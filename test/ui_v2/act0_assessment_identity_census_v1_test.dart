@@ -139,8 +139,42 @@ void main() {
     // Keep every prior whole-source pin in the historical reconstruction.
     const currentW24ContextFingerprint =
         'da8c4dc65ebc99979b01b3eb1c6e16d92626b95b4fbc4d4eb5df15d8585ff4c7';
-    expect(fingerprint, currentW24ContextFingerprint);
+    const currentExplicitW01ContextFingerprint =
+        '32e9e58b4821edec4c04239e417ddce1e6acf8257d0f844a0deba67dc834f44b';
+    expect(fingerprint, currentExplicitW01ContextFingerprint);
     final historicalComparison = jsonDecode(encoded) as List<dynamic>;
+    final position = historicalComparison.cast<List<dynamic>>().singleWhere(
+      (row) => row[2] == 'positions_review',
+    );
+    expect(position, <Object?>[
+      'world_1',
+      'positions',
+      'positions_review',
+      'review',
+      'proveIt',
+      <Object?>[
+        <Object?>['top', 'UTG', false, 'wrong', 'BTN'],
+        <Object?>['random', 'BB', false, 'wrong', 'BTN'],
+        <Object?>['bottom', 'BTN', true, 'correct', 'BTN'],
+      ],
+    ]);
+    position[5] = <Object?>[
+      <Object?>['top', 'UTG', false, 'wrong', 'BTN (your seat)'],
+      <Object?>['random', 'BB', false, 'wrong', 'BTN (your seat)'],
+      <Object?>[
+        'bottom',
+        'BTN (your seat)',
+        true,
+        'correct',
+        'BTN (your seat)',
+      ],
+    ];
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(historicalComparison))).toString(),
+      currentW24ContextFingerprint,
+      reason:
+          'Only the reviewed positions_review BTN display/preferred labels are reversed; IDs and grades remain exact.',
+    );
     final context = historicalComparison.cast<List<dynamic>>().singleWhere(
       (row) => row[2] == 'same_hand_different_seat_w3_same_hand_recap',
     );

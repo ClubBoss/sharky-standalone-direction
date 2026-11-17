@@ -869,6 +869,7 @@ class Act0TableStateV1 {
     this.emptyBoardLabel = '',
     this.actionTrail = const <Act0ActionTrailItemV1>[],
     this.activeSeatId,
+    this.decisionSeatId,
     this.heroSeatId,
     required this.highlightedSeatIds,
     required this.highlightedCardIds,
@@ -892,6 +893,8 @@ class Act0TableStateV1 {
   final String emptyBoardLabel;
   final List<Act0ActionTrailItemV1> actionTrail;
   final String? activeSeatId;
+  // Source-owned current actor; independent of answer-revealing display focus.
+  final String? decisionSeatId;
   final String? heroSeatId;
   final List<String> highlightedSeatIds;
   final List<String> highlightedCardIds;
@@ -924,6 +927,8 @@ class Act0TableStateV1 {
     String? emptyBoardLabel,
     List<Act0ActionTrailItemV1>? actionTrail,
     String? activeSeatId,
+    String? decisionSeatId,
+    bool clearDecisionSeatId = false,
     String? heroSeatId,
     List<String>? highlightedSeatIds,
     List<String>? highlightedCardIds,
@@ -953,6 +958,9 @@ class Act0TableStateV1 {
       emptyBoardLabel: emptyBoardLabel ?? this.emptyBoardLabel,
       actionTrail: actionTrail ?? this.actionTrail,
       activeSeatId: activeSeatId ?? this.activeSeatId,
+      decisionSeatId: clearDecisionSeatId
+          ? null
+          : decisionSeatId ?? this.decisionSeatId,
       heroSeatId: heroSeatId ?? this.heroSeatId,
       highlightedSeatIds: highlightedSeatIds ?? this.highlightedSeatIds,
       // A changed card array cannot inherit focus on cards no longer present.
@@ -1080,6 +1088,7 @@ String _act0DefaultSeatDisplayNameV1(Act0SeatStateV1 seat) {
 Act0SeatStateV1 _act0CopySeatStateV1(
   Act0SeatStateV1 seat, {
   String? displayName,
+  String? stackLabel,
   bool? isHero,
   bool? isActive,
   bool? isInHand,
@@ -1107,7 +1116,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     hasActed: hasActed ?? seat.hasActed,
     isLastAggressor: seat.isLastAggressor,
     isOccupied: isOccupied ?? seat.isOccupied,
-    stackLabel: seat.stackLabel,
+    stackLabel: stackLabel ?? seat.stackLabel,
     holeCards: holeCards ?? seat.holeCards,
     cardsVisibleMode: cardsVisibleMode ?? seat.cardsVisibleMode,
     currentBetLabel: clearCommitment ? bet?.amountLabel : seat.currentBetLabel,
@@ -2021,7 +2030,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_flop',
         title: 'Flop',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0FirstHandAkRunnerV1(_readBoardRunner),
+        runner: _act0W01NewFirstHandStackContextV1(
+          _act0FirstHandAkRunnerV1(_readBoardRunner),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2029,7 +2040,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_turn',
         title: 'Turn card',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0FirstHandAkRunnerV1(_turnBoardRunner),
+        runner: _act0W01NewFirstHandStackContextV1(
+          _act0FirstHandAkRunnerV1(_turnBoardRunner),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2037,11 +2050,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_river',
         title: 'River card',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0FirstHandAkRunnerV1(_riverBoardRunner).copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _riverBoardRunner.options,
-            correctOptionId: 'five',
-            correctIndex: 0,
+        runner: _act0W01NewFirstHandStackContextV1(
+          _act0FirstHandAkRunnerV1(_riverBoardRunner).copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _riverBoardRunner.options,
+              correctOptionId: 'five',
+              correctIndex: 0,
+            ),
           ),
         ),
         rewardXp: 6,
@@ -2069,14 +2084,16 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_action_trail',
         title: 'Action history',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0FirstHandAkRunnerV1(_actionTrailRunner, history: true)
-            .copyWith(
-              options: _act0AuthoredCorrectOptionAtV1(
-                _actionTrailRunner.options,
-                correctOptionId: 'bb_check',
-                correctIndex: 1,
-              ),
+        runner: _act0W01NewFirstHandStackContextV1(
+          _act0FirstHandAkRunnerV1(_actionTrailRunner, history: true).copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _actionTrailRunner.options,
+              correctOptionId: 'bb_check',
+              correctIndex: 1,
             ),
+          ),
+          earlierFlop: true,
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2156,11 +2173,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_call_drill',
         title: 'Call a price',
         phase: Act0LessonPhaseV1.drill,
-        runner: _callActionRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _callActionRunner.options,
-            correctOptionId: 'call',
-            correctIndex: 2,
+        runner: _act0W01ExplicitCallPriceContextV1(
+          _callActionRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _callActionRunner.options,
+              correctOptionId: 'call',
+              correctIndex: 2,
+            ),
           ),
         ),
         rewardXp: 5,
@@ -2231,8 +2250,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_first_actor',
         title: 'First preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
-          _firstPreflopActorRunner,
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _act0NeutralSeatAssessmentPreservingTeachingV1(
+            _firstPreflopActorRunner,
+          ),
+          frame: _Act0W01OrderFrameV1.first,
+          taskId: 'blinds_first_actor',
+          question: 'Who acts first preflop in this frame?',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2241,17 +2265,22 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_last_actor',
         title: 'Last preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _lastPreflopActorRunner.copyWith(
-          // Recognition choices stay neutral; authored teaching keeps its focus.
-          table: _lastPreflopActorRunner.table.copyWith(
-            highlightedSeatIds: const <String>[],
-            activeSeatId: '',
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _lastPreflopActorRunner.copyWith(
+            // Recognition choices stay neutral; authored teaching keeps its focus.
+            table: _lastPreflopActorRunner.table.copyWith(
+              highlightedSeatIds: const <String>[],
+              activeSeatId: '',
+            ),
+            options: _act0AuthoredCorrectOptionAtV1(
+              _lastPreflopActorRunner.options,
+              correctOptionId: 'bb',
+              correctIndex: 1,
+            ),
           ),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _lastPreflopActorRunner.options,
-            correctOptionId: 'bb',
-            correctIndex: 1,
-          ),
+          frame: _Act0W01OrderFrameV1.option,
+          taskId: 'blinds_last_actor',
+          question: 'Who has the next option before the flop here?',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2260,7 +2289,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_postflop_button',
         title: 'Last postflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _postflopButtonActorRunner,
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _postflopButtonActorRunner,
+          frame: _Act0W01OrderFrameV1.flop,
+          taskId: 'blinds_postflop_button',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2282,32 +2315,36 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_review',
         title: 'Order recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _meetTableRunner.copyWith(
-          phase: Act0LessonPhaseV1.review,
-          lessonId: 'blinds_order_recap',
-          caption: 'Lesson learned: blinds post before the first choice.',
-          hint: 'Think about who makes the first voluntary choice.',
-          question: 'Who acts first preflop?',
-          feedbackTitle: 'Order takeaway.',
-          feedbackReason:
-              'Preflop starts left of the big blind. After the flop, action starts left of the Button.',
-          options: _act0AuthoredCorrectOptionAtV1(
-            _firstPreflopActorRunner.options,
-            correctOptionId: 'utg',
-            correctIndex: 0,
-          ),
-          table: _meetTableRunner.table.copyWith(
-            highlightedSeatIds: const <String>[],
-            selectableSeatIds: const <String>['utg', 'btn'],
-          ),
-          teachingSteps: const <Act0TeachingStepV1>[
-            Act0TeachingStepV1(
-              title: 'Order recap.',
-              body: 'Blinds post before the first voluntary decision.',
-              focusSeatIds: <String>['sb', 'bb'],
-              focusLabels: <String>['Post first'],
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _meetTableRunner.copyWith(
+            phase: Act0LessonPhaseV1.review,
+            lessonId: 'blinds_order_recap',
+            caption: 'Lesson learned: blinds post before the first choice.',
+            hint: 'Think about who makes the first voluntary choice.',
+            question: 'Who acts first preflop?',
+            feedbackTitle: 'Order takeaway.',
+            feedbackReason:
+                'Preflop starts left of the big blind. After the flop, action starts left of the Button.',
+            options: _act0AuthoredCorrectOptionAtV1(
+              _firstPreflopActorRunner.options,
+              correctOptionId: 'utg',
+              correctIndex: 0,
             ),
-          ],
+            table: _meetTableRunner.table.copyWith(
+              highlightedSeatIds: const <String>[],
+              selectableSeatIds: const <String>['utg', 'btn'],
+            ),
+            teachingSteps: const <Act0TeachingStepV1>[
+              Act0TeachingStepV1(
+                title: 'Order recap.',
+                body: 'Blinds post before the first voluntary decision.',
+                focusSeatIds: <String>['sb', 'bb'],
+                focusLabels: <String>['Post first'],
+              ),
+            ],
+          ),
+          frame: _Act0W01OrderFrameV1.first,
+          taskId: 'blinds_review',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -2385,17 +2422,21 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_utg',
         title: 'Tap UTG',
         phase: Act0LessonPhaseV1.drill,
-        runner: _utgSeatRunner.copyWith(
-          // Recognition choices stay neutral; authored teaching keeps its focus.
-          table: _utgSeatRunner.table.copyWith(
-            highlightedSeatIds: const <String>[],
-            activeSeatId: '',
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _utgSeatRunner.copyWith(
+            // Recognition choices stay neutral; authored teaching keeps its focus.
+            table: _utgSeatRunner.table.copyWith(
+              highlightedSeatIds: const <String>[],
+              activeSeatId: '',
+            ),
+            options: _act0AuthoredCorrectOptionAtV1(
+              _utgSeatRunner.options,
+              correctOptionId: 'utg',
+              correctIndex: 1,
+            ),
           ),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _utgSeatRunner.options,
-            correctOptionId: 'utg',
-            correctIndex: 1,
-          ),
+          frame: _Act0W01OrderFrameV1.first,
+          taskId: 'positions_utg',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2414,12 +2455,16 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_late_seat',
         title: 'Late seat meaning',
         phase: Act0LessonPhaseV1.drill,
-        runner: _latePositionRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _latePositionRunner.options,
-            correctOptionId: 'btn',
-            correctIndex: 1,
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _latePositionRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _latePositionRunner.options,
+              correctOptionId: 'btn',
+              correctIndex: 1,
+            ),
           ),
+          frame: _Act0W01OrderFrameV1.flop,
+          taskId: 'positions_late_seat',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2428,8 +2473,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_early_late',
         title: 'Early vs late',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
-          _earlyLatePositionRunner,
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _act0NeutralSeatAssessmentPreservingTeachingV1(
+            _earlyLatePositionRunner,
+          ),
+          frame: _Act0W01OrderFrameV1.first,
+          taskId: 'positions_early_late',
+          question: 'Which acts earlier preflop: UTG or BTN?',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2438,46 +2488,50 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_review',
         title: 'Position recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _positionsRecapRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            const <Act0RunnerOptionV1>[
-              Act0RunnerOptionV1(
-                id: 'top',
-                label: 'UTG',
-                seatId: 'utg',
-                isCorrect: false,
-                preferredLabel: 'BTN (your seat)',
-                quality: Act0FeedbackQualityV1.wrong,
-                feedbackTitle: 'Read the postflop order.',
-                feedbackReason:
-                    'UTG acts before BTN after the flop in this six-seat hand.',
-              ),
-              Act0RunnerOptionV1(
-                id: 'bottom',
-                label: 'BTN (your seat)',
-                seatId: 'btn',
-                isCorrect: true,
-                preferredLabel: 'BTN (your seat)',
-                quality: Act0FeedbackQualityV1.correct,
-                feedbackTitle: 'Postflop position read.',
-                feedbackReason:
-                    'BTN acts last after the flop in this six-seat hand.',
-              ),
-              Act0RunnerOptionV1(
-                id: 'random',
-                label: 'BB',
-                seatId: 'bb',
-                isCorrect: false,
-                preferredLabel: 'BTN (your seat)',
-                quality: Act0FeedbackQualityV1.wrong,
-                feedbackTitle: 'Read the postflop order.',
-                feedbackReason:
-                    'BB acts before BTN after the flop in this six-seat hand.',
-              ),
-            ],
-            correctOptionId: 'bottom',
-            correctIndex: 2,
+        runner: _act0W01ExplicitOrderRunnerV1(
+          _positionsRecapRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              const <Act0RunnerOptionV1>[
+                Act0RunnerOptionV1(
+                  id: 'top',
+                  label: 'UTG',
+                  seatId: 'utg',
+                  isCorrect: false,
+                  preferredLabel: 'BTN (your seat)',
+                  quality: Act0FeedbackQualityV1.wrong,
+                  feedbackTitle: 'Read the postflop order.',
+                  feedbackReason:
+                      'UTG acts before BTN after the flop in this six-seat hand.',
+                ),
+                Act0RunnerOptionV1(
+                  id: 'bottom',
+                  label: 'BTN (your seat)',
+                  seatId: 'btn',
+                  isCorrect: true,
+                  preferredLabel: 'BTN (your seat)',
+                  quality: Act0FeedbackQualityV1.correct,
+                  feedbackTitle: 'Postflop position read.',
+                  feedbackReason:
+                      'BTN acts last after the flop in this six-seat hand.',
+                ),
+                Act0RunnerOptionV1(
+                  id: 'random',
+                  label: 'BB',
+                  seatId: 'bb',
+                  isCorrect: false,
+                  preferredLabel: 'BTN (your seat)',
+                  quality: Act0FeedbackQualityV1.wrong,
+                  feedbackTitle: 'Read the postflop order.',
+                  feedbackReason:
+                      'BB acts before BTN after the flop in this six-seat hand.',
+                ),
+              ],
+              correctOptionId: 'bottom',
+              correctIndex: 2,
+            ),
           ),
+          frame: _Act0W01OrderFrameV1.flop,
+          taskId: 'positions_review',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -8532,6 +8586,34 @@ const _firstHandPreflopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
   Act0ActionTrailItemV1(label: 'CO folds'),
 ];
+
+// New, explicitly declared 100 BB starting context for four existing snapshots.
+// This does not recover unknown historical stacks or change recorded actions.
+Act0RunnerStateV1 _act0W01NewFirstHandStackContextV1(
+  Act0RunnerStateV1 source, {
+  bool earlierFlop = false,
+}) {
+  const remaining = <String, String>{
+    'utg': '100 BB',
+    'hj': '100 BB',
+    'co': '99 BB',
+    'btn': '97 BB',
+    'sb': '99.5 BB',
+    'bb': '97 BB',
+  };
+  return source.copyWith(
+    caption:
+        '${earlierFlop ? 'Replay the earlier flop snapshot. ' : ''}For this example, all six players start with 100 BB before posting the 0.5/1 BB blinds; no ante, straddle or rake. Pot: 7.5 BB. BTN and BB each have 97 BB behind. Read the board and recorded actions.',
+    table: source.table.copyWith(
+      decisionSeatId: 'btn',
+      seats: [
+        for (final seat in source.table.seats)
+          _act0CopySeatStateV1(seat, stackLabel: remaining[seat.seatId]),
+      ],
+    ),
+  );
+}
+
 Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
   Act0RunnerStateV1 runner, {
   bool showdown = false,
@@ -9655,6 +9737,75 @@ final _callActionRunner = _readBoardRunner.copyWith(
   ],
 );
 
+// Newly authored full price context for this one mechanical Call question.
+// Shared Call templates and their later-world descendants remain unchanged.
+Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
+  const remaining = <String, String>{
+    'utg': '100 BB',
+    'hj': '98 BB',
+    'co': '100 BB',
+    'btn': '99 BB',
+    'sb': '99 BB',
+    'bb': '99 BB',
+  };
+  return source.copyWith(
+    caption:
+        'For this example, all six start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG and CO folded. HJ, BTN, SB and BB each put in 1 BB preflop, then BB checked. On the flop SB and BB checked; HJ bet 1 BB. Pot 5 BB includes that bet. Raise 4 BB means a total flop wager of 4 BB.',
+    table: source.table.copyWith(
+      decisionSeatId: 'btn',
+      activeSeatId: 'btn',
+      heroSeatId: 'btn',
+      highlightedSeatIds: const [],
+      highlightedCardIds: const [],
+      focusCalloutLabel: '',
+      selectedSeatId: '',
+      actionTrail: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+        Act0ActionTrailItemV1(label: 'BB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: HJ bets 1 BB'),
+      ],
+      seats: [
+        for (final seat in source.table.seats)
+          Act0SeatStateV1(
+            seatId: seat.seatId,
+            seatLabel: seat.seatLabel,
+            displayName: seat.displayName,
+            isHero: seat.seatId == 'btn',
+            isDealerButton: seat.seatId == 'btn',
+            isSmallBlind: seat.seatId == 'sb',
+            isBigBlind: seat.seatId == 'bb',
+            isActive: seat.seatId == 'btn',
+            isInHand: seat.seatId != 'utg' && seat.seatId != 'co',
+            isFolded: seat.seatId == 'utg' || seat.seatId == 'co',
+            hasActed: seat.seatId != 'btn',
+            isLastAggressor: seat.seatId == 'hj',
+            stackLabel: remaining[seat.seatId],
+            holeCards: seat.seatId == 'btn' ? seat.holeCards : const [],
+            cardsVisibleMode: seat.seatId == 'btn'
+                ? seat.cardsVisibleMode
+                : Act0CardsVisibleModeV1.none,
+            currentBetLabel: seat.seatId == 'hj' ? '1 BB' : null,
+            bet: seat.seatId == 'hj'
+                ? const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.bet,
+                    label: 'Bet',
+                    amountLabel: '1 BB',
+                  )
+                : null,
+          ),
+      ],
+    ),
+  );
+}
+
 final _blindsOrderRunner = _meetTableRunner.copyWith(
   lessonId: 'blinds_action_order',
   lessonTitle: 'Blinds & action order',
@@ -9696,6 +9847,164 @@ final _blindsOrderRunner = _meetTableRunner.copyWith(
     ),
   ],
 );
+
+// New owner-admitted independent teaching hands. No old history is inferred.
+enum _Act0W01OrderFrameV1 { first, option, flop }
+
+Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
+  Act0RunnerStateV1 source, {
+  required _Act0W01OrderFrameV1 frame,
+  required String taskId,
+  String? question,
+}) {
+  final flop = frame == _Act0W01OrderFrameV1.flop;
+  final matched = frame != _Act0W01OrderFrameV1.first;
+  final actor = flop
+      ? 'sb'
+      : matched
+      ? 'bb'
+      : 'utg';
+  final hero = flop ? 'co' : 'btn';
+  const cards = <Act0CardStateV1>[
+    Act0CardStateV1(rank: '?', suit: ''),
+    Act0CardStateV1(rank: '?', suit: ''),
+  ];
+  final trail = <Act0ActionTrailItemV1>[
+    const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+    const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+    if (matched) ...const [
+      Act0ActionTrailItemV1(label: 'UTG calls 1 BB'),
+      Act0ActionTrailItemV1(label: 'HJ calls 1 BB'),
+      Act0ActionTrailItemV1(label: 'CO calls 1 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+      Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+    ],
+    if (flop) const Act0ActionTrailItemV1(label: 'BB checks'),
+  ];
+  final seats = <Act0SeatStateV1>[
+    for (final id in const ['utg', 'hj', 'co', 'btn', 'sb', 'bb'])
+      Act0SeatStateV1(
+        seatId: id,
+        seatLabel: id.toUpperCase(),
+        displayName: id == hero ? 'Hero' : id.toUpperCase(),
+        isHero: id == hero,
+        isDealerButton: id == 'btn',
+        isSmallBlind: id == 'sb',
+        isBigBlind: id == 'bb',
+        blindAmountLabel: flop
+            ? null
+            : id == 'sb'
+            ? '0.5 BB'
+            : id == 'bb'
+            ? '1 BB'
+            : null,
+        // Remaining chips, not the starting 100 BB.
+        stackLabel: matched || id == 'bb'
+            ? '99 BB'
+            : id == 'sb'
+            ? '99.5 BB'
+            : '100 BB',
+        hasActed: !flop && matched && id != 'bb',
+        holeCards: cards,
+        cardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
+        currentBetLabel: flop
+            ? null
+            : matched || id == 'bb'
+            ? '1 BB'
+            : id == 'sb'
+            ? '0.5 BB'
+            : null,
+        bet: flop || (!matched && id != 'sb' && id != 'bb')
+            ? null
+            : Act0SeatBetStateV1(
+                kind: id == 'bb' || (!matched && id == 'sb')
+                    ? Act0SeatBetKindV1.post
+                    : Act0SeatBetKindV1.call,
+                label: id == 'bb' || (!matched && id == 'sb') ? 'Post' : 'Call',
+                amountLabel: matched || id == 'bb' ? '1 BB' : '0.5 BB',
+              ),
+      ),
+  ];
+  final context = flop
+      ? 'For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. Everyone matched 1 BB preflop and BB checked. Pot: 6 BB. All six have 99 BB behind; none is all-in. No flop action yet. Consider only the initial clockwise pass.'
+      : matched
+      ? 'For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG, HJ, CO and BTN called 1 BB; SB added 0.5 BB. No raise or fold. BB has not acted voluntarily. Everyone has 99 BB behind. Pot: 6 BB.'
+      : 'For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posted 0.5 BB and BB posted 1 BB. No voluntary action yet. All six remain in the hand with chips behind. Pot: 1.5 BB.';
+  return source.copyWith(
+    caption: context,
+    question: question,
+    hint: taskId == 'positions_review'
+        ? source.hint
+        : 'Read the street, recorded actions and eligible seats.',
+    feedbackReason: flop
+        ? 'In this initial postflop pass, with all six able to act, BTN is reached after SB, BB, UTG, HJ and CO.'
+        : matched
+        ? 'After the five stated matches, BB has chips behind and has not acted voluntarily, so BB has the next option.'
+        : 'In this six-seat preflop order, UTG acts before BTN.',
+    options: [
+      for (final o in source.options)
+        Act0RunnerOptionV1(
+          id: o.id,
+          label: flop && o.seatId == 'btn' ? 'BTN' : o.label,
+          amountLabel: o.amountLabel,
+          seatId: o.seatId,
+          isCorrect: o.isCorrect,
+          preferredLabel: flop ? 'BTN' : o.preferredLabel,
+          betterAnswerLabel: flop ? 'BTN' : o.betterAnswerLabel,
+          quality: o.quality,
+          feedbackTitle: o.feedbackTitle,
+          feedbackReason: taskId == 'positions_early_late'
+              ? (o.seatId == 'utg'
+                    ? 'UTG acts before BTN in the stated preflop order.'
+                    : 'BTN acts after UTG in the stated preflop order.')
+              : taskId == 'positions_late_seat'
+              ? (o.seatId == 'btn'
+                    ? 'BTN is reached last in this first postflop pass, with all six able to act.'
+                    : 'UTG is reached before BTN in this first postflop pass.')
+              : taskId == 'positions_utg'
+              ? (o.seatId == 'utg'
+                    ? 'UTG names the seat immediately after BB in this preflop order.'
+                    : 'BTN is the dealer-button seat, not UTG.')
+              : o.feedbackReason,
+          repairFocusSeatIds: o.repairFocusSeatIds,
+          repairFocusCardIds: o.repairFocusCardIds,
+          repairFocusLabels: o.repairFocusLabels,
+        ),
+    ],
+    table: source.table.copyWith(
+      scope: Act0TableScopeV1.playedHand,
+      seats: seats,
+      heroCards: cards,
+      boardCards: flop
+          ? const [
+              Act0CardStateV1(rank: '7', suit: 'h'),
+              Act0CardStateV1(rank: '8', suit: 's'),
+              Act0CardStateV1(rank: '2', suit: 'c'),
+            ]
+          : const [],
+      streetLabel: flop ? 'Flop' : 'Preflop',
+      potLabel: matched ? 'Pot 6 BB' : 'Pot 1.5 BB',
+      toCallLabel: '',
+      centerLabel: flop ? 'Initial postflop pass' : 'Initial preflop pass',
+      focusCalloutLabel: '',
+      actionTrail: trail,
+      activeSeatId: '',
+      decisionSeatId: actor,
+      heroSeatId: hero,
+      highlightedSeatIds: const [],
+      highlightedCardIds: const [],
+      selectedSeatId: '',
+    ),
+    teachingSteps: [
+      Act0TeachingStepV1(
+        title: 'Read this stated order.',
+        body:
+            'Read the given street and action history. Match the question to the stated seats and positions.',
+        focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
+      ),
+    ],
+  );
+}
 
 final _firstPreflopActorRunner = _meetTableRunner.copyWith(
   lessonId: 'first_preflop_actor',

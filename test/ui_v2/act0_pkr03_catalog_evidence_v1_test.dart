@@ -20,6 +20,7 @@ Map<String, Object?> _tableSourceInputs(Act0TableStateV1 table) => {
   'pot_label': table.potLabel,
   'to_call_label': table.toCallLabel,
   'active_seat_id': table.activeSeatId,
+  if (table.decisionSeatId != null) 'decision_seat_id': table.decisionSeatId,
   'hero_seat_id': table.heroSeatId,
   'seats': [
     for (final seat in table.seats)

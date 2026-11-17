@@ -95,7 +95,9 @@ void main() {
       'world_8/spr_and_commitment/what_poker_is_side_pot_intro',
       'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap',
     ];
-    final rows = act0RepairGapAdjudicationsV1;
+    // Preserve the byte-stable original37 dispositions as their own cohort.
+    expect(act0RepairGapAdjudicationsV1, hasLength(40));
+    final rows = act0RepairGapAdjudicationsV1.take(37).toList();
     expect(rows, hasLength(37));
     expect(
       rows
