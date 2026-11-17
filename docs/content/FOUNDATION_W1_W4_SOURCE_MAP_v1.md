@@ -100,3 +100,29 @@ Newly curated direct prerequisites: `what_poker_is_pot_stack` (pot labels; State
 Gaps: earlier explicit teaching of top/middle/weak pair in this decision context is UNKNOWN; enough hand strength is not defined; opponent holdings/ranges, equity, future action and pot accounting convention are absent. Cheap price does not by itself prove Call. The recap adds future cards without teaching their evaluation. The first five historical generic feedback strings are inherited runner-level flop copy; specific action-option feedback was inspected separately. Final visible feedback remains unverified.
 
 This proposal does not change strategy, grading, runtime, task IDs, XP, routing, source-map revision or historical provenance. Exact generator serialization and historical State/Preview guards require the separate maintenance decision in `MAINTENANCE.md` before integration. No CUR-01.a, CUR-02.a, 0.3, native or Human acceptance is claimed.
+## Qualified documentary skill links: W4 purpose/value/bluff/protection
+
+Sixteen existing IDs receive new documentary learning-goal/prerequisite/concept annotations from the independently reviewed WP03-SKILL-LINKS-W4-PURPOSE-01 proposal, authored at immutable1bddf5ea. This is a finite source-qualified subset, not a complete important-Foundation skill inventory or a runtime gate. Original source-map records, earlier accepted Call-price annotations and all historical pins remain unchanged.
+
+Later source qualification for w4_purpose_intro, w4_value_purpose and w4_bluff_purpose: source19b1f231 adds the exact worse-call/better-fold definitions only to the earlier task-local teaching body. The original annotations' PARTIAL_SHORTHAND and omission evidence is explicitly the dated1bdd snapshot. A direct EN14Pro widget shows the full longer text through existing scroll. Ordinary-route exposure before BOTH first applications remains UNKNOWN/open; source order, a synthetic current-study classification or a distinct ID is not learner comprehension or independent proof. No route, grade, XP or criterion is changed by this document.
+
+| Existing task ID | Documentary goal |
+| --- | --- |
+| `w4_purpose_intro` | Name value, bluff and protection as purposes before asking for a bet size. |
+| `w4_value_purpose` | Identify the authored value purpose from the stated stronger-hand/weaker-caller premise; distinguish it from bluff. |
+| `w4_bluff_purpose` | Identify the authored bluff purpose as trying to make better hands fold; distinguish it from value. |
+| `w4_purpose_recap` | Restate that purpose comes before size and recall the three named purposes. |
+| `w4_value_intro` | State that a value bet needs worse hands that can call, rather than just a strong hand. |
+| `w4_value_bet` | Relate the stated worse-caller premise to the source-authored value-bet choice; do not infer optimal sizing. |
+| `w4_value_missed` | Explain why checking can miss value under the stated premise that worse hands can call. |
+| `w4_value_recap` | Restate the worse-calls criterion for value before choosing size. |
+| `w4_bluff_intro` | State that a bluff tries to win through better hands folding and needs fold chance. |
+| `w4_bluff_pressure` | Relate the given missed-hand/fold-chance premise to the source-authored pressure bet; do not validate profitability. |
+| `w4_bad_bluff` | Use the stated low-fold-pressure premise to explain avoiding a forced bluff in this authored example. |
+| `w4_bluff_recap` | Restate that bluffing aims at better folds and a missed hand need not always bet. |
+| `w4_protection_intro` | Explain that protection denies a free next card by making continuation cost chips. |
+| `w4_protection_bet` | Relate the protection bet to charging for the next card rather than allowing a free continuation. |
+| `w4_protection_check` | Identify a free next card as the consequence described after Hero checks behind. |
+| `w4_protection_recap` | Restate that protection prevents continuation to the next card from being free. |
+
+Final Help visibility, cross-scope prerequisite coverage, important-Foundation completeness, strategic grade validity and learner exposure remain separately unverified. The already-qualified same-case protection practice pair is NOT independent/unseen proof. Full CUR-01.a/CUR-02.a, PKR, native/Human/release and roadmap points remain unaccepted.
