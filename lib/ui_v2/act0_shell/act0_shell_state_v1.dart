@@ -4546,7 +4546,16 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_purpose_intro',
         title: 'Bet purpose',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4PurposeIntroRunner,
+        runner: _world4PurposeIntroRunner.copyWith(
+          teachingSteps: const <Act0TeachingStepV1>[
+            Act0TeachingStepV1(
+              title: 'Purpose first.',
+              body:
+                  'Name the bet purpose first. Value means worse hands can still call. A bluff tries to make better hands fold. Protection makes the next card cost money.',
+              focusLabels: <String>['Value', 'Bluff', 'Protection'],
+            ),
+          ],
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
