@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
@@ -178,6 +179,51 @@ void main() {
       },
     );
   }
+
+  test(
+    'old UTG records remain raw and cannot prove the corrected semantic source',
+    () {
+      final f = Act0AuthoredRepairGoalFixtureV1.source(
+        lessonId: 'positions',
+        taskId: 'positions_utg',
+        choiceId: 'hj',
+        occurrenceId: 'SIMULATED-semantic-revision',
+      );
+      final current = act0AuthoredRepairFixtureSourceV1(f.intent);
+      const oldFingerprint =
+          '716d9ed69dff7839758f10fd334e4ceecaa644a34b9927ffce69e1a85a5e9ff8';
+      expect(current.authoredSourceFingerprint, isNot(oldFingerprint));
+      final oldWrong = Act0LearningEvidenceRecordV1.tryParse({
+        ...current.toPayload(),
+        'authoredSourceFingerprint': oldFingerprint,
+      })!;
+      final wrongBytes = jsonEncode(oldWrong.toPayload());
+      expect(
+        _resolve(
+          f.intent,
+          Act0LearningEvidenceHistoryV1(records: [oldWrong]),
+        ).canLaunch,
+        isFalse,
+      );
+      final currentCorrect = Act0LearningEvidenceRecordV1.tryParse({
+        ...current.toPayload(),
+        'choiceId': 'utg',
+        'isCorrect': true,
+        'resultKind': 'correct',
+        'errorType': 'none',
+      })!;
+      expect(act0CurrentAuthoredSourceProofV1(currentCorrect), isNotNull);
+      final oldCorrect = Act0LearningEvidenceRecordV1.tryParse({
+        ...currentCorrect.toPayload(),
+        'authoredSourceFingerprint': oldFingerprint,
+      })!;
+      final correctBytes = jsonEncode(oldCorrect.toPayload());
+      expect(act0CurrentAuthoredSourceProofV1(oldCorrect), isNull);
+      expect(oldCorrect.isCorrect, isTrue);
+      expect(jsonEncode(oldWrong.toPayload()), wrongBytes);
+      expect(jsonEncode(oldCorrect.toPayload()), correctBytes);
+    },
+  );
 
   test(
     'only the four new relations require capture; existing contracts keep old policy',
