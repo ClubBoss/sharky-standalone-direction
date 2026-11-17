@@ -786,6 +786,61 @@ class TypedCohortV2Controls(unittest.TestCase):
             with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
         finally: TRUTH.WP03_CONTEXT_LEDGER_REVIEW = saved
 
+    def test_wp03_check_extension_preserves_every_prior_record(self):
+        prior = json.loads(TRUTH.WP03_CONTEXT_FIXTURE.read_text())
+        combined = TRUTH._require_wp03_context_admission()
+        self.assertEqual(len(prior['task_ids']), 13)
+        self.assertEqual(len(combined['task_ids']), 15)
+        self.assertEqual(combined['task_ids'][:13], prior['task_ids'])
+        self.assertEqual(combined['ledger_groups'][:9], prior['ledger_groups'])
+        self.assertEqual(len(combined['ledger_groups']), 11)
+        for name, changes in prior['task_changes'].items():
+            for task_id, record in changes.items():
+                self.assertEqual(combined['task_changes'][name][task_id], record)
+        self.assertEqual(combined['task_changes']['learning-contract.json'],
+                         prior['task_changes']['learning-contract.json'])
+        self.assertEqual(combined['task_changes']['choice-identity.json'],
+                         prior['task_changes']['choice-identity.json'])
+
+    def test_wp03_check_extension_pins_and_membership_fail_closed(self):
+        path, pin = TRUTH.WP03_CHECK_EXTENSION_FIXTURE, TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256
+        original = json.loads(path.read_text())
+        try:
+            TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = '0' * 64
+            with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+        finally:
+            TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = pin
+        mutations = [
+            lambda x: x.update(task_ids=list(reversed(x['task_ids']))),
+            lambda x: x.update(predecessor_fixture_sha256='0' * 64),
+            lambda x: x['predecessor_capture_sha256'].update({'ledger.json': '0' * 64}),
+            lambda x: x['current_source_origin_packet'].update(state_sha256='f' * 64),
+            lambda x: x['task_changes']['learning-contract.json'].update({'actions_check_drill': {}}),
+            lambda x: x['task_changes']['runtime-inputs.json'].update({'positions_review': {}}),
+            lambda x: x['task_changes']['source-fingerprints.json'].pop('actions_check_drill'),
+            lambda x: x['ledger_groups'][0].update(task_id=x['ledger_groups'][1]['task_id']),
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            candidate = pathlib.Path(temporary) / 'extension.json'
+            try:
+                for mutate in mutations:
+                    changed = copy.deepcopy(original)
+                    mutate(changed)
+                    candidate.write_text(json.dumps(changed))
+                    TRUTH.WP03_CHECK_EXTENSION_FIXTURE = candidate
+                    TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = hashlib.sha256(candidate.read_bytes()).hexdigest()
+                    with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            finally:
+                TRUTH.WP03_CHECK_EXTENSION_FIXTURE = path
+                TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = pin
+
+    def test_wp03_prior_thirteen_receipt_is_not_current_fifteen(self):
+        cohort = self.wp03_context_producer()
+        prior = json.loads(TRUTH.WP03_CHECK_EXTENSION_FIXTURE.read_text())['predecessor_source_origin_packet']
+        for key in ('state_sha256', 'factory_sha256'):
+            cohort['producer_receipt'][key] = prior[key]
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(cohort, 'candidate')
+
     def recompute(self, root, task_id):
         contract = self.read(root / 'candidate/learning-contract.json')
         fingerprints = self.read(root / 'candidate/source-fingerprints.json')
@@ -855,7 +910,7 @@ def check_wp03_real_artifacts(baseline, candidate):
         with helper.assertRaises(SystemExit): TRUTH.wp03_context_w24_capture('runtime-inputs.json', changed)
         negative_count += 1
     changed = copy.deepcopy(current['runtime-inputs.json'])
-    changed['positions_button']['caption'] = 'unauthorized thirteenth context'
+    changed['positions_button']['caption'] = 'outside admitted WP03 contexts'
     with helper.assertRaises(SystemExit): TRUTH.wp03_context_w24_capture('runtime-inputs.json', changed)
     negative_count += 1
     for group in fixture['ledger_groups']:
@@ -897,7 +952,7 @@ def check_wp03_real_artifacts(baseline, candidate):
     result = {'candidate_producer_revision': TRUTH.WP03_CONTEXT_REVISION,
               'runtime_changed_task_count': comparison['runtime_changed_task_count'],
               'canonical_source_fingerprints': comparison['canonical_source_fingerprints'],
-              'wp03_changed_context_ids': sorted(ids), 'wp03_unchanged_context_count': 356,
+              'wp03_changed_context_ids': sorted(ids), 'wp03_unchanged_context_count': len(current['runtime-inputs.json']) - len(ids),
               'wp03_actual_capture_negative_controls': negative_count,
               'ledger_rows': len(current['ledger.json']),
               'ledger_statuses': dict(__import__('collections').Counter(row['status'] for row in current['ledger.json'])),

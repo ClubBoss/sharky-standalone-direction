@@ -989,24 +989,28 @@ def _require_w24_context_admission():
 
 # New explicit W01 contexts: exact independently reviewed source/capture delta.
 # Original authoring origin, all predecessor pins and raw captures stay intact.
-WP03_CONTEXT_REVISION = 'W01_REVIEWED_EXPLICIT_MECHANICAL_CONTEXTS'
-WP03_CONTEXT_PRODUCER_REVISION = {'source_revision': 'fbd031f15d9d934e79be37f86cc6538d24394f42',
- 'state_sha256': 'b569a52c0d44c153862b2b726c50f727edd580eb99f635a6f44305c75135681e',
+WP03_CONTEXT_REVISION = 'W01_REVIEWED_EXPLICIT_MECHANICAL_CONTEXTS_V2_15'
+WP03_CONTEXT_PRODUCER_REVISION = {'source_revision': '16e42ac9c48727a73489dd3ad0326a417024498d',
+ 'state_sha256': '8093daf2c0d9626e0b19e880fe09d45f0164d8e3082dee4e67c72ffdbffd0ae2',
  'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
  'runner_sha256': 'f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f',
  'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57',
  'street_replay_sha256': 'abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf',
- 'repair_gap_sha256': '83e891d4627419a3b23bb39cfbb80d457a73bd283df08e81a989817a8cef7c41'}
+ 'repair_gap_sha256': '1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a'}
 WP03_CONTEXT_CAPTURE_SHA256 = {'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646',
  'choice-identity.json': '3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d',
- 'runtime-inputs.json': 'e3abea3464e4addc20afc3cb9b36ff1063527e8261ee8eac3bb0112cd7acd1c8',
- 'source-fingerprints.json': '4de11eaac5fcf3ea16feb54cae35f2f5696edf93e165273145a04b2dea4d14ea',
- 'ledger.json': '10c338b3e2c1c94909a5820d15fafd3882cbb15b9453e4a0e064a2febe8007c7'}
+ 'runtime-inputs.json': 'c65325d08650cf8c267ae4ee4cc7cda521a35b98c256dcce20050175f1a7ca7c',
+ 'source-fingerprints.json': '6288843805fee1529f89a6882046a79545695c77e70cd9a0defc1fe9ca9475f9',
+ 'ledger.json': 'b7ccf7b8304db06abe35b1a0192928e1ea8d1f7e4dd47d5288f9af85d7c65a27'}
 WP03_CONTEXT_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / (
     'test/tools/fixtures/table_truth_wp03_explicit_contexts_v1.json'
 )
 WP03_CONTEXT_FIXTURE_SHA256 = '1156f92b96f7464fa3f868f77bc45b36d6b3a931d45d83f6e0ea64c3009b68c0'
-WP03_CONTEXT_LEDGER_REVIEW = 'EXACT_NINE_SOURCE_CONTEXT_GROUPS_CONFIRMED'
+WP03_CHECK_EXTENSION_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / (
+    'test/tools/fixtures/table_truth_wp03_check_mechanics_v2.json'
+)
+WP03_CHECK_EXTENSION_FIXTURE_SHA256 = 'd39db69f36e9e933588b3331c48fdda380b7e38a329a5f023d33d38191de82f7'
+WP03_CONTEXT_LEDGER_REVIEW = 'EXACT_ELEVEN_SOURCE_CONTEXT_GROUPS_CONFIRMED'
 
 
 def _require_wp03_context_admission():
@@ -1019,14 +1023,40 @@ def _require_wp03_context_admission():
         or set(WP03_CONTEXT_CAPTURE_SHA256) != set(W24_CONTEXT_CAPTURE_SHA256)
         or any(not re.fullmatch(r'[0-9a-f]{64}', str(value))
                for value in WP03_CONTEXT_CAPTURE_SHA256.values())
-        or WP03_CONTEXT_LEDGER_REVIEW != 'EXACT_NINE_SOURCE_CONTEXT_GROUPS_CONFIRMED'
+        or WP03_CONTEXT_LEDGER_REVIEW != 'EXACT_ELEVEN_SOURCE_CONTEXT_GROUPS_CONFIRMED'
         or hashlib.sha256(WP03_CONTEXT_FIXTURE.read_bytes()).hexdigest() != WP03_CONTEXT_FIXTURE_SHA256):
         raise SystemExit('WP03 explicit-context admission is unfinalized or inconsistent')
-    fixture = json.loads(WP03_CONTEXT_FIXTURE.read_text())
-    if (fixture.get('schema') != 1 or len(fixture.get('task_ids', [])) != 13
-        or fixture.get('capture_sha256') != WP03_CONTEXT_CAPTURE_SHA256
-        or len(fixture.get('ledger_groups', [])) != 9):
-        raise SystemExit('WP03 exact comparison fixture changed')
+    # Keep the previously admitted thirteen-record fixture immutable. The
+    # current family appends exactly two records; no earlier record is replaced.
+    prior = json.loads(WP03_CONTEXT_FIXTURE.read_text())
+    if hashlib.sha256(WP03_CHECK_EXTENSION_FIXTURE.read_bytes()).hexdigest() != WP03_CHECK_EXTENSION_FIXTURE_SHA256:
+        raise SystemExit('WP03 Check extension fixture changed')
+    extension = json.loads(WP03_CHECK_EXTENSION_FIXTURE.read_text())
+    added_ids = {'actions_legal_context', 'actions_check_drill'}
+    if (prior.get('schema') != 1 or len(prior.get('task_ids', [])) != 13
+        or len(prior.get('ledger_groups', [])) != 9
+        or extension.get('schema') != 1
+        or extension.get('task_ids') != ['actions_legal_context', 'actions_check_drill']
+        or extension.get('predecessor_fixture_sha256') != WP03_CONTEXT_FIXTURE_SHA256
+        or extension.get('predecessor_capture_sha256') != prior.get('capture_sha256')
+        or extension.get('current_source_origin_packet') != source
+        or set(extension.get('task_changes', {})) != set(prior['task_changes'])
+        or len(extension.get('ledger_groups', [])) != 2
+        or {g['task_id'] for g in extension['ledger_groups']} != added_ids
+        or added_ids.intersection(prior['task_ids'])):
+        raise SystemExit('WP03 exact Check extension membership changed')
+    fixture = copy.deepcopy(prior)
+    fixture['capture_sha256'] = extension['capture_sha256']
+    for name, changes in extension['task_changes'].items():
+        expected_ids = added_ids if name in ('runtime-inputs.json', 'source-fingerprints.json') else set()
+        if set(changes) != expected_ids or set(changes).intersection(fixture['task_changes'][name]):
+            raise SystemExit('WP03 Check extension overwrites prior or unchanged records')
+        fixture['task_changes'][name].update(copy.deepcopy(changes))
+    fixture['task_ids'].extend(extension['task_ids'])
+    fixture['ledger_groups'].extend(copy.deepcopy(extension['ledger_groups']))
+    if (len(fixture['task_ids']) != 15 or len(fixture['ledger_groups']) != 11
+        or fixture['capture_sha256'] != WP03_CONTEXT_CAPTURE_SHA256):
+        raise SystemExit('WP03 current fifteen-context capture changed')
     source_root = pathlib.Path(__file__).resolve().parents[1] / 'lib/ui_v2/act0_shell'
     for key, filename in (
         ('state_sha256', 'act0_shell_state_v1.dart'),
@@ -1624,7 +1654,7 @@ def compare(root):
                   if identity['candidate_revision'] == WP03_CONTEXT_REVISION else {}),
               'reviewed_wp03_source_origin_packet': (dict(WP03_CONTEXT_PRODUCER_REVISION)
                   if identity['candidate_revision'] == WP03_CONTEXT_REVISION else {}),
-              'wp03_scope': ('13 new authored source contexts; 9 existing-verifier groups; actor/stack diagnostic and native acceptance remain separate'
+              'wp03_scope': ('15 new authored contexts: 13 previously admitted plus 2 Check contexts; 11 verifier groups; native/learning/parent acceptance remains separate'
                   if identity['candidate_revision'] == WP03_CONTEXT_REVISION else None),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
