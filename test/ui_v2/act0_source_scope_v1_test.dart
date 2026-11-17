@@ -331,6 +331,10 @@ void main() {
         // Explicit new zero-price Check histories, still six-player roles.
         'actions_legal_context',
         'actions_check_drill',
+        // New complete folded-to-BTN frames; mechanical history only.
+        'actions_theory',
+        'actions_raise_drill',
+        'actions_review',
         // Existing approved first-hand and no-ante bubble source histories.
         'your_first_hand_flop',
         'your_first_hand_turn',
@@ -341,6 +345,32 @@ void main() {
       reason:
           'only explicitly enumerated source histories are consumer-safe; no whole-pot certification',
     );
+  });
+
+  test('folded-to-BTN replay preserves all three prior folds', () {
+    for (final id in [
+      'actions_theory',
+      'actions_raise_drill',
+      'actions_review',
+    ]) {
+      final replay = act0StreetReplayFromTableV1(_task(id).runner.table);
+      expect(replay?.isConsumerSafe, isTrue, reason: id);
+      expect(replay?.currentStreet, Act0StreetReplayStreetV1.preflop);
+      expect(replay?.currentDecisionActor, 'Hero');
+      expect(replay?.heroPosition, 'BTN');
+      expect(replay?.steps.map((step) => step.actorLabel), [
+        'SB',
+        'BB',
+        'UTG',
+        'HJ',
+        'CO',
+      ]);
+      expect(replay?.steps.skip(2).map((step) => step.actionTypeLabel), [
+        'folds',
+        'folds',
+        'folds',
+      ]);
+    }
   });
 
   test(

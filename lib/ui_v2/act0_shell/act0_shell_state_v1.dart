@@ -2123,11 +2123,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_theory',
         title: 'Action words',
         phase: Act0LessonPhaseV1.theory,
-        runner: _actionWordsRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _actionWordsRunner.options,
-            correctOptionId: 'raise',
-            correctIndex: 0,
+        runner: _act0W01FoldedToBtnMechanicalContextV1(
+          _actionWordsRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _actionWordsRunner.options,
+              correctOptionId: 'raise',
+              correctIndex: 0,
+            ),
           ),
         ),
         rewardXp: 5,
@@ -2192,7 +2194,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_raise_drill',
         title: 'Raise on the Button',
         phase: Act0LessonPhaseV1.drill,
-        runner: _whatYouCanDoRunner,
+        runner: _act0W01FoldedToBtnMechanicalContextV1(_whatYouCanDoRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
@@ -2204,11 +2206,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_review',
         title: 'Action recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _actionRecapRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _actionRecapRunner.options,
-            correctOptionId: 'raise',
-            correctIndex: 0,
+        runner: _act0W01FoldedToBtnMechanicalContextV1(
+          _actionRecapRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _actionRecapRunner.options,
+              correctOptionId: 'raise',
+              correctIndex: 0,
+            ),
           ),
         ),
         rewardXp: 5,
@@ -9745,6 +9749,87 @@ final _callActionRunner = _readBoardRunner.copyWith(
     ),
   ],
 );
+
+// Explicit new mechanical frame for only three W01 task bindings. Existing
+// strategy feedback and grades are preserved, not adjudicated by this repair.
+// First in means an unopened pot after three folds, not absence of prior action.
+Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
+  Act0RunnerStateV1 source,
+) {
+  const hidden = <Act0CardStateV1>[
+    Act0CardStateV1(rank: '?', suit: ''),
+    Act0CardStateV1(rank: '?', suit: ''),
+  ];
+  return source.copyWith(
+    caption:
+        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
+    table: source.table.copyWith(
+      scope: Act0TableScopeV1.playedHand,
+      tableFormat: Act0TableFormatV1.sixMax,
+      boardCards: const [],
+      streetLabel: 'Preflop',
+      potLabel: 'Pot 1.5 BB',
+      toCallLabel: 'To call 1 BB',
+      decisionSeatId: 'btn',
+      activeSeatId: 'btn',
+      heroSeatId: 'btn',
+      actionTrail: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+      ],
+      seats: [
+        for (final seat in source.table.seats)
+          Act0SeatStateV1(
+            seatId: seat.seatId,
+            seatLabel: seat.seatLabel,
+            displayName: seat.displayName,
+            isHero: seat.seatId == 'btn',
+            isDealerButton: seat.seatId == 'btn',
+            isSmallBlind: seat.seatId == 'sb',
+            isBigBlind: seat.seatId == 'bb',
+            blindAmountLabel: seat.seatId == 'sb'
+                ? '0.5 BB'
+                : seat.seatId == 'bb'
+                ? '1 BB'
+                : null,
+            isActive: seat.seatId == 'btn',
+            isInHand: const ['btn', 'sb', 'bb'].contains(seat.seatId),
+            isFolded: const ['utg', 'hj', 'co'].contains(seat.seatId),
+            hasActed: const ['utg', 'hj', 'co'].contains(seat.seatId),
+            isLastAggressor: false,
+            stackLabel: seat.seatId == 'sb'
+                ? '99.5 BB'
+                : seat.seatId == 'bb'
+                ? '99 BB'
+                : '100 BB',
+            currentBetLabel: seat.seatId == 'sb'
+                ? '0.5 BB'
+                : seat.seatId == 'bb'
+                ? '1 BB'
+                : null,
+            bet: seat.seatId == 'sb'
+                ? _smallBlindPost
+                : seat.seatId == 'bb'
+                ? _bigBlindPost
+                : null,
+            holeCards: seat.seatId == 'btn'
+                ? source.table.heroCards
+                : const ['sb', 'bb'].contains(seat.seatId)
+                ? hidden
+                : const [],
+            cardsVisibleMode: seat.seatId == 'btn'
+                ? Act0CardsVisibleModeV1.faceUp
+                : const ['sb', 'bb'].contains(seat.seatId)
+                ? Act0CardsVisibleModeV1.faceDown
+                : Act0CardsVisibleModeV1.none,
+          ),
+      ],
+    ),
+  );
+}
 
 // Newly authored mechanical free-continuation frames for two W01 tasks only.
 // The stipulated preflop raise is history, not a strategy recommendation.
