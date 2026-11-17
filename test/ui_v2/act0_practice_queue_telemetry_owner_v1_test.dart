@@ -11,8 +11,139 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_multi_repair_queue_v1.dart'
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart';
+
+Act0ReviewMistakeHistoryV1 _reviewForEvidence(
+  Act0LearningEvidenceHistoryV1 evidence,
+) {
+  Act0ReviewMistakeRecordV1 reviewRecord(Act0LearningEvidenceRecordV1 source) =>
+      Act0ReviewMistakeRecordV1(
+        recordId: 'review-${source.recordId}',
+        sourceDecisionId: source.recordId,
+        createdOrder: source.createdOrder,
+        updatedOrder: source.createdOrder,
+        worldId: source.worldId,
+        lessonId: source.lessonId,
+        decisionTaskId: source.taskId,
+        sourceTaskId: source.taskId,
+        decisionKind: 'actionList',
+        selectedId: source.choiceId,
+        expectedId: source.expectedChoiceId,
+        resultKind: source.resultKind,
+        errorType: source.errorType,
+        skillAtomId: source.skillAtomId,
+        repairFocusId: source.repairFocusId,
+        runId: source.runId,
+        runKind: source.runKind,
+        runOrdinal: source.runOrdinal,
+        attemptRecordIds: [source.recordId],
+        dedupUsesFallback: false,
+      );
+  return Act0ReviewMistakeHistoryV1.tryParse([
+    for (final source in evidence.records.where((r) => !r.isCorrect))
+      reviewRecord(source).toPayload(),
+  ])!;
+}
 
 void main() {
+  for (final hasCanonicalAttempt in [true, false]) {
+    testWidgets(
+      'real Practice root restores pruned repair history with canonical attempt=$hasCanonicalAttempt',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(393, 852));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        // SIMULATED stored events on admitted authored goals. The real root
+        // must pass outcomes as well as evidence to its Practice projection.
+        final rank = Act0AuthoredRepairGoalFixtureV1.rank();
+        final unresolved = Act0AuthoredRepairGoalFixtureV1.noBet();
+        final outcome = rank.outcome();
+        final fullEvidence = act0AuthoredRepairFixtureHistoryV1(
+          intents: [rank.intent, unresolved.intent],
+          outcomes: [outcome],
+        );
+        final evidence = Act0LearningEvidenceHistoryV1(
+          records: fullEvidence.records
+              .where(
+                (r) =>
+                    hasCanonicalAttempt ||
+                    r.recordId != outcome.repairAttemptId,
+              )
+              .toList(),
+        );
+        final review = _reviewForEvidence(evidence);
+        final payload = <String, Object?>{
+          'schemaVersion': 20,
+          'pendingDecisionAssistance': <Object>[],
+          'completedTaskIds': [
+            'what_poker_is_find_hero',
+            'what_poker_is_theory',
+          ],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': 'world_1',
+          'selectedLessonId': 'what_poker_is',
+          'selectedTaskId': 'what_poker_is_find_hero',
+          'earnedXp': 10,
+          'openRepairIntents': <Object>[],
+          'multiRepairQueue': const Act0MultiRepairQueueV1().toPayload(),
+          'repairOutcomeProjection': [outcome.toPayload()],
+          'reviewMistakeHistory': review.toPayload(),
+          'learningEvidenceHistory': evidence.toPayload(),
+          'learningEvidenceLineage': evidence.lineagePayload(),
+        };
+        SharedPreferences.setMockInitialValues({
+          'act0_welcome_completed_v1': true,
+          'intake_completed_v1': true,
+          'act0_shell_progress_v1': jsonEncode(payload),
+        });
+        for (var mount = 0; mount < 2; mount++) {
+          await tester.pumpWidget(
+            const MaterialApp(
+              home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+            ),
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Practice').last);
+          await tester.pumpAndSettle();
+          final leaf = tester.widget<Act0AcademyPracticeLeafV1>(
+            find.byType(Act0AcademyPracticeLeafV1),
+          );
+          final items = leaf.input.repairQueue.items;
+          expect(items, hasLength(hasCanonicalAttempt ? 1 : 2));
+          expect(
+            items.any(
+              (i) => i.itemId.endsWith(
+                'review-${unresolved.intent.repairOccurrenceId}',
+              ),
+            ),
+            isTrue,
+          );
+          final queue = find.byKey(
+            const Key('act0_academy_practice_leaf_repair_queue'),
+          );
+          expect(queue, findsOneWidget);
+          expect(
+            find.descendant(
+              of: queue,
+              matching: find.text('You chose king - better: ace'),
+            ),
+            hasCanonicalAttempt ? findsNothing : findsOneWidget,
+          );
+          final prefs = await SharedPreferences.getInstance();
+          final saved =
+              jsonDecode(prefs.getString('act0_shell_progress_v1')!) as Map;
+          expect(saved['earnedXp'], 10);
+          expect(saved['reviewMistakeHistory'], review.toPayload());
+          expect(saved['repairOutcomeProjection'], [outcome.toPayload()]);
+          expect(saved['completedTaskIds'], payload['completedTaskIds']);
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pumpAndSettle();
+        }
+      },
+    );
+  }
   for (final historicalCheckSource in [false, true]) {
     testWidgets(
       historicalCheckSource
@@ -84,7 +215,11 @@ void main() {
             'multiRepairQueueOrder': 3,
             'repairOutcomeProjection': <Object>[],
             'reviewResolutionReceipts': <Object>[],
-            'reviewMistakeHistory': <Object>[],
+            'reviewMistakeHistory': _reviewForEvidence(
+              act0AuthoredRepairFixtureHistoryV1(
+                intents: queue.activeRepairIntents(),
+              ),
+            ).toPayload(),
             'learningEvidenceHistory': act0AuthoredRepairFixtureHistoryV1(
               intents: queue.activeRepairIntents(),
             ).toPayload(),
@@ -224,6 +359,21 @@ void main() {
             jsonDecode(prefs.getString('act0_shell_progress_v1')!)
                 as Map<String, dynamic>;
         expect(restored['earnedXp'], onceXp);
+        await tester.tap(find.text('Practice').last);
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<Act0AcademyPracticeLeafV1>(
+                find.byType(Act0AcademyPracticeLeafV1),
+              )
+              .input
+              .repairQueue
+              .items,
+          isEmpty,
+          reason:
+              'Actual Queue answers must not resurrect the two preserved raw source misses.',
+        );
+        expect(restored['reviewMistakeHistory'], hasLength(2));
         expect(
           restored['repairOutcomeProjection'],
           finalProgress['repairOutcomeProjection'],

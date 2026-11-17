@@ -7104,6 +7104,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                               _activeRepairIntentsV1(),
                                           reviewMistakeHistory:
                                               _reviewMistakeHistoryV1,
+                                          repairOutcomeProjection:
+                                              _repairOutcomeProjectionV1,
                                         ),
                                       ),
                                   completionTitle: _practiceCompletionTitle,
