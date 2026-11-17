@@ -1,5 +1,6 @@
 // MACHINE-only clock simulations. No Human retention or mastery claim.
 import 'package:flutter_test/flutter_test.dart';
+import '../support/act0_authored_repair_goal_fixture_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -340,7 +341,7 @@ void main() {
     },
   );
   test(
-    'Profile and FixProof share current status while banked repair stays saved',
+    'Profile current status stays source-owned while genuine familiar repair stays banked',
     () {
       var recovered = replaceLast(append(chain(5), 6), {
         'authoredSourceFingerprint': 'stale',
@@ -374,7 +375,7 @@ void main() {
               .earned,
           isFalse,
         );
-        final proof = Act0FixProofProjectionV1.fromSources(
+        final rawLegacyProof = Act0FixProofProjectionV1.fromSources(
           repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
             outcomes: [
               Act0RepairOutcomeV1(
@@ -410,23 +411,92 @@ void main() {
           ),
           transferMeasurement: m,
         );
+        expect(
+          rawLegacyProof.aggregate.completedFixCount,
+          0,
+          reason:
+              'Raw Blinds queue/receipt without canonical occurrence cannot bank proof.',
+        );
+        final fixture = Act0AuthoredRepairGoalFixtureV1.noBet(
+          occurrenceId: 'epoch_banked_no_bet',
+        );
+        final outcome = fixture.outcome(sequence: 3);
+        final source = Act0LearningEvidenceRecordV1.tryParse({
+          ...act0AuthoredRepairFixtureSourceV1(
+            fixture.intent,
+            order: 1,
+          ).toPayload(),
+          'recordedAtUtc': t0
+              .subtract(const Duration(hours: 2))
+              .toIso8601String(),
+        })!;
+        final attempt = Act0LearningEvidenceRecordV1.tryParse({
+          ...act0AuthoredRepairFixtureAttemptV1(outcome, order: 2).toPayload(),
+          'recordedAtUtc': t0
+              .subtract(const Duration(hours: 1))
+              .toIso8601String(),
+        })!;
+        final proof = Act0FixProofProjectionV1.fromSources(
+          repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+            outcomes: [outcome],
+          ),
+          learningEvidenceHistory: Act0LearningEvidenceHistoryV1(
+            records: [
+              source,
+              attempt,
+              for (final record in h.records)
+                Act0LearningEvidenceRecordV1.tryParse({
+                  ...record.toPayload(),
+                  'createdOrder': record.createdOrder + 2,
+                })!,
+            ],
+          ),
+          currentFingerprintForIdentity: act0AuthoredRepairFixtureFingerprintV1,
+          repairIntents: [fixture.intent],
+          reviewResolutionReceiptHistory: Act0ReviewResolutionReceiptHistoryV1(
+            receipts: [
+              Act0ReviewResolutionReceiptV1(
+                reviewItemId: 'epoch_genuine_review',
+                conceptFamilyId: fixture.intent.missedSignalId,
+                sourceTaskId: fixture.intent.sourceTaskId,
+                learningEvidenceId: fixture.intent.repairOccurrenceId,
+                sourceSessionId: source.runId,
+                reviewState: act0ReviewResolutionStateResolvedV1,
+                resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                repairOutcomeId:
+                    'repair_outcome_v1|${outcome.sequence}|${fixture.queueItemId}',
+                resolvedAtOrder: outcome.sequence,
+              ),
+            ],
+          ),
+          transferMeasurement: m,
+        );
         expect(proof.aggregate.completedFixCount, 1);
         expect(
           proof.proofs.single.proofState,
           act0FixProofStateRepairCompletedV1,
         );
+        // Profile still follows the unchanged BB cohort. A familiar repair
+        // is banked history, not independent application of that other goal.
         expect(
-          proof.proofs.single.currentVerificationState,
           profile.signal!.confirmationState,
+          m.signalForConcept(family(false)).verdict,
         );
         expect(
-          proof.proofs.single.currentVerificationLine,
+          profile.signal!.proofLine,
           contains(
             (h.records.length == 5 || identical(h, recovered))
                 ? 'Recent verified'
                 : 'Confirmation needed',
           ),
         );
+
+        expect(proof.proofs.single.currentVerificationState, isEmpty);
+        expect(
+          proof.proofs.single.currentVerificationLine,
+          'A separate application check on this learning goal is still needed.',
+        );
+        expect(proof.aggregate.reinforcedFixCount, 0);
       }
     },
   );

@@ -1,4 +1,5 @@
 import '../support/act0_shell_presentation_finders_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -337,29 +338,34 @@ void main() {
   ) async {
     await _pumpResolverHost(
       tester,
-      taskIds: const <String>['actions_legal_context'],
-      taskId: 'actions_legal_context',
+      taskIds: const <String>['cards_ranks_suits_rank_drill'],
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_rank_drill',
     );
-    await _answerOption(tester, 'fold');
+    await _answerOption(tester, 'king');
+    final intent = _openRepairIntentPayload(
+      tester,
+      'cards_ranks_suits_rank_drill',
+    )!;
+    expect(intent['mappingType'], 'intentional_exact');
+    expect(intent['repairOccurrenceId'], isNotEmpty);
+    final expectedLine = _exactReplayReason(intent);
 
     await _openReview(tester);
 
-    expect(
-      find.text('Replay this spot to fix the no-bet-yet clue.'),
-      findsOneWidget,
-    );
+    expect(find.text(expectedLine), findsOneWidget);
     final snapshot = _reviewSupportCopySnapshot(tester);
     expect(snapshot?['schemaVersion'], 1);
     expect(snapshot?['safeTemplateId'], 'repair_exact_replay_v1');
     expect(snapshot?['lineKind'], 'exact_replay_repair');
     expect(snapshot?['selectionSource'], 'repair_intent_exact_replay');
+    expect(snapshot?['renderedLine'], expectedLine);
+    expect(snapshot?['sourceTaskId'], 'cards_ranks_suits_rank_drill');
+    expect(snapshot?['targetTaskId'], 'cards_ranks_suits_rank_drill');
     expect(
-      snapshot?['renderedLine'],
-      'Replay this spot to fix the no-bet-yet clue.',
+      snapshot?['reasonCode'],
+      'exact_replay_${intent['skillAtomId']}_${intent['missedSignalId']}',
     );
-    expect(snapshot?['sourceTaskId'], 'actions_legal_context');
-    expect(snapshot?['targetTaskId'], 'actions_legal_context');
-    expect(snapshot?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
     expect(
       find.text(
         'You missed that nobody has bet yet. This rep repeats the same clue.',
@@ -373,12 +379,20 @@ void main() {
     (tester) async {
       await _pumpResolverHost(
         tester,
-        taskIds: const <String>['actions_legal_context'],
-        taskId: 'actions_legal_context',
+        taskIds: const <String>['cards_ranks_suits_rank_drill'],
+        lessonId: 'cards_ranks_suits',
+        taskId: 'cards_ranks_suits_rank_drill',
       );
-      await _answerOption(tester, 'fold');
+      await _answerOption(tester, 'king');
+      final intent = _openRepairIntentPayload(
+        tester,
+        'cards_ranks_suits_rank_drill',
+      )!;
+      expect(intent['mappingType'], 'intentional_exact');
+      expect(intent['repairOccurrenceId'], isNotEmpty);
+      final expectedLine = _exactReplayReason(intent);
 
-      const visibleReason = 'Replay this spot to fix the no-bet-yet clue.';
+      final visibleReason = expectedLine;
       expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
       await _pumpHomeWithReason(tester, visibleReason);
       expect(find.text(visibleReason), findsNothing);
@@ -409,10 +423,17 @@ void main() {
   ) async {
     await _pumpResolverHost(
       tester,
-      taskIds: const <String>['actions_legal_context'],
-      taskId: 'actions_legal_context',
+      taskIds: const <String>['cards_ranks_suits_rank_drill'],
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_rank_drill',
     );
-    await _answerOption(tester, 'fold');
+    await _answerOption(tester, 'king');
+    final intent = _openRepairIntentPayload(
+      tester,
+      'cards_ranks_suits_rank_drill',
+    )!;
+    expect(intent['mappingType'], 'intentional_exact');
+    expect(intent['repairOccurrenceId'], isNotEmpty);
 
     await _openPractice(tester);
 
@@ -434,7 +455,9 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('No bet yet is still the clue to stabilize.'),
+      find.text(
+        '${intent['missedSignalLabel']} is still the clue to stabilize.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Repair reinforcement'), findsNothing);
@@ -637,73 +660,109 @@ void main() {
     expect(audit.last['selectionSource'], 'repair_intent_mapped');
     expect(audit.last['reasonCode'], 'same_signal_action_read_no_bet_yet');
 
-    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_bottom_nav')), findsNothing);
-  });
-
-  testWidgets('unavailable mapped target falls back to exact replay target', (
-    tester,
-  ) async {
-    await _pumpResolverHost(
-      tester,
-      taskIds: const <String>['actions_legal_context'],
-      taskId: 'actions_legal_context',
+    // Canonical failed directed repair returns to Review with the same debt;
+    // an ordinary visible Queue retry must still launch that exact target.
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_review_screen'),
+      findsOneWidget,
     );
-    await _answerOption(tester, 'fold');
-
-    final target = _nextUsefulHandTargetPayload(tester);
-    final audit = _repairIntentAuditTrailPayload(tester);
-    final bridge = _copyBridgePayload(tester);
-    final decision = _repairDecisionPayload(target);
-
-    expect(target?['source'], 'repair_intent');
-    expect(target?['selectionSource'], 'repair_intent_exact_replay');
-    expect(target?['sourceTaskId'], 'actions_legal_context');
-    expect(target?['targetTaskId'], 'actions_legal_context');
-    expect(target?['missedSignalId'], 'no_bet_yet');
-    expect(target?['skillAtomId'], 'action_read');
-    expect(target?['mappingType'], 'exact');
-    expect(target?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
-    expect(decision?['recommendationSource'], 'repair_intent');
-    expect(decision?['actionType'], 'exact_replay');
-    expect(decision?['selectionSource'], 'repair_intent_exact_replay');
-    expect(decision?['decisionRule'], 'exact_replay_fallback_v1');
-    expect(decision?['priorityBand'], 'repair_next');
-    expect(decision?['priorityScore'], 70);
-    expect(decision?['sourceTaskId'], 'actions_legal_context');
-    expect(decision?['targetTaskId'], 'actions_legal_context');
-    expect(decision?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
-    expect(audit.length, 2);
-    expect(audit.last['transition'], 'exact_replay_selection');
-    expect(audit.last['selectionSource'], 'repair_intent_exact_replay');
-    expect(audit.last['reasonCode'], 'exact_replay_action_read_no_bet_yet');
-    expect(audit.last['mappingType'], 'exact');
-    expect(bridge['lineKind'], 'exact_replay_repair');
-    expect(bridge['safeTemplateId'], 'repair_exact_replay_v1');
-    expect(bridge['sourceTaskId'], 'actions_legal_context');
-    expect(bridge['targetTaskId'], 'actions_legal_context');
-    expect(bridge['selectionSource'], 'repair_intent_exact_replay');
-    expect(bridge['reasonCode'], 'exact_replay_action_read_no_bet_yet');
+    expect(find.byKey(const Key('act0_shell_bottom_nav')), findsOneWidget);
+    final retained = _openRepairIntentPayload(tester, 'actions_legal_context')!;
+    expect(retained['repairOccurrenceId'], isNotEmpty);
+    await _openPractice(tester);
+    final retry = act0ShellPresentationFinderV1(
+      'act0_shell_play_repair_queue_item_cta',
+    );
+    expect(retry, findsOneWidget);
+    await tester.ensureVisible(retry);
+    await tester.tap(retry);
+    await tester.pumpAndSettle();
+    expect(_activeTaskId(tester), 'actions_check_drill');
+    expect(
+      _activeRepairContextPayload(tester)['sourceTaskId'],
+      'actions_legal_context',
+    );
+    expect(
+      _openRepairIntentPayload(
+        tester,
+        'actions_legal_context',
+      )!['repairOccurrenceId'],
+      retained['repairOccurrenceId'],
+    );
   });
+
+  testWidgets(
+    'missing mapped target stays held without inventing exact replay',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const ['actions_legal_context'],
+        taskId: 'actions_legal_context',
+      );
+      await _answerOption(tester, 'fold');
+      final intent = _openRepairIntentPayload(tester, 'actions_legal_context');
+      expect(intent, isNotNull);
+      expect(intent!['choiceId'], 'fold');
+      expect(intent['repairOccurrenceId'], isNotEmpty);
+      expect(intent['mappingType'], 'unresolved_product_gap');
+      final target = _nextUsefulHandTargetPayload(tester);
+      expect(target?['source'], isNot('repair_intent'));
+      expect(target?['selectionSource'], isNot('repair_intent_exact_replay'));
+      expect(_repairOutcomePayload(tester), isEmpty);
+      expect(_activeRepairContextPayload(tester), isEmpty);
+      await _openPractice(tester);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_play_repair_queue_item_cta'),
+        findsNothing,
+      );
+      expect(
+        _openRepairIntentPayload(
+          tester,
+          'actions_legal_context',
+        )!['repairOccurrenceId'],
+        intent['repairOccurrenceId'],
+      );
+    },
+  );
 
   testWidgets('exact replay fixed receipt avoids same-signal claims', (
     tester,
   ) async {
     await _pumpResolverHost(
       tester,
-      taskIds: const <String>['actions_legal_context'],
-      taskId: 'actions_legal_context',
+      taskIds: const <String>['cards_ranks_suits_rank_drill'],
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_rank_drill',
     );
-    await _answerOption(tester, 'fold');
+    await _answerOption(tester, 'king');
+    final intent = _openRepairIntentPayload(
+      tester,
+      'cards_ranks_suits_rank_drill',
+    )!;
+    expect(intent['mappingType'], 'intentional_exact');
+    expect(intent['repairOccurrenceId'], isNotEmpty);
 
     await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
+    expect(_activeTaskId(tester), 'cards_ranks_suits_rank_drill');
+    expect(_repairOutcomePayload(tester).last['isCorrect'], true);
+    final feedback = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
     expect(
-      find.text(
-        'Fix landed: you handled this spot correctly.',
-        skipOffstage: false,
-      ),
+      feedback.repairResultReceiptLine,
+      'Fix landed: you handled this spot correctly.',
+    );
+    expect(
+      feedback.repairOutcomeProofLine,
+      'Nice repair. Same spot, cleaner decision.',
+    );
+    expect(feedback.isAssistedDecision, isFalse);
+    expect(feedback.initialChoiceAssistance.name, 'none');
+    // The canonical proof detail occupies the same slot as the generic receipt.
+    expect(
+      find.text('Nice repair. Same spot, cleaner decision.'),
       findsOneWidget,
     );
     expect(
@@ -722,13 +781,22 @@ void main() {
   ) async {
     await _pumpResolverHost(
       tester,
-      taskIds: const <String>['actions_legal_context'],
-      taskId: 'actions_legal_context',
+      taskIds: const <String>['cards_ranks_suits_rank_drill'],
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_rank_drill',
     );
-    await _answerOption(tester, 'fold');
+    await _answerOption(tester, 'king');
+    final intent = _openRepairIntentPayload(
+      tester,
+      'cards_ranks_suits_rank_drill',
+    )!;
+    expect(intent['mappingType'], 'intentional_exact');
+    expect(intent['repairOccurrenceId'], isNotEmpty);
     await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerWrongly(tester);
+    expect(_activeTaskId(tester), 'cards_ranks_suits_rank_drill');
+    expect(_repairOutcomePayload(tester).last['isCorrect'], false);
     expect(
       find.text(
         'Replay missed again: try the same spot once more.',
@@ -933,10 +1001,18 @@ void main() {
   });
 }
 
+String _exactReplayReason(Map<String, Object?> intent) =>
+    act0RepairIntentCopyGuardLineV1(
+      safeTemplateId: 'repair_exact_replay_v1',
+      clueLabel: intent['missedSignalLabel'] as String,
+      skillLabel: intent['skillLabel'] as String,
+    )!;
+
 Future<void> _pumpResolverHost(
   WidgetTester tester, {
   required List<String> taskIds,
   required String taskId,
+  String lessonId = 'fold_check_call_raise',
 }) async {
   tester.view.physicalSize = const Size(1200, 1600);
   tester.view.devicePixelRatio = 1;
@@ -956,12 +1032,12 @@ Future<void> _pumpResolverHost(
         initialTab: Act0ShellTabV1.play,
         initialPhase: Act0LessonPhaseV1.drill,
         showPlacementOnStart: false,
-        state: _stateForFoldCheckCallRaiseTasks(taskIds),
+        state: _stateForFoldCheckCallRaiseTasks(taskIds, lessonId: lessonId),
         debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
           mode: Act0ControlledDemoCaptureModeV1.directState,
           surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
           worldId: 'world_1',
-          lessonId: 'fold_check_call_raise',
+          lessonId: lessonId,
           taskId: taskId,
         ),
       ),
@@ -970,11 +1046,14 @@ Future<void> _pumpResolverHost(
   await tester.pumpAndSettle();
 }
 
-Act0ShellStateV1 _stateForFoldCheckCallRaiseTasks(List<String> taskIds) {
+Act0ShellStateV1 _stateForFoldCheckCallRaiseTasks(
+  List<String> taskIds, {
+  String lessonId = 'fold_check_call_raise',
+}) {
   final sample = Act0ShellStateV1.sample;
   final baseWorld = sample.worldById('world_1');
   final baseLesson = baseWorld.lessons.firstWhere(
-    (lesson) => lesson.lessonId == 'fold_check_call_raise',
+    (lesson) => lesson.lessonId == lessonId,
   );
   final tasks = <Act0LessonTaskV1>[
     for (final taskId in taskIds)
@@ -1024,6 +1103,8 @@ Future<void> _advanceTeachingToDrill(WidgetTester tester) async {
     if (_hasVisibleAnswer()) {
       return;
     }
+    // Each authored teaching step owns the existing 820ms read lock.
+    await tester.pump(const Duration(seconds: 1));
     final selectedLessonCta = find.byKey(
       const Key('act0_shell_selected_lesson_cta'),
     );
@@ -1079,7 +1160,22 @@ Future<void> _advanceTeachingToDrill(WidgetTester tester) async {
   if (_hasVisibleAnswer()) {
     return;
   }
-  fail('Runner did not reach a visible answer surface.');
+  final runners = tester
+      .widgetList<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+      .map(
+        (runner) =>
+            '${runner.selectedTaskId}:${runner.runner.phase.name}:${runner.runner.selectedOptionId}',
+      )
+      .toList();
+  final labels = tester
+      .widgetList<Text>(find.byType(Text))
+      .map((text) => text.data)
+      .whereType<String>()
+      .take(20)
+      .toList();
+  fail(
+    'Runner did not reach a visible answer surface. Mounted runners=$runners; labels=$labels',
+  );
 }
 
 bool _hasVisibleAnswer() {

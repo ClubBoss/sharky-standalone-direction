@@ -123,6 +123,93 @@ String? act0AuthoredSourceFingerprintV1({
   return sha256.convert(utf8.encode(jsonEncode(payload))).toString();
 }
 
+/// Full semantic revision of the actual existing diagnostic factory output.
+/// The temporary task is a hash view only: source IDs/role/XP are never changed.
+/// Full semantic revision of the actual existing diagnostic factory output.
+/// The temporary task is a hash view only: source IDs/role/XP are never changed.
+String? act0PlacementDiagnosticFingerprintV1({
+  required String worldId,
+  required String lessonId,
+  required String diagnosticVariantId,
+  required Act0LessonTaskV1 sourceTask,
+  required Act0RunnerStateV1 diagnosticRunner,
+}) {
+  if (!const {
+    'board_private_cards',
+    'action_basics',
+  }.contains(diagnosticVariantId))
+    return null;
+  final base = act0AuthoredSourceFingerprintV1(
+    worldId: worldId,
+    lessonId: lessonId,
+    task: sourceTask,
+  );
+  final variant = act0AuthoredSourceFingerprintV1(
+    worldId: worldId,
+    lessonId: lessonId,
+    task: Act0LessonTaskV1(
+      taskId: sourceTask.taskId,
+      title: sourceTask.title,
+      phase: sourceTask.phase,
+      runner: diagnosticRunner,
+      rewardXp: sourceTask.rewardXp,
+      stepKind: sourceTask.stepKind,
+      taskFamily: sourceTask.taskFamily,
+      tablePresentation: sourceTask.tablePresentation,
+      summary: sourceTask.summary,
+      lockedSummary: sourceTask.lockedSummary,
+    ),
+  );
+  if (base == null || variant == null) return null;
+  // Canonical assessment fingerprints omit presentation labels. Diagnostic
+  // choice labels carry the misconception itself, so bind them here only.
+  final choices =
+      diagnosticRunner.options
+          .map(
+            (o) => <Object?>[
+              o.id,
+              o.label,
+              o.isCorrect,
+              o.quality.name,
+              o.preferredLabel,
+              o.betterAnswerLabel,
+              o.feedbackTitle,
+              o.feedbackReason,
+              o.amountLabel,
+              o.seatId,
+              o.repairFocusSeatIds.toList()..sort(),
+              o.repairFocusCardIds.toList()..sort(),
+              o.repairFocusLabels.toList()..sort(),
+            ],
+          )
+          .toList()
+        ..sort((a, b) => (a.first as String).compareTo(b.first as String));
+  return sha256
+      .convert(
+        utf8.encode(
+          jsonEncode([
+            'act0_placement_diagnostic_variant_v1',
+            diagnosticVariantId,
+            base,
+            variant,
+            'placement',
+            diagnosticRunner.beatIndex,
+            diagnosticRunner.beatCount,
+            diagnosticRunner.lessonId,
+            diagnosticRunner.lessonTitle,
+            diagnosticRunner.lessonSubtitle,
+            diagnosticRunner.caption,
+            diagnosticRunner.hint,
+            diagnosticRunner.question,
+            diagnosticRunner.feedbackTitle,
+            diagnosticRunner.feedbackReason,
+            choices,
+          ]),
+        ),
+      )
+      .toString();
+}
+
 String? act0CurrentAuthoredSourceFingerprintForIdentityV1({
   required String worldId,
   required String lessonId,
@@ -244,7 +331,8 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
   required String lessonId,
   required Act0LessonTaskV1 task,
 }) {
-  if (_isAuthoredTeachingTaskV1(task) ||
+  if (record.isDiagnosticLearningEntry ||
+      _isAuthoredTeachingTaskV1(task) ||
       record.worldId != worldId ||
       record.lessonId != lessonId ||
       record.taskId != task.taskId ||
@@ -333,6 +421,7 @@ Act0LearningEvidenceHistoryV1 act0CompleteCurrentAuthoredEvidenceV1(
   for (final record in ordered) {
     // Placement is assessment, not a retention/transfer learning witness.
     if (record.isPlacementAssessment ||
+        record.isDiagnosticLearningEntry ||
         act0RecordIsAuthoredTeachingV1(record)) {
       continue;
     }
@@ -456,7 +545,9 @@ Act0RecentAuthoredEvidenceV1 act0RecentAuthoredEvidenceV1(
       reset(knownFamilies.isEmpty ? families.keys : knownFamilies);
       continue;
     }
-    if (r.isPlacementAssessment || act0RecordIsAuthoredTeachingV1(r)) {
+    if (r.isPlacementAssessment ||
+        r.isDiagnosticLearningEntry ||
+        act0RecordIsAuthoredTeachingV1(r)) {
       continue;
     }
     final proof = act0CurrentAuthoredSourceProofV1(r);

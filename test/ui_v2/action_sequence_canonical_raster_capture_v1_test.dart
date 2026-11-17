@@ -11,7 +11,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
+import 'package:crypto/crypto.dart' show sha256;
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -43,6 +45,110 @@ const _expectsWaveA = bool.fromEnvironment(
   'ACTION_EVIDENCE_EXPECT_WAVE_A',
   defaultValue: true,
 );
+
+// Route semantics are separate from the existing Wave A presentation flag.
+const _comparisonRole = String.fromEnvironment(
+  'ACTION_EVIDENCE_COMPARISON_ROLE',
+  defaultValue: 'candidate',
+);
+const _routeContract = String.fromEnvironment(
+  'ACTION_EVIDENCE_ROUTE_CONTRACT',
+  defaultValue: 'canonical_goal_v1',
+);
+const _expectedProductSha = String.fromEnvironment(
+  'ACTION_EVIDENCE_PRODUCT_SHA',
+);
+const _expectedCaptureSha = String.fromEnvironment(
+  'ACTION_EVIDENCE_CAPTURE_OWNER_SHA256',
+);
+const _expectedLockSha = String.fromEnvironment('ACTION_EVIDENCE_LOCK_SHA256');
+const _historicalBaselineSha = '22b3d0c868a3770b982697b81f3d420dd3d48332';
+bool get _historicalBaselineRoute =>
+    _routeContract == 'historical_check_self_22b3d0c';
+
+Map<String, Object?> _captureSourceProvenance() {
+  String gitValue(List<String> args) {
+    final result = Process.runSync('git', args);
+    expect(
+      result.exitCode,
+      0,
+      reason: 'Capture source identity: ${result.stderr}',
+    );
+    return (result.stdout as String).trim();
+  }
+
+  final productSha = gitValue(['rev-parse', 'HEAD']);
+  final productTree = gitValue(['rev-parse', 'HEAD^{tree}']);
+  final unchanged = Process.runSync('git', [
+    'diff',
+    '--quiet',
+    'HEAD',
+    '--',
+    'lib',
+    'assets',
+    'content',
+    'packages',
+    'third_party',
+    'firebase_storage_stub',
+    'appinio_swiper_stub',
+    'pubspec.yaml',
+  ]);
+  expect(unchanged.exitCode, anyOf(0, 1));
+  final exactProductSource = unchanged.exitCode == 0;
+  if (_expectedProductSha.isNotEmpty || _comparisonRole == 'baseline') {
+    expect(
+      exactProductSource,
+      isTrue,
+      reason:
+          'Declared product SHA requires unchanged product source; only capture/lock overlays are allowed.',
+    );
+  }
+  final captureSha = sha256
+      .convert(
+        File(
+          'test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart',
+        ).readAsBytesSync(),
+      )
+      .toString();
+  final lockSha = sha256
+      .convert(File('pubspec.lock').readAsBytesSync())
+      .toString();
+  expect(_comparisonRole, anyOf('candidate', 'baseline'));
+  expect(
+    _routeContract,
+    anyOf('canonical_goal_v1', 'historical_check_self_22b3d0c'),
+  );
+  if (_expectedProductSha.isNotEmpty) expect(productSha, _expectedProductSha);
+  if (_expectedCaptureSha.isNotEmpty) expect(captureSha, _expectedCaptureSha);
+  if (_expectedLockSha.isNotEmpty) expect(lockSha, _expectedLockSha);
+  if (_comparisonRole == 'baseline') {
+    expect(_expectedProductSha, matches(RegExp(r'^[0-9a-f]{40}$')));
+    expect(_expectedCaptureSha, matches(RegExp(r'^[0-9a-f]{64}$')));
+    expect(_expectedLockSha, matches(RegExp(r'^[0-9a-f]{64}$')));
+  }
+  if (_historicalBaselineRoute) {
+    expect(_comparisonRole, 'baseline');
+    expect(productSha, _historicalBaselineSha);
+    expect(_expectedProductSha, _historicalBaselineSha);
+  }
+  return {
+    'comparisonRole': _comparisonRole,
+    'productSha': exactProductSource ? productSha : null,
+    'productTree': exactProductSource ? productTree : null,
+    'checkoutHead': productSha,
+    'productSourceScope': exactProductSource
+        ? 'exact_checkout'
+        : 'local_uncommitted_source',
+    'captureOwnerSha256': captureSha,
+    'dependencyLockSha256': lockSha,
+    'routeContract': _routeContract,
+    'routeEvidenceClass': _historicalBaselineRoute
+        ? 'historical_22b_legacy_action_dispatch_rendered_route'
+        : 'current_goal_owned_rendered_route',
+    'evidenceClass':
+        'deterministic rendered widget evidence; not native/Human/application proof',
+  };
+}
 
 void main() {
   setUpAll(() async {
@@ -80,6 +186,7 @@ void main() {
   });
 
   testWidgets('captures canonical W1 Action production states', (tester) async {
+    final provenance = _captureSourceProvenance();
     tester.view.physicalSize = _viewport;
     tester.view.devicePixelRatio = 1;
     tester.platformDispatcher.systemFontFamily = 'Roboto';
@@ -102,7 +209,7 @@ void main() {
     final out = Directory(_root)..createSync(recursive: true);
     final rows = <Map<String, Object?>>[];
 
-    void writeGeometryMetrics() {
+    void writeGeometryMetrics({bool captureAssertionsPassed = false}) {
       File('${out.path}/raster_geometry_metrics.json').writeAsStringSync(
         const JsonEncoder.withIndent('  ').convert(<String, Object?>{
               'viewport': <String, int>{
@@ -110,6 +217,8 @@ void main() {
                 'height': _viewport.height.toInt(),
               },
               'textScale': _textScale,
+              'provenance': provenance,
+              'captureAssertionsPassed': captureAssertionsPassed,
               'states': rows,
             }) +
             '\n',
@@ -126,34 +235,97 @@ void main() {
       String taskId = 'actions_check_drill',
       String lessonId = 'fold_check_call_raise',
       String phase = 'selected',
+      bool captureMountedState = false,
     }) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: realTextTheme,
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(
-              context,
-            ).copyWith(textScaler: TextScaler.linear(_textScale)),
-            child: child!,
-          ),
-          home: RepaintBoundary(
-            key: _boundaryKey,
-            child: Act0ShellPreviewScreenV1(
-              key: ValueKey<String>('action_sequence_capture_$name'),
-              state: Act0ShellStateV1.sample,
-              showPlacementOnStart: false,
-              debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
-                mode: Act0ControlledDemoCaptureModeV1.directState,
-                surface: surface,
-                worldId: 'world_1',
-                lessonId: lessonId,
-                taskId: taskId,
+      final realRepair =
+          surface == Act0ControlledDemoCaptureSurfaceV1.repairFocus ||
+          surface == Act0ControlledDemoCaptureSurfaceV1.repairResult;
+      if (!captureMountedState) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: realTextTheme,
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(_textScale)),
+              child: child!,
+            ),
+            home: RepaintBoundary(
+              key: _boundaryKey,
+              child: Act0ShellPreviewScreenV1(
+                key: ValueKey<String>('action_sequence_capture_$name'),
+                state: Act0ShellStateV1.sample,
+                showPlacementOnStart: false,
+                debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+                  mode: Act0ControlledDemoCaptureModeV1.directState,
+                  surface: realRepair
+                      ? Act0ControlledDemoCaptureSurfaceV1.runnerDrill
+                      : surface,
+                  worldId: 'world_1',
+                  lessonId: lessonId,
+                  taskId: taskId,
+                ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
+        if (realRepair) {
+          Future<void> tapKey(String key) async {
+            final target = find.byKey(Key(key));
+            expect(target, findsOneWidget, reason: key);
+            await tester.ensureVisible(target);
+            await tester.tap(target);
+            await tester.pumpAndSettle();
+          }
+
+          Future<void> advanceTo(String choice) async {
+            final answer = find.byKey(Key('act0_shell_option_$choice'));
+            for (var i = 0; i < 12 && answer.evaluate().isEmpty; i++) {
+              await tapKey('act0_shell_continue_cta');
+            }
+            expect(answer, findsOneWidget);
+          }
+
+          await advanceTo('fold');
+          await tester.pump(const Duration(seconds: 3));
+          await tapKey('act0_shell_option_fold');
+          await tapKey('act0_shell_runner_back');
+          final review = find.descendant(
+            of: find.byKey(const Key('act0_shell_bottom_nav')),
+            matching: find.text('Review'),
+          );
+          expect(review, findsOneWidget);
+          await tester.tap(review);
+          await tester.pumpAndSettle();
+          await tapKey(
+            act0AcademyReviewPreviewV1
+                ? 'act0_academy_review_leaf_repair_cta'
+                : 'act0_shell_review_practice_cta',
+          );
+          final current = tester.widget<Act0LessonRunnerShellV1>(
+            find.byType(Act0LessonRunnerShellV1),
+          );
+          expect(current.selectedTaskId, 'actions_check_drill');
+          final dynamic shell = tester.state(
+            find.byType(Act0ShellPreviewScreenV1),
+          );
+          expect(
+            shell.debugActiveRepairContextPayloadV1()['sourceTaskId'],
+            'actions_legal_context',
+          );
+          await advanceTo('check');
+          if (surface == Act0ControlledDemoCaptureSurfaceV1.repairResult) {
+            await tester.pump(const Duration(seconds: 3));
+            await tapKey('act0_shell_option_check');
+            expect(
+              find.byKey(const Key('act0_shell_feedback_card')),
+              findsOneWidget,
+            );
+            expect(shell.debugRepairOutcomeProjectionPayloadV1(), hasLength(1));
+          }
+        }
+      }
       final bytes = await _png(tester);
       File('${out.path}/$name.png').writeAsBytesSync(bytes);
       final runnerRoots = find
@@ -272,11 +444,18 @@ void main() {
               '${jsonEncode(informativeObjectCollisions)}',
         );
       }
+      if (captureMountedState) {
+        rows.removeWhere((row) => row['name'] == name);
+      }
       rows.add(<String, Object?>{
         'name': name,
         'phase': phase,
         'taskId': taskId,
         'owner': 'Act0ShellPreviewScreenV1',
+        'comparisonRole': provenance['comparisonRole'],
+        'productSha': provenance['productSha'],
+        'captureOwnerSha256': provenance['captureOwnerSha256'],
+        'routeContract': provenance['routeContract'],
         'sequenceId': 'w1_action_words_check_v1',
         'tableContextRelation': 'related_read',
         'runnerRootCount': runnerRoots,
@@ -507,6 +686,34 @@ void main() {
       await tester.tap(target);
     }
 
+    Future<void> advanceToVisibleChoice({
+      required String expectedTaskId,
+      required String choiceId,
+    }) async {
+      final choice = find.byKey(Key('act0_shell_option_$choiceId'));
+      for (var step = 0; step < 12; step++) {
+        final current = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        expect(current.selectedTaskId, expectedTaskId);
+        expect(current.runner.selectedOptionId, isNull);
+        if (current.runner.phase == Act0LessonPhaseV1.drill &&
+            choice.evaluate().isNotEmpty) {
+          // Ordinary animation time only. An already-ready prompt needs no
+          // extra Continue; no answer, status or evidence is injected.
+          for (var beat = 0; beat < 6; beat++) {
+            await tester.pump(const Duration(milliseconds: 500));
+          }
+          await tester.pumpAndSettle();
+          expect(choice.hitTestable(), findsOneWidget);
+          return;
+        }
+        await tapVisible(find.byKey(const Key('act0_shell_continue_cta')));
+        await tester.pumpAndSettle();
+      }
+      fail('Authored choice $choiceId was not ready for $expectedTaskId.');
+    }
+
     await tester.pumpWidget(
       MaterialApp(
         theme: realTextTheme,
@@ -613,8 +820,7 @@ void main() {
             showPlacementOnStart: false,
             debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
               mode: Act0ControlledDemoCaptureModeV1.directState,
-              surface:
-                  Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+              surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
               worldId: 'world_1',
               lessonId: 'fold_check_call_raise',
               taskId: 'actions_check_drill',
@@ -624,23 +830,184 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await saveMounted('wrong_feedback');
+    final source = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    final actionSourceTaskId = source.selectedTaskId!;
+    expect(actionSourceTaskId, 'actions_check_drill');
+    final wrongChoice = source.runner.options.firstWhere(
+      (option) => !option.isCorrect,
+    );
+    await advanceToVisibleChoice(
+      expectedTaskId: actionSourceTaskId,
+      choiceId: wrongChoice.id,
+    );
+    await tapVisible(find.byKey(Key('act0_shell_option_${wrongChoice.id}')));
+    await tester.pumpAndSettle();
+    final submittedSource = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(submittedSource.runner.selectedOptionId, wrongChoice.id);
+    expect(submittedSource.runner.selectedOption!.isCorrect, isFalse);
+    final dynamic liveRoot = tester.state(
+      find.byType(Act0ShellPreviewScreenV1),
+    );
+    final rawIntent =
+        liveRoot.debugOpenRepairIntentPayloadForSourceTaskV1(actionSourceTaskId)
+            as Map<String, Object?>?;
+    expect(
+      rawIntent,
+      isNotNull,
+      reason:
+          'The visible wrong answer must create its actual canonical repair intent.',
+    );
+    final intent = rawIntent!;
+    final declaredRepairTaskId = intent['targetTaskId'] as String;
+    expect(declaredRepairTaskId, 'actions_legal_context');
+    final actionRepairTaskId = _historicalBaselineRoute
+        ? 'actions_check_drill'
+        : declaredRepairTaskId;
+    final sourceOccurrenceId = intent['repairOccurrenceId'] as String;
+    expect(sourceOccurrenceId, isNotEmpty);
+    expect(intent['sourceTaskId'], actionSourceTaskId);
+    expect(intent['choiceId'], wrongChoice.id);
+    expect(intent['targetWorldId'], 'world_1');
+    expect(intent['targetLessonId'], 'fold_check_call_raise');
+    if (_historicalBaselineRoute) {
+      // Exact immutable22b baseline only: observe its older self-Check Action dispatch. The stored intent still names Legal.
+      expect(actionRepairTaskId, 'actions_check_drill');
+    } else {
+      // The new candidate must never fall back to the historical same-task route.
+      expect(actionRepairTaskId, 'actions_legal_context');
+      for (final key in [
+        'goalId',
+        'relationId',
+        'sourceFingerprint',
+        'targetFingerprint',
+      ]) {
+        expect(intent[key], isNotEmpty, reason: 'Current source-owned $key.');
+      }
+      expect(intent['relationRevision'], greaterThan(0));
+    }
+    await capture(
+      name: 'wrong_feedback',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
+      taskId: actionSourceTaskId,
+      phase: 'wrong_feedback',
+      captureMountedState: true,
+    );
     recordCtaHitGeometry('wrong_feedback');
     await recordFeedbackAllocation('wrong_feedback');
     await tapVisible(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
-    await saveMounted('targeted_repair');
-    await tapVisible(find.byKey(const Key('act0_shell_option_check')));
+    final repair = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(repair.selectedTaskId, actionRepairTaskId);
+    if (_historicalBaselineRoute) {
+      expect(
+        liveRoot.debugActiveRepairContextPayloadV1(),
+        isEmpty,
+        reason:
+            'Exact22b inline Action dispatch never starts the mapped Legal repair.',
+      );
+    } else {
+      expect(
+        liveRoot.debugActiveRepairContextPayloadV1()['sourceTaskId'],
+        actionSourceTaskId,
+      );
+    }
+    final repairChoice = repair.runner.options.singleWhere(
+      (option) => option.isCorrect,
+    );
+    await advanceToVisibleChoice(
+      expectedTaskId: actionRepairTaskId,
+      choiceId: repairChoice.id,
+    );
+    await capture(
+      name: 'targeted_repair',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+      taskId: actionRepairTaskId,
+      phase: 'targeted_repair',
+      captureMountedState: true,
+    );
+    await tapVisible(find.byKey(Key('act0_shell_option_${repairChoice.id}')));
     await tester.pumpAndSettle();
-    await saveMounted('repair_success');
+    final submittedRepair = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(submittedRepair.selectedTaskId, actionRepairTaskId);
+    expect(submittedRepair.runner.selectedOptionId, repairChoice.id);
+    expect(submittedRepair.runner.selectedOption!.isCorrect, isTrue);
+    final outcomes = (liveRoot.debugRepairOutcomeProjectionPayloadV1() as List)
+        .cast<Map<String, Object?>>();
+    final Map<String, Object?>? canonicalRepair;
+    if (_historicalBaselineRoute) {
+      expect(
+        outcomes,
+        isEmpty,
+        reason:
+            'Exact22b records the visible Check decision without a mapped repair request.',
+      );
+      canonicalRepair = null;
+    } else {
+      canonicalRepair = outcomes.singleWhere(
+        (outcome) => outcome['repairOccurrenceId'] == sourceOccurrenceId,
+      );
+      expect(canonicalRepair['sourceTaskId'], actionSourceTaskId);
+      expect(canonicalRepair['targetTaskId'], actionRepairTaskId);
+      expect(canonicalRepair['selectedChoiceId'], repairChoice.id);
+      expect(canonicalRepair['isCorrect'], isTrue);
+      expect(canonicalRepair['repairAttemptId'], isNotEmpty);
+    }
+    await capture(
+      name: 'repair_success',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
+      taskId: actionRepairTaskId,
+      phase: 'repair_success',
+      captureMountedState: true,
+    );
     recordCtaHitGeometry('repair_success');
     await recordFeedbackAllocation('repair_success');
     await tapVisible(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
-    await saveMounted('targeted_recheck');
-    await tapVisible(find.byKey(const Key('act0_shell_option_check')));
+    final recheck = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(recheck.selectedTaskId, actionSourceTaskId);
+    final recheckChoice = recheck.runner.options.singleWhere(
+      (option) => option.isCorrect,
+    );
+    await advanceToVisibleChoice(
+      expectedTaskId: actionSourceTaskId,
+      choiceId: recheckChoice.id,
+    );
+    await capture(
+      name: 'targeted_recheck',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+      taskId: actionSourceTaskId,
+      phase: 'targeted_recheck',
+      captureMountedState: true,
+    );
+    await tapVisible(find.byKey(Key('act0_shell_option_${recheckChoice.id}')));
     await tester.pumpAndSettle();
-    await saveMounted('recheck_success');
+    final submittedRecheck = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(submittedRecheck.selectedTaskId, actionSourceTaskId);
+    expect(submittedRecheck.runner.selectedOptionId, recheckChoice.id);
+    expect(submittedRecheck.runner.selectedOption!.isCorrect, isTrue);
+    if (_historicalBaselineRoute) {
+      expect(liveRoot.debugActiveRepairContextPayloadV1(), isEmpty);
+      expect(liveRoot.debugRepairOutcomeProjectionPayloadV1(), isEmpty);
+    }
+    await capture(
+      name: 'recheck_success',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
+      taskId: actionSourceTaskId,
+      phase: 'recheck_success',
+      captureMountedState: true,
+    );
     recordCtaHitGeometry('recheck_success');
     await recordFeedbackAllocation('recheck_success');
     await tapVisible(find.byKey(const Key('act0_shell_feedback_continue_cta')));
@@ -648,6 +1015,33 @@ void main() {
     await saveMounted('completion');
     await tester.pumpAndSettle();
     await saveMounted('next_step');
+    File('${out.path}/action_route_receipt.json').writeAsStringSync(
+      const JsonEncoder.withIndent('  ').convert({
+            'provenance': provenance,
+            'sourceTaskId': actionSourceTaskId,
+            'sourceChoiceId': wrongChoice.id,
+            'sourceOccurrenceId': sourceOccurrenceId,
+            'declaredRepairTaskId': declaredRepairTaskId,
+            'launchedTargetMatchesDeclaredIntent':
+                actionRepairTaskId == declaredRepairTaskId,
+            'repairTaskId': actionRepairTaskId,
+            'repairChoiceId': repairChoice.id,
+            'repairAttemptId': canonicalRepair?['repairAttemptId'],
+            'recordedRepairOutcome': canonicalRepair,
+            'canonicalOutcomeStatus': _historicalBaselineRoute
+                ? 'historical_inline_stage_no_mapped_outcome'
+                : 'current_goal_bound_actual_attempt',
+            'observedRepairIsCorrect':
+                submittedRepair.runner.selectedOption!.isCorrect,
+            'recheckTaskId': submittedRecheck.selectedTaskId,
+            'recheckChoiceId': recheckChoice.id,
+            'historicalCurrentGoalValidityClaimed': false,
+            'routeScope': _historicalBaselineRoute
+                ? 'Exact22b inline Action display with no active mapped repair or canonical outcome; raw choice/grade observed, no current goal/proof admission.'
+                : 'Current source-owned relation and actual canonical attempts; no independent application/native/Human proof.',
+          }) +
+          '\n',
+    );
 
     writeGeometryMetrics();
     final ctaHitGeometryJson = const JsonEncoder.withIndent(
@@ -665,13 +1059,21 @@ void main() {
     File('${out.path}/raster_state_inventory.md').writeAsStringSync(
       '''# Canonical Action raster inventory
 
-The harness mounts `Act0ShellPreviewScreenV1`. Theory, decision, and initial
-feedback use existing production capture entries. From the real Action wrong
-feedback state it taps the actual feedback and option controls through
-same-task repair, repair success, same-task recheck, recheck success,
-completion, and the next rendered state. The legacy `actions_legal_context`
-repair captures are retained only as unrelated existing evidence and are not
-used in the Action sequence contact sheets.
+Product source: `${provenance['productSha']}` / `${provenance['productTree']}`.
+Capture owner: `${provenance['captureOwnerSha256']}`. Role: `$_comparisonRole`.
+Route contract: `$_routeContract` (${provenance['routeEvidenceClass']}).
+
+The same collector mounts `Act0ShellPreviewScreenV1` on each exact product tree.
+Theory, decision, and initial feedback use existing production capture entries.
+The live route records a real wrong choice on `$actionSourceTaskId`, follows the
+observed `$actionRepairTaskId`, taps its real correct choice and the original
+source recheck, then records completion and the next rendered state. The current
+candidate requires Check -> Legal actions -> Check with full current witnesses.
+Only exact22b baseline may use its historical Check -> Check -> Check Action dispatch despite its stored Legal intent;
+its recorded outcomes are historical observations, not current goal validation.
+Capture names remain matched by phase, not a claim of identical task semantics.
+The collector remeasures already-mounted states, so geometry and actual
+`runnerSelectedTaskId` describe the final PNGs. No native/Human/application proof.
 ''',
     );
     _sheet(out, <String>[
@@ -741,6 +1143,29 @@ used in the Action sequence contact sheets.
       isTrue,
       reason:
           'Feedback content must remain reachable while the CTA stays pinned.',
+    );
+    writeGeometryMetrics(captureAssertionsPassed: true);
+    final pngs =
+        out
+            .listSync()
+            .whereType<File>()
+            .where((file) => file.path.endsWith('.png'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
+    File('${out.path}/capture_file_manifest.json').writeAsStringSync(
+      const JsonEncoder.withIndent('  ').convert({
+            'provenance': provenance,
+            'captureAssertionsPassed': true,
+            'pngs': [
+              for (final file in pngs)
+                {
+                  'name': file.uri.pathSegments.last,
+                  'bytes': file.lengthSync(),
+                  'sha256': sha256.convert(file.readAsBytesSync()).toString(),
+                },
+            ],
+          }) +
+          '\n',
     );
   });
 }

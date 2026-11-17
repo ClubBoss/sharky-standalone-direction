@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -18,12 +19,14 @@ void main() {
       runner: runner,
       selectedOption: wrongOption,
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     );
 
     expect(intent, isNotNull);
     expect(intent?.schemaVersion, 1);
     expect(intent?.sourceTaskId, 'actions_legal_context');
-    expect(intent?.choiceId, 'bet');
+    expect(intent?.choiceId, 'fold');
     expect(intent?.result, 'incorrect');
     expect(intent?.errorType, 'misread_action_legality');
     expect(intent?.missedSignalId, 'no_bet_yet');
@@ -37,51 +40,57 @@ void main() {
     expect(intent?.reasonCode, 'same_signal_action_read_no_bet_yet');
   });
 
-  test('W1 hero-button miss maps to the authored BTN seat repair', () {
-    final task = Act0ShellStateV1.sample
-        .worldById('world_1')
-        .lessons
-        .expand((lesson) => lesson.taskList)
-        .firstWhere((task) => task.taskId == 'what_poker_is_find_hero');
-    final wrongOption = task.runner.options.firstWhere(
-      (option) => !option.isCorrect,
-    );
+  test(
+    'identity versus seat-role miss does not treat partial BTN practice as a full repair',
+    () {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .expand((lesson) => lesson.taskList)
+          .firstWhere((task) => task.taskId == 'what_poker_is_find_hero');
+      final wrongOption = task.runner.options.firstWhere(
+        (option) => !option.isCorrect,
+      );
 
-    final intent = buildAct0RepairIntentV1(
-      sourceWorldId: 'world_1',
-      sourceLessonId: 'what_poker_is',
-      sourceTaskId: task.taskId,
-      runner: task.runner,
-      selectedOption: wrongOption,
-      mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
-    );
+      final intent = buildAct0RepairIntentV1(
+        sourceWorldId: 'world_1',
+        sourceLessonId: 'what_poker_is',
+        sourceTaskId: task.taskId,
+        runner: task.runner,
+        selectedOption: wrongOption,
+        mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
+      );
 
-    expect(intent, isNotNull);
-    expect(intent?.sourceTaskId, 'what_poker_is_find_hero');
-    expect(intent?.choiceId, wrongOption.id);
-    expect(intent?.missedSignalId, 'hero_button');
-    expect(intent?.skillAtomId, 'table_position_read');
-    expect(intent?.targetWorldId, 'world_3');
-    expect(intent?.targetLessonId, 'position_six_seats');
-    expect(
-      intent?.targetTaskId,
-      'position_six_seats_position_repair_seat_id_btn',
-    );
-    expect(intent?.mappingType, 'repair');
-    expect(intent?.reasonCode, 'same_signal_table_position_read_hero_button');
+      expect(intent, isNotNull);
+      expect(intent?.sourceTaskId, 'what_poker_is_find_hero');
+      expect(intent?.choiceId, wrongOption.id);
+      expect(intent?.missedSignalId, 'hero_button');
+      expect(intent?.skillAtomId, 'table_position_read');
+      expect(intent?.targetWorldId, 'world_1');
+      expect(intent?.targetLessonId, 'what_poker_is');
+      expect(intent?.targetTaskId, task.taskId);
+      expect(intent?.goalId, 'player_identity_and_seat_role');
+      expect(intent?.mappingType, 'unresolved_product_gap');
+      expect(
+        intent?.reasonCode,
+        'unresolved_product_gap_table_position_read_hero_button',
+      );
 
-    final unchangedCorrectRoute = act0FirstValueSameSignalRepMappingV1(
-      nextRepId: 'repeat_table_position_read',
-      skillAtomId: 'table_position_read',
-      sourceSignalId: 'hero_button',
-      sourceTaskId: task.taskId,
-      receiptOutcome: 'learned',
-    );
-    expect(
-      unchangedCorrectRoute?.taskId,
-      'position_checkpoint_position_checkpoint_table_notice',
-    );
-  });
+      final unchangedCorrectRoute = act0FirstValueSameSignalRepMappingV1(
+        nextRepId: 'repeat_table_position_read',
+        skillAtomId: 'table_position_read',
+        sourceSignalId: 'hero_button',
+        sourceTaskId: task.taskId,
+        receiptOutcome: 'learned',
+      );
+      expect(
+        unchangedCorrectRoute?.taskId,
+        'position_checkpoint_position_checkpoint_table_notice',
+      );
+    },
+  );
 
   test('same input creates same target and reason code', () {
     final runner = _runnerForNoBetActionRead();
@@ -96,6 +105,8 @@ void main() {
       runner: runner,
       selectedOption: wrongOption,
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     );
     final second = buildAct0RepairIntentV1(
       sourceWorldId: 'world_1',
@@ -104,6 +115,8 @@ void main() {
       runner: runner,
       selectedOption: wrongOption,
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     );
 
     expect(first?.targetTaskId, second?.targetTaskId);
@@ -115,7 +128,7 @@ void main() {
   test(
     'previous exact fallback now uses adjudicated alternate deterministically',
     () {
-      final runner = _runnerForNoBetActionRead();
+      final runner = _runnerForNoBetActionRead(taskId: 'actions_check_drill');
       final wrongOption = runner.options.firstWhere(
         (option) => !option.isCorrect,
       );
@@ -127,6 +140,8 @@ void main() {
         runner: runner,
         selectedOption: wrongOption,
         mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
       );
 
       expect(intent, isNotNull);
@@ -151,6 +166,8 @@ void main() {
       runner: runner,
       selectedOption: correctOption,
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     );
 
     expect(intent, isNull);
@@ -170,6 +187,8 @@ void main() {
         runner: runner,
         selectedOption: wrongOption,
         mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
       )!;
 
       expect(
@@ -201,6 +220,8 @@ void main() {
       runner: runner,
       selectedOption: wrongOption,
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     );
 
     final payload = intent!.toPayload();
@@ -225,57 +246,12 @@ void main() {
   });
 }
 
-Act0RunnerStateV1 _runnerForNoBetActionRead() {
-  return Act0RunnerStateV1(
-    lessonId: 'fold_check_call_raise',
-    lessonTitle: 'Fold, check, call, raise',
-    lessonSubtitle: 'Choose the legal action.',
-    beatIndex: 0,
-    beatCount: 1,
-    phase: Act0LessonPhaseV1.drill,
-    caption: 'No bet yet.',
-    hint: 'Check is free when no bet faces you.',
-    question: 'What can Hero do?',
-    options: const <Act0RunnerOptionV1>[
-      Act0RunnerOptionV1(
-        id: 'check',
-        label: 'Check',
-        isCorrect: true,
-        preferredLabel: 'Check',
-        quality: Act0FeedbackQualityV1.correct,
-        feedbackTitle: 'Correct.',
-        feedbackReason: 'No bet faces Hero, so checking keeps the hand moving.',
-        repairFocusLabels: <String>['No bet yet'],
-      ),
-      Act0RunnerOptionV1(
-        id: 'bet',
-        label: 'Bet',
-        isCorrect: false,
-        preferredLabel: 'Check',
-        betterAnswerLabel: 'Check',
-        quality: Act0FeedbackQualityV1.wrong,
-        feedbackTitle: 'Not quite.',
-        feedbackReason: 'No bet faces Hero yet. Check is the clean action.',
-        repairFocusLabels: <String>['No bet yet'],
-      ),
-    ],
-    feedbackTitle: 'Choose the legal action.',
-    feedbackReason: 'No bet faces Hero.',
-    primaryCtaLabel: 'Continue',
-    nextLessonId: null,
-    returnTarget: 'learn',
-    table: const Act0TableStateV1(
-      tableFormat: Act0TableFormatV1.sixMax,
-      playerCount: 6,
-      seats: <Act0SeatStateV1>[],
-      heroCards: <Act0CardStateV1>[],
-      boardCards: <Act0CardStateV1>[],
-      streetLabel: 'Preflop',
-      potLabel: '',
-      toCallLabel: '',
-      centerLabel: 'No bet yet',
-      highlightedSeatIds: <String>[],
-      highlightedCardIds: <String>[],
-    ),
-  );
-}
+Act0RunnerStateV1 _runnerForNoBetActionRead({
+  String taskId = 'actions_legal_context',
+}) => Act0ShellStateV1.sample
+    .worldById('world_1')
+    .lessons
+    .singleWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+    .taskList
+    .singleWhere((task) => task.taskId == taskId)
+    .runner;

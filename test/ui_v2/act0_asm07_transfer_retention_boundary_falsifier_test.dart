@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../support/act0_authored_repair_goal_fixture_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
@@ -403,7 +404,7 @@ void main() {
       record(1, 0, taskId: 'blinds_first_actor', choice: 'btn', correct: false),
       record(2, 24, choice: 'bb', sourceFingerprint: fingerprint(oldBbSource)),
     ]);
-    final projection = Act0FixProofProjectionV1.fromSources(
+    final rawLegacyProjection = Act0FixProofProjectionV1.fromSources(
       repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
         outcomes: [
           Act0RepairOutcomeV1(
@@ -441,7 +442,68 @@ void main() {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(h),
     );
+    expect(
+      rawLegacyProjection.aggregate.completedFixCount,
+      0,
+      reason:
+          'Raw Blinds outcome/receipt has no admitted canonical repair graph.',
+    );
+    final fixture = Act0AuthoredRepairGoalFixtureV1.noBet(
+      occurrenceId: 'genuine_banked_no_bet',
+    );
+    final outcome = fixture.outcome(sequence: 3);
+    final source = Act0LearningEvidenceRecordV1.tryParse({
+      ...act0AuthoredRepairFixtureSourceV1(
+        fixture.intent,
+        order: 1,
+      ).toPayload(),
+      'recordedAtUtc': t0.subtract(const Duration(hours: 2)).toIso8601String(),
+    })!;
+    final attempt = Act0LearningEvidenceRecordV1.tryParse({
+      ...act0AuthoredRepairFixtureAttemptV1(outcome, order: 2).toPayload(),
+      'recordedAtUtc': t0.subtract(const Duration(hours: 1)).toIso8601String(),
+    })!;
+    final genuineHistory = history([
+      source,
+      attempt,
+      for (final record in h.records)
+        Act0LearningEvidenceRecordV1.tryParse({
+          ...record.toPayload(),
+          'createdOrder': record.createdOrder + 2,
+        })!,
+    ]);
+    final projection = Act0FixProofProjectionV1.fromSources(
+      repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+        outcomes: [outcome],
+      ),
+      learningEvidenceHistory: genuineHistory,
+      currentFingerprintForIdentity: act0AuthoredRepairFixtureFingerprintV1,
+      repairIntents: [fixture.intent],
+      reviewResolutionReceiptHistory: Act0ReviewResolutionReceiptHistoryV1(
+        receipts: [
+          Act0ReviewResolutionReceiptV1(
+            reviewItemId: 'genuine_banked_review',
+            conceptFamilyId: fixture.intent.missedSignalId,
+            sourceTaskId: fixture.intent.sourceTaskId,
+            learningEvidenceId: fixture.intent.repairOccurrenceId,
+            sourceSessionId: source.runId,
+            reviewState: act0ReviewResolutionStateResolvedV1,
+            resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+            repairOutcomeId:
+                'repair_outcome_v1|${outcome.sequence}|${fixture.queueItemId}',
+            resolvedAtOrder: outcome.sequence,
+          ),
+        ],
+      ),
+      transferMeasurement:
+          Act0LearningTransferMeasurementV1.fromLearningEvidence(h),
+    );
     expect(projection.aggregate.completedFixCount, 1);
+    expect(projection.proofs.single.currentVerificationState, isEmpty);
+    expect(
+      projection.proofs.single.currentVerificationLine,
+      'A separate application check on this learning goal is still needed.',
+    );
     expect(projection.aggregate.reinforcedFixCount, 0);
   });
   test('control compaction keeps first facts but not all spaced witnesses', () {

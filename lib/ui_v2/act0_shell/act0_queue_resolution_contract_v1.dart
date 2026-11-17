@@ -1,3 +1,4 @@
+import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_repair_intent_contract_v1.dart';
 import 'act0_repair_outcome_projection_v1.dart';
 
@@ -5,6 +6,8 @@ const String act0QueueResolutionStateUnresolvedV1 = 'unresolved';
 const String act0QueueResolutionStateAttemptedNotResolvedV1 =
     'attempted_not_resolved';
 const String act0QueueResolutionStateResolvedV1 = 'resolved';
+const String act0QueueResolutionStateHeldV1 = 'held_no_validated_target';
+const String act0QueueResolutionReasonGoalUnconfirmedV1 = 'goal_unconfirmed';
 const String act0QueueResolutionStateNotActionableV1 = 'not_actionable';
 const String act0QueueResolutionStateInsufficientEvidenceV1 =
     'insufficient_evidence';
@@ -26,12 +29,20 @@ class Act0QueueResolutionStateV1 {
     List<Act0RepairIntentV1> activeRepairIntents = const <Act0RepairIntentV1>[],
     Act0RepairOutcomeProjectionV1 repairOutcomeProjection =
         const Act0RepairOutcomeProjectionV1(),
+    Act0LearningEvidenceHistoryV1 learningEvidenceHistory =
+        const Act0LearningEvidenceHistoryV1(),
+    Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
   }) {
     final byQueueItemId = <String, Act0QueueItemResolutionV1>{};
     final sortedIntents = <Act0RepairIntentV1>[...activeRepairIntents]
       ..sort((a, b) => _intentSortKey(a).compareTo(_intentSortKey(b)));
     for (final intent in sortedIntents) {
-      final resolution = _resolutionForIntent(intent, repairOutcomeProjection);
+      final resolution = _resolutionForIntent(
+        intent,
+        repairOutcomeProjection,
+        learningEvidenceHistory,
+        currentFingerprintForIdentity,
+      );
       if (resolution == null) {
         continue;
       }
@@ -119,7 +130,12 @@ class Act0QueueItemResolutionV1 {
   final String? outcomeId;
   final int? resolvedAtOrder;
 
-  bool get isActionable =>
+  // Compatibility with the existing queue's retain/prune callers. Launch is
+  // deliberately separate: held source occurrences must not be discarded.
+  bool get isActionable => isRetainedObligation;
+  bool get isRetainedObligation =>
+      isLaunchable || resolutionState == act0QueueResolutionStateHeldV1;
+  bool get isLaunchable =>
       resolutionState == act0QueueResolutionStateUnresolvedV1 ||
       resolutionState == act0QueueResolutionStateAttemptedNotResolvedV1;
 
@@ -177,6 +193,8 @@ class Act0QueueItemResolutionV1 {
 Act0QueueItemResolutionV1? _resolutionForIntent(
   Act0RepairIntentV1 intent,
   Act0RepairOutcomeProjectionV1 repairOutcomeProjection,
+  Act0LearningEvidenceHistoryV1 learningEvidenceHistory,
+  Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
 ) {
   final sourceTaskId = intent.sourceTaskId.trim();
   final queueItemId = queueItemIdForAct0RepairIntentV1(intent);
@@ -184,6 +202,23 @@ Act0QueueItemResolutionV1? _resolutionForIntent(
     return null;
   }
   final conceptFamilyId = _conceptFamilyIdForIntent(intent);
+  final goal = currentFingerprintForIdentity == null
+      ? null
+      : act0RepairGoalResolutionForIntentV1(
+          intent,
+          learningEvidence: learningEvidenceHistory,
+          currentFingerprintForIdentity: currentFingerprintForIdentity,
+        );
+  if (goal?.canLaunch != true) {
+    return Act0QueueItemResolutionV1(
+      queueItemId: queueItemId,
+      repairIntentId: _repairIntentId(intent),
+      conceptFamilyId: conceptFamilyId.isEmpty ? sourceTaskId : conceptFamilyId,
+      sourceTaskId: sourceTaskId,
+      resolutionState: act0QueueResolutionStateHeldV1,
+      resolutionReason: act0QueueResolutionReasonGoalUnconfirmedV1,
+    );
+  }
   if (conceptFamilyId.isEmpty) {
     return Act0QueueItemResolutionV1(
       queueItemId: queueItemId,
@@ -209,7 +244,13 @@ Act0QueueItemResolutionV1? _resolutionForIntent(
           .where(
             (outcome) =>
                 outcome.queueItemId.trim() == queueItemId &&
-                outcome.repairOccurrenceId == intent.repairOccurrenceId,
+                outcome.repairOccurrenceId == intent.repairOccurrenceId &&
+                act0RepairGoalOutcomeIsEligibleV1(
+                  intent: intent,
+                  outcome: outcome,
+                  learningEvidence: learningEvidenceHistory,
+                  currentFingerprintForIdentity: currentFingerprintForIdentity!,
+                ),
           )
           .toList(growable: false)
         ..sort((a, b) {
@@ -329,7 +370,8 @@ int _stateRank(String state) => switch (state) {
   act0QueueResolutionStateResolvedV1 => 0,
   act0QueueResolutionStateAttemptedNotResolvedV1 => 1,
   act0QueueResolutionStateUnresolvedV1 => 2,
-  act0QueueResolutionStateNotActionableV1 => 3,
+  act0QueueResolutionStateHeldV1 => 3,
+  act0QueueResolutionStateNotActionableV1 => 4,
   _ => 4,
 };
 
@@ -356,6 +398,7 @@ const Set<String> _resolutionStates = <String>{
   act0QueueResolutionStateResolvedV1,
   act0QueueResolutionStateNotActionableV1,
   act0QueueResolutionStateInsufficientEvidenceV1,
+  act0QueueResolutionStateHeldV1,
 };
 
 const Set<String> _resolutionReasons = <String>{
@@ -366,4 +409,5 @@ const Set<String> _resolutionReasons = <String>{
   act0QueueResolutionReasonMalformedIntentV1,
   act0QueueResolutionReasonSupersededV1,
   act0QueueResolutionReasonNoOutcomeYetV1,
+  act0QueueResolutionReasonGoalUnconfirmedV1,
 };

@@ -189,10 +189,25 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  test('blind concept repairs keep the one-BB signal and existing drill', () {
+  test('one-BB teaching keeps its normal drill and unconfirmed repairs held', () {
     const lesson = 'blinds_action_order';
+    final tasks = Act0ShellStateV1.sample.lessonById(lesson).taskList;
     final source = _task(lesson, 'blinds_theory');
     final target = _task(lesson, 'blinds_posts_drill');
+    // The normal lesson path still advances from this theory to its drill.
+    // That authored path does not itself validate a repair relation.
+    expect(source.phase, Act0LessonPhaseV1.theory);
+    expect(target.phase, Act0LessonPhaseV1.drill);
+    expect(tasks[tasks.indexOf(source) + 1].taskId, target.taskId);
+    expect(source.runner.question, 'Which blind posts 1 BB?');
+    expect(
+      target.runner.question,
+      'Tap the blind that sets the 1 BB baseline.',
+    );
+    expect(target.runner.options.map((option) => option.id), <String>[
+      'bb',
+      'sb',
+    ]);
     expect(
       target.runner.options
           .where(act0RunnerOptionIsAuthoredCorrectV1)
@@ -200,7 +215,48 @@ void main() {
           .id,
       'bb',
     );
-    expect(target.runner.question, contains('1 BB'));
+    final expectedReasons = <String, String>{
+      'bb':
+          'BB posts the full 1 BB blind, so later prices count from that baseline.',
+      'sb':
+          'SB posts only 0.5 BB. BB is the full 1 BB post players count from.',
+    };
+    for (final option in target.runner.options) {
+      expect(option.feedbackReason, expectedReasons[option.id]);
+      expect(
+        option.quality,
+        option.id == 'bb'
+            ? Act0FeedbackQualityV1.correct
+            : Act0FeedbackQualityV1.wrong,
+      );
+    }
+
+    void expectHeld(Act0RepairIntentV1 intent) {
+      expect(intent.sourceWorldId, 'world_1');
+      expect(intent.sourceLessonId, lesson);
+      expect(intent.targetWorldId, intent.sourceWorldId);
+      expect(intent.targetLessonId, intent.sourceLessonId);
+      expect(intent.targetTaskId, intent.sourceTaskId);
+      expect(intent.mappingType, 'unresolved_product_gap');
+      expect(intent.goalId, isEmpty);
+      expect(intent.relationId, isEmpty);
+      expect(intent.relationRevision, 0);
+      expect(intent.sourceFingerprint, isEmpty);
+      expect(intent.targetFingerprint, isEmpty);
+      final resolution = act0RepairGoalResolutionForIntentV1(
+        intent,
+        learningEvidence: const Act0LearningEvidenceHistoryV1(),
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
+      );
+      expect(resolution.reason, 'relation_unconfirmed');
+      expect(resolution.isHeld, isTrue);
+      expect(resolution.retainsObligation, isTrue);
+      expect(resolution.canLaunch, isFalse);
+      expect(resolution.canClaimIndependentApplication, isFalse);
+      expect(resolution.canClaimMatchedRecheck, isFalse);
+    }
+
     for (final option in source.runner.options) {
       final intent = buildAct0RepairIntentV1(
         sourceWorldId: 'world_1',
@@ -209,6 +265,8 @@ void main() {
         runner: source.runner,
         selectedOption: option,
         mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
       );
       if (act0RunnerOptionIsAuthoredCorrectV1(option)) {
         expect(intent, isNull);
@@ -217,12 +275,21 @@ void main() {
       expect(intent, isNotNull);
       expect(intent!.skillAtomId, 'table_read');
       expect(intent.missedSignalId, 'big_blind');
-      expect(intent.targetWorldId, 'world_1');
-      expect(intent.targetLessonId, lesson);
-      expect(intent.targetTaskId, target.taskId);
-      expect(intent.targetTaskId, isNot(source.taskId));
-      expect(intent.mappingType, 'repair');
+      expect(intent.sourceTaskId, source.taskId);
+      expectHeld(intent);
     }
+    // Preserve the legacy mechanical mapper, without treating it as semantic
+    // permission to launch a repair or claim independent learning evidence.
+    final legacyMapping = act0FirstValueSameSignalRepMappingV1(
+      nextRepId: 'repeat_table_read',
+      skillAtomId: 'table_read',
+      sourceSignalId: 'big_blind',
+      sourceTaskId: source.taskId,
+      receiptOutcome: 'repair_started',
+    );
+    expect(legacyMapping, isNotNull);
+    expect(legacyMapping!.taskId, target.taskId);
+    expect(legacyMapping.mappingType, 'repair');
     expect(
       act0FirstValueSameSignalRepMappingV1(
         nextRepId: 'repeat_table_read',
@@ -240,9 +307,11 @@ void main() {
       runner: target.runner,
       selectedOption: target.runner.options.singleWhere((o) => o.id == 'sb'),
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     )!;
-    expect(donorIntent.mappingType, 'intentional_exact');
-    expect(donorIntent.targetTaskId, target.taskId);
+    expect(donorIntent.sourceTaskId, target.taskId);
+    expectHeld(donorIntent);
   });
 
   for (final control in _controls) {

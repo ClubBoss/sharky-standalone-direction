@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -493,12 +495,75 @@ void main() {
   testWidgets('Wave 2 Home repair return keeps its personalized reason', (
     tester,
   ) async {
-    await pumpCompact(
-      tester,
-      wave2SurfaceHost(
-        Act0ControlledDemoCaptureSurfaceV1.wave2HomeRepairReturn,
-      ),
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final queue = Act0ProgressStoreV1(
+      key: 'act0_shell_progress_v1',
+      isValidPayload: (_) => false,
     );
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await queue.flush();
+    final world = Act0ShellStateV1.sample.worldById('world_1');
+    final lesson = world.lessons.singleWhere(
+      (l) => l.lessonId == 'fold_check_call_raise',
+    );
+    SharedPreferences.setMockInitialValues({
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 18,
+        'completedTaskIds': <String>[],
+        'completedLessonIds': <String>[],
+        'earnedXp': 0,
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': lesson.lessonId,
+        'selectedTaskId': 'actions_legal_context',
+        'skippedTaskIds': [
+          for (final l in world.lessons.takeWhile(
+            (l) => l.lessonId != lesson.lessonId,
+          ))
+            for (final t in l.taskList) t.taskId,
+          for (final t in lesson.taskList.takeWhile(
+            (t) => t.taskId != 'actions_legal_context',
+          ))
+            t.taskId,
+        ],
+      }),
+    });
+    await tester.pumpWidget(host());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Learn').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
+    await tester.pumpAndSettle();
+    final fold = find.byKey(const Key('act0_shell_option_fold'));
+    for (var i = 0; i < 12 && fold.evaluate().isEmpty; i++) {
+      final next = find.byKey(const Key('act0_shell_continue_cta'));
+      expect(next, findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 900));
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+    expect(fold, findsOneWidget);
+    for (var i = 0; i < 6; i++)
+      await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(fold);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
+    final dynamic shell = tester.state(find.byType(Act0ShellPreviewScreenV1));
+    final intent =
+        shell.debugOpenRepairIntentPayloadForSourceTaskV1(
+              'actions_legal_context',
+            )
+            as Map<String, Object?>;
+    expect(intent['repairOccurrenceId'], isNot(isEmpty));
+    expect(intent['targetTaskId'], 'actions_check_drill');
 
     if (act0AcademyHomePreviewV1) {
       expect(find.text('Repair one weak spot'), findsOneWidget);

@@ -182,15 +182,17 @@ void main() {
         );
         if (feedbackCase == 'wrong') {
           await _tap(tester, 'act0_shell_feedback_continue_cta');
+          // This ordinary table-read miss has no admitted repair target.
+          // Continue retains the authored source for a familiar lesson retry.
+          expect(_runner(tester).selectedTaskId, _source);
+          expect(_runner(tester).repairResultReceiptLine, isNull);
+          await _advanceToPrompt(tester);
+          await _choose(tester, 'two_three_six');
+          await _expectFeedbackClearance(tester);
+          await _tap(tester, 'act0_shell_feedback_continue_cta');
           expect(_runner(tester).selectedTaskId, _mappedRepair);
           await _advanceToPrompt(tester);
           await _choose(tester, 'two_three_four');
-          expect(_runner(tester).repairResultReceiptLine, isNotEmpty);
-          await _expectFeedbackClearance(tester);
-          await _tap(tester, 'act0_shell_feedback_continue_cta');
-          expect(_runner(tester).selectedTaskId, _source);
-          await _advanceToPrompt(tester);
-          await _choose(tester, 'two_three_six');
           await _expectFeedbackClearance(tester);
         } else if (feedbackCase == 'correct') {
           await _tap(tester, 'act0_shell_feedback_continue_cta');
@@ -776,18 +778,31 @@ void main() {
       expect(_stableProgress(await _saved(tester)), _stableProgress(missed));
       await tester.tap(find.text('Home').last);
       await tester.pumpAndSettle();
-      // Home deliberately offers the mapped repair after a miss. It is not a
-      // request to restart the old answer or proof of independent correction.
+      // Home preserves this miss but cannot launch an unadmitted target.
+      // Back and the held CTA must preserve the actual saved wrong answer.
       await _tap(tester, 'act0_academy_home_leaf_cta');
-      expect(_runner(tester).selectedTaskId, _mappedRepair);
-      final repairOpened = await _saved(tester);
-      expect(repairOpened['earnedXp'], missed['earnedXp']);
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
       expect(
-        repairOpened['learningEvidenceHistory'],
+        find.text(
+          'This miss is saved. A matching repair has not been confirmed yet.',
+        ),
+        findsOneWidget,
+      );
+      final held = await _saved(tester);
+      expect(held['earnedXp'], missed['earnedXp']);
+      expect(
+        held['learningEvidenceHistory'],
         missed['learningEvidenceHistory'],
       );
-      expect(repairOpened['completedTaskIds'], missed['completedTaskIds']);
-      expect(repairOpened['openRepairIntents'], missed['openRepairIntents']);
+      expect(held['completedTaskIds'], missed['completedTaskIds']);
+      expect(held['openRepairIntents'], missed['openRepairIntents']);
+      final heldIntent = _rows(
+        held,
+        'openRepairIntents',
+      ).singleWhere((row) => row['sourceTaskId'] == _source);
+      expect(heldIntent['mappingType'], 'unresolved_product_gap');
+      expect(heldIntent['repairOccurrenceId'], isNotEmpty);
+      expect(_rows(held, 'repairOutcomeProjection'), isEmpty);
     },
   );
   testWidgets(
@@ -842,7 +857,7 @@ void main() {
       );
 
       await _choose(tester, 'five_board_now');
-      expect(_runner(tester).repairReasonLine, isNotEmpty);
+      expect(_runner(tester).repairReasonLine, isNull);
       final missed = await _saved(tester);
       expect(missed['earnedXp'], 10, reason: 'A wrong choice earns no XP.');
       final miss = _rows(missed, 'learningEvidenceHistory').singleWhere(
@@ -859,19 +874,21 @@ void main() {
         isTrue,
       );
 
-      await _tap(tester, 'act0_shell_feedback_continue_cta');
-      expect(_runner(tester).selectedTaskId, _mappedRepair);
-      await _advanceToPrompt(tester);
-      await _choose(tester, 'two_three_four');
-      expect(_runner(tester).repairResultReceiptLine, isNotEmpty);
+      final heldIntent = _rows(
+        missed,
+        'openRepairIntents',
+      ).singleWhere((row) => row['sourceTaskId'] == _source);
+      expect(heldIntent['mappingType'], 'unresolved_product_gap');
+      expect(_rows(missed, 'repairOutcomeProjection'), isEmpty);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
 
-      // The existing main route rechecks the original 6 BB scene. It is a
-      // familiar source recheck, not a new unseen task or durable retention.
+      // A held mapping permits the ordinary same-source lesson retry;
+      // this is familiar correction, not an admitted repair or recheck proof.
       expect(_runner(tester).selectedTaskId, _source);
-      final guided = await _saved(tester);
-      expect(guided['earnedXp'], 10);
-      expect(guided['completedTaskIds'], isNot(contains(_mappedRepair)));
+      expect(_runner(tester).repairResultReceiptLine, isNull);
+      final retried = await _saved(tester);
+      expect(retried['earnedXp'], 10);
+      expect(retried['completedTaskIds'], isNot(contains(_mappedRepair)));
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_six');
       expect((await _saved(tester))['earnedXp'], 10);
@@ -880,8 +897,8 @@ void main() {
       expect(sourceCompleted['earnedXp'], 15);
       expect(sourceCompleted['completedTaskIds'], contains(_source));
 
-      // The ordinary lesson then visits the existing 4 BB task. Its earlier
-      // guided appearance does not make this a newly authored exercise.
+      // The ordinary lesson then visits the existing 4 BB task.
+      // No unadmitted guided appearance or repair completion is invented.
       expect(_runner(tester).selectedTaskId, _mappedRepair);
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_four');
@@ -952,9 +969,12 @@ void main() {
         _rows(
           acknowledged,
           'openRepairIntents',
-        ).where((row) => row['sourceTaskId'] == _source),
-        isEmpty,
+        ).singleWhere((row) => row['sourceTaskId'] == _source),
+        heldIntent,
+        reason:
+            'Familiar correction cannot falsely close unadmitted repair debt.',
       );
+      expect(_rows(acknowledged, 'repairOutcomeProjection'), isEmpty);
       final completed = (acknowledged['completedTaskIds'] as List)
           .cast<String>();
       expect(
@@ -962,14 +982,168 @@ void main() {
         containsAll(<String>[_source, _mappedRepair, _nextTask]),
       );
       expect(completed.toSet().length, completed.length);
-      // Main awards each admitted first completion once: theory5 + Hero5 +
-      // source6BB5 + ordinary4BB5 + distinctpreflop5. The locked inline4BB
-      // repair cannot complete its future curriculum task or award its5XP.
+      // Main awards each ordinary first completion once: theory5 + Hero5 +
+      // source6BB5 + ordinary4BB5 + distinctpreflop5. The earlier wrong answer
+      // and same-source retry add no extra completion or XP.
       expect(acknowledged['selectedWorldId'], 'world_1');
       expect(acknowledged['selectedLessonId'], 'what_poker_is');
       expect(acknowledged['selectedTaskId'], 'first_table_guide_route_roles');
-      final stable = _stableProgress(acknowledged);
+      // Retain a genuine repair-positive on the earliest admitted ordinary
+      // exact-replay source. All prerequisites are earned through visible W1
+      // curriculum controls; no skipped-credit fixture or injected route.
+      const rankTaskId = 'cards_ranks_suits_rank_drill';
+      await _advanceOrdinaryW1ToRank(tester);
+      expect(_runner(tester).selectedTaskId, rankTaskId);
+      final beforeRankMiss = await _saved(tester);
+      final beforeRankXp = (beforeRankMiss['earnedXp'] as num).toInt();
+      expect(beforeRankMiss['completedTaskIds'], isNot(contains(rankTaskId)));
+      await _foundationAdvanceToPrompt(tester);
+      await _choose(tester, 'king');
+      final rankMissed = await _saved(tester);
+      final rankMiss = _rows(rankMissed, 'learningEvidenceHistory').lastWhere(
+        (row) => row['taskId'] == rankTaskId && row['choiceId'] == 'king',
+      );
+      expect(rankMiss['isCorrect'], isFalse);
+      expect(rankMiss['assistanceKind'], 'none');
+      expect(rankMissed['earnedXp'], beforeRankXp);
+      final rankIntent = _rows(
+        rankMissed,
+        'openRepairIntents',
+      ).singleWhere((row) => row['sourceTaskId'] == rankTaskId);
+      expect(rankIntent['mappingType'], 'intentional_exact');
+      expect(rankIntent['repairOccurrenceId'], rankMiss['recordId']);
+      await _tap(tester, 'act0_shell_runner_back');
+      await tester.tap(find.text('Home').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      expect(_runner(tester).selectedTaskId, rankTaskId);
+      final rankOpened = await _saved(tester);
+      for (final field in [
+        'earnedXp',
+        'completedTaskIds',
+        'learningEvidenceHistory',
+      ]) {
+        expect(rankOpened[field], rankMissed[field]);
+      }
+      await _foundationAdvanceToPrompt(tester);
+      await _choose(tester, 'ace');
+      final rankAnswered = await _saved(tester);
+      final outcome = _rows(rankAnswered, 'repairOutcomeProjection').last;
+      expect(outcome['repairOccurrenceId'], rankMiss['recordId']);
+      expect(outcome['sourceTaskId'], rankTaskId);
+      expect(outcome['targetTaskId'], rankTaskId);
+      expect(outcome['selectedChoiceId'], 'ace');
+      expect(outcome['isCorrect'], isTrue);
+      expect(
+        _runner(tester).repairResultReceiptLine,
+        'Fix landed: you handled this spot correctly.',
+      );
+      final positiveProof = _runner(tester).repairOutcomeProofLine;
+      expect(positiveProof, 'Nice repair. Same spot, cleaner decision.');
+      expect(_runner(tester).isAssistedDecision, isFalse);
+      expect(_runner(tester).initialChoiceAssistance.name, 'none');
+      expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
+      expect(rankAnswered['earnedXp'], beforeRankXp);
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+      final repairCompleted = await _saved(tester);
+      final rankTask = Act0ShellStateV1.sample
+          .lessonById('cards_ranks_suits')
+          .taskList
+          .singleWhere((task) => task.taskId == rankTaskId);
+      expect(repairCompleted['earnedXp'], beforeRankXp + rankTask.rewardXp);
+      expect(repairCompleted['completedTaskIds'], contains(rankTaskId));
+      expect(
+        _rows(
+          repairCompleted,
+          'openRepairIntents',
+        ).where((row) => row['sourceTaskId'] == rankTaskId),
+        isEmpty,
+      );
+      expect(
+        _rows(
+          repairCompleted,
+          'learningEvidenceHistory',
+        ).singleWhere((row) => row['recordId'] == rankMiss['recordId']),
+        rankMiss,
+      );
+      expect(
+        _rows(
+          repairCompleted,
+          'learningEvidenceHistory',
+        ).singleWhere((row) => row['recordId'] == miss['recordId']),
+        miss,
+      );
+      expect(
+        _rows(
+          repairCompleted,
+          'openRepairIntents',
+        ).singleWhere((row) => row['sourceTaskId'] == _source),
+        heldIntent,
+      );
+      // Move to the ordinary next unfinished task before testing cold resume.
+      // Completed repair pointers may normalize to this next task on load.
+      final backToLesson = find.byKey(const Key('act0_shell_runner_back'));
+      if (backToLesson.evaluate().isNotEmpty) {
+        await _tap(tester, 'act0_shell_runner_back');
+      }
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      expect(_runner(tester).selectedTaskId, 'cards_ranks_suits_suit_drill');
+      await _foundationAdvanceToPrompt(tester);
+      expect(_runner(tester).runner.selectedOptionId, isNull);
+      final pendingNext = await _saved(tester);
+      for (final field in [
+        'earnedXp',
+        'completedTaskIds',
+        'completedLessonIds',
+        'learningEvidenceHistory',
+        'openRepairIntents',
+        'repairOutcomeProjection',
+      ]) {
+        expect(
+          pendingNext[field],
+          repairCompleted[field],
+          reason:
+              'Opening the next task must preserve graded learner data: $field',
+        );
+      }
+      expect(
+        pendingNext['completedTaskIds'],
+        isNot(contains('cards_ranks_suits_suit_drill')),
+      );
       final oldHost = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      // The normal widget disposal owns persistence of this unanswered choice.
+      // Capture its acknowledged checkpoint before comparing either remount.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        final prefs = await SharedPreferences.getInstance();
+        await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+        await prefs.reload().timeout(const Duration(seconds: 2));
+      });
+      final acknowledgedNext = await _saved(tester);
+      expect(acknowledgedNext['selectedWorldId'], 'world_1');
+      expect(acknowledgedNext['selectedLessonId'], 'cards_ranks_suits');
+      expect(
+        acknowledgedNext['selectedTaskId'],
+        'cards_ranks_suits_suit_drill',
+      );
+      for (final field in [
+        'earnedXp',
+        'completedTaskIds',
+        'completedLessonIds',
+        'learningEvidenceHistory',
+        'openRepairIntents',
+        'repairOutcomeProjection',
+      ]) {
+        expect(
+          acknowledgedNext[field],
+          repairCompleted[field],
+          reason: 'Ordinary disposal must preserve graded learner data: $field',
+        );
+      }
+      final stable = _stableProgress(acknowledgedNext);
 
       // No preference reseeding, task injection, debug entry or native calls.
       // Two ordinary root remounts cannot award XP or duplicate evidence.
@@ -1753,6 +1927,71 @@ Map<String, Object?> _foundationLearningTruth(Map<String, dynamic> payload) => {
     ].contains(entry.key))
       entry.key: entry.value,
 };
+
+// Finite ordinary W1 prefix only, reusing the full-route owner's existing
+// visible controls and authored answer/choreography helpers. No progress seed.
+Future<void> _advanceOrdinaryW1ToRank(WidgetTester tester) async {
+  const target = 'cards_ranks_suits_rank_drill';
+  final lessons = Act0ShellStateV1.sample.worldById('world_1').lessons;
+  final end = lessons.indexWhere(
+    (lesson) => lesson.lessonId == 'cards_ranks_suits',
+  );
+  expect(end, greaterThanOrEqualTo(0));
+  final allowed = {
+    for (final lesson in lessons.take(end + 1))
+      for (final task in lesson.taskList) task.taskId,
+  };
+  for (var step = 0; step < 160; step++) {
+    if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
+      final active = _runner(tester);
+      expect(active.selectedWorldId, 'world_1');
+      expect(allowed, contains(active.selectedTaskId));
+      if (active.selectedTaskId == target) return;
+      if (active.runner.phase == Act0LessonPhaseV1.review) {
+        await _tap(tester, 'act0_shell_feedback_continue_cta');
+      } else if (active.runner.activeTeachingStep != null ||
+          active.runner.phase == Act0LessonPhaseV1.theory) {
+        await _continueTeaching(tester);
+      } else {
+        await _foundationAdvanceToPrompt(tester);
+        final correct = _runner(
+          tester,
+        ).runner.options.singleWhere((o) => o.isCorrect);
+        await _choose(tester, correct.id);
+        expect(
+          _runner(tester).runner.reviewQuality,
+          Act0FeedbackQualityV1.correct,
+        );
+        await _tap(tester, 'act0_shell_feedback_continue_cta');
+      }
+      continue;
+    }
+    final summary = find.byType(Act0BlockCompletionShellV1);
+    if (summary.evaluate().isNotEmpty) {
+      final next = tester
+          .widget<Act0BlockCompletionShellV1>(summary)
+          .nextUsefulHand
+          ?.targetTaskId;
+      final completed = (await _saved(tester))['completedTaskIds'] as List;
+      await _tap(
+        tester,
+        next != null && allowed.contains(next) && !completed.contains(next)
+            ? 'act0_shell_block_summary_continue_cta'
+            : 'act0_shell_block_summary_map_cta',
+      );
+      continue;
+    }
+    if (find
+        .byKey(const Key('act0_shell_current_mission_cta'))
+        .evaluate()
+        .isEmpty) {
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+    }
+    await _tap(tester, 'act0_shell_current_mission_cta');
+  }
+  fail('Ordinary W1 prefix did not reach the authored rank repair source.');
+}
 
 Future<void> _foundationReplayTheory(
   WidgetTester tester,

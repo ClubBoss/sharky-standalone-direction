@@ -404,6 +404,8 @@ void main() {
       runner: task.runner,
       selectedOption: wrong,
       mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
     );
     expect(intent, isNotNull);
     expect(intent!.choiceId, 'one_answer');
@@ -596,6 +598,17 @@ void main() {
       expect(repairRecord.errorType, 'none');
       expect(repairRecord.runKind, 'repair');
       expect(repairRecord.assistanceKind, Act0DecisionAssistanceV1.none);
+      final actualOutcomes =
+          (correctedBeforeAck['repairOutcomeProjection'] as List).cast<Map>();
+      final actualOutcome = actualOutcomes.singleWhere(
+        (outcome) => outcome['repairAttemptId'] == repairRecord.recordId,
+      );
+      final savedReturn = correctedBeforeAck['lastSessionLearnerState'] as Map;
+      expect(savedReturn['last_session_proof_result'], 'fix_landed');
+      expect(
+        savedReturn['last_session_repair_outcome_ref'],
+        'repair_outcome_v1|${actualOutcome['sequence']}|${actualOutcome['queueItemId']}',
+      );
       _w24ExpectCurrentEvidence(
         correctedBeforeAck,
         currentFingerprint,
@@ -842,6 +855,196 @@ void main() {
               .hitTestable(),
           findsOneWidget,
         );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  for (final source
+      in <({String world, String lesson, String task, String choice})>[
+        (
+          world: 'world_2',
+          lesson: 'hand_discipline_buckets',
+          task: 'hand_discipline_buckets_premium',
+          choice: 'medium',
+        ),
+        (
+          world: 'world_4',
+          lesson: 'small_half_pot',
+          task: 'w4_half_pot_bet',
+          choice: 'two',
+        ),
+        (
+          world: 'world_1',
+          lesson: 'your_first_hand',
+          task: 'your_first_hand_showdown',
+          choice: 'first_actor',
+        ),
+      ]) {
+    testWidgets(
+      'SIMULATED held ${source.task} remains visible after a saved remount',
+      (tester) async {
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+        tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(tester.view.resetPadding);
+        addTearDown(tester.view.resetViewPadding);
+        final priorPlatform = SharedPreferencesStorePlatform.instance;
+        final sample = Act0ShellStateV1.sample;
+        final world = sample.worldById(source.world);
+        final lesson = world.lessons.singleWhere(
+          (item) => item.lessonId == source.lesson,
+        );
+        // Prerequisite-skipped initial fixture only; no assessed answer, earned
+        // progress, target route or private shell state is injected.
+        final skips = <String>{
+          for (final earlier in sample.worlds.takeWhile(
+            (item) => item.worldId != source.world,
+          ))
+            for (final priorLesson in earlier.lessons)
+              for (final task in priorLesson.taskList) task.taskId,
+          for (final priorLesson in world.lessons.takeWhile(
+            (item) => item.lessonId != source.lesson,
+          ))
+            for (final task in priorLesson.taskList) task.taskId,
+          for (final task in lesson.taskList.takeWhile(
+            (item) => item.taskId != source.task,
+          ))
+            task.taskId,
+        };
+        const empty = Act0LearningEvidenceHistoryV1();
+        final disk = _W24Disk(<String, Object>{
+          'app_language_code': 'en',
+          'act0_welcome_completed_v1': true,
+          'intake_completed_v1': true,
+          _w24ProgressKey: jsonEncode(<String, Object?>{
+            'schemaVersion': 20,
+            'completedTaskIds': <String>[],
+            'completedLessonIds': <String>[],
+            'skippedTaskIds': skips.toList()..sort(),
+            'selectedWorldId': source.world,
+            'selectedLessonId': source.lesson,
+            'selectedTaskId': source.task,
+            'earnedXp': 0,
+            'pendingDecisionAssistance': <Object?>[],
+            'learningEvidenceHistory': empty.toPayload(),
+            'learningEvidenceLineage': empty.lineagePayload(),
+            'sessionIdentityState': const Act0SessionIdentityStateV1()
+                .toPayload(),
+          }),
+        });
+        SharedPreferences.resetStatic();
+        SharedPreferencesStorePlatform.instance = disk;
+        addTearDown(() async {
+          try {
+            await tester.pumpWidget(const SizedBox.shrink());
+            await tester.pumpAndSettle();
+            await tester.runAsync(
+              () => _w24PendingWrites().flush().timeout(
+                const Duration(seconds: 2),
+              ),
+            );
+          } finally {
+            SharedPreferences.resetStatic();
+            SharedPreferencesStorePlatform.instance = priorPlatform;
+          }
+        });
+        await tester.pumpWidget(const AppRoot());
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Learn').last);
+        await tester.pumpAndSettle();
+        await _w24Tap(tester, 'act0_shell_current_mission_cta');
+        var ready = false;
+        for (var step = 0; step < 20; step++) {
+          final runner = _w24Runner(tester);
+          expect(runner.selectedTaskId, source.task);
+          if (runner.runner.activeTeachingStep == null &&
+              runner.runner.phase == Act0LessonPhaseV1.drill) {
+            ready = true;
+            break;
+          }
+          await tester.pump(const Duration(seconds: 1));
+          final theory = find.byKey(
+            const Key('act0_shell_theory_continue_cta'),
+          );
+          await _w24Tap(
+            tester,
+            theory.evaluate().isNotEmpty
+                ? 'act0_shell_theory_continue_cta'
+                : 'act0_shell_continue_cta',
+          );
+        }
+        expect(ready, isTrue);
+        await tester.pump(const Duration(seconds: 3));
+        if (source.task == 'w4_half_pot_bet') {
+          // Pump each chained table-animation timer. One large virtual jump
+          // does not advance timers scheduled by a preceding beat.
+          for (var beat = 0; beat < 40; beat++) {
+            await tester.pump(const Duration(milliseconds: 500));
+          }
+          await tester.pumpAndSettle();
+          await _w24Tap(tester, 'act0_shell_sizing_preset_${source.choice}');
+          await tester.pump(const Duration(seconds: 3));
+          await tester.pumpAndSettle();
+          expect(_w24Runner(tester).runner.selectedPresetId, source.choice);
+          expect(
+            tester
+                .widget<FilledButton>(
+                  find.byKey(const Key('act0_shell_sizing_confirm_cta')),
+                )
+                .onPressed,
+            isNotNull,
+          );
+          await _w24Tap(tester, 'act0_shell_sizing_confirm_cta');
+          expect(
+            find.byKey(const Key('act0_betting_price_unavailable')),
+            findsNothing,
+          );
+        } else {
+          await _w24Tap(tester, 'act0_shell_option_${source.choice}');
+        }
+        final saved = await _w24Saved(tester, disk);
+        void expectHeld(Map<String, dynamic> payload) {
+          final queue = Act0MultiRepairQueueV1.tryParse(
+            payload['multiRepairQueue'],
+          );
+          final intent = queue.entries.single.repairIntent;
+          expect(intent.sourceTaskId, source.task);
+          expect(intent.choiceId, source.choice);
+          expect(intent.mappingType, 'unresolved_product_gap');
+          expect(intent.repairOccurrenceId, isNotEmpty);
+          final history = _w24History(payload);
+          final miss = history.provenanceRecords.singleWhere(
+            (row) => row.recordId == intent.repairOccurrenceId,
+          );
+          expect(miss.taskId, source.task);
+          expect(miss.isCorrect, isFalse);
+          expect(miss.choiceId, source.choice);
+          expect(payload['earnedXp'], 0);
+          expect(payload['repairOutcomeProjection'], isEmpty);
+        }
+
+        expectHeld(saved);
+        final remounted = await _w24Remount(tester, disk);
+        expectHeld(remounted);
+        await tester.tap(find.text('Review').last);
+        await tester.pumpAndSettle();
+        expect(
+          find.text('Matching repair not confirmed · miss saved'),
+          findsWidgets,
+        );
+        await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
+        expect(
+          find.text(
+            'This miss is saved. A matching repair has not been confirmed yet.',
+          ),
+          findsOneWidget,
+        );
+        expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+        expectHeld(await _w24Saved(tester, disk));
         expect(tester.takeException(), isNull);
       },
     );

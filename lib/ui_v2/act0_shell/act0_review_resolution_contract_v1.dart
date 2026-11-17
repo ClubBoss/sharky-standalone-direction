@@ -1,3 +1,4 @@
+import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_practice_repair_queue_projection_v1.dart';
 import 'act0_queue_resolution_contract_v1.dart';
 import 'act0_repair_intent_contract_v1.dart';
@@ -9,6 +10,8 @@ const String act0ReviewResolutionStateRepairAttemptedNotResolvedV1 =
     'repair_attempted_not_resolved';
 const String act0ReviewResolutionStateResolvedV1 = 'resolved';
 const String act0ReviewResolutionStateHistoricalV1 = 'historical';
+const String act0ReviewResolutionStateHeldV1 = 'held_no_validated_target';
+const String act0ReviewResolutionReasonGoalUnconfirmedV1 = 'goal_unconfirmed';
 const String act0ReviewResolutionStateNotActionableV1 = 'not_actionable';
 const String act0ReviewResolutionStateInsufficientEvidenceV1 =
     'insufficient_evidence';
@@ -36,6 +39,9 @@ class Act0ReviewResolutionStateV1 {
         const Act0RepairOutcomeProjectionV1(),
     Act0ReviewResolutionReceiptHistoryV1 receiptHistory =
         const Act0ReviewResolutionReceiptHistoryV1(),
+    Act0LearningEvidenceHistoryV1 learningEvidenceHistory =
+        const Act0LearningEvidenceHistoryV1(),
+    Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
   }) {
     final intentsByKey = <String, Act0RepairIntentV1>{};
     for (final intent in activeRepairIntents) {
@@ -52,17 +58,31 @@ class Act0ReviewResolutionStateV1 {
             return updated != 0 ? updated : a.recordId.compareTo(b.recordId);
           });
     for (final record in sortedRecords) {
-      final receipt = receiptHistory.receiptForReviewItemId(
-        record.recordId,
-        learningEvidenceId: record.sourceDecisionId,
-      );
-      final resolution =
-          receipt?._toResolution(record) ??
-          _resolutionForRecord(
-            record: record,
-            matchingIntent: intentsByKey[_reviewIdentityKey(record)],
-            repairOutcomeProjection: repairOutcomeProjection,
+      // Stored receipts remain readable/history, but are never an eligibility
+      // bypass. A pruned valid link may be reconstructed from its exact event.
+      var matchingIntent = intentsByKey[_reviewIdentityKey(record)];
+      if (currentFingerprintForIdentity != null) {
+        for (final outcome in repairOutcomeProjection.outcomes) {
+          if (outcome.repairOccurrenceId != record.sourceDecisionId) continue;
+          final candidate = act0RepairIntentForRecordedOutcomeV1(
+            outcome: outcome,
+            learningEvidence: learningEvidenceHistory,
+            currentFingerprintForIdentity: currentFingerprintForIdentity,
+            repairIntents: activeRepairIntents,
           );
+          if (candidate != null) {
+            matchingIntent = candidate;
+            break;
+          }
+        }
+      }
+      final resolution = _resolutionForRecord(
+        record: record,
+        matchingIntent: matchingIntent,
+        repairOutcomeProjection: repairOutcomeProjection,
+        learningEvidenceHistory: learningEvidenceHistory,
+        currentFingerprintForIdentity: currentFingerprintForIdentity,
+      );
       if (resolution != null) {
         byReviewItemId[resolution.reviewItemId] = resolution;
       }
@@ -130,6 +150,10 @@ class Act0ReviewItemResolutionV1 {
   final int? resolvedAtOrder;
 
   bool get isVisibleInActiveReview =>
+      reviewState == act0ReviewResolutionStateUnresolvedV1 ||
+      reviewState == act0ReviewResolutionStateRepairAttemptedNotResolvedV1 ||
+      reviewState == act0ReviewResolutionStateHeldV1;
+  bool get isLaunchable =>
       reviewState == act0ReviewResolutionStateUnresolvedV1 ||
       reviewState == act0ReviewResolutionStateRepairAttemptedNotResolvedV1;
 
@@ -342,21 +366,6 @@ class Act0ReviewResolutionReceiptV1 {
     }
     return fromResolution(resolution);
   }
-
-  Act0ReviewItemResolutionV1 _toResolution(Act0ReviewMistakeRecordV1 record) {
-    return Act0ReviewItemResolutionV1(
-      reviewItemId: record.recordId,
-      learningEvidenceId: learningEvidenceId ?? record.sourceDecisionId,
-      repairIntentId: repairIntentId,
-      conceptFamilyId: conceptFamilyId,
-      sourceTaskId: sourceTaskId ?? record.sourceTaskId,
-      sourceSessionId: sourceSessionId,
-      reviewState: reviewState,
-      resolutionReason: resolutionReason,
-      repairOutcomeId: repairOutcomeId,
-      resolvedAtOrder: resolvedAtOrder,
-    );
-  }
 }
 
 Act0ReviewResolutionReceiptHistoryV1
@@ -365,6 +374,9 @@ reviewResolutionReceiptHistoryFromSourcesV1({
   required List<Act0RepairIntentV1> activeRepairIntents,
   required Act0RepairOutcomeProjectionV1 repairOutcomeProjection,
   required Act0ReviewResolutionReceiptHistoryV1 existingReceiptHistory,
+  Act0LearningEvidenceHistoryV1 learningEvidenceHistory =
+      const Act0LearningEvidenceHistoryV1(),
+  Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
 }) {
   var next = existingReceiptHistory;
   final resolutionState = Act0ReviewResolutionStateV1.fromSources(
@@ -372,8 +384,18 @@ reviewResolutionReceiptHistoryFromSourcesV1({
     activeRepairIntents: activeRepairIntents,
     repairOutcomeProjection: repairOutcomeProjection,
     receiptHistory: existingReceiptHistory,
+    learningEvidenceHistory: learningEvidenceHistory,
+    currentFingerprintForIdentity: currentFingerprintForIdentity,
   );
   for (final resolution in resolutionState.resolutions) {
+    // Current projection may reject or revalidate an old relation; it never
+    // rewrites the raw saved receipt for that original occurrence.
+    if (next.receiptForReviewItemId(
+          resolution.reviewItemId,
+          learningEvidenceId: resolution.learningEvidenceId,
+        ) !=
+        null)
+      continue;
     next = next.appendFromResolution(resolution);
   }
   return next;
@@ -383,6 +405,8 @@ Act0ReviewItemResolutionV1? _resolutionForRecord({
   required Act0ReviewMistakeRecordV1 record,
   required Act0RepairIntentV1? matchingIntent,
   required Act0RepairOutcomeProjectionV1 repairOutcomeProjection,
+  required Act0LearningEvidenceHistoryV1 learningEvidenceHistory,
+  required Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
 }) {
   final reviewItemId = record.recordId.trim();
   if (reviewItemId.isEmpty) {
@@ -402,17 +426,25 @@ Act0ReviewItemResolutionV1? _resolutionForRecord({
     );
   }
   final intent = matchingIntent;
-  if (intent == null) {
+  final goal = intent == null || currentFingerprintForIdentity == null
+      ? null
+      : act0RepairGoalResolutionForIntentV1(
+          intent,
+          learningEvidence: learningEvidenceHistory,
+          currentFingerprintForIdentity: currentFingerprintForIdentity,
+        );
+  if (goal?.canLaunch != true) {
     return Act0ReviewItemResolutionV1(
       reviewItemId: reviewItemId,
       learningEvidenceId: record.sourceDecisionId,
       conceptFamilyId: conceptFamilyId,
       sourceTaskId: _optionalString(record.sourceTaskId),
       sourceSessionId: _optionalString(record.runId),
-      reviewState: act0ReviewResolutionStateUnresolvedV1,
-      resolutionReason: act0ReviewResolutionReasonNoRepairOutcomeV1,
+      reviewState: act0ReviewResolutionStateHeldV1,
+      resolutionReason: act0ReviewResolutionReasonGoalUnconfirmedV1,
     );
   }
+  if (intent == null || currentFingerprintForIdentity == null) return null;
   final queueItemId = queueItemIdForAct0RepairIntentV1(intent);
   if (queueItemId.isEmpty || _hasMissingTarget(intent)) {
     return Act0ReviewItemResolutionV1(
@@ -435,7 +467,13 @@ Act0ReviewItemResolutionV1? _resolutionForRecord({
                 (intent.repairOccurrenceId.isEmpty ||
                     intent.repairOccurrenceId == record.sourceDecisionId) &&
                 outcome.sourceType ==
-                    act0PracticeRepairQueueSourceActiveRepairV1,
+                    act0PracticeRepairQueueSourceActiveRepairV1 &&
+                act0RepairGoalOutcomeIsEligibleV1(
+                  intent: intent,
+                  outcome: outcome,
+                  learningEvidence: learningEvidenceHistory,
+                  currentFingerprintForIdentity: currentFingerprintForIdentity,
+                ),
           )
           .toList(growable: false)
         ..sort((a, b) {
@@ -565,6 +603,7 @@ const Set<String> _reviewStates = <String>{
   act0ReviewResolutionStateHistoricalV1,
   act0ReviewResolutionStateNotActionableV1,
   act0ReviewResolutionStateInsufficientEvidenceV1,
+  act0ReviewResolutionStateHeldV1,
 };
 
 const Set<String> _resolutionReasons = <String>{
@@ -575,4 +614,5 @@ const Set<String> _resolutionReasons = <String>{
   act0ReviewResolutionReasonTargetMissingV1,
   act0ReviewResolutionReasonMalformedEvidenceV1,
   act0ReviewResolutionReasonHistoricalOnlyV1,
+  act0ReviewResolutionReasonGoalUnconfirmedV1,
 };

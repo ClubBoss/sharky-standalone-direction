@@ -687,3 +687,463 @@ Act0RepairGapAdjudicationV1? act0RepairGapAdjudicationForSourceTaskV1(
   }
   return null;
 }
+
+/// Narrow source-owned semantic admission. Existing scene mappings are not
+/// relation evidence. No new target/application is admitted by this registry.
+class Act0RepairGoalContractV1 {
+  const Act0RepairGoalContractV1({
+    required this.sourceWorldId,
+    required this.sourceLessonId,
+    required this.sourceTaskId,
+    required this.sourceChoiceId,
+    required this.sourceCorrectChoiceId,
+    required this.sourceFingerprint,
+    this.diagnosticVariantId = '',
+    this.sourceContainerFingerprint = '',
+    required this.sourceQuestion,
+    required this.sourceChoiceReason,
+    required this.sourceChoiceLabel,
+    this.sourceChoiceQuality = 'wrong',
+    required this.goalId,
+    required this.misconceptionId,
+    required this.relationId,
+    this.relationRevision = 1,
+    this.targetWorldId = '',
+    this.targetLessonId = '',
+    this.targetTaskId = '',
+    this.targetFingerprint = '',
+    this.targetCorrectChoiceId = '',
+    this.targetChoiceIds = const <String>{},
+    this.evidenceClass = 'no_validated_target',
+    this.mappingType = 'unresolved_product_gap',
+  });
+  final String sourceWorldId, sourceLessonId, sourceTaskId, sourceChoiceId;
+  final String sourceCorrectChoiceId, sourceFingerprint;
+  final String diagnosticVariantId, sourceContainerFingerprint;
+  bool get isDiagnosticLearningEntry =>
+      evidenceClass == 'diagnostic_learning_entry';
+  final String sourceQuestion,
+      sourceChoiceReason,
+      sourceChoiceLabel,
+      sourceChoiceQuality;
+  final String goalId, misconceptionId, relationId;
+  final int relationRevision;
+  final String targetWorldId, targetLessonId, targetTaskId, targetFingerprint;
+  final String targetCorrectChoiceId, evidenceClass, mappingType;
+  final Set<String> targetChoiceIds;
+  bool get hasValidatedTarget => targetTaskId.isNotEmpty;
+  String get learnerGoalLabel => switch (goalId) {
+    'player_identity_and_seat_role' => 'Player and seat role',
+    'card_rank_order' => 'Card rank comparison',
+    'starting_hand_premium_bucket' => 'Starting-hand bucket',
+    'half_pot_fraction' => 'Half-pot sizing',
+    'showdown_best_five' => 'Showdown hand comparison',
+    'no_bet_free_continue' => 'Checking for free',
+    'shared_board_vs_private_cards' => 'Private and shared cards',
+    'preflop_bucket_seat_frame' => 'Hand, seat and action frame',
+    _ => 'Repair not confirmed',
+  };
+  // Neither familiar vocabulary practice nor definition replay is application.
+  bool get canClaimIndependentApplication => false;
+  bool get canClaimMatchedRecheck => false;
+}
+
+const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "what_poker_is",
+    sourceTaskId: "what_poker_is_find_hero",
+    sourceChoiceId: "top",
+    sourceCorrectChoiceId: "bottom",
+    sourceFingerprint:
+        "e78e728df7edf3242d9a73f8662235733a4478c593d0cc6393e6b21f61e59e3d",
+    sourceQuestion:
+        "Which label could change next hand while the player is still you?",
+    sourceChoiceReason:
+        "You identifies the player, not the changing seat role.",
+    sourceChoiceLabel: "You",
+    sourceChoiceQuality: "wrong",
+    goalId: "player_identity_and_seat_role",
+    misconceptionId: "seat_role_as_player_identity",
+    relationId: "selected_w1_001_top_v1",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "what_poker_is",
+    sourceTaskId: "what_poker_is_find_hero",
+    sourceChoiceId: "random",
+    sourceCorrectChoiceId: "bottom",
+    sourceFingerprint:
+        "e78e728df7edf3242d9a73f8662235733a4478c593d0cc6393e6b21f61e59e3d",
+    sourceQuestion:
+        "Which label could change next hand while the player is still you?",
+    sourceChoiceReason:
+        "Your cards remain yours; BTN is the changing table role.",
+    sourceChoiceLabel: "Your private cards",
+    sourceChoiceQuality: "wrong",
+    goalId: "player_identity_and_seat_role",
+    misconceptionId: "seat_role_as_private_cards",
+    relationId: "selected_w1_002_random_v1",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "cards_ranks_suits",
+    sourceTaskId: "cards_ranks_suits_rank_drill",
+    sourceChoiceId: "king",
+    sourceCorrectChoiceId: "ace",
+    sourceFingerprint:
+        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+    sourceQuestion: "Which rank is higher here?",
+    sourceChoiceReason: "Ace is higher than king in this beginner drill.",
+    sourceChoiceLabel: "King",
+    goalId: "card_rank_order",
+    misconceptionId: "king_above_ace",
+    relationId: "selected_w1_023_king_v1",
+    targetWorldId: "world_1",
+    targetLessonId: "cards_ranks_suits",
+    targetTaskId: "cards_ranks_suits_rank_drill",
+    targetFingerprint:
+        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+    targetCorrectChoiceId: "ace",
+    evidenceClass: "intentional_exact_replay",
+    mappingType: "intentional_exact",
+    targetChoiceIds: <String>{"king", "suit", "ace"},
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "cards_ranks_suits",
+    sourceTaskId: "cards_ranks_suits_rank_drill",
+    sourceChoiceId: "suit",
+    sourceCorrectChoiceId: "ace",
+    sourceFingerprint:
+        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+    sourceQuestion: "Which rank is higher here?",
+    sourceChoiceReason: "Suit does not make one rank higher than another.",
+    sourceChoiceLabel: "Suit decides",
+    goalId: "card_rank_order",
+    misconceptionId: "suit_overrides_rank",
+    relationId: "selected_w1_024_suit_v1",
+    targetWorldId: "world_1",
+    targetLessonId: "cards_ranks_suits",
+    targetTaskId: "cards_ranks_suits_rank_drill",
+    targetFingerprint:
+        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+    targetCorrectChoiceId: "ace",
+    evidenceClass: "intentional_exact_replay",
+    mappingType: "intentional_exact",
+    targetChoiceIds: <String>{"king", "suit", "ace"},
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "fold_check_call_raise",
+    sourceTaskId: "actions_check_drill",
+    sourceChoiceId: "fold",
+    sourceCorrectChoiceId: "check",
+    sourceFingerprint:
+        "45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205",
+    sourceQuestion: "What action keeps playing for free?",
+    sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
+    sourceChoiceLabel: "Fold",
+    goalId: "no_bet_free_continue",
+    misconceptionId: "free_continue_as_fold",
+    relationId: "selected_w1_044_fold_v1",
+    targetWorldId: "world_1",
+    targetLessonId: "fold_check_call_raise",
+    targetTaskId: "actions_legal_context",
+    targetFingerprint:
+        "d889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4",
+    targetCorrectChoiceId: "check",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{"fold", "check", "call"},
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "fold_check_call_raise",
+    sourceTaskId: "actions_check_drill",
+    sourceChoiceId: "call",
+    sourceCorrectChoiceId: "check",
+    sourceFingerprint:
+        "45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205",
+    sourceQuestion: "What action keeps playing for free?",
+    sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
+    sourceChoiceLabel: "Call",
+    goalId: "no_bet_free_continue",
+    misconceptionId: "free_continue_as_call",
+    relationId: "selected_w1_045_call_v1",
+    targetWorldId: "world_1",
+    targetLessonId: "fold_check_call_raise",
+    targetTaskId: "actions_legal_context",
+    targetFingerprint:
+        "d889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4",
+    targetCorrectChoiceId: "check",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{"fold", "check", "call"},
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "your_first_hand",
+    sourceTaskId: "your_first_hand_showdown",
+    sourceChoiceId: "first_actor",
+    sourceCorrectChoiceId: "best_hand",
+    sourceFingerprint:
+        "fa616bf2f5b020fdbdb30d40ce9f1ae7fc3db75b8b7ce0b1fac19fdcd1c30aa8",
+    goalId: "showdown_best_five",
+    misconceptionId: "showdown_as_action_order",
+    relationId: "selected_w1_038_first_actor_v1",
+    sourceQuestion: "What decides a showdown?",
+    sourceChoiceReason:
+        "Seat order decides who acts first, not who wins at showdown. Once cards are revealed, players compare the best full hand they can make from private cards plus the shared board.",
+    sourceChoiceLabel: "First actor",
+    sourceChoiceQuality: "wrong",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "your_first_hand",
+    sourceTaskId: "your_first_hand_showdown",
+    sourceChoiceId: "hero_cards_only",
+    sourceCorrectChoiceId: "best_hand",
+    sourceFingerprint:
+        "fa616bf2f5b020fdbdb30d40ce9f1ae7fc3db75b8b7ce0b1fac19fdcd1c30aa8",
+    goalId: "showdown_best_five",
+    misconceptionId: "showdown_private_cards_only",
+    relationId: "selected_w1_039_hero_cards_only_v1",
+    sourceQuestion: "What decides a showdown?",
+    sourceChoiceReason:
+        "Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.",
+    sourceChoiceLabel: "Hero cards only",
+    sourceChoiceQuality: "suboptimal",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_2",
+    sourceLessonId: "hand_discipline_buckets",
+    sourceTaskId: "hand_discipline_buckets_premium",
+    sourceChoiceId: "medium",
+    sourceCorrectChoiceId: "premium",
+    sourceFingerprint:
+        "42ada0b5698d0215f0211ed107b5c5e2e25781383a4d302bfa38b520a951c4fc",
+    goalId: "starting_hand_premium_bucket",
+    misconceptionId: "premium_as_medium",
+    relationId: "selected_w2_01_medium_v1",
+    sourceQuestion: "Which bucket is AA?",
+    sourceChoiceReason: "AA is stronger than a medium hand.",
+    sourceChoiceLabel: "Medium",
+    sourceChoiceQuality: "wrong",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_2",
+    sourceLessonId: "continue_or_let_go",
+    sourceTaskId: "continue_or_let_go_premium_continue",
+    sourceChoiceId: "medium",
+    sourceCorrectChoiceId: "premium",
+    sourceFingerprint:
+        "da072c016c85f79c659ba2e62ac89a30c4714e9d8f157c26f885e09f0de0540a",
+    goalId: "starting_hand_premium_bucket",
+    misconceptionId: "premium_as_medium",
+    relationId: "selected_w2_01_medium_v1",
+    sourceQuestion: "Which bucket is AA?",
+    sourceChoiceReason: "AA is stronger than a medium hand.",
+    sourceChoiceLabel: "Medium",
+    sourceChoiceQuality: "wrong",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_2",
+    sourceLessonId: "discipline_checkpoint",
+    sourceTaskId: "discipline_checkpoint_checkpoint_premium",
+    sourceChoiceId: "medium",
+    sourceCorrectChoiceId: "premium",
+    sourceFingerprint:
+        "ee7b49aba48357c6ea8afb66560782d804069bb400cef6960c75f731b277f716",
+    goalId: "starting_hand_premium_bucket",
+    misconceptionId: "premium_as_medium",
+    relationId: "selected_w2_01_medium_v1",
+    sourceQuestion: "Which bucket is AA?",
+    sourceChoiceReason: "AA is stronger than a medium hand.",
+    sourceChoiceLabel: "Medium",
+    sourceChoiceQuality: "wrong",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_4",
+    sourceLessonId: "small_half_pot",
+    sourceTaskId: "w4_half_pot_bet",
+    sourceChoiceId: "two",
+    sourceCorrectChoiceId: "three",
+    sourceFingerprint:
+        "e8965720e103f2a3bbb428a8812303adf35d6c98197fa6e2f24bfa0245e35987",
+    goalId: "half_pot_fraction",
+    misconceptionId: "half_as_one_third",
+    relationId: "selected_w4_16_two_v1",
+    sourceQuestion: "Which size is half-pot?",
+    sourceChoiceReason: "2 BB into 6 BB is one-third pot, not half-pot.",
+    sourceChoiceLabel: "2 BB",
+    sourceChoiceQuality: "wrong",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_4",
+    sourceLessonId: "small_half_pot",
+    sourceTaskId: "w4_half_pot_bet",
+    sourceChoiceId: "six",
+    sourceCorrectChoiceId: "three",
+    sourceFingerprint:
+        "e8965720e103f2a3bbb428a8812303adf35d6c98197fa6e2f24bfa0245e35987",
+    goalId: "half_pot_fraction",
+    misconceptionId: "half_as_whole",
+    relationId: "selected_w4_17_six_v1",
+    sourceQuestion: "Which size is half-pot?",
+    sourceChoiceReason: "6 BB into 6 BB is pot-size, not half-pot.",
+    sourceChoiceLabel: "6 BB",
+    sourceChoiceQuality: "wrong",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "fold_check_call_raise",
+    sourceTaskId: "actions_legal_context",
+    sourceChoiceId: "fold",
+    sourceCorrectChoiceId: "check",
+    sourceFingerprint:
+        "d889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4",
+    goalId: "no_bet_free_continue",
+    misconceptionId: "free_continue_as_fold",
+    relationId: "selected_w1_042_fold_v1",
+    sourceQuestion:
+        "No bet faces you. Which action keeps you in the hand without adding chips?",
+    sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
+    sourceChoiceLabel: "Fold",
+    sourceChoiceQuality: "wrong",
+    targetWorldId: "world_1",
+    targetLessonId: "fold_check_call_raise",
+    targetTaskId: "actions_check_drill",
+    targetFingerprint:
+        "45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205",
+    targetCorrectChoiceId: "check",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{'check', 'call', 'fold'},
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "fold_check_call_raise",
+    sourceTaskId: "actions_legal_context",
+    sourceChoiceId: "call",
+    sourceCorrectChoiceId: "check",
+    sourceFingerprint:
+        "d889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4",
+    goalId: "no_bet_free_continue",
+    misconceptionId: "free_continue_as_call",
+    relationId: "selected_w1_043_call_v1",
+    sourceQuestion:
+        "No bet faces you. Which action keeps you in the hand without adding chips?",
+    sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
+    sourceChoiceLabel: "Call",
+    sourceChoiceQuality: "wrong",
+    targetWorldId: "world_1",
+    targetLessonId: "fold_check_call_raise",
+    targetTaskId: "actions_check_drill",
+    targetFingerprint:
+        "45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205",
+    targetCorrectChoiceId: "check",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{'check', 'call', 'fold'},
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_3',
+    sourceLessonId: 'same_hand_different_seat',
+    sourceTaskId: 'same_hand_different_seat_w3_same_hand_recap',
+    sourceChoiceId: 'one_answer',
+    sourceCorrectChoiceId: 'framework',
+    sourceQuestion: 'What prevents one-hand-one-answer thinking?',
+    sourceChoiceReason:
+        'One hand can change action when position or action frame changes.',
+    sourceChoiceLabel: 'One answer per hand',
+    sourceFingerprint:
+        '01dbd18c3bb86b31f053111959738cb6767a459b732438c7bf2bcf5ba0960c9c',
+    goalId: 'preflop_bucket_seat_frame',
+    misconceptionId: 'one_hand_one_answer',
+    relationId: 'w24_context_familiar_replay_v1',
+    targetWorldId: 'world_3',
+    targetLessonId: 'same_hand_different_seat',
+    targetTaskId: 'same_hand_different_seat_w3_same_hand_recap',
+    targetFingerprint:
+        '01dbd18c3bb86b31f053111959738cb6767a459b732438c7bf2bcf5ba0960c9c',
+    targetCorrectChoiceId: 'framework',
+    targetChoiceIds: <String>{'framework', 'one_answer'},
+    evidenceClass: 'intentional_exact_replay',
+    mappingType: 'intentional_exact',
+  ),
+  // Navigation-only placement teaching entries. Neither is repair proof.
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'what_poker_is',
+    sourceTaskId: 'what_poker_is_table_read_transfer',
+    sourceChoiceId: 'hero_private_cards',
+    sourceCorrectChoiceId: 'board_cards',
+    sourceFingerprint: '', // Captured full variant witness, never base-only.
+    sourceContainerFingerprint:
+        'f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760',
+    diagnosticVariantId: 'board_private_cards',
+    sourceQuestion: 'Which cards can everyone use?',
+    sourceChoiceReason:
+        'Hero’s private cards belong only to Hero. Board cards are shared.',
+    sourceChoiceLabel: 'Hero’s private cards',
+    sourceChoiceQuality: 'wrong',
+    goalId: 'shared_board_vs_private_cards',
+    misconceptionId: 'shared_cards_as_hero_private',
+    relationId: 'placement_shared_cards_learning_entry_v1',
+    targetWorldId: 'world_1',
+    targetLessonId: 'cards_ranks_suits',
+    targetTaskId: 'cards_ranks_suits_private_board',
+    targetFingerprint:
+        'b7c258fa030533d4641b1c680be74ccb790d78fd1beccd06aad846beb62a8641',
+    targetCorrectChoiceId: 'board',
+    targetChoiceIds: <String>{'board', 'private'},
+    evidenceClass: 'diagnostic_learning_entry',
+    mappingType: 'diagnostic_learning_entry',
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'what_poker_is',
+    sourceTaskId: 'what_poker_is_table_read_transfer',
+    sourceChoiceId: 'not_sure_yet',
+    sourceCorrectChoiceId: 'check',
+    sourceFingerprint: '', // Captured full variant witness, never base-only.
+    sourceContainerFingerprint:
+        'f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760',
+    diagnosticVariantId: 'action_basics',
+    sourceQuestion: 'No bet faces Hero. Which action is free?',
+    sourceChoiceReason: 'Sharky will start simple.',
+    sourceChoiceLabel: 'Not sure yet',
+    sourceChoiceQuality: 'suboptimal',
+    goalId: 'no_bet_free_continue',
+    misconceptionId: 'free_action_unsure',
+    relationId: 'placement_free_check_learning_entry_v1',
+    targetWorldId: 'world_1',
+    targetLessonId: 'fold_check_call_raise',
+    targetTaskId: 'actions_check_drill',
+    targetFingerprint:
+        '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
+    targetCorrectChoiceId: 'check',
+    targetChoiceIds: <String>{'check', 'call', 'fold'},
+    evidenceClass: 'diagnostic_learning_entry',
+    mappingType: 'diagnostic_learning_entry',
+  ),
+];
+
+Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
+  required String worldId,
+  required String lessonId,
+  required String taskId,
+  required String choiceId,
+  String diagnosticVariantId = '',
+}) {
+  for (final row in act0RepairGoalContractsV1) {
+    if (row.sourceWorldId == worldId &&
+        row.sourceLessonId == lessonId &&
+        row.sourceTaskId == taskId &&
+        row.sourceChoiceId == choiceId &&
+        row.diagnosticVariantId == diagnosticVariantId)
+      return row;
+  }
+  return null;
+}

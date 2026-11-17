@@ -1,4 +1,7 @@
+import '../support/act0_authored_repair_goal_fixture_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
@@ -12,12 +15,28 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
-const _guideLessonId = 'what_poker_is';
+const _guideLessonId = 'fold_check_call_raise';
 
 final _guideLesson = Act0ShellStateV1.sample
     .worldById('world_1')
     .lessons
     .firstWhere((lesson) => lesson.lessonId == _guideLessonId);
+// SIMULATED persisted guided history; the real producer is covered by JRN-06.
+Map<String, Object?> _priorGuidedCheck({bool stale = false}) {
+  final fixture = Act0AuthoredRepairGoalFixtureV1.noBet();
+  final outcome = fixture.outcome(
+    attemptId: 'prior-guided-check',
+    sessionId: 'prior-guided-session',
+  );
+  return {
+    ...act0AuthoredRepairFixtureAttemptV1(outcome, order: 1).toPayload(),
+    'runKind': act0DiagnosticLearningEntryRunKindV1,
+    'startedBy': 'placement_learning_entry',
+    'reviewKind': 'initialAssessment',
+    if (stale) 'authoredSourceFingerprint': '0' * 64,
+  };
+}
+
 Future<void> _pumpGuide(
   WidgetTester tester, {
   List<String> completedTaskIds = const <String>[],
@@ -33,22 +52,44 @@ Future<void> _pumpGuide(
     _progressKey: jsonEncode(<String, Object?>{
       'schemaVersion': 18,
       'completedTaskIds': completedTaskIds,
+      // Prerequisite-only fixture, never earned progress or XP.
+      'skippedTaskIds': [
+        for (final lesson
+            in Act0ShellStateV1.sample
+                .worldById('world_1')
+                .lessons
+                .takeWhile((lesson) => lesson.lessonId != _guideLessonId))
+          for (final task in lesson.taskList) task.taskId,
+      ],
       'completedLessonIds': <String>[],
       'selectedWorldId': 'world_1',
       'selectedLessonId': _guideLessonId,
       'selectedTaskId': _guideLesson.taskList.first.taskId,
       'earnedXp': 0,
       if (history.isNotEmpty) 'learningEvidenceHistory': history,
+      if (history.isNotEmpty)
+        'learningEvidenceLineage': Act0LearningEvidenceHistoryV1(
+          records: [
+            for (final row in history)
+              Act0LearningEvidenceRecordV1.tryParse(row)!,
+          ],
+        ).lineagePayload(),
     }),
   });
   await _mountRoot(tester);
+  await _openTab(tester, 'Learn');
+  final start = find.byKey(const Key('act0_shell_current_mission_cta'));
+  expect(start, findsOneWidget);
+  await tester.ensureVisible(start);
+  await tester.tap(start);
+  await tester.pumpAndSettle();
 }
 
 Future<void> _mountRoot(WidgetTester tester) async {
   await tester.pumpWidget(
     const MaterialApp(
       home: Act0ShellPreviewScreenV1(
-        initialTab: Act0ShellTabV1.play,
+        initialTab: Act0ShellTabV1.home,
         initialPhase: Act0LessonPhaseV1.theory,
         showPlacementOnStart: false,
       ),
@@ -57,8 +98,8 @@ Future<void> _mountRoot(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-/// Plays the real lesson route with each task's authored correct choice
-/// (independent: no hint or theory recall) until the Session Summary.
+/// Plays the ordinary Action lesson with one authored no-bet miss, followed by
+/// unassisted familiar repair/recheck. The initial wrong remains assessment truth.
 Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
   final answered = <String>[];
   for (var step = 0; step < 80; step++) {
@@ -66,13 +107,32 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
         .byKey(const Key('act0_shell_block_summary_title'))
         .evaluate()
         .isNotEmpty) {
-      return answered;
+      final summary = tester
+          .widget<Act0BlockCompletionShellV1>(
+            find.byType(Act0BlockCompletionShellV1),
+          )
+          .summary;
+      if (summary.curriculumCompleted) return answered;
+      // An earned-read payoff can precede full lesson completion. Follow its
+      // real next action rather than treating its headline as the final result.
+      final next = find.byKey(
+        const Key('act0_shell_block_summary_continue_cta'),
+      );
+      expect(next, findsOneWidget);
+      await tester.ensureVisible(next);
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+      continue;
     }
     final runners = find.byType(Act0LessonRunnerShellV1);
     if (runners.evaluate().isNotEmpty) {
       final runner = tester.widget<Act0LessonRunnerShellV1>(runners);
       final correct = runner.runner.options.where(
-        (o) => answered.isEmpty ? !o.isCorrect : o.isCorrect,
+        (o) =>
+            runner.selectedTaskId == 'actions_check_drill' &&
+                !answered.contains('actions_check_drill')
+            ? !o.isCorrect
+            : o.isCorrect,
       );
       if (correct.isNotEmpty &&
           runner.runner.phase == Act0LessonPhaseV1.drill &&
@@ -82,10 +142,48 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
         final option = find.byKey(Key('act0_shell_option_${choice.id}'));
         final target = seat.evaluate().isNotEmpty ? seat : option;
         if (target.evaluate().isNotEmpty) {
-          answered.add(runner.selectedTaskId ?? '');
           await tester.ensureVisible(target.first);
+          for (var beat = 0; beat < 6; beat++) {
+            await tester.pump(const Duration(milliseconds: 500));
+          }
+          await tester.pumpAndSettle();
+          expect(target.hitTestable(), findsOneWidget);
           await tester.tap(target.first);
           await tester.pumpAndSettle();
+          final submitted = tester.widget<Act0LessonRunnerShellV1>(runners);
+          expect(
+            submitted.runner.selectedOptionId,
+            choice.id,
+            reason: 'Count only the real submitted decision.',
+          );
+          answered.add(runner.selectedTaskId ?? '');
+          if (runner.selectedTaskId == 'actions_check_drill' &&
+              !choice.isCorrect) {
+            await tester.runAsync(
+              () => Act0ProgressStoreV1(
+                key: _progressKey,
+                isValidPayload: (_) => false,
+              ).flush(),
+            );
+            final saved = await _persisted();
+            final miss = (saved['learningEvidenceHistory'] as List)
+                .cast<Map>()
+                .singleWhere(
+                  (record) =>
+                      record['taskId'] == 'actions_check_drill' &&
+                      record['isCorrect'] == false,
+                );
+            expect(miss['runId'], isNotEmpty);
+            expect(miss['sessionId'], isNotEmpty);
+            expect(miss['runOrdinal'], greaterThan(0));
+            final intent = (saved['openRepairIntents'] as List)
+                .cast<Map>()
+                .singleWhere(
+                  (intent) => intent['sourceTaskId'] == 'actions_check_drill',
+                );
+            expect(intent['repairOccurrenceId'], miss['recordId']);
+            expect(intent['targetTaskId'], 'actions_legal_context');
+          }
           continue;
         }
       }
@@ -107,9 +205,6 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
     'Session Summary not reached: ${runner.selectedTaskId} ${runner.runner.phase} selected=${runner.runner.selectedOptionId} answered=$answered',
   );
 }
-
-String _text(WidgetTester tester, String key) =>
-    tester.widget<Text>(find.byKey(Key(key))).data ?? '';
 
 Future<Map<String, dynamic>> _persisted() async {
   final prefs = await SharedPreferences.getInstance();
@@ -141,58 +236,101 @@ Future<void> _leaveSummary(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets(
-    'real miss and independent repair earn completion without rewriting first assessment',
-    (t) async {
-      await _pumpGuide(t);
-      await _answerGuideToSummary(t);
-      expect(_text(t, 'act0_shell_block_summary_title'), 'Lesson complete');
-      expect(_text(t, 'act0_shell_block_summary_accuracy'), contains('75%'));
-      expect(find.text('Clean pass'), findsNothing);
-      expect(find.text('Replay before next lesson'), findsNothing);
-      final saved = await _persisted();
-      expect(
-        saved['completedTaskIds'],
-        containsAll(_guideLesson.taskList.map((task) => task.taskId)),
-      );
-      expect(saved['completedLessonIds'], contains(_guideLessonId));
-      final earnedXp = saved['earnedXp'];
-      await _leaveSummary(t);
-      await _openTab(t, 'Home');
-      if (act0AcademyRuntimeEnabledV1(
-        t.element(find.byType(Act0ShellPreviewScreenV1)),
-        Act0ShellTabV1.home,
-      )) {
-        final home = t.widget<Act0AcademyHomeLeafV1>(
-          find.byType(Act0AcademyHomeLeafV1),
+  for (final priorGuided in ['none', 'current', 'stale']) {
+    testWidgets(
+      'real no-bet lesson completion preserves first assessment (prior guided: $priorGuided)',
+
+      (t) async {
+        await _pumpGuide(
+          t,
+          history: priorGuided == 'none'
+              ? []
+              : [_priorGuidedCheck(stale: priorGuided == 'stale')],
         );
-        final completed = (saved['completedLessonIds'] as List)
-            .cast<String>()
-            .toSet();
+        await _answerGuideToSummary(t);
+        // The payoff headline can name an earned read. The source-owned
+        // completion and first-assessment counts carry the curriculum claim.
+        final summary = t
+            .widget<Act0BlockCompletionShellV1>(
+              find.byType(Act0BlockCompletionShellV1),
+            )
+            .summary;
+        expect(summary.curriculumCompleted, isTrue);
+        expect(summary.errorCount, 1);
+        expect(summary.correctCount, summary.taskCount - 1);
+        expect(summary.independentProvenanceKnown, isTrue);
+        expect(find.text('Clean pass'), findsNothing);
+        expect(find.text('Replay before next lesson'), findsNothing);
+        final saved = await _persisted();
         expect(
-          home.input.earnedLessonCount,
-          Act0ShellStateV1.sample
-              .worldById('world_1')
-              .lessons
-              .where((lesson) => completed.contains(lesson.lessonId))
-              .length,
+          saved['completedTaskIds'],
+          containsAll(_guideLesson.taskList.map((task) => task.taskId)),
         );
-        // Home can prioritize an unresolved repair; the actual curriculum
-        // must still advance beyond the completed Guide.
-        await _openTab(t, 'Learn');
-        final learn = t.widget<Act0LearnPathShellV1>(
-          find.byType(Act0LearnPathShellV1),
+        expect(saved['completedLessonIds'], contains(_guideLessonId));
+        final history = (saved['learningEvidenceHistory'] as List)
+            .cast<Map<String, dynamic>>();
+        final source = history.firstWhere(
+          (record) =>
+              record['taskId'] == 'actions_check_drill' &&
+              record['runKind'] != act0DiagnosticLearningEntryRunKindV1,
         );
-        final current = learn.lessons.firstWhere(
-          (lesson) =>
-              lesson.isSelectable && lesson.state == Act0LessonStateV1.current,
+        expect(source['isCorrect'], isFalse);
+        expect(source['choiceId'], 'fold');
+        if (priorGuided == 'current') {
+          expect(source['reviewKind'], 'exactReplay');
+        } else if (priorGuided == 'stale') {
+          expect(source['reviewKind'], isNot('exactReplay'));
+          expect(source['reviewKind'], isNot('unseenTransfer'));
+        }
+        expect(
+          history.any(
+            (record) =>
+                record['taskId'] == 'actions_legal_context' &&
+                record['runKind'] == 'repair' &&
+                record['isCorrect'] == true &&
+                record['assistanceKind'] == 'none',
+          ),
+          isTrue,
         );
-        expect(current.lessonId, isNot(_guideLessonId));
-      } else {
-        final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-        expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
-      }
-      expect((await _persisted())['earnedXp'], earnedXp);
-    },
-  );
+        final earnedXp = saved['earnedXp'];
+        await _leaveSummary(t);
+        await _openTab(t, 'Home');
+        if (act0AcademyRuntimeEnabledV1(
+          t.element(find.byType(Act0ShellPreviewScreenV1)),
+          Act0ShellTabV1.home,
+        )) {
+          final home = t.widget<Act0AcademyHomeLeafV1>(
+            find.byType(Act0AcademyHomeLeafV1),
+          );
+          final completed = (saved['completedLessonIds'] as List)
+              .cast<String>()
+              .toSet();
+          expect(
+            home.input.earnedLessonCount,
+            Act0ShellStateV1.sample
+                .worldById('world_1')
+                .lessons
+                .where((lesson) => completed.contains(lesson.lessonId))
+                .length,
+          );
+          // Home can prioritize an unresolved repair; the actual curriculum
+          // must still advance beyond the completed Guide.
+          await _openTab(t, 'Learn');
+          final learn = t.widget<Act0LearnPathShellV1>(
+            find.byType(Act0LearnPathShellV1),
+          );
+          final current = learn.lessons.firstWhere(
+            (lesson) =>
+                lesson.isSelectable &&
+                lesson.state == Act0LessonStateV1.current,
+          );
+          expect(current.lessonId, isNot(_guideLessonId));
+        } else {
+          final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+          expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
+        }
+        expect((await _persisted())['earnedXp'], earnedXp);
+      },
+    );
+  }
 }

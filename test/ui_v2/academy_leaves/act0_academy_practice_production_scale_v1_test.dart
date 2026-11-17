@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../support/act0_authored_repair_goal_fixture_v1.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -133,23 +134,8 @@ Future<void> _tap(WidgetTester tester, Key key) async {
   _expectReadable(tester);
 }
 
-const _intent = Act0RepairIntentV1(
-  sourceWorldId: 'world_1',
-  sourceLessonId: 'fold_check_call_raise',
-  sourceTaskId: 'actions_legal_context',
-  choiceId: 'fold',
-  result: 'incorrect',
-  errorType: 'missed_action_read',
-  missedSignalId: 'no_bet_yet',
-  missedSignalLabel: 'No bet yet',
-  skillAtomId: 'action_read',
-  skillLabel: 'Action read',
-  targetWorldId: 'world_1',
-  targetLessonId: 'fold_check_call_raise',
-  targetTaskId: 'actions_check_drill',
-  mappingType: 'repair',
-  reasonCode: 'same_signal_action_read_no_bet_yet',
-);
+final _fixture = Act0AuthoredRepairGoalFixtureV1.noBet();
+final Act0RepairIntentV1 _intent = _fixture.intent;
 
 const _history = Act0ReviewMistakeRecordV1(
   recordId: 'review_mistake_v1|history',
@@ -200,10 +186,25 @@ void main() {
     tester,
   ) async {
     final projection = Act0PracticeRepairQueueProjectionV1.fromSources(
-      activeRepairIntents: const [_intent],
+      activeRepairIntents: [_intent],
+      learningEvidenceHistory: act0AuthoredRepairFixtureHistoryV1(
+        intents: [_intent],
+      ),
+      currentFingerprintForIdentity: act0AuthoredRepairFixtureFingerprintV1,
       reviewMistakeHistory: const Act0ReviewMistakeHistoryV1(
         records: [_history],
       ),
+    );
+    final unconfirmed = Act0PracticeRepairQueueConsumerV1.fromProjection(
+      Act0PracticeRepairQueueProjectionV1.fromSources(
+        activeRepairIntents: [_intent],
+      ),
+    );
+    expect(
+      unconfirmed.items.single.isLaunchable,
+      isFalse,
+      reason:
+          'A structural legacy intent without its canonical source context cannot launch.',
     );
     final queue = Act0PracticeRepairQueueConsumerV1.fromProjection(projection);
     expect(queue.items, hasLength(2));
