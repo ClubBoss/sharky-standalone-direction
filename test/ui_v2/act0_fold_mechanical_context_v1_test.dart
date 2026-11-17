@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_betting_price_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
@@ -83,6 +84,21 @@ void main() {
       final task = _task;
       final runner = task.runner;
       final table = runner.table;
+      expect(
+        act0BuildInstructionBlocksV1(
+          text: runner.teachingSteps.last.body,
+          compact: true,
+        ),
+        hasLength(3),
+      );
+      expect(
+        act0AuditInstructionBlockV1(
+          scope: 'actions_fold_drill/new-context',
+          text: runner.teachingSteps.last.body,
+          compact: true,
+        ),
+        isEmpty,
+      );
       expect(task.title, 'Fold weak hands');
       expect(task.rewardXp, 5);
       expect(runner.caption, 'HJ bets and your hand is weak.');

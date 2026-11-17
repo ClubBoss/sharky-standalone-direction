@@ -9842,7 +9842,7 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       const Act0TeachingStepV1(
         title: 'A new mechanical example.',
         body:
-            'All six start with 100 BB before the 0.5/1 BB blinds; no ante or rake. UTG, HJ and BTN call 1 BB, CO folds, SB adds 0.5 BB and BB checks: pot 5 BB. On this flop SB, BB and UTG check; HJ bets 2 BB. BTN acts next: pot 7 BB, call 2 BB. Raise 6 BB means 6 BB total on this flop.',
+            'Six players start with 100 BB before the 0.5/1 BB blinds, with no ante or rake. Preflop: UTG and HJ call 1 BB, CO folds, BTN calls 1 BB, SB adds 0.5 BB to 1 BB, BB checks: pot 5 BB. Flop: SB, BB and UTG check; HJ bets 2 BB. BTN next: pot 7 BB, call 2 BB; Raise 6 BB means 6 BB total.',
         focusSeatIds: ['btn', 'hj'],
       ),
     ],
