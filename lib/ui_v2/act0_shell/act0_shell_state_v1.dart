@@ -10202,7 +10202,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
               : taskId == 'positions_utg'
               ? (o.seatId == 'utg'
                     ? 'UTG names the seat immediately after BB in this preflop order.'
-                    : 'BTN is the dealer-button seat, not UTG.')
+                    : o.feedbackReason)
               : o.feedbackReason,
           repairFocusSeatIds: o.repairFocusSeatIds,
           repairFocusCardIds: o.repairFocusCardIds,
