@@ -1942,6 +1942,222 @@ void main() {
   });
 
   testWidgets(
+    'actual Learn source miss resumes cancelled inline launch through Practice Queue Action policy',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await startAuthoredTaskFromLearnV1(
+        tester,
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_check_drill',
+        telemetrySink: sink,
+      );
+      await advanceAuthoredPromptV1(tester);
+      final beforeChoice = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(beforeChoice.selectedTaskId, 'actions_check_drill');
+      final wrong = beforeChoice.runner.options.firstWhere(
+        (option) => !option.isCorrect,
+      );
+      await answerVisiblePromptWronglyV1(tester);
+      final submitted = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(submitted.runner.selectedOptionId, wrong.id);
+      expect(submitted.runner.selectedOption!.isCorrect, isFalse);
+      final dynamic root = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      final sourceIntent =
+          root.debugOpenRepairIntentPayloadForSourceTaskV1(
+                'actions_check_drill',
+              )
+              as Map<String, Object?>;
+      expect(sourceIntent['sourceTaskId'], 'actions_check_drill');
+      expect(sourceIntent['targetTaskId'], 'actions_legal_context');
+      expect(sourceIntent['choiceId'], wrong.id);
+      final sourceOccurrence = sourceIntent['repairOccurrenceId'] as String;
+      expect(sourceOccurrence, isNotEmpty);
+      await tester.runAsync(() => saveQueue.flush());
+      final prefs = await SharedPreferences.getInstance();
+      final beforeQueue =
+          jsonDecode(prefs.getString('act0_shell_progress_v1')!)
+              as Map<String, dynamic>;
+      final originalSource = (beforeQueue['learningEvidenceHistory'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((record) => record['recordId'] == sourceOccurrence);
+      expect(originalSource['taskId'], 'actions_check_drill');
+      expect(originalSource['choiceId'], wrong.id);
+      expect(originalSource['isCorrect'], isFalse);
+      expect(originalSource['errorType'], sourceIntent['errorType']);
+      expect(originalSource['assistanceKind'], 'none');
+      expect(originalSource['runKind'], 'lesson');
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        isEmpty,
+      );
+      expect(sink.events.where((event) => event.name == 'fix_landed'), isEmpty);
+      final initialRecommendation = sink.events.singleWhere(
+        (event) =>
+            event.name == 'recommendation_generated' &&
+            event.fields['sequence_stage'] == 'decision',
+      );
+      expect(
+        initialRecommendation.fields['source_attempt_key'],
+        sourceOccurrence,
+      );
+      expect(initialRecommendation.fields['correct'], isFalse);
+      expect(
+        initialRecommendation.fields['error_type'],
+        'misread_action_legality',
+      );
+
+      // This feedback offers Continue. Cancel its real Legal launch before
+      // answering, then resume the still-open source obligation through Queue.
+      await continueVisibleFeedbackV1(tester);
+      final inlineTarget = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(inlineTarget.selectedTaskId, 'actions_legal_context');
+      expect(inlineTarget.runner.selectedOptionId, isNull);
+      await tester.runAsync(() => saveQueue.flush());
+      final beforeResume =
+          jsonDecode(prefs.getString('act0_shell_progress_v1')!)
+              as Map<String, dynamic>;
+      expect(
+        (beforeResume['learningEvidenceHistory'] as List)
+            .cast<Map<String, dynamic>>()
+            .where((record) => record['taskId'] == 'actions_legal_context'),
+        isEmpty,
+      );
+      expect(beforeResume['repairOutcomeProjection'], isEmpty);
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        isEmpty,
+      );
+      expect(sink.events.where((event) => event.name == 'fix_landed'), isEmpty);
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'recommendation_generated' &&
+              event.fields['sequence_stage'] == 'repair',
+        ),
+        isEmpty,
+      );
+      final back = find.byKey(const Key('act0_shell_runner_back'));
+      expect(back, findsOneWidget);
+      await tester.ensureVisible(back);
+      await tester.tap(back);
+      await tester.pumpAndSettle();
+      await openBottomTabV1(tester, 'Practice');
+      final launch = act0ShellPresentationFinderV1(
+        'act0_shell_play_repair_queue_item_cta',
+      );
+      expect(launch, findsOneWidget);
+      await tester.ensureVisible(launch);
+      await tester.pumpAndSettle();
+      expect(launch.hitTestable(), findsOneWidget);
+      await tester.tap(launch);
+      await tester.pumpAndSettle();
+      final target = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(target.selectedTaskId, 'actions_legal_context');
+      expect(
+        root.debugActiveRepairContextPayloadV1()['sourceTaskId'],
+        'actions_check_drill',
+      );
+      expect(
+        root.debugActiveRepairContextPayloadV1()['repairTaskId'],
+        'actions_legal_context',
+      );
+      await advanceAuthoredPromptV1(tester);
+      final correct = target.runner.options.singleWhere(
+        (option) => option.isCorrect,
+      );
+      await answerVisiblePromptCorrectlyV1(tester);
+      final submittedTarget = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(submittedTarget.selectedTaskId, 'actions_legal_context');
+      expect(submittedTarget.runner.selectedOptionId, correct.id);
+      expect(submittedTarget.runner.selectedOption!.isCorrect, isTrue);
+      await tester.runAsync(() => saveQueue.flush());
+      final afterAnswer =
+          jsonDecode(prefs.getString('act0_shell_progress_v1')!)
+              as Map<String, dynamic>;
+      final outcomes = (afterAnswer['repairOutcomeProjection'] as List)
+          .cast<Map<String, dynamic>>();
+      final canonical = outcomes.singleWhere(
+        (outcome) => outcome['repairOccurrenceId'] == sourceOccurrence,
+      );
+      expect(canonical['sourceTaskId'], 'actions_check_drill');
+      expect(canonical['targetTaskId'], 'actions_legal_context');
+      expect(canonical['selectedChoiceId'], correct.id);
+      expect(canonical['isCorrect'], isTrue);
+      final targetAttempt = canonical['repairAttemptId'] as String;
+      expect(targetAttempt, isNotEmpty);
+      final history = (afterAnswer['learningEvidenceHistory'] as List)
+          .cast<Map<String, dynamic>>();
+      expect(
+        history.singleWhere((record) => record['recordId'] == sourceOccurrence),
+        originalSource,
+      );
+      final actualTarget = history.singleWhere(
+        (record) => record['recordId'] == targetAttempt,
+      );
+      expect(actualTarget['taskId'], 'actions_legal_context');
+      expect(actualTarget['isCorrect'], isTrue);
+      expect(actualTarget['assistanceKind'], 'none');
+      expect(actualTarget['runKind'], 'repair');
+      final generated = sink.events.singleWhere(
+        (event) =>
+            event.name == 'recommendation_generated' &&
+            event.fields['sequence_stage'] == 'repair',
+      );
+      expect(generated.fields['sequence_id'], 'w1_action_words_check_v1');
+      expect(generated.fields['source_attempt_key'], targetAttempt);
+      expect(generated.fields['source_user_choice'], correct.id);
+      expect(generated.fields['correct'], isTrue);
+      expect(generated.fields['error_type'], 'none');
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where((event) => event.name == 'fix_landed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'recheck_started' ||
+              event.name == 'recheck_completed',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'action_payoff_generated' &&
+              event.fields['sequence_stage'] == 'repair' &&
+              event.fields['payoff_type'] == 'recoveredSuccess',
+        ),
+        isEmpty,
+      );
+      await continueVisibleFeedbackV1(tester);
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where((event) => event.name == 'fix_landed'),
+        hasLength(1),
+      );
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'Action sequence surfaces a traceable deterministic recommendation',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();

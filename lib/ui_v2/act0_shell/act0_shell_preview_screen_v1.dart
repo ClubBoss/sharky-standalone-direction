@@ -7059,6 +7059,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             _resetLessonRunMetrics();
                             _activePracticeGroupId = null;
                             _clearActiveRepairLaunchV1();
+                            final actionSequence =
+                                act0ActionLearningSequenceForTaskV1(taskId);
+                            _activeActionSequenceStageV1 = actionSequence
+                                ?.stageForTask(taskId);
                             _learnDetailLessonId = null;
                             _learnPopupTaskId = null;
                             _learnDetailWorldId = null;
@@ -10705,6 +10709,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activePracticeRepairQueueRequestV1 = request;
     _activeRepairObligationV1 =
         _openRepairIntentBySourceTaskId[request.sourceTaskId];
+    if (intent.sourceTaskId == act0ActionLearningSequenceV1.practiceTaskId &&
+        intent.targetTaskId == 'actions_legal_context') {
+      // Queue and feedback launches feed the same canonical Action policy.
+      // The policy still validates the actual current source/target attempts.
+      _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.repair;
+    }
     final launchTask = _taskById(
       _lessonById(launchWorld.lessons, request.targetLessonId),
       request.targetTaskId,
