@@ -3,13 +3,15 @@
 set -euo pipefail
 
 usage() {
-  echo "Usage: bash tools/sharky_candidate_preflight_v1.sh --head SHA40 --base SHA40 [--run-static]"
-  echo "Default is read-only plan. --run-static requires a clean, non-main isolated checkout."
+  echo "Usage: bash tools/sharky_candidate_preflight_v1.sh --head SHA40 --base SHA40 [--run-authority | --run-static]"
+  echo "Default is read-only plan. Execution requires a clean, non-main isolated checkout."
+  echo "--run-authority checks existing test admission without Dart/Flutter; --run-static checks it before format/analyze."
 }
 
 HEAD_ARG=""
 BASE_ARG=""
 RUN_STATIC=0
+RUN_AUTHORITY=0
 while (( $# )); do
   case "$1" in
     --head|--base)
@@ -17,6 +19,7 @@ while (( $# )); do
       if [[ "$1" == "--head" ]]; then HEAD_ARG="$2"; else BASE_ARG="$2"; fi
       shift 2 ;;
     --run-static) RUN_STATIC=1; shift ;;
+    --run-authority) RUN_AUTHORITY=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "ERROR=UNKNOWN_ARG" >&2; usage >&2; exit 2 ;;
   esac
@@ -85,11 +88,12 @@ else
   echo "CHECKOUT_COVERAGE=COMPLETE_FOR_CHANGED_DART"
 fi
 
-if (( ! RUN_STATIC )); then
+if (( ! RUN_STATIC && ! RUN_AUTHORITY )); then
   echo "MODE=PLAN_ONLY"
   echo "FORMAT=NOT_RUN"
   echo "ANALYZE=NOT_RUN"
   echo "DIFF_CHECK=NOT_RUN"
+  echo "TEST_AUTHORITY=NOT_RUN"
   echo "NEXT=Owner selects applicable tests and existing gates; no tests launched."
   exit 0
 fi
@@ -107,7 +111,11 @@ fi
 [[ -f tools/sharky_compact_evidence_v1.sh ]] || {
   echo "ERROR=EXISTING_EVIDENCE_WRAPPER_MISSING" >&2; exit 4;
 }
-echo "MODE=RUN_STATIC_ONLY"
+if (( RUN_STATIC )); then
+  echo "MODE=RUN_STATIC_ONLY"
+else
+  echo "MODE=RUN_AUTHORITY_ONLY"
+fi
 EVIDENCE_ROOT="${SHARKY_EVIDENCE_DIR:-output/context-economy}"
 mkdir -p "$EVIDENCE_ROOT"
 ATTEMPT_DIR="$(mktemp -d "${EVIDENCE_ROOT%/}/preflight-${HEAD_ARG:0:12}-XXXXXXXX")"
@@ -120,6 +128,17 @@ STARTED_UTC="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 } > "$ATTEMPT_DIR/identity.txt"
 echo "EVIDENCE_DIR=$ATTEMPT_DIR"
 echo "ATTEMPT_STARTED_UTC=$STARTED_UTC"
+echo "TEST_AUTHORITY=RUNNING"
+bash tools/sharky_compact_evidence_v1.sh --dir "$ATTEMPT_DIR" --id test-authority -- \
+  bash tools/test_authority_validate_v1.sh --json
+echo "TEST_AUTHORITY=PASS_SCOPED"
+if (( ! RUN_STATIC )); then
+  echo "FORMAT=NOT_RUN"
+  echo "ANALYZE=NOT_RUN"
+  echo "DIFF_CHECK=NOT_RUN"
+  echo "NEXT=Admission structure only; existing source/CI/native and independent gates remain required."
+  exit 0
+fi
 echo "DIFF_CHECK=RUNNING"
 bash tools/sharky_compact_evidence_v1.sh --dir "$ATTEMPT_DIR" --id diff-check -- \
   git diff --check "$BASE_ARG" "$HEAD_ARG"

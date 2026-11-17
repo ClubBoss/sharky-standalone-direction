@@ -23,6 +23,7 @@ class ExactCandidatePreflightTests(unittest.TestCase):
         self.bin = self.parent / "bin"
         self.bin.mkdir()
         self.trace = self.parent / "trace"
+        self.authority_trace = self.parent / "authority-trace"
         self.git("init", "-q", "-b", "main")
         self.git("config", "user.email", "pilot@example.invalid")
         self.git("config", "user.name", "Pilot")
@@ -52,6 +53,12 @@ class ExactCandidatePreflightTests(unittest.TestCase):
             encoding="utf-8",
         )
         (self.repo / "lib" / "example.dart").write_text("void main() {}\n")
+        (self.repo / "tools" / "test_authority_validate_v1.sh").write_text(
+            '#!/usr/bin/env bash\n'
+            'echo "authority $*" >> "$AUTHORITY_TRACE"\n'
+            'if [[ "$MOCK_FAIL" == "authority" ]]; then exit 19; fi\n'
+            'exit 0\n'
+        )
         (self.repo / ".gitignore").write_text("output/\n")
         self.git("add", ".")
         self.git("commit", "-qm", "base")
@@ -83,6 +90,7 @@ class ExactCandidatePreflightTests(unittest.TestCase):
         env = os.environ.copy()
         env["PATH"] = str(self.bin) + os.pathsep + env["PATH"]
         env["TRACE"] = str(self.trace)
+        env["AUTHORITY_TRACE"] = str(self.authority_trace)
         env["MOCK_FAIL"] = fail
         return subprocess.run(
             ["bash", str(self.repo / "tools" / SCRIPT.name),
@@ -97,11 +105,49 @@ class ExactCandidatePreflightTests(unittest.TestCase):
         self.assertIn("SOURCE_TESTS=NOT_RUN", result.stdout)
         self.assertIn("CHANGED_DART_COUNT=1", result.stdout)
         self.assertFalse(self.trace.exists())
+        self.assertFalse(self.authority_trace.exists())
+
+    def test_authority_only_never_launches_sdk(self):
+        result = self.run_preflight("--run-authority")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertIn("MODE=RUN_AUTHORITY_ONLY", result.stdout)
+        self.assertIn("TEST_AUTHORITY=PASS_SCOPED", result.stdout)
+        self.assertIn("NATIVE=NOT_VERIFIED", result.stdout)
+        self.assertNotIn("STATIC_PREFLIGHT=PASS_SCOPED", result.stdout)
+        self.assertEqual(self.authority_trace.read_text(), "authority --json\n")
+        self.assertFalse(self.trace.exists())
+
+    def test_authority_failure_blocks_static_and_preserves_raw(self):
+        result = self.run_preflight("--run-static", fail="authority")
+        self.assertEqual(result.returncode, 19, result.stderr + result.stdout)
+        self.assertNotIn("TEST_AUTHORITY=PASS_SCOPED", result.stdout)
+        self.assertNotIn("FORMAT=RUNNING", result.stdout)
+        self.assertNotIn("ANALYZE=RUNNING", result.stdout)
+        self.assertFalse(self.trace.exists())
+        attempts = list((self.repo / "output" / "context-economy").glob("preflight-*"))
+        self.assertEqual(len(attempts), 1)
+        self.assertEqual((attempts[0] / "test-authority.summary.log").read_text(), "exit=19\n")
+        self.assertTrue((attempts[0] / "test-authority.raw.log").exists())
+
+    def test_authority_only_failure_never_claims_pass(self):
+        result = self.run_preflight("--run-authority", fail="authority")
+        self.assertEqual(result.returncode, 19)
+        self.assertNotIn("TEST_AUTHORITY=PASS_SCOPED", result.stdout)
+        self.assertFalse(self.trace.exists())
+
+    def test_authority_only_preserves_clean_branch_requirement(self):
+        (self.repo / "foreign.txt").write_text("unowned\n")
+        result = self.run_preflight("--run-authority")
+        self.assertEqual(result.returncode, 4)
+        self.assertIn("DIRTY_CHECKOUT", result.stderr)
+        self.assertFalse(self.authority_trace.exists())
 
     def test_static_orders_format_before_analyze(self):
         result = self.run_preflight("--run-static")
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
         self.assertIn("STATIC_PREFLIGHT=PASS_SCOPED", result.stdout)
+        self.assertLess(result.stdout.index("TEST_AUTHORITY=PASS_SCOPED"),
+                        result.stdout.index("FORMAT=RUNNING"))
         lines = self.trace.read_text().splitlines()
         self.assertEqual(len(lines), 2)
         self.assertTrue(lines[0].startswith(
