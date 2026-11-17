@@ -515,6 +515,7 @@ void _newFirstHandStackTests() {
 
 void main() {
   _newCallPriceContextTests();
+  _newFreeCheckContextTests();
   _newFirstHandStackTests();
   setUpAll(() async {
     final font = [
@@ -1191,4 +1192,311 @@ Act0SeatStateV1 _callSeatMutation(
           amountLabel: '1 BB',
         )
       : s.bet,
+);
+
+// New declared facts, not a reconstruction of the rejected old AK scene.
+void _newFreeCheckContextTests() {
+  const sources = <String, (String, String)>{
+    'actions_legal_context': (
+      'No bet faces you. Which action keeps you in the hand without adding chips?',
+      'd889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4',
+    ),
+    'actions_check_drill': (
+      'What action keeps playing for free?',
+      '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
+    ),
+  };
+  for (final entry in sources.entries) {
+    final id = entry.key;
+    _contextPremisesWidgetTest('fold_check_call_raise', id, neutral: false);
+    test(
+      'new mechanical Check $id retains goal and complete declared facts',
+      () {
+        final task = _task('fold_check_call_raise', id);
+        final table = task.runner.table;
+        expect(task.runner.question, entry.value.$1);
+        expect(task.rewardXp, 5);
+        expect(task.runner.options.map((o) => o.id), ['fold', 'check', 'call']);
+        expect(task.runner.options.map((o) => o.isCorrect), [
+          false,
+          true,
+          false,
+        ]);
+        expect(task.runner.options.map((o) => o.quality.name), [
+          'wrong',
+          'correct',
+          'wrong',
+        ]);
+        expect(task.runner.options.map((o) => o.feedbackReason), [
+          'Folding gives up the hand. Checking is free here.',
+          'Checking keeps the hand going when no bet faces you.',
+          'Calling means matching a bet. There is no bet here.',
+        ]);
+        expect(table.scope, Act0TableScopeV1.playedHand);
+        expect(table.playerCount, 6);
+        expect(table.heroCards.map((c) => c.label), ['9c', '8d']);
+        expect(table.heroCards.last.tone, Act0CardToneV1.red);
+        expect(table.boardCards.map((c) => c.label), ['Ah', '7c', '2d']);
+        expect(
+          {...table.heroCards, ...table.boardCards}.map((c) => c.label).toSet(),
+          hasLength(5),
+        );
+        expect(table.heroSeat.holeCards.map((c) => c.label), ['9c', '8d']);
+        expect(table.streetLabel, 'Flop');
+        expect(table.potLabel, 'Pot 4.5 BB');
+        expect(table.toCallLabel, isEmpty);
+        expect(table.heroSeatId, 'btn');
+        expect(table.decisionSeatId, 'btn');
+        expect(table.activeSeatId, 'btn');
+        expect(
+          table.seats.where((s) => s.isInHand).map((s) => s.seatId).toSet(),
+          {'btn', 'bb'},
+        );
+        expect(
+          table.seats.where((s) => s.isFolded).map((s) => s.seatId).toSet(),
+          {'utg', 'hj', 'co', 'sb'},
+        );
+        expect(table.seats.singleWhere((s) => s.isSmallBlind).seatId, 'sb');
+        expect(table.seats.singleWhere((s) => s.isBigBlind).seatId, 'bb');
+        expect(table.seats.singleWhere((s) => s.isDealerButton).seatId, 'btn');
+        expect(
+          {for (final s in table.seats) s.seatId: s.stackLabel},
+          {
+            'utg': '100 BB',
+            'hj': '100 BB',
+            'co': '100 BB',
+            'btn': '98 BB',
+            'sb': '99.5 BB',
+            'bb': '98 BB',
+          },
+        );
+        expect(_freeCheckTotal(table), 600);
+        expect(
+          table.seats.every(
+            (s) =>
+                s.blindAmountLabel == null &&
+                s.currentBetLabel == null &&
+                s.bet == null &&
+                !s.isLastAggressor,
+          ),
+          isTrue,
+        );
+        expect(table.highlightedSeatIds, isEmpty);
+        expect(table.highlightedCardIds, isEmpty);
+        expect(table.actionTrail.map((a) => a.label), [
+          'SB blind 0.5 BB',
+          'BB blind 1 BB',
+          'UTG folds',
+          'HJ folds',
+          'CO folds',
+          'BTN raises 2 BB',
+          'SB folds',
+          'BB calls 1 BB more',
+          'Flop: BB checks',
+        ]);
+        expect(
+          task.runner.caption,
+          contains('100 BB before the 0.5/1 BB blinds'),
+        );
+        expect(task.runner.caption, contains('no ante, straddle or rake'));
+        expect(task.runner.caption, contains('raises to 2 BB'));
+        expect(task.runner.caption, contains('calls 1 BB more'));
+        expect(task.runner.caption, contains('pot is 4.5 BB'));
+        final proof = act0BettingRoundOrderProofForTableV1(table);
+        expect(proof.truth, Act0BettingRoundOrderTruthV1.consistent);
+        expect(proof.reason, 'consistent_current_decision');
+        final feedback = act0FeedbackTableForRunnerV1(
+          runner: task.runner.copyWith(selectedOptionId: 'check'),
+          taskFamily: task.resolvedTaskFamily,
+        );
+        expect(feedback.streetLabel, 'Flop');
+        expect(feedback.boardCards.map((c) => c.label), ['Ah', '7c', '2d']);
+        expect(feedback.potLabel, 'Pot 4.5 BB');
+        expect(
+          feedback.actionTrail.map((a) => a.label),
+          table.actionTrail.map((a) => a.label),
+        );
+      },
+    );
+    test('new mechanical Check $id rejects missing facts and paid Call', () {
+      final table = _task('fold_check_call_raise', id).runner.table;
+      Act0RunnerOptionV1 wager(String action, String amount) =>
+          Act0RunnerOptionV1(
+            id: 'synthetic_${action}_$amount',
+            label: action,
+            amountLabel: amount,
+            isCorrect: false,
+            preferredLabel: 'Check',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Synthetic numeric control',
+            feedbackReason: 'Mechanical price only.',
+          );
+      final call = act0BettingPriceForOptionV1(table, wager('Call', '1 BB'));
+      expect(call.truth, Act0BettingPriceTruthV1.contradiction);
+      expect(call.reason, 'call_without_price');
+      expect(call.amountToMatchBb, 0);
+      expect(call.actorCommittedBb, 0);
+      expect(
+        act0BettingPriceForOptionV1(table, wager('Call', '0 BB')).truth,
+        Act0BettingPriceTruthV1.contradiction,
+      );
+      // A legal numeric bet is only a rule control, not a recommended choice.
+      expect(
+        act0BettingPriceForOptionV1(table, wager('Bet', '1 BB')).truth,
+        Act0BettingPriceTruthV1.consistent,
+      );
+      expect(
+        act0BettingPriceForOptionV1(table, wager('Raise', '1 BB')).truth,
+        Act0BettingPriceTruthV1.contradiction,
+      );
+      for (final label in [
+        'SB blind 0.5 BB',
+        'BB calls 1 BB more',
+        'Flop: BB checks',
+      ]) {
+        final bad = table.copyWith(
+          actionTrail: table.actionTrail
+              .where((a) => a.label != label)
+              .toList(),
+        );
+        expect(
+          act0BettingRoundOrderProofForTableV1(bad).truth,
+          isNot(Act0BettingRoundOrderTruthV1.consistent),
+          reason: label,
+        );
+      }
+      for (final raise in ['BTN raises 1.5 BB', 'BTN raises 3 BB']) {
+        final bad = table.copyWith(
+          actionTrail: [
+            for (final a in table.actionTrail)
+              a.label == 'BTN raises 2 BB'
+                  ? Act0ActionTrailItemV1(label: raise)
+                  : a,
+          ],
+        );
+        expect(
+          act0BettingPriceForOptionV1(bad, wager('Bet', '1 BB')).truth,
+          isNot(Act0BettingPriceTruthV1.consistent),
+        );
+      }
+      for (final wrongActor in ['bb', 'sb', 'missing']) {
+        expect(
+          act0BettingRoundOrderProofForTableV1(
+            table.copyWith(decisionSeatId: wrongActor),
+          ).truth,
+          isNot(Act0BettingRoundOrderTruthV1.consistent),
+        );
+      }
+      for (final wrongPot in ['Pot 4 BB', 'Pot 3 BB', 'Pot 5.5 BB']) {
+        // Independent snapshot conservation; no claim that generic D2 is admitted.
+        expect(_freeCheckTotal(table.copyWith(potLabel: wrongPot)), isNot(600));
+      }
+      for (final stack in <String?>['0 BB', null]) {
+        final bad = table.copyWith(
+          seats: [
+            for (final s in table.seats)
+              s.seatId == 'btn' ? _freeCheckSeatMutation(s, stack: stack) : s,
+          ],
+        );
+        expect(
+          act0BettingRoundOrderProofForTableV1(bad).truth,
+          isNot(Act0BettingRoundOrderTruthV1.consistent),
+        );
+      }
+      // Synthetic rule boundary only: two live checks close this flop.
+      final closed = table.copyWith(
+        clearDecisionSeatId: true,
+        activeSeatId: '',
+        seats: [
+          for (final s in table.seats)
+            _freeCheckSeatMutation(s, stack: s.stackLabel, active: false),
+        ],
+        actionTrail: [
+          ...table.actionTrail,
+          const Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
+        ],
+      );
+      final closedProof = act0BettingRoundOrderProofForTableV1(closed);
+      expect(closedProof.truth, Act0BettingRoundOrderTruthV1.consistent);
+      expect(closedProof.reason, 'consistent_closed_history');
+      expect(_freeCheckTotal(closed), 600);
+      expect(closed.streetLabel, 'Flop');
+      expect(closed.boardCards.length, 3);
+      expect(
+        act0BettingRoundOrderProofForTableV1(
+          closed.copyWith(decisionSeatId: 'btn'),
+        ).truth,
+        Act0BettingRoundOrderTruthV1.contradiction,
+      );
+    });
+    test(
+      'new mechanical Check $id retains old raw history without new proof',
+      () {
+        final fp = act0CurrentAuthoredSourceFingerprintForIdentityV1(
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: id,
+        )!;
+        expect(fp, isNot(entry.value.$2));
+        final old = Act0LearningEvidenceRecordV1(
+          recordId: 'synthetic_old_$id',
+          createdOrder: 1,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: id,
+          sourceTaskId: id,
+          choiceId: 'check',
+          expectedChoiceId: 'check',
+          isCorrect: true,
+          errorType: 'none',
+          conceptFamilyId: 'action_read',
+          repairFocusId: 'action_read',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+          authoredSourceFingerprint: entry.value.$2,
+        );
+        final bytes = jsonEncode(old.toPayload());
+        final restored = Act0LearningEvidenceRecordV1.tryParse(
+          jsonDecode(bytes),
+        )!;
+        expect(jsonEncode(restored.toPayload()), bytes);
+        expect(restored.authoredSourceFingerprint, entry.value.$2);
+        expect(restored.choiceId, 'check');
+        expect(restored.isCorrect, isTrue);
+        expect(act0CurrentAuthoredSourceProofV1(restored), isNull);
+      },
+    );
+  }
+}
+
+double _freeCheckTotal(Act0TableStateV1 table) => table.seats.fold<double>(
+  double.parse(table.potLabel.split(' ')[1]),
+  (sum, s) => sum + double.parse(s.stackLabel!.split(' ').first),
+);
+
+Act0SeatStateV1 _freeCheckSeatMutation(
+  Act0SeatStateV1 s, {
+  required String? stack,
+  bool? active,
+}) => Act0SeatStateV1(
+  seatId: s.seatId,
+  seatLabel: s.seatLabel,
+  displayName: s.displayName,
+  isHero: s.isHero,
+  isDealerButton: s.isDealerButton,
+  isSmallBlind: s.isSmallBlind,
+  isBigBlind: s.isBigBlind,
+  isActive: active ?? s.isActive,
+  isInHand: s.isInHand,
+  isFolded: s.isFolded,
+  isOccupied: s.isOccupied,
+  hasActed: s.hasActed,
+  isLastAggressor: s.isLastAggressor,
+  stackLabel: stack,
+  holeCards: s.holeCards,
+  cardsVisibleMode: s.cardsVisibleMode,
+  currentBetLabel: s.currentBetLabel,
+  bet: s.bet,
+  blindAmountLabel: s.blindAmountLabel,
 );

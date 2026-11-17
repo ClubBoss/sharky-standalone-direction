@@ -2139,7 +2139,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_legal_context',
         title: 'Legal actions',
         phase: Act0LessonPhaseV1.drill,
-        runner: _legalActionRunner,
+        runner: _act0W01ExplicitFreeCheckContextV1(_legalActionRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
@@ -2151,7 +2151,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_check_drill',
         title: 'Check when no bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _checkActionRunner,
+        runner: _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         tablePresentation: Act0TaskTablePresentationV1.stablePractice,
@@ -9736,6 +9736,81 @@ final _callActionRunner = _readBoardRunner.copyWith(
     ),
   ],
 );
+
+// Newly authored mechanical free-continuation frames for two W01 tasks only.
+// The stipulated preflop raise is history, not a strategy recommendation.
+Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(Act0RunnerStateV1 source) {
+  const cards = <Act0CardStateV1>[
+    Act0CardStateV1(rank: '9', suit: 'c'),
+    Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+  ];
+  const remaining = <String, String>{
+    'utg': '100 BB',
+    'hj': '100 BB',
+    'co': '100 BB',
+    'btn': '98 BB',
+    'sb': '99.5 BB',
+    'bb': '98 BB',
+  };
+  return source.copyWith(
+    caption:
+        'For this example, all six start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG, HJ and CO fold; BTN raises to 2 BB, SB folds and BB calls 1 BB more. On this flop BB checks; BTN acts next. The pot is 4.5 BB and no bet faces BTN.',
+    table: source.table.copyWith(
+      scope: Act0TableScopeV1.playedHand,
+      heroCards: cards,
+      boardCards: const [
+        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '7', suit: 'c'),
+        Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+      ],
+      streetLabel: 'Flop',
+      potLabel: 'Pot 4.5 BB',
+      toCallLabel: '',
+      centerLabel: 'No bet faces you',
+      decisionSeatId: 'btn',
+      activeSeatId: 'btn',
+      heroSeatId: 'btn',
+      highlightedSeatIds: const [],
+      highlightedCardIds: const [],
+      selectableSeatIds: const [],
+      selectedSeatId: '',
+      focusCalloutLabel: '',
+      actionTrail: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN raises 2 BB'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      ],
+      seats: [
+        for (final seat in source.table.seats)
+          Act0SeatStateV1(
+            seatId: seat.seatId,
+            seatLabel: seat.seatLabel,
+            displayName: seat.displayName,
+            isHero: seat.seatId == 'btn',
+            isDealerButton: seat.seatId == 'btn',
+            isSmallBlind: seat.seatId == 'sb',
+            isBigBlind: seat.seatId == 'bb',
+            isActive: seat.seatId == 'btn',
+            isInHand: seat.seatId == 'btn' || seat.seatId == 'bb',
+            isFolded: seat.seatId != 'btn' && seat.seatId != 'bb',
+            hasActed: seat.seatId != 'btn',
+            isLastAggressor: false,
+            stackLabel: remaining[seat.seatId],
+            holeCards: seat.seatId == 'btn' ? cards : const [],
+            cardsVisibleMode: seat.seatId == 'btn'
+                ? Act0CardsVisibleModeV1.faceUp
+                : Act0CardsVisibleModeV1.none,
+          ),
+      ],
+    ),
+  );
+}
 
 // Newly authored full price context for this one mechanical Call question.
 // Shared Call templates and their later-world descendants remain unchanged.

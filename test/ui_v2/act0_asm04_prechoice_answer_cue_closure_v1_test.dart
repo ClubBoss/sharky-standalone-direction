@@ -921,27 +921,42 @@ void main() {
       }
     });
 
-    test('untouched tasks keep their fingerprint and current proof', () {
-      final task = _row('actions_legal_context').task;
-      expect(act0PredecisionCardFocusSourceRevisionV1(task), isNull);
-      expect(
-        act0PrechoiceAnswerCueSourceRevisionV1(task, lessonId: 'x'),
-        isNull,
-      );
-      expect(
-        fingerprint('actions_legal_context'),
-        mainFingerprints['actions_legal_context'],
-      );
-      expect(
-        act0CurrentAuthoredSourceProofV1(
-          record(
-            'actions_legal_context',
-            mainFingerprints['actions_legal_context']!,
+    test(
+      'uncued context revisions retain old history without current proof',
+      () {
+        final task = _row('actions_legal_context').task;
+        expect(act0PredecisionCardFocusSourceRevisionV1(task), isNull);
+        expect(
+          act0PrechoiceAnswerCueSourceRevisionV1(task, lessonId: 'x'),
+          isNull,
+        );
+        // WP03 Check02 authors a new task-local hand without changing ASM04's
+        // cue policy. The immutable pre-ASM04 fingerprint stays historical.
+        final current = fingerprint('actions_legal_context');
+        expect(current, isNot(mainFingerprints['actions_legal_context']));
+        final old = record(
+          'actions_legal_context',
+          mainFingerprints['actions_legal_context']!,
+        );
+        final restored = Act0LearningEvidenceHistoryV1.tryParse(
+          jsonDecode(
+            Act0LearningEvidenceHistoryV1(records: [old]).toStorageString(),
           ),
-        )!.isCurrentlyCorrect,
-        isTrue,
-      );
-    });
+        )!;
+        expect(restored.records.single.toPayload(), old.toPayload());
+        expect(restored.records.single.isCorrect, isTrue);
+        expect(
+          act0CurrentAuthoredSourceProofV1(restored.records.single),
+          isNull,
+        );
+        expect(
+          act0CurrentAuthoredSourceProofV1(
+            record('actions_legal_context', current),
+          )!.isCurrentlyCorrect,
+          isTrue,
+        );
+      },
+    );
 
     test('revision covers exactly the tasks whose pre-choice view changed', () {
       final revised = {

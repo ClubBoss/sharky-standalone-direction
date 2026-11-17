@@ -232,6 +232,16 @@ Future<void> _launchAndCancelPlacementTeaching(
   expect(_runner(tester).selectedWorldId, 'world_1');
   expect(_runner(tester).selectedLessonId, lesson);
   expect(_runner(tester).selectedTaskId, target);
+  expect(intent['relationRevision'], board ? 1 : 2);
+  if (!board) {
+    final table = _runner(tester).runner.table;
+    expect(table.heroCards.map((c) => c.label), ['9c', '8d']);
+    expect(table.boardCards.map((c) => c.label), ['Ah', '7c', '2d']);
+    expect(table.potLabel, 'Pot 4.5 BB');
+    expect(table.toCallLabel, isEmpty);
+    expect(table.decisionSeatId, 'btn');
+  }
+
   expect(_host(tester).debugDiagnosticLearningEntryPayloadV1(), {
     'sourceOccurrenceId': intent['repairOccurrenceId'],
     'sourceTaskId': _sourceTask,
@@ -434,6 +444,16 @@ void main() {
               : 'fold_check_call_raise';
           final expected = miss == 'hero_private_cards' ? 'board' : 'check';
           expect(_runner(tester).selectedTaskId, target);
+          if (target == 'actions_check_drill') {
+            expect(intent['relationRevision'], 2);
+            final table = _runner(tester).runner.table;
+            expect(table.heroCards.map((c) => c.label), ['9c', '8d']);
+            expect(table.boardCards.map((c) => c.label), ['Ah', '7c', '2d']);
+            expect(table.potLabel, 'Pot 4.5 BB');
+            expect(table.toCallLabel, isEmpty);
+            expect(table.decisionSeatId, 'btn');
+          }
+
           expect(_host(tester).debugDiagnosticLearningEntryPayloadV1(), {
             'sourceOccurrenceId': intent['repairOccurrenceId'],
             'sourceTaskId': _sourceTask,
