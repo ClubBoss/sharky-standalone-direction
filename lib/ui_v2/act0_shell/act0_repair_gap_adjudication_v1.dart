@@ -773,7 +773,9 @@ class Act0RepairGoalContractV1 {
     this.targetChoiceIds = const <String>{},
     this.evidenceClass = 'no_validated_target',
     this.mappingType = 'unresolved_product_gap',
+    this.requireCapturedGoalWitness = false,
   });
+  final bool requireCapturedGoalWitness;
   final String sourceWorldId, sourceLessonId, sourceTaskId, sourceChoiceId;
   final String sourceCorrectChoiceId, sourceFingerprint;
   final String diagnosticVariantId, sourceContainerFingerprint;
@@ -798,6 +800,9 @@ class Act0RepairGoalContractV1 {
     'no_bet_free_continue' => 'Checking for free',
     'shared_board_vs_private_cards' => 'Private and shared cards',
     'preflop_bucket_seat_frame' => 'Hand, seat and action frame',
+    'six_max_initial_preflop_first_actor' => 'First preflop actor here',
+    'six_max_unraised_initial_pass_bb_option' => 'Big blind option here',
+    'utg_seat_identity' => 'UTG seat',
     _ => 'Repair not confirmed',
   };
   // Neither familiar vocabulary practice nor definition replay is application.
@@ -1189,6 +1194,108 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',
     mappingType: 'diagnostic_learning_entry',
+  ),
+  // New source-owned familiar retries. A pre-declaration intent cannot be
+  // promoted into one of these relations by current lookup alone.
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "blinds_action_order",
+    sourceTaskId: "blinds_first_actor",
+    sourceChoiceId: "btn",
+    sourceCorrectChoiceId: "utg",
+    sourceFingerprint:
+        "d6bed4d335446fb450e9d91a905d358e3858c40394a2276c441773e658ed1ad4",
+    sourceQuestion: "Who acts first preflop in this frame?",
+    sourceChoiceReason: "The Button acts late, not first preflop.",
+    sourceChoiceLabel: "BTN",
+    goalId: "six_max_initial_preflop_first_actor",
+    misconceptionId: "first_preflop_actor_read_as_button",
+    relationId: "w01_blinds_first_actor_btn_intentional_exact_r1",
+    targetWorldId: "world_1",
+    targetLessonId: "blinds_action_order",
+    targetTaskId: "blinds_first_actor",
+    targetFingerprint:
+        "d6bed4d335446fb450e9d91a905d358e3858c40394a2276c441773e658ed1ad4",
+    targetCorrectChoiceId: "utg",
+    evidenceClass: "intentional_exact_replay",
+    mappingType: "intentional_exact",
+    targetChoiceIds: <String>{"utg", "btn"},
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "blinds_action_order",
+    sourceTaskId: "blinds_last_actor",
+    sourceChoiceId: "sb",
+    sourceCorrectChoiceId: "bb",
+    sourceFingerprint:
+        "986c7e1a0f3bd2200f06b0fe5a742e4b8eff8d8ca2668062665bda1814eba008",
+    sourceQuestion: "Who has the next option before the flop here?",
+    sourceChoiceReason: "The small blind acts before the big blind preflop.",
+    sourceChoiceLabel: "SB",
+    goalId: "six_max_unraised_initial_pass_bb_option",
+    misconceptionId: "matched_initial_bb_option_read_as_sb",
+    relationId: "w01_blinds_last_actor_sb_intentional_exact_r1",
+    targetWorldId: "world_1",
+    targetLessonId: "blinds_action_order",
+    targetTaskId: "blinds_last_actor",
+    targetFingerprint:
+        "986c7e1a0f3bd2200f06b0fe5a742e4b8eff8d8ca2668062665bda1814eba008",
+    targetCorrectChoiceId: "bb",
+    evidenceClass: "intentional_exact_replay",
+    mappingType: "intentional_exact",
+    targetChoiceIds: <String>{"sb", "bb"},
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "blinds_action_order",
+    sourceTaskId: "blinds_review",
+    sourceChoiceId: "btn",
+    sourceCorrectChoiceId: "utg",
+    sourceFingerprint:
+        "29141cefa52d6d1a163c562ca62d23bc77bc3bd30d9c6a08086ce7ac9ad9b108",
+    sourceQuestion: "Who acts first preflop?",
+    sourceChoiceReason: "The Button acts late, not first preflop.",
+    sourceChoiceLabel: "BTN",
+    goalId: "six_max_initial_preflop_first_actor",
+    misconceptionId: "first_preflop_actor_read_as_button",
+    relationId: "w01_blinds_review_btn_intentional_exact_r1",
+    targetWorldId: "world_1",
+    targetLessonId: "blinds_action_order",
+    targetTaskId: "blinds_review",
+    targetFingerprint:
+        "29141cefa52d6d1a163c562ca62d23bc77bc3bd30d9c6a08086ce7ac9ad9b108",
+    targetCorrectChoiceId: "utg",
+    evidenceClass: "intentional_exact_replay",
+    mappingType: "intentional_exact",
+    targetChoiceIds: <String>{"utg", "btn"},
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
+    sourceLessonId: "positions",
+    sourceTaskId: "positions_utg",
+    sourceChoiceId: "hj",
+    sourceCorrectChoiceId: "utg",
+    sourceFingerprint:
+        "0a9a08191c010b834aedf903063f641b5dea2a741af3f1f0bafc61878a6106ca",
+    sourceQuestion: "Tap UTG.",
+    sourceChoiceReason: "HJ is after UTG in this order.",
+    sourceChoiceLabel: "HJ",
+    goalId: "utg_seat_identity",
+    misconceptionId: "utg_seat_read_as_hj",
+    relationId: "w01_positions_utg_hj_intentional_exact_r1",
+    targetWorldId: "world_1",
+    targetLessonId: "positions",
+    targetTaskId: "positions_utg",
+    targetFingerprint:
+        "0a9a08191c010b834aedf903063f641b5dea2a741af3f1f0bafc61878a6106ca",
+    targetCorrectChoiceId: "utg",
+    evidenceClass: "intentional_exact_replay",
+    mappingType: "intentional_exact",
+    targetChoiceIds: <String>{"hj", "utg"},
+    requireCapturedGoalWitness: true,
   ),
 ];
 

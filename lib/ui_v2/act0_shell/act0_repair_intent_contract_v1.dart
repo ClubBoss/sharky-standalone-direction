@@ -476,6 +476,8 @@ Act0RepairGoalResolutionV1 act0RepairGoalResolutionForIntentV1(
       intent.relationRevision != 0 ||
       intent.sourceFingerprint.isNotEmpty ||
       intent.targetFingerprint.isNotEmpty;
+  if (row.requireCapturedGoalWitness && !hasWitness)
+    return held('relation_capture_unconfirmed');
   if (hasWitness &&
       (intent.goalId != row.goalId ||
           intent.relationId != row.relationId ||
