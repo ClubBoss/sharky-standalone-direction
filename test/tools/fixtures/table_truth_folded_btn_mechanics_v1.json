@@ -17,8 +17,8 @@
     "repair_gap_sha256": "1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a"
   },
   "current_source_origin_packet": {
-    "source_revision": "91c40ba5a4e42b3a3c3e6f58a1696cac2fe3aa5d",
-    "state_sha256": "537dc420c93be7c72c687546cbddc6349525cd869d1d3f2df40a3298454830bf",
+    "source_revision": "6dd4e7e17237538430b43844a462cf15ac9dc7f7",
+    "state_sha256": "36581ea5cec60798aac3a123a72e792af95a60cd5d5ce093543896227accd7d0",
     "factory_sha256": "c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b",
     "runner_sha256": "f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f",
     "source_proof_sha256": "b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57",
@@ -35,9 +35,9 @@
   "capture_sha256": {
     "learning-contract.json": "37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646",
     "choice-identity.json": "3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d",
-    "runtime-inputs.json": "790931ffb50d924f365a34a27570befa4b6866af69d04ce8683ccacdb2fc0ca0",
-    "source-fingerprints.json": "a14f9a966f33f1bca553f7ec425bf2d8826a2804dfe1b18020a0ec6d648981a9",
-    "ledger.json": "208a45d51de30d23d79854b4881aa9b0f636f768f9df9588611ec8c15b17a339"
+    "runtime-inputs.json": "41020288736063ea86c892ede5c2a882c1ddd09cbd21e1cdad5881e6f0b6599c",
+    "source-fingerprints.json": "3ff7c58ac38406b10dd5f6e69af048a2b14ebd9947e68c8c5d0705717f2b4816",
+    "ledger.json": "02a4b1c62e20951fcb0ec1f2426be6bd22456c17e9cd540a37bf52d2f85b9cad"
   },
   "task_changes": {
     "learning-contract.json": {},
@@ -342,7 +342,7 @@
                 "currentBet": "0.5 BB",
                 "bet": {
                   "kind": "post",
-                  "label": "Post",
+                  "label": "SB",
                   "amount": "0.5 BB"
                 }
               },
@@ -363,7 +363,7 @@
                 "currentBet": "1 BB",
                 "bet": {
                   "kind": "post",
-                  "label": "Post",
+                  "label": "BB",
                   "amount": "1 BB"
                 }
               }
@@ -715,7 +715,7 @@
                 "currentBet": "0.5 BB",
                 "bet": {
                   "kind": "post",
-                  "label": "Post",
+                  "label": "SB",
                   "amount": "0.5 BB"
                 }
               },
@@ -736,7 +736,7 @@
                 "currentBet": "1 BB",
                 "bet": {
                   "kind": "post",
-                  "label": "Post",
+                  "label": "BB",
                   "amount": "1 BB"
                 }
               }
@@ -1088,7 +1088,7 @@
                 "currentBet": "0.5 BB",
                 "bet": {
                   "kind": "post",
-                  "label": "Post",
+                  "label": "SB",
                   "amount": "0.5 BB"
                 }
               },
@@ -1109,7 +1109,7 @@
                 "currentBet": "1 BB",
                 "bet": {
                   "kind": "post",
-                  "label": "Post",
+                  "label": "BB",
                   "amount": "1 BB"
                 }
               }
@@ -1160,7 +1160,7 @@
         "current": {
           "world_id": "world_1",
           "lesson_id": "fold_check_call_raise",
-          "fingerprint": "1cfb244cc7b2847795cd372854b33843cd15828e3181c11cc3a4e20562936d13"
+          "fingerprint": "b1513bb81d998617d19a4c2900bfd395a736b446abf005311f4b2b6a8c7da6ad"
         }
       },
       "actions_raise_drill": {
@@ -1172,7 +1172,7 @@
         "current": {
           "world_id": "world_1",
           "lesson_id": "fold_check_call_raise",
-          "fingerprint": "91e0fc178e1b652060aeb9946739199924c22ac295a0105a36f6c4423710b9b3"
+          "fingerprint": "e40cda03bf3d1cc2f76ad244db9a34aee766ed37eb1bbed36f497d969155c996"
         }
       },
       "actions_review": {
@@ -1184,7 +1184,7 @@
         "current": {
           "world_id": "world_1",
           "lesson_id": "fold_check_call_raise",
-          "fingerprint": "4d1fa1a7013bab933d66f6b8ce4281d1915aafbefdbad6beef29557a98e6669e"
+          "fingerprint": "4beda225c3b6317ca556a3cc96ea7ad8564c26e1adc222c12ac748034fe77b86"
         }
       }
     }
@@ -1195,7 +1195,7 @@
       "prior_count": 171,
       "prior_sha256": "9332d7e1e5caf3c40484ccc345e335cc5d9107cba3339a6c19e605d577ba80e4",
       "current_count": 187,
-      "current_sha256": "7135da77ee27afb352bf724280848bca25427eac3217991372e427025d73da22",
+      "current_sha256": "7f930face137bdf5c8e821a269a3e1e9a662a21f26fd4ddc25c2698f79dcd21f",
       "current_statuses": {
         "NEEDS_SOURCE_CONTEXT": 9,
         "PASS": 178
@@ -3602,7 +3602,7 @@
       "prior_count": 213,
       "prior_sha256": "05158e7966ff28f73ee5f74ed04c12db531af0116cbfb9ccd9dd93c59f98254d",
       "current_count": 233,
-      "current_sha256": "f5299edb6b18a83da0162a8e49f95da6b2e4a0504637ba7f1be7a49d9dde82e6",
+      "current_sha256": "94572249a09fff1555fcf78c4a8ea3c33dd735e5f68a3075c4f06815e602c26a",
       "current_statuses": {
         "NEEDS_SOURCE_CONTEXT": 11,
         "PASS": 222
@@ -6597,7 +6597,7 @@
       "prior_count": 171,
       "prior_sha256": "2acfbe1752cc99ca17b0bbe8cf9759697ee63de21610c309f15182ce0310fdd7",
       "current_count": 187,
-      "current_sha256": "aad1d73e4c9363510dc2a5970ac5a534e52cb0be7f5ac3aea183560d819ad4bc",
+      "current_sha256": "045eb04e9b6d6f0ab29c7b34b41400742cf6af282c6bab5d61871680a73a4664",
       "current_statuses": {
         "NEEDS_SOURCE_CONTEXT": 9,
         "PASS": 178
@@ -9017,6 +9017,6 @@
       "current": "      Act0LessonTaskV1(\n        taskId: 'actions_review',\n        title: 'Action recap',\n        phase: Act0LessonPhaseV1.review,\n        runner: _act0W01FoldedToBtnMechanicalContextV1(\n          _actionRecapRunner.copyWith(\n            options: _act0AuthoredCorrectOptionAtV1(\n              _actionRecapRunner.options,\n              correctOptionId: 'raise',\n              correctIndex: 0,\n            ),\n          ),\n        ),\n        rewardXp: 5,\n        stepKind: Act0LessonStepKindV1.proveIt,\n        summary: 'Prove you can name the right action without prompts.',\n        lockedSummary: 'The recap opens after the action drills are clean.',\n      ),\n"
     }
   ],
-  "source_helper_added": "// Explicit new mechanical frame for only three W01 task bindings. Existing\n// strategy feedback and grades are preserved, not adjudicated by this repair.\n// First in means an unopened pot after three folds, not absence of prior action.\nAct0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(\n  Act0RunnerStateV1 source,\n) {\n  const hidden = <Act0CardStateV1>[\n    Act0CardStateV1(rank: '?', suit: ''),\n    Act0CardStateV1(rank: '?', suit: ''),\n  ];\n  return source.copyWith(\n    caption:\n        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',\n    table: source.table.copyWith(\n      scope: Act0TableScopeV1.playedHand,\n      tableFormat: Act0TableFormatV1.sixMax,\n      boardCards: const [],\n      streetLabel: 'Preflop',\n      potLabel: 'Pot 1.5 BB',\n      toCallLabel: 'To call 1 BB',\n      decisionSeatId: 'btn',\n      activeSeatId: 'btn',\n      heroSeatId: 'btn',\n      actionTrail: const [\n        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),\n        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),\n        Act0ActionTrailItemV1(label: 'UTG folds'),\n        Act0ActionTrailItemV1(label: 'HJ folds'),\n        Act0ActionTrailItemV1(label: 'CO folds'),\n      ],\n      seats: [\n        for (final seat in source.table.seats)\n          Act0SeatStateV1(\n            seatId: seat.seatId,\n            seatLabel: seat.seatLabel,\n            displayName: seat.displayName,\n            isHero: seat.seatId == 'btn',\n            isDealerButton: seat.seatId == 'btn',\n            isSmallBlind: seat.seatId == 'sb',\n            isBigBlind: seat.seatId == 'bb',\n            blindAmountLabel: seat.seatId == 'sb'\n                ? '0.5 BB'\n                : seat.seatId == 'bb'\n                ? '1 BB'\n                : null,\n            isActive: seat.seatId == 'btn',\n            isInHand: const ['btn', 'sb', 'bb'].contains(seat.seatId),\n            isFolded: const ['utg', 'hj', 'co'].contains(seat.seatId),\n            hasActed: const ['utg', 'hj', 'co'].contains(seat.seatId),\n            isLastAggressor: false,\n            stackLabel: seat.seatId == 'sb'\n                ? '99.5 BB'\n                : seat.seatId == 'bb'\n                ? '99 BB'\n                : '100 BB',\n            currentBetLabel: seat.seatId == 'sb'\n                ? '0.5 BB'\n                : seat.seatId == 'bb'\n                ? '1 BB'\n                : null,\n            bet: const ['sb', 'bb'].contains(seat.seatId)\n                ? Act0SeatBetStateV1(\n                    kind: Act0SeatBetKindV1.post,\n                    label: 'Post',\n                    amountLabel: seat.seatId == 'sb' ? '0.5 BB' : '1 BB',\n                  )\n                : null,\n            holeCards: seat.seatId == 'btn'\n                ? source.table.heroCards\n                : const ['sb', 'bb'].contains(seat.seatId)\n                ? hidden\n                : const [],\n            cardsVisibleMode: seat.seatId == 'btn'\n                ? Act0CardsVisibleModeV1.faceUp\n                : const ['sb', 'bb'].contains(seat.seatId)\n                ? Act0CardsVisibleModeV1.faceDown\n                : Act0CardsVisibleModeV1.none,\n          ),\n      ],\n    ),\n  );\n}\n\n",
+  "source_helper_added": "// Explicit new mechanical frame for only three W01 task bindings. Existing\n// strategy feedback and grades are preserved, not adjudicated by this repair.\n// First in means an unopened pot after three folds, not absence of prior action.\nAct0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(\n  Act0RunnerStateV1 source,\n) {\n  const hidden = <Act0CardStateV1>[\n    Act0CardStateV1(rank: '?', suit: ''),\n    Act0CardStateV1(rank: '?', suit: ''),\n  ];\n  return source.copyWith(\n    caption:\n        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',\n    table: source.table.copyWith(\n      scope: Act0TableScopeV1.playedHand,\n      tableFormat: Act0TableFormatV1.sixMax,\n      boardCards: const [],\n      streetLabel: 'Preflop',\n      potLabel: 'Pot 1.5 BB',\n      toCallLabel: 'To call 1 BB',\n      decisionSeatId: 'btn',\n      activeSeatId: 'btn',\n      heroSeatId: 'btn',\n      actionTrail: const [\n        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),\n        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),\n        Act0ActionTrailItemV1(label: 'UTG folds'),\n        Act0ActionTrailItemV1(label: 'HJ folds'),\n        Act0ActionTrailItemV1(label: 'CO folds'),\n      ],\n      seats: [\n        for (final seat in source.table.seats)\n          Act0SeatStateV1(\n            seatId: seat.seatId,\n            seatLabel: seat.seatLabel,\n            displayName: seat.displayName,\n            isHero: seat.seatId == 'btn',\n            isDealerButton: seat.seatId == 'btn',\n            isSmallBlind: seat.seatId == 'sb',\n            isBigBlind: seat.seatId == 'bb',\n            blindAmountLabel: seat.seatId == 'sb'\n                ? '0.5 BB'\n                : seat.seatId == 'bb'\n                ? '1 BB'\n                : null,\n            isActive: seat.seatId == 'btn',\n            isInHand: const ['btn', 'sb', 'bb'].contains(seat.seatId),\n            isFolded: const ['utg', 'hj', 'co'].contains(seat.seatId),\n            hasActed: const ['utg', 'hj', 'co'].contains(seat.seatId),\n            isLastAggressor: false,\n            stackLabel: seat.seatId == 'sb'\n                ? '99.5 BB'\n                : seat.seatId == 'bb'\n                ? '99 BB'\n                : '100 BB',\n            currentBetLabel: seat.seatId == 'sb'\n                ? '0.5 BB'\n                : seat.seatId == 'bb'\n                ? '1 BB'\n                : null,\n            bet: seat.seatId == 'sb'\n                ? _smallBlindPost\n                : seat.seatId == 'bb'\n                ? _bigBlindPost\n                : null,\n            holeCards: seat.seatId == 'btn'\n                ? source.table.heroCards\n                : const ['sb', 'bb'].contains(seat.seatId)\n                ? hidden\n                : const [],\n            cardsVisibleMode: seat.seatId == 'btn'\n                ? Act0CardsVisibleModeV1.faceUp\n                : const ['sb', 'bb'].contains(seat.seatId)\n                ? Act0CardsVisibleModeV1.faceDown\n                : Act0CardsVisibleModeV1.none,\n          ),\n      ],\n    ),\n  );\n}\n\n",
   "scope": "Exactly3newmechanicalcontexts; existingstrategygradingUNKNOWN, no parent/native/Human/pointsadmission. Prior15/W4fixtures and alltheiroriginalsourcepinsremainimmutable."
 }

@@ -1244,19 +1244,19 @@ def _w4_purpose_teaching_wp03_capture_core(name, value, fixture):
 FOLDED_BTN_REVISION = 'W01_REVIEWED_FOLDED_TO_BTN_MECHANICS_V1_3'
 FOLDED_BTN_PRODUCER_REVISION = {
     **W4_PURPOSE_TEACHING_PRODUCER_REVISION,
-    'source_revision': '91c40ba5a4e42b3a3c3e6f58a1696cac2fe3aa5d',
-    'state_sha256': '537dc420c93be7c72c687546cbddc6349525cd869d1d3f2df40a3298454830bf',
+    'source_revision': '6dd4e7e17237538430b43844a462cf15ac9dc7f7',
+    'state_sha256': '36581ea5cec60798aac3a123a72e792af95a60cd5d5ce093543896227accd7d0',
 }
 FOLDED_BTN_CAPTURE_SHA256 = {
     **W4_PURPOSE_TEACHING_CAPTURE_SHA256,
-    'runtime-inputs.json': '790931ffb50d924f365a34a27570befa4b6866af69d04ce8683ccacdb2fc0ca0',
-    'source-fingerprints.json': 'a14f9a966f33f1bca553f7ec425bf2d8826a2804dfe1b18020a0ec6d648981a9',
-    'ledger.json': '208a45d51de30d23d79854b4881aa9b0f636f768f9df9588611ec8c15b17a339',
+    'runtime-inputs.json': '41020288736063ea86c892ede5c2a882c1ddd09cbd21e1cdad5881e6f0b6599c',
+    'source-fingerprints.json': '3ff7c58ac38406b10dd5f6e69af048a2b14ebd9947e68c8c5d0705717f2b4816',
+    'ledger.json': '02a4b1c62e20951fcb0ec1f2426be6bd22456c17e9cd540a37bf52d2f85b9cad',
 }
 FOLDED_BTN_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / (
     'test/tools/fixtures/table_truth_folded_btn_mechanics_v1.json'
 )
-FOLDED_BTN_FIXTURE_SHA256 = '8e2c3f78a381ba301ef0f07e6da60d29fba8b353938158d7691d3801555660fa'
+FOLDED_BTN_FIXTURE_SHA256 = '4312dce98c1da100258d54b89fb003c41a38d831ef76bee47a679f450d855350'
 FOLDED_BTN_TASK_IDS = ('actions_theory', 'actions_raise_drill', 'actions_review')
 
 
@@ -1277,8 +1277,8 @@ def _require_folded_btn_admission():
         or fixture.get('predecessor_capture_sha256') != W4_PURPOSE_TEACHING_CAPTURE_SHA256
         or fixture.get('capture_sha256') != FOLDED_BTN_CAPTURE_SHA256
         or source != {**W4_PURPOSE_TEACHING_PRODUCER_REVISION,
-                      'source_revision': '91c40ba5a4e42b3a3c3e6f58a1696cac2fe3aa5d',
-                      'state_sha256': '537dc420c93be7c72c687546cbddc6349525cd869d1d3f2df40a3298454830bf'}
+                      'source_revision': '6dd4e7e17237538430b43844a462cf15ac9dc7f7',
+                      'state_sha256': '36581ea5cec60798aac3a123a72e792af95a60cd5d5ce093543896227accd7d0'}
         or set(fixture.get('task_changes', {})) !=
             {'learning-contract.json', 'choice-identity.json', 'runtime-inputs.json', 'source-fingerprints.json'}
         or len(fixture.get('ledger_groups', [])) != 3
