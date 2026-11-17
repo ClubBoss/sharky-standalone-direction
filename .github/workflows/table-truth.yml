@@ -82,7 +82,7 @@ jobs:
           set -euo pipefail
           OUT="$GITHUB_WORKSPACE/output/table_truth"
           set +e
-          TABLE_TRUTH_OUTPUT="$OUT/candidate" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_table_choreography_contract_v1_test.dart test/ui_v2/act0_street_replay_contract_v1_test.dart --machine > "$OUT/candidate-tests.jsonl" 2>&1
+          TABLE_TRUTH_OUTPUT="$OUT/candidate" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_table_choreography_contract_v1_test.dart test/ui_v2/act0_street_replay_contract_v1_test.dart test/ui_v2/act0_fold_mechanical_context_v1_test.dart --machine > "$OUT/candidate-tests.jsonl" 2>&1
           code=$?
           set -e
           python3 tools/table_truth_evidence_v1.py tests "$OUT/candidate-tests.jsonl" green "$code"

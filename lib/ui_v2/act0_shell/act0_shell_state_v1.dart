@@ -2164,7 +2164,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_fold_drill',
         title: 'Fold weak hands',
         phase: Act0LessonPhaseV1.drill,
-        runner: _foldActionRunner,
+        runner: _act0W01ExplicitFoldMechanicalContextV1(_foldActionRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.fixMistakes,
         summary: 'Train the clean exit when continuing would only burn chips.',
@@ -9825,6 +9825,73 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
                 : const ['sb', 'bb'].contains(seat.seatId)
                 ? Act0CardsVisibleModeV1.faceDown
                 : Act0CardsVisibleModeV1.none,
+          ),
+      ],
+    ),
+  );
+}
+
+// NEW authored mechanical context, not a recovered history or strategy grade.
+// Only actions_fold_drill binds this wrapper; shared donors remain unchanged.
+Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
+  Act0RunnerStateV1 source,
+) {
+  return source.copyWith(
+    table: source.table.copyWith(
+      decisionSeatId: 'btn',
+      activeSeatId: 'btn',
+      heroSeatId: 'btn',
+      actionTrail: const [
+        Act0ActionTrailItemV1.note(
+          label:
+              'New example: six players start with 100 BB before the 0.5/1 BB blinds; no ante or rake. Raise 6 BB means a total flop wager of 6 BB.',
+        ),
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'HJ calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'BB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+        Act0ActionTrailItemV1(label: 'BB checks'),
+        Act0ActionTrailItemV1(label: 'UTG checks'),
+        Act0ActionTrailItemV1(label: 'HJ bets 2 BB'),
+        // Current-decision instruction, not an executed betting action.
+        Act0ActionTrailItemV1.note(label: 'Hero acts'),
+      ],
+      seats: [
+        for (final seat in source.table.seats)
+          Act0SeatStateV1(
+            seatId: seat.seatId,
+            seatLabel: seat.seatLabel,
+            displayName: seat.displayName,
+            isHero: seat.isHero,
+            isDealerButton: seat.isDealerButton,
+            isSmallBlind: seat.isSmallBlind,
+            isBigBlind: seat.isBigBlind,
+            blindAmountLabel: seat.isSmallBlind
+                ? '0.5 BB'
+                : seat.isBigBlind
+                ? '1 BB'
+                : null,
+            isActive: seat.seatId == 'btn',
+            isTarget: seat.isTarget,
+            isInHand: seat.seatId != 'co',
+            isFolded: seat.seatId == 'co',
+            hasActed: const ['sb', 'bb', 'utg', 'hj'].contains(seat.seatId),
+            isLastAggressor: seat.seatId == 'hj',
+            isOccupied: seat.isOccupied,
+            stackLabel: seat.seatId == 'hj'
+                ? '97 BB'
+                : seat.seatId == 'co'
+                ? '100 BB'
+                : '99 BB',
+            holeCards: seat.holeCards,
+            cardsVisibleMode: seat.cardsVisibleMode,
+            currentBetLabel: seat.seatId == 'hj' ? '2 BB' : '0 BB',
+            bet: seat.seatId == 'hj' ? seat.bet : null,
           ),
       ],
     ),
