@@ -1260,7 +1260,7 @@ FOLDED_BTN_FIXTURE_SHA256 = '4312dce98c1da100258d54b89fb003c41a38d831ef76bee47a6
 FOLDED_BTN_TASK_IDS = ('actions_theory', 'actions_raise_drill', 'actions_review')
 
 
-def _require_folded_btn_admission():
+def _load_folded_btn_fixture():
     """Exact three task bindings and one helper, not a new strategy admission."""
     w4 = _load_w4_purpose_teaching_fixture()
     if hashlib.sha256(FOLDED_BTN_FIXTURE.read_bytes()).hexdigest() != FOLDED_BTN_FIXTURE_SHA256:
@@ -1289,18 +1289,14 @@ def _require_folded_btn_admission():
         expected = ids if name in ('runtime-inputs.json', 'source-fingerprints.json') else set()
         if set(changes) != expected:
             raise SystemExit('Folded BTN changes outside exact mechanical contexts')
-    source_root = pathlib.Path(__file__).resolve().parents[1] / 'lib/ui_v2/act0_shell'
-    for key, filename in (
-        ('state_sha256', 'act0_shell_state_v1.dart'),
-        ('factory_sha256', 'act0_asm05_authored_decision_truth_v1.dart'),
-        ('runner_sha256', 'act0_lesson_runner_shell_v1.dart'),
-        ('source_proof_sha256', 'act0_authored_source_proof_v1.dart'),
-        ('street_replay_sha256', 'act0_street_replay_contract_v1.dart'),
-        ('repair_gap_sha256', 'act0_repair_gap_adjudication_v1.dart'),
-    ):
-        if hashlib.sha256((source_root / filename).read_bytes()).hexdigest() != source[key]:
-            raise SystemExit(f'Folded BTN physical source changed: {filename}')
-    restored = (source_root / 'act0_shell_state_v1.dart').read_bytes()
+    return fixture
+
+
+def _validate_folded_btn_ancestor_inverse(fixture, restored):
+    """Pure exact ancestor inverse; never an override of physical admission."""
+    w4 = _load_w4_purpose_teaching_fixture()
+    if hashlib.sha256(restored).hexdigest() != FOLDED_BTN_PRODUCER_REVISION['state_sha256']:
+        raise SystemExit('Folded BTN ancestor input bytes changed')
     for change in fixture['source_binding_changes']:
         current, prior = change['current'].encode(), change['prior'].encode()
         if not current or restored.count(current) != 1:
@@ -1317,12 +1313,34 @@ def _require_folded_btn_admission():
         or hashlib.sha256(restored.replace(after, before, 1)).hexdigest()
             != WP03_CONTEXT_PRODUCER_REVISION['state_sha256']):
         raise SystemExit('Folded BTN ancestor inverse does not restore sealed V2_15 State')
+    return restored
+
+
+def _require_folded_btn_admission():
+    fixture = _load_folded_btn_fixture()
+    source = FOLDED_BTN_PRODUCER_REVISION
+    source_root = pathlib.Path(__file__).resolve().parents[1] / 'lib/ui_v2/act0_shell'
+    for key, filename in (
+        ('state_sha256', 'act0_shell_state_v1.dart'),
+        ('factory_sha256', 'act0_asm05_authored_decision_truth_v1.dart'),
+        ('runner_sha256', 'act0_lesson_runner_shell_v1.dart'),
+        ('source_proof_sha256', 'act0_authored_source_proof_v1.dart'),
+        ('street_replay_sha256', 'act0_street_replay_contract_v1.dart'),
+        ('repair_gap_sha256', 'act0_repair_gap_adjudication_v1.dart'),
+    ):
+        if hashlib.sha256((source_root / filename).read_bytes()).hexdigest() != source[key]:
+            raise SystemExit(f'Folded BTN physical source changed: {filename}')
+    restored = (source_root / 'act0_shell_state_v1.dart').read_bytes()
+    _validate_folded_btn_ancestor_inverse(fixture, restored)
     return fixture
 
 
 def folded_btn_w4_capture(name, value):
+    return _folded_btn_w4_capture_core(name, value, _require_folded_btn_admission())
+
+
+def _folded_btn_w4_capture_core(name, value, fixture):
     """Reverse only three literal records/groups to all five sealed W4 captures."""
-    fixture = _require_folded_btn_admission()
     result = copy.deepcopy(value)
     try:
         if _digest(result) != FOLDED_BTN_CAPTURE_SHA256[name]:
@@ -1365,6 +1383,105 @@ def folded_btn_w4_capture(name, value):
         raise SystemExit(f'Folded BTN exact capture mismatch: {name}') from error
     return result
 
+
+FOLD_MECHANICS_REVISION = 'W01_REVIEWED_FOLD_MECHANICAL_CONTEXT_V1_1'
+FOLD_MECHANICS_PRODUCER_REVISION = {'source_revision': '9c422911e4899329d88b90a3723dc0424bb2adfc', 'state_sha256': 'e359cd86593d6b960c2b671668bcb23337a1b0abd8c097f6d93c60cb15548dc9', 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b', 'runner_sha256': 'f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f', 'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57', 'street_replay_sha256': 'abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf', 'repair_gap_sha256': '1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a', 'betting_price_sha256': 'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e', 'instruction_policy_sha256': '34593e914a9a61be1544e9d84eac435670d1b14c9a95175177c919050cbd7820'}
+FOLD_MECHANICS_CAPTURE_SHA256 = {'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646', 'choice-identity.json': '3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d', 'runtime-inputs.json': '42a1a34bce256ed1340eaf202098a83c8b3c31d523832ec96251c0a42ad871c5', 'source-fingerprints.json': 'c0e24363505ea4bfce27870611ff0d70462e8999e78cdff4ac421fc35e07ec4e', 'ledger.json': 'ded36578054d9d457cc6fb4d87d2900a77b0c41cc42d55edf5af782f5d165e05'}
+FOLD_MECHANICS_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / 'test/tools/fixtures/table_truth_fold_mechanics_v1.json'
+FOLD_MECHANICS_FIXTURE_SHA256 = '39856a68c7dc53236665bae04893fa8a938bc95c4580e024d42fba1d0cfa587d'
+FOLD_MECHANICS_TASK_IDS = ('actions_fold_drill',)
+
+
+def _require_fold_mechanics_admission():
+    ancestor = _load_folded_btn_fixture()
+    if hashlib.sha256(FOLD_MECHANICS_FIXTURE.read_bytes()).hexdigest() != FOLD_MECHANICS_FIXTURE_SHA256:
+        raise SystemExit('Fold mechanics fixture changed')
+    fixture = json.loads(FOLD_MECHANICS_FIXTURE.read_text())
+    source = FOLD_MECHANICS_PRODUCER_REVISION
+    ids = set(FOLD_MECHANICS_TASK_IDS)
+    if (fixture.get('schema') != 1
+        or fixture.get('package') != 'WP03-W01-FOLD-MECHANICS-01'
+        or fixture.get('task_ids') != list(FOLD_MECHANICS_TASK_IDS)
+        or fixture.get('current_source_origin_packet') != source
+        or fixture.get('predecessor_revision') != FOLDED_BTN_REVISION
+        or fixture.get('predecessor_source_origin_packet') != FOLDED_BTN_PRODUCER_REVISION
+        or fixture.get('predecessor_capture_sha256') != FOLDED_BTN_CAPTURE_SHA256
+        or fixture.get('capture_sha256') != FOLD_MECHANICS_CAPTURE_SHA256
+        or source != {'source_revision': '9c422911e4899329d88b90a3723dc0424bb2adfc', 'state_sha256': 'e359cd86593d6b960c2b671668bcb23337a1b0abd8c097f6d93c60cb15548dc9', 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b', 'runner_sha256': 'f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f', 'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57', 'street_replay_sha256': 'abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf', 'repair_gap_sha256': '1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a', 'betting_price_sha256': 'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e', 'instruction_policy_sha256': '34593e914a9a61be1544e9d84eac435670d1b14c9a95175177c919050cbd7820'}
+        or set(fixture.get('task_changes', {})) !=
+            {'learning-contract.json', 'choice-identity.json', 'runtime-inputs.json', 'source-fingerprints.json'}
+        or len(fixture.get('ledger_groups', [])) != 1
+        or {g['task_id'] for g in fixture['ledger_groups']} != ids
+        or [x['task_id'] for x in fixture.get('source_binding_changes', [])] != list(FOLD_MECHANICS_TASK_IDS)):
+        raise SystemExit('Fold mechanics closed revision metadata changed')
+    for name, changes in fixture['task_changes'].items():
+        expected = ids if name in ('runtime-inputs.json','source-fingerprints.json') else set()
+        if set(changes) != expected:
+            raise SystemExit('Fold mechanics changes outside exact context')
+    root = pathlib.Path(__file__).resolve().parents[1] / 'lib/ui_v2/act0_shell'
+    for key, filename in [('state_sha256', 'act0_shell_state_v1.dart'), ('factory_sha256', 'act0_asm05_authored_decision_truth_v1.dart'), ('runner_sha256', 'act0_lesson_runner_shell_v1.dart'), ('source_proof_sha256', 'act0_authored_source_proof_v1.dart'), ('street_replay_sha256', 'act0_street_replay_contract_v1.dart'), ('repair_gap_sha256', 'act0_repair_gap_adjudication_v1.dart'), ('betting_price_sha256', 'act0_betting_price_contract_v1.dart'), ('instruction_policy_sha256', 'act0_instruction_content_policy_v1.dart')]:
+        if hashlib.sha256((root / filename).read_bytes()).hexdigest() != source[key]:
+            raise SystemExit(f'Fold mechanics physical source changed: {filename}')
+    restored = (root / 'act0_shell_state_v1.dart').read_bytes()
+    for change in fixture['source_binding_changes']:
+        current, prior = change['current'].encode(), change['prior'].encode()
+        if not current or restored.count(current) != 1:
+            raise SystemExit('Fold mechanics binding inverse is not unique')
+        restored = restored.replace(current, prior, 1)
+    helper = fixture['source_helper_added'].encode()
+    if not helper or restored.count(helper) != 1:
+        raise SystemExit('Fold mechanics helper inverse is not unique')
+    restored = restored.replace(helper, b'', 1)
+    if hashlib.sha256(restored).hexdigest() != FOLDED_BTN_PRODUCER_REVISION['state_sha256']:
+        raise SystemExit('Fold mechanics inverse does not restore entire Source3 State')
+    _validate_folded_btn_ancestor_inverse(ancestor, restored)
+    return fixture
+
+
+def fold_mechanics_source3_capture(name, value):
+    """Reverse only the Fold record/group to all five sealed Source3 captures."""
+    fixture = _require_fold_mechanics_admission()
+    result = copy.deepcopy(value)
+    try:
+        if _digest(result) != FOLD_MECHANICS_CAPTURE_SHA256[name]:
+            raise ValueError('whole current folded BTN capture')
+        if name == 'ledger.json':
+            groups = {row['task_id']: row for row in fixture['ledger_groups']}
+            rebuilt, seen, index = [], set(), 0
+            while index < len(result):
+                task_id = result[index]['task_id']
+                end = index + 1
+                while end < len(result) and result[end]['task_id'] == task_id:
+                    end += 1
+                if task_id in seen:
+                    raise ValueError('duplicate or noncontiguous ledger group')
+                seen.add(task_id)
+                rows = result[index:end]
+                if task_id in groups:
+                    group = groups[task_id]
+                    if (len(rows) != group['current_count']
+                        or _digest(rows) != group['current_sha256']
+                        or dict(collections.Counter(r['status'] for r in rows)) != group['current_statuses']
+                        or len(group['prior_rows']) != group['prior_count']
+                        or _digest(group['prior_rows']) != group['prior_sha256']
+                        or any(r['task_id'] != task_id for r in group['prior_rows'])):
+                        raise ValueError('literal ledger group/status/witness')
+                    rows = copy.deepcopy(group['prior_rows'])
+                rebuilt.extend(rows)
+                index = end
+            if not set(groups) <= seen:
+                raise ValueError('missing admitted group')
+            result = rebuilt
+        else:
+            for task_id, change in fixture['task_changes'][name].items():
+                if result[task_id] != change['current']:
+                    raise ValueError('literal current folded BTN task record')
+                result[task_id] = copy.deepcopy(change['prior'])
+        if _digest(result) != FOLDED_BTN_CAPTURE_SHA256[name]:
+            raise ValueError('whole reconstructed W4 capture')
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'Fold mechanics exact capture mismatch: {name}') from error
+    return result
 
 def _digest(value):
     encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
@@ -1427,6 +1544,10 @@ def producer_revision(cohort, role):
     if role == 'candidate' and source_bytes == folded_btn_bytes:
         _require_folded_btn_admission()
         return FOLDED_BTN_REVISION
+    fold_mechanics_bytes = {key: FOLD_MECHANICS_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == fold_mechanics_bytes:
+        _require_fold_mechanics_admission()
+        return FOLD_MECHANICS_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -1643,6 +1764,12 @@ def w24_context_w5_capture(name, value):
 
 
 def reviewed_origin_capture(name, value, revision):
+    if revision == FOLD_MECHANICS_REVISION:
+        predecessor = fold_mechanics_source3_capture(name, value)
+        w4 = _folded_btn_w4_capture_core(name, predecessor, _load_folded_btn_fixture())
+        wp03 = _w4_purpose_teaching_wp03_capture_core(name, w4, _load_w4_purpose_teaching_fixture())
+        w24 = _wp03_context_w24_capture_core(name, wp03, _load_wp03_context_fixture())
+        return reviewed_origin_capture(name, w24, W24_CONTEXT_REVISION)
     if revision == FOLDED_BTN_REVISION:
         w4 = folded_btn_w4_capture(name, value)
         wp03 = _w4_purpose_teaching_wp03_capture_core(name, w4, _load_w4_purpose_teaching_fixture())
@@ -1655,19 +1782,19 @@ def reviewed_origin_capture(name, value, revision):
     if revision == WP03_CONTEXT_REVISION:
         return reviewed_origin_capture(name, wp03_context_w24_capture(name, value), W24_CONTEXT_REVISION)
     if revision == W24_CONTEXT_REVISION: value = w24_context_w5_capture(name, value)
-    if revision in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = w5_factual_prompt_capture(name, value)
-    if revision in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = w3_recap_prompt_ato_capture(name, value)
-    if revision in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = w3_ato_teaching_recap_capture(name, value)
-    if revision in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = w3_recap_position_capture(name, value)
-    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = w01_position_pkg1_capture(name, value)
-    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = pkg1_w01_capture(name, value)
-    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         value = w01_origin_capture(name, value)
     return main01_origin_capture(name, value)
 
@@ -1690,11 +1817,13 @@ def validate_capture_artifacts(source, revision, names=None):
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            if revision == FOLD_MECHANICS_REVISION and observed != FOLD_MECHANICS_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'Fold mechanics current capture artifact drift: {name}')
             if revision == FOLDED_BTN_REVISION and observed != FOLDED_BTN_CAPTURE_SHA256.get(name):
                 raise SystemExit(f'Folded BTN current capture artifact drift: {name}')
             if revision == W4_PURPOSE_TEACHING_REVISION and observed != W4_PURPOSE_TEACHING_CAPTURE_SHA256.get(name):
@@ -1762,7 +1891,7 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION):
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
         comparison_contract = reviewed_origin_capture(
             'learning-contract.json', final, candidate_revision)
@@ -1789,7 +1918,7 @@ def validate_typed_cohort(root):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
         reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
-        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else after_choices
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -1909,14 +2038,16 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION),
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION),
               'historical_contracts_identical_except_exact_reviewed_revisions': True,
               'reviewed_theory_changes': ([
                   {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
                    'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
                    'current_source_policy': 'reject old fingerprint'}
                   for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
-              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else []),
+              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else []),
+              'reviewed_fold_mechanics_context_change': ({'task_ids': list(FOLD_MECHANICS_TASK_IDS), 'runtime_changes_vs_Source3': 1, 'assessment_FP_changes_vs_Source3': 1, 'other_contexts_unchanged_vs_Source3': 368, 'strategy_grading': 'UNKNOWN_PRESERVED_NOT_ADMITTED', 'representation': 'ROOTv3 qualified note/collectedblind/teachingprefix adaptations; originalAUTHOR not exactkind/list adoption', 'normal_route_native_Human': 'UNKNOWN_NOT_ADMITTED'} if identity['candidate_revision'] == FOLD_MECHANICS_REVISION else {}),
+              'reviewed_fold_mechanics_source_origin_packet': (dict(FOLD_MECHANICS_PRODUCER_REVISION) if identity['candidate_revision'] == FOLD_MECHANICS_REVISION else {}),
               'reviewed_folded_btn_mechanical_changes': ({'task_ids': list(FOLDED_BTN_TASK_IDS), 'runtime_changes_vs_W4': 3, 'assessment_FP_changes_vs_W4': 3, 'other_contexts_unchanged_vs_W4': 366, 'strategy_grading': 'UNKNOWN_PRESERVED_NOT_ADMITTED', 'normal_theory_reachability': 'UNKNOWN_REPRESENTATIVE_ANSWER_STAGE_ONLY', 'old_raw_record_policy': 'retain exact old history; no automatic new-context proof'}
                   if identity['candidate_revision'] == FOLDED_BTN_REVISION else {}),
               'reviewed_folded_btn_source_origin_packet': (dict(FOLDED_BTN_PRODUCER_REVISION)
@@ -1934,19 +2065,19 @@ def compare(root):
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
               'reviewed_hand_seat_changes': ({name: len(leaves) for name, leaves in PKG1_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else {}),
+                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else {}),
               'reviewed_position_feedback_changes': ({name: len(rows) for name, rows in W01_POSITION_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else {}),
+                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else {}),
               'reviewed_w3_recap_changes': ({name: len(rows) for name, rows in W3_RECAP_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else {}),
               'reviewed_ato_teaching_changes': ({name: len(rows) for name, rows in W3_ATO_TEACHING_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else {}),
               'reviewed_recap_prompt_changes': ({name: len(rows) for name, rows in W3_RECAP_PROMPT_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else {}),
               'reviewed_w5_factual_changes': ({name: len(rows) for name, rows in W5_FACTUAL_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else {}),
+                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else {}),
               'protected_w5_context_ids_unchanged': (sorted(W5_FACTUAL_PROTECTED_FINGERPRINTS)
-                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else []),
+                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else []),
               'reviewed_w24_context_changes': ({name: len(rows) for name, rows in W24_CONTEXT_CAPTURE_LEAVES.items()}
                   if identity['candidate_revision'] == W24_CONTEXT_REVISION else {}),
               'reviewed_w24_source_files': (dict(W24_CONTEXT_PRODUCER_REVISION)
@@ -1964,13 +2095,13 @@ def compare(root):
                   if identity['candidate_revision'] == W3_RECAP_REVISION else W01_POSITION_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W01_POSITION_REVISION else PKG1_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == PKG1_REVISION else W01_PRODUCER_REVISION['source_revision']
-                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else
+                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else
                   MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION) else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION, W4_PURPOSE_TEACHING_REVISION, FOLDED_BTN_REVISION, FOLD_MECHANICS_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}
