@@ -1185,6 +1185,63 @@ void main() {
           act0QueueResolutionStateResolvedV1,
         );
         final projection = Act0RepairOutcomeProjectionV1(outcomes: [outcome]);
+        final rawReview = _reviewHistory(_sourceRecord(intent));
+        final reviewBytes = rawReview.toStorageString();
+        // Model ordinary persistence after Preview prunes the resolved intent.
+        // Raw history is retained; cached receipt flags cannot close a miss.
+        final restoredReview = Act0ReviewMistakeHistoryV1.tryParseStorageString(
+          reviewBytes,
+        )!;
+        final restoredEvidence =
+            Act0LearningEvidenceHistoryV1.tryParseStorageString(
+              history.toStorageString(),
+            )!;
+        final restoredProjection = Act0RepairOutcomeProjectionV1.tryParse(
+          projection.toPayload(),
+        );
+        Act0PracticeRepairQueueProjectionV1 practiceAfterPrune({
+          Act0LearningEvidenceHistoryV1? evidence,
+          Act0RepairOutcomeProjectionV1? outcomes,
+          Act0ReviewMistakeHistoryV1? review,
+          bool validateSources = true,
+        }) => Act0PracticeRepairQueueProjectionV1.fromSources(
+          reviewMistakeHistory: review ?? restoredReview,
+          repairOutcomeProjection: outcomes ?? restoredProjection,
+          learningEvidenceHistory: evidence ?? restoredEvidence,
+          currentFingerprintForIdentity: validateSources ? _fingerprint : null,
+        );
+        expect(practiceAfterPrune().items, isEmpty);
+        expect(restoredReview.toStorageString(), reviewBytes);
+        final heldReview = _reviewHistory(_sourceRecord(_intent(_bad.first)));
+        final mixedReview = Act0ReviewMistakeHistoryV1(
+          records: [...restoredReview.records, ...heldReview.records],
+        );
+        expect(
+          practiceAfterPrune(review: mixedReview).items.single.sourceRecordId,
+          heldReview.records.single.recordId,
+        );
+        expect(practiceAfterPrune(validateSources: false).items, hasLength(1));
+        expect(
+          practiceAfterPrune(
+            outcomes: const Act0RepairOutcomeProjectionV1(),
+          ).items,
+          hasLength(1),
+        );
+        expect(
+          practiceAfterPrune(review: _reviewHistory(nextSource)).items,
+          hasLength(1),
+          reason: 'A resolved prior occurrence cannot hide a new miss.',
+        );
+        final staleEvidence = Act0LearningEvidenceHistoryV1(
+          records: [
+            _sourceRecord(intent),
+            Act0LearningEvidenceRecordV1.tryParse({
+              ...record.toPayload(),
+              'authoredSourceFingerprint': 'stale-source-fingerprint',
+            })!,
+          ],
+        );
+        expect(practiceAfterPrune(evidence: staleEvidence).items, hasLength(1));
         final receipts = reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewHistory(_sourceRecord(intent)),
           activeRepairIntents: [intent],
@@ -1262,6 +1319,11 @@ void main() {
           records: [...history.records, laterAssistedTarget],
         );
         expect(
+          practiceAfterPrune(evidence: laterHistory).items,
+          isEmpty,
+          reason: 'Extra assisted practice does not reopen the resolved miss.',
+        );
+        expect(
           Act0RepairOutcomeConsumerV1.fromProjection(
             projection,
             learningEvidenceHistory: laterHistory,
@@ -1314,6 +1376,14 @@ void main() {
           expect(restored.toPayload().last, rawLatest);
           expect(restored.outcomes.last.repairIntentIsUnconfirmed, isTrue);
           expect(
+            practiceAfterPrune(
+              evidence: laterHistory,
+              outcomes: restored,
+            ).items,
+            isEmpty,
+            reason: 'Keep the genuine earlier resolution historical.',
+          );
+          expect(
             Act0RepairOutcomeConsumerV1.fromProjection(
               restored,
               learningEvidenceHistory: laterHistory,
@@ -1347,6 +1417,14 @@ void main() {
           'assistanceKind': 'quickHint',
         })!;
         expect(
+          practiceAfterPrune(
+            evidence: Act0LearningEvidenceHistoryV1(
+              records: [_sourceRecord(intent), assisted],
+            ),
+          ).items,
+          hasLength(1),
+        );
+        expect(
           eligible(
             outcome,
             Act0LearningEvidenceHistoryV1(
@@ -1360,6 +1438,14 @@ void main() {
           'repairOccurrenceId': 'other-source-miss',
         })!;
         expect(eligible(staleOccurrence, history), isFalse);
+        expect(
+          practiceAfterPrune(
+            outcomes: Act0RepairOutcomeProjectionV1(
+              outcomes: [staleOccurrence],
+            ),
+          ).items,
+          hasLength(1),
+        );
         final otherTarget = Act0RepairOutcomeV1.tryParse({
           ...outcome.toPayload(),
           'targetWorldId': 'world_9',
@@ -1369,6 +1455,7 @@ void main() {
           records: [_sourceRecord(intent)],
         );
         expect(eligible(outcome, missingEvent), isFalse);
+        expect(practiceAfterPrune(evidence: missingEvent).items, hasLength(1));
         final wrongChoice = target.runner.options
             .firstWhere((option) => !option.isCorrect)
             .id;

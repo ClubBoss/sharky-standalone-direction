@@ -3,6 +3,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_queue_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart'
+    show Act0ReviewResolutionStateV1, act0ReviewResolutionStateResolvedV1;
 
 const String act0PracticeRepairQueueSourceReviewHistoryV1 =
     'review_history_unresolved_v1';
@@ -114,6 +116,16 @@ class Act0PracticeRepairQueueProjectionV1 {
       );
     }
 
+    // Raw Review history survives a successful repair. Once its active intent
+    // is pruned, use the same current-source qualification as Review rather
+    // than reintroducing that resolved occurrence as open repair debt.
+    final reviewResolution = Act0ReviewResolutionStateV1.fromSources(
+      reviewMistakeHistory: reviewMistakeHistory,
+      activeRepairIntents: activeRepairIntents,
+      repairOutcomeProjection: repairOutcomeProjection,
+      learningEvidenceHistory: learningEvidenceHistory,
+      currentFingerprintForIdentity: currentFingerprintForIdentity,
+    );
     final records = <Act0ReviewMistakeRecordV1>[...reviewMistakeHistory.records]
       ..sort((a, b) {
         final updatedCompare = b.updatedOrder.compareTo(a.updatedOrder);
@@ -122,6 +134,15 @@ class Act0PracticeRepairQueueProjectionV1 {
             : a.recordId.compareTo(b.recordId);
       });
     for (final record in records) {
+      final resolution = reviewResolution.resolutionForReviewItemId(
+        record.recordId,
+      );
+      if (currentFingerprintForIdentity != null &&
+          record.sourceDecisionId.isNotEmpty &&
+          resolution?.learningEvidenceId == record.sourceDecisionId &&
+          resolution?.reviewState == act0ReviewResolutionStateResolvedV1) {
+        continue;
+      }
       final key = _dedupKey(
         sourceTaskId: record.sourceTaskId,
         repairFocusId: record.repairFocusId,
