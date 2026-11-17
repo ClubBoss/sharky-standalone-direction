@@ -11,10 +11,10 @@
     "positions_utg"
   ],
   "current_source_origin_packet": {
-    "source_revision": "3e4824757bb456350af03373378501068fa4ea41",
+    "source_revision": "32fe057d4ecb673ed970e5d4fb97521ac26be750",
     "state_sha256": "7e243ede4bb5f67f117040e1d9de4f0c708fdd88d44e4aeb64277396a007d95b",
     "factory_sha256": "c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b",
-    "runner_sha256": "f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f",
+    "runner_sha256": "9cca14aa20fc0de3d794bc7684a90d65ee5dd768dbf45cb5ffafd786953eb518",
     "source_proof_sha256": "b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57",
     "street_replay_sha256": "abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf",
     "repair_gap_sha256": "60d51ad72e0d0329293d69fbf7d07053913f74c9b50ad5555cf4a6e7c67d5a9a",
@@ -71,6 +71,20 @@
         {
           "current": "      intent.relationId.isNotEmpty ||\n      intent.relationRevision != 0 ||\n      intent.sourceFingerprint.isNotEmpty ||\n      intent.targetFingerprint.isNotEmpty;\n  if (row.requireCapturedGoalWitness && !hasWitness)\n    return held('relation_capture_unconfirmed');\n  if (hasWitness &&\n      (intent.goalId != row.goalId ||\n          intent.relationId != row.relationId ||\n          intent.relationRevision != row.relationRevision ||\n",
           "prior": "      intent.relationId.isNotEmpty ||\n      intent.relationRevision != 0 ||\n      intent.sourceFingerprint.isNotEmpty ||\n      intent.targetFingerprint.isNotEmpty;\n  if (hasWitness &&\n      (intent.goalId != row.goalId ||\n          intent.relationId != row.relationId ||\n          intent.relationRevision != row.relationRevision ||\n"
+        }
+      ]
+    },
+    "act0_lesson_runner_shell_v1.dart": {
+      "current_sha256": "9cca14aa20fc0de3d794bc7684a90d65ee5dd768dbf45cb5ffafd786953eb518",
+      "prior_sha256": "f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f",
+      "hunks": [
+        {
+          "current": "      );\n    }\n\n    Widget buildRunnerScreen({bool registeredScene = false}) {\n      // Source premises must remain readable without covering an answer seat.\n      // Reuse the existing scrollable guide shelf; the registered table stays\n      // at its source-owned camera/seat anchors.\n      final dockSourceSeatGuide =\n          isDrill &&\n          !isTeaching &&\n          runner.selectedOptionId == null &&\n          hasSeatTargets &&\n          runner.table.decisionSeatId != null;\n      final dockIntegratedFeedbackGuide =\n          _usesCanonicalIntegratedLearningSceneV1 &&\n          usesSharedActiveRunnerAllocation &&\n          (isReview || dockSourceSeatGuide) &&\n          registeredScene;\n\n      Widget buildIntegratedLowerSurface() {\n        final actionDock = buildRunnerActionDock(\n",
+          "prior": "      );\n    }\n\n    Widget buildRunnerScreen({bool registeredScene = false}) {\n      final dockIntegratedFeedbackGuide =\n          _usesCanonicalIntegratedLearningSceneV1 &&\n          usesSharedActiveRunnerAllocation &&\n          isReview &&\n          registeredScene;\n\n      Widget buildIntegratedLowerSurface() {\n        final actionDock = buildRunnerActionDock(\n"
+        },
+        {
+          "current": "        return Column(\n          mainAxisSize: MainAxisSize.min,\n          children: [\n            SizedBox(\n              key: Key(\n                isReview\n                    ? 'act0_shell_feedback_guide_viewport'\n                    : 'act0_shell_seat_decision_guide_viewport',\n              ),\n              // Keep the same bounded shelf for feedback and seat decisions.\n              height: 88,\n              child: Row(\n                children: [\n                  Expanded(\n                    child: SingleChildScrollView(\n                      key: Key(\n                        isReview\n                            ? 'act0_shell_feedback_guide_scroll'\n                            : 'act0_shell_seat_decision_guide_scroll',\n                      ),\n                      primary: false,\n                      physics: const ClampingScrollPhysics(),\n                      child: buildIntegratedPrompt(focusPointsUp: true),\n                    ),\n",
+          "prior": "        return Column(\n          mainAxisSize: MainAxisSize.min,\n          children: [\n            SizedBox(\n              key: const Key('act0_shell_feedback_guide_viewport'),\n              // Reserve the live Hero label even when the repair action wraps.\n              height: 88,\n              child: Row(\n                children: [\n                  Expanded(\n                    child: SingleChildScrollView(\n                      key: const Key('act0_shell_feedback_guide_scroll'),\n                      primary: false,\n                      physics: const ClampingScrollPhysics(),\n                      child: buildIntegratedPrompt(focusPointsUp: true),\n                    ),\n"
         }
       ]
     }

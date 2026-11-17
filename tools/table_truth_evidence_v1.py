@@ -1505,12 +1505,13 @@ def _fold_mechanics_source3_capture_core(name, value, fixture):
 
 # New exact/familiar repair declarations; no old receipt is repinned.
 NONHERO_REVISION = 'W01_NONHERO_EXACT_REPAIR_RELATIONS_V1_4'
-NONHERO_PRODUCER_REVISION = {'source_revision': '3e4824757bb456350af03373378501068fa4ea41', 'state_sha256': '7e243ede4bb5f67f117040e1d9de4f0c708fdd88d44e4aeb64277396a007d95b', 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b', 'runner_sha256': 'f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f', 'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57', 'street_replay_sha256': 'abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf', 'repair_gap_sha256': '60d51ad72e0d0329293d69fbf7d07053913f74c9b50ad5555cf4a6e7c67d5a9a', 'betting_price_sha256': 'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e', 'instruction_policy_sha256': '34593e914a9a61be1544e9d84eac435670d1b14c9a95175177c919050cbd7820', 'repair_intent_sha256': '5514005ce208b6424708750ac034c9bcc9c4f046ec435744fa7268d8fe947f13', 'preview_sha256': '4f4f2e3296004fd68010707fcdc7a5c85bdf7d8d51ecde20105ddf3255eb2c7a'}
+NONHERO_PRODUCER_REVISION = {'source_revision': '32fe057d4ecb673ed970e5d4fb97521ac26be750', 'state_sha256': '7e243ede4bb5f67f117040e1d9de4f0c708fdd88d44e4aeb64277396a007d95b', 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b', 'runner_sha256': '9cca14aa20fc0de3d794bc7684a90d65ee5dd768dbf45cb5ffafd786953eb518', 'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57', 'street_replay_sha256': 'abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf', 'repair_gap_sha256': '60d51ad72e0d0329293d69fbf7d07053913f74c9b50ad5555cf4a6e7c67d5a9a', 'betting_price_sha256': 'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e', 'instruction_policy_sha256': '34593e914a9a61be1544e9d84eac435670d1b14c9a95175177c919050cbd7820', 'repair_intent_sha256': '5514005ce208b6424708750ac034c9bcc9c4f046ec435744fa7268d8fe947f13', 'preview_sha256': '4f4f2e3296004fd68010707fcdc7a5c85bdf7d8d51ecde20105ddf3255eb2c7a'}
 NONHERO_CAPTURE_SHA256 = {'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646', 'choice-identity.json': '3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d', 'runtime-inputs.json': '29eb7b6fbbde002a4139c2507f49f9f437d9c8a401b0b26650f94bcb9a1aaf9e', 'source-fingerprints.json': '648fecc667affde53c0c1d70e011a6bfd985d0d4f8c73b929120826be3709923', 'ledger.json': 'ded36578054d9d457cc6fb4d87d2900a77b0c41cc42d55edf5af782f5d165e05'}
 NONHERO_SOURCE_FILES = {'state': 'act0_shell_state_v1.dart', 'factory': 'act0_asm05_authored_decision_truth_v1.dart', 'runner': 'act0_lesson_runner_shell_v1.dart', 'source_proof': 'act0_authored_source_proof_v1.dart', 'street_replay': 'act0_street_replay_contract_v1.dart', 'repair_gap': 'act0_repair_gap_adjudication_v1.dart', 'betting_price': 'act0_betting_price_contract_v1.dart', 'instruction_policy': 'act0_instruction_content_policy_v1.dart', 'repair_intent': 'act0_repair_intent_contract_v1.dart', 'preview': 'act0_shell_preview_screen_v1.dart'}
-NONHERO_PRIOR_SOURCE_SHA256 = {'act0_shell_state_v1.dart': 'e359cd86593d6b960c2b671668bcb23337a1b0abd8c097f6d93c60cb15548dc9', 'act0_repair_gap_adjudication_v1.dart': '1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a', 'act0_repair_intent_contract_v1.dart': '1f3c4816c28798887b59ab3e3fb567ce0929e9738e676d1000681fee948842f5'}
+NONHERO_PRIOR_SOURCE_SHA256 = {'act0_shell_state_v1.dart': 'e359cd86593d6b960c2b671668bcb23337a1b0abd8c097f6d93c60cb15548dc9', 'act0_repair_gap_adjudication_v1.dart': '1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a', 'act0_repair_intent_contract_v1.dart': '1f3c4816c28798887b59ab3e3fb567ce0929e9738e676d1000681fee948842f5', 'act0_lesson_runner_shell_v1.dart': 'f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f'}
 NONHERO_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / 'test/tools/fixtures/table_truth_nonhero_repair_goals_v1.json'
-NONHERO_FIXTURE_SHA256 = 'e1ae247d8903ecdb75a6775a42b3c24e7f9404c2af1bcb7d8eb9f299e1219ede'
+NONHERO_FIXTURE_SHA256 = '8e97313842963ef1f0edac209646dfac475847358c514cfe60c03230ea7ee871'
+NONHERO_SOURCE_HUNK_COUNTS = {'act0_shell_state_v1.dart': 1, 'act0_repair_gap_adjudication_v1.dart': 3, 'act0_repair_intent_contract_v1.dart': 1, 'act0_lesson_runner_shell_v1.dart': 2}
 NONHERO_RELATION_TASK_IDS = ('blinds_first_actor', 'blinds_last_actor', 'blinds_review', 'positions_utg')
 
 
@@ -1536,7 +1537,7 @@ def _load_nonhero_fixture():
         key = next(k for k, v in NONHERO_SOURCE_FILES.items() if v == name)
         if (entry.get('current_sha256') != NONHERO_PRODUCER_REVISION[key + '_sha256']
             or entry.get('prior_sha256') != NONHERO_PRIOR_SOURCE_SHA256[name]
-            or len(entry.get('hunks', [])) != (3 if key == 'repair_gap' else 1)):
+            or len(entry.get('hunks', [])) != NONHERO_SOURCE_HUNK_COUNTS[name]):
             raise SystemExit('Non-Hero closed source hunks changed')
     return fixture
 
@@ -1567,11 +1568,13 @@ def _require_nonhero_admission():
             raise SystemExit(f'Non-Hero physical source changed: {name}')
         if name in fixture['source_inverse']:
             restored[name] = _nonhero_prior_source(name, raw, fixture)
-    # Only State/Gap/Intent changed; the exact Gap predecessor is the old Fold
+    # State/Gap/Intent/Runner inverse to entire predecessor files; the Gap is old Fold
     # source. Validate the entire State through immutable ancestry, without
     # calling an old public physical guard on new source.
     if hashlib.sha256(restored['act0_repair_gap_adjudication_v1.dart']).hexdigest() != FOLD_MECHANICS_PRODUCER_REVISION['repair_gap_sha256']:
         raise SystemExit('Non-Hero repair gap predecessor changed')
+    if hashlib.sha256(restored['act0_lesson_runner_shell_v1.dart']).hexdigest() != FOLD_MECHANICS_PRODUCER_REVISION['runner_sha256']:
+        raise SystemExit('Non-Hero Runner predecessor changed')
     _validate_fold_mechanics_ancestor_inverse(_load_fold_mechanics_fixture(), restored['act0_shell_state_v1.dart'])
     return fixture
 

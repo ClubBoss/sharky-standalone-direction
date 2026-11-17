@@ -20,10 +20,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
+
 import '../support/act0_authored_repair_goal_fixture_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
 const _key = 'act0_shell_progress_v1';
+final _decisionGeometry = <String, Object?>{};
+var _frameSequence = 0;
 const _subjects = [
   (lesson: 'blinds_action_order', task: 'blinds_first_actor', wrong: 'btn'),
   (lesson: 'blinds_action_order', task: 'blinds_last_actor', wrong: 'sb'),
@@ -101,6 +105,82 @@ Future<String> _choice(WidgetTester t, String id, String taskId) async {
           )
           .hitTestable();
       final optionButton = find.byKey(Key(optionKey));
+      final guideShelf = find.byKey(
+        const Key('act0_shell_seat_decision_guide_viewport'),
+      );
+      expect(guideShelf, findsOneWidget);
+      expect(
+        t.getRect(guideShelf).overlaps(t.getRect(seat)),
+        isFalse,
+        reason: 'The source premise guide must not cover an answer seat.',
+      );
+      final guide = t.widget<Act0LearningSceneGuideV3>(
+        find.byType(Act0LearningSceneGuideV3),
+      );
+      expect(guide.support, _runner(t).runner.caption);
+      expect(guide.scrollSupport, isTrue);
+      final supportText = t.widget<Text>(
+        find.byKey(const Key('act0_learning_scene_v3_support')),
+      );
+      expect(supportText.data, _runner(t).runner.caption);
+      expect(supportText.maxLines, isNull);
+      final seatRectBeforeRead = t.getRect(seat);
+      final supportViewport = find.byKey(
+        const Key('act0_learning_scene_v3_model_support_scroll'),
+      );
+      await t.ensureVisible(supportViewport);
+      await t.pumpAndSettle();
+      final supportScroll = t.state<ScrollableState>(
+        find.descendant(of: supportViewport, matching: find.byType(Scrollable)),
+      );
+      expect(supportScroll.position.pixels, 0);
+      expect(supportScroll.position.maxScrollExtent, greaterThan(0));
+      await t.drag(supportViewport, const Offset(0, -800));
+      await t.pumpAndSettle();
+      final actualEnd = supportScroll.position.pixels;
+      expect(actualEnd, closeTo(supportScroll.position.maxScrollExtent, 0.1));
+      await t.drag(supportViewport, const Offset(0, 800));
+      await t.pumpAndSettle();
+      expect(supportScroll.position.pixels, 0);
+      await t.ensureVisible(
+        find.byKey(const Key('act0_integrated_scene_prompt')),
+      );
+      await t.pumpAndSettle();
+      expect(t.getRect(seat), seatRectBeforeRead);
+      final frameName =
+          '$taskId-$id-${_frameSequence++}-source-seat-decision.png';
+      _decisionGeometry['$taskId/$id'] = {
+        'seat_rect': seatRectBeforeRead.toString(),
+        'guide_rect': t.getRect(guideShelf).toString(),
+        'guide_overlaps_seat': false,
+        'full_source_caption': guide.support,
+        'support_scroll_observed_start': 0,
+        'support_scroll_observed_end': actualEnd,
+        'support_scroll_extent': supportScroll.position.maxScrollExtent,
+        'support_scroll_observed_return': supportScroll.position.pixels,
+        'table_seat_rect_unchanged_after_read': true,
+        'widget_frame': frameName,
+      };
+      final output = Platform.environment['PKR03_OUTPUT'];
+      if (output != null) {
+        await t.runAsync(() async {
+          final dir = Directory(output)..createSync(recursive: true);
+          final boundary = t.renderObject<RenderRepaintBoundary>(
+            find.byKey(const Key('nonhero-host-capture')),
+          );
+          final frame = await boundary.toImage(pixelRatio: 1);
+          final bytes = await frame.toByteData(format: ui.ImageByteFormat.png);
+          File(
+            '${dir.path}/$frameName',
+          ).writeAsBytesSync(bytes!.buffer.asUint8List());
+          frame.dispose();
+        });
+      }
+      expect(
+        seat.hitTestable(),
+        findsOneWidget,
+        reason: 'The actual seat centre must receive its ordinary pointer.',
+      );
       late final String submittedKey;
       if (seat.hitTestable().evaluate().isNotEmpty) {
         submittedKey = seatKey;
@@ -330,6 +410,10 @@ void main() {
           'actual_miss': miss.toPayload(),
           'wrong_public_affordance': wrongAffordance,
           'correct_public_affordance': correctAffordance,
+          'source_seat_decision_checks': {
+            'wrong': _decisionGeometry['${subject.task}/${subject.wrong}'],
+            'correct': _decisionGeometry['${subject.task}/${correct.id}'],
+          },
           'actual_intent': intent.toPayload(),
           'host_remount_intent_equal': true,
           'actual_familiar_attempt': attempt.toPayload(),
