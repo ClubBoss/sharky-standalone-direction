@@ -1,3 +1,4 @@
+import '../support/act0_source_choreography_test_wait_v1.dart';
 import 'dart:async';
 // SIMULATED normal production AppRoot journey on English iPhone 14 Pro.
 // Uses current-main tasks only. Empty fake preferences are seeded once at boot.
@@ -2022,6 +2023,19 @@ Future<void> _foundationAdvanceToPrompt(WidgetTester tester) async {
   final plan = act0TableChoreographyPlanForTableV1(source.table);
   final replay = act0StreetReplayFromTableV1(source.table);
   if (plan == null || replay?.isConsumerSafe != true) return;
+  if (source.table.decisionSeatId != null &&
+      source.table.toCallLabel.trim().isNotEmpty) {
+    // Priced snapshots deliberately suppress legacy per-action pot annotations.
+    // Their replay affordance is therefore not a decision-ready signal.
+    expect(_runner(tester).runner.selectedOptionId, isNull);
+    await pumpSourceChoreographyToDecisionV1(tester, source.table);
+    expect(_runner(tester).runner.selectedOptionId, isNull);
+    expect(
+      find.byKey(const Key('act0_shell_street_replay_inline')),
+      findsNothing,
+    );
+    return;
+  }
   // This actual rendered affordance appears only once the source action
   // choreography is decision-ready. Incremental pumps drain chained timers;
   // one large time jump does not. The public plan bounds the finite wait.

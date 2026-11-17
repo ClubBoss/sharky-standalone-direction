@@ -335,6 +335,8 @@ void main() {
         'actions_theory',
         'actions_raise_drill',
         'actions_review',
+        // New five-way limped-pot Fold context; no strategy certification.
+        'actions_fold_drill',
         // Existing approved first-hand and no-ante bubble source histories.
         'your_first_hand_flop',
         'your_first_hand_turn',

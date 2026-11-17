@@ -754,9 +754,15 @@ class TypedCohortV2Controls(unittest.TestCase):
             cohort['producer_receipt'][key] = TRUTH.FOLDED_BTN_PRODUCER_REVISION[key]
         return cohort
 
+    def fold_mechanics_producer(self):
+        cohort = self.folded_btn_producer()
+        for key in ('state_sha256', 'factory_sha256'):
+            cohort['producer_receipt'][key] = TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[key]
+        return cohort
+
     def test_prior_fifteen_physical_receipt_cannot_claim_current_teaching_source(self):
-        self.assertEqual(TRUTH.producer_revision(self.folded_btn_producer(), 'candidate'),
-                         TRUTH.FOLDED_BTN_REVISION)
+        self.assertEqual(TRUTH.producer_revision(self.fold_mechanics_producer(), 'candidate'),
+                         TRUTH.FOLD_MECHANICS_REVISION)
         with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
         with self.assertRaises(SystemExit): TRUTH.producer_revision(self.wp03_context_producer(), 'candidate')
 
@@ -796,19 +802,19 @@ class TypedCohortV2Controls(unittest.TestCase):
                 TRUTH.W4_PURPOSE_TEACHING_FIXTURE = path
                 TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256 = pin
 
-    def test_current_folded_btn_all_six_physical_source_pins_are_required(self):
-        TRUTH._require_folded_btn_admission()
-        for field in TRUTH.FOLDED_BTN_PRODUCER_REVISION:
-            saved = TRUTH.FOLDED_BTN_PRODUCER_REVISION[field]
+    def test_current_fold_mechanics_all_eight_physical_source_pins_are_required(self):
+        TRUTH._require_fold_mechanics_admission()
+        for field in TRUTH.FOLD_MECHANICS_PRODUCER_REVISION:
+            saved = TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[field]
             try:
-                TRUTH.FOLDED_BTN_PRODUCER_REVISION[field] = '0' * len(saved)
-                with self.assertRaises(SystemExit): TRUTH._require_folded_btn_admission()
+                TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[field] = '0' * len(saved)
+                with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
             finally:
-                TRUTH.FOLDED_BTN_PRODUCER_REVISION[field] = saved
+                TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[field] = saved
 
     def test_wp03_context_producer_preserves_origin_and_rejects_bad_receipts(self):
-        cohort = self.folded_btn_producer()
-        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLDED_BTN_REVISION)
+        cohort = self.fold_mechanics_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLD_MECHANICS_REVISION)
         for field in ('state_sha256', 'factory_sha256', 'head'):
             for value in (None, '0', '0' * 64):
                 changed = copy.deepcopy(cohort)
@@ -821,27 +827,28 @@ class TypedCohortV2Controls(unittest.TestCase):
         changed['admitted_source_reference'] = copy.deepcopy(TRUTH.SOURCE_REFERENCES['historical_baseline'])
         with self.assertRaises(SystemExit): TRUTH.producer_revision(changed, 'historical_baseline')
 
-    def test_folded_btn_actual_physical_source_mutations_fail_closed(self):
-        TRUTH._require_folded_btn_admission()
+    def test_fold_mechanics_actual_physical_source_mutations_fail_closed(self):
+        TRUTH._require_fold_mechanics_admission()
         original = pathlib.Path.read_bytes
         for name in ('act0_shell_state_v1.dart', 'act0_asm05_authored_decision_truth_v1.dart',
                      'act0_lesson_runner_shell_v1.dart', 'act0_authored_source_proof_v1.dart',
-                     'act0_street_replay_contract_v1.dart', 'act0_repair_gap_adjudication_v1.dart'):
+                     'act0_street_replay_contract_v1.dart', 'act0_repair_gap_adjudication_v1.dart',
+                     'act0_betting_price_contract_v1.dart', 'act0_instruction_content_policy_v1.dart'):
             target = ROOT / 'lib/ui_v2/act0_shell' / name
             def changed(path):
                 value = original(path)
                 return value + b'\n// SYNTHETIC mutation\n' if path == target else value
             with mock.patch.object(pathlib.Path, 'read_bytes', changed):
                 with self.assertRaisesRegex(SystemExit, 'physical source changed'):
-                    TRUTH._require_folded_btn_admission()
+                    TRUTH._require_fold_mechanics_admission()
 
-    def test_folded_btn_exact_membership_and_source_inverse_fail_closed(self):
-        TRUTH._require_folded_btn_admission()
+    def test_ancestor_folded_btn_exact_membership_and_source_inverse_fail_closed(self):
+        TRUTH._require_fold_mechanics_admission()
         path, pin = TRUTH.FOLDED_BTN_FIXTURE, TRUTH.FOLDED_BTN_FIXTURE_SHA256
         original = self.read(path)
         try:
             TRUTH.FOLDED_BTN_FIXTURE_SHA256 = '0' * 64
-            with self.assertRaises(SystemExit): TRUTH._require_folded_btn_admission()
+            with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
         finally:
             TRUTH.FOLDED_BTN_FIXTURE_SHA256 = pin
         mutations = [
@@ -864,15 +871,15 @@ class TypedCohortV2Controls(unittest.TestCase):
                     self.write(changed, candidate)
                     TRUTH.FOLDED_BTN_FIXTURE = changed
                     TRUTH.FOLDED_BTN_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
-                    with self.assertRaises(SystemExit): TRUTH._require_folded_btn_admission()
+                    with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
             finally:
                 TRUTH.FOLDED_BTN_FIXTURE, TRUTH.FOLDED_BTN_FIXTURE_SHA256 = path, pin
 
-    def test_folded_btn_current_producer_keeps_original_authoring_reference(self):
-        cohort = self.folded_btn_producer()
+    def test_fold_mechanics_current_producer_keeps_original_authoring_reference(self):
+        cohort = self.fold_mechanics_producer()
         cohort['producer_receipt']['head'] = 'c' * 40
-        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLDED_BTN_REVISION)
-        cohort['admitted_source_reference']['commit'] = TRUTH.FOLDED_BTN_PRODUCER_REVISION['source_revision']
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLD_MECHANICS_REVISION)
+        cohort['admitted_source_reference']['commit'] = TRUTH.FOLD_MECHANICS_PRODUCER_REVISION['source_revision']
         with self.assertRaises(SystemExit): TRUTH.producer_revision(cohort, 'candidate')
 
     def test_wp03_missing_source_fixture_capture_or_ledger_admission_fails_closed(self):
@@ -986,6 +993,68 @@ class TypedCohortV2Controls(unittest.TestCase):
     @staticmethod
     def write(path, value):
         path.write_text(json.dumps(value, separators=(',', ':'), ensure_ascii=False))
+
+
+    def test_current_fold_mechanics_exact_membership_and_source_inverse_fail_closed(self):
+        TRUTH._require_fold_mechanics_admission()
+        path, pin = TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256
+        original = self.read(path)
+        try:
+            TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = '0' * 64
+            with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
+        finally:
+            TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = pin
+        mutations = [
+            lambda x: x.update(task_ids=x['task_ids'] + ['outside']),
+            lambda x: x['current_source_origin_packet'].update(state_sha256='f' * 64),
+            lambda x: x['predecessor_capture_sha256'].update({'ledger.json': 'f' * 64}),
+            lambda x: x['task_changes']['learning-contract.json'].update({'actions_theory': {}}),
+            lambda x: x['task_changes']['runtime-inputs.json'].update({'w4_purpose_intro': {}}),
+            lambda x: x['task_changes']['source-fingerprints.json'].pop('actions_fold_drill'),
+            lambda x: x['ledger_groups'][0].update(task_id='actions_theory'),
+            lambda x: x['source_binding_changes'][0].update(current='not the actual task'),
+            lambda x: x.update(source_helper_added=x['source_helper_added'] + '// forged'),
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            changed = pathlib.Path(temporary) / 'folded.json'
+            try:
+                for mutate in mutations:
+                    candidate = copy.deepcopy(original)
+                    mutate(candidate)
+                    self.write(changed, candidate)
+                    TRUTH.FOLD_MECHANICS_FIXTURE = changed
+                    TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
+                    with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
+            finally:
+                TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = path, pin
+
+    def test_ancestor_folded_physical_receipt_cannot_claim_current_fold(self):
+        TRUTH._load_folded_btn_fixture()
+        TRUTH._require_fold_mechanics_admission()
+        with self.assertRaises(SystemExit): TRUTH._require_folded_btn_admission()
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(self.folded_btn_producer(), 'candidate')
+
+    def test_partial_fold_capture_cannot_repin_away_whole_ancestor(self):
+        fixture = copy.deepcopy(TRUTH._require_fold_mechanics_admission())
+        task_id = 'actions_fold_drill'
+        partial = {task_id: fixture['task_changes']['runtime-inputs.json'][task_id]['current']}
+        forged_pin = TRUTH._digest(partial)
+        path, pin = TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256
+        saved = TRUTH.FOLD_MECHANICS_CAPTURE_SHA256['runtime-inputs.json']
+        with tempfile.TemporaryDirectory() as temporary:
+            try:
+                fixture['capture_sha256']['runtime-inputs.json'] = forged_pin
+                TRUTH.FOLD_MECHANICS_CAPTURE_SHA256['runtime-inputs.json'] = forged_pin
+                changed = pathlib.Path(temporary) / 'partial.json'
+                self.write(changed, fixture)
+                TRUTH.FOLD_MECHANICS_FIXTURE = changed
+                TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
+                with self.assertRaisesRegex(SystemExit, 'capture mismatch'):
+                    TRUTH.fold_mechanics_source3_capture('runtime-inputs.json', partial)
+            finally:
+                TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = path, pin
+                TRUTH.FOLD_MECHANICS_CAPTURE_SHA256['runtime-inputs.json'] = saved
+
 
 
 def check_wp03_real_artifacts(baseline, candidate):
@@ -1139,6 +1208,64 @@ def check_folded_btn_real_artifacts(baseline, candidate):
     }, sort_keys=True))
 
 
+def check_fold_mechanics_real_artifacts(baseline, candidate):
+    """Admit one Fold group against exact sealed Source3 and older data."""
+    helper = TypedCohortV2Controls()
+    current = {name: helper.read(candidate / name) for name in TRUTH.FOLD_MECHANICS_CAPTURE_SHA256}
+    cohort = helper.read(candidate / 'typed-cohort-v2.json')
+    helper.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLD_MECHANICS_REVISION)
+    prior, negatives = {}, 0
+    for name, captured in current.items():
+        prior[name] = TRUTH.fold_mechanics_source3_capture(name, captured)
+        helper.assertEqual(TRUTH._digest(prior[name]), TRUTH.FOLDED_BTN_CAPTURE_SHA256[name])
+        helper.assertEqual(TRUTH._digest(TRUTH.reviewed_origin_capture(
+            name, captured, TRUTH.FOLD_MECHANICS_REVISION)), TRUTH.EXPECTED_CAPTURE_ARTIFACTS[name])
+        changed = copy.deepcopy(captured)
+        if isinstance(changed, list): changed[0]['status'] = 'FORGED'
+        else: changed['_forged'] = True
+        with helper.assertRaises(SystemExit): TRUTH.fold_mechanics_source3_capture(name, changed)
+        negatives += 1
+    ids = set(TRUTH.FOLD_MECHANICS_TASK_IDS)
+    for name in ('runtime-inputs.json', 'source-fingerprints.json'):
+        helper.assertEqual({key for key in current[name] if current[name][key] != prior[name][key]}, ids)
+    for name in ('learning-contract.json', 'choice-identity.json'):
+        helper.assertEqual(current[name], prior[name])
+    outside = [row for row in current['ledger.json'] if row['task_id'] not in ids]
+    helper.assertEqual(outside, [row for row in prior['ledger.json'] if row['task_id'] not in ids])
+    for task_id in ids:
+        changed = copy.deepcopy(current['ledger.json'])
+        next(row for row in changed if row['task_id'] == task_id)['status'] = 'FORGED'
+        with helper.assertRaises(SystemExit): TRUTH.fold_mechanics_source3_capture('ledger.json', changed)
+        negatives += 1
+    changed = copy.deepcopy(current['runtime-inputs.json'])
+    changed['w4_purpose_intro']['caption'] = 'forged outside current scope'
+    with helper.assertRaises(SystemExit): TRUTH.fold_mechanics_source3_capture('runtime-inputs.json', changed)
+    negatives += 1
+    with tempfile.TemporaryDirectory() as temporary:
+        root = pathlib.Path(temporary)
+        for role, source in (('baseline', baseline), ('candidate', candidate)):
+            target = root / role
+            target.mkdir()
+            for name in (*current.keys(), 'typed-cohort-v2.json'):
+                shutil.copyfile(source / name, target / name)
+        TRUTH.validate_typed_cohort(root)
+    print(json.dumps({
+        'revision': TRUTH.FOLD_MECHANICS_REVISION,
+        'actual_producer_receipt': cohort['producer_receipt'],
+        'changed_runtime_and_FP_ids_vs_Source3': sorted(ids),
+        'unchanged_contexts_vs_Source3': len(current['runtime-inputs.json']) - len(ids),
+        'learning_and_choice_unchanged': True,
+        'all_five_Source3_and_original_captures_exact': True,
+        'current_whole_capture_and_group_falsifiers': negatives,
+        'ledger_rows': len(current['ledger.json']),
+        'outside_ledger_rows_unchanged': len(outside),
+        'generic_unknown_rows_in_one_fold_group': sum(row['status'] == 'NEEDS_SOURCE_CONTEXT'
+            for row in current['ledger.json'] if row['task_id'] in ids),
+        'prior_controls': 'Reused only after exact whole-five predecessor reconstruction; no historical full CLI rerun.',
+        'scope': 'Mechanical/source identity only; strategy grading UNKNOWN, normal theory reachability/native/Human/parents/points unaccepted.',
+    }, sort_keys=True))
+
+
 def check_w4_purpose_real_artifacts(baseline, candidate):
     """Check the new teaching overlay, reusing its exact sealed predecessor."""
     helper = TypedCohortV2Controls()
@@ -1193,6 +1320,9 @@ if __name__ == '__main__':
     if len(sys.argv) == 4 and sys.argv[1] == '--real-artifacts':
         candidate_path = pathlib.Path(sys.argv[3])
         actual_cohort = candidate_path / 'typed-cohort-v2.json'
+        if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.FOLD_MECHANICS_REVISION):
+            check_fold_mechanics_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
+            sys.exit(0)
         if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.FOLDED_BTN_REVISION):
             check_folded_btn_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
             sys.exit(0)

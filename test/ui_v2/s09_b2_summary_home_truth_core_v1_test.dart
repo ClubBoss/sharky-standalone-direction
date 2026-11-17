@@ -1,3 +1,4 @@
+import '../support/act0_source_choreography_test_wait_v1.dart';
 import 'dart:convert';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import '../support/act0_authored_repair_goal_fixture_v1.dart';
@@ -168,6 +169,13 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
       await tester.tap(next);
       await tester.pumpAndSettle();
     }
+    final decisionRunner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    await pumpSourceChoreographyToDecisionV1(
+      tester,
+      decisionRunner.runner.table,
+    );
     if (seat.evaluate().isNotEmpty) {
       await tester.tap(seat);
     } else {
@@ -175,6 +183,14 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
       await tester.tap(option);
     }
     await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .runner
+          .selectedOptionId,
+      answer.id,
+      reason: 'Count only the real submitted decision.',
+    );
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
   }
