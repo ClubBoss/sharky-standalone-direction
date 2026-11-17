@@ -328,6 +328,9 @@ void main() {
         // The newly authored Call frame now supplies its full blind prefix,
         // folds, street actions and positive remaining stacks.
         'actions_call_drill',
+        // Explicit new zero-price Check histories, still six-player roles.
+        'actions_legal_context',
+        'actions_check_drill',
         // Existing approved first-hand and no-ante bubble source histories.
         'your_first_hand_flop',
         'your_first_hand_turn',

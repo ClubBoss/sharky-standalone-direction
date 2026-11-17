@@ -1,4 +1,6 @@
 // SIMULATED contract controls on current authored tasks; no native/Human proof.
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
@@ -826,6 +828,39 @@ void main() {
         expect(fresh?.canLaunchTeaching, isTrue);
         expect(fresh?.canClaimRepairClosure, isFalse);
         expect(
+          intent.relationRevision,
+          diagnostic.id == 'action_basics' ? 2 : 1,
+        );
+        if (diagnostic.id == 'action_basics') {
+          for (final patch in <Map<String, Object?>>[
+            {'relationRevision': 1},
+            {
+              'targetFingerprint':
+                  '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
+            },
+            {
+              'relationRevision': 1,
+              'targetFingerprint':
+                  '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
+            },
+          ]) {
+            final bytes = jsonEncode({...intent.toPayload(), ...patch});
+            final old = Act0RepairIntentV1.tryParse(jsonDecode(bytes))!;
+            expect(jsonEncode(old.toPayload()), bytes);
+            expect(
+              act0DiagnosticLearningEntryForIntentV1(
+                old,
+                learningEvidence: history,
+                reviewMistakeHistory: review,
+                currentFingerprintForIdentity: _fingerprint,
+                currentDiagnosticVariantFingerprint: current,
+              ),
+              isNull,
+            );
+          }
+        }
+
+        expect(
           act0RepairGoalResolutionForIntentV1(
             intent,
             learningEvidence: history,
@@ -929,6 +964,64 @@ void main() {
         expect(goal.canLaunch, isTrue);
         expect(goal.isHeld, isFalse);
         expect(goal.canClaimIndependentApplication, isFalse);
+        if (const {
+          'actions_check_drill',
+          'actions_legal_context',
+        }.contains(source.task)) {
+          const oldFp = <String, String>{
+            'actions_check_drill':
+                '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
+            'actions_legal_context':
+                'd889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4',
+          };
+          expect(intent.relationRevision, 2);
+          expect(intent.sourceFingerprint, isNot(oldFp[source.task]));
+          expect(intent.targetFingerprint, isNot(oldFp[intent.targetTaskId]));
+          for (final patch in <Map<String, Object?>>[
+            {'relationRevision': 1},
+            {'sourceFingerprint': oldFp[source.task]},
+            {'targetFingerprint': oldFp[intent.targetTaskId]},
+            {
+              'relationRevision': 1,
+              'sourceFingerprint': oldFp[source.task],
+              'targetFingerprint': oldFp[intent.targetTaskId],
+            },
+          ]) {
+            final payload = {...intent.toPayload(), ...patch};
+            final bytes = jsonEncode(payload);
+            final legacy = Act0RepairIntentV1.tryParse(jsonDecode(bytes))!;
+            expect(jsonEncode(legacy.toPayload()), bytes);
+            expect(
+              act0RepairGoalResolutionForIntentV1(
+                legacy,
+                learningEvidence: history,
+                currentFingerprintForIdentity: _fingerprint,
+              ).canLaunch,
+              isFalse,
+            );
+          }
+          final sourceRecord = _sourceRecord(intent);
+          final oldPayload = {
+            ...sourceRecord.toPayload(),
+            'authoredSourceFingerprint': oldFp[source.task],
+          };
+          final oldBytes = jsonEncode(oldPayload);
+          final oldRecord = Act0LearningEvidenceRecordV1.tryParse(
+            jsonDecode(oldBytes),
+          )!;
+          expect(jsonEncode(oldRecord.toPayload()), oldBytes);
+          expect(
+            act0RepairGoalResolutionForIntentV1(
+              intent,
+              learningEvidence: Act0LearningEvidenceHistoryV1(
+                records: [oldRecord],
+              ),
+              currentFingerprintForIdentity: _fingerprint,
+            ).canLaunch,
+            isFalse,
+          );
+        }
+
         expect(
           act0RepairGoalResolutionForIntentV1(
             intent,
