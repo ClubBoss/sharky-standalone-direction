@@ -9810,12 +9810,10 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
                 : seat.seatId == 'bb'
                 ? '1 BB'
                 : null,
-            bet: const ['sb', 'bb'].contains(seat.seatId)
-                ? Act0SeatBetStateV1(
-                    kind: Act0SeatBetKindV1.post,
-                    label: 'Post',
-                    amountLabel: seat.seatId == 'sb' ? '0.5 BB' : '1 BB',
-                  )
+            bet: seat.seatId == 'sb'
+                ? _smallBlindPost
+                : seat.seatId == 'bb'
+                ? _bigBlindPost
                 : null,
             holeCards: seat.seatId == 'btn'
                 ? source.table.heroCards

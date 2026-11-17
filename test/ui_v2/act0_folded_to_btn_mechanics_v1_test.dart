@@ -95,6 +95,14 @@ void main() {
         expect(chips + 1.5, 600);
         expect(table.potLabel, 'Pot 1.5 BB');
         expect(table.toCallLabel, 'To call 1 BB');
+        for (final blind in [('sb', 'SB', '0.5 BB'), ('bb', 'BB', '1 BB')]) {
+          final seat = table.seats.singleWhere((s) => s.seatId == blind.$1);
+          expect(seat.bet?.kind, Act0SeatBetKindV1.post);
+          expect(seat.bet?.label, blind.$2);
+          expect(seat.bet?.amountLabel, blind.$3);
+          expect(seat.currentBetLabel, blind.$3);
+          expect(seat.blindAmountLabel, blind.$3);
+        }
         expect(
           act0BettingRoundOrderProofForTableV1(table).truth,
           Act0BettingRoundOrderTruthV1.consistent,
