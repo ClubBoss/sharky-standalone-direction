@@ -119,6 +119,8 @@ String? act0AuthoredSourceFingerprintV1({
       table.selectableSeatIds.toList()..sort(),
     ],
     optionSemantics,
+    if (table.decisionSeatId != null)
+      <Object?>['decision_actor_v1', table.decisionSeatId],
   ];
   return sha256.convert(utf8.encode(jsonEncode(payload))).toString();
 }

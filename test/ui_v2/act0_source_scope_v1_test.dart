@@ -8,6 +8,17 @@ Act0LessonTaskV1 _task(String id) => [
     for (final lesson in world.lessons) ...lesson.taskList,
 ].singleWhere((task) => task.taskId == id);
 
+const _newW01OrderContextIds = <String>{
+  'blinds_first_actor',
+  'blinds_last_actor',
+  'blinds_postflop_button',
+  'blinds_review',
+  'positions_utg',
+  'positions_late_seat',
+  'positions_early_late',
+  'positions_review',
+};
+
 const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_10',
   'asm05_new_known_holes_turn_call_40',
@@ -17,7 +28,14 @@ void main() {
   test('orientation cannot become a played replay from an active seat', () {
     // Real accepted-main negative: these posted blinds were consumerSafe even
     // though the authored job is identifying the first preflop seat.
-    final table = _task('blinds_first_actor').runner.table;
+    final table = _task('positions_button').runner.table.copyWith(
+      activeSeatId: 'utg',
+      actionTrail: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      ],
+    );
+    expect(table.scope, Act0TableScopeV1.orientation);
     expect(
       act0StreetReplayFromTableV1(table)?.isConsumerSafe ?? false,
       isFalse,
@@ -187,7 +205,9 @@ void main() {
     final historyConsumers = <String>{};
     for (final task in tasks) {
       final table = task.runner.table;
-      final expected = orientationIds.contains(task.taskId)
+      final expected = _newW01OrderContextIds.contains(task.taskId)
+          ? Act0TableScopeV1.playedHand
+          : orientationIds.contains(task.taskId)
           ? Act0TableScopeV1.orientation
           : explanationIds.contains(task.taskId)
           ? Act0TableScopeV1.explanation
@@ -296,11 +316,13 @@ void main() {
       w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
       hasLength(23),
     );
-    expect(legacyPlayed, 314);
-    expect(played, 316); // Authored contexts, not certified replay histories.
+    expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
+    expect(legacyPlayed, 321);
+    expect(played, 323); // Authored contexts, not certified replay histories.
     expect(
       historyConsumers,
       <String>{
+        ..._newW01OrderContextIds,
         ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
         ...w11ExplicitStreetHistoryIds,
         // Existing approved first-hand and no-ante bubble source histories.

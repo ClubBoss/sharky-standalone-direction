@@ -1,5 +1,11 @@
 // SIMULATED source/teaching regression, not native or independent learning proof.
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/rendering.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,7 +58,458 @@ Act0LessonTaskV1 _task(String lesson, String id) => Act0ShellStateV1.sample
     .taskList
     .singleWhere((task) => task.taskId == id);
 
+const _oldOrderFingerprints = <String, String>{
+  "blinds_first_actor":
+      "4c2405b1405492f1839dab890138d29ee388f1891e8b70a12bfd7e8aa191c24b",
+  "blinds_last_actor":
+      "4a72fb90b7a61c4af8c879c62984122fd8f94495519ce7b17387a9e594f77c09",
+  "blinds_postflop_button":
+      "09e11882af88bf22682470c92bc96cb9fed7c1e2a1ef301439b231156c153f93",
+  "blinds_review":
+      "1cfa7de67cb28034e39bb34f894a569e71371755cf23c9ac44a836a316882dea",
+  "positions_utg":
+      "1aa766a5a0cc3c63ba45b28067d24c924aa644e2611b5064d4c30a39da247285",
+  "positions_late_seat":
+      "36fd23bc2754aa5de6cba675a993f3ea8a577b8bff295f75a05a035298617fc2",
+  "positions_early_late":
+      "7ef6f54d57c33fac2f8a15ae3e3e6c53edcc95e5dcc26992e18fffa5fd817b67",
+  "positions_review":
+      "5f82d32f64c23407a3685a0870d1c062ed6fcb0cc0ac4b79236840c268547877",
+};
+
+void _explicitOrderFrameTests() {
+  for (final entry in _oldOrderFingerprints.entries) {
+    final lesson = entry.key.startsWith('blinds_')
+        ? 'blinds_action_order'
+        : 'positions';
+    test(
+      '${entry.key} has a complete neutral new actor frame and no old proof',
+      () {
+        final task = _task(lesson, entry.key);
+        final table = task.runner.table;
+        final flop = [
+          'blinds_postflop_button',
+          'positions_late_seat',
+          'positions_review',
+        ].contains(entry.key);
+        final matched = flop || entry.key == 'blinds_last_actor';
+        expect(table.scope, Act0TableScopeV1.playedHand);
+        expect(
+          table.decisionSeatId,
+          flop
+              ? 'sb'
+              : matched
+              ? 'bb'
+              : 'utg',
+        );
+        expect(table.activeSeatId, '');
+        expect(
+          table.seats.every(
+            (s) =>
+                !s.isActive &&
+                !s.isTarget &&
+                s.isOccupied &&
+                s.isInHand &&
+                !s.isFolded,
+          ),
+          isTrue,
+        );
+        expect(table.highlightedSeatIds, isEmpty);
+        expect(table.streetLabel, flop ? 'Flop' : 'Preflop');
+        expect(table.boardCards.length, flop ? 3 : 0);
+        expect(table.heroSeatId, flop ? 'co' : 'btn');
+        expect(table.potLabel, matched ? 'Pot 6 BB' : 'Pot 1.5 BB');
+        expect(table.actionTrail.any((a) => a.label.contains('acts')), isFalse);
+        expect(
+          act0BettingRoundOrderProofForTableV1(table).truth,
+          Act0BettingRoundOrderTruthV1.consistent,
+        );
+
+        for (final fault in ['all-in', 'folded', 'unknown-stack']) {
+          final badSeats = [
+            for (final seat in table.seats)
+              if (seat.seatId != table.decisionSeatId)
+                seat
+              else
+                Act0SeatStateV1(
+                  seatId: seat.seatId,
+                  seatLabel: seat.seatLabel,
+                  displayName: seat.displayName,
+                  isHero: seat.isHero,
+                  isDealerButton: seat.isDealerButton,
+                  isSmallBlind: seat.isSmallBlind,
+                  isBigBlind: seat.isBigBlind,
+                  blindAmountLabel: seat.blindAmountLabel,
+                  isFolded: fault == 'folded',
+                  isInHand: fault != 'folded',
+                  isOccupied: true,
+                  hasActed: seat.hasActed,
+                  stackLabel: fault == 'unknown-stack'
+                      ? null
+                      : fault == 'all-in'
+                      ? '0 BB'
+                      : seat.stackLabel,
+                  currentBetLabel: seat.currentBetLabel,
+                  bet: seat.bet,
+                  holeCards: seat.holeCards,
+                  cardsVisibleMode: seat.cardsVisibleMode,
+                ),
+          ];
+          expect(
+            act0BettingRoundOrderProofForTableV1(
+              table.copyWith(seats: badSeats),
+            ).truth,
+            isNot(Act0BettingRoundOrderTruthV1.consistent),
+            reason:
+                'A source decision actor cannot override $fault participation/eligibility facts.',
+          );
+        }
+        final action = flop
+            ? 'Flop: SB bets 1 BB'
+            : matched
+            ? 'BB raises to 2 BB'
+            : 'UTG raises to 2 BB';
+        expect(
+          act0BettingRoundOrderProofForTableV1(
+            table.copyWith(
+              actionTrail: [
+                ...table.actionTrail,
+                Act0ActionTrailItemV1(label: action),
+              ],
+            ),
+          ).truth,
+          isNot(Act0BettingRoundOrderTruthV1.consistent),
+          reason:
+              'The old next actor cannot survive a new action/reopened response.',
+        );
+        if (entry.key == 'blinds_last_actor') {
+          final sb = table.seats.singleWhere((s) => s.seatId == 'sb');
+          expect(sb.bet!.kind, Act0SeatBetKindV1.call);
+          expect(sb.bet!.label, 'Call');
+          expect(sb.currentBetLabel, '1 BB');
+        }
+        final current = act0CurrentAuthoredSourceFingerprintForIdentityV1(
+          worldId: 'world_1',
+          lessonId: lesson,
+          taskId: entry.key,
+        )!;
+        expect(current, isNot(entry.value));
+        final correct = task.runner.options.singleWhere((o) => o.isCorrect);
+        expect(
+          correct.id,
+          entry.key == 'positions_review'
+              ? 'bottom'
+              : flop
+              ? 'btn'
+              : matched
+              ? 'bb'
+              : 'utg',
+        );
+        if (flop) {
+          expect(
+            table.seats.every(
+              (s) =>
+                  s.stackLabel == '99 BB' &&
+                  !s.hasActed &&
+                  s.blindAmountLabel == null &&
+                  s.currentBetLabel == null &&
+                  s.bet == null,
+            ),
+            isTrue,
+          );
+          expect(
+            task.runner.options.where((o) => o.seatId == 'btn').single.label,
+            'BTN',
+          );
+        }
+        final old = Act0LearningEvidenceRecordV1(
+          recordId: 'synthetic-old-${entry.key}',
+          createdOrder: 1,
+          worldId: 'world_1',
+          lessonId: lesson,
+          taskId: entry.key,
+          sourceTaskId: entry.key,
+          choiceId: correct.id,
+          expectedChoiceId: correct.id,
+          isCorrect: true,
+          errorType: 'none',
+          conceptFamilyId: 'table_position_read',
+          repairFocusId: '',
+          skillAtomId: 'table_position_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+          assistanceKind: Act0DecisionAssistanceV1.none,
+          authoredSourceFingerprint: entry.value,
+        );
+        final bytes = jsonEncode(old.toPayload());
+        final restored = Act0LearningEvidenceRecordV1.tryParse(
+          jsonDecode(bytes),
+        )!;
+        expect(jsonEncode(restored.toPayload()), bytes);
+        expect(act0CurrentAuthoredSourceProofV1(restored), isNull);
+        expect(
+          table.copyWith(potLabel: table.potLabel).decisionSeatId,
+          table.decisionSeatId,
+        );
+        for (final bad in [
+          table.copyWith(decisionSeatId: ''),
+          table.copyWith(decisionSeatId: 'missing'),
+          table.copyWith(decisionSeatId: 'co'),
+          table.copyWith(clearDecisionSeatId: true),
+          table.copyWith(actionTrail: table.actionTrail.skip(2).toList()),
+        ]) {
+          expect(
+            act0BettingRoundOrderProofForTableV1(bad).truth,
+            isNot(Act0BettingRoundOrderTruthV1.consistent),
+          );
+        }
+      },
+    );
+
+    testWidgets('${entry.key} renders neutral semantic actor at EN14Pro', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final task = _task(lesson, entry.key);
+      final assistance = <Act0DecisionAssistanceV1>[];
+      var decisions = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: RepaintBoundary(
+              key: const Key('order-frame-capture'),
+              child: Act0LessonRunnerShellV1(
+                runner: task.runner.copyWith(
+                  phase: task.entryPhase,
+                  teachingStepIndex: task.runner.teachingSteps.length,
+                ),
+                worldNumber: 1,
+                selectedWorldId: 'world_1',
+                selectedLessonId: lesson,
+                selectedTaskId: task.taskId,
+                selectedTaskTitle: task.title,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                compositionFamily: task.resolvedCompositionFamily,
+                tablePresentation: task.tablePresentation,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {
+                  decisions++;
+                },
+                onChooseSeat: (_) {
+                  decisions++;
+                },
+                onContinueReview: () {},
+                onChoiceAssistance: assistance.add,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      final scenes = tester
+          .widgetList<Act0TableSceneV1>(find.byType(Act0TableSceneV1))
+          .toList();
+      expect(scenes, isNotEmpty);
+      for (final scene in scenes) {
+        expect(scene.table.activeSeatId, '');
+        expect(scene.table.seats.any((s) => s.isActive || s.isTarget), isFalse);
+        expect(scene.table.highlightedSeatIds, isEmpty);
+      }
+      final texts = tester
+          .widgetList<Text>(find.byType(Text))
+          .map((t) => t.data ?? t.textSpan?.toPlainText() ?? '')
+          .where((t) => t.isNotEmpty)
+          .toList();
+      expect(
+        texts.any(
+          (t) =>
+              t.contains('UTG acts next') ||
+              t.contains('BB acts next') ||
+              t.contains('SB acts next'),
+        ),
+        isFalse,
+      );
+      expect(find.text(task.runner.question), findsOneWidget);
+      expect(
+        find.textContaining(task.runner.caption),
+        findsOneWidget,
+        reason: 'Full source premises must be available when answering.',
+      );
+      final support = find.byKey(
+        const Key('act0_learning_scene_v3_model_support_scroll'),
+      );
+      expect(support, findsOneWidget);
+      final scroll = tester.state<ScrollableState>(
+        find.descendant(of: support, matching: find.byType(Scrollable)),
+      );
+      expect(scroll.position.maxScrollExtent, greaterThan(0));
+
+      await tester.runAsync(() async {
+        final boundary = tester.renderObject<RenderRepaintBoundary>(
+          find.byKey(const Key('order-frame-capture')),
+        );
+        final png = await boundary.toImage(pixelRatio: 1);
+        final data = await png.toByteData(format: ui.ImageByteFormat.png);
+        final out = Directory(
+          'output/w01-explicit-order-frames-20261117/frames',
+        )..createSync(recursive: true);
+        File(
+          '${out.path}/${entry.key}.premises-start.png',
+        ).writeAsBytesSync(data!.buffer.asUint8List());
+        png.dispose();
+      });
+      await tester.drag(support, const Offset(0, -500));
+      await tester.pumpAndSettle();
+      expect(scroll.position.pixels, greaterThan(0));
+      expect(scroll.position.extentAfter, lessThan(1));
+      expect(decisions, 0);
+      expect(assistance, isEmpty);
+      await tester.runAsync(() async {
+        final boundary = tester.renderObject<RenderRepaintBoundary>(
+          find.byKey(const Key('order-frame-capture')),
+        );
+        final png = await boundary.toImage(pixelRatio: 1);
+        final bytes = await png.toByteData(format: ui.ImageByteFormat.png);
+        final out = Directory(
+          'output/w01-explicit-order-frames-20261117/frames',
+        )..createSync(recursive: true);
+        File(
+          '${out.path}/${entry.key}.png',
+        ).writeAsBytesSync(bytes!.buffer.asUint8List());
+        File(
+          '${out.path}/${entry.key}.texts.json',
+        ).writeAsStringSync(jsonEncode(texts));
+        png.dispose();
+      });
+    });
+  }
+}
+
+const _firstHandOldFingerprints = <String, String>{
+  "your_first_hand_flop":
+      "9303bf5618dfc8558e7e524eac6871f0c5a83a7cee5a1b8858c4c337b285959a",
+  "your_first_hand_turn":
+      "77057e6ee5fe53be4bae1f41443163833a8aee7ea876d84498bdb06be6307607",
+  "your_first_hand_river":
+      "cebc7bee377f4d2542f6036395de07c124b2cefc2858d23df42e73cc7848ca8c",
+  "your_first_hand_action_trail":
+      "ab7c65ac6c292960d9bf72648760115f973e1667350f0bc08d6ce270ed5bb714",
+};
+
+void _newFirstHandStackTests() {
+  for (final entry in _firstHandOldFingerprints.entries) {
+    test(
+      '${entry.key} new complete stack context preserves the recorded hand',
+      () {
+        final task = _task('your_first_hand', entry.key);
+        final t = task.runner.table;
+        final street = entry.key == 'your_first_hand_turn'
+            ? 'Turn'
+            : entry.key == 'your_first_hand_river'
+            ? 'River'
+            : 'Flop';
+        final correct = entry.key == 'your_first_hand_turn'
+            ? 'four'
+            : entry.key == 'your_first_hand_river'
+            ? 'five'
+            : entry.key == 'your_first_hand_action_trail'
+            ? 'bb_check'
+            : 'three';
+        expect(task.runner.options.singleWhere((o) => o.isCorrect).id, correct);
+        expect(task.rewardXp, 6);
+        expect(t.streetLabel, street);
+        expect(t.decisionSeatId, 'btn');
+        expect(t.activeSeatId, 'btn');
+        expect(t.heroCards.map((c) => c.label), ['As', 'Kd']);
+        expect(t.potLabel, 'Pot 7.5 BB');
+        expect(t.actionTrail.last.label, '$street: BB checks');
+        expect(t.seats.where((s) => s.isInHand).map((s) => s.seatId).toSet(), {
+          'bb',
+          'btn',
+        });
+        expect(
+          {for (final a in t.seats) a.seatId: a.stackLabel},
+          {
+            'utg': '100 BB',
+            'hj': '100 BB',
+            'co': '99 BB',
+            'btn': '97 BB',
+            'sb': '99.5 BB',
+            'bb': '97 BB',
+          },
+        );
+        expect(
+          t.seats.fold<double>(
+            7.5,
+            (n, a) => n + double.parse(a.stackLabel!.split(' ').first),
+          ),
+          600,
+        );
+        expect(
+          act0BettingRoundOrderProofForTableV1(t).truth,
+          Act0BettingRoundOrderTruthV1.consistent,
+        );
+        expect(
+          task.runner.caption,
+          contains('before posting the 0.5/1 BB blinds'),
+        );
+        expect(task.runner.caption, contains('100 BB'));
+        final fp = act0CurrentAuthoredSourceFingerprintForIdentityV1(
+          worldId: 'world_1',
+          lessonId: 'your_first_hand',
+          taskId: entry.key,
+        )!;
+        expect(fp, isNot(entry.value));
+        final old = Act0LearningEvidenceRecordV1(
+          recordId: 'synthetic_old_firsthand_${entry.key}',
+          createdOrder: 1,
+          worldId: 'world_1',
+          lessonId: 'your_first_hand',
+          taskId: entry.key,
+          sourceTaskId: entry.key,
+          choiceId: correct,
+          expectedChoiceId: correct,
+          isCorrect: true,
+          errorType: 'none',
+          conceptFamilyId: 'table_read',
+          repairFocusId: '',
+          skillAtomId: 'table_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+          authoredSourceFingerprint: entry.value,
+        );
+        final bytes = jsonEncode(old.toPayload());
+        final restored = Act0LearningEvidenceRecordV1.tryParse(
+          jsonDecode(bytes),
+        )!;
+        expect(jsonEncode(restored.toPayload()), bytes);
+        expect(act0CurrentAuthoredSourceProofV1(restored), isNull);
+      },
+    );
+  }
+}
+
 void main() {
+  _newFirstHandStackTests();
+  setUpAll(() async {
+    final font = [
+      File('/System/Library/Fonts/Supplemental/Arial.ttf'),
+      File('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'),
+    ].firstWhere((f) => f.existsSync());
+    final bytes = await font.readAsBytes();
+    for (final name in ['Roboto', 'Ahem']) {
+      await (FontLoader(
+        name,
+      )..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)))).load();
+    }
+  });
+  _explicitOrderFrameTests();
   test('W01 Button definition explains the marker for every choice', () {
     final task = _task('positions', 'positions_theory');
     expect(task.phase, Act0LessonPhaseV1.theory);

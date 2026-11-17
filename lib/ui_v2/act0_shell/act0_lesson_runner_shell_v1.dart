@@ -3368,6 +3368,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? bottomContext.promptSupportLine
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
     final showStreetReplayInline =
+        (table.decisionSeatId == null ||
+            _tableChoreographyActorFocusSafeV1()) &&
         _heroDecisionReady &&
         streetReplay?.isConsumerSafe == true &&
         isDrill &&
@@ -4344,7 +4346,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             'asm05_new_known_holes_turn_call_10',
             'asm05_new_known_holes_turn_call_40',
           }.contains(widget.selectedTaskId);
-      final support = showAsm05ModelAssumptions
+      // Complete authored hand premises are task data, not answer help.
+      final showSourceOrderPremises =
+          isDrill &&
+          !isTeaching &&
+          runner.selectedOptionId == null &&
+          runner.table.decisionSeatId != null;
+      final support = showSourceOrderPremises
+          ? runner.caption
+          : showAsm05ModelAssumptions
           ? '${runner.caption} ${runner.hint}'
           : isTheory || isTeaching
           ? hint
@@ -4407,7 +4417,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         eyebrow: purpose,
         headline: headline,
         support: support,
-        scrollSupport: showAsm05ModelAssumptions,
+        scrollSupport: showAsm05ModelAssumptions || showSourceOrderPremises,
         focusPointsUp: focusPointsUp,
         focusLabel: focusLabel,
         progressLabel: progressLabel,

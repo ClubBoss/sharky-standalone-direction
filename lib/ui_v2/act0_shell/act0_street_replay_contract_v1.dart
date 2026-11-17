@@ -145,6 +145,11 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
       table.seats.length != table.playerCount) {
     return (unproved, 'not_ordinary_played_hand');
   }
+  if (table.decisionSeatId != null &&
+      (table.decisionSeatId!.trim().isEmpty ||
+          _act0StreetReplaySeatByIdV1(table, table.decisionSeatId) == null)) {
+    return (unproved, 'invalid_source_decision_actor');
+  }
   // A source-recorded shove ends only this player's betting eligibility.
   // Check this before unsupported grammar or sparse stacks can erase it.
   final allInActors = <String>{};
@@ -164,7 +169,10 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
       allInActors.add(actor);
     }
   }
-  final currentActor = _act0StreetReplaySeatByIdV1(table, table.activeSeatId);
+  final currentActor = _act0StreetReplaySeatByIdV1(
+    table,
+    table.decisionSeatId ?? table.activeSeatId,
+  );
   if (currentActor != null &&
       (allInActors.contains(currentActor.seatLabel.trim().toUpperCase()) ||
           currentActor.bet?.kind == Act0SeatBetKindV1.allIn)) {
@@ -251,7 +259,10 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
     markedActor = token == 'HERO'
         ? table.heroSeat.seatLabel.trim().toUpperCase()
         : token;
-    final active = _act0StreetReplaySeatByIdV1(table, table.activeSeatId);
+    final active = _act0StreetReplaySeatByIdV1(
+      table,
+      table.decisionSeatId ?? table.activeSeatId,
+    );
     if (active != null &&
         active.seatLabel.trim().toUpperCase() != markedActor) {
       return (contradiction, 'decision_marker_not_active_seat');
@@ -830,7 +841,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
         foldDeducedExit(nextActor(), false)) {}
   }
 
-  final activeId = table.activeSeatId?.trim() ?? '';
+  final activeId = (table.decisionSeatId ?? table.activeSeatId)?.trim() ?? '';
   if (activeId.isEmpty) {
     if (markedActor != null) {
       foldExitsBefore(markedActor);
@@ -907,7 +918,10 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
 
   final heroSeat = table.heroSeat;
   final heroPosition = heroSeat.seatLabel.trim();
-  final activeSeat = _act0StreetReplaySeatByIdV1(table, table.activeSeatId);
+  final activeSeat = _act0StreetReplaySeatByIdV1(
+    table,
+    table.decisionSeatId ?? table.activeSeatId,
+  );
   final currentDecisionActor = activeSeat?.displayName.trim().isNotEmpty == true
       ? activeSeat!.displayName.trim()
       : activeSeat?.seatLabel.trim() ?? '';
@@ -919,7 +933,10 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
   final sourceRefs = <String>[
     'streetLabel',
     'actionTrail',
-    if ((table.activeSeatId ?? '').trim().isNotEmpty) 'activeSeatId',
+    if (table.decisionSeatId != null)
+      'decisionSeatId'
+    else if ((table.activeSeatId ?? '').trim().isNotEmpty)
+      'activeSeatId',
     if ((table.heroSeatId ?? '').trim().isNotEmpty) 'heroSeatId',
   ];
 
