@@ -741,9 +741,64 @@ class TypedCohortV2Controls(unittest.TestCase):
             cohort['producer_receipt'][key] = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[key]
         return cohort
 
-    def test_wp03_context_producer_preserves_origin_and_rejects_bad_receipts(self):
+    def w4_purpose_teaching_producer(self):
         cohort = self.wp03_context_producer()
-        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.WP03_CONTEXT_REVISION)
+        for key in ('state_sha256', 'factory_sha256'):
+            cohort['producer_receipt'][key] = TRUTH.W4_PURPOSE_TEACHING_PRODUCER_REVISION[key]
+        return cohort
+
+    def test_prior_fifteen_physical_receipt_cannot_claim_current_teaching_source(self):
+        self.assertEqual(TRUTH.producer_revision(self.w4_purpose_teaching_producer(), 'candidate'),
+                         TRUTH.W4_PURPOSE_TEACHING_REVISION)
+        with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(self.wp03_context_producer(), 'candidate')
+
+    def test_w4_purpose_teaching_overlay_literal_body_and_predecessor_pins_fail_closed(self):
+        TRUTH._require_w4_purpose_teaching_admission()
+        path, pin = TRUTH.W4_PURPOSE_TEACHING_FIXTURE, TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256
+        original = self.read(path)
+        try:
+            TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256 = '0' * 64
+            with self.assertRaises(SystemExit): TRUTH._require_w4_purpose_teaching_admission()
+        finally:
+            TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256 = pin
+        mutations = [
+            lambda x: x.update(task_id='w4_value_purpose'),
+            lambda x: x.update(changed_leaf=['caption']),
+            lambda x: x['current_record']['teaching'][0].update(body='Forged new teaching'),
+            lambda x: x['current_record'].update(caption='Forged sibling or context'),
+            lambda x: x['predecessor_capture_sha256'].update({'ledger.json': '0' * 64}),
+            lambda x: x['capture_sha256'].update({'source-fingerprints.json': 'f' * 64}),
+            lambda x: x['current_source_origin_packet'].update(state_sha256='f' * 64),
+            lambda x: x.update(source_task_after=x['source_task_before']),
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            candidate = pathlib.Path(temporary) / 'teaching.json'
+            try:
+                for mutate in mutations:
+                    changed = copy.deepcopy(original)
+                    mutate(changed)
+                    self.write(candidate, changed)
+                    TRUTH.W4_PURPOSE_TEACHING_FIXTURE = candidate
+                    TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256 = hashlib.sha256(candidate.read_bytes()).hexdigest()
+                    with self.assertRaises(SystemExit): TRUTH._require_w4_purpose_teaching_admission()
+            finally:
+                TRUTH.W4_PURPOSE_TEACHING_FIXTURE = path
+                TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256 = pin
+
+    def test_w4_purpose_teaching_all_six_physical_source_pins_are_required(self):
+        TRUTH._require_w4_purpose_teaching_admission()
+        for field in TRUTH.W4_PURPOSE_TEACHING_PRODUCER_REVISION:
+            saved = TRUTH.W4_PURPOSE_TEACHING_PRODUCER_REVISION[field]
+            try:
+                TRUTH.W4_PURPOSE_TEACHING_PRODUCER_REVISION[field] = '0' * len(saved)
+                with self.assertRaises(SystemExit): TRUTH._require_w4_purpose_teaching_admission()
+            finally:
+                TRUTH.W4_PURPOSE_TEACHING_PRODUCER_REVISION[field] = saved
+
+    def test_wp03_context_producer_preserves_origin_and_rejects_bad_receipts(self):
+        cohort = self.w4_purpose_teaching_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.W4_PURPOSE_TEACHING_REVISION)
         for field in ('state_sha256', 'factory_sha256', 'head'):
             for value in (None, '0', '0' * 64):
                 changed = copy.deepcopy(cohort)
@@ -757,38 +812,39 @@ class TypedCohortV2Controls(unittest.TestCase):
         with self.assertRaises(SystemExit): TRUTH.producer_revision(changed, 'historical_baseline')
 
     def test_wp03_missing_source_fixture_capture_or_ledger_admission_fails_closed(self):
+        TRUTH._load_wp03_context_fixture()  # Valid immutable metadata before negatives.
         for field in TRUTH.WP03_CONTEXT_PRODUCER_REVISION:
             saved = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field]
             try:
                 TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = None
-                with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+                with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
             finally: TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = saved
         for field in ('state_sha256', 'runner_sha256', 'source_proof_sha256', 'street_replay_sha256', 'repair_gap_sha256'):
             saved = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field]
             try:
                 TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = 'f' * 64
-                with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+                with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
             finally: TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = saved
         for name in TRUTH.WP03_CONTEXT_CAPTURE_SHA256:
             saved = TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name]
             try:
                 TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name] = None
-                with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+                with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
             finally: TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name] = saved
         saved = TRUTH.WP03_CONTEXT_FIXTURE_SHA256
         try:
             TRUTH.WP03_CONTEXT_FIXTURE_SHA256 = '0' * 64
-            with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
         finally: TRUTH.WP03_CONTEXT_FIXTURE_SHA256 = saved
         saved = TRUTH.WP03_CONTEXT_LEDGER_REVIEW
         try:
             TRUTH.WP03_CONTEXT_LEDGER_REVIEW = 'UNREVIEWED'
-            with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
         finally: TRUTH.WP03_CONTEXT_LEDGER_REVIEW = saved
 
     def test_wp03_check_extension_preserves_every_prior_record(self):
         prior = json.loads(TRUTH.WP03_CONTEXT_FIXTURE.read_text())
-        combined = TRUTH._require_wp03_context_admission()
+        combined = TRUTH._load_wp03_context_fixture()
         self.assertEqual(len(prior['task_ids']), 13)
         self.assertEqual(len(combined['task_ids']), 15)
         self.assertEqual(combined['task_ids'][:13], prior['task_ids'])
@@ -807,7 +863,7 @@ class TypedCohortV2Controls(unittest.TestCase):
         original = json.loads(path.read_text())
         try:
             TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = '0' * 64
-            with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
         finally:
             TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = pin
         mutations = [
@@ -829,7 +885,7 @@ class TypedCohortV2Controls(unittest.TestCase):
                     candidate.write_text(json.dumps(changed))
                     TRUTH.WP03_CHECK_EXTENSION_FIXTURE = candidate
                     TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = hashlib.sha256(candidate.read_bytes()).hexdigest()
-                    with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+                    with self.assertRaises(SystemExit): TRUTH._load_wp03_context_fixture()
             finally:
                 TRUTH.WP03_CHECK_EXTENSION_FIXTURE = path
                 TRUTH.WP03_CHECK_EXTENSION_FIXTURE_SHA256 = pin
@@ -961,10 +1017,63 @@ def check_wp03_real_artifacts(baseline, candidate):
     print(json.dumps(result, sort_keys=True))
 
 
+def check_w4_purpose_real_artifacts(baseline, candidate):
+    """Check the new teaching overlay, reusing its exact sealed predecessor."""
+    helper = TypedCohortV2Controls()
+    current = {name: helper.read(candidate / name)
+               for name in TRUTH.W4_PURPOSE_TEACHING_CAPTURE_SHA256}
+    cohort = helper.read(candidate / 'typed-cohort-v2.json')
+    helper.assertEqual(TRUTH.producer_revision(cohort, 'candidate'),
+                       TRUTH.W4_PURPOSE_TEACHING_REVISION)
+    predecessor = {}
+    negative_count = 0
+    for name, captured in current.items():
+        predecessor[name] = TRUTH.w4_purpose_teaching_wp03_capture(name, captured)
+        helper.assertEqual(TRUTH._digest(predecessor[name]), TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name])
+        helper.assertEqual(TRUTH._digest(TRUTH.reviewed_origin_capture(
+            name, captured, TRUTH.W4_PURPOSE_TEACHING_REVISION)), TRUTH.EXPECTED_CAPTURE_ARTIFACTS[name])
+        changed = copy.deepcopy(captured)
+        if isinstance(changed, list):
+            changed[0]['status'] = 'FORGED'
+        else:
+            changed['_forged'] = True
+        with helper.assertRaises(SystemExit):
+            TRUTH.w4_purpose_teaching_wp03_capture(name, changed)
+        negative_count += 1
+    delta = [task_id for task_id, record in current['runtime-inputs.json'].items()
+             if record != predecessor['runtime-inputs.json'][task_id]]
+    helper.assertEqual(delta, ['w4_purpose_intro'])
+    for name in current:
+        if name != 'runtime-inputs.json': helper.assertEqual(current[name], predecessor[name])
+    with tempfile.TemporaryDirectory() as temporary:
+        root = pathlib.Path(temporary)
+        for role, source in (('baseline', baseline), ('candidate', candidate)):
+            target = root / role
+            target.mkdir()
+            for name in (*current.keys(), 'typed-cohort-v2.json'):
+                shutil.copyfile(source / name, target / name)
+        TRUTH.validate_typed_cohort(root)
+    print(json.dumps({
+        'revision': TRUTH.W4_PURPOSE_TEACHING_REVISION,
+        'current_producer_head': cohort['producer_receipt']['head'],
+        'current_state_sha256': cohort['producer_receipt']['state_sha256'],
+        'runtime_changed_vs_sealed_V2_15': delta,
+        'runtime_unchanged_vs_sealed_V2_15': len(current['runtime-inputs.json']) - len(delta),
+        'assessment_FP_learning_choice_ledger_unchanged': True,
+        'sealed_V2_15_and_original_all_five_exact': True,
+        'new_whole_capture_mutation_controls': negative_count,
+        'prior_94_controls': 'Previously completed Check02 proof reused only on exact whole-five predecessor reconstruction; not re-executed.',
+        'scope': 'Strict source/capture admission only; actual first-use exposure/native/Human/fullparents/points unaccepted.',
+    }, sort_keys=True))
+
+
 if __name__ == '__main__':
     if len(sys.argv) == 4 and sys.argv[1] == '--real-artifacts':
         candidate_path = pathlib.Path(sys.argv[3])
         actual_cohort = candidate_path / 'typed-cohort-v2.json'
+        if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.W4_PURPOSE_TEACHING_REVISION):
+            check_w4_purpose_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
+            sys.exit(0)
         if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.WP03_CONTEXT_REVISION):
             check_wp03_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
             sys.exit(0)
