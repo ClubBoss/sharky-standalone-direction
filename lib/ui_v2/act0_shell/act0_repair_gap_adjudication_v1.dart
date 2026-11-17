@@ -698,6 +698,8 @@ class Act0RepairGoalContractV1 {
     required this.sourceChoiceId,
     required this.sourceCorrectChoiceId,
     required this.sourceFingerprint,
+    this.diagnosticVariantId = '',
+    this.sourceContainerFingerprint = '',
     required this.sourceQuestion,
     required this.sourceChoiceReason,
     required this.sourceChoiceLabel,
@@ -717,6 +719,9 @@ class Act0RepairGoalContractV1 {
   });
   final String sourceWorldId, sourceLessonId, sourceTaskId, sourceChoiceId;
   final String sourceCorrectChoiceId, sourceFingerprint;
+  final String diagnosticVariantId, sourceContainerFingerprint;
+  bool get isDiagnosticLearningEntry =>
+      evidenceClass == 'diagnostic_learning_entry';
   final String sourceQuestion,
       sourceChoiceReason,
       sourceChoiceLabel,
@@ -734,6 +739,7 @@ class Act0RepairGoalContractV1 {
     'half_pot_fraction' => 'Half-pot sizing',
     'showdown_best_five' => 'Showdown hand comparison',
     'no_bet_free_continue' => 'Checking for free',
+    'shared_board_vs_private_cards' => 'Private and shared cards',
     'preflop_bucket_seat_frame' => 'Hand, seat and action frame',
     _ => 'Repair not confirmed',
   };
@@ -1066,6 +1072,62 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     evidenceClass: 'intentional_exact_replay',
     mappingType: 'intentional_exact',
   ),
+  // Navigation-only placement teaching entries. Neither is repair proof.
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'what_poker_is',
+    sourceTaskId: 'what_poker_is_table_read_transfer',
+    sourceChoiceId: 'hero_private_cards',
+    sourceCorrectChoiceId: 'board_cards',
+    sourceFingerprint: '', // Captured full variant witness, never base-only.
+    sourceContainerFingerprint:
+        'f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760',
+    diagnosticVariantId: 'board_private_cards',
+    sourceQuestion: 'Which cards can everyone use?',
+    sourceChoiceReason:
+        'Hero’s private cards belong only to Hero. Board cards are shared.',
+    sourceChoiceLabel: 'Hero’s private cards',
+    sourceChoiceQuality: 'wrong',
+    goalId: 'shared_board_vs_private_cards',
+    misconceptionId: 'shared_cards_as_hero_private',
+    relationId: 'placement_shared_cards_learning_entry_v1',
+    targetWorldId: 'world_1',
+    targetLessonId: 'cards_ranks_suits',
+    targetTaskId: 'cards_ranks_suits_private_board',
+    targetFingerprint:
+        'b7c258fa030533d4641b1c680be74ccb790d78fd1beccd06aad846beb62a8641',
+    targetCorrectChoiceId: 'board',
+    targetChoiceIds: <String>{'board', 'private'},
+    evidenceClass: 'diagnostic_learning_entry',
+    mappingType: 'diagnostic_learning_entry',
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'what_poker_is',
+    sourceTaskId: 'what_poker_is_table_read_transfer',
+    sourceChoiceId: 'not_sure_yet',
+    sourceCorrectChoiceId: 'check',
+    sourceFingerprint: '', // Captured full variant witness, never base-only.
+    sourceContainerFingerprint:
+        'f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760',
+    diagnosticVariantId: 'action_basics',
+    sourceQuestion: 'No bet faces Hero. Which action is free?',
+    sourceChoiceReason: 'Sharky will start simple.',
+    sourceChoiceLabel: 'Not sure yet',
+    sourceChoiceQuality: 'suboptimal',
+    goalId: 'no_bet_free_continue',
+    misconceptionId: 'free_action_unsure',
+    relationId: 'placement_free_check_learning_entry_v1',
+    targetWorldId: 'world_1',
+    targetLessonId: 'fold_check_call_raise',
+    targetTaskId: 'actions_check_drill',
+    targetFingerprint:
+        '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
+    targetCorrectChoiceId: 'check',
+    targetChoiceIds: <String>{'check', 'call', 'fold'},
+    evidenceClass: 'diagnostic_learning_entry',
+    mappingType: 'diagnostic_learning_entry',
+  ),
 ];
 
 Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
@@ -1073,12 +1135,14 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
   required String lessonId,
   required String taskId,
   required String choiceId,
+  String diagnosticVariantId = '',
 }) {
   for (final row in act0RepairGoalContractsV1) {
     if (row.sourceWorldId == worldId &&
         row.sourceLessonId == lessonId &&
         row.sourceTaskId == taskId &&
-        row.sourceChoiceId == choiceId)
+        row.sourceChoiceId == choiceId &&
+        row.diagnosticVariantId == diagnosticVariantId)
       return row;
   }
   return null;

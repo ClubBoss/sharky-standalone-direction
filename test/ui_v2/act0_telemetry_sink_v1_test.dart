@@ -1,3 +1,6 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_authored_repair_goal_fixture_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:convert';
@@ -78,8 +81,22 @@ void _writeActionHnpPhysicalTraceV1(String jsonl) {
   file.writeAsStringSync(jsonl);
 }
 
+class _RecordingThrowingTelemetrySinkV1 implements Act0TelemetrySinkV1 {
+  final events = <Act0TelemetryEventV1>[];
+  @override
+  void record(Act0TelemetryEventV1 event) {
+    events.add(event);
+    throw StateError('telemetry disabled');
+  }
+}
+
 void main() {
-  setUp(() {
+  final saveQueue = Act0ProgressStoreV1(
+    key: 'act0_shell_progress_v1',
+    isValidPayload: (_) => false,
+  ); // flush only; never validates or writes.
+  setUp(() async {
+    await saveQueue.flush();
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
@@ -366,7 +383,123 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> completeDailySetFromPlayV1(WidgetTester tester) async {
+  Future<void> startAuthoredTaskFromLearnV1(
+    WidgetTester tester, {
+    required String lessonId,
+    required String taskId,
+    Act0TelemetrySinkV1? telemetrySink,
+  }) async {
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.runAsync(() => saveQueue.flush());
+    });
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await saveQueue.flush();
+    final world = Act0ShellStateV1.sample.worldById('world_1');
+    final lesson = world.lessons.singleWhere((l) => l.lessonId == lessonId);
+    SharedPreferences.setMockInitialValues({
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 18, 'completedTaskIds': <String>[],
+        'completedLessonIds': <String>[], 'earnedXp': 0,
+        // Route access only. Every assessed answer below is a real UI event.
+        'skippedTaskIds': [
+          for (final l in world.lessons.takeWhile(
+            (l) => l.lessonId != lessonId,
+          ))
+            for (final t in l.taskList) t.taskId,
+          for (final t in lesson.taskList.takeWhile((t) => t.taskId != taskId))
+            t.taskId,
+        ],
+        'selectedWorldId': world.worldId, 'selectedLessonId': lessonId,
+        'selectedTaskId': taskId, 'learningEvidenceHistory': <Object>[],
+      }),
+    });
+    await tester.pumpWidget(previewHost(telemetrySink: telemetrySink));
+    await tester.pumpAndSettle();
+    await openBottomTabV1(tester, 'Learn');
+    final start = find.byKey(const Key('act0_shell_current_mission_cta'));
+    expect(start, findsOneWidget);
+    await tester.ensureVisible(start);
+    await tester.tap(start);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> advanceAuthoredPromptV1(WidgetTester tester) async {
+    await advanceRunnerUntilV1(tester, () {
+      final finder = find.byType(Act0LessonRunnerShellV1);
+      if (finder.evaluate().length != 1) return false;
+      final runner = tester.widget<Act0LessonRunnerShellV1>(finder).runner;
+      return runner.phase == Act0LessonPhaseV1.drill &&
+          runner.options.any(
+            (o) =>
+                find
+                    .byKey(Key('act0_shell_option_${o.id}'))
+                    .evaluate()
+                    .isNotEmpty ||
+                (o.seatId != null &&
+                    find
+                        .byKey(Key('act0_shell_seat_tap_${o.seatId}'))
+                        .evaluate()
+                        .isNotEmpty) ||
+                find
+                    .byKey(Key('act0_shell_sizing_preset_${o.id}'))
+                    .evaluate()
+                    .isNotEmpty,
+          );
+    }, failureMessage: 'Actual authored decision was not reached.');
+    // Ordinary presentation timer pumps only; no clock/mode/answer override.
+    for (var i = 0; i < 6; i++)
+      await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> completeOrdinaryActionRepairRecheckV1(
+    WidgetTester tester, {
+    Act0TelemetrySinkV1? telemetrySink,
+  }) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await startActionsTheoryFromLearnV1(tester, telemetrySink: telemetrySink);
+    await advanceActionTheoryToCanonicalDecisionV1(tester);
+    await answerVisiblePromptWronglyV1(tester);
+    await continueVisibleFeedbackV1(tester);
+    await answerVisiblePromptCorrectlyV1(tester);
+    await continueVisibleFeedbackV1(tester);
+    await answerVisiblePromptCorrectlyV1(tester);
+    await continueVisibleFeedbackV1(tester);
+    expect(tester.takeException(), isNull);
+  }
+
+  Future<void> completeDailySetFromPlayV1(
+    WidgetTester tester, {
+    Act0TelemetrySinkV1? telemetrySink,
+  }) async {
+    await startAuthoredTaskFromLearnV1(
+      tester,
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_rank_drill',
+      telemetrySink: telemetrySink,
+    );
+    final earned = <String>{};
+    for (var i = 0; i < 3; i++) {
+      await advanceAuthoredPromptV1(tester);
+      final task = tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId;
+      expect(task, isNotNull);
+      expect(earned.add(task!), isTrue);
+      await answerVisiblePromptCorrectlyV1(tester);
+      await continueVisibleFeedbackV1(tester);
+    }
+    expect(earned, hasLength(3));
+    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+    await tester.pumpAndSettle();
     // The shell now holds its surface until persisted progress has loaded.
     await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Practice');
@@ -407,10 +540,306 @@ void main() {
     await answerVisiblePromptWronglyV1(tester);
   }
 
+  // SIMULATED familiar replay only: the existing six-completion sequence is
+  // earned through UI. No due date, elapsed clock, cache or history is injected.
+  Future<void> completeCanonicalOwnedCandidateProveV1(
+    WidgetTester tester, {
+    required Act0TelemetrySinkV1 telemetrySink,
+  }) async {
+    final reader = Act0ProgressStoreV1(
+      key: 'act0_shell_progress_v1',
+      isValidPayload: (_) => true,
+    );
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.runAsync(reader.flush);
+    });
+    Future<Map<String, dynamic>> snapshot() async {
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.runAsync(reader.flush);
+      final payload = await reader.load();
+      expect(payload, isNotNull);
+      return jsonDecode(payload!) as Map<String, dynamic>;
+    }
+
+    List<Map> rows(Map<String, dynamic> p, String key) =>
+        (p[key] as List).cast<Map>();
+    Map retention(Map<String, dynamic> p) => rows(
+      p,
+      'retentionMemory',
+    ).singleWhere((r) => r['taskId'] == 'actions_legal_context');
+    Set<String> completed(Map<String, dynamic> p) =>
+        (p['completedTaskIds'] as List).cast<String>().toSet();
+    Future<void> tapVisible(Finder f) async {
+      expect(f, findsOneWidget);
+      await tester.ensureVisible(f);
+      await tester.pumpAndSettle();
+      await tester.tap(f);
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> leaveRunner() async {
+      final map = find.byKey(const Key('act0_shell_block_summary_map_cta'));
+      if (map.evaluate().isNotEmpty) {
+        await tapVisible(map);
+      } else if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
+        await tapVisible(find.byKey(const Key('act0_shell_runner_back')));
+      }
+    }
+
+    Future<void> replaySource() async {
+      await leaveRunner();
+      await openBottomTabV1(tester, 'Review');
+      final past = find.byKey(
+        const Key('act0_academy_review_leaf_past_repairs'),
+      );
+      final replay = act0ShellPresentationFinderV1(
+        'act0_shell_fixed_mistake_replay_actions_legal_context',
+      );
+      if (replay.evaluate().isEmpty && act0AcademyReviewPreviewV1) {
+        await tapVisible(past);
+      }
+      await tapVisible(replay);
+      await advanceAuthoredPromptV1(tester);
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        'actions_legal_context',
+      );
+      await answerVisiblePromptCorrectlyV1(tester);
+      await continueVisibleFeedbackV1(tester);
+      await leaveRunner();
+      await openBottomTabV1(tester, 'Review');
+    }
+
+    // The only seed is route access with zero completed tasks/XP/history. It is
+    // used once; the same mounted learner/store continues for the whole test.
+    await startAuthoredTaskFromLearnV1(
+      tester,
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_legal_context',
+      telemetrySink: telemetrySink,
+    );
+    await advanceAuthoredPromptV1(tester);
+    await tapVisible(find.byKey(const Key('act0_shell_option_fold')));
+    await tapVisible(find.byKey(const Key('act0_shell_runner_back')));
+    await openBottomTabV1(tester, 'Review');
+    await tapVisible(
+      act0ShellPresentationFinderV1('act0_shell_review_practice_cta'),
+    );
+    await advanceAuthoredPromptV1(tester);
+    expect(
+      tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      'actions_check_drill',
+    );
+    await answerVisiblePromptCorrectlyV1(tester);
+    await continueVisibleFeedbackV1(tester);
+    var p = await snapshot();
+    expect(retention(p)['status'], 'fixedRecent');
+    final initialHistory = rows(p, 'learningEvidenceHistory');
+    final miss = initialHistory.singleWhere(
+      (r) => r['taskId'] == 'actions_legal_context' && r['isCorrect'] == false,
+    );
+    expect(miss['choiceId'], 'fold');
+    expect(miss['expectedChoiceId'], 'check');
+    expect(
+      miss['authoredSourceFingerprint'],
+      act0AuthoredRepairFixtureFingerprintV1(
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_legal_context',
+      ),
+    );
+    final outcomes = rows(p, 'repairOutcomeProjection');
+    final outcome = outcomes.singleWhere(
+      (r) =>
+          r['sourceTaskId'] == 'actions_legal_context' &&
+          r['isCorrect'] == true,
+    );
+    expect(outcome['repairOccurrenceId'], miss['recordId']);
+    expect(outcome['targetTaskId'], 'actions_check_drill');
+    expect(outcome['repairIntent'], isA<Map>());
+    final repairAttempt = initialHistory.singleWhere(
+      (r) => r['recordId'] == outcome['repairAttemptId'],
+    );
+    expect(repairAttempt['taskId'], 'actions_check_drill');
+    expect(repairAttempt['isCorrect'], isTrue);
+    expect(repairAttempt['assistanceKind'], 'none');
+    expect(
+      repairAttempt['authoredSourceFingerprint'],
+      act0AuthoredRepairFixtureFingerprintV1(
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_check_drill',
+      ),
+    );
+
+    // Follow source-owned current missions; summaries use their real Map CTA.
+    // Each loop performs one ordinary action, so snapshots witness the exact
+    // interval start even if a normal source completion refreshes fixedAt.
+    final observations = <Map<String, dynamic>>[p];
+    for (
+      var action = 0;
+      action < 120 && retention(p)['status'] != 'agedRecheck';
+      action++
+    ) {
+      final map = find.byKey(const Key('act0_shell_block_summary_map_cta'));
+      final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+      if (map.evaluate().isNotEmpty) {
+        await tapVisible(map);
+      } else if (runnerFinder.evaluate().isNotEmpty) {
+        final runner = tester
+            .widget<Act0LessonRunnerShellV1>(runnerFinder)
+            .runner;
+        if (runner.selectedOptionId != null) {
+          await continueVisibleFeedbackV1(tester);
+        } else {
+          final choiceVisible = runner.options.any(
+            (o) =>
+                find
+                    .byKey(Key('act0_shell_option_${o.id}'))
+                    .evaluate()
+                    .isNotEmpty ||
+                (o.seatId != null &&
+                    find
+                        .byKey(Key('act0_shell_seat_tap_${o.seatId}'))
+                        .evaluate()
+                        .isNotEmpty) ||
+                find
+                    .byKey(Key('act0_shell_sizing_preset_${o.id}'))
+                    .evaluate()
+                    .isNotEmpty,
+          );
+          if (choiceVisible) {
+            for (var beat = 0; beat < 6; beat++)
+              await tester.pump(const Duration(milliseconds: 500));
+            await tester.pumpAndSettle();
+            await answerVisiblePromptCorrectlyV1(tester);
+          } else {
+            final theory = find.byKey(
+              const Key('act0_shell_theory_continue_cta'),
+            );
+            await tapVisible(
+              theory.evaluate().isNotEmpty
+                  ? theory
+                  : find.byKey(const Key('act0_shell_continue_cta')),
+            );
+          }
+        }
+      } else {
+        await openBottomTabV1(tester, 'Learn');
+        await tapVisible(
+          find.byKey(const Key('act0_shell_current_mission_cta')),
+        );
+      }
+      p = await snapshot();
+      observations.add(p);
+    }
+    expect(retention(p)['status'], 'agedRecheck');
+    final fixedAt = retention(p)['fixedAtSequence'] as int;
+    expect((p['retentionSequence'] as int) - fixedAt, 6);
+    final intervalStart = observations.lastWhere(
+      (s) => s['retentionSequence'] == fixedAt,
+    );
+    final earned = completed(p).difference(completed(intervalStart));
+    expect(earned, hasLength(6));
+    final state = Act0ShellStateV1.sample;
+    var expectedXp = 0;
+    for (final taskId in earned) {
+      final source = state.worlds
+          .expand((w) => w.lessons.map((l) => (worldId: w.worldId, lesson: l)))
+          .singleWhere((s) => s.lesson.taskList.any((t) => t.taskId == taskId));
+      final task = source.lesson.taskList.singleWhere(
+        (t) => t.taskId == taskId,
+      );
+      expectedXp += task.rewardXp;
+      final correct = rows(p, 'learningEvidenceHistory').where(
+        (r) =>
+            r['taskId'] == taskId &&
+            r['isCorrect'] == true &&
+            r['assistanceKind'] == 'none',
+      );
+      if (task.phase == Act0LessonPhaseV1.theory) {
+        expect(
+          rows(p, 'studyObservations').where(
+            (r) =>
+                r['taskId'] == taskId &&
+                r['sourceRevision'] ==
+                    act0AuthoredStudyRevisionV1(
+                      worldId: source.worldId,
+                      lessonId: source.lesson.lessonId,
+                      task: task,
+                    ),
+          ),
+          isNotEmpty,
+        );
+      } else {
+        expect(correct, isNotEmpty);
+        for (final r in correct) {
+          expect(
+            r['authoredSourceFingerprint'],
+            act0AuthoredRepairFixtureFingerprintV1(
+              worldId: source.worldId,
+              lessonId: source.lesson.lessonId,
+              taskId: taskId,
+            ),
+          );
+        }
+      }
+    }
+    expect(
+      (p['earnedXp'] as int) - (intervalStart['earnedXp'] as int),
+      expectedXp,
+    );
+    expect(retention(p)['successfulRecheckCount'], 0);
+    final xpBeforeReplays = p['earnedXp'];
+    final completedBeforeReplays = completed(p);
+    final oldRecordIds = rows(
+      p,
+      'learningEvidenceHistory',
+    ).map((r) => r['recordId']).toSet();
+    await replaySource();
+    p = await snapshot();
+    expect(retention(p)['status'], 'ownedCandidate');
+    expect(retention(p)['successfulRecheckCount'], 1);
+    await replaySource();
+    p = await snapshot();
+    expect(retention(p)['status'], 'ownedCandidate');
+    expect(retention(p)['successfulRecheckCount'], 2);
+    expect(p['earnedXp'], xpBeforeReplays);
+    expect(completed(p), completedBeforeReplays);
+    expect(
+      rows(p, 'learningEvidenceHistory').map((r) => r['recordId']).toSet(),
+      containsAll(oldRecordIds),
+    );
+    final replayAttempts = rows(p, 'learningEvidenceHistory').where(
+      (r) =>
+          !oldRecordIds.contains(r['recordId']) &&
+          r['taskId'] == 'actions_legal_context',
+    );
+    expect(replayAttempts, hasLength(2));
+    for (final r in replayAttempts) {
+      expect(r['isCorrect'], isTrue);
+      expect(r['assistanceKind'], 'none');
+      expect(r['runKind'], 'practice');
+      expect(r['startedBy'], 'review_familiar_replay');
+      expect(r['authoredSourceFingerprint'], miss['authoredSourceFingerprint']);
+    }
+    expect(tester.takeException(), isNull);
+  }
+
   Future<void> completeAgedRecheckFromHomeV1(
     WidgetTester tester, {
     Act0TelemetrySinkV1? telemetrySink,
   }) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     SharedPreferences.setMockInitialValues(<String, Object>{
       'act0_shell_progress_v1': jsonEncode(<String, Object?>{
         'schemaVersion': 8,
@@ -452,16 +881,16 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(replayFinder);
     await tester.pumpAndSettle();
-    await advanceCurrentRunnerToDrillV1(tester);
-    await answerVisiblePromptCorrectlyV1(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
+    expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+    expect(tester.takeException(), isNull);
   }
 
   Future<void> completeOwnedCandidateProveFromReviewV1(
     WidgetTester tester, {
     Act0TelemetrySinkV1? telemetrySink,
   }) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     SharedPreferences.setMockInitialValues(<String, Object>{
       'act0_shell_progress_v1': jsonEncode(<String, Object?>{
         'schemaVersion': 8,
@@ -503,10 +932,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(replayFinder);
     await tester.pumpAndSettle();
-    await advanceCurrentRunnerToDrillV1(tester);
-    await answerVisiblePromptCorrectlyV1(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
+    expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+    expect(tester.takeException(), isNull);
   }
 
   ({Act0LessonCardV1 lesson, Act0LessonTaskV1 task}) taskByIdV1({
@@ -1067,22 +1494,17 @@ void main() {
 
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Act0ShellPreviewScreenV1(
-            key: UniqueKey(),
-            state: Act0ShellStateV1.sample,
-            showPlacementOnStart: false,
-            telemetrySink: sink,
-            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
-              mode: Act0ControlledDemoCaptureModeV1.directState,
-              surface: Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome,
-            ),
-          ),
-        ),
+      await startAuthoredTaskFromLearnV1(
+        tester,
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_legal_context',
+        telemetrySink: sink,
       );
+      await advanceAuthoredPromptV1(tester);
+      await answerVisiblePromptWronglyV1(tester);
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
       await tester.pumpAndSettle();
-
+      final repairEventBoundary = sink.events.length;
       await openBottomTabV1(tester, 'Review');
       final fixNext = act0ShellPresentationFinderV1(
         'act0_shell_review_practice_cta',
@@ -1093,7 +1515,7 @@ void main() {
       await tester.tap(fixNext);
       await tester.pumpAndSettle();
 
-      await advanceCurrentRunnerToDrillV1(tester);
+      await advanceAuthoredPromptV1(tester);
       await answerVisiblePromptCorrectlyV1(tester);
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -1105,7 +1527,10 @@ void main() {
         findsOneWidget,
       );
 
-      final repairStartedEvents = sink.events
+      final repairTrace = sink.events
+          .skip(repairEventBoundary)
+          .toList(growable: false);
+      final repairStartedEvents = repairTrace
           .where((event) => event.name == 'repair_started')
           .toList(growable: false);
       expect(repairStartedEvents, hasLength(1));
@@ -1116,7 +1541,7 @@ void main() {
       expect(repairStart['repairTaskId'], allOf(isA<String>(), isNot(isEmpty)));
       expect(repairStart['attemptOrdinal'], 1);
 
-      final repairAttemptedEvents = sink.events
+      final repairAttemptedEvents = repairTrace
           .where((event) => event.name == 'repair_attempted')
           .toList(growable: false);
       expect(repairAttemptedEvents, hasLength(1));
@@ -1129,10 +1554,13 @@ void main() {
         repairAttemptedEvents.single.fields['source_surface'],
         'act0_review',
       );
-      final sessionStart = sink.events.firstWhere(
-        (event) => event.name == 'session_start',
+      final sessionStart = sink.events.singleWhere(
+        (event) =>
+            event.name == 'session_start' &&
+            event.fields['session_id'] ==
+                repairAttemptedEvents.single.fields['session_id'],
       );
-      final decisionMade = sink.events.lastWhere(
+      final decisionMade = repairTrace.lastWhere(
         (event) => event.name == 'decision_made',
       );
       expect(sessionStart.fields['session_id'], isNot(isEmpty));
@@ -1145,7 +1573,7 @@ void main() {
         sessionStart.fields['session_id'],
       );
 
-      final repairEvents = sink.events
+      final repairEvents = repairTrace
           .where((event) => event.name == 'repair_completed')
           .toList(growable: false);
       expect(repairEvents, hasLength(1));
@@ -1160,7 +1588,7 @@ void main() {
       expect(repair['sourceTaskId'], repairStart['sourceTaskId']);
       expect(repair['repairTaskId'], repairStart['repairTaskId']);
 
-      final fixLandedEvents = sink.events
+      final fixLandedEvents = repairTrace
           .where((event) => event.name == 'fix_landed')
           .toList(growable: false);
       expect(fixLandedEvents, hasLength(1));
@@ -1175,13 +1603,16 @@ void main() {
         sessionStart.fields['session_id'],
       );
 
-      final repairItemEvents = sink.events
+      final repairItemEvents = repairTrace
           .where((event) => event.name == 'repair_item_completed')
           .toList(growable: false);
       expect(repairItemEvents, hasLength(1));
-      expect(sink.events.last.name, 'personalized_next_step_selected');
+      final learnerTrace = repairTrace
+          .where((e) => e.name != 'progress_persist_result')
+          .toList();
+      expect(learnerTrace.last.name, 'personalized_next_step_selected');
 
-      final nextStep = sink.events.last.fields;
+      final nextStep = learnerTrace.last.fields;
       expect(nextStep['surface'], 'review');
       expect(nextStep['reason_type'], isA<String>());
       expect(nextStep['evidence_kind'], isA<String>());
@@ -1193,7 +1624,7 @@ void main() {
       // (non-reconstructable) incident trace on the exact native candidate.
       expect(nextStep['schemaVersion'], 1);
       final hnp = Act0HnpTelemetrySinkV1(fileStore: _NoFileStoreV1());
-      hnp.record(sink.events.last);
+      hnp.record(learnerTrace.last);
       final capture =
           (jsonDecode(hnp.exportJson()) as Map<String, dynamic>)['capture']
               as Map<String, dynamic>;
@@ -1209,7 +1640,7 @@ void main() {
       expect(repairItem, isNot(contains('missedSignal')));
       expect(repairItem, isNot(contains('skillAtomId')));
 
-      expectNoForbiddenTelemetryFieldsV1(sink.events);
+      expectNoForbiddenTelemetryFieldsV1(repairTrace);
     },
   );
 
@@ -1258,7 +1689,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(previewHost(telemetrySink: sink));
-      await completeDailySetFromPlayV1(tester);
+      await completeDailySetFromPlayV1(tester, telemetrySink: sink);
 
       expect(
         act0ShellPresentationFinderV1('act0_shell_play_screen'),
@@ -1305,13 +1736,26 @@ void main() {
       expect(practice['practiceGroupId'], practiceStart['practiceGroupId']);
 
       final sessionComplete = sink.events.firstWhere(
-        (event) => event.name == 'session_complete',
+        (event) =>
+            event.name == 'session_complete' &&
+            event.fields['source_surface'] == 'act0_practice' &&
+            event.fields['practice_group_id'] == 'daily',
       );
       final sessionStartEvents = sink.events
-          .where((event) => event.name == 'session_start')
+          .where(
+            (event) =>
+                event.name == 'session_start' &&
+                event.fields['session_id'] ==
+                    sessionComplete.fields['session_id'],
+          )
           .toList(growable: false);
       final sessionCompleteEvents = sink.events
-          .where((event) => event.name == 'session_complete')
+          .where(
+            (event) =>
+                event.name == 'session_complete' &&
+                event.fields['session_id'] ==
+                    sessionComplete.fields['session_id'],
+          )
           .toList(growable: false);
       expect(sessionStartEvents, hasLength(1));
       expect(sessionCompleteEvents, hasLength(1));
@@ -1412,30 +1856,54 @@ void main() {
     expectNoForbiddenTelemetryFieldsV1(worldSink.events);
   });
 
-  testWidgets('Act0 recheck flow emits safe recheck_completed telemetry', (
-    tester,
-  ) async {
-    final sink = Act0InMemoryTelemetrySinkV1();
+  testWidgets(
+    'ordinary Action recheck emits safe recheck_completed telemetry',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
 
-    await tester.binding.setSurfaceSize(const Size(430, 932));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    await completeAgedRecheckFromHomeV1(tester, telemetrySink: sink);
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await completeOrdinaryActionRepairRecheckV1(tester, telemetrySink: sink);
 
-    final recheckEvents = sink.events
-        .where((event) => event.name == 'recheck_completed')
-        .toList(growable: false);
-    expect(recheckEvents, hasLength(1));
+      final recheckEvents = sink.events
+          .where((event) => event.name == 'recheck_completed')
+          .toList(growable: false);
+      expect(recheckEvents, hasLength(1));
 
-    final recheck = recheckEvents.single.fields;
-    expect(recheck['schemaVersion'], 1);
-    expect(recheck['taskId'], 'what_poker_is_table_read_transfer');
-    expect(recheck['result'], 'correct');
-    expect(recheck['attemptOrdinal'], 1);
-    expect(recheck['retentionStatus'], 'ownedCandidate');
-    expect(recheck['successfulRecheckCount'], 1);
+      final recheck = recheckEvents.single.fields;
+      expect(recheck['schemaVersion'], 1);
+      expect(recheck['taskId'], 'actions_check_drill');
+      expect(recheck['result'], 'correct');
+      expect(recheck['attemptOrdinal'], 1);
+      expect(recheck['retentionStatus'], 'ownedCandidate');
+      expect(recheck['successfulRecheckCount'], 1);
 
-    expectNoForbiddenTelemetryFieldsV1(sink.events);
-  });
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+    },
+  );
+
+  testWidgets(
+    'legacy counter-only aged cache cannot manufacture recheck proof',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await completeAgedRecheckFromHomeV1(tester, telemetrySink: sink);
+      expect(
+        sink.events.where(
+          (e) => const {
+            'recheck_completed',
+            'prove_completed',
+            'fix_landed',
+            'decision_made',
+          }.contains(e.name),
+        ),
+        isEmpty,
+      );
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_review_screen'),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('Act0 completion telemetry stays non-blocking when sink throws', (
     tester,
@@ -1446,7 +1914,10 @@ void main() {
       previewHost(telemetrySink: _ThrowingTelemetrySinkV1()),
     );
 
-    await completeDailySetFromPlayV1(tester);
+    await completeDailySetFromPlayV1(
+      tester,
+      telemetrySink: _ThrowingTelemetrySinkV1(),
+    );
 
     expect(
       act0ShellPresentationFinderV1('act0_shell_play_screen'),
@@ -1665,7 +2136,7 @@ void main() {
       expect(recheck.fields['result'], 'correct');
       expect(recheck.fields['sequence_id'], 'w1_action_words_check_v1');
 
-      await tester.tap(find.byKey(const Key('act0_shell_previous_cta')));
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
       expect(
@@ -1739,7 +2210,70 @@ void main() {
     },
   );
 
-  testWidgets('Act0 prove flow emits safe prove_completed telemetry', (
+  testWidgets(
+    'SIMULATED canonical familiar replay emits safe prove_completed telemetry',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await completeCanonicalOwnedCandidateProveV1(tester, telemetrySink: sink);
+      final rechecks = sink.events
+          .where(
+            (e) =>
+                e.name == 'recheck_completed' &&
+                e.fields['taskId'] == 'actions_legal_context',
+          )
+          .toList();
+      expect(rechecks, hasLength(1));
+      expect(rechecks.single.fields['successfulRecheckCount'], 1);
+      final proves = sink.events
+          .where((e) => e.name == 'prove_completed')
+          .toList();
+      expect(proves, hasLength(1));
+      final prove = proves.single;
+      expect(
+        sink.events.indexOf(prove),
+        greaterThan(sink.events.indexOf(rechecks.single)),
+      );
+      expect(prove.fields['schemaVersion'], 1);
+      expect(prove.fields['taskId'], 'actions_legal_context');
+      expect(prove.fields['result'], 'correct');
+      expect(prove.fields['attemptOrdinal'], 1);
+      expect(prove.fields['retentionStatus'], 'ownedCandidate');
+      expect(prove.fields['session_id'], isNot(isEmpty));
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'session_start' &&
+              event.fields['session_id'] == prove.fields['session_id'],
+        ),
+        hasLength(1),
+      );
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+    },
+  );
+
+  testWidgets(
+    'SIMULATED canonical Prove stays non-blocking when its sink throws',
+    (tester) async {
+      final sink = _RecordingThrowingTelemetrySinkV1();
+      await completeCanonicalOwnedCandidateProveV1(tester, telemetrySink: sink);
+      // This proves the positive emitter was invoked before throwing; a blocked
+      // or accidentally skipped Prove route cannot satisfy this test.
+      final proves = sink.events
+          .where((e) => e.name == 'prove_completed')
+          .toList();
+      expect(proves, hasLength(1));
+      expect(proves.single.fields['taskId'], 'actions_legal_context');
+      expect(proves.single.fields['result'], 'correct');
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_review_screen'),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+    },
+  );
+
+  testWidgets('legacy counter-only prove cannot emit current proof telemetry', (
     tester,
   ) async {
     final sink = Act0InMemoryTelemetrySinkV1();
@@ -1748,19 +2282,24 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await completeOwnedCandidateProveFromReviewV1(tester, telemetrySink: sink);
 
-    final proveEvents = sink.events
-        .where((event) => event.name == 'prove_completed')
-        .toList(growable: false);
-    expect(proveEvents, hasLength(1));
-
-    final prove = proveEvents.single.fields;
-    expect(prove['schemaVersion'], 1);
-    expect(prove['taskId'], 'actions_raise_drill');
-    expect(prove['result'], 'correct');
-    expect(prove['attemptOrdinal'], 1);
-    expect(prove['retentionStatus'], 'ownedCandidate');
-
+    expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_review_screen'),
+      findsOneWidget,
+    );
+    expect(
+      sink.events.where(
+        (event) => const {
+          'prove_completed',
+          'recheck_completed',
+          'fix_landed',
+          'decision_made',
+        }.contains(event.name),
+      ),
+      isEmpty,
+    );
     expectNoForbiddenTelemetryFieldsV1(sink.events);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Act0 recheck telemetry stays non-blocking when sink throws', (
@@ -1768,18 +2307,15 @@ void main() {
   ) async {
     await tester.binding.setSurfaceSize(const Size(430, 932));
     addTearDown(() => tester.binding.setSurfaceSize(null));
-    await completeAgedRecheckFromHomeV1(
+    await completeOrdinaryActionRepairRecheckV1(
       tester,
       telemetrySink: _ThrowingTelemetrySinkV1(),
     );
-
-    expect(
-      act0ShellPresentationFinderV1('act0_shell_review_screen'),
-      findsOneWidget,
-    );
+    expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Act0 prove telemetry stays non-blocking when sink throws', (
+  testWidgets('legacy prove rejection stays non-blocking when sink throws', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(430, 932));

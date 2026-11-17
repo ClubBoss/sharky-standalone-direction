@@ -87,6 +87,9 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
 /// `runKind` of evidence recorded by the Placement diagnostic.
 const act0PlacementAssessmentRunKindV1 = 'placement';
 
+/// An actual guided answer reached from Placement; no learning/proof credit.
+const act0DiagnosticLearningEntryRunKindV1 = 'diagnostic_learning_entry';
+
 /// Evidence-only record for a completed Act0 decision.
 ///
 /// This contract deliberately has no learner-facing interpretation fields.
@@ -329,6 +332,9 @@ class Act0LearningEvidenceRecordV1 {
   bool get isPlacementAssessment =>
       runKind.trim() == act0PlacementAssessmentRunKindV1;
 
+  bool get isDiagnosticLearningEntry =>
+      runKind.trim() == act0DiagnosticLearningEntryRunKindV1;
+
   bool get isAssistedCorrect => isCorrect && hasKnownAssistance;
 
   bool get hasKnownAssistance =>
@@ -336,7 +342,9 @@ class Act0LearningEvidenceRecordV1 {
       assistanceKind == Act0DecisionAssistanceV1.theoryRecall;
 
   bool get isIndependentCorrect =>
-      isCorrect && assistanceKind == Act0DecisionAssistanceV1.none;
+      !isDiagnosticLearningEntry &&
+      isCorrect &&
+      assistanceKind == Act0DecisionAssistanceV1.none;
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -834,6 +842,8 @@ class Act0LearningEvidenceHistoryV1 {
       ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     final first = <String, Act0LearningEvidenceRecordV1>{};
     for (final record in sorted) {
+      // Raw teaching answers remain in records; they cannot create proof anchors.
+      if (record.isDiagnosticLearningEntry) continue;
       final key = jsonEncode([
         record.worldId,
         record.lessonId,
@@ -1036,7 +1046,8 @@ class Act0LearningEvidenceHistoryV1 {
           // become the "latest run" summary or earn a session achievement.
           (record) =>
               record?.runId.trim().isNotEmpty == true &&
-              record?.isPlacementAssessment == false,
+              record?.isPlacementAssessment == false &&
+              record?.isDiagnosticLearningEntry == false,
           orElse: () => null,
         );
     if (latestGrouped == null) {

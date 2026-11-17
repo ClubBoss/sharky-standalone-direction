@@ -58,6 +58,16 @@ class Act0AuthoredRepairGoalFixtureV1 {
          occurrenceId,
        );
 
+  Act0AuthoredRepairGoalFixtureV1.rank({
+    String occurrenceId = 'source_miss_rank',
+  }) : intent = _intent(
+         'world_1',
+         'cards_ranks_suits',
+         'cards_ranks_suits_rank_drill',
+         'king',
+         occurrenceId,
+       );
+
   Act0AuthoredRepairGoalFixtureV1.w24({String occurrenceId = 'source_miss_W24'})
     : intent = _intent(
         'world_3',

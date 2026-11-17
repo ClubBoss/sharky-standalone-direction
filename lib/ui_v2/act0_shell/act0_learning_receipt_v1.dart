@@ -141,8 +141,9 @@ class Act0LearningReceiptV1 {
         learningEvidence.records
             .where(
               (record) =>
-                  record.sourceTaskId.trim() == source ||
-                  record.taskId.trim() == source,
+                  !record.isDiagnosticLearningEntry &&
+                  (record.sourceTaskId.trim() == source ||
+                      record.taskId.trim() == source),
             )
             .toList()
           ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));

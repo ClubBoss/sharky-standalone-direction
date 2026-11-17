@@ -1,4 +1,6 @@
 import 'act0_learning_evidence_contract_v1.dart';
+import 'act0_authored_source_proof_v1.dart';
+import 'act0_review_mistake_history_v1.dart';
 import 'act0_repair_gap_adjudication_v1.dart';
 import 'act0_repair_outcome_projection_v1.dart';
 import 'act0_queue_resolution_contract_v1.dart';
@@ -206,6 +208,10 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
   required Act0RunnerOptionV1 selectedOption,
   Act0RepairIntentTargetMapperV1? mapSameSignalRep,
   Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
+  Act0LessonTaskV1? sourceTask,
+  String diagnosticVariantId = '',
+  Act0DiagnosticVariantFingerprintResolverV1?
+  currentDiagnosticVariantFingerprint,
 }) {
   if (selectedOption.isCorrect ||
       selectedOption.quality == Act0FeedbackQualityV1.correct) {
@@ -269,10 +275,47 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     lessonId: sourceLessonId,
     taskId: sourceTaskId,
     choiceId: selectedOption.id,
+    diagnosticVariantId: diagnosticVariantId,
   );
   final canonicalChoices = runner.options
       .where((o) => o.id == selectedOption.id)
       .toList();
+  final diagnostic = goal?.isDiagnosticLearningEntry ?? false;
+  final capturedVariant =
+      diagnostic && sourceTask != null && sourceTask.taskId == sourceTaskId
+      ? act0PlacementDiagnosticFingerprintV1(
+          worldId: sourceWorldId,
+          lessonId: sourceLessonId,
+          diagnosticVariantId: diagnosticVariantId,
+          sourceTask: sourceTask,
+          diagnosticRunner: runner,
+        )
+      : null;
+  final sourceFingerprint = diagnostic
+      ? (capturedVariant ?? '')
+      : (goal?.sourceFingerprint ?? '');
+  final currentSourceBound = diagnostic
+      ? capturedVariant != null &&
+            currentFingerprintForIdentity?.call(
+                  worldId: sourceWorldId,
+                  lessonId: sourceLessonId,
+                  taskId: sourceTaskId,
+                ) ==
+                goal?.sourceContainerFingerprint &&
+            currentDiagnosticVariantFingerprint?.call(
+                  worldId: sourceWorldId,
+                  lessonId: sourceLessonId,
+                  taskId: sourceTaskId,
+                  diagnosticVariantId: diagnosticVariantId,
+                ) ==
+                capturedVariant
+      : currentFingerprintForIdentity?.call(
+              worldId: sourceWorldId,
+              lessonId: sourceLessonId,
+              taskId: sourceTaskId,
+            ) ==
+            goal?.sourceFingerprint;
+  final expected = runner.options.where((o) => o.isCorrect).toList();
   final sourceBound =
       goal != null &&
       canonicalChoices.length == 1 &&
@@ -281,12 +324,10 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
       selectedOption.feedbackReason == goal.sourceChoiceReason &&
       selectedOption.quality.name == goal.sourceChoiceQuality &&
       _sameRepairOptionV1(canonicalChoices.single, selectedOption) &&
-      currentFingerprintForIdentity?.call(
-            worldId: sourceWorldId,
-            lessonId: sourceLessonId,
-            taskId: sourceTaskId,
-          ) ==
-          goal.sourceFingerprint;
+      currentSourceBound &&
+      (!diagnostic ||
+          (expected.length == 1 &&
+              expected.single.id == goal.sourceCorrectChoiceId));
   // Persist structural source IDs for a held obligation, never as a fallback
   // target. All launchers must consume the semantic eligibility helper.
   final validatedTarget =
@@ -318,7 +359,7 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     goalId: sourceBound ? goal.goalId : '',
     relationId: sourceBound ? goal.relationId : '',
     relationRevision: sourceBound ? goal.relationRevision : 0,
-    sourceFingerprint: sourceBound ? goal.sourceFingerprint : '',
+    sourceFingerprint: sourceBound ? sourceFingerprint : '',
     targetFingerprint: validatedTarget ? goal.targetFingerprint : '',
     sourceWorldId: sourceWorldId,
     sourceLessonId: sourceLessonId,
@@ -416,6 +457,7 @@ Act0RepairGoalResolutionV1 act0RepairGoalResolutionForIntentV1(
       source.expectedChoiceId != row.sourceCorrectChoiceId ||
       source.isCorrect ||
       source.isPlacementAssessment ||
+      source.isDiagnosticLearningEntry ||
       source.sessionId.isEmpty ||
       source.runId.isEmpty ||
       (source.runOrdinal ?? 0) <= 0 ||
@@ -459,6 +501,129 @@ Act0RepairGoalResolutionV1 act0RepairGoalResolutionForIntentV1(
     contract: row,
     isHeld: false,
     reason: 'validated_familiar_relation',
+  );
+}
+
+/// Current factory semantics for one named diagnostic, never a scene fallback.
+typedef Act0DiagnosticVariantFingerprintResolverV1 =
+    String? Function({
+      required String worldId,
+      required String lessonId,
+      required String taskId,
+      required String diagnosticVariantId,
+    });
+
+/// Navigation permission only. It cannot discharge the source obligation.
+class Act0DiagnosticLearningEntryV1 {
+  const Act0DiagnosticLearningEntryV1({
+    required this.contract,
+    required this.sourceOccurrenceId,
+  });
+  final Act0RepairGoalContractV1 contract;
+  final String sourceOccurrenceId;
+  String get diagnosticVariantId => contract.diagnosticVariantId;
+  String get targetWorldId => contract.targetWorldId;
+  String get targetLessonId => contract.targetLessonId;
+  String get targetTaskId => contract.targetTaskId;
+  bool get canLaunchTeaching => true;
+  bool get canClaimRepairClosure => false;
+  bool get canClaimIndependentApplication => false;
+  bool get canClaimMatchedRecheck => false;
+}
+
+Act0DiagnosticLearningEntryV1? act0DiagnosticLearningEntryForIntentV1(
+  Act0RepairIntentV1 intent, {
+  required Act0LearningEvidenceHistoryV1 learningEvidence,
+  required Act0ReviewMistakeHistoryV1 reviewMistakeHistory,
+  required Act0RepairFingerprintResolverV1 currentFingerprintForIdentity,
+  required Act0DiagnosticVariantFingerprintResolverV1
+  currentDiagnosticVariantFingerprint,
+}) {
+  final candidates = act0RepairGoalContractsV1
+      .where(
+        (row) =>
+            row.isDiagnosticLearningEntry &&
+            row.sourceWorldId == intent.sourceWorldId &&
+            row.sourceLessonId == intent.sourceLessonId &&
+            row.sourceTaskId == intent.sourceTaskId &&
+            row.sourceChoiceId == intent.choiceId &&
+            row.goalId == intent.goalId &&
+            row.relationId == intent.relationId &&
+            row.relationRevision == intent.relationRevision,
+      )
+      .toList();
+  if (candidates.length != 1 || intent.repairOccurrenceId.isEmpty) return null;
+  final row = candidates.single;
+  // All five witnesses must have been stored at the real miss. A base-only
+  // legacy occurrence cannot prove what its old diagnostic variant asked.
+  final currentVariant = currentDiagnosticVariantFingerprint(
+    worldId: row.sourceWorldId,
+    lessonId: row.sourceLessonId,
+    taskId: row.sourceTaskId,
+    diagnosticVariantId: row.diagnosticVariantId,
+  );
+  if (currentVariant == null ||
+      currentVariant.isEmpty ||
+      intent.sourceFingerprint != currentVariant ||
+      intent.targetFingerprint != row.targetFingerprint ||
+      currentFingerprintForIdentity(
+            worldId: row.sourceWorldId,
+            lessonId: row.sourceLessonId,
+            taskId: row.sourceTaskId,
+          ) !=
+          row.sourceContainerFingerprint ||
+      intent.targetWorldId != row.targetWorldId ||
+      intent.targetLessonId != row.targetLessonId ||
+      intent.targetTaskId != row.targetTaskId ||
+      intent.mappingType != 'diagnostic_learning_entry' ||
+      currentFingerprintForIdentity(
+            worldId: row.targetWorldId,
+            lessonId: row.targetLessonId,
+            taskId: row.targetTaskId,
+          ) !=
+          row.targetFingerprint)
+    return null;
+  final sources = act0RepairEvidenceRecordsForIdV1(
+    learningEvidence,
+    intent.repairOccurrenceId,
+  );
+  if (sources.length != 1) return null;
+  final source = sources.single;
+  if (!source.isPlacementAssessment ||
+      source.isCorrect ||
+      source.worldId != row.sourceWorldId ||
+      source.lessonId != row.sourceLessonId ||
+      source.taskId != row.sourceTaskId ||
+      source.sourceTaskId != row.sourceTaskId ||
+      source.choiceId != row.sourceChoiceId ||
+      source.expectedChoiceId != row.sourceCorrectChoiceId ||
+      source.authoredSourceFingerprint != row.sourceContainerFingerprint ||
+      source.resultKind != intent.result ||
+      source.sessionId.isEmpty ||
+      source.runId.isEmpty ||
+      (source.runOrdinal ?? 0) <= 0)
+    return null;
+  final review = reviewMistakeHistory.records
+      .where(
+        (r) =>
+            r.sourceDecisionId == intent.repairOccurrenceId &&
+            r.worldId == row.sourceWorldId &&
+            r.lessonId == row.sourceLessonId &&
+            r.decisionTaskId == row.sourceTaskId &&
+            r.sourceTaskId == row.sourceTaskId &&
+            r.selectedId == row.sourceChoiceId &&
+            r.expectedId == row.sourceCorrectChoiceId &&
+            r.runKind == act0PlacementAssessmentRunKindV1 &&
+            r.runId == source.runId &&
+            r.runOrdinal == source.runOrdinal &&
+            r.resultKind == source.resultKind &&
+            r.attemptRecordIds.contains(intent.repairOccurrenceId),
+      )
+      .toList();
+  if (review.length != 1) return null;
+  return Act0DiagnosticLearningEntryV1(
+    contract: row,
+    sourceOccurrenceId: intent.repairOccurrenceId,
   );
 }
 
@@ -519,6 +684,7 @@ bool act0RepairGoalOutcomeIsEligibleV1({
   return roleMatches &&
       attempt.runKind == 'repair' &&
       !attempt.isPlacementAssessment &&
+      !attempt.isDiagnosticLearningEntry &&
       attempt.worldId == row.targetWorldId &&
       attempt.lessonId == row.targetLessonId &&
       attempt.taskId == row.targetTaskId &&

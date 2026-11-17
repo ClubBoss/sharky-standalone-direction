@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'act0_learning_evidence_contract_v1.dart'
+    show act0DiagnosticLearningEntryRunKindV1;
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 
@@ -223,6 +225,7 @@ class Act0ReviewMistakeHistoryV1 {
     int? runOrdinal,
     String repairOccurrenceId = '',
   }) {
+    if (runKind.trim() == act0DiagnosticLearningEntryRunKindV1) return this;
     if (!_isCompleteMistakeDecision(decision) ||
         records.any(
           (record) => record.attemptRecordIds.contains(decision.attemptKey),

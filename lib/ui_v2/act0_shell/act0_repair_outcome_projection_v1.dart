@@ -289,7 +289,8 @@ bool act0RepairCurrentViewHasUnconfirmedLaterSourceAttemptV1({
   );
   for (final record in provenance) {
     if (record.createdOrder <= repairs.single.createdOrder ||
-        record.isPlacementAssessment)
+        record.isPlacementAssessment ||
+        record.isDiagnosticLearningEntry)
       continue;
     final isSource =
         record.worldId == intent.sourceWorldId &&

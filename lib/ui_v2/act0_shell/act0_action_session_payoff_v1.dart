@@ -41,9 +41,7 @@ class Act0ActionSessionPayoffPolicyV1 {
     required Act0ActionSequenceLearnerStateV1 learnerState,
     required Act0ActionRecommendationV1 recommendation,
   }) {
-    final initial = learnerState.outcomes.isEmpty
-        ? null
-        : learnerState.outcomes.first;
+    final initial = learnerState.currentInitialOutcome;
     final initialMissed = initial != null && !initial.isCorrect;
     if (learnerState.repairSucceeded && learnerState.recheckSucceeded) {
       return _result(
@@ -59,7 +57,10 @@ class Act0ActionSessionPayoffPolicyV1 {
         primaryActionLabel: 'Continue',
       );
     }
-    if (!initialMissed && learnerState.latestOutcome?.isCorrect == true) {
+    if (!initialMissed &&
+        initial?.isProofEligible == true &&
+        learnerState.latestOutcome?.isCorrect == true &&
+        learnerState.latestOutcome?.isProofEligible == true) {
       return _result(
         learnerState: learnerState,
         recommendation: recommendation,

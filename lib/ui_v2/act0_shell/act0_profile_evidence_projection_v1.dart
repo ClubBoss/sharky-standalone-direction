@@ -115,6 +115,7 @@ class Act0ProfileEvidenceProjectionV1 {
       hasUnverifiedPractice: history.records.any(
         (record) =>
             !record.isPlacementAssessment &&
+            !record.isDiagnosticLearningEntry &&
             !act0RecordIsAuthoredTeachingV1(record) &&
             !current.families.values.any(
               (records) => records.any((r) => r.recordId == record.recordId),

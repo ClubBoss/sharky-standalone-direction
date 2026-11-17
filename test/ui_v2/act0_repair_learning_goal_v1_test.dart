@@ -1,5 +1,9 @@
 // SIMULATED contract controls on current authored tasks; no native/Human proof.
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
@@ -250,7 +254,619 @@ Act0ReviewMistakeHistoryV1 _reviewHistory(
   ],
 );
 
+// SIMULATED canonical append using actual task options/grades/fingerprints.
+({Act0LearningEvidenceHistoryV1 history, Act0CompletedDecisionV1 decision})
+_appendAuthoredDiagnosticControl({
+  required Act0LearningEvidenceHistoryV1 history,
+  required Act0RepairIntentV1 focus,
+  required _Subject subject,
+  required String attemptId,
+  required String runKind,
+  Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.initialAssessment,
+}) {
+  final task = _task(subject.world, subject.lesson, subject.task);
+  final selected = task.runner.options.singleWhere(
+    (o) => o.id == subject.choice,
+  );
+  final correct = task.runner.options.singleWhere((o) => o.isCorrect);
+  final decision = Act0CompletedDecisionV1(
+    attemptKey: attemptId,
+    worldId: subject.world,
+    lessonId: subject.lesson,
+    taskId: subject.task,
+    sourceTaskId: subject.task,
+    decisionKind: Act0CompletedDecisionKindV1.actionList,
+    selectedId: selected.id,
+    expectedId: correct.id,
+    isCorrect: selected.isCorrect,
+    decisionTimeBucket: '3_to_10s',
+    taskFamily: task.resolvedTaskFamily,
+    resultKind: selected.isCorrect
+        ? 'correct'
+        : selected.quality == Act0FeedbackQualityV1.suboptimal
+        ? 'suboptimal'
+        : 'incorrect',
+    errorType: selected.isCorrect ? 'none' : focus.errorType,
+    conceptFamilyId: focus.missedSignalId,
+    repairFocusId: focus.missedSignalId,
+    skillAtomId: focus.skillAtomId,
+    missedSignalId: focus.missedSignalId,
+    assistanceKind: Act0DecisionAssistanceV1.none,
+  );
+  final order =
+      history.provenanceRecords.fold<int>(
+        0,
+        (value, record) =>
+            record.createdOrder > value ? record.createdOrder : value,
+      ) +
+      1;
+  return (
+    decision: decision,
+    history: history.appendCompletedDecision(
+      decision,
+      authoredSourceFingerprint: _fingerprint(
+        worldId: subject.world,
+        lessonId: subject.lesson,
+        taskId: subject.task,
+      )!,
+      runKey: Act0EvidenceRunKeyV1(
+        runId: 'control-$attemptId',
+        worldId: subject.world,
+        lessonId: subject.lesson,
+        runOrdinal: order,
+        runKind: runKind,
+        startedBy: runKind == act0DiagnosticLearningEntryRunKindV1
+            ? 'placement_learning_entry'
+            : 'simulated_authored_repair',
+      ),
+      sessionId: 'session-$attemptId',
+      recordedAtUtc: DateTime.utc(2026, 11, 17).add(Duration(minutes: order)),
+      reviewKind: reviewKind,
+    ),
+  );
+}
+
 void main() {
+  test(
+    'diagnostic teaching keeps actual correct grade but cannot mint independent proof',
+    () {
+      final intent = _intent(
+        _rehearsals[4],
+      ); // Actual legal-context fold -> Check.
+      const target = (
+        world: 'world_1',
+        lesson: 'fold_check_call_raise',
+        task: 'actions_check_drill',
+        choice: 'check',
+      );
+      final added = _appendAuthoredDiagnosticControl(
+        history: const Act0LearningEvidenceHistoryV1(),
+        focus: intent,
+        subject: target,
+        attemptId: 'guided-check',
+        runKind: act0DiagnosticLearningEntryRunKindV1,
+      );
+      final restored = Act0LearningEvidenceHistoryV1.tryParseStorageString(
+        added.history.toStorageString(),
+      )!;
+      final raw = restored.records.single;
+      expect(raw.toPayload(), added.history.records.single.toPayload());
+      expect(raw.choiceId, 'check');
+      expect(raw.expectedChoiceId, 'check');
+      expect(raw.isCorrect, isTrue);
+      expect(raw.resultKind, 'correct');
+      expect(raw.assistanceKind, Act0DecisionAssistanceV1.none);
+      expect(raw.isDiagnosticLearningEntry, isTrue);
+      expect(raw.isPlacementAssessment, isFalse);
+      expect(raw.isIndependentCorrect, isFalse);
+      expect(restored.sourceAnchors, isEmpty);
+      expect(restored.latestRunSummary(), isNull);
+      expect(act0CurrentAuthoredSourceProofV1(raw), isNull);
+      final profile =
+          Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+            restored,
+            nowUtc: DateTime.utc(2026, 11, 17, 1),
+          );
+      expect(profile.signals, isEmpty);
+      expect(profile.practiceStates, isEmpty);
+      expect(profile.hasUnverifiedPractice, isFalse);
+      final seeds = Act0AchievementSeedProjectionV1.fromSources(
+        learningEvidenceHistory: restored,
+      );
+      final first = seeds.seedForId(act0AchievementSeedFirstCorrectReadV1);
+      expect(first.earned, isFalse);
+      expect(first.sourceSummary, isEmpty);
+      expect(
+        seeds.seedForId(act0AchievementSeedFirstSessionCompleteV1).earned,
+        isFalse,
+      );
+      expect(
+        Act0DurableRetentionHistoryV1.fromLearningEvidence(restored).families,
+        isEmpty,
+      );
+      expect(
+        Act0ConceptFamilyStateHistoryV1.fromLearningEvidence(restored).families,
+        isEmpty,
+      );
+      expect(
+        const Act0ReviewMistakeHistoryV1()
+            .appendCompletedDecision(
+              added.decision,
+              runId: raw.runId,
+              runKind: raw.runKind,
+              runOrdinal: raw.runOrdinal,
+            )
+            .records,
+        isEmpty,
+      );
+      expect(
+        Act0FixProofProjectionV1.fromSources(
+          repairOutcomeProjection: const Act0RepairOutcomeProjectionV1(),
+          reviewResolutionReceiptHistory:
+              const Act0ReviewResolutionReceiptHistoryV1(),
+          learningEvidenceHistory: restored,
+          currentFingerprintForIdentity: _fingerprint,
+        ).proofs,
+        isEmpty,
+      );
+
+      // Same actual target/grade/current FP after an authentic source occurrence
+      // still cannot impersonate the existing independent repair attempt role.
+      final source = _sourceRecord(intent);
+      final withSource = _appendAuthoredDiagnosticControl(
+        history: Act0LearningEvidenceHistoryV1(records: [source]),
+        focus: intent,
+        subject: target,
+        attemptId: 'guided-after-real-miss',
+        runKind: act0DiagnosticLearningEntryRunKindV1,
+        reviewKind: Act0ReviewKindV1.immediateRepair,
+      );
+      final guided = withSource.history.records.last;
+      final fakeRepair = Act0RepairOutcomeV1(
+        repairIntent: intent,
+        repairOccurrenceId: intent.repairOccurrenceId,
+        repairAttemptId: guided.recordId,
+        sourceTaskId: intent.sourceTaskId,
+        repairTaskId: intent.targetTaskId,
+        repairFocusKey: intent.missedSignalId,
+        queueItemId: queueItemIdForAct0RepairIntentV1(intent),
+        targetWorldId: intent.targetWorldId,
+        targetLessonId: intent.targetLessonId,
+        targetTaskId: intent.targetTaskId,
+        selectedChoiceId: 'check',
+        correctChoiceId: 'check',
+        isCorrect: true,
+        outcomeState: act0RepairOutcomeStateCorrectV1,
+        sequence: 1,
+        sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+        sessionId: guided.sessionId,
+      );
+      expect(
+        act0RepairGoalResolutionForIntentV1(
+          intent,
+          learningEvidence: withSource.history,
+          currentFingerprintForIdentity: _fingerprint,
+        ).canLaunch,
+        isTrue,
+      );
+      expect(
+        act0RepairGoalOutcomeIsEligibleV1(
+          intent: intent,
+          outcome: fakeRepair,
+          learningEvidence: withSource.history,
+          currentFingerprintForIdentity: _fingerprint,
+        ),
+        isFalse,
+      );
+      expect(
+        Act0QueueResolutionStateV1.fromSources(
+          activeRepairIntents: [intent],
+          repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+            outcomes: [fakeRepair],
+          ),
+          learningEvidenceHistory: withSource.history,
+          currentFingerprintForIdentity: _fingerprint,
+        ).resolutions.single.resolutionState,
+        isNot(act0QueueResolutionStateResolvedV1),
+      );
+      expect(
+        Act0ReviewResolutionStateV1.fromSources(
+          reviewMistakeHistory: _reviewHistory(source),
+          activeRepairIntents: [intent],
+          repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+            outcomes: [fakeRepair],
+          ),
+          learningEvidenceHistory: withSource.history,
+          currentFingerprintForIdentity: _fingerprint,
+        ).resolutions.single.reviewState,
+        isNot(act0ReviewResolutionStateResolvedV1),
+      );
+    },
+  );
+
+  test(
+    'guided Check answers cannot alter existing due or cap a genuine source repair',
+    () {
+      // The guided Check destination genuinely coincides with this existing
+      // ordinary repair's original source, exercising the prior-proof cap seam.
+      final intent = _intent(_rehearsals[2]); // Check/fold -> legal context.
+      final source = _sourceRecord(intent);
+      final target = _task(
+        intent.targetWorldId,
+        intent.targetLessonId,
+        intent.targetTaskId,
+      );
+      final correct = target.runner.options.singleWhere((o) => o.isCorrect).id;
+      final normal = _appendAuthoredDiagnosticControl(
+        history: Act0LearningEvidenceHistoryV1(records: [source]),
+        focus: intent,
+        subject: (
+          world: intent.targetWorldId,
+          lesson: intent.targetLessonId,
+          task: intent.targetTaskId,
+          choice: correct,
+        ),
+        attemptId: 'genuine-ordinary-repair',
+        runKind: 'repair',
+        reviewKind: Act0ReviewKindV1.alternateSameSignal,
+      );
+      var history = normal.history;
+      final attempt = history.records.last;
+      final outcome = Act0RepairOutcomeV1(
+        repairIntent: intent,
+        repairOccurrenceId: intent.repairOccurrenceId,
+        repairAttemptId: attempt.recordId,
+        sourceTaskId: intent.sourceTaskId,
+        repairTaskId: intent.targetTaskId,
+        repairFocusKey: intent.missedSignalId,
+        queueItemId: queueItemIdForAct0RepairIntentV1(intent),
+        targetWorldId: intent.targetWorldId,
+        targetLessonId: intent.targetLessonId,
+        targetTaskId: intent.targetTaskId,
+        selectedChoiceId: correct,
+        correctChoiceId: correct,
+        isCorrect: true,
+        outcomeState: act0RepairOutcomeStateCorrectV1,
+        sequence: 1,
+        sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+        sessionId: attempt.sessionId,
+      );
+      expect(
+        act0RepairGoalOutcomeIsEligibleV1(
+          intent: intent,
+          outcome: outcome,
+          learningEvidence: history,
+          currentFingerprintForIdentity: _fingerprint,
+        ),
+        isTrue,
+      );
+      final outcomes = Act0RepairOutcomeProjectionV1(outcomes: [outcome]);
+      final review = _reviewHistory(source);
+      final receipts = reviewResolutionReceiptHistoryFromSourcesV1(
+        reviewMistakeHistory: review,
+        activeRepairIntents: [intent],
+        repairOutcomeProjection: outcomes,
+        existingReceiptHistory: const Act0ReviewResolutionReceiptHistoryV1(),
+        learningEvidenceHistory: history,
+        currentFingerprintForIdentity: _fingerprint,
+      );
+      final banked = Act0FixProofProjectionV1.fromSources(
+        repairOutcomeProjection: outcomes,
+        reviewResolutionReceiptHistory: receipts,
+        learningEvidenceHistory: history,
+        currentFingerprintForIdentity: _fingerprint,
+      );
+      expect(banked.proofs, hasLength(1));
+      final durable = Act0DurableRetentionHistoryV1.fromLearningEvidence(
+        history,
+      );
+      expect(durable.families, isNotEmpty);
+      expect(durable.families.any((f) => f.nextDueAtUtc != null), isTrue);
+      final concepts = Act0ConceptFamilyStateHistoryV1.fromLearningEvidence(
+        history,
+      );
+      final anchorBytes = history.sourceAnchors
+          .map((r) => r.toPayload())
+          .toList();
+      final firstRead = Act0AchievementSeedProjectionV1.fromSources(
+        learningEvidenceHistory: history,
+      ).seedForId(act0AchievementSeedFirstCorrectReadV1);
+      expect(firstRead.earned, isTrue);
+      expect(firstRead.sourceSummary['completedCorrectDecisions'], 1);
+      for (final choice in ['check', 'fold']) {
+        final next = _appendAuthoredDiagnosticControl(
+          history: history,
+          focus: intent,
+          subject: (
+            world: 'world_1',
+            lesson: 'fold_check_call_raise',
+            task: 'actions_check_drill',
+            choice: choice,
+          ),
+          attemptId: 'guided-source-$choice',
+          runKind: act0DiagnosticLearningEntryRunKindV1,
+        );
+        history = next.history;
+        final raw = history.records.last;
+        expect(raw.isCorrect, choice == 'check');
+        expect(raw.assistanceKind, Act0DecisionAssistanceV1.none);
+        expect(raw.isIndependentCorrect, isFalse);
+        expect(
+          history.sourceAnchors.map((r) => r.toPayload()).toList(),
+          anchorBytes,
+        );
+        expect(
+          Act0DurableRetentionHistoryV1.fromLearningEvidence(
+            history,
+          ).toPayload(),
+          durable.toPayload(),
+        );
+        final currentConcepts =
+            Act0ConceptFamilyStateHistoryV1.fromLearningEvidence(history);
+        expect(currentConcepts.toPayload(), concepts.toPayload());
+        expect(currentConcepts.appliedSourceIds, concepts.appliedSourceIds);
+        expect(
+          review
+              .appendCompletedDecision(
+                next.decision,
+                runId: raw.runId,
+                runKind: raw.runKind,
+                runOrdinal: raw.runOrdinal,
+              )
+              .toPayload(),
+          review.toPayload(),
+        );
+        final currentSeeds = Act0AchievementSeedProjectionV1.fromSources(
+          learningEvidenceHistory: history,
+        );
+        expect(
+          currentSeeds
+              .seedForId(act0AchievementSeedFirstCorrectReadV1)
+              .sourceSummary,
+          firstRead.sourceSummary,
+        );
+        final currentProof = Act0FixProofProjectionV1.fromSources(
+          repairOutcomeProjection: outcomes,
+          reviewResolutionReceiptHistory: receipts,
+          learningEvidenceHistory: history,
+          currentFingerprintForIdentity: _fingerprint,
+        );
+        expect(currentProof.toPayload(), banked.toPayload());
+        expect(
+          Act0RepairOutcomeConsumerV1.fromProjection(
+            outcomes,
+            fixProofProjection: currentProof,
+            learningEvidenceHistory: history,
+            currentFingerprintForIdentity: _fingerprint,
+          ).proof?.title,
+          'Fix landed',
+        );
+        expect(
+          Act0LearningReceiptV1.fromEvidence(
+            focusLabel: 'Checking for free',
+            sourceTaskId: intent.sourceTaskId,
+            repairOutcomes: outcomes.outcomes,
+            learningEvidence: history,
+            currentFingerprintForIdentity: _fingerprint,
+          ).level,
+          Act0LearningReceiptLevelV1.sameClueRepaired,
+        );
+      }
+      expect(
+        history.records.map((r) => r.recordId),
+        containsAll([
+          source.recordId,
+          attempt.recordId,
+          'guided-source-check',
+          'guided-source-fold',
+        ]),
+      );
+      expect(history.records.first.toPayload(), source.toPayload());
+      expect(outcomes.outcomes, hasLength(1));
+    },
+  );
+
+  for (final diagnostic in [
+    (
+      id: 'board_private_cards',
+      index: 2,
+      choice: 'hero_private_cards',
+      expected: 'board_cards',
+      target: 'cards_ranks_suits_private_board',
+    ),
+    (
+      id: 'action_basics',
+      index: 3,
+      choice: 'not_sure_yet',
+      expected: 'check',
+      target: 'actions_check_drill',
+    ),
+  ]) {
+    test(
+      '${diagnostic.id}: label-only variant changes invalidate persisted teaching navigation',
+      () {
+        final source = _task(
+          'world_1',
+          'what_poker_is',
+          'what_poker_is_table_read_transfer',
+        );
+        final base = _fingerprint(
+          worldId: 'world_1',
+          lessonId: 'what_poker_is',
+          taskId: source.taskId,
+        );
+        final runner = placementQuickCheckRunnerV1(
+          source.runner,
+          signalId: diagnostic.id,
+          checkIndex: diagnostic.index,
+          checkCount: 3,
+          isRu: false,
+        );
+        final selected = runner.options.singleWhere(
+          (o) => o.id == diagnostic.choice,
+        );
+        final changed = runner.copyWith(
+          options: [
+            for (final o in runner.options)
+              if (o.id != selected.id)
+                o
+              else
+                Act0RunnerOptionV1(
+                  id: o.id,
+                  label: '${o.label} changed',
+                  isCorrect: o.isCorrect,
+                  preferredLabel: o.preferredLabel,
+                  betterAnswerLabel: o.betterAnswerLabel,
+                  quality: o.quality,
+                  feedbackTitle: o.feedbackTitle,
+                  feedbackReason: o.feedbackReason,
+                  amountLabel: o.amountLabel,
+                  seatId: o.seatId,
+                  repairFocusSeatIds: o.repairFocusSeatIds,
+                  repairFocusCardIds: o.repairFocusCardIds,
+                  repairFocusLabels: o.repairFocusLabels,
+                ),
+          ],
+        );
+        String? variant(Act0RunnerStateV1 value) =>
+            act0PlacementDiagnosticFingerprintV1(
+              worldId: 'world_1',
+              lessonId: 'what_poker_is',
+              diagnosticVariantId: diagnostic.id,
+              sourceTask: source,
+              diagnosticRunner: value,
+            );
+        final before = variant(runner);
+        final after = variant(changed);
+        expect(
+          variant(runner.copyWith(phase: Act0LessonPhaseV1.drill)),
+          variant(runner.copyWith(phase: Act0LessonPhaseV1.review)),
+          reason:
+              'Runtime feedback phase is not a diagnostic content revision.',
+        );
+        expect(before, isNotNull);
+        expect(after, isNot(before));
+        expect(
+          _fingerprint(
+            worldId: 'world_1',
+            lessonId: 'what_poker_is',
+            taskId: source.taskId,
+          ),
+          base,
+        );
+        Act0LessonTaskV1 hashView(Act0RunnerStateV1 value) => Act0LessonTaskV1(
+          taskId: source.taskId,
+          title: source.title,
+          phase: source.phase,
+          runner: value,
+          rewardXp: source.rewardXp,
+          stepKind: source.stepKind,
+          taskFamily: source.taskFamily,
+          tablePresentation: source.tablePresentation,
+          summary: source.summary,
+          lockedSummary: source.lockedSummary,
+        );
+        expect(
+          act0AuthoredSourceFingerprintV1(
+            worldId: 'world_1',
+            lessonId: 'what_poker_is',
+            task: hashView(runner),
+          ),
+          act0AuthoredSourceFingerprintV1(
+            worldId: 'world_1',
+            lessonId: 'what_poker_is',
+            task: hashView(changed),
+          ),
+          reason: 'Ordinary fingerprint label policy remains unchanged.',
+        );
+        String? current({
+          required String worldId,
+          required String lessonId,
+          required String taskId,
+          required String diagnosticVariantId,
+        }) =>
+            worldId == 'world_1' &&
+                lessonId == 'what_poker_is' &&
+                taskId == source.taskId &&
+                diagnosticVariantId == diagnostic.id
+            ? before
+            : null;
+        final built = buildAct0RepairIntentV1(
+          sourceWorldId: 'world_1',
+          sourceLessonId: 'what_poker_is',
+          sourceTaskId: source.taskId,
+          runner: runner,
+          selectedOption: selected,
+          sourceTask: source,
+          diagnosticVariantId: diagnostic.id,
+          currentFingerprintForIdentity: _fingerprint,
+          currentDiagnosticVariantFingerprint: current,
+        )!;
+        final intent = Act0RepairIntentV1.tryParse({
+          ...built.toPayload(),
+          'repairOccurrenceId': 'actual-${diagnostic.id}',
+        })!;
+        final event = Act0LearningEvidenceRecordV1.tryParse({
+          ..._sourceRecord(intent).toPayload(),
+          'runKind': act0PlacementAssessmentRunKindV1,
+          'expectedChoiceId': diagnostic.expected,
+          'resultKind': intent.result,
+          'authoredSourceFingerprint': base,
+        })!;
+        final history = Act0LearningEvidenceHistoryV1(records: [event]);
+        final review = _reviewHistory(event);
+        final fresh = act0DiagnosticLearningEntryForIntentV1(
+          intent,
+          learningEvidence: history,
+          reviewMistakeHistory: review,
+          currentFingerprintForIdentity: _fingerprint,
+          currentDiagnosticVariantFingerprint: current,
+        );
+        expect(fresh?.targetTaskId, diagnostic.target);
+        expect(fresh?.canLaunchTeaching, isTrue);
+        expect(fresh?.canClaimRepairClosure, isFalse);
+        expect(
+          act0RepairGoalResolutionForIntentV1(
+            intent,
+            learningEvidence: history,
+            currentFingerprintForIdentity: _fingerprint,
+          ).canLaunch,
+          isFalse,
+        );
+        expect(
+          act0DiagnosticLearningEntryForIntentV1(
+            intent,
+            learningEvidence: history,
+            reviewMistakeHistory: review,
+            currentFingerprintForIdentity: _fingerprint,
+            currentDiagnosticVariantFingerprint:
+                ({
+                  required String worldId,
+                  required String lessonId,
+                  required String taskId,
+                  required String diagnosticVariantId,
+                }) => after,
+          ),
+          isNull,
+        );
+        final legacy = Act0RepairIntentV1.tryParse({
+          ...intent.toPayload(),
+          'sourceFingerprint': base,
+        })!;
+        expect(
+          act0DiagnosticLearningEntryForIntentV1(
+            legacy,
+            learningEvidence: history,
+            reviewMistakeHistory: review,
+            currentFingerprintForIdentity: _fingerprint,
+            currentDiagnosticVariantFingerprint: current,
+          ),
+          isNull,
+        );
+      },
+    );
+  }
+
   for (final source in _bad) {
     test(
       '${source.task}/${source.choice}: unrelated scene route holds the real miss',

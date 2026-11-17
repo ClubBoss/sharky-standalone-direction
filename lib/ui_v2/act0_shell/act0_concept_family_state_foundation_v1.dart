@@ -61,6 +61,7 @@ class Act0ConceptFamilyStateHistoryV1 {
   Act0ConceptFamilyStateHistoryV1 appendLearningEvidence(
     Act0LearningEvidenceRecordV1 record,
   ) {
+    if (record.isDiagnosticLearningEntry) return this;
     final sourceId = 'learning:${record.recordId.trim()}';
     if (sourceId.trim() == 'learning:' || appliedSourceIds.contains(sourceId)) {
       return this;
