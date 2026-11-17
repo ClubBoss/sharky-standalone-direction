@@ -1,3 +1,4 @@
+import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_authored_repair_goal_fixture_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'dart:convert';
@@ -143,10 +144,7 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
         final target = seat.evaluate().isNotEmpty ? seat : option;
         if (target.evaluate().isNotEmpty) {
           await tester.ensureVisible(target.first);
-          for (var beat = 0; beat < 6; beat++) {
-            await tester.pump(const Duration(milliseconds: 500));
-          }
-          await tester.pumpAndSettle();
+          await pumpSourceChoreographyToDecisionV1(tester, runner.runner.table);
           expect(target.hitTestable(), findsOneWidget);
           await tester.tap(target.first);
           await tester.pumpAndSettle();

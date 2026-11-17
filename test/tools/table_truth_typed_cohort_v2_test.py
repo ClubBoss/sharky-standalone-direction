@@ -1209,7 +1209,7 @@ def check_folded_btn_real_artifacts(baseline, candidate):
 
 
 def check_fold_mechanics_real_artifacts(baseline, candidate):
-    """Admit three mechanical groups against exact sealed W4 and older data."""
+    """Admit one Fold group against exact sealed Source3 and older data."""
     helper = TypedCohortV2Controls()
     current = {name: helper.read(candidate / name) for name in TRUTH.FOLD_MECHANICS_CAPTURE_SHA256}
     cohort = helper.read(candidate / 'typed-cohort-v2.json')
@@ -1217,7 +1217,7 @@ def check_fold_mechanics_real_artifacts(baseline, candidate):
     prior, negatives = {}, 0
     for name, captured in current.items():
         prior[name] = TRUTH.fold_mechanics_source3_capture(name, captured)
-        helper.assertEqual(TRUTH._digest(prior[name]), TRUTH.W4_PURPOSE_TEACHING_CAPTURE_SHA256[name])
+        helper.assertEqual(TRUTH._digest(prior[name]), TRUTH.FOLDED_BTN_CAPTURE_SHA256[name])
         helper.assertEqual(TRUTH._digest(TRUTH.reviewed_origin_capture(
             name, captured, TRUTH.FOLD_MECHANICS_REVISION)), TRUTH.EXPECTED_CAPTURE_ARTIFACTS[name])
         changed = copy.deepcopy(captured)
@@ -1259,7 +1259,7 @@ def check_fold_mechanics_real_artifacts(baseline, candidate):
         'current_whole_capture_and_group_falsifiers': negatives,
         'ledger_rows': len(current['ledger.json']),
         'outside_ledger_rows_unchanged': len(outside),
-        'generic_unknown_rows_in_three_groups': sum(row['status'] == 'NEEDS_SOURCE_CONTEXT'
+        'generic_unknown_rows_in_one_fold_group': sum(row['status'] == 'NEEDS_SOURCE_CONTEXT'
             for row in current['ledger.json'] if row['task_id'] in ids),
         'prior_controls': 'Reused only after exact whole-five predecessor reconstruction; no historical full CLI rerun.',
         'scope': 'Mechanical/source identity only; strategy grading UNKNOWN, normal theory reachability/native/Human/parents/points unaccepted.',
