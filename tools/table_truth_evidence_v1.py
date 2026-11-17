@@ -990,8 +990,8 @@ def _require_w24_context_admission():
 # New explicit W01 contexts: exact independently reviewed source/capture delta.
 # Original authoring origin, all predecessor pins and raw captures stay intact.
 WP03_CONTEXT_REVISION = 'W01_REVIEWED_EXPLICIT_MECHANICAL_CONTEXTS'
-WP03_CONTEXT_PRODUCER_REVISION = {'source_revision': 'c417d28d844d3591f03da1b5bebc8af1f9c50609',
- 'state_sha256': '2fd4d0617668068f1559e499c182d5710dec0df9640fcc1d4b20cce3bd1311fd',
+WP03_CONTEXT_PRODUCER_REVISION = {'source_revision': 'fbd031f15d9d934e79be37f86cc6538d24394f42',
+ 'state_sha256': 'b569a52c0d44c153862b2b726c50f727edd580eb99f635a6f44305c75135681e',
  'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
  'runner_sha256': 'f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f',
  'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57',
@@ -999,13 +999,13 @@ WP03_CONTEXT_PRODUCER_REVISION = {'source_revision': 'c417d28d844d3591f03da1b5be
  'repair_gap_sha256': '83e891d4627419a3b23bb39cfbb80d457a73bd283df08e81a989817a8cef7c41'}
 WP03_CONTEXT_CAPTURE_SHA256 = {'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646',
  'choice-identity.json': '3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d',
- 'runtime-inputs.json': 'efe5490ed34506cb9e2afc5e884052f7e6c64a5c164a4f63e160d318c5ae44ee',
+ 'runtime-inputs.json': 'e3abea3464e4addc20afc3cb9b36ff1063527e8261ee8eac3bb0112cd7acd1c8',
  'source-fingerprints.json': '4de11eaac5fcf3ea16feb54cae35f2f5696edf93e165273145a04b2dea4d14ea',
  'ledger.json': '10c338b3e2c1c94909a5820d15fafd3882cbb15b9453e4a0e064a2febe8007c7'}
 WP03_CONTEXT_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / (
     'test/tools/fixtures/table_truth_wp03_explicit_contexts_v1.json'
 )
-WP03_CONTEXT_FIXTURE_SHA256 = '354def5d5ce9e4b076bf0da35da141c01bdedb36638a95863b3230e5449bf3bf'
+WP03_CONTEXT_FIXTURE_SHA256 = '1156f92b96f7464fa3f868f77bc45b36d6b3a931d45d83f6e0ea64c3009b68c0'
 WP03_CONTEXT_LEDGER_REVIEW = 'EXACT_NINE_SOURCE_CONTEXT_GROUPS_CONFIRMED'
 
 

@@ -405,7 +405,7 @@
   "capture_sha256": {
     "learning-contract.json": "37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646",
     "choice-identity.json": "3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d",
-    "runtime-inputs.json": "efe5490ed34506cb9e2afc5e884052f7e6c64a5c164a4f63e160d318c5ae44ee",
+    "runtime-inputs.json": "e3abea3464e4addc20afc3cb9b36ff1063527e8261ee8eac3bb0112cd7acd1c8",
     "source-fingerprints.json": "4de11eaac5fcf3ea16feb54cae35f2f5696edf93e165273145a04b2dea4d14ea",
     "ledger.json": "10c338b3e2c1c94909a5820d15fafd3882cbb15b9453e4a0e064a2febe8007c7"
   },
@@ -3041,7 +3041,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posted 0.5 BB and BB posted 1 BB. No voluntary action yet. All six remain in the hand with chips behind. Pot: 1.5 BB.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -3408,7 +3408,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG, HJ, CO and BTN called 1 BB; SB added 0.5 BB. No raise or fold. BB has not acted voluntarily. Everyone has 99 BB behind. Pot: 6 BB.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -3763,7 +3763,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. Everyone matched 1 BB preflop and BB checked. Pot: 6 BB. All six have 99 BB behind; none is all-in. No flop action yet. Consider only the initial clockwise pass.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -4095,7 +4095,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posted 0.5 BB and BB posted 1 BB. No voluntary action yet. All six remain in the hand with chips behind. Pot: 1.5 BB.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -4426,7 +4426,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posted 0.5 BB and BB posted 1 BB. No voluntary action yet. All six remain in the hand with chips behind. Pot: 1.5 BB.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -4779,7 +4779,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. Everyone matched 1 BB preflop and BB checked. Pot: 6 BB. All six have 99 BB behind; none is all-in. No flop action yet. Consider only the initial clockwise pass.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -5241,7 +5241,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posted 0.5 BB and BB posted 1 BB. No voluntary action yet. All six remain in the hand with chips behind. Pot: 1.5 BB.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
@@ -5604,7 +5604,7 @@
           "teaching": [
             {
               "title": "Read this stated order.",
-              "body": "For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. Everyone matched 1 BB preflop and BB checked. Pot: 6 BB. All six have 99 BB behind; none is all-in. No flop action yet. Consider only the initial clockwise pass.",
+              "body": "Read the given street and action history. Match the question to the stated seats and positions.",
               "table": null,
               "seats": [],
               "cards": []
