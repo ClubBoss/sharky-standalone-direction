@@ -9998,7 +9998,8 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
     teachingSteps: [
       Act0TeachingStepV1(
         title: 'Read this stated order.',
-        body: context,
+        body:
+            'Read the given street and action history. Match the question to the stated seats and positions.',
         focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
       ),
     ],
