@@ -763,7 +763,7 @@ class TypedCohortV2Controls(unittest.TestCase):
                 TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = None
                 with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
             finally: TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = saved
-        for field in ('state_sha256', 'runner_sha256', 'source_proof_sha256', 'street_replay_sha256'):
+        for field in ('state_sha256', 'runner_sha256', 'source_proof_sha256', 'street_replay_sha256', 'repair_gap_sha256'):
             saved = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field]
             try:
                 TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = 'f' * 64
@@ -897,7 +897,7 @@ def check_wp03_real_artifacts(baseline, candidate):
     result = {'candidate_producer_revision': TRUTH.WP03_CONTEXT_REVISION,
               'runtime_changed_task_count': comparison['runtime_changed_task_count'],
               'canonical_source_fingerprints': comparison['canonical_source_fingerprints'],
-              'wp03_changed_context_ids': sorted(ids), 'wp03_unchanged_context_count': 357,
+              'wp03_changed_context_ids': sorted(ids), 'wp03_unchanged_context_count': 356,
               'wp03_actual_capture_negative_controls': negative_count,
               'ledger_rows': len(current['ledger.json']),
               'ledger_statuses': dict(__import__('collections').Counter(row['status'] for row in current['ledger.json'])),
