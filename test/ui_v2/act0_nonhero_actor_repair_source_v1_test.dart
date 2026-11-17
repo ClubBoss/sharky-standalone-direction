@@ -49,7 +49,7 @@ void main() {
           lessonId: source.lesson.lessonId,
           task: task,
         );
-        expect(fingerprint, matchesRegExp(r'^[0-9a-f]{64}$'));
+        expect(RegExp(r'^[0-9a-f]{64}$').hasMatch(fingerprint ?? ''), isTrue);
         records[id] = {
           'world_id': source.world.worldId,
           'lesson_id': source.lesson.lessonId,
