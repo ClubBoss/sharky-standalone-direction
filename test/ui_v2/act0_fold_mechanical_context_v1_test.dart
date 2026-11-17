@@ -58,6 +58,23 @@ void main() {
         name,
       )..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)))).load();
     }
+    for (final icon in [
+      (
+        'MaterialIcons',
+        'build/unit_test_assets/fonts/MaterialIcons-Regular.otf',
+      ),
+      (
+        'CupertinoIcons',
+        'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf',
+      ),
+    ]) {
+      final file = File(icon.$2);
+      if (!file.existsSync()) continue;
+      final bytes = await file.readAsBytes();
+      await (FontLoader(
+        icon.$1,
+      )..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)))).load();
+    }
   });
 
   test(
@@ -107,7 +124,12 @@ void main() {
       expect(
         table.seats
             .where((s) => s.isSmallBlind || s.isBigBlind)
-            .every((s) => s.currentBetLabel == '0 BB' && s.bet == null),
+            .every(
+              (s) =>
+                  s.currentBetLabel == '0 BB' &&
+                  s.bet == null &&
+                  s.blindAmountLabel == null,
+            ),
         isTrue,
       );
       expect(
@@ -309,6 +331,38 @@ void main() {
       image.dispose();
     });
 
+    // Direct snapshot of the appended, pre-answer context explanation.
+    await mount(
+      task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingStepIndex: task.runner.teachingSteps.length - 1,
+      ),
+    );
+    final contextBody = find.text(task.runner.teachingSteps.last.body);
+    expect(contextBody, findsOneWidget);
+    final paragraph = tester.renderObject<RenderParagraph>(contextBody);
+    expect(paragraph.didExceedMaxLines, isFalse);
+    await capture('context-start');
+    final support = find.byWidgetPredicate(
+      (w) =>
+          w.key == const Key('act0_learning_scene_v3_model_support_scroll') ||
+          w.key == const Key('act0_learning_scene_v3_theory_support_scroll'),
+    );
+    expect(support, findsOneWidget);
+    final scroll = tester.state<ScrollableState>(
+      find.descendant(of: support, matching: find.byType(Scrollable)),
+    );
+    if (scroll.position.maxScrollExtent > 0) {
+      await tester.drag(support, const Offset(0, -1000));
+      await tester.pumpAndSettle();
+    }
+    expect(scroll.position.extentAfter, lessThan(1));
+    expect(
+      tester.getRect(contextBody).bottom,
+      lessThanOrEqualTo(tester.getRect(support).bottom + 1),
+    );
+    await capture('context-end');
+    expect(answers, 0);
     final answerStage = task.runner.copyWith(
       phase: Act0LessonPhaseV1.drill,
       teachingStepIndex: task.runner.teachingSteps.length,
@@ -331,8 +385,12 @@ void main() {
         selectedOptionId: 'fold',
       ),
     );
-    expect(find.text('Fold gives up this hand.'), findsWidgets);
     await capture('feedback');
+    expect(
+      find.byKey(const Key('act0_shell_feedback_hero_action')),
+      findsWidgets,
+    );
+    expect(find.textContaining('Fold', findRichText: true), findsWidgets);
     // Direct source snapshots/callback only: not ordinary route or persistence.
   });
 }

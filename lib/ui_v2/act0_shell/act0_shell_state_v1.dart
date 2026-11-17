@@ -9837,15 +9837,20 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
   Act0RunnerStateV1 source,
 ) {
   return source.copyWith(
+    teachingSteps: [
+      ...source.teachingSteps,
+      const Act0TeachingStepV1(
+        title: 'A new mechanical example.',
+        body:
+            'All six start with 100 BB before the 0.5/1 BB blinds; no ante or rake. UTG, HJ and BTN call 1 BB, CO folds, SB adds 0.5 BB and BB checks: pot 5 BB. On this flop SB, BB and UTG check; HJ bets 2 BB. BTN acts next: pot 7 BB, call 2 BB. Raise 6 BB means 6 BB total on this flop.',
+        focusSeatIds: ['btn', 'hj'],
+      ),
+    ],
     table: source.table.copyWith(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
       actionTrail: const [
-        Act0ActionTrailItemV1.note(
-          label:
-              'New example: six players start with 100 BB before the 0.5/1 BB blinds; no ante or rake. Raise 6 BB means a total flop wager of 6 BB.',
-        ),
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
         Act0ActionTrailItemV1(label: 'UTG calls 1 BB'),
@@ -9871,11 +9876,8 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
             isDealerButton: seat.isDealerButton,
             isSmallBlind: seat.isSmallBlind,
             isBigBlind: seat.isBigBlind,
-            blindAmountLabel: seat.isSmallBlind
-                ? '0.5 BB'
-                : seat.isBigBlind
-                ? '1 BB'
-                : null,
+            // These posts were collected into the preflop pot.
+            blindAmountLabel: null,
             isActive: seat.seatId == 'btn',
             isTarget: seat.isTarget,
             isInHand: seat.seatId != 'co',
