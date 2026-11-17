@@ -110,6 +110,28 @@ Future<void> _choice(WidgetTester t, String id, String taskId) async {
   fail('No ordinary decision offered for $taskId');
 }
 
+void _seedPrerequisites(({String lesson, String task, String wrong}) subject) {
+  final all = [
+    for (final lesson in Act0ShellStateV1.sample.worldById('world_1').lessons)
+      for (final task in lesson.taskList) task,
+  ];
+  SharedPreferences.setMockInitialValues({
+    'act0_welcome_completed_v1': true,
+    'intake_completed_v1': true,
+    _key: jsonEncode({
+      'schemaVersion': 18,
+      'completedTaskIds': <String>[], 'completedLessonIds': <String>[],
+      // Only fixture prerequisites: no claimed earned completion or skill.
+      'skippedTaskIds': [
+        for (final task in all.takeWhile((task) => task.taskId != subject.task))
+          task.taskId,
+      ],
+      'selectedWorldId': 'world_1', 'selectedLessonId': subject.lesson,
+      'selectedTaskId': subject.task, 'earnedXp': 0,
+    }),
+  });
+}
+
 void main() {
   final observations = <String, Object?>{};
   for (final subject in _subjects) {
@@ -130,28 +152,7 @@ void main() {
             ).flush(),
           );
         });
-        final all = [
-          for (final lesson
-              in Act0ShellStateV1.sample.worldById('world_1').lessons)
-            for (final task in lesson.taskList) task,
-        ];
-        SharedPreferences.setMockInitialValues({
-          'act0_welcome_completed_v1': true,
-          'intake_completed_v1': true,
-          _key: jsonEncode({
-            'schemaVersion': 18,
-            'completedTaskIds': <String>[], 'completedLessonIds': <String>[],
-            // Only fixture prerequisites: no claimed earned completion or skill.
-            'skippedTaskIds': [
-              for (final task in all.takeWhile(
-                (task) => task.taskId != subject.task,
-              ))
-                task.taskId,
-            ],
-            'selectedWorldId': 'world_1', 'selectedLessonId': subject.lesson,
-            'selectedTaskId': subject.task, 'earnedXp': 0,
-          }),
-        });
+        _seedPrerequisites(subject);
         await _mount(t);
         await _tab(t, 'Learn');
         await _tap(t, 'act0_shell_current_mission_cta');
@@ -244,7 +245,19 @@ void main() {
           ),
           isTrue,
         );
-        expect(finalSaved['earnedXp'], 0);
+        final sourceTask = act0AuthoredRepairFixtureTaskV1(
+          'world_1',
+          subject.lesson,
+          subject.task,
+        );
+        expect(finalSaved['earnedXp'], sourceTask.rewardXp);
+        expect(finalSaved['completedTaskIds'], contains(subject.task));
+        await t.pumpWidget(const SizedBox.shrink());
+        await t.pumpAndSettle();
+        await _mount(t);
+        final afterFinalRemount = await _saved(t);
+        expect(afterFinalRemount['earnedXp'], sourceTask.rewardXp);
+        expect(afterFinalRemount['completedTaskIds'], contains(subject.task));
         observations[subject.task] = {
           'fixture':
               'prerequisite-only skipped, zero XP; no injected miss/history/repair',
@@ -255,6 +268,8 @@ void main() {
           'actual_outcome': outcome.toPayload(),
           'first_miss_unchanged': true,
           'final_xp': finalSaved['earnedXp'],
+          'xp_basis': 'existing first eligible curriculum completion',
+          'final_remount_xp_stable': true,
           'not_proved': [
             'native_restart',
             'Human',
@@ -280,4 +295,111 @@ void main() {
       },
     );
   }
+  testWidgets(
+    'simulated old unwitnessed intent cannot acquire a goal on host remount',
+    (t) async {
+      t.view.physicalSize = const Size(393, 852);
+      t.view.devicePixelRatio = 1;
+      addTearDown(t.view.resetPhysicalSize);
+      addTearDown(t.view.resetDevicePixelRatio);
+      addTearDown(() async {
+        await t.pumpWidget(const SizedBox.shrink());
+        await t.pumpAndSettle();
+        await t.runAsync(
+          () => Act0ProgressStoreV1(
+            key: _key,
+            isValidPayload: (_) => true,
+          ).flush(),
+        );
+      });
+      final subject = _subjects.first;
+      _seedPrerequisites(subject);
+      await _mount(t);
+      await _tab(t, 'Learn');
+      await _tap(t, 'act0_shell_current_mission_cta');
+      await _choice(t, subject.wrong, subject.task);
+      final saved = await _saved(t);
+      final historyBytes = jsonEncode(saved['learningEvidenceHistory']);
+      await t.pumpWidget(const SizedBox.shrink());
+      await t.pumpAndSettle();
+      // SIMULATED legacy intent only: recursively strip the five additive
+      // witnesses from every copy of this source intent in the saved payload.
+      var copies = 0;
+      void stripWitness(Object? value) {
+        if (value is Map) {
+          if (value['sourceTaskId'] == subject.task &&
+              value.containsKey('mappingType')) {
+            for (final key in [
+              'goalId',
+              'relationId',
+              'relationRevision',
+              'sourceFingerprint',
+              'targetFingerprint',
+            ]) {
+              value.remove(key);
+            }
+            copies++;
+          }
+          for (final child in value.values.toList()) {
+            stripWitness(child);
+          }
+        } else if (value is List) {
+          for (final child in value) {
+            stripWitness(child);
+          }
+        }
+      }
+
+      stripWitness(saved);
+      expect(copies, greaterThanOrEqualTo(1));
+      expect(jsonEncode(saved['learningEvidenceHistory']), historyBytes);
+      await t.runAsync(
+        () =>
+            Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true).flush(),
+      );
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_key, jsonEncode(saved));
+      await _mount(t);
+      await _tab(t, 'Review');
+      expect(
+        find.text('Matching repair not confirmed · miss saved'),
+        findsWidgets,
+      );
+      await _tap(
+        t,
+        act0AcademyReviewPreviewV1
+            ? 'act0_academy_review_leaf_repair_cta'
+            : 'act0_shell_review_practice_cta',
+      );
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      expect(
+        find.text('Matching repair not confirmed · miss saved'),
+        findsWidgets,
+      );
+      final restored = await _saved(t);
+      final oldIntent = (restored['openRepairIntents'] as List)
+          .map(Act0RepairIntentV1.tryParse)
+          .whereType<Act0RepairIntentV1>()
+          .singleWhere((i) => i.sourceTaskId == subject.task);
+      expect(oldIntent.goalId, isEmpty);
+      expect(oldIntent.relationId, isEmpty);
+      expect(oldIntent.relationRevision, 0);
+      final history = Act0LearningEvidenceHistoryV1.tryParse(
+        restored['learningEvidenceHistory'],
+      );
+      expect(history, isNotNull);
+      final resolution = act0RepairGoalResolutionForIntentV1(
+        oldIntent,
+        learningEvidence: history!,
+        currentFingerprintForIdentity: act0AuthoredRepairFixtureFingerprintV1,
+      );
+      expect(resolution.canLaunch, isFalse);
+      expect(resolution.reason, 'relation_capture_unconfirmed');
+      expect(jsonEncode(restored['learningEvidenceHistory']), historyBytes);
+      expect(restored['earnedXp'], 0);
+      expect(restored['completedTaskIds'], isNot(contains(subject.task)));
+      expect((restored['repairOutcomeProjection'] as List?) ?? [], isEmpty);
+      expect(t.takeException(), isNull);
+    },
+  );
 }
