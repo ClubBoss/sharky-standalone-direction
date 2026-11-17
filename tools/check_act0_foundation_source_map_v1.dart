@@ -71,10 +71,38 @@ void main() {
     );
     mutate('unknown map version rejected', (m) => m['schema'] = 'unknown');
     mutate('stale source revision rejected', (m) => m['source_git_blobs'] = {});
+    Map callPrice(Map<String, dynamic> m) =>
+        (m['worlds'] as List)
+                .expand((w) => w['lessons'] as List)
+                .singleWhere((l) => l['lesson_id'] == 'call_price')
+            as Map;
+    mutate(
+      'missing lesson curation rejected',
+      (m) => callPrice(m).remove('current_curation'),
+    );
+    mutate(
+      'missing task curation rejected',
+      (m) => (callPrice(m)['tasks'][0] as Map).remove('current_curation'),
+    );
+    mutate(
+      'changed current authorship rejected',
+      (m) => callPrice(m)['current_curation']['source_commit'] = 'invented',
+    );
     final markdown = File('${temp.path}/${paths[4]}');
     markdown.writeAsStringSync('stale summary');
     run('stale Markdown rejected', succeeds: false);
     markdown.writeAsBytesSync(File(paths[4]).readAsBytesSync());
+    final originalMarkdown = markdown.readAsStringSync();
+    const summaryHeading =
+        '## New current curation proposal: call_price (six existing tasks)';
+    if (!originalMarkdown.contains(summaryHeading)) {
+      throw StateError('Missing current curation summary fixture.');
+    }
+    markdown.writeAsStringSync(
+      originalMarkdown.replaceFirst(summaryHeading, 'unreviewed summary'),
+    );
+    run('changed current curation summary rejected', succeeds: false);
+    markdown.writeAsStringSync(originalMarkdown);
     final preview = File('${temp.path}/${paths[1]}');
     final previewBytes = preview.readAsBytesSync();
     preview.writeAsStringSync('// changed candidate Preview\n');
