@@ -102,42 +102,94 @@ jobs:
           set -euo pipefail
           ROOT="output/wave_a_pr_evidence"
           mkdir -p "$ROOT/candidate" "$ROOT/baseline"
+          test "$(git rev-parse HEAD)" = "$SHARKY_PR_HEAD_SHA"
+          test "$(git -C _wave_a_baseline rev-parse HEAD)" = "$SHARKY_PR_BASE_SHA"
+          CAPTURE_OWNER_SHA="$(sha256sum test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart | cut -d' ' -f1)"
+          CAPTURE_LOCK_SHA="$(sha256sum pubspec.lock | cut -d' ' -f1)"
+          BASELINE_ROUTE=canonical_goal_v1
+          if [[ "$SHARKY_PR_BASE_SHA" == "22b3d0c868a3770b982697b81f3d420dd3d48332" ]]; then
+            BASELINE_ROUTE=historical_check_self_22b3d0c
+          fi
+          printf '%s\n' \
+            "candidate_sha=$SHARKY_PR_HEAD_SHA" \
+            "candidate_tree=$(git rev-parse HEAD^{tree})" \
+            "baseline_sha=$SHARKY_PR_BASE_SHA" \
+            "baseline_tree=$(git -C _wave_a_baseline rev-parse HEAD^{tree})" \
+            "capture_owner_sha256=$CAPTURE_OWNER_SHA" \
+            "shared_dependency_lock_sha256=$CAPTURE_LOCK_SHA" \
+            'candidate_route_contract=canonical_goal_v1' \
+            "baseline_route_contract=$BASELINE_ROUTE" \
+            'capture_owner=test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart' \
+            'comparison_scope=matched named rendered phases; task semantics may differ under exact historical baseline' \
+            'evidence_class=deterministic rendered widget evidence; not native/Human/application proof' \
+            'capture_status=started' > "$ROOT/provenance.txt"
 
           flutter test \
+            --dart-define=ACTION_EVIDENCE_COMPARISON_ROLE=candidate \
+            --dart-define=ACTION_EVIDENCE_ROUTE_CONTRACT=canonical_goal_v1 \
+            --dart-define=ACTION_EVIDENCE_PRODUCT_SHA="$SHARKY_PR_HEAD_SHA" \
+            --dart-define=ACTION_EVIDENCE_CAPTURE_OWNER_SHA256="$CAPTURE_OWNER_SHA" \
+            --dart-define=ACTION_EVIDENCE_LOCK_SHA256="$CAPTURE_LOCK_SHA" \
             --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
             --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
           flutter test \
+            --dart-define=ACTION_EVIDENCE_COMPARISON_ROLE=candidate \
+            --dart-define=ACTION_EVIDENCE_ROUTE_CONTRACT=canonical_goal_v1 \
+            --dart-define=ACTION_EVIDENCE_PRODUCT_SHA="$SHARKY_PR_HEAD_SHA" \
+            --dart-define=ACTION_EVIDENCE_CAPTURE_OWNER_SHA256="$CAPTURE_OWNER_SHA" \
+            --dart-define=ACTION_EVIDENCE_LOCK_SHA256="$CAPTURE_LOCK_SHA" \
             --dart-define=ACTION_EVIDENCE_DEVICE=compact \
             --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/compact" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
           flutter test \
+            --dart-define=ACTION_EVIDENCE_COMPARISON_ROLE=candidate \
+            --dart-define=ACTION_EVIDENCE_ROUTE_CONTRACT=canonical_goal_v1 \
+            --dart-define=ACTION_EVIDENCE_PRODUCT_SHA="$SHARKY_PR_HEAD_SHA" \
+            --dart-define=ACTION_EVIDENCE_CAPTURE_OWNER_SHA256="$CAPTURE_OWNER_SHA" \
+            --dart-define=ACTION_EVIDENCE_LOCK_SHA256="$CAPTURE_LOCK_SHA" \
             --dart-define=ACTION_EVIDENCE_DEVICE=tall_phone \
             --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/tall_phone" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
           flutter test \
+            --dart-define=ACTION_EVIDENCE_COMPARISON_ROLE=candidate \
+            --dart-define=ACTION_EVIDENCE_ROUTE_CONTRACT=canonical_goal_v1 \
+            --dart-define=ACTION_EVIDENCE_PRODUCT_SHA="$SHARKY_PR_HEAD_SHA" \
+            --dart-define=ACTION_EVIDENCE_CAPTURE_OWNER_SHA256="$CAPTURE_OWNER_SHA" \
+            --dart-define=ACTION_EVIDENCE_LOCK_SHA256="$CAPTURE_LOCK_SHA" \
             --dart-define=ACTION_EVIDENCE_DEVICE=large_phone \
             --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/large_phone" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
           flutter test \
+            --dart-define=ACTION_EVIDENCE_COMPARISON_ROLE=candidate \
+            --dart-define=ACTION_EVIDENCE_ROUTE_CONTRACT=canonical_goal_v1 \
+            --dart-define=ACTION_EVIDENCE_PRODUCT_SHA="$SHARKY_PR_HEAD_SHA" \
+            --dart-define=ACTION_EVIDENCE_CAPTURE_OWNER_SHA256="$CAPTURE_OWNER_SHA" \
+            --dart-define=ACTION_EVIDENCE_LOCK_SHA256="$CAPTURE_LOCK_SHA" \
             --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
             --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.4 \
             --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class_text_1_4" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
 
-          # Reuse the freshly resolved compatible graph for both compared trees.
+          # Declare the same capture-owner/lock overlays; baseline product source remains immutable.
           cp pubspec.lock _wave_a_baseline/pubspec.lock
           cp test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             _wave_a_baseline/test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart
           (
             cd _wave_a_baseline
             flutter pub get
+            cmp pubspec.lock ../pubspec.lock
             flutter test \
+              --dart-define=ACTION_EVIDENCE_COMPARISON_ROLE=baseline \
+              --dart-define=ACTION_EVIDENCE_ROUTE_CONTRACT="$BASELINE_ROUTE" \
+              --dart-define=ACTION_EVIDENCE_PRODUCT_SHA="$SHARKY_PR_BASE_SHA" \
+              --dart-define=ACTION_EVIDENCE_CAPTURE_OWNER_SHA256="$CAPTURE_OWNER_SHA" \
+              --dart-define=ACTION_EVIDENCE_LOCK_SHA256="$CAPTURE_LOCK_SHA" \
               --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
               --dart-define=ACTION_EVIDENCE_EXPECT_WAVE_A=false \
               --dart-define=ACTION_EVIDENCE_OUTPUT="../$ROOT/baseline/iphone17_class" \
@@ -145,15 +197,10 @@ jobs:
               --plain-name 'captures canonical W1 Action production states'
           )
 
-          printf '%s\n' \
-            "candidate_sha=$SHARKY_PR_HEAD_SHA" \
-            "baseline_sha=$SHARKY_PR_BASE_SHA" \
-            'capture_owner=test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart' \
-            'evidence_class=deterministic rendered widget evidence; not Human proof' \
-            > "$ROOT/provenance.txt"
+          sed -i 's/^capture_status=started$/capture_status=completed/' "$ROOT/provenance.txt"
 
       - name: Upload Wave A matched-state evidence
-        if: github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        if: always() && github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
         uses: actions/upload-artifact@v4
         with:
           name: wave-a-matched-state-${{ env.TARGET_SHA }}
