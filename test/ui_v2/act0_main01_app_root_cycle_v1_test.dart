@@ -4,10 +4,12 @@ import 'dart:async';
 // Uses current-main tasks only. Empty fake preferences are seeded once at boot.
 // Widget remount/fake preferences do not prove native restart or Human learning.
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart' show debugPrintSynchronously;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
@@ -1298,6 +1300,9 @@ void main() {
     var pendingRemounted = false;
     var feedbackRemounted = false;
     var assessed = 0;
+    var w4PurposeDefinitionOffered = false;
+    final w4ChoicesAfterDefinition = <String>{};
+    final w4OfferedSequenceTrace = <Map<String, Object?>>[];
 
     SharedPreferences.setMockInitialValues(<String, Object>{});
     tester.view.physicalSize = const Size(393, 852);
@@ -1464,6 +1469,75 @@ void main() {
       expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
       final active = _runner(tester);
       expect(required, contains(active.selectedTaskId));
+      if (active.selectedTaskId == 'w4_purpose_intro' &&
+          !w4PurposeDefinitionOffered) {
+        // Observe the ordinary first-use surface before any W4 answer. The
+        // existing Foundation route earns eligibility from empty preferences;
+        // it does not inject a task, unlock, completion or study observation.
+        expect(active.selectedWorldId, 'world_4');
+        expect(active.selectedLessonId, 'why_bets_happen');
+        expect(active.runner.phase, Act0LessonPhaseV1.theory);
+        expect(active.runner.teachingStepIndex, 0);
+        expect(active.runner.selectedOptionId, isNull);
+        expect(active.isSourceRecheckAttempt, isFalse);
+        expect(active.learningLoopStage, isNull);
+        expect(active.reviewKindId, 'initialAssessment');
+        for (final id in [
+          'w4_purpose_intro',
+          'w4_value_purpose',
+          'w4_bluff_purpose',
+        ]) {
+          expect(completed, isNot(contains(id)));
+          expect(saved['skippedTaskIds'], isNot(contains(id)));
+        }
+        const offeredBody =
+            'Name the bet purpose first. '
+            'Value means worse hands can still call. '
+            'A bluff tries to make better hands fold. '
+            'Protection makes the next card cost money.';
+        final definition = find.textContaining(offeredBody);
+        expect(definition, findsOneWidget);
+        final paragraph = tester.renderObject<RenderParagraph>(definition);
+        expect(paragraph.didExceedMaxLines, isFalse);
+        final rect = tester.getRect(definition);
+        expect(rect.top, greaterThanOrEqualTo(0));
+        expect(rect.bottom, lessThanOrEqualTo(852));
+        w4OfferedSequenceTrace.add({
+          'kind': 'definition_offered',
+          'task_id': active.selectedTaskId,
+          'phase': active.runner.phase.name,
+          'teaching_index': active.runner.teachingStepIndex,
+          'selected_option_id': active.runner.selectedOptionId,
+          'review_kind': active.reviewKindId,
+          'source_recheck': active.isSourceRecheckAttempt,
+          'loop_stage': active.learningLoopStage?.name,
+          'rendered_text': paragraph.text.toPlainText(),
+          'rect': {'top': rect.top, 'bottom': rect.bottom},
+          'did_exceed_max_lines': paragraph.didExceedMaxLines,
+          'completed_named_ids': completed
+              .where(
+                (id) => const {
+                  'w4_purpose_intro',
+                  'w4_value_purpose',
+                  'w4_bluff_purpose',
+                }.contains(id),
+              )
+              .toList(),
+          'skipped_named_ids': (saved['skippedTaskIds'] as List)
+              .where(
+                (id) => const {
+                  'w4_purpose_intro',
+                  'w4_value_purpose',
+                  'w4_bluff_purpose',
+                }.contains(id),
+              )
+              .toList(),
+        });
+        w4PurposeDefinitionOffered = true;
+        debugPrintSynchronously(
+          'W4_OFFERED_SEQUENCE intro_definition_visible_no_answer',
+        );
+      }
       if (visited.add(active.selectedTaskId!)) {
         debugPrintSynchronously(
           'FOUNDATION_ROUTE_ENTER ${active.selectedWorldId}/${active.selectedLessonId}/${active.selectedTaskId}',
@@ -1502,6 +1576,31 @@ void main() {
         final answer = _runner(
           tester,
         ).runner.options.firstWhere((o) => o.isCorrect);
+        if (taskId == 'w4_value_purpose' || taskId == 'w4_bluff_purpose') {
+          expect(w4PurposeDefinitionOffered, isTrue);
+          expect(_runner(tester).runner.selectedOptionId, isNull);
+          expect(_runner(tester).isSourceRecheckAttempt, isFalse);
+          expect(_runner(tester).learningLoopStage, isNull);
+          expect(_runner(tester).reviewKindId, 'initialAssessment');
+          expect(
+            find.byKey(Key('act0_shell_option_${answer.id}')),
+            findsOneWidget,
+          );
+          w4OfferedSequenceTrace.add({
+            'kind': 'choice_offered',
+            'task_id': _runner(tester).selectedTaskId,
+            'phase': _runner(tester).runner.phase.name,
+            'selected_option_id': _runner(tester).runner.selectedOptionId,
+            'review_kind': _runner(tester).reviewKindId,
+            'source_recheck': _runner(tester).isSourceRecheckAttempt,
+            'loop_stage': _runner(tester).learningLoopStage?.name,
+            'option_key': 'act0_shell_option_${answer.id}',
+          });
+          w4ChoicesAfterDefinition.add(taskId!);
+          debugPrintSynchronously(
+            'W4_OFFERED_SEQUENCE $taskId choice_visible_after_definition',
+          );
+        }
         await _choose(tester, answer.id);
         expect(
           find.byKey(const Key('act0_betting_price_unavailable')),
@@ -1558,6 +1657,8 @@ void main() {
     );
     expect(visited, required);
     expect(answeredIds, assessedIds);
+    expect(w4PurposeDefinitionOffered, isTrue);
+    expect(w4ChoicesAfterDefinition, {'w4_value_purpose', 'w4_bluff_purpose'});
     expect(
       pendingRemounted && feedbackRemounted && firstBoundaryChecked,
       isTrue,
@@ -1572,6 +1673,46 @@ void main() {
       tasks.fold<int>(0, (sum, task) => sum + task.rewardXp),
     );
     expect(completed['studyObservations'], hasLength(28));
+    expect(w4OfferedSequenceTrace.map((row) => row['task_id']).toList(), [
+      'w4_purpose_intro',
+      'w4_value_purpose',
+      'w4_bluff_purpose',
+    ]);
+    // Reuse the existing CI artifact transport, in a separate test-owned folder.
+    // This witness is not one of the two OBS04 diagnostic windows or its claims.
+    final witnessRoot = Platform.environment['OBS04_RECEIPT_DIR'];
+    if (witnessRoot != null && witnessRoot.isNotEmpty) {
+      await tester.runAsync(() async {
+        final output = Directory('$witnessRoot/w4-offered-sequence');
+        await output.create(recursive: true);
+        final source = File(
+          'test/ui_v2/act0_main01_app_root_cycle_v1_test.dart',
+        );
+        await File('${output.path}/ordinary-first-use.json').writeAsString(
+          jsonEncode({
+            'schema': 'w4_actual_offered_sequence_widget_v1',
+            'fixture': 'existing_empty_preferences_ordinary_Foundation_AppRoot',
+            'run_id': Platform.environment['GITHUB_RUN_ID'],
+            'run_attempt': Platform.environment['GITHUB_RUN_ATTEMPT'],
+            'checkout_sha': Platform.environment['GITHUB_SHA'],
+            'physical_test_sha256': sha256
+                .convert(await source.readAsBytes())
+                .toString(),
+            'logical_observation_order': w4OfferedSequenceTrace,
+            'not_proved': [
+              'person_reading',
+              'comprehension',
+              'native',
+              'Human',
+              'strategy_grade',
+              'full_CUR_or_parent',
+              'points',
+            ],
+          }),
+          flush: true,
+        );
+      });
+    }
     debugPrintSynchronously(
       'FOUNDATION_ROUTE_COMPLETE ${jsonEncode({'visited': visited.toList(), 'assessedIds': answeredIds.toList(), 'assessmentEvents': assessed, 'summaryVisits': summaryVisits, 'worldRemounts': remountedWorlds.toList(), 'completed': completed['completedTaskIds'], 'completedLessons': completed['completedLessonIds'], 'earnedXp': completed['earnedXp'], 'studyCount': (completed['studyObservations'] as List).length, 'historyCount': (completed['learningEvidenceHistory'] as List).length})}',
     );
