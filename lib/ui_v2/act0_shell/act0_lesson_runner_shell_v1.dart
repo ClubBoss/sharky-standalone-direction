@@ -4428,10 +4428,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }
 
     Widget buildRunnerScreen({bool registeredScene = false}) {
+      // Source premises must remain readable without covering an answer seat.
+      // Reuse the existing scrollable guide shelf; the registered table stays
+      // at its source-owned camera/seat anchors.
+      final dockSourceSeatGuide =
+          isDrill &&
+          !isTeaching &&
+          runner.selectedOptionId == null &&
+          hasSeatTargets &&
+          runner.table.decisionSeatId != null;
       final dockIntegratedFeedbackGuide =
           _usesCanonicalIntegratedLearningSceneV1 &&
           usesSharedActiveRunnerAllocation &&
-          isReview &&
+          (isReview || dockSourceSeatGuide) &&
           registeredScene;
 
       Widget buildIntegratedLowerSurface() {
@@ -4443,14 +4452,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              key: const Key('act0_shell_feedback_guide_viewport'),
-              // Reserve the live Hero label even when the repair action wraps.
+              key: Key(
+                isReview
+                    ? 'act0_shell_feedback_guide_viewport'
+                    : 'act0_shell_seat_decision_guide_viewport',
+              ),
+              // Keep the same bounded shelf for feedback and seat decisions.
               height: 88,
               child: Row(
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
-                      key: const Key('act0_shell_feedback_guide_scroll'),
+                      key: Key(
+                        isReview
+                            ? 'act0_shell_feedback_guide_scroll'
+                            : 'act0_shell_seat_decision_guide_scroll',
+                      ),
                       primary: false,
                       physics: const ClampingScrollPhysics(),
                       child: buildIntegratedPrompt(focusPointsUp: true),
