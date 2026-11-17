@@ -325,6 +325,9 @@ void main() {
         ..._newW01OrderContextIds,
         ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
         ...w11ExplicitStreetHistoryIds,
+        // The newly authored Call frame now supplies its full blind prefix,
+        // folds, street actions and positive remaining stacks.
+        'actions_call_drill',
         // Existing approved first-hand and no-ante bubble source histories.
         'your_first_hand_flop',
         'your_first_hand_turn',
