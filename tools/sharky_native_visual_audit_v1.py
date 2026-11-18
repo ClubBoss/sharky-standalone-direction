@@ -134,7 +134,7 @@ def emit_shards(rows: list[dict], destination: pathlib.Path) -> None:
         (destination / f"{name}.json").write_text(json.dumps({"schema": "sharky_native_visual_audit_shard_v1", "shard": name, "row_ids": [r["visual_state_id"] for r in shard_rows], "rows": shard_rows}, indent=2) + "\n")
 
 
-def selected_simulator(profile: str) -> tuple[str, str, str]:
+def selected_simulator(profile: str, explicit_udid: str | None = None) -> tuple[str, str, str]:
     names = {
         "compact": ("iPhone SE", "iPhone 16e", "iPhone 15", "iPhone 14", "iPhone 13", "iPhone 12", "iPhone 11"),
         "canonical": ("iPhone 17 Pro", "iPhone 16 Pro", "iPhone 15 Pro", "iPhone 14 Pro", "iPhone 17", "iPhone 16", "iPhone 15", "iPhone 14"),
@@ -143,7 +143,7 @@ def selected_simulator(profile: str) -> tuple[str, str, str]:
     devices = json.loads(run("xcrun", "simctl", "list", "devices", "available", "-j", capture=True))
     for runtime, values in devices["devices"].items():
         for device in values:
-            if device.get("isAvailable") and any(device["name"].startswith(name) for name in names):
+            if device.get("isAvailable") and (device["udid"] == explicit_udid if explicit_udid else any(device["name"].startswith(name) for name in names)):
                 return device["udid"], device["name"], runtime
     available = sorted({device["name"] for values in devices["devices"].values() for device in values if device.get("isAvailable")})
     raise RuntimeError(f"No available Simulator for {profile}; available: {', '.join(available)}")
@@ -289,9 +289,11 @@ def capture(rows: list[dict], args: argparse.Namespace) -> None:
         shard_manifest["resumed_rows"] = list(shard_manifest["completed_rows"])
         rows = [row for row in rows if row["visual_state_id"] not in shard_manifest["completed_rows"]]
     write_json(manifest_path, shard_manifest)
-    profile = profiles.pop(); udid, name, runtime = selected_simulator(profile)
+    profile = profiles.pop(); udid, name, runtime = selected_simulator(profile, args.udid)
     best_effort("xcrun", "simctl", "boot", udid); run("xcrun", "simctl", "bootstatus", udid, "-b")
-    best_effort("xcrun", "simctl", "uninstall", udid, BUNDLE_ID); run("xcrun", "simctl", "install", udid, str(app))
+    if not args.preserve_data:
+        best_effort("xcrun", "simctl", "uninstall", udid, BUNDLE_ID)
+    run("xcrun", "simctl", "install", udid, str(app))
     transitions = (output / "state_transitions.jsonl").open("w")
     try:
         for row in rows:
@@ -316,7 +318,7 @@ def capture(rows: list[dict], args: argparse.Namespace) -> None:
                     ready_at, listener_started = launch_for_capture(udid, environment, marker, args.ready_timeout); relaunches += 1
             screenshot_done = time.monotonic()
             timing = {"launch_started_epoch": launch_started, "readiness_seconds": round(ready_at - listener_started, 3), "screenshot_seconds": round(screenshot_done - ready_at, 3), "total_row_seconds": round(screenshot_done - row_started, 3), "relaunch_count": relaunches}
-            record = row | {"candidate_sha": candidate, "capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": name, "ios_runtime": runtime, "timing": timing, "attempts": attempts}
+            record = row | {"candidate_sha": candidate, "capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": name, "ios_runtime": runtime, "installation_policy": "preserve_data" if args.preserve_data else "fresh_install", "timing": timing, "attempts": attempts}
             transitions.write(json.dumps({"event": "captured", **record}) + "\n"); transitions.flush()
             shard_manifest["completed_rows"].append(state_id); shard_manifest["rows"].append(record); shard_manifest["wall_time_seconds"] = round(time.monotonic() - started, 3); write_json(manifest_path, shard_manifest)
         shard_manifest["status"] = "success"
@@ -367,7 +369,11 @@ def replace_shard_row(base: pathlib.Path, replacement: pathlib.Path, output: pat
         if row["visual_state_id"] == state_id: continue
         image = base / row["png"]
         if not image.is_file() or sha256(image) != row["png_sha256"]: raise RuntimeError(f"base PNG/hash mismatch {image}")
-        assert_valid_frame(image)
+        # Reuse only an explicit prior accepted-frame result for identical
+        # bytes. Older/incomplete records keep the original pixel check.
+        attempts = row.get("attempts", [])
+        if not attempts or attempts[-1].get("result") != "accepted" or attempts[-1].get("frame_validity") != "valid":
+            assert_valid_frame(image)
     shutil.copytree(base, output)
     copied = output / "raw" / pathlib.Path(replacement_row["png"]).name; shutil.copy2(source, copied)
     old = matching[0]; updated = dict(replacement_row); updated["png"] = str(copied.relative_to(output)); updated["replaces_png_sha256"] = old["png_sha256"]
@@ -397,6 +403,8 @@ def main() -> int:
     parser.add_argument("--build-runner", action="store_true"); parser.add_argument("--app-out", type=pathlib.Path)
     parser.add_argument("--row-id", action="append"); parser.add_argument("--row-ids-file", type=pathlib.Path); parser.add_argument("--family", action="append"); parser.add_argument("--full-checkpoint", action="store_true")
     parser.add_argument("--validate-selection", action="store_true"); parser.add_argument("--app", type=pathlib.Path); parser.add_argument("--out", type=pathlib.Path, default=ROOT / "output" / "native_visual_audit")
+    parser.add_argument("--udid", help="Exact available simulator; never falls back to another device")
+    parser.add_argument("--preserve-data", action="store_true", help="Install without uninstalling the existing app")
     parser.add_argument("--shard"); parser.add_argument("--candidate-sha"); parser.add_argument("--resume-from", type=pathlib.Path); parser.add_argument("--ready-timeout", type=float, default=30.0); parser.add_argument("--frame-settle-seconds", type=float, default=1.5)
     parser.add_argument("--aggregate-shards", type=pathlib.Path); parser.add_argument("--replace-shard-row", type=pathlib.Path); parser.add_argument("--replacement-shard", type=pathlib.Path); parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(); rows = load_rows(args.manifest.resolve())
