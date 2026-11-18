@@ -173,9 +173,11 @@ void main() {
         '2': 63,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
+      // A10: "all-in" counts as an action word like "jam", so W9+ all-in
+      // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
-        'TABLE_ACTION_DECISION': 29,
-        'TABLE_CLUE_OR_RANGE_INFERENCE': 29,
+        'TABLE_ACTION_DECISION': 32,
+        'TABLE_CLUE_OR_RANGE_INFERENCE': 26,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -350,8 +352,8 @@ void main() {
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
-      'TABLE_ACTION_DECISION': 31,
-      'TABLE_CLUE_OR_RANGE_INFERENCE': 29,
+      'TABLE_ACTION_DECISION': 34,
+      'TABLE_CLUE_OR_RANGE_INFERENCE': 26,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -802,7 +804,9 @@ _LateWorldRow _lateWorldRow(_Row row) {
     row.task.runner.question,
     for (final option in row.task.runner.options) option.label,
   ].join(' ').toLowerCase();
-  final action = RegExp(r'\b(fold|call|check|bet|raise|jam)\b').hasMatch(copy);
+  final action = RegExp(
+    r'\b(fold|call|check|bet|raise|jam|all-in)\b',
+  ).hasMatch(copy);
   final table =
       row.task.runner.table.boardCards.isNotEmpty ||
       row.task.runner.table.heroCards.isNotEmpty ||

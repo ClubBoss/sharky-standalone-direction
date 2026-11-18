@@ -89,7 +89,7 @@ void main() {
       final sums = <String, double>{};
       for (final item in table.actionTrail) {
         final m = RegExp(
-          r'^(SB|BB|BTN) (blind|raises to|shoves to) ([\d.]+) BB',
+          r'^(SB|BB|BTN) (blind|raises to|shoves to|all-in) ([\d.]+) BB',
         ).firstMatch(item.label);
         if (m != null) sums[m[1]!] = double.parse(m[3]!);
       }

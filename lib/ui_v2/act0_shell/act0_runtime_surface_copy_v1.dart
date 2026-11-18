@@ -133,6 +133,7 @@ bool _looksLikeActionDecisionDrillV1({
         normalizedLabel == 'bet' ||
         normalizedLabel == 'jam' ||
         normalizedLabel == 'shove' ||
+        normalizedLabel == 'all-in' ||
         normalizedLabel == 'open' ||
         normalizedLabel.startsWith('fold ') ||
         normalizedLabel.startsWith('call ') ||
@@ -141,6 +142,8 @@ bool _looksLikeActionDecisionDrillV1({
         normalizedLabel.startsWith('bet ') ||
         normalizedLabel.startsWith('jam ') ||
         normalizedLabel.startsWith('shove ') ||
+        normalizedLabel.startsWith('all-in ') ||
+        normalizedLabel.startsWith('go all-in ') ||
         normalizedLabel.startsWith('open ')) {
       actionLikeOptions += 1;
     }
