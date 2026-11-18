@@ -6512,10 +6512,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             diagnosticVariantId: placementDiagnosticSignalId!,
           )
         : null;
+    final dailyQueueIndex =
+        isPlayRunner && _activePracticeGroupId == 'daily' && _rapidPracticeLoop
+        ? _dailyPracticeQueue.taskIds.indexOf(_selectedTaskId)
+        : -1;
     final activePlayRunner = placementSource != null
         ? placementSource.runner.copyWith(
             phase: _phase,
             selectedOptionId: _selectedOptionId,
+          )
+        : dailyQueueIndex >= 0
+        ? playRunner?.copyWith(
+            beatIndex: dailyQueueIndex + 1,
+            beatCount: _dailyPracticeQueue.taskIds.length,
           )
         : playRunner;
     final accessibilityPrototypeStep =

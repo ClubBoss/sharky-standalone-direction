@@ -52,6 +52,8 @@ void main() {
       expect(ids.length, greaterThan(1));
       expect(ids.length, lessThanOrEqualTo(3));
       expect(ids.first, first);
+      expect(_runner(tester).runner.beatIndex, 1);
+      expect(_runner(tester).runner.beatCount, ids.length);
       await _choose(
         tester,
         _runner(tester).runner.options.firstWhere((o) => o.isCorrect).id,
@@ -72,6 +74,8 @@ void main() {
       expect(find.text('Resume practice'), findsOneWidget);
       await _tap(tester, 'act0_academy_practice_leaf_start');
       expect(_runner(tester).selectedTaskId, ids[1]);
+      expect(_runner(tester).runner.beatIndex, 2);
+      expect(_runner(tester).runner.beatCount, ids.length);
       final seen = <String>{first!};
       for (
         var step = 0;
