@@ -5,8 +5,38 @@ class PrivacyScreen extends StatelessWidget {
   const PrivacyScreen({super.key});
 
   static const String _body =
-      'Sharky Poker stores learning progress, snapshots, and session history on this device so the training loop can continue reliably. '
-      'You can clear local data from the Legal & Compliance screen at any time.';
+      'Sharky privacy — English iPhone beta\n\n'
+      'Stored on this device\n'
+      'Sharky saves your completed lessons and tasks, answers and use of help, '
+      'mistakes and repair attempts, practice queue and history, XP, activity dates '
+      'and streaks, resume position, introduction choices and app preferences. '
+      'Recovery copies protect local progress. These records support learning '
+      'and restoring your place; they are not a verified mastery score.\n\n'
+      'Network and accounts\n'
+      'The current Act0 learning route runs without an account or cloud sync. '
+      'It does not send your learning records to an analytics, advertising or '
+      'AI service. There is no cross-app tracking. Local app data may be included '
+      'in device backups managed by your operating system.\n\n'
+      'Retention and deletion\n'
+      'Sharky keeps progress between launches. Recent-answer histories are bounded; '
+      'older entries can be replaced by newer practice. Open You → Settings → Delete '
+      'local data to erase learning records, recovery copies, introduction choices '
+      'and preferences on this device. Deletion cannot be undone. If storage '
+      'refuses deletion, Sharky asks you to retry before learning can resume. '
+      'Deleting in Sharky does not delete earlier Apple backups, exported files '
+      'or feedback already sent through TestFlight.\n\n'
+      'TestFlight and voluntary feedback\n'
+      'Apple processes beta installation, usage, crash and feedback data under '
+      'TestFlight’s own privacy terms. Feedback or screenshots you choose to send '
+      'may reach the app developer through Apple. Avoid including private '
+      'information in feedback. Manage those records through Apple’s services. '
+      'TestFlight feedback is also the beta support channel.\n\n'
+      'Development diagnostics\n'
+      'A separately enabled debug build can retain a filtered local learning '
+      'trace. It is off in normal builds and disabled in release builds. '
+      'Delete local data also removes that local trace.\n\n'
+      'Updated 18 November 2026. This notice describes the current beta route; '
+      'new online features require a revised notice before they are enabled.';
 
   @override
   Widget build(BuildContext context) {

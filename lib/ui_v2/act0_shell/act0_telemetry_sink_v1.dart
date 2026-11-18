@@ -16,7 +16,22 @@ abstract class Act0TelemetrySinkV1 {
   void record(Act0TelemetryEventV1 event);
 }
 
+extension Act0TelemetryDeletionV1 on Act0TelemetrySinkV1 {
+  Future<void> stopForLocalDeletion() async {
+    final sink = this;
+    if (sink is Act0HnpTelemetrySinkV1) {
+      await sink.stopForLocalDeletion();
+    } else if (sink is Act0InMemoryTelemetrySinkV1) {
+      await sink.stopForLocalDeletion();
+    }
+  }
+}
+
 class Act0InMemoryTelemetrySinkV1 implements Act0TelemetrySinkV1 {
+  Future<void> stopForLocalDeletion() async {
+    _events.clear();
+  }
+
   final List<Act0TelemetryEventV1> _events = <Act0TelemetryEventV1>[];
 
   List<Act0TelemetryEventV1> get events => _events;
@@ -68,6 +83,17 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     _scheduleExport();
   }
 
+  bool _stoppedForDeletion = false;
+
+  @override
+  Future<void> stopForLocalDeletion() async {
+    _stoppedForDeletion = true;
+    await _pendingExport;
+    _retainedEvents.clear();
+    _bufferedEvents.clear();
+    _sequences.clear();
+  }
+
   final int maxEvents;
   final Act0HnpTraceFileStoreV1? _fileStore;
   final List<Act0TelemetryEventV1> _retainedEvents = [];
@@ -94,6 +120,7 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
 
   @override
   void record(Act0TelemetryEventV1 event) {
+    if (_stoppedForDeletion) return;
     if (_loadingPrior) {
       // The previous process's I/O may stall. Apply the same privacy and
       // capacity boundary before retaining anything during that wait.

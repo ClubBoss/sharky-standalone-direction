@@ -27,6 +27,7 @@ class Act0AcademySettingsLeafInputV1 {
     this.onOpenTerms,
     this.onBack,
     this.onRecoveryOptions,
+    this.onDeleteLocalData,
   });
 
   final Act0AcademySettingsLoadStateV1 loadState;
@@ -42,6 +43,7 @@ class Act0AcademySettingsLeafInputV1 {
   final VoidCallback? onOpenTerms;
   final VoidCallback? onBack;
   final VoidCallback? onRecoveryOptions;
+  final VoidCallback? onDeleteLocalData;
 }
 
 /// Premium Academy Settings leaf ("Quiet Control", Draft PR #315), as a body
@@ -113,6 +115,14 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         ),
     ];
     final legal = <Widget>[
+      if (input.onDeleteLocalData != null)
+        _row(
+          'Delete local data',
+          'Erase learning history, recovery copies and preferences',
+          Act0AcademyLeafGlyphKindV1.privacy,
+          key: const Key('act0_settings_delete_local_data'),
+          onTap: input.onDeleteLocalData,
+        ),
       if (input.onOpenPrivacy != null)
         _row(
           'Privacy Policy',

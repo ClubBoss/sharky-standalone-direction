@@ -177,6 +177,7 @@ Widget act0AcademyYouRuntimeV1(
   BuildContext context, {
   List<Act0W14SkillStateV1> skills = const [],
   required Act0ProfileShellV1 legacy,
+  VoidCallback? onDeleteLocalData,
   required bool Function() isCurrent,
   required Act0AchievementSeedProjectionV1 earnedProjection,
   required int completedTasks,
@@ -210,6 +211,7 @@ Widget act0AcademyYouRuntimeV1(
               () => Navigator.of(context).push<void>(
                 MaterialPageRoute(
                   builder: (_) => _AcademySettingsRouteV1(
+                    onDeleteLocalData: _guard(isCurrent, onDeleteLocalData),
                     onReplayWelcome: _guard(isCurrent, legacy.onReplayWelcome),
                     onRetakePlacement: _guard(
                       isCurrent,
@@ -233,10 +235,12 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
     this.onReplayWelcome,
     required this.onRetakePlacement,
     this.onRecoveryOptions,
+    this.onDeleteLocalData,
   });
   final VoidCallback? onReplayWelcome;
   final VoidCallback onRetakePlacement;
   final VoidCallback? onRecoveryOptions;
+  final VoidCallback? onDeleteLocalData;
   @override
   State<_AcademySettingsRouteV1> createState() =>
       _AcademySettingsRouteV1State();
@@ -279,7 +283,18 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
           input: Act0AcademySettingsLeafInputV1(
             loadState: _loadState,
             hapticsEnabled: saved.hapticsEnabled,
-            onHapticsChanged: AppSettingsService.instance.setHapticsEnabled,
+            onHapticsChanged: (value) async {
+              try {
+                await AppSettingsService.instance.setHapticsEnabled(value);
+              } catch (_) {
+                if (context.mounted)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Preference was not saved. Try again.'),
+                    ),
+                  );
+              }
+            },
             // Sound is withheld until actual audibility is verified on this build.
             onRetryLoad: _load,
             onBack: () => Navigator.of(context).pop(),
@@ -290,6 +305,9 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
             onRecoveryOptions: widget.onRecoveryOptions == null
                 ? null
                 : () => _returnToShell(widget.onRecoveryOptions!),
+            onDeleteLocalData: widget.onDeleteLocalData == null
+                ? null
+                : () => _returnToShell(widget.onDeleteLocalData!),
             onOpenPrivacy: () => Navigator.of(context).push<void>(
               MaterialPageRoute(builder: (_) => const PrivacyScreen()),
             ),
