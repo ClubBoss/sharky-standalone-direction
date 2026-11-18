@@ -342,6 +342,12 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
             selected.append("test/services/booster_pack_launcher_test.dart")
             selected.extend(files[-1:])
         files = list(dict.fromkeys(selected))
+    shard = os.environ.get("TEST_AUTHORITY_SHARD", "")
+    if shard:
+        # "i/n": run every n-th file starting at i, so CI can split a lane
+        # across parallel jobs. Together the shards cover the whole manifest.
+        index, count = (int(x) for x in shard.split("/"))
+        files = files[index::count]
     if lane == "tier-b" and not smoke and len(files) > 1:
         # One `flutter test` process for the whole blocking lane: each separate
         # process spends ~9s on startup, which dominated this lane. A green batch
