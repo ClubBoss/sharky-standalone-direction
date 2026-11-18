@@ -45,6 +45,7 @@ class Act0AcademyHomeLeafInputV1 {
     this.phase,
     this.backdrop,
     this.onOpenDevMenu,
+    this.onStartDailyPractice,
   });
 
   final String courseTitle;
@@ -56,6 +57,7 @@ class Act0AcademyHomeLeafInputV1 {
   final Act0AcademyHomePhaseV1? phase;
   final ImageProvider? backdrop;
   final VoidCallback? onOpenDevMenu;
+  final VoidCallback? onStartDailyPractice;
 }
 
 /// Validated earned progress. Invalid or missing counts produce `null` so no
@@ -144,6 +146,15 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
                 _NextActionCardV1(action: next),
                 const SizedBox(height: 10),
               ],
+              if (input.onStartDailyPractice != null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    key: const Key('act0_home_daily_practice'),
+                    onPressed: input.onStartDailyPractice,
+                    child: const Text('Daily practice'),
+                  ),
+                ),
               _CourseProgressStripV1(
                 courseTitle: input.courseTitle,
                 progress: progress,

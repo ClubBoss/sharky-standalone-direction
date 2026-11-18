@@ -160,12 +160,20 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
             eligible,
             practicedToday: _dailyCompletedTaskIds,
           );
-    return deck.firstWhere((entry) => entry.taskId == queue.nextTaskId);
+    final nextTaskId = queue.nextTaskId;
+    return nextTaskId == null
+        ? null
+        : deck.firstWhere((entry) => entry.taskId == nextTaskId);
   }
 
   List<_Act0DailyDeckEntryV1> _dailyDeckEntries(Act0ShellStateV1 state) {
     final practiceWorlds = _progressedWorlds(state)
-        .where((world) => world.worldNumber >= 1 && world.worldNumber <= 4)
+        .where(
+          (world) =>
+              world.isSelectable &&
+              world.worldNumber >= 1 &&
+              world.worldNumber <= 4,
+        )
         .toList(growable: false);
     if (practiceWorlds.isEmpty) {
       return const <_Act0DailyDeckEntryV1>[];
@@ -320,72 +328,22 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final currentTask = _firstIncompleteTask(selectedLesson);
 
     if (_dailyCompletedRepCount >= 3 && _openMistakes().isEmpty) {
-      final streakSaved = _streakSaveEarned();
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
-        label: streakSaved
-            ? _copyV1(en: 'Streak saved', ru: 'Ритм сохранён')
-            : _copyV1(en: 'Done for today', ru: 'На сегодня всё'),
-        title: streakSaved
-            ? _copyV1(
-                en: 'Seat held for tomorrow',
-                ru: 'Завтра будет легко вернуться',
-              )
-            : _copyV1(en: 'Tomorrow is set', ru: 'Завтрашний старт готов'),
-        subtitle: streakSaved
-            ? _copyV1(
-                en: 'You repaired the miss, then finished the short table-clue set.',
-                ru: 'Сегодня ты сначала разобрал ошибки, а потом закрыл дневной набор. Завтра будет проще продолжить.',
-              )
-            : _copyV1(
-                en: 'Today\'s table clue is complete. Come back for the next useful hand.',
-                ru: 'Сегодняшний день закрыт. Короткий заход завтра поможет не выпадать из ритма.',
-              ),
+        label: _copyV1(en: 'Done for today', ru: 'На сегодня всё'),
+        title: _copyV1(en: 'Practice complete', ru: 'Практика завершена'),
+        subtitle: _copyV1(
+          en: 'Your practice is saved. Come back whenever you’re ready.',
+          ru: 'Ответы сохранены. Возвращайся, когда захочешь.',
+        ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
         ),
         hint: '',
-        outcome: streakSaved
-            ? _copyV1(
-                en: 'Repair banked. One useful hand tomorrow keeps the clue warm.',
-                ru: 'Завтра будет проще продолжить. Один чистый дневной набор продлит этот ритм.',
-              )
-            : _copyV1(
-                en: 'Next time, Sharky will keep the next useful hand ready.',
-                ru: 'Завтра можно сразу продолжать. Один чистый дневной набор удержит ритм.',
-              ),
-        lessonId: selectedLesson.lessonId,
-        taskId: null,
-        practiceGroupId: 'daily',
-      );
-    }
-
-    if (!_completedTaskIds.contains(currentTask.taskId)) {
-      return _Act0LearningRecommendationV1(
-        kind: _Act0LearningNextActionKindV1.continueLesson,
-        label: _cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
-            ? _copyV1(en: 'Start here', ru: 'Начни здесь')
-            : _copyV1(en: 'Continue', ru: 'Продолжить'),
-        title: _localizedLessonTitleV1(selectedLesson),
-        subtitle: _localizedLessonSubtitleV1(selectedLesson),
-        ctaLabel: _recommendationCtaLabel(
-          _Act0LearningNextActionKindV1.continueLesson,
+        outcome: _copyV1(
+          en: 'Continue your course whenever you’re ready.',
+          ru: 'Продолжай курс, когда захочешь.',
         ),
-        hint: _copyV1(
-          en: 'Continue this lesson now.',
-          ru: 'Продолжи этот урок сейчас.',
-        ),
-        outcome:
-            _nextLesson(selectedWorld.lessons, selectedLesson.lessonId) == null
-            ? _copyV1(
-                en: 'On return: keep the clean pass moving.',
-                ru: 'Когда вернёшься, просто продолжай чистый проход.',
-              )
-            : _copyV1(
-                en: 'On return: ${_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title} stays next to unlock.',
-                ru: 'Когда вернёшься, следующим для открытия останется ${act0LocalizedLessonTitleAtomByIdV1(_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.lessonId, fallback: _nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title, isRu: _isRuLocaleV1)}.',
-              ),
-        lessonId: selectedLesson.lessonId,
         taskId: currentTask.taskId,
         practiceGroupId: 'continue',
       );
@@ -394,13 +352,16 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final dailyDeckEntry = _nextDailyDeckEntry(
       state: widget.state ?? Act0ShellStateV1.sample,
     );
-    if (_dailyCompletedRepCount < 3 && dailyDeckEntry != null) {
+    if (_dailyCompletedRepCount < 3 &&
+        dailyDeckEntry != null &&
+        (_dailyPracticeQueue.taskIds.isEmpty ||
+            _dailyPracticeQueue.nextTaskId != null)) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDrill,
         label: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
         title: _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
         subtitle: _copyV1(
-          en: 'Run three short spots to keep today clean.',
+          en: 'Choose a short set whenever you’re ready.',
           ru: 'Пройди три коротких спота, чтобы держать день в ритме.',
         ),
         ctaLabel: _recommendationCtaLabel(
@@ -411,7 +372,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
           ru: 'Быстрый дневной дрилл во вкладке Практика.',
         ),
         outcome: _copyV1(
-          en: 'Daily set: 3 crisp reps, no extra noise.',
+          en: 'Practice up to three spots.',
           ru: 'Дневной набор: 3 чётких спота без лишнего шума.',
         ),
         lessonId: dailyDeckEntry.lessonId,
@@ -421,21 +382,16 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     }
 
     if (_dailyCompletedRepCount >= 3 && _openMistakes().isEmpty) {
-      final streakSaved = _streakSaveEarned();
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
-        label: streakSaved ? 'Streak saved' : 'Done for today',
-        title: streakSaved ? 'Seat held for tomorrow' : 'Tomorrow is set',
-        subtitle: streakSaved
-            ? 'You repaired the miss, then finished the short table-clue set.'
-            : 'Today\'s table clue is complete. Come back for the next useful hand.',
+        label: 'Done for today',
+        title: 'Practice complete',
+        subtitle: 'Your practice is saved. Come back whenever you’re ready.',
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
         ),
         hint: '',
-        outcome: streakSaved
-            ? 'Repair banked. One useful hand tomorrow keeps the clue warm.'
-            : 'Next time, Sharky will keep the next useful hand ready.',
+        outcome: 'Continue your course whenever you’re ready.',
         lessonId: selectedLesson.lessonId,
         taskId: null,
         practiceGroupId: 'daily',
@@ -1425,12 +1381,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     if (count < 3) {
       return _copyV1(en: '$count/3 daily spots', ru: '$count/3 дневных спота');
     }
-    return _streakSaveEarned()
-        ? _copyV1(
-            en: 'Seat held for tomorrow',
-            ru: 'Завтра будет легко вернуться',
-          )
-        : _copyV1(en: 'Done for today', ru: 'На сегодня всё');
+    return _copyV1(en: 'Done for today', ru: 'На сегодня всё');
   }
 
   String _compactDailyLabel() {
@@ -1438,9 +1389,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     if (count < 3) {
       return _copyV1(en: 'Today $count/3', ru: 'Сегодня $count/3');
     }
-    return _streakSaveEarned()
-        ? _copyV1(en: 'Saved \u2713', ru: 'Сохранён \u2713')
-        : _copyV1(en: 'Done \u2713', ru: 'Готово \u2713');
+    return _copyV1(en: 'Done \u2713', ru: 'Готово \u2713');
   }
 
   // The bar under `_compactDailyLabel()` must track the same today's-goal
@@ -1493,19 +1442,6 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine: 'Every strong player started exactly here.',
         preSessionMood: Act0SharkyMoodV1.neutral,
-      );
-    }
-
-    // Streak milestone — 3+ day streak and daily not yet done
-    if (state.streakDays >= 3 && _dailyCompletedRepCount == 0) {
-      return Act0SharkyCueV1(
-        preSessionLine:
-            '${state.streakDays} days running. One clean rep keeps it alive.',
-        correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
-        repairLine: 'Take one breath. I will point at the clue.',
-        summaryLine: 'Consistency is the edge. You have it.',
-        preSessionMood: Act0SharkyMoodV1.happy,
       );
     }
 

@@ -591,6 +591,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
   }
 
   bool _launchDailyPracticeQueueTaskV1() {
+    _ensureDailyCountDayV1();
     final taskId = _dailyPracticeQueue.nextTaskId;
     if (taskId == null) return false;
     final state = widget.state ?? Act0ShellStateV1.sample;
@@ -632,6 +633,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
       _closeLearningRunForLearnExitV1();
     }
     if (group.groupId == 'daily') {
+      _ensureDailyCountDayV1();
       final entries = _dailyDeckEntries(
         widget.state ?? Act0ShellStateV1.sample,
       );

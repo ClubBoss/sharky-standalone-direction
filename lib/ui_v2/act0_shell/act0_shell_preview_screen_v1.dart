@@ -85,6 +85,8 @@ import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consumer_v1.dart';
 
+import 'act0_practice_reminder_v1.dart';
+
 part 'act0_shell_preview_telemetry_v1.dart';
 part 'act0_shell_preview_copy_v1.dart';
 part 'act0_shell_preview_debug_surfaces_v1.dart';
@@ -1483,7 +1485,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   // Date of the last earned 3/3 set, never merely the last app save.
   String _lastDailyDate = '';
   // Date owning the in-memory 0–3 daily counter.
-  String _dailyRepCountDay = _todayDateString();
+  late String _dailyRepCountDay = _todayDateString();
   int _retentionSequence = 0;
   final Map<String, _Act0RetentionMemoryEntryV1> _retentionMemoryByTaskId =
       <String, _Act0RetentionMemoryEntryV1>{};
@@ -1842,7 +1844,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     super.initState();
     _reviewLifecycleV1 = AppLifecycleListener(
       onResume: () {
-        if (mounted) setState(() {});
+        if (mounted) {
+          setState(() {});
+          if (_bootSurfaceReady && !_recoveryBusyV1) _syncPracticeReminderV1();
+        }
       },
     );
     _tab = widget.initialTab;
@@ -1918,6 +1923,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     super.dispose();
   }
 
+  void _syncPracticeReminderV1() {
+    if (!Act0PracticeReminderV1.isSupported) return;
+    _ensureDailyCountDayV1();
+    final canPractice = _dailyDeckEntries(
+      widget.state ?? Act0ShellStateV1.sample,
+    ).isNotEmpty;
+    final done =
+        _dailyCompletedRepCount >= 3 ||
+        (_dailyPracticeQueue.taskIds.isNotEmpty &&
+            _dailyPracticeQueue.nextTaskId == null);
+    final schedule = !canPractice
+        ? Act0PracticeReminderScheduleV1.none
+        : done
+        ? Act0PracticeReminderScheduleV1.tomorrowEvening
+        : Act0PracticeReminderScheduleV1.nextEvening;
+    unawaited(
+      Act0PracticeReminderV1.sync(
+        schedule,
+      ).then<void>((_) {}, onError: (Object _, StackTrace _) {}),
+    );
+  }
+
   Future<void> _bootstrapFirstStartRouteV1() async {
     final epoch = ++_recoveryEpochV1;
     _progressRestoredV1 = false;
@@ -1938,6 +1965,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     if (!mounted || epoch != _recoveryEpochV1) return;
     _progressRestoredV1 = true;
+    if (_usesPersistedProgress && !_progressLoadFailed)
+      _syncPracticeReminderV1();
     if (!widget.showPlacementOnStart) {
       if (!mounted) {
         return;
@@ -2048,8 +2077,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           };
   }
 
-  static String _todayDateString() {
-    final now = DateTime.now();
+  String _todayDateString() {
+    final now = widget.clock.nowUtc().toLocal();
     return '${now.year.toString().padLeft(4, '0')}-'
         '${now.month.toString().padLeft(2, '0')}-'
         '${now.day.toString().padLeft(2, '0')}';
@@ -2619,6 +2648,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         body: SafeArea(child: Center(child: CircularProgressIndicator())),
       );
     }
+    _ensureDailyCountDayV1();
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
@@ -2675,6 +2705,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       state: state,
       world: selectedWorld,
       selectedLesson: selectedLesson,
+    );
+    final dailyGroup = practiceGroups.firstWhere(
+      (group) => group.groupId == 'daily',
     );
     final practiceSurfaceRecommendation = _practiceSurfaceRecommendation(
       selectedWorld: selectedWorld,
@@ -3127,34 +3160,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               act0DevMenuEnabledV1(isReleaseMode: kReleaseMode)
                               ? _openDevMenu
                               : null,
-                          completionEarnedStreak: _streakSaveEarned(),
-                          onStartDailyDrill: _dailyCompletedRepCount < 3
-                              ? () => setState(() {
-                                  final world = _worldById(
-                                    _progressedWorlds(
-                                      widget.state ?? Act0ShellStateV1.sample,
-                                    ),
-                                    _selectedWorldId,
-                                  );
-                                  final baseState =
-                                      widget.state ?? Act0ShellStateV1.sample;
-                                  final lesson = _lessonById(
-                                    world.lessons,
-                                    _selectedLessonId,
-                                  );
-                                  final groups = _practiceGroups(
-                                    state: baseState,
-                                    world: world,
-                                    selectedLesson: lesson,
-                                  );
-                                  final dailyGroup = groups.firstWhere(
-                                    (g) => g.groupId == 'daily',
-                                    orElse: () => groups.first,
-                                  );
-                                  _startPracticeGroup(dailyGroup, world);
-                                  _tab = Act0ShellTabV1.play;
-                                  _showPlayHub = false;
-                                })
+                          onStartDailyDrill:
+                              dailyGroup.isEnabled &&
+                                  _dailyCompletedRepCount < 3 &&
+                                  (_dailyPracticeQueue.taskIds.isEmpty ||
+                                      _dailyPracticeQueue.nextTaskId != null)
+                              ? () => setState(
+                                  () => _startPracticeGroup(
+                                    dailyGroup,
+                                    selectedWorld,
+                                  ),
+                                )
                               : null,
                           onContinue: () => setState(() {
                             _openPersonalizedNextStepV1(
@@ -4276,6 +4292,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _completeCurrentTask(playSelectedTask);
                                       if (_launchDailyPracticeQueueTaskV1())
                                         return;
+                                      _syncPracticeReminderV1();
+                                      if (_dailyPracticeQueue.taskIds.isEmpty) {
+                                        _showPlayHub = true;
+                                        _rapidPracticeLoop = false;
+                                        _activePracticeGroupId = null;
+                                        _selectedOptionId = null;
+                                        _persistProgress();
+                                        return;
+                                      }
                                       _finishRapidPracticeLoopToHub(
                                         completedLessonId:
                                             selectedLesson.lessonId,

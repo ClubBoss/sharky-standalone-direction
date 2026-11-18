@@ -415,7 +415,7 @@ class Act0HomeShellV1 extends StatelessWidget {
         tapKey: onOpenPracticeContext == null && onStartDailyDrill == null
             ? null
             : 'act0_shell_home_daily_practice_now',
-        onTap: onOpenPracticeContext ?? onStartDailyDrill,
+        onTap: onStartDailyDrill ?? onOpenPracticeContext,
       ),
       reviewRow,
     ];

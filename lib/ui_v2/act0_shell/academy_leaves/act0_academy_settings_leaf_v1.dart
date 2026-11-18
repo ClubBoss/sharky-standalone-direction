@@ -20,6 +20,8 @@ class Act0AcademySettingsLeafInputV1 {
     this.soundDetail = 'Sound effects for decisions',
     this.onSoundChanged,
     this.onHapticsChanged,
+    this.practiceReminderEnabled,
+    this.onPracticeReminderChanged,
     this.onRetryLoad,
     this.onReplayWelcome,
     this.onRetakePlacement,
@@ -36,6 +38,8 @@ class Act0AcademySettingsLeafInputV1 {
   final String soundDetail;
   final ValueChanged<bool>? onSoundChanged;
   final ValueChanged<bool>? onHapticsChanged;
+  final bool? practiceReminderEnabled;
+  final ValueChanged<bool>? onPracticeReminderChanged;
   final VoidCallback? onRetryLoad;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onRetakePlacement;
@@ -84,6 +88,17 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
             key: const Key('act0_academy_settings_leaf_haptics'),
             value: input.hapticsEnabled,
             onChanged: input.onHapticsChanged,
+          ),
+        ),
+      if (input.practiceReminderEnabled != null)
+        _row(
+          'Practice reminder',
+          'One reminder at 6 pm local time when practice is available.',
+          Act0AcademyLeafGlyphKindV1.recall,
+          trailing: Switch(
+            key: const Key('act0_academy_settings_practice_reminder'),
+            value: input.practiceReminderEnabled!,
+            onChanged: input.onPracticeReminderChanged,
           ),
         ),
     ];

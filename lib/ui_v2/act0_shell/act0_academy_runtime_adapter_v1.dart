@@ -14,6 +14,7 @@ import 'academy_leaves/act0_academy_review_leaf_v1.dart';
 import 'academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'academy_leaves/act0_academy_you_leaf_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
+import 'act0_practice_reminder_v1.dart';
 
 // Owner-restored green presentation; explicit false keeps independent rollback.
 // These adapt the current shell's resolved
@@ -80,7 +81,7 @@ Widget act0AcademyHomeRuntimeV1(
   return Act0AcademyHomeLeafV1(
     input: Act0AcademyHomeLeafInputV1(
       courseTitle: courseTitle,
-      streakDays: legacy.state.streakDays,
+      streakDays: 0,
       mood: (legacy.sharkyOverride ?? lesson.runner.sharky).preSessionMood,
       earnedLessonCount: earnedLessons,
       courseLessonCount: totalLessons,
@@ -95,6 +96,7 @@ Widget act0AcademyHomeRuntimeV1(
       ),
       backdrop: _backdrop,
       onOpenDevMenu: _guard(isCurrent, legacy.onOpenDevMenu),
+      onStartDailyPractice: _guard(isCurrent, legacy.onStartDailyDrill),
     ),
   );
 }
@@ -248,6 +250,7 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
 
 class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
   var _loadState = Act0AcademySettingsLoadStateV1.loading;
+  bool _savingReminder = false;
   @override
   void initState() {
     super.initState();
@@ -266,23 +269,55 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
     }
   }
 
+  Future<void> _setPracticeReminder(bool enabled) async {
+    setState(() => _savingReminder = true);
+    try {
+      final scheduled = await Act0PracticeReminderV1.setEnabled(enabled);
+      if (mounted && enabled && !scheduled) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Allow Sharky notifications in iPhone Settings.'),
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('The reminder could not be updated. Try again.'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _savingReminder = false);
+    }
+  }
+
   void _returnToShell(VoidCallback action) {
     Navigator.of(context).pop();
     action();
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) => ValueListenableBuilder<AppSettingsSnapshot>(
-    valueListenable: AppSettingsService.instance.changes,
-    builder: (context, saved, _) => Scaffold(
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: Listenable.merge([
+      AppSettingsService.instance.changes,
+      Act0PracticeReminderV1.enabled,
+    ]),
+    builder: (context, _) => Scaffold(
       backgroundColor: Act0AcademyLeafPaletteV1.ink,
       body: SafeArea(
         child: Act0AcademySettingsLeafV1(
           input: Act0AcademySettingsLeafInputV1(
             loadState: _loadState,
-            hapticsEnabled: saved.hapticsEnabled,
+            hapticsEnabled:
+                AppSettingsService.instance.changes.value.hapticsEnabled,
+            practiceReminderEnabled: Act0PracticeReminderV1.isSupported
+                ? Act0PracticeReminderV1.enabled.value
+                : null,
+            onPracticeReminderChanged: _savingReminder
+                ? null
+                : _setPracticeReminder,
             onHapticsChanged: (value) async {
               try {
                 await AppSettingsService.instance.setHapticsEnabled(value);

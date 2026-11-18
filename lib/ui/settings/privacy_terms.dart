@@ -17,6 +17,9 @@ class PrivacyScreen extends StatelessWidget {
       'It does not send your learning records to an analytics, advertising or '
       'AI service. There is no cross-app tracking. Local app data may be included '
       'in device backups managed by your operating system.\n\n'
+      'Optional practice reminder\n'
+      'If you turn on Practice reminder, iOS can schedule one local reminder with a generic message. '
+      'Turn it off in Sharky Settings at any time. Deleting local data cancels the reminder.\n\n'
       'Retention and deletion\n'
       'Sharky keeps progress between launches. Recent-answer histories are bounded; '
       'older entries can be replaced by newer practice. Open You → Settings → Delete '
@@ -35,7 +38,7 @@ class PrivacyScreen extends StatelessWidget {
       'A separately enabled debug build can retain a filtered local learning '
       'trace. It is off in normal builds and disabled in release builds. '
       'Delete local data also removes that local trace.\n\n'
-      'Updated 18 November 2026. This notice describes the current beta route; '
+      'Updated 19 November 2026. This notice describes the current beta route; '
       'new online features require a revised notice before they are enabled.';
 
   @override

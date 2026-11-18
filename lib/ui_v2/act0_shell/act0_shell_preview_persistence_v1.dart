@@ -151,7 +151,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     if (!mounted) {
       return;
     }
-    final today = _Act0ShellPreviewScreenV1State._todayDateString();
+    final today = _todayDateString();
     final isNewDay = parsed.lastActiveDay != today;
     // Legacy 3/3 + lastActiveDay is NOT proof of completion on that date:
     // an old runtime could save yesterday's 3/3 after midnight. Fail closed
@@ -813,10 +813,11 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
   }
 
   void _ensureDailyCountDayV1() {
-    final today = _Act0ShellPreviewScreenV1State._todayDateString();
+    final today = _todayDateString();
     if (_dailyRepCountDay == today) return;
     _dailyCompletedRepCount = 0;
     _dailyCompletedTaskIds.clear();
+    _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
     _dailyRepCountDay = today;
   }
 
@@ -844,7 +845,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       return;
     }
     _ensureDailyCountDayV1();
-    final today = _Act0ShellPreviewScreenV1State._todayDateString();
+    final today = _todayDateString();
     final dailyDone = _dailyCompletedRepCount >= 3;
     final currentStreak = _earnedStreakDaysTodayV1(today);
     if (dailyDone) _lastDailyDate = today;
@@ -1115,10 +1116,10 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           orElse: () => null,
         );
     if (latestRecord != null && !wasAlreadyRecorded) {
+      if (_activePracticeGroupId == 'daily') _ensureDailyCountDayV1();
       if (_activePracticeGroupId == 'daily' &&
           latestRecord.runKind == 'practice' &&
           _dailyPracticeQueue.nextTaskId == latestRecord.taskId) {
-        _ensureDailyCountDayV1();
         _dailyPracticeQueue = _dailyPracticeQueue.answer(
           latestRecord.taskId,
           independentCorrect: latestRecord.isIndependentCorrect,
