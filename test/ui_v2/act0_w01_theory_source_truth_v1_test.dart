@@ -355,7 +355,7 @@ void _contextPremisesWidgetTest(
     );
     expect(find.text(task.runner.question), findsOneWidget);
     expect(
-      find.textContaining(task.runner.caption),
+      find.textContaining(act0LearnerFacingPremisesV1(task.runner.caption)),
       findsOneWidget,
       reason: 'Full source premises must be available when answering.',
     );

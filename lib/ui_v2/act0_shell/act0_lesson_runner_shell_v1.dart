@@ -4356,7 +4356,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           runner.selectedOptionId == null &&
           runner.table.decisionSeatId != null;
       final support = showSourceOrderPremises
-          ? runner.caption
+          ? act0LearnerFacingPremisesV1(runner.caption)
           : showAsm05ModelAssumptions
           ? '${runner.caption} ${runner.hint}'
           : isTheory || isTeaching
@@ -6084,6 +6084,25 @@ double _normalRunnerLowerSurfaceDemandV1(
 /// Predicts compact-mode activation before the normal table-plus-answer layout
 /// renders. It measures the actual question and option copy at the admitted
 /// text scale against the lower space left by the accepted table geometry.
+/// Learner-facing order of a task's hand premises.
+///
+/// Authored captions open with a fixed setup sentence (six players, 100 BB
+/// stacks, 0.5/1 BB blinds, no ante, straddle or rake). Every premise stays on
+/// screen, but the decision facts come first and the setup sentence moves to
+/// the end, so the first visible lines answer "what is happening now".
+String act0LearnerFacingPremisesV1(String caption) {
+  final match = RegExp(
+    r'For this [^;]*?100 BB[^;]*;\s*no ante, straddle or rake\.',
+  ).firstMatch(caption);
+  if (match == null) return caption;
+  final rest =
+      (caption.substring(0, match.start) + caption.substring(match.end))
+          .replaceAll(RegExp(r'\s+'), ' ')
+          .trim();
+  if (rest.isEmpty) return caption;
+  return '$rest ${match.group(0)}';
+}
+
 bool act0ShouldActivateCompactAccessibilityPrototypeV1(
   BuildContext context, {
   required String question,
