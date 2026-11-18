@@ -194,6 +194,7 @@ TIER_A_COMMANDS = [
             "--dart-define=SHARKY_ACADEMY_REVIEW_PREVIEW=true",
             "test/ui_v2/act0_academy_review_runtime_adapter_v1_test.dart",
             "test/ui_v2/academy_leaves/act0_academy_review_resume_focus_v1_test.dart",
+            "test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart",
             "-r", "expanded",
         ],
     },
@@ -202,7 +203,7 @@ TIER_A_COMMANDS = [
         "cmd": ["./tools/release_gate_world1.sh"],
     },
     {
-        "name": "repair intent lifecycle (Academy Review mapped repair roundtrip included)",
+        "name": "repair intent lifecycle (Academy Review default OFF)",
         "cmd": ["flutter","test","test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart","-r","expanded"],
     },
     {
