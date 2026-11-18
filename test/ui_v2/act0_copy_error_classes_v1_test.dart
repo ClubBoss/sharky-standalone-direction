@@ -137,4 +137,69 @@ void main() {
     }
     expect(problems, isEmpty, reason: problems.join('\n'));
   });
+
+  // Error class: task text states a pot, a price, a street or Hero's hand
+  // that differs from what the table on the same screen shows.
+  test('W1–W4 text numbers, street and Hero hand match the table', () {
+    double? bb(String s) {
+      final m = RegExp(r'([\d.]+)\s*BB').firstMatch(s);
+      return m == null ? null : double.parse(m[1]!);
+    }
+
+    const order = 'AKQJT98765432';
+    final problems = <String>[];
+    for (final w in Act0ShellStateV1.sample.worlds.where(
+      (w) => w.worldNumber <= 4,
+    )) {
+      for (final l in w.lessons) {
+        for (final t in l.taskList) {
+          final r = t.runner;
+          final table = r.table;
+          final pot = bb(table.potLabel);
+          final call = bb(table.toCallLabel);
+          final street = table.streetLabel.toLowerCase();
+          final hero = [for (final c in table.heroCards) c.rank]
+            ..sort((a, b) => order.indexOf(a) - order.indexOf(b));
+          for (final text in [r.caption, r.question, r.hint]) {
+            for (final m in RegExp(
+              r'\b[Pp]ot (?:is |of )?([\d.]+) BB',
+            ).allMatches(text)) {
+              if (pot != null && double.parse(m[1]!) != pot) {
+                problems.add('${t.taskId}: "${m[0]}" vs ${table.potLabel}');
+              }
+            }
+            for (final m in RegExp(
+              r'\bto call ([\d.]+) BB',
+              caseSensitive: false,
+            ).allMatches(text)) {
+              if (call != null && double.parse(m[1]!) != call) {
+                problems.add('${t.taskId}: "${m[0]}" vs ${table.toCallLabel}');
+              }
+            }
+            for (final s in ['preflop', 'flop', 'turn', 'river']) {
+              final says = RegExp(
+                '\\b(on|at) the $s\\b|\\bthis $s\\b',
+                caseSensitive: false,
+              ).hasMatch(text);
+              if (says && street.isNotEmpty && s != street) {
+                problems.add('${t.taskId}: says $s, table is $street');
+              }
+            }
+            if (hero.length == 2 && !hero.contains('?')) {
+              for (final m in RegExp(
+                r'(?:Hero|You)[^.]*?\bwith ([AKQJT2-9])([AKQJT2-9])[so]?\b',
+              ).allMatches(text)) {
+                final named = [m[1]!, m[2]!]
+                  ..sort((a, b) => order.indexOf(a) - order.indexOf(b));
+                if (named.join() != hero.join()) {
+                  problems.add('${t.taskId}: "${m[0]}" vs ${hero.join()}');
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    expect(problems, isEmpty, reason: problems.join('\n'));
+  });
 }
