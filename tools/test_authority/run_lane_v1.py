@@ -31,16 +31,7 @@ LANES = {
         "label": "Tier B maintained-support",
         "manifest": MANIFEST_DIR / "tier_b_maintained_support.txt",
     },
-    "tier-c": {
-        "blocking": False,
-        "label": "Tier C quarantine",
-        "manifest": MANIFEST_DIR / "tier_c_quarantine.txt",
-    },
-    "tier-d": {
-        "blocking": False,
-        "label": "Tier D retired/excluded",
-        "manifest": MANIFEST_DIR / "tier_d_retired.txt",
-    },
+
 }
 
 TIER_A_COMMANDS = [
@@ -389,13 +380,8 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
     assert manifest is not None
     files = _read_manifest(manifest)
     if smoke:
-        # Include first files plus known timeout residual when present so smoke
-        # proves continuation past the historically unfinished file.
-        selected = files[:2]
-        if lane == "tier-c" and "test/services/booster_pack_launcher_test.dart" in files:
-            selected.append("test/services/booster_pack_launcher_test.dart")
-            selected.extend(files[-1:])
-        files = list(dict.fromkeys(selected))
+        files = files[:2]
+
     shard = os.environ.get("TEST_AUTHORITY_SHARD", "")
     if shard:
         # "i/n": run every n-th file starting at i, so CI can split a lane
@@ -525,8 +511,6 @@ def main() -> int:
     # Infrastructure errors are fatal even in nonblocking test lanes.
     if any(result["status"] == "error" for result in summary["results"]):
         return 1
-    if args.lane == "tier-c":
-        return 0
     if summary["blocking_verdict"] == "BLOCK":
         return 1
     return 0
