@@ -99,6 +99,7 @@ TIER_A_COMMANDS = [
             "flutter",
             "test",
             "test/ui_v2/act0_repair_intent_resolver_v1_test.dart",
+            "test/ui_v2/act0_repair_goal_fingerprints_current_v1_test.dart",
             "-r",
             "compact",
         ],

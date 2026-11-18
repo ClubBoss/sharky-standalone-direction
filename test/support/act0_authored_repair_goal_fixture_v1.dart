@@ -47,6 +47,13 @@ String? act0AuthoredRepairFixtureFingerprintV1({
 }
 
 class Act0AuthoredRepairGoalFixtureV1 {
+  Act0AuthoredRepairGoalFixtureV1.source({
+    required String lessonId,
+    required String taskId,
+    required String choiceId,
+    String occurrenceId = 'simulated_source_miss',
+  }) : intent = _intent('world_1', lessonId, taskId, choiceId, occurrenceId);
+
   Act0AuthoredRepairGoalFixtureV1.noBet({
     String choiceId = 'fold',
     String occurrenceId = 'source_miss_A',

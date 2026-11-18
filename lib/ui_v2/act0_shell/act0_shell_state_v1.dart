@@ -9684,7 +9684,8 @@ final _callActionRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Almost got it.',
-      feedbackReason: 'Raising adds more chips than the call price.',
+      feedbackReason:
+          'Raising adds more chips than calling, which only matches the current bet.',
     ),
   ],
   table: _readBoardRunner.table.copyWith(
@@ -10204,7 +10205,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
               : taskId == 'positions_utg'
               ? (o.seatId == 'utg'
                     ? 'UTG names the seat immediately after BB in this preflop order.'
-                    : '${o.label} is not UTG. UTG is the first seat to act after the big blind preflop.')
+                    : o.feedbackReason)
               : o.feedbackReason,
           repairFocusSeatIds: o.repairFocusSeatIds,
           repairFocusCardIds: o.repairFocusCardIds,
@@ -10341,7 +10342,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
   lessonTitle: 'Blinds & action order',
   caption: 'After the flop, Button often acts last.',
   hint: 'Tap BTN.',
-  question: 'Tap the last postflop actor.',
+  question: 'Tap the seat that acts last after the flop.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'btn',
@@ -12119,7 +12120,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
   beatIndex: 3,
   beatCount: 5,
   caption:
-      'New table. You have two cards, the flop has three, and the pot is 6 BB.',
+      'New table. You have two cards, three shared cards (the flop) are out, and the pot is 6 BB.',
   hint: 'Read your cards, the shared board, and the pot before any action.',
   feedbackReason:
       'Start with the same three checks every time: your cards, the shared board, and chips in the pot.',

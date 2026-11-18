@@ -1180,7 +1180,7 @@ const _academyW1RuCopyV1 = <String, Map<String, String>>{
   'what_poker_is_table_read_transfer': {
     'What is the clean first table read?':
         '\u041A\u0430\u043A\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0441\u0442\u043E\u043B\u0430 \u0432\u0435\u0440\u043D\u043E?',
-    'New table. You have two cards, the flop has three, and the pot is 6 BB.':
+    'New table. You have two cards, three shared cards (the flop) are out, and the pot is 6 BB.':
         '\u041D\u043E\u0432\u044B\u0439 \u0441\u0442\u043E\u043B: \u0443 \u0442\u0435\u0431\u044F \u0434\u0432\u0435 \u043B\u0438\u0447\u043D\u044B\u0435 \u043A\u0430\u0440\u0442\u044B, \u043D\u0430 \u0444\u043B\u043E\u043F\u0435 \u0442\u0440\u0438 \u043E\u0431\u0449\u0438\u0435, \u0432 \u0431\u0430\u043D\u043A\u0435 6 BB.',
     'Read your cards, the shared board, and the pot before any action.':
         '\u041F\u0440\u043E\u0432\u0435\u0440\u044C \u0434\u0432\u0435 \u043B\u0438\u0447\u043D\u044B\u0435 \u043A\u0430\u0440\u0442\u044B, \u0442\u0440\u0438 \u043E\u0431\u0449\u0438\u0435 \u043A\u0430\u0440\u0442\u044B \u0444\u043B\u043E\u043F\u0430 \u0438 \u0431\u0430\u043D\u043A 6 BB.',
