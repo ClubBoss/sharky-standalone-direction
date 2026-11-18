@@ -8484,6 +8484,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ? 'Daily practice'
             : _dailyPracticeQueue.nextTaskId != null
             ? 'Resume your short set'
+            : _dailyPracticeQueue.taskIds.isNotEmpty
+            ? 'Start a new short set'
             : 'Practice a short set',
         subtitle: dailyDeckEntry == null
             ? 'Unlocks as you work through lessons.'
