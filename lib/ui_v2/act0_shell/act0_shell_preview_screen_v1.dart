@@ -15650,17 +15650,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return false;
     }
     final decisionTask = _taskById(selectedLesson, sequence.practiceTaskId);
-    // Close the deliberately skipped nodes without reward. The lesson counts
-    // as complete only when every task in it is closed; leaving a skipped node
-    // open made the lesson replay forever ("Almost there - replay to unlock").
-    final from = _taskIndex(selectedLesson, selectedTask.taskId);
-    final to = _taskIndex(selectedLesson, decisionTask.taskId);
-    for (var i = from + 1; i < to; i++) {
-      final skipped = selectedLesson.taskList[i].taskId;
-      if (!_completedTaskIds.contains(skipped)) {
-        _closeTaskWithoutRewardV1(skipped);
-      }
-    }
     _selectedTaskId = decisionTask.taskId;
     _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.decision;
     _phase = decisionTask.entryPhase;
@@ -15817,10 +15806,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   Act0LessonTaskV1? _nextTask(Act0LessonCardV1 lesson, String taskId) {
     final index = _taskIndex(lesson, taskId);
-    if (index < 0 || index + 1 >= lesson.taskList.length) {
-      return null;
+    if (index >= 0 && index + 1 < lesson.taskList.length) {
+      return lesson.taskList[index + 1];
     }
-    return lesson.taskList[index + 1];
+    // End of the list. A route that jumped over a task (the Action sequence
+    // skips its legal-context node) must still visit it before the lesson
+    // ends; otherwise the lesson never completes and only "replay" is left.
+    for (final task in lesson.taskList) {
+      if (task.taskId != taskId &&
+          !_completedTaskIds.contains(task.taskId) &&
+          !_lessonRunMistakeTaskIds.contains(task.taskId)) {
+        return task;
+      }
+    }
+    return null;
   }
 
   bool _lessonComplete(Act0LessonCardV1 lesson) {
