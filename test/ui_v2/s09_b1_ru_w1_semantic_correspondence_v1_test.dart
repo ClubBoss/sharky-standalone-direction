@@ -112,7 +112,7 @@ void main() {
               reason = act0AcademyW1InstructionV1(
                 context,
                 taskId,
-                'The flop has only three shared cards. Five board cards appear only by the river.',
+                'The flop has only three shared cards. All five board cards are out only on the last street, the river.',
               );
               return const SizedBox();
             },

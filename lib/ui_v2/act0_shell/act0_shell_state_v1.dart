@@ -2503,7 +2503,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
                   isCorrect: false,
                   preferredLabel: 'BTN (your seat)',
                   quality: Act0FeedbackQualityV1.wrong,
-                  feedbackTitle: 'Read the postflop order.',
+                  feedbackTitle: 'Read the order after the flop.',
                   feedbackReason:
                       'UTG acts before BTN after the flop in this six-seat hand.',
                 ),
@@ -2514,7 +2514,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
                   isCorrect: true,
                   preferredLabel: 'BTN (your seat)',
                   quality: Act0FeedbackQualityV1.correct,
-                  feedbackTitle: 'Postflop position read.',
+                  feedbackTitle: 'Order after the flop read.',
                   feedbackReason:
                       'BTN acts last after the flop in this six-seat hand.',
                 ),
@@ -2525,7 +2525,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
                   isCorrect: false,
                   preferredLabel: 'BTN (your seat)',
                   quality: Act0FeedbackQualityV1.wrong,
-                  feedbackTitle: 'Read the postflop order.',
+                  feedbackTitle: 'Read the order after the flop.',
                   feedbackReason:
                       'BB acts before BTN after the flop in this six-seat hand.',
                 ),
@@ -7984,7 +7984,8 @@ const _meetTableRunner = Act0RunnerStateV1(
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
-      feedbackReason: 'BB acts after BTN preflop, so it is not next here.',
+      feedbackReason:
+          'BB acts after BTN before the flop, so it is not next here.',
     ),
   ],
   feedbackTitle: 'Sharp read.',
@@ -8114,7 +8115,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more step.',
       feedbackReason:
-          'First in on the Button, folding gives up a playable spot.',
+          'With nobody in the pot yet on the Button, folding gives up a playable spot.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Hero acts', 'Blinds posted', 'KTs'],
@@ -8143,7 +8144,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'First in on the Button, raising takes the lead and pressures the blinds.',
+          'With nobody in the pot yet on the Button, raising takes the lead and pressures the blinds.',
       repairFocusSeatIds: <String>['btn'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Button raise', 'Hero acts'],
@@ -8505,7 +8506,8 @@ const _readBoardRunner = Act0RunnerStateV1(
       preferredLabel: 'Three',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Almost got it.',
-      feedbackReason: 'Five board cards appear only by the river.',
+      feedbackReason:
+          'All five board cards are out only on the last street, the river.',
     ),
   ],
   feedbackTitle: 'Excellent spot.',
@@ -10200,8 +10202,8 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
                     : 'BTN acts after UTG in the stated preflop order.')
               : taskId == 'positions_late_seat'
               ? (o.seatId == 'btn'
-                    ? 'BTN is reached last in this first postflop pass, with all six able to act.'
-                    : 'UTG is reached before BTN in this first postflop pass.')
+                    ? 'BTN is reached last in this first round after the flop, with all six able to act.'
+                    : 'UTG is reached before BTN in this first round after the flop.')
               : taskId == 'positions_utg'
               ? (o.seatId == 'utg'
                     ? 'UTG names the seat immediately after BB in this preflop order.'
@@ -10362,7 +10364,8 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
-      feedbackReason: 'UTG is early, not the late postflop seat here.',
+      feedbackReason:
+          'UTG is early, not the seat that acts last after the flop here.',
     ),
   ],
   table: _readBoardRunner.table.copyWith(
@@ -10436,7 +10439,7 @@ final _buttonSeatRunner = _meetTableRunner.copyWith(
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'BTN seat found.',
-      feedbackReason: 'BTN is the dealer button and acts last postflop.',
+      feedbackReason: 'BTN is the dealer button and acts last after the flop.',
     ),
     Act0RunnerOptionV1(
       id: 'co',
@@ -11790,7 +11793,7 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
-          'The flop has only three shared cards. Five board cards appear only by the river.',
+          'The flop has only three shared cards. All five board cards are out only on the last street, the river.',
     ),
     Act0RunnerOptionV1(
       id: 'hand_first_only',
@@ -11994,7 +11997,8 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   beatIndex: 1,
   beatCount: 5,
   caption: 'Your cards are at the bottom in this first example.',
-  hint: 'Read the seats in preflop order: early seats, BTN, then the blinds.',
+  hint:
+      'Read the seats in order before the flop: early seats, BTN, then the blinds.',
   question:
       'UTG, HJ, and CO have acted. Which seat acts next before the blinds?',
   options: const <Act0RunnerOptionV1>[
@@ -12006,7 +12010,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Start with the order.',
-      feedbackReason: 'UTG acts before HJ, CO, and BTN preflop.',
+      feedbackReason: 'UTG acts before HJ, CO, and BTN before the flop.',
     ),
     Act0RunnerOptionV1(
       id: 'bottom',
@@ -12026,7 +12030,8 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One seat later.',
-      feedbackReason: 'BB acts after BTN preflop, so it is not next here.',
+      feedbackReason:
+          'BB acts after BTN before the flop, so it is not next here.',
     ),
   ],
   feedbackTitle: 'Sharp read.',
@@ -12144,7 +12149,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
-          'The flop has only three shared cards. Five board cards appear only by the river.',
+          'The flop has only three shared cards. All five board cards are out only on the last street, the river.',
     ),
     Act0RunnerOptionV1(
       id: 'hand_first_only',
@@ -12401,7 +12406,8 @@ final _cardsRecapRunner = _bestFiveCardsRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'cards_recap',
   caption: 'Lesson learned: cards have a job.',
-  hint: 'Ranks compare strength, suits make flushes, board cards are shared.',
+  hint:
+      'Ranks compare strength, suits matter for flushes (five cards of one suit), board cards are shared.',
   question: 'How many cards make your final hand?',
   feedbackTitle: 'Card takeaway.',
   feedbackReason:
@@ -12506,7 +12512,7 @@ final _actionWordsRunner = _whatYouCanDoRunner.copyWith(
   lessonId: 'action_words',
   caption: 'Four action words matter first: fold, check, call, raise.',
   hint: 'The table state tells which actions are legal.',
-  question: 'Which action adds more chips first in?',
+  question: 'Nobody has entered the pot yet. Which action adds more chips?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Actions are table verbs.',
@@ -13219,7 +13225,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Read the postflop order.',
+      feedbackTitle: 'Read the order after the flop.',
       feedbackReason:
           'UTG acts before BTN after the flop on this six-seat table.',
     ),
@@ -13230,7 +13236,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Postflop position read.',
+      feedbackTitle: 'Order after the flop read.',
       feedbackReason: 'BTN acts last after the flop on this six-seat table.',
     ),
     Act0RunnerOptionV1(
@@ -13240,7 +13246,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Read the postflop order.',
+      feedbackTitle: 'Read the order after the flop.',
       feedbackReason:
           'BB acts before BTN after the flop on this six-seat table.',
     ),
@@ -13480,7 +13486,7 @@ final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
-          'AA belongs to premium pairs and usually raises for value.',
+          'AA belongs to premium pairs and usually raises to grow the pot with the best hand.',
     ),
     Act0RunnerOptionV1(
       id: 'medium',
