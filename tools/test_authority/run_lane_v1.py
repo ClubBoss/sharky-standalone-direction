@@ -95,6 +95,15 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "W1-W4 skill map and evidence states",
+        "cmd": [
+            "flutter", "test",
+            "test/ui_v2/act0_w14_skill_projection_v1_test.dart",
+            "test/ui_v2/act0_w14_skill_state_v1_test.dart",
+            "-r", "compact",
+        ],
+    },
+    {
         "name": "repair intent",
         "cmd": [
             "flutter",

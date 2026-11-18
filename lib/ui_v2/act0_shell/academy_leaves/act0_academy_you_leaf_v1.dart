@@ -1,4 +1,5 @@
 import '../act0_learning_record_card_v1.dart';
+import '../act0_w14_skill_state_v1.dart';
 import '../act0_profile_evidence_projection_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
@@ -46,6 +47,7 @@ class Act0AcademyYouLeafInputV1 {
     this.reinforcedRepairCount = 0,
     this.openRepairCount = 0,
     this.dueReviewCount = 0,
+    this.skills = const <Act0W14SkillStateV1>[],
     this.onOpenReview,
     this.onOpenLearn,
     this.onOpenSettings,
@@ -63,6 +65,7 @@ class Act0AcademyYouLeafInputV1 {
   final int reinforcedRepairCount;
   final int openRepairCount;
   final int dueReviewCount;
+  final List<Act0W14SkillStateV1> skills;
   final VoidCallback? onOpenReview;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenSettings;
@@ -203,6 +206,54 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                 style: const TextStyle(color: _muted, fontSize: 12),
               ),
             ),
+          if (input.skills.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Act0AcademyLeafSurfaceV1(
+              child: ExpansionTile(
+                key: const Key('act0_w14_skills'),
+                textColor: _text,
+                collapsedTextColor: _text,
+                iconColor: _muted,
+                collapsedIconColor: _muted,
+                title: const Text('Skills · W1–W4'),
+                subtitle: const Text(
+                  'Saved answers, not a mastery score.',
+                  style: TextStyle(color: _muted),
+                ),
+                children: [
+                  for (final skill in input.skills)
+                    Padding(
+                      key: Key('act0_w14_skill_${skill.label}'),
+                      padding: const EdgeInsets.fromLTRB(16, 6, 16, 14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            skill.label,
+                            style: const TextStyle(
+                              color: _text,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            skill.stateLabel,
+                            style: const TextStyle(color: _gold),
+                          ),
+                          Text(
+                            skill.explanation,
+                            style: const TextStyle(color: _muted),
+                          ),
+                          Text(
+                            '${skill.lessonCount} lessons · ${skill.taskCount} tasks',
+                            style: const TextStyle(color: _muted, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
           if (input.onRecoveryOptions != null)
             TextButton.icon(
               key: const Key('act0_profile_recovery_options'),
