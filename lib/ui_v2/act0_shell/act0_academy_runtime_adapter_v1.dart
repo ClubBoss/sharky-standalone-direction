@@ -13,6 +13,7 @@ import 'academy_leaves/act0_academy_practice_leaf_v1.dart';
 import 'academy_leaves/act0_academy_review_leaf_v1.dart';
 import 'academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'academy_leaves/act0_academy_you_leaf_v1.dart';
+import 'act0_w14_skill_state_v1.dart';
 
 // Owner-restored green presentation; explicit false keeps independent rollback.
 // These adapt the current shell's resolved
@@ -174,6 +175,7 @@ Widget act0AcademyReviewRuntimeV1(
 
 Widget act0AcademyYouRuntimeV1(
   BuildContext context, {
+  List<Act0W14SkillStateV1> skills = const [],
   required Act0ProfileShellV1 legacy,
   required bool Function() isCurrent,
   required Act0AchievementSeedProjectionV1 earnedProjection,
@@ -187,6 +189,7 @@ Widget act0AcademyYouRuntimeV1(
     return legacy;
   return Act0AcademyYouLeafV1(
     input: Act0AcademyYouLeafInputV1(
+      skills: skills,
       displayName: legacy.profile.playerName,
       levelLabel: legacy.profile.level,
       xpLine: legacy.profile.xpLine,

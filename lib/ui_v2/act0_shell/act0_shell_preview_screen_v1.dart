@@ -1,5 +1,6 @@
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
+import 'act0_w14_skill_state_v1.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
@@ -8212,6 +8213,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
                         context,
+                        skills: act0W14SkillStatesV1(
+                          worlds: state.worlds,
+                          history: _learningEvidenceHistoryV1,
+                        ),
                         isCurrent: () =>
                             _acceptRecoveryCallbackV1(callbackEpochV1),
                         completedTasks: _completedTaskIds.length,

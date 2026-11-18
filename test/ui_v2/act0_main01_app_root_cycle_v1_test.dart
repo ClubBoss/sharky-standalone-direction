@@ -32,6 +32,55 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  testWidgets('W1 skill miss and its explanation survive an AppRoot remount', (
+    tester,
+  ) async {
+    await _openPendingHelpDecision(tester);
+    final wrong = _runner(
+      tester,
+    ).runner.options.firstWhere((option) => !option.isCorrect);
+    await _choose(tester, wrong.id);
+    final saved = await _saved(tester);
+
+    Future<List<String>> readSkill() async {
+      if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
+        await _tap(tester, 'act0_shell_runner_back');
+      }
+      await tester.tap(find.text('You').last);
+      await tester.pumpAndSettle();
+      final map = find.byKey(const Key('act0_w14_skills'));
+      await tester.ensureVisible(map);
+      await tester.tap(map);
+      await tester.pumpAndSettle();
+      final skill = find.byKey(const Key('act0_w14_skill_Table sense'));
+      expect(skill, findsOneWidget);
+      final text = tester
+          .widgetList<Text>(
+            find.descendant(of: skill, matching: find.byType(Text)),
+          )
+          .map((text) => text.data ?? '')
+          .toList();
+      expect(text, contains('Needs practice'));
+      expect(text.join(' '), contains('Recent tasks to revisit: 1'));
+      return text;
+    }
+
+    final before = await readSkill();
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => _pendingWrites().flush());
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+    expect(await readSkill(), before);
+    final restored = await _saved(tester);
+    expect(restored['completedTaskIds'], saved['completedTaskIds']);
+    expect(restored['earnedXp'], saved['earnedXp']);
+    expect(
+      restored['learningEvidenceHistory'],
+      saved['learningEvidenceHistory'],
+    );
+  });
+
   for (final reducedMotion in [false, true]) {
     testWidgets(
       'SIMULATED semantic help lifecycle preserves truth with reducedMotion=$reducedMotion',
