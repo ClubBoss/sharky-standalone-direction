@@ -12042,7 +12042,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'You marks the learner. BTN is this hand\'s position and can change next hand. SB and BB post the blinds.',
+          'You marks the learner. BTN is this hand\'s position and can change next hand. SB and BB post the blinds first; then seats act in order: UTG, HJ, CO, BTN, SB, BB. In hand examples, Hero also means you.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['You', 'BTN', 'Blinds'],
       identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
@@ -12172,7 +12172,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 4,
   beatCount: 5,
-  caption: 'Same scan, new spot: You are first in on BTN with KTs.',
+  caption: 'Same scan, new spot: nobody has entered the pot, and You are on BTN with K and T of the same suit.',
   hint: 'No board is out yet. Start with You, blinds, pot, and who acts next.',
   question: 'What is the clean preflop setup here?',
   options: const <Act0RunnerOptionV1>[
