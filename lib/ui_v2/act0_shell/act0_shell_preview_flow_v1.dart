@@ -611,7 +611,8 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     final taskExists = normalizedLesson.taskList.any(
       (task) => task.taskId == _selectedTaskId,
     );
-    final normalizedTask = taskExists
+    final normalizedTask =
+        taskExists || _activeSpacedReviewTaskV1?.taskId == _selectedTaskId
         ? _taskById(normalizedLesson, _selectedTaskId)
         : _firstIncompleteTask(normalizedLesson);
     if (_selectedTaskId != normalizedTask.taskId) {
@@ -689,6 +690,12 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Act0LessonTaskV1 _taskById(Act0LessonCardV1 lesson, String taskId) {
+    final reviewTask = _activeSpacedReviewTaskV1;
+    if (reviewTask != null &&
+        taskId == reviewTask.taskId &&
+        lesson.lessonId == _selectedLessonId) {
+      return reviewTask;
+    }
     return _taskByIdWithTaskIds(lesson, taskId, _pathClosedTaskIds);
   }
 

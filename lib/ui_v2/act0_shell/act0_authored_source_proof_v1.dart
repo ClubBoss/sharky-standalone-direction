@@ -380,6 +380,7 @@ Act0LessonTaskV1? _resolveTask(String worldId, String lessonId, String taskId) {
   final tasks = lessons.single.taskList
       .where((task) => task.taskId == taskId)
       .toList();
+  if (tasks.isEmpty) return act0ReviewOnlyTaskV1(worldId, lessonId, taskId);
   return tasks.length == 1 ? tasks.single : null;
 }
 

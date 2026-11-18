@@ -465,6 +465,7 @@ class Act0DueReviewItemV1 {
     required this.nextDueAtUtc,
     required this.repeatedMissCount,
     required this.lapseCount,
+    this.unseenTaskId,
   });
 
   final String conceptFamilyId;
@@ -474,6 +475,18 @@ class Act0DueReviewItemV1 {
   final DateTime nextDueAtUtc;
   final int repeatedMissCount;
   final int lapseCount;
+  final String? unseenTaskId;
+
+  Act0DueReviewItemV1 withUnseenTask(String? taskId) => Act0DueReviewItemV1(
+    conceptFamilyId: conceptFamilyId,
+    worldId: worldId,
+    lessonId: lessonId,
+    taskId: this.taskId,
+    nextDueAtUtc: nextDueAtUtc,
+    repeatedMissCount: repeatedMissCount,
+    lapseCount: lapseCount,
+    unseenTaskId: taskId,
+  );
 }
 
 int _compareDueItems(Act0DueReviewItemV1 a, Act0DueReviewItemV1 b) {

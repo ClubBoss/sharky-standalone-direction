@@ -185,6 +185,11 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       _diagnosticLearningEntryV1 = null;
       _diagnosticLearningReturnV1 = null;
       _spacedReviewReturnV1 = null;
+      _activeSpacedReviewTaskV1 = null;
+      _newSpacedReviewSavePendingV1 = false;
+      _openedSpacedReviewTaskIdsV1
+        ..clear()
+        ..addAll(parsed.openedSpacedReviewTaskIds);
       _pendingReviewKindV1 = null;
       _completedLessonIds = completedLessonIds;
       _skippedTaskIds
@@ -890,6 +895,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       lessonRunEvidenceBoundaries: Map<String, int?>.from(
         _lessonRunEvidenceBoundariesV1,
       ),
+      openedSpacedReviewTaskIds: Set.unmodifiable(_openedSpacedReviewTaskIdsV1),
       durableRetentionHistory: _durableRetentionHistoryV1.refreshedAt(
         widget.clock.nowUtc(),
       ),

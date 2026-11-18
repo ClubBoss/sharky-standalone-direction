@@ -1353,6 +1353,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       const Act0DurableRetentionHistoryV1();
   Act0ReviewKindV1? _pendingReviewKindV1;
   ({String worldId, String lessonId, String taskId})? _spacedReviewReturnV1;
+  Act0LessonTaskV1? _activeSpacedReviewTaskV1;
+  final _openedSpacedReviewTaskIdsV1 = <String>{};
+  bool _newSpacedReviewSavePendingV1 = false;
   late final AppLifecycleListener _reviewLifecycleV1;
   Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
       const Act0ReviewMistakeHistoryV1();
@@ -3994,6 +3997,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     return;
 
                                   setState(() {
+                                    if (_activeSpacedReviewTaskV1 != null) {
+                                      _appendLearningEvidenceV1(decision);
+                                      return;
+                                    }
                                     if (_diagnosticLearningEntryV1 != null) {
                                       _appendLearningEvidenceV1(decision);
                                       return;
@@ -5442,6 +5449,7 @@ class _Act0PersistedProgressV1 {
     this.hasPendingAssistanceProvenance = true,
     this.lessonRunEvidenceBoundaries = const <String, int?>{},
     this.durableRetentionHistory = const Act0DurableRetentionHistoryV1(),
+    this.openedSpacedReviewTaskIds = const {},
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
     this.reviewResolutionReceiptHistory =
         const Act0ReviewResolutionReceiptHistoryV1(),
@@ -5487,6 +5495,7 @@ class _Act0PersistedProgressV1 {
   final bool hasPendingAssistanceProvenance;
   final Map<String, int?> lessonRunEvidenceBoundaries;
   final Act0DurableRetentionHistoryV1 durableRetentionHistory;
+  final Set<String> openedSpacedReviewTaskIds;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
   final Act0ReviewResolutionReceiptHistoryV1 reviewResolutionReceiptHistory;
   final Act0ConceptFamilyStateHistoryV1 conceptFamilyStateHistory;
@@ -5509,6 +5518,8 @@ class _Act0PersistedProgressV1 {
       if (suppressLegacyRecheckAfterRecovery)
         'suppressLegacyRecheckAfterRecovery': true,
       'completedTaskIds': sortedTaskIds,
+      if (openedSpacedReviewTaskIds.isNotEmpty)
+        'openedSpacedReviewTaskIds': openedSpacedReviewTaskIds.toList()..sort(),
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
       'selectedWorldId': selectedWorldId,
@@ -5625,6 +5636,13 @@ class _Act0PersistedProgressV1 {
         pendingDecisionAssistance.add(receipt);
       }
     }
+    final openedReviewsRaw = map['openedSpacedReviewTaskIds'];
+    if (map.containsKey('openedSpacedReviewTaskIds') &&
+        (openedReviewsRaw is! List ||
+            openedReviewsRaw.any((id) => id is! String || id.isEmpty))) {
+      return null;
+    }
+    final openedSpacedReviewTaskIds = _stringSet(openedReviewsRaw);
     final completedTaskIds = _stringSet(map['completedTaskIds']);
     final skippedTaskIds = _stringSet(map['skippedTaskIds']);
     final completedLessonIds = _stringSet(map['completedLessonIds']);
@@ -5802,6 +5820,7 @@ class _Act0PersistedProgressV1 {
       ),
       lessonRunEvidenceBoundaries: lessonRunEvidenceBoundaries,
       durableRetentionHistory: durableRetentionHistory,
+      openedSpacedReviewTaskIds: openedSpacedReviewTaskIds,
       reviewMistakeHistory: reviewMistakeHistory,
       reviewResolutionReceiptHistory: reviewResolutionReceiptHistory,
       conceptFamilyStateHistory: conceptFamilyStateHistory,

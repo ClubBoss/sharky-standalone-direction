@@ -1,8 +1,11 @@
 import '../support/act0_shell_presentation_finders_v1.dart';
+import '../support/act0_table_truth_v1.dart'
+    show actorFlagsConsistent, cardIdentity;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -10,6 +13,56 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  test(
+    'all review-only hands have distinct valid checkpoints and unique grades',
+    () {
+      final lesson = Act0ShellStateV1.sample.worlds
+          .singleWhere((world) => world.worldId == 'world_1')
+          .lessons
+          .singleWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+      final courseIds = lesson.taskList.map((task) => task.taskId).toSet();
+      final reviewIds = <String>{};
+      final seenBoards = <String>{};
+      for (final entry in act0NewReviewTasksV1) {
+        final task = entry.task;
+        final table = task.runner.table;
+        expect(courseIds, isNot(contains(task.taskId)));
+        expect(reviewIds.add(task.taskId), isTrue);
+        expect(task.rewardXp, 0);
+        expect(task.runner.hint, isEmpty);
+        expect(task.runner.teachingSteps, isEmpty);
+        expect(
+          task.runner.options.singleWhere((option) => option.isCorrect).id,
+          'check',
+        );
+        expect(actorFlagsConsistent(table), isTrue);
+        expect(table.decisionSeatId, 'btn');
+        expect(table.actionTrail.last.label, '${table.streetLabel}: BB checks');
+        expect(table.toCallLabel, isEmpty);
+        expect(table.potLabel, 'Pot 4.5 BB');
+        expect(table.boardCards.length, table.streetLabel == 'Turn' ? 4 : 5);
+        final cards = [
+          ...table.heroCards,
+          ...table.boardCards,
+        ].map(cardIdentity);
+        expect(cards.toSet(), hasLength(cards.length));
+        expect(
+          seenBoards.add(table.boardCards.map(cardIdentity).join(',')),
+          isTrue,
+        );
+        expect(
+          act0CurrentAuthoredSourceFingerprintForIdentityV1(
+            worldId: entry.worldId,
+            lessonId: entry.lessonId,
+            taskId: task.taskId,
+          ),
+          isNotNull,
+        );
+      }
+      expect(reviewIds, hasLength(2));
+    },
+  );
+
   testWidgets('Day 2 and 7 open one saved review without changing XP', (
     tester,
   ) async {
@@ -108,16 +161,23 @@ void main() {
     final startReview = act0ShellPresentationFinderV1(
       'act0_shell_review_start_due_spaced_item',
     );
-    Future<Act0LessonRunnerShellV1> start() async {
+    Future<Act0LessonRunnerShellV1> start({
+      String taskId = 'actions_check_drill',
+      bool unseen = false,
+    }) async {
       expect(dueCard, findsOneWidget);
+      expect(
+        find.text(unseen ? 'New situation' : 'Familiar situation'),
+        findsOneWidget,
+      );
       await tester.ensureVisible(startReview);
       await tester.tap(startReview);
       await tester.pumpAndSettle();
       final runner = tester.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),
       );
-      expect(runner.selectedTaskId, 'actions_check_drill');
-      expect(runner.reviewKindId, 'spacedReview');
+      expect(runner.selectedTaskId, taskId);
+      expect(runner.reviewKindId, unseen ? 'unseenTransfer' : 'spacedReview');
       expect(
         runner.evidenceRunId,
         startsWith('run_v1|world_1|fold_check_call_raise|spaced_review|'),
@@ -175,7 +235,16 @@ void main() {
     await mountReview(day7.subtract(oneSecond));
     expect(dueCard, findsNothing);
     await mountReview(day7);
-    final day7Runner = await start();
+    const turnVariant = 'spaced_review_check_turn_v1';
+    const riverVariant = 'spaced_review_check_river_v1';
+    final turn = await start(taskId: turnVariant, unseen: true);
+    expect(turn.runner.table.streetLabel, 'Turn');
+    expect((await saved())['openedSpacedReviewTaskIds'], [turnVariant]);
+
+    // Simulate termination before answering. The seen turn cannot return as new.
+    await mountReview(day7.add(oneSecond));
+    final day7Runner = await start(taskId: riverVariant, unseen: true);
+    expect(day7Runner.runner.table.streetLabel, 'River');
     expect(day7Runner.evidenceRunId, isNot(day2Runner.evidenceRunId));
     await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
     await tester.pumpAndSettle();
@@ -188,14 +257,17 @@ void main() {
     expect(recordIds.last, endsWith('|actionList|fold|1'));
     final day7Family =
         (day7Saved['durableRetentionHistory'] as List).single as Map;
-    expect(day7Family['lastReviewKind'], 'spacedReview');
+    expect(day7Family['lastReviewKind'], 'unseenTransfer');
     expect(day7Family['retentionState'], 'lapsed');
     expect(
       day7Family['nextDueAtUtc'],
-      day7.add(const Duration(days: 1)).toIso8601String(),
+      day7.add(const Duration(days: 1, seconds: 1)).toIso8601String(),
     );
     expect(day7Saved['resumeInRunner'], isFalse);
     expect(day7Saved['earnedXp'], 0);
     expect(day7Saved['completedTaskIds'], isEmpty);
+
+    await mountReview(day7.add(const Duration(days: 1, seconds: 1)));
+    await start(taskId: riverVariant);
   });
 }
