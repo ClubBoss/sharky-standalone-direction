@@ -2,6 +2,7 @@ name: Test Authority Lanes
 
 on:
   pull_request:
+    paths-ignore: ['docs/**', '**/*.md']
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -34,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OBS04_RECEIPT_DIR: ${{ github.workspace }}/build/test_authority/obs04
+      # Tier B runs in the parallel tier-b job on PR/push; same tests, less wall time.
+      TEST_AUTHORITY_SKIP_TIER_B: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -69,7 +72,7 @@ jobs:
 
   tier-b:
     name: Tier B maintained support
-    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-b' || inputs.lane == 'all-diagnostic')) }}
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-b' || inputs.lane == 'all-diagnostic')) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

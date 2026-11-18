@@ -1,5 +1,7 @@
 # Pre-Human Campaign State v1
 
+> HISTORICAL since 2026-11-18. Task selection moved to `docs/PLAN.md`; this file is kept for provenance only.
+
 Status: `ACTIVE_PROCESS_COMPLETION_THEN_INTERNAL_0_1`
 Freshness date: 2026-11-13
 Current dispatch section: ## November 2026 exact current dispatch - process completion then internal 0.1

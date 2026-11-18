@@ -342,6 +342,35 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
             selected.append("test/services/booster_pack_launcher_test.dart")
             selected.extend(files[-1:])
         files = list(dict.fromkeys(selected))
+    if lane == "tier-b" and not smoke and len(files) > 1:
+        # One `flutter test` process for the whole blocking lane: each separate
+        # process spends ~9s on startup, which dominated this lane. A green batch
+        # is a green lane. Any non-green batch falls through to the per-file runs
+        # below, so failure diagnostics and the verdict stay per file.
+        batch = _run_command(
+            "tier-b batch",
+            ["flutter", "test", *files, "-r", "compact"],
+            timeout * len(files),
+        )
+        if batch["status"] == "cancelled":
+            return [batch]
+        if batch["status"] == "pass":
+            share = round(float(batch["duration_seconds"]) / len(files), 3)
+            return [
+                {
+                    "name": path,
+                    "cmd": ["flutter", "test", path, "-r", "compact"],
+                    "status": "pass",
+                    "exit_code": 0,
+                    "duration_seconds": share,
+                    "output_tail": "",
+                    "output_truncated": False,
+                    "output_chars": 0,
+                    "flutter_failure_cases": [],
+                    "batched": True,
+                }
+                for path in files
+            ]
     results = []
     for path in files:
         results.append(

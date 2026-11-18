@@ -7,6 +7,10 @@ on:
       - "lib/l10n/**"
       - ".github/workflows/l10n-drift.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   l10n-drift:
     runs-on: ubuntu-latest
