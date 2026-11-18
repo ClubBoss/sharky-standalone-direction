@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -13,14 +14,15 @@ import UIKit
       didFinishLaunchingWithOptions: launchOptions
     )
 
+    guard let controller = window?.rootViewController as? FlutterViewController else {
+      return launchResult
+    }
+    registerPracticeReminders(controller.binaryMessenger)
+
     let environment = ProcessInfo.processInfo.environment
     let payload = environment["SHARKY_VISUAL_AUDIT_PAYLOAD"]
     let stateId = environment["SHARKY_VISUAL_AUDIT_STATE_ID"]
-    guard payload != nil || stateId != nil,
-      let controller = window?.rootViewController as? FlutterViewController
-    else {
-      return launchResult
-    }
+    guard payload != nil || stateId != nil else { return launchResult }
 
     let visualAuditChannel = FlutterMethodChannel(
       name: "com.clubboss.sharky/visual_audit_v1",
@@ -38,4 +40,123 @@ import UIKit
     }
     return launchResult
   }
+}
+
+private extension AppDelegate {
+  static let practiceReminderId = "sharky.practice-reminder"
+  static let practiceReminderOptIn = "sharky.practice-reminder.opt-in"
+
+  func registerPracticeReminders(_ messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(
+      name: "com.clubboss.sharky/practice_reminder_v1",
+      binaryMessenger: messenger
+    )
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self else {
+        result(FlutterError(code: "unavailable", message: nil, details: nil))
+        return
+      }
+      let defaults = UserDefaults.standard
+      let arguments = call.arguments as? [String: Any]
+      let schedule = arguments?["schedule"] as? String ?? "none"
+      switch call.method {
+      case "sync":
+        guard defaults.bool(forKey: Self.practiceReminderOptIn) else {
+          result(false)
+          return
+        }
+        self.schedulePracticeReminder(schedule, result)
+      case "setEnabled":
+        guard let enabled = arguments?["enabled"] as? Bool else {
+          result(FlutterError(code: "invalid_arguments", message: nil, details: nil))
+          return
+        }
+        if enabled {
+          UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
+            DispatchQueue.main.async {
+              if error != nil {
+                result(FlutterError(code: "permission_unavailable", message: nil, details: nil))
+              } else if granted {
+                self.schedulePracticeReminder(schedule, result)
+              } else {
+                self.cancelPracticeReminder()
+                result(false)
+              }
+            }
+          }
+        } else {
+          self.cancelPracticeReminder()
+          result(false)
+        }
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
+  func schedulePracticeReminder(_ schedule: String, _ result: @escaping FlutterResult) {
+    let center = UNUserNotificationCenter.current()
+    center.getNotificationSettings { settings in
+      DispatchQueue.main.async {
+        guard settings.authorizationStatus == .authorized,
+              settings.alertSetting == .enabled else {
+          self.cancelPracticeReminder()
+          result(false)
+          return
+        }
+        if schedule == "none" {
+          center.removePendingNotificationRequests(withIdentifiers: [Self.practiceReminderId])
+          UserDefaults.standard.set(true, forKey: Self.practiceReminderOptIn)
+          result(true)
+          return
+        }
+        let content = UNMutableNotificationContent()
+        content.title = "Sharky"
+        content.body = "A short practice whenever you feel ready."
+        guard let evening = practiceReminderEvening(
+          tomorrow: schedule == "tomorrowEvening",
+          now: Date(),
+          calendar: .current
+        ) else {
+          result(FlutterError(code: "schedule_unavailable", message: nil, details: nil))
+          return
+        }
+        let trigger = UNCalendarNotificationTrigger(dateMatching: evening, repeats: false)
+        guard trigger.nextTriggerDate() != nil else {
+          result(FlutterError(code: "schedule_unavailable", message: nil, details: nil))
+          return
+        }
+        center.add(UNNotificationRequest(
+          identifier: Self.practiceReminderId,
+          content: content,
+          trigger: trigger
+        )) { error in
+          DispatchQueue.main.async {
+            if error != nil {
+              result(FlutterError(code: "schedule_unavailable", message: nil, details: nil))
+              return
+            }
+            UserDefaults.standard.set(true, forKey: Self.practiceReminderOptIn)
+            result(true)
+          }
+        }
+      }
+    }
+  }
+
+  func cancelPracticeReminder() {
+    UserDefaults.standard.removeObject(forKey: Self.practiceReminderOptIn)
+    let center = UNUserNotificationCenter.current()
+    center.removePendingNotificationRequests(withIdentifiers: [Self.practiceReminderId])
+    center.removeDeliveredNotifications(withIdentifiers: [Self.practiceReminderId])
+  }
+}
+
+func practiceReminderEvening(tomorrow: Bool, now: Date, calendar: Calendar) -> DateComponents? {
+  if !tomorrow { return DateComponents(hour: 18, minute: 0) }
+  guard let nextDay = calendar.date(byAdding: .day, value: 1, to: now) else { return nil }
+  var evening = calendar.dateComponents([.year, .month, .day], from: nextDay)
+  evening.hour = 18
+  evening.minute = 0
+  return evening
 }

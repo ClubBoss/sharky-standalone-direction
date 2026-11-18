@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_reminder_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
@@ -253,4 +256,57 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  test('reminders need explicit opt-in and deletion disables them', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    const channel = MethodChannel('com.clubboss.sharky/practice_reminder_v1');
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final calls = <MethodCall>[];
+    var optIn = false;
+    var granted = false;
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calls.add(call);
+      if (call.method == 'setEnabled') {
+        optIn = call.arguments['enabled'] == true && granted;
+      }
+      if (!granted) optIn = false;
+      return optIn;
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+    SharedPreferences.setMockInitialValues({'local_test_setting': true});
+
+    expect(
+      await Act0PracticeReminderV1.sync(Act0PracticeReminderScheduleV1.none),
+      isFalse,
+    );
+    expect(calls.single.method, 'sync');
+    expect(calls.single.arguments['schedule'], 'none');
+    expect(await Act0PracticeReminderV1.setEnabled(true), isFalse);
+    granted = true;
+    expect(await Act0PracticeReminderV1.setEnabled(true), isTrue);
+    expect(
+      await Act0PracticeReminderV1.sync(
+        Act0PracticeReminderScheduleV1.tomorrowEvening,
+      ),
+      isTrue,
+    );
+    expect(calls.last.arguments['schedule'], 'tomorrowEvening');
+
+    granted = false; // iOS settings revoked permission while the app was away.
+    expect(
+      await Act0PracticeReminderV1.sync(
+        Act0PracticeReminderScheduleV1.nextEvening,
+      ),
+      isFalse,
+    );
+    granted = true;
+    await Act0PracticeReminderV1.setEnabled(true);
+    await Act0LocalDataDeletionV1.erase();
+    expect(calls.last.method, 'setEnabled');
+    expect(calls.last.arguments['enabled'], isFalse);
+    expect(Act0PracticeReminderV1.enabled.value, isFalse);
+    expect((await SharedPreferences.getInstance()).getKeys(), isEmpty);
+  });
 }

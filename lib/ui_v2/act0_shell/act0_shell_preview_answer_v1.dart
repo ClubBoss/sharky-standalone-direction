@@ -607,7 +607,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _lastSessionLearnerStateV1 = Act0LastSessionLearnerStateV1(
       lastSessionRepairFocusId: repairFocusId.trim(),
       lastSessionProofResult: proofResult.trim(),
-      lastSessionDate: _Act0ShellPreviewScreenV1State._todayDateString(),
+      lastSessionDate: _todayDateString(),
       lastSessionWorldId: worldId.trim().isEmpty ? _selectedWorldId : worldId,
     );
   }
@@ -811,7 +811,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       lastSessionProofResult: eligible && option.isCorrect
           ? act0LastSessionProofFixLandedV1
           : act0LastSessionProofNotYetV1,
-      lastSessionDate: _Act0ShellPreviewScreenV1State._todayDateString(),
+      lastSessionDate: _todayDateString(),
       lastSessionWorldId: request.targetWorldId.trim(),
       lastSessionRepairOutcomeRef: eligible && option.isCorrect
           ? 'repair_outcome_v1|${recordedOutcome.sequence}|${recordedOutcome.queueItemId}'

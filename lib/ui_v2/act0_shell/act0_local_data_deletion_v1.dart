@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'act0_local_data_files_v1.dart';
+import 'act0_practice_reminder_v1.dart';
 
 /// A durable erase intent survives process death between individual removals.
 /// No learner route may open until a pending erase has finished and reloaded.
@@ -39,6 +40,7 @@ class Act0LocalDataDeletionV1 {
     if (prefs.getBool(pendingKey) != true) {
       throw StateError('Deletion intent could not be verified');
     }
+    await Act0PracticeReminderV1.setEnabled(false);
     // Includes the compatibility mirror, twins, damaged archive, recovery
     // intent, onboarding, preferences and old learning projections.
     for (final key in prefs.getKeys().where((key) => key != pendingKey)) {

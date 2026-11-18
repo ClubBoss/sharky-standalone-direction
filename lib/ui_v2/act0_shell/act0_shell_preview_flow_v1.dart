@@ -50,6 +50,11 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       _completedLessonIds.add(lesson.lessonId);
     }
     _persistProgress();
+    if (!alreadyCompleted &&
+        selectedTask.phase == Act0LessonPhaseV1.drill &&
+        Act0PracticeReminderV1.enabled.value) {
+      _syncPracticeReminderV1();
+    }
   }
 
   Act0ActionRecommendationV1? _actionRecommendationForActiveSequenceV1() {
@@ -865,9 +870,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     // Only earned completion dates are eligible for streak continuation.
     // Explicit non-persisted preview/test states retain sample semantics.
     if (_usesPersistedProgress) {
-      return _earnedStreakDaysTodayV1(
-        _Act0ShellPreviewScreenV1State._todayDateString(),
-      );
+      return _earnedStreakDaysTodayV1(_todayDateString());
     }
     return _dailyCompletedRepCount >= 3
         ? (base.streakDays + 1).clamp(0, 365)
