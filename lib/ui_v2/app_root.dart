@@ -375,14 +375,18 @@ class _AppRootState extends State<AppRoot> {
       value: _languageController,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        locale: proofLocaleOverride ?? _languageController.currentLocale,
+        locale: kReleaseMode
+            ? const Locale('en')
+            : proofLocaleOverride ?? _languageController.currentLocale,
         // Providing a basic dark theme to ensure text is visible on dark backgrounds
         // defined in AppColors. Complex theme logic will be restored later.
         theme: ThemeData.dark(
           useMaterial3: true,
         ).copyWith(splashFactory: InkRipple.splashFactory),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        supportedLocales: kReleaseMode
+            ? const [Locale('en')]
+            : AppLocalizations.supportedLocales,
         builder: (context, child) {
           if (child == null) {
             return const NonBlankFallbackSurfaceV1(
