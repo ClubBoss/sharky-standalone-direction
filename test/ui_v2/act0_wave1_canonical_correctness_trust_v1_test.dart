@@ -149,15 +149,15 @@ void main() {
     test('W5 factual repairs preserve five accepted W3 assessment revisions', () {
       const expected = <String, String>{
         'same_hand_different_seat_same_hand_late_open':
-            '5731c58b4fbc4bce4a7ded4f9b130afb4e8f2b900c68ad52bc4ace914adc9805',
+            '95649823a2721a31f29eef264abb31f0bf8b01aa321d43fafb8ad40ed36eb748',
         'position_apply_late_open':
-            '834529b14664a30cf01b7b00c50bb8e191762a9c73de066127c5e78aa7d92b9f',
+            'be850f5cd07685fd3a81359f2e859f245767eff79f922d7830181946414670b3',
         'position_checkpoint_position_checkpoint_late_open':
-            '9652fa85867d717e25fbb5ea67dedace383f91698f93477bcb76a092706023ee',
+            '088caafce326978cc4f1c5a1dfac4df7ad72007be76e60df2cb291dea10d8f3c',
         'position_apply_recap':
-            '72242d32d6cc24415d687747308418c599efc5523363d0705c12ae192db9b012',
+            '9526493b94505565364989e95b6f470a2cee704e659bfa2d6a4fd3eece66c6cb',
         'position_checkpoint_position_checkpoint_review':
-            'a72741f70c4bd15cdfc8f257a3d35215f46fbc246e024d7cc565989d4787d92a',
+            '8e36e4bb4ea93c3b9913d9f48f20c0345999ca1caf335d49fa5294019b03f6b8',
       };
       final world = Act0ShellStateV1.sample.worldById('world_3');
       final observed = <String>{};

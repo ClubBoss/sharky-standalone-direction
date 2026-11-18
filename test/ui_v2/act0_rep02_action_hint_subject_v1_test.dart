@@ -66,8 +66,7 @@ void main() {
           lesson: 'cards_ranks_suits',
           task: 'cards_ranks_suits_board_count',
           question: null,
-          hint:
-              'Track the board street by street, not chips in the pot.',
+          hint: 'Track the board street by street, not chips in the pot.',
         ),
         (
           name: 'authored sizing',

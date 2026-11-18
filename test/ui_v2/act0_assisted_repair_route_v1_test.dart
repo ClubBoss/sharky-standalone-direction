@@ -330,9 +330,7 @@ void main() {
         await tester.tap(hint);
         await tester.pumpAndSettle();
         expect(
-          find.text(
-            'Track the board street by street, not chips in the pot.',
-          ),
+          find.text('Track the board street by street, not chips in the pot.'),
           findsOneWidget,
         );
         expect(
