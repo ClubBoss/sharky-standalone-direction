@@ -86,7 +86,7 @@ void main() {
     final r = pkr06CapEvidenceV1('source', t);
     expect(r.applicability, Pkr06CapApplicabilityV1.historical);
     final positive = r.comparisons.singleWhere(
-      (c) => c.sourceLabel == 'Hero shoves 20 BB',
+      (c) => c.sourceLabel == 'Hero all-in 20 BB',
     );
     expect(positive.verdict, PotTruthVerdictV1.proved);
     expect(positive.reason, 'source_amount_within_preflop_budget');
@@ -157,7 +157,7 @@ void main() {
     );
     final result = pkr06CapEvidenceV1('late', later);
     final oldShove = result.comparisons.singleWhere(
-      (c) => c.sourceLabel == 'Hero shoves 20 BB',
+      (c) => c.sourceLabel == 'Hero all-in 20 BB',
     );
     expect(oldShove.verdict, PotTruthVerdictV1.unproved);
     expect(oldShove.reason, 'source_time_budget_unproved');
@@ -206,7 +206,7 @@ void main() {
     expect(missing.seats.singleWhere((s) => s.isHero).currentBetLabel, isNull);
     final result = pkr06CapEvidenceV1('missing', missing);
     final row = result.comparisons.singleWhere(
-      (c) => c.sourceLabel == 'Hero shoves 20 BB',
+      (c) => c.sourceLabel == 'Hero all-in 20 BB',
     );
     expect(row.verdict, PotTruthVerdictV1.unproved);
     expect(row.reason, 'commitment_missing:btn');
@@ -254,7 +254,7 @@ void main() {
     final t = _table('what_poker_is_all_in_meaning');
     expect(
       pkr06CapEvidenceV1('known', t).comparisons
-          .singleWhere((c) => c.sourceLabel == 'Hero shoves 20 BB')
+          .singleWhere((c) => c.sourceLabel == 'Hero all-in 20 BB')
           .verdict,
       PotTruthVerdictV1.proved,
     );

@@ -609,13 +609,13 @@ void main() {
         lesson: 'position_apply',
         task: 'position_apply_recap',
         oldFingerprint:
-            '1f82f0f3f797b73969cc3d9e6df57e43ee220e5df8d9217aac879f00429c045b',
+            '1983e106773b0dd388792a2cf146d426159a80e67d65aa5bf26d1ef676e5d618',
       ),
       (
         lesson: 'position_checkpoint',
         task: 'position_checkpoint_position_checkpoint_review',
         oldFingerprint:
-            '51efd5c94ce391121d3dc6c0a2fc3c2211da8d32c470ef20be484bafca8f7a5d',
+            '05c0c6c3ecab78869602c1ea6a689aafb25f5f85abb4021d3fea4eef293a4244',
       ),
     ]) {
       test(

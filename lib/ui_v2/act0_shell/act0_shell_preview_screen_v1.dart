@@ -2,6 +2,7 @@ import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
 import 'act0_daily_practice_queue_v1.dart';
+import 'act0_path_progress_v1.dart';
 import 'dart:async';
 import 'act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
@@ -8488,25 +8489,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<Act0WorldCardV1> _progressWorldsWithTaskIds(
     Act0ShellStateV1 state,
     Set<String> completedTaskIds,
-  ) {
-    var previousWorldComplete = true;
-    var lockedWorldSeen = false;
-    final worlds = <Act0WorldCardV1>[];
-    for (final world in state.worlds) {
-      final progressed = _progressWorld(
-        world,
-        previousWorldComplete,
-        isImmediateLockedWorld: !previousWorldComplete && !lockedWorldSeen,
-        completedTaskIds: completedTaskIds,
-      );
-      worlds.add(progressed);
-      if (progressed.status == Act0WorldStateV1.locked) {
-        lockedWorldSeen = true;
-      }
-      previousWorldComplete = progressed.status == Act0WorldStateV1.completed;
-    }
-    return worlds;
-  }
+  ) => act0ProgressWorldsV1(
+    state.worlds,
+    pathClosedTaskIds: completedTaskIds,
+    earnedTaskIds: _completedTaskIds,
+  );
 
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
       _progressWorlds(state);
@@ -15103,117 +15090,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     };
   }
 
-  Act0WorldCardV1 _progressWorld(
-    Act0WorldCardV1 world,
-    bool previousWorldComplete, {
-    required bool isImmediateLockedWorld,
-    Set<String>? completedTaskIds,
-  }) {
-    final progressTaskIds = completedTaskIds ?? _completedTaskIds;
-    if (world.lessons.isEmpty) {
-      return world.copyWith(
-        status: previousWorldComplete
-            ? Act0WorldStateV1.current
-            : Act0WorldStateV1.locked,
-        isSelectable: previousWorldComplete,
-        isLocked: !previousWorldComplete,
-      );
-    }
-    final allComplete = world.lessons.every(
-      (lesson) => _lessonCompleteWithTaskIds(lesson, progressTaskIds),
-    );
-    final available = previousWorldComplete;
-    final currentLessonId = available && !allComplete
-        ? world.lessons
-              .firstWhere(
-                (lesson) =>
-                    !_lessonCompleteWithTaskIds(lesson, progressTaskIds),
-              )
-              .lessonId
-        : null;
-    final lessons = [
-      for (final lesson in world.lessons)
-        _progressLesson(
-          lesson,
-          worldAvailable: available,
-          currentLessonId: currentLessonId,
-          completedTaskIds: progressTaskIds,
-        ),
-    ];
-    final completedCount = lessons
-        .where((lesson) => lesson.state == Act0LessonStateV1.completed)
-        .length;
-    // Path closure (earned + Placement-skipped tasks) drives routing and lesson
-    // state, but only earned tasks are earned completion. The learner-facing
-    // count must not present a Placement-cleared lesson as completed work. The
-    // label keeps its exact "X of N lessons complete" format: Home, Learn and
-    // the RU localizer parse it.
-    final earnedLessonCount = available
-        ? world.lessons
-              .where(
-                (lesson) =>
-                    _lessonCompleteWithTaskIds(lesson, _completedTaskIds),
-              )
-              .length
-        : 0;
-    final lessonsProgressLabel =
-        '$earnedLessonCount of ${lessons.length} lessons complete';
-    final status = !available
-        ? Act0WorldStateV1.locked
-        : allComplete
-        ? Act0WorldStateV1.completed
-        : Act0WorldStateV1.current;
-    return world.copyWith(
-      status: status,
-      progressLabel: !available
-          ? act0LockedWorldProgressLabelV1(
-              isImmediateNext: isImmediateLockedWorld,
-            )
-          : lessonsProgressLabel,
-      primaryCtaLabel: !available
-          ? act0LockedWorldPrimaryCtaLabelV1(
-              isImmediateNext: isImmediateLockedWorld,
-            )
-          : allComplete
-          ? 'Replay lessons'
-          : 'Open lessons',
-      unlockLabel: available
-          ? 'Available now'
-          : act0DisplayWorldNameCopyV1(world.unlockLabel),
-      isSelectable: available,
-      isLocked: !available,
-      lessons: lessons,
-    );
-  }
-
-  Act0LessonCardV1 _progressLesson(
-    Act0LessonCardV1 lesson, {
-    required bool worldAvailable,
-    required String? currentLessonId,
-    Set<String>? completedTaskIds,
-  }) {
-    final completed = _lessonCompleteWithTaskIds(
-      lesson,
-      completedTaskIds ?? _completedTaskIds,
-    );
-    final current = lesson.lessonId == currentLessonId;
-    final state = completed
-        ? Act0LessonStateV1.completed
-        : current
-        ? Act0LessonStateV1.current
-        : Act0LessonStateV1.locked;
-    return lesson.copyWith(
-      state: state,
-      primaryCtaLabel: completed
-          ? 'Replay'
-          : current
-          ? 'Start'
-          : 'Locked',
-      isSelectable: worldAvailable && (completed || current),
-      isLocked: !worldAvailable || state == Act0LessonStateV1.locked,
-    );
-  }
-
   void _recordCompletedStudyV1(Act0LessonTaskV1 task) {
     if (_diagnosticLearningEntryV1 != null) return;
     final revision = act0AuthoredStudyRevisionV1(
@@ -15991,11 +15867,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _lessonCompleteWithTaskIds(
     Act0LessonCardV1 lesson,
     Set<String> completedTaskIds,
-  ) {
-    return lesson.taskList.every(
-      (task) => completedTaskIds.contains(task.taskId),
-    );
-  }
+  ) => act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds);
 
   void _closeTaskWithoutRewardV1(String taskId) {
     final state = widget.state ?? Act0ShellStateV1.sample;

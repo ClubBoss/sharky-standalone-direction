@@ -8049,7 +8049,7 @@ const _meetTableRunner = Act0RunnerStateV1(
     potLabel: 'Pot 1.5 BB',
     toCallLabel: '',
     centerLabel: 'Blinds posted',
-    emptyBoardLabel: 'No community cards yet',
+    emptyBoardLabel: 'No board cards yet',
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -8226,7 +8226,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     potLabel: 'Pot 1.5 BB',
     toCallLabel: 'To call 1 BB',
     centerLabel: 'Action on hero',
-    emptyBoardLabel: 'No community cards yet',
+    emptyBoardLabel: 'No board cards yet',
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -8378,7 +8378,7 @@ const _firstHandRunner = Act0RunnerStateV1(
     potLabel: 'Pot 1.5 BB',
     toCallLabel: '',
     centerLabel: 'Private cards',
-    emptyBoardLabel: 'No community cards yet',
+    emptyBoardLabel: 'No board cards yet',
     highlightedSeatIds: <String>['btn'],
     highlightedCardIds: <String>[],
     instructionAnchor: 'cards',
@@ -8456,7 +8456,7 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
     centerLabel: 'Hero private cards',
     potLabel: 'Pot 1.5 BB',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
-    emptyBoardLabel: 'No community cards yet',
+    emptyBoardLabel: 'No board cards yet',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -8944,7 +8944,7 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
       Act0ActionTrailItemV1.note(label: 'UTG folds'),
       Act0ActionTrailItemV1.note(label: 'HJ folds'),
       Act0ActionTrailItemV1.note(label: 'CO calls 1 BB (limps)'),
-      Act0ActionTrailItemV1.note(label: 'Hero shoves 20 BB'),
+      Act0ActionTrailItemV1.note(label: 'Hero all-in 20 BB'),
       Act0ActionTrailItemV1.note(label: 'SB folds'),
       Act0ActionTrailItemV1.note(label: 'BB folds'),
       Act0ActionTrailItemV1.note(label: 'CO calls, 20 BB total'),

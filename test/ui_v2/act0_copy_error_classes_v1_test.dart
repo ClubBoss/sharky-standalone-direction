@@ -202,4 +202,77 @@ void main() {
     }
     expect(problems, isEmpty, reason: problems.join('\n'));
   });
+
+  // Error class: one concept under two names ("shove" next to "all-in",
+  // "hole cards" next to "private cards"). The route teaches one name per
+  // concept; the right-hand name is the one learners have already seen.
+  test('W1–W4 name each poker concept one way', () {
+    const variants = <String, String>{
+      r'\bshov(e|es|ed|ing)\b': 'all-in',
+      r'\bjam(s|med|ming)?\b': 'all-in',
+      r'\ball in\b(?! one suit)': 'all-in',
+      r'\bmuck': 'fold',
+      r'\b(hole|pocket) cards?\b': 'private cards',
+      r'\btable cards?\b': 'board',
+      r'\bcost to call\b': 'price / to call',
+      r'\d ?bb\b': 'BB',
+      r'\d big blinds\b': 'BB',
+    };
+    final problems = <String>[];
+    for (final w in Act0ShellStateV1.sample.worlds.where(
+      (w) => w.worldNumber <= 4,
+    )) {
+      for (final l in w.lessons) {
+        for (final t in l.taskList) {
+          final r = t.runner;
+          final texts = [
+            l.title,
+            l.subtitle,
+            t.title,
+            t.summary ?? '',
+            r.caption,
+            r.question,
+            r.hint,
+            for (final s in r.teachingSteps) ...[s.title, s.body],
+            for (final o in r.options) ...[
+              o.label,
+              o.feedbackTitle,
+              o.feedbackReason,
+            ],
+            for (final table in [
+              r.table,
+              for (final s in r.teachingSteps)
+                if (s.table != null) s.table!,
+            ]) ...[
+              table.streetLabel,
+              table.potLabel,
+              table.toCallLabel,
+              table.centerLabel,
+              table.focusCalloutLabel,
+              table.emptyBoardLabel,
+              for (final a in table.actionTrail) a.label,
+            ],
+          ];
+          for (final text in texts) {
+            for (final v in variants.entries) {
+              final m = RegExp(v.key).firstMatch(text);
+              if (m != null) {
+                problems.add('${t.taskId}: "${m[0]}" — say "${v.value}"');
+              }
+            }
+            // "Community cards" only where the first lessons explain the
+            // shared cards; everywhere else they are the board.
+            if (RegExp(r'\bcommunity cards?\b').hasMatch(text) &&
+                !const {
+                  'what_poker_is',
+                  'what_poker_is_content',
+                }.contains(l.lessonId)) {
+              problems.add('${t.taskId}: "community cards" — say "board"');
+            }
+          }
+        }
+      }
+    }
+    expect(problems, isEmpty, reason: problems.join('\n'));
+  });
 }
