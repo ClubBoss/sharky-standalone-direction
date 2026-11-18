@@ -23,6 +23,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify iOS candidate source integrity guard
+        run: python3 tools/ios_candidate_guard_v1_test.py
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:

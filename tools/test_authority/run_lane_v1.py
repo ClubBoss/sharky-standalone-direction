@@ -85,7 +85,9 @@ TIER_A_COMMANDS = [
         "cmd": ["flutter", "test", "test/ui_v2/act0_telemetry_sink_v1_test.dart", "-r", "compact"],
     },
     {
-        "name": "W1 long session across a restart",
+        "name": "W1-W4 long session across restarts",
+        # The full-course test has a five-minute body budget; allow compilation too.
+        "min_timeout_seconds": 360,
         "cmd": [
             "flutter",
             "test",
@@ -339,7 +341,7 @@ TIER_A_WEIGHTS = {
     "Wave 5 telemetry": 38,
     "Academy Placement Review widget-host remount default OFF": 29,
     "repair intent": 35,
-    "W1 long session across a restart": 40,
+    "W1-W4 long session across restarts": 120,
     "poker W4 closed-flop actor and historical compatibility": 15,
     "source scope, showdown disclosure and replay chronology (Q0)": 13,
     "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 11,
@@ -375,10 +377,11 @@ def _run_tier_a(timeout: int, smoke: bool) -> list[dict[str, object]]:
         commands = _tier_a_shard(commands, index, count)
     results = []
     for command in commands:
+        command_timeout = max(timeout, int(command.get("min_timeout_seconds", 0)))
         if command["cmd"] == ["./tools/release_gate_world1.sh"]:
-            result = _run_world1_gate(command["name"], command["cmd"], timeout)
+            result = _run_world1_gate(command["name"], command["cmd"], command_timeout)
         else:
-            result = _run_command(command["name"], command["cmd"], timeout)
+            result = _run_command(command["name"], command["cmd"], command_timeout)
         results.append(result)
         if result["status"] == "cancelled":
             break
@@ -498,7 +501,7 @@ def _print_summary(summary: dict[str, object]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("lane", choices=sorted(LANES))
-    parser.add_argument("--timeout-seconds", type=int, default=int(os.environ.get("TEST_AUTHORITY_TIMEOUT_SECONDS", "120")))
+    parser.add_argument("--timeout-seconds", type=int, default=int(os.environ.get("TEST_AUTHORITY_TIMEOUT_SECONDS", "120")), help="Default command watchdog; named minimum budgets still apply")
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
