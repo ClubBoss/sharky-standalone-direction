@@ -71,9 +71,15 @@ jobs:
           if-no-files-found: error
 
   tier-b:
-    name: Tier B maintained support
+    name: Tier B maintained support (${{ matrix.shard }}/2)
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-b' || inputs.lane == 'all-diagnostic')) }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
+    env:
+      TEST_AUTHORITY_SHARD: ${{ matrix.shard }}/2
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
