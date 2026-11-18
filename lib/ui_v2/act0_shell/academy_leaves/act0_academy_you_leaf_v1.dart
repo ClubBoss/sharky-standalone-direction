@@ -215,6 +215,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                 collapsedTextColor: _text,
                 iconColor: _muted,
                 collapsedIconColor: _muted,
+                expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
                 title: const Text('Skills · W1–W4'),
                 subtitle: const Text(
                   'Saved answers, not a mastery score.',
@@ -244,7 +245,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                             style: const TextStyle(color: _muted),
                           ),
                           Text(
-                            '${skill.lessonCount} lessons · ${skill.taskCount} tasks',
+                            '${skill.lessonCount} ${_plural(skill.lessonCount, 'lesson', 'lessons')} · ${skill.taskCount} tasks',
                             style: const TextStyle(color: _muted, fontSize: 12),
                           ),
                         ],

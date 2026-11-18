@@ -27,5 +27,10 @@ void main() {
     expect(find.text('Table sense'), findsOneWidget);
     expect(find.text('Position play'), findsOneWidget);
     expect(find.text('No lesson answers recorded yet.'), findsNWidgets(6));
+    expect(
+      tester.getTopLeft(find.text('Table sense')).dx,
+      tester.getTopLeft(find.text('Hand reading')).dx,
+    );
+    expect(find.text('1 lesson · 7 tasks'), findsOneWidget);
   });
 }
