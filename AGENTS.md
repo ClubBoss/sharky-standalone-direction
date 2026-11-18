@@ -16,8 +16,10 @@ Everything else under `docs/` is reference or history: open it only when a task 
 ## Plan and status
 
 - `docs/PLAN.md` is the single plan: current stage, next result, blockers, working rules.
-- Update the stage status in `docs/PLAN.md` in the same PR that moves it. Do not create new registries,
-  audits, review docs or handoff files.
+- Work goes block by block ("Маршрут по дням" in `docs/PLAN.md`): take the first open block, one block ≈ one day ≈ one PR.
+  Update the block status and the "Сейчас" table in the same PR. After changing the route, run
+  `python3 tools/plan_coverage_check_v1.py` (every pre-beta Roadmap criterion must sit in a block).
+  Do not create new registries, audits, review docs or handoff files.
 - Roadmap 2.0 (Google Sheet) holds the text of the 165 original criteria. `docs/plan/ROADMAP_STAGE_MAP_v1.md`
   says which stage each criterion belongs to.
 
