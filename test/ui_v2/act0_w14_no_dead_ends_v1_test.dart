@@ -1,0 +1,188 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_f7_scene_gate_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+import '../support/act0_source_choreography_test_wait_v1.dart';
+
+// Dead-end classes across the whole W1–W4 route. Progress is a pure function
+// of completed task ids, so a learner gets stuck only when a task cannot be
+// finished: no correct answer, an id that credits another lesson, an empty
+// lesson, or a correct answer that cannot be tapped on the target phone.
+class _Bytes extends CachingAssetBundle {
+  @override
+  Future<ByteData> load(String key) async =>
+      ByteData.sublistView(File(key).readAsBytesSync());
+}
+
+final _rows = [
+  for (final world in Act0ShellStateV1.sample.worlds.where(
+    (w) => w.worldNumber <= 4,
+  ))
+    for (final lesson in world.lessons)
+      for (final task in lesson.taskList)
+        (world: world, lesson: lesson, task: task),
+];
+
+void main() {
+  test('W1–W4 structure has no dead ends', () {
+    final problems = <String>[];
+    final worlds = Act0ShellStateV1.sample.worlds.where(
+      (w) => w.worldNumber <= 4,
+    );
+    for (final w in worlds) {
+      if (w.lessons.isEmpty) problems.add('${w.worldId}: no lessons');
+      for (final l in w.lessons) {
+        if (l.taskList.isEmpty) problems.add('${l.lessonId}: no tasks');
+      }
+    }
+    final allIds = [
+      for (final w in Act0ShellStateV1.sample.worlds)
+        for (final l in w.lessons)
+          for (final t in l.taskList) t.taskId,
+    ];
+    final seen = <String>{};
+    for (final id in allIds) {
+      if (!seen.add(id)) problems.add('$id: task id used twice');
+    }
+    for (final r in _rows) {
+      final options = r.task.runner.options;
+      if (options.isNotEmpty && !options.any((o) => o.isCorrect)) {
+        problems.add('${r.task.taskId}: no correct answer');
+      }
+    }
+    expect(problems, isEmpty, reason: problems.join('\n'));
+  });
+
+  testWidgets('every W1–W4 task can be finished on iPhone 14 Pro', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    if (kAct0F7TableScenePreview) {
+      await tester.runAsync(
+        () => Act0F7SceneGateV1.premiumStore.warmUp(bundle: _Bytes()),
+      );
+    }
+    final problems = <String>[];
+    var checked = 0;
+    for (final r in _rows) {
+      final task = r.task;
+      final theory = task.entryPhase == Act0LessonPhaseV1.theory;
+      final recap = !theory && task.runner.options.isEmpty;
+      var continued = 0;
+      final chosen = <Act0RunnerOptionV1>[];
+      final decisions = <Act0CompletedDecisionV1>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          key: ValueKey(task.taskId),
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: task.entryPhase,
+                teachingStepIndex: task.runner.teachingSteps.length,
+              ),
+              worldNumber: r.world.worldNumber,
+              selectedWorldId: r.world.worldId,
+              selectedLessonId: r.lesson.lessonId,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () => continued++,
+              onChooseOption: chosen.add,
+              onCompletedDecision: decisions.add,
+              onContinueReview: () => continued++,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await pumpSourceChoreographyToDecisionV1(tester, task.runner.table);
+      if (recap) {
+        // A recap without choices finishes through its own primary button.
+        for (var page = 0; page < 8 && continued == 0; page++) {
+          final button = find.byType(FilledButton).hitTestable();
+          if (button.evaluate().isEmpty) break;
+          await tester.tap(button.last, warnIfMissed: false);
+          await tester.pump(const Duration(seconds: 1));
+          await tester.pumpAndSettle();
+        }
+        if (continued == 0) {
+          problems.add('${task.taskId}: recap has no way to finish');
+        }
+        checked++;
+        continue;
+      }
+      if (theory) {
+        // Theory finishes with Continue; its authored options are not asked.
+        final cta = find.byKey(const Key('act0_shell_continue_cta'));
+        if (cta.evaluate().isEmpty) {
+          problems.add('${task.taskId}: theory has no Continue');
+          continue;
+        }
+        // Multi-page theory turns pages first; it must finish within a few.
+        for (var page = 0; page < 8 && continued == 0; page++) {
+          if (cta.evaluate().isEmpty) break;
+          await tester.ensureVisible(cta.first);
+          await tester.pumpAndSettle();
+          await tester.tap(cta.first, warnIfMissed: false);
+          await tester.pumpAndSettle();
+        }
+        if (continued == 0) {
+          problems.add('${task.taskId}: theory Continue does not finish');
+        }
+        checked++;
+        continue;
+      }
+      final correct = task.runner.options.firstWhere((o) => o.isCorrect);
+      final candidates = [
+        find.byKey(Key('act0_shell_option_${correct.id}')),
+        if (correct.seatId != null)
+          find.byKey(Key('act0_shell_seat_tap_${correct.seatId}')),
+      ];
+      Finder? target;
+      for (final f in candidates) {
+        if (f.evaluate().isEmpty) continue;
+        await tester.ensureVisible(f.first);
+        await tester.pumpAndSettle();
+        if (f.hitTestable().evaluate().isNotEmpty) {
+          target = f.first;
+          break;
+        }
+      }
+      if (target == null) {
+        problems.add('${task.taskId}: correct answer not tappable');
+        continue;
+      }
+      checked++;
+      await tester.tap(target, warnIfMissed: false);
+      await tester.pumpAndSettle();
+      final picked = chosen.isNotEmpty
+          ? chosen.last.id
+          : decisions.isNotEmpty
+          ? decisions.last.selectedId
+          : null;
+      if (picked != correct.id) {
+        problems.add(
+          '${task.taskId}: tap on ${correct.id} registered as $picked',
+        );
+      }
+    }
+    // ignore: avoid_print
+    print('W14_CHECKED $checked of ${_rows.length}');
+    expect(checked, greaterThan(100), reason: 'the walk must reach the route');
+    expect(problems, isEmpty, reason: problems.join('\n'));
+  });
+}
