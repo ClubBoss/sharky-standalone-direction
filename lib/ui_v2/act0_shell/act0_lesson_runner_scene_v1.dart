@@ -937,7 +937,23 @@ class _RunnerProgressV1 extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: Act0ShellTokensV1.gapMd),
+        const SizedBox(width: Act0ShellTokensV1.gapXs),
+        SizedBox(
+          width: 44,
+          height: 44,
+          child: IconButton(
+            key: const Key('act0_shell_runner_glossary'),
+            tooltip: 'Glossary',
+            onPressed: () => showAct0GlossarySheetV1(
+              context,
+              taskText: act0GlossaryTaskTextV1(runner),
+            ),
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.menu_book_rounded, size: 22),
+            color: Act0ShellTokensV1.text,
+          ),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapXs),
         Text(
           act0AcademyLanguageV1(context) == 'ru'
               ? '\u0428\u0430\u0433 ${runner.beatIndex}/${runner.beatCount}'
