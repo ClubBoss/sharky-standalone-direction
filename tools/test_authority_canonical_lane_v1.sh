@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# PHP-4 positive authority entrypoint.  Tier C/D are validated by the manifest
-# contract but never executed as learner-facing authority tests.
+# Active PR authority: blocking Tier A plus maintained Tier B.
 ROOT="$PWD"
 if [[ ! -f "$ROOT/pubspec.yaml" ]]; then
   while [[ "$ROOT" != "/" && ! -f "$ROOT/pubspec.yaml" ]]; do ROOT="$(dirname "$ROOT")"; done

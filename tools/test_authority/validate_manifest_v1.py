@@ -1,429 +1,116 @@
 #!/usr/bin/env python3
+"""Validate the executable PR test lanes; historical measurements are not roots."""
+
 import argparse
-import hashlib
+import ast
+import collections
 import json
 import os
+from pathlib import Path, PurePosixPath
+import re
 import sys
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST_DIR = Path(
-    os.environ.get(
-        "TEST_AUTHORITY_MANIFEST_DIR",
-        ROOT / "tools" / "test_authority" / "manifests",
-    )
-)
-POST_SHIM_ARTIFACT = (
-    ROOT / "docs" / "_reviews" / "post_shim_global_suite_remeasurement_v1.md"
-)
-TIER_B_MANIFEST = MANIFEST_DIR / "tier_b_maintained_support.txt"
-TIER_C_MANIFEST = MANIFEST_DIR / "tier_c_quarantine.txt"
-TIER_D_MANIFEST = MANIFEST_DIR / "tier_d_retired.txt"
-TIER_C_RECORDS = MANIFEST_DIR / "tier_c_quarantine_records_v1.json"
-KNOWN_TIER_C_MANIFEST = MANIFEST_DIR / "known_tier_c_residuals.txt"
-PHP2_REVIEW_ARTIFACT = (
-    ROOT / "docs" / "_reviews" / "php2_legacy_corpus_ownership_disposition_v1.md"
-)
-PHP3_REVIEW_ARTIFACT = (
-    ROOT / "docs" / "_reviews" / "php3_canonical_contract_extraction_and_manifest_v1.md"
-)
-FROZEN_POST_SHIM_SHA256 = (
-    "6ed420cdd53bc08790c27b6581f7dcc3fead04c43b295d8e2458bd45a394cfce"
-)
+MANIFEST_DIR = Path(os.environ.get(
+    "TEST_AUTHORITY_MANIFEST_DIR", ROOT / "tools/test_authority/manifests"
+))
 
-EXPECTED_OBSERVED_TIER_B_COUNT = 117
-EXPECTED_OBSERVED_TIER_C_COUNT = 304
-EXPECTED_OBSERVED_UNIQUE_NON_GREEN = 421
-EXPECTED_MEASUREMENT_COUNTS = {
-    "Started": "3519",
-    "Done": "3518",
-    "Success": "3044",
-    "Failure": "84",
-    "Error": "390",
-    "Skipped": "2",
-}
-KNOWN_TIER_C_RESIDUALS = {
-    "test/services/booster_pack_launcher_test.dart",
-    "test/services/skill_gap_booster_service_test.dart",
-    "test/training_pack_template_service_test.dart",
-    "test/widgets/export_csv_button_test.dart",
-    "test/widgets/review_path_card_test.dart",
-}
-KNOWN_UNREACHED_TIER_C = {
-    "test/services/skill_gap_booster_service_test.dart",
-    "test/widgets/export_csv_button_test.dart",
-    "test/widgets/review_path_card_test.dart",
-}
-PHP3_F17_TIER_B_PATHS = {
-    "test/guards/early_world_feedback_quality_family_contract_test.dart",
-    "test/guards/showable_spine_handoff_coherence_contract_test.dart",
-    "test/guards/targeted_content_repairs_contract_test.dart",
-    "test/guards/w10_to_w11_transition_policy_contract_test.dart",
-    "test/ui_v2/session_summary_gold_containment_v1_test.dart",
-    "test/ui_v2/wave4_2_premium_identity_claim_cleanup_v1_test.dart",
-}
-# Reviewed current-route additions; the frozen historical inventory is unchanged.
-MAIN01_TIER_B_PATHS = {
-    'test/ui_v2/act0_skl01_evidence_state_v1_test.dart',
-    'test/ui_v2/act0_positions_theory_persistence_truth_v1_test.dart',
+# Keep the pre-A0b PR contracts in either active lane. Proven additions need only join the manifest,
+# rather than a second whitelist or a historical quarantine accounting ledger.
+REQUIRED_PR_CONTRACTS = {
+    'test/guards/early_world_feedback_quality_family_contract_test.dart',
+    'test/guards/showable_spine_handoff_coherence_contract_test.dart',
+    'test/guards/targeted_content_repairs_contract_test.dart',
+    'test/guards/w10_to_w11_transition_policy_contract_test.dart',
+    'test/services/loc01_language_persistence_test.dart',
+    'test/tools/session_world_truth_surface_audit_v1_test.dart',
+    'test/tools/world0_dealer_button_index_copy_convergence_test.dart',
+    'test/tools/world3_preflop_hand_chain_validator_convergence_test.dart',
+    'test/tools/world_route_ownership_inventory_v1_test.dart',
+    'test/tools/world_screenshot_evidence_audit_v1_test.dart',
+    'test/tools/world_visual_instrumentation_audit_v1_test.dart',
+    'test/ui_v2/act0_completed_decision_callback_contract_v1_test.dart',
+    'test/ui_v2/act0_first_table_setup_grading_v1_test.dart',
+    'test/ui_v2/act0_instruction_content_policy_v1_test.dart',
+    'test/ui_v2/act0_main01_app_root_cycle_v1_test.dart',
+    'test/ui_v2/act0_onb02_disposition_ack_v1_test.dart',
     'test/ui_v2/act0_persistence_roundtrip_v1_test.dart',
-    "test/services/loc01_language_persistence_test.dart",
-    "test/ui_v2/act0_onb02_disposition_ack_v1_test.dart",
-    "test/ui_v2/act0_first_table_setup_grading_v1_test.dart",
-    "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart",
-    "test/ui_v2/cnt01_role_inventory_v1_test.dart",
-    "test/ui_v2/act0_w01_theory_source_truth_v1_test.dart",
-    "test/ui_v2/act0_w24_context_recap_v1_test.dart",
-    "test/ui_v2/act0_repair_learning_goal_v1_test.dart",
-    "test/ui_v2/act0_repair_day2_reference_v1_test.dart",
-}
-TIER_C_OWNER_KINDS = {"current", "historical", "decision_authority"}
-TIER_C_REASON_CODES = {
-    "HISTORICAL_TOOLING_SUPPORT",
-    "DORMANT_ARCHITECTURE_CONTRACT",
-    "RETIRED_ROUTE_OR_FIXTURE",
-    "NONCANONICAL_AUDIT_HUB",
-    "SUPERSEDED_CONTENT_GUARD",
-    "DUPLICATE_CURRENT_OWNER_PROOF",
-    "LEGACY_ENGINE_OUTSIDE_ACTIVE_ROUTE",
-    "MANUAL_OR_OFFLINE_TOOLING",
-    "OTHER_EXPLICITLY_EVIDENCED",
-}
-GENERIC_TIER_C_VALUES = {
-    "unknown", "historical/quarantine owner review", "legacy", "miscellaneous",
-    "tbd", "generic support", "none", "never", "review later",
-    "noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+    'test/ui_v2/act0_positions_theory_persistence_truth_v1_test.dart',
+    'test/ui_v2/act0_repair_day2_reference_v1_test.dart',
+    'test/ui_v2/act0_repair_learning_goal_v1_test.dart',
+    'test/ui_v2/act0_skl01_evidence_state_v1_test.dart',
+    'test/ui_v2/act0_w01_theory_source_truth_v1_test.dart',
+    'test/ui_v2/act0_w24_context_recap_v1_test.dart',
+    'test/ui_v2/act0_w4_w7_owner_contract_decomposition_v1_test.dart',
+    'test/ui_v2/cnt01_role_inventory_v1_test.dart',
+    'test/ui_v2/session_result_world1_onboarding_payoff_test.dart',
+    'test/ui_v2/session_summary_gold_containment_v1_test.dart',
+    'test/ui_v2/wave4_2_premium_identity_claim_cleanup_v1_test.dart',
 }
 
 
-def _read_manifest(path: Path) -> tuple[list[str], list[str]]:
-    if not path.exists():
-        raise AssertionError(f"missing manifest: {path.relative_to(ROOT)}")
-    entries: list[str] = []
-    duplicates: list[str] = []
-    seen: set[str] = set()
-    for line_number, raw in enumerate(path.read_text().splitlines(), start=1):
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-        if line in seen:
-            duplicates.append(f"{path.relative_to(ROOT)}:{line_number}: {line}")
-        seen.add(line)
-        entries.append(line)
-    return entries, duplicates
+def _entries(path):
+    if not path.is_file():
+        raise AssertionError(f"missing manifest: {path}")
+    return [line.strip() for line in path.read_text().splitlines()
+            if line.strip() and not line.lstrip().startswith("#")]
 
 
-def _is_generic(value: str) -> bool:
-    return value.strip().lower() in GENERIC_TIER_C_VALUES
+def _tier_a_paths():
+    paths = set()
+    runner = ROOT / "tools/test_authority/run_lane_v1.py"
+    for node in ast.parse(runner.read_text()).body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "TIER_A_COMMANDS"
+            for target in node.targets
+        ):
+            for command in ast.literal_eval(node.value):
+                for arg in command["cmd"]:
+                    if not arg.startswith("test/"):
+                        continue
+                    path = ROOT / arg
+                    if path.is_dir():
+                        paths.update(str(p.relative_to(ROOT)) for p in path.rglob("*_test.dart"))
+                    else:
+                        paths.add(arg)
+    selected = ROOT / "tools/_world1_selected_tests_v1.sh"
+    paths.update(re.findall(r"test/[\w/.-]+_test\.dart", selected.read_text()))
+    return paths
 
 
-def _read_tier_c_records() -> tuple[set[str], set[str], list[str]]:
-    if not TIER_C_RECORDS.exists():
-        return set(), set(), [f"missing Tier C quarantine records: {TIER_C_RECORDS.relative_to(ROOT)}"]
-    payload = json.loads(TIER_C_RECORDS.read_text())
-    if payload.get("schema_version") != 2:
-        return set(), set(), ["Tier C quarantine records must use schema_version 2"]
-    records = payload.get("records", [])
-    paths: set[str] = set()
-    identities: set[str] = set()
-    failures: list[str] = []
-    for index, record in enumerate(records):
-        if not isinstance(record, dict):
-            failures.append(f"Tier C record {index} is not an object")
-            continue
-        path = record.get("path")
-        if not isinstance(path, str) or not path:
-            failures.append(f"Tier C record {index} missing path")
-            continue
-        if path in paths:
-            failures.append(f"duplicate Tier C path record: {path}")
-        paths.add(path)
-        for field in ("carrier_identity", "owner_kind", "owner", "owner_evidence", "reason_code", "reason", "disposition_evidence", "reentry_condition"):
-            if not isinstance(record.get(field), str) or not record[field].strip():
-                failures.append(f"Tier C record {path} missing {field}")
-        identity = record.get("carrier_identity", "")
-        expected_identity = "path-sha256:" + hashlib.sha256(path.encode()).hexdigest()
-        if identity in identities:
-            failures.append(f"duplicate Tier C carrier identity: {identity}")
-        identities.add(identity)
-        if identity != expected_identity:
-            failures.append(f"Tier C record {path} has noncanonical carrier identity")
-        if record.get("owner_kind") not in TIER_C_OWNER_KINDS:
-            failures.append(f"Tier C record {path} has unsupported owner_kind")
-        if record.get("reason_code") not in TIER_C_REASON_CODES:
-            failures.append(f"Tier C record {path} has unsupported reason_code")
-        for field in ("owner", "reason", "owner_evidence", "disposition_evidence", "reentry_condition"):
-            value = record.get(field, "")
-            if isinstance(value, str) and _is_generic(value):
-                failures.append(f"Tier C record {path} has generic {field}")
-        for field in ("owner_evidence", "disposition_evidence"):
-            value = record.get(field, "")
-            if isinstance(value, str) and "#" not in value:
-                failures.append(f"Tier C record {path} has non-specific {field}")
-    return paths, identities, failures
-
-
-def _parse_observed_inventory() -> dict[str, str]:
-    text = POST_SHIM_ARTIFACT.read_text()
-    section = text.split("## Exact Non-Green Inventory\n", 1)[1].split(
-        "\n## Minimal Next Waves", 1
-    )[0]
-    rows: dict[str, str] = {}
-    for raw in section.splitlines():
-        if not raw.startswith("| test/") and not raw.startswith("| ./"):
-            continue
-        cells = [cell.strip() for cell in raw.strip().strip("|").split("|")]
-        if len(cells) < 5:
-            raise AssertionError(f"malformed inventory row: {raw}")
-        path, tier = cells[0], cells[4]
-        rows[path] = tier
-    return rows
-
-
-def _require_artifact_measurements(text: str) -> None:
-    required_literals = [
-        "| Command | `flutter test -r json` |",
-        "| No-progress timeout | `240` seconds |",
-        "| Wall duration | `2373.3` seconds |",
-        "Reconciliation: `0 + 117 + 304 + 0 + 0 = 421` unique non-green files.",
-    ]
-    for literal in required_literals:
-        if literal not in text:
-            raise AssertionError(f"missing frozen artifact literal: {literal}")
-    for label, value in EXPECTED_MEASUREMENT_COUNTS.items():
-        if f"| {label} |" not in text or f"| `{value}` |" not in text:
-            raise AssertionError(f"missing frozen measurement count: {label}={value}")
-
-
-def _retired_paths_from_ledger(artifact: Path, dispositions: set[str]) -> set[str]:
-    if not artifact.exists():
-        return set()
-    retired: set[str] = set()
-    for raw in artifact.read_text().splitlines():
-        if not raw.startswith("| `test/"):
-            continue
-        cells = [cell.strip() for cell in raw.strip().strip("|").split("|")]
-        if len(cells) < 6:
-            continue
-        path = cells[0].strip("`")
-        if any(f"`{disposition}`" in raw for disposition in dispositions):
-            retired.add(path)
-    return retired
-
-
-def _ledger_retired_paths() -> set[str]:
-    return _retired_paths_from_ledger(
-        PHP2_REVIEW_ARTIFACT,
-        {"DELETE_ARCHIVED_NONCANONICAL"},
-    ) | _retired_paths_from_ledger(
-        PHP3_REVIEW_ARTIFACT,
-        {
-            "ARCHIVED_NONCANONICAL_TEST_RETIRED",
-            "EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED",
-        },
-    )
-
-
-def validate() -> dict[str, object]:
-    artifact_text = POST_SHIM_ARTIFACT.read_text()
-    _require_artifact_measurements(artifact_text)
-    frozen_sha256 = hashlib.sha256(POST_SHIM_ARTIFACT.read_bytes()).hexdigest()
-    observed = _parse_observed_inventory()
-    observed_b = sorted(path for path, tier in observed.items() if tier == "Tier B")
-    observed_c = sorted(path for path, tier in observed.items() if tier == "Tier C")
-
-    tier_b, tier_b_duplicates = _read_manifest(TIER_B_MANIFEST)
-    tier_c, tier_c_duplicates = _read_manifest(TIER_C_MANIFEST)
-    tier_d, tier_d_duplicates = _read_manifest(TIER_D_MANIFEST)
-    tier_c_record_paths, tier_c_record_identities, tier_c_record_failures = _read_tier_c_records()
-    known_tier_c, known_duplicates = _read_manifest(KNOWN_TIER_C_MANIFEST)
-    duplicates = tier_b_duplicates + tier_c_duplicates + tier_d_duplicates + known_duplicates
-
-    observed_b_set = set(observed_b)
-    observed_c_set = set(observed_c)
-    tier_b_set = set(tier_b)
-    tier_c_set = set(tier_c)
-    tier_d_set = set(tier_d)
-    known_tier_c_set = set(known_tier_c)
-    overlap = sorted(tier_b_set & tier_c_set)
-    tier_a_paths = set(PHP3_F17_TIER_B_PATHS)
-    tier_a_tier_c_overlap = sorted(tier_a_paths & tier_c_set)
-    all_manifest_paths = tier_b + tier_c + tier_d
-    all_carrier_identities = [
-        "path-sha256:" + hashlib.sha256(path.encode()).hexdigest()
-        for path in all_manifest_paths
-    ]
-    duplicate_carrier_identities = sorted(
-        {identity for identity in all_carrier_identities if all_carrier_identities.count(identity) > 1}
-    )
-    ledger_retired = _ledger_retired_paths()
-    retired_tier_b = tier_d_set & observed_b_set
-    retired_tier_c = tier_d_set & observed_c_set
-    observed_tier_b_missing = sorted(
-        observed_b_set - tier_b_set - retired_tier_b - tier_c_set
-    )
-    observed_tier_b_extra = sorted(tier_b_set - observed_b_set)
-    unexpected_tier_b_extra = sorted(
-        set(observed_tier_b_extra) - PHP3_F17_TIER_B_PATHS - MAIN01_TIER_B_PATHS
-    )
-    missing_php3_f17_tier_b = sorted(PHP3_F17_TIER_B_PATHS - tier_b_set)
-    missing_main01_tier_b = sorted(MAIN01_TIER_B_PATHS - tier_b_set)
-    observed_tier_c_missing = sorted(observed_c_set - tier_c_set - retired_tier_c)
-    executable_tier_c_extra = sorted(tier_c_set - observed_c_set)
-    missing_known_registry = sorted(KNOWN_TIER_C_RESIDUALS - known_tier_c_set)
-    unexpected_known_registry = sorted(known_tier_c_set - KNOWN_TIER_C_RESIDUALS)
-    known_missing_from_executable_tier_c = sorted(KNOWN_TIER_C_RESIDUALS - tier_c_set)
-    known_unreached_missing = sorted(KNOWN_UNREACHED_TIER_C - tier_c_set)
-    known_unreached_extra = sorted(set(executable_tier_c_extra) - KNOWN_UNREACHED_TIER_C)
-    missing_executable_paths = sorted(
-        path
-        for path in tier_b + tier_c
-        if path.startswith("test/") and not (ROOT / path).exists()
-    )
-    tier_d_existing_paths = sorted(
-        path for path in tier_d if path.startswith("test/") and (ROOT / path).exists()
-    )
-    tier_d_missing_ledger_evidence = sorted(tier_d_set - ledger_retired)
-    unexpected_tier_d_paths = sorted(tier_d_set - observed_b_set - observed_c_set)
-    unexplained_historical_disappearance = sorted(
-        (observed_b_set | observed_c_set) - tier_b_set - tier_c_set - tier_d_set
-    )
-
-    observed_tier_b_exact_set_match = (
-        not observed_tier_b_missing
-        and not unexpected_tier_b_extra
-        and not missing_php3_f17_tier_b
-        and not missing_main01_tier_b
-    )
-    observed_tier_c_exact_set_match = not observed_tier_c_missing
-    known_residuals_subset_of_executable_tier_c = not known_missing_from_executable_tier_c
-    tier_c_known_unreached_additions = sorted(tier_c_set - observed_c_set)
-
-    failures: list[str] = []
-    if len(observed) != EXPECTED_OBSERVED_UNIQUE_NON_GREEN:
-        failures.append(
-            f"observed inventory count expected {EXPECTED_OBSERVED_UNIQUE_NON_GREEN}, got {len(observed)}"
-        )
-    if len(observed_b) != EXPECTED_OBSERVED_TIER_B_COUNT:
-        failures.append(f"observed Tier B expected 117, got {len(observed_b)}")
-    if len(observed_c) != EXPECTED_OBSERVED_TIER_C_COUNT:
-        failures.append(f"observed Tier C expected 304, got {len(observed_c)}")
-    if frozen_sha256 != FROZEN_POST_SHIM_SHA256:
-        failures.append(
-            "frozen post-shim artifact bytes changed: "
-            f"expected={FROZEN_POST_SHIM_SHA256} got={frozen_sha256}"
-        )
-    if duplicates:
-        failures.append(f"duplicate manifest paths: {duplicates[:10]}")
-    if not observed_tier_b_exact_set_match:
-        failures.append(
-            "observed Tier B drift: "
-            f"missing={observed_tier_b_missing[:10]} "
-            f"unexpected_extra={unexpected_tier_b_extra[:10]} "
-            f"missing_php3_f17={missing_php3_f17_tier_b[:10]} "
-            f"missing_main01={missing_main01_tier_b[:10]}"
-        )
-    if not observed_tier_c_exact_set_match:
-        failures.append(f"observed Tier C missing from executable manifest: {observed_tier_c_missing[:10]}")
-    if known_unreached_missing:
-        failures.append(f"known unreached Tier C paths missing: {known_unreached_missing[:10]}")
-    if tier_c_record_failures:
-        failures.extend(tier_c_record_failures[:10])
-    if tier_c_record_paths != tier_c_set:
-        failures.append(
-            "Tier C quarantine record drift: "
-            f"missing={sorted(tier_c_set - tier_c_record_paths)[:10]} "
-            f"unexpected={sorted(tier_c_record_paths - tier_c_set)[:10]}"
-        )
-    if tier_a_tier_c_overlap:
-        failures.append(f"Tier C path leaks into Tier A: {tier_a_tier_c_overlap[:10]}")
-    if duplicate_carrier_identities:
-        failures.append(f"duplicate carrier identity across manifest tiers: {duplicate_carrier_identities[:10]}")
-    if missing_known_registry or unexpected_known_registry:
-        failures.append(
-            f"known residual registry drift: missing={missing_known_registry[:10]} "
-            f"unexpected={unexpected_known_registry[:10]}"
-        )
-    if not known_residuals_subset_of_executable_tier_c:
-        failures.append(
-            f"known residuals missing from executable Tier C: {known_missing_from_executable_tier_c[:10]}"
-        )
-    if overlap:
-        failures.append(f"tier_b/tier_c overlap: {overlap[:10]}")
-    if tier_d_set & tier_b_set or tier_d_set & tier_c_set:
-        failures.append(
-            "Tier D overlaps executable manifest: "
-            f"{sorted((tier_d_set & tier_b_set) | (tier_d_set & tier_c_set))[:10]}"
-        )
-    if missing_executable_paths:
-        failures.append(
-            f"executable manifest paths do not exist: {missing_executable_paths[:10]}"
-        )
-    if tier_d_existing_paths:
-        failures.append(
-            f"Tier D tombstones still exist in working tree: {tier_d_existing_paths[:10]}"
-        )
-    if tier_d_missing_ledger_evidence:
-        failures.append(
-            "Tier D paths lack approved PHP-2/PHP-3 ledger evidence: "
-            f"{tier_d_missing_ledger_evidence[:10]}"
-        )
-    if unexpected_tier_d_paths:
-        failures.append(
-            f"Tier D paths are absent from frozen historical inventory: {unexpected_tier_d_paths[:10]}"
-        )
-    if unexplained_historical_disappearance:
-        failures.append(
-            "historical paths disappeared without executable or Tier-D accounting: "
-            f"{unexplained_historical_disappearance[:10]}"
-        )
-
+def validate():
+    tier_b = _entries(MANIFEST_DIR / "tier_b_maintained_support.txt")
+    tier_a = _tier_a_paths()
+    duplicates = sorted(path for path, count in collections.Counter(tier_b).items() if count > 1)
+    invalid = sorted(path for path in tier_b if (
+        not path.startswith("test/") or not path.endswith("_test.dart")
+        or ".." in PurePosixPath(path).parts or PurePosixPath(path).as_posix() != path
+        or not (ROOT / path).resolve().is_relative_to(ROOT / "test")
+    ))
+    missing = sorted(path for path in tier_a | set(tier_b) if not (ROOT / path).is_file())
+    required_missing = sorted(REQUIRED_PR_CONTRACTS - (tier_a | set(tier_b)))
+    overlap = sorted(tier_a & set(tier_b))
     result = {
-        "observed_tier_b_exact_set_match": observed_tier_b_exact_set_match,
-        "observed_tier_c_exact_set_match": observed_tier_c_exact_set_match,
-        "observed_unique_non_green": len(observed),
-        "observed_tier_b_count": len(observed_b),
-        "observed_tier_c_count": len(observed_c),
+        "tier_a_file_count": len(tier_a),
         "executable_tier_b_count": len(tier_b),
-        "executable_tier_c_count": len(tier_c),
-        "tier_d_tombstone_count": len(tier_d),
-        "tier_b_to_d_retired_count": len(retired_tier_b),
-        "tier_c_to_d_retired_count": len(retired_tier_c),
-        "frozen_post_shim_sha256": frozen_sha256,
-        "observed_tier_b_missing": observed_tier_b_missing,
-        "observed_tier_b_extra": observed_tier_b_extra,
-        "php3_f17_tier_b_count": len(PHP3_F17_TIER_B_PATHS),
-        "php3_f17_tier_b_missing": missing_php3_f17_tier_b,
-        "main01_tier_b_count": len(MAIN01_TIER_B_PATHS),
-        "main01_tier_b_missing": missing_main01_tier_b,
-        "unexpected_tier_b_extra": unexpected_tier_b_extra,
-        "observed_tier_c_missing": observed_tier_c_missing,
-        "tier_c_known_unreached_additions": tier_c_known_unreached_additions,
-        "known_residuals_subset_of_executable_tier_c": known_residuals_subset_of_executable_tier_c,
-        "known_residuals_missing_from_executable_tier_c": known_missing_from_executable_tier_c,
-        "tier_b_tier_c_overlap": len(overlap),
-        "tier_a_tier_c_overlap": tier_a_tier_c_overlap,
-        "tier_c_record_count": len(tier_c_record_paths),
-        "tier_c_carrier_identity_count": len(tier_c_record_identities),
-        "duplicate_carrier_identities": duplicate_carrier_identities,
         "duplicates": duplicates,
-        "missing_executable_paths": missing_executable_paths,
-        "tier_d_existing_paths": tier_d_existing_paths,
-        "tier_d_missing_ledger_evidence": tier_d_missing_ledger_evidence,
-        "unexplained_historical_disappearance": unexplained_historical_disappearance,
+        "invalid_test_paths": invalid,
+        "missing_executable_paths": missing,
+        "required_pr_contracts_missing": required_missing,
+        "tier_a_tier_b_overlap": overlap,
     }
-    if failures:
-        raise AssertionError(json.dumps({"failures": failures, **result}, indent=2))
+    if duplicates or invalid or missing or required_missing or overlap:
+        raise AssertionError(json.dumps(result, indent=2))
     return result
 
 
-def main() -> int:
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     try:
         result = validate()
-    except AssertionError as error:
+    except (AssertionError, OSError, ValueError) as error:
         if args.json:
             print(json.dumps({"ok": False, "error": str(error)}, indent=2))
         else:
