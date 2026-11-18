@@ -12119,7 +12119,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
   beatIndex: 3,
   beatCount: 5,
   caption:
-      'New table. You have two cards, three shared cards (the flop) are out, and the pot is 6 BB.',
+      'New table. You have two cards, the flop has three, and the pot is 6 BB.',
   hint: 'Read your cards, the shared board, and the pot before any action.',
   feedbackReason:
       'Start with the same three checks every time: your cards, the shared board, and chips in the pot.',
