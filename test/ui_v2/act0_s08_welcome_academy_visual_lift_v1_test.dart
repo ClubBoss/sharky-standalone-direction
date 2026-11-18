@@ -5,10 +5,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_welcome_shell_v1.dart';
 
-// S08 Wave A: Welcome's own text beats (intro/handoff) must render through
-// the approved V3 Editorial Tide light Academy tokens, not the dark
-// table-shared Act0ShellTokensV1 palette. The protected table demo spot in
-// between stays untouched.
+// Welcome renders dark onboarding leaves; no light Academy page may sit behind
+// them, or it shows as cream bands in the iPhone safe areas.
 void main() {
   Future<void> pumpWelcomeV1(
     WidgetTester tester, {
@@ -43,23 +41,19 @@ void main() {
 
   for (final size in [const Size(320, 690), const Size(375, 812)]) {
     testWidgets(
-      'Welcome intro beat uses the Academy light page/card tokens at ${size.width.toInt()}px',
+      'Welcome intro beat paints no light page behind the dark leaves at ${size.width.toInt()}px',
       (tester) async {
         await pumpWelcomeV1(tester, size: size);
 
-        final pageBackground = find.byWidgetPredicate(
-          (widget) =>
-              widget is Container &&
-              widget.color == Act0AcademyDesignTokensV1.pageSurface,
+        expect(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is Container &&
+                widget.color == Act0AcademyDesignTokensV1.pageSurface,
+          ),
+          findsNothing,
+          reason: 'a light page shows as cream bands in the iPhone safe areas',
         );
-        expect(pageBackground, findsOneWidget);
-
-        final frame = tester.widget<Container>(
-          find.byKey(const Key('act0_shell_welcome_beat_frame')),
-        );
-        final frameDecoration = frame.decoration as BoxDecoration;
-        expect(frameDecoration.color, Act0AcademyDesignTokensV1.cardSurface);
-        expect(frameDecoration.borderRadius, BorderRadius.circular(6));
       },
     );
   }
