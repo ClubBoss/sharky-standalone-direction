@@ -10478,8 +10478,7 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'UTG seat found.',
-      feedbackReason:
-          'UTG acts first preflop, so opening range should stay tighter.',
+      feedbackReason: 'UTG acts first preflop, so UTG should open fewer hands.',
     ),
     Act0RunnerOptionV1(
       id: 'hj',
@@ -12120,7 +12119,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
   beatIndex: 3,
   beatCount: 5,
   caption:
-      'New table. You have two cards, the flop has three, and the pot is 6 BB.',
+      'New table. You have two cards, three shared cards (the flop) are out, and the pot is 6 BB.',
   hint: 'Read your cards, the shared board, and the pot before any action.',
   feedbackReason:
       'Start with the same three checks every time: your cards, the shared board, and chips in the pot.',
@@ -12537,7 +12536,8 @@ final _actionRecapRunner = _whatYouCanDoRunner.copyWith(
   lessonId: 'action_recap',
   caption: 'Lesson learned: action words depend on price.',
   hint: 'No bet allows check. Facing a bet creates fold, call, or raise.',
-  question: 'First in on the Button. What is cleaner than limping?',
+  question:
+      'First in on the Button. What is cleaner than limping (just calling the big blind)?',
   feedbackTitle: 'Action takeaway.',
   feedbackReason:
       'Check is free, fold exits, call matches the price, and raise adds more.',
@@ -14873,7 +14873,8 @@ final _w3EarlyLateOrderRepairRunner = _earlyLatePositionRunner.copyWith(
 final _w3EarlySeatPressureRunner = _earlyLatePositionRunner.copyWith(
   lessonId: 'w3_early_pressure',
   caption: 'UTG must act before HJ, CO, BTN, SB, and BB.',
-  hint: 'More players behind means more pressure on the opening range.',
+  hint:
+      'More players still to act behind you means you should open fewer hands.',
   question: 'Why does UTG need more discipline here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -16460,7 +16461,8 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
 
 final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   lessonId: 'w4_protection_check',
-  caption: 'Hero checks behind on a draw-heavy board.',
+  caption:
+      'Hero checks behind on a board where many turn cards can complete a straight or flush.',
   hint: 'Ask what the opponent receives by not facing a bet.',
   question: 'What did checking allow?',
   options: const <Act0RunnerOptionV1>[
@@ -17174,7 +17176,7 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Purpose and price connected.',
       feedbackReason:
-          'A bet tells a purpose, creates a size, and gives the caller a price. Next, board texture tells you which bet purpose fits.',
+          'A bet tells a purpose, creates a size, and gives the caller a price. Next, the board cards tell you which bet purpose fits.',
     ),
     Act0RunnerOptionV1(
       id: 'random_size',

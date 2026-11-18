@@ -30,7 +30,7 @@ const _old = <String, (String, String, List<String>)>{
   ),
   'actions_review': (
     '49972ed99d92ac5fa3e7320eb2f22195f04e888a411696de90bb0bc5e621efda',
-    'First in on the Button. What is cleaner than limping?',
+    'First in on the Button. What is cleaner than limping (just calling the big blind)?',
     ['raise', 'fold', 'call'],
   ),
 };

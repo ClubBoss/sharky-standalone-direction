@@ -4378,7 +4378,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 ? '\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u043D\u0438\u0436\u0435.'
                 : isRu
                 ? '\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0434\u043D\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u043D\u0438\u0436\u0435.'
-                : 'Choose one action below.');
+                : 'Choose one answer below.');
       final focusLabel = isReview
           ? feedbackSignalProof == null
                 ? null

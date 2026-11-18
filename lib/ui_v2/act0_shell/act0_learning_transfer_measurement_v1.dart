@@ -376,13 +376,13 @@ Act0LearningTransferSignalV1 _recentSignal(
   final line = verified
       ? 'Recent verified responses'
       : eligible.length < 5
-      ? 'Confirmation needed — complete 5 independent responses.'
+      ? 'Not confirmed yet — answer 5 questions on your own first.'
       : correct < 3 || !eligible.last.isCorrect
-      ? 'Confirmation needed — try another independent response.'
+      ? 'Not confirmed yet — get the next question right on your own.'
       : eligible.map((r) => r.taskId).toSet().length < 2 ||
             eligible.map((r) => r.sessionId).toSet().length < 2
-      ? 'Confirmation needed — try a different task in another session.'
-      : 'Confirmation needed — return after 24 hours for an independent response.';
+      ? 'Not confirmed yet — try a different question another time.'
+      : 'Not confirmed yet — come back after 24 hours and answer again.';
   final base = _signalFromPair(
     family,
     eligible,
