@@ -53,7 +53,7 @@ Everything else under `docs/` is reference or history: open it only when a task 
   `TEST_AUTHORITY_SHARD=0/3 python3 tools/test_authority/run_lane_v1.py tier-a`.
 - Catalog-wide guards (Tier A): `act0_copy_error_classes_v1_test` (copy error classes),
   `act0_bet_rules_w14_v1_test` (bets and stacks), `act0_w14_no_dead_ends_v1_test` (every W1–W4 task can be
-  finished), `act0_w1_long_session_v1_test` (a learner finishes World 1 across a restart),
+  finished), `act0_w1_long_session_v1_test` (a learner finishes W1–W4 across restarts),
   `act0_repair_goal_fingerprints_current_v1_test` (retry goals match task content).
 - After editing task text: `python3 tools/update_repair_goal_fingerprints_v1.py`.
   Export the catalog to JSON for review: `flutter test tools/export_catalog_v1_test.dart --dart-define=OUT=/tmp/c.json`.

@@ -32,6 +32,19 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
                 self.assertEqual(result["results"][0]["output_tail"], "original failure")
                 self.assertEqual(command.call_count, 1)
 
+    def test_full_course_budget_is_scoped_and_larger_overrides_still_apply(self):
+        course = next(c for c in run_lane_v1.TIER_A_COMMANDS
+                      if "test/ui_v2/act0_w1_long_session_v1_test.dart" in c["cmd"])
+        ordinary = {"name": "fixture ordinary command", "cmd": ["fixture"]}
+        for requested, expected in ((120, [120, 360]), (480, [480, 480])):
+            with self.subTest(requested=requested), \
+                 mock.patch.dict(os.environ, {"TEST_AUTHORITY_SHARD": ""}), \
+                 mock.patch.object(run_lane_v1, "TIER_A_COMMANDS", [ordinary, course]), \
+                 mock.patch.object(run_lane_v1, "_run_command", return_value={"status": "pass"}) as command:
+                results = run_lane_v1._run_tier_a(requested, False)
+                self.assertEqual([call.args[2] for call in command.call_args_list], expected)
+                self.assertEqual(len(results), 2)
+
     def python(self, code):
         return [sys.executable, "-c", code]
 
