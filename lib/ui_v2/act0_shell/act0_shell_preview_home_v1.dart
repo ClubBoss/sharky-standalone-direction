@@ -344,6 +344,38 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
           en: 'Continue your course whenever you’re ready.',
           ru: 'Продолжай курс, когда захочешь.',
         ),
+        lessonId: selectedLesson.lessonId,
+        taskId: null,
+        practiceGroupId: 'daily',
+      );
+    }
+
+    if (!_completedTaskIds.contains(currentTask.taskId)) {
+      return _Act0LearningRecommendationV1(
+        kind: _Act0LearningNextActionKindV1.continueLesson,
+        label: _cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
+            ? _copyV1(en: 'Start here', ru: 'Начни здесь')
+            : _copyV1(en: 'Continue', ru: 'Продолжить'),
+        title: _localizedLessonTitleV1(selectedLesson),
+        subtitle: _localizedLessonSubtitleV1(selectedLesson),
+        ctaLabel: _recommendationCtaLabel(
+          _Act0LearningNextActionKindV1.continueLesson,
+        ),
+        hint: _copyV1(
+          en: 'Continue this lesson now.',
+          ru: 'Продолжи этот урок сейчас.',
+        ),
+        outcome:
+            _nextLesson(selectedWorld.lessons, selectedLesson.lessonId) == null
+            ? _copyV1(
+                en: 'On return: keep the clean pass moving.',
+                ru: 'Когда вернёшься, просто продолжай чистый проход.',
+              )
+            : _copyV1(
+                en: 'On return: ${_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title} stays next to unlock.',
+                ru: 'Когда вернёшься, следующим для открытия останется ${act0LocalizedLessonTitleAtomByIdV1(_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.lessonId, fallback: _nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title, isRu: _isRuLocaleV1)}.',
+              ),
+        lessonId: selectedLesson.lessonId,
         taskId: currentTask.taskId,
         practiceGroupId: 'continue',
       );
