@@ -57,31 +57,24 @@ void main() {
                   .widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1))
                   .groups;
         final daily = groups.singleWhere((group) => group.groupId == 'daily');
-        expect(daily.title, 'Daily short reps complete');
+        expect(daily.title, 'Practice a short set');
+        expect(daily.ctaLabel, 'Start practice');
         expect(daily.subtitle, isNot(contains('Table read improved')));
-        expect(daily.subtitle, contains('$earnedXp total XP earned'));
-        expect(
-          daily.subtitle,
-          contains('Completion alone does not verify independent improvement'),
-        );
+        expect(daily.subtitle, contains('different completed spots'));
         // Nothing the learner can see may claim an improvement verdict, and the
-        // honest completion copy is actually rendered.
+        // the next-set action is actually rendered. Daily activity remains
+        // complete, independently of the new short set.
         expect(
           find.textContaining('Table read improved', skipOffstage: false),
           findsNothing,
         );
-        expect(
-          find.textContaining(
-            'Completion alone does not verify independent improvement',
-            skipOffstage: false,
-          ),
-          findsWidgets,
-        );
+        expect(find.text(daily.subtitle), findsWidgets);
         final prefs = await SharedPreferences.getInstance();
         final restored =
             jsonDecode(prefs.getString('act0_shell_progress_v1')!)
                 as Map<String, dynamic>;
         expect(restored['earnedXp'], earnedXp);
+        expect(restored['dailyCompletedRepCount'], 3);
         expect(restored['completedTaskIds'], saved['completedTaskIds']);
         expect(tester.takeException(), isNull);
       },
