@@ -289,9 +289,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     // when the durable spaced-review owner has no launchable due item.
     final quickFixDue =
         quickFix != null &&
-        _durableRetentionHistoryV1
-            .dueItemsAt(widget.clock.nowUtc())
-            .any((item) => item.taskId == quickFix.taskId);
+        _dueReviewItemsV1().any((item) => item.taskId == quickFix.taskId);
     if (quickFix != null && quickFixDue) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.reviewQuickFix,
@@ -820,9 +818,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
             // Scheduling cache remains historical; current proof is replayed.
             nowUtc: widget.clock.nowUtc(),
           ),
-      dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
-        widget.clock.nowUtc(),
-      ),
+      dueReviewItems: _dueReviewItemsV1(),
     );
   }
 
@@ -874,13 +870,10 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     if (step.recommendedAction != 'spaced_review') {
       return null;
     }
-    return _durableRetentionHistoryV1
-        .dueItemsAt(widget.clock.nowUtc())
-        .cast<Act0DueReviewItemV1?>()
-        .firstWhere(
-          (item) => item?.taskId == step.sourceTaskId,
-          orElse: () => null,
-        );
+    return _dueReviewItemsV1().cast<Act0DueReviewItemV1?>().firstWhere(
+      (item) => item?.taskId == step.sourceTaskId,
+      orElse: () => null,
+    );
   }
 
   void _recordPersonalizedNextStepOpenedV1(

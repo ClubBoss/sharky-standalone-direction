@@ -1352,6 +1352,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0DurableRetentionHistoryV1 _durableRetentionHistoryV1 =
       const Act0DurableRetentionHistoryV1();
   Act0ReviewKindV1? _pendingReviewKindV1;
+  ({String worldId, String lessonId, String taskId})? _spacedReviewReturnV1;
+  late final AppLifecycleListener _reviewLifecycleV1;
   Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
       const Act0ReviewMistakeHistoryV1();
   Act0ReviewResolutionReceiptHistoryV1 _reviewResolutionReceiptHistoryV1 =
@@ -1835,6 +1837,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   @override
   void initState() {
     super.initState();
+    _reviewLifecycleV1 = AppLifecycleListener(
+      onResume: () {
+        if (mounted) setState(() {});
+      },
+    );
     _tab = widget.initialTab;
     _learningRunLearnVisitActiveV1 = widget.initialTab == Act0ShellTabV1.learn;
     _phase = widget.initialPhase;
@@ -1899,6 +1906,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   void dispose() {
+    _reviewLifecycleV1.dispose();
     _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _persistProgress();
@@ -2554,6 +2562,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final callbackEpochV1 = _recoveryEpochV1;
     final callbackDiagnosticEntryV1 = _diagnosticLearningEntryV1;
     final callbackDiagnosticRunIdV1 = _activeLearningEvidenceRunKeyV1?.runId;
+    final openedAsSpacedReview = _spacedReviewReturnV1 != null;
     if (_progressLoadFailed) {
       return Scaffold(
         body: SafeArea(
@@ -2691,7 +2700,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         playSelectedTask != null &&
         _completedTaskIds.contains(playSelectedTask.taskId);
     final playTaskAwardXp =
-        _diagnosticLearningEntryV1 != null ||
+        openedAsSpacedReview ||
+            _diagnosticLearningEntryV1 != null ||
             playSelectedTask == null ||
             playTaskAlreadyCompleted
         ? 0
@@ -3645,7 +3655,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     ? _activeRepairSessionSummaryLines
                                     : const <String>[],
                                 feedbackForwardCtaLabel:
-                                    _diagnosticLearningEntryV1 != null
+                                    _diagnosticLearningEntryV1 != null ||
+                                        _spacedReviewReturnV1 != null
                                     ? 'Back to Review'
                                     : placementForwardCtaLabel ??
                                           (_activeRepairTaskId ==
@@ -3675,6 +3686,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   callbackDiagnosticEntryV1,
                                   callbackDiagnosticRunIdV1,
                                   () {
+                                    if (openedAsSpacedReview) {
+                                      _returnFromSpacedReviewV1(
+                                        callbackDiagnosticRunIdV1,
+                                      );
+                                      return;
+                                    }
                                     _pendingReviewKindV1 = null;
                                     if (_diagnosticLearningEntryV1 != null) {
                                       _returnFromDiagnosticLearningEntryV1();
@@ -3731,34 +3748,37 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         }
                                       },
                                     ),
-                                onUndoInteraction: () =>
-                                    _setStateForRunnerCallbackV1(
-                                      callbackEpochV1,
-                                      callbackDiagnosticEntryV1,
-                                      callbackDiagnosticRunIdV1,
-                                      () {
-                                        if (_phase ==
-                                            Act0LessonPhaseV1.review) {
-                                          _selectedOptionId = null;
-                                          _phase = Act0LessonPhaseV1.drill;
-                                          _teachingStepIndex = activePlayRunner
-                                              .teachingSteps
-                                              .length;
-                                          return;
-                                        }
-                                        if (_phase == Act0LessonPhaseV1.drill &&
-                                            activePlayRunner
-                                                .teachingSteps
-                                                .isNotEmpty) {
-                                          _selectedOptionId = null;
-                                          _teachingStepIndex =
+                                onUndoInteraction: _spacedReviewReturnV1 != null
+                                    ? null
+                                    : () => _setStateForRunnerCallbackV1(
+                                        callbackEpochV1,
+                                        callbackDiagnosticEntryV1,
+                                        callbackDiagnosticRunIdV1,
+                                        () {
+                                          if (_phase ==
+                                              Act0LessonPhaseV1.review) {
+                                            _selectedOptionId = null;
+                                            _phase = Act0LessonPhaseV1.drill;
+                                            _teachingStepIndex =
+                                                activePlayRunner
+                                                    .teachingSteps
+                                                    .length;
+                                            return;
+                                          }
+                                          if (_phase ==
+                                                  Act0LessonPhaseV1.drill &&
                                               activePlayRunner
                                                   .teachingSteps
-                                                  .length -
-                                              1;
-                                        }
-                                      },
-                                    ),
+                                                  .isNotEmpty) {
+                                            _selectedOptionId = null;
+                                            _teachingStepIndex =
+                                                activePlayRunner
+                                                    .teachingSteps
+                                                    .length -
+                                                1;
+                                          }
+                                        },
+                                      ),
                                 onContinueTheory: () => _setStateForRunnerCallbackV1(
                                   callbackEpochV1,
                                   callbackDiagnosticEntryV1,
@@ -4060,6 +4080,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   () {
                                     if (_diagnosticLearningEntryV1 != null) {
                                       _returnFromDiagnosticLearningEntryV1();
+                                      return;
+                                    }
+                                    if (openedAsSpacedReview) {
+                                      _returnFromSpacedReviewV1(
+                                        callbackDiagnosticRunIdV1,
+                                      );
                                       return;
                                     }
                                     if (sameSessionLearningDelta != null) {
@@ -4417,9 +4443,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 patternCoachingProjection:
                                     _reviewPatternCoachingProjectionV1(),
                               ).items,
-                          dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
-                            widget.clock.nowUtc(),
-                          ),
+                          dueReviewItems: _dueReviewItemsV1(),
                           nextStep: personalizedNextStep,
                           onOpenRecommendedAction: () => setState(() {
                             _openPersonalizedNextStepV1(
@@ -4429,9 +4453,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               reviewState: reviewState,
                             );
                           }),
-                          onStartDueReview: (item) => setState(() {
-                            _startDueReviewItemV1(item);
-                          }),
+                          onStartDueReview: (item) {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1))
+                              return;
+                            setState(() => _startDueReviewItemV1(item));
+                          },
                           onStartSessionDrillRecheck: (item) {
                             if (!_acceptRecoveryCallbackV1(callbackEpochV1))
                               return;
@@ -4460,9 +4486,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             _acceptRecoveryCallbackV1(callbackEpochV1),
                         completedTasks: _completedTaskIds.length,
                         openRepairs: reviewState.mistakes.length,
-                        dueReviews: _durableRetentionHistoryV1
-                            .dueItemsAt(widget.clock.nowUtc())
-                            .length,
+                        dueReviews: _dueReviewItemsV1().length,
                         earnedProjection:
                             Act0AchievementSeedProjectionV1.fromSources(
                               learningEvidenceHistory:

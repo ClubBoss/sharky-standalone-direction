@@ -22,7 +22,8 @@ class Act0FixedUtcClockV1 implements Act0UtcClockV1 {
 /// Versioned spacing and recent-evidence thresholds. Do not scatter literals.
 abstract final class Act0DurableLearningTimingV1 {
   static const Duration recoveryToFirstReview = Duration(hours: 24);
-  static const Duration firstToSecondReview = Duration(hours: 72);
+  // Recovery is Day 1. An on-time first review on Day 2 leads to Day 7.
+  static const Duration firstToSecondReview = Duration(days: 5);
   static const Duration durableMaintenance = Duration(days: 7);
   static const Duration lapseToReview = Duration(hours: 24);
   static const Duration minimumTransferSeparation = Duration(hours: 24);

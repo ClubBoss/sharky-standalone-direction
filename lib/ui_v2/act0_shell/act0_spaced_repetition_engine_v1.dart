@@ -37,7 +37,7 @@ class Act0SpacedRepetitionScheduleV1 {
       schedules.add(
         Act0SpacedRepetitionFamilyScheduleV1(
           conceptFamilyId: refreshed.conceptFamilyId,
-          scheduleState: refreshed.retentionState == Act0RetentionStateV1.due
+          scheduleState: refreshed.isDueAt(now)
               ? act0SpacedRepStateDueNowV1
               : act0SpacedRepStateNotDueV1,
           retentionState: refreshed.retentionState,
