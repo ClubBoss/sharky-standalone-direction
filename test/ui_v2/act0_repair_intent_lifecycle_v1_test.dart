@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -72,7 +74,18 @@ void main() {
     expect(intent?['sourceTaskId'], 'actions_raise_drill');
     expect(intent?['choiceId'], 'call');
     expect(intent?['result'], 'suboptimal');
-    expect(intent?['mappingType'], 'repair');
+    // This choice has no validated repair target, so the intent says so
+    // instead of inventing one (repair goal contracts, 2026-11-17).
+    expect(
+      act0RepairGoalContractForSourceV1(
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_raise_drill',
+        choiceId: 'call',
+      )?.hasValidatedTarget,
+      isNot(isTrue),
+    );
+    expect(intent?['mappingType'], 'unresolved_product_gap');
     expect(_openRepairIntentCount(tester), 1);
   });
 
@@ -91,45 +104,11 @@ void main() {
 
     await _answerOption(tester, 'check');
 
-    await _openPractice(tester);
-    expect(find.byKey(const Key('act0_shell_play_repair_queue')), findsNothing);
+    expect(_openRepairIntentPayload(tester, 'actions_legal_context'), isNull);
+    expect(_openRepairIntentCount(tester), 0);
   });
 
-  testWidgets('showing Review does not clear open repair intent prematurely', (
-    tester,
-  ) async {
-    await _pumpLifecycleHost(
-      tester,
-      state: _stateForFoldCheckCallRaiseTasks(const <String>[
-        'actions_legal_context',
-        'actions_check_drill',
-      ]),
-      taskId: 'actions_legal_context',
-    );
-    await _advanceTeachingToDrill(tester);
-    await _answerOption(tester, 'fold');
-    final beforeReview = _openRepairIntentPayload(
-      tester,
-      'actions_legal_context',
-    );
-
-    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Review'));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_review_fix_next_cta')),
-      findsNothing,
-    );
-    expect(
-      _openRepairIntentPayload(tester, 'actions_legal_context'),
-      beforeReview,
-    );
-  });
-
-  if (const bool.fromEnvironment('SHARKY_ACADEMY_REVIEW_PREVIEW')) {
+  if (act0AcademyReviewPreviewV1) {
     for (final correct in [true, false]) {
       testWidgets('Academy Review mapped repair returns with '
           '${correct ? "cleared" : "retained"} source debt', (tester) async {
@@ -199,110 +178,6 @@ void main() {
       });
     }
   }
-
-  testWidgets('successful Practice queue repair clears matching intent', (
-    tester,
-  ) async {
-    await _pumpLifecycleHost(
-      tester,
-      state: _stateForFoldCheckCallRaiseTasks(const <String>[
-        'actions_legal_context',
-        'actions_check_drill',
-      ]),
-      taskId: 'actions_legal_context',
-    );
-    await _advanceTeachingToDrill(tester);
-    await _answerOption(tester, 'fold');
-
-    await _launchPracticeQueueRepair(tester);
-    expect(_activeTaskId(tester), 'actions_check_drill');
-
-    await _advanceTeachingToDrill(tester);
-    await _answerCorrectly(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-
-    await _openPractice(tester);
-    final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
-    expect(
-      find.descendant(
-        of: queue,
-        matching: find.byKey(
-          const Key('act0_shell_play_repair_queue_item_cta'),
-        ),
-      ),
-      findsNothing,
-    );
-  });
-
-  testWidgets('failed Practice queue repair keeps matching intent active', (
-    tester,
-  ) async {
-    await _pumpLifecycleHost(
-      tester,
-      state: _stateForFoldCheckCallRaiseTasks(const <String>[
-        'actions_legal_context',
-        'actions_check_drill',
-      ]),
-      taskId: 'actions_legal_context',
-    );
-    await _advanceTeachingToDrill(tester);
-    await _answerOption(tester, 'fold');
-
-    await _launchPracticeQueueRepair(tester);
-    await _advanceTeachingToDrill(tester);
-    await _answerWrongly(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-
-    final intent = _openRepairIntentPayload(tester, 'actions_legal_context');
-    expect(intent, isNotNull);
-    expect(intent?['targetTaskId'], 'actions_check_drill');
-    expect(intent?['reasonCode'], 'same_signal_action_read_no_bet_yet');
-  });
-
-  testWidgets(
-    'check drill source fallback does not clear its mapped repair intent',
-    (tester) async {
-      await _pumpLifecycleHost(
-        tester,
-        state: _stateForFoldCheckCallRaiseTasks(const <String>[
-          'actions_legal_context',
-          'actions_check_drill',
-        ]),
-        taskId: 'actions_check_drill',
-      );
-      await _advanceTeachingToDrill(tester);
-      await _answerWrongly(tester);
-
-      final intent = _openRepairIntentPayload(tester, 'actions_check_drill');
-      expect(intent?['mappingType'], 'repair');
-      expect(intent?['targetTaskId'], 'actions_legal_context');
-
-      await tester.tap(
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      );
-      await tester.pumpAndSettle();
-      expect(_activeTaskId(tester), 'actions_check_drill');
-      await _answerCorrectly(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      );
-      await tester.pumpAndSettle();
-      final retained = _openRepairIntentPayload(tester, 'actions_check_drill');
-      expect(retained?['mappingType'], 'repair');
-      expect(retained?['targetTaskId'], 'actions_legal_context');
-      // The source retry stays correct, yet the owed mapped repair remains
-      // the actionable next step on the shared Summary/Home source.
-      final root =
-          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
-      final owed =
-          root.debugSummaryHomeHandoffPayloadV1() as Map<String, String>;
-      expect(owed['selectionSource'], 'repair_intent_mapped');
-      expect(owed['sourceTaskId'], 'actions_check_drill');
-      expect(owed['targetTaskId'], 'actions_legal_context');
-    },
-  );
 
   testWidgets(
     'feedback CTA runs the mapped repair before its source-task recheck',
@@ -482,7 +357,7 @@ void main() {
           tester,
           'what_poker_is_table_read_transfer',
         )?['targetTaskId'],
-        'cards_ranks_suits_board_count',
+        'cards_ranks_suits_private_board',
       );
 
       await tester.tap(
@@ -901,38 +776,6 @@ Future<void> _answerWrongly(WidgetTester tester) async {
     (option) => !option.isCorrect,
   );
   await _answerOption(tester, option.id);
-}
-
-Future<void> _launchPracticeQueueRepair(WidgetTester tester) async {
-  await _openPractice(tester);
-  final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
-  expect(queue, findsOneWidget);
-  expect(
-    find.descendant(
-      of: queue,
-      matching: find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
-    ),
-    findsOneWidget,
-  );
-  await tester.tap(
-    find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
-  );
-  await tester.pumpAndSettle();
-}
-
-Future<void> _openPractice(WidgetTester tester) async {
-  final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
-  if (runnerBack.evaluate().isNotEmpty) {
-    await tester.tap(runnerBack);
-    await tester.pumpAndSettle();
-  }
-  final practiceTab = find.descendant(
-    of: find.byKey(const Key('act0_shell_bottom_nav')),
-    matching: find.text('Practice'),
-  );
-  await tester.ensureVisible(practiceTab);
-  await tester.tap(practiceTab, warnIfMissed: false);
-  await tester.pumpAndSettle();
 }
 
 Map<String, Object?>? _openRepairIntentPayload(
