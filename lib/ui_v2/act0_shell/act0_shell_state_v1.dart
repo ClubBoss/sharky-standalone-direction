@@ -9762,7 +9762,7 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
   ];
   return source.copyWith(
     caption:
-        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
+        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds K and T of the same suit and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
     table: source.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
       tableFormat: Act0TableFormatV1.sixMax,
@@ -10173,7 +10173,9 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
     question: question,
     hint: taskId == 'positions_review'
         ? source.hint
-        : 'Read the street, recorded actions and eligible seats.',
+        : flop
+        ? 'After the flop, count from the first live seat left of the button. BTN is last.'
+        : 'Before the flop, start right after the big blind. BB is last.',
     feedbackReason: flop
         ? 'In this initial postflop pass, with all six able to act, BTN is reached after SB, BB, UTG, HJ and CO.'
         : matched
