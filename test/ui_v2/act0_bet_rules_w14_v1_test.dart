@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-// Bet and stack rules across the whole W1–W4 route (PKR-02.a, PKR-06.a):
+// Bet and stack rules across the whole W1–W12 route (PKR-02.a, PKR-06.a):
 // a call matches the price, a raise is at least a min-raise, a bet is at least
 // one big blind, nobody puts in more than their stack, and when every seat
 // started with 100 BB the chips on the table add up to 600 BB.
@@ -12,13 +12,11 @@ double? _bb(String? s) {
 }
 
 void main() {
-  test('W1–W4 bet sizes and stacks follow the rules', () {
+  test('W1–W12 bet sizes and stacks follow the rules', () {
     final problems = <String>[];
     var amounts = 0;
     var conserved = 0;
-    for (final w in Act0ShellStateV1.sample.worlds.where(
-      (w) => w.worldNumber <= 4,
-    )) {
+    for (final w in Act0ShellStateV1.sample.worlds) {
       for (final l in w.lessons) {
         for (final t in l.taskList) {
           final table = t.runner.table;

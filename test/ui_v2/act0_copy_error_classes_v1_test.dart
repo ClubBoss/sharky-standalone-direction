@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-// Learner-copy error classes, each checked across the whole W1–W4 route.
+// Learner-copy error classes, each checked across the whole W1–W12 route.
 //
 // Class: a poker term shows up
 // in learner text before any lesson explains it. A term counts as explained
@@ -38,11 +38,9 @@ const _terms = <_Term>[
 ];
 
 void main() {
-  test('W1–W4 terms are explained before they are used', () {
+  test('W1–W12 terms are explained before they are used', () {
     final tasks = <({String lesson, String task, String teach, String rest})>[];
-    for (final w in Act0ShellStateV1.sample.worlds.where(
-      (w) => w.worldNumber <= 4,
-    )) {
+    for (final w in Act0ShellStateV1.sample.worlds) {
       for (final l in w.lessons) {
         for (final t in l.taskList) {
           final r = t.runner;
@@ -96,7 +94,7 @@ void main() {
 
   // Error class: a wrong seat answer whose explanation talks only about
   // other seats ("BTN is the dealer seat, not UTG" on an HJ answer).
-  test('W1–W4 wrong seat answers explain the seat that was chosen', () {
+  test('W1–W12 wrong seat answers explain the seat that was chosen', () {
     const names = {
       'utg': 'UTG',
       'hj': 'HJ',
@@ -116,9 +114,7 @@ void main() {
       r'\b(UTG|HJ|CO|BTN|SB|BB|Button|Cutoff|Hijack|small blind|big blind)\b',
     );
     final problems = <String>[];
-    for (final w in Act0ShellStateV1.sample.worlds.where(
-      (w) => w.worldNumber <= 4,
-    )) {
+    for (final w in Act0ShellStateV1.sample.worlds) {
       for (final l in w.lessons) {
         for (final t in l.taskList) {
           for (final o in t.runner.options) {
@@ -140,7 +136,7 @@ void main() {
 
   // Error class: task text states a pot, a price, a street or Hero's hand
   // that differs from what the table on the same screen shows.
-  test('W1–W4 text numbers, street and Hero hand match the table', () {
+  test('W1–W12 text numbers, street and Hero hand match the table', () {
     double? bb(String s) {
       final m = RegExp(r'([\d.]+)\s*BB').firstMatch(s);
       return m == null ? null : double.parse(m[1]!);
@@ -148,9 +144,7 @@ void main() {
 
     const order = 'AKQJT98765432';
     final problems = <String>[];
-    for (final w in Act0ShellStateV1.sample.worlds.where(
-      (w) => w.worldNumber <= 4,
-    )) {
+    for (final w in Act0ShellStateV1.sample.worlds) {
       for (final l in w.lessons) {
         for (final t in l.taskList) {
           final r = t.runner;
@@ -206,22 +200,20 @@ void main() {
   // Error class: one concept under two names ("shove" next to "all-in",
   // "hole cards" next to "private cards"). The route teaches one name per
   // concept; the right-hand name is the one learners have already seen.
-  test('W1–W4 name each poker concept one way', () {
+  test('W1–W12 name each poker concept one way', () {
     const variants = <String, String>{
-      r'\bshov(e|es|ed|ing)\b': 'all-in',
-      r'\bjam(s|med|ming)?\b': 'all-in',
+      r'\b[Ss]hov(e|es|ed|ing)\b': 'all-in',
+      r'\b[Jj]am(s|med|ming)?\b': 'all-in',
       r'\ball in\b(?! one suit)': 'all-in',
-      r'\bmuck': 'fold',
-      r'\b(hole|pocket) cards?\b': 'private cards',
+      r'\b[Mm]uck': 'fold',
+      r'\b([Hh]ole|[Pp]ocket) cards?\b': 'private cards',
       r'\btable cards?\b': 'board',
       r'\bcost to call\b': 'price / to call',
       r'\d ?bb\b': 'BB',
       r'\d big blinds\b': 'BB',
     };
     final problems = <String>[];
-    for (final w in Act0ShellStateV1.sample.worlds.where(
-      (w) => w.worldNumber <= 4,
-    )) {
+    for (final w in Act0ShellStateV1.sample.worlds) {
       for (final l in w.lessons) {
         for (final t in l.taskList) {
           final r = t.runner;

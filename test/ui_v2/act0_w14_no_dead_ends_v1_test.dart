@@ -12,7 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
-// Dead-end classes across the whole W1–W4 route. Progress is a pure function
+// Dead-end classes across the whole W1–W12 route. Progress is a pure function
 // of completed task ids, so a learner gets stuck only when a task cannot be
 // finished: no correct answer, an id that credits another lesson, an empty
 // lesson, or a correct answer that cannot be tapped on the target phone.
@@ -23,20 +23,16 @@ class _Bytes extends CachingAssetBundle {
 }
 
 final _rows = [
-  for (final world in Act0ShellStateV1.sample.worlds.where(
-    (w) => w.worldNumber <= 4,
-  ))
+  for (final world in Act0ShellStateV1.sample.worlds)
     for (final lesson in world.lessons)
       for (final task in lesson.taskList)
         (world: world, lesson: lesson, task: task),
 ];
 
 void main() {
-  test('W1–W4 structure has no dead ends', () {
+  test('W1–W12 structure has no dead ends', () {
     final problems = <String>[];
-    final worlds = Act0ShellStateV1.sample.worlds.where(
-      (w) => w.worldNumber <= 4,
-    );
+    final worlds = Act0ShellStateV1.sample.worlds;
     for (final w in worlds) {
       if (w.lessons.isEmpty) problems.add('${w.worldId}: no lessons');
       for (final l in w.lessons) {
@@ -61,7 +57,7 @@ void main() {
     expect(problems, isEmpty, reason: problems.join('\n'));
   });
 
-  testWidgets('every W1–W4 task can be finished on iPhone 14 Pro', (
+  testWidgets('every W1–W12 task can be finished on iPhone 14 Pro', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(393, 852);
