@@ -43,7 +43,7 @@ Everything else under `docs/` is reference or history: open it only when a task 
 
 ## Checks
 
-- Before a PR: `flutter analyze` and the tests that cover what you changed.
+- Before a PR: `dart format` on changed Dart files, `flutter analyze`, and the tests that cover what you changed.
 - Main PR checks: Test Authority Tier A (curated product tests + `flutter analyze`), Table Truth,
   Learner Trust, Health, R5 release gate. Keep them green; do not merge on red.
 - Fast local loop for W1 work: `./tools/fast_loop_world1_v1.sh`.

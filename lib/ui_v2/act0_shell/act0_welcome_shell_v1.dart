@@ -376,8 +376,10 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
         ),
       );
     }
+    // Dark page behind the safe areas: the welcome leaves are dark, so a light
+    // page showed as cream bands above and below the content on iPhone.
     return Container(
-      color: Act0AcademyDesignTokensV1.pageSurface,
+      color: Act0AcademyLeafPaletteV1.ink,
       child: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

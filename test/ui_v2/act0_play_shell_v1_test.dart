@@ -72,7 +72,7 @@ void main() {
   const disabledDailyGroup = Act0PracticeGroupV1(
     groupId: 'daily',
     title: 'Daily practice',
-    subtitle: 'Unlock after one route rep.',
+    subtitle: 'Unlocks as you work through lessons.',
     ctaLabel: 'Start',
     categoryLabel: 'Daily',
     sessionLabel: 'Daily',
@@ -224,7 +224,7 @@ void main() {
             ],
             recommendedGroupId: 'daily',
             recommendedTitle: 'Daily practice',
-            recommendedSubtitle: 'Unlock after one route rep.',
+            recommendedSubtitle: 'Unlocks as you work through lessons.',
             recommendedReasonLabel: 'Practice focus',
             recommendedOutcome: 'Open one route rep first.',
             recommendedOutcomeLead: 'Next:',
@@ -244,7 +244,7 @@ void main() {
     expect(
       find.descendant(
         of: hero,
-        matching: find.text('Unlock after one route rep.'),
+        matching: find.text('Unlocks as you work through lessons.'),
       ),
       findsOneWidget,
     );

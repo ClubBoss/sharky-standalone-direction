@@ -648,7 +648,7 @@ void main() {
         find.text('Your first clear read will appear here.'),
         findsOneWidget,
       );
-      expect(find.textContaining('Confirmation needed'), findsOneWidget);
+      expect(find.textContaining('Not confirmed yet'), findsOneWidget);
       expect(find.text('Recent route proof'), findsNothing);
       expect(find.text('0 tasks complete'), findsOneWidget);
       expect(find.text('Starting now'), findsNothing);
@@ -707,7 +707,7 @@ void main() {
         );
         expect(find.text('You are building this skill.'), findsNothing);
       } else {
-        expect(find.textContaining('Confirmation needed'), findsOneWidget);
+        expect(find.textContaining('Not confirmed yet'), findsOneWidget);
         expect(find.text('Recent route proof'), findsNothing);
         expect(
           find.text('Recent practice; proof still pending'),

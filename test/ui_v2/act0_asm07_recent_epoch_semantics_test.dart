@@ -487,7 +487,7 @@ void main() {
           contains(
             (h.records.length == 5 || identical(h, recovered))
                 ? 'Recent verified'
-                : 'Confirmation needed',
+                : 'Not confirmed yet',
           ),
         );
 
@@ -509,8 +509,8 @@ void main() {
           nowUtc: now,
         ),
       );
-      expect(p.signal!.proofLine, contains('Confirmation needed'));
-      expect(p.signal!.proofLine, contains('independent'));
+      expect(p.signal!.proofLine, contains('Not confirmed yet'));
+      expect(p.signal!.proofLine, contains('on your own'));
     },
   );
 }

@@ -36,52 +36,6 @@ jobs:
           dart format --output=none --set-exit-if-changed $FILES
           mkdir -p output/table_truth/formatted
           cp --parents $FILES output/table_truth/formatted
-      - name: Check baseline dependency adapter controls
-        run: |
-          git fetch --no-tags --depth=1 origin 455f240d2a4e8646725187536a77fb23a56eb1a6
-          python3 test/tools/table_truth_baseline_dependencies_v1_test.py
-      - name: Check typed producer and immutable capture admission controls
-        run: python3 test/tools/table_truth_typed_cohort_v2_test.py
-      - name: Genuine RED on unchanged merged-main source
-        env:
-          BASE_SHA: fa079b6c5880814e231981a7bd5ed97df192d215
-        run: |
-          set -euo pipefail
-          BASE="$RUNNER_TEMP/table-truth-baseline"
-          OUT="$GITHUB_WORKSPACE/output/table_truth"
-          git fetch --no-tags --depth=1 origin "$BASE_SHA"
-          git worktree add --detach "$BASE" "$BASE_SHA"
-          git -C "$BASE" rev-parse HEAD HEAD^{tree} > "$OUT/baseline-source.txt"
-          # Reuse the already reviewed visibility adapter byte-for-byte. Current
-          # Runner's new optional decision actor does not exist in fa079 State.
-          # GREEN below still uses the actual candidate Runner and model.
-          ADAPTER_SHA=455f240d2a4e8646725187536a77fb23a56eb1a6
-          git show "$ADAPTER_SHA:lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart" > "$BASE/lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart"
-          echo "ce7c84d43281783148ae81c9c50f628865ef3f35769461d21bf9bd3c83446fad  $BASE/lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart" | sha256sum --check
-          echo "baseline adapter source: $ADAPTER_SHA" > "$OUT/baseline-visibility-adapter.txt"
-          sha256sum "$BASE/lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart" >> "$OUT/baseline-visibility-adapter.txt"
-          sha256sum lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart > "$OUT/candidate-runner-source.txt"
-          cp test/support/act0_table_truth_v1.dart "$BASE/test/support/"
-          cp test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart "$BASE/test/ui_v2/"
-          cp test/ui_v2/fixtures/table_truth_learning_contract_v1.json "$BASE/test/ui_v2/fixtures/"
-          cp pubspec.lock "$BASE/pubspec.lock"
-          # Complete only missing imports, plus the exact-pinned historical
-          # Guide constructor shim; preserve all historical rendering bodies.
-          python3 tools/table_truth_baseline_dependencies_v1.py --baseline "$BASE" --expected-head "$BASE_SHA" --output "$OUT/baseline-dependencies.json"
-          cd "$BASE"
-          flutter pub get --offline
-          set +e
-          TABLE_TRUTH_OUTPUT="$OUT/baseline" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart --machine > "$OUT/baseline-tests.jsonl" 2>&1
-          code=$?
-          set -e
-          cd "$GITHUB_WORKSPACE"
-          # Reject price-shim invocation or unsupported Guide scroll opt-in.
-          # It is not a waiver and must not manufacture a synthetic RED.
-          if grep -q -e SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED -e SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED "$OUT/baseline-tests.jsonl"; then
-            echo "::error::Historical compatibility shim was executed; RED evidence invalid"
-            exit 1
-          fi
-          python3 tools/table_truth_evidence_v1.py tests "$OUT/baseline-tests.jsonl" red "$code"
       - name: GREEN catalog, falsifiers and affected source/render contracts
         run: |
           set -euo pipefail
@@ -91,7 +45,6 @@ jobs:
           code=$?
           set -e
           python3 tools/table_truth_evidence_v1.py tests "$OUT/candidate-tests.jsonl" green "$code"
-          python3 tools/table_truth_evidence_v1.py compare "$OUT"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

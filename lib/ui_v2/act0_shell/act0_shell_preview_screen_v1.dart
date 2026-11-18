@@ -6596,7 +6596,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: premiumAcademy
+      backgroundColor: premiumAcademy || _showWelcome || _showPlacement
           ? Act0AcademyLeafPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -8487,7 +8487,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
         subtitle: dailyDeckEntry == null
             ? _copyV1(
-                en: 'Unlock after one route rep.',
+                en: 'Unlocks as you work through lessons.',
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3

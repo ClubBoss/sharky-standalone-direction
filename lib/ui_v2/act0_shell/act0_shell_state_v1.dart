@@ -9762,7 +9762,7 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
   ];
   return source.copyWith(
     caption:
-        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
+        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds K and T of the same suit and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
     table: source.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
       tableFormat: Act0TableFormatV1.sixMax,
@@ -10173,7 +10173,9 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
     question: question,
     hint: taskId == 'positions_review'
         ? source.hint
-        : 'Read the street, recorded actions and eligible seats.',
+        : flop
+        ? 'After the flop, count from the first live seat left of the button. BTN is last.'
+        : 'Before the flop, start right after the big blind. BB is last.',
     feedbackReason: flop
         ? 'In this initial postflop pass, with all six able to act, BTN is reached after SB, BB, UTG, HJ and CO.'
         : matched
@@ -10202,7 +10204,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
               : taskId == 'positions_utg'
               ? (o.seatId == 'utg'
                     ? 'UTG names the seat immediately after BB in this preflop order.'
-                    : 'BTN is the dealer-button seat, not UTG.')
+                    : '${o.label} is not UTG. UTG is the first seat to act after the big blind preflop.')
               : o.feedbackReason,
           repairFocusSeatIds: o.repairFocusSeatIds,
           repairFocusCardIds: o.repairFocusCardIds,
@@ -10235,9 +10237,12 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
     ),
     teachingSteps: [
       Act0TeachingStepV1(
-        title: 'Read this stated order.',
-        body:
-            'Read the given street and action history. Match the question to the stated seats and positions.',
+        title: flop
+            ? 'After the flop, the button acts last.'
+            : 'Preflop starts after the big blind.',
+        body: flop
+            ? 'From the flop on, the first live seat left of the button acts first. BTN acts last on every later street.'
+            : 'Before the flop, UTG acts first, right after the big blind. Then HJ, CO, BTN and SB act, and BB acts last.',
         focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
       ),
     ],
@@ -10473,8 +10478,7 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'UTG seat found.',
-      feedbackReason:
-          'UTG acts first preflop, so opening range should stay tighter.',
+      feedbackReason: 'UTG acts first preflop, so UTG should open fewer hands.',
     ),
     Act0RunnerOptionV1(
       id: 'hj',
@@ -11579,7 +11583,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Showdown compares hands.',
       body:
-          'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Other live hands are hidden, so this comparison does not establish the pot winner.',
+          'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Only these two hands are shown, so this compares just them.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -12039,7 +12043,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'You marks the learner. BTN is this hand\'s position and can change next hand. SB and BB post the blinds.',
+          'You marks the learner. BTN is this hand\'s position and can change next hand. SB and BB post the blinds first; then seats act in order: UTG, HJ, CO, BTN, SB, BB. In hand examples, Hero also means you.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['You', 'BTN', 'Blinds'],
       identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
@@ -12169,7 +12173,8 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 4,
   beatCount: 5,
-  caption: 'Same scan, new spot: You are first in on BTN with KTs.',
+  caption:
+      'Same scan, new spot: nobody has entered the pot, and You are on BTN with K and T of the same suit.',
   hint: 'No board is out yet. Start with You, blinds, pot, and who acts next.',
   question: 'What is the clean preflop setup here?',
   options: const <Act0RunnerOptionV1>[
@@ -12531,7 +12536,8 @@ final _actionRecapRunner = _whatYouCanDoRunner.copyWith(
   lessonId: 'action_recap',
   caption: 'Lesson learned: action words depend on price.',
   hint: 'No bet allows check. Facing a bet creates fold, call, or raise.',
-  question: 'First in on the Button. What is cleaner than limping?',
+  question:
+      'First in on the Button. What is cleaner than limping (just calling the big blind)?',
   feedbackTitle: 'Action takeaway.',
   feedbackReason:
       'Check is free, fold exits, call matches the price, and raise adds more.',
@@ -13002,7 +13008,7 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Split means share.',
       body:
-          'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. That alone does not establish who shares the pot.',
+          'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.',
       focusLabels: <String>['Shown hands tie'],
     ),
   ],
@@ -14867,7 +14873,8 @@ final _w3EarlyLateOrderRepairRunner = _earlyLatePositionRunner.copyWith(
 final _w3EarlySeatPressureRunner = _earlyLatePositionRunner.copyWith(
   lessonId: 'w3_early_pressure',
   caption: 'UTG must act before HJ, CO, BTN, SB, and BB.',
-  hint: 'More players behind means more pressure on the opening range.',
+  hint:
+      'More players still to act behind you means you should open fewer hands.',
   question: 'Why does UTG need more discipline here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -16454,7 +16461,8 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
 
 final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   lessonId: 'w4_protection_check',
-  caption: 'Hero checks behind on a draw-heavy board.',
+  caption:
+      'Hero checks behind on a board where many turn cards can complete a straight or flush.',
   hint: 'Ask what the opponent receives by not facing a bet.',
   question: 'What did checking allow?',
   options: const <Act0RunnerOptionV1>[
@@ -17168,7 +17176,7 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Purpose and price connected.',
       feedbackReason:
-          'A bet tells a purpose, creates a size, and gives the caller a price. Next, board texture tells you which bet purpose fits.',
+          'A bet tells a purpose, creates a size, and gives the caller a price. Next, the board cards tell you which bet purpose fits.',
     ),
     Act0RunnerOptionV1(
       id: 'random_size',
