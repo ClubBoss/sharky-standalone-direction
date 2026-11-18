@@ -1,4 +1,6 @@
 # SHARKY POKER — MASTER PLAN v5.0
+
+> 2026-11-18: day-to-day task selection, stages and working rules moved to `docs/PLAN.md` (owner instruction to simplify the process). This document remains the strategy reference: mission, positioning, 36-world horizon, product contracts.
 ## NORTH STAR × TOP-1 EXCELLENCE × PARALLEL BULLDOZER EXECUTION
 
 **Document status:** `OWNER APPROVED — ACTIVE PRINCIPAL AUTHORITY EFFECTIVE UPON VERIFIED DOCS-ONLY MERGE OF PR #242`

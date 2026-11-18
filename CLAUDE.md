@@ -1,55 +1,10 @@
-# Sharky Poker - Claude Helper Instructions
+# Sharky — Claude
 
-## Authority
+Follow `AGENTS.md` (instructions) and `docs/PLAN.md` (the single plan). They override older
+documents under `docs/`.
 
-This file is a helper for Claude. It is not the project source of truth.
-The Master Plan, current SSOT docs, current execution direction, and project
-rules override this file whenever they differ.
-
-## Automatic context economy
-
-For every Sharky repo session, treat the root `AGENTS.md` automatic context-economy
-policy as default. Run the native capsule once, use compact evidence for noisy
-commands, and reuse stable contract references without waiting for a user trigger.
-Do not ask the user to enable or manage token-saving mode.
-
-## Product context
-
-- Target user: a micro-stakes player who makes mistakes and wants to repair
-  them quickly.
-- Stack: Flutter and Dart.
-- Active learner-facing UI: `lib/ui_v2/act0_shell` and its direct support
-  seams.
-- Key surfaces: lesson runner, placement, profile, review, and welcome.
-
-## Guardrails
-
-- Do not change Modern Table visuals unless an explicitly opened task proves a
-  real blocker.
-- Do not start monetization or paywall work in the current wave unless it is
-  explicitly opened. The Master Plan may allow the future W5+ premium path
-  after content and value proof are ready.
-- Do not start broad redesign, AI/chat/persona expansion, or dashboard, XP, or
-  economy expansion without explicit scope.
-- Do not change product UI, routes, or telemetry unless the task explicitly
-  scopes those changes.
-- Do not commit generated screenshots, manifests, archives, or other output
-  artifacts.
-
-## Claude role
-
-Claude may provide visual critique, implementation suggestions, or local code
-edits only when explicitly assigned. Claude is not the roadmap owner and must
-not override SSOT or widen the requested scope.
-
-## graphify
-
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
-
-Rules:
-- Graphify is navigation and dependency-safety tooling only. It is advisory and must not override SSOT, roadmap, product scope, or user instructions.
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- Use `graphify hook-check` as lightweight validation. Run a full `graphify update .` only when explicitly needed for graph freshness or when a task requires it; do not run expensive graph generation every turn.
-- Never commit generated graph output.
+- Answer the owner in Russian unless asked otherwise; code, commits and docs for agents stay in English.
+- Keep context small: read targeted line ranges of the large Act0 files
+  (`act0_shell_state_v1.dart`, `act0_lesson_runner_shell_v1.dart`); never stream full test logs —
+  write them to a file and extract the failing lines.
+- Graphify is advisory navigation only. Never commit `graphify-out/`.
