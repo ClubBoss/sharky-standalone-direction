@@ -30,7 +30,7 @@ const _old = <String, (String, String, List<String>)>{
   ),
   'actions_review': (
     '49972ed99d92ac5fa3e7320eb2f22195f04e888a411696de90bb0bc5e621efda',
-    'First in on the Button. What is cleaner than limping?',
+    'First in on the Button. What is cleaner than limping (just calling the big blind)?',
     ['raise', 'fold', 'call'],
   ),
 };
@@ -240,7 +240,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         expect(find.text(task.runner.question), findsOneWidget);
-        final caption = find.textContaining(task.runner.caption);
+        final caption = find.textContaining(
+          act0LearnerFacingPremisesV1(task.runner.caption),
+        );
         expect(caption, findsOneWidget);
         final paragraph = tester.renderObject<RenderParagraph>(caption);
         expect(paragraph.didExceedMaxLines, isFalse);

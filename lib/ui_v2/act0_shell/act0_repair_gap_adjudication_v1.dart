@@ -1147,7 +1147,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'board_cards',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        'f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760',
+        '41ac3af5db7af86c7b5439c8f474f9799f424e0930b8c4d044ad231c68cf4deb',
     diagnosticVariantId: 'board_private_cards',
     sourceQuestion: 'Which cards can everyone use?',
     sourceChoiceReason:
@@ -1175,7 +1175,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'check',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        'f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760',
+        '41ac3af5db7af86c7b5439c8f474f9799f424e0930b8c4d044ad231c68cf4deb',
     diagnosticVariantId: 'action_basics',
     sourceQuestion: 'No bet faces Hero. Which action is free?',
     sourceChoiceReason: 'Sharky will start simple.',
@@ -1204,7 +1204,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "d6bed4d335446fb450e9d91a905d358e3858c40394a2276c441773e658ed1ad4",
+        "bf78fa256bd38e93d5cdd84f96cb315b0029b7b4efe9ca5ca52522411ca08f78",
     sourceQuestion: "Who acts first preflop in this frame?",
     sourceChoiceReason: "The Button acts late, not first preflop.",
     sourceChoiceLabel: "BTN",
@@ -1215,7 +1215,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_first_actor",
     targetFingerprint:
-        "d6bed4d335446fb450e9d91a905d358e3858c40394a2276c441773e658ed1ad4",
+        "bf78fa256bd38e93d5cdd84f96cb315b0029b7b4efe9ca5ca52522411ca08f78",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1229,7 +1229,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "sb",
     sourceCorrectChoiceId: "bb",
     sourceFingerprint:
-        "986c7e1a0f3bd2200f06b0fe5a742e4b8eff8d8ca2668062665bda1814eba008",
+        "5e5b33ce4bcfc65970370c7aeecdaedb78e1374ec88cb6328e3ec7bfc5a9aa8d",
     sourceQuestion: "Who has the next option before the flop here?",
     sourceChoiceReason: "The small blind acts before the big blind preflop.",
     sourceChoiceLabel: "SB",
@@ -1240,7 +1240,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_last_actor",
     targetFingerprint:
-        "986c7e1a0f3bd2200f06b0fe5a742e4b8eff8d8ca2668062665bda1814eba008",
+        "5e5b33ce4bcfc65970370c7aeecdaedb78e1374ec88cb6328e3ec7bfc5a9aa8d",
     targetCorrectChoiceId: "bb",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1254,7 +1254,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "29141cefa52d6d1a163c562ca62d23bc77bc3bd30d9c6a08086ce7ac9ad9b108",
+        "6adb6cccc2b9ea705eea6a35812184206a45653a7cb4f3d8ebd3b1d22f0bea95",
     sourceQuestion: "Who acts first preflop?",
     sourceChoiceReason: "The Button acts late, not first preflop.",
     sourceChoiceLabel: "BTN",
@@ -1265,7 +1265,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "29141cefa52d6d1a163c562ca62d23bc77bc3bd30d9c6a08086ce7ac9ad9b108",
+        "6adb6cccc2b9ea705eea6a35812184206a45653a7cb4f3d8ebd3b1d22f0bea95",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1279,7 +1279,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "0a9a08191c010b834aedf903063f641b5dea2a741af3f1f0bafc61878a6106ca",
+        "a70961948c1af97f2376944385c372a0eaea47d4dc07f5b2e39f2c515f8206b0",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is after UTG in this order.",
     sourceChoiceLabel: "HJ",
@@ -1290,7 +1290,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "positions",
     targetTaskId: "positions_utg",
     targetFingerprint:
-        "0a9a08191c010b834aedf903063f641b5dea2a741af3f1f0bafc61878a6106ca",
+        "a70961948c1af97f2376944385c372a0eaea47d4dc07f5b2e39f2c515f8206b0",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

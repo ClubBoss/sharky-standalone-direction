@@ -99,6 +99,7 @@ TIER_A_COMMANDS = [
             "flutter",
             "test",
             "test/ui_v2/act0_repair_intent_resolver_v1_test.dart",
+            "test/ui_v2/act0_repair_goal_fingerprints_current_v1_test.dart",
             "-r",
             "compact",
         ],
@@ -314,10 +315,49 @@ def _run_world1_gate(name: str, cmd: list[str], timeout: int) -> dict[str, objec
         return result
 
 
+# Rough CI seconds per Tier A command, used only to balance parallel shards.
+# Unknown names count as 10s. A stale number only makes shards less even.
+TIER_A_WEIGHTS = {
+    "World 1 release gate": 55,
+    "durable learner truth and assessment interaction (LDR-01)": 53,
+    "flutter analyze": 49,
+    "Academy Placement Review widget-host remount preview ON": 39,
+    "Wave 5 telemetry": 38,
+    "Academy Placement Review widget-host remount default OFF": 29,
+    "repair intent": 18,
+    "poker W4 closed-flop actor and historical compatibility": 15,
+    "source scope, showdown disclosure and replay chronology (Q0)": 13,
+    "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 11,
+}
+# LDR-01 writes the OBS04 captures; the CI job sealing them runs shard 0.
+TIER_A_SHARD0 = {"durable learner truth and assessment interaction (LDR-01)"}
+
+
+def _tier_a_shard(commands: list[dict[str, object]], index: int, count: int) -> list[dict[str, object]]:
+    """Greedy split by weight; every command lands in exactly one shard."""
+    loads = [0] * count
+    owner: dict[str, int] = {}
+    for name in TIER_A_SHARD0:
+        owner[name] = 0
+        loads[0] += TIER_A_WEIGHTS.get(name, 10)
+    for command in sorted(commands, key=lambda c: -TIER_A_WEIGHTS.get(str(c["name"]), 10)):
+        name = str(command["name"])
+        if name in owner:
+            continue
+        target = loads.index(min(loads))
+        owner[name] = target
+        loads[target] += TIER_A_WEIGHTS.get(name, 10)
+    return [c for c in commands if owner[str(c["name"])] == index]
+
+
 def _run_tier_a(timeout: int, smoke: bool) -> list[dict[str, object]]:
     commands = TIER_A_COMMANDS
     if smoke:
         commands = TIER_A_COMMANDS[:1]
+    shard = os.environ.get("TEST_AUTHORITY_SHARD", "")
+    if shard and not smoke:
+        index, count = (int(x) for x in shard.split("/"))
+        commands = _tier_a_shard(commands, index, count)
     results = []
     for command in commands:
         if command["cmd"] == ["./tools/release_gate_world1.sh"]:
@@ -342,6 +382,41 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
             selected.append("test/services/booster_pack_launcher_test.dart")
             selected.extend(files[-1:])
         files = list(dict.fromkeys(selected))
+    shard = os.environ.get("TEST_AUTHORITY_SHARD", "")
+    if shard:
+        # "i/n": run every n-th file starting at i, so CI can split a lane
+        # across parallel jobs. Together the shards cover the whole manifest.
+        index, count = (int(x) for x in shard.split("/"))
+        files = files[index::count]
+    if lane == "tier-b" and not smoke and len(files) > 1:
+        # One `flutter test` process for the whole blocking lane: each separate
+        # process spends ~9s on startup, which dominated this lane. A green batch
+        # is a green lane. Any non-green batch falls through to the per-file runs
+        # below, so failure diagnostics and the verdict stay per file.
+        batch = _run_command(
+            "tier-b batch",
+            ["flutter", "test", *files, "-r", "compact"],
+            timeout * len(files),
+        )
+        if batch["status"] == "cancelled":
+            return [batch]
+        if batch["status"] == "pass":
+            share = round(float(batch["duration_seconds"]) / len(files), 3)
+            return [
+                {
+                    "name": path,
+                    "cmd": ["flutter", "test", path, "-r", "compact"],
+                    "status": "pass",
+                    "exit_code": 0,
+                    "duration_seconds": share,
+                    "output_tail": "",
+                    "output_truncated": False,
+                    "output_chars": 0,
+                    "flutter_failure_cases": [],
+                    "batched": True,
+                }
+                for path in files
+            ]
     results = []
     for path in files:
         results.append(

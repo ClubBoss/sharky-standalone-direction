@@ -18,16 +18,21 @@ fi
 
 echo "canonical test authority: structural manifest validation"
 ./tools/test_authority_validate_v1.sh
-python3 tools/test_authority/validate_manifest_v1_fixtures_test.py
-python3 tools/test_authority/run_lane_diagnostics_fixtures_test.py
+env -u TEST_AUTHORITY_SHARD python3 tools/test_authority/validate_manifest_v1_fixtures_test.py
+env -u TEST_AUTHORITY_SHARD python3 tools/test_authority/run_lane_diagnostics_fixtures_test.py
 # Guard event scope, single nested execution and interrupted legacy-run truth.
-python3 tools/test_authority/changeset_base_fixtures_test.py
-python3 tools/test_authority/changeset_context_fixtures_test.py
-python3 tools/test_authority/process_orchestration_fixtures_test.py
-python3 tools/test_authority/release_gate_full_suite_completion_fixtures_test.py
+env -u TEST_AUTHORITY_SHARD python3 tools/test_authority/changeset_base_fixtures_test.py
+env -u TEST_AUTHORITY_SHARD python3 tools/test_authority/changeset_context_fixtures_test.py
+env -u TEST_AUTHORITY_SHARD python3 tools/test_authority/process_orchestration_fixtures_test.py
+env -u TEST_AUTHORITY_SHARD python3 tools/test_authority/release_gate_full_suite_completion_fixtures_test.py
 
 echo "canonical test authority: positive Tier A"
 ./tools/test_authority_tier_a_v1.sh
+if [[ "${TEST_AUTHORITY_SKIP_TIER_B:-0}" == "1" ]]; then
+  echo "canonical test authority: Tier B runs in the parallel CI job"
+  echo "canonical test authority: PASS (Tier A; Tier B in parallel job)"
+  exit 0
+fi
 echo "canonical test authority: positive terminal Tier B"
 ./tools/test_authority_tier_b_v1.sh
 echo "canonical test authority: PASS (Tier A + terminal Tier B)"

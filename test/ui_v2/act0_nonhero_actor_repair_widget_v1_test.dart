@@ -127,12 +127,18 @@ Future<String> _choice(WidgetTester t, String id, String taskId) async {
         final guide = t.widget<Act0LearningSceneGuideV3>(
           find.byType(Act0LearningSceneGuideV3),
         );
-        expect(guide.support, _runner(t).runner.caption);
+        expect(
+          guide.support,
+          act0LearnerFacingPremisesV1(_runner(t).runner.caption),
+        );
         expect(guide.scrollSupport, isTrue);
         final supportText = t.widget<Text>(
           find.byKey(const Key('act0_learning_scene_v3_support')),
         );
-        expect(supportText.data, _runner(t).runner.caption);
+        expect(
+          supportText.data,
+          act0LearnerFacingPremisesV1(_runner(t).runner.caption),
+        );
         expect(supportText.maxLines, isNull);
         final seatRectBeforeRead = t.getRect(seat);
         final supportViewport = find.byKey(

@@ -201,7 +201,7 @@ void main() {
                     _group(
                       'daily',
                       'Daily practice',
-                      'Unlock after one route rep.',
+                      'Unlocks as you work through lessons.',
                       enabled: false,
                     ),
                     _group(
@@ -213,7 +213,7 @@ void main() {
                   ],
             recommendedGroupId: 'daily',
             recommendedTitle: 'Daily practice',
-            recommendedSubtitle: 'Unlock after one route rep.',
+            recommendedSubtitle: 'Unlocks as you work through lessons.',
             onStartGroup: started.add,
             onOpenLearn: () => learn++,
           ),

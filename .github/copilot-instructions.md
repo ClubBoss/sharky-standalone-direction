@@ -1,9 +1,6 @@
-## Automatic context economy
+## Start here
 
-For all Sharky repository work, apply the root `AGENTS.md` context-economy policy
-automatically. Use the native capsule once per stable session and compact noisy
-evidence without asking the user to opt in. Reuse stable contract references and
-send only the changing task delta.
+Read `AGENTS.md`, then `docs/PLAN.md` (the single plan).
 
 ## graphify
 

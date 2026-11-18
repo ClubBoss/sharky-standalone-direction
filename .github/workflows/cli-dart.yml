@@ -23,6 +23,10 @@ on:
       - "pubspec.lock"
       - ".github/workflows/cli-dart.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   dart-cli:
     runs-on: ubuntu-latest

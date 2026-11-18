@@ -14,12 +14,11 @@ different authority documents, because each document restates history.
 
 ## 1. Orientation order
 
-1. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` — one screen; canonical HEAD, umbrella stage, active packet, finding statuses, what is authorized.
-2. The packet definition in `docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` — read **only** your packet's subsection plus §7 rows for your finding IDs.
-3. Escalate to capsule / Master Plan / topology map **only** when the task needs authority the state file does not carry, or when its facts conflict with live source or tests.
-
-Never read the authority stack "for context". If a fact matters, it belongs in
-the state file — put it there instead of re-reading five documents next session.
+1. `AGENTS.md` — the whole instruction set.
+2. `docs/PLAN.md` — the single plan: current stage, next result, blockers, rules.
+3. Anything else only when the task needs one specific fact. Never read the
+   authority stack "for context". If a fact matters for the next agent, it belongs
+   in `docs/PLAN.md` or the PR description.
 
 **Supersession trap:** a `docs/_reviews/*.md` document can be fully superseded
 and still read as authoritative — status is stated inside the prose, not in
@@ -208,8 +207,8 @@ canonical SSOT, `AGENTS.md`, or project instructions automatically.
 ## 11. Automatic session policy
 
 This skill is default behavior for Sharky repository work, not an opt-in command.
-At session start, run the native capsule once when possible, then operate from the
-minimum sufficient authority plus task delta. Use compact evidence automatically for
+At session start, read `AGENTS.md` and `docs/PLAN.md`, then operate from that plus the
+task delta. Use compact evidence automatically for
 noisy commands. Re-orient only after a material branch/HEAD/state/authority change or
 when live evidence creates a conflict.
 

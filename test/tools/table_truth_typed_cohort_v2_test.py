@@ -760,15 +760,9 @@ class TypedCohortV2Controls(unittest.TestCase):
             cohort['producer_receipt'][key] = TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[key]
         return cohort
 
-    def nonhero_producer(self):
-        cohort = self.fold_mechanics_producer()
-        for key in ('state_sha256', 'factory_sha256'):
-            cohort['producer_receipt'][key] = TRUTH.NONHERO_PRODUCER_REVISION[key]
-        return cohort
-
     def test_prior_fifteen_physical_receipt_cannot_claim_current_teaching_source(self):
-        self.assertEqual(TRUTH.producer_revision(self.nonhero_producer(), 'candidate'),
-                         TRUTH.NONHERO_REVISION)
+        self.assertEqual(TRUTH.producer_revision(self.fold_mechanics_producer(), 'candidate'),
+                         TRUTH.FOLD_MECHANICS_REVISION)
         with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
         with self.assertRaises(SystemExit): TRUTH.producer_revision(self.wp03_context_producer(), 'candidate')
 
@@ -809,18 +803,18 @@ class TypedCohortV2Controls(unittest.TestCase):
                 TRUTH.W4_PURPOSE_TEACHING_FIXTURE_SHA256 = pin
 
     def test_current_fold_mechanics_all_eight_physical_source_pins_are_required(self):
-        TRUTH._require_nonhero_admission()
+        TRUTH._require_fold_mechanics_admission()
         for field in TRUTH.FOLD_MECHANICS_PRODUCER_REVISION:
             saved = TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[field]
             try:
                 TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[field] = '0' * len(saved)
-                with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
+                with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
             finally:
                 TRUTH.FOLD_MECHANICS_PRODUCER_REVISION[field] = saved
 
     def test_wp03_context_producer_preserves_origin_and_rejects_bad_receipts(self):
-        cohort = self.nonhero_producer()
-        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.NONHERO_REVISION)
+        cohort = self.fold_mechanics_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLD_MECHANICS_REVISION)
         for field in ('state_sha256', 'factory_sha256', 'head'):
             for value in (None, '0', '0' * 64):
                 changed = copy.deepcopy(cohort)
@@ -834,28 +828,27 @@ class TypedCohortV2Controls(unittest.TestCase):
         with self.assertRaises(SystemExit): TRUTH.producer_revision(changed, 'historical_baseline')
 
     def test_fold_mechanics_actual_physical_source_mutations_fail_closed(self):
-        TRUTH._require_nonhero_admission()
+        TRUTH._require_fold_mechanics_admission()
         original = pathlib.Path.read_bytes
         for name in ('act0_shell_state_v1.dart', 'act0_asm05_authored_decision_truth_v1.dart',
                      'act0_lesson_runner_shell_v1.dart', 'act0_authored_source_proof_v1.dart',
                      'act0_street_replay_contract_v1.dart', 'act0_repair_gap_adjudication_v1.dart',
-                     'act0_betting_price_contract_v1.dart', 'act0_instruction_content_policy_v1.dart',
-                     'act0_repair_intent_contract_v1.dart', 'act0_shell_preview_screen_v1.dart'):
+                     'act0_betting_price_contract_v1.dart', 'act0_instruction_content_policy_v1.dart'):
             target = ROOT / 'lib/ui_v2/act0_shell' / name
             def changed(path):
                 value = original(path)
                 return value + b'\n// SYNTHETIC mutation\n' if path == target else value
             with mock.patch.object(pathlib.Path, 'read_bytes', changed):
                 with self.assertRaisesRegex(SystemExit, 'physical source changed'):
-                    TRUTH._require_nonhero_admission()
+                    TRUTH._require_fold_mechanics_admission()
 
     def test_ancestor_folded_btn_exact_membership_and_source_inverse_fail_closed(self):
-        TRUTH._require_nonhero_admission()
+        TRUTH._require_fold_mechanics_admission()
         path, pin = TRUTH.FOLDED_BTN_FIXTURE, TRUTH.FOLDED_BTN_FIXTURE_SHA256
         original = self.read(path)
         try:
             TRUTH.FOLDED_BTN_FIXTURE_SHA256 = '0' * 64
-            with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
+            with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
         finally:
             TRUTH.FOLDED_BTN_FIXTURE_SHA256 = pin
         mutations = [
@@ -878,14 +871,14 @@ class TypedCohortV2Controls(unittest.TestCase):
                     self.write(changed, candidate)
                     TRUTH.FOLDED_BTN_FIXTURE = changed
                     TRUTH.FOLDED_BTN_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
-                    with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
+                    with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
             finally:
                 TRUTH.FOLDED_BTN_FIXTURE, TRUTH.FOLDED_BTN_FIXTURE_SHA256 = path, pin
 
     def test_fold_mechanics_current_producer_keeps_original_authoring_reference(self):
-        cohort = self.nonhero_producer()
+        cohort = self.fold_mechanics_producer()
         cohort['producer_receipt']['head'] = 'c' * 40
-        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.NONHERO_REVISION)
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.FOLD_MECHANICS_REVISION)
         cohort['admitted_source_reference']['commit'] = TRUTH.FOLD_MECHANICS_PRODUCER_REVISION['source_revision']
         with self.assertRaises(SystemExit): TRUTH.producer_revision(cohort, 'candidate')
 
@@ -1003,12 +996,12 @@ class TypedCohortV2Controls(unittest.TestCase):
 
 
     def test_current_fold_mechanics_exact_membership_and_source_inverse_fail_closed(self):
-        TRUTH._require_nonhero_admission()
+        TRUTH._require_fold_mechanics_admission()
         path, pin = TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256
         original = self.read(path)
         try:
             TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = '0' * 64
-            with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
+            with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
         finally:
             TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = pin
         mutations = [
@@ -1031,19 +1024,18 @@ class TypedCohortV2Controls(unittest.TestCase):
                     self.write(changed, candidate)
                     TRUTH.FOLD_MECHANICS_FIXTURE = changed
                     TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
-                    with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
+                    with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
             finally:
                 TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = path, pin
 
     def test_ancestor_folded_physical_receipt_cannot_claim_current_fold(self):
         TRUTH._load_folded_btn_fixture()
-        TRUTH._require_nonhero_admission()
+        TRUTH._require_fold_mechanics_admission()
         with self.assertRaises(SystemExit): TRUTH._require_folded_btn_admission()
         with self.assertRaises(SystemExit): TRUTH.producer_revision(self.folded_btn_producer(), 'candidate')
 
     def test_partial_fold_capture_cannot_repin_away_whole_ancestor(self):
-        TRUTH._require_nonhero_admission()
-        fixture = copy.deepcopy(TRUTH._load_fold_mechanics_fixture())
+        fixture = copy.deepcopy(TRUTH._require_fold_mechanics_admission())
         task_id = 'actions_fold_drill'
         partial = {task_id: fixture['task_changes']['runtime-inputs.json'][task_id]['current']}
         forged_pin = TRUTH._digest(partial)
@@ -1058,57 +1050,11 @@ class TypedCohortV2Controls(unittest.TestCase):
                 TRUTH.FOLD_MECHANICS_FIXTURE = changed
                 TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
                 with self.assertRaisesRegex(SystemExit, 'capture mismatch'):
-                    TRUTH._fold_mechanics_source3_capture_core('runtime-inputs.json', partial, TRUTH._load_fold_mechanics_fixture())
+                    TRUTH.fold_mechanics_source3_capture('runtime-inputs.json', partial)
             finally:
                 TRUTH.FOLD_MECHANICS_FIXTURE, TRUTH.FOLD_MECHANICS_FIXTURE_SHA256 = path, pin
                 TRUTH.FOLD_MECHANICS_CAPTURE_SHA256['runtime-inputs.json'] = saved
 
-
-
-    def test_nonhero_old_fold_receipt_remains_rejected(self):
-        TRUTH._load_fold_mechanics_fixture()
-        with self.assertRaises(SystemExit): TRUTH._require_fold_mechanics_admission()
-        with self.assertRaises(SystemExit): TRUTH.producer_revision(self.fold_mechanics_producer(), 'candidate')
-        fixture = TRUTH._require_nonhero_admission()
-        raw = (ROOT / 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart').read_bytes()
-        with self.assertRaises(SystemExit):
-            TRUTH._validate_fold_mechanics_ancestor_inverse(TRUTH._load_fold_mechanics_fixture(), raw)
-        old = TRUTH._nonhero_prior_source('act0_shell_state_v1.dart', raw, fixture)
-        TRUTH._validate_fold_mechanics_ancestor_inverse(TRUTH._load_fold_mechanics_fixture(), old)
-
-    def test_nonhero_all_ten_pins_and_closed_source_inverse_fail_closed(self):
-        TRUTH._require_nonhero_admission()
-        for field in TRUTH.NONHERO_PRODUCER_REVISION:
-            old = TRUTH.NONHERO_PRODUCER_REVISION[field]
-            try:
-                TRUTH.NONHERO_PRODUCER_REVISION[field] = '0' * len(old)
-                with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
-            finally:
-                TRUTH.NONHERO_PRODUCER_REVISION[field] = old
-        path, pin = TRUTH.NONHERO_FIXTURE, TRUTH.NONHERO_FIXTURE_SHA256
-        original = self.read(path)
-        mutations = [
-            lambda f: f.update(relation_task_ids=f['relation_task_ids'] + ['outside']),
-            lambda f: f['task_changes']['runtime-inputs.json'].update(outside={}),
-            lambda f: f['source_inverse'].pop('act0_repair_intent_contract_v1.dart'),
-            lambda f: f['source_inverse'].pop('act0_lesson_runner_shell_v1.dart'),
-            lambda f: f['source_inverse']['act0_lesson_runner_shell_v1.dart']['hunks'].pop(),
-            lambda f: f['source_inverse']['act0_lesson_runner_shell_v1.dart']['hunks'][0].update(prior='forged Runner'),
-            lambda f: f['source_inverse']['act0_repair_gap_adjudication_v1.dart']['hunks'].pop(),
-            lambda f: f['source_inverse']['act0_shell_state_v1.dart']['hunks'].append(f['source_inverse']['act0_shell_state_v1.dart']['hunks'][0]),
-            lambda f: f['source_inverse']['act0_repair_intent_contract_v1.dart']['hunks'][0].update(prior='forged'),
-            lambda f: f['source_inverse']['act0_shell_state_v1.dart']['hunks'][0].update(current='missing hunk'),
-        ]
-        with tempfile.TemporaryDirectory() as temporary:
-            changed = pathlib.Path(temporary) / 'nonhero.json'
-            try:
-                for mutate in mutations:
-                    f = copy.deepcopy(original); mutate(f); self.write(changed, f)
-                    TRUTH.NONHERO_FIXTURE = changed
-                    TRUTH.NONHERO_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
-                    with self.assertRaises(SystemExit): TRUTH._require_nonhero_admission()
-            finally:
-                TRUTH.NONHERO_FIXTURE, TRUTH.NONHERO_FIXTURE_SHA256 = path, pin
 
 
 def check_wp03_real_artifacts(baseline, candidate):
@@ -1370,61 +1316,10 @@ def check_w4_purpose_real_artifacts(baseline, candidate):
     }, sort_keys=True))
 
 
-def check_nonhero_real_artifacts(baseline, candidate):
-    helper = TypedCohortV2Controls()
-    current = {name: helper.read(candidate / name) for name in TRUTH.NONHERO_CAPTURE_SHA256}
-    cohort = helper.read(candidate / 'typed-cohort-v2.json')
-    helper.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.NONHERO_REVISION)
-    prior, negatives = {}, 0
-    for name, captured in current.items():
-        prior[name] = TRUTH.nonhero_fold_capture(name, captured)
-        helper.assertEqual(TRUTH._digest(prior[name]), TRUTH.FOLD_MECHANICS_CAPTURE_SHA256[name])
-        helper.assertEqual(TRUTH._digest(TRUTH.reviewed_origin_capture(name, captured, TRUTH.NONHERO_REVISION)), TRUTH.EXPECTED_CAPTURE_ARTIFACTS[name])
-        changed = copy.deepcopy(captured)
-        if isinstance(changed, list): changed[0]['status'] = 'FORGED'
-        else: changed['_outside'] = True
-        with helper.assertRaises(SystemExit): TRUTH.nonhero_fold_capture(name, changed)
-        negatives += 1
-    for name in ('learning-contract.json', 'choice-identity.json', 'ledger.json'):
-        helper.assertEqual(current[name], prior[name])
-    for name in ('runtime-inputs.json', 'source-fingerprints.json'):
-        helper.assertEqual({key for key in current[name] if current[name][key] != prior[name][key]}, {'positions_utg'})
-    # A repinned partial current export still cannot reconstruct the whole Fold export.
-    f = copy.deepcopy(TRUTH._require_nonhero_admission())
-    partial = {'positions_utg': current['runtime-inputs.json']['positions_utg']}
-    path, pin = TRUTH.NONHERO_FIXTURE, TRUTH.NONHERO_FIXTURE_SHA256
-    old_capture = TRUTH.NONHERO_CAPTURE_SHA256['runtime-inputs.json']
-    with tempfile.TemporaryDirectory() as temporary:
-        try:
-            forged = TRUTH._digest(partial)
-            f['capture_sha256']['runtime-inputs.json'] = forged
-            TRUTH.NONHERO_CAPTURE_SHA256['runtime-inputs.json'] = forged
-            changed = pathlib.Path(temporary) / 'partial.json'; helper.write(changed, f)
-            TRUTH.NONHERO_FIXTURE = changed
-            TRUTH.NONHERO_FIXTURE_SHA256 = hashlib.sha256(changed.read_bytes()).hexdigest()
-            with helper.assertRaisesRegex(SystemExit, 'capture mismatch'):
-                TRUTH.nonhero_fold_capture('runtime-inputs.json', partial)
-            negatives += 1
-        finally:
-            TRUTH.NONHERO_FIXTURE, TRUTH.NONHERO_FIXTURE_SHA256 = path, pin
-            TRUTH.NONHERO_CAPTURE_SHA256['runtime-inputs.json'] = old_capture
-    with tempfile.TemporaryDirectory() as temporary:
-        root = pathlib.Path(temporary)
-        for role, source in (('baseline', baseline), ('candidate', candidate)):
-            target = root / role; target.mkdir()
-            for name in (*current.keys(), 'typed-cohort-v2.json'):
-                shutil.copyfile(source / name, target / name)
-        TRUTH.validate_typed_cohort(root)
-    print(json.dumps({'revision': TRUTH.NONHERO_REVISION, 'actual_producer_receipt': cohort['producer_receipt'], 'relation_task_ids': list(TRUTH.NONHERO_RELATION_TASK_IDS), 'runtime_FP_changed_ids': ['positions_utg'], 'other_contexts_unchanged': 368, 'ledger_all_64090_rows_unchanged': True, 'whole_capture_falsifiers': negatives, 'all_five_Fold_and_original_exact': True, 'scope': 'strict source/capture ancestry only; actual UI/native/Human/whole repair/parents/points unaccepted'}, sort_keys=True))
-
-
 if __name__ == '__main__':
     if len(sys.argv) == 4 and sys.argv[1] == '--real-artifacts':
         candidate_path = pathlib.Path(sys.argv[3])
         actual_cohort = candidate_path / 'typed-cohort-v2.json'
-        if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.NONHERO_REVISION):
-            check_nonhero_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
-            sys.exit(0)
         if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.FOLD_MECHANICS_REVISION):
             check_fold_mechanics_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
             sys.exit(0)
