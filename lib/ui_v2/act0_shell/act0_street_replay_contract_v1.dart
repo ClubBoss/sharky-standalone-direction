@@ -957,6 +957,9 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
   }
 
   final steps = <Act0StreetReplayStepV1>[];
+  final lastSourceActionIndex = trailLabels.lastIndexWhere(
+    (label) => label.isNotEmpty,
+  );
   var activeStreet = Act0StreetReplayStreetV1.preflop;
   var failedActionTruth =
       act0BettingRoundOrderTruthForTableV1(table) ==
@@ -1019,7 +1022,12 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
           table.boardCards,
           activeStreet,
         ),
-        potAtStreet: activeStreet == currentStreet ? table.potLabel.trim() : '',
+        // The snapshot proves the pot after the supplied history, not after
+        // every earlier action on the same street.
+        potAtStreet:
+            activeStreet == currentStreet && index == lastSourceActionIndex
+            ? table.potLabel.trim()
+            : '',
         isCurrentStreet: activeStreet == currentStreet,
         compactLabel: activeStreet == currentStreet ? 'Current street' : '',
       ),
