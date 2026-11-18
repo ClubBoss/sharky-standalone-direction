@@ -28,6 +28,9 @@ Everything else under `docs/` is reference or history: open it only when a task 
 - Strict areas (always tests + review): poker correctness (rules, pot, call price, legal actions, grading),
   saving/restoring learner progress, privacy and stored data.
 - Do not repeat checks whose inputs did not change.
+- Continuously remove waste: a process step, test, CI job or document that costs time or money without
+  guarding a real risk gets simplified or deleted when you notice it, with a one-line reason in the PR.
+- Prefer free paths (web build, Personal Team signing, free CI minutes); paid services need an owner decision.
 - Ask the owner only for access, or for decisions that change the product or the release.
 
 ## Code rules
