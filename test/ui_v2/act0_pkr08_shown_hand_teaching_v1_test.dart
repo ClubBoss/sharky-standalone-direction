@@ -15,9 +15,9 @@ const _bestHandTaskXp = <String, int>{
 };
 const _tieTaskXp = <String, int>{'showdown_tie_drill': 7};
 const _bestHandBody =
-    'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Other live hands are hidden, so this comparison does not establish the pot winner.';
+    'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Only these two hands are shown, so this compares just them.';
 const _tieBody =
-    'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. That alone does not establish who shares the pot.';
+    'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.';
 
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)

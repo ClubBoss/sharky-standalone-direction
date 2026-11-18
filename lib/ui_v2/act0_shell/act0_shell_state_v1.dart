@@ -10202,7 +10202,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
               : taskId == 'positions_utg'
               ? (o.seatId == 'utg'
                     ? 'UTG names the seat immediately after BB in this preflop order.'
-                    : 'BTN is the dealer-button seat, not UTG.')
+                    : '${o.label} is not UTG. UTG is the first seat to act after the big blind preflop.')
               : o.feedbackReason,
           repairFocusSeatIds: o.repairFocusSeatIds,
           repairFocusCardIds: o.repairFocusCardIds,
@@ -10235,9 +10235,12 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
     ),
     teachingSteps: [
       Act0TeachingStepV1(
-        title: 'Read this stated order.',
-        body:
-            'Read the given street and action history. Match the question to the stated seats and positions.',
+        title: flop
+            ? 'After the flop, the button acts last.'
+            : 'Preflop starts after the big blind.',
+        body: flop
+            ? 'From the flop on, the first live seat left of the button acts first. BTN acts last on every later street.'
+            : 'Before the flop, UTG acts first, right after the big blind. Then HJ, CO, BTN and SB act, and BB acts last.',
         focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
       ),
     ],
@@ -11579,7 +11582,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Showdown compares hands.',
       body:
-          'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Other live hands are hidden, so this comparison does not establish the pot winner.',
+          'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Only these two hands are shown, so this compares just them.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -13002,7 +13005,7 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Split means share.',
       body:
-          'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. That alone does not establish who shares the pot.',
+          'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.',
       focusLabels: <String>['Shown hands tie'],
     ),
   ],
