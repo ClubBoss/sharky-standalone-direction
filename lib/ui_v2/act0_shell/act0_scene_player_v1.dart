@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_character_asset_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 
@@ -182,6 +183,7 @@ class Act0ScenePlayerFigureV1 extends StatelessWidget {
     required this.posture,
     this.light = Act0SceneLightV1.canonical,
     this.perspective = Act0ScenePerspectiveV1.canonical,
+    this.asset,
   });
 
   final Act0SceneSeatSlotV1 slot;
@@ -190,24 +192,45 @@ class Act0ScenePlayerFigureV1 extends StatelessWidget {
   final Act0SceneLightV1 light;
   final Act0ScenePerspectiveV1 perspective;
 
+  /// Authored artwork for this seat, when the slice owns it.
+  ///
+  /// Null everywhere else, and null until the bundle has been read, in which
+  /// case the B3 procedural figure paints exactly as before. The seam degrades
+  /// to the accepted floor; it never leaves a seat empty.
+  final Act0SceneCharacterAssetV1? asset;
+
   @override
   Widget build(BuildContext context) {
     // Which way this seat turns to face the pot, from its own anchor.
     final facing = ((0.5 - slot.plateAnchor.dx) * 2.4).clamp(-1.0, 1.0);
+    final authored = asset == null
+        ? null
+        : Act0SceneCharacterAssetStoreV1.imageFor(asset!);
     return IgnorePointer(
       child: SizedBox(
         width: size.width,
         height: size.height,
         child: CustomPaint(
-          painter: _Act0ScenePlayerFigurePainterV1(
-            archetype: act0ScenePlayerArchetypeForSeatV1(slot.seatId),
-            depth: slot.depth,
-            facing: facing,
-            posture: posture,
-            detail: act0ScenePlayerDetailForDepthV1(slot.depth),
-            haze: perspective.hazeAt(slot.depth),
-            light: light,
-          ),
+          painter: authored != null
+              ? Act0SceneCharacterAssetPainterV1(
+                  image: authored,
+                  haze: perspective.hazeAt(slot.depth),
+                  light: light,
+                  // Folded seats recede instead of changing artwork, which is
+                  // how B5 already says "this seat matters less".
+                  recession: posture == Act0ScenePlayerPostureV1.folded
+                      ? 0.20
+                      : 0.0,
+                )
+              : _Act0ScenePlayerFigurePainterV1(
+                  archetype: act0ScenePlayerArchetypeForSeatV1(slot.seatId),
+                  depth: slot.depth,
+                  facing: facing,
+                  posture: posture,
+                  detail: act0ScenePlayerDetailForDepthV1(slot.depth),
+                  haze: perspective.hazeAt(slot.depth),
+                  light: light,
+                ),
         ),
       ),
     );
@@ -534,29 +557,36 @@ class Act0ScenePlayerLayerV1 extends StatelessWidget {
         // Far first, so nearer players overlap their neighbours correctly.
         final ordered = [...slots.where((slot) => !slot.isHero)]
           ..sort((a, b) => a.depth.compareTo(b.depth));
+        // Exactly one seat carries authored artwork in this slice.
+        final authoredSeatId = act0SceneAuthoredOpponentSeatIdV1(slots);
 
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            for (final slot in ordered)
-              Positioned(
-                left: width * slot.characterAnchor.dx,
-                top: height * slot.characterAnchor.dy,
-                child: FractionalTranslation(
-                  translation: const Offset(-0.5, -0.5),
-                  child: Act0ScenePlayerFigureV1(
-                    key: Key('act0_scene_player_figure_${slot.seatId}'),
-                    slot: slot,
-                    size: slot.volumeSize(width),
-                    posture: foldedSeatIds.contains(slot.seatId)
-                        ? Act0ScenePlayerPostureV1.folded
-                        : Act0ScenePlayerPostureV1.inHand,
-                    light: light,
-                    perspective: perspective,
+        return Act0SceneCharacterAssetGateV1(
+          builder: (context, ready) => Stack(
+            clipBehavior: Clip.none,
+            children: [
+              for (final slot in ordered)
+                Positioned(
+                  left: width * slot.characterAnchor.dx,
+                  top: height * slot.characterAnchor.dy,
+                  child: FractionalTranslation(
+                    translation: const Offset(-0.5, -0.5),
+                    child: Act0ScenePlayerFigureV1(
+                      key: Key('act0_scene_player_figure_${slot.seatId}'),
+                      slot: slot,
+                      size: slot.volumeSize(width),
+                      posture: foldedSeatIds.contains(slot.seatId)
+                          ? Act0ScenePlayerPostureV1.folded
+                          : Act0ScenePlayerPostureV1.inHand,
+                      light: light,
+                      perspective: perspective,
+                      asset: ready && slot.seatId == authoredSeatId
+                          ? Act0SceneCharacterAssetV1.opponentNearLeft
+                          : null,
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -590,8 +620,25 @@ class Act0ScenePlayerHeroV1 extends StatelessWidget {
           heightFactor: 0.19,
           child: FractionalTranslation(
             translation: const Offset(0, 0.80),
-            child: CustomPaint(
-              painter: _Act0ScenePlayerHeroPainterV1(light: light),
+            child: Act0SceneCharacterAssetGateV1(
+              builder: (context, ready) {
+                final authored = ready
+                    ? Act0SceneCharacterAssetStoreV1.imageFor(
+                        Act0SceneCharacterAssetV1.heroForeground,
+                      )
+                    : null;
+                return CustomPaint(
+                  painter: authored != null
+                      // The hero is the closest plane to the camera, so it
+                      // carries no haze at all — only the scene dim.
+                      ? Act0SceneCharacterAssetPainterV1(
+                          image: authored,
+                          haze: 0,
+                          light: light,
+                        )
+                      : _Act0ScenePlayerHeroPainterV1(light: light),
+                );
+              },
             ),
           ),
         ),
