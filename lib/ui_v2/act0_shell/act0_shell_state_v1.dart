@@ -12049,9 +12049,9 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'You marks the learner. BTN is this hand\'s position and can change next hand. SB and BB post the blinds first; then seats act in order: UTG, HJ, CO, BTN, SB, BB. In hand examples, Hero also means you.',
+          'SB and BB post the blinds first. Then seats act in this order: UTG, HJ, CO, BTN, SB, BB. In hand examples, Hero means you.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['You', 'BTN', 'Blinds'],
+      focusLabels: <String>['Blinds', 'BTN'],
       identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
     ),
   ],
