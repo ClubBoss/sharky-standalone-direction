@@ -12172,7 +12172,8 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 4,
   beatCount: 5,
-  caption: 'Same scan, new spot: nobody has entered the pot, and You are on BTN with K and T of the same suit.',
+  caption:
+      'Same scan, new spot: nobody has entered the pot, and You are on BTN with K and T of the same suit.',
   hint: 'No board is out yet. Start with You, blinds, pot, and who acts next.',
   question: 'What is the clean preflop setup here?',
   options: const <Act0RunnerOptionV1>[

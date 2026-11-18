@@ -20,8 +20,10 @@ void main() {
   });
 
   test('captions without the setup sentence are unchanged', () {
-    expect(act0LearnerFacingPremisesV1('HJ bets and your hand is weak.'),
-        'HJ bets and your hand is weak.');
+    expect(
+      act0LearnerFacingPremisesV1('HJ bets and your hand is weak.'),
+      'HJ bets and your hand is weak.',
+    );
   });
 
   test('every catalogue caption keeps all of its words', () {
@@ -29,9 +31,11 @@ void main() {
         .expand((w) => w.lessons)
         .expand((l) => l.taskList);
     for (final t in tasks) {
-      expect(_words(act0LearnerFacingPremisesV1(t.runner.caption)),
-          _words(t.runner.caption),
-          reason: t.taskId);
+      expect(
+        _words(act0LearnerFacingPremisesV1(t.runner.caption)),
+        _words(t.runner.caption),
+        reason: t.taskId,
+      );
     }
   });
 }

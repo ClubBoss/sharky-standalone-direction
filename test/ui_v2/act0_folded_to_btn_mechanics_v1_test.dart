@@ -240,7 +240,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         expect(find.text(task.runner.question), findsOneWidget);
-        final caption = find.textContaining(act0LearnerFacingPremisesV1(task.runner.caption));
+        final caption = find.textContaining(
+          act0LearnerFacingPremisesV1(task.runner.caption),
+        );
         expect(caption, findsOneWidget);
         final paragraph = tester.renderObject<RenderParagraph>(caption);
         expect(paragraph.didExceedMaxLines, isFalse);
