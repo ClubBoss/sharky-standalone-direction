@@ -100,6 +100,7 @@ TIER_A_COMMANDS = [
             "test",
             "test/ui_v2/act0_repair_intent_resolver_v1_test.dart",
             "test/ui_v2/act0_repair_goal_fingerprints_current_v1_test.dart",
+            "test/ui_v2/act0_copy_error_classes_v1_test.dart",
             "-r",
             "compact",
         ],

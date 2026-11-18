@@ -986,7 +986,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "42ada0b5698d0215f0211ed107b5c5e2e25781383a4d302bfa38b520a951c4fc",
+        "9526e3759b3561185d575c8cdd90f1a25e0ca73828614218dc65a7a0b64d55fb",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1002,7 +1002,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "da072c016c85f79c659ba2e62ac89a30c4714e9d8f157c26f885e09f0de0540a",
+        "ca964f94e9da39e132a16a0d1732a0a4e8fe7b0cd5a754f918adb51bff1ca556",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1018,7 +1018,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "ee7b49aba48357c6ea8afb66560782d804069bb400cef6960c75f731b277f716",
+        "31dbac67a41203040a929a8f3abbd3bf6696c87b3978a089937509295930c8d4",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1147,7 +1147,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'board_cards',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        '41ac3af5db7af86c7b5439c8f474f9799f424e0930b8c4d044ad231c68cf4deb',
+        'e6f26c1eb372dab91d453fb5059c3a35556e28add44fd4fb52fea49a45d59614',
     diagnosticVariantId: 'board_private_cards',
     sourceQuestion: 'Which cards can everyone use?',
     sourceChoiceReason:
@@ -1175,7 +1175,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'check',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        '41ac3af5db7af86c7b5439c8f474f9799f424e0930b8c4d044ad231c68cf4deb',
+        'e6f26c1eb372dab91d453fb5059c3a35556e28add44fd4fb52fea49a45d59614',
     diagnosticVariantId: 'action_basics',
     sourceQuestion: 'No bet faces Hero. Which action is free?',
     sourceChoiceReason: 'Sharky will start simple.',

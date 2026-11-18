@@ -20,7 +20,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.d
 const _old = <String, (String, String, List<String>)>{
   'actions_theory': (
     '6c3675f14448ded48ee7486f2c2ca8772955f2680b2e86e4d55eb407dce29191',
-    'Which action adds more chips first in?',
+    'Nobody has entered the pot yet. Which action adds more chips?',
     ['raise', 'fold', 'call'],
   ),
   'actions_raise_drill': (
