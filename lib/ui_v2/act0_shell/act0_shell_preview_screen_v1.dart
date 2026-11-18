@@ -10018,6 +10018,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (launchTask.phase != Act0LessonPhaseV1.drill) {
       return false;
     }
+    // A daily rep may only use content the learner has opened. A target in a
+    // locked world or lesson (e.g. a World 3 checkpoint for a World 1
+    // learner) falls back to the route instead of jumping ahead.
+    if (!launchWorld.isSelectable || launchLesson.isLocked) {
+      return false;
+    }
     _emitFirstValueTodayConsumedTelemetryV1(carry);
     _emitFirstValueDailyRepLaunchedTelemetryV1(carry: carry, target: target);
     _firstValueReceiptCarry = null;
@@ -15800,10 +15806,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   Act0LessonTaskV1? _nextTask(Act0LessonCardV1 lesson, String taskId) {
     final index = _taskIndex(lesson, taskId);
-    if (index < 0 || index + 1 >= lesson.taskList.length) {
-      return null;
+    if (index >= 0 && index + 1 < lesson.taskList.length) {
+      return lesson.taskList[index + 1];
     }
-    return lesson.taskList[index + 1];
+    // End of the list. A route that jumped over a task (the Action sequence
+    // skips its legal-context node) must still visit it before the lesson
+    // ends; otherwise the lesson never completes and only "replay" is left.
+    for (final task in lesson.taskList) {
+      if (task.taskId != taskId &&
+          !_completedTaskIds.contains(task.taskId) &&
+          !_lessonRunMistakeTaskIds.contains(task.taskId)) {
+        return task;
+      }
+    }
+    return null;
   }
 
   bool _lessonComplete(Act0LessonCardV1 lesson) {
