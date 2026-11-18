@@ -7,6 +7,11 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
     if (_diagnosticLearningEntryV1 != null) {
       return Act0ReviewKindV1.initialAssessment;
     }
+    if (_pendingReviewKindV1 == Act0ReviewKindV1.unseenTransfer) {
+      return decision.assistanceKind == Act0DecisionAssistanceV1.none
+          ? Act0ReviewKindV1.unseenTransfer
+          : Act0ReviewKindV1.spacedReview;
+    }
     final routed = _routeReviewKindForTaskIdV1(decision.taskId);
     if (routed != Act0ReviewKindV1.initialAssessment &&
         routed != Act0ReviewKindV1.unseenTransfer) {
@@ -748,6 +753,10 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _repairOutcomeProjectionV1 = const Act0RepairOutcomeProjectionV1();
       _repairOutcomeSequenceV1 = 0;
       _retentionSequence = 0;
+      _spacedReviewReturnV1 = null;
+      _activeSpacedReviewTaskV1 = null;
+      _newSpacedReviewSavePendingV1 = false;
+      _openedSpacedReviewTaskIdsV1.clear();
       _retentionMemoryByTaskId.clear();
       _activePracticeGroupId = null;
       _clearActiveRepairLaunchV1();

@@ -243,9 +243,11 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Check what you remember without guided repair.',
-                      style: TextStyle(color: _muted, fontSize: 14),
+                    Text(
+                      dueFirst.unseenTaskId == null
+                          ? 'Familiar situation'
+                          : 'New situation',
+                      style: const TextStyle(color: _muted, fontSize: 14),
                     ),
                     const SizedBox(height: 14),
                     _cta(

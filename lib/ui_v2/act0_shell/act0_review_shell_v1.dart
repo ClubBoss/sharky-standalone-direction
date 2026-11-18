@@ -496,7 +496,13 @@ class _DueReviewCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            hasOpenMistakeForTask
+            item.unseenTaskId == null ? 'Familiar situation' : 'New situation',
+            style: Act0AcademyReadingStyleV1.muted,
+          ),
+          Text(
+            item.unseenTaskId != null
+                ? 'Apply the same idea to a new hand.'
+                : hasOpenMistakeForTask
                 ? item.lapseCount > 0
                       ? 'The last recheck of this task was missed. The mistake is still open: use guided repair below, or take this separate scheduled recheck independently.'
                       : 'This task also has an open mistake. Use guided repair below, or take this separate scheduled recheck independently.'

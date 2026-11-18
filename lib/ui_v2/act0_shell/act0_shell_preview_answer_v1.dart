@@ -87,12 +87,14 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       if (world.worldId != item.worldId) continue;
       for (final lesson in world.lessons) {
         if (lesson.lessonId != item.lessonId) continue;
-        if (lesson.taskList.any(
-          (task) =>
-              task.taskId == item.taskId &&
-              task.phase != Act0LessonPhaseV1.theory &&
-              task.runner.options.isNotEmpty,
-        )) {
+        if (act0ReviewOnlyTaskV1(item.worldId, item.lessonId, item.taskId) !=
+                null ||
+            lesson.taskList.any(
+              (task) =>
+                  task.taskId == item.taskId &&
+                  task.phase != Act0LessonPhaseV1.theory &&
+                  task.runner.options.isNotEmpty,
+            )) {
           return world;
         }
       }
@@ -100,36 +102,106 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     return null;
   }
 
-  List<Act0DueReviewItemV1> _dueReviewItemsV1() => _durableRetentionHistoryV1
-      .dueItemsAt(widget.clock.nowUtc())
-      .where((item) => _dueReviewTargetWorldV1(item) != null)
-      .toList(growable: false);
+  List<Act0DueReviewItemV1> _dueReviewItemsV1() => [
+    for (final item in _durableRetentionHistoryV1.dueItemsAt(
+      widget.clock.nowUtc(),
+    ))
+      if (_dueReviewTargetWorldV1(item) != null)
+        item.withUnseenTask(_unseenReviewTaskIdV1(item)),
+  ];
+
+  String? _unseenReviewTaskIdV1(Act0DueReviewItemV1 item) {
+    final family = _durableRetentionHistoryV1.familyById(item.conceptFamilyId);
+    // Day 2 checks retention on familiar material. After a spaced success,
+    // offer a new hand only if its review-only source has never been opened.
+    if (family == null || family.spacedSuccessStage == 0) return null;
+    for (final entry in act0NewReviewTasksV1) {
+      final id = entry.task.taskId;
+      if (entry.conceptFamilyId == item.conceptFamilyId &&
+          entry.worldId == item.worldId &&
+          entry.lessonId == item.lessonId &&
+          item.taskId != id &&
+          !_openedSpacedReviewTaskIdsV1.contains(id) &&
+          !_learningEvidenceHistoryV1.provenanceRecords.any(
+            (record) => record.taskId == id,
+          )) {
+        return id;
+      }
+    }
+    return null;
+  }
+
+  bool _isCurrentDueReviewV1(Act0DueReviewItemV1 item) =>
+      _durableRetentionHistoryV1
+          .dueItemsAt(widget.clock.nowUtc())
+          .any(
+            (due) =>
+                due.conceptFamilyId == item.conceptFamilyId &&
+                due.worldId == item.worldId &&
+                due.lessonId == item.lessonId &&
+                due.taskId == item.taskId &&
+                due.nextDueAtUtc == item.nextDueAtUtc,
+          );
 
   void _startDueReviewItemV1(Act0DueReviewItemV1 item) {
     if (_spacedReviewReturnV1 != null ||
-        !_dueReviewItemsV1().any(
-          (due) =>
-              due.conceptFamilyId == item.conceptFamilyId &&
-              due.worldId == item.worldId &&
-              due.lessonId == item.lessonId &&
-              due.taskId == item.taskId &&
-              due.nextDueAtUtc == item.nextDueAtUtc,
-        )) {
+        _newSpacedReviewSavePendingV1 ||
+        !_isCurrentDueReviewV1(item) ||
+        _unseenReviewTaskIdV1(item) != item.unseenTaskId) {
       return;
     }
     final world = _dueReviewTargetWorldV1(item);
     if (world == null) return;
+    if (item.unseenTaskId == null) {
+      _openSpacedReviewTaskV1(item, world);
+    } else {
+      unawaited(_openUnseenReviewTaskV1(item, world));
+    }
+  }
 
+  Future<void> _openUnseenReviewTaskV1(
+    Act0DueReviewItemV1 item,
+    Act0WorldCardV1 world,
+  ) async {
+    final taskId = item.unseenTaskId!;
+    final task = act0ReviewOnlyTaskV1(item.worldId, item.lessonId, taskId);
+    if (task == null) return;
+    final epoch = _recoveryEpochV1;
+    final returnTab = _tab;
+    _newSpacedReviewSavePendingV1 = true;
+    _openedSpacedReviewTaskIdsV1.add(taskId);
+    final saved = Completer<bool>();
+    // Persist exposure before showing the scene, even if the learner leaves
+    // without an answer or the app restarts. A failed save never claims novelty.
+    _persistProgress(acknowledgement: saved);
+    final persisted = await saved.future;
+    if (!_acceptRecoveryCallbackV1(epoch)) return;
+    _newSpacedReviewSavePendingV1 = false;
+    if (!persisted || _tab != returnTab || !_isCurrentDueReviewV1(item)) return;
+    _setStateV1(() => _openSpacedReviewTaskV1(item, world, unseen: task));
+  }
+
+  void _openSpacedReviewTaskV1(
+    Act0DueReviewItemV1 item,
+    Act0WorldCardV1 world, {
+    Act0LessonTaskV1? unseen,
+  }) {
     _spacedReviewReturnV1 = (
       worldId: _selectedWorldId,
       lessonId: _selectedLessonId,
       taskId: _selectedTaskId,
     );
-    _pendingReviewKindV1 = Act0ReviewKindV1.spacedReview;
+    _activeSpacedReviewTaskV1 =
+        unseen ??
+        act0ReviewOnlyTaskV1(item.worldId, item.lessonId, item.taskId);
+    _pendingReviewKindV1 = unseen == null
+        ? Act0ReviewKindV1.spacedReview
+        : Act0ReviewKindV1.unseenTransfer;
+    _selectedLessonId = item.lessonId;
     _startTaskByIds(
       world,
       item.lessonId,
-      item.taskId,
+      unseen?.taskId ?? item.taskId,
       skipTeaching: true,
       evidenceRunKind: 'spaced_review',
       evidenceStartedBy: 'review_due',
@@ -142,6 +214,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       return;
     }
     _spacedReviewReturnV1 = null;
+    _activeSpacedReviewTaskV1 = null;
     _pendingReviewKindV1 = null;
     _activeLearningEvidenceRunKeyV1 = null;
     _activeActionSequenceStageV1 = null;
@@ -248,7 +321,10 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0LessonTaskV1 selectedTask,
     Act0RunnerOptionV1 option,
   ) {
-    if (_diagnosticLearningEntryV1 != null) return;
+    if (_diagnosticLearningEntryV1 != null ||
+        _activeSpacedReviewTaskV1 != null) {
+      return;
+    }
     if (_choiceWasAssistedV1) {
       // Record help in this lesson separately from correctness/mistake counts;
       // it cannot earn the learner an independent clean-pass claim.
