@@ -155,7 +155,7 @@ void main() {
       ),
     );
     expect(find.text('Daily reps'), findsOneWidget);
-    expect(find.text('Start practice'), findsOneWidget);
+    expect(find.text(daily.ctaLabel), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_academy_practice_leaf_start')));
     expect(started, hasLength(1));
     // Identity: assisted/independent flags stay exactly as the source set them.

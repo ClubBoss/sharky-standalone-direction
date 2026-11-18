@@ -32,6 +32,95 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  testWidgets(
+    'Practice finite set resumes after restart, ends, and explicitly restarts',
+    (tester) async {
+      await _openPendingHelpDecision(tester);
+      await _choose(
+        tester,
+        _runner(tester).runner.options.firstWhere((o) => o.isCorrect).id,
+      );
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+      await _tap(tester, 'act0_shell_runner_back');
+      await tester.tap(find.text('Practice').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_academy_practice_leaf_start');
+      final first = _runner(tester).selectedTaskId;
+      final baseline = await _saved(tester);
+      final queue = baseline['dailyPracticeQueue'] as Map;
+      final ids = (queue['taskIds'] as List).cast<String>();
+      expect(ids.length, greaterThan(1));
+      expect(ids.length, lessThanOrEqualTo(3));
+      expect(ids.first, first);
+      expect(_runner(tester).runner.beatIndex, 1);
+      expect(_runner(tester).runner.beatCount, ids.length);
+      await _choose(
+        tester,
+        _runner(tester).runner.options.firstWhere((o) => o.isCorrect).id,
+      );
+      final answered = await _saved(tester);
+      expect((answered['dailyPracticeQueue'] as Map)['answeredTaskIds'], [
+        first,
+      ]);
+      final earned = answered['earnedXp'];
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.runAsync(() => _pendingWrites().flush());
+      await tester.pumpWidget(const AppRoot());
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Practice').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Resume practice'), findsOneWidget);
+      await _tap(tester, 'act0_academy_practice_leaf_start');
+      expect(_runner(tester).selectedTaskId, ids[1]);
+      expect(_runner(tester).runner.beatIndex, 2);
+      expect(_runner(tester).runner.beatCount, ids.length);
+      final seen = <String>{first!};
+      for (
+        var step = 0;
+        step < ids.length + 2 &&
+            find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty;
+        step++
+      ) {
+        final shell = _runner(tester);
+        expect(
+          seen.add(shell.selectedTaskId!),
+          isTrue,
+          reason: 'No repeated queue task',
+        );
+        await _choose(
+          tester,
+          shell.runner.options.firstWhere((o) => o.isCorrect).id,
+        );
+        if (find
+            .byKey(const Key('act0_shell_feedback_continue_cta'))
+            .evaluate()
+            .isNotEmpty) {
+          await _tap(tester, 'act0_shell_feedback_continue_cta');
+        }
+      }
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      expect(seen, ids.toSet());
+      expect(find.text('Start new set'), findsOneWidget);
+      final finished = await _saved(tester);
+      expect(finished['earnedXp'], earned);
+      expect(finished['completedTaskIds'], answered['completedTaskIds']);
+      expect((finished['dailyPracticeQueue'] as Map)['answeredTaskIds'], ids);
+      await _tap(tester, 'act0_academy_practice_leaf_start');
+      final restarted = await _saved(tester);
+      expect(
+        (restarted['dailyPracticeQueue'] as Map)['answeredTaskIds'],
+        isEmpty,
+      );
+      expect(
+        restarted['dailyCompletedRepCount'],
+        finished['dailyCompletedRepCount'],
+      );
+      expect(restarted['earnedXp'], earned);
+    },
+  );
+
   testWidgets('W1 skill miss and its explanation survive an AppRoot remount', (
     tester,
   ) async {

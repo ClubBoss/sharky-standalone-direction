@@ -1,6 +1,7 @@
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
+import 'act0_daily_practice_queue_v1.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
@@ -1449,6 +1450,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
+  Act0DailyPracticeQueueV1 _dailyPracticeQueue =
+      const Act0DailyPracticeQueueV1();
   int _dailyCompletedRepCount = 0;
   bool _rapidPracticeLoop = false;
   int _persistedStreakDays = 0;
@@ -2102,13 +2105,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'attempt_ordinal': 1,
       'source_surface': 'act0_review',
     });
-  }
-
-  int _dailyCleanRepCountV1() {
-    return _dailyCompletedTaskIds
-        .where(_cleanTaskIds.contains)
-        .length
-        .clamp(0, 3);
   }
 
   void _emitPracticeCompletedTelemetryV1({
@@ -3075,6 +3071,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _lastDailyDate = '';
     _dailyCompletedRepCount = 0;
     _dailyCompletedTaskIds.clear();
+    _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
     _profileSkillValues.clear();
     _recentSkillGains.clear();
     _mistakeRecords.clear();
@@ -4081,6 +4078,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _persistedStreakDays = restoredStreakDays;
       _lastDailyDate = earnedDay;
       _dailyRepCountDay = today;
+      _dailyPracticeQueue = parsed.dailyPracticeQueue;
+      _dailyCompletedTaskIds
+        ..clear()
+        ..addAll(
+          isNewDay
+              ? const <String>[]
+              : parsed.dailyCompletedTaskIds.where(validTaskIds.contains),
+        );
       _dailyCompletedRepCount =
           (isNewDay ||
               unverifiedLegacyDailyCount ||
@@ -4150,6 +4155,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       // Daily deck resets on new day
       if (isNewDay) {
         _dailyCompletedTaskIds.clear();
+        _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
         _dailyCompletedRepCount = 0;
         _rapidPracticeLoop = false;
       }
@@ -4722,6 +4728,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lastActiveDay: today,
       lastEarnedDailyDay: _lastDailyDate,
       dailyCompletedRepCount: _dailyCompletedRepCount,
+      dailyPracticeQueue: _dailyPracticeQueue,
+      dailyCompletedTaskIds: _dailyCompletedTaskIds,
       persistedStreakDays: currentStreak,
       retentionSequence: _retentionSequence,
       retentionMemory: _retentionMemoryByTaskId.values.toList(growable: false),
@@ -4971,6 +4979,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           orElse: () => null,
         );
     if (latestRecord != null && !wasAlreadyRecorded) {
+      if (_activePracticeGroupId == 'daily' &&
+          latestRecord.runKind == 'practice' &&
+          _dailyPracticeQueue.nextTaskId == latestRecord.taskId) {
+        _ensureDailyCountDayV1();
+        _dailyPracticeQueue = _dailyPracticeQueue.answer(
+          latestRecord.taskId,
+          independentCorrect: latestRecord.isIndependentCorrect,
+        );
+        _dailyCompletedTaskIds.add(latestRecord.taskId);
+        _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
+      }
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendLearningEvidence(latestRecord);
       _durableRetentionHistoryV1 = _durableRetentionHistoryV1
@@ -5863,6 +5882,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _lessonRunQuickFixTaskIds.clear();
       _lessonRunDeepLeakTaskIds.clear();
       _dailyCompletedTaskIds.clear();
+      _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
       _dailyCompletedRepCount = 0;
       _rapidPracticeLoop = false;
       _activeLearningEvidenceRunKeyV1 = null;
@@ -6492,10 +6512,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             diagnosticVariantId: placementDiagnosticSignalId!,
           )
         : null;
+    final dailyQueueIndex =
+        isPlayRunner && _activePracticeGroupId == 'daily' && _rapidPracticeLoop
+        ? _dailyPracticeQueue.taskIds.indexOf(_selectedTaskId)
+        : -1;
     final activePlayRunner = placementSource != null
         ? placementSource.runner.copyWith(
             phase: _phase,
             selectedOptionId: _selectedOptionId,
+          )
+        : dailyQueueIndex >= 0
+        ? playRunner?.copyWith(
+            beatIndex: dailyQueueIndex + 1,
+            beatCount: _dailyPracticeQueue.taskIds.length,
           )
         : playRunner;
     final accessibilityPrototypeStep =
@@ -7983,46 +8012,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     if (_rapidPracticeLoop &&
                                         _activePracticeGroupId == 'daily') {
                                       _completeCurrentTask(playSelectedTask);
-                                      final nextDailyEntry =
-                                          _nextDailyDeckEntry(
-                                            state:
-                                                widget.state ??
-                                                Act0ShellStateV1.sample,
-                                          );
-                                      if (_dailyCompletedRepCount < 3 &&
-                                          nextDailyEntry != null) {
-                                        final launchWorld = _worldById(
-                                          _progressedWorlds(
-                                            widget.state ??
-                                                Act0ShellStateV1.sample,
-                                          ),
-                                          nextDailyEntry.worldId,
-                                        );
-                                        _startTaskByIds(
-                                          launchWorld,
-                                          nextDailyEntry.lessonId,
-                                          nextDailyEntry.taskId,
-                                          skipTeaching: true,
-                                          allowDrillBypass: true,
-                                          rapidPracticeLoop: true,
-                                        );
-                                        _activePracticeGroupId = 'daily';
-                                        _showPlayHub = false;
-                                        _returnToPlayHubOnBack = true;
+                                      if (_launchDailyPracticeQueueTaskV1())
                                         return;
-                                      }
                                       _finishRapidPracticeLoopToHub(
                                         completedLessonId:
                                             selectedLesson.lessonId,
-                                        completedRepCount:
-                                            _dailyCompletedRepCount.clamp(0, 3),
-                                        cleanRepCount: _dailyCleanRepCountV1(),
+                                        completedRepCount: _dailyPracticeQueue
+                                            .answeredTaskIds
+                                            .length,
+                                        cleanRepCount: _dailyPracticeQueue
+                                            .cleanTaskIds
+                                            .length,
                                         resultSummary:
-                                            _dailyCleanRepCountV1() >=
-                                                _dailyCompletedRepCount.clamp(
-                                                  0,
-                                                  3,
-                                                )
+                                            _dailyPracticeQueue
+                                                    .cleanTaskIds
+                                                    .length ==
+                                                _dailyPracticeQueue
+                                                    .answeredTaskIds
+                                                    .length
                                             ? 'daily_clean_set_complete'
                                             : 'daily_set_complete',
                                       );
@@ -8483,33 +8490,27 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       Act0PracticeGroupV1(
         groupId: 'daily',
         title: dailyDeckEntry == null
-            ? _copyV1(en: 'Daily practice', ru: 'Дневная практика')
-            : _dailyCompletedRepCount >= 3
-            ? _copyV1(
-                en: 'Daily short reps complete',
-                ru: 'Дневная серия закрыта',
-              )
-            : _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
+            ? 'Daily practice'
+            : _dailyPracticeQueue.nextTaskId != null
+            ? 'Resume your short set'
+            : _dailyPracticeQueue.taskIds.isNotEmpty
+            ? 'Start a new short set'
+            : 'Practice a short set',
         subtitle: dailyDeckEntry == null
-            ? _copyV1(
-                en: 'Unlocks as you work through lessons.',
-                ru: 'Откроется после одного дрилла на маршруте.',
-              )
-            : _dailyCompletedRepCount >= 3
-            ? 'Daily spots complete. $_earnedXp total XP earned. Completion alone does not verify independent improvement.'
-            : dailyDeckEntry.isSpaced
-            ? 'Finish three spaced spots across completed worlds.'
-            : 'Finish three short spots for today.',
-        ctaLabel: _dailyCompletedRepCount >= 3
-            ? _recommendationCtaLabel(_Act0LearningNextActionKindV1.dailyDone)
-            : _recommendationCtaLabel(_Act0LearningNextActionKindV1.dailyDrill),
+            ? 'Unlocks as you work through lessons.'
+            : 'Practice up to three different completed spots. Start a new set when it ends.',
+        ctaLabel: _dailyPracticeQueue.nextTaskId != null
+            ? 'Resume practice'
+            : _dailyPracticeQueue.taskIds.isNotEmpty
+            ? 'Start new set'
+            : 'Start practice',
         categoryLabel: 'Daily',
         isEnabled: dailyDeckEntry != null,
         targetWorldId: dailyDeckEntry?.worldId,
         targetLessonId: dailyDeckEntry?.lessonId,
         targetTaskId: dailyDeckEntry?.taskId,
         countLabel: _dailyGoalValueLabel(),
-        sessionLabel: _dailyCompletedRepCount >= 3 ? 'Complete' : '3 spot set',
+        sessionLabel: 'Up to 3 spots',
         durationLabel: '~3 min',
         isRecommended: recommendation.practiceGroupId == 'daily',
         skipTeaching: true,
@@ -8533,16 +8534,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (deck.isEmpty) {
       return null;
     }
-    return deck.firstWhere(
-      (entry) => !_dailyCompletedTaskIds.contains(entry.taskId),
-      orElse: () => deck.first,
-    );
+    final eligible = deck.map((entry) => entry.taskId).toSet();
+    final queue =
+        _dailyPracticeQueue.isValidFor(eligible) &&
+            _dailyPracticeQueue.nextTaskId != null
+        ? _dailyPracticeQueue
+        : Act0DailyPracticeQueueV1.start(
+            eligible,
+            practicedToday: _dailyCompletedTaskIds,
+          );
+    return deck.firstWhere((entry) => entry.taskId == queue.nextTaskId);
   }
 
   List<_Act0DailyDeckEntryV1> _dailyDeckEntries(Act0ShellStateV1 state) {
-    final practiceWorlds = _progressedWorlds(
-      state,
-    ).where((world) => world.worldNumber <= 6).toList(growable: false);
+    final practiceWorlds = _progressedWorlds(state)
+        .where((world) => world.worldNumber >= 1 && world.worldNumber <= 4)
+        .toList(growable: false);
     if (practiceWorlds.isEmpty) {
       return const <_Act0DailyDeckEntryV1>[];
     }
@@ -10598,6 +10605,33 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     };
   }
 
+  bool _launchDailyPracticeQueueTaskV1() {
+    final taskId = _dailyPracticeQueue.nextTaskId;
+    if (taskId == null) return false;
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final entries = _dailyDeckEntries(
+      state,
+    ).where((entry) => entry.taskId == taskId);
+    if (entries.isEmpty) return false;
+    final target = entries.first;
+    final world = _worldById(_progressedWorlds(state), target.worldId);
+    if (!_startTaskByIds(
+      world,
+      target.lessonId,
+      target.taskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      rapidPracticeLoop: true,
+      evidenceRunKind: 'practice',
+      evidenceStartedBy: 'practice_daily',
+    ))
+      return false;
+    _activePracticeGroupId = 'daily';
+    _returnToPlayHubOnBack = true;
+    _persistProgress();
+    return true;
+  }
+
   void _startPracticeGroup(
     Act0PracticeGroupV1 group,
     Act0WorldCardV1 selectedWorld,
@@ -10611,6 +10645,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     if (_learningRunV1 != null) {
       _closeLearningRunForLearnExitV1();
+    }
+    if (group.groupId == 'daily') {
+      final entries = _dailyDeckEntries(
+        widget.state ?? Act0ShellStateV1.sample,
+      );
+      final eligible = entries.map((entry) => entry.taskId).toSet();
+      if (!_dailyPracticeQueue.isValidFor(eligible) ||
+          _dailyPracticeQueue.nextTaskId == null) {
+        _dailyPracticeQueue = Act0DailyPracticeQueueV1.start(
+          eligible,
+          practicedToday: _dailyCompletedTaskIds,
+        );
+      }
+      _emitPracticeStartedTelemetryV1(practiceGroupId: 'daily');
+      _launchDailyPracticeQueueTaskV1();
+      return;
     }
     if (group.groupId == 'weak_spots') {
       final weakSpot = _topOpenMistake();
@@ -12620,11 +12670,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final repairSourceLessonId =
         repairSourceRecord?.lessonId ?? selectedLesson.lessonId;
     final repairSourceWorldId = repairSourceRecord?.worldId ?? _selectedWorldId;
-    if (_activePracticeGroupId == 'daily') {
-      _ensureDailyCountDayV1();
-      _dailyCompletedTaskIds.add(selectedTask.taskId);
-      _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
-    }
     if (option.isCorrect && !_choiceHasIndependentProvenanceV1) {
       // Real learning attempt, not independent repair, transfer or retention.
       // Preserve any existing repair intent; subsequent ordinary task
@@ -13803,6 +13848,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedPresetTaskId = null;
     _phase = Act0LessonPhaseV1.theory;
     _teachingStepIndex = 0;
+    _persistProgress();
   }
 
   String _hardenMistakeReason({
@@ -16641,6 +16687,8 @@ class _Act0PersistedProgressV1 {
     this.lastEarnedDailyDay = '',
     this.hasEarnedDailyDayField = false,
     this.dailyCompletedRepCount = 0,
+    this.dailyPracticeQueue = const Act0DailyPracticeQueueV1(),
+    this.dailyCompletedTaskIds = const {},
     this.persistedStreakDays = 0,
     this.retentionSequence = 0,
     this.retentionMemory = const <_Act0RetentionMemoryEntryV1>[],
@@ -16684,6 +16732,8 @@ class _Act0PersistedProgressV1 {
   // Whether the incoming stored payload carried the new provenance key.
   final bool hasEarnedDailyDayField;
   final int dailyCompletedRepCount;
+  final Act0DailyPracticeQueueV1 dailyPracticeQueue;
+  final Set<String> dailyCompletedTaskIds;
   final int persistedStreakDays;
   final int retentionSequence;
   final List<_Act0RetentionMemoryEntryV1> retentionMemory;
@@ -16745,6 +16795,8 @@ class _Act0PersistedProgressV1 {
       'lastActiveDay': lastActiveDay,
       'lastEarnedDailyDay': lastEarnedDailyDay,
       'dailyCompletedRepCount': dailyCompletedRepCount,
+      'dailyPracticeQueue': dailyPracticeQueue.toPayload(),
+      'dailyCompletedTaskIds': dailyCompletedTaskIds.toList()..sort(),
       'persistedStreakDays': persistedStreakDays,
       'retentionSequence': retentionSequence,
       'retentionMemory': <Map<String, Object>>[
@@ -16987,6 +17039,10 @@ class _Act0PersistedProgressV1 {
       lastEarnedDailyDay: lastEarnedDailyDay,
       hasEarnedDailyDayField: map.containsKey('lastEarnedDailyDay'),
       dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),
+      dailyPracticeQueue:
+          Act0DailyPracticeQueueV1.tryParse(map['dailyPracticeQueue']) ??
+          const Act0DailyPracticeQueueV1(),
+      dailyCompletedTaskIds: _stringSet(map['dailyCompletedTaskIds']),
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,
       retentionMemory: retentionMemory,

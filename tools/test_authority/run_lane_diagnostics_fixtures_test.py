@@ -17,6 +17,21 @@ import run_lane_v1
 
 
 class LaneDiagnosticsFixturesTest(unittest.TestCase):
+    def test_failed_batch_blocks_without_reexecuting_the_manifest(self):
+        for status in ("fail", "error", "timeout", "cancelled"):
+            with self.subTest(status=status), \
+                 mock.patch.dict(os.environ, {"TEST_AUTHORITY_SHARD": ""}), \
+                 mock.patch.object(run_lane_v1, "_read_manifest", return_value=["a_test.dart", "b_test.dart"]), \
+                 mock.patch.object(run_lane_v1, "_run_command", return_value={
+                     "name": "tier-b batch", "status": status, "exit_code": 1,
+                     "duration_seconds": 1, "output_tail": "original failure",
+                 }) as command:
+                result = run_lane_v1.run_lane("tier-b", 120, False)
+                self.assertEqual(result["blocking_verdict"], "BLOCK")
+                self.assertEqual(result["files_attempted"], 2)
+                self.assertEqual(result["results"][0]["output_tail"], "original failure")
+                self.assertEqual(command.call_count, 1)
+
     def python(self, code):
         return [sys.executable, "-c", code]
 

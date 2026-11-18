@@ -99,6 +99,7 @@ TIER_A_COMMANDS = [
         "cmd": [
             "flutter", "test",
             "test/ui_v2/act0_w14_skill_projection_v1_test.dart",
+            "test/ui_v2/act0_daily_practice_queue_v1_test.dart",
             "test/ui_v2/act0_w14_skill_state_v1_test.dart",
             "-r", "compact",
         ],
@@ -400,14 +401,15 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
     if lane == "tier-b" and not smoke and len(files) > 1:
         # One `flutter test` process for the whole blocking lane: each separate
         # process spends ~9s on startup, which dominated this lane. A green batch
-        # is a green lane. Any non-green batch falls through to the per-file runs
-        # below, so failure diagnostics and the verdict stay per file.
+        # is a green lane. Preserve a failed batch and its diagnostics immediately;
+        # rerunning every file hid the first failure behind minutes of duplicate work.
         batch = _run_command(
             "tier-b batch",
             ["flutter", "test", *files, "-r", "compact"],
             timeout * len(files),
         )
-        if batch["status"] == "cancelled":
+        if batch["status"] != "pass":
+            batch["file_count"] = len(files)
             return [batch]
         if batch["status"] == "pass":
             share = round(float(batch["duration_seconds"]) / len(files), 3)
@@ -468,7 +470,7 @@ def run_lane(lane: str, timeout: int, smoke: bool) -> dict[str, object]:
         "label": LANES[lane]["label"],
         "blocking": blocking,
         "smoke": smoke,
-        "files_attempted": len(results),
+        "files_attempted": sum(int(result.get("file_count", 1)) for result in results),
         **counts,
         "duration_seconds": round(time.monotonic() - started, 3),
         "blocking_verdict": blocking_verdict,

@@ -168,6 +168,7 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
             if (input.groups.isNotEmpty &&
                 !(launchableRepair && group?.groupId == 'weak_spots'))
               _RecommendationCardV1(
+                actionLabel: group?.groupId == 'daily' ? group?.ctaLabel : null,
                 title: input.recommendedTitle,
                 subtitle: input.recommendedSubtitle,
                 reasonLabel:
@@ -447,6 +448,7 @@ class _PracticeEmptyV1 extends StatelessWidget {
 
 class _RecommendationCardV1 extends StatelessWidget {
   const _RecommendationCardV1({
+    this.actionLabel,
     required this.title,
     required this.subtitle,
     required this.reasonLabel,
@@ -457,6 +459,7 @@ class _RecommendationCardV1 extends StatelessWidget {
   });
 
   final String title;
+  final String? actionLabel;
   final String subtitle;
   final String? reasonLabel;
   final bool canStart;
@@ -467,7 +470,9 @@ class _RecommendationCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final VoidCallback? action = canStart ? onStart : onOpenLearn;
-    final label = canStart ? 'Start practice' : 'Continue learning';
+    final label = canStart
+        ? actionLabel ?? 'Start practice'
+        : 'Continue learning';
     final buttonChild = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
