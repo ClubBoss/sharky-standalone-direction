@@ -190,7 +190,7 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     }
     final parsed = RegExp(
       r'^(UTG|HJ|CO|BTN|SB|BB|UTG\+1|UTG\+2|LJ) '
-      r'(blind|posts|folds?|checks?|calls?|bets?|raises?|shoves?|jams?)'
+      r'(blind|posts|folds?|checks?|calls?|bets?|raises?|shoves?|jams?|all-in)'
       r'(?: (?:to )?([0-9]{1,7}(?:\.[0-9]{1,6})? BB)( more)?)?$',
       caseSensitive: false,
     ).firstMatch(label);
@@ -252,7 +252,8 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     }
     final before = ledger.committed[who] ?? 0;
     final total = more ? before + amount : amount;
-    final isAllIn = verb.startsWith('shove') || verb.startsWith('jam');
+    final isAllIn =
+        verb.startsWith('shove') || verb.startsWith('jam') || verb == 'all-in';
     if (verb.startsWith('call') || (isAllIn && total <= ledger.price)) {
       if (ledger.price == 0 ||
           total <= before ||

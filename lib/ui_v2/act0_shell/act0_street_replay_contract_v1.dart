@@ -128,7 +128,7 @@ act0BettingRoundOrderConditionalProofForTableV1(Act0TableStateV1 table) {
   );
 }
 
-const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
+const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams', 'all-in'};
 
 (Act0BettingRoundOrderTruthV1, String) _act0BettingRoundOrderProofV1(
   Act0TableStateV1 table, {
@@ -1227,7 +1227,8 @@ bool _act0StreetReplayLooksLikeActionV1(String value) {
     'shoves' ||
     'shove' ||
     'jams' ||
-    'jam' => true,
+    'jam' ||
+    'all-in' => true,
     _ => false,
   };
 }

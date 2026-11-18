@@ -216,13 +216,13 @@ act0RuntimeGenericLabelAtomByEnglishV1 = <String, String>{
       'runtime_phrase_some_room_not_carefree_deep',
   'Stick to process and planned exploit line':
       'runtime_phrase_stick_to_process_planned_exploit',
-  'Still take practical jam spots before blinded out':
+  'Still take practical all-in spots before blinded out':
       'runtime_phrase_take_practical_jam_spots_before_blinded_out',
   'Structured exploit before transfer':
       'runtime_phrase_structured_exploit_before_transfer',
   'Survival pressure matters more':
       'runtime_phrase_survival_pressure_matters_more',
-  'Take a reasonable jam or reshove spot':
+  'Take a reasonable all-in spot, first in or over a raise':
       'runtime_phrase_take_reasonable_jam_or_reshove',
   'Take only evidence-backed lines':
       'runtime_phrase_take_only_evidence_backed_lines',

@@ -35,7 +35,7 @@ void main() {
     expect(r.verdict, PotTruthVerdictV1.unproved);
     expect(
       r.comparisons
-          .singleWhere((c) => c.sourceLabel == 'BB shoves to 18 BB')
+          .singleWhere((c) => c.sourceLabel == 'BB all-in 18 BB')
           .reason,
       'stack_missing:bb',
     );
@@ -43,13 +43,13 @@ void main() {
 
   test('PKR06 exact W9 18 to 999 mutation cannot certify cap evidence', () {
     final source = _table(_w9);
-    const original = 'BB shoves to 18 BB';
+    const original = 'BB all-in 18 BB';
     expect(source.actionTrail.where((a) => a.label == original), hasLength(1));
     final mutated = source.copyWith(
       actionTrail: [
         for (final a in source.actionTrail)
           if (a.label == original)
-            const Act0ActionTrailItemV1(label: 'BB shoves to 999 BB')
+            const Act0ActionTrailItemV1(label: 'BB all-in 999 BB')
           else
             a,
       ],
@@ -68,7 +68,7 @@ void main() {
     expect(r.verdict, PotTruthVerdictV1.unproved);
     expect(
       r.comparisons
-          .singleWhere((c) => c.sourceLabel == 'BB shoves to 999 BB')
+          .singleWhere((c) => c.sourceLabel == 'BB all-in 999 BB')
           .verdict,
       PotTruthVerdictV1.unproved,
     );

@@ -17399,7 +17399,8 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
       preferredLabel: 'Connected ranks',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
-      feedbackReason: '9-8-7 are connected ranks, so straight draws are live.',
+      feedbackReason:
+          '9-8-7 are connected ranks, so one more card can make a straight.',
     ),
     Act0RunnerOptionV1(
       id: 'paired_board',
@@ -18621,7 +18622,7 @@ final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'Board reading starts with texture, visible draws, and improvement cards. Next, you will group hands into simple ranges.',
+          'Board reading starts with texture, visible draws, and improvement cards. Next, you will sort hands into simple groups.',
     ),
     Act0RunnerOptionV1(
       id: 'just_outs',
@@ -18891,7 +18892,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable read.',
       feedbackReason:
-          'J-T can bluff sometimes, but on a dry board with no equity it is mostly missed '
+          'J-T can bluff sometimes, but on a dry board with almost no way to improve it is mostly missed '
           'rather than a strong bluff candidate.',
     ),
     Act0RunnerOptionV1(
@@ -19051,7 +19052,7 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'K-Q did not pair on 8-7-6. Only hands that connect to the board '
-          'carry value betting equity.',
+          'are strong enough to bet for value.',
     ),
   ],
 );
@@ -19089,8 +19090,8 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
-          '9-8 has real equity. Bluff candidates are hands with little made equity '
-          'but enough fold pressure potential.',
+          '9-8 already has a real hand here. Bluff candidates are hands with '
+          'little made strength but enough fold pressure potential.',
     ),
     Act0RunnerOptionV1(
       id: 'missed',
@@ -19462,7 +19463,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket now.',
       feedbackReason:
-          'A-Q has not paired either hole card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.',
+          'A-Q has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.',
     ),
   ],
   table: _w6BluffCandidateRunner.table.copyWith(
@@ -20200,7 +20201,7 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more check.',
       feedbackReason:
-          'Do not stop at the hole cards. The board already makes the best five-card straight, so Hero ace does not outrank the board.',
+          'Do not stop at the private cards. The board already makes the best five-card straight, so Hero ace does not outrank the board.',
     ),
     Act0RunnerOptionV1(
       id: 'villain_wins',
@@ -20481,14 +20482,14 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'forced_jam',
-      label: 'Mostly jam now',
+      label: 'Mostly all-in now',
       isCorrect: false,
       preferredLabel: 'More room and more risk',
       betterAnswerLabel: 'More room and more risk',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Forced jam logic belongs more to short stacks. With 100 BB, the key change is extra room and extra risk, not immediate all-in pressure.',
+          'Forced all-in logic belongs more to short stacks. With 100 BB, the key change is extra room and extra risk, not immediate all-in pressure.',
     ),
   ],
 );
@@ -20497,7 +20498,7 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_40bb_middle',
   caption: 'Now the same hand plays 40 BB effective.',
-  hint: 'This is not pure jam depth and not carefree deep depth.',
+  hint: 'This is not pure all-in depth and not carefree deep depth.',
   question: 'What is the cleaner 40 BB read?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20512,14 +20513,14 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'pure_jam',
-      label: 'Mostly shove-or-fold only',
+      label: 'Mostly all-in or fold only',
       isCorrect: false,
       preferredLabel: 'Some room, but not carefree deep',
       betterAnswerLabel: 'Some room, but not carefree deep',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too shallow.',
       feedbackReason:
-          'That overstates short-stack pressure. 40 BB keeps more play than pure jam depth.',
+          'That overstates short-stack pressure. 40 BB keeps more play than pure all-in depth.',
     ),
     Act0RunnerOptionV1(
       id: 'same_100',
@@ -20630,14 +20631,14 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'shove_now',
-      label: 'Use shove logic',
+      label: 'Use all-in-or-fold logic',
       isCorrect: false,
       preferredLabel: 'Treat it as deeper',
       betterAnswerLabel: 'Treat it as deeper',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too shallow a plan.',
       feedbackReason:
-          'Shove logic belongs more to short stacks. At 100 BB, the main change is more future-street room and more ways to make an expensive mistake.',
+          'All-in-or-fold logic belongs more to short stacks. At 100 BB, the main change is more future-street room and more ways to make an expensive mistake.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -20773,7 +20774,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_spr4_middle',
   caption: 'SPR is 4 with one pair and some stack still behind.',
-  hint: 'Middle SPR is neither pure jam nor huge freedom.',
+  hint: 'Middle SPR is neither pure all-in nor huge freedom.',
   question: 'What does SPR 4 usually feel like?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21240,9 +21241,9 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'take_spot',
-      label: 'Take a reasonable jam or reshove spot',
+      label: 'Take a reasonable all-in spot, first in or over a raise',
       isCorrect: true,
-      preferredLabel: 'Take a reasonable jam or reshove spot',
+      preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
@@ -21252,8 +21253,9 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
       id: 'wait_premium',
       label: 'Wait only for premium pairs',
       isCorrect: false,
-      preferredLabel: 'Take a reasonable jam or reshove spot',
-      betterAnswerLabel: 'Take a reasonable jam or reshove spot',
+      preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
+      betterAnswerLabel:
+          'Take a reasonable all-in spot, first in or over a raise',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too tight here.',
       feedbackReason:
@@ -21263,8 +21265,9 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
       id: 'open_fold',
       label: 'Open small and fold to pressure',
       isCorrect: false,
-      preferredLabel: 'Take a reasonable jam or reshove spot',
-      betterAnswerLabel: 'Take a reasonable jam or reshove spot',
+      preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
+      betterAnswerLabel:
+          'Take a reasonable all-in spot, first in or over a raise',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Very close.',
       feedbackReason:
@@ -21445,7 +21448,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          'Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner shove, reshove, and steal windows here.',
+          'Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner all-in and steal windows here.',
     ),
     Act0RunnerOptionV1(
       id: 'ignore',
@@ -21644,7 +21647,7 @@ final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'jam_any_two',
-      label: 'Jam any two cards every hand',
+      label: 'Go all-in with any two cards every hand',
       isCorrect: false,
       preferredLabel: 'Apply selective open pressure',
       betterAnswerLabel: 'Apply selective open pressure',
@@ -21665,9 +21668,9 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'still_take_spots',
-      label: 'Still take practical jam spots before blinded out',
+      label: 'Still take practical all-in spots before blinded out',
       isCorrect: true,
-      preferredLabel: 'Still take practical jam spots before blinded out',
+      preferredLabel: 'Still take practical all-in spots before blinded out',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
       feedbackReason:
@@ -21677,8 +21680,8 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
       id: 'fold_to_money',
       label: 'Fold every hand until payouts begin',
       isCorrect: false,
-      preferredLabel: 'Still take practical jam spots before blinded out',
-      betterAnswerLabel: 'Still take practical jam spots before blinded out',
+      preferredLabel: 'Still take practical all-in spots before blinded out',
+      betterAnswerLabel: 'Still take practical all-in spots before blinded out',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too passive.',
       feedbackReason:
@@ -21688,8 +21691,8 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
       id: 'call_off_light',
       label: 'Call off too light',
       isCorrect: false,
-      preferredLabel: 'Still take practical jam spots before blinded out',
-      betterAnswerLabel: 'Still take practical jam spots before blinded out',
+      preferredLabel: 'Still take practical all-in spots before blinded out',
+      betterAnswerLabel: 'Still take practical all-in spots before blinded out',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
@@ -21702,7 +21705,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w9_bubble_table_risk_transfer',
   caption:
-      'Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble. No antes; BB shoves to 18 BB total. Pot 21 BB, 15.5 BB to call.',
+      'Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble. No antes; BB goes all-in for 18 BB total. Pot 21 BB, 15.5 BB to call.',
   hint:
       'The covering big blind can hurt you more than you can hurt them. Name the bubble risk premium before acting.',
   question: 'What is the cleaner first bubble adjustment here?',
@@ -21725,7 +21728,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
           Act0ActionTrailItemV1(label: 'CO folds'),
           Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
           Act0ActionTrailItemV1(label: 'SB folds'),
-          Act0ActionTrailItemV1(label: 'BB shoves to 18 BB'),
+          Act0ActionTrailItemV1(label: 'BB all-in 18 BB'),
         ],
       ),
       {'utg', 'hj', 'co', 'sb'},
@@ -21829,7 +21832,7 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too extreme.',
       feedbackReason:
-          'Urgency is real, but panic jams are not the target. You still choose spots with fold equity and blockers.',
+          'Urgency is real, but panic all-ins are not the target. You still choose spots with fold equity and blockers.',
     ),
     Act0RunnerOptionV1(
       id: 'wait_only_aa',
@@ -21997,7 +22000,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
   lessonSubtitle: 'Tournament Pressure',
   caption:
       'Real table. Medium stack near the bubble faces a covering big-stack open.',
-  hint: 'Read the pressure before you click call or jam.',
+  hint: 'Read the pressure before you click call or all-in.',
   question: 'What is the clean first pressure read?',
   feedbackTitle: 'Pressure read first.',
   feedbackReason:
@@ -22287,7 +22290,7 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'allin_only',
-      label: 'Only shove strong hands',
+      label: 'Only go all-in with strong hands',
       isCorrect: false,
       preferredLabel: 'Value-bet heavier, bluff less often',
       betterAnswerLabel: 'Value-bet heavier, bluff less often',
@@ -23244,14 +23247,14 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'jam_turn',
-      label: 'Jam to deny equity',
+      label: 'Go all-in to deny equity',
       isCorrect: false,
       preferredLabel: 'Fold the turn',
       betterAnswerLabel: 'Fold the turn',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too much pressure back.',
       feedbackReason:
-          'Jamming a single pair into a tight CO\'s value-heavy barrel magnifies risk without a credible reason to expect enough folds.',
+          'Going all-in with a single pair into a tight CO\'s value-heavy barrel magnifies risk without a credible reason to expect enough folds.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
