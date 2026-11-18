@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart' show debugPrintSynchronously;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,6 +33,89 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  testWidgets(
+    'persistent render fault can go Back without losing learner state',
+    (tester) async {
+      await _openPendingHelpDecision(tester);
+      final before = await _saved(tester);
+      final learner = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      final navigator = Navigator.of(
+        tester.element(find.byType(Act0LessonRunnerShellV1)),
+      );
+      unawaited(
+        navigator.push<void>(
+          PageRouteBuilder<void>(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (_, __, ___) => Builder(
+              builder: (_) => throw StateError('persistent render fault'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isA<StateError>());
+      expect(find.text('Please retry or go back.'), findsOneWidget);
+      await tester.tap(find.text('Retry'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isA<StateError>());
+      expect(find.text('Something went wrong'), findsOneWidget);
+      await tester.tap(find.text('Back'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      expect(
+        tester.state(find.byType(Act0ShellPreviewScreenV1)),
+        same(learner),
+      );
+      expect(_stableProgress(await _saved(tester)), _stableProgress(before));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'render Retry rebuilds the failed screen without replacing learner state',
+    (tester) async {
+      await _openPendingHelpDecision(tester);
+      final before = await _saved(tester);
+      final learner = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      var fail = true;
+      final navigator = Navigator.of(
+        tester.element(find.byType(Act0LessonRunnerShellV1)),
+      );
+      unawaited(
+        navigator.push<void>(
+          PageRouteBuilder<void>(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (_, __, ___) => Builder(
+              builder: (_) {
+                if (fail) throw StateError('synthetic render fault');
+                return const Scaffold(body: Text('Recovered screen'));
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isA<StateError>());
+      expect(find.text('Something went wrong'), findsOneWidget);
+      fail = false;
+      await tester.tap(find.text('Retry'));
+      await tester.pumpAndSettle();
+      expect(find.text('Recovered screen'), findsOneWidget);
+      expect(
+        tester.state(
+          find.byType(Act0ShellPreviewScreenV1, skipOffstage: false),
+        ),
+        same(learner),
+      );
+      final after = await _saved(tester);
+      expect(_stableProgress(after), _stableProgress(before));
+      expect(after['dailyPracticeQueue'], before['dailyPracticeQueue']);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets(
     'Practice finite set resumes after restart, ends, and explicitly restarts',
     (tester) async {
@@ -416,7 +500,7 @@ void main() {
     },
   );
 
-  for (final mode in ['ack', 'failure', 'navigation', 'reset']) {
+  for (final mode in ['ack', 'failure', 'lowStorage', 'navigation', 'reset']) {
     testWidgets('SIMULATED help waits for durable marker: $mode', (
       tester,
     ) async {
@@ -426,6 +510,7 @@ void main() {
       SharedPreferencesStorePlatform.instance = disk;
       addTearDown(() async {
         disk.failWrites = false;
+        disk.outOfSpace = false;
         disk.release();
         await tester.runAsync(() async {
           await _pendingWrites().flush().timeout(const Duration(seconds: 2));
@@ -435,6 +520,8 @@ void main() {
       final untouched = await _saved(tester);
       if (mode == 'failure') {
         disk.failWrites = true;
+      } else if (mode == 'lowStorage') {
+        disk.outOfSpace = true;
       } else {
         disk.holdNext = true;
       }
@@ -445,12 +532,30 @@ void main() {
         findsNothing,
         reason: 'Unacknowledged help must not be exposed.',
       );
-      if (mode == 'failure') {
+      if (mode == 'failure' || mode == 'lowStorage') {
         expect(
           find.text('Help could not be saved. Please try again.'),
           findsOneWidget,
         );
         disk.failWrites = false;
+        if (mode == 'lowStorage') {
+          final failed = await _saved(tester);
+          expect(_stableProgress(failed), _stableProgress(untouched));
+          expect(
+            find.text(
+              'Progress save not confirmed. Keep Sharky open and retry.',
+            ),
+            findsOneWidget,
+          );
+          disk.outOfSpace = false;
+          await _tap(tester, 'act0_progress_save_retry');
+          final recovered = await _saved(tester);
+          expect(_stableProgress(recovered), _stableProgress(untouched));
+          expect(
+            find.byKey(const Key('act0_progress_save_notice')),
+            findsNothing,
+          );
+        }
         final answer = _runner(
           tester,
         ).runner.options.singleWhere((o) => o.isCorrect);
@@ -2072,6 +2177,7 @@ class _HelpWriteGate extends SharedPreferencesStorePlatform {
   final SharedPreferencesStorePlatform delegate;
   bool holdNext = false;
   bool failWrites = false;
+  bool outOfSpace = false;
   Completer<void>? held;
   void release() {
     if (held != null && !held!.isCompleted) held!.complete();
@@ -2082,6 +2188,12 @@ class _HelpWriteGate extends SharedPreferencesStorePlatform {
   @override
   Future<bool> setValue(String type, String key, Object value) async {
     if (key.startsWith('flutter.act0_shell_progress_v1')) {
+      if (outOfSpace) {
+        throw PlatformException(
+          code: 'ENOSPC',
+          message: 'No space left on device',
+        );
+      }
       if (holdNext) {
         holdNext = false;
         held = Completer<void>();
