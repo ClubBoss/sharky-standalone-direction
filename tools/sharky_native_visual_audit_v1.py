@@ -369,8 +369,11 @@ def replace_shard_row(base: pathlib.Path, replacement: pathlib.Path, output: pat
         if row["visual_state_id"] == state_id: continue
         image = base / row["png"]
         if not image.is_file() or sha256(image) != row["png_sha256"]: raise RuntimeError(f"base PNG/hash mismatch {image}")
-        # Hash-identical accepted frames retain their validity; only the
-        # replacement needs pixel decoding.
+        # Reuse only an explicit prior accepted-frame result for identical
+        # bytes. Older/incomplete records keep the original pixel check.
+        attempts = row.get("attempts", [])
+        if not attempts or attempts[-1].get("result") != "accepted" or attempts[-1].get("frame_validity") != "valid":
+            assert_valid_frame(image)
     shutil.copytree(base, output)
     copied = output / "raw" / pathlib.Path(replacement_row["png"]).name; shutil.copy2(source, copied)
     old = matching[0]; updated = dict(replacement_row); updated["png"] = str(copied.relative_to(output)); updated["replaces_png_sha256"] = old["png_sha256"]
