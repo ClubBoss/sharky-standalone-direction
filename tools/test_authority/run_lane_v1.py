@@ -94,6 +94,16 @@ TIER_A_COMMANDS = [
         "cmd": ["flutter", "test", "test/ui_v2/act0_telemetry_sink_v1_test.dart", "-r", "compact"],
     },
     {
+        "name": "W1 long session across a restart",
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_w1_long_session_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
         "name": "repair intent",
         "cmd": [
             "flutter",
@@ -327,6 +337,7 @@ TIER_A_WEIGHTS = {
     "Wave 5 telemetry": 38,
     "Academy Placement Review widget-host remount default OFF": 29,
     "repair intent": 35,
+    "W1 long session across a restart": 40,
     "poker W4 closed-flop actor and historical compatibility": 15,
     "source scope, showdown disclosure and replay chronology (Q0)": 13,
     "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 11,

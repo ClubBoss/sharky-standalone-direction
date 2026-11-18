@@ -10018,6 +10018,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (launchTask.phase != Act0LessonPhaseV1.drill) {
       return false;
     }
+    // A daily rep may only use content the learner has opened. A target in a
+    // locked world or lesson (e.g. a World 3 checkpoint for a World 1
+    // learner) falls back to the route instead of jumping ahead.
+    if (!launchWorld.isSelectable || launchLesson.isLocked) {
+      return false;
+    }
     _emitFirstValueTodayConsumedTelemetryV1(carry);
     _emitFirstValueDailyRepLaunchedTelemetryV1(carry: carry, target: target);
     _firstValueReceiptCarry = null;
@@ -15644,6 +15650,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return false;
     }
     final decisionTask = _taskById(selectedLesson, sequence.practiceTaskId);
+    // Close the deliberately skipped nodes without reward. The lesson counts
+    // as complete only when every task in it is closed; leaving a skipped node
+    // open made the lesson replay forever ("Almost there - replay to unlock").
+    final from = _taskIndex(selectedLesson, selectedTask.taskId);
+    final to = _taskIndex(selectedLesson, decisionTask.taskId);
+    for (var i = from + 1; i < to; i++) {
+      final skipped = selectedLesson.taskList[i].taskId;
+      if (!_completedTaskIds.contains(skipped)) {
+        _closeTaskWithoutRewardV1(skipped);
+      }
+    }
     _selectedTaskId = decisionTask.taskId;
     _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.decision;
     _phase = decisionTask.entryPhase;
