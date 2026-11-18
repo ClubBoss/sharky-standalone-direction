@@ -49,6 +49,7 @@ class Act0AcademyYouLeafInputV1 {
     this.dueReviewCount = 0,
     this.skills = const <Act0W14SkillStateV1>[],
     this.onOpenReview,
+    this.onOpenPractice,
     this.onOpenLearn,
     this.onOpenSettings,
     this.onRecoveryOptions,
@@ -67,6 +68,7 @@ class Act0AcademyYouLeafInputV1 {
   final int dueReviewCount;
   final List<Act0W14SkillStateV1> skills;
   final VoidCallback? onOpenReview;
+  final VoidCallback? onOpenPractice;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenSettings;
   final VoidCallback? onRecoveryOptions;
@@ -388,7 +390,10 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
           ],
           if (input.learningRecord != null) ...[
             const SizedBox(height: 12),
-            Act0LearningRecordCardV1(projection: input.learningRecord!),
+            Act0LearningRecordCardV1(
+              projection: input.learningRecord!,
+              onOpenPractice: input.onOpenPractice,
+            ),
           ],
         ],
       ),

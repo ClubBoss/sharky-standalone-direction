@@ -5,8 +5,13 @@ import 'act0_profile_evidence_projection_v1.dart';
 
 /// Both You surfaces consume the same current-source projection.
 class Act0LearningRecordCardV1 extends StatelessWidget {
-  const Act0LearningRecordCardV1({super.key, required this.projection});
+  const Act0LearningRecordCardV1({
+    super.key,
+    required this.projection,
+    this.onOpenPractice,
+  });
   final Act0ProfileEvidenceProjectionV1 projection;
+  final VoidCallback? onOpenPractice;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +28,7 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
         ),
       ),
     );
+    final week = projection.weeklyAnswers;
     return Act0AcademyLeafSurfaceV1(
       key: const Key('act0_learning_record'),
       child: Padding(
@@ -30,6 +36,26 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (week != null) ...[
+              line('Past 7 days', title: true),
+              if (week.answers == 0)
+                line('Your saved answers will appear here.')
+              else ...[
+                line(
+                  '${week.answers} saved ${week.answers == 1 ? 'answer' : 'answers'}',
+                ),
+                line('${week.correctWithoutHelp} correct without help'),
+                if (week.withHelp > 0)
+                  line('${week.withHelp} answered with help'),
+                if (onOpenPractice != null)
+                  TextButton(
+                    key: const Key('act0_weekly_open_practice'),
+                    onPressed: onOpenPractice,
+                    child: const Text('Open Practice'),
+                  ),
+              ],
+              const Divider(),
+            ],
             line('Your learning evidence', title: true),
             line(
               'Study, practice and independent responses are recorded separately.',

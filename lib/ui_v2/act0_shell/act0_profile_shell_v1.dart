@@ -40,6 +40,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
     this.onReplayWelcome,
     this.onRecoveryOptions,
     this.onGoToHome,
+    this.onOpenPractice,
     this.evidenceSignal,
     this.learningRecord,
     this.crossSessionProof,
@@ -50,6 +51,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback onRetakePlacement;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
+  final VoidCallback? onOpenPractice;
   final VoidCallback? onRecoveryOptions;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
   final Act0ProfileEvidenceProjectionV1? learningRecord;
@@ -93,7 +95,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
         ),
         if (learningRecord != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Act0LearningRecordCardV1(projection: learningRecord!),
+          Act0LearningRecordCardV1(
+            projection: learningRecord!,
+            onOpenPractice: onOpenPractice,
+          ),
         ],
         if (evidenceSignal != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),

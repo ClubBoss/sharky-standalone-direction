@@ -3137,15 +3137,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               taskId: _firstIncompleteTask(lesson).taskId,
                             );
                           }),
-                          onOpenPracticeContext: () => setState(() {
-                            _tab = Act0ShellTabV1.play;
-                            _showPlayHub = true;
-                            _returnToPlayHubOnBack = false;
-                            _learnDetailLessonId = null;
-                            _learnDetailWorldId = null;
-                            _showWorldMenu = false;
-                            _blockCompletionSummary = null;
-                          }),
+                          onOpenPracticeContext: () =>
+                              setState(_openPracticeHubV1),
                           onOpenReviewContext: () => setState(() {
                             _tab = Act0ShellTabV1.review;
                             _showPlayHub = true;
@@ -4542,6 +4535,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 _fixProofProjectionV1(),
                               ),
                           learningRecord: currentProfileEvidenceProjection,
+                          onOpenPractice: () {
+                            if (_acceptRecoveryCallbackV1(callbackEpochV1)) {
+                              setState(_openPracticeHubV1);
+                            }
+                          },
                           evidenceSignal:
                               Act0ProfileEvidenceConsumerV1.fromProjection(
                                 currentProfileEvidenceProjection,
