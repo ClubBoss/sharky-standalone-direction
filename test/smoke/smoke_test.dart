@@ -1,8 +1,0 @@
-@TestOn('vm')
-import 'package:test/test.dart';
-
-void main() {
-  test('smoke runs', () {
-    expect(1 + 1, 2);
-  });
-}

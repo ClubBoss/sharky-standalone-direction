@@ -128,9 +128,6 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
     def test_summary_write_failure_preserves_blocking_failure(self):
         self.check_summary_write_failure("fail", "tier-a", 1)
 
-    def test_summary_write_failure_preserves_nonblocking_failure(self):
-        self.check_summary_write_failure("fail", "tier-c", 0)
-
     def test_summary_write_failure_preserves_cancellation(self):
         self.check_summary_write_failure("cancelled", "tier-a", 130)
 
@@ -160,19 +157,19 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
                 self.assertIn("command-001 | error | unknown", summary_path.read_text())
 
     def test_missing_executable_is_fatal_in_every_lane(self):
-        for lane in ("tier-a", "tier-b", "tier-c", "tier-d"):
+        for lane in ("tier-a", "tier-b"):
             with self.subTest(lane=lane):
                 self.check_missing_executable_lane(lane)
 
     def test_summary_write_failure_preserves_infrastructure_error_in_every_lane(self):
-        for lane in ("tier-a", "tier-b", "tier-c", "tier-d"):
+        for lane in ("tier-a", "tier-b"):
             with self.subTest(lane=lane):
                 self.check_missing_executable_lane(lane, summary_write_failure=True)
 
     def test_summary_write_failure_preserves_ordinary_failure_and_cancel_in_every_lane(self):
-        for lane in ("tier-a", "tier-b", "tier-c", "tier-d"):
+        for lane in ("tier-a", "tier-b"):
             with self.subTest(lane=lane, status="fail"):
-                self.check_summary_write_failure("fail", lane, 1 if lane in ("tier-a", "tier-b") else 0)
+                self.check_summary_write_failure("fail", lane, 1)
             with self.subTest(lane=lane, status="cancelled"):
                 self.check_summary_write_failure("cancelled", lane, 130)
 

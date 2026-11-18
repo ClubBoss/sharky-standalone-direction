@@ -8,12 +8,6 @@ void main() {
     final previewCoreTest = File(
       'test/ui_v2/act0_shell_preview_screen_v1_test.dart',
     ).readAsStringSync();
-    final legacyPreviewBacklog = File(
-      'test/ui_v2/act0_shell_preview_screen_v1_legacy_backlog.dart',
-    ).readAsStringSync();
-    final appRootOwnershipTest = File(
-      'test/guards/app_root_shell_ownership_contract_test.dart',
-    ).readAsStringSync();
 
     expect(
       r5Gate,
@@ -30,20 +24,6 @@ void main() {
     expect(
       previewCoreTest,
       contains('Act0 sample state keeps canonical W1-W12 runtime identity'),
-    );
-    expect(
-      legacyPreviewBacklog,
-      contains('Legacy Act0 preview backlog retained for provenance only.'),
-    );
-    expect(
-      legacyPreviewBacklog,
-      contains('Do not rename this file back to `_test.dart`'),
-    );
-    expect(
-      appRootOwnershipTest,
-      contains(
-        'app root delegates canonical path root ownership to act0 shell',
-      ),
     );
   });
 

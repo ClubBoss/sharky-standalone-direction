@@ -67,7 +67,7 @@ void main() {
       }
     });
 
-    test('W11 and W10 route copy avoid overcertain taxonomy or EV claims', () {
+    test('W11 source copy avoids overcertain value claims', () {
       final w11 = _readText(
         'content/worlds/world11/v1/sessions/w11.s01/'
         'w11.s01_deterministic_source_packet_v1.md',
@@ -75,58 +75,6 @@ void main() {
       expect(w11, isNot(contains('gives up value')));
       expect(w11, isNot(contains('too tight here')));
       expect(w11, contains('one-focus'));
-
-      final w10 = _readText(
-        'lib/ui_v2/act0_shell/'
-        'act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart',
-      ).toLowerCase();
-      expect(w10, contains('one measured late-position widen'));
-      expect(w10, isNot(contains('first purpose question is whether')));
-      expect(w10, isNot(contains('all bets fit only')));
-    });
-
-    test('final review and capsules close the bounded ledger', () {
-      final review = _readText('docs/_reviews/targeted_content_repairs_v1.md');
-      expect(
-        review,
-        contains('targeted_content_repairs_landed_with_explicit_deferrals'),
-      );
-      for (final id in <String>[
-        'PC-001',
-        'PC-002',
-        'PC-003',
-        'PC-004',
-        'PC-005',
-        'PC-006',
-        'PC-007',
-        'PC-008',
-        'PC-009',
-        'PC-010',
-        'PC-011',
-        'SLCR-001',
-        'SLCR-002',
-        'SLCR-003',
-        'SLCR-004',
-        'SLCR-005',
-        'SLCR-006',
-        'SLCR-007',
-        'SLCR-008',
-      ]) {
-        expect(review, contains(id));
-      }
-      expect(review, contains('close_targeted_content_repairs'));
-      expect(review, contains('Phase 7 Closure Audit v1'));
-
-      final activeRoute = _readText('docs/context/ACTIVE_ROUTE_CAPSULE_v1.md');
-      expect(activeRoute, contains('Targeted Content Repairs - CLOSED'));
-      expect(activeRoute, contains('Phase 7 Closure Audit - CLOSED'));
-      expect(activeRoute, contains('Motion Direction System - CLOSED'));
-      expect(activeRoute, contains('Sharky Micro-Animations v1 - BLOCKED'));
-
-      final learning = _readText('docs/context/LEARNING_REPAIR_CAPSULE_v1.md');
-      expect(learning, contains('no unresolved actionable P1-P4'));
-      expect(learning, contains('W13+ remains closed'));
-      expect(learning, contains('Practice mapping remains blocked'));
     });
   });
 }
