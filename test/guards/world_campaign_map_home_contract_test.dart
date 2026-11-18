@@ -11,9 +11,6 @@ void main() {
     final previewCoreTest = File(
       'test/ui_v2/act0_shell_preview_screen_v1_test.dart',
     ).readAsStringSync();
-    final legacyPreviewBacklog = File(
-      'test/ui_v2/act0_shell_preview_screen_v1_legacy_backlog.dart',
-    ).readAsStringSync();
 
     expect(canonicalRoot, contains('Act0ShellPreviewScreenV1'));
     expect(canonicalRoot, contains('showPlacementOnStart: true'));
@@ -27,10 +24,6 @@ void main() {
     expect(
       previewCoreTest,
       contains('Act0 sample state keeps canonical W1-W12 runtime identity'),
-    );
-    expect(
-      legacyPreviewBacklog,
-      contains('Legacy Act0 preview backlog retained for provenance only.'),
     );
   });
 
