@@ -331,7 +331,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           find.text(
-            'Track the community cards street by street, not chips in the pot.',
+            'Track the board street by street, not chips in the pot.',
           ),
           findsOneWidget,
         );

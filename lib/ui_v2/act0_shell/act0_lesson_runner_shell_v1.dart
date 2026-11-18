@@ -17239,7 +17239,7 @@ String _genericDecisionHintV1({
       (taskFamily == Act0TaskFamilyV1.counting ||
           focus.contains('how many') ||
           focus.contains('count'))) {
-    return 'Track the community cards street by street, not chips in the pot.';
+    return 'Track the board street by street, not chips in the pot.';
   }
   if (taskFamily != Act0TaskFamilyV1.sizing &&
       RegExp(r'\b(?:which|what)\s+action\b').hasMatch(focus)) {

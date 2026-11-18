@@ -67,7 +67,7 @@ void main() {
           task: 'cards_ranks_suits_board_count',
           question: null,
           hint:
-              'Track the community cards street by street, not chips in the pot.',
+              'Track the board street by street, not chips in the pot.',
         ),
         (
           name: 'authored sizing',
