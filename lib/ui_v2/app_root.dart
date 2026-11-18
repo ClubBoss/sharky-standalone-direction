@@ -41,7 +41,6 @@ final DeepLinkTargetV1? _deepLinkTarget = parseDeepLinkTargetV1(
   _deepLinkTargetRaw,
 );
 const bool _allowLegacySurfaces = false;
-final ValueNotifier<int> _uiRenderRecoveryTick = ValueNotifier<int>(0);
 const Set<String> _legacySurfaceRoutes = <String>{
   '/home',
   '/home_screen',
@@ -390,20 +389,12 @@ class _AppRootState extends State<AppRoot> {
               retryLabel: null,
             );
           }
-          return ValueListenableBuilder<int>(
-            valueListenable: _uiRenderRecoveryTick,
-            builder: (context, _, __) {
-              final media = MediaQuery.of(context);
-              final clamped = media.copyWith(
-                textScaleFactor: media.textScaleFactor.clamp(1.0, 1.4),
-              );
-              return _ErrorWidgetBuilderScope(
-                onRetry: () {
-                  _uiRenderRecoveryTick.value = _uiRenderRecoveryTick.value + 1;
-                },
-                child: MediaQuery(data: clamped, child: child),
-              );
-            },
+          final media = MediaQuery.of(context);
+          final clamped = media.copyWith(
+            textScaleFactor: media.textScaleFactor.clamp(1.0, 1.4),
+          );
+          return _ErrorWidgetBuilderScope(
+            child: MediaQuery(data: clamped, child: child),
           );
         },
         navigatorKey: widget.navigatorKey,
@@ -415,10 +406,9 @@ class _AppRootState extends State<AppRoot> {
 }
 
 class _ErrorWidgetBuilderScope extends StatefulWidget {
-  const _ErrorWidgetBuilderScope({required this.child, required this.onRetry});
+  const _ErrorWidgetBuilderScope({required this.child});
 
   final Widget child;
-  final VoidCallback onRetry;
 
   @override
   State<_ErrorWidgetBuilderScope> createState() =>
@@ -433,10 +423,7 @@ class _ErrorWidgetBuilderScopeState extends State<_ErrorWidgetBuilderScope> {
     super.initState();
     _previousBuilder = ErrorWidget.builder;
     ErrorWidget.builder = (FlutterErrorDetails details) {
-      return _GlobalRenderFallbackPanel(
-        details: details,
-        onRetry: widget.onRetry,
-      );
+      return _GlobalRenderFallbackPanel(details: details);
     };
   }
 
@@ -451,13 +438,9 @@ class _ErrorWidgetBuilderScopeState extends State<_ErrorWidgetBuilderScope> {
 }
 
 class _GlobalRenderFallbackPanel extends StatelessWidget {
-  const _GlobalRenderFallbackPanel({
-    required this.details,
-    required this.onRetry,
-  });
+  const _GlobalRenderFallbackPanel({required this.details});
 
   final FlutterErrorDetails details;
-  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -491,9 +474,7 @@ class _GlobalRenderFallbackPanel extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        kReleaseMode
-                            ? 'Please retry. Your progress is safe.'
-                            : 'Render fallback active.',
+                        'Please retry or go back.',
                         style: const TextStyle(
                           color: Color(0xFFCDD8EA),
                           fontSize: 13,
@@ -518,7 +499,17 @@ class _GlobalRenderFallbackPanel extends StatelessWidget {
                         children: [
                           Expanded(
                             child: OutlinedButton(
-                              onPressed: onRetry,
+                              onPressed: () {
+                                if (!context.mounted) return;
+                                // ErrorWidget.builder replaces the failed
+                                // component's child with this panel. Rebuild
+                                // that component, preserving its State and
+                                // the Navigator/learner state around it.
+                                context.visitAncestorElements((element) {
+                                  element.markNeedsBuild();
+                                  return false;
+                                });
+                              },
                               child: const Text('Retry'),
                             ),
                           ),
@@ -526,7 +517,9 @@ class _GlobalRenderFallbackPanel extends StatelessWidget {
                           Expanded(
                             child: TextButton(
                               onPressed: () {
-                                Navigator.of(context).maybePop();
+                                if (context.mounted) {
+                                  Navigator.maybeOf(context)?.maybePop();
+                                }
                               },
                               child: const Text('Back'),
                             ),
