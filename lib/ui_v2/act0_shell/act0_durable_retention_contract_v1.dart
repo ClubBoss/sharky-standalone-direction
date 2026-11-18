@@ -82,9 +82,7 @@ class Act0DurableRetentionHistoryV1 {
     final due = <Act0DueReviewItemV1>[];
     for (final family in families) {
       final refreshed = family.refreshedAt(nowUtc);
-      if (refreshed.retentionState != Act0RetentionStateV1.due ||
-          refreshed.nextDueAtUtc == null ||
-          refreshed.sourceTaskId.isEmpty) {
+      if (!refreshed.isDueAt(nowUtc) || refreshed.sourceTaskId.isEmpty) {
         continue;
       }
       due.add(
@@ -205,18 +203,21 @@ class Act0DurableRetentionFamilyV1 {
   bool get hasRetentionDebt =>
       incorrectCount > 0 && retentionState != Act0RetentionStateV1.unseen;
 
-  Act0DurableRetentionFamilyV1 refreshedAt(DateTime nowUtc) {
+  bool isDueAt(DateTime nowUtc) {
     final due = nextDueAtUtc;
-    if (due == null || nowUtc.toUtc().isBefore(due)) {
-      return this;
-    }
-    if (retentionState == Act0RetentionStateV1.recoveredPendingSpacedReview ||
-        retentionState == Act0RetentionStateV1.durable ||
-        retentionState == Act0RetentionStateV1.lapsed) {
-      return _copyWith(retentionState: Act0RetentionStateV1.due);
-    }
-    return this;
+    return due != null &&
+        !nowUtc.toUtc().isBefore(due) &&
+        (retentionState == Act0RetentionStateV1.due ||
+            retentionState ==
+                Act0RetentionStateV1.recoveredPendingSpacedReview ||
+            retentionState == Act0RetentionStateV1.durable ||
+            retentionState == Act0RetentionStateV1.lapsed);
   }
+
+  Act0DurableRetentionFamilyV1 refreshedAt(DateTime nowUtc) =>
+      isDueAt(nowUtc) && retentionState != Act0RetentionStateV1.due
+      ? _copyWith(retentionState: Act0RetentionStateV1.due)
+      : this;
 
   Act0DurableRetentionFamilyV1 applyLegacy(
     Act0LearningEvidenceRecordV1 record,
@@ -249,10 +250,12 @@ class Act0DurableRetentionFamilyV1 {
     Act0LearningEvidenceRecordV1 record,
   ) {
     final recordedAt = record.recordedAtUtc!.toUtc();
+    final previousTime = lastRecordedAtUtc;
+    // Keep the existing deadline when the device clock moves backwards.
+    if (previousTime != null && recordedAt.isBefore(previousTime)) return this;
     final currentAtAttempt = refreshedAt(recordedAt);
     final dueEligible =
-        currentAtAttempt.nextDueAtUtc != null &&
-        !recordedAt.isBefore(currentAtAttempt.nextDueAtUtc!) &&
+        currentAtAttempt.isDueAt(recordedAt) &&
         record.reviewKind != Act0ReviewKindV1.immediateRepair &&
         record.reviewKind != Act0ReviewKindV1.exactReplay;
     final priorDebt = currentAtAttempt.incorrectCount > 0;
@@ -263,9 +266,8 @@ class Act0DurableRetentionFamilyV1 {
     var lapses = currentAtAttempt.lapseCount;
 
     if (!record.isCorrect) {
-      if (dueEligible ||
-          state == Act0RetentionStateV1.durable ||
-          state == Act0RetentionStateV1.due ||
+      if (state == Act0RetentionStateV1.durable ||
+          currentAtAttempt.isDueAt(recordedAt) ||
           stage > 0) {
         state = Act0RetentionStateV1.lapsed;
         nextDue = recordedAt.add(Act0DurableLearningTimingV1.lapseToReview);
@@ -276,7 +278,7 @@ class Act0DurableRetentionFamilyV1 {
         nextDue = null;
         stage = 0;
       }
-    } else if (dueEligible) {
+    } else if (dueEligible && record.isIndependentCorrect) {
       stage = (stage + 1).clamp(
         0,
         Act0DurableLearningTimingV1.durableSpacedSuccesses,
@@ -293,7 +295,7 @@ class Act0DurableRetentionFamilyV1 {
           Act0DurableLearningTimingV1.firstToSecondReview,
         );
       }
-    } else if (priorDebt) {
+    } else if (priorDebt && nextDue == null && record.isIndependentCorrect) {
       state = Act0RetentionStateV1.recoveredPendingSpacedReview;
       nextDue = recordedAt.add(
         Act0DurableLearningTimingV1.recoveryToFirstReview,

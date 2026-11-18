@@ -25,9 +25,14 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
         task.phase != Act0LessonPhaseV1.theory &&
         task.runner.options.isNotEmpty &&
         _hasValidatedRepairTargetV1(repairLaunchIntent);
-    final lessonAvailable = lesson.isSelectable || drillBypass || repairBypass;
+    final spacedReview = _spacedReviewReturnV1 != null;
+    final lessonAvailable =
+        lesson.isSelectable || drillBypass || repairBypass || spacedReview;
     final taskAvailable =
-        _taskAvailable(lesson, taskId) || drillBypass || repairBypass;
+        _taskAvailable(lesson, taskId) ||
+        drillBypass ||
+        repairBypass ||
+        spacedReview;
     if (!lessonAvailable || !taskAvailable) {
       return false;
     }
@@ -44,7 +49,9 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _selectedTaskId = task.taskId;
     final actionSequence = act0ActionLearningSequenceForTaskV1(task.taskId);
     _activeActionSequenceStageV1 =
-        actionSequence == null || diagnosticLearningEntry != null
+        actionSequence == null ||
+            diagnosticLearningEntry != null ||
+            spacedReview
         ? null
         : actionSequence.stageForTask(task.taskId);
     _emitLessonStartedTelemetryV1(
@@ -65,7 +72,8 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _rapidPracticeLoop = rapidPracticeLoop;
     _phase = task.entryPhase;
     _selectedOptionId = null;
-    _teachingStepIndex = skipTeaching && task.phase == Act0LessonPhaseV1.drill
+    _teachingStepIndex =
+        skipTeaching && (task.phase == Act0LessonPhaseV1.drill || spacedReview)
         ? task.runner.teachingSteps.length
         : 0;
     _blockCompletionSummary = null;
@@ -73,35 +81,80 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     return true;
   }
 
-  void _startDueReviewItemV1(Act0DueReviewItemV1 item) {
+  Act0WorldCardV1? _dueReviewTargetWorldV1(Act0DueReviewItemV1 item) {
     final state = widget.state ?? Act0ShellStateV1.sample;
-    final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
-      (candidate) => candidate?.worldId == item.worldId,
-      orElse: () => null,
+    for (final world in state.worlds) {
+      if (world.worldId != item.worldId) continue;
+      for (final lesson in world.lessons) {
+        if (lesson.lessonId != item.lessonId) continue;
+        if (lesson.taskList.any(
+          (task) =>
+              task.taskId == item.taskId &&
+              task.phase != Act0LessonPhaseV1.theory &&
+              task.runner.options.isNotEmpty,
+        )) {
+          return world;
+        }
+      }
+    }
+    return null;
+  }
+
+  List<Act0DueReviewItemV1> _dueReviewItemsV1() => _durableRetentionHistoryV1
+      .dueItemsAt(widget.clock.nowUtc())
+      .where((item) => _dueReviewTargetWorldV1(item) != null)
+      .toList(growable: false);
+
+  void _startDueReviewItemV1(Act0DueReviewItemV1 item) {
+    if (_spacedReviewReturnV1 != null ||
+        !_dueReviewItemsV1().any(
+          (due) =>
+              due.conceptFamilyId == item.conceptFamilyId &&
+              due.worldId == item.worldId &&
+              due.lessonId == item.lessonId &&
+              due.taskId == item.taskId &&
+              due.nextDueAtUtc == item.nextDueAtUtc,
+        )) {
+      return;
+    }
+    final world = _dueReviewTargetWorldV1(item);
+    if (world == null) return;
+
+    _spacedReviewReturnV1 = (
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
     );
-    if (world == null) {
-      return;
-    }
-    final lessonExists = world.lessons.any(
-      (lesson) => lesson.lessonId == item.lessonId,
-    );
-    if (!lessonExists) {
-      return;
-    }
-    final lesson = _lessonById(world.lessons, item.lessonId);
-    if (!lesson.taskList.any((task) => task.taskId == item.taskId)) {
-      return;
-    }
     _pendingReviewKindV1 = Act0ReviewKindV1.spacedReview;
     _startTaskByIds(
       world,
       item.lessonId,
       item.taskId,
       skipTeaching: true,
-      allowDrillBypass: true,
       evidenceRunKind: 'spaced_review',
       evidenceStartedBy: 'review_due',
     );
+  }
+
+  void _returnFromSpacedReviewV1(String? runId) {
+    final selection = _spacedReviewReturnV1;
+    if (selection == null || _activeLearningEvidenceRunKeyV1?.runId != runId) {
+      return;
+    }
+    _spacedReviewReturnV1 = null;
+    _pendingReviewKindV1 = null;
+    _activeLearningEvidenceRunKeyV1 = null;
+    _activeActionSequenceStageV1 = null;
+    _selectedWorldId = selection.worldId;
+    _selectedLessonId = selection.lessonId;
+    _selectedTaskId = selection.taskId;
+    _selectedOptionId = null;
+    _phase = Act0LessonPhaseV1.theory;
+    _teachingStepIndex = 0;
+    _showPlayHub = true;
+    _returnToPlayHubOnBack = false;
+    _tab = Act0ShellTabV1.review;
+    _persistProgress();
   }
 
   void _startLearningEvidenceRunV1({

@@ -118,7 +118,7 @@ String verdict(
 ]) => Act0LearningTransferMeasurementV1.fromLearningEvidence(
   h,
   retentionHistory: cache,
-  nowUtc: t0.add(const Duration(hours: 96)),
+  nowUtc: t0.add(const Duration(days: 6)),
 ).signalForConcept(family).verdict;
 List<Act0LearningEvidenceRecordV1> durableRecords({
   bool stale = false,
@@ -146,7 +146,7 @@ List<Act0LearningEvidenceRecordV1> durableRecords({
   ),
   record(
     4,
-    96,
+    144,
     choice: stale ? 'bb' : 'utg',
     sourceFingerprint: stale ? fingerprint(oldBbSource) : conditionFingerprint,
   ),
@@ -196,7 +196,7 @@ void main() {
       expect(
         Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
           h,
-          nowUtc: t0.add(const Duration(hours: 96)),
+          nowUtc: t0.add(const Duration(days: 6)),
         ).familyById(family)?.retentionState,
         Act0RetentionStateV1.durable,
       );
@@ -251,7 +251,7 @@ void main() {
       expect(
         Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
           h,
-          nowUtc: t0.add(const Duration(hours: 96)),
+          nowUtc: t0.add(const Duration(days: 6)),
         ).familyById(family)?.retentionState,
         Act0RetentionStateV1.durable,
       );
@@ -271,7 +271,7 @@ void main() {
       verdict(h, historical);
       Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
         h,
-        nowUtc: t0.add(const Duration(hours: 96)),
+        nowUtc: t0.add(const Duration(days: 6)),
       );
       expect(h.toStorageString(), raw);
       expect(historical.toStorageString(), cache);
@@ -293,7 +293,7 @@ void main() {
       expect(
         Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
           h,
-          nowUtc: t0.add(const Duration(hours: 96)),
+          nowUtc: t0.add(const Duration(days: 6)),
         ).families,
         isEmpty,
       );
@@ -364,7 +364,7 @@ void main() {
       expect(
         Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
           h,
-          nowUtc: t0.add(const Duration(hours: 96)),
+          nowUtc: t0.add(const Duration(days: 6)),
         ).families,
         isEmpty,
       );
@@ -579,7 +579,7 @@ void main() {
       expect(
         Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
           h,
-          nowUtc: t0.add(const Duration(hours: 96)),
+          nowUtc: t0.add(const Duration(days: 6)),
         ).familyById(family)?.retentionState,
         isNot(Act0RetentionStateV1.durable),
       );
@@ -636,7 +636,7 @@ void main() {
       expect(
         Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
           history(records),
-          nowUtc: t0.add(const Duration(hours: 96)),
+          nowUtc: t0.add(const Duration(days: 6)),
         ).familyById(family)?.retentionState,
         isNot(Act0RetentionStateV1.durable),
       );
@@ -650,7 +650,7 @@ void main() {
     expect(
       Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
         history(records),
-        nowUtc: t0.add(const Duration(hours: 96)),
+        nowUtc: t0.add(const Duration(days: 6)),
       ).familyById(family)?.retentionState,
       Act0RetentionStateV1.durable,
     );
@@ -685,7 +685,7 @@ void main() {
     expect(
       Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
         history(records),
-        nowUtc: t0.add(const Duration(hours: 96)),
+        nowUtc: t0.add(const Duration(days: 6)),
       ).familyById(family)?.retentionState,
       Act0RetentionStateV1.needsRepair,
     );

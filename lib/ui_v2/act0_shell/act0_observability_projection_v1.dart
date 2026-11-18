@@ -273,8 +273,7 @@ String _elapsedBucket(DateTime? previous, DateTime? current) {
   final elapsed = current.difference(previous);
   if (elapsed < Act0DurableLearningTimingV1.recoveryToFirstReview)
     return 'under_24h';
-  if (elapsed < Act0DurableLearningTimingV1.firstToSecondReview)
-    return '24h_to_72h';
+  if (elapsed < const Duration(hours: 72)) return '24h_to_72h';
   if (elapsed < Act0DurableLearningTimingV1.durableMaintenance)
     return '72h_to_7d';
   return '7d_or_more';

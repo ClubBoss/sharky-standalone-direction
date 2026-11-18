@@ -184,6 +184,8 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       _completedTaskIds = completedTaskIds;
       _diagnosticLearningEntryV1 = null;
       _diagnosticLearningReturnV1 = null;
+      _spacedReviewReturnV1 = null;
+      _pendingReviewKindV1 = null;
       _completedLessonIds = completedLessonIds;
       _skippedTaskIds
         ..clear()
@@ -842,15 +844,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final currentStreak = _earnedStreakDaysTodayV1(today);
     if (dailyDone) _lastDailyDate = today;
     _persistedStreakDays = currentStreak;
+    final returnSelection =
+        _diagnosticLearningReturnV1 ?? _spacedReviewReturnV1;
     final snapshot = _Act0PersistedProgressV1(
       suppressLegacyRecheckAfterRecovery: _suppressLegacyRecheckAfterRecoveryV1,
       completedTaskIds: _completedTaskIds,
       skippedTaskIds: _skippedTaskIds,
       completedLessonIds: _completedLessonIds,
-      selectedWorldId: _diagnosticLearningReturnV1?.worldId ?? _selectedWorldId,
-      selectedLessonId:
-          _diagnosticLearningReturnV1?.lessonId ?? _selectedLessonId,
-      selectedTaskId: _diagnosticLearningReturnV1?.taskId ?? _selectedTaskId,
+      selectedWorldId: returnSelection?.worldId ?? _selectedWorldId,
+      selectedLessonId: returnSelection?.lessonId ?? _selectedLessonId,
+      selectedTaskId: returnSelection?.taskId ?? _selectedTaskId,
       earnedXp: _earnedXp,
       profileSkillValues: _profileSkillValues,
       recentSkillGains: _recentSkillGains,
@@ -866,16 +869,14 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       multiRepairQueue: _multiRepairQueueV1,
       multiRepairQueueOrder: _multiRepairQueueOrderV1,
       resumeInRunner:
-          _diagnosticLearningEntryV1 == null &&
+          returnSelection == null &&
           _tab == Act0ShellTabV1.play &&
           !_showPlayHub &&
           _blockCompletionSummary == null &&
           !_showPlacement,
-      resumePhase: _diagnosticLearningEntryV1 == null ? _phase.name : 'theory',
-      resumeTeachingStepIndex: _diagnosticLearningEntryV1 == null
-          ? _teachingStepIndex
-          : 0,
-      resumeSelectedOptionId: _diagnosticLearningEntryV1 == null
+      resumePhase: returnSelection == null ? _phase.name : 'theory',
+      resumeTeachingStepIndex: returnSelection == null ? _teachingStepIndex : 0,
+      resumeSelectedOptionId: returnSelection == null
           ? _selectedOptionId
           : null,
       dismissedHomeHandoffKey: _dismissedHomeHandoffKey,

@@ -1,6 +1,7 @@
 // These fixtures test reducer/consumer arithmetic, not current authored proof.
 // Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
@@ -113,7 +114,7 @@ void main() {
       expect(schedule.nextDueFamily!.scheduleState, act0SpacedRepStateDueNowV1);
     });
 
-    test('5 first due success schedules 72h', () {
+    test('5 Day 2 success schedules Day 7', () {
       final dueAt = _t0.add(const Duration(hours: 24));
       final history = _recoveredHistory().applyEvidence(
         _record(
@@ -129,17 +130,79 @@ void main() {
       final family = history.familyById('no_bet_yet')!;
 
       expect(family.spacedSuccessStage, 1);
-      expect(family.nextDueAtUtc, dueAt.add(const Duration(hours: 72)));
+      expect(family.nextDueAtUtc, _t0.add(const Duration(days: 6)));
       expect(
         family.retentionState,
         Act0RetentionStateV1.recoveredPendingSpacedReview,
       );
     });
 
+    test('only a due, independent answer advances the schedule', () {
+      final at = _t0.add(const Duration(days: 1));
+      final recovered = _recoveredHistory();
+
+      for (final attempt in [
+        _record(
+          order: 3,
+          at: at.subtract(const Duration(seconds: 1)),
+          isCorrect: true,
+          reviewKind: Act0ReviewKindV1.spacedReview,
+        ),
+        _record(
+          order: 3,
+          at: at,
+          isCorrect: true,
+          reviewKind: Act0ReviewKindV1.exactReplay,
+        ),
+        _record(
+          order: 3,
+          at: at,
+          isCorrect: true,
+          reviewKind: Act0ReviewKindV1.spacedReview,
+          assistanceKind: Act0DecisionAssistanceV1.quickHint,
+        ),
+        _record(
+          order: 3,
+          at: at,
+          isCorrect: true,
+          reviewKind: Act0ReviewKindV1.spacedReview,
+          assistanceKind: Act0DecisionAssistanceV1.legacyUnknown,
+        ),
+      ]) {
+        final family = recovered
+            .applyEvidence(attempt)
+            .familyById('no_bet_yet')!;
+        expect(family.spacedSuccessStage, 0);
+        expect(family.nextDueAtUtc, at);
+      }
+    });
+
+    test(
+      'clock rollback hides a saved due item without moving its deadline',
+      () {
+        final day2 = _t0.add(const Duration(days: 1));
+        final restored = Act0DurableRetentionHistoryV1.tryParse(
+          _recoveredHistory().refreshedAt(day2).toPayload(),
+        );
+        final earlier = _t0.subtract(const Duration(hours: 1));
+
+        expect(restored.dueItemsAt(earlier), isEmpty);
+        final schedule = Act0SpacedRepetitionScheduleV1.fromRetention(
+          nowUtc: earlier,
+          retentionHistory: restored,
+        );
+        expect(schedule.nextDueFamily, isNull);
+        final afterRollback = restored.applyEvidence(
+          _record(order: 3, at: earlier),
+        );
+        expect(afterRollback.dueItemsAt(day2).single.nextDueAtUtc, day2);
+      },
+    );
+
     test('6 second due success becomes durable with 7d maintenance', () {
       final history = _durableHistory();
       final family = history.familyById('no_bet_yet')!;
-      final secondDueAt = _t0.add(const Duration(hours: 96));
+      final secondDueAt = _t0.add(const Duration(days: 6));
 
       expect(family.spacedSuccessStage, 2);
       expect(family.retentionState, Act0RetentionStateV1.durable);
@@ -147,7 +210,7 @@ void main() {
     });
 
     test('7 due miss lapses and schedules 24h', () {
-      final maintenanceAt = _t0.add(const Duration(hours: 96, days: 7));
+      final maintenanceAt = _t0.add(const Duration(days: 13));
       final history = _durableHistory().applyEvidence(
         _record(
           order: 5,
@@ -544,7 +607,7 @@ Act0LearningEvidenceHistoryV1 _durableEvidenceHistory() =>
         ),
         _record(
           order: 4,
-          at: _t0.add(const Duration(hours: 96)),
+          at: _t0.add(const Duration(days: 6)),
           taskId: 'actions_unseen_transfer',
           sourceTaskId: 'actions_legal_context',
           sessionId: 'session_v1|3',
@@ -568,6 +631,7 @@ Act0LearningEvidenceRecordV1 _record({
   String sessionId = 'session_v1|1',
   bool isCorrect = false,
   Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.initialAssessment,
+  Act0DecisionAssistanceV1 assistanceKind = Act0DecisionAssistanceV1.none,
   String? recordId,
 }) {
   return Act0LearningEvidenceRecordV1(
@@ -589,6 +653,7 @@ Act0LearningEvidenceRecordV1 _record({
     sessionId: sessionId,
     recordedAtUtc: at,
     reviewKind: reviewKind,
+    assistanceKind: assistanceKind,
   );
 }
 

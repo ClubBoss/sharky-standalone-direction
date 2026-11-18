@@ -10,9 +10,11 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('due Review item launches the existing canonical runner', (
+  testWidgets('Day 2 and 7 open one saved review without changing XP', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     final now = DateTime.utc(2026, 7, 18, 12);
     SharedPreferences.setMockInitialValues(<String, Object>{
       'act0_shell_progress_v1': jsonEncode(<String, Object>{
@@ -21,8 +23,8 @@ void main() {
         'skippedTaskIds': <String>[],
         'completedLessonIds': <String>[],
         'selectedWorldId': 'world_1',
-        'selectedLessonId': 'fold_check_call_raise',
-        'selectedTaskId': 'actions_check_drill',
+        'selectedLessonId': 'what_poker_is_content',
+        'selectedTaskId': 'what_poker_is_pot_stack',
         'earnedXp': 0,
         'learningEvidenceHistory': <Object>[
           <String, Object>{
@@ -80,96 +82,120 @@ void main() {
                 .subtract(const Duration(days: 1))
                 .toIso8601String(),
             'reviewKind': 'immediateRepair',
-          },
-        ],
-        'durableRetentionHistory': <Object>[
-          <String, Object>{
-            'schemaVersion': 1,
-            'conceptFamilyId': 'no_bet_yet',
-            'worldId': 'world_1',
-            'sourceLessonId': 'fold_check_call_raise',
-            'sourceTaskId': 'actions_check_drill',
-            'retentionState': 'recoveredPendingSpacedReview',
-            'nextDueAtUtc': now
-                .subtract(const Duration(minutes: 1))
-                .toIso8601String(),
-            'spacedSuccessStage': 0,
-            'lapseCount': 0,
-            'incorrectCount': 1,
-            'correctCount': 1,
-            'lastRecordedAtUtc': now
-                .subtract(const Duration(days: 1))
-                .toIso8601String(),
-            'lastCreatedOrder': 2,
-            'lastSessionId': 'session_v1|1',
-            'lastReviewKind': 'immediateRepair',
-            'hasLegacyUnspacedEvidence': false,
+            'assistanceKind': 'none',
           },
         ],
       }),
     });
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Act0ShellPreviewScreenV1(
-          initialTab: Act0ShellTabV1.review,
-          showPlacementOnStart: false,
-          clock: Act0FixedUtcClockV1(now),
+    Future<void> mountReview(DateTime at) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          key: ValueKey(at),
+          home: Act0ShellPreviewScreenV1(
+            initialTab: Act0ShellTabV1.review,
+            showPlacementOnStart: false,
+            clock: Act0FixedUtcClockV1(at),
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.pump(const Duration(milliseconds: 100));
+      );
+      await tester.pumpAndSettle();
+    }
 
-    expect(
-      act0ShellPresentationFinderV1('act0_shell_review_due_spaced_item'),
-      findsOneWidget,
+    final dueCard = act0ShellPresentationFinderV1(
+      'act0_shell_review_due_spaced_item',
     );
+    final startReview = act0ShellPresentationFinderV1(
+      'act0_shell_review_start_due_spaced_item',
+    );
+    Future<Act0LessonRunnerShellV1> start() async {
+      expect(dueCard, findsOneWidget);
+      await tester.ensureVisible(startReview);
+      await tester.tap(startReview);
+      await tester.pumpAndSettle();
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedTaskId, 'actions_check_drill');
+      expect(runner.reviewKindId, 'spacedReview');
+      expect(
+        runner.evidenceRunId,
+        startsWith('run_v1|world_1|fold_check_call_raise|spaced_review|'),
+      );
+      return runner;
+    }
+
+    Future<Map<String, dynamic>> saved() async {
+      await tester.pumpAndSettle();
+      final prefs = await SharedPreferences.getInstance();
+      return jsonDecode(prefs.getString('act0_shell_progress_v1')!)
+          as Map<String, dynamic>;
+    }
+
+    const oneSecond = Duration(seconds: 1);
+    await mountReview(now.subtract(oneSecond));
+    expect(dueCard, findsNothing);
+
+    await mountReview(now);
+    await start();
+    final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
     await tester.tap(
-      act0ShellPresentationFinderV1('act0_shell_review_start_due_spaced_item'),
+      runnerBack.evaluate().isNotEmpty
+          ? runnerBack
+          : find.widgetWithText(TextButton, 'Back'),
     );
     await tester.pumpAndSettle();
+    expect(dueCard, findsOneWidget);
 
-    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
-    final runner = tester.widget<Act0LessonRunnerShellV1>(
-      find.byType(Act0LessonRunnerShellV1),
+    final day2Runner = await start();
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    final backToReview = find.byKey(
+      const Key('act0_shell_feedback_continue_cta'),
     );
-    expect(runner.selectedTaskId, 'actions_check_drill');
-    expect(runner.reviewKindId, 'spacedReview');
-    expect(
-      runner.evidenceRunId,
-      startsWith('run_v1|world_1|fold_check_call_raise|spaced_review|'),
-    );
+    final continueReview = tester
+        .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+        .onContinueReview;
+    await tester.ensureVisible(backToReview);
+    await tester.tap(backToReview);
+    continueReview(); // A second tap before the next frame cannot complete a lesson task.
+    await tester.pumpAndSettle();
+    expect(dueCard, findsNothing);
 
+    final day7 = now.add(const Duration(days: 5));
+    final day2Saved = await saved();
+    final day2Family =
+        (day2Saved['durableRetentionHistory'] as List).single as Map;
+    expect(day2Family['nextDueAtUtc'], day7.toIso8601String());
+    expect(day2Family['spacedSuccessStage'], 1);
+    expect(day2Saved['selectedTaskId'], 'what_poker_is_pot_stack');
+    expect(day2Saved['earnedXp'], 0);
+    expect(day2Saved['completedTaskIds'], isEmpty);
+
+    await mountReview(day7.subtract(oneSecond));
+    expect(dueCard, findsNothing);
+    await mountReview(day7);
+    final day7Runner = await start();
+    expect(day7Runner.evidenceRunId, isNot(day2Runner.evidenceRunId));
     await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
-    final prefs = await SharedPreferences.getInstance();
-    final stored =
-        jsonDecode(prefs.getString('act0_shell_progress_v1')!)
-            as Map<String, dynamic>;
-    final evidence = stored['learningEvidenceHistory'] as List<dynamic>;
-    final recordIds = evidence
-        .map((record) => (record as Map<String, dynamic>)['recordId'] as String)
-        .toList(growable: false);
-
-    expect(evidence, hasLength(3));
-    expect(
-      recordIds.first,
-      'v1|world_1|fold_check_call_raise|actions_check_drill|actionList|fold|1',
-    );
-    expect(
-      recordIds.last,
-      startsWith('v3|${runner.evidenceRunId}|${runner.evidenceNextOrder}|'),
-    );
+    final day7Saved = await saved();
+    final evidence = day7Saved['learningEvidenceHistory'] as List;
+    final recordIds = [for (final record in evidence) record['recordId']];
+    expect(recordIds.toSet(), hasLength(4));
+    expect(recordIds.last, startsWith('v3|${day7Runner.evidenceRunId}|'));
     expect(recordIds.last, endsWith('|actionList|fold|1'));
-    expect(recordIds.toSet(), hasLength(3));
-
-    final retention =
-        (stored['durableRetentionHistory'] as List<dynamic>).single
-            as Map<String, dynamic>;
-    expect(retention['incorrectCount'], 2);
-    expect(retention['lastReviewKind'], 'spacedReview');
+    final day7Family =
+        (day7Saved['durableRetentionHistory'] as List).single as Map;
+    expect(day7Family['lastReviewKind'], 'spacedReview');
+    expect(day7Family['retentionState'], 'lapsed');
+    expect(
+      day7Family['nextDueAtUtc'],
+      day7.add(const Duration(days: 1)).toIso8601String(),
+    );
+    expect(day7Saved['resumeInRunner'], isFalse);
+    expect(day7Saved['earnedXp'], 0);
+    expect(day7Saved['completedTaskIds'], isEmpty);
   });
 }
