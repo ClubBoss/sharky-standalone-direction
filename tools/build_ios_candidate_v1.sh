@@ -7,11 +7,8 @@ if [[ ! "$candidate_number" =~ ^[1-9][0-9]*$ ]]; then
   echo 'Usage: tools/build_ios_candidate_v1.sh [positive build number]' >&2
   exit 2
 fi
-if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo 'Commit tracked changes before building a reproducible candidate.' >&2
-  exit 2
-fi
 candidate_sha="$(git rev-parse HEAD)"
+python3 tools/ios_candidate_guard_v1.py --source-commit "$candidate_sha" > /dev/null
 candidate_out="output/ios-candidate-${candidate_sha:0:8}-${candidate_number}"
 mkdir -p "$candidate_out"
 candidate_out="$(mktemp -d "$candidate_out/run.XXXXXX")"
@@ -20,6 +17,8 @@ xcodebuild -version > "$candidate_out/xcode.txt"
 flutter pub get --enforce-lockfile > "$candidate_out/dependencies.log" 2>&1
 flutter build ios --release --no-codesign --no-pub --target=lib/main.dart \
   --build-number="$candidate_number" > "$candidate_out/build.log" 2>&1
+python3 tools/ios_candidate_guard_v1.py --source-commit "$candidate_sha" \
+  --app build/ios/iphoneos/Runner.app > "$candidate_out/source-check.json"
 python3 - "$candidate_out" "$candidate_sha" "$candidate_number" <<'PY'
 import hashlib, json, pathlib, plistlib, sys
 out, sha, number = sys.argv[1:]
@@ -39,6 +38,7 @@ metadata = {
     'input_sha256': {f: hashlib.sha256((root/f).read_bytes()).hexdigest()
                      for f in ['pubspec.yaml', 'pubspec.lock', 'ios/Podfile.lock']},
     'runtime_performance': 'NOT_MEASURED_ON_SIGNED_DEVICE_BUILD',
+    'project_assets': json.loads(pathlib.Path(out, 'source-check.json').read_text()),
 }
 pathlib.Path(out, 'candidate.json').write_text(json.dumps(metadata, indent=2)+'\n')
 print(json.dumps(metadata, indent=2))
