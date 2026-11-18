@@ -161,6 +161,81 @@ void main() {
     );
   });
 
+  test('W1-W4 histories retain source facts without backdating the pot', () {
+    var tasks = 0;
+    var histories = 0;
+    var diagrams = 0;
+    final backdatedPots = <String>[];
+    for (final world in Act0ShellStateV1.sample.worlds.where(
+      (world) => world.worldNumber >= 1 && world.worldNumber <= 4,
+    )) {
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          tasks++;
+          final table = task.runner.table;
+          final replay = act0StreetReplayFromTableV1(table);
+          if (table.scope != Act0TableScopeV1.playedHand) {
+            diagrams++;
+            expect(replay, isNull, reason: task.taskId);
+            continue;
+          }
+          if (replay?.isConsumerSafe != true) continue;
+          histories++;
+          var previousStreet = Act0StreetReplayStreetV1.preflop;
+          for (final step in replay!.steps) {
+            final source = table.actionTrail[step.order];
+            expect(source.isNote, isFalse, reason: task.taskId);
+            expect(
+              source.label.trim(),
+              endsWith(step.actionSummary),
+              reason: '${task.taskId}: a history must not invent actions',
+            );
+            expect(
+              step.street.index,
+              greaterThanOrEqualTo(previousStreet.index),
+            );
+            expect(
+              step.street.index,
+              lessThanOrEqualTo(replay.currentStreet.index),
+            );
+            previousStreet = step.street;
+            final visibleBoardCount = switch (step.street) {
+              Act0StreetReplayStreetV1.preflop => 0,
+              Act0StreetReplayStreetV1.flop => 3,
+              Act0StreetReplayStreetV1.turn => 4,
+              Act0StreetReplayStreetV1.river => 5,
+            };
+            expect(
+              step.boardCardsAtStreet,
+              table.boardCards
+                  .take(visibleBoardCount)
+                  .map((card) => card.label)
+                  .where(
+                    (label) => label.trim().isNotEmpty && !label.contains('?'),
+                  ),
+              reason: '${task.taskId}: no future board cards',
+            );
+            if (step.order != replay.steps.last.order &&
+                step.potAtStreet.isNotEmpty) {
+              backdatedPots.add(
+                '${task.taskId}: ${step.actionSummary} -> ${step.potAtStreet}',
+              );
+            }
+          }
+        }
+      }
+    }
+    print('HST_W14_TASKS=$tasks SAFE_HISTORIES=$histories DIAGRAMS=$diagrams');
+    expect(tasks, greaterThan(0));
+    expect(histories, greaterThan(0));
+    expect(diagrams, greaterThan(0));
+    expect(
+      backdatedPots,
+      isEmpty,
+      reason: 'The current snapshot pot is not a per-action historical pot.',
+    );
+  });
+
   test('fails closed when actor truth is missing from an action step', () {
     final replay = act0StreetReplayFromTableV1(
       multiStreetTable.copyWith(
