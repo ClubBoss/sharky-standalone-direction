@@ -36,6 +36,11 @@ Everything else under `docs/` is reference or history: open it only when a task 
   guarding a real risk gets simplified or deleted when you notice it, with a one-line reason in the PR.
 - Prefer free paths (web build, Personal Team signing, free CI minutes); paid services need an owner decision.
 - Ask the owner only for access, or for decisions that change the product or the release.
+- Never stop to wait: when a block is done or blocked on the owner, take the next one from the default queue
+  in `docs/PLAN.md` ("Подход", rules 11–12). Batch owner questions into one line of the block report.
+- Do not multiply worktrees or simulators: one worktree per agent (new branch from fresh `origin/main` per block,
+  delete it after merge), one reference simulator `Sharky-EN-V1-iPhone-14-Pro-Reference`. Keep `output/`,
+  screenshots and builds local and remove them after the PR.
 
 ## Code rules
 
