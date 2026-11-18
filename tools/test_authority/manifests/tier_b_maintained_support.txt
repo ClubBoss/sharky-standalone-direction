@@ -110,3 +110,9 @@ test/ui_v2/onboarding_preferences_service_contract_test.dart
 test/ui_v2/s09_review_due_with_open_mistake_en_v1_test.dart
 test/ui_v2/ui_sound_v1_test.dart
 test/ui_v2/act0_privacy_deletion_v1_test.dart
+test/guards/world_campaign_map_home_contract_test.dart
+test/guards/world_campaign_routing_matrix_contract_test.dart
+test/payments/payment_service_restore_verification_policy_v1_test.dart
+test/services/campaign_spine_runner_v1_test.dart
+test/services/energy_service_entitlement_ssot_test.dart
+test/services/outcome_summary_v1_test.dart

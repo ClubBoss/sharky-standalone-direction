@@ -9,6 +9,17 @@ void main() {
       'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
       'lib/ui_v2/act0_shell/act0_review_shell_v1.dart',
       'lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_answer_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_copy_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_debug_surfaces_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_flow_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_home_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_launch_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_learning_run_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_persistence_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_placement_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_profile_v1.dart',
+      'lib/ui_v2/act0_shell/act0_shell_preview_telemetry_v1.dart',
     ];
 
     const bannedPhrases = <String>[

@@ -12,6 +12,8 @@ Everything else under `docs/` is reference or history: open it only when a task 
   Dormant families: `lib/ui_v2/persona`, `lib/ui_v2/ai_coach`, `lib/personalization`, `lib/ui_v3`,
   non-Act0 screens under `lib/ui_v2/screens`, `lib/ui_v2/map/ui_v2_progress_map_screen_v2.dart`.
 - Task catalogue: `lib/ui_v2/act0_shell/act0_shell_state_v1.dart`. Lesson runner: `act0_lesson_runner_shell_v1.dart`.
+  The app screen (`act0_shell_preview_screen_v1.dart`) and the runner are split into `part` files by topic
+  (`act0_shell_preview_*_v1.dart`, `act0_lesson_runner_*_v1.dart`); screen-state methods live in private extensions.
 
 ## Plan and status
 
