@@ -30,10 +30,16 @@ concurrency:
 
 jobs:
   canonical-authority:
-    name: Canonical authority (Tier A + terminal Tier B)
+    name: Canonical authority (Tier A ${{ matrix.shard }}/3)
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-a' || inputs.lane == 'all-diagnostic')) }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2]
     env:
+      # Tier A commands are split across three parallel jobs by expected time.
+      TEST_AUTHORITY_SHARD: ${{ matrix.shard }}/3
       OBS04_RECEIPT_DIR: ${{ github.workspace }}/build/test_authority/obs04
       # Tier B runs in the parallel tier-b job on PR/push; same tests, less wall time.
       TEST_AUTHORITY_SKIP_TIER_B: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && '1' || '0' }}
@@ -48,6 +54,7 @@ jobs:
           cache: true
       - run: flutter pub get
       - name: Prepare OBS04 execution manifest
+        if: matrix.shard == 0
         env:
           OBS04_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
@@ -57,13 +64,13 @@ jobs:
           python3 tools/test_authority/obs04_receipt_verify.py prepare --packet "$OBS04_RECEIPT_DIR" --source-root .
       - run: ./tools/test_authority_canonical_lane_v1.sh
       - name: Seal OBS04 actual captures
-        if: always()
+        if: always() && matrix.shard == 0
         run: python3 tools/test_authority/obs04_receipt_verify.py seal --packet "$OBS04_RECEIPT_DIR" --source-root .
       - name: Verify OBS04 machine witness and negatives
-        if: always()
+        if: always() && matrix.shard == 0
         run: python3 tools/test_authority/obs04_receipt_verify.py verify --packet "$OBS04_RECEIPT_DIR" --expected-execution "$OBS04_RECEIPT_DIR/ci_expected_execution.json" --source-root .
       - name: Preserve OBS04 receipt
-        if: always()
+        if: always() && matrix.shard == 0
         uses: actions/upload-artifact@v4
         with:
           name: obs04-${{ github.run_id }}-${{ github.run_attempt }}
