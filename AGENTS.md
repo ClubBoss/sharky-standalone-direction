@@ -36,6 +36,9 @@ Everything else under `docs/` is reference or history: open it only when a task 
   guarding a real risk gets simplified or deleted when you notice it, with a one-line reason in the PR.
 - Prefer free paths (web build, Personal Team signing, free CI minutes); paid services need an owner decision.
 - Ask the owner only for access, or for decisions that change the product or the release.
+- When you take a block, read the full text of its Roadmap 2.0 criteria (Google Sheet; IDs in the block row) and
+  state in the PR how each one is met. Do not close a block on its short description alone.
+- Product and visual direction: decide from expertise with a one-line rationale; the owner keeps a veto.
 - Never stop to wait: when a block is done or blocked on the owner, take the next one from the default queue
   in `docs/PLAN.md` ("Подход", rules 11–12). Batch owner questions into one line of the block report.
 - Do not multiply worktrees or simulators: one worktree per agent (new branch from fresh `origin/main` per block,
