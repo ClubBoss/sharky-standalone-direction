@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'act0_local_data_deletion_v1.dart';
+
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,7 +59,11 @@ class Act0ProgressStoreV1 {
   final Future<void> Function(String)? debugRecoveryBoundary;
   static final _epochs = <String, int>{};
   final int _lease;
-  bool get isWriteLeaseCurrent => _lease == (_epochs[key] ?? 0);
+  final int _dataGeneration = Act0LocalDataDeletionV1.generation;
+  bool get isWriteLeaseCurrent =>
+      !Act0LocalDataDeletionV1.blocked &&
+      _dataGeneration == Act0LocalDataDeletionV1.generation &&
+      _lease == (_epochs[key] ?? 0);
   static const _maxRevision = 9007199254740991;
   static final Object _absent = Object();
   String get damagedCopyKey => '${key}_damaged_copy_v1';
@@ -97,6 +103,10 @@ class Act0ProgressStoreV1 {
   Future<({String? payload, bool isReset})> loadState() => _serial(() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
+    if (Act0LocalDataDeletionV1.blocked ||
+        prefs.containsKey(Act0LocalDataDeletionV1.pendingKey)) {
+      throw const Act0RecoveryHoldV1();
+    }
     if (prefs.containsKey(recoveryIntentKey) && !await _resumeRecovery(prefs)) {
       throw const Act0RecoveryHoldV1();
     }
@@ -112,7 +122,9 @@ class Act0ProgressStoreV1 {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
-      if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey))
+      if (!isWriteLeaseCurrent ||
+          prefs.containsKey(Act0LocalDataDeletionV1.pendingKey) ||
+          prefs.containsKey(recoveryIntentKey))
         return false;
       final current = await _resolve(prefs);
       if (current.revision >= _maxRevision) return false;
@@ -135,7 +147,9 @@ class Act0ProgressStoreV1 {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
-      if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey))
+      if (!isWriteLeaseCurrent ||
+          prefs.containsKey(Act0LocalDataDeletionV1.pendingKey) ||
+          prefs.containsKey(recoveryIntentKey))
         return false;
       var revision = 0;
       String? previousRaw;
@@ -174,7 +188,9 @@ class Act0ProgressStoreV1 {
   Future<Act0RecoveryProposalV1> inspectRecovery() => _serial(() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
-    if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey))
+    if (!isWriteLeaseCurrent ||
+        prefs.containsKey(Act0LocalDataDeletionV1.pendingKey) ||
+        prefs.containsKey(recoveryIntentKey))
       throw const Act0RecoveryHoldV1();
     final snapshot = _snapshot(prefs);
     if (!await _recoveryEligible(prefs, snapshot))

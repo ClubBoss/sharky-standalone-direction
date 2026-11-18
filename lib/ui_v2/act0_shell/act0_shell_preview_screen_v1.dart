@@ -3,6 +3,8 @@ import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
 import 'act0_daily_practice_queue_v1.dart';
 import 'dart:async';
+import 'act0_local_data_deletion_v1.dart';
+import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
 import 'act0_observability_projection_v1.dart';
@@ -1362,6 +1364,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _progressSaveStatusDisposedV1 = false;
   int _recoveryEpochV1 = 0;
   bool _recoveryBusyV1 = false;
+  bool _privacyDeletionStarted = false;
+  bool _privacyDeletionFailed = false;
   // A canonical reset severs all legacy SessionDrill projections. Their raw
   // preferences are retained; current Act0 repair/evidence remains supported.
   bool _suppressLegacyRecheckAfterRecoveryV1 = false;
@@ -6029,6 +6033,73 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
+  Future<void> _requestDeleteLocalDataV1() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete local data?'),
+        content: const Text(
+          'This permanently erases your learning progress, answers, XP, '
+          'practice history, recovery copies and preferences on this device. '
+          'You will start again. It cannot be undone. '
+          'Apple backups and TestFlight feedback are managed separately by Apple.',
+        ),
+        actions: [
+          TextButton(
+            key: const Key('act0_delete_data_cancel'),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            key: const Key('act0_delete_data_confirm'),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) await _deleteLocalDataV1();
+  }
+
+  Future<void> _deleteLocalDataV1() async {
+    _recoveryEpochV1++;
+    _learnLessonOpenSequenceV1++;
+    _progressPersistGeneration++;
+    setState(() {
+      _privacyDeletionStarted = true;
+      _privacyDeletionFailed = false;
+      _recoveryBusyV1 = true;
+      _progressRestoredV1 = false;
+    });
+    Act0LocalDataDeletionV1.blockOldWriters();
+    final language = Provider.of<AppLanguageController?>(
+      context,
+      listen: false,
+    );
+    try {
+      await _progressStore.flush();
+      await Act0FirstStartPreferencesV1.flush();
+      await AppSettingsService.instance.flush();
+      await language?.flush();
+      await widget.telemetrySink?.stopForLocalDeletion();
+      await Act0LocalDataDeletionV1.erase();
+      await AppSettingsService.instance.load();
+      await language?.resetAfterLocalDeletion();
+      if (!mounted) return;
+      _restorePreviewToFreshStart(showPlacement: true);
+      _progressStore = _makeProgressStoreV1();
+      setState(() {
+        _privacyDeletionStarted = false;
+        _recoveryBusyV1 = false;
+        _progressLoadFailed = false;
+        _bootSurfaceReady = true;
+        _progressRestoredV1 = true;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _privacyDeletionFailed = true);
+    }
+  }
+
   Future<void> _handleResetAppProgress() async {
     final shouldReset = await showDialog<bool>(
       context: context,
@@ -6326,6 +6397,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   Widget build(BuildContext context) {
+    if (_privacyDeletionStarted) {
+      return Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _privacyDeletionFailed
+                        ? 'Data deletion unfinished'
+                        : 'Deleting local data…',
+                  ),
+                  if (_privacyDeletionFailed) ...[
+                    const Text(
+                      'Keep Sharky open and retry. Your learning route stays closed until deletion finishes.',
+                    ),
+                    TextButton(
+                      key: const Key('act0_retry_data_deletion'),
+                      onPressed: _deleteLocalDataV1,
+                      child: const Text('Retry deletion'),
+                    ),
+                  ] else
+                    const CircularProgressIndicator(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     final callbackEpochV1 = _recoveryEpochV1;
     final callbackDiagnosticEntryV1 = _diagnosticLearningEntryV1;
     final callbackDiagnosticRunIdV1 = _activeLearningEvidenceRunKeyV1?.runId;
@@ -6366,6 +6470,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   key: const Key('act0_recovery_options'),
                   onPressed: _recoveryBusyV1 ? null : _openRecoveryOptionsV1,
                   child: const Text('Recovery options'),
+                ),
+                TextButton(
+                  onPressed: _recoveryBusyV1 ? null : _requestDeleteLocalDataV1,
+                  child: const Text('Delete local data'),
                 ),
               ],
             ),
@@ -8220,6 +8328,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
                         context,
+                        onDeleteLocalData: _usesPersistedProgress
+                            ? _requestDeleteLocalDataV1
+                            : null,
                         skills: act0W14SkillStatesV1(
                           worlds: state.worlds,
                           history: _learningEvidenceHistoryV1,

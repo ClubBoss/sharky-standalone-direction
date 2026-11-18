@@ -109,3 +109,4 @@ test/ui_v2/act0_wave2_canonical_assessment_validity_v1_test.dart
 test/ui_v2/onboarding_preferences_service_contract_test.dart
 test/ui_v2/s09_review_due_with_open_mistake_en_v1_test.dart
 test/ui_v2/ui_sound_v1_test.dart
+test/ui_v2/act0_privacy_deletion_v1_test.dart

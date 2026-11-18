@@ -17,6 +17,9 @@ class AppSettingsService {
   static const _aiCoachEnabledKey = 'ai_coach_enabled';
   static const _engineV2BackendEnabledV1Key = 'engine_v2_backend_enabled_v1';
 
+  Future<void>? _pendingHaptics;
+  Future<void> flush() => _pendingHaptics ?? Future<void>.value();
+
   bool _notificationsEnabled = true;
   bool _useNewTrainerUi = false;
   bool _useIcm = false;
@@ -104,13 +107,23 @@ class AppSettingsService {
     _logSettingChange('sound_enabled', value);
   }
 
-  Future<void> setHapticsEnabled(bool value) async {
-    if (_hapticsEnabled == value) return;
-    _hapticsEnabled = value;
-    _emitSnapshot();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_hapticsEnabledKey, value);
-    _logSettingChange('haptics_enabled', value);
+  Future<void> setHapticsEnabled(bool value) {
+    final saving = (_pendingHaptics ?? Future<void>.value()).then((_) async {
+      if (_hapticsEnabled == value) return;
+      final prefs = await SharedPreferences.getInstance();
+      if (!await prefs.setBool(_hapticsEnabledKey, value)) {
+        throw StateError('Haptics preference was not saved');
+      }
+      _hapticsEnabled = value;
+      _emitSnapshot();
+      _logSettingChange('haptics_enabled', value);
+    });
+    final tail = saving.then<void>((_) {}, onError: (Object _) {});
+    _pendingHaptics = tail;
+    tail.then((_) {
+      if (identical(_pendingHaptics, tail)) _pendingHaptics = null;
+    });
+    return saving;
   }
 
   Future<void> setAiCoachEnabled(bool value) async {

@@ -79,6 +79,16 @@ class AppLanguageController extends ChangeNotifier {
   /// Returns whether the visible language changed, NOT whether it was saved.
   /// Storage failures are reported through [FlutterError.reportError]. Selecting
   /// the same language can retry a failed save while still returning false.
+  Future<void> resetAfterLocalDeletion() async {
+    await _pendingWrites;
+    _currentLocale = const Locale('en');
+    _lastSavedLanguageCode = null;
+    _hasExplicitSelection = false;
+    notifyListeners();
+  }
+
+  Future<void> flush() => _pendingWrites;
+
   Future<bool> setLanguage(String languageCode) async {
     if (!supportedLanguages.containsKey(languageCode)) return false;
 

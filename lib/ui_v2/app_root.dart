@@ -1,4 +1,6 @@
 import 'dart:async' show unawaited;
+import 'package:poker_analyzer/services/app_settings_service.dart';
+import 'act0_shell/act0_local_data_deletion_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -648,6 +650,7 @@ class _EntryGateState extends State<_EntryGate> {
   // treating campaign or compatibility surfaces as a production entry.
   bool _checked = false;
   bool _entryReady = false;
+  bool _deletionFailed = false;
   bool _showPlacementOnStart = true;
   Act0ShellDebugHarnessEntryV1? _debugHarnessEntry;
   bool _deepLinkHandled = false;
@@ -673,6 +676,27 @@ class _EntryGateState extends State<_EntryGate> {
   }
 
   Future<void> _bootstrapEntrySurface() async {
+    try {
+      final before = Act0LocalDataDeletionV1.generation;
+      await Act0LocalDataDeletionV1.resumePending();
+      if (mounted && before != Act0LocalDataDeletionV1.generation) {
+        await Provider.of<AppLanguageController>(
+          context,
+          listen: false,
+        ).resetAfterLocalDeletion();
+      }
+    } catch (_) {
+      if (mounted) setState(() => _deletionFailed = true);
+      return;
+    }
+    try {
+      await AppSettingsService.instance.load();
+    } catch (_) {
+      // Settings owns its explicit retry; unavailable preferences cannot
+      // prevent opening the learning route when no erase is pending.
+    }
+    if (!mounted) return;
+    setState(() => _deletionFailed = false);
     final onboardingCompleted =
         await OnboardingPreferencesService.hasCompletedOnboarding();
     final showPlacementOnStart = !onboardingCompleted;
@@ -737,6 +761,14 @@ class _EntryGateState extends State<_EntryGate> {
 
   @override
   Widget build(BuildContext context) {
+    if (_deletionFailed) {
+      return NonBlankFallbackSurfaceV1(
+        title: 'Data deletion unfinished',
+        message: 'Keep Sharky open and retry to finish deleting local data.',
+        retryLabel: 'Retry deletion',
+        onRetry: _bootstrapEntrySurface,
+      );
+    }
     if (!_entryReady) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }

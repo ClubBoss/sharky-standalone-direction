@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Act0FirstStartPreferencesV1 {
   static const String _welcomeCompletedKey = 'act0_welcome_completed_v1';
   static Future<void>? _operations;
+  static Future<void> flush() => _operations ?? Future<void>.value();
 
   // Legacy preferences update their cache before the backend acknowledges a
   // write. Serialize this owner's reads/writes and refresh from
