@@ -49,7 +49,9 @@ Future<bool> _tapFirst(WidgetTester t, List<Finder> finders) async {
     _tapLog.add(RegExp(r"'([a-z0-9_]+)'").firstMatch('$f')?.group(1) ?? '?');
     await t.tap(hit.first, warnIfMissed: false);
     await t.pump(const Duration(milliseconds: 800));
-    await t.pumpAndSettle();
+    // Route assertions use the settled screen. Sample fewer intermediate
+    // animation frames while preserving the real navigation and dwell timers.
+    await t.pumpAndSettle(const Duration(milliseconds: 250));
     return true;
   }
   return false;
