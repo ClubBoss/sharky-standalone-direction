@@ -4446,7 +4446,11 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           question:
               'Which of these seats acts last on the flop when the dealer is still in the hand?',
           options: _positionsRecapRunner.options,
-          table: _postflopButtonActorRunner.table.copyWith(
+          table: _world2PositionRecapRunner.table.copyWith(
+            streetLabel: 'Flop',
+            potLabel: '',
+            actionTrail: const [],
+            activeSeatId: '',
             selectableSeatIds: const ['utg', 'btn', 'bb'],
           ),
         ),
@@ -4643,7 +4647,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                   'ATo can raise from HJ by the Sharky starting chart, but UTG acts before HJ.',
             ),
           ],
-          teachingSteps: const <Act0TeachingStepV1>[],
+          teachingSteps: const <Act0TeachingStepV1>[
+            Act0TeachingStepV1(
+              title: 'Check the seat and the hand.',
+              body:
+                  'Find where you sit, then read across the chart for your hand.',
+            ),
+          ],
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,

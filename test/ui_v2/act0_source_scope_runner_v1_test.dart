@@ -77,7 +77,7 @@ void main() {
   testWidgets('real incomplete showdown cannot announce a hand winner', (
     tester,
   ) async {
-    final source = _task('showdown_best_hand_drill').runner;
+    final source = _task('what_poker_is_showdown_win').runner;
     expect(
       source.table.seats.where((s) => s.isInHand && !s.isFolded),
       hasLength(6),
@@ -133,7 +133,7 @@ void main() {
     (tester) async {
       // A deliberately synthetic heads-up fixture. Marking unknown seats out
       // tests a consumer boundary and is NOT evidence about the source hand.
-      final source = _task('showdown_best_hand_drill').runner;
+      final source = _task('what_poker_is_showdown_win').runner;
       final twoSeats = _twoLiveSeats(source.table);
       final table = source.table.copyWith(seats: twoSeats);
       await _pump(tester, source.copyWith(table: table), explanation: true);
@@ -148,7 +148,7 @@ void main() {
   testWidgets('the same two physical Hero cards may be ordered differently', (
     tester,
   ) async {
-    final source = _task('showdown_best_hand_drill').runner;
+    final source = _task('what_poker_is_showdown_win').runner;
     final table = source.table.copyWith(
       seats: [
         for (final seat in _twoLiveSeats(source.table))
@@ -179,7 +179,7 @@ void main() {
     'folded-hero',
   ]) {
     testWidgets('showdown comparison fails closed: $invalid', (tester) async {
-      final source = _task('showdown_best_hand_drill').runner;
+      final source = _task('what_poker_is_showdown_win').runner;
       var table = source.table.copyWith(seats: _twoLiveSeats(source.table));
       if (invalid == 'one-card-reveal' ||
           invalid == 'placeholder-reveal' ||
@@ -274,7 +274,7 @@ void main() {
   testWidgets(
     'physical board-play tie is a comparison, not a split-pot claim',
     (tester) async {
-      final source = _task('showdown_best_hand_drill').runner;
+      final source = _task('what_poker_is_showdown_win').runner;
       final table = source.table.copyWith(
         seats: _twoLiveSeats(source.table),
         boardCards: const [

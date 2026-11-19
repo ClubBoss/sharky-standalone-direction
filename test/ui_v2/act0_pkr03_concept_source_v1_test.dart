@@ -11,18 +11,19 @@ Act0LessonTaskV1 _task(String id) => Act0ShellStateV1.sample.worlds
     .singleWhere((t) => t.taskId == id);
 
 void main() {
-  for (final id in const [
-    'button_advantage_button_intro',
-    'early_vs_late_w2_position_intro',
-    'position_apply_intro',
-    'position_checkpoint_position_checkpoint_intro',
-  ]) {
-    test('$id asks a seat question its seat answers can answer', () {
-      final runner = _task(id).runner;
-      expect(
-        runner.question,
+  for (final entry in const {
+    'button_advantage_button_intro':
+        'Which seat gets to see CO act on the first pass after the flop?',
+    'early_vs_late_w2_position_intro':
         'Which seat usually has more information before acting?',
-      );
+    'position_apply_intro':
+        'Which of these seats has fewer players still to act behind it before the flop?',
+    'position_checkpoint_position_checkpoint_intro':
+        'Which of these seats sees HJ act before making its own first decision before the flop?',
+  }.entries) {
+    test('${entry.key} asks a seat question its seat answers can answer', () {
+      final runner = _task(entry.key).runner;
+      expect(runner.question, entry.value);
       expect(runner.options.map((o) => o.label).toSet(), {'BTN', 'UTG'});
       expect(runner.options.singleWhere((o) => o.isCorrect).label, 'BTN');
     });

@@ -4555,7 +4555,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               !dockIntegratedFeedbackGuide &&
               (isTheory || isDrill || isReview)) ...[
             const SizedBox(height: Act0ShellTokensV1.gapXs),
-            buildIntegratedPrompt(),
+            // Seat decisions use a passive guide here. Let taps in its
+            // overlapping painted area reach the physical seats underneath.
+            IgnorePointer(
+              ignoring:
+                  isDrill &&
+                  !isTeaching &&
+                  hasSeatTargets &&
+                  runner.table.decisionSeatId == null,
+              child: buildIntegratedPrompt(),
+            ),
           ],
           if (taskCycleEnvelope.usesFixedLowerSlot &&
               !usesSharedActiveRunnerAllocation)

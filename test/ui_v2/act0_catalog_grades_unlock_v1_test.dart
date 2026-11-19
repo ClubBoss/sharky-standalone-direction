@@ -59,7 +59,7 @@ void main() {
     expect(problems, isEmpty, reason: problems.join('\n'));
   });
 
-  test('a lesson opens only after every task before it is closed', () {
+  test('a lesson opens only after every course task before it is closed', () {
     final route = [
       for (final w in _worlds)
         for (final l in w.lessons) (world: w.worldId, lesson: l),
@@ -95,7 +95,7 @@ void main() {
           problems.add('${target.lessonId} opens without $missing');
         }
       }
-      before.addAll(target.taskList.map((t) => t.taskId));
+      before.addAll(target.courseTaskList.map((t) => t.taskId));
     }
     expect(route.length, greaterThan(50), reason: 'catalog went missing');
     expect(problems, isEmpty, reason: problems.take(40).join('\n'));

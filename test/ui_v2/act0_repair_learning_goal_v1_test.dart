@@ -30,12 +30,6 @@ const _bad = <_Subject>[
     world: "world_1",
     lesson: "what_poker_is",
     task: "what_poker_is_find_hero",
-    choice: "top",
-  ),
-  (
-    world: "world_1",
-    lesson: "what_poker_is",
-    task: "what_poker_is_find_hero",
     choice: "random",
   ),
   (
@@ -123,6 +117,12 @@ const _rehearsals = <_Subject>[
     lesson: 'same_hand_different_seat',
     task: 'same_hand_different_seat_w3_same_hand_recap',
     choice: 'one_answer',
+  ),
+  (
+    world: "world_1",
+    lesson: "what_poker_is",
+    task: "what_poker_is_find_hero",
+    choice: "top",
   ),
 ];
 
@@ -904,7 +904,7 @@ void main() {
 
   for (final source in _bad) {
     test(
-      '${source.task}/${source.choice}: unrelated scene route holds the real miss',
+      '${source.task}/${source.choice}: missing goal proof holds the real miss',
       () {
         final intent = _intent(source);
         final history = _history(intent);
