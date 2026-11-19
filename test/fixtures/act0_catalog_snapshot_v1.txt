@@ -3983,12 +3983,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [suboptimal] Bet 4 BB — Four leaves 16 BB. Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Ah Jh | Board Ad 8c 4h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
-  - [wrong] Go all-in — All-in leaves nothing behind. At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to shove.
+  - [wrong] Go all-in — All-in leaves nothing behind. At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to go all-in.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Ah Jh | Board Ad 8c 4h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
 
 TASK w7_100bb_tighter [drill] 100 BB decision
-CAPTION: BB checks. Plan to bet 4 BB on the flop and 8 BB on the turn. Assume BB calls both.
+CAPTION: BB checks. Plan a 4 BB flop bet and an 8 BB turn bet. Assume BB calls both.
 TEACH: Depth changes commitment. A short stack runs out sooner. It also limits how much you can win when a small pair makes a set or suited connectors make a strong hand. At 100 BB, you have more chips for bets on the same streets.
 TEACH LABELS: 20 BB, 100 BB, More room, More risk
 Q: Which river bet would both stacks still cover?
@@ -4006,7 +4006,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Ad Jd | Board Ah 8s 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
 
 TASK w7_40bb_middle [drill] 40 BB middle plan
-CAPTION: BB checks. Plan to bet 5 BB on the flop and 10 BB on the turn. Assume BB calls both.
+CAPTION: BB checks. Plan a 5 BB flop bet and a 10 BB turn bet. Assume BB calls both.
 TEACH: Depth changes commitment. A short stack runs out sooner. It also limits how much you can win when a small pair makes a set or suited connectors make a strong hand. At 100 BB, you have more chips for bets on the same streets.
 TEACH LABELS: 20 BB, 100 BB, More room, More risk
 Q: What is the largest river bet both stacks could cover?
@@ -4034,12 +4034,12 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 22.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN acts
   - [wrong] Call 2.5 BB — A call does not make CO add chips. Calling keeps A-T suited in, but puts no extra chips in from CO. The question asks which raise gets paid.
     BETTER ANSWER: Raise to 7.5 BB
-  - [suboptimal] Go all-in for 25 BB — A-T suited folds to the shove. CO folds the weaker ace to a shove in this example. The smaller raise gets the call instead.
+  - [suboptimal] Go all-in for 25 BB — A-T suited folds to an all-in bet. CO folds the weaker ace to an all-in bet in this example. The smaller raise gets the call instead.
     BETTER ANSWER: Raise to 7.5 BB
   + [correct] Raise to 7.5 BB — A-T suited calls the raise. A-T suited pays the extra 5 BB under the stated rule. At 25 BB effective, a call leaves both players 17.5 BB behind.
 
 TASK w7_ajs_btn_100bb_transfer [drill] A-J suited at 100 BB
-CAPTION: CO opens to 2.5 BB. Assume the blinds fold. CO folds weaker aces to any raise. A-Q and A-K reraise a small raise and call a shove.
+CAPTION: CO opens to 2.5 BB. Assume the blinds fold. CO folds weaker aces to any raise. A-Q and A-K reraise a small raise and call an all-in bet.
 TEACH: Same hand, deeper caution. Deep stacks give more room, but they also punish dominated and fragile hands more because more money can keep flowing later.
 TEACH LABELS: 100 BB, More room, More risk
 Q: Which action keeps the weaker aces in the pot?
@@ -4050,7 +4050,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
   + [correct] Call 2.5 BB — A call keeps the weaker aces in. A call keeps the weaker aces in and leaves 97.5 BB behind on each side. More chips can go in on the same later streets, so reassess if CO bets big.
   - [suboptimal] Raise to 7.5 BB — A raise folds the hands you want to keep. In this example CO folds the weaker aces to either raise and raises again with stronger hands such as A-Q.
     BETTER ANSWER: Call 2.5 BB
-  - [wrong] Go all-in for 100 BB — The shove risks the whole stack. Under the stated model, the weaker aces fold. The larger stack lets you lose more when your ace is outkicked.
+  - [wrong] Go all-in for 100 BB — Going all-in risks the whole stack. Under the stated model, the weaker aces fold. The larger stack lets you lose more when your ace is outkicked.
     BETTER ANSWER: Call 2.5 BB
 
 TASK w7_depth_shift_recap [review] Depth recap

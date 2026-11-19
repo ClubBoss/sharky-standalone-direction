@@ -21686,7 +21686,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'All-in leaves nothing behind.',
       feedbackReason:
-          'At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to shove.',
+          'At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to go all-in.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -21703,7 +21703,7 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_100bb_tighter',
   caption:
-      'BB checks. Plan to bet 4 BB on the flop and 8 BB on the turn. Assume BB calls both.',
+      'BB checks. Plan a 4 BB flop bet and an 8 BB turn bet. Assume BB calls both.',
   hint: 'Subtract both earlier bets from the smaller stack.',
   question: 'Which river bet would both stacks still cover?',
   options: const <Act0RunnerOptionV1>[
@@ -21754,7 +21754,7 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_40bb_middle',
   caption:
-      'BB checks. Plan to bet 5 BB on the flop and 10 BB on the turn. Assume BB calls both.',
+      'BB checks. Plan a 5 BB flop bet and a 10 BB turn bet. Assume BB calls both.',
   hint: 'Track the chips left after each bet.',
   question: 'What is the largest river bet both stacks could cover?',
   options: const <Act0RunnerOptionV1>[
@@ -21884,9 +21884,9 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       preferredLabel: 'Raise to 7.5 BB',
       betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'A-T suited folds to the shove.',
+      feedbackTitle: 'A-T suited folds to an all-in bet.',
       feedbackReason:
-          'CO folds the weaker ace to a shove in this example. The smaller raise gets the call instead.',
+          'CO folds the weaker ace to an all-in bet in this example. The smaller raise gets the call instead.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -21903,7 +21903,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_ajs_btn_100bb_transfer',
   caption:
-      'CO opens to 2.5 BB. Assume the blinds fold. CO folds weaker aces to any raise. A-Q and A-K reraise a small raise and call a shove.',
+      'CO opens to 2.5 BB. Assume the blinds fold. CO folds weaker aces to any raise. A-Q and A-K reraise a small raise and call an all-in bet.',
   hint: 'Find the action that keeps weaker aces in.',
   question: 'Which action keeps the weaker aces in the pot?',
   table: _act0CoOpenLessonTableV1(
@@ -21940,7 +21940,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       preferredLabel: 'Call 2.5 BB',
       betterAnswerLabel: 'Call 2.5 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'The shove risks the whole stack.',
+      feedbackTitle: 'Going all-in risks the whole stack.',
       feedbackReason:
           'Under the stated model, the weaker aces fold. The larger stack lets you lose more when your ace is outkicked.',
     ),
