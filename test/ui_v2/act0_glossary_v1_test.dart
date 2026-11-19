@@ -70,6 +70,7 @@ void main() {
         (r) =>
             r.world.worldNumber == 1 &&
             r.task.runner.options.length > 1 &&
+            r.task.runner.teachingSteps.isNotEmpty &&
             act0GlossaryTermsInV1(
               act0GlossaryTaskTextV1(r.task.runner),
             ).isNotEmpty,
@@ -81,38 +82,48 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
-      Future<void> mount(Act0LessonPhaseV1 phase, {String? selectedOptionId}) =>
-          tester.pumpWidget(
-            MaterialApp(
-              home: Scaffold(
-                body: Act0LessonRunnerShellV1(
-                  runner: task.runner.copyWith(
-                    phase: phase,
-                    selectedOptionId: selectedOptionId,
-                  ),
-                  worldNumber: row.world.worldNumber,
-                  selectedWorldId: row.world.worldId,
-                  selectedLessonId: row.lesson.lessonId,
-                  selectedTaskId: task.taskId,
-                  selectedTaskTitle: task.title,
-                  selectedTaskFamily: task.resolvedTaskFamily,
-                  compositionFamily: task.resolvedCompositionFamily,
-                  tablePresentation: task.tablePresentation,
-                  onBack: () {},
-                  onContinueTheory: () {},
-                  onChooseOption: chosen.add,
-                  onContinueReview: () {},
-                  onChoiceAssistance: (_) => assistance++,
-                ),
+      Future<void> mount(
+        Act0LessonPhaseV1 phase, {
+        String? selectedOptionId,
+        bool teaching = false,
+      }) => tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: phase,
+                selectedOptionId: selectedOptionId,
+                teachingStepIndex: teaching
+                    ? 0
+                    : task.runner.teachingSteps.length,
               ),
+              worldNumber: row.world.worldNumber,
+              selectedWorldId: row.world.worldId,
+              selectedLessonId: row.lesson.lessonId,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: chosen.add,
+              onContinueReview: () {},
+              onChoiceAssistance: (_) => assistance++,
             ),
-          );
+          ),
+        ),
+      );
       final glossary = find.byKey(const Key('act0_shell_runner_glossary'));
       await mount(Act0LessonPhaseV1.drill);
       await tester.pumpAndSettle();
       expect(glossary, findsNothing);
 
       await mount(Act0LessonPhaseV1.theory);
+      await tester.pumpAndSettle();
+      expect(glossary, findsOneWidget);
+
+      await mount(Act0LessonPhaseV1.drill, teaching: true);
       await tester.pumpAndSettle();
       await tester.tap(glossary);
       await tester.pumpAndSettle();

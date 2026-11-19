@@ -902,10 +902,15 @@ List<String> _trimmedUniqueStringsV1(Iterable<String> values) {
 }
 
 class _RunnerProgressV1 extends StatelessWidget {
-  const _RunnerProgressV1({required this.runner, required this.onBack});
+  const _RunnerProgressV1({
+    required this.runner,
+    required this.onBack,
+    required this.showGlossary,
+  });
 
   final Act0RunnerStateV1 runner;
   final VoidCallback onBack;
+  final bool showGlossary;
 
   @override
   Widget build(BuildContext context) {
@@ -937,7 +942,7 @@ class _RunnerProgressV1 extends StatelessWidget {
             ),
           ),
         ),
-        if (runner.phase != Act0LessonPhaseV1.drill) ...[
+        if (showGlossary) ...[
           const SizedBox(width: Act0ShellTokensV1.gapXs),
           SizedBox(
             width: 44,

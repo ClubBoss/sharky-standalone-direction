@@ -4101,7 +4101,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (!_usesCanonicalIntegratedLearningSceneV1)
-                _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
+                _RunnerProgressV1(
+                  runner: runner,
+                  onBack: _handleRunnerBackV1,
+                  showGlossary: isTheory || isTeaching || isReview,
+                ),
               SizedBox(
                 height: showTopInstructionCard
                     ? Act0ShellTokensV1.gapSm
@@ -4535,7 +4539,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               (isTheory || isDrill || isReview))
-            _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
+            _RunnerProgressV1(
+              runner: runner,
+              onBack: _handleRunnerBackV1,
+              showGlossary: isTheory || isTeaching || isReview,
+            ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               usesSharedActiveRunnerAllocation &&
               !dockIntegratedFeedbackGuide &&
