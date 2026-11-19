@@ -20751,7 +20751,7 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
   ],
   table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Qs Jd'),
+    heroCards: _act0LessonCardsV1('8h 8c'),
     centerLabel: 'Count combinations',
   ),
 );
