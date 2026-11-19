@@ -81,7 +81,18 @@ void main() {
     'W4 observation preserves the declared non-Hero turn through feedback',
     () {
       final task = _task('w4_checkpoint_table_purpose_price');
-      expect(task.runner.table.activeSeatId, 'bb');
+      final decision = task.runner.table;
+      expect(decision.activeSeatId, 'bb');
+      expect(decision.decisionSeatId, 'bb');
+      expect(decision.potLabel, 'Pot 8 BB');
+      expect(decision.toCallLabel, 'To call 2 BB');
+      expect(
+        decision.seats.singleWhere((seat) => seat.seatId == 'bb').hasActed,
+        isFalse,
+      );
+      final button = decision.seats.singleWhere((seat) => seat.seatId == 'btn');
+      expect(button.bet?.amountLabel, '2 BB');
+      expect(button.hasActed, isTrue);
       for (final option in task.runner.options) {
         final table = act0FeedbackTableForRunnerV1(
           runner: task.runner.copyWith(

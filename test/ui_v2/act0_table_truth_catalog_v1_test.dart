@@ -251,11 +251,55 @@ void main() {
         'options': priorContextOptions,
       });
     }
+    // L1 revises the exact disputed answers while the frozen historical
+    // fixture still guards XP, task IDs, unaffected choices and repair fields.
+    const gradingCorrections = {
+      'button_advantage_button_vs_cutoff': [
+        ('co', false, 'co'),
+        ('btn', true, 'btn'),
+      ],
+      'same_hand_different_seat_w3_same_hand_intro': [
+        ('cards_and_seat', false, null),
+        ('full_context', true, null),
+      ],
+      'same_hand_different_seat_w3_same_hand_call': [
+        ('blinds_only', false, null),
+        ('players_behind', true, null),
+      ],
+      'w4_cheap_price_marginal_call': [
+        ('fold', false, null),
+        ('call', true, null),
+      ],
+      'w4_big_price_marginal_fold': [
+        ('call', false, null),
+        ('fold', true, null),
+      ],
+      'w4_checkpoint_table_price': [
+        ('fold', false, null),
+        ('call', true, null),
+      ],
+    };
+    for (final entry in gradingCorrections.entries) {
+      final expectedTask =
+          expectedComparison[entry.key] as Map<String, dynamic>;
+      expectedTask['options'] = [
+        for (final (id, correct, seat) in entry.value)
+          {
+            'id': id,
+            'correct': correct,
+            'quality': correct ? 'correct' : 'wrong',
+            'seat': seat,
+            'repairSeats': <String>[],
+            'repairCards': <String>[],
+            'repairLabels': <String>[],
+          },
+      ];
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only reviewed MAIN01 quality cells, the exact three W01 theory option contracts and the exact active W24 context choices may differ; every other identity, XP, family and repair field remains frozen',
+          'Only reviewed MAIN01 quality cells, the exact three W01 theory option contracts and the exact W24 and L1 grading corrections may differ; every other identity, XP, family and repair field remains frozen',
     );
     const expectedAsmContracts = {
       'asm05_new_known_holes_turn_call_10': {

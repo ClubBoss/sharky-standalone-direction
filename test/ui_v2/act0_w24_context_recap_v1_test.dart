@@ -134,9 +134,9 @@ void main() {
         normalized.options.every((option) => option.seatId == null),
         isTrue,
       );
-      // The recap override must not clear the ancestor or real seat tasks.
+      // The context questions use answers, while seat questions still use the table.
       const seatControls = <String, List<String>>{
-        'same_hand_different_seat_w3_same_hand_intro': <String>['btn', 'utg'],
+        'button_advantage_button_vs_cutoff': <String>['btn', 'co'],
         'button_advantage_find_button': <String>['btn', 'co'],
       };
       for (final entry in seatControls.entries) {
