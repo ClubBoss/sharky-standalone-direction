@@ -53,17 +53,11 @@ void main() {
     'w6_wet_board_repair': 'respect_wetter_board',
     'w12_bad_call_good_result': 'flag_leak',
   }.entries) {
-    test('${entry.key} is a stated premise in every real table projection', () {
+    test('${entry.key} preserves its evidence in each table projection', () {
       final task = _task(entry.key);
       final runner = task.runner;
-      expect(runner.caption.toLowerCase(), contains('suppose'));
-      if (entry.key.startsWith('w6_')) {
-        expect(
-          runner.teachingSteps.map((s) => s.body.toLowerCase()).join(' '),
-          anyOf(contains('suppose'), contains('hypothetical')),
-        );
-      }
       if (entry.key == 'w6_turn_shift_bucket') {
+        expect(runner.caption, contains('Assume BB is less likely to fold'));
         expect(
           runner.options
               .singleWhere((o) => o.id == 'always_value')
@@ -88,6 +82,17 @@ void main() {
           act0RepairTableForRunnerV1(runner.table, option),
       ];
       for (final table in tables) {
+        if (entry.key.startsWith('w6_')) {
+          expect(table.scope, Act0TableScopeV1.playedHand);
+          expect(table.streetLabel, 'Turn');
+          expect(table.boardCards, runner.table.boardCards);
+          expect(table.heroCards, runner.table.heroCards);
+          expect(table.toCallLabel, isEmpty);
+          expect(table.actionTrail.last.label, 'Turn: BB checks');
+          expect(act0StreetReplayFromTableV1(table)?.isConsumerSafe, isTrue);
+          continue;
+        }
+        expect(runner.caption.toLowerCase(), contains('suppose'));
         expect(table.scope, Act0TableScopeV1.explanation);
         expect(table.centerLabel, 'Hypothetical example');
         expect(table.streetLabel, isEmpty);

@@ -302,5 +302,39 @@ void main() {
         );
       }
     });
+
+    test('W8 compares full ring using a six-max preflop example', () {
+      final formatLesson = Act0ShellStateV1.sample
+          .worldById('world_8')
+          .lessons
+          .singleWhere((lesson) => lesson.lessonId == 'format_pressure');
+      for (final task in formatLesson.taskList.where(
+        (task) => task.taskId != 'w7_stack_checkpoint',
+      )) {
+        final runner = task.runner;
+        final table = runner.table;
+        expect(
+          table.tableFormat,
+          Act0TableFormatV1.sixMax,
+          reason: task.taskId,
+        );
+        expect(table.seats.where((seat) => seat.isOccupied), hasLength(6));
+        expect(table.heroSeat.seatLabel, 'UTG');
+        expect(table.streetLabel, 'Preflop');
+        for (final role in ['UTG+1', 'UTG+2', 'LJ']) {
+          expect(runner.caption, contains(role), reason: task.taskId);
+        }
+      }
+      for (final id in ['w7_fullring_tighter', 'w7_format_table_notice']) {
+        final correct = task(
+          'world_8',
+          id,
+        ).runner.options.singleWhere((option) => option.isCorrect);
+        expect(
+          correct.label,
+          anyOf(contains('fewer hands'), contains('tighten')),
+        );
+      }
+    });
   });
 }

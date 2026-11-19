@@ -13595,33 +13595,43 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
   required List<Act0CardStateV1> heroCards,
   required List<Act0CardStateV1> otherCards,
   required List<Act0CardStateV1> boardCards,
+  num flopBetBb = 0,
+  num turnBetBb = 0,
+  List<String> highlightedCardIds = const [],
 }) {
+  final contributedBb = 2.25 + flopBetBb + turnBetBb;
   return _showdownKickerRunner.table.copyWith(
     centerLabel: 'Showdown',
     streetLabel: 'River',
-    potLabel: 'Pot 6 BB',
+    potLabel: 'Pot ${_act0BbLabelV1(2 * contributedBb + 1.5)}',
     toCallLabel: '',
     activeSeatId: '',
     clearDecisionSeatId: true,
     selectableSeatIds: const [],
-    highlightedCardIds: const [],
+    highlightedCardIds: highlightedCardIds,
     heroCards: heroCards,
     boardCards: boardCards,
-    actionTrail: const [
-      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ folds'),
-      Act0ActionTrailItemV1(label: 'CO raises 2.25 BB'),
-      Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
-      Act0ActionTrailItemV1(label: 'SB folds'),
-      Act0ActionTrailItemV1(label: 'BB folds'),
-      Act0ActionTrailItemV1(label: 'Flop: CO checks'),
-      Act0ActionTrailItemV1(label: 'BTN checks'),
-      Act0ActionTrailItemV1(label: 'Turn: CO checks'),
-      Act0ActionTrailItemV1(label: 'BTN checks'),
-      Act0ActionTrailItemV1(label: 'River: CO checks'),
-      Act0ActionTrailItemV1(label: 'BTN checks'),
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      const Act0ActionTrailItemV1(label: 'HJ folds'),
+      const Act0ActionTrailItemV1(label: 'CO raises 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'SB folds'),
+      const Act0ActionTrailItemV1(label: 'BB folds'),
+      for (final (street, bet) in [('Flop', flopBetBb), ('Turn', turnBetBb)])
+        if (bet > 0) ...[
+          Act0ActionTrailItemV1(
+            label: '$street: CO bets ${_act0BbLabelV1(bet)}',
+          ),
+          Act0ActionTrailItemV1(label: 'BTN calls ${_act0BbLabelV1(bet)}'),
+        ] else ...[
+          Act0ActionTrailItemV1(label: '$street: CO checks'),
+          const Act0ActionTrailItemV1(label: 'BTN checks'),
+        ],
+      const Act0ActionTrailItemV1(label: 'River: CO checks'),
+      const Act0ActionTrailItemV1(label: 'BTN checks'),
     ],
     autoPlayHistory: false,
     seats: [
@@ -13636,7 +13646,7 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
           isLastAggressor: false,
           clearCommitment: true,
           stackLabel: switch (seat.seatId) {
-            'btn' || 'co' => '97.75 BB',
+            'btn' || 'co' => _act0BbLabelV1(100 - contributedBb),
             'sb' => '99.5 BB',
             'bb' => '99 BB',
             _ => '100 BB',
@@ -18294,8 +18304,8 @@ Act0TableStateV1 _act0BoardLessonTableV1({
 Act0TableStateV1 _act0UnopenedLessonTableV1({
   required List<Act0CardStateV1> heroCards,
   required String centerLabel,
-  Act0TableFormatV1 format = Act0TableFormatV1.sixMax,
 }) {
+  const format = Act0TableFormatV1.sixMax;
   final seatOrder = act0CanonicalSeatOrderForFormatV1(format);
   return Act0TableStateV1(
     scope: Act0TableScopeV1.playedHand,
@@ -19183,6 +19193,13 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
     heroCards: _act0LessonCardsV1('6h 5c'),
     boardCards: _act0LessonCardsV1('8s 7d 2h'),
     centerLabel: 'Read the draw',
+    highlightedCardIds: const [
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_2',
+    ],
   ),
 );
 
@@ -19316,6 +19333,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
     centerLabel: 'Compare two river cards',
     openBb: 3,
     flopBetBb: 2,
+    highlightedCardIds: const ['hero_0', 'hero_1', 'board_1', 'board_2'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -20996,6 +21014,8 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
     heroCards: _heroAkCards,
     otherCards: _villainKqCards,
     boardCards: _boardK7294Cards,
+    flopBetBb: 2.5,
+    highlightedCardIds: const ['hero_0', 'hero_1', 'board_0'],
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21053,6 +21073,7 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
     heroCards: _heroAjCards,
     otherCards: _villainK8Cards,
     boardCards: _boardJ8822Cards,
+    flopBetBb: 4,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21116,6 +21137,15 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
     heroCards: _heroA5Cards,
     otherCards: _villainK4Cards,
     boardCards: _boardBroadwayCards,
+    flopBetBb: 3,
+    turnBetBb: 3,
+    highlightedCardIds: const [
+      'board_0',
+      'board_1',
+      'board_2',
+      'board_3',
+      'board_4',
+    ],
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21245,7 +21275,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_effective_stack_100bb',
-  caption: 'Hero has 100 BB. Villain has 100 BB.',
+  caption: 'Both players have the same stack behind on this flop.',
   hint: 'Equal stacks keep the full depth in play.',
   question: 'What is the effective stack?',
   options: const <Act0RunnerOptionV1>[
@@ -21374,7 +21404,7 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   lessonId: 'w7_depth_shift_intro',
   lessonTitle: 'Same hand, different depth',
   caption:
-      'The same hand leaves different room for later bets at 20 BB and 100 BB.',
+      'Compare a short stack here with a deeper stack holding the same hand.',
   hint: 'Short stacks simplify decisions. Deep stacks create more future risk.',
   question: 'Why does stack depth change the plan?',
   table: _act0BoardLessonTableV1(
@@ -21401,7 +21431,7 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_20bb_wider',
-  caption: 'Compare A-J suited at 20 BB and 100 BB effective.',
+  caption: 'Compare this short-stack A-J suited spot with a deeper one.',
   hint: 'Shorter stacks reduce the postflop burden.',
   question: 'Which depth leaves less room for large bets on later streets?',
   options: const <Act0RunnerOptionV1>[
@@ -21451,7 +21481,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
 final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_100bb_tighter',
-  caption: 'Now look at the same hand with 100 BB effective.',
+  caption: 'Now look at the same hand with more chips behind.',
   hint: 'More streets create more ways to make a second-best hand.',
   question: 'What changes when the hand is 100 BB deep?',
   options: const <Act0RunnerOptionV1>[
@@ -21576,6 +21606,9 @@ Act0TableStateV1 _act0CoOpenLessonTableV1({
           'btn' => _act0CopySeatStateV1(
             seat,
             stackLabel: _act0BbLabelV1(startingDepthBb),
+            cardsVisibleMode: heroCards == _unknownHoleCards
+                ? Act0CardsVisibleModeV1.faceDown
+                : Act0CardsVisibleModeV1.faceUp,
           ),
           'co' => _act0CopySeatStateV1(
             seat,
@@ -22047,11 +22080,15 @@ final _w7SprRecapRunner = _w7SprIntroRunner.copyWith(
   ),
 );
 
+const _w7FullRingComparisonV1 =
+    'This table is 6-max. At a nine-player full-ring table, '
+    'UTG+1, UTG+2, and LJ also act after UTG.';
+
 final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w7_format_intro',
   lessonTitle: '6-max vs full ring',
-  caption: 'The same hand can open wider in 6-max than in full ring.',
+  caption: _w7FullRingComparisonV1,
   hint:
       'Fewer players behind means less chance someone wakes up with a premium hand.',
   question: 'Why does 6-max usually widen ranges?',
@@ -22059,7 +22096,7 @@ final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Fewer players behind.',
       body:
-          'In 6-max, fewer players can wake up with a stronger hand. That usually lets ranges widen compared with full ring.',
+          'From UTG, five players act after you in 6-max and eight act after you in full ring. With more players still to act, open fewer hands.',
       focusLabels: <String>['6-max', 'Full ring', 'Fewer players behind'],
     ),
   ],
@@ -22075,9 +22112,9 @@ final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_6max_wider',
-  caption: 'A-J offsuit in early position.',
+  caption: _w7FullRingComparisonV1,
   hint: 'Compare 6-max with 9-handed full ring.',
-  question: 'Where does this hand usually open wider?',
+  question: 'In which format can you usually open more hands from UTG?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '6max',
@@ -22121,15 +22158,15 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
 final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_fullring_tighter',
-  caption: 'A-J offsuit in early position at a nine-handed table.',
+  caption: _w7FullRingComparisonV1,
   hint: 'More players still need to act.',
-  question: 'What usually changes in full ring?',
+  question: 'From UTG, how should you adjust your opens in full ring?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'tighter',
-      label: 'Range tightens',
+      label: 'Open fewer hands',
       isCorrect: true,
-      preferredLabel: 'Range tightens',
+      preferredLabel: 'Open fewer hands',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
@@ -22137,10 +22174,10 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'wider',
-      label: 'Range widens more',
+      label: 'Open more hands',
       isCorrect: false,
-      preferredLabel: 'Range tightens',
-      betterAnswerLabel: 'Range tightens',
+      preferredLabel: 'Open fewer hands',
+      betterAnswerLabel: 'Open fewer hands',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
@@ -22150,8 +22187,8 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       id: 'depth',
       label: 'Only stack depth matters',
       isCorrect: false,
-      preferredLabel: 'Range tightens',
-      betterAnswerLabel: 'Range tightens',
+      preferredLabel: 'Open fewer hands',
+      betterAnswerLabel: 'Open fewer hands',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not quite.',
       feedbackReason:
@@ -22161,16 +22198,16 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ac Jh'),
     centerLabel: 'Players behind',
-    format: Act0TableFormatV1.nineMax,
   ),
 );
 
 final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_format_table_notice',
-  caption: 'You jump from 6-max online to a 9-handed live table.',
+  caption: _w7FullRingComparisonV1,
   hint: 'Start by counting how many players are still behind you.',
-  question: 'What is the first useful adjustment?',
+  question:
+      'You move to full ring at the same stack depth. What changes for your UTG opens?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'tighten_early',
@@ -22210,15 +22247,13 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Js'),
     centerLabel: 'Players behind',
-    format: Act0TableFormatV1.nineMax,
   ),
 );
 
 final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w7_format_recap',
-  caption:
-      'Lesson learned: the same hand can open wider in 6-max and tighter in full ring.',
+  caption: _w7FullRingComparisonV1,
   hint: 'Format changes pressure before the cards even hit the flop.',
   question: 'Why does format change opening pressure?',
   feedbackTitle: 'Format takeaway.',
@@ -22235,7 +22270,6 @@ final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Kc Td'),
     centerLabel: 'Players behind',
-    format: Act0TableFormatV1.nineMax,
   ),
 );
 
