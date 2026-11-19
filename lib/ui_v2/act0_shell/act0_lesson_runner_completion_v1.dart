@@ -1302,15 +1302,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).disableAnimations) {
-      return _buildCard(context);
-    }
-    return TweenAnimationBuilder<double>(
-      tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 1800),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) => _buildCard(context),
-    );
+    return _buildCard(context);
   }
 
   Widget _buildCard(BuildContext context) {
