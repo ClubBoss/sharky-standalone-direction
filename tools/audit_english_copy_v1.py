@@ -35,6 +35,10 @@ DOC_ALLOWED_PREFIXES = (
 ACTIVE_ACT0_FILES = {
     "act0_home_shell_v1.dart",
     "act0_learn_path_shell_v1.dart",
+    "act0_learn_path_journey_v1.dart",
+    "act0_learn_path_world_menu_v1.dart",
+    "act0_learn_path_mission_v1.dart",
+    "act0_learn_path_cards_v1.dart",
     "act0_play_shell_v1.dart",
     "act0_review_shell_v1.dart",
     "act0_profile_shell_v1.dart",
