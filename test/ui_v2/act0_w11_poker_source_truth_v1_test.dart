@@ -14,11 +14,11 @@ void main() {
       (t) => t.taskId == 'w11_trigger_bad_price_fold',
     );
 
-    expect(flop.runner.table.potLabel, 'Pot 8 BB');
+    expect(flop.runner.table.potLabel, 'Pot 10 BB');
     expect(flop.runner.table.toCallLabel, 'To call 2 BB');
     expect(flop.runner.caption, contains('0.25 BB ante each'));
     expect(flop.runner.caption, contains('35 BB behind'));
-    expect(turn.runner.table.potLabel, 'Pot 12 BB');
+    expect(turn.runner.table.potLabel, 'Pot 24 BB');
     expect(turn.runner.table.toCallLabel, 'To call 12 BB');
     expect(turn.runner.caption.toLowerCase(), contains('same hand again'));
     expect(turn.runner.caption, contains('33 BB behind'));
@@ -62,7 +62,7 @@ void main() {
     expect(fold.feedbackReason, contains('33%'));
     expect(fold.feedbackReason, contains('rarely bluffs'));
     expect(fold.feedbackReason, contains('not an automatic rule'));
-    expect(call.feedbackReason, contains('betting range'));
+    expect(call.feedbackReason, contains('33%'));
     expect(12 / (12 + 12 + 12), closeTo(1 / 3, 1e-8));
   });
 }
