@@ -268,7 +268,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     final world = _worldById(worlds, 'world_1');
     final result = _placementResult;
     final guideLesson = _lessonById(world.lessons, 'what_poker_is');
-    final guideTask = guideLesson.taskList.first;
+    final guideTask = guideLesson.courseTaskList.first;
     final recommendedLessonId = fromZero || result == null
         ? guideLesson.lessonId
         : result.recommendedLessonId;
@@ -488,18 +488,18 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
       if (lesson.lessonId == guideLessonId) {
         continue;
       }
-      for (final task in lesson.taskList) {
+      for (final task in lesson.courseTaskList) {
         orderedTaskIds.add(task.taskId);
       }
     }
 
     final recommendedLesson = world.lessons[lessonIndex];
-    final recommendedTaskIndex = recommendedLesson.taskList.indexWhere(
+    final recommendedTaskIndex = recommendedLesson.courseTaskList.indexWhere(
       (task) => task.taskId == recommendedTaskId,
     );
     if (recommendedTaskIndex > 0) {
       for (var i = 0; i < recommendedTaskIndex; i++) {
-        orderedTaskIds.add(recommendedLesson.taskList[i].taskId);
+        orderedTaskIds.add(recommendedLesson.courseTaskList[i].taskId);
       }
     }
 
@@ -576,7 +576,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
   ) {
     final contentTaskIds = state
         .lessonById('what_poker_is_content')
-        .taskList
+        .courseTaskList
         .map((task) => task.taskId);
     return contentTaskIds.any(
       (taskId) =>
@@ -596,7 +596,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Set<String> _guideTaskIdsV1(Act0ShellStateV1 state) => <String>{
-    for (final task in state.worldById('world_1').lessons.first.taskList)
+    for (final task in state.worldById('world_1').lessons.first.courseTaskList)
       task.taskId,
   };
 

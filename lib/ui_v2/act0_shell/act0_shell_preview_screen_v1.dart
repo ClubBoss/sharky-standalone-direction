@@ -2778,7 +2778,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
                   beatIndex:
                       _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
-                  beatCount: selectedLesson.taskList.length,
+                  beatCount: selectedLesson.courseTaskList.length,
                   phase: _phase,
                   selectedOptionId: _selectedOptionId,
                   sizingConfig: _activeSizingConfigV1(
@@ -3495,8 +3495,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     }),
                                 onReplay: () => setState(() {
                                   _showPlayHub = false;
-                                  _selectedTaskId =
-                                      selectedLesson.taskList.first.taskId;
+                                  _selectedTaskId = selectedLesson
+                                      .courseTaskList
+                                      .first
+                                      .taskId;
                                   _phase = _taskById(
                                     selectedLesson,
                                     _selectedTaskId,

@@ -168,8 +168,8 @@ void main() {
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
-        '0': 112,
-        '1': 119,
+        '0': 113,
+        '1': 118,
         '2': 60,
       });
       expect(snapshot['longestCorrectPositionRun'], 5);
@@ -197,10 +197,10 @@ void main() {
         ),
         isTrue,
       );
-      expect(repairSnapshot['sameSignalMapped'], 270);
-      expect(repairSnapshot['fallbackOnly'], 21);
+      expect(repairSnapshot['sameSignalMapped'], 269);
+      expect(repairSnapshot['fallbackOnly'], 22);
       expect(repairSnapshot['unresolvedProductGap'], 3);
-      expect(repairSnapshot['unrecordedFallback'], 1);
+      expect(repairSnapshot['unrecordedFallback'], 2);
       // The historical comparison restores the old M-ratio price mapping
       // and the intro's old seat mapping. The live rows use their actual goals.
       final zone = repair.singleWhere(
@@ -208,7 +208,13 @@ void main() {
       );
       expect(zone.mappingType, 'exact');
       expect(zone.fallbackOnly, isTrue);
-      final priorDeclaredMappings = currentGaps.length + 2;
+      final revisedButton = repair.singleWhere(
+        (row) => row.row.task.taskId == 'button_advantage_find_button',
+      );
+      // The previous declared mapper used the learner's old seat.
+      // The current same-goal rehearsal is covered by the typed census below.
+      expect(revisedButton.mappingType, 'exact');
+      final priorDeclaredMappings = currentGaps.length + 3;
       final historicalRepairComparison = <String, Object?>{
         ...repairSnapshot,
         'sameSignalMapped':
@@ -225,13 +231,13 @@ void main() {
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
-      expect(repairSnapshot['unrecordedFallback'], 1);
+      expect(repairSnapshot['unrecordedFallback'], 2);
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
         'confused_card_rank_suit': 5,
         'confused_chip_commitment_eligibility': 7,
-        'confused_private_board_cards': 16,
-        'confused_table_identity': 12,
+        'confused_private_board_cards': 18,
+        'confused_table_identity': 10,
         'misread_action_legality': 14,
         'misread_bet_price': 14,
         'misread_bet_purpose': 8,
@@ -376,8 +382,8 @@ void main() {
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
-      '0': 113,
-      '1': 120,
+      '0': 114,
+      '1': 119,
       '2': 60,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 5);
@@ -498,18 +504,18 @@ void main() {
       currentGaps.map((row) => row.row.task.taskId).toSet(),
       _newW01OrderGapIds,
     );
-    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(272));
-    expect(allRepair.where((row) => row.fallbackOnly), hasLength(21));
+    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(271));
+    expect(allRepair.where((row) => row.fallbackOnly), hasLength(22));
     expect(
       allRepair.where((row) => row.sameSignalMapped).length +
           currentGaps.length +
-          2,
+          3,
       278 - 1,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
           currentGaps.length -
-          2,
+          3,
       15 + 1,
     );
     expect(allRepair.where((row) => row.exactReplay), hasLength(17));
@@ -550,8 +556,9 @@ void main() {
       allRepair
           .where((row) => row.mappingType == 'exact')
           .map((row) => row.row.task.taskId),
-      ['w9_m_ratio_table_window_transfer'],
-      reason: 'The removed price label must not supply a repair mapping.',
+      ['button_advantage_find_button', 'w9_m_ratio_table_window_transfer'],
+      reason:
+          'The two superseded declared mappings are checked separately from typed repairs.',
     );
     expect(
       allRepair
@@ -694,7 +701,7 @@ void main() {
     final diagnosticEntries = act0RepairGoalContractsV1
         .where((row) => row.isDiagnosticLearningEntry)
         .toList();
-    expect(ordinaryContracts, hasLength(20));
+    expect(ordinaryContracts, hasLength(26));
     expect(diagnosticEntries, hasLength(2));
     expect(
       ordinaryContracts.length + diagnosticEntries.length,
@@ -740,9 +747,15 @@ void main() {
       'world_1/fold_check_call_raise/actions_legal_context/fold',
       'world_1/fold_check_call_raise/actions_legal_context/call',
       'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap/one_answer',
+      'world_1/what_poker_is/what_poker_is_find_hero/top',
+      'world_3/position_six_seats/position_six_seats_positions_button/co',
+      'world_3/button_advantage/button_advantage_find_button/co',
+      'world_3/position_six_seats/position_six_seats_positions_utg/hj',
+      'world_3/button_advantage/button_advantage_button_last/utg',
+      'world_3/early_vs_late/early_vs_late_early_pressure_choice/same_as_btn',
+      'world_3/same_hand_different_seat/same_hand_different_seat_same_hand_early_fold/raise',
     });
     expect(knownHeld, <String>{
-      'world_1/what_poker_is/what_poker_is_find_hero/top',
       'world_1/what_poker_is/what_poker_is_find_hero/random',
       'world_1/your_first_hand/your_first_hand_showdown/first_actor',
       'world_1/your_first_hand/your_first_hand_showdown/hero_cards_only',
@@ -752,7 +765,7 @@ void main() {
       'world_4/small_half_pot/w4_half_pot_bet/two',
       'world_4/small_half_pot/w4_half_pot_bet/six',
     });
-    expect(unknown, hasLength(441));
+    expect(unknown, hasLength(435));
     expect(admitted.length + knownHeld.length + unknown.length, 461);
     print(
       const JsonEncoder.withIndent('  ').convert({

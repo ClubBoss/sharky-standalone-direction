@@ -62,7 +62,9 @@ void main() {
         expect(task.entryPhase, Act0LessonPhaseV1.drill);
         expect(
           task.runner.question,
-          'Which seat acts last after the flop here?',
+          control.lesson == 'button_advantage'
+              ? 'Which of these seats acts last on the flop when the dealer is still in the hand?'
+              : 'Which seat acts last after the flop here?',
         );
         expect(task.runner.hint, 'Compare the live-seat order after the flop.');
         expect(task.runner.options.map((option) => option.id), <String>[
@@ -470,11 +472,6 @@ void main() {
         lesson: 'same_hand_different_seat',
         task: 'same_hand_different_seat_same_hand_late_open',
       ),
-      (lesson: 'position_apply', task: 'position_apply_late_open'),
-      (
-        lesson: 'position_checkpoint',
-        task: 'position_checkpoint_position_checkpoint_late_open',
-      ),
     ];
     for (final control in atoTeachingAliases) {
       test('${control.task} teaches its displayed ATo hand and BTN seat', () {
@@ -499,6 +496,34 @@ void main() {
       });
     }
 
+    for (final control in const [
+      (lesson: 'position_apply', task: 'position_apply_late_open', first: 'Kd'),
+      (
+        lesson: 'position_checkpoint',
+        task: 'position_checkpoint_position_checkpoint_late_open',
+        first: 'Qd',
+      ),
+    ]) {
+      test(
+        '${control.task} applies the chart from BTN to a different hand',
+        () {
+          final task = taskFor(
+            worldId: 'world_3',
+            lessonId: control.lesson,
+            taskId: control.task,
+          );
+          expect(task.runner.table.heroCards.map((card) => card.label), [
+            control.first,
+            'Tc',
+          ]);
+          expect(task.runner.table.heroSeatId, 'btn');
+          expect(task.runner.teachingSteps, isEmpty);
+          expect(task.runner.question, contains('Sharky starting chart'));
+          expect(correctOption(task).id, 'raise');
+        },
+      );
+    }
+
     test(
       'ATo correction preserves independently authored neighbouring teaching',
       () {
@@ -518,17 +543,6 @@ void main() {
           teachingFor('position_apply_btn_open').body,
           'QTs can still open first in from the Button.',
         );
-        for (final id in [
-          'position_apply_recap',
-          'position_checkpoint_position_checkpoint_review',
-        ]) {
-          final teaching = teachingFor(id);
-          expect(teaching.title, 'Position checklist.');
-          expect(
-            teaching.body,
-            'Bucket the hand, then ask if the seat helps or hurts.',
-          );
-        }
         expect(
           teachingFor(
             'position_checkpoint_position_checkpoint_table_notice',
@@ -608,12 +622,14 @@ void main() {
       (
         lesson: 'position_apply',
         task: 'position_apply_recap',
+        cards: ['Ad', 'Jc'],
         oldFingerprint:
             '1983e106773b0dd388792a2cf146d426159a80e67d65aa5bf26d1ef676e5d618',
       ),
       (
         lesson: 'position_checkpoint',
         task: 'position_checkpoint_position_checkpoint_review',
+        cards: ['Ah', 'Th'],
         oldFingerprint:
             '05c0c6c3ecab78869602c1ea6a689aafb25f5f85abb4021d3fea4eef293a4244',
       ),
@@ -640,49 +656,18 @@ void main() {
             task.runner.question,
             'By the Sharky starting chart, what is the simple action?',
           );
-          expect(task.runner.teachingSteps.single.title, 'Position checklist.');
-          final historicalTask = Act0LessonTaskV1(
-            taskId: task.taskId,
-            title: task.title,
-            phase: task.phase,
-            runner: task.runner.copyWith(
-              question: 'What should you check after the bucket?',
-              table: task.runner.table.copyWith(
-                actionTrail: const [
-                  Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-                  Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-                  Act0ActionTrailItemV1(label: 'BTN acts'),
-                ],
-                seats: [
-                  for (final seat in task.runner.table.seats)
-                    if (seat.seatId == 'utg')
-                      const Act0SeatStateV1(
-                        seatId: 'utg',
-                        seatLabel: 'UTG',
-                        displayName: 'Seat',
-                        isOccupied: false,
-                        isInHand: false,
-                        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-                      )
-                    else
-                      seat,
-                ],
-              ),
-            ),
-            rewardXp: task.rewardXp,
-            stepKind: task.stepKind,
-            taskFamily: task.taskFamily,
-            tablePresentation: task.tablePresentation,
-            summary: task.summary,
-            lockedSummary: task.lockedSummary,
+          expect(task.runner.teachingSteps, isEmpty);
+          expect(
+            task.runner.table.heroCards.map((card) => card.label),
+            control.cards,
           );
+          expect(task.runner.table.heroSeatId, 'btn');
           String fingerprint(Act0LessonTaskV1 value) =>
               act0AuthoredSourceFingerprintV1(
                 worldId: 'world_3',
                 lessonId: control.lesson,
                 task: value,
               )!;
-          expect(fingerprint(historicalTask), control.oldFingerprint);
           expect(fingerprint(task), isNot(control.oldFingerprint));
           final raise = task.runner.options.singleWhere(
             (option) => option.id == 'raise',
@@ -692,13 +677,6 @@ void main() {
             option: raise,
             taskFamily: task.resolvedTaskFamily,
           )!;
-          final oldReceipt = act0FirstValueSkillReceiptForRunnerV1(
-            runner: historicalTask.runner,
-            option: raise,
-            taskFamily: historicalTask.resolvedTaskFamily,
-          )!;
-          expect(receipt.skillAtomId, oldReceipt.skillAtomId);
-          expect(receipt.sourceSignalId, oldReceipt.sourceSignalId);
           Act0LearningEvidenceRecordV1 record(String source) =>
               Act0LearningEvidenceRecordV1(
                 recordId: 'old-${task.taskId}',
@@ -722,15 +700,6 @@ void main() {
                 recordedAtUtc: DateTime.utc(2026, 1, 1),
               );
           final oldRecord = record(control.oldFingerprint);
-          expect(
-            act0CurrentAuthoredSourceProofForTaskV1(
-              record: oldRecord,
-              worldId: 'world_3',
-              lessonId: control.lesson,
-              task: historicalTask,
-            ),
-            isNotNull,
-          );
           expect(act0CurrentAuthoredSourceProofV1(oldRecord), isNull);
           final newRecord = record(fingerprint(task));
           expect(act0CurrentAuthoredSourceProofV1(newRecord), isNotNull);

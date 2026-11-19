@@ -513,13 +513,46 @@ void main() {
         ],
       ],
     };
+    const priorL1CheckpointOptions = {
+      "showdown_best_hand_drill": [
+        ["first_actor", "First actor", false, "wrong", "Best hand"],
+        [
+          "hero_cards_only",
+          "Hero cards only",
+          false,
+          "suboptimal",
+          "Best hand",
+        ],
+        ["best_hand", "Best hand", true, "correct", "Best hand"],
+      ],
+      "showdown_review": [
+        ["best_hand", "Best hand", true, "correct", "Best hand"],
+        ["first_actor", "First actor", false, "wrong", "Best hand"],
+        [
+          "hero_cards_only",
+          "Hero cards only",
+          false,
+          "suboptimal",
+          "Best hand",
+        ],
+      ],
+      "w4_checkpoint_value": [
+        ["bluff", "A-K", false, "wrong", "A-J"],
+        ["value", "A-J", true, "correct", "A-J"],
+      ],
+      "w4_checkpoint_price": [
+        ["call", "Call", false, "wrong", "Fold"],
+        ["fold", "Fold", true, "correct", "Fold"],
+      ],
+    };
     final beforeL1 = jsonDecode(encoded) as List<dynamic>;
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
       final options =
           priorL1Options[row[2]] ??
           priorL1TeachingOptions[row[2]] ??
-          priorL1PrechoiceOptions[row[2]];
+          priorL1PrechoiceOptions[row[2]] ??
+          priorL1CheckpointOptions[row[2]];
       if (options != null) row[5] = options;
     }
     var beforeCopyEdits = jsonEncode(beforeL1);

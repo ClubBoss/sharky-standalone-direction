@@ -41,7 +41,7 @@ void main() {
   });
 
   test(
-    'the reauthored card read holds the previous seat-role repair relation',
+    'mistaking shared cards opens the private and shared cards rehearsal',
     () {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -69,14 +69,11 @@ void main() {
       expect(intent?.missedSignalId, 'hero_button');
       expect(intent?.skillAtomId, 'table_position_read');
       expect(intent?.targetWorldId, 'world_1');
-      expect(intent?.targetLessonId, 'what_poker_is');
-      expect(intent?.targetTaskId, task.taskId);
-      expect(intent?.goalId, isEmpty);
-      expect(intent?.mappingType, 'unresolved_product_gap');
-      expect(
-        intent?.reasonCode,
-        'unresolved_product_gap_table_position_read_hero_button',
-      );
+      expect(intent?.targetLessonId, 'cards_ranks_suits');
+      expect(intent?.targetTaskId, 'cards_ranks_suits_private_board');
+      expect(intent?.goalId, 'shared_board_vs_private_cards');
+      expect(intent?.mappingType, 'repair');
+      expect(intent?.reasonCode, 'same_signal_table_position_read_hero_button');
 
       final unchangedCorrectRoute = act0FirstValueSameSignalRepMappingV1(
         nextRepId: 'repeat_table_position_read',

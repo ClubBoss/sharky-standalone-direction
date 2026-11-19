@@ -96,6 +96,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     eligibleRepairFamily: 'private_board_distinction',
     lessonKeys: <String>{'world_1/your_first_hand'},
     taskKeys: <String>{
+      'world_1/what_poker_is/what_poker_is_find_hero',
       'world_1/cards_ranks_suits/cards_ranks_suits_private_board',
       'world_1/cards_ranks_suits/cards_ranks_suits_board_count',
     },

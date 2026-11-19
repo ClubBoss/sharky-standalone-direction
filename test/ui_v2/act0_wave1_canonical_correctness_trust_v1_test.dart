@@ -213,13 +213,13 @@ void main() {
         'same_hand_different_seat_same_hand_late_open':
             '422e7fb3ee3883f617134a71da7331fddd447c4f8f44ab0e31aefba3367c1db3',
         'position_apply_late_open':
-            'a892dba903fd8c328685a703066e6c6ae5b9cdb7c63004e9ee9e6f7155be2ed5',
+            'dfada935a04c5b0adbab820ff3fe43cb03f2674578875bd3331ddd10348c0268',
         'position_checkpoint_position_checkpoint_late_open':
-            'afa9b9c4ca646ee2c994d9b90a972cd96e82951304df12dea848643f7171d991',
+            '713838471c438bec7240d2b6867ac8635730411aa533248cba6a2ec5a85b11d5',
         'position_apply_recap':
-            'b894dd8aa67d27cc52a1902ece257e5d564f975ab4a20d3317d4a0d8e42ab544',
+            '894bf75decddb380a2b9a784c23bc4ce2826744431cb6b37be0c571b9bb3c04b',
         'position_checkpoint_position_checkpoint_review':
-            '8d7bc31d273ba29e3745aa5723f1ad316fea24ef4e5c33d14e4c76d182e82b7d',
+            '92d11aeae7c308debfc90703afc1c4f14a546a20d68b2394c92d3f0b2cd1cdc1',
       };
       final world = Act0ShellStateV1.sample.worldById('world_3');
       final observed = <String>{};
@@ -338,7 +338,7 @@ void main() {
         'fold_discipline_facing_fold': 'J8o still folds versus a CO open.',
         'weak_ace_warning_weak_ace_pressure_fold':
             'J8o still folds versus a CO open.',
-        'continue_or_let_go_weak_let_go': 'J8o still folds versus a CO open.',
+        'continue_or_let_go_weak_let_go': 'Use the Weak row.',
       };
       final tasks = <Act0LessonTaskV1>[
         for (var world = 1; world <= 3; world++)

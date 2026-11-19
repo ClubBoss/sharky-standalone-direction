@@ -255,7 +255,13 @@ void main() {
       final taskWorld = {
         for (final w in worlds)
           for (final l in w.lessons)
-            for (final task in l.taskList) task.taskId: w.worldNumber,
+            for (final task in l.courseTaskList) task.taskId: w.worldNumber,
+      };
+      final repairWorld = {
+        for (final w in worlds)
+          for (final l in w.lessons)
+            for (final task in l.taskList)
+              if (task.repairOnly) task.taskId: w.worldNumber,
       };
       final rewards = {
         for (final w in worlds)
@@ -281,8 +287,11 @@ void main() {
           final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
           final runner = shell.runner;
           final taskId = shell.selectedTaskId ?? '';
-          final world = taskWorld[taskId];
+          final world = taskWorld[taskId] ?? repairWorld[taskId];
           if (world == null) break; // Never answer a future-world task.
+          if (repairWorld.containsKey(taskId)) {
+            expect(confirmedMisses, contains(world), reason: taskId);
+          }
           if (enteredWorlds.add(world)) {
             if (taskId == 'visible_ace_combo_reduction_intro') {
               expect(runner.phase, Act0LessonPhaseV1.theory);
@@ -331,8 +340,13 @@ void main() {
               if (runner.sizingConfig.isEnabled)
                 find.byKey(Key('act0_shell_sizing_preset_${choice.id}')),
               find.byKey(Key('act0_shell_option_${choice.id}')),
-              if (choice.seatId != null)
-                find.byKey(Key('act0_shell_seat_tap_${choice.seatId}')),
+              if (choice.seatId case final seatId?) ...[
+                find.byKey(Key('act0_shell_seat_tap_$seatId')),
+                find.descendant(
+                  of: find.byKey(Key('act0_shell_seat_tap_$seatId')),
+                  matching: find.text(seatId.toUpperCase()),
+                ),
+              ],
             ]);
             expect(tapped, isTrue, reason: '$taskId: no answer');
             if (runner.sizingConfig.isEnabled) {
@@ -407,7 +421,7 @@ void main() {
           .cast<String>()
           .toSet();
       expect(taskWorld.keys.toSet().difference(completed), isEmpty);
-      expect(taskWorld.length, fullRoute ? 369 : 255);
+      expect(taskWorld.length, fullRoute ? 364 : 250);
       if (fullRoute) {
         expect(completed, contains('w12_checkpoint_full_loop_line'));
         expect(completed, contains('w12_checkpoint_review'));

@@ -81,6 +81,8 @@ const _pkr08OutcomeClaims = <String, Set<String>>{
   'w6_checkpoint_table_best_five': {'btn', 'co'},
   'hand_rankings_quads_vs_full_house_drill': {'btn'},
   'your_first_hand_showdown': {'btn'},
+  'showdown_best_hand_drill': {'btn'},
+  'showdown_review': {'btn', 'co'},
 };
 
 /// Outcome claims whose winner is not yet determined by source cards (live
@@ -326,6 +328,8 @@ void main() {
       'w6_checkpoint_table_best_five': 'Split the pot',
       'hand_rankings_quads_vs_full_house_drill': 'Hero four of a kind',
       'your_first_hand_showdown': 'You — A-A-K-J-7',
+      'showdown_best_hand_drill': 'You · Q-Q-Q-K-8',
+      'showdown_review': 'Split the pot',
     };
     for (final e in labels.entries) {
       final correct = _task(e.key).runner.options.where((o) => o.isCorrect);

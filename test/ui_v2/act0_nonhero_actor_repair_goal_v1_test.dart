@@ -226,23 +226,32 @@ void main() {
   );
 
   test(
-    'only the four new relations require capture; existing contracts keep old policy',
+    'only explicitly enumerated relations require captured goal evidence',
     () {
       final newRows = act0RepairGoalContractsV1
           .where((row) => row.requireCapturedGoalWitness)
           .toList();
-      expect(newRows, hasLength(4));
+      expect(newRows, hasLength(11));
       expect(
         newRows
             .map((row) => '${row.sourceTaskId}/${row.sourceChoiceId}')
             .toSet(),
-        {for (final source in _subjects) '${source.task}/${source.choice}'},
+        {
+          for (final source in _subjects) '${source.task}/${source.choice}',
+          'what_poker_is_find_hero/top',
+          'position_six_seats_positions_button/co',
+          'position_six_seats_positions_utg/hj',
+          'button_advantage_find_button/co',
+          'button_advantage_button_last/utg',
+          'early_vs_late_early_pressure_choice/same_as_btn',
+          'same_hand_different_seat_same_hand_early_fold/raise',
+        },
       );
       expect(
         act0RepairGoalContractsV1.where(
           (row) => !row.requireCapturedGoalWitness,
         ),
-        hasLength(18),
+        hasLength(17),
       );
     },
   );

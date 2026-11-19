@@ -290,10 +290,14 @@ Future<String> _choice(WidgetTester t, String id, String taskId) async {
   fail('No ordinary decision offered for $taskId');
 }
 
-void _seedPrerequisites(({String lesson, String task, String wrong}) subject) {
+void _seedPrerequisites(
+  ({String lesson, String task, String wrong}) subject, {
+  String worldId = 'world_1',
+}) {
   final all = [
-    for (final lesson in Act0ShellStateV1.sample.worldById('world_1').lessons)
-      for (final task in lesson.taskList) task,
+    for (final world in Act0ShellStateV1.sample.worlds)
+      for (final lesson in world.lessons)
+        for (final task in lesson.courseTaskList) task,
   ];
   SharedPreferences.setMockInitialValues({
     'act0_welcome_completed_v1': true,
@@ -306,13 +310,49 @@ void _seedPrerequisites(({String lesson, String task, String wrong}) subject) {
         for (final task in all.takeWhile((task) => task.taskId != subject.task))
           task.taskId,
       ],
-      'selectedWorldId': 'world_1', 'selectedLessonId': subject.lesson,
+      'selectedWorldId': worldId, 'selectedLessonId': subject.lesson,
       'selectedTaskId': subject.task, 'earnedXp': 0,
     }),
   });
 }
 
 void main() {
+  testWidgets('a W3 repair-only task opens from a real matching miss', (
+    t,
+  ) async {
+    const subject = (
+      lesson: 'position_six_seats',
+      task: 'position_six_seats_positions_utg',
+      wrong: 'hj',
+    );
+    const target = 'position_six_seats_position_repair_seat_id_utg';
+    t.view.physicalSize = const Size(393, 852);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.resetPhysicalSize);
+    addTearDown(t.view.resetDevicePixelRatio);
+    _seedPrerequisites(subject, worldId: 'world_3');
+    await _mount(t);
+    await _tab(t, 'Learn');
+    await _tap(t, 'act0_shell_current_mission_cta');
+    await _choice(t, subject.wrong, subject.task);
+
+    final before = await _saved(t);
+    final intent = (before['openRepairIntents'] as List)
+        .map(Act0RepairIntentV1.tryParse)
+        .whereType<Act0RepairIntentV1>()
+        .singleWhere((intent) => intent.sourceTaskId == subject.task);
+    expect(intent.targetTaskId, target);
+    expect(intent.mappingType, 'repair');
+    expect(before['completedTaskIds'], isNot(contains(subject.task)));
+    await _tap(t, 'act0_shell_feedback_continue_cta');
+    expect(_runner(t).selectedTaskId, target);
+    await _choice(t, 'utg', target);
+    await _tap(t, 'act0_shell_feedback_continue_cta');
+    expect(_runner(t).selectedTaskId, subject.task);
+    final after = await _saved(t);
+    expect(after['completedTaskIds'], isNot(contains(subject.task)));
+  });
+
   final observations = <String, Object?>{};
   for (final subject in _subjects) {
     testWidgets(

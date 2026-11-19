@@ -1,5 +1,5 @@
 // Narrow PKR-08 regression: shown-hand teaching is not a full-pot verdict.
-// All three active sample.worlds tasks retain authored teaching in the Runner.
+// The two partial-showdown examples retain bounded teaching in the Runner.
 // Compatibility-only w2_* references are source impact, not active Runner cases.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,10 +9,7 @@ import 'package:poker_solver/poker_solver.dart';
 
 import '../support/act0_pot_showdown_truth_v1.dart';
 
-const _bestHandTaskXp = <String, int>{
-  'what_poker_is_showdown_win': 4,
-  'showdown_best_hand_drill': 7,
-};
+const _bestHandTaskXp = <String, int>{'what_poker_is_showdown_win': 4};
 const _tieTaskXp = <String, int>{'showdown_tie_drill': 7};
 const _bestHandBody =
     'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Only these two hands are shown, so this compares just them.';
