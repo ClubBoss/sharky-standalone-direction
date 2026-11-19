@@ -833,7 +833,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "top",
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
-        "6f4e0d177dc090a17254c82ca1fcd297fb01892d2e185a9ed1027aa689b2b92f",
+        "126229140138e9a6819ac1697c01995d720bcb3704386cdaaa84f26eeec153c7",
     sourceQuestion:
         "Which label could change next hand while the player is still you?",
     sourceChoiceReason:
@@ -851,7 +851,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "random",
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
-        "6f4e0d177dc090a17254c82ca1fcd297fb01892d2e185a9ed1027aa689b2b92f",
+        "126229140138e9a6819ac1697c01995d720bcb3704386cdaaa84f26eeec153c7",
     sourceQuestion:
         "Which label could change next hand while the player is still you?",
     sourceChoiceReason:
@@ -917,7 +917,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "d5a867e30cd3c338292fdfee68a65b9f75de17c1020abbdc817c4c3ab7f4508a",
+        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
     sourceChoiceLabel: "Fold",
@@ -942,7 +942,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "d5a867e30cd3c338292fdfee68a65b9f75de17c1020abbdc817c4c3ab7f4508a",
+        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
     sourceChoiceLabel: "Call",
@@ -1049,7 +1049,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "two",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "e8965720e103f2a3bbb428a8812303adf35d6c98197fa6e2f24bfa0245e35987",
+        "e6968e360d6fc00b542a94c4bc9df521351732e3f73eecf6be4b8f09972d60f7",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_one_third",
     relationId: "selected_w4_16_two_v1",
@@ -1065,7 +1065,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "six",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "e8965720e103f2a3bbb428a8812303adf35d6c98197fa6e2f24bfa0245e35987",
+        "e6968e360d6fc00b542a94c4bc9df521351732e3f73eecf6be4b8f09972d60f7",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_whole",
     relationId: "selected_w4_17_six_v1",
@@ -1095,7 +1095,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "d5a867e30cd3c338292fdfee68a65b9f75de17c1020abbdc817c4c3ab7f4508a",
+        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1122,7 +1122,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "d5a867e30cd3c338292fdfee68a65b9f75de17c1020abbdc817c4c3ab7f4508a",
+        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1162,7 +1162,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'board_cards',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        'e6f26c1eb372dab91d453fb5059c3a35556e28add44fd4fb52fea49a45d59614',
+        '6d0a0beaf2469d896d8984b1a24b2cf2f3a399ec37b4a50b2b3df2a29cf03d5a',
     diagnosticVariantId: 'board_private_cards',
     sourceQuestion: 'Which cards can everyone use?',
     sourceChoiceReason:
@@ -1190,7 +1190,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'check',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        'e6f26c1eb372dab91d453fb5059c3a35556e28add44fd4fb52fea49a45d59614',
+        '6d0a0beaf2469d896d8984b1a24b2cf2f3a399ec37b4a50b2b3df2a29cf03d5a',
     diagnosticVariantId: 'action_basics',
     sourceQuestion: 'No bet faces Hero. Which action is free?',
     sourceChoiceReason: 'Sharky will start simple.',
@@ -1204,7 +1204,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        'd5a867e30cd3c338292fdfee68a65b9f75de17c1020abbdc817c4c3ab7f4508a',
+        'f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',

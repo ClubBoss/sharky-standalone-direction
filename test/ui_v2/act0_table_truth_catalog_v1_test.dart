@@ -79,7 +79,7 @@ void main() {
       final options = (setup['options'] as List<dynamic>)
           .cast<Map<String, dynamic>>();
       for (final (id, current, prior) in <(String, String, String)>[
-        ('co_still_acting', 'suboptimal', 'wrong'),
+        ('co_still_acting', 'wrong', 'wrong'),
         ('hero_has_no_cards', 'wrong', 'suboptimal'),
       ]) {
         final option = options.singleWhere((option) => option['id'] == id);
@@ -305,6 +305,35 @@ void main() {
             'repairLabels': <String>[],
           },
       ];
+    }
+    for (final id in [
+      'actions_theory',
+      'actions_raise_drill',
+      'actions_review',
+    ]) {
+      final row = expectedComparison[id] as Map<String, dynamic>;
+      final choice = (row['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == 'call');
+      choice['quality'] = 'wrong';
+      choice['repairLabels'] = [
+        'Matches 1 BB',
+        'Sets a higher price',
+        'Button',
+      ];
+    }
+    for (final id in [
+      'apply_btn_open',
+      'button_advantage_button_open',
+      'position_apply_btn_open',
+    ]) {
+      final row = expectedComparison[id] as Map<String, dynamic>;
+      for (final choice
+          in (row['options'] as List).cast<Map<String, dynamic>>()) {
+        choice['repairSeats'] = <String>[];
+        choice['repairCards'] = <String>[];
+        choice['repairLabels'] = <String>[];
+      }
     }
     expect(
       historicalComparison,

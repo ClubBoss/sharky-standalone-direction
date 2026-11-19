@@ -4,28 +4,53 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  const cases =
-      <({String worldId, String lessonId, String taskId, String expectedHint})>[
-        (
-          worldId: 'world_4',
-          lessonId: 'small_half_pot',
-          taskId: 'w4_pot_bet',
-          expectedHint:
-              'Count only chips that are actually in the pot or matched.',
-        ),
-        (
-          worldId: 'world_1',
-          lessonId: 'blinds_action_order',
-          taskId: 'positions_button',
-          expectedHint: 'Start from the button, then follow seat order.',
-        ),
-        (
-          worldId: 'world_1',
-          lessonId: 'fold_check_call_raise',
-          taskId: 'actions_check_drill',
-          expectedHint: 'Name the action before choosing what it means.',
-        ),
-      ];
+  const cases = <({String worldId, String lessonId, String taskId, String expectedHint})>[
+    (
+      worldId: 'world_1',
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_rank_drill',
+      expectedHint: 'Compare the ranks on the named cards in deck order.',
+    ),
+    (
+      worldId: 'world_1',
+      lessonId: 'cards_ranks_suits',
+      taskId: 'cards_ranks_suits_suit_drill',
+      expectedHint:
+          'Match the suit symbol or letter on the named card to the suit key.',
+    ),
+    (
+      worldId: 'world_2',
+      lessonId: 'hand_discipline_buckets',
+      taskId: 'hand_discipline_buckets_premium',
+      expectedHint:
+          'Read your two cards first. Match the ranks and suits to the chart.',
+    ),
+    (
+      worldId: 'world_4',
+      lessonId: 'call_price',
+      taskId: 'w4_good_price_call',
+      expectedHint:
+          'Use the visible pot and the amount you would add to find the required chance.',
+    ),
+    (
+      worldId: 'world_4',
+      lessonId: 'small_half_pot',
+      taskId: 'w4_pot_bet',
+      expectedHint: 'Count only chips that are actually in the pot or matched.',
+    ),
+    (
+      worldId: 'world_1',
+      lessonId: 'blinds_action_order',
+      taskId: 'positions_button',
+      expectedHint: 'Start from the button, then follow seat order.',
+    ),
+    (
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_check_drill',
+      expectedHint: 'Name the action before choosing what it means.',
+    ),
+  ];
   for (final scenario in cases) {
     testWidgets(
       'representative ' + scenario.taskId + ' hint follows task subject',

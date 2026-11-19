@@ -58,19 +58,21 @@ void main() {
     final id = entry.key;
     test(
       'folded-to-BTN $id has legal mechanics and preserves old raw data',
+      // Only the live decision uses the revised mechanical question.
       () {
         final task = _task(id);
         final table = task.runner.table;
-        expect(
-          task.runner.question,
-          id == 'actions_raise_drill'
-              ? 'Which action increases the price above the big blind?'
-              : entry.value.$2,
-        );
+        expect(task.runner.question, switch (id) {
+          'actions_theory' =>
+            'Which action would make the next player match more than the big blind?',
+          'actions_review' =>
+            'Which action sets a higher price for the next player?',
+          _ => 'Which action increases the price above the big blind?',
+        });
         expect(task.rewardXp, 5);
         expect(task.runner.options.map((o) => o.id), entry.value.$3);
         expect(task.runner.options.singleWhere((o) => o.isCorrect).id, 'raise');
-        // Existing source grades/feedback are not a new strategy adjudication.
+        // The exercise checks which action raises the price.
         expect(table.heroCards.map((card) => card.label), ['Ks', 'Ts']);
         expect(table.boardCards, isEmpty);
         expect(table.playerCount, 6);
@@ -114,6 +116,7 @@ void main() {
         );
         final call = task.runner.options.singleWhere((o) => o.id == 'call');
         final raise = task.runner.options.singleWhere((o) => o.id == 'raise');
+        expect(call.quality, Act0FeedbackQualityV1.wrong);
         final price = act0BettingPriceForOptionV1(table, call);
         expect(price.truth, Act0BettingPriceTruthV1.consistent);
         expect(price.actorCommittedBb, 0);

@@ -1103,7 +1103,7 @@ void main() {
       expect(userChoice['attempt_id'], isA<String>());
       expect(userChoice['review_kind'], 'initialAssessment');
       expect(userChoice, isNot(contains('time_to_decision_ms')));
-      expect(userChoice['acceptable_action_ids'], <String>['call', 'raise']);
+      expect(userChoice['acceptable_action_ids'], <String>['raise']);
       expect(userChoice['option_quality'], 'correct');
       expect(
         userChoice['decisionTimeBucket'],
