@@ -19254,7 +19254,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Ah 7h'),
     boardCards: _act0LessonCardsV1('Th 4h 2c 9s'),
-    centerLabel: 'Read the draw and price',
+    centerLabel: 'Draw and price',
     openBb: 3.75,
     facingBb: 2,
   ),
@@ -19372,7 +19372,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('6s 5d'),
     boardCards: _act0LessonCardsV1('8c 7h 2s Kd'),
-    centerLabel: 'Read the draw and price',
+    centerLabel: 'Draw and price',
     openBb: 2.75,
     facingBb: 3,
   ),
@@ -21744,7 +21744,7 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Ah Tc'),
     boardCards: _act0LessonCardsV1('Ac 8s 3d'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 20,
     bbBehindBb: 35,
     openBb: 2.25,
@@ -21797,7 +21797,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Kd Qc'),
     boardCards: _act0LessonCardsV1('Kh 7d 3s'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 10,
     bbBehindBb: 12,
     openBb: 2.25,
@@ -21847,7 +21847,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('As 9c'),
     boardCards: _act0LessonCardsV1('Ad 7h 2s'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 40,
     bbBehindBb: 42,
     openBb: 2.25,
@@ -21897,7 +21897,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Jd 9d'),
     boardCards: _act0LessonCardsV1('Js 8c 3h'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 20,
     bbBehindBb: 27,
     openBb: 2.25,
@@ -21912,7 +21912,7 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Kd Qc'),
     boardCards: _act0LessonCardsV1('Kc 7d 2s'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 16,
     bbBehindBb: 18,
     openBb: 3.75,
@@ -21971,7 +21971,7 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Kh Qd'),
     boardCards: _act0LessonCardsV1('Ks 7c 2h'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 64,
     bbBehindBb: 66,
     openBb: 3.75,
@@ -22040,7 +22040,7 @@ final _w7SprRecapRunner = _w7SprIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Tc'),
     boardCards: _act0LessonCardsV1('Ac 7s 4c'),
-    centerLabel: 'Compare stack and pot',
+    centerLabel: 'Stack and pot',
     heroBehindBb: 24,
     bbBehindBb: 30,
     openBb: 3.75,
@@ -22065,7 +22065,7 @@ final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   ],
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Kd Jc'),
-    centerLabel: 'Count the players behind',
+    centerLabel: 'Players behind',
   ),
   feedbackTitle: 'Count the players behind.',
   feedbackReason:
@@ -22114,7 +22114,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('As Jd'),
-    centerLabel: 'Count the players behind',
+    centerLabel: 'Players behind',
   ),
 );
 
@@ -22160,7 +22160,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ac Jh'),
-    centerLabel: 'Count the players behind',
+    centerLabel: 'Players behind',
     format: Act0TableFormatV1.nineMax,
   ),
 );
@@ -22209,7 +22209,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Js'),
-    centerLabel: 'Count the players behind',
+    centerLabel: 'Players behind',
     format: Act0TableFormatV1.nineMax,
   ),
 );
@@ -22234,7 +22234,7 @@ final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Kc Td'),
-    centerLabel: 'Count the players behind',
+    centerLabel: 'Players behind',
     format: Act0TableFormatV1.nineMax,
   ),
 );

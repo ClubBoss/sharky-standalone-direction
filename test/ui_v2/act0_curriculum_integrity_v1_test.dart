@@ -246,6 +246,8 @@ void main() {
       expect(mainEligible.values.reduce((a, b) => a + b), 60.5);
       expect(sideEligible.values.reduce((a, b) => a + b), 60);
       expect(runner.table.potLabel, 'Main 60.5 BB; side 60 BB');
+      expect(runner.table.activeSeatId, isEmpty);
+      expect(runner.table.seats.where((seat) => seat.isActive), isEmpty);
       expect(seats['btn']?.currentBetLabel, '20 BB');
       expect(seats['co']?.currentBetLabel, '50 BB');
       expect(seats['bb']?.currentBetLabel, '50 BB');
@@ -263,6 +265,42 @@ void main() {
         'BB contributes 50 BB total',
         'CO and BB: 30 BB each to side',
       ]);
+    });
+
+    test('W8 stack and SPR exercises show the stacks they compare', () {
+      const expected = {
+        'w7_effective_stack_30bb': ('200 BB', '30 BB'),
+        'w7_effective_stack_100bb': ('100 BB', '100 BB'),
+        'w7_table_effective_notice': ('120 BB', '18 BB'),
+        'w7_20bb_wider': ('20 BB', '20 BB'),
+        'w7_40bb_middle': ('40 BB', '40 BB'),
+        'w7_100bb_tighter': ('100 BB', '100 BB'),
+        'w7_top_pair_spr2_transfer': ('16 BB', '18 BB'),
+        'w7_top_pair_spr8_transfer': ('64 BB', '66 BB'),
+      };
+      for (final entry in expected.entries) {
+        final table = task('world_8', entry.key).runner.table;
+        final opponent = table.seats.singleWhere(
+          (seat) => seat.isInHand && !seat.isHero,
+        );
+        expect(
+          (table.heroSeat.stackLabel, opponent.stackLabel),
+          entry.value,
+          reason: entry.key,
+        );
+      }
+      for (final (id, depth, openerBehind) in [
+        ('w7_ajs_btn_25bb_transfer', '25 BB', '22.5 BB'),
+        ('w7_ajs_btn_100bb_transfer', '100 BB', '97.5 BB'),
+      ]) {
+        final table = task('world_8', id).runner.table;
+        expect(table.heroSeat.stackLabel, depth, reason: id);
+        expect(
+          table.seats.singleWhere((seat) => seat.seatId == 'co').stackLabel,
+          openerBehind,
+          reason: id,
+        );
+      }
     });
   });
 }
