@@ -853,6 +853,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetChoiceIds: <String>{'bet', 'check', 'bet_bluff'},
     evidenceClass: 'intentional_exact_replay',
     mappingType: 'intentional_exact',
+    requireCapturedGoalWitness: true,
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_3",

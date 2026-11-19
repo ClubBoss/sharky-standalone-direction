@@ -701,7 +701,7 @@ void main() {
     final diagnosticEntries = act0RepairGoalContractsV1
         .where((row) => row.isDiagnosticLearningEntry)
         .toList();
-    expect(ordinaryContracts, hasLength(26));
+    expect(ordinaryContracts, hasLength(27));
     expect(diagnosticEntries, hasLength(2));
     expect(
       ordinaryContracts.length + diagnosticEntries.length,
@@ -754,6 +754,7 @@ void main() {
       'world_3/button_advantage/button_advantage_button_last/utg',
       'world_3/early_vs_late/early_vs_late_early_pressure_choice/same_as_btn',
       'world_3/same_hand_different_seat/same_hand_different_seat_same_hand_early_fold/raise',
+      'world_6/range_pressure_lines/w6_value_range_action/bet_bluff',
     });
     expect(knownHeld, <String>{
       'world_1/what_poker_is/what_poker_is_find_hero/random',
@@ -765,7 +766,7 @@ void main() {
       'world_4/small_half_pot/w4_half_pot_bet/two',
       'world_4/small_half_pot/w4_half_pot_bet/six',
     });
-    expect(unknown, hasLength(435));
+    expect(unknown, hasLength(434));
     expect(admitted.length + knownHeld.length + unknown.length, 461);
     print(
       const JsonEncoder.withIndent('  ').convert({
