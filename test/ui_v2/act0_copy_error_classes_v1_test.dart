@@ -112,6 +112,10 @@ void main() {
   // Error class: task text states a pot, a price, a street or Hero's hand
   // that differs from what the table on the same screen shows.
   test('W1–W12 text numbers, street and Hero hand match the table', () {
+    final previousHand = RegExp(
+      r'\b(?:last|previous) (?:hand|orbit)\b',
+      caseSensitive: false,
+    );
     double? bb(String s) {
       final m = RegExp(r'([\d.]+)\s*BB').firstMatch(s);
       return m == null ? null : double.parse(m[1]!);
@@ -125,6 +129,13 @@ void main() {
         for (final t in l.taskList) {
           final r = t.runner;
           final table = r.table;
+          for (final item in table.actionTrail) {
+            if (!item.isNote && previousHand.hasMatch(item.label)) {
+              problems.add(
+                '${t.taskId}: prior hand included as current action: "${item.label}"',
+              );
+            }
+          }
           final pot = bb(table.potLabel);
           final call = bb(table.toCallLabel);
           if (table.toCallLabel.isNotEmpty && call == null) {

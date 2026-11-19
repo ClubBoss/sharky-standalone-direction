@@ -23085,7 +23085,8 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
 final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_overcall_flop',
-  caption: 'Villain keeps calling flop and turn with weak pairs.',
+  caption:
+      'In several earlier showdowns, Villain showed a weak pair after calling bets on both flop and turn.',
   hint: 'Overcall trigger points to value-density change.',
   question: 'What is the sharper one-lever response?',
   options: const <Act0RunnerOptionV1>[
@@ -23119,7 +23120,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Callers want value.',
       feedbackReason:
-          'Against overcalls, value-heavy transfer lines outperform bluff-heavy defaults.',
+          'Those showdowns give you a reason to try more value bets and fewer bluffs against this player. Keep checking whether the pattern holds.',
     ),
   ],
 );
@@ -23691,7 +23692,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
   caption:
       'You folded a marginal bluff-catcher and villain later showed a bluff.',
   hint: 'Do not auto-label by reveal result only.',
-  question: 'How should Hero grade this losing fold?',
+  question: 'How should you review this fold?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'process_review',
@@ -23701,7 +23702,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Process beats reveal.',
       feedbackReason:
-          'One reveal does not invalidate disciplined logic. Process review protects you from outcome bias.',
+          'Review the price and the range you could reasonably give Villain before they showed the bluff. This reveal can inform future decisions.',
     ),
     Act0RunnerOptionV1(
       id: 'instant_regret',
@@ -24044,7 +24045,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Calm fold.',
       feedbackReason:
-          'Top pair looks good, which is why the call feels tempting. But the bad river price, tight action history, and deep remaining risk all point to a disciplined fold.',
+          'Calling 18 BB contests 56 BB after your call, so you need about 32% equity if the call closes the action. The tight player’s repeated betting is the reason to be cautious.',
     ),
     Act0RunnerOptionV1(
       id: 'hero_call',
@@ -24097,12 +24098,12 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       heroCards: _heroQJsCards,
       boardCards: _boardJ74FlopCards,
       streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
+      potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'Top pair, ego trap',
       actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Villain needled you last orbit'),
-        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        Act0ActionTrailItemV1.note(label: 'Villain needled you last orbit'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
       ],
     ),
     bets: {
@@ -24133,7 +24134,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Stable line.',
       feedbackReason:
-          'Price is kind, board is dry, and top pair in position can continue calmly. The table talk is noise, not a reason to force a bigger pot.',
+          'You have top pair in position and face a small bet on a dry board. One bluff in the previous hand tells you little about what CO holds now.',
     ),
     Act0RunnerOptionV1(
       id: 'snap_fold_noise',
@@ -24311,14 +24312,14 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       heroCards: _heroAJsCards,
       boardCards: _boardA84TwoToneCards,
       streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
+      potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'After mistake, stay clean',
       actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Last orbit: loose bluff'),
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),
+        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
       ],
     ),
     bets: {
@@ -24360,7 +24361,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong reset.',
       feedbackReason:
-          'Position, top pair, kind price, and shorter stack depth support a calm continue. The prior mistake matters only if it changes your process, not if it changes this table read.',
+          'Start this decision with top pair, position and the small bet you face. Review the previous bluff separately so it does not drive this call.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[

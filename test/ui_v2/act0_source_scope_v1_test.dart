@@ -157,6 +157,10 @@ void main() {
       'w11_trigger_small_price_continue',
       'w11_trigger_bad_price_fold',
     };
+    const w12ExplicitFlopHistoryIds = <String>{
+      'w12_revenge_raise_trap',
+      'w12_checkpoint_full_loop_line',
+    };
     final tasks = [
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
@@ -252,6 +256,13 @@ void main() {
           expect(replay?.steps, isEmpty);
           expect(replay?.isConsumerSafe, isFalse);
           expect(act0TableChoreographyPlanForTableV1(table), isNull);
+        } else if (w12ExplicitFlopHistoryIds.contains(task.taskId)) {
+          expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
+          final latest = replay!.steps.last;
+          expect(latest.street, Act0StreetReplayStreetV1.flop);
+          expect(latest.actionSummary, 'CO bets 2 BB');
+          expect(latest.potAtStreet, 'Pot 10 BB');
+          expect(table.toCallLabel, 'To call 2 BB');
         } else if (w4NumericHistoryIds.contains(task.taskId)) {
           expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
           expect(
@@ -325,6 +336,7 @@ void main() {
         ..._newW01OrderContextIds,
         ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
         ...w11ExplicitStreetHistoryIds,
+        ...w12ExplicitFlopHistoryIds,
         // The newly authored Call frame now supplies its full blind prefix,
         // folds, street actions and positive remaining stacks.
         'actions_call_drill',
