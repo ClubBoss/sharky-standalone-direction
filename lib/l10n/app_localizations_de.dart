@@ -24,7 +24,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get yourPacks => 'Your Packs';
 
   @override
-  String get recentPacks => 'Recently Practiced';
+  String get recentPacks => 'Recently Practised';
 
   @override
   String get popularPacks => '🔥 Popular';
