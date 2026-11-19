@@ -108,6 +108,54 @@ void main() {
       expect(specTasks.last.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
     });
 
+    test('W7 queen removal uses the learner’s private cards and board', () {
+      final tasks = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .single
+          .taskList;
+      final queenChecks = tasks.where(
+        (task) => task.runner.question.startsWith('Three queens are visible'),
+      );
+      expect(queenChecks.length, 2);
+      for (final task in queenChecks) {
+        final table = task.runner.table;
+        final shownQueens = [
+          ...table.heroCards,
+          ...table.boardCards,
+        ].where((card) => card.rank == 'Q').map((card) => card.suit).toSet();
+        expect(shownQueens.length, 3, reason: task.taskId);
+        final right = task.runner.options.singleWhere(
+          (option) => option.isCorrect,
+        );
+        expect(right.feedbackReason, contains('You hold two queens'));
+        expect(right.feedbackReason, contains('queens are impossible'));
+      }
+    });
+
+    test('W8 SPR read has no invented bet before the learner answers', () {
+      final tasks = Act0ShellStateV1.sample
+          .worldById('world_8')
+          .lessons
+          .expand((lesson) => lesson.taskList);
+      for (final id in [
+        'w7_top_pair_spr2_transfer',
+        'w7_top_pair_spr8_transfer',
+      ]) {
+        final table = tasks
+            .singleWhere((task) => task.taskId == id)
+            .runner
+            .table;
+        expect(table.toCallLabel, isEmpty, reason: id);
+        expect(table.actionTrail, isEmpty, reason: id);
+        expect(
+          table.seats.every((seat) => seat.bet == null),
+          isTrue,
+          reason: id,
+        );
+      }
+    });
+
     test('keeps preflop bridge reachable before W4', () {
       final world3 = Act0ShellStateV1.sample.worldById('world_3');
       final world3Text = world3.lessons

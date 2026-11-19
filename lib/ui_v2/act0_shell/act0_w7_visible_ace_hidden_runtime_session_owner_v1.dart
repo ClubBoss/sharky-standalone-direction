@@ -337,9 +337,9 @@ act0W7VisibleAceHiddenTaskSpecsV1 = <Act0W7VisibleAceHiddenTaskSpecV1>[
           'The visible queens prove the opponent’s exact hand.',
     },
     feedbackReason:
-        'The queen on the board is unavailable to private hands, so fewer '
-        'queen-containing combinations remain. That narrows a range; it '
-        'does not identify one exact hand.',
+        'You hold two queens and the board shows a third. Only one queen is '
+        'unaccounted for, so an opponent can still hold one queen. Pocket '
+        'queens are impossible.',
     incorrectFeedback: <String, String>{
       'only_board_low_cards_matter':
           'Any visible rank can change available matching-rank '

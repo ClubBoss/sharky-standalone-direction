@@ -6045,7 +6045,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'effective_stack_basics',
     title: 'Effective stack',
-    subtitle: 'The smaller stack sets the maximum risk in the hand.',
+    subtitle: 'The smaller of two stacks caps what those players can match.',
     phaseLabel: 'Effective stack',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -6112,7 +6112,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'same_hand_different_depth',
     title: 'Same hand, different depth',
-    subtitle: 'A hand can widen at 20 BB and tighten at 100 BB.',
+    subtitle: 'Compare the room left for later bets at 20 BB and 100 BB.',
     phaseLabel: 'Depth shift',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -20234,8 +20234,8 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonId: 'w7_effective_stack_intro',
   lessonTitle: 'Effective stack',
   lessonSubtitle: 'Stack Depth And Risk',
-  caption: 'The smaller stack sets the maximum risk in the hand.',
-  hint: 'No one can win or lose more than the smaller stack.',
+  caption: 'The smaller of two stacks caps what those players can match.',
+  hint: 'Compare the two players who can put chips in against each other.',
   question: 'What is the effective stack?',
   table: _w6ComboCountsIntroRunner.table.copyWith(
     centerLabel: 'Effective stack',
@@ -20265,7 +20265,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'The effective stack is always the smaller stack. Here only 30 BB can really go into the pot.',
+          'Against this opponent, each player can put in up to 30 BB from these stacks.',
     ),
     Act0RunnerOptionV1(
       id: '200',
@@ -20287,7 +20287,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Close idea.',
       feedbackReason:
-          'Effective stack is not the average. It is the smaller stack, because that stack caps what either player can lose.',
+          'The average is 115 BB, but these players can only match 30 BB each.',
     ),
   ],
 );
@@ -20399,14 +20399,16 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w7_depth_shift_intro',
   lessonTitle: 'Same hand, different depth',
-  caption: 'The same hand can widen at 20 BB and tighten at 100 BB.',
+  caption:
+      'The same hand leaves different room for later bets at 20 BB and 100 BB.',
   hint: 'Short stacks simplify decisions. Deep stacks create more future risk.',
   question: 'Why does stack depth change the plan?',
+  table: _w7EffectiveStackIntroRunner.table.copyWith(heroCards: _heroAJsCards),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Depth changes commitment.',
       body:
-          'At 20 BB, many hands play more simply because less money is left behind. At 100 BB, more streets mean more risk and more caution.',
+          'At 20 BB, the stack runs out sooner. At 100 BB, players have more chips for later bets on the same streets.',
       focusLabels: <String>['20 BB', '100 BB', 'More room', 'More risk'],
     ),
   ],
@@ -20415,9 +20417,9 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_20bb_wider',
-  caption: 'You hold A-J suited with 20 BB effective.',
+  caption: 'Compare A-J suited at 20 BB and 100 BB effective.',
   hint: 'Shorter stacks reduce the postflop burden.',
-  question: 'Which depth usually plays this hand more simply and more often?',
+  question: 'Which depth leaves less room for large bets on later streets?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '20bb',
@@ -20427,7 +20429,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'At 20 BB, the hand plays more simply. Less money is left behind, so the decision tree is shorter.',
+          'At 20 BB, fewer chips are available for later bets. That changes the room you have to maneuver.',
     ),
     Act0RunnerOptionV1(
       id: '100bb',
@@ -20438,7 +20440,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Close idea.',
       feedbackReason:
-          'A-J suited is still playable deep, but deep stacks create more tough streets. The shorter stack usually simplifies the choice.',
+          'At 100 BB, more chips can go in over the same streets. The 20 BB stack caps those later bets sooner.',
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -20561,7 +20563,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong transfer read.',
       feedbackReason:
-          'Position and hand quality help, but 25 BB is the stack clue that matters. Shorter depth brings less risk because it reduces future-street risk and makes the continue cleaner.',
+          'At 25 BB effective, there are fewer chips for later bets. To choose between folding, calling and raising, you still need an estimate of what CO opens.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_100',
@@ -20583,14 +20585,14 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting deep-stack thought.',
       feedbackReason:
-          'That caution belongs more to deep stacks. At 25 BB, there is less room for the hand to drift into a costly long decision tree.',
+          'Depth alone cannot tell you whether A-J suited is too weak. The shorter effective stack limits the size of later bets.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Same hand, simpler shallow.',
       body:
-          'The same hand can be cleaner shallow because less stack remains to punish second-best outcomes later.',
+          'A shorter effective stack caps how much more you can lose with a second-best hand.',
       focusLabels: <String>['25 BB', 'Position', 'Less future risk'],
     ),
   ],
@@ -20824,7 +20826,7 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
   table: _w6ValueRangeActionRunner.table.copyWith(
     streetLabel: 'Flop',
     potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 3 BB',
+    toCallLabel: '',
     centerLabel: 'SPR 2, top pair',
   ),
   options: const <Act0RunnerOptionV1>[
@@ -20880,7 +20882,7 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
   table: _w6ValueRangeActionRunner.table.copyWith(
     streetLabel: 'Flop',
     potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 3 BB',
+    toCallLabel: '',
     centerLabel: 'SPR 8, top pair',
   ),
   options: const <Act0RunnerOptionV1>[
