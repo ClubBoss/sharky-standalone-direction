@@ -1,5 +1,6 @@
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
+import 'act0_glossary_sheet_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'dart:async';
 import 'act0_predecision_card_focus_v1.dart';
@@ -4100,7 +4101,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (!_usesCanonicalIntegratedLearningSceneV1)
-                _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
+                _RunnerProgressV1(
+                  runner: runner,
+                  onBack: _handleRunnerBackV1,
+                  showGlossary: isTheory || isTeaching || isReview,
+                ),
               SizedBox(
                 height: showTopInstructionCard
                     ? Act0ShellTokensV1.gapSm
@@ -4534,7 +4539,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               (isTheory || isDrill || isReview))
-            _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
+            _RunnerProgressV1(
+              runner: runner,
+              onBack: _handleRunnerBackV1,
+              showGlossary: isTheory || isTeaching || isReview,
+            ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               usesSharedActiveRunnerAllocation &&
               !dockIntegratedFeedbackGuide &&

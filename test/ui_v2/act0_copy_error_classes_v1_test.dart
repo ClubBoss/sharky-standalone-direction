@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 // Learner-copy error classes, each checked across the whole W1–W12 route.
@@ -7,35 +8,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 // in learner text before any lesson explains it. A term counts as explained
 // at the first task whose teaching step uses it, or that defines it inline
 // (the `inline` pattern). Use inside the same lesson as the explanation is
-// allowed: that lesson is what teaches it.
-class _Term {
-  const _Term(this.name, this.use, {this.inline});
-  final String name;
-  final String use;
-  final String? inline;
-}
-
-const _terms = <_Term>[
-  _Term('preflop', r'\bpreflop\b'),
-  _Term('flop', r'\bflop\b', inline: r'\(the flop\)'),
-  _Term('river', r'\briver\b', inline: r'last street, the river'),
-  _Term('postflop', r'\bpostflop\b'),
-  _Term('limp', r'\blimp', inline: r'limping \(just calling the big blind\)'),
-  _Term('first in', r'\bfirst in\b'),
-  _Term('flush', r'\bflush', inline: r'flushes \(five cards of one suit\)'),
-  _Term('straight', r'\bstraight\b'),
-  _Term('kicker', r'\bkicker'),
-  _Term('offsuit', r'\boffsuit\b'),
-  _Term('range', r'\branges?\b'),
-  _Term('equity', r'\bequity\b'),
-  _Term('draw', r'\bdraws?\b|\bdraw-'),
-  _Term('texture', r'\btexture\b'),
-  _Term(
-    'for value',
-    r'\bfor value\b|\bvalue bet',
-    inline: r'value bet wants weaker hands to call',
-  ),
-];
+// allowed: that lesson is what teaches it. The terms come from the in-lesson
+// glossary dictionary (`act0_glossary_v1.dart`).
+final _terms = act0GlossaryTermsV1.where((t) => t.teachOrderChecked);
 
 void main() {
   test('W1–W12 terms are explained before they are used', () {

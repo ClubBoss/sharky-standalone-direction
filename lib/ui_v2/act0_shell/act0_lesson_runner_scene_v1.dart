@@ -902,10 +902,15 @@ List<String> _trimmedUniqueStringsV1(Iterable<String> values) {
 }
 
 class _RunnerProgressV1 extends StatelessWidget {
-  const _RunnerProgressV1({required this.runner, required this.onBack});
+  const _RunnerProgressV1({
+    required this.runner,
+    required this.onBack,
+    required this.showGlossary,
+  });
 
   final Act0RunnerStateV1 runner;
   final VoidCallback onBack;
+  final bool showGlossary;
 
   @override
   Widget build(BuildContext context) {
@@ -937,7 +942,26 @@ class _RunnerProgressV1 extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: Act0ShellTokensV1.gapMd),
+        if (showGlossary) ...[
+          const SizedBox(width: Act0ShellTokensV1.gapXs),
+          SizedBox(
+            width: 44,
+            height: 44,
+            child: IconButton(
+              key: const Key('act0_shell_runner_glossary'),
+              tooltip: 'Glossary',
+              onPressed: () => showAct0GlossarySheetV1(
+                context,
+                taskText: act0GlossaryTaskTextV1(runner),
+              ),
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.menu_book_rounded, size: 22),
+              color: Act0ShellTokensV1.text,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapXs),
+        ] else
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
         Text(
           act0AcademyLanguageV1(context) == 'ru'
               ? '\u0428\u0430\u0433 ${runner.beatIndex}/${runner.beatCount}'
