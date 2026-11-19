@@ -188,9 +188,8 @@ class _Act0SharkySpokenSurfaceV1 extends StatelessWidget {
 
 /// The single compact teaching/task layer attached to the learning table.
 ///
-/// This is intentionally not another card. The left rule and open background
-/// make the copy read as table context while the table remains the scene's
-/// dominant object.
+/// The prompt sits on the scene's upper chrome. In the registered feedback
+/// shelf, the reason leads and the table remains in view.
 class Act0LearningSceneGuideV3 extends StatelessWidget {
   const Act0LearningSceneGuideV3({
     super.key,
@@ -264,11 +263,32 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         scaffold.tier == Act0SharkyCoachScaffoldTierV1.spoken &&
         isEvidenceBacked;
 
+    final compactFeedback =
+        focusPointsUp &&
+        phase != Act0LearningScenePhaseV3.theory &&
+        phase != Act0LearningScenePhaseV3.tableTask;
+    final hasReason = compactFeedback && support.trim().isNotEmpty;
+    final Widget? avatar = showAvatar
+        ? ExcludeSemantics(
+            child: Act0SharkyCompanionAvatarV1(
+              key: const Key('act0_shell_learning_scene_sharky_avatar'),
+              state: sharkyState,
+              size: compactFeedback ? 20 : scaffold.avatarSize,
+              simpleFrame: compactFeedback || !showSpokenSurface,
+              growthStage: growthStage,
+            ),
+          )
+        : null;
+
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
+            if (compactFeedback && avatar != null) ...[
+              avatar,
+              const SizedBox(width: 6),
+            ],
             if (showSpokenSurface) ...[
               Text(
                 'Sharky',
@@ -290,7 +310,11 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 style: Act0ShellTokensV1.label.copyWith(
-                  color: showSpokenSurface ? Act0ShellTokensV1.textMuted : tone,
+                  color:
+                      showSpokenSurface ||
+                          phase == Act0LearningScenePhaseV3.tableTask
+                      ? Act0ShellTokensV1.textMuted
+                      : tone,
                   fontSize: showSpokenSurface ? 8.8 : 10.2,
                   fontWeight: FontWeight.w900,
                   letterSpacing: showSpokenSurface ? 0.35 : 0.65,
@@ -310,6 +334,19 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           ],
         ),
         SizedBox(height: showSpokenSurface ? 3 : 2),
+        if (hasReason) ...[
+          Text(
+            support,
+            key: const Key('act0_learning_scene_v3_support'),
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontSize: enlarged ? 14 : 13,
+              fontWeight: FontWeight.w700,
+              height: 1.22,
+            ),
+          ),
+          const SizedBox(height: 5),
+        ],
         Text(
           headline,
           key: const Key('act0_integrated_scene_prompt'),
@@ -322,15 +359,19 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               ? TextOverflow.visible
               : TextOverflow.ellipsis,
           style: Act0ShellTokensV1.body.copyWith(
-            color: Act0ShellTokensV1.text,
-            fontSize: showSpokenSurface
+            color: hasReason
+                ? Act0ShellTokensV1.textMuted
+                : Act0ShellTokensV1.text,
+            fontSize: hasReason
+                ? 12
+                : showSpokenSurface
                 ? (enlarged ? 15.4 : 16.4)
                 : (enlarged ? 15.2 : 16.0),
-            fontWeight: FontWeight.w900,
+            fontWeight: hasReason ? FontWeight.w700 : FontWeight.w900,
             height: showSpokenSurface ? 1.10 : 1.08,
           ),
         ),
-        if (support.trim().isNotEmpty) ...[
+        if (!hasReason && support.trim().isNotEmpty) ...[
           SizedBox(height: showSpokenSurface ? 4 : 3),
           // Preserve the existing compact overlay footprint while letting
           // learners read the complete authored theory rather than ellipsizing
@@ -428,26 +469,23 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           ? CrossAxisAlignment.start
           : CrossAxisAlignment.center,
       children: [
-        if (showAvatar) ...[
-          ExcludeSemantics(
-            child: Act0SharkyCompanionAvatarV1(
-              key: const Key('act0_shell_learning_scene_sharky_avatar'),
-              state: sharkyState,
-              size: scaffold.avatarSize,
-              simpleFrame: !showSpokenSurface,
-              growthStage: growthStage,
-            ),
-          ),
+        if (!compactFeedback && avatar != null) ...[
+          avatar,
           SizedBox(width: showSpokenSurface ? 10 : Act0ShellTokensV1.gapSm),
         ],
         Expanded(
-          child: showSpokenSurface
+          child: showSpokenSurface && !compactFeedback
               ? _Act0SharkySpokenSurfaceV1(tone: tone, child: content)
               : content,
         ),
       ],
     );
 
+    final detachedSpeechBubble = showSpokenSurface && !compactFeedback;
+    final darkPromptSurface =
+        compactFeedback ||
+        phase == Act0LearningScenePhaseV3.theory ||
+        (phase == Act0LearningScenePhaseV3.tableTask && !focusPointsUp);
     return Semantics(
       container: true,
       explicitChildNodes: focusPointsUp,
@@ -456,23 +494,23 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         key: const Key('act0_wave_a_learning_context'),
         width: double.infinity,
         margin: EdgeInsets.fromLTRB(
-          showSpokenSurface ? 10 : 14,
-          showSpokenSurface ? 3 : 1,
-          showSpokenSurface ? 10 : 14,
-          showSpokenSurface ? 3 : 1,
+          detachedSpeechBubble ? 10 : 14,
+          detachedSpeechBubble ? 3 : 1,
+          detachedSpeechBubble ? 10 : 14,
+          detachedSpeechBubble ? 3 : 1,
         ),
-        padding: showSpokenSurface
+        padding: detachedSpeechBubble
             ? const EdgeInsets.fromLTRB(2, 2, 2, 2)
             : EdgeInsets.fromLTRB(12, enlarged ? 6 : 5, 10, enlarged ? 7 : 6),
-        decoration: showSpokenSurface
+        decoration: detachedSpeechBubble
             ? null
             : BoxDecoration(
                 border: Border(left: BorderSide(color: phaseTone, width: 3)),
                 gradient: LinearGradient(
-                  colors: phase == Act0LearningScenePhaseV3.theory
+                  colors: darkPromptSurface
                       ? <Color>[
+                          Act0ShellTokensV1.surface.withValues(alpha: 0.95),
                           Act0ShellTokensV1.surface.withValues(alpha: 0.88),
-                          Act0ShellTokensV1.surface.withValues(alpha: 0.72),
                         ]
                       : <Color>[
                           phaseTone.withValues(alpha: 0.11),
