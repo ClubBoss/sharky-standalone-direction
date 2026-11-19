@@ -21492,7 +21492,7 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
     boardCards: const <Act0CardStateV1>[],
     highlightedCardIds: const ['hero_0', 'hero_1'],
     potLabel: 'Pot 1.5 BB',
-    toCallLabel: 'To call 0 BB',
+    toCallLabel: '',
     centerLabel: 'BTN, 12 BB, yellow zone',
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'Folded to BTN'),
@@ -21711,8 +21711,8 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   caption:
       'Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble. No antes; BB goes all-in for 18 BB total. Pot 21 BB, 15.5 BB to call.',
   hint:
-      'The covering big blind can hurt you more than you can hurt them. Name the bubble risk premium before acting.',
-  question: 'What is the cleaner first bubble adjustment here?',
+      'Check whether losing the hand could eliminate you. That changes how much of an edge you need.',
+  question: 'How should you adjust if losing to BB would eliminate you?',
   table: _act0CurrentStreetTableV1(
     _act0ExplicitFoldsV1(
       _w9BubblePressureIntroRunner.table.copyWith(
@@ -21759,7 +21759,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong transfer.',
       feedbackReason:
-          'That is the live-table bubble transfer. Against a covering big blind, a medium stack feels extra risk premium before calling off, so thin chip-EV stack-offs tighten first.',
+          'If BB can eliminate you, a call that barely gains chips can still hurt your tournament chances. Require a bigger edge.',
     ),
     Act0RunnerOptionV1(
       id: 'call_chip_ev',
@@ -21770,7 +21770,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose for bubble pressure.',
       feedbackReason:
-          'Pure chip-EV calls miss the tournament tax here. A covering big blind creates real bubble pressure, so medium stacks need more hand strength before risking tournament life.',
+          'Chip-only odds tell you the price of a call. If the call puts your tournament life at risk, payouts and the other stacks also matter.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_anything_close',
@@ -21781,14 +21781,14 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Right caution, too extreme.',
       feedbackReason:
-          'Risk premium is not total shutdown. The real-table bubble read is selective tightening for a medium stack, not folding every playable spot just because the big blind covers you.',
+          'If losing would eliminate you, tighten marginal calls. Strong hands can still call when the edge is large enough.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Bubble pressure changes the stack-off bar.',
       body:
-          'Real table, same concept, clearer transfer. A medium stack near the bubble cannot call off like pure chip EV when the big blind covers them. Bubble risk premium means tighter stack-offs first, not panic folds everywhere.',
+          'An all-in for 18 BB tells you the big blind’s wager. To know whether a loss would eliminate you, compare it with your own stack. Payouts and other stacks determine how much extra equity you need.',
       focusLabels: <String>[
         'Real table',
         'Bubble',
@@ -22161,7 +22161,8 @@ final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
 final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_overaggressive_tag',
-  caption: 'Villain double-barrels missed boards and raises often.',
+  caption:
+      'Villain raises often. In several earlier hands, you saw them bet twice and then show a weak hand.',
   hint: 'Frequent pressure with weak showdowns points to one useful tag.',
   question: 'Which tag fits repeated pressure with weak showdowns?',
   options: const <Act0RunnerOptionV1>[
@@ -22173,7 +22174,7 @@ final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
       feedbackReason:
-          'Repeated thin barrels and raise-heavy pressure suggest an over-aggressive profile worth tagging before you widen bluff-catches.',
+          'The frequent raises and weak hands shown after two bets suggest a possible over-aggressive pattern. Keep watching for more examples.',
     ),
     Act0RunnerOptionV1(
       id: 'nit',
@@ -22362,7 +22363,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_table_value_vs_caller_transfer',
   caption:
-      'Real table. BTN opens K-Q, BB calls too wide, and the flop is K-7-2 rainbow.',
+      'You hold K-Q on K-7-2 rainbow. BB checks. In earlier hands, you saw BB call flop bets with weak pairs.',
   hint:
       'Call-heavy opponents pay value more often. Ask what changes first before adding more bluffs.',
   question: 'What is the cleaner first adjustment here?',
@@ -22375,7 +22376,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
     ],
     streetLabel: 'Flop',
     potLabel: 'Pot 6 BB',
-    toCallLabel: 'To call 2 BB',
+    toCallLabel: '',
     centerLabel: 'Top pair vs caller',
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
@@ -22403,7 +22404,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp live adjustment.',
       feedbackReason:
-          'That is the real-table transfer. If BB calls too wide, top pair gets paid by weaker hands more often, so value rises and bluff frequency should shrink.',
+          'BB has checked. The earlier calls with weak pairs support leaning toward value with top pair. BB’s exact hand in this spot is still unknown.',
     ),
     Act0RunnerOptionV1(
       id: 'force_big_pot',
@@ -22421,7 +22422,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Caller changes the mix.',
       body:
-          'This is the changed frame: same one-lever idea, now at a live table. When BB calls too wide, value hands move up in priority and bluffs move down.',
+          'Use the check in this hand and the calling pattern from earlier hands. A value bet aims to get called by worse hands.',
       focusLabels: <String>['Real table', 'Calls too wide', 'Value', 'Bluff'],
     ),
   ],
@@ -22461,7 +22462,8 @@ final _w10ExploitGuardrailsIntroRunner = _w10OneLeverIntroRunner.copyWith(
 final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_overbluff_punish',
-  caption: 'Villain barrels many missed draws in obvious spots.',
+  caption:
+      'In earlier river showdowns on this line, Villain repeatedly showed missed draws after betting.',
   hint: 'Overbluffing can be punished by wider bluff-catch windows.',
   question: 'What is the cleaner exploit response?',
   teachingSteps: const <Act0TeachingStepV1>[

@@ -117,6 +117,7 @@ void main() {
       return m == null ? null : double.parse(m[1]!);
     }
 
+    final check = RegExp(r'^\w+ checks[.!]?$', caseSensitive: false);
     const order = 'AKQJT98765432';
     final problems = <String>[];
     for (final w in Act0ShellStateV1.sample.worlds) {
@@ -132,6 +133,14 @@ void main() {
             );
           }
           final street = table.streetLabel.toLowerCase();
+          final actions = table.actionTrail.where((item) => !item.isNote);
+          if (call != null &&
+              call > 0 &&
+              const {'flop', 'turn', 'river'}.contains(street) &&
+              actions.isNotEmpty &&
+              check.hasMatch(actions.last.label.trim())) {
+            problems.add('${t.taskId}: a check cannot leave a price to call');
+          }
           final hero = [for (final c in table.heroCards) c.rank]
             ..sort((a, b) => order.indexOf(a) - order.indexOf(b));
           for (final text in [r.caption, r.question, r.hint]) {
