@@ -189,7 +189,7 @@ void main() {
         (
           task: taskFor(
             worldId: 'world_1',
-            lessonId: 'hand_rankings_table',
+            lessonId: 'hand_rankings_upper',
             taskId: 'hand_rankings_flush_drill',
           ),
           banned: <String>['flush beats straight'],
@@ -224,7 +224,7 @@ void main() {
             lessonId: 'hand_discipline_buckets',
             taskId: 'hand_discipline_buckets_trash',
           ),
-          banned: <String>['trash bucket'],
+          banned: <String>['trash bucket', 'weak bucket'],
         ),
         (
           task: taskFor(
@@ -283,7 +283,7 @@ void main() {
       expect(teachingText, contains('Premium'));
       expect(teachingText, contains('Strong'));
       expect(teachingText, contains('Medium'));
-      expect(teachingText, contains('Trash'));
+      expect(teachingText, contains('Weak'));
     });
 
     test(

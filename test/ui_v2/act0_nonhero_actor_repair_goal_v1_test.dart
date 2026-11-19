@@ -32,7 +32,7 @@ const _subjects = [
     goal: 'six_max_initial_preflop_first_actor',
   ),
   (
-    lesson: 'positions',
+    lesson: 'blinds_action_order',
     task: 'positions_utg',
     choice: 'hj',
     goal: 'utg_seat_identity',
@@ -184,7 +184,7 @@ void main() {
     'old UTG records remain raw and cannot prove the corrected semantic source',
     () {
       final f = Act0AuthoredRepairGoalFixtureV1.source(
-        lessonId: 'positions',
+        lessonId: 'blinds_action_order',
         taskId: 'positions_utg',
         choiceId: 'hj',
         occurrenceId: 'SIMULATED-semantic-revision',

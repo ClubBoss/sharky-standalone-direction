@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -101,6 +102,89 @@ Future<Map<String, dynamic>> _saved(WidgetTester t) async {
 }
 
 void main() {
+  testWidgets('pre-L1 saved progress resumes at the first new prerequisite', (
+    t,
+  ) async {
+    // In the previous route the all-in lesson came before ranks. This saved
+    // learner completed the first three lessons and had not studied ranks.
+    const oldCompleted = <String>[
+      'what_poker_is_theory',
+      'what_poker_is_find_hero',
+      'what_poker_is_table_read_transfer',
+      'what_poker_is_table_read_recheck',
+      'first_table_guide_one_clear_choice',
+      'first_table_guide_route_roles',
+      'what_poker_is_pot_stack',
+      'what_poker_is_win_ways',
+      'what_poker_is_showdown_win',
+      'what_poker_is_all_in_meaning',
+      'what_poker_is_matched_chips_transfer',
+      'what_poker_is_live_win_transfer',
+      'what_poker_is_review',
+      'cards_ranks_suits_theory',
+      'cards_ranks_suits_rank_drill',
+      'cards_ranks_suits_suit_drill',
+      'cards_ranks_suits_private_board',
+      'cards_ranks_suits_board_count',
+      'cards_ranks_suits_best_five',
+      'cards_ranks_suits_recap',
+    ];
+    const oldXp = 101;
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_welcome_completed_v1': true,
+      'intake_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 20,
+        'pendingDecisionAssistance': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+        'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+            .lineagePayload(),
+        'durableRetentionHistory': <Object>[],
+        'completedTaskIds': oldCompleted,
+        'completedLessonIds': [
+          'what_poker_is',
+          'what_poker_is_content',
+          'cards_ranks_suits',
+        ],
+        'skippedTaskIds': <String>[],
+        'earnedXp': oldXp,
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'cards_ranks_suits',
+        'selectedTaskId': 'cards_ranks_suits_recap',
+      }),
+    });
+    t.view.physicalSize = const Size(393, 852);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.reset);
+    await _mount(t);
+    await t.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+    await t.pumpAndSettle();
+    expect(
+      await _tapFirst(
+        t,
+        _continueKeys.map((key) => find.byKey(Key(key))).toList(),
+      ),
+      isTrue,
+      reason: t
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data)
+          .whereType<String>()
+          .take(25)
+          .join(' | '),
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'hand_rankings_theory');
+    final saved = await _saved(t);
+    expect((saved['completedTaskIds'] as List).toSet(), oldCompleted.toSet());
+    expect(saved['earnedXp'], oldXp);
+    expect(saved['skippedTaskIds'], isEmpty);
+    expect(t.takeException(), isNull);
+  });
+
   testWidgets('W9 long inline history keeps the current decision playable', (
     t,
   ) async {

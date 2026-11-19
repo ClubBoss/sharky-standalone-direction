@@ -172,7 +172,7 @@ void main() {
         '1': 119,
         '2': 60,
       });
-      expect(snapshot['longestCorrectPositionRun'], 4);
+      expect(snapshot['longestCorrectPositionRun'], 5);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
@@ -327,7 +327,10 @@ void main() {
       final firstTable = rows.singleWhere(
         (row) => row.task.taskId == 'what_poker_is_theory',
       );
-      expect(firstTable.task.runner.question, contains('have acted'));
+      expect(
+        firstTable.task.runner.question,
+        contains('two cards you can use on your own'),
+      );
       expect(firstTable.task.runner.question, isNot(contains('hero seat')));
 
       final value = rows.singleWhere(
@@ -377,7 +380,7 @@ void main() {
       '1': 120,
       '2': 60,
     });
-    expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
+    expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 5);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
       'TABLE_ACTION_DECISION': 34,
@@ -729,7 +732,7 @@ void main() {
       'world_1/blinds_action_order/blinds_first_actor/btn',
       'world_1/blinds_action_order/blinds_last_actor/sb',
       'world_1/blinds_action_order/blinds_review/btn',
-      'world_1/positions/positions_utg/hj',
+      'world_1/blinds_action_order/positions_utg/hj',
       'world_1/cards_ranks_suits/cards_ranks_suits_rank_drill/king',
       'world_1/cards_ranks_suits/cards_ranks_suits_rank_drill/suit',
       'world_1/fold_check_call_raise/actions_check_drill/fold',

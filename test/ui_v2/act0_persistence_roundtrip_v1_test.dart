@@ -365,16 +365,16 @@ void main() {
     'study revisions and legacy completion survive without promoted status',
     (tester) async {
       final task = Act0ShellStateV1.sample
-          .lessonById('positions')
+          .lessonById('blinds_action_order')
           .taskList
           .singleWhere((t) => t.taskId == 'positions_theory');
       final observation = Act0StudyObservationV1(
         worldId: 'world_1',
-        lessonId: 'positions',
+        lessonId: 'blinds_action_order',
         taskId: task.taskId,
         sourceRevision: act0AuthoredStudyRevisionV1(
           worldId: 'world_1',
-          lessonId: 'positions',
+          lessonId: 'blinds_action_order',
           task: task,
         )!,
         sessionId: 'preserved-study-session',
@@ -387,7 +387,7 @@ void main() {
           'skippedTaskIds': <String>[],
           'completedLessonIds': <String>[],
           'selectedWorldId': 'world_1',
-          'selectedLessonId': 'positions',
+          'selectedLessonId': 'blinds_action_order',
           'selectedTaskId': 'positions_utg',
           'earnedXp': 123,
           if (includeStudy) 'studyObservations': [observation.toPayload()],

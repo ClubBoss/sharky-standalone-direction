@@ -32,7 +32,7 @@ const _subjects = [
   (lesson: 'blinds_action_order', task: 'blinds_first_actor', wrong: 'btn'),
   (lesson: 'blinds_action_order', task: 'blinds_last_actor', wrong: 'sb'),
   (lesson: 'blinds_action_order', task: 'blinds_review', wrong: 'btn'),
-  (lesson: 'positions', task: 'positions_utg', wrong: 'hj'),
+  (lesson: 'blinds_action_order', task: 'positions_utg', wrong: 'hj'),
 ];
 
 Act0LessonRunnerShellV1 _runner(WidgetTester t) =>

@@ -20,9 +20,7 @@ Act0LessonTaskV1 get _task => Act0ShellStateV1.sample
     .singleWhere((task) => task.taskId == _taskId);
 
 void main() {
-  // Independent meaning oracle from this finite scene: Hero is BTN with KTs;
-  // blinds are posted; CO has folded; there is no board. The CO answer states
-  // the wrong actor, while saying Hero has no cards contradicts visible K and T.
+  // Independent meaning oracle from this finite scene: Two private cards are visible and the shared board is empty.
   for (final control
       in <
         ({
@@ -38,21 +36,21 @@ void main() {
           result: 'correct',
           correct: true,
           quality: Act0FeedbackQualityV1.correct,
-          reason: 'BTN this hand',
+          reason: 'Your two cards are visible',
         ),
         (
           choice: 'co_still_acting',
           result: 'suboptimal',
           correct: false,
           quality: Act0FeedbackQualityV1.suboptimal,
-          reason: 'CO has already folded',
+          reason: 'The shared cards have yet to appear',
         ),
         (
           choice: 'hero_has_no_cards',
           result: 'incorrect',
           correct: false,
           quality: Act0FeedbackQualityV1.wrong,
-          reason: 'K and T showing at BTN',
+          reason: 'two cards are visible beside you',
         ),
       ]) {
     testWidgets(

@@ -3,10 +3,11 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_assessment_summary_projecti
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  final lesson = Act0ShellStateV1.sample.lessons.singleWhere(
-    (lesson) => lesson.lessonId == 'hand_rankings_table',
-  );
-  final tasks = lesson.taskList;
+  final tasks = [
+    for (final lesson in Act0ShellStateV1.sample.lessons)
+      for (final task in lesson.taskList)
+        if (task.taskId.startsWith('hand_rankings_')) task,
+  ];
 
   test('hand-ranking Academy summaries are neutral before the decision', () {
     const knownLeadingIds = <String>{

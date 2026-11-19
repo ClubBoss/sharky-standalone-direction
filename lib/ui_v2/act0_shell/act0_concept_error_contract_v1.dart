@@ -114,6 +114,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     eligibleRepairFamily: 'showdown_hand_strength',
     lessonKeys: <String>{
       'world_1/hand_rankings_table',
+      'world_1/hand_rankings_upper',
       'world_1/showdown_winning',
     },
     taskKeys: <String>{
@@ -143,6 +144,12 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     sourceConceptOwner: 'Act0ShellStateV1:position_identity',
     eligibleRepairFamily: 'table_position_identity',
     lessonKeys: <String>{'world_1/positions', 'world_3/position_six_seats'},
+    taskKeys: <String>{
+      'world_1/blinds_action_order/positions_theory',
+      'world_1/blinds_action_order/positions_button',
+      'world_1/blinds_action_order/positions_utg',
+      'world_1/blinds_action_order/positions_cutoff',
+    },
     legacyAliases: <String>{
       'missed_table_position_read',
       'thin_table_position_read',

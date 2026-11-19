@@ -18,20 +18,20 @@ import '../support/act0_shell_presentation_finders_v1.dart';
 final _start = DateTime.utc(2026, 1, 1);
 final _now = _start.add(const Duration(days: 20));
 Act0LessonTaskV1 get _theory => Act0ShellStateV1.sample
-    .lessonById('positions')
+    .lessonById('blinds_action_order')
     .taskList
     .singleWhere((t) => t.taskId == 'positions_theory');
 
 Act0StudyObservationV1 _study({String? revision, DateTime? time}) =>
     Act0StudyObservationV1(
       worldId: 'world_1',
-      lessonId: 'positions',
+      lessonId: 'blinds_action_order',
       taskId: _theory.taskId,
       sourceRevision:
           revision ??
           act0AuthoredStudyRevisionV1(
             worldId: 'world_1',
-            lessonId: 'positions',
+            lessonId: 'blinds_action_order',
             task: _theory,
           )!,
       sessionId: 'study-session',
@@ -304,14 +304,14 @@ void main() {
           );
       final original = act0AuthoredStudyRevisionV1(
         worldId: 'world_1',
-        lessonId: 'positions',
+        lessonId: 'blinds_action_order',
         task: task,
       );
       for (final revised in [changed(), changed(table: true)]) {
         expect(
           act0AuthoredStudyRevisionV1(
             worldId: 'world_1',
-            lessonId: 'positions',
+            lessonId: 'blinds_action_order',
             task: revised,
           ),
           isNot(original),
@@ -319,12 +319,12 @@ void main() {
         expect(
           act0AuthoredSourceFingerprintV1(
             worldId: 'world_1',
-            lessonId: 'positions',
+            lessonId: 'blinds_action_order',
             task: revised,
           ),
           act0AuthoredSourceFingerprintV1(
             worldId: 'world_1',
-            lessonId: 'positions',
+            lessonId: 'blinds_action_order',
             task: task,
           ),
         );
@@ -332,7 +332,7 @@ void main() {
       expect(
         act0AuthoredStudyRevisionV1(
           worldId: 'world_1',
-          lessonId: 'positions',
+          lessonId: 'blinds_action_order',
           task: changed(role: true),
         ),
         isNull,
@@ -340,7 +340,7 @@ void main() {
       expect(
         act0AuthoredStudyRevisionV1(
           worldId: 'world_1',
-          lessonId: 'positions',
+          lessonId: 'blinds_action_order',
           task: task,
         ),
         original,

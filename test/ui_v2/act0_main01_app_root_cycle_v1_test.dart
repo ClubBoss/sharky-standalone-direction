@@ -1512,7 +1512,7 @@ void main() {
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.taskList];
-    expect(lessons, hasLength(28));
+    expect(lessons, hasLength(29));
     expect(tasks, hasLength(181));
     expect(tasks.map((task) => task.taskId).toSet(), hasLength(181));
     expect(
@@ -1915,7 +1915,7 @@ void main() {
       completed['earnedXp'],
       tasks.fold<int>(0, (sum, task) => sum + task.rewardXp),
     );
-    expect(completed['studyObservations'], hasLength(28));
+    expect(completed['studyObservations'], hasLength(29));
     expect(w4OfferedSequenceTrace.map((row) => row['task_id']).toList(), [
       'w4_purpose_intro',
       'w4_value_purpose',

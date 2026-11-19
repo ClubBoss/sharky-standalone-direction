@@ -246,7 +246,7 @@ void main() {
         (
           task: taskFor(
             worldId: 'world_1',
-            lessonId: 'positions',
+            lessonId: 'blinds_action_order',
             taskId: 'positions_button',
           ),
           title: 'BTN seat found.',
@@ -254,7 +254,7 @@ void main() {
         (
           task: taskFor(
             worldId: 'world_1',
-            lessonId: 'positions',
+            lessonId: 'blinds_action_order',
             taskId: 'positions_utg',
           ),
           title: 'UTG seat found.',

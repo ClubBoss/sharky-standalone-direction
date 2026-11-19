@@ -24,7 +24,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
 const _worldId = 'world_1';
-const _lessonId = 'positions';
+const _lessonId = 'blinds_action_order';
 const _theoryTaskId = 'positions_theory';
 const _drillTaskId = 'positions_utg';
 

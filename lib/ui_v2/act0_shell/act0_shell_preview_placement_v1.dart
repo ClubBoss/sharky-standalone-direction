@@ -533,7 +533,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     required _Act0PersistedProgressV1 parsed,
     required Act0ShellStateV1 state,
   }) {
-    if (!_legacyCompatAppliesV1(parsed, state)) {
+    if (!_legacyCompatAppliesV1(parsed)) {
       return const <String>{};
     }
     final guideTaskIds = _guideTaskIdsV1(state);
@@ -555,7 +555,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     required _Act0PersistedProgressV1 parsed,
     required Act0ShellStateV1 state,
   }) {
-    if (!_legacyCompatAppliesV1(parsed, state)) {
+    if (!_legacyCompatAppliesV1(parsed)) {
       return const <String>{};
     }
     final guideTaskIds = _guideTaskIdsV1(state);
@@ -585,11 +585,10 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
-  bool _legacyCompatAppliesV1(
-    _Act0PersistedProgressV1 parsed,
-    Act0ShellStateV1 state,
-  ) {
-    if (parsed.selectedWorldId != 'world_1') {
+  bool _legacyCompatAppliesV1(_Act0PersistedProgressV1 parsed) {
+    // The content lesson was first written with schema 8. Its later position
+    // in Foundation does not make an earlier completion a pre-split save.
+    if (parsed.schemaVersion >= 8 || parsed.selectedWorldId != 'world_1') {
       return false;
     }
     return parsed.selectedLessonId != 'what_poker_is' &&
