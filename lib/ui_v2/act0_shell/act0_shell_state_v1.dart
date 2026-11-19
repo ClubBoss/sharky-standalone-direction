@@ -17391,7 +17391,7 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
 final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
   lessonId: 'w5_connected_board',
   caption: '9-8-7 is connected.',
-  hint: 'Many nearby ranks can complete a straight.',
+  hint: "Close board ranks can connect with an opponent's private cards.",
   question: 'What is the key board clue?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -17402,7 +17402,7 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
       feedbackReason:
-          '9-8-7 are connected ranks, so one more card can make a straight.',
+          '9-8-7 leaves room for straights. For example, a player holding J-T already has one.',
     ),
     Act0RunnerOptionV1(
       id: 'paired_board',
@@ -17577,51 +17577,50 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
   caption:
       'Real table. Hero holds A-spade and J-club on A-heart, 8-heart, 4-club.',
   hint:
-      'Name what is already real now, then name the draw pressure that can still change the turn or river.',
+      'Name Hero’s made hand, then read what the board could give an opponent.',
   question: 'What is the clean read first?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'made_hand_with_draw_pressure',
-      label:
-          'Hero already has top pair, and the heart draw is still only pressure',
+      label: 'Hero has top pair. An opponent could be drawing to a flush',
       isCorrect: true,
       preferredLabel:
-          'Hero already has top pair, and the heart draw is still only pressure',
+          'Hero has top pair. An opponent could be drawing to a flush',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct transfer.',
       feedbackReason:
-          'Hero already has top pair. The heart draw matters, but it is not a made flush yet, so the clean read starts with the made hand plus future draw pressure.',
+          'Hero has top pair and no hearts. An opponent with two hearts can make a flush if another heart comes.',
     ),
     Act0RunnerOptionV1(
       id: 'made_flush_now',
-      label: 'The heart draw is already a made flush',
+      label: 'Hero already has a flush',
       isCorrect: false,
       preferredLabel:
-          'Hero already has top pair, and the heart draw is still only pressure',
+          'Hero has top pair. An opponent could be drawing to a flush',
       betterAnswerLabel:
-          'Hero already has top pair, and the heart draw is still only pressure',
+          'Hero has top pair. An opponent could be drawing to a flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not made yet.',
       feedbackReason:
-          'Two hearts on the board create pressure, but that is not a made flush yet. The draw is still future potential, not current value.',
+          'Hero has no hearts. With two hearts on the board, even an opponent holding two hearts would still need one more.',
     ),
     Act0RunnerOptionV1(
       id: 'draw_means_pair_does_not_count',
-      label: 'The draw matters, so the pair does not count yet',
+      label: 'A possible flush draw cancels Hero’s pair',
       isCorrect: false,
       preferredLabel:
-          'Hero already has top pair, and the heart draw is still only pressure',
+          'Hero has top pair. An opponent could be drawing to a flush',
       betterAnswerLabel:
-          'Hero already has top pair, and the heart draw is still only pressure',
+          'Hero has top pair. An opponent could be drawing to a flush',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Current hand first.',
       feedbackReason:
-          'The draw matters because later cards can change the danger, but Hero still has a real made hand right now. Start with what already exists on the flop.',
+          'Hero’s pair of aces already counts. Another heart could help an opponent later.',
     ),
   ],
   table: _world5FlushDrawRunner.table.copyWith(
     potLabel: 'Pot 8 BB',
-    centerLabel: 'Top pair, heart draw live',
+    centerLabel: 'Top pair on a two-heart board',
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'A', suit: 's'),
       Act0CardStateV1(rank: 'J', suit: 'c'),
@@ -17637,7 +17636,7 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
     Act0TeachingStepV1(
       title: 'Made hand first, draw pressure second.',
       body:
-          'Top pair is already real. The two-heart board adds future pressure, but it does not erase the made hand or turn the draw into a finished flush.',
+          'Hero has top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.',
       focusLabels: <String>['Top pair', 'Two hearts', 'Not made yet'],
     ),
   ],
@@ -18164,9 +18163,10 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
           'Hero already has 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether Hero improves, but which completing card is safer.',
     ),
   ],
-  table: _world5TableOutsStraightTransferRunner.table.copyWith(
-    potLabel: 'Pot 9 BB',
-    toCallLabel: 'River preview',
+  table: _world5StraightOutRunner.table.copyWith(
+    streetLabel: 'Turn',
+    potLabel: '',
+    toCallLabel: '',
     centerLabel: 'Some outs are safer',
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: '9', suit: 's'),
@@ -18181,8 +18181,6 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'Flop: A hearts, 7 hearts, 6 clubs'),
       Act0ActionTrailItemV1(label: 'Turn: 2 diamonds'),
-      Act0ActionTrailItemV1(label: 'River can bring a 5'),
-      Act0ActionTrailItemV1(label: 'Hero compares safer vs riskier'),
     ],
     highlightedCardIds: const <String>[
       'hero_0',
@@ -19528,7 +19526,8 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
   lessonId: 'w6_combo_counts_intro',
   lessonTitle: 'Count the combos',
   caption: 'Ranges are not just hand names. They also have combo counts.',
-  hint: 'More combos means that hand family appears more often in a range.',
+  hint:
+      'First count the possible hands. To weigh a range, ask how often each one takes the action.',
   question: 'Why do combo counts matter?',
   options: const <Act0RunnerOptionV1>[],
   table: _w6RangeIntroRunner.table.copyWith(centerLabel: 'Combo count'),
@@ -19581,7 +19580,7 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
       feedbackReason:
-          'Six combos is the count for a pocket pair. Two different ranks like A-K appear much more often.',
+          'Six combos is the count for a pocket pair. A-K has 16 possible suit combinations before removing known cards.',
     ),
   ],
 );
@@ -19601,7 +19600,7 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice count.',
       feedbackReason:
-          'A pocket pair has 6 combinations. That is why pair families appear less often than broad non-pair hands.',
+          'Choose two of the four suits. That gives six possible pairs before removing known cards.',
     ),
     Act0RunnerOptionV1(
       id: 'twelve',
@@ -19633,24 +19632,24 @@ final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonId: 'w6_combo_weight_compare',
   caption: 'Compare A-K with pocket eights before blockers.',
   hint: 'One family has 16 combos. The other has 6.',
-  question: 'Which family appears more often in a range?',
+  question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'ak_more',
-      label: 'A-K appears more often',
+      label: 'A-K has more combos',
       isCorrect: true,
-      preferredLabel: 'A-K appears more often',
+      preferredLabel: 'A-K has more combos',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice count.',
       feedbackReason:
-          'A-K has 16 combos, so it appears more often than a pocket pair with only 6.',
+          'Before removing known cards, A-K has 16 combos and pocket eights have 6.',
     ),
     Act0RunnerOptionV1(
       id: 'same_weight',
-      label: 'They appear equally often',
+      label: 'They have the same combo count',
       isCorrect: false,
-      preferredLabel: 'A-K appears more often',
-      betterAnswerLabel: 'A-K appears more often',
+      preferredLabel: 'A-K has more combos',
+      betterAnswerLabel: 'A-K has more combos',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Close start.',
       feedbackReason:
@@ -19658,10 +19657,10 @@ final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'pair_more',
-      label: 'Pocket eights appear more often',
+      label: 'Pocket eights have more combos',
       isCorrect: false,
-      preferredLabel: 'A-K appears more often',
-      betterAnswerLabel: 'A-K appears more often',
+      preferredLabel: 'A-K has more combos',
+      betterAnswerLabel: 'A-K has more combos',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Getting warmer.',
       feedbackReason:
@@ -19674,17 +19673,17 @@ final _w6ComboCountsRecapRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w6_combo_counts_recap',
   caption:
-      'Lesson learned: combo counts measure how often a hand family appears.',
+      'Lesson learned: count the possible hands, then account for the action.',
   hint: 'A-K = 16 combos. A pocket pair = 6 combos.',
   question: 'What do combo counts help you measure?',
   feedbackTitle: 'Combo takeaway.',
   feedbackReason:
-      'Combo counts measure range density. Some hand families appear far more often than others.',
+      'Combo counts tell you how many ways a hand can be dealt. The range also depends on how often each hand takes the action.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Count before you guess.',
       body:
-          'Range thinking is not only names like A-K or pocket eights. The combo count shows how much weight that family carries.',
+          'Count the available combos, then account for the action. Ten available combos count as five on average if each takes this action half the time.',
       focusLabels: <String>['16 combos', '6 combos', 'Range density'],
     ),
   ],
@@ -19697,7 +19696,7 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonSubtitle: 'Range Thinking',
   caption: 'Compare A-K suited with A-K offsuit before blockers.',
   hint: 'Offsuit hands usually have more combinations than suited hands.',
-  question: 'Which family appears more often in a range?',
+  question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'ak_offsuit',
@@ -19707,7 +19706,7 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean weight read.',
       feedbackReason:
-          'A-K offsuit has 12 combos, while A-K suited has only 4. More combos means the offsuit family shows up more often.',
+          'A-K offsuit has 12 possible combos, while A-K suited has 4.',
     ),
     Act0RunnerOptionV1(
       id: 'ak_suited',
@@ -19722,7 +19721,7 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'same_weight',
-      label: 'They appear equally often',
+      label: 'They have the same combo count',
       isCorrect: false,
       preferredLabel: 'A-K offsuit',
       betterAnswerLabel: 'A-K offsuit',
@@ -19736,7 +19735,7 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Suited is rarer.',
       body:
-          'Combos count how many ways a hand can exist. Offsuit versions usually carry more weight because there are more of them.',
+          'Four aces can go with four kings. Four combinations match suits, leaving twelve offsuit combinations.',
       focusLabels: <String>['12 offsuit', '4 suited', 'Range weight'],
     ),
   ],
@@ -19749,7 +19748,7 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonSubtitle: 'Range Thinking',
   caption: 'Compare pocket nines with K-Q suited before blockers.',
   hint: 'Not every unpaired hand is denser than a pocket pair.',
-  question: 'Which family appears more often in a range?',
+  question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'pair_nines',
@@ -19759,7 +19758,7 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good compare.',
       feedbackReason:
-          'Pocket nines have 6 combos. K-Q suited has only 4, so the pocket pair appears more often here.',
+          'Pocket nines have 6 possible combos, compared with 4 for K-Q suited.',
     ),
     Act0RunnerOptionV1(
       id: 'kq_suited',
@@ -19774,7 +19773,7 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'same_weight',
-      label: 'They appear equally often',
+      label: 'They have the same combo count',
       isCorrect: false,
       preferredLabel: 'Pocket nines',
       betterAnswerLabel: 'Pocket nines',
@@ -19788,7 +19787,7 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Weight beats intuition.',
       body:
-          'A pocket pair has fewer combos than a broad unpaired hand overall, but it can still outweigh one suited hand family. Use the count, not the label.',
+          'A pocket pair has six possible combos. A specified suited hand has four, one per suit.',
       focusLabels: <String>[
         '6 pair combos',
         '4 suited combos',
@@ -19804,10 +19803,11 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonTitle: 'Range thinking checkpoint',
   lessonSubtitle: 'Range Thinking',
   caption:
-      'Real table. CO opens preflop. Before guessing exact hands in a simple opening range, you want the heavier family first.',
-  hint: 'Use combo counts as weight, not as a guess.',
+      'CO opens preflop. Assume CO opens every A-K offsuit and every 9-9 combo.',
+  hint:
+      'Here every combo from either family takes the same action. Compare counts before removing known cards.',
   question:
-      'Which family should you expect more often in a simple opening range before blockers?',
+      'Which family contributes more combos to this range before blockers?',
   table: _world3PlayableCallRunner.table.copyWith(
     heroCards: _unknownHoleCards,
     centerLabel: 'Range weight',
@@ -19826,7 +19826,7 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Practical read.',
       feedbackReason:
-          'A-K offsuit carries 12 combos, while pocket nines have 6. More combos means that family shows up more often in the range before blockers.',
+          'With every combo of both hands included, A-K offsuit contributes 12 and pocket nines contribute 6.',
     ),
     Act0RunnerOptionV1(
       id: 'pair_nines',
@@ -19837,25 +19837,25 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Reasonable guess.',
       feedbackReason:
-          'Pocket nines are real and strong enough to appear, but 6 pair combos still weigh less than 12 offsuit A-K combos.',
+          'CO opens all six pocket-nine combos here and all twelve A-K offsuit combos.',
     ),
     Act0RunnerOptionV1(
       id: 'same_weight',
-      label: 'They appear equally often',
+      label: 'They have the same weight',
       isCorrect: false,
       preferredLabel: 'A-K offsuit',
       betterAnswerLabel: 'A-K offsuit',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Combo weight is not equal here. Twelve combos versus six means one family reaches the spot about twice as often.',
+          'CO opens both families at the same frequency per combo, so twelve A-K offsuit combos carry twice the weight of six pocket-nine combos.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Start with the heavier family.',
+      title: 'Count the combos that take the action.',
       body:
-          'More combos means the family appears more often. That does not prove the exact hand, but it gives your first range read a better weight.',
+          'Here every listed combo opens, so the count is enough. If CO opens some combos only part of the time, those combos count for less.',
       focusLabels: <String>['12 beats 6', 'Range weight', 'First read'],
     ),
   ],

@@ -126,6 +126,11 @@ void main() {
           final table = r.table;
           final pot = bb(table.potLabel);
           final call = bb(table.toCallLabel);
+          if (table.toCallLabel.isNotEmpty && call == null) {
+            problems.add(
+              '${t.taskId}: a call label needs an amount: "${table.toCallLabel}"',
+            );
+          }
           final street = table.streetLabel.toLowerCase();
           final hero = [for (final c in table.heroCards) c.rank]
             ..sort((a, b) => order.indexOf(a) - order.indexOf(b));
@@ -165,6 +170,35 @@ void main() {
                 }
               }
             }
+          }
+        }
+      }
+    }
+    expect(problems, isEmpty, reason: problems.join('\n'));
+  });
+
+  test('W1–W12 do not equate raw combo counts with action frequency', () {
+    final unconditional = RegExp(
+      r'(?:more combos means[^.!?]*\b(?:more often|more likely)\b|'
+      r'which family appears more often in a range\?|'
+      r'combo counts measure how often)',
+      caseSensitive: false,
+    );
+    final problems = <String>[];
+    for (final w in Act0ShellStateV1.sample.worlds) {
+      for (final l in w.lessons) {
+        for (final t in l.taskList) {
+          final r = t.runner;
+          final copy = [
+            r.caption,
+            r.question,
+            r.hint,
+            r.feedbackReason,
+            for (final step in r.teachingSteps) step.body,
+            for (final option in r.options) option.feedbackReason,
+          ];
+          for (final text in copy.where(unconditional.hasMatch)) {
+            problems.add('${t.taskId}: $text');
           }
         }
       }
