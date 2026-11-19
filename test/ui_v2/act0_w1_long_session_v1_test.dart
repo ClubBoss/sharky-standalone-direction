@@ -503,10 +503,19 @@ void main() {
           // the next unlocked world using the same menu a learner uses.
           if (routeSnapshot['selectedWorldId'] != 'world_$nextWorld') {
             expect(await _tapFirst(t, [levels]), isTrue);
+            final world = find.byKey(Key('act0_shell_world_$nextWorld'));
+            if (world.evaluate().isEmpty) {
+              await t.scrollUntilVisible(
+                world,
+                250,
+                scrollable: find.descendant(
+                  of: find.byKey(const Key('act0_shell_worlds_content_scroll')),
+                  matching: find.byType(Scrollable),
+                ),
+              );
+            }
             expect(
-              await _tapFirst(t, [
-                find.byKey(Key('act0_shell_world_$nextWorld')),
-              ]),
+              await _tapFirst(t, [world]),
               isTrue,
               reason: 'The level menu should offer W$nextWorld',
             );

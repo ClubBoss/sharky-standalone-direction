@@ -1654,7 +1654,9 @@ _buildFoundationRepairDefaults() {
             targetChoiceIds: target.task.runner.options
                 .map((option) => option.id)
                 .toSet(),
-            evidenceClass: 'familiar_rehearsal',
+            evidenceClass: exact
+                ? 'intentional_exact_replay'
+                : 'familiar_rehearsal',
             mappingType: exact ? 'intentional_exact' : 'repair',
             requireCapturedGoalWitness: true,
           );

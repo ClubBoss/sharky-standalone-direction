@@ -61,6 +61,7 @@ Future<void> _pump(
             // Synthetic disclosure checks exercise explanation, not an
             // unassisted graded answer. Keep their solver validation live.
             phase: explanation ? Act0LessonPhaseV1.theory : runner.phase,
+            options: explanation ? const [] : runner.options,
           ),
           onBack: () {},
           onContinueTheory: () {},
@@ -136,8 +137,19 @@ void main() {
       final source = _task('what_poker_is_showdown_win').runner;
       final twoSeats = _twoLiveSeats(source.table);
       final table = source.table.copyWith(seats: twoSeats);
-      await _pump(tester, source.copyWith(table: table), explanation: true);
-      await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
+      final theory = source.copyWith(
+        table: table,
+        phase: Act0LessonPhaseV1.theory,
+      );
+      final board = find.byKey(const Key('act0_shell_card_board_0'));
+      expect(theory.options, isNotEmpty);
+      await _pump(tester, theory);
+      await tester.tap(board);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Best shown hand:'), findsNothing);
+
+      await _pump(tester, theory, explanation: true);
+      await tester.tap(board);
       await tester.pumpAndSettle();
       expect(find.textContaining('Best shown hand: You'), findsOneWidget);
       expect(find.textContaining('You win with'), findsNothing);

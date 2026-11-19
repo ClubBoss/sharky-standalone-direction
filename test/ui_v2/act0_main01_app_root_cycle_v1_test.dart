@@ -1043,6 +1043,31 @@ void main() {
       expect(intent['targetTaskId'], _source);
       expect(intent['repairOccurrenceId'], isNotEmpty);
       expect(_rows(resumed, 'repairOutcomeProjection'), isEmpty);
+
+      await _foundationAdvanceToPrompt(tester);
+      await _choose(tester, 'two_three_six');
+      final answered = await _saved(tester);
+      final outcome = _rows(
+        answered,
+        'repairOutcomeProjection',
+      ).singleWhere((row) => row['sourceTaskId'] == _source);
+      expect(outcome['repairOccurrenceId'], intent['repairOccurrenceId']);
+      expect(outcome['isCorrect'], isTrue);
+      expect(answered['earnedXp'], missed['earnedXp']);
+      expect(
+        _rows(
+          answered,
+          'openRepairIntents',
+        ).where((row) => row['sourceTaskId'] == _source),
+        isEmpty,
+      );
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+      final finished = await _saved(tester);
+      expect(finished['earnedXp'], (missed['earnedXp'] as int) + 5);
+      expect(
+        (finished['completedTaskIds'] as List).where((id) => id == _source),
+        hasLength(1),
+      );
     },
   );
   testWidgets(

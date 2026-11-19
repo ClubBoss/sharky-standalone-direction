@@ -2527,8 +2527,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   void _onBoardTappedForShowdown(Act0TableStateV1 table) {
     // Solver-derived best-five cues are help, not unassisted assessment input.
     // Keep explanation/review and explicitly assisted decisions available.
-    if (!_isTheory &&
-        _decisionAssistanceKindV1 == Act0DecisionAssistanceV1.none &&
+    if (_decisionAssistanceKindV1 == Act0DecisionAssistanceV1.none &&
         _isActiveAssessmentStateV1(
           isTeaching: _isTeaching,
           isReview: _isReview,
