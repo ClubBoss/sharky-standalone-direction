@@ -23125,11 +23125,21 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
   ],
 );
 
+// The same dealt hand continues from the flop to the turn. Forced
+// contributions are context notes, so replay lists only authored actions.
+const _w11QJsPreflopTrail = <Act0ActionTrailItemV1>[
+  Act0ActionTrailItemV1.note(label: 'SB blind 0.5 BB'),
+  Act0ActionTrailItemV1.note(label: 'BB blind 1 BB'),
+  Act0ActionTrailItemV1.note(label: '6 antes of 0.25 BB each'),
+  Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+  Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+];
+
 final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_small_price_continue',
   caption:
-      'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Flop J-7-4 rainbow: CO bets 2 BB into 8 BB, with 35 BB behind each.',
+      'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Both started the flop with 35 BB behind. On J-7-4 rainbow, CO bets 2 BB into 8 BB.',
   hint: 'Real play means combining cues, not naming one concept.',
   question: 'What is the cleaner response?',
   table: _act0CurrentStreetTableV1(
@@ -23137,12 +23147,11 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       heroCards: _heroQJsCards,
       boardCards: _boardJ74FlopCards,
       streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
+      potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'BTN, top pair, small price',
       actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
+        ..._w11QJsPreflopTrail,
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
       ],
     ),
@@ -23163,7 +23172,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean table read.',
       feedbackReason:
-          'Position, top pair, and a cheap price all support a continue once. The clean action comes from the whole table, not just the hand label.',
+          'A 2 BB call adds to the 10 BB already in the pot. That is about 17% immediate pot odds. Top pair and position support a call here.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_now',
@@ -23202,7 +23211,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_bad_price_fold',
   caption:
-      'Same hand again. BTN called 2 BB on J-7-4. Turn 2 is a brick; pot is 12 BB and both started this street with 33 BB behind. Tight CO rarely bluffs big turn bets and now bets 12 BB.',
+      'Same hand again. BTN called 2 BB on J-7-4. Both started the turn with 33 BB behind. Tight CO rarely bluffs big turn bets and now bets 12 BB into 12 BB.',
   hint:
       'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
   question: 'What is the cleaner response now?',
@@ -23211,12 +23220,11 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       heroCards: _heroQJsCards,
       boardCards: _boardJ742TurnCards,
       streetLabel: 'Turn',
-      potLabel: 'Pot 12 BB',
+      potLabel: 'Pot 24 BB',
       toCallLabel: 'To call 12 BB',
       centerLabel: 'BTN top pair, tight CO barrel',
       actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
+        ..._w11QJsPreflopTrail,
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
         Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
         Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
@@ -23240,7 +23248,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting hand-label trap.',
       feedbackReason:
-          'Top pair makes calling tempting, but this tight CO rarely bluffs a full-pot second barrel. Calling 12 BB into 12 BB needs about 33% equity against the betting range, not just a pair label.',
+          'Top pair makes calling tempting, but this tight CO rarely bluffs a full-pot second barrel. Calling 12 BB adds to the 24 BB already in the pot. You need about 33% equity at this price before accounting for the river.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_turn',
@@ -23250,7 +23258,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong contrast read.',
       feedbackReason:
-          'The 12 BB call into a 12 BB turn pot needs about 33% equity. This tight CO rarely bluffs this size and usually has a stronger jack or better; folding QJs is a disciplined exploit, not an automatic rule against every opponent.',
+          'The pot is 24 BB after CO’s bet. Calling 12 BB would make it 36 BB, about 33% immediate pot odds. This opponent rarely bluffs this size, so folding is reasonable here, not an automatic rule against every opponent.',
     ),
     Act0RunnerOptionV1(
       id: 'jam_turn',

@@ -6,7 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.d
 
 const _flopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-  Act0ActionTrailItemV1(label: 'BTN calls'),
+  Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
   Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
 ];
 const _turnTrail = <Act0ActionTrailItemV1>[
@@ -34,7 +34,9 @@ void _expectProjection(Act0TableStateV1 table, bool turn) {
   );
   expect(
     replay.steps.map((s) => s.amountLabel),
-    turn ? ['2.5 BB', '', '2 BB', '2 BB', '12 BB'] : ['2.5 BB', '', '2 BB'],
+    turn
+        ? ['2.5 BB', '2.5 BB', '2 BB', '2 BB', '12 BB']
+        : ['2.5 BB', '2.5 BB', '2 BB'],
   );
   expect(replay.steps.map((s) => s.street), [
     Act0StreetReplayStreetV1.preflop,
@@ -47,7 +49,7 @@ void _expectProjection(Act0TableStateV1 table, bool turn) {
     replay.steps.map((s) => s.boardCardsAtStreet.length),
     turn ? [0, 0, 3, 3, 4] : [0, 0, 3],
   );
-  expect(replay.steps.last.potAtStreet, turn ? 'Pot 12 BB' : 'Pot 8 BB');
+  expect(replay.steps.last.potAtStreet, turn ? 'Pot 24 BB' : 'Pot 10 BB');
   expect(replay.steps.last.isCurrentStreet, isTrue);
 }
 
@@ -103,7 +105,7 @@ void main() {
           .toList();
       expect(texts, contains(turn ? 'CO bets 12 BB' : 'CO bets 2 BB'));
       expect(texts, contains(turn ? 'Turn - Jh 7c 4d 2s' : 'Flop - Jh 7c 4d'));
-      expect(texts, contains(turn ? 'Pot 12 BB' : 'Pot 8 BB'));
+      expect(texts, contains(turn ? 'Pot 24 BB' : 'Pot 10 BB'));
       expect(texts, contains('You are here'));
       final text = texts.join(' ');
       expect(text, isNot(contains('UTG')));
@@ -114,11 +116,53 @@ void main() {
       expect(tester.takeException(), isNull);
     });
     test('$id incomplete trail retains source pot fallback at every index', () {
-      final labels = task.runner.table.actionTrail.map((a) => a.label).toList();
-      for (var index = 0; index < labels.length; index++) {
-        expect(act0CalcTrailPotV1(labels, index), (potBb: -1.0, street: ''));
+      final table = task.runner.table;
+      for (var index = 0; index < table.actionTrail.length; index++) {
+        expect(act0CalcTableTrailPotV1(table, index), (
+          potBb: -1.0,
+          street: '',
+        ));
       }
     });
+    test(
+      '$id pot and call price reconcile with the authored contributions',
+      () {
+        final table = task.runner.table;
+        final notes = table.actionTrail.where((item) => item.isNote).toList();
+        final amounts = notes
+            .map((note) => act0ParseBbAmountV1(note.label))
+            .toList();
+        expect(amounts, [0.5, 1, 0.25]);
+        expect(notes.last.label, startsWith('${table.playerCount} antes'));
+        final forcedMoney =
+            amounts[0] + amounts[1] + table.playerCount * amounts[2];
+        final actions = table.actionTrail
+            .where((item) => !item.isNote)
+            .toList();
+        final voluntaryMoney = actions
+            .map((action) => act0ParseBbAmountV1(action.label))
+            .reduce((a, b) => a + b);
+        final wager = act0ParseBbAmountV1(actions.last.label);
+        final currentStreet = turn ? 'Turn' : 'Flop';
+        expect(actions.last.label, startsWith('$currentStreet: CO bets '));
+        expect(table.activeSeatId, 'btn');
+        expect(
+          table.seats
+              .singleWhere((seat) => seat.seatId == 'btn')
+              .currentBetLabel,
+          isNull,
+        );
+        expect(
+          act0ParseBbAmountV1(table.potLabel),
+          forcedMoney + voluntaryMoney,
+        );
+        expect(act0ParseBbAmountV1(table.toCallLabel), wager);
+        expect(
+          wager / (forcedMoney + voluntaryMoney + wager),
+          closeTo(turn ? 1 / 3 : 1 / 6, 1e-8),
+        );
+      },
+    );
     test('$id authored source exposes correct street projection', () {
       _expectProjection(task.runner.table, turn);
     });
