@@ -1010,6 +1010,34 @@ class Act0CardStateV1 {
   final Act0CardToneV1 tone;
 
   String get label => suit.isEmpty ? rank : '$rank$suit';
+
+  /// Hearts and diamonds are red, spades and clubs are dark, whatever [tone]
+  /// says: the suit is what the learner reads. [tone] only decides when the
+  /// suit is unknown (hidden or placeholder cards).
+  bool get isRedSuit {
+    switch (suit.trim().toLowerCase()) {
+      case 'h':
+      case 'heart':
+      case 'hearts':
+      case '\u2665':
+      case 'd':
+      case 'diamond':
+      case 'diamonds':
+      case '\u2666':
+        return true;
+      case 's':
+      case 'spade':
+      case 'spades':
+      case '\u2660':
+      case 'c':
+      case 'club':
+      case 'clubs':
+      case '\u2663':
+        return false;
+      default:
+        return tone == Act0CardToneV1.red;
+    }
+  }
 }
 
 class Act0SeatBetStateV1 {

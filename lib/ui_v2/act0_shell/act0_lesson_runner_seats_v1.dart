@@ -2653,7 +2653,7 @@ BoxDecoration _playingCardDecorationV1({
 }
 
 Color _cardInkColor(Act0CardStateV1 card) {
-  return card.tone == Act0CardToneV1.red
+  return card.isRedSuit
       ? Act0ShellTokensV1.runnerAnswerDanger
       : Act0ShellTokensV1.runnerAnswerText;
 }
