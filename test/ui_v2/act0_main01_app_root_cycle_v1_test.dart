@@ -2272,6 +2272,19 @@ Future<void> _expectFeedbackClearance(
   final support = find.byKey(const Key('act0_learning_scene_v3_support'));
   expect(tester.widget<Text>(support).data, isNotEmpty);
   expect(tester.widget<Text>(support).maxLines, isNull);
+  final guideViewport = find.byKey(
+    const Key('act0_shell_feedback_guide_viewport'),
+  );
+  final verdict = find.byKey(const Key('act0_integrated_scene_prompt'));
+  expect(
+    tester.getTopLeft(support).dy,
+    lessThan(tester.getTopLeft(verdict).dy),
+  );
+  expect(
+    tester.getTopLeft(support).dy,
+    lessThan(tester.getBottomLeft(guideViewport).dy - 16),
+    reason: 'The first line of the reason is visible before scrolling.',
+  );
   await tester.ensureVisible(support);
   await tester.pumpAndSettle();
   expect(support.hitTestable(), findsOneWidget);
