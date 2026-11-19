@@ -3,6 +3,10 @@ import 'dart:io';
 final _activeAct0SurfaceFiles = <String>[
   'lib/ui_v2/act0_shell/act0_home_shell_v1.dart',
   'lib/ui_v2/act0_shell/act0_learn_path_shell_v1.dart',
+  'lib/ui_v2/act0_shell/act0_learn_path_journey_v1.dart',
+  'lib/ui_v2/act0_shell/act0_learn_path_world_menu_v1.dart',
+  'lib/ui_v2/act0_shell/act0_learn_path_mission_v1.dart',
+  'lib/ui_v2/act0_shell/act0_learn_path_cards_v1.dart',
   'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
   'lib/ui_v2/act0_shell/act0_play_shell_v1.dart',
   'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
