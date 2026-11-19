@@ -5,7 +5,6 @@ import '../models/training_spot.dart';
 import '../services/spot_of_the_day_service.dart';
 import '../screens/training_screen.dart';
 import 'package:intl/intl.dart';
-import '../widgets/sync_status_widget.dart';
 
 class SpotOfTheDayHistoryScreen extends StatefulWidget {
   SpotOfTheDayHistoryScreen({super.key});
@@ -38,7 +37,6 @@ class _SpotOfTheDayHistoryScreenState extends State<SpotOfTheDayHistoryScreen> {
       appBar: AppBar(
         title: const Text('История "Спот дня"'),
         centerTitle: true,
-        actions: [SyncStatusIcon.of(context)],
       ),
       body: FutureBuilder<List<TrainingSpot>>(
         future: _spotsFuture,

@@ -36,7 +36,6 @@ import 'achievements_screen.dart';
 import 'drill_history_screen.dart';
 import 'goal_drill_screen.dart';
 import 'weekly_progress_screen.dart';
-import '../widgets/sync_status_widget.dart';
 import '../utils/responsive.dart';
 import '../widgets/xp_progress_card.dart';
 
@@ -871,7 +870,6 @@ class _ProgressScreenState extends State<ProgressScreen>
         title: const Text('Прогресс'),
         centerTitle: true,
         actions: [
-          SyncStatusIcon.of(context),
           IconButton(
             icon: const Icon(Icons.history),
             tooltip: 'История целей',

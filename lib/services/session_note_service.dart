@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -10,16 +9,10 @@ import 'package:pdf/pdf.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'training_stats_service.dart';
-import 'cloud_sync_service.dart';
-import '../app_bootstrap.dart';
 
 class SessionNoteService extends ChangeNotifier {
   static const _prefsKey = 'session_notes';
   static const _timeKey = 'session_notes_updated';
-
-  SessionNoteService({this.cloud});
-
-  final CloudSyncService? cloud;
 
   final Map<int, String> _notes = {};
   Map<int, String> get notes => _notes;
@@ -43,33 +36,6 @@ class SessionNoteService extends ChangeNotifier {
         _notes.clear();
       }
     }
-    if (cloud != null) {
-      final remote = cloud!.getCached('session_notes');
-      if (remote != null) {
-        final remoteAt =
-            DateTime.tryParse(remote['updatedAt'] as String? ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final localAt =
-            DateTime.tryParse(prefs.getString(_timeKey) ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        if (remoteAt.isAfter(localAt)) {
-          final map = remote['notes'];
-          if (map is Map) {
-            _notes
-              ..clear()
-              ..addEntries(
-                map.entries.map(
-                  (e) =>
-                      MapEntry(int.parse(e.key as String), e.value as String),
-                ),
-              );
-            await _persist();
-          }
-        } else if (localAt.isAfter(remoteAt)) {
-          await cloud!.uploadSessionNotes(_notes);
-        }
-      }
-    }
     notifyListeners();
   }
 
@@ -77,13 +43,6 @@ class SessionNoteService extends ChangeNotifier {
     _notes[sessionId] = note;
     await _persist();
     notifyListeners();
-    if (cloud != null) {
-      try {
-        await cloud!.uploadSessionNotes(_notes);
-      } catch (_) {
-        unawaited(AppBootstrap.sync?.cloud.syncUp());
-      }
-    }
   }
 
   Future<void> _persist() async {

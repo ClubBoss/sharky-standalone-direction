@@ -1,19 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
 
 import 'package:poker_analyzer/ui/flutter_kit.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/training_spot.dart';
-import 'cloud_sync_service.dart';
 
 class TrainingSpotStorageService extends ChangeNotifier {
   static const String _fileName = 'training_spots.json';
 
-  TrainingSpotStorageService({this.cloud});
-
-  final CloudSyncService? cloud;
   final Map<String, dynamic> activeFilters = {};
 
   void applyFilters(Map<String, dynamic> filters) {
@@ -51,14 +46,6 @@ class TrainingSpotStorageService extends ChangeNotifier {
       jsonEncode([for (final s in spots) s.toJson()]),
       flush: true,
     );
-    if (cloud != null) {
-      final data = {
-        'spots': [for (final s in spots) s.toJson()],
-        'updatedAt': DateTime.now().toIso8601String(),
-      };
-      await cloud!.queueMutation('training_spots', 'main', data);
-      unawaited(cloud!.syncUp());
-    }
   }
 
   Future<void> addSpot(TrainingSpot spot) async {

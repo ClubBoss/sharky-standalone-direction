@@ -6,7 +6,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'progress_export_service.dart';
-import 'cloud_sync_service.dart';
 import '../models/training_stats.dart';
 import '../models/saved_hand.dart';
 import '../models/skill_stat.dart';
@@ -26,11 +25,10 @@ class TrainingStatsService extends ChangeNotifier {
   static TrainingStatsService? _instance;
   static TrainingStatsService? get instance => _instance;
 
-  TrainingStatsService({this.cloud}) {
+  TrainingStatsService() {
     _instance = this;
   }
 
-  final CloudSyncService? cloud;
   static const _sessionsKey = 'stats_sessions';
   static const _handsKey = 'stats_hands';
   static const _mistakesKey = 'stats_mistakes';
@@ -570,94 +568,9 @@ class TrainingStatsService extends ChangeNotifier {
     }
     _currentStreak = prefs.getInt(_currentStreakKey) ?? 0;
     _bestStreak = prefs.getInt(_bestStreakKey) ?? 0;
-    if (cloud != null) {
-      final remote = await cloud!.downloadTrainingStats();
-      if (remote != null) {
-        final remoteAt =
-            DateTime.tryParse(remote['updatedAt'] as String? ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final localAt =
-            DateTime.tryParse(prefs.getString(_timeKey) ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        if (remoteAt.isAfter(localAt)) {
-          _sessions = (remote['sessions'] as num?)?.toInt() ?? _sessions;
-          _hands = (remote['hands'] as num?)?.toInt() ?? _hands;
-          _mistakes = (remote['mistakes'] as num?)?.toInt() ?? _mistakes;
-          final spd = remote['sessionsPerDay'];
-          final hpd = remote['handsPerDay'];
-          final mpd = remote['mistakesPerDay'];
-          if (spd is Map) {
-            _sessionsPerDay = {
-              for (final e in spd.entries)
-                e.key.toString(): (e.value as num).toInt(),
-            };
-          }
-          if (hpd is Map) {
-            _handsPerDay = {
-              for (final e in hpd.entries)
-                e.key.toString(): (e.value as num).toInt(),
-            };
-          }
-          if (mpd is Map) {
-            _mistakesPerDay = {
-              for (final e in mpd.entries)
-                e.key.toString(): (e.value as num).toInt(),
-            };
-          }
-          _currentStreak = (remote['currentStreak'] as num?)?.toInt() ?? 0;
-          _bestStreak = (remote['bestStreak'] as num?)?.toInt() ?? 0;
-          _evalTotal = (remote['evalTotal'] as num?)?.toInt() ?? 0;
-          _evalCorrect = (remote['evalCorrect'] as num?)?.toInt() ?? 0;
-          final hist = remote['evalHistory'];
-          if (hist is List) {
-            _evalHistory = [for (final v in hist) (v as num).toDouble()];
-          }
-          final skills = remote['skills'];
-          if (skills is Map) {
-            _skillStats = {};
-            for (final entry in skills.entries) {
-              final key = entry.key.toString();
-              final value = entry.value;
-              _skillStats[key] = SkillStat.fromJson(
-                value is Map<String, dynamic>
-                    ? value
-                    : Map<String, dynamic>.from(value as Map),
-              );
-            }
-          }
-          final counts = remote['mistakeCounts'];
-          if (counts is Map) {
-            _mistakeCounts = {
-              for (final e in counts.entries)
-                e.key.toString(): (e.value as num).toInt(),
-            };
-          }
-          await _persist(remoteAt);
-        } else if (localAt.isAfter(remoteAt)) {
-          await cloud!.uploadTrainingStats(_toMap());
-        }
-      }
-    }
     await _updateStreaks();
     notifyListeners();
   }
-
-  Map<String, dynamic> _toMap() => {
-    'sessions': _sessions,
-    'hands': _hands,
-    'mistakes': _mistakes,
-    'sessionsPerDay': _sessionsPerDay,
-    'handsPerDay': _handsPerDay,
-    'mistakesPerDay': _mistakesPerDay,
-    'currentStreak': _currentStreak,
-    'bestStreak': _bestStreak,
-    'evalTotal': _evalTotal,
-    'evalCorrect': _evalCorrect,
-    'evalHistory': _evalHistory,
-    'skills': {for (final e in _skillStats.entries) e.key: e.value.toJson()},
-    'mistakeCounts': _mistakeCounts,
-    'updatedAt': DateTime.now().toIso8601String(),
-  };
 
   Future<void> _persist(DateTime ts) async {
     final prefs = await SharedPreferences.getInstance();
@@ -686,9 +599,6 @@ class TrainingStatsService extends ChangeNotifier {
 
   Future<void> _save() async {
     await _persist(DateTime.now());
-    if (cloud != null) {
-      await cloud!.uploadTrainingStats(_toMap());
-    }
   }
 
   Future<void> incrementSessions() async {
@@ -729,9 +639,6 @@ class TrainingStatsService extends ChangeNotifier {
       ..addAll(map);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_mistakeCountsKey, jsonEncode(_mistakeCounts));
-    if (cloud != null) {
-      await cloud!.uploadTrainingStats(_toMap());
-    }
     notifyListeners();
   }
 

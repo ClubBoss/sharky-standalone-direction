@@ -16,7 +16,6 @@ import '../models/v2/training_pack_spot.dart';
 import '../services/template_storage_service.dart';
 import 'package:uuid/uuid.dart';
 import 'saved_hand_manager_service.dart';
-import 'mistake_pack_cloud_service.dart';
 
 class MistakeReviewPackService extends ChangeNotifier {
   static const _progressKey = 'mistake_review_progress';
@@ -56,7 +55,6 @@ class MistakeReviewPackService extends ChangeNotifier {
   }
 
   final SavedHandManagerService hands;
-  final MistakePackCloudService? cloud;
   Box<dynamic>? _box;
 
   final List<MistakePack> _packs = [];
@@ -96,7 +94,7 @@ class MistakeReviewPackService extends ChangeNotifier {
   TrainingPack? get pack => _pack;
   int get progress => _progress;
 
-  MistakeReviewPackService({required this.hands, this.cloud});
+  MistakeReviewPackService({required this.hands});
 
   bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
@@ -128,7 +126,6 @@ class MistakeReviewPackService extends ChangeNotifier {
     _trim();
     _generate();
     _schedule();
-    unawaited(syncDown());
   }
 
   List<SavedHand> _mistakes() {
@@ -191,7 +188,6 @@ class MistakeReviewPackService extends ChangeNotifier {
       MistakePack(templateId: templateId, spotIds: spotIds, note: note),
     );
     await _save();
-    await syncUp();
     _generate();
   }
 
@@ -252,44 +248,6 @@ class MistakeReviewPackService extends ChangeNotifier {
     _packSpots.remove(templateId);
     _busy = false;
     return reviewTpl;
-  }
-
-  Future<void> syncDown() async {
-    if (cloud == null) return;
-    final remote = await cloud!.loadPacks();
-    final now = DateTime.now();
-    _packs
-      ..clear()
-      ..addAll([
-        for (final p in remote)
-          if (now.difference(p.createdAt).inDays <= 30) p,
-      ]);
-    _trim();
-    await _save();
-    _generate();
-  }
-
-  Future<void> syncUp() async {
-    if (cloud == null) return;
-    _trim();
-    final cutoff = DateTime.now().subtract(const Duration(days: 30));
-    for (final p in List<MistakePack>.from(_packs)) {
-      if (p.createdAt.isBefore(cutoff)) {
-        await cloud!.deletePack(p.id);
-        _packs.remove(p);
-        // cleanup orphaned cached entries
-        try {
-          await SharedPreferences.getInstance().then(
-            (prefs) => prefs.remove('mistake_pack_${p.id}'),
-          );
-          if (_box != null) await _box!.delete('mistake_pack_${p.id}');
-        } catch (_) {}
-      }
-    }
-    await _save();
-    for (final p in _packs) {
-      await cloud!.savePack(p);
-    }
   }
 
   void _schedule() {

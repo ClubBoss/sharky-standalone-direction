@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../services/goals_service.dart';
-import '../widgets/sync_status_widget.dart';
 
 class DailySpotHistoryCalendarScreen extends StatefulWidget {
   DailySpotHistoryCalendarScreen({super.key});
@@ -47,7 +46,6 @@ class _DailySpotHistoryCalendarScreenState
         title: const Text('История спотов дня'),
         centerTitle: true,
         actions: [
-          SyncStatusIcon.of(context),
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () => Navigator.pop(context),

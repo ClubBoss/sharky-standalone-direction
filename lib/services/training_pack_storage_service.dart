@@ -11,7 +11,6 @@ import '../models/session_log.dart';
 import '../asset_manifest.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'cloud_sync_service.dart';
 
 import '../models/training_pack.dart';
 import '../models/training_pack_template.dart';
@@ -23,17 +22,6 @@ class TrainingPackStorageService extends ChangeNotifier {
   static final _manifestFuture = AssetManifest.instance;
 
   Timer? _persistTimer;
-
-  TrainingPackStorageService({this.cloud});
-
-  final CloudSyncService? cloud;
-
-  Future<void> _sync(TrainingPack pack) async {
-    if (cloud != null && !pack.isBuiltIn) {
-      await cloud!.queueMutation('training_packs', pack.id, pack.toJson());
-      unawaited(cloud!.syncUp());
-    }
-  }
 
   final List<TrainingPack> _packs = [];
   List<TrainingPack> get packs => List.unmodifiable(_packs);
@@ -277,7 +265,6 @@ class TrainingPackStorageService extends ChangeNotifier {
   Future<void> addPack(TrainingPack pack) async {
     _packs.add(pack);
     await _persist();
-    await _sync(pack);
     notifyListeners();
   }
 
@@ -285,7 +272,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final newPack = pack.copyWith(isBuiltIn: false, history: const []);
     _packs.add(newPack);
     await _persist();
-    await _sync(newPack);
     notifyListeners();
   }
 
@@ -301,7 +287,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     if (index == -1) return null;
     final removed = _packs.removeAt(index);
     await _persist();
-    await _sync(removed);
     notifyListeners();
     return (removed, index);
   }
@@ -310,7 +295,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final insertIndex = index.clamp(0, _packs.length);
     _packs.insert(insertIndex, pack);
     await _persist();
-    await _sync(pack);
     notifyListeners();
   }
 
@@ -379,7 +363,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final updated = pack.copyWith(name: trimmed);
     _packs[index] = updated;
     await _persist();
-    await _sync(updated);
     notifyListeners();
   }
 
@@ -389,7 +372,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final updated = pack.copyWith(colorTag: color);
     _packs[index] = updated;
     await _persist();
-    await _sync(updated);
     notifyListeners();
   }
 
@@ -399,7 +381,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final updated = pack.copyWith(tags: tags);
     _packs[index] = updated;
     await _persist();
-    await _sync(updated);
     notifyListeners();
   }
 
@@ -413,7 +394,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('training_progress_${pack.name}');
     await _persist();
-    await _sync(updated);
     notifyListeners();
   }
 
@@ -435,7 +415,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final updated = pack.copyWith(history: history);
     _packs[index] = updated;
     await _persist();
-    await _sync(updated);
     notifyListeners();
     return updated;
   }
@@ -450,7 +429,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     if (index == -1) return;
     _packs[index] = newPack;
     await _persist();
-    await _sync(newPack);
     notifyListeners();
   }
 
@@ -473,7 +451,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final copy = TrainingPack.fromJson(map);
     _packs.add(copy);
     await _persist();
-    await _sync(copy);
     notifyListeners();
     return copy;
   }
@@ -512,7 +489,6 @@ class TrainingPackStorageService extends ChangeNotifier {
       );
       _packs.insert(index + result.length, newPack);
       result.add(newPack);
-      await _sync(newPack);
       i++;
     }
     await _persist();
@@ -551,7 +527,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     );
     _packs.add(pack);
     await save();
-    await _sync(pack);
     return pack;
   }
 
@@ -598,7 +573,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     );
     _packs.add(pack);
     await _persist();
-    await _sync(pack);
     notifyListeners();
     return pack;
   }
@@ -612,7 +586,6 @@ class TrainingPackStorageService extends ChangeNotifier {
     final updated = pack.copyWith(tags: snap.tags, hands: snap.hands);
     _packs[index] = updated;
     await _persist();
-    await _sync(updated);
     notifyListeners();
     return updated;
   }

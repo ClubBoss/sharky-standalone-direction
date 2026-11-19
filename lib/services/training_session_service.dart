@@ -16,7 +16,6 @@ import 'mistake_review_pack_service.dart';
 import 'smart_review_service.dart';
 import 'training_progress_logger.dart';
 import 'learning_path_progress_service.dart';
-import 'cloud_training_history_service.dart';
 import 'learning_path_personalization_service.dart';
 import 'xp_tracker_service.dart';
 import 'tag_goal_tracker_service.dart';
@@ -35,8 +34,6 @@ import '../models/v2/training_action.dart';
 import '../models/v2/focus_goal.dart';
 import '../models/category_progress.dart';
 import 'recap_opportunity_detector.dart';
-import 'daily_reminder_scheduler.dart';
-import 'training_reminder_push_service.dart';
 import 'tag_mastery_service.dart';
 import 'session_log_service.dart';
 import 'smart_spot_injector.dart';
@@ -404,8 +401,6 @@ class TrainingSessionService extends ChangeNotifier {
     String source = 'manual',
   }) async {
     if (persist) await _openBox();
-    unawaited(DailyReminderScheduler.instance.cancelAll());
-    unawaited(TrainingReminderPushService.instance.cancelAll());
     if (template.tags.contains('customPath')) {
       unawaited(LearningPathProgressService.instance.markCustomPathStarted());
     }
@@ -563,9 +558,6 @@ class TrainingSessionService extends ChangeNotifier {
         templateId: _template!.id,
       );
     }
-    unawaited(
-      context.read<CloudTrainingHistoryService>().saveSession(_buildResults()),
-    );
 
     // Calculate XP reward with personalization boost
     final xpService = context.read<XPTrackerService>();
@@ -826,28 +818,6 @@ class TrainingSessionService extends ChangeNotifier {
     if (skill < 0.6) return 1.5;
     return 1.0;
   }
-
-  List<ResultEntry> _buildResults() => [
-    for (final a in _actions)
-      (() {
-        final spot = _spots.firstWhere(
-          (s) => s.id == a.spotId,
-          orElse: () => TrainingPackSpot(id: ''),
-        );
-        if (spot.id.isEmpty) return null;
-        final eval = EvaluationResult(
-          correct: a.isCorrect,
-          expectedAction: _expectedAction(spot) ?? '',
-          userEquity: 0,
-          expectedEquity: 0,
-        );
-        return ResultEntry(
-          name: spot.title.isNotEmpty ? spot.title : spot.id,
-          userAction: a.chosenAction,
-          evaluation: eval,
-        );
-      })(),
-  ].whereType<ResultEntry>().toList();
 
   @override
   void dispose() {

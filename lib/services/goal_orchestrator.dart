@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import '../constants/telemetry_events.dart';
 import 'daily_goal_service.dart';
 import 'firebase_lite_telemetry_service.dart';
-import 'goal_progress_cloud_service.dart';
 import 'goal_progress_persistence_service.dart';
-import 'goal_sync_service.dart';
 
 /// Facade that coordinates existing goal services and exposes a stable API.
 class GoalOrchestrator {
@@ -23,19 +20,10 @@ class GoalOrchestrator {
   final DailyGoalService _dailyGoal = DailyGoalService.instance;
   final GoalProgressPersistenceService _persistence =
       GoalProgressPersistenceService.instance;
-  final bool _firebaseReady = Firebase.apps.isNotEmpty;
-  late final GoalProgressCloudService _cloud = GoalProgressCloudService(
-    firebaseReady: _firebaseReady,
-  );
-  late final GoalSyncService _sync = GoalSyncService(
-    firebaseReady: _firebaseReady,
-  );
 
   /// Exposes the legacy services for callers that still depend on them.
   DailyGoalService get dailyGoalService => _dailyGoal;
   GoalProgressPersistenceService get progressPersistence => _persistence;
-  GoalProgressCloudService get cloudService => _cloud;
-  GoalSyncService get syncService => _sync;
 
   Future<void> setDailyGoal(int xpTarget) async {
     final target = xpTarget.clamp(1, 10000);
@@ -72,12 +60,6 @@ class GoalOrchestrator {
       await _dailyGoal.increment(remaining);
     }
     await _persistence.markCompleted(_goalId, DateTime.now());
-    await _cloud.saveProgress({
-      'templateId': _goalId,
-      'goal': snapshot.target,
-      'progress': snapshot.target,
-      'completedAt': DateTime.now().toIso8601String(),
-    });
     await _emitTelemetry(
       'complete',
       target: snapshot.target,

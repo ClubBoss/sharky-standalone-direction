@@ -7,9 +7,7 @@ import 'services/pack_rating_service.dart';
 import 'services/training_pack_comments_service.dart';
 import 'services/pinned_pack_service.dart';
 import 'services/user_profile_preference_service.dart';
-import 'services/cloud_sync_service.dart';
 import 'services/session_note_service.dart';
-import 'services/connectivity_sync_controller.dart';
 import 'services/evaluation_executor_service.dart';
 import 'services/training_pack_service.dart';
 import 'services/service_registry.dart';
@@ -26,28 +24,21 @@ import 'core/training/library/training_pack_library_v2.dart';
 class AppBootstrap {
   const AppBootstrap._();
 
-  static ConnectivitySyncController? _sync;
-  static ConnectivitySyncController? get sync => _sync;
-
   static ServiceRegistry? _registry;
   static ServiceRegistry get registry => _registry!;
 
   @visibleForTesting
   static set testRegistry(ServiceRegistry registry) => _registry = registry;
 
-  static Future<ServiceRegistry> init({
-    CloudSyncService? cloud,
-    required PluginRuntime runtime,
-  }) async {
+  static Future<ServiceRegistry> init({required PluginRuntime runtime}) async {
     await runtime.initialize();
     final ServiceRegistry registry = runtime.registry.createChild();
     await _loadAssets();
     await _initServices();
-    await _setupCloudSync(cloud);
-    await SessionNoteService(cloud: cloud).load();
+    await SessionNoteService().load();
     final packs = await TrainingPackStorage.load();
     if (packs.isEmpty) {
-      await TrainingPackService.generateDefaultPersonalPack(cloud: cloud);
+      await TrainingPackService.generateDefaultPersonalPack();
     }
     registry.registerIfAbsent<EvaluationExecutor>(EvaluationExecutorService());
     registry.registerIfAbsent<TrainingSessionFingerprintService>(
@@ -62,8 +53,6 @@ class AppBootstrap {
   }
 
   static void dispose() {
-    _sync?.dispose();
-    _sync = null;
     _registry = null;
   }
 
@@ -108,34 +97,6 @@ class AppBootstrap {
     } catch (e, s) {
       ErrorLogger.instance.logError('Failed to initialize services', e, s);
       rethrow;
-    }
-  }
-
-  static Future<void> _setupCloudSync(CloudSyncService? cloud) async {
-    if (cloud == null) return;
-    final initOk = await _runCloudTask('CloudSyncService.init', cloud.init);
-    if (!initOk) return;
-    await _runCloudTask('CloudSyncService.syncUp', cloud.syncUp);
-    await _runCloudTask('CloudSyncService.syncDown', cloud.syncDown);
-    await _runCloudTask('CloudSyncService.loadHands', cloud.loadHands);
-    await _runCloudTask('CloudSyncService.watchChanges', () async {
-      cloud.watchChanges();
-    });
-    _sync = ConnectivitySyncController(cloud: cloud);
-  }
-
-  static Future<bool> _runCloudTask(
-    String name,
-    Future<void> Function() task,
-  ) async {
-    try {
-      debugPrint('Starting $name');
-      await task();
-      debugPrint('Completed $name');
-      return true;
-    } catch (e, s) {
-      ErrorLogger.instance.logError('$name failed', e, s);
-      return false;
     }
   }
 

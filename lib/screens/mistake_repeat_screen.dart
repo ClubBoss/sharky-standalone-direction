@@ -12,7 +12,6 @@ import '../models/saved_hand.dart';
 import '../services/saved_hand_manager_service.dart';
 import '../widgets/saved_hand_viewer_dialog.dart';
 import '../widgets/saved_hand_tile.dart';
-import '../widgets/sync_status_widget.dart';
 import '../services/mistake_review_pack_service.dart';
 import '../services/mistake_streak_service.dart';
 import '../services/training_pack_service.dart';
@@ -405,7 +404,6 @@ class _MistakeRepeatScreenState extends State<MistakeRepeatScreen> {
         title: const Text('Повторы ошибок'),
         centerTitle: true,
         actions: [
-          SyncStatusIcon.of(context),
           IconButton(
             icon: const Icon(Icons.save_alt),
             tooltip: 'Экспорт',

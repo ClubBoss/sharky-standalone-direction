@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../services/saved_hand_manager_service.dart';
 import 'saved_hand_list_view.dart';
 import '../screens/hand_history_review_screen.dart';
-import 'sync_status_widget.dart';
 
 class MistakeHeatmap extends StatelessWidget {
   final Map<String, Map<String, int>> data;
@@ -109,11 +108,7 @@ class _HeatmapMistakeHandsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('$position • $street'),
-        centerTitle: true,
-        actions: [SyncStatusIcon.of(context)],
-      ),
+      appBar: AppBar(title: Text('$position • $street'), centerTitle: true),
       body: SavedHandListView(
         hands: filtered,
         positions: [position],

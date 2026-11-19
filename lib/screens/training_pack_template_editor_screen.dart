@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import '../services/template_storage_service.dart';
 import '../models/training_pack_template_model.dart';
 import '../models/training_pack_template.dart';
-import '../widgets/sync_status_widget.dart';
 import '../services/training_pack_template_storage_service.dart';
 import '../core/training/generation/yaml_reader.dart';
 
@@ -211,7 +210,6 @@ class _TrainingPackTemplateEditorScreenState
         onTap: _renameTemplate,
         child: Text(_templateName),
       ),
-      actions: [SyncStatusIcon.of(context)],
     ),
     floatingActionButton: FloatingActionButton(
       onPressed: _importYaml,

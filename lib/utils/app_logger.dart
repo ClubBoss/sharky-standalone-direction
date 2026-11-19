@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+
 import '../infra/telemetry.dart';
 
 /// A simple logging utility that centralizes log output.
 ///
-/// In debug mode, logs are printed to the console. In release mode, this
-/// prepares for integration with services like Crashlytics.
+/// Prints debug logs and allows local observation in contract tests.
 class AppLogger {
   AppLogger._();
 
@@ -42,9 +42,6 @@ class AppLogger {
           if (stack != null) 'stack': stack.toString(),
         }),
       );
-      if (error != null && stack != null) {
-        unawaited(Telemetry.logError(error, stack));
-      }
     }
   }
 }

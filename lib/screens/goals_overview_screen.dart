@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/goals_service.dart';
-import '../widgets/sync_status_widget.dart';
 
 class GoalsOverviewScreen extends StatelessWidget {
   GoalsOverviewScreen({super.key});
@@ -145,11 +144,7 @@ class GoalsOverviewScreen extends StatelessWidget {
     final accuracy = service.weeklyAccuracyProgress();
     final accuracyPrev = service.weeklyAccuracyPrevious();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Цели'),
-        centerTitle: true,
-        actions: [SyncStatusIcon.of(context)],
-      ),
+      appBar: AppBar(title: const Text('Цели'), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -23,7 +23,6 @@ import '../import_export/training_generator.dart' as import_export;
 import '../services/saved_hand_manager_service.dart';
 import '../services/booster_recap_hook.dart';
 import '../helpers/mistake_advice.dart';
-import '../widgets/sync_status_widget.dart';
 import 'saved_hand_editor_screen.dart';
 
 /// Displays a saved hand with simple playback controls.
@@ -374,7 +373,6 @@ class _HandHistoryReviewScreenState extends State<HandHistoryReviewScreen> {
         title: Text('${_hand.name} \u2022 ${formatLongDate(_hand.savedAt)}'),
         centerTitle: true,
         actions: [
-          SyncStatusIcon.of(context),
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () async {
