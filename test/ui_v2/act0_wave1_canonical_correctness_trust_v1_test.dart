@@ -208,18 +208,18 @@ void main() {
       }
     });
 
-    test('W5 factual repairs preserve five accepted W3 assessment revisions', () {
+    test('W3 model revisions keep five assessments anchored to current source', () {
       const expected = <String, String>{
         'same_hand_different_seat_same_hand_late_open':
-            '95649823a2721a31f29eef264abb31f0bf8b01aa321d43fafb8ad40ed36eb748',
+            'd244b2b91557e6a8bd628f295843826a3d2e100a78184946b184a3d21bcfe469',
         'position_apply_late_open':
-            'be850f5cd07685fd3a81359f2e859f245767eff79f922d7830181946414670b3',
+            '366d8dc503afe0c978e93fdc6020ba011b8d052b952e2c958b83db43e616876c',
         'position_checkpoint_position_checkpoint_late_open':
-            '088caafce326978cc4f1c5a1dfac4df7ad72007be76e60df2cb291dea10d8f3c',
+            '6e7fb6a084c238f433af26ab2bddf991bafa5ee65a4ac7c2fa7b951bbe8db3bd',
         'position_apply_recap':
-            '9526493b94505565364989e95b6f470a2cee704e659bfa2d6a4fd3eece66c6cb',
+            'a44f71960373e4df6700f5fec151ce96ae3d1c45fddb482ee54ab0020e6e990f',
         'position_checkpoint_position_checkpoint_review':
-            '8e36e4bb4ea93c3b9913d9f48f20c0345999ca1caf335d49fa5294019b03f6b8',
+            'e88e5428ba7f6403b156eafcdf4e4ccff1b3ca58400a9a450664a9626e70da98',
       };
       final world = Act0ShellStateV1.sample.worldById('world_3');
       final observed = <String>{};

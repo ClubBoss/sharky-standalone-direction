@@ -30,7 +30,7 @@ void main() {
 
   test('showdown_theory asks the foldout condition its answers assess', () {
     final runner = _task('showdown_theory').runner;
-    expect(runner.question, 'What happens if everyone folds to you?');
+    expect(runner.question, 'What happens if everyone else folds to you?');
     expect(runner.options.singleWhere((o) => o.isCorrect).id, 'win_now');
     expect(runner.options.map((o) => o.label).toSet(), {
       'Win now',

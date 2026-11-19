@@ -14021,7 +14021,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
   hint:
       'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
   question:
-      '6-max micro-stakes practice: assume HJ raises with many hands, and CO and the blinds fold. What is the simple continue?',
+      '6-max micro-stakes practice: assume HJ raises with many hands, and CO and the blinds fold. What is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14112,7 +14112,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
 final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w2_kqo_contrast',
   caption: 'CO opened. Hero is BTN with KQo instead of A7o.',
-  hint: 'Same seat, different hand class, much less domination risk.',
+  hint: 'Look for a shared rank, then compare the other card.',
   question: 'What is different about how these hands can be dominated?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -14135,7 +14135,7 @@ final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'The clean reason is not auto-continue. It is the mix of position and lower domination risk.',
+          'AK has no queen. KQo shares its king with AK, and the queen loses to the ace.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -14145,7 +14145,7 @@ final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
           'Both hands can be dominated. Use the shared rank and compare the other card.',
       focusSeatIds: <String>['co', 'btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['KQo', 'Less domination'],
+      focusLabels: <String>['Shared rank', 'Second card'],
     ),
   ],
 );
@@ -14156,7 +14156,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
   hint:
       'Playable suited broadways can continue, but the reason is still seat plus hand class.',
   question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the simple continue?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14520,7 +14520,7 @@ final _world3FacingOpenRecapRunner = _world3PlayableCallRunner.copyWith(
   caption: 'Lesson learned: facing an open creates a price.',
   hint: 'Playable hands can call; weak hands can still fold.',
   question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the cleaner continue with this playable hand facing an open?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision facing the raise?',
   feedbackTitle: 'Facing-open takeaway.',
   feedbackReason:
       'Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.',
@@ -16187,7 +16187,8 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
   caption: 'Hero has top pair on A-7-2 after BB checks.',
   hint:
       'Read Hero hand strength and the likely response before naming purpose.',
-  question: 'What is the main purpose?',
+  question:
+      'You bet to get a call from a weaker ace. What is the purpose of the bet?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'value',
@@ -16234,7 +16235,8 @@ final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
   caption:
       'On A-7-2, BB checks. You are considering a bet to make a better hand fold.',
   hint: 'Read whether a bet can tell a credible story before naming purpose.',
-  question: 'What is the main purpose?',
+  question:
+      'You bet to make a better hand fold. What is the purpose of the bet?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bluff',

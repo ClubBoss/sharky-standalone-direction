@@ -61,7 +61,12 @@ void main() {
       () {
         final task = _task(id);
         final table = task.runner.table;
-        expect(task.runner.question, entry.value.$2);
+        expect(
+          task.runner.question,
+          id == 'actions_raise_drill'
+              ? 'Which action increases the price above the big blind?'
+              : entry.value.$2,
+        );
         expect(task.rewardXp, 5);
         expect(task.runner.options.map((o) => o.id), entry.value.$3);
         expect(task.runner.options.singleWhere((o) => o.isCorrect).id, 'raise');
