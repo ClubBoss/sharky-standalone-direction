@@ -6,6 +6,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_solver/poker_solver.dart';
+
+import '../support/act0_pot_showdown_truth_v1.dart';
 
 Act0LessonTaskV1 _task(String id) => Act0ShellStateV1.sample.worlds
     .expand((world) => world.lessons)
@@ -13,6 +16,41 @@ Act0LessonTaskV1 _task(String id) => Act0ShellStateV1.sample.worlds
     .singleWhere((task) => task.taskId == id);
 
 void main() {
+  test('W4 protection teaches a pair that ace-king can overtake', () {
+    for (final id in [
+      'w4_protection_intro',
+      'w4_protection_bet',
+      'w4_protection_check',
+      'w4_protection_recap',
+    ]) {
+      final table = _task(id).runner.table;
+      final heroCards = table.heroCards
+          .map(potTruthSolverCardV1)
+          .cast<String>();
+      final board = table.boardCards.map(potTruthSolverCardV1).cast<String>();
+      expect(heroCards, ['Qs', 'Jd'], reason: id);
+      expect(
+        table.heroSeat.holeCards.map(potTruthSolverCardV1),
+        unorderedEquals(heroCards),
+        reason: id,
+      );
+      for (final (extraCards, heroWins) in [
+        (<String>[], true),
+        (['Ac'], false),
+        (['Kh'], false),
+      ]) {
+        final community = [...board, ...extraCards];
+        final hero = Hand.solveHand([...community, ...heroCards]);
+        final opponent = Hand.solveHand([...community, 'As', 'Ks']);
+        expect(
+          hero.compare(opponent),
+          heroWins ? lessThan(0) : greaterThan(0),
+          reason: '$id with board $community',
+        );
+      }
+    }
+  });
+
   test('checked-through W4 flop has no active actor', () {
     final task = _task('w4_protection_check');
     final table = task.runner.table;
