@@ -22162,7 +22162,7 @@ final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_overaggressive_tag',
   caption:
-      'Villain raises often. In several earlier hands, you saw them bet twice and then show a weak hand.',
+      'Villain raises often. In several earlier hands, you saw them make two bets and then show a weak hand.',
   hint: 'Frequent pressure with weak showdowns points to one useful tag.',
   question: 'Which tag fits repeated pressure with weak showdowns?',
   options: const <Act0RunnerOptionV1>[

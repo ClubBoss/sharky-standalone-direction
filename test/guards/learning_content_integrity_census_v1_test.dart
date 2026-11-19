@@ -197,18 +197,24 @@ void main() {
         ),
         isTrue,
       );
-      expect(repairSnapshot['sameSignalMapped'], 272);
-      expect(repairSnapshot['fallbackOnly'], 19);
+      expect(repairSnapshot['sameSignalMapped'], 271);
+      expect(repairSnapshot['fallbackOnly'], 20);
       expect(repairSnapshot['unresolvedProductGap'], 3);
-      expect(repairSnapshot['unrecordedFallback'], 0);
-      // This reconstructs only historical declaration counts. It never makes
-      // the current three unresolved contexts mapped or semantically admitted.
+      expect(repairSnapshot['unrecordedFallback'], 1);
+      // The M-ratio exercise had borrowed a price-read mapping from a 0 BB
+      // call label. Restore that entry only for the historical comparison.
+      final zone = repair.singleWhere(
+        (row) => row.row.task.taskId == 'w9_m_ratio_table_window_transfer',
+      );
+      expect(zone.mappingType, 'exact');
+      expect(zone.fallbackOnly, isTrue);
+      final priorDeclaredMappings = currentGaps.length + 1;
       final historicalRepairComparison = <String, Object?>{
         ...repairSnapshot,
         'sameSignalMapped':
-            (repairSnapshot['sameSignalMapped'] as int) + currentGaps.length,
+            (repairSnapshot['sameSignalMapped'] as int) + priorDeclaredMappings,
         'fallbackOnly':
-            (repairSnapshot['fallbackOnly'] as int) - currentGaps.length,
+            (repairSnapshot['fallbackOnly'] as int) - priorDeclaredMappings,
         'unresolvedProductGap':
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
@@ -219,7 +225,7 @@ void main() {
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 15 + 1);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
-      expect(repairSnapshot['unrecordedFallback'], 0);
+      expect(repairSnapshot['unrecordedFallback'], 1);
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
         'confused_card_rank_suit': 5,
@@ -330,6 +336,21 @@ void main() {
       );
     },
   );
+
+  test('W9 M-ratio mistakes do not use the removed call-price cue', () {
+    final source = _assessedRows().singleWhere(
+      (row) => row.task.taskId == 'w9_m_ratio_table_window_transfer',
+    );
+    expect(source.task.runner.table.toCallLabel, isEmpty);
+    for (final choice in source.incorrectOptions) {
+      final intent = _incorrectOptionRow(source, choice).intent;
+      expect(intent?.missedSignalId, 'misread_tournament_pressure');
+      expect(intent?.targetWorldId, 'world_9');
+      expect(intent?.targetLessonId, 'm_ratio_zones_lite');
+      expect(intent?.targetTaskId, source.task.taskId);
+      expect(intent?.mappingType, 'unresolved_product_gap');
+    }
+  });
 
   test('two ASM05 rows retain full census without inventing semantic admission', () {
     final rows = _assessedRows();
@@ -467,15 +488,18 @@ void main() {
       currentGaps.map((row) => row.row.task.taskId).toSet(),
       _newW01OrderGapIds,
     );
-    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(274));
-    expect(allRepair.where((row) => row.fallbackOnly), hasLength(19));
+    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(273));
+    expect(allRepair.where((row) => row.fallbackOnly), hasLength(20));
     expect(
       allRepair.where((row) => row.sameSignalMapped).length +
-          currentGaps.length,
+          currentGaps.length +
+          1,
       278 - 1,
     );
     expect(
-      allRepair.where((row) => row.fallbackOnly).length - currentGaps.length,
+      allRepair.where((row) => row.fallbackOnly).length -
+          currentGaps.length -
+          1,
       15 + 1,
     );
     expect(allRepair.where((row) => row.exactReplay), hasLength(15 + 1));
@@ -513,11 +537,11 @@ void main() {
       }),
     );
     expect(
-      allRepair.where((row) => row.mappingType == 'exact'),
-      isEmpty,
-      reason:
-          'Legacy declared mapper must remain deterministic; this is not '
-          'semantic admission of the ASM05 pair.',
+      allRepair
+          .where((row) => row.mappingType == 'exact')
+          .map((row) => row.row.task.taskId),
+      ['w9_m_ratio_table_window_transfer'],
+      reason: 'The removed price label must not supply a repair mapping.',
     );
     expect(
       allRepair
