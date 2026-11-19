@@ -37,6 +37,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     required this.selected,
     required this.onSelected,
     this.onFixMistake,
+    this.repeatedMistake,
     this.onReplayFixedMistake,
     this.sessionDrillRecheckQueueItems =
         const <SessionDrillRecheckLaunchQueueItemV1>[],
@@ -53,6 +54,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onSelected;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
+  final Act0MistakeCardV1? repeatedMistake;
   final ValueChanged<Act0MistakeCardV1>? onReplayFixedMistake;
   final List<SessionDrillRecheckLaunchQueueItemV1>
   sessionDrillRecheckQueueItems;
@@ -69,7 +71,12 @@ class Act0ReviewShellV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final localeIsRu = _isRuLocaleV1(context);
-    final missCount = review.mistakes.length;
+    final repeat = onFixMistake == null ? null : repeatedMistake;
+    final mistakes = [
+      if (repeat != null) repeat,
+      ...review.mistakes.where((mistake) => mistake != repeat),
+    ];
+    final missCount = mistakes.length;
     final showBenchExplainer = missCount <= 1;
     final recovered = <Act0MistakeCardV1>[
       ...review.fixedMistakes.where(
@@ -214,15 +221,16 @@ class Act0ReviewShellV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ...queueCard,
-                for (final mistake in review.mistakes) ...[
+                for (final mistake in mistakes) ...[
                   _ReviewRepairCoachCardV1(
                     mistake: mistake,
                     onFixMistake: onFixMistake,
+                    isRepeated: mistake == repeat,
                     hasIndependentDueRecheck:
                         dueCardAvailable &&
                         mistake.taskId == selectedDueItem.taskId,
                   ),
-                  if (mistake != review.mistakes.last)
+                  if (mistake != mistakes.last)
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
                 ],
                 ...historyAndRecovered,
@@ -233,9 +241,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
       );
     }
 
-    final activeMistake = review.mistakes.isEmpty
-        ? null
-        : review.mistakes.first;
+    final activeMistake = mistakes.firstOrNull;
     final hasPassiveNotes =
         mistakeHistoryItems.isNotEmpty || recovered.isNotEmpty;
     final benchBody = <Widget>[
@@ -245,6 +251,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
       else if (activeMistake != null)
         _ReviewRepairCoachCardV1(
           mistake: activeMistake,
+          isRepeated: activeMistake == repeat,
           onFixMistake: onFixMistake,
           hasIndependentDueRecheck:
               dueCardAvailable &&
@@ -773,11 +780,13 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
     required this.mistake,
     this.onFixMistake,
     this.hasIndependentDueRecheck = false,
+    this.isRepeated = false,
   });
 
   final Act0MistakeCardV1 mistake;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
   final bool hasIndependentDueRecheck;
+  final bool isRepeated;
 
   @override
   Widget build(BuildContext context) {
@@ -842,6 +851,12 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               'You retried the original spot correctly. A different spot with the same clue is still waiting for you.',
               key: const Key('act0_shell_review_source_retried_note'),
               style: Act0AcademyReadingStyleV1.muted,
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
+          if (isRepeated) ...[
+            const Text(
+              'This mistake came up more than once when you answered without help.',
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],

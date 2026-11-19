@@ -748,9 +748,36 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
+  Act0MistakeCardV1? _repeatedMistakeForReviewV1(
+    Act0ReviewStateV1 review,
+    Act0ReviewPatternCoachingProjectionV1 coaching,
+  ) {
+    for (final pattern in coaching.patterns) {
+      if (!pattern.isRepeatedIndependentMiss ||
+          pattern.patternState != act0ReviewPatternStateActiveV1) {
+        continue;
+      }
+      for (final taskId in pattern.sourceTaskIds.reversed) {
+        final mistake = review.mistakes
+            .where((card) => card.taskId == taskId)
+            .firstOrNull;
+        if (mistake == null) continue;
+        final target = _openRepairIntentTargetForSourceTaskV1(taskId);
+        if (target != null &&
+            target.intent.missedSignalId == pattern.conceptFamilyId &&
+            target.intent.errorType == pattern.errorType) {
+          return mistake;
+        }
+      }
+    }
+    return null;
+  }
+
   Act0ReviewPatternCoachingProjectionV1 _reviewPatternCoachingProjectionV1() {
+    final now = widget.clock.nowUtc();
     return Act0ReviewPatternCoachingProjectionV1.fromSources(
       learningEvidenceHistory: _learningEvidenceHistoryV1,
+      nowUtc: now,
       reviewMistakeHistory: _reviewMistakeHistoryV1,
       reviewResolutionState: _reviewResolutionStateV1(),
       activeRepairIntents: _activeRepairIntentsV1(),
@@ -759,7 +786,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
             // Scheduling cache remains historical; current proof is replayed.
-            nowUtc: widget.clock.nowUtc(),
+            nowUtc: now,
           ),
     );
   }
