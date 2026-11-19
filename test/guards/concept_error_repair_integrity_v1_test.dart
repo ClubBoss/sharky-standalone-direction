@@ -96,7 +96,7 @@ void main() {
       'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap',
     ];
     // Preserve the byte-stable original37 dispositions as their own cohort.
-    expect(act0RepairGapAdjudicationsV1, hasLength(40));
+    expect(act0RepairGapAdjudicationsV1, hasLength(41));
     final rows = act0RepairGapAdjudicationsV1.take(37).toList();
     expect(rows, hasLength(37));
     expect(

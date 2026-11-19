@@ -733,6 +733,21 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     compatibilityImpact:
         'Raw history, source fingerprints and once-only XP retained; no new repair evidence or launch authority',
   ),
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_3',
+    sourceLessonId: 'same_hand_different_seat',
+    sourceTaskId: 'same_hand_different_seat_w3_same_hand_intro',
+    misconception: 'checking hand and position without reading earlier action',
+    conceptErrorId: 'misread_position_action_order',
+    priorFallback: 'unrecorded_exact_source_fallback',
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.intentionalExactReplay,
+    learnerEquivalenceRationale:
+        'Retry the current context question and check what changed before acting.',
+    difficultyRelationship: _sameDifficulty,
+    recheckPath: _recheck,
+    compatibilityImpact: _compat,
+  ),
 ];
 
 Act0RepairGapAdjudicationV1? act0RepairGapAdjudicationForSourceTaskV1(
