@@ -18053,7 +18053,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Live outs first.',
       feedbackReason:
-          'That is the clean transfer. Hero still has heart outs, so naming those improvement cards comes before judging whether the 2 BB price is worth it in a 10 BB pot.',
+          'Any remaining heart makes your flush. The 2 of hearts also pairs the board, so an opponent holding two tens would make a full house. Weigh your chance of winning against the 2 BB price.',
     ),
     Act0RunnerOptionV1(
       id: 'ace_only',
@@ -18064,7 +18064,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too narrow.',
       feedbackReason:
-          'The live draw story still matters more. Hearts are the real outs here, so start by naming the flush improvement cards before inventing a one-pair rescue line.',
+          'A non-heart ace gives you a pair. A heart completes your flush, and a heart that pairs the board can also help your opponent.',
     ),
     Act0RunnerOptionV1(
       id: 'price_only',
@@ -18075,7 +18075,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Sequence first.',
       feedbackReason:
-          'Price matters after the draw read. On a real table, name the heart outs first, then decide whether paying 2 BB into Pot 10 BB is worth it.',
+          'Start with the hearts that complete your flush. Then consider how often the flush will win before you judge the 2 BB price.',
     ),
   ],
   table: _act0CurrentStreetTableV1(
@@ -18216,7 +18216,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct transfer.',
       feedbackReason:
-          'The same ladder still works on a real table. A 4 or 9 completes the straight, so those remain the live outs before you judge the 3 BB decision.',
+          'A 4 or 9 makes your straight. A 9 can also give an opponent holding J-T a higher straight. Weigh your chance of winning against the 3 BB price.',
     ),
     Act0RunnerOptionV1(
       id: 'king_pairs',
@@ -18227,7 +18227,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong improvement story.',
       feedbackReason:
-          'Pairing the king is not the draw lesson here. The transfer is keep the same straight ladder and name the 4 or 9 outs first.',
+          'A king pairs the board. A 4 or 9 completes your straight, though an opponent can still make a better hand.',
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
@@ -18238,7 +18238,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Do not drop the ladder.',
       feedbackReason:
-          'A blank turn does not erase the draw. The live-table transfer is keep following the same 4 or 9 straight outs before making the next choice.',
+          'You can still make a straight with a 4 or 9 on the river. How often that straight will win matters when you judge the 3 BB price.',
     ),
   ],
   table: _act0CurrentStreetTableV1(
