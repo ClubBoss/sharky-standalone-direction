@@ -23,6 +23,7 @@ class Act0AcademySettingsLeafInputV1 {
     this.practiceReminderEnabled,
     this.onPracticeReminderChanged,
     this.onRetryLoad,
+    this.onOpenBetaMetrics,
     this.onReplayWelcome,
     this.onRetakePlacement,
     this.onOpenPrivacy,
@@ -41,6 +42,7 @@ class Act0AcademySettingsLeafInputV1 {
   final bool? practiceReminderEnabled;
   final ValueChanged<bool>? onPracticeReminderChanged;
   final VoidCallback? onRetryLoad;
+  final VoidCallback? onOpenBetaMetrics;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onRetakePlacement;
   final VoidCallback? onOpenPrivacy;
@@ -103,6 +105,14 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         ),
     ];
     final learning = <Widget>[
+      if (input.onOpenBetaMetrics != null)
+        _row(
+          'Beta activity',
+          'See local progress and answer a short survey',
+          Act0AcademyLeafGlyphKindV1.recall,
+          key: const Key('act0_settings_beta_activity'),
+          onTap: input.onOpenBetaMetrics,
+        ),
       if (input.onRecoveryOptions != null)
         _row(
           'Recovery options',

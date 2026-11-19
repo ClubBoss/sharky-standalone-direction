@@ -8,6 +8,7 @@ import 'act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
+import 'act0_beta_metrics_v1.dart';
 import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'academy_leaves/act0_academy_leaf_style_v1.dart';
@@ -1228,6 +1229,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.initialPhase = Act0LessonPhaseV1.theory,
     this.state,
     this.showPlacementOnStart = true,
+    this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
     this.telemetrySink,
     this.debugSessionDrillRecheckQueueItemsV1,
@@ -1242,6 +1244,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final Act0LessonPhaseV1 initialPhase;
   final Act0ShellStateV1? state;
   final bool showPlacementOnStart;
+  final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
   final Act0TelemetrySinkV1? telemetrySink;
   final List<SessionDrillRecheckLaunchQueueItemV1>?
@@ -1359,6 +1362,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final _openedSpacedReviewTaskIdsV1 = <String>{};
   bool _newSpacedReviewSavePendingV1 = false;
   late final AppLifecycleListener _reviewLifecycleV1;
+  bool _betaWentToBackground = false;
   Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
       const Act0ReviewMistakeHistoryV1();
   Act0ReviewResolutionReceiptHistoryV1 _reviewResolutionReceiptHistoryV1 =
@@ -1843,11 +1847,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void initState() {
     super.initState();
     _reviewLifecycleV1 = AppLifecycleListener(
+      onHide: () => _betaWentToBackground = true,
       onResume: () {
         if (mounted) {
           setState(() {});
-          if (_bootSurfaceReady && !_recoveryBusyV1) _syncPracticeReminderV1();
+          if (_bootSurfaceReady && !_recoveryBusyV1) {
+            _syncPracticeReminderV1();
+            if (_betaWentToBackground) _recordBetaVisitV1();
+          }
         }
+        _betaWentToBackground = false;
       },
     );
     _tab = widget.initialTab;
@@ -1945,6 +1954,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  void _recordBetaVisitV1() {
+    if (!widget.enableBetaMetrics ||
+        !_usesPersistedProgress ||
+        !_progressRestoredV1 ||
+        _progressLoadFailed) {
+      return;
+    }
+    unawaited(
+      Act0BetaMetricsStoreV1.recordVisit(
+        widget.clock.nowUtc(),
+      ).then<void>((_) {}, onError: (Object _) {}),
+    );
+  }
+
   Future<void> _bootstrapFirstStartRouteV1() async {
     final epoch = ++_recoveryEpochV1;
     _progressRestoredV1 = false;
@@ -1965,6 +1988,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     if (!mounted || epoch != _recoveryEpochV1) return;
     _progressRestoredV1 = true;
+    _recordBetaVisitV1();
     if (_usesPersistedProgress && !_progressLoadFailed)
       _syncPracticeReminderV1();
     if (!widget.showPlacementOnStart) {
@@ -2300,6 +2324,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     try {
       await _progressStore.flush();
+      await Act0BetaMetricsStoreV1.flush();
       await Act0FirstStartPreferencesV1.flush();
       await AppSettingsService.instance.flush();
       await language?.flush();
@@ -4504,6 +4529,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
                         context,
+                        betaLearningMetrics:
+                            widget.enableBetaMetrics && _usesPersistedProgress
+                            ? () => Act0BetaLearningMetricsV1.fromProgress(
+                                firstWorld: baseState.worldById('world_1'),
+                                completedTaskIds: _completedTaskIds,
+                                correctedMistakes:
+                                    _fixProofProjectionV1().proofs.length,
+                              )
+                            : null,
+                        nowUtc: widget.clock.nowUtc,
                         onDeleteLocalData: _usesPersistedProgress
                             ? _requestDeleteLocalDataV1
                             : null,
