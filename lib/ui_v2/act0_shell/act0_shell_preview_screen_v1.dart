@@ -2653,6 +2653,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
+    late final reviewCoaching = _reviewPatternCoachingProjectionV1();
     final personalizedNextStep = _personalizedNextStepV1(reviewState);
     // Home's NoPersonal reason falls back to the lesson card, never a review.
     final homeDueReview =
@@ -4425,6 +4426,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           onSelected: (value) => setState(() {
                             _reviewConfidence = value;
                           }),
+                          repeatedMistake: _repeatedMistakeForReviewV1(
+                            reviewState,
+                            reviewCoaching,
+                          ),
                           onFixMistake: (mistake) => setState(() {
                             _startMistakeRepair(
                               selectedWorld,
@@ -4465,8 +4470,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 },
                                 reviewResolutionState:
                                     _reviewResolutionStateV1(),
-                                patternCoachingProjection:
-                                    _reviewPatternCoachingProjectionV1(),
+                                patternCoachingProjection: reviewCoaching,
                               ).items,
                           dueReviewItems: _dueReviewItemsV1(),
                           nextStep: personalizedNextStep,

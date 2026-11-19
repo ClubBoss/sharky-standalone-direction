@@ -1,4 +1,6 @@
-import 'act0_concept_family_state_foundation_v1.dart';
+import 'act0_authored_source_proof_v1.dart';
+import 'act0_completed_decision_contract_v1.dart';
+import 'act0_durable_learning_time_contract_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_learning_transfer_measurement_v1.dart';
 import 'act0_queue_resolution_contract_v1.dart';
@@ -9,6 +11,8 @@ import 'act0_review_resolution_contract_v1.dart';
 
 const String act0ReviewPatternTypeRepeatedMissAcrossSessionsV1 =
     'repeated_miss_across_sessions';
+const String act0ReviewPatternTypeRepeatedMissAcrossHandsV1 =
+    'repeated_miss_across_hands';
 const String act0ReviewPatternTypeRepeatedUnsuccessfulRepairV1 =
     'repeated_unsuccessful_repair';
 const String act0ReviewPatternTypeMissThenLaterImprovementV1 =
@@ -23,6 +27,7 @@ const String act0ReviewPatternStateInsufficientEvidenceV1 =
     'insufficient_evidence';
 
 const String act0ReviewPatternStrengthTwoSessionSignalV1 = 'two_session_signal';
+const String act0ReviewPatternStrengthTwoHandSignalV1 = 'two_hand_signal';
 const String act0ReviewPatternStrengthRepeatedMultiSessionSignalV1 =
     'repeated_multi_session_signal';
 const String act0ReviewPatternStrengthImprovementObservedV1 =
@@ -61,6 +66,7 @@ class Act0ReviewPatternCoachingProjectionV1 {
     Act0RepairOutcomeProjectionV1 repairOutcomeProjection =
         const Act0RepairOutcomeProjectionV1(),
     Act0LearningTransferMeasurementV1? transferMeasurement,
+    DateTime? nowUtc,
   }) {
     final patterns = <Act0ReviewPatternCoachingPatternV1>[
       ..._patternsFromRepairOutcomes(
@@ -69,6 +75,7 @@ class Act0ReviewPatternCoachingProjectionV1 {
       ),
       ..._patternsFromLearningEvidence(
         learningEvidenceHistory,
+        nowUtc: nowUtc ?? DateTime.now().toUtc(),
         reviewMistakeHistory: reviewMistakeHistory,
         reviewResolutionState: reviewResolutionState,
       ),
@@ -137,6 +144,7 @@ class Act0ReviewPatternCoachingPatternV1 {
     required this.sameFamilyDifferentTasks,
     this.latestRepairState = '',
     this.transferVerdict = '',
+    this.errorType = '',
     required this.messageKey,
   });
 
@@ -156,7 +164,12 @@ class Act0ReviewPatternCoachingPatternV1 {
   final bool sameFamilyDifferentTasks;
   final String latestRepairState;
   final String transferVerdict;
+  final String errorType;
   final String messageKey;
+
+  bool get isRepeatedIndependentMiss =>
+      patternType == act0ReviewPatternTypeRepeatedMissAcrossSessionsV1 ||
+      patternType == act0ReviewPatternTypeRepeatedMissAcrossHandsV1;
 
   String get copyLine {
     if (messageKey == _messageRepeatedUnsuccessfulRepairV1) {
@@ -165,7 +178,7 @@ class Act0ReviewPatternCoachingPatternV1 {
     if (messageKey == _messageMissThenLaterImprovementV1) {
       return 'You missed this earlier, then handled it correctly on a later hand.';
     }
-    return 'This table-reading mistake showed up in more than one session.';
+    return 'This mistake came up more than once when you answered without help.';
   }
 
   Map<String, Object?> toPayload() => <String, Object?>{
@@ -185,6 +198,7 @@ class Act0ReviewPatternCoachingPatternV1 {
     'sameFamilyDifferentTasks': sameFamilyDifferentTasks,
     if (latestRepairState.isNotEmpty) 'latestRepairState': latestRepairState,
     if (transferVerdict.isNotEmpty) 'transferVerdict': transferVerdict,
+    if (errorType.isNotEmpty) 'errorType': errorType,
     'messageKey': messageKey,
   };
 
@@ -242,6 +256,7 @@ class Act0ReviewPatternCoachingPatternV1 {
       sameFamilyDifferentTasks: sameFamilyDifferentTasks,
       latestRepairState: map['latestRepairState']?.toString().trim() ?? '',
       transferVerdict: map['transferVerdict']?.toString().trim() ?? '',
+      errorType: map['errorType']?.toString().trim() ?? '',
       messageKey: messageKey,
     );
   }
@@ -249,74 +264,72 @@ class Act0ReviewPatternCoachingPatternV1 {
 
 List<Act0ReviewPatternCoachingPatternV1> _patternsFromLearningEvidence(
   Act0LearningEvidenceHistoryV1 history, {
+  required DateTime nowUtc,
   required Act0ReviewMistakeHistoryV1? reviewMistakeHistory,
   required Act0ReviewResolutionStateV1? reviewResolutionState,
 }) {
-  final buckets = <String, List<Act0LearningEvidenceRecordV1>>{};
-  for (final record in history.records) {
-    if (record.isCorrect || record.createdOrder < 0) {
-      continue;
-    }
-    final sessionId = record.sessionId.trim();
-    if (sessionId.isEmpty) {
-      continue;
-    }
-    final conceptFamilyId = act0ConceptFamilyIdForEvidenceRecordV1(record);
-    if (conceptFamilyId.isEmpty || conceptFamilyId == 'none') {
-      continue;
-    }
-    buckets.putIfAbsent(
-      conceptFamilyId,
-      () => <Act0LearningEvidenceRecordV1>[],
-    );
-    buckets[conceptFamilyId]!.add(record);
-  }
+  final current = act0RecentAuthoredEvidenceV1(history, nowUtc: nowUtc);
   final patterns = <Act0ReviewPatternCoachingPatternV1>[];
-  for (final entry in buckets.entries) {
-    final ordered = <Act0LearningEvidenceRecordV1>[...entry.value]
-      ..sort((a, b) {
-        final orderCompare = a.createdOrder.compareTo(b.createdOrder);
-        if (orderCompare != 0) {
-          return orderCompare;
+  for (final family in current.families.entries) {
+    final misses = <String, List<Act0LearningEvidenceRecordV1>>{};
+    for (final record in family.value) {
+      if (record.assistanceKind != Act0DecisionAssistanceV1.none ||
+          record.reviewKind == Act0ReviewKindV1.immediateRepair ||
+          record.reviewKind == Act0ReviewKindV1.alternateSameSignal ||
+          record.reviewKind == Act0ReviewKindV1.originalSourceRecheck) {
+        continue;
+      }
+      if (record.isCorrect) {
+        misses.clear();
+      } else {
+        final error = record.errorType.trim();
+        if (error.isNotEmpty && error != 'none' && error != 'unknown') {
+          misses.putIfAbsent(error, () => []).add(record);
         }
-        return a.recordId.compareTo(b.recordId);
-      });
-    final sessionIds = _distinctStrings(
-      ordered.map((record) => record.sessionId),
-    );
-    if (ordered.length < 2 || sessionIds.length < 2) {
-      continue;
+      }
     }
-    final sourceTaskIds = _distinctStrings(
-      ordered.map((record) => record.taskId),
-    );
-    patterns.add(
-      Act0ReviewPatternCoachingPatternV1(
-        patternId: _patternId(
-          act0ReviewPatternTypeRepeatedMissAcrossSessionsV1,
-          entry.key,
+    for (final entry in misses.entries) {
+      final ordered = entry.value;
+      final sessionIds = _distinctStrings(
+        ordered.map((record) => record.sessionId),
+      );
+      final sourceTaskIds = _distinctStrings(
+        ordered.map((record) => record.taskId),
+      );
+      // A same-hand retry in the same session counts as one observation.
+      if (sessionIds.length < 2 && sourceTaskIds.length < 2) continue;
+      final patternType = sessionIds.length >= 2
+          ? act0ReviewPatternTypeRepeatedMissAcrossSessionsV1
+          : act0ReviewPatternTypeRepeatedMissAcrossHandsV1;
+      final evidenceStrength = switch (sessionIds.length) {
+        1 => act0ReviewPatternStrengthTwoHandSignalV1,
+        2 => act0ReviewPatternStrengthTwoSessionSignalV1,
+        _ => act0ReviewPatternStrengthRepeatedMultiSessionSignalV1,
+      };
+      patterns.add(
+        Act0ReviewPatternCoachingPatternV1(
+          patternId: _patternId(patternType, '${family.key}|${entry.key}'),
+          conceptFamilyId: family.key,
+          errorType: entry.key,
+          patternType: patternType,
+          sessionCount: sessionIds.length,
+          evidenceCount: ordered.length,
+          firstSessionId: sessionIds.first,
+          latestSessionId: ordered.last.sessionId.trim(),
+          sourceTaskIds: sourceTaskIds,
+          patternState: _stateForFamily(
+            family.key,
+            reviewMistakeHistory: reviewMistakeHistory,
+            reviewResolutionState: reviewResolutionState,
+          ),
+          evidenceStrength: evidenceStrength,
+          latestEvidenceOrder: ordered.last.createdOrder,
+          exactTaskRepeat: sourceTaskIds.length == 1,
+          sameFamilyDifferentTasks: sourceTaskIds.length > 1,
+          messageKey: _messageRepeatedMissV1,
         ),
-        conceptFamilyId: entry.key,
-        patternType: act0ReviewPatternTypeRepeatedMissAcrossSessionsV1,
-        sessionCount: sessionIds.length,
-        evidenceCount: ordered.length,
-        firstSessionId: sessionIds.first,
-        latestSessionId: ordered.last.sessionId.trim(),
-        sourceTaskIds: sourceTaskIds,
-        patternState: _stateForFamily(
-          entry.key,
-          reviewMistakeHistory: reviewMistakeHistory,
-          reviewResolutionState: reviewResolutionState,
-        ),
-        evidenceStrength: sessionIds.length >= 3
-            ? act0ReviewPatternStrengthRepeatedMultiSessionSignalV1
-            : act0ReviewPatternStrengthTwoSessionSignalV1,
-        latestEvidenceOrder: ordered.last.createdOrder,
-        exactTaskRepeat: sourceTaskIds.length == 1,
-        sameFamilyDifferentTasks: sourceTaskIds.length > 1,
-        messageKey: _messageRepeatedMissV1,
-      ),
-    );
+      );
+    }
   }
   return patterns;
 }
@@ -530,8 +543,7 @@ int _typePriority(Act0ReviewPatternCoachingPatternV1 pattern) {
       act0ReviewPatternTypeRepeatedUnsuccessfulRepairV1) {
     return 0;
   }
-  if (pattern.patternType ==
-      act0ReviewPatternTypeRepeatedMissAcrossSessionsV1) {
+  if (pattern.isRepeatedIndependentMiss) {
     return 1;
   }
   if (pattern.patternType == act0ReviewPatternTypeMissThenLaterImprovementV1) {

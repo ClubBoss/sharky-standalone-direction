@@ -60,6 +60,7 @@ class Act0AcademyReviewSavedCheckV1 {
 class Act0AcademyReviewLeafInputV1 {
   const Act0AcademyReviewLeafInputV1({
     this.openMistakes = const <Act0MistakeCardV1>[],
+    this.repeatedMistake,
     this.pastRepairs = const <Act0MistakeCardV1>[],
     this.dueItems = const <Act0DueReviewItemV1>[],
     this.savedChecks = const <Act0AcademyReviewSavedCheckV1>[],
@@ -75,6 +76,7 @@ class Act0AcademyReviewLeafInputV1 {
   });
 
   final List<Act0MistakeCardV1> openMistakes;
+  final Act0MistakeCardV1? repeatedMistake;
   final List<Act0MistakeCardV1> pastRepairs;
   final List<Act0DueReviewItemV1> dueItems;
   final List<Act0AcademyReviewSavedCheckV1> savedChecks;
@@ -102,7 +104,11 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mistakes = input.openMistakes;
+    final repeat = input.onRepairMistake == null ? null : input.repeatedMistake;
+    final mistakes = [
+      if (repeat != null) repeat,
+      ...input.openMistakes.where((mistake) => mistake != repeat),
+    ];
     final featured = mistakes.firstOrNull;
     final due = input.dueItems;
     final dueFirst = due.firstOrNull;
@@ -375,8 +381,10 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Saved mistake from an earlier decision.',
+          Text(
+            mistake == input.repeatedMistake
+                ? 'This mistake came up more than once when you answered without help.'
+                : 'Saved mistake from an earlier decision.',
             style: TextStyle(color: _muted, fontSize: 13),
           ),
           const SizedBox(height: 12),

@@ -144,6 +144,7 @@ Widget act0AcademyReviewRuntimeV1(
   return Act0AcademyReviewLeafV1(
     input: Act0AcademyReviewLeafInputV1(
       openMistakes: legacy.review.mistakes,
+      repeatedMistake: legacy.repeatedMistake,
       pastRepairs: legacy.review.fixedMistakes,
       dueItems: due,
       savedChecks: legacy.sessionDrillRecheckQueueItems
