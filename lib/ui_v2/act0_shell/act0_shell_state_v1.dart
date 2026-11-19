@@ -14831,7 +14831,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Re-check A9o and UTG.',
       feedbackReason:
-          'The Sharky starting chart lists AT as a Medium hand. Ace-nine offsuit falls below that threshold.',
+          'At UTG, the Sharky starting chart puts A9o in the Weak group. Ace-ten is in the next group.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(

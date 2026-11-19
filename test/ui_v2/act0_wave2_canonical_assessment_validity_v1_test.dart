@@ -442,7 +442,7 @@ void main() {
           for (final option in task.runner.options) {
             expect(option.feedbackReason, contains(hand), reason: task.taskId);
             expect(option.feedbackReason, contains(seat), reason: task.taskId);
-            expect(option.feedbackReason, contains('course baseline'));
+            expect(option.feedbackReason, contains('Sharky starting chart'));
             expect(option.feedbackReason, isNot(contains('J8o')));
             expect(
               option.feedbackReason,
