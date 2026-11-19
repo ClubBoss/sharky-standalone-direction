@@ -413,7 +413,8 @@ void main() {
     await tester.ensureVisible(full);
     await tester.tap(full);
     await tester.pumpAndSettle();
-    expect(find.text(task.runner.teachingSteps.first.body), findsWidgets);
+    expect(find.text('Reasoning guide'), findsOneWidget);
+    expect(find.text(task.runner.teachingSteps.first.body), findsNothing);
     await tester.tap(
       find.byKey(const Key('act0_shell_theory_recall_close_cta')),
     );
@@ -427,7 +428,10 @@ void main() {
         teachingStepIndex: 0,
       ),
     );
-    expect(find.text('Quads mean all four cards.'), findsWidgets);
+    expect(
+      find.text('Four of a kind uses all four of one rank.'),
+      findsWidgets,
+    );
     expect(
       table().highlightedCardIds,
       containsAll(['hero_0', 'hero_1', 'board_0', 'board_1']),

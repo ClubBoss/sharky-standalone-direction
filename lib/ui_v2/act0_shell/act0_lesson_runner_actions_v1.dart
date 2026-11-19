@@ -298,13 +298,16 @@ String _genericDecisionHintV1({
   final isBoardFocus =
       focus.contains('board') ||
       focus.contains('community card') ||
+      focus.contains('shared card') ||
       focus.contains('flop') ||
       focus.contains('river');
   if (isBoardFocus &&
       (taskFamily == Act0TaskFamilyV1.counting ||
           focus.contains('how many') ||
           focus.contains('count'))) {
-    return 'Track the board street by street, not chips in the pot.';
+    return focus.contains('shared card')
+        ? 'Count the shared cards in the middle.'
+        : 'Track the board street by street, not chips in the pot.';
   }
   if (taskFamily != Act0TaskFamilyV1.sizing &&
       RegExp(r'\b(?:which|what)\s+action\b').hasMatch(focus)) {

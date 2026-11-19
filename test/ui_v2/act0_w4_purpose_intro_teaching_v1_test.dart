@@ -97,7 +97,7 @@ void main() {
         lessonId: lesson.lessonId,
         task: task,
       ),
-      '3f2f57e82f32df7dc8970e9a3d63b45a3fb61f2feca1bb0aa9fc4d0585a5e5b7',
+      '920c6865340c1c4defbdd3f7ce32593bd2ba7f3317cd9f2cf117b68f739b3bec',
       reason:
           'Current W4 purpose source includes the revised authored call labels.',
     );

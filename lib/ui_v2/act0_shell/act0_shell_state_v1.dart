@@ -198,7 +198,7 @@ class Act0ShellStateV1 {
     pathProgressLabel: '4 of 10 lessons complete',
     selectedWorldId: 'world_1',
     worlds: _act0PreviewWorlds,
-    lessons: _pokerFromZeroLessons,
+    lessons: _act0PreviewWorlds.first.lessons,
     review: Act0ReviewStateV1(
       title: 'What to fix next',
       subtitle: 'Clean up one decision before moving on.',
@@ -1835,6 +1835,8 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           feedbackReason:
               'Everyone can use the cards in the middle. Your two cards belong only to you.',
           table: _privateBoardRunner.table.copyWith(
+            scope: Act0TableScopeV1.orientation,
+            potLabel: '',
             heroCards: const [
               Act0CardStateV1(rank: 'K', suit: 'c'),
               Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
@@ -2507,7 +2509,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_legal_context',
         title: 'Legal actions',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitFreeCheckContextV1(_legalActionRunner),
+        runner: _act0W01ExplicitFreeCheckContextV1(
+          _legalActionRunner,
+          firstBoardCard: const Act0CardStateV1(
+            rank: 'K',
+            suit: 'h',
+            tone: Act0CardToneV1.red,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
@@ -2519,13 +2528,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_check_drill',
         title: 'Check when no bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitFreeCheckContextV1(
-          _checkActionRunner,
-          heroCards: const [
-            Act0CardStateV1(rank: 'T', suit: 's'),
-            Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-          ],
-        ),
+        runner: _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         tablePresentation: Act0TaskTablePresentationV1.stablePractice,
@@ -4538,6 +4541,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         runner: _world2PositionRecapRunner.copyWith(
           caption:
               'All six players put in 1 BB before the flop. The first betting round on the flop is about to start.',
+          hint: 'Compare the live-seat order after the flop.',
           question:
               'Which of these seats acts last on the flop when the dealer is still in the hand?',
           options: _positionsRecapRunner.options,
@@ -4545,6 +4549,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             streetLabel: 'Flop',
             boardCards: _flopA72Cards,
             potLabel: 'Pot 6 BB',
+            centerLabel: 'First pass on the flop',
             seats: [
               for (final seat in _world2PositionRecapRunner.table.seats)
                 _act0CopySeatStateV1(seat, clearCommitment: true),
@@ -10553,11 +10558,16 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
 // The stipulated preflop raise is history, not a strategy recommendation.
 Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
   Act0RunnerStateV1 source, {
-  List<Act0CardStateV1> heroCards = const [
+  Act0CardStateV1 firstBoardCard = const Act0CardStateV1(
+    rank: 'A',
+    suit: 'h',
+    tone: Act0CardToneV1.red,
+  ),
+}) {
+  const heroCards = [
     Act0CardStateV1(rank: '9', suit: 'c'),
     Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-  ],
-}) {
+  ];
   const remaining = <String, String>{
     'utg': '100 BB',
     'hj': '100 BB',
@@ -10572,10 +10582,10 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
     table: source.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
       heroCards: heroCards,
-      boardCards: const [
-        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '7', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+      boardCards: [
+        firstBoardCard,
+        const Act0CardStateV1(rank: '7', suit: 'c'),
+        const Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
       ],
       streetLabel: 'Flop',
       potLabel: 'Pot 4.5 BB',
@@ -13424,7 +13434,8 @@ final _positionsRecapRunner = _positionsRunner.copyWith(
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Read the seat marker and order.',
-      feedbackReason: 'UTG sits between the big blind and HJ.',
+      feedbackReason:
+          'UTG acts before BTN after the flop on this six-seat table.',
     ),
     Act0RunnerOptionV1(
       id: 'bottom',
@@ -13434,8 +13445,7 @@ final _positionsRecapRunner = _positionsRunner.copyWith(
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'You found the seat.',
-      feedbackReason:
-          'Clockwise from CO, BTN is next, followed by the small blind.',
+      feedbackReason: 'BTN acts last after the flop on this six-seat table.',
     ),
     Act0RunnerOptionV1(
       id: 'random',
@@ -13446,7 +13456,7 @@ final _positionsRecapRunner = _positionsRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Read the seat marker and order.',
       feedbackReason:
-          'BB sits after the small blind, clockwise from the Button.',
+          'BB acts before BTN after the flop on this six-seat table.',
     ),
   ],
   feedbackTitle: 'Position takeaway.',
@@ -14109,7 +14119,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Read the order after the flop.',
+      feedbackTitle: 'Read the seating order.',
       feedbackReason: 'UTG sits between the big blind and HJ.',
     ),
     Act0RunnerOptionV1(
@@ -14119,7 +14129,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Order after the flop read.',
+      feedbackTitle: 'Clockwise order found.',
       feedbackReason:
           'Clockwise from CO, BTN is next, followed by the small blind.',
     ),
@@ -14130,7 +14140,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Read the order after the flop.',
+      feedbackTitle: 'Read the seating order.',
       feedbackReason:
           'BB sits after the small blind, clockwise from the Button.',
     ),

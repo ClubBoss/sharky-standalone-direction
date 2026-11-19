@@ -71,8 +71,9 @@ void main() {
     },
   );
 
-  test('369 authored contexts preserve legacy scopes and two ASM05 snapshots', () {
+  test('370 authored contexts preserve legacy scopes and two ASM05 snapshots', () {
     const orientationIds = <String>{
+      'first_table_guide_shared_cards_repair',
       'what_poker_is_theory',
       'what_poker_is_find_hero',
       'what_poker_is_pot_stack',
@@ -184,15 +185,15 @@ void main() {
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
     ];
-    expect(tasks, hasLength(369));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(369));
+    expect(tasks, hasLength(370));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(370));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
     expect(newTasks.map((task) => task.taskId), _asm05NewTaskIds);
     expect(
       tasks.where((task) => !_asm05NewTaskIds.contains(task.taskId)),
-      hasLength(367),
+      hasLength(368),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -219,7 +220,7 @@ void main() {
       expect(replay.isConsumerSafe, isFalse);
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
-    expect(orientationIds, hasLength(46));
+    expect(orientationIds, hasLength(47));
     expect(explanationIds, hasLength(5));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
@@ -351,7 +352,20 @@ void main() {
             expect(table.seats.where((seat) => seat.isActive), isEmpty);
           }
         } else {
-          expect(table.boardCards, isEmpty, reason: task.taskId);
+          if (task.taskId == 'first_table_guide_shared_cards_repair') {
+            expect(table.boardCards, hasLength(3));
+            expect(table.heroCards, hasLength(2));
+            expect(table.potLabel, isEmpty);
+            expect(table.actionTrail, isEmpty);
+          } else if (task.taskId == 'button_advantage_button_recap') {
+            expect(table.streetLabel, 'Flop');
+            expect(table.boardCards, hasLength(3));
+            expect(table.potLabel, 'Pot 6 BB');
+            expect(table.actionTrail, isEmpty);
+            expect(table.seats.where((seat) => seat.bet != null), isEmpty);
+          } else {
+            expect(table.boardCards, isEmpty, reason: task.taskId);
+          }
           expect(
             table.actionTrail.every(
               (item) =>

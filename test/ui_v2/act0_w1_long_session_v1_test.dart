@@ -350,6 +350,7 @@ void main() {
         step < (fullRoute ? 5200 : 3600) && !complete;
         step++
       ) {
+        Map<String, dynamic>? routeSnapshot;
         final runnerFinder = find.byType(Act0LessonRunnerShellV1);
         if (runnerFinder.evaluate().isNotEmpty) {
           final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
@@ -466,28 +467,51 @@ void main() {
             continue;
           }
         } else {
-          final snapshot = await _saved(t);
-          final completed = (snapshot['completedTaskIds'] as List)
+          routeSnapshot = await _saved(t);
+          final completed = (routeSnapshot['completedTaskIds'] as List)
               .cast<String>()
               .toSet();
           complete = completed.containsAll(taskWorld.keys);
           if (complete) break;
         }
+        // The summary can promote a saved review above the course route.
+        // This traversal follows the map once the in-lesson retry is done.
         var moved = await _tapFirst(t, [
+          if (find.text('Practice this clue').evaluate().isNotEmpty)
+            find.byKey(const Key('act0_shell_block_summary_map_cta')),
           find.byKey(const Key('act0_shell_theory_continue_cta')),
           for (final key in _continueKeys) find.byKey(Key(key)),
         ]);
+        final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
+        final levels = find.byKey(const Key('act0_shell_levels_menu_button'));
         if (!moved &&
             find
                 .byKey(const Key('act0_academy_review_leaf'))
                 .evaluate()
                 .isNotEmpty) {
-          // A rehearsal started outside the lesson returns to Review. Resume
-          // through the actual Learn entry, just as after reopening the app.
           await _tapFirst(t, [find.text('Learn').last]);
-          moved = await _tapFirst(t, [
-            find.byKey(const Key('act0_shell_current_mission_cta')),
-          ]);
+        }
+        if (!moved && levels.evaluate().isNotEmpty) {
+          routeSnapshot ??= await _saved(t);
+          final completed = (routeSnapshot['completedTaskIds'] as List)
+              .cast<String>()
+              .toSet();
+          final nextWorld = taskWorld.entries
+              .firstWhere((entry) => !completed.contains(entry.key))
+              .value;
+          // A summary can open the map of the world just completed. Choose
+          // the next unlocked world using the same menu a learner uses.
+          if (routeSnapshot['selectedWorldId'] != 'world_$nextWorld') {
+            expect(await _tapFirst(t, [levels]), isTrue);
+            expect(
+              await _tapFirst(t, [
+                find.byKey(Key('act0_shell_world_$nextWorld')),
+              ]),
+              isTrue,
+              reason: 'The level menu should offer W$nextWorld',
+            );
+          }
+          moved = await _tapFirst(t, [mission]);
         }
         final visible = moved
             ? ''

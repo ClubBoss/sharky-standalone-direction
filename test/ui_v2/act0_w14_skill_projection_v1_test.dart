@@ -80,9 +80,9 @@ void main() {
   );
 
   test(
-    'all 181 W1-W4 tasks have explicit curriculum topics and independent evidence',
+    'all 182 W1-W4 tasks have explicit curriculum topics and independent evidence',
     () {
-      expect(_tasks.length, 181);
+      expect(_tasks.length, 182);
       expect(
         _tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),

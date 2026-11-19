@@ -742,10 +742,10 @@ SUMMARY: Match the table state to the actions that are actually allowed.
 CAPTION: BB checks on the flop. It is your turn and there is no bet to match.
 TEACH: Legality depends on price. No price means check is available. A price unlocks call.
 TEACH LABELS: No bet
-TEACH TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1 | Center No bet faces you | Facts high card, rainbow, backdoor straight
+TEACH TABLE: Flop | You 9c 8d | Board Kh 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1 | Center No bet faces you | Facts high card, rainbow, backdoor straight
 Q: No bet faces you. Which action keeps you in the hand without adding chips?
 HINT [theoryOnly]: When no chips are owed, you can check. Facing a bet, a call matches the price and a fold exits. A raise may also be available.
-TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
+TABLE: Flop | You 9c 8d | Board Kh 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
   - [wrong] Fold — Nearly there. Folding gives up the hand. Checking is free here.
@@ -759,11 +759,11 @@ SUMMARY: Recognize the one moment checking is free and correct.
 CAPTION: BB checks on the flop. It is your turn and there is no bet to match.
 TEACH: No bet is facing you. When no one has bet, check keeps playing for free.
 TEACH LABELS: No bet, Check is free
-TEACH TABLE: Flop | You Ts 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center No bet faces you | Facts high card, rainbow, backdoor straight
+TEACH TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center No bet faces you | Facts high card, rainbow, backdoor straight
 Q: What action keeps playing for free?
 HINT [theoryOnly]: Read the amount required to stay in the hand.
-TABLE: Flop | You Ts 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ts 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
+TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
   - [wrong] Fold — Nearly there. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
@@ -1912,19 +1912,19 @@ ENTRY: drill
 CAPTION: All six players put in 1 BB before the flop. The first betting round on the flop is about to start.
 TEACH: Position-value checklist. Name the seat, note who acts first, then compare the hand.
 TEACH LABELS: Seat, Order, Hand
-TEACH TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus utg, btn | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts rainbow
+TEACH TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus utg, btn | Tap utg, btn, bb | Center First pass on the flop | Empty board No board cards yet | Facts rainbow
 Q: Which of these seats acts last on the flop when the dealer is still in the hand?
-HINT [theoryOnly]: Read the seat labels clockwise from CO.
-TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Tap utg, btn, bb | Center Blinds posted | Facts rainbow
+HINT [theoryOnly]: Compare the live-seat order after the flop.
+TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Tap utg, btn, bb | Center First pass on the flop | Facts rainbow
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB | BB
-  - [wrong] UTG [seat utg] — Read the seat marker and order. UTG sits between the big blind and HJ.
+  - [wrong] UTG [seat utg] — Read the seat marker and order. UTG acts before BTN after the flop on this six-seat table.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Facts rainbow
-  + [correct] BTN [seat btn] — You found the seat. Clockwise from CO, BTN is next, followed by the small blind.
-    FEEDBACK TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Facts rainbow
-  - [wrong] BB [seat bb] — Read the seat marker and order. BB sits after the small blind, clockwise from the Button.
+    FEEDBACK TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center First pass on the flop | Facts rainbow
+  + [correct] BTN [seat btn] — You found the seat. BTN acts last after the flop on this six-seat table.
+    FEEDBACK TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center First pass on the flop | Facts rainbow
+  - [wrong] BB [seat bb] — Read the seat marker and order. BB acts before BTN after the flop on this six-seat table.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Facts rainbow
+    FEEDBACK TABLE: Flop | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center First pass on the flop | Facts rainbow
 
 ===== WORLD 3 · LESSON early_vs_late · Early vs late =====
 
@@ -2014,12 +2014,12 @@ HINT [theoryOnly]: Read the seat labels clockwise from CO.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] UTG [seat utg] — Read the order after the flop. UTG sits between the big blind and HJ.
+  - [wrong] UTG [seat utg] — Read the seating order. UTG sits between the big blind and HJ.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  + [correct] BTN [seat btn] — Order after the flop read. Clockwise from CO, BTN is next, followed by the small blind.
+  + [correct] BTN [seat btn] — Clockwise order found. Clockwise from CO, BTN is next, followed by the small blind.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BB [seat bb] — Read the order after the flop. BB sits after the small blind, clockwise from the Button.
+  - [wrong] BB [seat bb] — Read the seating order. BB sits after the small blind, clockwise from the Button.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -5520,13 +5520,13 @@ TASK first_table_guide_shared_cards_repair [drill] Read the cards
 CAPTION: There are two groups of cards in view.
 Q: Which cards can everyone use?
 HINT [theoryOnly]: Look at the cards in the middle.
-TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Pot 5 BB | Seat BTN | Facts high card, rainbow, backdoor straight
+TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Seat BTN | Facts high card, rainbow, backdoor straight
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Board cards — Board cards are shared. Board cards are shared by everyone still in the hand.
-    FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Seat BTN | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
   - [wrong] Private cards — On the right track. Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.
     BETTER ANSWER: Board cards
-    FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Seat BTN | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
 
 ===== WORLD 3 · LESSON position_six_seats · The 6 positions =====
 

@@ -112,7 +112,7 @@ void main() {
           .worldById('world_1')
           .lessons
           .firstWhere((l) => l.lessonId == 'what_poker_is');
-      for (final task in lesson.taskList) {
+      for (final task in lesson.courseTaskList) {
         expect(_runner(tester).selectedTaskId, task.taskId);
         await _advanceTask(tester);
         final records = (await _saved())['learningEvidenceHistory'] as List;
