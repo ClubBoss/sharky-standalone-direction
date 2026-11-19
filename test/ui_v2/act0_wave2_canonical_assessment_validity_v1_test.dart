@@ -647,6 +647,27 @@ void main() {
             phase: task.phase,
             runner: task.runner.copyWith(
               question: 'What should you check after the bucket?',
+              table: task.runner.table.copyWith(
+                actionTrail: const [
+                  Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+                  Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+                  Act0ActionTrailItemV1(label: 'BTN acts'),
+                ],
+                seats: [
+                  for (final seat in task.runner.table.seats)
+                    if (seat.seatId == 'utg')
+                      const Act0SeatStateV1(
+                        seatId: 'utg',
+                        seatLabel: 'UTG',
+                        displayName: 'Seat',
+                        isOccupied: false,
+                        isInHand: false,
+                        cardsVisibleMode: Act0CardsVisibleModeV1.none,
+                      )
+                    else
+                      seat,
+                ],
+              ),
             ),
             rewardXp: task.rewardXp,
             stepKind: task.stepKind,

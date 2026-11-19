@@ -211,15 +211,15 @@ void main() {
     test('W3 model revisions keep five assessments anchored to current source', () {
       const expected = <String, String>{
         'same_hand_different_seat_same_hand_late_open':
-            'd244b2b91557e6a8bd628f295843826a3d2e100a78184946b184a3d21bcfe469',
+            '69e6eebb3b6d18d8e0180c3c456d1df67fad9ae1d92ff29df7970a1ca0b09d55',
         'position_apply_late_open':
-            '366d8dc503afe0c978e93fdc6020ba011b8d052b952e2c958b83db43e616876c',
+            '4db45e40de6d071e9540c4a08cf66b01bf5198a19dd840dbc81e46e1f95e6c76',
         'position_checkpoint_position_checkpoint_late_open':
-            '6e7fb6a084c238f433af26ab2bddf991bafa5ee65a4ac7c2fa7b951bbe8db3bd',
+            '6bf2c9ac37ba02ed13d16de4f41930a674a89a7e69c030cfb0885a3d549074d6',
         'position_apply_recap':
-            'a44f71960373e4df6700f5fec151ce96ae3d1c45fddb482ee54ab0020e6e990f',
+            'fc48c3744dd33bbda94cc152fefddf47d2f12eeb82bc179e789c31959138a357',
         'position_checkpoint_position_checkpoint_review':
-            'e88e5428ba7f6403b156eafcdf4e4ccff1b3ca58400a9a450664a9626e70da98',
+            '63c1818bf58580cbb441def348effe8286b07b4abe4743d8d5abf6274b6fd766',
       };
       final world = Act0ShellStateV1.sample.worldById('world_3');
       final observed = <String>{};

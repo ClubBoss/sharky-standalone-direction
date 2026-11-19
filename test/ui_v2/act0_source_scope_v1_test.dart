@@ -125,6 +125,16 @@ void main() {
       'w6_wet_board_repair': 'board_texture_change',
       'w12_bad_call_good_result': 'process_over_outcome',
     };
+    const w4TurnPriceIds = <String>{
+      'w4_price_intro',
+      'w4_good_price_call',
+      'w4_bad_price_fold',
+      'w4_cheap_price_marginal_call',
+      'w4_big_price_marginal_fold',
+      'w4_price_recap',
+      'w4_checkpoint_price',
+      'w4_checkpoint_table_price',
+    };
     const w4NumericHistoryIds = <String>{
       'w4_bad_bluff',
       'w4_bluff_intro',
@@ -263,6 +273,23 @@ void main() {
           expect(latest.actionSummary, 'CO bets 2 BB');
           expect(latest.potAtStreet, 'Pot 10 BB');
           expect(table.toCallLabel, 'To call 2 BB');
+        } else if (w4TurnPriceIds.contains(task.taskId)) {
+          expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
+          expect(replay?.currentStreet, Act0StreetReplayStreetV1.turn);
+          expect(table.activeSeatId, 'btn', reason: task.taskId);
+          expect(replay?.currentDecisionActor, 'Hero', reason: task.taskId);
+          expect(
+            replay?.steps.last.potAtStreet,
+            table.potLabel,
+            reason: task.taskId,
+          );
+          final wager = table.seats.singleWhere((seat) => seat.bet != null);
+          expect(
+            wager.seatId,
+            task.taskId == 'w4_checkpoint_table_price' ? 'bb' : 'hj',
+          );
+          expect(table.seats.where((seat) => seat.isInHand), hasLength(2));
+          expect(table.seats.every((seat) => seat.isOccupied), isTrue);
         } else if (w4NumericHistoryIds.contains(task.taskId)) {
           expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
           expect(
@@ -330,32 +357,41 @@ void main() {
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 321);
     expect(played, 323); // Authored contexts, not certified replay histories.
+    final expectedHistories = <String>{
+      ..._newW01OrderContextIds,
+      ...w4TurnPriceIds,
+      ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
+      ...w11ExplicitStreetHistoryIds,
+      ...w12ExplicitFlopHistoryIds,
+      // The newly authored Call frame now supplies its full blind prefix,
+      // folds, street actions and positive remaining stacks.
+      'actions_call_drill',
+      // Explicit new zero-price Check histories, still six-player roles.
+      'actions_legal_context',
+      'actions_check_drill',
+      // New complete folded-to-BTN frames; mechanical history only.
+      'actions_theory',
+      'actions_raise_drill',
+      'actions_review',
+      // New five-way limped-pot Fold context; no strategy certification.
+      'actions_fold_drill',
+      'fold_discipline_discipline_intro',
+      'apply_hj_decision',
+      // Existing approved first-hand and no-ante bubble source histories.
+      'your_first_hand_flop',
+      'your_first_hand_turn',
+      'your_first_hand_river',
+      'your_first_hand_action_trail',
+      'w9_bubble_table_risk_transfer',
+    };
     expect(
-      historyConsumers,
-      <String>{
-        ..._newW01OrderContextIds,
-        ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
-        ...w11ExplicitStreetHistoryIds,
-        ...w12ExplicitFlopHistoryIds,
-        // The newly authored Call frame now supplies its full blind prefix,
-        // folds, street actions and positive remaining stacks.
-        'actions_call_drill',
-        // Explicit new zero-price Check histories, still six-player roles.
-        'actions_legal_context',
-        'actions_check_drill',
-        // New complete folded-to-BTN frames; mechanical history only.
-        'actions_theory',
-        'actions_raise_drill',
-        'actions_review',
-        // New five-way limped-pot Fold context; no strategy certification.
-        'actions_fold_drill',
-        // Existing approved first-hand and no-ante bubble source histories.
-        'your_first_hand_flop',
-        'your_first_hand_turn',
-        'your_first_hand_river',
-        'your_first_hand_action_trail',
-        'w9_bubble_table_risk_transfer',
-      },
+      historyConsumers.difference(expectedHistories),
+      isEmpty,
+      reason: 'Only the explicit source histories should be consumer-safe.',
+    );
+    expect(
+      expectedHistories.difference(historyConsumers),
+      isEmpty,
       reason:
           'only explicitly enumerated source histories are consumer-safe; no whole-pot certification',
     );

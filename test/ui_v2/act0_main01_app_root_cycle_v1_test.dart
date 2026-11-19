@@ -433,7 +433,7 @@ void main() {
             _runner(tester).runner.reviewQuality,
             Act0FeedbackQualityV1.suboptimal,
           );
-          await _expectFeedbackClearance(tester, baked: false);
+          await _expectFeedbackClearance(tester);
         }
         expect(tester.takeException(), isNull);
       },
@@ -2210,10 +2210,7 @@ class _HelpWriteGate extends SharedPreferencesStorePlatform {
   Future<bool> clear() => delegate.clear();
 }
 
-Future<void> _expectFeedbackClearance(
-  WidgetTester tester, {
-  bool baked = true,
-}) async {
+Future<void> _expectFeedbackClearance(WidgetTester tester) async {
   final registered = find.byKey(const Key('act0_f7_registered_scene'));
   for (var frame = 0; frame < 20 && registered.evaluate().isEmpty; frame++) {
     await tester.runAsync(() async {
@@ -2222,26 +2219,7 @@ Future<void> _expectFeedbackClearance(
     await tester.pump(const Duration(milliseconds: 25));
   }
   await tester.pumpAndSettle();
-  if (baked) {
-    expect(registered, findsOneWidget);
-  } else {
-    expect(registered, findsNothing);
-    expect(find.byKey(const Key('act0_shell_table_felt')), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_feedback_guide_viewport')),
-      findsNothing,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_feedback_guide_scroll')),
-      findsNothing,
-    );
-    expect(find.byIcon(Icons.south_rounded), findsOneWidget);
-    final next = find.byKey(const Key('act0_shell_feedback_continue_cta'));
-    expect(next.hitTestable(), findsOneWidget);
-    expect(tester.getRect(next).height, greaterThanOrEqualTo(48));
-    expect(tester.takeException(), isNull);
-    return;
-  }
+  expect(registered, findsOneWidget);
   final guide = tester.getRect(
     find.byKey(const Key('act0_wave_a_learning_context')),
   );

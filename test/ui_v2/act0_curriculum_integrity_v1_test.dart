@@ -176,10 +176,12 @@ void main() {
         expect(hero.bet, isNull, reason: entry.key);
         expect(bettor.bet?.amountLabel, entry.value, reason: entry.key);
         expect(runner.table.toCallLabel, 'To call ${entry.value}');
-        expect(runner.table.actionTrail.map((item) => item.label), <String>[
-          'HJ bets ${entry.value}',
-          'Hero acts',
-        ], reason: entry.key);
+        expect(runner.table.activeSeatId, 'btn', reason: entry.key);
+        expect(
+          runner.table.actionTrail.last.label,
+          'Turn: HJ bets ${entry.value}',
+          reason: entry.key,
+        );
       }
     });
 

@@ -869,6 +869,7 @@ class Act0TableStateV1 {
     this.focusCalloutLabel = '',
     this.emptyBoardLabel = '',
     this.actionTrail = const <Act0ActionTrailItemV1>[],
+    this.autoPlayHistory = true,
     this.activeSeatId,
     this.decisionSeatId,
     this.heroSeatId,
@@ -893,6 +894,7 @@ class Act0TableStateV1 {
   final String focusCalloutLabel;
   final String emptyBoardLabel;
   final List<Act0ActionTrailItemV1> actionTrail;
+  final bool autoPlayHistory;
   final String? activeSeatId;
   // Source-owned current actor; independent of answer-revealing display focus.
   final String? decisionSeatId;
@@ -927,6 +929,7 @@ class Act0TableStateV1 {
     String? focusCalloutLabel,
     String? emptyBoardLabel,
     List<Act0ActionTrailItemV1>? actionTrail,
+    bool? autoPlayHistory,
     String? activeSeatId,
     String? decisionSeatId,
     bool clearDecisionSeatId = false,
@@ -958,6 +961,7 @@ class Act0TableStateV1 {
       focusCalloutLabel: focusCalloutLabel ?? this.focusCalloutLabel,
       emptyBoardLabel: emptyBoardLabel ?? this.emptyBoardLabel,
       actionTrail: actionTrail ?? this.actionTrail,
+      autoPlayHistory: autoPlayHistory ?? this.autoPlayHistory,
       activeSeatId: activeSeatId ?? this.activeSeatId,
       decisionSeatId: clearDecisionSeatId
           ? null
@@ -3738,7 +3742,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'discipline_intro',
         title: 'Fold is a tool',
         phase: Act0LessonPhaseV1.theory,
-        runner: _foldActionRunner,
+        runner: _act0W01ExplicitFoldMechanicalContextV1(_foldActionRunner),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -8190,8 +8194,9 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
-        isOccupied: false,
         isInHand: false,
+        isFolded: true,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
       ),
       Act0SeatStateV1(
@@ -8255,6 +8260,9 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
       Act0ActionTrailItemV1(label: 'BTN acts'),
     ],
     activeSeatId: 'btn',
@@ -8594,7 +8602,7 @@ const _readBoardRunner = Act0RunnerStateV1(
     potLabel: 'Pot 5 BB',
     toCallLabel: '',
     centerLabel: 'Shared board',
-    highlightedSeatIds: <String>['co'],
+    highlightedSeatIds: <String>[],
     highlightedCardIds: <String>['board_0', 'board_1', 'board_2'],
     instructionAnchor: 'board',
   ),
@@ -9334,7 +9342,26 @@ final _winWaysRunner = _meetTableRunner.copyWith(
 );
 
 final _suitsRunner = _firstHandRunner.copyWith(
-  table: _firstHandRunner.table.copyWith(scope: Act0TableScopeV1.orientation),
+  table: _firstHandRunner.table.copyWith(
+    scope: Act0TableScopeV1.orientation,
+    heroCards: const [
+      Act0CardStateV1(rank: 'A', suit: 'h'),
+      Act0CardStateV1(rank: 'K', suit: 'd'),
+    ],
+    seats: [
+      for (final seat in _firstHandRunner.table.seats)
+        if (seat.isHero)
+          _act0CopySeatStateV1(
+            seat,
+            holeCards: const [
+              Act0CardStateV1(rank: 'A', suit: 'h'),
+              Act0CardStateV1(rank: 'K', suit: 'd'),
+            ],
+          )
+        else
+          seat,
+    ],
+  ),
   lessonId: 'suits_drill',
   lessonTitle: 'Cards, ranks & suits',
   caption: 'Each card has a rank and a suit. Ah means ace of hearts.',
@@ -12271,10 +12298,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   feedbackTitle: 'Setup locked in.',
   feedbackReason:
       'You read one spot, named the setup, and got one clear why back. That foundation makes later lessons move faster because later lessons keep reusing the same table-first scan.',
-  table: _whatYouCanDoRunner.table.copyWith(
-    toCallLabel: '',
-    centerLabel: 'You act next',
-  ),
+  table: _whatYouCanDoRunner.table.copyWith(centerLabel: 'You act next'),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Same scan, simpler job.',
@@ -12333,6 +12357,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   feedbackTitle: 'Tab jobs locked in.',
   feedbackReason:
       'Home shows what to do now, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress.',
+  table: _whatYouCanDoRunner.table.copyWith(actionTrail: const []),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Know the five jobs.',
@@ -13911,6 +13936,148 @@ final _world3FacingOpenIntroRunner = _world3FirstInIntroRunner.copyWith(
   ],
 );
 
+// Later worlds still author scenes on the original table scaffold.
+final _legacyFacingOpenTableV1 = _callActionRunner.table.copyWith(
+  heroCards: const <Act0CardStateV1>[
+    Act0CardStateV1(rank: 'K', suit: 'd'),
+    Act0CardStateV1(rank: 'Q', suit: 'c'),
+  ],
+  boardCards: const <Act0CardStateV1>[],
+  highlightedCardIds: const ['hero_0', 'hero_1'],
+  streetLabel: 'Preflop',
+  potLabel: 'Pot 4 BB',
+  toCallLabel: 'To call 2.5 BB',
+  centerLabel: 'CO opened',
+  actionTrail: const <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+    Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  activeSeatId: 'btn',
+  highlightedSeatIds: const <String>['co', 'btn'],
+  seats: <Act0SeatStateV1>[
+    Act0SeatStateV1(
+      seatId: 'utg',
+      seatLabel: 'UTG',
+      displayName: 'Seat',
+      holeCards: _unknownHoleCards,
+    ),
+    Act0SeatStateV1(
+      seatId: 'hj',
+      seatLabel: 'HJ',
+      displayName: 'Seat',
+      holeCards: _unknownHoleCards,
+    ),
+    Act0SeatStateV1(
+      seatId: 'co',
+      seatLabel: 'CO',
+      displayName: 'Cutoff',
+      bet: _coOpen25Bb,
+      holeCards: _unknownHoleCards,
+    ),
+    Act0SeatStateV1(
+      seatId: 'btn',
+      seatLabel: 'BTN',
+      displayName: 'Hero',
+      isHero: true,
+      isDealerButton: true,
+      holeCards: _heroKqCards,
+    ),
+    Act0SeatStateV1(
+      seatId: 'sb',
+      seatLabel: 'SB',
+      displayName: 'Small blind',
+      isSmallBlind: true,
+      holeCards: _unknownHoleCards,
+    ),
+    Act0SeatStateV1(
+      seatId: 'bb',
+      seatLabel: 'BB',
+      displayName: 'Big blind',
+      isBigBlind: true,
+      holeCards: _unknownHoleCards,
+    ),
+  ],
+);
+
+Act0TableStateV1 _act0FacingOpenTableV1(
+  Act0TableStateV1 source, {
+  required String opener,
+  String hero = 'btn',
+}) {
+  final open = opener == 'hj' ? _hjOpen25Bb : _coOpen25Bb;
+  final folded = {
+    'utg',
+    if (opener == 'co') 'hj',
+    if (opener == 'hj' && hero == 'btn') 'co',
+  };
+  return source.copyWith(
+    boardCards: const [],
+    streetLabel: 'Preflop',
+    potLabel: 'Pot 4 BB',
+    toCallLabel: 'To call 2.5 BB',
+    activeSeatId: hero,
+    heroSeatId: hero,
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      if (opener == 'co') const Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: '${opener.toUpperCase()} opens 2.5 BB'),
+      if (opener == 'hj' && hero == 'btn')
+        const Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1.note(label: '${hero.toUpperCase()} acts'),
+    ],
+    seats: [
+      for (final seat in source.seats)
+        Act0SeatStateV1(
+          seatId: seat.seatId,
+          seatLabel: seat.seatLabel,
+          displayName: seat.seatId == hero
+              ? 'Hero'
+              : _act0DefaultSeatDisplayNameV1(seat),
+          isHero: seat.seatId == hero,
+          isDealerButton: seat.seatId == 'btn',
+          isSmallBlind: seat.seatId == 'sb',
+          isBigBlind: seat.seatId == 'bb',
+          isActive: seat.seatId == hero,
+          isInHand: !folded.contains(seat.seatId),
+          isFolded: folded.contains(seat.seatId),
+          hasActed: seat.seatId == opener || folded.contains(seat.seatId),
+          isLastAggressor: seat.seatId == opener,
+          blindAmountLabel: switch (seat.seatId) {
+            'sb' => '0.5 BB',
+            'bb' => '1 BB',
+            _ => null,
+          },
+          stackLabel: switch (seat.seatId) {
+            'sb' => '99.5 BB',
+            'bb' => '99 BB',
+            _ when seat.seatId == opener => '97.5 BB',
+            _ => '100 BB',
+          },
+          bet: switch (seat.seatId) {
+            'sb' => _smallBlindPost,
+            'bb' => _bigBlindPost,
+            _ when seat.seatId == opener => open,
+            _ => null,
+          },
+          currentBetLabel: switch (seat.seatId) {
+            'sb' => '0.5 BB',
+            'bb' => '1 BB',
+            _ when seat.seatId == opener => '2.5 BB',
+            _ => null,
+          },
+          holeCards: seat.seatId == hero ? source.heroCards : _unknownHoleCards,
+          cardsVisibleMode: folded.contains(seat.seatId)
+              ? Act0CardsVisibleModeV1.none
+              : seat.seatId == hero
+              ? Act0CardsVisibleModeV1.faceUp
+              : Act0CardsVisibleModeV1.faceDown,
+        ),
+    ],
+  );
+}
+
 final _world3PlayableCallRunner = _callActionRunner.copyWith(
   lessonId: 'w3_playable_call',
   lessonTitle: 'Facing an open',
@@ -13943,66 +14110,13 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
           'Folding is too tight here. BTN versus a CO open, KQo can continue in position.',
     ),
   ],
-  table: _callActionRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'd'),
-      Act0CardStateV1(rank: 'Q', suit: 'c'),
-    ],
-    boardCards: const <Act0CardStateV1>[],
-    highlightedCardIds: const ['hero_0', 'hero_1'],
-    streetLabel: 'Preflop',
-    potLabel: 'Pot 4 BB',
-    toCallLabel: 'To call 2.5 BB',
-    centerLabel: 'CO opened',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
-    activeSeatId: 'btn',
-    highlightedSeatIds: const <String>['co', 'btn'],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        bet: _coOpen25Bb,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroKqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-    ],
+  table: _act0FacingOpenTableV1(
+    _callActionRunner.table.copyWith(
+      heroCards: _heroKqCards,
+      highlightedCardIds: const ['hero_0', 'hero_1'],
+      centerLabel: 'CO opened',
+    ),
+    opener: 'co',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -14046,56 +14160,9 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
           'Folding is still too tight. KQo keeps enough strength and position against an HJ open.',
     ),
   ],
-  table: _world3PlayableCallRunner.table.copyWith(
-    centerLabel: 'HJ opened',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
-    highlightedSeatIds: const <String>['hj', 'btn'],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Hijack',
-        bet: _hjOpen25Bb,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroKqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-    ],
+  table: _act0FacingOpenTableV1(
+    _world3PlayableCallRunner.table.copyWith(centerLabel: 'HJ opened'),
+    opener: 'hj',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -14240,22 +14307,10 @@ final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
           'BTN sits between you and the blinds and has yet to respond to the raise.',
     ),
   ],
-  table: _act0ReassignHeroSeatV1(
-    _world2StrongContinueRunner.table.copyWith(
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'd'),
-        Act0CardStateV1(rank: 'Q', suit: 'c'),
-      ],
-      activeSeatId: 'co',
-      highlightedSeatIds: const <String>['hj', 'co'],
-      centerLabel: 'HJ opened',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'CO acts'),
-      ],
-    ),
-    heroSeatId: 'co',
-    activeSeatId: 'co',
+  table: _act0FacingOpenTableV1(
+    _world2StrongContinueRunner.table,
+    opener: 'hj',
+    hero: 'co',
   ),
   teachingSteps: const [
     Act0TeachingStepV1(
@@ -15896,6 +15951,12 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       ],
       centerLabel: 'HJ, medium hand',
       activeSeatId: 'hj',
+      actionTrail: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1.note(label: 'HJ acts'),
+      ],
       highlightedSeatIds: const <String>['hj'],
       highlightedCardIds: const <String>['hero_0', 'hero_1'],
     ),
@@ -16060,19 +16121,16 @@ final _w4TableFrameNoticeRunner = _world3FacingOpenIntroRunner.copyWith(
           'AJo may continue sometimes, but frame comes before action. Name facing open first.',
     ),
   ],
-  table: _world3PlayableCallRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h'),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
-    ],
-    activeSeatId: 'co',
-    highlightedSeatIds: const <String>['hj', 'co'],
-    centerLabel: 'HJ opens 2.5 BB',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'CO acts'),
-    ],
+  table: _act0FacingOpenTableV1(
+    _world3PlayableCallRunner.table.copyWith(
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'A', suit: 'h'),
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+      ],
+      centerLabel: 'HJ opens 2.5 BB',
+    ),
+    opener: 'hj',
+    hero: 'co',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16628,19 +16686,19 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
       'Price is what you must pay to continue. Read pot, to call, and hand strength together.',
   question: 'What does a bet give the caller?',
   options: const <Act0RunnerOptionV1>[],
-  table: _callActionRunner.table.copyWith(
-    streetLabel: 'Turn',
-    potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 2 BB',
-    centerLabel: 'Facing price',
-    seats: _world4PriceSeatsV1('2 BB'),
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    actionTrail: _world4PriceActionTrailV1('2 BB'),
+  table: _act0W4FacingTurnPriceV1(
+    _callActionRunner.table.copyWith(
+      streetLabel: 'Turn',
+      centerLabel: 'Facing price',
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+    ),
+    potBeforeBet: 6,
+    price: 2,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16652,29 +16710,83 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
   ],
 );
 
-List<Act0SeatStateV1> _world4PriceSeatsV1(String amountLabel) =>
-    <Act0SeatStateV1>[
-      for (final seat in _callActionRunner.table.seats)
-        seat.seatId == 'hj'
-            ? Act0SeatStateV1(
-                seatId: 'hj',
-                seatLabel: 'HJ',
-                displayName: 'Seat',
-                bet: Act0SeatBetStateV1(
-                  kind: Act0SeatBetKindV1.bet,
-                  label: 'HJ',
-                  amountLabel: amountLabel,
-                ),
-                holeCards: _unknownHoleCards,
-              )
-            : seat,
-    ];
-
-List<Act0ActionTrailItemV1> _world4PriceActionTrailV1(String amountLabel) =>
-    <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'HJ bets $amountLabel'),
-      const Act0ActionTrailItemV1(label: 'Hero acts'),
-    ];
+// The two players reach the turn with the stated pot. Dead blinds are
+// still in the pot, but the folded players have no current commitment.
+Act0TableStateV1 _act0W4FacingTurnPriceV1(
+  Act0TableStateV1 table, {
+  required double potBeforeBet,
+  required double price,
+  String bettor = 'hj',
+}) {
+  final fromBigBlind = bettor == 'bb';
+  final otherFolds = fromBigBlind
+      ? const {'utg', 'hj', 'co', 'sb'}
+      : const {'utg', 'co', 'sb', 'bb'};
+  final preflopAmount = (potBeforeBet - (fromBigBlind ? 0.5 : 1.5)) / 2;
+  String bb(double amount) =>
+      '${amount.toString().replaceFirst(RegExp(r'\.0$'), '')} BB';
+  final opponent = bettor.toUpperCase();
+  final bet = Act0SeatBetStateV1(
+    kind: Act0SeatBetKindV1.bet,
+    label: opponent,
+    amountLabel: bb(price),
+  );
+  return table.copyWith(
+    autoPlayHistory: false,
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      if (fromBigBlind) ...[
+        const Act0ActionTrailItemV1(label: 'HJ folds'),
+        const Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN raises ${bb(preflopAmount)}'),
+        const Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls ${bb(preflopAmount)}'),
+      ] else ...[
+        Act0ActionTrailItemV1(label: 'HJ raises ${bb(preflopAmount)}'),
+        const Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN calls ${bb(preflopAmount)}'),
+        const Act0ActionTrailItemV1(label: 'SB folds'),
+        const Act0ActionTrailItemV1(label: 'BB folds'),
+      ],
+      Act0ActionTrailItemV1(label: 'Flop: $opponent checks'),
+      const Act0ActionTrailItemV1(label: 'BTN checks'),
+      Act0ActionTrailItemV1(label: 'Turn: $opponent bets ${bb(price)}'),
+    ],
+    activeSeatId: 'btn',
+    decisionSeatId: 'btn',
+    potLabel: 'Pot ${bb(potBeforeBet + price)}',
+    toCallLabel: 'To call ${bb(price)}',
+    seats: [
+      for (final seat in table.seats)
+        _act0CopySeatStateV1(
+          seat,
+          isOccupied: true,
+          isInHand: !otherFolds.contains(seat.seatId),
+          isFolded: otherFolds.contains(seat.seatId),
+          isActive: seat.seatId == 'btn',
+          hasActed: seat.seatId != 'btn',
+          isLastAggressor: seat.seatId == bettor,
+          clearCommitment: true,
+          bet: seat.seatId == bettor ? bet : null,
+          holeCards: seat.isHero ? table.heroCards : _unknownHoleCards,
+          cardsVisibleMode: otherFolds.contains(seat.seatId)
+              ? Act0CardsVisibleModeV1.none
+              : seat.isHero
+              ? Act0CardsVisibleModeV1.faceUp
+              : Act0CardsVisibleModeV1.faceDown,
+          stackLabel: bb(switch (seat.seatId) {
+            'btn' => 100 - preflopAmount,
+            'sb' => 99.5,
+            _ when seat.seatId == bettor => 100 - preflopAmount - price,
+            'bb' => 99,
+            _ => 100.0,
+          }),
+        ),
+    ],
+  );
+}
 
 final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
@@ -16706,28 +16818,28 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
           'Folding gives up a profitable call in this model: 25% is higher than the roughly 11.1% you need.',
     ),
   ],
-  table: _world4PriceIntroRunner.table.copyWith(
-    potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Turn decision',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>[
-      'hero_0',
-      'hero_1',
-      'board_0',
-      'board_1',
-    ],
-    seats: _world4PriceSeatsV1('1 BB'),
-    actionTrail: _world4PriceActionTrailV1('1 BB'),
+  table: _act0W4FacingTurnPriceV1(
+    _world4PriceIntroRunner.table.copyWith(
+      centerLabel: 'Turn decision',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+      ],
+    ),
+    potBeforeBet: 7,
+    price: 1,
   ),
 );
 
@@ -16760,22 +16872,22 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
           'Calling puts 7 BB at risk. The required chance is about 33.3%, but you win only 25% of the time.',
     ),
   ],
-  table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 14 BB',
-    toCallLabel: 'To call 7 BB',
-    centerLabel: 'Turn decision',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '8', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '4', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    seats: _world4PriceSeatsV1('7 BB'),
-    actionTrail: _world4PriceActionTrailV1('7 BB'),
+  table: _act0W4FacingTurnPriceV1(
+    _world4GoodPriceCallRunner.table.copyWith(
+      centerLabel: 'Turn decision',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '8', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '4', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+    ),
+    potBeforeBet: 7,
+    price: 7,
   ),
 );
 
@@ -16808,23 +16920,23 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
           'Folding gives up a profitable call in this model: 15% is higher than the roughly 9.1% you need.',
     ),
   ],
-  table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 10 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Turn decision',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_1'],
-    seats: _world4PriceSeatsV1('1 BB'),
-    actionTrail: _world4PriceActionTrailV1('1 BB'),
+  table: _act0W4FacingTurnPriceV1(
+    _world4GoodPriceCallRunner.table.copyWith(
+      centerLabel: 'Turn decision',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '9', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'c'),
+        Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '4', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>['hero_0', 'board_1'],
+    ),
+    potBeforeBet: 9,
+    price: 1,
   ),
 );
 
@@ -16857,23 +16969,23 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
           'Calling puts 6 BB at risk. The required chance is about 31.6%, but you win only 25% of the time.',
     ),
   ],
-  table: _world4BadPriceFoldRunner.table.copyWith(
-    potLabel: 'Pot 13 BB',
-    toCallLabel: 'To call 6 BB',
-    centerLabel: 'Turn decision',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_0'],
-    seats: _world4PriceSeatsV1('6 BB'),
-    actionTrail: _world4PriceActionTrailV1('6 BB'),
+  table: _act0W4FacingTurnPriceV1(
+    _world4BadPriceFoldRunner.table.copyWith(
+      centerLabel: 'Turn decision',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>['hero_0', 'board_0'],
+    ),
+    potBeforeBet: 7,
+    price: 6,
   ),
 );
 
@@ -17090,11 +17202,9 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
           'Folding gives up a profitable call in this model: 30% is higher than the roughly 22.2% you need.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
+  table: _act0W4FacingTurnPriceV1(
     _world4GoodPriceCallRunner.table.copyWith(
       streetLabel: 'Turn',
-      potLabel: 'Pot 7 BB',
-      toCallLabel: 'To call 2 BB',
       centerLabel: 'Turn decision',
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'c'),
@@ -17106,21 +17216,12 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
         Act0CardStateV1(rank: '4', suit: 'c'),
         Act0CardStateV1(rank: '2', suit: 'd'),
       ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BTN acts'),
-      ],
-      activeSeatId: 'btn',
       highlightedSeatIds: const <String>['btn', 'bb'],
       highlightedCardIds: const <String>['hero_1', 'board_1'],
     ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '2 BB',
-      ),
-    },
+    potBeforeBet: 5,
+    price: 2,
+    bettor: 'bb',
   ),
 );
 
@@ -19859,7 +19960,7 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       'Here every combo from either family takes the same action. Compare counts before removing known cards.',
   question:
       'Which family contributes more combos to this range before blockers?',
-  table: _world3PlayableCallRunner.table.copyWith(
+  table: _legacyFacingOpenTableV1.copyWith(
     heroCards: _unknownHoleCards,
     centerLabel: 'Range weight',
     highlightedSeatIds: const <String>['co', 'btn'],
@@ -20599,7 +20700,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
   hint:
       'Read hand, position, then notice how the shorter depth simplifies the future.',
   question: 'What is the cleaner stack-depth read here?',
-  table: _world3PlayableCallRunner.table.copyWith(
+  table: _legacyFacingOpenTableV1.copyWith(
     heroCards: _heroAJsCards,
     centerLabel: '25 BB effective',
     potLabel: 'Pot 4 BB',
@@ -20656,7 +20757,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       'Same spot again. CO opens 2.5 BB. Hero is BTN with A-J suited at 100 BB effective.',
   hint: 'The hand did not change. The stack did.',
   question: 'What changes when this spot becomes 100 BB deep?',
-  table: _world3PlayableCallRunner.table.copyWith(
+  table: _legacyFacingOpenTableV1.copyWith(
     heroCards: _heroAJsCards,
     centerLabel: '100 BB effective',
     potLabel: 'Pot 4 BB',
@@ -23194,7 +23295,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   hint: 'Real play means combining cues, not naming one concept.',
   question: 'What is the cleaner response?',
   table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
+    _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroQJsCards,
       boardCards: _boardJ74FlopCards,
       streetLabel: 'Flop',
@@ -23267,7 +23368,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
   question: 'What is the cleaner response now?',
   table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
+    _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroQJsCards,
       boardCards: _boardJ742TurnCards,
       streetLabel: 'Turn',
@@ -23599,7 +23700,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   hint: 'Read seat, hand, board, price, and stack before choosing.',
   question: 'What is the cleaner integrated response?',
   table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
+    _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroAJsCards,
       boardCards: _boardA84TwoToneCards,
       streetLabel: 'Flop',
@@ -24072,7 +24173,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
   hint: 'Do not hero call only because the hand looks pretty.',
   question: 'What is the cleaner disciplined action?',
   table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
+    _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroKqCards,
       boardCards: _boardK7294Cards,
       streetLabel: 'River',
@@ -24153,7 +24254,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       'Do not raise just to take control when the table read says stay simple.',
   question: 'What is the clean discipline line?',
   table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
+    _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroQJsCards,
       boardCards: _boardJ74FlopCards,
       streetLabel: 'Flop',
@@ -24367,7 +24468,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       'Use the same decision loop even after a mistake: seat, hand, board, price, stack and action, then the clean action.',
   question: 'What keeps the next decision stable?',
   table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
+    _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroAJsCards,
       boardCards: _boardA84TwoToneCards,
       streetLabel: 'Flop',
