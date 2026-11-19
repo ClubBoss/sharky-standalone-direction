@@ -122,6 +122,10 @@ void main() {
     }
 
     final check = RegExp(r'^\w+ checks[.!]?$', caseSensitive: false);
+    final betIntoPot = RegExp(
+      r'\bbets ([\d.]+) BB into ([\d.]+) BB\b',
+      caseSensitive: false,
+    );
     const order = 'AKQJT98765432';
     final problems = <String>[];
     for (final w in Act0ShellStateV1.sample.worlds) {
@@ -142,6 +146,28 @@ void main() {
             problems.add(
               '${t.taskId}: a call label needs an amount: "${table.toCallLabel}"',
             );
+          }
+          // An explicit starting pot plus a single live wager gives the
+          // amount shown now. The call is still only the unmatched wager.
+          for (final match in betIntoPot.allMatches(r.caption)) {
+            final wager = double.parse(match[1]!);
+            final potBeforeBet = double.parse(match[2]!);
+            if (pot != potBeforeBet + wager) {
+              problems.add(
+                '${t.taskId}: pot after ${match[0]} is ${potBeforeBet + wager} BB'
+                ', table shows "${table.potLabel}"',
+              );
+            }
+            final currentWagers = table.seats.where((seat) => seat.bet != null);
+            if (currentWagers.length == 1 &&
+                !currentWagers.single.isHero &&
+                bb(currentWagers.single.bet!.amountLabel) == wager &&
+                call != wager) {
+              problems.add(
+                '${t.taskId}: unmatched bet is $wager BB'
+                ', table shows "${table.toCallLabel}"',
+              );
+            }
           }
           final street = table.streetLabel.toLowerCase();
           final actions = table.actionTrail.where((item) => !item.isNote);
