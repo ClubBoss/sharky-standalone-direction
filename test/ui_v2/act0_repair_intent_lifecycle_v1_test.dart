@@ -57,7 +57,9 @@ void main() {
     expect(repeat, intent);
   });
 
-  testWidgets('suboptimal answer stores open repair intent', (tester) async {
+  testWidgets('an incorrect price read stores one open repair intent', (
+    tester,
+  ) async {
     await _pumpLifecycleHost(
       tester,
       state: _stateForFoldCheckCallRaiseTasks(const <String>[
@@ -73,7 +75,7 @@ void main() {
     expect(intent, isNotNull);
     expect(intent?['sourceTaskId'], 'actions_raise_drill');
     expect(intent?['choiceId'], 'call');
-    expect(intent?['result'], 'suboptimal');
+    expect(intent?['result'], 'incorrect');
     // This choice has no validated repair target, so the intent says so
     // instead of inventing one (repair goal contracts, 2026-11-17).
     expect(

@@ -284,7 +284,9 @@ String _genericDecisionHintV1({
   if (focus.contains('which rank') || focus.contains('what rank')) {
     return 'Compare the ranks on the named cards in deck order.';
   }
-  if (focus.contains('which bucket') || focus.contains('which group')) {
+  if (focus.contains('which bucket is') ||
+      focus.contains('what bucket is') ||
+      focus.contains('which group is')) {
     return 'Read your two cards first. Match the ranks and suits to the chart.';
   }
   if (focus.contains('which earns more') && focus.contains('win')) {

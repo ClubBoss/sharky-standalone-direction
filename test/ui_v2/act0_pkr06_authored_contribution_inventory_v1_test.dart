@@ -256,7 +256,7 @@ void main() {
         'Blinds: 1.5 BB',
         'UTG folds',
         'HJ folds',
-        'CO calls 1 BB (limps)',
+        'CO calls 1 BB',
         'Hero all-in 20 BB',
         'SB folds',
         'BB folds',

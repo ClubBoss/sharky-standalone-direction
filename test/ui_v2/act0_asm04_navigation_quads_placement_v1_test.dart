@@ -442,7 +442,7 @@ void main() {
       ),
     );
     expect(find.text(answer.feedbackReason), findsWidgets);
-    expect(table().centerLabelOverride, 'Four queens play');
+    expect(table().centerLabelOverride, 'Read the cards');
     expect(
       table().highlightedCardIds,
       containsAll(['hero_0', 'hero_1', 'board_0', 'board_1']),
