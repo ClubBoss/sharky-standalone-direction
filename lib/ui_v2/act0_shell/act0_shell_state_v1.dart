@@ -16669,7 +16669,7 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
     Act0TeachingStepV1(
       title: 'AJo in the starting chart.',
       body:
-          'AJo is in the Medium group. Before a raise, its opening seats are HJ, CO and BTN.',
+          'AJo is in the Medium group. Before a raise, its opening seats are HJ, CO and BTN. BTN acts last after the flop.',
       focusSeatIds: <String>['btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['AJo', 'BTN', 'Open'],
