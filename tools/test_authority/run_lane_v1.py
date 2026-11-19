@@ -117,6 +117,7 @@ TIER_A_COMMANDS = [
             "test/ui_v2/act0_learning_order_v1_test.dart",
             "test/ui_v2/act0_glossary_v1_test.dart",
             "test/ui_v2/act0_bet_rules_w14_v1_test.dart",
+            "test/ui_v2/act0_card_suit_colour_v1_test.dart",
             "test/ui_v2/act0_catalog_grades_unlock_v1_test.dart",
             "test/ui_v2/act0_w14_no_dead_ends_v1_test.dart",
             "-r",
