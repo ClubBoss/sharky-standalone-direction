@@ -1,0 +1,686 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+import 'act0_catalog_claims_v1.dart';
+import 'act0_catalog_poker_facts_v1.dart';
+import 'act0_catalog_snapshot_v1.dart';
+import 'act0_catalog_starting_chart_v1.dart';
+import 'act0_pot_showdown_truth_v1.dart';
+
+class CatalogAudit {
+  final checks = <String, int>{};
+  final ambiguous = <String, int>{};
+  final findings = <String, Map<String, Object?>>{};
+  final outsideChart = <String, String>{};
+  final uncertainClaims = <String, String>{};
+
+  void count(String rule, Map<String, int> counter) =>
+      counter.update(rule, (n) => n + 1, ifAbsent: () => 1);
+
+  void check(
+    String rule,
+    CatalogTask row,
+    String anchor,
+    bool? passes,
+    String detail,
+  ) {
+    final world = row.world.worldNumber;
+    final taskId = row.task.taskId;
+    if (passes == null) {
+      count(rule, ambiguous);
+      uncertainClaims['$rule|$taskId|$anchor'] = detail;
+      return;
+    }
+    count(rule, checks);
+    if (passes) return;
+    final id = '$rule|$taskId|$anchor';
+    findings[id] = {
+      'rule': rule,
+      'world': world,
+      'task_id': taskId,
+      'target': world <= 4
+          ? 'P8'
+          : world <= 8
+          ? 'L2'
+          : 'после беты',
+      'reason': detail,
+    };
+  }
+
+  void dormant(String id, String owner) {
+    count('4.reachability', checks);
+    if (owner.isEmpty) return;
+    findings['4.reachability|$id|$owner'] = {
+      'rule': '4.reachability',
+      'task_id': id,
+      'target': 'после беты',
+      'reason': 'Declared in $owner and unavailable from the W1–W12 catalog.',
+    };
+  }
+
+  Map<String, Object?> toJson() => {
+    'checks': checks,
+    'ambiguous': ambiguous,
+    'ambiguous_examples': uncertainClaims,
+    'outside_starting_chart': outsideChart,
+    'findings': findings,
+  };
+}
+
+typedef _Copy = ({
+  String surface,
+  String text,
+  Act0TableStateV1 table,
+  bool label,
+});
+
+Iterable<_Copy> _copy(CatalogTask row) sync* {
+  final task = row.task;
+  final runner = task.runner;
+  final table = runner.table;
+  yield (surface: 'title', text: task.title, table: table, label: true);
+  yield (surface: 'caption', text: runner.caption, table: table, label: false);
+  yield (surface: 'Q', text: catalogQuestion(task), table: table, label: false);
+  yield (surface: 'hint', text: runner.hint, table: table, label: false);
+  yield (surface: 'center', text: table.centerLabel, table: table, label: true);
+  yield (
+    surface: 'callout',
+    text: table.focusCalloutLabel,
+    table: table,
+    label: true,
+  );
+  yield (
+    surface: 'feedback',
+    text: runner.feedbackReason,
+    table: table,
+    label: false,
+  );
+  for (final (index, step) in runner.teachingSteps.indexed) {
+    final shown = act0TeachingTableForRunnerV1(table, step);
+    yield (
+      surface: 'teach.$index.title',
+      text: step.title,
+      table: shown,
+      label: true,
+    );
+    yield (
+      surface: 'teach.$index',
+      text: step.body,
+      table: shown,
+      label: false,
+    );
+    for (final (labelIndex, label) in step.focusLabels.indexed) {
+      yield (
+        surface: 'teach.$index.focus.$labelIndex',
+        text: label,
+        table: shown,
+        label: true,
+      );
+    }
+  }
+  for (final o in runner.options) {
+    final projected = act0FeedbackTableForRunnerV1(
+      runner: runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: o.id,
+        teachingStepIndex: runner.teachingSteps.length,
+      ),
+      taskFamily: task.resolvedTaskFamily,
+    );
+    yield (
+      surface: 'feedback.' + o.id,
+      text: o.feedbackReason,
+      table: projected,
+      label: false,
+    );
+    yield (
+      surface: 'feedback.' + o.id + '.title',
+      text: o.feedbackTitle,
+      table: projected,
+      label: false,
+    );
+  }
+}
+
+String _words(String text) =>
+    text.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), ' ').trim();
+
+const _stopWords = {
+  'a',
+  'an',
+  'the',
+  'in',
+  'on',
+  'at',
+  'is',
+  'are',
+  'should',
+  'which',
+  'what',
+  'does',
+  'do',
+  'here',
+  'this',
+  'of',
+  'you',
+  'your',
+  'to',
+  'for',
+  'can',
+  'when',
+  'how',
+  'one',
+  'best',
+  'correct',
+};
+Set<String> _questionWords(String text) => _words(text)
+    .split(' ')
+    .where((word) => word.isNotEmpty && !_stopWords.contains(word))
+    .toSet();
+
+const _streets = {'Preflop': 0, 'Flop': 3, 'Turn': 4, 'River': 5};
+
+bool _isAction(Act0RunnerOptionV1 option) =>
+    startingChartActions.contains(option.id) ||
+    RegExp(
+      r'^(?:raise|open|fold|call|check|bet|limp|3-bet|all-in)\b',
+      caseSensitive: false,
+    ).hasMatch(option.label);
+
+String _action(Act0RunnerOptionV1 option) {
+  final label = _words(option.label);
+  final match = RegExp(
+    r'^(raise|open|fold|call|check|bet|limp)\b',
+  ).firstMatch(label);
+  return match?[1] == 'open' ? 'raise' : match?[1] ?? option.id;
+}
+
+final _actualRankQuestion = RegExp(
+  r'\b(?:who wins|who (?:takes|gets) the pot|which (?:shown )?hand wins|'
+  r'what happens to the pot|which (?:hand|rank) (?:is stronger|ranks higher)|'
+  r'what (?:hand|rank) (?:do|does) .+ have|how many .{0,24}(?:cards|outs)|'
+  r'which (?:seat|player) (?:acts|acted|posts)|'
+  r'what (?:is|was) the (?:pot|price)|what (?:size|amount) is|'
+  r'how much .{0,28}(?:call|pot))\b',
+  caseSensitive: false,
+);
+
+CatalogAudit runCatalogAudit() {
+  final audit = CatalogAudit();
+  final chart = CatalogStartingChart.foundation();
+  final orderByTask = {for (final row in catalogTasks) row.task.taskId: row};
+  final knownRepairGoals = <String, Set<String>>{};
+  for (final contract in act0RepairGoalContractsV1) {
+    knownRepairGoals
+        .putIfAbsent(contract.sourceTaskId, () => {})
+        .add(contract.goalId);
+  }
+  final strategyKeys = <(int, String), List<CatalogTask>>{};
+  final knowledge = <({CatalogTask row, String answer, Set<String> words})>[];
+  final inherited = <(String, String), CatalogTask>{};
+
+  for (final row in catalogTasks) {
+    final task = row.task;
+    final r = task.runner;
+    final t = r.table;
+    final facts = CatalogPokerFacts(t);
+    final correct = r.options
+        .where(act0RunnerOptionIsAuthoredCorrectV1)
+        .firstOrNull;
+    final preflop = t.streetLabel == 'Preflop';
+    final heroSeat = t.seats.where((s) => s.isHero).firstOrNull;
+    final raisers = chartRaisers(t);
+
+    for (final field in _copy(row)) {
+      final claims = catalogClaims(
+        field.text,
+        field.table,
+        titleOrLabel: field.label,
+      );
+      for (final (i, claim) in claims.indexed) {
+        audit.check(
+          '1.' + claim.rule,
+          row,
+          field.surface + ':' + i.toString(),
+          claim.matches,
+          field.surface +
+              ': "' +
+              claim.value +
+              '" · ' +
+              catalogTableLine(field.table),
+        );
+      }
+    }
+
+    if (correct != null && facts.complete) {
+      final question = _words(catalogQuestion(task));
+      final answer = _words(correct.label);
+      if (RegExp(
+        r'^what draw is visible$|^which draw do you have$|^which draw do you see$',
+      ).hasMatch(question)) {
+        final expected = switch (answer) {
+          'flush draw' => facts.flushSuits.isNotEmpty,
+          'straight draw' => facts.straightRanks.isNotEmpty,
+          'gutshot straight draw' || 'gutshot' => facts.gutshot,
+          'open ended straight draw' || 'open ended' => facts.openEnded,
+          'no draw' => facts.completionCards.isEmpty,
+          _ => null,
+        };
+        audit.check(
+          '1.draw.grade',
+          row,
+          correct.id,
+          expected,
+          'Question asks for the current draw; grades "' +
+              correct.label +
+              '"; the table facts are ' +
+              facts.description +
+              '.',
+        );
+      }
+    }
+
+    final namesChart = referencesStartingChart(r);
+    if (correct != null && (preflop || namesChart)) {
+      final group = startingChartGroups.contains(correct.id);
+      final decision = _isAction(correct);
+      final foundation =
+          row.world.worldNumber == 2 || row.world.worldNumber == 3;
+      if (namesChart || foundation && (group || decision)) {
+        final expected = chart.expected(t, groupOnly: group);
+        final actual = startingChartActual(correct, expected);
+        if (expected == null) {
+          audit.outsideChart[task.taskId] =
+              'The combination of earlier actions, hand and seat is outside the Foundation chart.';
+        }
+        audit.check(
+          '2.starting_chart',
+          row,
+          correct.id,
+          expected == null ? null : expected == actual,
+          'Hand ${facts.code ?? '?'}, seat ${heroSeat?.seatId ?? '?'}, '
+              'raises $raisers. Chart: $expected, grade: $actual.',
+        );
+      } else {
+        audit.outsideChart[task.taskId] = switch (row.world.worldNumber) {
+          1 => 'W1 teaches table mechanics before the Sharky starting chart.',
+          >= 5 =>
+            'This question uses a later world’s premise and does not invoke the Foundation chart.',
+          _ =>
+            'This question has no opening, calling, folding, or classification grade.',
+        };
+      }
+    }
+
+    if (facts.hero.length == 2 && heroSeat != null) {
+      final seatCards = physicalCards(heroSeat.holeCards);
+      audit.check(
+        '4.hero_cards',
+        row,
+        'table',
+        seatCards.length == 2 && seatCards.toSet().containsAll(facts.hero),
+        'Main hand ' + facts.hero.join(' ') + ', seat ' + seatCards.join(' '),
+      );
+    }
+    if (correct != null &&
+        (r.options.every((o) => o.seatId != null) ||
+            const {
+              'recognition',
+              'counting',
+            }.contains(task.resolvedTaskFamily.name) ||
+            _actualRankQuestion.hasMatch(catalogQuestion(task)))) {
+      for (final o in r.options.where((o) => !o.isCorrect)) {
+        audit.check(
+          '4.factual_grade',
+          row,
+          o.id,
+          o.quality == Act0FeedbackQualityV1.wrong,
+          'Deterministic question grades "' +
+              o.label +
+              '" as ' +
+              o.quality.name,
+        );
+      }
+    }
+
+    if (correct != null && !task.repairOnly) {
+      if (_isAction(correct) && facts.code != null && heroSeat != null) {
+        // Price differences do not make the same Foundation first-in / facing
+        // one open exercise a different skill. Postflop keeps the board ranks.
+        final context = preflop
+            ? (raisers.isEmpty ? 'first in' : raisers.join('/'))
+            : [
+                t.streetLabel,
+                facts.board.map((c) => c[0]).join(),
+                ...t.actionTrail.map(
+                  (item) => _words(
+                    item.label,
+                  ).replaceAll(RegExp(r'\b[0-9]+(?: [0-9]+)? bb\b'), ''),
+                ),
+              ].join(':');
+        final key = [
+          facts.code!,
+          heroSeat.seatId,
+          context,
+          _action(correct),
+        ].join('/');
+        final group = strategyKeys.putIfAbsent((
+          row.world.worldNumber,
+          key,
+        ), () => []);
+        _checkRepeat(audit, row, group, key);
+        group.add(row);
+      } else if (!_isAction(correct)) {
+        final answer = (correct.seatId ?? _words(correct.label));
+        final words = _questionWords(catalogQuestion(task));
+        final comparable = words.length >= 2;
+        if (comparable) {
+          final matches = [
+            for (final other in knowledge)
+              if (other.row.world.worldNumber == row.world.worldNumber &&
+                  other.answer == answer &&
+                  (words.difference(other.words).isEmpty &&
+                          other.words.difference(words).isEmpty ||
+                      words.length >= 4 &&
+                          other.words.length >= 4 &&
+                          words.intersection(other.words).length /
+                                  words.union(other.words).length >=
+                              .8))
+                other.row,
+          ];
+          _checkRepeat(audit, row, matches, words.join(' '));
+          knowledge.add((row: row, answer: answer, words: words));
+        }
+      }
+    }
+
+    if (correct != null) {
+      final answer = _words(correct.label);
+      final answerTokens = answer.split(' ');
+      final optionTokens = r.options
+          .where((o) => !o.isCorrect)
+          .map((o) => _words(o.label))
+          .toSet();
+      for (final field in _copy(row)) {
+        if (field.surface != 'caption' &&
+            field.surface != 'center' &&
+            field.surface != 'hint' &&
+            !field.surface.startsWith('teach.'))
+          continue;
+        if (field.text.trim().isEmpty || answer.isEmpty) continue;
+        final text = _words(field.text);
+        // A direct naming cue ("Tap BTN", "The answer is ...") is
+        // separable from a term or amount that the actual question asks to read.
+        final seatNames = correct.seatId == 'btn'
+            ? '(?:btn|(?:the )?button)'
+            : RegExp.escape(answer);
+        final direct = RegExp(
+          r'\b(?:tap|choose|select|answer is|correct choice is) ' +
+              seatNames +
+              r'\b',
+        ).hasMatch(text);
+        final explicitSeatAnswer =
+            correct.seatId != null &&
+            field.surface == 'hint' &&
+            RegExp(
+              r'\b' +
+                  seatNames +
+                  r' (?:is (?:the (?:best|clearest)|early|late)|acts (?:first|last))\b',
+            ).hasMatch(text);
+        final echoesAnswer =
+            text == answer &&
+            !optionTokens.contains(answer) &&
+            (answerTokens.length > 1 ||
+                field.surface == 'center' ||
+                field.surface.contains('.focus.'));
+        audit.check(
+          '6.answer_copy',
+          row,
+          field.surface,
+          !direct && !echoesAnswer && !explicitSeatAnswer,
+          field.surface +
+              ': "' +
+              field.text +
+              '" discloses "' +
+              correct.label +
+              '".',
+        );
+      }
+    }
+
+    if (r.options.isNotEmpty && r.options.every((o) => o.seatId != null)) {
+      final choices = r.options.map((o) => o.seatId!).toSet();
+      final targets = t.selectableSeatIds.toSet();
+      final seat = correct?.seatId;
+      if (seat != null) {
+        audit.check(
+          '6.authored_seat_cue',
+          row,
+          seat,
+          t.activeSeatId != seat && !t.highlightedSeatIds.contains(seat),
+          'Answer seat $seat is active or highlighted in the source frame.',
+        );
+      }
+      audit.check(
+        '7.selectable_seats',
+        row,
+        'table',
+        choices.length == targets.length && targets.containsAll(choices),
+        'Options $choices, selectable $targets.',
+      );
+    }
+
+    final expectedBoard = _streets[t.streetLabel];
+    if (expectedBoard != null) {
+      audit.check(
+        '8.street_board_count',
+        row,
+        'table',
+        expectedBoard == t.boardCards.length,
+        t.streetLabel +
+            ' expects $expectedBoard cards; displays ' +
+            t.boardCards.length.toString(),
+      );
+    }
+    if (t.boardCards.isNotEmpty) {
+      audit.check(
+        '8.empty_board_label',
+        row,
+        'table',
+        t.emptyBoardLabel.trim().isEmpty,
+        'Board is present with empty-board label "' + t.emptyBoardLabel + '".',
+      );
+    }
+    final teachesNewCard =
+        RegExp(
+          r'\b(?:which|what) (?:new |next |latest )?card (?:was |is |gets )?(?:added|dealt|new)|'
+          r'\b(?:what|which) (?:changed|card changed) (?:on|after) the (?:turn|river)\b',
+          caseSensitive: false,
+        ).hasMatch(catalogQuestion(task)) ||
+        row.lesson.lessonId == 'turn_river_changes' ||
+        const {
+          'your_first_hand_turn',
+          'your_first_hand_river',
+        }.contains(task.taskId);
+    final cardIds = {
+      for (var i = 0; i < t.heroCards.length; i++) 'hero_$i',
+      for (var i = 0; i < t.boardCards.length; i++) 'board_$i',
+      for (final seat in t.seats.where((seat) => !seat.isHero))
+        for (var i = 0; i < seat.holeCards.length; i++)
+          if (seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceUp)
+            seat.seatId + '_$i',
+    };
+    for (final id in t.highlightedCardIds) {
+      audit.check(
+        '8.card_focus_exists',
+        row,
+        id,
+        cardIds.contains(id),
+        'Highlight $id with only $cardIds.',
+      );
+      if (teachesNewCard &&
+          (expectedBoard ?? 0) >= 4 &&
+          id.startsWith('board_')) {
+        final last = 'board_' + (t.boardCards.length - 1).toString();
+        audit.check(
+          '8.latest_board_focus',
+          row,
+          id,
+          id == last,
+          t.streetLabel + ' highlights $id; latest board card is $last.',
+        );
+      }
+    }
+    for (final seat in t.seats) {
+      if (seat.bet != null &&
+          potTruthBbV1(seat.stackLabel) == 0 &&
+          (potTruthBbV1(seat.bet!.amountLabel) ?? 0) > 0) {
+        audit.check(
+          '8.all_in_kind',
+          row,
+          seat.seatId,
+          seat.bet!.kind == Act0SeatBetKindV1.allIn,
+          seat.seatId +
+              ' has zero behind but its commitment is ' +
+              seat.bet!.kind.name,
+        );
+      }
+      if (seat.isActive || seat.seatId == t.activeSeatId) {
+        audit.check(
+          '8.active_folded',
+          row,
+          seat.seatId,
+          !seat.isFolded,
+          seat.seatId + ' is folded and still active.',
+        );
+        final last = t.actionTrail.where((item) => !item.isNote).lastOrNull;
+        final action = last == null
+            ? null
+            : potTruthParseActionV1(t, last.label);
+        if (action?.verb == 'call') {
+          audit.check(
+            '8.active_caller',
+            row,
+            seat.seatId,
+            action!.actor != seat.seatLabel.toUpperCase(),
+            'Last action is a call, and the same seat is still active: ' +
+                last!.label,
+          );
+        }
+      }
+    }
+
+    for (final (name, raw) in [
+      ('title', task.title),
+      ('caption', r.caption),
+      ('center', t.centerLabel),
+      ('feedback', r.feedbackReason),
+    ]) {
+      final text = _words(raw);
+      // Keep generic headings out. Identical fact-bearing phrases reused on
+      // different tables may be an inherited premise, not a glossary label.
+      if (text.length < 20 ||
+          facts.code == null ||
+          !RegExp(
+            r'\b(?:hand|pair|aces|queens|kings|cards|board|flop|turn|river|pot|open|calls|acts|checks)\b',
+          ).hasMatch(text)) {
+        continue;
+      }
+      final other = inherited.putIfAbsent((name, text), () => row);
+      final otherFacts = CatalogPokerFacts(other.task.runner.table);
+      final differs =
+          facts.code != otherFacts.code ||
+          facts.board.join() != otherFacts.board.join();
+      audit.check(
+        '9.inherited_copy',
+        row,
+        name,
+        other.lesson.lessonId == row.lesson.lessonId || !differs,
+        name +
+            ' is identical to ' +
+            other.task.taskId +
+            ' on a different table: "$raw"',
+      );
+    }
+
+    if (task.repairOnly) continue;
+    for (final o in r.options.where((o) => !o.isCorrect)) {
+      final intent = buildAct0RepairIntentV1(
+        sourceWorldId: row.world.worldId,
+        sourceLessonId: row.lesson.lessonId,
+        sourceTaskId: task.taskId,
+        runner: r,
+        selectedOption: o,
+        sourceTask: task,
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
+      );
+      // Choices with no repair intent are outside this check: the consumer
+      // did not create a held obligation for them.
+      if (intent == null) continue;
+      final resolved = intent.mappingType != 'unresolved_product_gap';
+      audit.check(
+        '10.repair_resolves',
+        row,
+        o.id,
+        resolved,
+        'Wrong option "${o.label}" creates a held repair obligation (${intent.missedSignalId}).',
+      );
+      if (!resolved) continue;
+      final target = orderByTask[intent.targetTaskId];
+      final source = act0RepairGoalContractForSourceV1(
+        worldId: row.world.worldId,
+        lessonId: row.lesson.lessonId,
+        taskId: task.taskId,
+        choiceId: o.id,
+      );
+      final earlier =
+          target != null &&
+          (target.world.worldNumber < row.world.worldNumber ||
+              target.world.worldNumber == row.world.worldNumber &&
+                  target.lessonIndex <= row.lessonIndex);
+      audit.check(
+        '10.repair_order',
+        row,
+        o.id,
+        earlier,
+        'Repair points to a missing or later task ' + intent.targetTaskId,
+      );
+      final targetGoals = knownRepairGoals[intent.targetTaskId];
+      audit.check(
+        '10.repair_goal',
+        row,
+        o.id,
+        source == null || targetGoals == null
+            ? null
+            : targetGoals.contains(source.goalId),
+        'Source goal ' +
+            (source?.goalId ?? '?') +
+            ', target goals $targetGoals.',
+      );
+    }
+  }
+  return audit;
+}
+
+void _checkRepeat(
+  CatalogAudit audit,
+  CatalogTask row,
+  List<CatalogTask> previous,
+  String key,
+) {
+  final review =
+      row.task.phase == Act0LessonPhaseV1.review ||
+      row.lesson.lessonId.endsWith('_checkpoint');
+  audit.check(
+    '5.semantic_repeat',
+    row,
+    'question',
+    previous.isEmpty || previous.length == 1 && review,
+    'Signature "$key" already taught by ' +
+        previous.map((old) => old.task.taskId).join(', '),
+  );
+}
