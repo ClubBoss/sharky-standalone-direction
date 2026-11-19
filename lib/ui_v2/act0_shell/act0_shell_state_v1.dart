@@ -6733,7 +6733,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'format_pressure',
     title: '6-max vs full ring',
-    subtitle: 'The same hand can open wider in 6-max than in full ring.',
+    subtitle: 'Compare opening from UTG at tables of different sizes.',
     phaseLabel: 'Format',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -6752,7 +6752,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_6max_wider',
-        title: '6-max opens wider',
+        title: 'Compare opening ranges',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7SixMaxWiderRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -6766,7 +6766,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_fullring_tighter',
-        title: 'Full ring tightens',
+        title: 'Opening from UTG',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7FullRingTighterRunner,
         rewardXp: 10,
