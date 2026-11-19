@@ -9,7 +9,6 @@ import '../widgets/poker_table_painter.dart';
 import '../widgets/player_info_widget.dart';
 import '../helpers/table_geometry_helper.dart';
 import '../models/card_model.dart';
-import '../widgets/sync_status_widget.dart';
 
 class SpotOfTheDayScreen extends StatefulWidget {
   SpotOfTheDayScreen({super.key});
@@ -56,7 +55,6 @@ class _SpotOfTheDayScreenState extends State<SpotOfTheDayScreen> {
           title: const Text('Спот дня'),
           centerTitle: true,
           actions: [
-            SyncStatusIcon.of(context),
             IconButton(
               icon: const Icon(Icons.history),
               onPressed: () {
@@ -78,7 +76,6 @@ class _SpotOfTheDayScreenState extends State<SpotOfTheDayScreen> {
         title: const Text('Спот дня'),
         centerTitle: true,
         actions: [
-          SyncStatusIcon.of(context),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {

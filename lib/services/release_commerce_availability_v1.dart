@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:poker_analyzer/payments/payment_service.dart';
 import 'package:poker_analyzer/services/release_premium_offer_scope_v1.dart';
 
 @immutable
@@ -34,53 +33,17 @@ class ReleaseCommerceAvailabilityServiceV1 {
       return override();
     }
 
-    final paymentService = PaymentService();
-    await paymentService.initialize();
-    final isStoreAvailable = paymentService.isAvailable;
-    final productIds = paymentService.products
-        .map((product) => product.id)
-        .toSet();
-    final hasPremiumProduct =
-        productIds.contains(PaymentService.productProSubscription) ||
-        productIds.contains(PaymentService.productPremiumPack);
-
-    if (!isStoreAvailable) {
-      return const ReleaseCommerceAvailabilityStateV1(
-        isStoreAvailable: false,
-        hasPremiumProduct: false,
-        canRestore: false,
+    return const ReleaseCommerceAvailabilityStateV1(
+      isStoreAvailable: false,
+      hasPremiumProduct: false,
+      canRestore: false,
+      canUpgrade: false,
+      offerScope: ReleasePremiumOfferScopeV1(
+        kind: ReleasePremiumOfferKindV1.unavailable,
         canUpgrade: false,
-        offerScope: ReleasePremiumOfferScopeV1(
-          kind: ReleasePremiumOfferKindV1.unavailable,
-          canUpgrade: false,
-          upgradeLabel: 'Premium unavailable',
-        ),
-        message: 'Purchases are unavailable on this device right now.',
-      );
-    }
-
-    final offerScope = ReleasePremiumOfferScopeServiceV1.fromProductIdsV1(
-      productIds,
-    );
-
-    if (!hasPremiumProduct) {
-      return ReleaseCommerceAvailabilityStateV1(
-        isStoreAvailable: true,
-        hasPremiumProduct: false,
-        canRestore: true,
-        canUpgrade: false,
-        offerScope: offerScope,
-        message: 'Premium purchase products are not configured on this build.',
-      );
-    }
-
-    return ReleaseCommerceAvailabilityStateV1(
-      isStoreAvailable: true,
-      hasPremiumProduct: true,
-      canRestore: true,
-      canUpgrade: offerScope.canUpgrade,
-      offerScope: offerScope,
-      message: offerScope.message,
+        upgradeLabel: 'Premium unavailable',
+      ),
+      message: 'Purchases are unavailable on this device right now.',
     );
   }
 

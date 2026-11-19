@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:poker_analyzer/payments/payment_service.dart';
 import 'package:poker_analyzer/services/entitlement_sync_v1.dart';
 import 'package:poker_analyzer/services/release_commerce_availability_v1.dart';
-import 'package:poker_analyzer/services/release_premium_access_action_v1.dart';
 import 'package:poker_analyzer/services/subscription_surface_copy_v1.dart';
 import 'package:poker_analyzer/services/subscription_status_v1.dart';
 import 'package:poker_analyzer/services/premium_value_package_v1.dart';
 import 'package:poker_analyzer/theme/theme_v2.dart';
-import 'package:poker_analyzer/theme/app_colors.dart';
 import 'package:poker_analyzer/services/premium_service.dart';
 
 /// UI v2 Premium Hub: shows benefits and lets the user upgrade via mock gateway.
@@ -22,10 +19,7 @@ class UiV2PremiumHub extends StatefulWidget {
 
 class _UiV2PremiumHubState extends State<UiV2PremiumHub>
     with WidgetsBindingObserver {
-  bool _loading = false;
   SubscriptionStatusV1? _status;
-  bool _restoreInProgress = false;
-  String? _actionMessage;
   ReleaseCommerceAvailabilityStateV1? _commerceAvailability;
 
   @override
@@ -66,76 +60,6 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
     _load();
   }
 
-  Future<void> _upgrade() async {
-    if (_loading) return;
-    final paymentService = PaymentService();
-    setState(() {
-      _loading = true;
-      _actionMessage = null;
-    });
-    try {
-      final result = await ReleasePremiumAccessActionV1.upgradeV1(
-        readStatusBefore: SubscriptionServiceV1.getStatusV1,
-        checkStoreAvailability: () async {
-          await paymentService.initialize();
-          return paymentService.isAvailable;
-        },
-        readLastError: () => paymentService.lastError,
-        performUpgrade: PremiumService().buyPremium,
-        readStatusAfter: SubscriptionServiceV1.getStatusV1,
-      );
-      if (!mounted) return;
-      setState(() {
-        _status = result.subscriptionStatus;
-        _actionMessage = result.message;
-      });
-      if (result.status == ReleasePremiumAccessActionStatusV1.activated ||
-          result.status == ReleasePremiumAccessActionStatusV1.alreadyActive) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Premium Activated')));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result.message ?? 'Purchase failed')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
-  }
-
-  Future<void> _restore() async {
-    if (_restoreInProgress) return;
-    setState(() {
-      _restoreInProgress = true;
-      _actionMessage = null;
-    });
-    final paymentService = PaymentService();
-    try {
-      final result = await ReleasePremiumAccessActionV1.restoreV1(
-        readStatusBefore: SubscriptionServiceV1.getStatusV1,
-        checkStoreAvailability: () async {
-          await paymentService.initialize();
-          return paymentService.isAvailable;
-        },
-        performRestore: paymentService.restorePurchases,
-        readEntitlementAfter: () async =>
-            (await SubscriptionServiceV1.getStatusV1()).isEntitled,
-        readLastError: () => paymentService.lastError,
-        readStatusAfter: SubscriptionServiceV1.getStatusV1,
-      );
-      if (!mounted) return;
-      setState(() {
-        _status = result.subscriptionStatus;
-        _actionMessage = result.message;
-      });
-    } finally {
-      if (mounted) {
-        setState(() => _restoreInProgress = false);
-      }
-    }
-  }
-
   String _hubStatusLineV1(SubscriptionAccessStateV1 accessState) {
     return SubscriptionSurfaceCopyV1.hubStatusLine(
       _status ??
@@ -171,9 +95,6 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
     final status = _status;
     final commerceAvailability = _commerceAvailability;
     final accessState = status?.accessState ?? SubscriptionAccessStateV1.free;
-    final isPremium = accessState == SubscriptionAccessStateV1.premium;
-    final canRestore = commerceAvailability?.canRestore ?? true;
-    final canUpgrade = commerceAvailability?.canUpgrade ?? true;
     final defaultUpgradeLabel = switch (accessState) {
       SubscriptionAccessStateV1.premium => 'Premium Activated',
       SubscriptionAccessStateV1.trial => 'Upgrade to Premium',
@@ -226,25 +147,13 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
                   style: theme.textTheme.bodyMedium,
                 ),
               ],
-              if (_actionMessage != null) ...[
-                const SizedBox(height: 8),
-                Text(
-                  _actionMessage!,
-                  key: const Key('premium_hub_restore_status_v1'),
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ],
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   key: const Key('premium_hub_restore_cta_v1'),
-                  onPressed: _restoreInProgress || !canRestore
-                      ? null
-                      : _restore,
-                  child: Text(
-                    _restoreInProgress ? 'RESTORING...' : 'Restore purchases',
-                  ),
+                  onPressed: null,
+                  child: const Text('Restore purchases'),
                 ),
               ),
               const SizedBox(height: 8),
@@ -252,19 +161,12 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   key: const Key('premium_hub_upgrade_cta_v1'),
-                  onPressed: isPremium || _loading || !canUpgrade
-                      ? null
-                      : _upgrade,
+                  onPressed: null,
                   icon: const Icon(Icons.workspace_premium),
                   label: Text(upgradeLabel),
                 ),
               ),
               const SizedBox(height: 8),
-              if (_loading)
-                const LinearProgressIndicator(
-                  color: AppColors.accentSuccess,
-                  backgroundColor: AppColors.progressBackground,
-                ),
             ],
           ),
         ),

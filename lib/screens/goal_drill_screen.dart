@@ -6,7 +6,6 @@ import '../models/training_spot.dart';
 import '../services/goals_service.dart';
 import '../services/training_pack_storage_service.dart';
 import '../widgets/replay_spot_widget.dart';
-import '../widgets/sync_status_widget.dart';
 
 class GoalDrillScreen extends StatefulWidget {
   GoalDrillScreen({super.key});
@@ -55,11 +54,7 @@ class _GoalDrillScreenState extends State<GoalDrillScreen> {
   Widget build(BuildContext context) {
     if (_goal == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Отработка цели'),
-          centerTitle: true,
-          actions: [SyncStatusIcon.of(context)],
-        ),
+        appBar: AppBar(title: const Text('Отработка цели'), centerTitle: true),
         body: const Center(
           child: Text(
             'Нет активной цели для отработки.',
@@ -70,11 +65,7 @@ class _GoalDrillScreenState extends State<GoalDrillScreen> {
     }
     if (_index >= _hands.length) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Отработка цели'),
-          centerTitle: true,
-          actions: [SyncStatusIcon.of(context)],
-        ),
+        appBar: AppBar(title: const Text('Отработка цели'), centerTitle: true),
         body: const Center(
           child: Text(
             'Цель отработана! 💪 Продолжай в том же духе.',
@@ -87,11 +78,7 @@ class _GoalDrillScreenState extends State<GoalDrillScreen> {
     final hand = _hands[_index];
     final spot = TrainingSpot.fromSavedHand(hand);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_goal.title),
-        centerTitle: true,
-        actions: [SyncStatusIcon.of(context)],
-      ),
+      appBar: AppBar(title: Text(_goal.title), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

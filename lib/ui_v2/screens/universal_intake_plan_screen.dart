@@ -36,7 +36,6 @@ import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/premium_route_boundary_v1.dart';
 import 'package:poker_analyzer/services/premium_value_package_v1.dart';
 import 'package:poker_analyzer/services/release_commerce_availability_v1.dart';
-import 'package:poker_analyzer/services/release_premium_access_action_v1.dart';
 import 'package:poker_analyzer/services/release_entitlement_surface_state_v1.dart';
 import 'package:poker_analyzer/services/subscription_surface_copy_v1.dart';
 import 'package:poker_analyzer/services/subscription_status_v1.dart';
@@ -44,7 +43,6 @@ import 'package:poker_analyzer/services/trial_offer_policy_v1.dart';
 import 'package:poker_analyzer/services/entitlement_ssot_v1.dart';
 import 'package:poker_analyzer/services/trial_service_v1.dart';
 import 'package:poker_analyzer/services/today_router_v1.dart';
-import 'package:poker_analyzer/payments/payment_service.dart';
 import 'package:poker_analyzer/sharky/design_tokens_v1.dart';
 import 'package:poker_analyzer/theme/app_spacing.dart';
 import 'package:poker_analyzer/theme/app_typography.dart';
@@ -682,18 +680,15 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
       'status': surfaceStatus,
     });
     if (!mounted) return;
-    final paymentService = PaymentService();
     final commerceAvailability =
         await ReleaseCommerceAvailabilityServiceV1.readV1();
-    var restoreInProgress = false;
-    String? restoreMessage;
     await showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
       isScrollControlled: false,
       builder: (context) {
         return StatefulBuilder(
-          builder: (context, setModalState) {
+          builder: (context, _) {
             return SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
@@ -776,49 +771,9 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                           key: const Key(
                             'today_plan_premium_preview_restore_cta_v1',
                           ),
-                          onPressed:
-                              restoreInProgress ||
-                                  !commerceAvailability.canRestore
-                              ? null
-                              : () async {
-                                  setModalState(() {
-                                    restoreInProgress = true;
-                                    restoreMessage = null;
-                                  });
-                                  final result =
-                                      await ReleasePremiumAccessActionV1.restoreV1(
-                                        readStatusBefore: () async => status,
-                                        checkStoreAvailability: () async {
-                                          await paymentService.initialize();
-                                          return paymentService.isAvailable;
-                                        },
-                                        performRestore:
-                                            paymentService.restorePurchases,
-                                        readEntitlementAfter: () {
-                                          return EntitlementSSOTV1.instance
-                                              .isEntitledToPremiumV1(
-                                                nowEpochMs: nowEpochMs,
-                                              );
-                                        },
-                                        readLastError: () =>
-                                            paymentService.lastError,
-                                        readStatusAfter: () =>
-                                            SubscriptionServiceV1.getStatusV1(
-                                              nowEpochMs: nowEpochMs,
-                                            ),
-                                      );
-                                  if (!context.mounted) {
-                                    return;
-                                  }
-                                  setModalState(() {
-                                    restoreInProgress = false;
-                                    restoreMessage = result.message;
-                                  });
-                                },
+                          onPressed: null,
                           child: Text(
-                            restoreInProgress
-                                ? 'RESTORING...'
-                                : 'Restore purchases',
+                            'Restore purchases',
                             style: AppTypography.caption.copyWith(
                               color: SharkyTokensV1.brandPrimary,
                               fontWeight: FontWeight.w700,
@@ -826,19 +781,6 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                           ),
                         ),
                       ),
-                      if (restoreMessage != null) ...[
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          restoreMessage!,
-                          key: const Key(
-                            'today_plan_premium_preview_restore_status_v1',
-                          ),
-                          style: AppTypography.caption.copyWith(
-                            color: SharkyTokensV1.textSecondary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),

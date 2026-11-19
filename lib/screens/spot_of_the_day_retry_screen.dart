@@ -9,7 +9,6 @@ import '../widgets/board_cards_widget.dart';
 import '../widgets/player_info_widget.dart';
 import '../widgets/poker_table_painter.dart';
 import '../helpers/table_geometry_helper.dart';
-import '../widgets/sync_status_widget.dart';
 
 class SpotOfTheDayRetryScreen extends StatefulWidget {
   SpotOfTheDayRetryScreen({super.key});
@@ -78,11 +77,7 @@ class _SpotOfTheDayRetryScreenState extends State<SpotOfTheDayRetryScreen> {
     final service = context.watch<SpotOfTheDayService>();
     if (_mistakes.isEmpty) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Повтор ошибок'),
-          centerTitle: true,
-          actions: [SyncStatusIcon.of(context)],
-        ),
+        appBar: AppBar(title: const Text('Повтор ошибок'), centerTitle: true),
         backgroundColor: const Color(0xFF121212),
         body: const Center(
           child: Text('Ошибок нет', style: TextStyle(color: Colors.white70)),
@@ -105,11 +100,7 @@ class _SpotOfTheDayRetryScreenState extends State<SpotOfTheDayRetryScreen> {
         }
         final spot = spots[entry.spotIndex];
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Повтор ошибок'),
-            centerTitle: true,
-            actions: [SyncStatusIcon.of(context)],
-          ),
+          appBar: AppBar(title: const Text('Повтор ошибок'), centerTitle: true),
           backgroundColor: const Color(0xFF121212),
           body: LayoutBuilder(
             builder: (context, constraints) {

@@ -40,11 +40,12 @@
    сборки ещё нет в App Store Connect. Работать из чистого коммита с постоянным ID.
    Минимум iOS 13.0 задан одинаково в проекте Xcode, Podfile и Flutter framework;
    программа тестирования ограничена iPhone 14 Pro, английским и портретным режимом.
-4. **ждёт O4** · 15–40 мин. До подписания использовать согласованные иконку Sharky и экран
+4. **ждёт O4** · 15–40 мин. До подписания использовать согласованные в V7 иконку Sharky и экран
    запуска. В репетиции иконка 1024×1024 без альфы, с логотипом Flutter, а экран запуска
    белый. Собрать подписанный архив и IPA. [Загрузка сборок Apple](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds).
 
    ```bash
+   flutter clean
    flutter pub get --enforce-lockfile
    sharky_build_number=1  # заменить следующим номером перед новой загрузкой
    flutter build ipa --release --no-pub --build-number="$sharky_build_number" \
@@ -54,23 +55,14 @@
    open build/ios/archive/Runner.xcarchive
    ```
 
-   В Organizer проверить идентификатор, версию и номер.
+   Очистка пересобирает пакет после обновления зависимостей и исключает старые
+   файлы SDK в `Runner.app`. В Organizer проверить идентификатор, версию и номер.
 5. **ждёт O4** · 40–50 мин. Заполнить поля ниже готовыми текстами T1 и реальными контактами.
-   В Xcode Organizer создать Privacy Report для архива. В App Privacy указать **Data Not
-   Collected** после сверки с фактическим поведением SDK. Маршрут беты работает локально,
-   декларация Runner указывает отсутствие сбора и трекинга. В отчёте SDK будут
-   отдельные декларации сбора от Firebase Auth/Firestore, Google Sign-In и Sentry.
-   Flutter 3.35 включает эти SDK в бинарник, хотя учебный маршрут их не запускает.
-   Перед публикацией убрать неиспользуемые SDK или подтвердить в кандидате, что
-   они не отправляют пользовательские данные.
-   При вопросе про шифрование учитывать библиотеки архива и выбранные страны. У Sharky
-   SHA-256 используется для контрольных сумм, а в репетиции зависимость Firestore включает
-   BoringSSL для gRPC. Если он остаётся, указать стандартное шифрование вне Apple OS и
-   проверить требования к документации для выбранных стран по анкете Apple. Если в
-   подписываемой сборке останутся только системные механизмы или иное подтверждённо
-   освобождённое шифрование, добавить `ITSAppUsesNonExemptEncryption = NO` в
-   `ios/Runner/Info.plist`.
-   [Анкета и документы Apple](https://developer.apple.com/help/app-store-connect/reference/app-information/export-compliance-documentation-for-encryption/).
+   В App Privacy указать **Data Not Collected**. Учебные данные и Beta activity
+   остаются на устройстве. Runner и встроенные библиотеки не заявляют сбор и трекинг.
+   Сверить Privacy Report в Organizer для подписанного архива.
+   В Info.plist установлено `ITSAppUsesNonExemptEncryption = NO`. Firestore,
+   BoringSSL и gRPC убраны из поставки, SHA-256 используется для контрольных сумм.
 6. **ждёт O4** · В App Information → Age Rating для текущей беты отметить
    **Gambling — No**, **Simulated Gambling — Frequent**: решения с учебными фишками
    повторяются в уроках. **Contests**, **Loot Boxes**, покупки, реклама, пользовательский

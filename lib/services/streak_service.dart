@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'cloud_retry_policy.dart';
-import 'cloud_sync_service.dart';
 import 'xp_tracker_service.dart';
 import 'streak_progress_service.dart';
 
@@ -17,9 +14,8 @@ import 'streak_progress_service.dart';
 /// refreshed it compares today's date with the last stored activity date and
 /// updates the counter accordingly.
 class StreakService extends ChangeNotifier {
-  StreakService({this.cloud, required this.xp});
+  StreakService({required this.xp});
 
-  final CloudSyncService? cloud;
   final XPTrackerService xp;
   static const _lastOpenKey = 'streak_last_open';
   static const _countKey = 'streak_count';
@@ -75,25 +71,6 @@ class StreakService extends ChangeNotifier {
     final tStr = prefs.getString(_trainingDateKey);
     _lastTrainingDate = tStr != null ? DateTime.tryParse(tStr) : null;
     _verifyTrainingStreak();
-    if (cloud != null && cloud!.uid != null) {
-      try {
-        final doc = await CloudRetryPolicy.execute(
-          () => FirebaseFirestore.instance
-              .collection('stats')
-              .doc(cloud!.uid)
-              .collection('streak')
-              .doc('main')
-              .get(),
-        );
-        if (doc.exists) {
-          final data = doc.data();
-          streak.value = (data?['current'] as num?)?.toInt() ?? streak.value;
-          final d = DateTime.tryParse(data?['last'] as String? ?? '');
-          if (d != null) _lastTrainingDate = d;
-          await _saveTraining();
-        }
-      } catch (_) {}
-    }
     await updateStreak();
   }
 
@@ -119,21 +96,6 @@ class StreakService extends ChangeNotifier {
       );
     } else {
       await prefs.remove(_trainingDateKey);
-    }
-    if (cloud != null && cloud!.uid != null) {
-      final data = {
-        'current': streak.value,
-        'last': _lastTrainingDate?.toIso8601String(),
-        'updatedAt': DateTime.now().toIso8601String(),
-      };
-      await CloudRetryPolicy.execute(
-        () => FirebaseFirestore.instance
-            .collection('stats')
-            .doc(cloud!.uid)
-            .collection('streak')
-            .doc('main')
-            .set(data),
-      );
     }
   }
 

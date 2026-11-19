@@ -18,9 +18,6 @@ import '../helpers/training_pack_storage.dart';
 import '../helpers/mistake_category_translations.dart';
 import 'pack_generator_service.dart';
 import '../main.dart';
-import 'cloud_retry_policy.dart';
-import 'cloud_sync_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'template_storage_service.dart';
 import 'training_pack_stats_service.dart';
 
@@ -451,43 +448,6 @@ class TrainingPackService {
     );
   }
 
-  static Future<v2.TrainingPackTemplate?> createDrillFromGlobalMistakes(
-    BuildContext context,
-  ) async {
-    final cloud = context.read<CloudSyncService>();
-    if (!cloud.isEnabled) return null;
-    try {
-      final snap = await CloudRetryPolicy.execute(
-        () => FirebaseFirestore.instance
-            .collection('community_mistakes')
-            .orderBy('evLoss', descending: true)
-            .limit(100)
-            .get(),
-      );
-      final map = <String, SavedHand>{};
-      for (final d in snap.docs) {
-        final data = d.data();
-        final hand = SavedHand.fromJson(Map<String, dynamic>.from(data));
-        if (hand.corrected) continue;
-        final key = hand.spotId ?? hand.name;
-        map[key] ??= hand;
-      }
-      if (map.isEmpty) return null;
-      final list = map.values.toList()
-        ..sort((a, b) => (b.evLoss ?? 0).compareTo(a.evLoss ?? 0));
-      final rng = Random();
-      final count = min(list.length, 10 + rng.nextInt(6));
-      final spots = [for (final h in list.take(count)) _spotFromHand(h)];
-      return v2.TrainingPackTemplate(
-        id: const Uuid().v4(),
-        name: 'Community Mistakes',
-        spots: spots,
-      );
-    } catch (_) {
-      return null;
-    }
-  }
-
   static v2.TrainingPackTemplate createDrillFromHand(SavedHand hand) {
     final spot = _spotFromHand(hand);
     return v2.TrainingPackTemplate(
@@ -590,10 +550,8 @@ class TrainingPackService {
     return template;
   }
 
-  static Future<v2.TrainingPackTemplate?> generateDefaultPersonalPack({
-    CloudSyncService? cloud,
-  }) async {
-    final storage = SavedHandStorageService(cloud: cloud);
+  static Future<v2.TrainingPackTemplate?> generateDefaultPersonalPack() async {
+    final storage = SavedHandStorageService();
     await storage.load();
     final hands = storage.hands
         .where((h) => (h.evLoss?.abs() ?? 0) >= 1.0)

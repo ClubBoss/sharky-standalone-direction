@@ -10,7 +10,6 @@ import '../widgets/dynamic_progress_row.dart';
 import '../widgets/active_tag_goal_banner.dart';
 import 'session_result_screen.dart';
 import '../services/training_pack_stats_service.dart';
-import '../services/cloud_sync_service.dart';
 import '../services/achievement_service.dart';
 import '../services/achievement_trigger_engine.dart';
 import '../services/smart_review_service.dart';
@@ -579,10 +578,6 @@ class _TrainingSessionScreenState extends State<TrainingSessionScreen> {
         }
       }
       await prefs.setDouble('last_accuracy_tpl_${tpl.id}_0', acc);
-      final cloud = context.read<CloudSyncService?>();
-      if (cloud != null) {
-        unawaited(cloud.save('completed_tpl_${tpl.id}', '1'));
-      }
       final elapsed = service.elapsedTime;
       unawaited(
         PackLibraryCompletionService.instance.registerCompletion(

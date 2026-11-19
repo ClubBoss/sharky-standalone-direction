@@ -5,7 +5,6 @@ import '../controllers/training_pack_controller.dart';
 import '../models/result_entry.dart';
 import '../models/saved_hand.dart';
 import '../models/training_pack.dart';
-import '../services/cloud_sync_service.dart';
 import '../services/training_spot_storage_service.dart';
 
 import 'training_pack_overlay.dart';
@@ -41,9 +40,7 @@ class TrainingPackCoreState extends State<TrainingPackCore> {
   @override
   void initState() {
     super.initState();
-    final storage = TrainingSpotStorageService(
-      cloud: context.read<CloudSyncService>(),
-    );
+    final storage = TrainingSpotStorageService();
     _controller = TrainingPackController(
       pack: widget.pack,
       allHands: widget.hands ?? widget.pack.hands,

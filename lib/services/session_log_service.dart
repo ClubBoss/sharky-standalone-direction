@@ -9,7 +9,6 @@ import '../models/session_log.dart';
 import '../models/v2/training_pack_spot.dart';
 import '../models/training_result.dart';
 import 'xp_service.dart';
-import 'cloud_sync_service.dart';
 import 'smart_recommender_engine.dart' show UserProgress;
 import 'nudge_scheduler_service.dart';
 
@@ -98,19 +97,15 @@ class StageStatsWithHistory extends StageStats {
 }
 
 class SessionLogService extends ChangeNotifier {
-  SessionLogService._internal({Object? sessions, CloudSyncService? cloud})
-    : _sessions = sessions,
-      _cloud = cloud;
+  SessionLogService._internal({Object? sessions}) : _sessions = sessions;
 
-  factory SessionLogService({Object? sessions, CloudSyncService? cloud}) =>
-      SessionLogService._internal(sessions: sessions, cloud: cloud);
+  factory SessionLogService({Object? sessions}) =>
+      SessionLogService._internal(sessions: sessions);
 
   static final SessionLogService instance = SessionLogService._internal();
 
   // ignore: unused_field
   final Object? _sessions;
-  // ignore: unused_field
-  final CloudSyncService? _cloud;
 
   List<SessionLogEntry>? _cache;
   DateTime? _activeStartCache;

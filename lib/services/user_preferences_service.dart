@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'cloud_sync_service.dart';
 import 'theme_service.dart';
 
 class UserPreferencesService extends ChangeNotifier {
@@ -34,10 +32,9 @@ class UserPreferencesService extends ChangeNotifier {
   RangeValues _evRange = const RangeValues(0, 5);
   bool _showTagGoalBanner = true;
   bool _showQuickAccess = true;
-  final CloudSyncService? cloud;
   final ThemeService theme;
 
-  UserPreferencesService({this.cloud, required this.theme}) {
+  UserPreferencesService({required this.theme}) {
     theme.addListener(notifyListeners);
   }
 
@@ -112,11 +109,6 @@ class UserPreferencesService extends ChangeNotifier {
   Future<void> _save(String key, bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(key, value);
-    if (cloud != null) {
-      final data = _toMap();
-      await cloud!.queueMutation('preferences', 'main', data);
-      unawaited(cloud!.syncUp());
-    }
   }
 
   Future<void> _setBool(
@@ -189,11 +181,6 @@ class UserPreferencesService extends ChangeNotifier {
       await prefs.setString(_weakRangeStartKey, value.start.toIso8601String());
       await prefs.setString(_weakRangeEndKey, value.end.toIso8601String());
     }
-    if (cloud != null) {
-      final data = _toMap();
-      await cloud!.queueMutation('preferences', 'main', data);
-      unawaited(cloud!.syncUp());
-    }
     notifyListeners();
   }
 
@@ -201,11 +188,6 @@ class UserPreferencesService extends ChangeNotifier {
     _weakCatCount = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_weakCatCountKey, value);
-    if (cloud != null) {
-      final data = _toMap();
-      await cloud!.queueMutation('preferences', 'main', data);
-      unawaited(cloud!.syncUp());
-    }
     notifyListeners();
   }
 
@@ -214,11 +196,6 @@ class UserPreferencesService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(_evRangeStartKey, value.start);
     await prefs.setDouble(_evRangeEndKey, value.end);
-    if (cloud != null) {
-      final data = _toMap();
-      await cloud!.queueMutation('preferences', 'main', data);
-      unawaited(cloud!.syncUp());
-    }
     notifyListeners();
   }
 

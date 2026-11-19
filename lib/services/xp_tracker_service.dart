@@ -8,21 +8,16 @@ import 'xp_level_engine.dart';
 import 'level_up_celebration_engine.dart';
 
 import '../models/xp_entry.dart';
-import 'cloud_sync_service.dart';
 import 'goal_engine.dart';
 import 'achievements_engine.dart';
 
 class XPTrackerService extends ChangeNotifier {
-  XPTrackerService({this.cloud});
-
   static const _xpKey = 'xp_total';
   static const _boxKey = 'xp_history';
   static const targetXp = 10;
   static const achievementXp = 50;
   static const _timeKey = 'xp_updated';
   static const _tagXpPrefix = 'tag_xp_';
-
-  final CloudSyncService? cloud;
 
   int _xp = 0;
   Box<dynamic>? _box;
@@ -54,12 +49,6 @@ class XPTrackerService extends ChangeNotifier {
     }
   }
 
-  Map<String, dynamic> _toMap() => {
-    'xp': _xp,
-    'entries': [for (final e in _history) e.toJson()],
-    'updatedAt': DateTime.now().toIso8601String(),
-  };
-
   Future<void> _persist(DateTime ts) async {
     await _saveXp();
     await _persistHistory();
@@ -69,9 +58,6 @@ class XPTrackerService extends ChangeNotifier {
 
   Future<void> _save() async {
     await _persist(DateTime.now());
-    if (cloud != null) {
-      await cloud!.uploadXp(_toMap());
-    }
   }
 
   int get xp => _xp;
@@ -108,36 +94,6 @@ class XPTrackerService extends ChangeNotifier {
             }),
       );
     _xp = prefs.getInt(_xpKey) ?? 0;
-    if (cloud != null) {
-      final remote = await cloud!.downloadXp();
-      if (remote != null) {
-        final remoteAt =
-            DateTime.tryParse(remote['updatedAt'] as String? ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final localAt =
-            DateTime.tryParse(prefs.getString(_timeKey) ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        if (remoteAt.isAfter(localAt)) {
-          final list = remote['entries'];
-          if (list is List) {
-            _history
-              ..clear()
-              ..addAll(
-                list.map(
-                  (e) => XPEntry.fromJson(Map<String, dynamic>.from(e as Map)),
-                ),
-              );
-            _trim();
-            _xp =
-                (remote['xp'] as num?)?.toInt() ??
-                _history.fold(0, (p, e) => p + e.xp);
-            await _persist(remoteAt);
-          }
-        } else if (localAt.isAfter(remoteAt)) {
-          await cloud!.uploadXp(_toMap());
-        }
-      }
-    }
     if (_history.isNotEmpty || _storageReady) {
       _xp = _history.fold(0, (p, e) => p + e.xp);
     }

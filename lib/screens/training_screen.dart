@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../widgets/training_spot_diagram.dart';
 import '../widgets/training_spot_preview.dart';
 import '../widgets/replay_spot_widget.dart';
-import '../widgets/sync_status_widget.dart';
 import '../widgets/xp_award_badge.dart';
 import '../widgets/xp_session_recap_banner.dart';
 import '../helpers/training_pack_storage.dart';
@@ -368,7 +367,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
             ],
           ),
           centerTitle: true,
-          actions: [SyncStatusIcon.of(context)],
         ),
         backgroundColor: const Color(0xFF121212),
         body: Stack(

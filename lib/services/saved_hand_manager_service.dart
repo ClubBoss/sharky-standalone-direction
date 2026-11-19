@@ -11,7 +11,6 @@ import '../models/v2/hand_data.dart';
 import '../models/v2/hero_position.dart';
 import '../models/training_pack.dart';
 import 'saved_hand_storage_service.dart';
-import 'cloud_sync_service.dart';
 
 import 'training_stats_service.dart';
 
@@ -21,26 +20,14 @@ class SavedHandManagerService extends ChangeNotifier {
 
   SavedHandManagerService({
     required SavedHandStorageService storage,
-    CloudSyncService? cloud,
     TrainingStatsService? stats,
   }) : _storage = storage,
-       _cloud = cloud,
        _stats = stats {
     _instance = this;
   }
 
   final SavedHandStorageService _storage;
   final TrainingStatsService? _stats;
-  final CloudSyncService? _cloud;
-
-  Future<void> _sync() async {
-    if (_cloud == null) return;
-    await _cloud.queueMutation('saved_hands', 'main', {
-      'hands': [for (final h in hands) h.toJson()],
-      'updatedAt': DateTime.now().toIso8601String(),
-    });
-    unawaited(_cloud.syncUp());
-  }
 
   List<SavedHand> get hands => _storage.hands;
 
@@ -57,7 +44,6 @@ class SavedHandManagerService extends ChangeNotifier {
     }
     final withSession = hand.copyWith(sessionId: sessionId);
     await _storage.add(withSession);
-    await _sync();
     unawaited(_stats?.incrementHands());
     final cat = withSession.category;
     final ev = withSession.heroEv;
@@ -82,7 +68,6 @@ class SavedHandManagerService extends ChangeNotifier {
   Future<void> update(int index, SavedHand hand) async {
     final old = _storage.hands[index];
     await _storage.update(index, hand);
-    await _sync();
     final oldExp = old.expectedAction?.trim().toLowerCase();
     final oldGto = old.gtoAction?.trim().toLowerCase();
     final newExp = hand.expectedAction?.trim().toLowerCase();
@@ -103,7 +88,6 @@ class SavedHandManagerService extends ChangeNotifier {
 
   Future<void> removeAt(int index) async {
     await _storage.removeAt(index);
-    await _sync();
   }
 
   /// Remove all hands belonging to the given session id and return them in
@@ -117,7 +101,6 @@ class SavedHandManagerService extends ChangeNotifier {
         await _storage.removeAt(i);
       }
     }
-    await _sync();
     notifyListeners();
     return removed.reversed.toList();
   }
@@ -127,7 +110,6 @@ class SavedHandManagerService extends ChangeNotifier {
     for (final hand in hands) {
       await _storage.add(hand);
     }
-    await _sync();
     notifyListeners();
   }
 

@@ -8,14 +8,12 @@ import '../main.dart';
 import 'training_stats_service.dart';
 import 'xp_tracker_service.dart';
 import 'goal_analytics_service.dart';
-import 'goal_sync_service.dart';
 
 class UserGoalEngine extends ChangeNotifier {
   static const _prefsKey = 'user_goals';
   final TrainingStatsService stats;
-  final GoalSyncService? sync;
 
-  UserGoalEngine({required this.stats, this.sync}) {
+  UserGoalEngine({required this.stats}) {
     _init();
   }
 
@@ -25,12 +23,6 @@ class UserGoalEngine extends ChangeNotifier {
 
   Future<void> _init() async {
     await _load();
-    if (sync != null && sync!.uid != null) {
-      try {
-        final remote = await sync!.download();
-        _merge(remote);
-      } catch (_) {}
-    }
     _update();
     stats.sessionsStream.listen((_) => _update());
     stats.handsStream.listen((_) => _update());
@@ -50,27 +42,6 @@ class UserGoalEngine extends ChangeNotifier {
   Future<void> _save() async {
     final prefs = await PreferencesService.getInstance();
     await prefs.setString(_prefsKey, UserGoal.encode(_goals));
-    unawaited(sync?.upload(_goals));
-  }
-
-  void _merge(List<UserGoal> remote) {
-    bool changed = false;
-    for (final r in remote) {
-      final index = _goals.indexWhere((g) => g.id == r.id);
-      if (index == -1) {
-        _goals.add(r);
-        changed = true;
-      } else {
-        final local = _goals[index];
-        final localAt = local.completedAt ?? local.createdAt;
-        final remoteAt = r.completedAt ?? r.createdAt;
-        if (remoteAt.isAfter(localAt)) {
-          _goals[index] = r;
-          changed = true;
-        }
-      }
-    }
-    if (changed) unawaited(_save());
   }
 
   int _statValue(String type) {

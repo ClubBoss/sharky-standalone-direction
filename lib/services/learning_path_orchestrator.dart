@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,16 +8,11 @@ import 'starter_learning_path_builder.dart';
 
 /// Resolves the current learning path template used by the app.
 class LearningPathOrchestrator {
-  LearningPathOrchestrator._({
-    StarterLearningPathBuilder? starterBuilder,
-    FirebaseFirestore? firestore,
-  }) : _builder = starterBuilder ?? StarterLearningPathBuilder(),
-       _db = firestore ?? FirebaseFirestore.instance;
+  LearningPathOrchestrator._();
 
   static final LearningPathOrchestrator instance = LearningPathOrchestrator._();
 
-  final StarterLearningPathBuilder _builder;
-  final FirebaseFirestore _db;
+  final _builder = StarterLearningPathBuilder();
 
   Future<LearningPathTemplateV2>? _future;
 
@@ -33,13 +27,6 @@ class LearningPathOrchestrator {
     if (local != null) {
       debugPrint('LearningPathOrchestrator: loaded local path');
       return local;
-    }
-
-    final remote = await _loadRemote();
-    if (remote != null) {
-      await _saveLocal(remote);
-      debugPrint('LearningPathOrchestrator: loaded remote path');
-      return remote;
     }
 
     final starter = _builder.build();
@@ -64,17 +51,5 @@ class LearningPathOrchestrator {
   Future<void> _saveLocal(LearningPathTemplateV2 path) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefsKey, jsonEncode(path.toJson()));
-  }
-
-  Future<LearningPathTemplateV2?> _loadRemote() async {
-    try {
-      final doc = await _db.collection('learningPaths').doc('main').get();
-      if (!doc.exists) return null;
-      final data = doc.data();
-      if (data == null) return null;
-      return LearningPathTemplateV2.fromJson(Map<String, dynamic>.from(data));
-    } catch (_) {
-      return null;
-    }
   }
 }
