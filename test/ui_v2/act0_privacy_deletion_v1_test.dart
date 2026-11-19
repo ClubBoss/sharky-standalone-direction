@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_reminder_v1.dart';
@@ -93,6 +94,31 @@ void main() {
       );
       expect(await fresh.load(), isNull);
       expect(await fresh.save('{"xp":0}'), isTrue);
+    },
+  );
+
+  test(
+    'beta returns and survey are erased and queued writes stay fenced',
+    () async {
+      final first = DateTime.utc(2026, 11, 19, 12);
+      await Act0BetaMetricsStoreV1.recordVisit(first);
+      await Act0BetaMetricsStoreV1.setAnswer(0, Act0BetaSurveyAnswerV1.yes);
+      final write = Act0BetaMetricsStoreV1.recordVisit(
+        first.add(const Duration(days: 6)),
+      );
+      Act0LocalDataDeletionV1.blockOldWriters();
+      await Act0BetaMetricsStoreV1.flush();
+      await write;
+      await Act0LocalDataDeletionV1.erase();
+      expect(await Act0BetaMetricsStoreV1.read(), isNull);
+
+      final afterErase = first.add(const Duration(days: 8));
+      await Act0BetaMetricsStoreV1.recordVisit(afterErase);
+      final fresh = (await Act0BetaMetricsStoreV1.read())!;
+      expect(fresh.firstVisitUtc, afterErase);
+      expect(fresh.returnedDay2, isFalse);
+      expect(fresh.returnedDay7, isFalse);
+      expect(fresh.answers, everyElement(isNull));
     },
   );
 

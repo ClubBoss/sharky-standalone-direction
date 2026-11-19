@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'package:poker_analyzer/ui/settings/privacy_terms.dart';
 import 'act0_achievement_seed_projection_v1.dart';
+import 'act0_beta_metrics_dialog_v1.dart';
+import 'act0_beta_metrics_v1.dart';
 import 'act0_home_shell_v1.dart';
 import 'act0_play_shell_v1.dart';
 import 'act0_profile_shell_v1.dart';
@@ -180,6 +182,8 @@ Widget act0AcademyYouRuntimeV1(
   BuildContext context, {
   List<Act0W14SkillStateV1> skills = const [],
   required Act0ProfileShellV1 legacy,
+  Act0BetaLearningMetricsV1 Function()? betaLearningMetrics,
+  DateTime Function()? nowUtc,
   VoidCallback? onDeleteLocalData,
   required bool Function() isCurrent,
   required Act0AchievementSeedProjectionV1 earnedProjection,
@@ -215,6 +219,19 @@ Widget act0AcademyYouRuntimeV1(
               () => Navigator.of(context).push<void>(
                 MaterialPageRoute(
                   builder: (_) => _AcademySettingsRouteV1(
+                    onOpenBetaMetrics:
+                        betaLearningMetrics == null || nowUtc == null
+                        ? null
+                        : (routeContext) {
+                            if (!isCurrent()) return;
+                            showDialog<void>(
+                              context: routeContext,
+                              builder: (_) => Act0BetaMetricsDialogV1(
+                                learning: betaLearningMetrics(),
+                                nowUtc: nowUtc,
+                              ),
+                            );
+                          },
                     onDeleteLocalData: _guard(isCurrent, onDeleteLocalData),
                     onReplayWelcome: _guard(isCurrent, legacy.onReplayWelcome),
                     onRetakePlacement: _guard(
@@ -240,11 +257,13 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
     required this.onRetakePlacement,
     this.onRecoveryOptions,
     this.onDeleteLocalData,
+    this.onOpenBetaMetrics,
   });
   final VoidCallback? onReplayWelcome;
   final VoidCallback onRetakePlacement;
   final VoidCallback? onRecoveryOptions;
   final VoidCallback? onDeleteLocalData;
+  final void Function(BuildContext)? onOpenBetaMetrics;
   @override
   State<_AcademySettingsRouteV1> createState() =>
       _AcademySettingsRouteV1State();
@@ -334,6 +353,9 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
             },
             // Sound is withheld until actual audibility is verified on this build.
             onRetryLoad: _load,
+            onOpenBetaMetrics: widget.onOpenBetaMetrics == null
+                ? null
+                : () => widget.onOpenBetaMetrics!(context),
             onBack: () => Navigator.of(context).pop(),
             onReplayWelcome: widget.onReplayWelcome == null
                 ? null
