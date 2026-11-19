@@ -36,7 +36,7 @@ void main() {
     for (final w in worlds) {
       if (w.lessons.isEmpty) problems.add('${w.worldId}: no lessons');
       for (final l in w.lessons) {
-        if (l.taskList.isEmpty) problems.add('${l.lessonId}: no tasks');
+        if (l.courseTaskList.isEmpty) problems.add('${l.lessonId}: no tasks');
       }
     }
     final allIds = [
@@ -44,6 +44,20 @@ void main() {
         for (final l in w.lessons)
           for (final t in l.taskList) t.taskId,
     ];
+    expect(
+      _rows.where((r) => r.task.repairOnly).map((r) => r.task.taskId).toSet(),
+      {
+        'position_six_seats_position_repair_seat_id_btn',
+        'position_six_seats_position_repair_seat_id_utg',
+        'button_advantage_position_repair_btn_last_postflop',
+        'early_vs_late_position_repair_utg_players_behind',
+        'same_hand_different_seat_position_repair_same_hand_different_seat',
+      },
+    );
+    expect(
+      worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
+      hasLength(364),
+    );
     final seen = <String>{};
     for (final id in allIds) {
       if (!seen.add(id)) problems.add('$id: task id used twice');

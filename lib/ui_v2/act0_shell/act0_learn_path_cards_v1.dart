@@ -291,8 +291,10 @@ class _PathCardV1 extends StatelessWidget {
     final isCompletedQuiet = isCompleted && !selected && !expanded;
     final isInProgress =
         isCurrent &&
-        lesson.taskList.any((t) => pathClosedTaskIds.contains(t.taskId)) &&
-        lesson.taskList.any((t) => !pathClosedTaskIds.contains(t.taskId));
+        lesson.courseTaskList.any(
+          (t) => pathClosedTaskIds.contains(t.taskId),
+        ) &&
+        lesson.courseTaskList.any((t) => !pathClosedTaskIds.contains(t.taskId));
     final stateColor = _stateColor(lesson.state);
     final completedAccent = Act0ShellTokensV1.primary;
     final icon = switch (lesson.state) {
@@ -300,10 +302,10 @@ class _PathCardV1 extends StatelessWidget {
       Act0LessonStateV1.current => Icons.play_arrow_rounded,
       Act0LessonStateV1.locked => Icons.lock_rounded,
     };
-    final completedSteps = lesson.taskList
+    final completedSteps = lesson.courseTaskList
         .where((t) => pathClosedTaskIds.contains(t.taskId))
         .length;
-    final totalSteps = lesson.taskList.length;
+    final totalSteps = lesson.courseTaskList.length;
     final stepSummary = isCompleted
         ? (expanded ? '$totalSteps steps complete' : '')
         : isCurrent

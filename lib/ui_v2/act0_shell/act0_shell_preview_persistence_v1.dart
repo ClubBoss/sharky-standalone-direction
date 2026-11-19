@@ -135,7 +135,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ? persistedLesson
         : _firstPlayableLesson(selectedWorld);
     final selectedTask =
-        selectedLesson.taskList.any(
+        selectedLesson.courseTaskList.any(
               (task) => task.taskId == parsed.selectedTaskId,
             ) &&
             !closedTaskIds.contains(parsed.selectedTaskId)
@@ -256,7 +256,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         );
         _pendingDecisionAssistanceV1[receipt.key] = receipt;
       }
-      final hasPriorLessonProgress = selectedLesson.taskList.any(
+      final hasPriorLessonProgress = selectedLesson.courseTaskList.any(
         (task) => completedTaskIds.contains(task.taskId),
       );
       final hasPriorLessonEvidence = parsed.learningEvidenceHistory.records.any(

@@ -161,27 +161,12 @@ void main() {
         expect(target!.phase, Act0LessonPhaseV1.drill);
         expect(target.taskId, isNot(source.taskId));
         expect(target.runner.question, isNot(source.runner.question));
-        if (row.sourceTaskId == 'what_poker_is_find_hero') {
-          // This cross-world target is a narrowly pinned seat-identity drill:
-          // W1 already introduces BTN and preflop order; the W3 repair asks
-          // only to locate the dealer-marked BTN seat.
-          expect(row.sourceWorldId, 'world_1');
-          expect(row.sourceLessonId, 'what_poker_is');
-          expect(row.targetWorldId, 'world_3');
-          expect(row.targetLessonId, 'position_six_seats');
-          expect(
-            row.targetTaskId,
-            'position_six_seats_position_repair_seat_id_btn',
-          );
-          expect(row.requiresFutureKnowledge, isFalse);
-        } else {
-          expect(
-            int.parse(row.targetWorldId!.substring('world_'.length)),
-            lessThanOrEqualTo(
-              int.parse(row.sourceWorldId.substring('world_'.length)),
-            ),
-          );
-        }
+        expect(
+          int.parse(row.targetWorldId!.substring('world_'.length)),
+          lessThanOrEqualTo(
+            int.parse(row.sourceWorldId.substring('world_'.length)),
+          ),
+        );
       }
     }
     expect(counts, <Act0RepairGapOutcomeV1, int>{
@@ -208,10 +193,7 @@ void main() {
       w1HeroButton.outcome,
       Act0RepairGapOutcomeV1.alternateSameSignalTarget,
     );
-    expect(
-      w1HeroButton.targetTaskId,
-      'position_six_seats_position_repair_seat_id_btn',
-    );
+    expect(w1HeroButton.targetTaskId, 'cards_ranks_suits_private_board');
     final coPlayersBehind = rows.singleWhere(
       (row) =>
           row.sourceTaskId ==

@@ -30,25 +30,7 @@
     "your_first_hand_turn|Button (BTN)",
     "your_first_hand_turn|Positions (UTG, HJ, CO)"
   ],
-  "exactRepeatsOutsideBudget": [
-    "apply_recap|fold_discipline_fold_recap",
-    "button_advantage_find_button|positions_button",
-    "continue_or_let_go_continue_intro|hand_discipline_buckets_intro",
-    "continue_or_let_go_premium_continue|hand_discipline_buckets_premium",
-    "continue_or_let_go_weak_let_go|fold_discipline_facing_fold",
-    "early_vs_late_w2_position_intro|button_advantage_button_intro",
-    "fold_discipline_discipline_intro|actions_fold_drill",
-    "position_apply_early_fold|same_hand_different_seat_same_hand_early_fold",
-    "position_apply_intro|button_advantage_button_intro",
-    "position_apply_late_open|same_hand_different_seat_same_hand_late_open",
-    "position_checkpoint_position_checkpoint_late_open|same_hand_different_seat_same_hand_late_open",
-    "position_checkpoint_position_checkpoint_review|same_hand_different_seat_same_hand_late_open",
-    "showdown_best_hand_drill|what_poker_is_showdown_win",
-    "showdown_foldout_drill|showdown_theory",
-    "weak_ace_warning_w3_dominated_fold|fold_discipline_discipline_stack_protect"
-  ],
-  "questionOverridesInheritingOptions": [
-    "_worldOneCheckpointRunner|_showdownBestHandRunner"
-  ],
+  "exactRepeatsOutsideBudget": [],
+  "questionOverridesInheritingOptions": [],
   "wrongFeedbackEqualsCorrect": []
 }

@@ -335,6 +335,14 @@ void main() {
         choice['repairLabels'] = <String>[];
       }
     }
+    final checkpointPrice =
+        expectedComparison['w4_checkpoint_price'] as Map<String, dynamic>;
+    for (final choice
+        in (checkpointPrice['options'] as List).cast<Map<String, dynamic>>()) {
+      final isCall = choice['id'] == 'call';
+      choice['correct'] = isCall;
+      choice['quality'] = isCall ? 'correct' : 'wrong';
+    }
     expect(
       historicalComparison,
       expectedComparison,

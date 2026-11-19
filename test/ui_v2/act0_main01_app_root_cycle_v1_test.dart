@@ -1511,17 +1511,17 @@ void main() {
       'world_4',
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
-    final tasks = [for (final lesson in lessons) ...lesson.taskList];
+    final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
     expect(lessons, hasLength(29));
-    expect(tasks, hasLength(181));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(181));
+    expect(tasks, hasLength(176));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(176));
     expect(
       tasks.where(
         (task) =>
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(146),
+      hasLength(141),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();
@@ -1598,7 +1598,7 @@ void main() {
         final world = worlds[index];
         final ids = {
           for (final lesson in world.lessons)
-            for (final task in lesson.taskList) task.taskId,
+            for (final task in lesson.courseTaskList) task.taskId,
         };
         if (!remountedWorlds.contains(world.worldId) &&
             completed.containsAll(ids)) {
@@ -1633,7 +1633,7 @@ void main() {
         final lesson = lessons.singleWhere(
           (lesson) => lesson.lessonId == saved['selectedLessonId'],
         );
-        final outstanding = lesson.taskList
+        final outstanding = lesson.courseTaskList
             .where((task) => !completed.contains(task.taskId))
             .map((task) => task.taskId)
             .toList();

@@ -463,7 +463,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (!preferDrill || firstIncomplete.phase == Act0LessonPhaseV1.drill) {
       return firstIncomplete;
     }
-    return lesson.taskList.firstWhere(
+    return lesson.courseTaskList.firstWhere(
       (task) =>
           task.phase == Act0LessonPhaseV1.drill &&
           _taskAvailable(lesson, task.taskId),
@@ -478,7 +478,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (!preferDrill) {
       return _firstIncompleteTask(lesson);
     }
-    for (final task in lesson.taskList) {
+    for (final task in lesson.courseTaskList) {
       if (task.phase == Act0LessonPhaseV1.drill) {
         return task;
       }

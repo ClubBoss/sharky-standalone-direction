@@ -267,14 +267,15 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
         : const _Act0WorldRetentionSeedResultV1();
     final lessonPerfectClearCount = _perfectTaskIds()
         .where(
-          (taskId) =>
-              selectedLesson.taskList.any((task) => task.taskId == taskId),
+          (taskId) => selectedLesson.courseTaskList.any(
+            (task) => task.taskId == taskId,
+          ),
         )
         .length;
     final lessonOpenMistakeCount = _openMistakeCountForLessonV1(selectedLesson);
     // Scored drills emit completed evidence; theory and review/navigation
     // stages cannot inflate the lesson assessment denominator.
-    final assessedTaskIds = selectedLesson.taskList
+    final assessedTaskIds = selectedLesson.courseTaskList
         .where((task) => task.phase == Act0LessonPhaseV1.drill)
         .map((task) => task.taskId)
         .toSet();
@@ -388,14 +389,14 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
           : lessonPerfectClearCount,
       completedClearCount: isWorldComplete
           ? _completedTaskCountForWorldV1(progressedWorld)
-          : selectedLesson.taskList.length,
+          : selectedLesson.courseTaskList.length,
       hasSafeReviewTarget: isWorldComplete
           ? worldOpenMistakeCount > 0
           : lessonOpenMistakeCount > 0,
       hasReplayForPerfectTarget:
           !isWorldComplete &&
           lessonOpenMistakeCount == 0 &&
-          lessonPerfectClearCount < selectedLesson.taskList.length,
+          lessonPerfectClearCount < selectedLesson.courseTaskList.length,
       futureRecheckCount: worldRetentionSeed.recheckCount,
       futureProveCount: worldRetentionSeed.proveCount,
     );
@@ -645,7 +646,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
         ? _lessonById(normalizedWorld.lessons, _learnDetailLessonId!)
         : normalizedLesson;
     if (_learnPopupTaskId != null &&
-        !popupOwnerLesson.taskList.any(
+        !popupOwnerLesson.courseTaskList.any(
           (task) => task.taskId == _learnPopupTaskId,
         )) {
       _learnPopupTaskId = null;
@@ -688,13 +689,15 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     Act0LessonCardV1 lesson,
     Set<String> completedTaskIds,
   ) {
-    return lesson.taskList.firstWhere(
+    return lesson.courseTaskList.firstWhere(
       (task) => !completedTaskIds.contains(task.taskId),
-      orElse: () => lesson.taskList.first,
+      orElse: () => lesson.courseTaskList.first,
     );
   }
 
   bool _taskAvailable(Act0LessonCardV1 lesson, String taskId) {
+    if (!lesson.courseTaskList.any((task) => task.taskId == taskId))
+      return false;
     if (_completedTaskIds.contains(taskId)) {
       return true;
     }
@@ -726,19 +729,23 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   }
 
   int _taskIndex(Act0LessonCardV1 lesson, String taskId) {
-    final index = lesson.taskList.indexWhere((task) => task.taskId == taskId);
+    final index = lesson.courseTaskList.indexWhere(
+      (task) => task.taskId == taskId,
+    );
     return index < 0 ? 0 : index;
   }
 
   Act0LessonTaskV1? _nextTask(Act0LessonCardV1 lesson, String taskId) {
-    final index = _taskIndex(lesson, taskId);
-    if (index >= 0 && index + 1 < lesson.taskList.length) {
-      return lesson.taskList[index + 1];
+    final index = lesson.courseTaskList.indexWhere(
+      (task) => task.taskId == taskId,
+    );
+    if (index >= 0 && index + 1 < lesson.courseTaskList.length) {
+      return lesson.courseTaskList[index + 1];
     }
     // End of the list. A route that jumped over a task (the Action sequence
     // skips its legal-context node) must still visit it before the lesson
     // ends; otherwise the lesson never completes and only "replay" is left.
-    for (final task in lesson.taskList) {
+    for (final task in lesson.courseTaskList) {
       if (task.taskId != taskId &&
           !_completedTaskIds.contains(task.taskId) &&
           !_lessonRunMistakeTaskIds.contains(task.taskId)) {

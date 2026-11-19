@@ -149,7 +149,7 @@ String _cards(List<Act0CardStateV1> cards) {
 
 Set<String> _exactRepeatViolations() {
   final firstIds = <Object, String>{};
-  final allowedRepeatUsed = <Object>{};
+  var allowedRepeatUsed = false;
   final findings = <String>{};
   for (final row in _route) {
     final runner = row.task.runner;
@@ -171,8 +171,10 @@ Set<String> _exactRepeatViolations() {
     final inReview =
         row.task.phase == Act0LessonPhaseV1.review ||
         row.lesson.endsWith('_checkpoint');
-    if (!inReview || !allowedRepeatUsed.add(key)) {
+    if (!inReview || allowedRepeatUsed) {
       findings.add('${row.task.taskId}|$first');
+    } else {
+      allowedRepeatUsed = true;
     }
   }
   return findings;

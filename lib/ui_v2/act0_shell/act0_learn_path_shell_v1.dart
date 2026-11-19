@@ -517,17 +517,17 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       }
     }
     routeLesson ??= widget.lessons.isEmpty ? null : widget.lessons.first;
-    if (routeLesson == null || routeLesson.taskList.isEmpty) {
+    if (routeLesson == null || routeLesson.courseTaskList.isEmpty) {
       return null;
     }
     Act0LessonTaskV1? routeTask;
-    for (final task in routeLesson.taskList) {
+    for (final task in routeLesson.courseTaskList) {
       if (task.taskId == widget.selectedTaskId) {
         routeTask = task;
         break;
       }
     }
-    routeTask ??= routeLesson.taskList.first;
+    routeTask ??= routeLesson.courseTaskList.first;
     return act0AcademyTaskTitleV1(context, routeTask);
   }
 
@@ -620,12 +620,12 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
         orElse: () => widget.lessons.first,
       ),
     );
-    final currentMissionTask = currentMissionLesson.taskList.firstWhere(
+    final currentMissionTask = currentMissionLesson.courseTaskList.firstWhere(
       (task) => !widget.pathClosedTaskIds.contains(task.taskId),
-      orElse: () => currentMissionLesson.taskList.first,
+      orElse: () => currentMissionLesson.courseTaskList.first,
     );
     final currentMissionStepIndex =
-        currentMissionLesson.taskList.indexWhere(
+        currentMissionLesson.courseTaskList.indexWhere(
           (task) => task.taskId == currentMissionTask.taskId,
         ) +
         1;
@@ -640,8 +640,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
         : widget.lessons
                   .where(
                     (lesson) =>
-                        lesson.taskList.isNotEmpty &&
-                        lesson.taskList.every(
+                        lesson.courseTaskList.isNotEmpty &&
+                        lesson.courseTaskList.every(
                           (task) =>
                               widget.completedTaskIds.contains(task.taskId),
                         ),

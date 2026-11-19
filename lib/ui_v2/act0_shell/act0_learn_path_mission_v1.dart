@@ -46,7 +46,7 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
     final panelAccent = locked
         ? Act0ShellTokensV1.textDim
         : Act0ShellTokensV1.primary;
-    final tasks = lesson.taskList;
+    final tasks = lesson.courseTaskList;
     final lessonSubtitle = act0AcademyLessonSubtitleV1(context, lesson);
     final lessonSubtitleBlocks = act0BuildInstructionBlocksV1(
       text: lessonSubtitle,

@@ -88,7 +88,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           lesson: currentMissionLesson,
           task: currentMissionTask,
           stepIndex: currentMissionStepIndex,
-          totalSteps: currentMissionLesson.taskList.length,
+          totalSteps: currentMissionLesson.courseTaskList.length,
           accent: Act0AcademyDesignTokensV1.focus,
           detailMode: detailMode,
           firstLessonLanding: firstLessonLanding,
@@ -545,12 +545,16 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
     final isCompleted = lesson.state == Act0LessonStateV1.completed;
     final isEarnedCompleted =
         isCompleted &&
-        lesson.taskList.isNotEmpty &&
-        lesson.taskList.every((task) => completedTaskIds.contains(task.taskId));
+        lesson.courseTaskList.isNotEmpty &&
+        lesson.courseTaskList.every(
+          (task) => completedTaskIds.contains(task.taskId),
+        );
     final isPlacementCleared =
         isCompleted &&
         !isEarnedCompleted &&
-        lesson.taskList.any((task) => skippedTaskIds.contains(task.taskId));
+        lesson.courseTaskList.any(
+          (task) => skippedTaskIds.contains(task.taskId),
+        );
     final isCurrent = lesson.state == Act0LessonStateV1.current;
     final isLocked = lesson.state == Act0LessonStateV1.locked;
     final accent = isNextUp

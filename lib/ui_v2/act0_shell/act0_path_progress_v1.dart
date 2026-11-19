@@ -41,7 +41,7 @@ bool act0LessonCompleteWithTaskIdsV1(
   Act0LessonCardV1 lesson,
   Set<String> completedTaskIds,
 ) {
-  return lesson.taskList.every(
+  return lesson.courseTaskList.every(
     (task) => completedTaskIds.contains(task.taskId),
   );
 }
