@@ -23552,7 +23552,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       heroCards: _heroAJsCards,
       boardCards: _boardA84TwoToneCards,
       streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
+      potLabel: 'Pot 13 BB',
       toCallLabel: 'To call 5 BB',
       centerLabel: 'BTN, top pair, 30 BB',
       actionTrail: const <Act0ActionTrailItemV1>[
@@ -23589,7 +23589,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Integrated read.',
       feedbackReason:
-          'Position, top pair, and a still-manageable stack depth support a continue, but the bigger price and two-tone board argue for control rather than immediate escalation.',
+          'A 5 BB call brings the current 13 BB pot to 18 BB. That makes the immediate equity threshold about 28%. Top pair and position support a call in this example.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_to_pressure',
@@ -24025,7 +24025,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       heroCards: _heroKqCards,
       boardCards: _boardK7294Cards,
       streetLabel: 'River',
-      potLabel: 'Pot 20 BB',
+      potLabel: 'Pot 38 BB',
       toCallLabel: 'To call 18 BB',
       centerLabel: 'Top pair, bad river price',
       actionTrail: const <Act0ActionTrailItemV1>[
@@ -24053,7 +24053,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Calm fold.',
       feedbackReason:
-          'Calling 18 BB contests 56 BB after your call, so you need about 32% equity if the call closes the action. The tight player’s repeated betting is the reason to be cautious.',
+          'Calling 18 BB adds to the current 38 BB pot. You need about 32% equity if the call closes the action. The tight player’s repeated betting is the reason to be cautious.',
     ),
     Act0RunnerOptionV1(
       id: 'hero_call',
