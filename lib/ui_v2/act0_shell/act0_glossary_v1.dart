@@ -163,9 +163,9 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
   ),
   Act0GlossaryTermV1(
     'First in',
-    r'\bfirst in\b',
-    'The first player to put chips in voluntarily before the flop, when '
-        'everyone before folded.',
+    r'\bfirst[- ]in\b',
+    'Entering the pot before the flop when nobody else has put chips in '
+        'voluntarily. Forced blinds do not count as entering.',
     teachOrderChecked: true,
   ),
   Act0GlossaryTermV1(
@@ -175,7 +175,90 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
     inline: r'value bet wants weaker hands to call',
     teachOrderChecked: true,
   ),
+  Act0GlossaryTermV1(
+    'Open / opener',
+    r'\bopen\s*/\s*opener\b|\b(?:unopened pot|open(?:-raise|ing|ed|er|s)? (?:the pot|first|fewer|too loose|weak|from|here|[0-9])|(?:an?|first|CO|HJ|UTG|BB) open|opened\b|opener\b|open-or-fold)',
+    'An open is the first raise before the flop when nobody has entered '
+        'voluntarily. The player who makes that raise is the opener.',
+  ),
+  Act0GlossaryTermV1(
+    'In position',
+    r'\b(?:in|out of) position\b',
+    'You are in position against a player when you act after them in '
+        'the usual order after the flop.',
+  ),
+  Act0GlossaryTermV1(
+    'Bluff',
+    r'\bbluff(?:s|ing)?\b',
+    'A bet or raise that tries to make a better hand fold.',
+  ),
+  Act0GlossaryTermV1(
+    'Protection',
+    r'\bprotect(?:ion bets?|ion)\b',
+    'Betting so an opponent with a weaker hand has to pay to see the '
+        'next card. If they fold, they give up their chance to improve.',
+  ),
+  Act0GlossaryTermV1(
+    'One-third pot',
+    r'\bone-third(?:[- ]pot)?\b',
+    'A bet equal to one-third of the pot before the bet. Into 6 BB, '
+        'that is 2 BB.',
+  ),
+  Act0GlossaryTermV1(
+    'Half-pot',
+    r'\bhalf[- ]pot\b',
+    'A bet equal to half of the pot before the bet. Into 6 BB, '
+        'that is 3 BB.',
+  ),
+  Act0GlossaryTermV1(
+    'Pot-size',
+    r'\bpot[- ]size\b',
+    'A bet equal to the pot before the bet. Into 6 BB, that is 6 BB.',
+  ),
   // Hands.
+  Act0GlossaryTermV1(
+    'Broadway',
+    r'\bbroadways?\b',
+    'The broadway ranks are ten, jack, queen, king and ace. A broadway '
+        'starting hand has two cards from those ranks.',
+  ),
+  Act0GlossaryTermV1(
+    'Dominated',
+    r'\bdominat(?:ed|es|ion)\b',
+    'When starting hands share a rank, the hand with the lower other '
+        'card is often dominated. For example, ace-seven has the lower '
+        'other card against ace-king.',
+  ),
+  Act0GlossaryTermV1(
+    'Top pair',
+    r'\btop pair\b',
+    'A pair made by matching one of your private cards with the highest '
+        'rank on the board.',
+  ),
+  Act0GlossaryTermV1(
+    'Middle pair',
+    r'\b(?:middle|second) pair\b',
+    'On the flop, a pair made by matching one of your private cards with '
+        'the second-highest rank on the board.',
+  ),
+  Act0GlossaryTermV1(
+    'Set',
+    r'^set$|\b(?:a set|trips and sets|top set|middle set|bottom set)\b',
+    'Three cards of the same rank made with a pair in your private cards '
+        'and one card on the board.',
+  ),
+  Act0GlossaryTermV1(
+    'Flush draw',
+    r'\bflush draws?\b',
+    'Four cards of the same suit between your hand and the board. One '
+        'more card of that suit would make a flush.',
+  ),
+  Act0GlossaryTermV1(
+    'Dry board',
+    r'\bdry (?:board|flop)\b',
+    'A board whose cards give players few ways to complete a straight '
+        'or a flush on the next card.',
+  ),
   Act0GlossaryTermV1(
     'Suited',
     r'\bsuited\b',
