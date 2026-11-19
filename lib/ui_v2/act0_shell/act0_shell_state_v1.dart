@@ -14760,7 +14760,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the HJ row.',
       feedbackReason:
-          'The Sharky starting chart opens KTo from CO or BTN. Fold it from HJ here. Experienced players sometimes use a wider opening range.',
+          'The Sharky starting chart opens KTo from CO or BTN. Fold it from HJ here. Experienced players sometimes open KTo from HJ as well.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -15443,7 +15443,7 @@ final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Disciplined fold.',
       feedbackReason:
-          'The Sharky starting chart folds A7o on BTN against a CO raise because stronger aces can win when both players pair their ace. Experienced players sometimes continue with a wider range.',
+          'The Sharky starting chart folds A7o on BTN against a CO raise because stronger aces can win when both players pair their ace. Experienced players sometimes continue with more hands.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
