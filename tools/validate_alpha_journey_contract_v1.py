@@ -54,11 +54,14 @@ def validate_action_fixture(contract_path: Path, contract: dict) -> None:
     lessons = fixture.get("completed_lesson_ids")
     if not isinstance(lessons, list) or lessons != [
         "what_poker_is",
-        "what_poker_is_content",
         "cards_ranks_suits",
+        "hand_rankings_table",
+        "hand_rankings_upper",
         "your_first_hand",
+        "blinds_action_order",
+        "positions",
     ]:
-        raise SystemExit("P1 Action fixture must represent the exact four completed prerequisites")
+        raise SystemExit("P1 Action fixture must represent the exact completed prerequisites before Action")
     target = fixture.get("target")
     if not isinstance(target, dict) or target.get("lesson_id") != "fold_check_call_raise" or target.get("task_id") != "actions_theory":
         raise SystemExit("P1 Action fixture must start before Action theory")

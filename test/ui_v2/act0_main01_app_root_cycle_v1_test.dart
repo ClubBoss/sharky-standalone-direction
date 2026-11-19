@@ -1915,7 +1915,15 @@ void main() {
       completed['earnedXp'],
       tasks.fold<int>(0, (sum, task) => sum + task.rewardXp),
     );
-    expect(completed['studyObservations'], hasLength(29));
+    final studyObservations = (completed['studyObservations'] as List)
+        .cast<Map<String, dynamic>>();
+    expect(studyObservations, hasLength(28));
+    expect(
+      studyObservations
+          .where((row) => row['lessonId'] == 'blinds_action_order')
+          .map((row) => row['taskId']),
+      ['positions_theory', 'blinds_theory'],
+    );
     expect(w4OfferedSequenceTrace.map((row) => row['task_id']).toList(), [
       'w4_purpose_intro',
       'w4_value_purpose',

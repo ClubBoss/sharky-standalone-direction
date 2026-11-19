@@ -6,9 +6,12 @@
   "world_id": "world_1",
   "completed_lesson_ids": [
     "what_poker_is",
-    "what_poker_is_content",
     "cards_ranks_suits",
-    "your_first_hand"
+    "hand_rankings_table",
+    "hand_rankings_upper",
+    "your_first_hand",
+    "blinds_action_order",
+    "positions"
   ],
   "target": {
     "lesson_id": "fold_check_call_raise",

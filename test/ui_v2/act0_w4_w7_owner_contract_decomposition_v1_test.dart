@@ -22,11 +22,11 @@ void main() {
       );
       expect(world4.lessons.map((lesson) => lesson.lessonId), <String>[
         'why_bets_happen',
+        'small_half_pot',
+        'call_price',
         'value_bets',
         'bluff_pressure',
         'protection_and_denial',
-        'call_price',
-        'small_half_pot',
         'price_checkpoint',
       ]);
 

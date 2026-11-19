@@ -72,7 +72,11 @@ void main() {
   );
 
   test('plain seat labels stay unchanged', () {
-    final history = _mistake('positions_button', 'co', lesson: 'positions');
+    final history = _mistake(
+      'positions_button',
+      'co',
+      lesson: 'blinds_action_order',
+    );
     expect(
       _consume(history).items.single.decisionLine,
       'You chose CO; better was BTN.',

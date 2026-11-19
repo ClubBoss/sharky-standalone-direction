@@ -186,7 +186,7 @@ void main() {
             final source = table.actionTrail[step.order];
             expect(source.isNote, isFalse, reason: task.taskId);
             expect(
-              source.label.trim(),
+              source.learnerLabel.trim(),
               endsWith(step.actionSummary),
               reason: '${task.taskId}: a history must not invent actions',
             );

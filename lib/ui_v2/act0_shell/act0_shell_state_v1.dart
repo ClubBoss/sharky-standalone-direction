@@ -195,7 +195,7 @@ class Act0ShellStateV1 {
     streakDays: 3,
     dailyGoalLabel: 'Daily goal',
     dailyGoalValue: '5 minutes today',
-    pathProgressLabel: '4 of 9 lessons complete',
+    pathProgressLabel: '4 of 10 lessons complete',
     selectedWorldId: 'world_1',
     worlds: _act0PreviewWorlds,
     lessons: _pokerFromZeroLessons,
@@ -1717,7 +1717,7 @@ Act0RunnerStateV1 _act0NeutralSeatAssessmentPreservingTeachingV1(
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
-    title: 'Your cards and the pot',
+    title: 'First Table Guide',
     subtitle: 'Find your cards, the shared board, and the chips in the middle.',
     state: Act0LessonStateV1.completed,
     phaseLabel: 'Start',
@@ -4623,16 +4623,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_purpose_intro',
         title: 'Bet purpose',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4PurposeIntroRunner.copyWith(
-          teachingSteps: const <Act0TeachingStepV1>[
-            Act0TeachingStepV1(
-              title: 'Purpose first.',
-              body:
-                  'Name the bet purpose first. Value means worse hands can still call. A bluff tries to make better hands fold. Protection makes the next card cost money.',
-              focusLabels: <String>['Value', 'Bluff', 'Protection'],
-            ),
-          ],
-        ),
+        runner: _world4PurposeIntroRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -13560,7 +13551,12 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Groups and seats, before a raise.',
       body:
-          '6-max micro-stakes practice, with opponents defending strong hands. Use the first matching row.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ or AJ suited | Open from UTG through BTN.\n\nMedium | 99–22, AQ offsuit, KQ, QJ suited, AJ offsuit, AT, KT, QT | Open AQ offsuit and KQ from HJ or later. With the other hands in this row, use CO or BTN.\n\nWeak | Other hands in this course model | Fold.',
+          'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ or AJ suited | Open from UTG through BTN.\n\nMedium | 99–22, AQ offsuit, KQ, QJ suited, AJ offsuit, AT, KT, QT | Open AQ offsuit, KQ and AT from HJ or later. With the other hands in this row, use CO or BTN.\n\nWeak | Other hands in this course model | Fold.',
+    ),
+    Act0TeachingStepV1(
+      title: 'On BTN after a raise.',
+      body:
+          'Against one HJ or CO raise, this chart calls on BTN with KQo, KJs or QJs. It folds Weak hands such as A7o and J8o. Read the opener, your seat, and your cards before applying the rule.',
     ),
     Act0TeachingStepV1(
       title: 'Read the match-up.',
@@ -13714,8 +13710,7 @@ final _world3ButtonOpenRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'Folded to BTN with KTs.',
   hint: 'First in and late position: opening is the clean action.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple first-in action?',
+  question: 'By the Sharky starting chart, what is the simple first-in action?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Late playable hand.',
@@ -13767,7 +13762,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
   caption: 'Folded to CO with AJo.',
   hint: 'Cutoff is late, but Button and blinds still remain behind.',
   question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the cleaner first-in action from CO?',
+      'By the Sharky starting chart, what is the cleaner first-in action from CO?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise',
@@ -13893,8 +13888,7 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'Unopened pot. Hero is early with J8o.',
   hint: 'Early position removes the comfort from weak offsuit hands.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
+  question: 'By the Sharky starting chart, what is the clean action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14128,8 +14122,7 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'CO opened. Hero is BTN with KQo.',
   hint: 'Playable hand in position: call keeps the hand in.',
-  question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the simple response?',
+  question: 'By the Sharky starting chart, what is the simple response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14179,7 +14172,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
   hint:
       'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
   question:
-      '6-max micro-stakes practice: assume HJ raises with many hands, and CO and the blinds fold. What is your decision in this model?',
+      'By the Sharky starting chart, what is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14267,7 +14260,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
   hint:
       'Playable suited broadways can continue, but the reason is still seat plus hand class.',
   question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision in this model?',
+      'By the Sharky starting chart, what is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14365,28 +14358,28 @@ final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
   ],
 );
 
-final _world3WeakFacingFoldPressureRunner = _world3WeakFacingFoldRunner.copyWith(
-  lessonId: 'w3_weak_facing_fold_pressure',
-  hint: 'Late position adds comfort, not permission.',
-  question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What does discipline say here?',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Comfort is not a rescue.',
-      body: 'J8o stays too weak even when the Button acts after the opener.',
-      focusSeatIds: <String>['btn'],
-      focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['J8o', 'Still fold'],
-    ),
-  ],
-);
+final _world3WeakFacingFoldPressureRunner = _world3WeakFacingFoldRunner
+    .copyWith(
+      lessonId: 'w3_weak_facing_fold_pressure',
+      hint: 'Late position adds comfort, not permission.',
+      question: 'By the Sharky starting chart, what does discipline say here?',
+      teachingSteps: const <Act0TeachingStepV1>[
+        Act0TeachingStepV1(
+          title: 'Comfort is not a rescue.',
+          body:
+              'J8o stays too weak even when the Button acts after the opener.',
+          focusSeatIds: <String>['btn'],
+          focusCardIds: <String>['hero_0', 'hero_1'],
+          focusLabels: <String>['J8o', 'Still fold'],
+        ),
+      ],
+    );
 
 final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_position_btn_call_kjs',
   caption: 'HJ opened. Hero is BTN with KJs.',
   hint: 'Late position helps when the hand can still continue cleanly.',
-  question:
-      '6-max micro-stakes practice: assume HJ raises with many hands, and CO and the blinds fold. What is the simple response?',
+  question: 'By the Sharky starting chart, what is the simple response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14569,8 +14562,7 @@ final _world3WeakFacingFoldRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_weak_facing_fold',
   caption: 'CO opened. Hero is BTN with J8o.',
   hint: 'Position helps, but this hand is still too weak to continue.',
-  question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the clean response?',
+  question: 'By the Sharky starting chart, what is the clean response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14619,7 +14611,7 @@ final _world3FacingOpenRecapRunner = _world3PlayableCallRunner.copyWith(
   caption: 'Lesson learned: facing an open creates a price.',
   hint: 'Playable hands can call; weak hands can still fold.',
   question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision facing the raise?',
+      'By the Sharky starting chart, what is your decision facing the raise?',
   feedbackTitle: 'Facing-open takeaway.',
   feedbackReason:
       'Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.',
@@ -14656,8 +14648,7 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonTitle: 'Position preflop',
   caption: 'Unopened pot. Hero is late with ATo.',
   hint: 'Late position supports a clean open with this playable hand.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple action?',
+  question: 'By the Sharky starting chart, what is the simple action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise',
@@ -14706,8 +14697,7 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
   lessonTitle: 'Position preflop',
   caption: 'Unopened pot. Hero is early with ATo.',
   hint: 'The same hand is less comfortable from early position.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the disciplined action?',
+  question: 'By the Sharky starting chart, what is the disciplined action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14715,9 +14705,9 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Early-seat baseline applied.',
+      feedbackTitle: 'Read the UTG row.',
       feedbackReason:
-          'The course baseline folds ATo from UTG in this unopened pot.',
+          'The Sharky starting chart opens ATo from HJ or later. Fold it from UTG here. Experienced players sometimes open ATo from earlier seats.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -14728,7 +14718,7 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Re-check ATo and UTG.',
       feedbackReason:
-          'Read ATo and UTG together. The course baseline here is Fold, not an automatic open.',
+          'UTG is earlier than HJ, where the Sharky starting chart begins opening ATo.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -14768,9 +14758,9 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Middle-seat baseline applied.',
+      feedbackTitle: 'Read the HJ row.',
       feedbackReason:
-          'The course baseline folds KTo from HJ in this unopened pot.',
+          'The Sharky starting chart opens KTo from CO or BTN. Fold it from HJ here. Experienced players sometimes use a wider opening range.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -14781,7 +14771,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Re-check KTo and HJ.',
       feedbackReason:
-          'Read KTo and HJ together. The course baseline here is Fold, not an automatic open.',
+          'HJ is before CO. The Sharky starting chart starts opening KTo from CO.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -14809,7 +14799,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Middle still needs discipline.',
       body:
-          'KTo from HJ is still too loose to auto-open just because UTG folded first.',
+          'On the Sharky chart, KTo opens from CO and BTN in an unopened pot.',
       focusSeatIds: <String>['hj'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['KTo', 'HJ', 'Fold'],
@@ -14830,7 +14820,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace discipline applied.',
       feedbackReason:
-          'The course baseline folds A9o from UTG in this unopened pot.',
+          'A9o is in the Weak group of the Sharky starting chart. Fold it from UTG here.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -14841,7 +14831,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Re-check A9o and UTG.',
       feedbackReason:
-          'Read A9o and UTG together. The course baseline here is Fold, not an automatic open.',
+          'The Sharky starting chart lists AT as a Medium hand. Ace-nine offsuit falls below that threshold.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -15443,8 +15433,7 @@ final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
   lessonTitle: 'Dominated hand warning',
   caption: 'CO opened. Hero is BTN with A7o.',
   hint: 'This can be behind stronger aces, so folding is clean.',
-  question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined response?',
+  question: 'By the Sharky starting chart, what is the disciplined response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -15454,7 +15443,7 @@ final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Disciplined fold.',
       feedbackReason:
-          'A7o can run into better aces after a CO open. Position is not enough to rescue that domination risk.',
+          'The Sharky starting chart folds A7o on BTN against a CO raise because stronger aces can win when both players pair their ace. Experienced players sometimes continue with a wider range.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -15466,7 +15455,7 @@ final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tempting, but fold.',
       feedbackReason:
-          'The ace looks tempting, but A7o is too often dominated after a CO open.',
+          'A7o is in the Weak group. If both players pair an ace, a hand like A-J can win with its higher second card.',
     ),
   ],
   table: _world3WeakFacingFoldRunner.table.copyWith(
@@ -15492,10 +15481,10 @@ final _world3DominatedRecapRunner = _world3DominatedFoldRunner.copyWith(
   caption: 'Lesson learned: familiar cards still need context.',
   hint: 'Do not continue just because one card looks high.',
   question:
-      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined action with this weak ace facing an open?',
+      'By the Sharky starting chart, what is the disciplined action with this weak ace facing an open?',
   feedbackTitle: 'Discipline takeaway.',
   feedbackReason:
-      'Some hands look playable but are often behind stronger versions after an open.',
+      'The Sharky starting chart folds A7o against a CO raise. A higher second card can win when both players pair an ace.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Trouble-hand checklist.',
@@ -15808,8 +15797,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'BTN. Pot unopened. Hero holds K♦ Q♣.',
   hint: 'Medium hand in the best seat. Raising is sharper than limping.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the best first-in action?',
+  question: 'By the Sharky starting chart, what is the best first-in action?',
   table: _world3ButtonOpenRunner.table.copyWith(
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'K', suit: 'd'),
@@ -15907,8 +15895,7 @@ final _w1DisciplineApplyEarlyFoldRunner = _world3EarlyFoldRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'UTG. Pot unopened. Hero holds 8♠ 4♦.',
   hint: 'Early position, weak bucket. Discipline says fold.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
+  question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'Discipline holds.',
   feedbackReason:
       'Early position with a weak hand needs no extra thought. Fold and wait.',
@@ -15945,11 +15932,10 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'BTN. Pot unopened. Hero holds A♠ J♦.',
   hint: 'Late position, strong hand, no one entered. Clean open.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
+  question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'Discipline confirms.',
   feedbackReason:
-      'AJo on the button is a strong late-position open when the pot is clean.',
+      'AJo is Medium. The Sharky starting chart opens it from CO or BTN when no one has raised.',
   table: _world3ButtonOpenRunner.table.copyWith(
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'A', suit: 's'),
@@ -15964,7 +15950,7 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Strong hand, good seat.',
       body:
-          'AJo is a strong bucket. BTN acts last after the flop. Pot is clean. Open.',
+          'AJo is in the Medium group. BTN acts last after the flop. Pot is clean. Open.',
       focusSeatIds: <String>['btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['AJo', 'BTN', 'Open'],
@@ -15978,8 +15964,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'HJ. Pot unopened. Hero holds K♦ Q♣.',
   hint: 'Medium hand, middle seat, unopened pot. Open with a clear reason.',
-  question:
-      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
+  question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'HJ open is clean.',
   feedbackReason:
       'KQo is a medium hand, and HJ can open it when the pot is unopened.',
@@ -16386,11 +16371,11 @@ final _world4PurposeRecapRunner = _world4PurposeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w4_purpose_recap',
   caption: 'Lesson learned: name the purpose before the size.',
-  hint: 'Value gets calls. Bluff gets folds. Protection denies free cards.',
+  hint: 'Compare what the bettor hopes a weaker or stronger hand will do.',
   question: 'What comes before the bet size?',
   feedbackTitle: 'Purpose takeaway.',
   feedbackReason:
-      'Betting gets clearer when every chip has a job: value, bluff, or protection.',
+      'With a value bet you want a weaker hand to call. With a bluff you want a stronger hand to fold.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Purpose checklist.',
@@ -16752,10 +16737,16 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Price to continue.',
+      title: 'Call 2 BB into a pot of 8 BB.',
       body:
-          'To call X into a pot of Y after the opponent’s bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.',
-      focusLabels: <String>['Pot', 'To call', 'Price'],
+          'You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.',
+      focusLabels: <String>['8 BB in the pot', '2 BB to call', '1 in 5'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Write the same chance as a percentage.',
+      body:
+          'One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.',
+      focusLabels: <String>['1 in 5', '20%'],
     ),
   ],
 );
@@ -16848,7 +16839,7 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
   caption: 'Compare the call amount with the pot.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 25% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
@@ -16902,7 +16893,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
   caption: 'Compare the call amount with the pot.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 25% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
@@ -16950,7 +16941,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
   caption: 'Compare the call amount with the pot.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 15% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
@@ -16999,7 +16990,7 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
   caption: 'Compare the call amount with the pot.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 25% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
@@ -17075,13 +17066,13 @@ final _world4SizingIntroRunner = _world4PurposeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Before and after a bet.',
       body:
-          'The pot is 6 BB before a 2 BB bet. That bet makes the pot 8 BB. Its size is one-third of the original 6 BB.',
+          'The pot is 6 BB before your opponent bets 2 BB. The bet makes the pot 8 BB. Use the original 6 BB to measure the bet.',
       focusLabels: <String>['6 BB before', '8 BB after'],
     ),
     Act0TeachingStepV1(
       title: 'Use the pot before the bet.',
       body:
-          'One-third pot means betting one-third of the pot before your bet. Half-pot means half the pot. A pot-size bet is equal to the pot.',
+          'One-third pot means betting one-third of the pot before your bet. Half-pot means half the pot. Pot-size means a bet equal to the pot before your bet.',
       focusLabels: <String>['One-third', 'Half-pot', 'Pot-size'],
     ),
   ],
@@ -17238,7 +17229,7 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
   caption: 'Compare the call amount with the pot.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 30% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',

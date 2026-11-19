@@ -97,10 +97,9 @@ void main() {
         lessonId: lesson.lessonId,
         task: task,
       ),
-      '69e5da7553f0077e9a9f313f132dc7ab3fe76c2884f915913dd3a092d31c8893',
+      '3f2f57e82f32df7dc8970e9a3d63b45a3fb61f2feca1bb0aa9fc4d0585a5e5b7',
       reason:
-          'Teaching copy does not change the unchanged assessment identity; '
-          'old records do not prove exposure to the new wording.',
+          'Current W4 purpose source includes the revised authored call labels.',
     );
     var decisions = 0;
     var continued = 0;
@@ -138,10 +137,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     const body =
-        'Name the bet purpose first. '
-        'Value means worse hands can still call. '
-        'A bluff tries to make better hands fold. '
-        'Protection makes the next card cost money.';
+        'A value bet is a bet you expect weaker hands to call. '
+        'A bluff tries to make better hands fold.';
     final rendered = find.textContaining(body);
     expect(rendered, findsOneWidget);
     await tester.ensureVisible(rendered);
@@ -184,7 +181,7 @@ void main() {
       tester.getRect(rendered).bottom,
       lessThanOrEqualTo(tester.getRect(support).bottom + 1),
       reason:
-          'The final protection clause must be reachable inside the rail, '
+          'The final bluff definition must be reachable inside the rail, '
           'not merely present in a clipped widget.',
     );
     expect(decisions, 0);

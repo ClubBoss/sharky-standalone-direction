@@ -15,7 +15,7 @@ void main() {
         ),
         (
           worldId: 'world_1',
-          lessonId: 'positions',
+          lessonId: 'blinds_action_order',
           taskId: 'positions_button',
           expectedHint: 'Start from the button, then follow seat order.',
         ),

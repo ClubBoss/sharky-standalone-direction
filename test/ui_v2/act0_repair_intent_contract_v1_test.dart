@@ -41,7 +41,7 @@ void main() {
   });
 
   test(
-    'identity versus seat-role miss does not treat partial BTN practice as a full repair',
+    'the reauthored card read holds the previous seat-role repair relation',
     () {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -71,7 +71,7 @@ void main() {
       expect(intent?.targetWorldId, 'world_1');
       expect(intent?.targetLessonId, 'what_poker_is');
       expect(intent?.targetTaskId, task.taskId);
-      expect(intent?.goalId, 'player_identity_and_seat_role');
+      expect(intent?.goalId, isEmpty);
       expect(intent?.mappingType, 'unresolved_product_gap');
       expect(
         intent?.reasonCode,
