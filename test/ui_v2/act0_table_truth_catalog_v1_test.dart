@@ -390,11 +390,19 @@ void main() {
         .singleWhere((choice) => choice['id'] == 'call');
     expect(limpChoice['repairLabels'], ['Limp legal', 'Raise sharper', 'BTN']);
     limpChoice['repairLabels'] = ['Call 1 BB', 'Chart says raise', 'BTN'];
+    final w6ValueOptions =
+        (expectedComparison['w6_value_range_action']
+                as Map<String, dynamic>)['options']
+            as List;
+    final oldFold = w6ValueOptions.cast<Map<String, dynamic>>().singleWhere(
+      (option) => option['id'] == 'fold',
+    );
+    oldFold['id'] = 'bet_bluff'; // BB checked; folding is not an offered line.
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24 and L1 fields may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1 and L2 fields may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

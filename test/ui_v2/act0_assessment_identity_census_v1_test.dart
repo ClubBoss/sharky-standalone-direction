@@ -647,8 +647,50 @@ void main() {
       ],
     };
     final beforeL1 = jsonDecode(encoded) as List<dynamic>;
+    const l2OptionDeltas = {
+      'w6_value_range_action': (
+        [
+          ['check', 'Check and see', false, 'suboptimal', 'Bet for value'],
+          ['bet_bluff', 'Bet as a bluff', false, 'wrong', 'Bet for value'],
+          ['bet', 'Bet for value', true, 'correct', 'Bet for value'],
+        ],
+        [
+          ['check', 'Check and see', false, 'suboptimal', 'Bet for value'],
+          ['fold', 'Fold', false, 'wrong', 'Bet for value'],
+          ['bet', 'Bet for value', true, 'correct', 'Bet for value'],
+        ],
+      ),
+      'w7_fullring_tighter': (
+        [
+          ['tighter', 'Open fewer hands', true, 'correct', 'Open fewer hands'],
+          ['wider', 'Open more hands', false, 'wrong', 'Open fewer hands'],
+          [
+            'depth',
+            'Only stack depth matters',
+            false,
+            'suboptimal',
+            'Open fewer hands',
+          ],
+        ],
+        [
+          ['tighter', 'Range tightens', true, 'correct', 'Range tightens'],
+          ['wider', 'Range widens more', false, 'wrong', 'Range tightens'],
+          [
+            'depth',
+            'Only stack depth matters',
+            false,
+            'suboptimal',
+            'Range tightens',
+          ],
+        ],
+      ),
+    };
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
+      if (l2OptionDeltas[row[2]] case (final current, final prior)) {
+        expect(row[5], current, reason: row[2] as String);
+        row[5] = prior;
+      }
       final options =
           priorL1Options[row[2]] ??
           priorL1TeachingOptions[row[2]] ??

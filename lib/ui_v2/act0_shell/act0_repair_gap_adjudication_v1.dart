@@ -820,6 +820,7 @@ class Act0RepairGoalContractV1 {
     'last_actor_after_flop' => 'Last seat after the flop',
     'early_seat_players_behind' => 'Players left to act',
     'same_hand_different_seat' => 'Same hand from two seats',
+    'value_bet_purpose' => 'Why you bet',
     _ => 'Repair not confirmed',
   };
   // Neither familiar vocabulary practice nor definition replay is application.
@@ -828,6 +829,32 @@ class Act0RepairGoalContractV1 {
 }
 
 const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_6',
+    sourceLessonId: 'range_pressure_lines',
+    sourceTaskId: 'w6_value_range_action',
+    sourceChoiceId: 'bet_bluff',
+    sourceCorrectChoiceId: 'bet',
+    sourceFingerprint:
+        '6c7f31f299e5018fbd788fc9df4ab0df14f45be2f21fbd6a5427d22b3c5f8800',
+    sourceQuestion: 'What does K-Q do here?',
+    sourceChoiceReason:
+        'A weaker pair can call here. The bet aims to get called by worse, rather than to make a better hand fold.',
+    sourceChoiceLabel: 'Bet as a bluff',
+    goalId: 'value_bet_purpose',
+    misconceptionId: 'value_bet_seen_as_bluff',
+    relationId: 'w6_value_range_action_bet_bluff_v1',
+    targetWorldId: 'world_6',
+    targetLessonId: 'range_pressure_lines',
+    targetTaskId: 'w6_value_range_action',
+    targetFingerprint:
+        '6c7f31f299e5018fbd788fc9df4ab0df14f45be2f21fbd6a5427d22b3c5f8800',
+    targetCorrectChoiceId: 'bet',
+    targetChoiceIds: <String>{'bet', 'check', 'bet_bluff'},
+    evidenceClass: 'intentional_exact_replay',
+    mappingType: 'intentional_exact',
+    requireCapturedGoalWitness: true,
+  ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_3",
     sourceLessonId: "same_hand_different_seat",

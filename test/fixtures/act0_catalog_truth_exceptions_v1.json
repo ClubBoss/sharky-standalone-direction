@@ -1,11 +1,4 @@
 {
-  "1.hand.category|w7_low_spr_commit|caption:0": {
-    "reason": "caption: \"you hold top pair\" · Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Effective stack | Facts one pair, pocket pair, rainbow",
-    "rule": "1.hand.category",
-    "target": "L2",
-    "task_id": "w7_low_spr_commit",
-    "world": 8
-  },
   "1.hand.code|position_checkpoint_position_checkpoint_early_fold|title:0": {
     "reason": "title: \"ATo\" · Preflop | You Ac 9d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center UTG discipline | Empty board No board cards yet | Facts no applicable hand facts",
     "rule": "1.hand.code",
@@ -26,13 +19,6 @@
     "target": "P8",
     "task_id": "discipline_checkpoint_checkpoint_premium",
     "world": 2
-  },
-  "1.hand.private_pair|w6_pair_combos|caption:0": {
-    "reason": "caption: \"Pocket eights\" · Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow",
-    "rule": "1.hand.private_pair",
-    "target": "L2",
-    "task_id": "w6_pair_combos",
-    "world": 6
   },
   "10.repair_order|what_poker_is_find_hero|top": {
     "reason": "Repair points to a missing or later task cards_ranks_suits_private_board",
@@ -2302,13 +2288,6 @@
     "task_id": "w6_value_range_action",
     "world": 6
   },
-  "10.repair_resolves|w6_value_range_action|fold": {
-    "reason": "Wrong option \"Fold\" creates a held repair obligation (hero_cards_board_pot).",
-    "rule": "10.repair_resolves",
-    "target": "L2",
-    "task_id": "w6_value_range_action",
-    "world": 6
-  },
   "10.repair_resolves|w6_value_wet_board|bluff": {
     "reason": "Wrong option \"Bluff candidate\" creates a held repair obligation (hero_cards_board_pot).",
     "rule": "10.repair_resolves",
@@ -3717,13 +3696,6 @@
     "task_id": "button_advantage_find_button",
     "world": 3
   },
-  "6.answer_copy|connected_boards_w5_disconnected_board|center": {
-    "reason": "center: \"Disconnected\" discloses \"Disconnected\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "connected_boards_w5_disconnected_board",
-    "world": 5
-  },
   "6.answer_copy|discipline_checkpoint_checkpoint_borderline_continue|teach.0.focus.2": {
     "reason": "teach.0.focus.2: \"Call\" discloses \"Call\".",
     "rule": "6.answer_copy",
@@ -3890,13 +3862,6 @@
     "rule": "6.answer_copy",
     "target": "L2",
     "task_id": "straight_draws_w5_straight_draw_find",
-    "world": 5
-  },
-  "6.answer_copy|turn_river_changes_w5_river_misses|center": {
-    "reason": "center: \"Draw missed\" discloses \"Draw missed\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_river_misses",
     "world": 5
   },
   "6.answer_copy|w6_ak_combos|teach.0.focus.0": {
@@ -4179,90 +4144,6 @@
     "task_id": "turn_river_changes_w5_river_draw_story_transfer",
     "world": 5
   },
-  "8.latest_board_focus|turn_river_changes_w5_river_misses|board_0": {
-    "reason": "River highlights board_0; latest board card is board_4.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_river_misses",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_river_misses|board_1": {
-    "reason": "River highlights board_1; latest board card is board_4.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_river_misses",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_river_misses|board_2": {
-    "reason": "River highlights board_2; latest board card is board_4.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_river_misses",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_street_change_intro|board_0": {
-    "reason": "Turn highlights board_0; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_change_intro",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_street_change_intro|board_1": {
-    "reason": "Turn highlights board_1; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_change_intro",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_street_change_intro|board_2": {
-    "reason": "Turn highlights board_2; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_change_intro",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_street_repair|board_0": {
-    "reason": "Turn highlights board_0; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_repair",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_street_repair|board_1": {
-    "reason": "Turn highlights board_1; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_repair",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_street_repair|board_2": {
-    "reason": "Turn highlights board_2; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_repair",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_turn_hits|board_0": {
-    "reason": "Turn highlights board_0; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_turn_hits",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_turn_hits|board_1": {
-    "reason": "Turn highlights board_1; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_turn_hits",
-    "world": 5
-  },
-  "8.latest_board_focus|turn_river_changes_w5_turn_hits|board_2": {
-    "reason": "Turn highlights board_2; latest board card is board_3.",
-    "rule": "8.latest_board_focus",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_turn_hits",
-    "world": 5
-  },
   "8.latest_board_focus|turn_river_changes_w5_turn_texture_shift_transfer|board_1": {
     "reason": "Turn highlights board_1; latest board card is board_3.",
     "rule": "8.latest_board_focus",
@@ -4347,48 +4228,6 @@
     "task_id": "actions_legal_context",
     "world": 1
   },
-  "9.inherited_copy|board_texture_basics_w5_dry_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "board_texture_basics_w5_dry_board",
-    "world": 5
-  },
-  "9.inherited_copy|board_texture_basics_w5_texture_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "board_texture_basics_w5_texture_intro",
-    "world": 5
-  },
-  "9.inherited_copy|board_texture_basics_w5_wet_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "board_texture_basics_w5_wet_board",
-    "world": 5
-  },
-  "9.inherited_copy|connected_boards_w5_connected_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "connected_boards_w5_connected_board",
-    "world": 5
-  },
-  "9.inherited_copy|connected_boards_w5_connected_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "connected_boards_w5_connected_intro",
-    "world": 5
-  },
-  "9.inherited_copy|connected_boards_w5_disconnected_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "connected_boards_w5_disconnected_board",
-    "world": 5
-  },
   "9.inherited_copy|continue_or_let_go_medium_call_or_fold|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
     "rule": "9.inherited_copy",
@@ -4409,41 +4248,6 @@
     "target": "P8",
     "task_id": "discipline_checkpoint_checkpoint_fold",
     "world": 2
-  },
-  "9.inherited_copy|flush_draws_w5_flush_draw_find|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "flush_draws_w5_flush_draw_find",
-    "world": 5
-  },
-  "9.inherited_copy|flush_draws_w5_flush_draw_recheck_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "flush_draws_w5_flush_draw_recheck_transfer",
-    "world": 5
-  },
-  "9.inherited_copy|flush_draws_w5_flush_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "flush_draws_w5_flush_intro",
-    "world": 5
-  },
-  "9.inherited_copy|flush_draws_w5_made_hand_vs_flush_draw_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "flush_draws_w5_made_hand_vs_flush_draw_transfer",
-    "world": 5
-  },
-  "9.inherited_copy|flush_draws_w5_no_flush_draw|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "flush_draws_w5_no_flush_draw",
-    "world": 5
   },
   "9.inherited_copy|fold_discipline_discipline_intro|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
@@ -4564,13 +4368,6 @@
     "task_id": "outs_improvement_w5_flush_out",
     "world": 5
   },
-  "9.inherited_copy|outs_improvement_w5_outs_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "outs_improvement_w5_outs_intro",
-    "world": 5
-  },
   "9.inherited_copy|outs_improvement_w5_straight_out|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
     "rule": "9.inherited_copy",
@@ -4611,13 +4408,6 @@
     "rule": "9.inherited_copy",
     "target": "L2",
     "task_id": "range_checkpoint_combos",
-    "world": 6
-  },
-  "9.inherited_copy|range_checkpoint_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "range_checkpoint_intro",
     "world": 6
   },
   "9.inherited_copy|range_checkpoint_pressure|feedback": {
@@ -4696,76 +4486,6 @@
     "target": "P8",
     "task_id": "showdown_tie_drill",
     "world": 1
-  },
-  "9.inherited_copy|straight_draws_w5_gap_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "straight_draws_w5_gap_board",
-    "world": 5
-  },
-  "9.inherited_copy|straight_draws_w5_gutshot_contrast_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "straight_draws_w5_gutshot_contrast_transfer",
-    "world": 5
-  },
-  "9.inherited_copy|straight_draws_w5_gutshot_draw|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "straight_draws_w5_gutshot_draw",
-    "world": 5
-  },
-  "9.inherited_copy|straight_draws_w5_straight_draw_find|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "straight_draws_w5_straight_draw_find",
-    "world": 5
-  },
-  "9.inherited_copy|straight_draws_w5_straight_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "straight_draws_w5_straight_intro",
-    "world": 5
-  },
-  "9.inherited_copy|turn_river_changes_w5_river_draw_story_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_river_draw_story_transfer",
-    "world": 5
-  },
-  "9.inherited_copy|turn_river_changes_w5_river_misses|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_river_misses",
-    "world": 5
-  },
-  "9.inherited_copy|turn_river_changes_w5_street_change_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_street_change_intro",
-    "world": 5
-  },
-  "9.inherited_copy|turn_river_changes_w5_turn_hits|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_turn_hits",
-    "world": 5
-  },
-  "9.inherited_copy|turn_river_changes_w5_turn_texture_shift_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_turn_texture_shift_transfer",
-    "world": 5
   },
   "9.inherited_copy|w4_bad_bluff|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
@@ -4956,67 +4676,11 @@
     "task_id": "w4_value_purpose",
     "world": 4
   },
-  "9.inherited_copy|w6_ak_combos|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_ak_combos",
-    "world": 6
-  },
-  "9.inherited_copy|w6_bluff_candidate|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_bluff_candidate",
-    "world": 6
-  },
-  "9.inherited_copy|w6_board_fit_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_board_fit_intro",
-    "world": 6
-  },
-  "9.inherited_copy|w6_combo_counts_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_combo_counts_intro",
-    "world": 6
-  },
-  "9.inherited_copy|w6_combo_weight_compare|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_combo_weight_compare",
-    "world": 6
-  },
   "9.inherited_copy|w6_kicker_showdown_compare|title": {
     "reason": "title is identical to showdown_kicker_drill on a different table: \"Same pair, better kicker\"",
     "rule": "9.inherited_copy",
     "target": "L2",
     "task_id": "w6_kicker_showdown_compare",
-    "world": 6
-  },
-  "9.inherited_copy|w6_missed_dry_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_missed_dry_board",
-    "world": 6
-  },
-  "9.inherited_copy|w6_missed_hand_action|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_missed_hand_action",
-    "world": 6
-  },
-  "9.inherited_copy|w6_pair_combos|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_pair_combos",
     "world": 6
   },
   "9.inherited_copy|w6_pair_vs_suited_weight_compare|feedback": {
@@ -5026,215 +4690,12 @@
     "task_id": "w6_pair_vs_suited_weight_compare",
     "world": 6
   },
-  "9.inherited_copy|w6_pressure_lines_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_pressure_lines_intro",
-    "world": 6
-  },
-  "9.inherited_copy|w6_range_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_range_intro",
-    "world": 6
-  },
   "9.inherited_copy|w6_suited_offsuit_weight_compare|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
     "rule": "9.inherited_copy",
     "target": "L2",
     "task_id": "w6_suited_offsuit_weight_compare",
     "world": 6
-  },
-  "9.inherited_copy|w6_table_bucket_notice|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_table_bucket_notice",
-    "world": 6
-  },
-  "9.inherited_copy|w6_table_value_line_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_table_value_line_transfer",
-    "world": 6
-  },
-  "9.inherited_copy|w6_turn_pressure_shift_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_turn_pressure_shift_transfer",
-    "world": 6
-  },
-  "9.inherited_copy|w6_value_dry_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_value_dry_board",
-    "world": 6
-  },
-  "9.inherited_copy|w6_value_range_action|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_value_range_action",
-    "world": 6
-  },
-  "9.inherited_copy|w6_value_wet_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_value_wet_board",
-    "world": 6
-  },
-  "9.inherited_copy|w6_wrong_board|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w6_wrong_board",
-    "world": 6
-  },
-  "9.inherited_copy|w7_100bb_tighter|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_100bb_tighter",
-    "world": 8
-  },
-  "9.inherited_copy|w7_20bb_wider|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_20bb_wider",
-    "world": 8
-  },
-  "9.inherited_copy|w7_40bb_middle|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_40bb_middle",
-    "world": 8
-  },
-  "9.inherited_copy|w7_6max_wider|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_6max_wider",
-    "world": 8
-  },
-  "9.inherited_copy|w7_ajs_btn_100bb_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_ajs_btn_100bb_transfer",
-    "world": 8
-  },
-  "9.inherited_copy|w7_ajs_btn_25bb_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_ajs_btn_25bb_transfer",
-    "world": 8
-  },
-  "9.inherited_copy|w7_depth_shift_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_depth_shift_intro",
-    "world": 8
-  },
-  "9.inherited_copy|w7_effective_stack_100bb|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_effective_stack_100bb",
-    "world": 8
-  },
-  "9.inherited_copy|w7_effective_stack_30bb|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_effective_stack_30bb",
-    "world": 8
-  },
-  "9.inherited_copy|w7_effective_stack_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_effective_stack_intro",
-    "world": 8
-  },
-  "9.inherited_copy|w7_format_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_format_intro",
-    "world": 8
-  },
-  "9.inherited_copy|w7_format_table_notice|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_format_table_notice",
-    "world": 8
-  },
-  "9.inherited_copy|w7_fullring_tighter|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_fullring_tighter",
-    "world": 8
-  },
-  "9.inherited_copy|w7_high_spr_room|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_high_spr_room",
-    "world": 8
-  },
-  "9.inherited_copy|w7_low_spr_commit|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_low_spr_commit",
-    "world": 8
-  },
-  "9.inherited_copy|w7_spr4_middle|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_spr4_middle",
-    "world": 8
-  },
-  "9.inherited_copy|w7_spr_intro|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_spr_intro",
-    "world": 8
-  },
-  "9.inherited_copy|w7_table_effective_notice|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_table_effective_notice",
-    "world": 8
-  },
-  "9.inherited_copy|w7_top_pair_spr2_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_top_pair_spr2_transfer",
-    "world": 8
-  },
-  "9.inherited_copy|w7_top_pair_spr8_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "w7_top_pair_spr8_transfer",
-    "world": 8
   },
   "9.inherited_copy|weak_ace_warning_w3_dominated_fold|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",

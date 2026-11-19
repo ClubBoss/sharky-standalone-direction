@@ -11,7 +11,7 @@ void main() {
     'w6_wet_board_repair',
     'w12_bad_call_good_result',
   ]) {
-    testWidgets('$id shows a premise and submits each original graded choice', (
+    testWidgets('$id renders the context and submits each graded choice', (
       t,
     ) async {
       t.view.physicalSize = const Size(393, 852);
@@ -26,6 +26,24 @@ void main() {
         (l) => l.taskList.any((task) => task.taskId == id),
       );
       final task = lesson.taskList.singleWhere((task) => task.taskId == id);
+      void expectContext({bool feedback = false}) {
+        if (id.startsWith('w6_')) {
+          final dynamic tableWidget = t.widget(
+            find.byWidgetPredicate(
+              (widget) => widget.runtimeType.toString() == '_Act0TableV1',
+            ),
+          );
+          final table = tableWidget.table as Act0TableStateV1;
+          expect(table.boardCards, task.runner.table.boardCards);
+          expect(table.boardCards, hasLength(4));
+          expect(find.text('Hypothetical example'), findsNothing);
+        } else {
+          if (!feedback) expect(find.textContaining('Suppose'), findsWidgets);
+          expect(find.text('Hypothetical example'), findsWidgets);
+          expect(find.text('Flop'), findsNothing);
+        }
+      }
+
       for (final option in task.runner.options) {
         final decisions = <Act0CompletedDecisionV1>[];
         String? selected;
@@ -56,9 +74,7 @@ void main() {
         );
         await t.pumpAndSettle();
         expect(t.takeException(), isNull);
-        expect(find.textContaining('Suppose'), findsWidgets);
-        expect(find.text('Hypothetical example'), findsWidgets);
-        expect(find.text('Flop'), findsNothing);
+        expectContext();
         final choice = find.byKey(Key('act0_shell_option_${option.id}'));
         await t.ensureVisible(choice);
         await t.tap(choice);
@@ -84,8 +100,7 @@ void main() {
         );
         await t.pumpAndSettle();
         expect(t.takeException(), isNull);
-        expect(find.text('Hypothetical example'), findsWidgets);
-        expect(find.text('Flop'), findsNothing);
+        expectContext(feedback: true);
         expect(find.textContaining(option.feedbackReason), findsWidgets);
       }
     });

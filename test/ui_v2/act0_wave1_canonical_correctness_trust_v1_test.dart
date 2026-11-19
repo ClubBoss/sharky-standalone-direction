@@ -30,11 +30,11 @@ void main() {
         taskId: 'straight_draws_w5_gap_board',
       );
       expect(task.runner.table.boardCards.map((card) => card.label), <String>[
-        'As',
-        'Kd',
-        '4c',
+        'Ad',
+        '6s',
+        '2c',
       ]);
-      expect(task.runner.caption, 'A-K-4 has large rank gaps.');
+      expect(task.runner.caption, 'A-6-2 has large rank gaps.');
       expect(task.runner.options.map((option) => option.id), <String>[
         'yes',
         'no',
@@ -50,13 +50,13 @@ void main() {
         taskId: 'outs_improvement_w5_straight_out',
       );
       expect(task.runner.table.heroCards.map((card) => card.label), <String>[
-        '6s',
-        '5d',
+        '6h',
+        '5c',
       ]);
       expect(task.runner.table.boardCards.map((card) => card.label), <String>[
-        '8c',
-        '7h',
-        '2s',
+        '8s',
+        '7d',
+        '2h',
       ]);
       expect(task.runner.options.map((option) => option.id), <String>[
         'nine',
@@ -101,10 +101,7 @@ void main() {
         lessonId: 'connected_boards',
         taskId: 'connected_boards_w5_disconnected_board',
       );
-      expect(
-        disconnected.runner.caption,
-        'A-K-4 is high-card heavy but not connected.',
-      );
+      expect(disconnected.runner.caption, 'A-8-2 has large rank gaps.');
       expect(correctOption(disconnected).id, 'disconnected');
       final draw = taskFor(
         worldId: 'world_5',

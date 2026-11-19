@@ -24,6 +24,15 @@ const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_40',
 };
 
+Iterable<Act0LessonTaskV1> _world5To8Tasks() sync* {
+  for (final world in Act0ShellStateV1.sample.worlds) {
+    if (world.worldNumber < 5 || world.worldNumber > 8) continue;
+    for (final lesson in world.lessons) {
+      yield* lesson.taskList;
+    }
+  }
+}
+
 void main() {
   test('orientation cannot become a played replay from an active seat', () {
     // Real accepted-main negative: these posted blinds were consumerSafe even
@@ -116,13 +125,13 @@ void main() {
       'what_poker_is_matched_chips_transfer',
       'same_hand_different_seat_position_repair_same_hand_different_seat',
       'what_poker_is_side_pot_intro',
-      'w6_turn_shift_bucket',
-      'w6_wet_board_repair',
       'w12_bad_call_good_result',
     };
-    const conceptualSignals = <String, String>{
+    const rangeSignals = <String, String>{
       'w6_turn_shift_bucket': 'range_bucket_shift',
       'w6_wet_board_repair': 'board_texture_change',
+    };
+    const conceptualSignals = <String, String>{
       'w12_bad_call_good_result': 'process_over_outcome',
     };
     const w4TurnPriceIds = <String>{
@@ -211,8 +220,8 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(46));
-    expect(explanationIds, hasLength(7));
-    expect(conceptualSignals, hasLength(3));
+    expect(explanationIds, hasLength(5));
+    expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
     var legacyPlayed = 0;
@@ -233,6 +242,11 @@ void main() {
         if (!_asm05NewTaskIds.contains(task.taskId)) legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
+        if (rangeSignals.containsKey(task.taskId)) {
+          expect(task.runner.feedbackSignalId, rangeSignals[task.taskId]);
+          expect(table.boardCards, hasLength(4));
+          expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
+        }
         if (task.taskId == 'w4_protection_check') {
           // The hand is a closed observational snapshot, not a current turn.
           expect(table.activeSeatId, anyOf(isNull, isEmpty));
@@ -355,8 +369,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 321);
-    expect(played, 323); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 323);
+    expect(played, 325); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
@@ -383,6 +397,10 @@ void main() {
       'your_first_hand_river',
       'your_first_hand_action_trail',
       'w9_bubble_table_risk_transfer',
+      for (final task in _world5To8Tasks())
+        if (task.runner.table.scope == Act0TableScopeV1.playedHand &&
+            (task.runner.table.activeSeatId ?? '').isNotEmpty)
+          task.taskId,
     };
     expect(
       historyConsumers.difference(expectedHistories),
@@ -395,6 +413,60 @@ void main() {
       reason:
           'only explicitly enumerated source histories are consumer-safe; no whole-pot certification',
     );
+  });
+
+  test('W5–W8 banks and prices follow the recorded contributions', () {
+    final snapshots = <String>{};
+    final action = RegExp(
+      r'^(?:(Flop|Turn|River): )?([A-Z0-9+]+) '
+      r'(blind|raises|opens|calls|bets|checks|folds)(?: ([0-9.]+) BB)?$',
+    );
+    for (final task in _world5To8Tasks()) {
+      final table = task.runner.table;
+      if (table.scope != Act0TableScopeV1.playedHand) continue;
+      final proof = act0BettingRoundOrderProofForTableV1(table);
+      expect(
+        proof.truth,
+        Act0BettingRoundOrderTruthV1.consistent,
+        reason: '${task.taskId}: ${proof.reason}',
+      );
+      final liveAmounts = <String, double>{};
+      var collected = 0.0;
+      for (final item in table.actionTrail.where((item) => !item.isNote)) {
+        final match = action.firstMatch(item.label);
+        expect(match, isNotNull, reason: '${task.taskId}: ${item.label}');
+        if (match![1] != null) {
+          collected += liveAmounts.values.fold(0.0, (sum, bb) => sum + bb);
+          liveAmounts.clear();
+        }
+        if (match[4] case final amount?) {
+          // An amount is the player's total commitment on that street.
+          liveAmounts[match[2]!] = double.parse(amount);
+        }
+      }
+      final livePot = liveAmounts.values.fold(0.0, (sum, bb) => sum + bb);
+      final shownPot = double.parse(table.potLabel.split(' ')[1]);
+      expect(shownPot, collected + livePot, reason: task.taskId);
+      if (table.activeSeatId case final actor? when actor.isNotEmpty) {
+        final highest = liveAmounts.values.fold(0.0, (a, b) => a > b ? a : b);
+        final actorLabel = table.seats
+            .singleWhere((s) => s.seatId == actor)
+            .seatLabel;
+        final price = highest - (liveAmounts[actorLabel] ?? 0);
+        final shownPrice = table.toCallLabel.isEmpty
+            ? 0.0
+            : double.parse(table.toCallLabel.split(' ')[2]);
+        expect(shownPrice, price, reason: task.taskId);
+      }
+      final snapshot = [
+        table.tableFormat.name,
+        for (final card in [...table.heroCards, ...table.boardCards])
+          card.label,
+        table.potLabel,
+        for (final seat in table.seats) seat.stackLabel,
+      ].join('|');
+      expect(snapshots.add(snapshot), isTrue, reason: task.taskId);
+    }
   });
 
   test('folded-to-BTN replay preserves all three prior folds', () {

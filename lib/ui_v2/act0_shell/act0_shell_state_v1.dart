@@ -6140,7 +6140,16 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'range_checkpoint_intro',
         title: 'Three-step read',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w6RangeIntroRunner,
+        runner: _w6RangeIntroRunner.copyWith(
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Qc Jd'),
+            boardCards: _act0LessonCardsV1('Qh 7h 3c'),
+            centerLabel: 'Read the range',
+          ),
+          feedbackTitle: 'Put the reads together.',
+          feedbackReason:
+              'Read how the flop fits the hand, then consider weaker calls and the hands that might fold.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -6148,7 +6157,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'range_checkpoint_value',
         title: 'Value on dry board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6ValueDryBoardRunner,
+        runner: _w6ValueDryBoardRunner.copyWith(
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Kh Qd'),
+            boardCards: _act0LessonCardsV1('Ks 7h 2c'),
+            centerLabel: 'Read the flop',
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -6156,7 +6171,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'range_checkpoint_board_fit',
         title: 'Board changes bucket',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6WrongBoardRunner,
+        runner: _w6WrongBoardRunner.copyWith(
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Kh Qc'),
+            boardCards: _act0LessonCardsV1('8s 7s 6d'),
+            centerLabel: 'Read the flop',
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -6165,6 +6186,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         title: 'Count the family',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6AkComboRunner.copyWith(
+          table: _act0UnopenedLessonTableV1(
+            heroCards: _act0LessonCardsV1('8c 7c'),
+            centerLabel: 'Count combinations',
+          ),
           options: _act0AuthoredCorrectOptionAtV1(
             _w6AkComboRunner.options,
             correctOptionId: 'sixteen',
@@ -6222,6 +6247,11 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         title: 'Bluff candidate',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6BluffCandidateRunner.copyWith(
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Ah Qc'),
+            boardCards: _act0LessonCardsV1('Ks 7c 2d'),
+            centerLabel: 'Read the flop',
+          ),
           options: _act0AuthoredCorrectOptionAtV1(
             _w6BluffCandidateRunner.options,
             correctOptionId: 'bluff',
@@ -6357,10 +6387,13 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
   Act0W7VisibleAceHiddenTaskSpecV1 spec, {
   required Act0LessonPhaseV1 phase,
 }) {
-  final baseTable = _w6ComboCountsIntroRunner.table;
-  final heroCards = spec.taskId == 'visible_card_combo_density_transfer_check'
-      ? _heroQdQsCards
-      : baseTable.heroCards;
+  final heroCards = switch (spec.taskId) {
+    'visible_ace_combo_reduction_intro' => _act0LessonCardsV1('Js Tc'),
+    'visible_king_combo_reduction_intro' => _act0LessonCardsV1('Qd Jd'),
+    'paired_board_texture_lite_intro' => _act0LessonCardsV1('Kh 9s'),
+    _ when phase == Act0LessonPhaseV1.review => _act0LessonCardsV1('Qh Qs'),
+    _ => _heroQdQsCards,
+  };
   return _w6ComboCountsIntroRunner.copyWith(
     lessonId: spec.taskId,
     lessonTitle: 'Visible Cards Change Ranges',
@@ -6387,17 +6420,12 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     ],
     feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
     feedbackReason: spec.feedbackReason,
-    table: baseTable.copyWith(
+    table: _act0BoardLessonTableV1(
       centerLabel: spec.boardContext,
       heroCards: heroCards,
-      boardCards: _w7VisibleBoardCardsForSpecV1(spec),
-      seats: baseTable.seats
-          .map(
-            (seat) => seat.seatId == baseTable.heroSeatId
-                ? _act0CopySeatStateV1(seat, holeCards: heroCards)
-                : seat,
-          )
-          .toList(growable: false),
+      boardCards: phase == Act0LessonPhaseV1.review
+          ? _act0LessonCardsV1('Qc Jd 5s')
+          : _w7VisibleBoardCardsForSpecV1(spec),
     ),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
@@ -6705,7 +6733,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'format_pressure',
     title: '6-max vs full ring',
-    subtitle: 'The same hand can open wider in 6-max than in full ring.',
+    subtitle: 'Compare opening from UTG at tables of different sizes.',
     phaseLabel: 'Format',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -6724,7 +6752,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_6max_wider',
-        title: '6-max opens wider',
+        title: 'Compare opening ranges',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7SixMaxWiderRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -6738,7 +6766,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_fullring_tighter',
-        title: 'Full ring tightens',
+        title: 'Opening from UTG',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7FullRingTighterRunner,
         rewardXp: 10,
@@ -9533,6 +9561,8 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
   ],
   table: _matchedChipsTransferRunner.table.copyWith(
     scope: Act0TableScopeV1.explanation,
+    activeSeatId: '',
+    clearDecisionSeatId: true,
     centerLabel: 'Hero cannot win side pot',
     potLabel: 'Main 60.5 BB; side 60 BB',
     // Added authored hand history (PKR-06 content decision, 2026-11-08); not in
@@ -9590,11 +9620,10 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
                   isSmallBlind: seat.isSmallBlind,
                   isBigBlind: seat.isBigBlind,
                   blindAmountLabel: seat.blindAmountLabel,
-                  isActive: true,
                   isTarget: seat.isTarget,
                   isInHand: seat.isInHand,
                   isFolded: seat.isFolded,
-                  hasActed: seat.hasActed,
+                  hasActed: true,
                   isLastAggressor: seat.isLastAggressor,
                   isOccupied: seat.isOccupied,
                   stackLabel: '50 BB',
@@ -13566,33 +13595,43 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
   required List<Act0CardStateV1> heroCards,
   required List<Act0CardStateV1> otherCards,
   required List<Act0CardStateV1> boardCards,
+  num flopBetBb = 0,
+  num turnBetBb = 0,
+  List<String> highlightedCardIds = const [],
 }) {
+  final contributedBb = 2.25 + flopBetBb + turnBetBb;
   return _showdownKickerRunner.table.copyWith(
     centerLabel: 'Showdown',
     streetLabel: 'River',
-    potLabel: 'Pot 6 BB',
+    potLabel: 'Pot ${_act0BbLabelV1(2 * contributedBb + 1.5)}',
     toCallLabel: '',
     activeSeatId: '',
     clearDecisionSeatId: true,
     selectableSeatIds: const [],
-    highlightedCardIds: const [],
+    highlightedCardIds: highlightedCardIds,
     heroCards: heroCards,
     boardCards: boardCards,
-    actionTrail: const [
-      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ folds'),
-      Act0ActionTrailItemV1(label: 'CO raises 2.25 BB'),
-      Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
-      Act0ActionTrailItemV1(label: 'SB folds'),
-      Act0ActionTrailItemV1(label: 'BB folds'),
-      Act0ActionTrailItemV1(label: 'Flop: CO checks'),
-      Act0ActionTrailItemV1(label: 'BTN checks'),
-      Act0ActionTrailItemV1(label: 'Turn: CO checks'),
-      Act0ActionTrailItemV1(label: 'BTN checks'),
-      Act0ActionTrailItemV1(label: 'River: CO checks'),
-      Act0ActionTrailItemV1(label: 'BTN checks'),
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      const Act0ActionTrailItemV1(label: 'HJ folds'),
+      const Act0ActionTrailItemV1(label: 'CO raises 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'SB folds'),
+      const Act0ActionTrailItemV1(label: 'BB folds'),
+      for (final (street, bet) in [('Flop', flopBetBb), ('Turn', turnBetBb)])
+        if (bet > 0) ...[
+          Act0ActionTrailItemV1(
+            label: '$street: CO bets ${_act0BbLabelV1(bet)}',
+          ),
+          Act0ActionTrailItemV1(label: 'BTN calls ${_act0BbLabelV1(bet)}'),
+        ] else ...[
+          Act0ActionTrailItemV1(label: '$street: CO checks'),
+          const Act0ActionTrailItemV1(label: 'BTN checks'),
+        ],
+      const Act0ActionTrailItemV1(label: 'River: CO checks'),
+      const Act0ActionTrailItemV1(label: 'BTN checks'),
     ],
     autoPlayHistory: false,
     seats: [
@@ -13607,12 +13646,16 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
           isLastAggressor: false,
           clearCommitment: true,
           stackLabel: switch (seat.seatId) {
-            'btn' || 'co' => '97.75 BB',
+            'btn' || 'co' => _act0BbLabelV1(100 - contributedBb),
             'sb' => '99.5 BB',
             'bb' => '99 BB',
             _ => '100 BB',
           },
-          holeCards: seat.seatId == 'co' ? otherCards : seat.holeCards,
+          holeCards: switch (seat.seatId) {
+            'co' => otherCards,
+            'btn' => heroCards,
+            _ => seat.holeCards,
+          },
           cardsVisibleMode: seat.seatId == 'btn' || seat.seatId == 'co'
               ? Act0CardsVisibleModeV1.faceUp
               : Act0CardsVisibleModeV1.none,
@@ -18139,6 +18182,186 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
   ],
 );
 
+List<Act0CardStateV1> _act0LessonCardsV1(String cards) => [
+  for (final card in cards.split(' '))
+    Act0CardStateV1(
+      rank: card[0],
+      suit: card[1],
+      tone: card[1] == 'h' || card[1] == 'd'
+          ? Act0CardToneV1.red
+          : Act0CardToneV1.dark,
+    ),
+];
+
+// BTN opens, BB defends, and the small blind stays in the pot. Earlier
+// streets either check through or close with BTN betting and BB calling.
+Act0TableStateV1 _act0BoardLessonTableV1({
+  required List<Act0CardStateV1> heroCards,
+  required List<Act0CardStateV1> boardCards,
+  required String centerLabel,
+  num openBb = 2.5,
+  num flopBetBb = 0,
+  num turnBetBb = 0,
+  num facingBb = 0,
+  num? heroBehindBb,
+  num? bbBehindBb,
+  List<String> highlightedCardIds = const [],
+}) {
+  final street = switch (boardCards.length) {
+    3 => 'Flop',
+    4 => 'Turn',
+    5 => 'River',
+    _ => throw ArgumentError.value(boardCards, 'boardCards'),
+  };
+  final collectedPerPlayer = openBb + flopBetBb + turnBetBb;
+  const folds = {'utg', 'hj', 'co', 'sb'};
+  return Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
+    tableFormat: Act0TableFormatV1.sixMax,
+    playerCount: 6,
+    heroSeatId: 'btn',
+    activeSeatId: 'btn',
+    decisionSeatId: 'btn',
+    heroCards: heroCards,
+    boardCards: boardCards,
+    streetLabel: street,
+    potLabel: 'Pot ${_act0BbLabelV1(2 * collectedPerPlayer + 0.5 + facingBb)}',
+    toCallLabel: facingBb > 0 ? 'To call ${_act0BbLabelV1(facingBb)}' : '',
+    centerLabel: centerLabel,
+    autoPlayHistory: false,
+    highlightedSeatIds: const [],
+    highlightedCardIds: highlightedCardIds,
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      const Act0ActionTrailItemV1(label: 'HJ folds'),
+      const Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN raises ${_act0BbLabelV1(openBb)}'),
+      const Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls ${_act0BbLabelV1(openBb)}',
+        displayLabel: 'BB calls ${_act0BbLabelV1(openBb - 1)} more',
+      ),
+      if (boardCards.length >= 4) ...[
+        const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        if (flopBetBb == 0)
+          const Act0ActionTrailItemV1(label: 'BTN checks')
+        else ...[
+          Act0ActionTrailItemV1(label: 'BTN bets ${_act0BbLabelV1(flopBetBb)}'),
+          Act0ActionTrailItemV1(label: 'BB calls ${_act0BbLabelV1(flopBetBb)}'),
+        ],
+      ],
+      if (boardCards.length == 5) ...[
+        const Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        if (turnBetBb == 0)
+          const Act0ActionTrailItemV1(label: 'BTN checks')
+        else ...[
+          Act0ActionTrailItemV1(label: 'BTN bets ${_act0BbLabelV1(turnBetBb)}'),
+          Act0ActionTrailItemV1(label: 'BB calls ${_act0BbLabelV1(turnBetBb)}'),
+        ],
+      ],
+      Act0ActionTrailItemV1(
+        label: facingBb == 0
+            ? '$street: BB checks'
+            : '$street: BB bets ${_act0BbLabelV1(facingBb)}',
+      ),
+    ],
+    seats: [
+      for (final seat in _readBoardRunner.table.seats)
+        _act0CopySeatStateV1(
+          seat,
+          isInHand: !folds.contains(seat.seatId),
+          isFolded: folds.contains(seat.seatId),
+          isActive: seat.isHero,
+          hasActed: !seat.isHero,
+          isLastAggressor: seat.seatId == 'bb' && facingBb > 0,
+          clearCommitment: true,
+          stackLabel: _act0BbLabelV1(switch (seat.seatId) {
+            'btn' => heroBehindBb ?? 100 - collectedPerPlayer,
+            'bb' => bbBehindBb ?? 100 - collectedPerPlayer - facingBb,
+            'sb' => 99.5,
+            _ => 100,
+          }),
+          bet: seat.seatId == 'bb' && facingBb > 0
+              ? Act0SeatBetStateV1(
+                  kind: Act0SeatBetKindV1.bet,
+                  label: 'BB',
+                  amountLabel: _act0BbLabelV1(facingBb),
+                )
+              : null,
+          holeCards: seat.isHero ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: folds.contains(seat.seatId)
+              ? Act0CardsVisibleModeV1.none
+              : seat.isHero
+              ? Act0CardsVisibleModeV1.faceUp
+              : Act0CardsVisibleModeV1.faceDown,
+        ),
+    ],
+  );
+}
+
+Act0TableStateV1 _act0UnopenedLessonTableV1({
+  required List<Act0CardStateV1> heroCards,
+  required String centerLabel,
+}) {
+  const format = Act0TableFormatV1.sixMax;
+  final seatOrder = act0CanonicalSeatOrderForFormatV1(format);
+  return Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
+    tableFormat: format,
+    playerCount: seatOrder.length,
+    heroSeatId: 'utg',
+    activeSeatId: 'utg',
+    decisionSeatId: 'utg',
+    heroCards: heroCards,
+    boardCards: const [],
+    streetLabel: 'Preflop',
+    potLabel: 'Pot 1.5 BB',
+    toCallLabel: 'To call 1 BB',
+    centerLabel: centerLabel,
+    autoPlayHistory: false,
+    highlightedSeatIds: const [],
+    highlightedCardIds: const [],
+    actionTrail: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+    ],
+    seats: [
+      for (final position in seatOrder)
+        Act0SeatStateV1(
+          seatId: position.toLowerCase(),
+          seatLabel: position,
+          displayName: position == 'UTG' ? 'Hero' : position,
+          isHero: position == 'UTG',
+          isActive: position == 'UTG',
+          isDealerButton: position == 'BTN',
+          isSmallBlind: position == 'SB',
+          isBigBlind: position == 'BB',
+          blindAmountLabel: switch (position) {
+            'SB' => '0.5 BB',
+            'BB' => '1 BB',
+            _ => null,
+          },
+          stackLabel: switch (position) {
+            'SB' => '99.5 BB',
+            'BB' => '99 BB',
+            _ => '100 BB',
+          },
+          bet: switch (position) {
+            'SB' => _smallBlindPost,
+            'BB' => _bigBlindPost,
+            _ => null,
+          },
+          holeCards: position == 'UTG' ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: position == 'UTG' && heroCards != _unknownHoleCards
+              ? Act0CardsVisibleModeV1.faceUp
+              : Act0CardsVisibleModeV1.faceDown,
+        ),
+    ],
+  );
+}
+
 final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w5_texture_intro',
@@ -18148,16 +18371,11 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   hint: 'Dry boards change less. Wet boards create more threats.',
   question: 'What does board texture describe?',
   options: const <Act0RunnerOptionV1>[],
-  table: _readBoardRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 5 BB',
-    centerLabel: 'Texture read',
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['board_0', 'board_1', 'board_2'],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Jd'),
+    boardCards: _act0LessonCardsV1('Ks 8h 3c'),
+    centerLabel: 'Read the flop',
+    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18166,6 +18384,9 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
       focusLabels: <String>['Dry', 'Wet', 'Board'],
     ),
   ],
+  feedbackTitle: 'Texture first.',
+  feedbackReason:
+      'Rank gaps and matching suits tell you how much the next card can change.',
 );
 
 final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
@@ -18197,6 +18418,12 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       feedbackReason: 'Wet boards show more connected ranks or suit pressure.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah Tc'),
+    boardCards: _act0LessonCardsV1('Kc 7d 2s'),
+    centerLabel: 'Read the flop',
+    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+  ),
 );
 
 final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
@@ -18229,13 +18456,11 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
           'This is not dry. Connected ranks plus two hearts mean future cards can change the story fast, so the board already carries wet pressure.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-    ],
-    centerLabel: 'Wet board',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Js Td'),
+    boardCards: _act0LessonCardsV1('Th 9h 8c'),
+    centerLabel: 'Read the flop',
+    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18263,6 +18488,11 @@ final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['Ranks', 'Suits', 'Change'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Jc'),
+    boardCards: _act0LessonCardsV1('9d 9h 3s'),
+    centerLabel: 'Read the flop',
+  ),
 );
 
 final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
@@ -18273,7 +18503,12 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
   hint: 'Close ranks create more straight paths.',
   question: 'What makes a board connected?',
   options: const <Act0RunnerOptionV1>[],
-  table: _world5WetBoardRunner.table.copyWith(centerLabel: 'Connected ranks'),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Qd Jc'),
+    boardCards: _act0LessonCardsV1('9h 8s 7d'),
+    centerLabel: 'Read the ranks',
+    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Ranks can connect.',
@@ -18281,11 +18516,14 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['9', '8', '7', 'Connected'],
     ),
   ],
+  feedbackTitle: 'Read the rank gaps.',
+  feedbackReason:
+      'Three nearby ranks, such as 9-8-7, give private cards more ways to complete a straight.',
 );
 
 final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
   lessonId: 'w5_disconnected_board',
-  caption: 'A-K-4 is high-card heavy but not connected.',
+  caption: 'A-8-2 has large rank gaps.',
   hint: 'The ranks are far apart.',
   question: 'Is this board connected?',
   options: const <Act0RunnerOptionV1>[
@@ -18309,13 +18547,10 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
       feedbackReason: 'Connected boards have close ranks, not big gaps.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 's'),
-      Act0CardStateV1(rank: 'K', suit: 'd', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'c'),
-    ],
-    centerLabel: 'Disconnected',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jh 9c'),
+    boardCards: _act0LessonCardsV1('As 8d 2c'),
+    centerLabel: 'Read the ranks',
   ),
 );
 
@@ -18347,14 +18582,19 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
           'A paired board repeats a rank. This board connects ranks.',
     ),
   ],
-  table: _world5WetBoardRunner.table.copyWith(
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '7', suit: 'c'),
-    ],
-    centerLabel: '9-8-7',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Qh Tc'),
+    boardCards: _act0LessonCardsV1('9s 8h 7c'),
+    centerLabel: 'Read the ranks',
   ),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Read the rank gaps.',
+      body:
+          'Look at how close the three ranks are. Nearby ranks can fit into the same five-card straight.',
+      focusLabels: ['Ranks', 'Straight possibilities'],
+    ),
+  ],
 );
 
 final _world5ConnectedRecapRunner = _world5ConnectedIntroRunner.copyWith(
@@ -18372,6 +18612,11 @@ final _world5ConnectedRecapRunner = _world5ConnectedIntroRunner.copyWith(
       focusLabels: <String>['Close ranks', 'Straight path'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Js Td'),
+    boardCards: _act0LessonCardsV1('Qc 9s 8h'),
+    centerLabel: 'Read the ranks',
+  ),
 );
 
 final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
@@ -18382,17 +18627,10 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
   hint: 'Count suits on the board and in hand.',
   question: 'What does a flush draw need?',
   options: const <Act0RunnerOptionV1>[],
-  table: _world5TextureIntroRunner.table.copyWith(
-    centerLabel: 'Two hearts',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 'c'),
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh Jh'),
+    boardCards: _act0LessonCardsV1('Qh 8h 3s'),
+    centerLabel: 'Count matching suits',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18402,6 +18640,8 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
   ],
+  feedbackTitle: 'Count matching suits.',
+  feedbackReason: 'Four cards of one suit leave you one card short of a flush.',
 );
 
 final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
@@ -18452,6 +18692,11 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       focusLabels: <String>['Four hearts', 'Not made yet', 'One more heart'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah 7h'),
+    boardCards: _act0LessonCardsV1('Th 4h 2c'),
+    centerLabel: 'Read the suits',
+  ),
 );
 
 final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
@@ -18481,7 +18726,11 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
       feedbackReason: 'A rainbow flop does not show flush pressure yet.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(centerLabel: 'Rainbow flop'),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Jc'),
+    boardCards: _act0LessonCardsV1('As 9h 4c'),
+    centerLabel: 'Read the suits',
+  ),
 );
 
 final _world5FlushRecapRunner = _world5FlushIntroRunner.copyWith(
@@ -18500,6 +18749,11 @@ final _world5FlushRecapRunner = _world5FlushIntroRunner.copyWith(
       focusLabels: <String>['Suits', 'One more card'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kc 9c'),
+    boardCards: _act0LessonCardsV1('Ac 6c 3d'),
+    centerLabel: 'Read the suits',
+  ),
 );
 
 final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith(
@@ -18549,19 +18803,12 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
           'Hero’s pair of aces already counts. Another heart could help an opponent later.',
     ),
   ],
-  table: _world5FlushDrawRunner.table.copyWith(
-    potLabel: 'Pot 8 BB',
-    centerLabel: 'Top pair on a two-heart board',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'c'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_0', 'board_1'],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Jc'),
+    boardCards: _act0LessonCardsV1('Ah 8h 4c'),
+    centerLabel: 'Made hand or draw?',
+    openBb: 3.75,
+    highlightedCardIds: const ['hero_0', 'board_0', 'board_1'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18614,24 +18861,11 @@ final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
           'The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.',
     ),
   ],
-  table: _world5FlushDrawRunner.table.copyWith(
-    potLabel: 'Pot 7 BB',
-    centerLabel: 'Four hearts, not home yet',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
-    ],
-    highlightedCardIds: const <String>[
-      'hero_0',
-      'hero_1',
-      'board_0',
-      'board_2',
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Qh 7h'),
+    boardCards: _act0LessonCardsV1('Ah 8c 2h'),
+    centerLabel: 'Read the suits',
+    openBb: 3.25,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18657,6 +18891,14 @@ final _world5StraightIntroRunner = _world5ConnectedIntroRunner.copyWith(
       focusLabels: <String>['Ranks', 'Ladder', 'Straight draw'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ts 9d'),
+    boardCards: _act0LessonCardsV1('Jh 8c 3s'),
+    centerLabel: 'Read the ranks',
+  ),
+  feedbackTitle: 'Follow the ranks.',
+  feedbackReason:
+      'Check which next rank could give you five consecutive cards.',
 );
 
 final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
@@ -18686,17 +18928,10 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
       feedbackReason: 'The clue is rank connection, not matching suits.',
     ),
   ],
-  table: _world5ConnectedIntroRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '6', suit: 's'),
-      Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    centerLabel: '4 or 9 helps',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('6s 5d'),
+    boardCards: _act0LessonCardsV1('8c 7h 2s'),
+    centerLabel: 'Read the ranks',
   ),
 );
 
@@ -18740,17 +18975,10 @@ final _world5GutshotDrawRunner = _world5StraightIntroRunner.copyWith(
           'The straight is not complete yet. The board and hand still miss the 6, so this stays a draw, not a made hand.',
     ),
   ],
-  table: _world5StraightIntroRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '5', suit: 's'),
-    ],
-    centerLabel: 'Only a 6 helps',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('9s 8d'),
+    boardCards: _act0LessonCardsV1('Kc 7h 5s'),
+    centerLabel: 'Read the ranks',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18803,18 +19031,11 @@ final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
           'Hero still needs the 6 to finish five in a row. Until that card arrives, the straight is future potential, not a made hand.',
     ),
   ],
-  table: _world5GutshotDrawRunner.table.copyWith(
-    potLabel: 'Pot 6 BB',
-    centerLabel: 'Only a 6 fits',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 'c'),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '5', suit: 's'),
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('9d 8s'),
+    boardCards: _act0LessonCardsV1('Qh 7c 5d'),
+    centerLabel: 'Read the ranks',
+    openBb: 2.75,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18829,7 +19050,7 @@ final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
 final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_gap_board',
-  caption: 'A-K-4 has large rank gaps.',
+  caption: 'A-6-2 has large rank gaps.',
   hint: 'Big gaps mean no obvious straight draw.',
   question: 'Is straight pressure obvious?',
   options: const <Act0RunnerOptionV1>[
@@ -18854,7 +19075,11 @@ final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
       feedbackReason: 'Straight pressure needs closer ranks.',
     ),
   ],
-  table: _world5DisconnectedBoardRunner.table.copyWith(centerLabel: 'Big gaps'),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jc 8h'),
+    boardCards: _act0LessonCardsV1('Ad 6s 2c'),
+    centerLabel: 'Read the ranks',
+  ),
 );
 
 final _world5StraightRecapRunner = _world5StraightIntroRunner.copyWith(
@@ -18872,6 +19097,11 @@ final _world5StraightRecapRunner = _world5StraightIntroRunner.copyWith(
       focusLabels: <String>['Nearby ranks', 'Outs'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('8s 6d'),
+    boardCards: _act0LessonCardsV1('9c 5h 2s'),
+    centerLabel: 'Read the ranks',
+  ),
 );
 
 final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
@@ -18882,7 +19112,11 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
   hint: 'At this level, just name the kind of card that helps.',
   question: 'What is an out?',
   options: const <Act0RunnerOptionV1>[],
-  table: _world5StraightDrawRunner.table.copyWith(centerLabel: 'Outs help'),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Js Tc'),
+    boardCards: _act0LessonCardsV1('Qd 9h 3c'),
+    centerLabel: 'Read the draw',
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Outs are helpers.',
@@ -18890,6 +19124,9 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['Future card', 'Improve', 'Out'],
     ),
   ],
+  feedbackTitle: 'Name the improving cards.',
+  feedbackReason:
+      'Identify the cards that complete your draw before deciding what price is worth paying.',
 );
 
 final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
@@ -18918,6 +19155,11 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
       feedbackReason: 'The flush path is hearts, so hearts are the outs.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh 8h'),
+    boardCards: _act0LessonCardsV1('Jh 3h 7s'),
+    centerLabel: 'Read the draw',
+  ),
 );
 
 final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
@@ -18947,6 +19189,18 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       feedbackReason: 'A king does not connect this rank ladder.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('6h 5c'),
+    boardCards: _act0LessonCardsV1('8s 7d 2h'),
+    centerLabel: 'Read the draw',
+    highlightedCardIds: const [
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_2',
+    ],
+  ),
 );
 
 final _world5OutsRecapRunner = _world5OutsIntroRunner.copyWith(
@@ -18965,6 +19219,11 @@ final _world5OutsRecapRunner = _world5OutsIntroRunner.copyWith(
       focusLabels: <String>['Improve', 'Future card', 'Price'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('9s 8h'),
+    boardCards: _act0LessonCardsV1('Td 7c 4h'),
+    centerLabel: 'Read the draw',
+  ),
 );
 
 final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
@@ -19009,38 +19268,12 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
           'Start with the hearts that complete your flush. Then consider how often the flush will win before you judge the 2 BB price.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _world5FlushDrawRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Live heart outs',
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '2', suit: 'c'),
-        Act0CardStateV1(rank: '9', suit: 's'),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
-        Act0ActionTrailItemV1(label: 'Turn: 9 spades'),
-        Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'Hero acts'),
-      ],
-      highlightedCardIds: const <String>[
-        'hero_0',
-        'hero_1',
-        'board_0',
-        'board_1',
-      ],
-    ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '2 BB',
-      ),
-    },
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah 7h'),
+    boardCards: _act0LessonCardsV1('Th 4h 2c 9s'),
+    centerLabel: 'Draw and price',
+    openBb: 3.75,
+    facingBb: 2,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19094,31 +19327,13 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
           'Hero already has 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether Hero improves, but which completing card is safer.',
     ),
   ],
-  table: _world5StraightOutRunner.table.copyWith(
-    streetLabel: 'Turn',
-    potLabel: '',
-    toCallLabel: '',
-    centerLabel: 'Some outs are safer',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '6', suit: 'c'),
-      Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'Flop: A hearts, 7 hearts, 6 clubs'),
-      Act0ActionTrailItemV1(label: 'Turn: 2 diamonds'),
-    ],
-    highlightedCardIds: const <String>[
-      'hero_0',
-      'hero_1',
-      'board_1',
-      'board_2',
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('9s 8d'),
+    boardCards: _act0LessonCardsV1('Ah 7h 6c 2d'),
+    centerLabel: 'Compare two river cards',
+    openBb: 3,
+    flopBetBb: 2,
+    highlightedCardIds: const ['hero_0', 'hero_1', 'board_1', 'board_2'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19172,39 +19387,12 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
           'You can still make a straight with a 4 or 9 on the river. How often that straight will win matters when you judge the 3 BB price.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _world5StraightDrawRunner.table.copyWith(
-      streetLabel: 'Turn',
-      activeSeatId: 'btn',
-      potLabel: 'Pot 9 BB',
-      toCallLabel: 'To call 3 BB',
-      centerLabel: 'Live straight outs',
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: '8', suit: 'c'),
-        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '2', suit: 's'),
-        Act0CardStateV1(rank: 'K', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Flop: 8-7-2'),
-        Act0ActionTrailItemV1(label: 'Turn: K diamonds'),
-        Act0ActionTrailItemV1(label: 'BB bets 3 BB'),
-        Act0ActionTrailItemV1(label: 'Hero acts'),
-      ],
-      highlightedCardIds: const <String>[
-        'hero_0',
-        'hero_1',
-        'board_0',
-        'board_1',
-      ],
-    ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '3 BB',
-      ),
-    },
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('6s 5d'),
+    boardCards: _act0LessonCardsV1('8c 7h 2s Kd'),
+    centerLabel: 'Draw and price',
+    openBb: 2.75,
+    facingBb: 3,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19224,9 +19412,11 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
   hint: 'Read the same draw story again after each new street card.',
   question: 'What changes after the flop?',
   options: const <Act0RunnerOptionV1>[],
-  table: _turnBoardRunner.table.copyWith(
-    centerLabel: 'Turn changes',
-    potLabel: 'Pot 7 BB',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ks 9s'),
+    boardCards: _act0LessonCardsV1('As 7s 4c 2s'),
+    centerLabel: 'Read the turn',
+    highlightedCardIds: const ['board_3'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19236,6 +19426,9 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['Turn', 'River', 'Draw story'],
     ),
   ],
+  feedbackTitle: 'Read the new card.',
+  feedbackReason:
+      'Compare the new card to the previous board to see which draws finished or stayed open.',
 );
 
 final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
@@ -19268,23 +19461,17 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
           'A heart is not blank when the flop already showed a live heart draw.',
     ),
   ],
-  table: _world5FlushIntroRunner.table.copyWith(
-    streetLabel: 'Turn',
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-    ],
-    centerLabel: 'Heart lands',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah 7h'),
+    boardCards: _act0LessonCardsV1('Th 4h 2c 9h'),
+    centerLabel: 'Read the turn',
+    highlightedCardIds: const ['board_3'],
   ),
 );
 
 final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_river_misses',
-  caption:
-      'Different runout: the river is the 2 of diamonds. The heart draw misses.',
   hint: 'The river did not help the draw you were tracking.',
   question: 'What happened by the river?',
   options: const <Act0RunnerOptionV1>[
@@ -19310,24 +19497,18 @@ final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
           'No heart arrived on the river, so the tracked heart draw stayed incomplete.',
     ),
   ],
-  table: _world5FlushIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    centerLabel: 'Draw missed',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh 8h'),
+    boardCards: _act0LessonCardsV1('Jh 3h 7s 9c 2d'),
+    centerLabel: 'Read the river',
+    highlightedCardIds: const ['board_4'],
   ),
+  caption: 'What did the 2 of diamonds change about the heart draw?',
 );
 
 final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_street_repair',
-  caption:
-      'The turn connected the board, but hero still treats one pair like the flop stayed easy.',
   hint: 'Repair the street-change read before repeating the flop plan.',
   question: 'What needs fixing first?',
   feedbackTitle: 'Repair the street read.',
@@ -19381,6 +19562,15 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
       focusLabels: <String>['Turn change', 'Repair read', 'One-pair caution'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Qs'),
+    boardCards: _act0LessonCardsV1('Ah 7c 6d 8c'),
+    centerLabel: 'Read the turn',
+    flopBetBb: 2,
+    highlightedCardIds: const ['board_3'],
+  ),
+  caption:
+      'The 8 of clubs arrives on A-7-6. Hero still treats top pair like the flop stayed easy.',
 );
 
 final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.copyWith(
@@ -19426,27 +19616,13 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
           'Size matters, but not before the board read. The turn changed texture first, so action should start from that update.',
     ),
   ],
-  table: _world5StreetChangeIntroRunner.table.copyWith(
-    streetLabel: 'Turn',
-    potLabel: 'Pot 8 BB',
-    centerLabel: 'Turn texture shift',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 's'),
-      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-    ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BB checks flop'),
-      Act0ActionTrailItemV1(label: 'BTN bets'),
-      Act0ActionTrailItemV1(label: 'BB calls'),
-      Act0ActionTrailItemV1(label: 'Turn: T hearts'),
-    ],
-    highlightedCardIds: const <String>['board_1', 'board_3'],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ks Jd'),
+    boardCards: _act0LessonCardsV1('Kc 9h 2s Th'),
+    centerLabel: 'Read the turn',
+    openBb: 2.75,
+    flopBetBb: 1,
+    highlightedCardIds: const ['board_1', 'board_3'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19466,8 +19642,6 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
 final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_river_draw_story_transfer',
-  caption:
-      'Real table. The flop and turn showed a heart draw, but the river bricks with the black 3.',
   hint:
       'Keep the same draw story in mind and decide whether it finished or missed.',
   question: 'What is the clean river read first?',
@@ -19505,27 +19679,13 @@ final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyW
           'That guess skips the board. The clean recheck is simpler: no heart means the same draw story missed.',
     ),
   ],
-  table: _world5StreetChangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 10 BB',
-    centerLabel: 'River draw story',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '3', suit: 'c'),
-    ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
-      Act0ActionTrailItemV1(label: 'Turn: draw still live'),
-      Act0ActionTrailItemV1(label: 'River: black 3'),
-    ],
-    highlightedCardIds: const <String>['board_0', 'board_1', 'board_4'],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah 7h'),
+    boardCards: _act0LessonCardsV1('Th 4h 2c 9s 3c'),
+    centerLabel: 'Read the river',
+    openBb: 2.75,
+    flopBetBb: 2,
+    highlightedCardIds: const ['board_0', 'board_1', 'board_4'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19535,6 +19695,8 @@ final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyW
       focusLabels: <String>['Same story', 'Flop-turn-river', 'Hit or missed'],
     ),
   ],
+  caption:
+      'The flop and turn showed a heart draw. The river brings the 3 of clubs.',
 );
 
 final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
@@ -19588,6 +19750,11 @@ final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['Texture', 'Draws', 'Outs', 'Street change'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Qh Js'),
+    boardCards: _act0LessonCardsV1('Td 9c 3h'),
+    centerLabel: 'Read the flop',
+  ),
 );
 
 final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
@@ -19642,6 +19809,11 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       focusLabels: <String>['Range buckets', 'Texture fit', 'Stack depth'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Kc'),
+    boardCards: _act0LessonCardsV1('Kh 9s 5d'),
+    centerLabel: 'Read the flop',
+  ),
 );
 
 // These questions assess a supplied premise, not an observed hand history.
@@ -19664,17 +19836,19 @@ Act0TableStateV1 _act0HypotheticalConceptTableV1(Act0TableStateV1 base) =>
     );
 
 final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w6WrongBoardRunner.table),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh Js'),
+    boardCards: _act0LessonCardsV1('Kd 8c 7d 9d'),
+    centerLabel: 'Read the turn',
+    flopBetBb: 2,
+    highlightedCardIds: const ['board_3'],
+  ),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_wet_board_repair',
   feedbackSignalId: 'board_texture_change',
   lessonTitle: 'Range meets board',
   lessonSubtitle: 'Range Thinking',
-  caption:
-      'Suppose a turn makes a dry board wetter, but Hero keeps the old one-pair plan.',
   hint: 'Repair the board read before forcing the same old action.',
-  question:
-      'Suppose a turn makes a dry board wetter. What needs fixing in the old one-pair plan?',
   feedbackTitle: 'Repair the board read.',
   feedbackReason:
       'When the board gets wetter, thin value and easy bets need more caution. Repair the texture read before repeating the flop plan.',
@@ -19721,10 +19895,13 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Repair story before line.',
       body:
-          'In this hypothetical example, the turn made the board wetter. Repair that board read before repeating the old one-pair plan.',
+          'Here, the turn made the board wetter. Repair that board read before repeating the old one-pair plan.',
       focusLabels: <String>['Wet turn', 'Repair read', 'One pair caution'],
     ),
   ],
+  caption:
+      'A 9 of diamonds arrives on K-8-7. Hero keeps the old one-pair plan.',
+  question: 'What needs fixing in the old one-pair plan?',
 );
 
 // ── W7: Visible Cards Change Ranges — fresh runners ──────────────────────────────
@@ -19747,6 +19924,14 @@ final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
       focusLabels: <String>['Value', 'Bluff candidate', 'Missed'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Js'),
+    boardCards: _act0LessonCardsV1('Jh 8c 3d'),
+    centerLabel: 'Read the flop',
+  ),
+  feedbackTitle: 'Read the range.',
+  feedbackReason:
+      'A range collects the hands that fit a situation. Read the flop before placing a hand in a bucket.',
 );
 
 // K-7-2 rainbow: hero has KQ → value range (top pair, good kicker)
@@ -19790,8 +19975,9 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
           'K-Q flopped top pair. Missed hands do not connect to the board at all.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(
-    heroCards: _heroKqCards,
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Qc'),
+    boardCards: _act0LessonCardsV1('Kc 7d 2s'),
     centerLabel: 'Range bucket?',
   ),
 );
@@ -19838,11 +20024,9 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
           'Value hands connect to the board. J-T has no pair or flush draw here.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(
-    heroCards: const [
-      Act0CardStateV1(rank: 'J', suit: 's'),
-      Act0CardStateV1(rank: 'T', suit: 'c'),
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Js Tc'),
+    boardCards: _act0LessonCardsV1('Kh 7s 2c'),
     centerLabel: 'Range bucket?',
   ),
 );
@@ -19853,11 +20037,10 @@ final _w6TableBucketNoticeRunner = _w6RangeIntroRunner.copyWith(
   caption: 'Real table. K-7-2 rainbow lands and you hold A-Q.',
   hint: 'Before picking a size, make the first useful read.',
   question: 'What should you ask first?',
-  table: _world5TextureIntroRunner.table.copyWith(
-    heroCards: const [
-      Act0CardStateV1(rank: 'A', suit: 's'),
-      Act0CardStateV1(rank: 'Q', suit: 'c'),
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Qc'),
+    boardCards: _act0LessonCardsV1('Kd 7c 2h'),
+    centerLabel: 'Read the flop',
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19912,6 +20095,11 @@ final _w6BucketsRecapRunner = _w6RangeIntroRunner.copyWith(
       focusLabels: <String>['Value', 'Bluff candidate', 'Missed', 'Board fit'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ts Tc'),
+    boardCards: _act0LessonCardsV1('Td 5h 2s'),
+    centerLabel: 'Read the flop',
+  ),
 );
 
 // Board-fit lesson: 8-7-6 two-tone board ─────────────────────────────────
@@ -19924,13 +20112,10 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
   hint: 'The same hand can be value on one board and missed on another.',
   question: 'What changes a hand\'s range bucket?',
   options: const <Act0RunnerOptionV1>[],
-  table: _w6RangeIntroRunner.table.copyWith(
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '6', suit: 'c'),
-    ],
-    centerLabel: 'Range shift',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Jc'),
+    boardCards: _act0LessonCardsV1('8h 7h 6c'),
+    centerLabel: 'Read the flop',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19940,6 +20125,9 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
       focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
     ),
   ],
+  feedbackTitle: 'Read how the board fits.',
+  feedbackReason:
+      'The same private cards can make a strong hand on one board and miss another.',
 );
 
 // 8-7-6 two-tone: hero has K-Q (no pair, no draw) → missed, bluff-candidate suboptimal
@@ -19949,7 +20137,11 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
   caption: '8-7-6 two-tone. Hero holds K-Q.',
   hint: 'K-Q was strong preflop, but this board changed everything.',
   question: 'Which range bucket is K-Q on 8-7-6?',
-  table: _w6BoardFitIntroRunner.table.copyWith(heroCards: _heroKqCards),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Qc'),
+    boardCards: _act0LessonCardsV1('8h 7h 6c'),
+    centerLabel: 'Read the flop',
+  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'missed',
@@ -19995,11 +20187,10 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
   caption: 'Same 8-7-6 two-tone. Hero holds 9-8.',
   hint: '9-8 has top pair and an open-ended straight draw.',
   question: 'Which range bucket is 9-8 on 8-7-6?',
-  table: _w6BoardFitIntroRunner.table.copyWith(
-    heroCards: const [
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('9s 8c'),
+    boardCards: _act0LessonCardsV1('8h 7h 6c'),
+    centerLabel: 'Read the flop',
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20039,11 +20230,17 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
 );
 
 final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w6BoardFitIntroRunner.table),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jh 9d'),
+    boardCards: _act0LessonCardsV1('Ad 7s 4c 4h'),
+    centerLabel: 'Read the turn',
+    flopBetBb: 2,
+  ),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_turn_shift_bucket',
   feedbackSignalId: 'range_bucket_shift',
-  caption: 'Suppose a bluff candidate loses fold pressure on the turn.',
+  caption:
+      'BTN bet the flop and BB called. Assume BB is less likely to fold after checking the paired turn.',
   hint: 'When pressure drops, the bucket can slide.',
   question:
       'Suppose a bluff candidate loses fold pressure on the turn. What can happen to its bucket?',
@@ -20110,6 +20307,11 @@ final _w6BoardFitRecapRunner = _w6BoardFitIntroRunner.copyWith(
       focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Jc'),
+    boardCards: _act0LessonCardsV1('4h 5h 6s'),
+    centerLabel: 'Read the flop',
+  ),
 );
 
 // Pressure lines lesson ───────────────────────────────────────────────────
@@ -20132,9 +20334,17 @@ final _w6PressureLinesIntroRunner = _w6RangeIntroRunner.copyWith(
       focusLabels: <String>['Bet value', 'Bluff', 'Check-fold'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Qd'),
+    boardCards: _act0LessonCardsV1('Qh 8s 3d'),
+    centerLabel: 'Read the flop',
+  ),
+  feedbackTitle: 'Ask what the bet earns.',
+  feedbackReason:
+      'Before betting, decide whether you want a weaker hand to call or a better hand to fold.',
 );
 
-// K-7-2: hero has K-Q (value) → bet for value (correct), check=suboptimal, fold=wrong
+// K-7-2: Hero has K-Q and acts after BB checks.
 final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_value_range_action',
@@ -20165,20 +20375,21 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
           'by betting, not by waiting.',
     ),
     Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
+      id: 'bet_bluff',
+      label: 'Bet as a bluff',
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Very close.',
       feedbackReason:
-          'Folding top pair good kicker on a dry board gives up a very profitable spot.',
+          'A weaker pair can call here. The bet aims to get called by worse, rather than to make a better hand fold.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(
-    heroCards: _heroKqCards,
-    centerLabel: 'Value action',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh Qs'),
+    boardCards: _act0LessonCardsV1('Kd 7s 2c'),
+    centerLabel: 'After BB checks',
   ),
 );
 
@@ -20226,12 +20437,10 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
           'will call with worse.',
     ),
   ],
-  table: _world5TextureIntroRunner.table.copyWith(
-    heroCards: const [
-      Act0CardStateV1(rank: 'A', suit: 's'),
-      Act0CardStateV1(rank: 'Q', suit: 'c'),
-    ],
-    centerLabel: 'Bucket?',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Qc'),
+    boardCards: _act0LessonCardsV1('Kh 7d 2c'),
+    centerLabel: 'Read the flop',
   ),
 );
 
@@ -20241,11 +20450,10 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   caption: 'K-7-2 rainbow. Hero holds J-T with no draw.',
   hint: 'Pure missed hands usually do not want a big pot.',
   question: 'What is the clean action direction?',
-  table: _world5TextureIntroRunner.table.copyWith(
-    heroCards: const [
-      Act0CardStateV1(rank: 'J', suit: 's'),
-      Act0CardStateV1(rank: 'T', suit: 'c'),
-    ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jd Th'),
+    boardCards: _act0LessonCardsV1('Ks 7h 2c'),
+    centerLabel: 'After BB checks',
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20324,25 +20532,12 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
           'The bet is fine, but the reason matters. This is not bluff pressure. It is a value line because top pair can get called by worse.',
     ),
   ],
-  table: _w6ValueRangeActionRunner.table.copyWith(
-    potLabel: 'Pot 6 BB',
-    centerLabel: 'Real table value line',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'c'),
-    ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BB checks'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
-    activeSeatId: 'btn',
-    highlightedSeatIds: const <String>['btn', 'bb'],
-    highlightedCardIds: const <String>['hero_0', 'board_0'],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ks Jc'),
+    boardCards: _act0LessonCardsV1('Kh 8d 4c'),
+    centerLabel: 'After BB checks',
+    openBb: 2.75,
+    highlightedCardIds: const ['hero_0', 'board_0'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -20397,29 +20592,13 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
           'A-Q has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.',
     ),
   ],
-  table: _w6BluffCandidateRunner.table.copyWith(
-    streetLabel: 'Turn',
-    potLabel: 'Pot 11 BB',
-    centerLabel: 'Turn pressure shift',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 's'),
-      Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '2', suit: 's'),
-      Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-    ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN bets flop'),
-      Act0ActionTrailItemV1(label: 'BB calls'),
-      Act0ActionTrailItemV1(label: 'BB checks turn'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
-    activeSeatId: 'btn',
-    highlightedSeatIds: const <String>['btn', 'bb'],
-    highlightedCardIds: const <String>['board_2', 'board_3'],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Qd'),
+    boardCards: _act0LessonCardsV1('Kc 7h 2s 2d'),
+    centerLabel: 'After BB checks',
+    openBb: 2.75,
+    flopBetBb: 2.5,
+    highlightedCardIds: const ['board_2', 'board_3'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -20448,6 +20627,11 @@ final _w6PressureLinesRecapRunner = _w6PressureLinesIntroRunner.copyWith(
       focusLabels: <String>['Value bets', 'Bluff folds out', 'Missed folds'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Tc'),
+    boardCards: _act0LessonCardsV1('As 7s 4h'),
+    centerLabel: 'Read the flop',
+  ),
 );
 
 // Combo-count lesson ───────────────────────────────────────────────────────
@@ -20461,7 +20645,10 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
       'First count the possible hands. To weigh a range, ask how often each one takes the action.',
   question: 'Why do combo counts matter?',
   options: const <Act0RunnerOptionV1>[],
-  table: _w6RangeIntroRunner.table.copyWith(centerLabel: 'Combo count'),
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jc 9d'),
+    centerLabel: 'Count combinations',
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Families have counts.',
@@ -20471,6 +20658,9 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
       focusLabels: <String>['16 combos', '6 combos', 'Range density'],
     ),
   ],
+  feedbackTitle: 'Count the actual hands.',
+  feedbackReason:
+      'A hand family represents several different two-card combinations. Count them to see how much weight each family has.',
 );
 
 final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20514,6 +20704,10 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
           'Six combos is the count for a pocket pair. A-K has 16 possible suit combinations before removing known cards.',
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Tc 9h'),
+    centerLabel: 'Count combinations',
+  ),
 );
 
 final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20556,6 +20750,10 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
           'Sixteen combos belongs to two different ranks like A-K, not to one pocket pair.',
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('8h 8c'),
+    centerLabel: 'Count combinations',
+  ),
 );
 
 final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20598,6 +20796,10 @@ final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
           'Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.',
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('7d 6d'),
+    centerLabel: 'Count combinations',
+  ),
 );
 
 final _w6ComboCountsRecapRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20618,6 +20820,10 @@ final _w6ComboCountsRecapRunner = _w6ComboCountsIntroRunner.copyWith(
       focusLabels: <String>['16 combos', '6 combos', 'Range density'],
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('9c 8c'),
+    centerLabel: 'Count combinations',
+  ),
 );
 
 final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20670,6 +20876,10 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       focusLabels: <String>['12 offsuit', '4 suited', 'Range weight'],
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jh Th'),
+    centerLabel: 'Count combinations',
+  ),
 );
 
 final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20726,6 +20936,10 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       ],
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Jc'),
+    centerLabel: 'Count combinations',
+  ),
 );
 
 final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -20739,14 +20953,10 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       'Here every combo from either family takes the same action. Compare counts before removing known cards.',
   question:
       'Which family contributes more combos to this range before blockers?',
-  table: _legacyFacingOpenTableV1.copyWith(
+  table: _act0CoOpenLessonTableV1(
+    startingDepthBb: 100,
     heroCards: _unknownHoleCards,
-    centerLabel: 'Range weight',
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN reads the range'),
-    ],
+    centerLabel: 'Count combinations',
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20800,71 +21010,12 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
   caption: 'River board is K-7-2-9-4. Hero shows A-K. Villain shows K-Q.',
   hint: 'Name the made hand first. Both players have one pair.',
   question: 'Which hand is stronger at showdown?',
-  table: _w6RangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 11 BB',
-    toCallLabel: '',
-    centerLabel: 'Showdown read',
-    boardCards: _boardK7294Cards,
+  table: _act0CheckpointShowdownTableV1(
     heroCards: _heroAkCards,
-    highlightedCardIds: const <String>['hero_0', 'hero_1', 'board_0'],
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'River checks through'),
-      Act0ActionTrailItemV1(label: 'Cards tabled'),
-    ],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Villain',
-        holeCards: _villainKqCards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroAkCards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-    ],
+    otherCards: _villainKqCards,
+    boardCards: _boardK7294Cards,
+    flopBetBb: 2.5,
+    highlightedCardIds: const ['hero_0', 'hero_1', 'board_0'],
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20918,71 +21069,11 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
   caption: 'River board is J-8-8-2-2. Hero shows A-J. Villain shows K-8.',
   hint: 'The board helped both players. Compare the full five-card hand.',
   question: 'Which hand is stronger at showdown?',
-  table: _w6RangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 14 BB',
-    toCallLabel: '',
-    centerLabel: 'River compare',
-    boardCards: _boardJ8822Cards,
+  table: _act0CheckpointShowdownTableV1(
     heroCards: _heroAjCards,
-    highlightedCardIds: const <String>['hero_1', 'board_0', 'board_1'],
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'River checks through'),
-      Act0ActionTrailItemV1(label: 'Cards tabled'),
-    ],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Villain',
-        holeCards: _villainK8Cards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroAjCards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-    ],
+    otherCards: _villainK8Cards,
+    boardCards: _boardJ8822Cards,
+    flopBetBb: 4,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21042,76 +21133,18 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
       'Real table showdown. River board is A-K-Q-J-T. Hero shows A-5. Villain shows K-4.',
   hint: 'Best five cards decide the hand, not the loudest private card.',
   question: 'What is the clean read before the pot is pushed?',
-  table: _w6RangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 18 BB',
-    toCallLabel: '',
-    centerLabel: 'Live showdown',
-    boardCards: _boardBroadwayCards,
+  table: _act0CheckpointShowdownTableV1(
     heroCards: _heroA5Cards,
-    highlightedCardIds: const <String>[
+    otherCards: _villainK4Cards,
+    boardCards: _boardBroadwayCards,
+    flopBetBb: 3,
+    turnBetBb: 3,
+    highlightedCardIds: const [
       'board_0',
       'board_1',
       'board_2',
       'board_3',
       'board_4',
-    ],
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'River checks through'),
-      Act0ActionTrailItemV1(label: 'Cards tabled'),
-    ],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Villain',
-        holeCards: _villainK4Cards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroA5Cards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Seat',
-        isOccupied: false,
-        isInHand: false,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-      ),
     ],
   ),
   options: const <Act0RunnerOptionV1>[
@@ -21168,8 +21201,13 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
   caption: 'The smaller of two stacks caps what those players can match.',
   hint: 'Compare the two players who can put chips in against each other.',
   question: 'What is the effective stack?',
-  table: _w6ComboCountsIntroRunner.table.copyWith(
-    centerLabel: 'Effective stack',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Qd'),
+    boardCards: _act0LessonCardsV1('Qs 8c 3h'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 200,
+    bbBehindBb: 30,
+    openBb: 2.5,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -21179,6 +21217,9 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
       focusLabels: <String>['200 BB', '30 BB', 'Effective stack'],
     ),
   ],
+  feedbackTitle: 'Find the smaller stack.',
+  feedbackReason:
+      'Between two players, the smaller stack caps what the two can still match.',
 );
 
 final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
@@ -21221,12 +21262,20 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
           'The average is 115 BB, but these players can only match 30 BB each.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('7s 7c'),
+    boardCards: _act0LessonCardsV1('Ad 9h 3c'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 200,
+    bbBehindBb: 30,
+    openBb: 3,
+  ),
 );
 
 final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_effective_stack_100bb',
-  caption: 'Hero has 100 BB. Villain has 100 BB.',
+  caption: 'Both players have the same stack behind on this flop.',
   hint: 'Equal stacks keep the full depth in play.',
   question: 'What is the effective stack?',
   options: const <Act0RunnerOptionV1>[
@@ -21263,6 +21312,14 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
           'Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Td'),
+    boardCards: _act0LessonCardsV1('Th 8d 3c'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 100,
+    bbBehindBb: 100,
+    openBb: 2.75,
+  ),
 );
 
 final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith(
@@ -21305,6 +21362,14 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
           'Total chips are a real table detail, so this looks useful at first. But total chips do not drive the plan here. The dominant cue is the effective stack that caps the real risk.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Js Jc'),
+    boardCards: _act0LessonCardsV1('Td 7c 3h'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 120,
+    bbBehindBb: 18,
+    openBb: 2.5,
+  ),
 );
 
 final _w7EffectiveStackRecapRunner = _w7EffectiveStackIntroRunner.copyWith(
@@ -21324,6 +21389,14 @@ final _w7EffectiveStackRecapRunner = _w7EffectiveStackIntroRunner.copyWith(
       focusLabels: <String>['Smaller stack', 'Real risk', 'Hand depth'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh Qh'),
+    boardCards: _act0LessonCardsV1('Qc 9s 2d'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 43,
+    bbBehindBb: 75,
+    openBb: 3,
+  ),
 );
 
 final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
@@ -21331,10 +21404,17 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   lessonId: 'w7_depth_shift_intro',
   lessonTitle: 'Same hand, different depth',
   caption:
-      'The same hand leaves different room for later bets at 20 BB and 100 BB.',
+      'Compare a short stack here with a deeper stack holding the same hand.',
   hint: 'Short stacks simplify decisions. Deep stacks create more future risk.',
   question: 'Why does stack depth change the plan?',
-  table: _w7EffectiveStackIntroRunner.table.copyWith(heroCards: _heroAJsCards),
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Js'),
+    boardCards: _act0LessonCardsV1('Ac 7h 2c'),
+    centerLabel: 'Read the stack depth',
+    heroBehindBb: 20,
+    bbBehindBb: 20,
+    openBb: 2.5,
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Depth changes commitment.',
@@ -21343,12 +21423,15 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
       focusLabels: <String>['20 BB', '100 BB', 'More room', 'More risk'],
     ),
   ],
+  feedbackTitle: 'Check how much is behind.',
+  feedbackReason:
+      'The same hand can face bigger bets on the same streets when more chips are left.',
 );
 
 final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_20bb_wider',
-  caption: 'Compare A-J suited at 20 BB and 100 BB effective.',
+  caption: 'Compare this short-stack A-J suited spot with a deeper one.',
   hint: 'Shorter stacks reduce the postflop burden.',
   question: 'Which depth leaves less room for large bets on later streets?',
   options: const <Act0RunnerOptionV1>[
@@ -21385,12 +21468,20 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
           'Stack depth changes both risk and commitment. The same hand does not play the same way at every depth.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah Jh'),
+    boardCards: _act0LessonCardsV1('Ad 8c 4h'),
+    centerLabel: 'Read the stack depth',
+    heroBehindBb: 20,
+    bbBehindBb: 20,
+    openBb: 2.5,
+  ),
 );
 
 final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_100bb_tighter',
-  caption: 'Now look at the same hand with 100 BB effective.',
+  caption: 'Now look at the same hand with more chips behind.',
   hint: 'More streets create more ways to make a second-best hand.',
   question: 'What changes when the hand is 100 BB deep?',
   options: const <Act0RunnerOptionV1>[
@@ -21427,6 +21518,14 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
           'Forced all-in logic belongs more to short stacks. With 100 BB, the key change is extra room and extra risk, not immediate all-in pressure.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Jd'),
+    boardCards: _act0LessonCardsV1('Ah 8s 4d'),
+    centerLabel: 'Read the stack depth',
+    heroBehindBb: 100,
+    bbBehindBb: 100,
+    openBb: 2.5,
+  ),
 );
 
 final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
@@ -21469,7 +21568,57 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
           '40 BB has meaningful room, but it is still less forgiving than full deep-stack play.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Jc'),
+    boardCards: _act0LessonCardsV1('As 8d 4c'),
+    centerLabel: 'Read the stack depth',
+    heroBehindBb: 40,
+    bbBehindBb: 40,
+    openBb: 2.5,
+  ),
 );
+
+Act0TableStateV1 _act0CoOpenLessonTableV1({
+  required num startingDepthBb,
+  required List<Act0CardStateV1> heroCards,
+  required String centerLabel,
+}) {
+  final table = _act0FacingOpenTableV1(
+    _legacyFacingOpenTableV1.copyWith(
+      heroCards: heroCards,
+      centerLabel: centerLabel,
+      autoPlayHistory: false,
+      highlightedSeatIds: const [],
+    ),
+    opener: 'co',
+  );
+  return table.copyWith(
+    actionTrail: [
+      for (final item in table.actionTrail)
+        if (item.label == 'CO opens 2.5 BB')
+          const Act0ActionTrailItemV1(label: 'CO raises 2.5 BB')
+        else
+          item,
+    ],
+    seats: [
+      for (final seat in table.seats)
+        switch (seat.seatId) {
+          'btn' => _act0CopySeatStateV1(
+            seat,
+            stackLabel: _act0BbLabelV1(startingDepthBb),
+            cardsVisibleMode: heroCards == _unknownHoleCards
+                ? Act0CardsVisibleModeV1.faceDown
+                : Act0CardsVisibleModeV1.faceUp,
+          ),
+          'co' => _act0CopySeatStateV1(
+            seat,
+            stackLabel: _act0BbLabelV1(startingDepthBb - 2.5),
+          ),
+          _ => seat,
+        },
+    ],
+  );
+}
 
 final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
@@ -21479,11 +21628,10 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
   hint:
       'Read hand, position, then notice how the shorter depth simplifies the future.',
   question: 'What is the cleaner stack-depth read here?',
-  table: _legacyFacingOpenTableV1.copyWith(
+  table: _act0CoOpenLessonTableV1(
+    startingDepthBb: 25,
     heroCards: _heroAJsCards,
-    centerLabel: '25 BB effective',
-    potLabel: 'Pot 4 BB',
-    toCallLabel: 'To call 2.5 BB',
+    centerLabel: 'Compare the stacks',
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21536,11 +21684,10 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       'Same spot again. CO opens 2.5 BB. Hero is BTN with A-J suited at 100 BB effective.',
   hint: 'The hand did not change. The stack did.',
   question: 'What changes when this spot becomes 100 BB deep?',
-  table: _legacyFacingOpenTableV1.copyWith(
+  table: _act0CoOpenLessonTableV1(
+    startingDepthBb: 100,
     heroCards: _heroAJsCards,
-    centerLabel: '100 BB effective',
-    potLabel: 'Pot 4 BB',
-    toCallLabel: 'To call 2.5 BB',
+    centerLabel: 'Compare the stacks',
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21603,6 +21750,14 @@ final _w7DepthShiftRecapRunner = _w7DepthShiftIntroRunner.copyWith(
       focusLabels: <String>['Short stack', 'Deep stack', 'Risk', 'Commitment'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Js'),
+    boardCards: _act0LessonCardsV1('Jh 9c 3d'),
+    centerLabel: 'Read the stack depth',
+    heroBehindBb: 78,
+    bbBehindBb: 36,
+    openBb: 3,
+  ),
 );
 
 final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
@@ -21619,6 +21774,17 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
       focusLabels: <String>['Low SPR', 'Commitment', 'High SPR', 'Room'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah Tc'),
+    boardCards: _act0LessonCardsV1('Ac 8s 3d'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 20,
+    bbBehindBb: 35,
+    openBb: 2.25,
+  ),
+  feedbackTitle: 'Compare stack and pot.',
+  feedbackReason:
+      'Compare the smaller remaining stack with the pot to see how much could still go in.',
 );
 
 final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
@@ -21661,6 +21827,14 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
           'SPR changes the hand structure. SPR 2 is a much more commit-heavy situation than SPR 8.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Qc'),
+    boardCards: _act0LessonCardsV1('Kh 7d 3s'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 10,
+    bbBehindBb: 12,
+    openBb: 2.25,
+  ),
 );
 
 final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
@@ -21703,6 +21877,14 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
           'SPR changes how postflop decisions feel. High SPR gives you more future streets and more flexibility.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As 9c'),
+    boardCards: _act0LessonCardsV1('Ad 7h 2s'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 40,
+    bbBehindBb: 42,
+    openBb: 2.25,
+  ),
 );
 
 final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
@@ -21745,20 +21927,28 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
           'SPR 4 has less room and more commitment pressure than SPR 8. It is a middle node, not a deep one.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Jd 9d'),
+    boardCards: _act0LessonCardsV1('Js 8c 3h'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 20,
+    bbBehindBb: 27,
+    openBb: 2.25,
+  ),
 );
 
 final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_top_pair_spr2_transfer',
   caption: 'Real table. K-7-2 rainbow flop. Hero has K-Q and SPR is 2.',
-  hint:
-      'The hand did not change from the deeper version. Read what the low SPR changes first.',
   question: 'What does low SPR add to this top-pair spot?',
-  table: _w6ValueRangeActionRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 8 BB',
-    toCallLabel: '',
-    centerLabel: 'SPR 2, top pair',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Qc'),
+    boardCards: _act0LessonCardsV1('Kc 7d 2s'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 16,
+    bbBehindBb: 18,
+    openBb: 3.75,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21798,10 +21988,11 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Same top pair, tighter room.',
       body:
-          'Compare this directly with the SPR 8 version. Low SPR keeps less room behind, so commitment pressure becomes part of the first read instead of a later warning.',
+          'Low SPR keeps less room behind, so commitment pressure becomes part of the first read instead of a later warning.',
       focusLabels: <String>['Top pair', 'SPR 2', 'Less room', 'Commitment'],
     ),
   ],
+  hint: 'Compare the smaller stack with the pot. How much is left to bet?',
 );
 
 final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
@@ -21810,11 +22001,13 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
   caption: 'Real table. K-7-2 rainbow flop. Hero has K-Q and SPR is 8.',
   hint: 'Top pair is good, but deep room keeps future-street risk alive.',
   question: 'What does stack depth add to this top-pair spot?',
-  table: _w6ValueRangeActionRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 8 BB',
-    toCallLabel: '',
-    centerLabel: 'SPR 8, top pair',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kh Qd'),
+    boardCards: _act0LessonCardsV1('Ks 7c 2h'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 64,
+    bbBehindBb: 66,
+    openBb: 3.75,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21877,13 +22070,25 @@ final _w7SprRecapRunner = _w7SprIntroRunner.copyWith(
       focusLabels: <String>['Low SPR', 'Commitment', 'High SPR', 'Room'],
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Tc'),
+    boardCards: _act0LessonCardsV1('Ac 7s 4c'),
+    centerLabel: 'Stack and pot',
+    heroBehindBb: 24,
+    bbBehindBb: 30,
+    openBb: 3.75,
+  ),
 );
+
+const _w7FullRingComparisonV1 =
+    'This table is 6-max. At a nine-player full-ring table, '
+    'UTG+1, UTG+2, and LJ also act after UTG.';
 
 final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w7_format_intro',
   lessonTitle: '6-max vs full ring',
-  caption: 'The same hand can open wider in 6-max than in full ring.',
+  caption: _w7FullRingComparisonV1,
   hint:
       'Fewer players behind means less chance someone wakes up with a premium hand.',
   question: 'Why does 6-max usually widen ranges?',
@@ -21891,18 +22096,25 @@ final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Fewer players behind.',
       body:
-          'In 6-max, fewer players can wake up with a stronger hand. That usually lets ranges widen compared with full ring.',
+          'From UTG, five players act after you in 6-max and eight act after you in full ring. With more players still to act, open fewer hands.',
       focusLabels: <String>['6-max', 'Full ring', 'Fewer players behind'],
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kd Jc'),
+    centerLabel: 'Players behind',
+  ),
+  feedbackTitle: 'Count the players behind.',
+  feedbackReason:
+      'From first position, a nine-handed table leaves more players to act than a six-handed table.',
 );
 
 final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_6max_wider',
-  caption: 'A-J offsuit in early position.',
+  caption: _w7FullRingComparisonV1,
   hint: 'Compare 6-max with 9-handed full ring.',
-  question: 'Where does this hand usually open wider?',
+  question: 'In which format can you usually open more hands from UTG?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '6max',
@@ -21937,20 +22149,24 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
           'The hand class stays the same, but the format changes pressure. Fewer players behind usually widens the opening range.',
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Jd'),
+    centerLabel: 'Players behind',
+  ),
 );
 
 final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_fullring_tighter',
-  caption: 'Now imagine the same hand in full ring.',
+  caption: _w7FullRingComparisonV1,
   hint: 'More players still need to act.',
-  question: 'What usually changes in full ring?',
+  question: 'From UTG, how should you adjust your opens in full ring?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'tighter',
-      label: 'Range tightens',
+      label: 'Open fewer hands',
       isCorrect: true,
-      preferredLabel: 'Range tightens',
+      preferredLabel: 'Open fewer hands',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
@@ -21958,10 +22174,10 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'wider',
-      label: 'Range widens more',
+      label: 'Open more hands',
       isCorrect: false,
-      preferredLabel: 'Range tightens',
-      betterAnswerLabel: 'Range tightens',
+      preferredLabel: 'Open fewer hands',
+      betterAnswerLabel: 'Open fewer hands',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
@@ -21971,22 +22187,27 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       id: 'depth',
       label: 'Only stack depth matters',
       isCorrect: false,
-      preferredLabel: 'Range tightens',
-      betterAnswerLabel: 'Range tightens',
+      preferredLabel: 'Open fewer hands',
+      betterAnswerLabel: 'Open fewer hands',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'Stack depth matters too, but format matters here because table size changes how many players are left to act.',
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Jh'),
+    centerLabel: 'Players behind',
+  ),
 );
 
 final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_format_table_notice',
-  caption: 'You jump from 6-max online to a 9-handed live table.',
+  caption: _w7FullRingComparisonV1,
   hint: 'Start by counting how many players are still behind you.',
-  question: 'What is the first useful adjustment?',
+  question:
+      'You move to full ring at the same stack depth. What changes for your UTG opens?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'tighten_early',
@@ -22023,13 +22244,16 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
           'Depth matters too, but table format starts with how many players are left behind to wake up with strength.',
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Js'),
+    centerLabel: 'Players behind',
+  ),
 );
 
 final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w7_format_recap',
-  caption:
-      'Lesson learned: the same hand can open wider in 6-max and tighter in full ring.',
+  caption: _w7FullRingComparisonV1,
   hint: 'Format changes pressure before the cards even hit the flop.',
   question: 'Why does format change opening pressure?',
   feedbackTitle: 'Format takeaway.',
@@ -22043,6 +22267,10 @@ final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       focusLabels: <String>['6-max', 'Full ring', 'Players behind'],
     ),
   ],
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kc Td'),
+    centerLabel: 'Players behind',
+  ),
 );
 
 final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
@@ -22102,6 +22330,14 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
           'Raw chips plus range still misses the real stack-risk layer. Effective stack, SPR, and format explain how much pressure the range can handle.',
     ),
   ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Kc Qs'),
+    boardCards: _act0LessonCardsV1('Kh 8d 3s'),
+    centerLabel: 'Read the table',
+    heroBehindBb: 32,
+    bbBehindBb: 43,
+    openBb: 3.75,
+  ),
 );
 
 final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
@@ -22123,6 +22359,12 @@ final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
       focusLabels: <String>['Tournament life', 'Survival', 'Bubble'],
     ),
   ],
+  table: _readBoardRunner.table.copyWith(
+    boardCards: _act0LessonCardsV1('Kc 7d 2s'),
+    potLabel: 'Pot 5 BB',
+    centerLabel: 'Combo count',
+    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+  ),
 );
 
 final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(

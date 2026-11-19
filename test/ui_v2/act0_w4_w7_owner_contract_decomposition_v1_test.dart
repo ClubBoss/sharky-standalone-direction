@@ -147,7 +147,12 @@ void main() {
             .runner
             .table;
         expect(table.toCallLabel, isEmpty, reason: id);
-        expect(table.actionTrail, isEmpty, reason: id);
+        expect(table.actionTrail.last.label, 'Flop: BB checks', reason: id);
+        expect(
+          table.actionTrail.where((item) => item.label.contains('bets')),
+          isEmpty,
+          reason: id,
+        );
         expect(
           table.seats.every((seat) => seat.bet == null),
           isTrue,
