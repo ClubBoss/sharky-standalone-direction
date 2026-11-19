@@ -32,6 +32,26 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
                 self.assertEqual(result["results"][0]["output_tail"], "original failure")
                 self.assertEqual(command.call_count, 1)
 
+    def test_tier_b_shards_batch_the_full_manifest_once(self):
+        files = run_lane_v1._read_manifest(run_lane_v1.LANES["tier-b"]["manifest"])
+        assigned = []
+        for index in range(2):
+            with mock.patch.dict(os.environ, {"TEST_AUTHORITY_SHARD": f"{index}/2"}), \
+                 mock.patch.object(run_lane_v1, "_run_command", return_value={
+                     "status": "pass", "duration_seconds": 1,
+                 }) as command:
+                result = run_lane_v1.run_lane("tier-b", 120, False)
+
+            command.assert_called_once()
+            batch_files = command.call_args.args[1][2:-2]
+            self.assertEqual(batch_files, [entry for entry in files if entry in batch_files])
+            self.assertEqual([entry["name"] for entry in result["results"]], batch_files)
+            assigned.append(batch_files)
+
+        self.assertCountEqual(assigned[0] + assigned[1], files)
+        full_route = "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart"
+        self.assertIn(full_route, min(assigned, key=len))
+
     def test_full_course_budget_is_scoped_and_larger_overrides_still_apply(self):
         course = next(c for c in run_lane_v1.TIER_A_COMMANDS
                       if "test/ui_v2/act0_w1_long_session_v1_test.dart" in c["cmd"])

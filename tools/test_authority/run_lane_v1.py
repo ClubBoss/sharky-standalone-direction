@@ -350,24 +350,49 @@ TIER_A_WEIGHTS = {
     "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 11,
 }
 # LDR-01 writes the OBS04 captures; the CI job sealing them runs shard 0.
-TIER_A_SHARD0 = {"durable learner truth and assessment interaction (LDR-01)"}
+TIER_A_SHARD0 = ("durable learner truth and assessment interaction (LDR-01)",)
+
+# Rough weights from a serial run of the Tier B manifest, with per-file setup.
+# Ordinary files count as 3; the full app-root route alone took about 120s.
+TIER_B_WEIGHTS = {
+    "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart": 122,
+    "test/ui_v2/act0_w01_theory_source_truth_v1_test.dart": 8,
+    "test/ui_v2/act0_w24_context_recap_v1_test.dart": 8,
+    "test/ui_v2/act0_positions_theory_persistence_truth_v1_test.dart": 7,
+    "test/ui_v2/academy_leaves/act0_academy_onboarding_leaf_v1_test.dart": 6,
+    "test/ui_v2/act0_s11_learn_run_provenance_v1_test.dart": 6,
+}
 
 
-def _tier_a_shard(commands: list[dict[str, object]], index: int, count: int) -> list[dict[str, object]]:
-    """Greedy split by weight; every command lands in exactly one shard."""
+def _shard_owners(
+    names: list[str],
+    count: int,
+    weights: dict[str, int],
+    default_weight: int,
+    pinned_shard_zero: tuple[str, ...] = (),
+) -> dict[str, int]:
+    """Assign the longest remaining item to the lightest shard."""
     loads = [0] * count
-    owner: dict[str, int] = {}
-    for name in TIER_A_SHARD0:
-        owner[name] = 0
-        loads[0] += TIER_A_WEIGHTS.get(name, 10)
-    for command in sorted(commands, key=lambda c: -TIER_A_WEIGHTS.get(str(c["name"]), 10)):
-        name = str(command["name"])
+    owner = {name: 0 for name in pinned_shard_zero}
+    loads[0] = sum(weights.get(name, default_weight) for name in pinned_shard_zero)
+    for name in sorted(names, key=lambda name: -weights.get(name, default_weight)):
         if name in owner:
             continue
         target = loads.index(min(loads))
         owner[name] = target
-        loads[target] += TIER_A_WEIGHTS.get(name, 10)
-    return [c for c in commands if owner[str(c["name"])] == index]
+        loads[target] += weights.get(name, default_weight)
+    return owner
+
+
+def _tier_a_shard(commands: list[dict[str, object]], index: int, count: int) -> list[dict[str, object]]:
+    owner = _shard_owners(
+        [str(command["name"]) for command in commands],
+        count,
+        TIER_A_WEIGHTS,
+        default_weight=10,
+        pinned_shard_zero=TIER_A_SHARD0,
+    )
+    return [command for command in commands if owner[str(command["name"])] == index]
 
 
 def _run_tier_a(timeout: int, smoke: bool) -> list[dict[str, object]]:
@@ -400,10 +425,12 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
 
     shard = os.environ.get("TEST_AUTHORITY_SHARD", "")
     if shard:
-        # "i/n": run every n-th file starting at i, so CI can split a lane
-        # across parallel jobs. Together the shards cover the whole manifest.
         index, count = (int(x) for x in shard.split("/"))
-        files = files[index::count]
+        if lane == "tier-b" and not smoke:
+            owner = _shard_owners(files, count, TIER_B_WEIGHTS, default_weight=3)
+            files = [path for path in files if owner[path] == index]
+        else:
+            files = files[index::count]
     if lane == "tier-b" and not smoke and len(files) > 1:
         # One `flutter test` process for the whole blocking lane: each separate
         # process spends ~9s on startup, which dominated this lane. A green batch
