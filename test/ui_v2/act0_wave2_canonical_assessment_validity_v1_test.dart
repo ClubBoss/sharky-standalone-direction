@@ -638,7 +638,7 @@ void main() {
           expect(task.runner.question, parent.runner.question);
           expect(
             task.runner.question,
-            '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple action?',
+            'By the Sharky starting chart, what is the simple action?',
           );
           expect(task.runner.teachingSteps.single.title, 'Position checklist.');
           final historicalTask = Act0LessonTaskV1(
@@ -805,7 +805,7 @@ void main() {
           final prompt = find.byKey(const Key('act0_integrated_scene_prompt'));
           expect(
             tester.widget<Text>(prompt).data,
-            '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple action?',
+            'By the Sharky starting chart, what is the simple action?',
           );
           final choice = find.byKey(Key('act0_shell_option_$choiceId'));
           expect(choice, findsOneWidget);

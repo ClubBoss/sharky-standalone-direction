@@ -1734,10 +1734,8 @@ void main() {
           expect(saved['skippedTaskIds'], isNot(contains(id)));
         }
         const offeredBody =
-            'Name the bet purpose first. '
-            'Value means worse hands can still call. '
-            'A bluff tries to make better hands fold. '
-            'Protection makes the next card cost money.';
+            'A value bet is a bet you expect weaker hands to call. '
+            'A bluff tries to make better hands fold.';
         final definition = find.textContaining(offeredBody);
         expect(definition, findsOneWidget);
         final paragraph = tester.renderObject<RenderParagraph>(definition);
