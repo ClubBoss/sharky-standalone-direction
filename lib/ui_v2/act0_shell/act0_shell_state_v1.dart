@@ -6090,7 +6090,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w6_bluff_candidate',
-        title: 'Bluff candidate',
+        title: 'When better hands fold',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6BluffCandidateRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -6360,16 +6360,19 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'range_checkpoint_pressure',
-        title: 'Bluff candidate',
+        title: 'Pressure after a check',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6BluffCandidateRunner.copyWith(
+          caption:
+              'On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.',
+          question: 'Which plan fits 9-6 under this rule?',
           table: _act0BoardLessonTableV1(
-            heroCards: _act0LessonCardsV1('Ah Qc'),
-            boardCards: _act0LessonCardsV1('Ks 7c 2d'),
+            heroCards: _act0LessonCardsV1('9h 6d'),
+            boardCards: _act0LessonCardsV1('Kd 8s 3h'),
             centerLabel: 'Read the flop',
           ),
           options: _act0AuthoredCorrectOptionAtV1(
-            _w6BluffCandidateRunner.options,
+            _w6BluffCandidateOptionsV1('9-6'),
             correctOptionId: 'bluff',
             correctIndex: 1,
           ),
@@ -6528,7 +6531,9 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
           quality: choiceId == spec.expectedChoiceId
               ? Act0FeedbackQualityV1.correct
               : Act0FeedbackQualityV1.wrong,
-          feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
+          feedbackTitle: choiceId == spec.expectedChoiceId
+              ? _w7LearnerFeedbackTitleV1(spec.taskId)
+              : 'Recheck the visible cards.',
           feedbackReason: choiceId == spec.expectedChoiceId
               ? spec.feedbackReason
               : spec.incorrectFeedback[choiceId]!,
@@ -20201,46 +20206,46 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
 final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_missed_dry_board',
-  caption: 'Same K-7-2 rainbow. Hero holds J-T.',
-  hint: 'No pair, no draw on a dry board.',
-  question: 'Which range bucket is J-T on this board?',
+  caption:
+      'BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.',
+  hint: 'Compare the high cards if neither hand improves.',
+  question: 'Which plan fits A-Q under this rule?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'missed',
-      label: 'Missed',
+      label: 'Missed: check',
       isCorrect: true,
-      preferredLabel: 'Missed',
+      preferredLabel: 'Missed: check',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Missed: no pair, no draw.',
+      feedbackTitle: 'Ace-high can win.',
       feedbackReason:
-          'J-T has no pair and no clear draw on K-7-2. It is in the missed bucket.',
+          'A-Q missed the flop, but if nobody improves, it beats both Q-J and A-9. The rule says to check when your hand can already win.',
     ),
     Act0RunnerOptionV1(
       id: 'bluff',
-      label: 'Bluff candidate',
+      label: 'Consider a bluff',
       isCorrect: false,
-      preferredLabel: 'Missed',
-      betterAnswerLabel: 'Missed',
+      preferredLabel: 'Missed: check',
+      betterAnswerLabel: 'Missed: check',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable read.',
+      feedbackTitle: 'Ace-high has a reason to check.',
       feedbackReason:
-          'J-T can bluff sometimes, but on a dry board with almost no way to improve it is mostly missed '
-          'rather than a strong bluff candidate.',
+          'A bet makes Q-J and A-9 fold. A-Q is already ahead of both, so that is not the goal in this example.',
     ),
     Act0RunnerOptionV1(
       id: 'value',
-      label: 'Value',
+      label: 'Value: bet',
       isCorrect: false,
-      preferredLabel: 'Missed',
-      betterAnswerLabel: 'Missed',
+      preferredLabel: 'Missed: check',
+      betterAnswerLabel: 'Missed: check',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'One more step.',
+      feedbackTitle: 'The weaker hands would fold.',
       feedbackReason:
-          'Value hands connect to the board. J-T has no pair or flush draw here.',
+          'A-Q has no pair here. Both weaker high-card hands fold under the rule, so they cannot pay off a value bet.',
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Js Tc'),
+    heroCards: _act0LessonCardsV1('As Qd'),
     boardCards: _act0LessonCardsV1('Kh 7s 2c'),
     centerLabel: 'Range bucket?',
   ),
@@ -20364,9 +20369,9 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Missed',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
+      feedbackTitle: 'K-Q missed this flop.',
       feedbackReason:
-          'K-Q has no pair and no draw on 8-7-6. It missed this board completely.',
+          'K-Q has neither a pair nor a one-card straight or flush draw on this flop.',
     ),
     Act0RunnerOptionV1(
       id: 'bluff',
@@ -20375,10 +20380,9 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       preferredLabel: 'Missed',
       betterAnswerLabel: 'Missed',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable read.',
+      feedbackTitle: 'Read the board before choosing a bet.',
       feedbackReason:
-          'K-Q can bluff sometimes on wet boards, but with two overcards and no '
-          'backdoor draws it leans more toward missed.',
+          'K-Q missed. To decide whether to bluff, you still need to know which better hands the other player would fold.',
     ),
     Act0RunnerOptionV1(
       id: 'value',
@@ -20387,10 +20391,9 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       preferredLabel: 'Missed',
       betterAnswerLabel: 'Missed',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Getting warmer.',
+      feedbackTitle: 'Value depends on weaker calls.',
       feedbackReason:
-          'K-Q did not pair on 8-7-6. Only hands that connect to the board '
-          'are strong enough to bet for value.',
+          'K-Q missed this flop. An overpair such as J-J can bet for value if enough weaker hands call, even with no jack on the board.',
     ),
   ],
 );
@@ -20563,9 +20566,10 @@ final _w6PressureLinesIntroRunner = _w6RangeIntroRunner.copyWith(
 final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_value_range_action',
-  caption: 'K-7-2 rainbow. Hero holds K-Q. You are in the value range.',
-  hint: 'Value hands want to build the pot.',
-  question: 'What does K-Q do here?',
+  caption:
+      'BB checks, then calls half-pot bets with weaker pairs such as K-J and 7-6.',
+  hint: 'Think about which hands would pay to see the turn.',
+  question: 'What is the purpose of a half-pot bet here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet',
@@ -20573,21 +20577,20 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Weaker pairs can pay.',
       feedbackReason:
-          'Top pair good kicker bets to get value from worse hands that will call.',
+          'In this example, BB calls a half-pot bet with weaker pairs such as K-J or 7-6. A call from a worse hand is what makes this a value bet.',
     ),
     Act0RunnerOptionV1(
       id: 'check',
-      label: 'Check and see',
+      label: 'Check',
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Legal check, lost value.',
+      feedbackTitle: 'A check gives a free card.',
       feedbackReason:
-          'Checking is legal but leaves value behind. Strong value hands build the pot '
-          'by betting, not by waiting.',
+          'Checking is legal. Under this rule, a small bet earns chips from weaker pairs that would call.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_bluff',
@@ -20596,9 +20599,9 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Very close.',
+      feedbackTitle: 'The bet earns a call.',
       feedbackReason:
-          'A weaker pair can call here. The bet aims to get called by worse, rather than to make a better hand fold.',
+          'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -20609,51 +20612,53 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
 );
 
 // K-7-2: hero has A-Q (overcards, no pair) → bluff candidate (correct), value=wrong, missed=suboptimal
+List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
+  String hand,
+) => <Act0RunnerOptionV1>[
+  Act0RunnerOptionV1(
+    id: 'bluff',
+    label: 'Consider a bluff',
+    isCorrect: true,
+    preferredLabel: 'Consider a bluff',
+    quality: Act0FeedbackQualityV1.correct,
+    feedbackTitle: 'A bet can fold out a better hand.',
+    feedbackReason:
+        'If no one improves, both Q-J and A-9 beat $hand. Since both fold to a half-pot bet in this example, $hand is a bluff candidate.',
+  ),
+  Act0RunnerOptionV1(
+    id: 'missed',
+    label: 'Missed: check',
+    isCorrect: false,
+    preferredLabel: 'Consider a bluff',
+    betterAnswerLabel: 'Consider a bluff',
+    quality: Act0FeedbackQualityV1.suboptimal,
+    feedbackTitle: 'Both high-card hands beat yours.',
+    feedbackReason:
+        '$hand missed the board. You might improve after checking, but in this example a bet can make two better hands fold.',
+  ),
+  Act0RunnerOptionV1(
+    id: 'value',
+    label: 'Value: bet',
+    isCorrect: false,
+    preferredLabel: 'Consider a bluff',
+    betterAnswerLabel: 'Consider a bluff',
+    quality: Act0FeedbackQualityV1.wrong,
+    feedbackTitle: 'Worse calls are missing.',
+    feedbackReason:
+        'Q-J and A-9 are both ahead of $hand if no one improves. Getting those hands to fold is a bluff.',
+  ),
+];
+
 final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_bluff_candidate',
-  caption: 'K-7-2 rainbow. Hero holds A-Q.',
-  hint: 'One overcard, no pair. Some fold equity exists.',
-  question: 'Which range bucket is A-Q here?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'bluff',
-      label: 'Bluff candidate',
-      isCorrect: true,
-      preferredLabel: 'Bluff candidate',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
-      feedbackReason:
-          'A-Q has one overcard and ace-blocker. It can represent pressure '
-          'without made-hand equity.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'missed',
-      label: 'Missed',
-      isCorrect: false,
-      preferredLabel: 'Bluff candidate',
-      betterAnswerLabel: 'Bluff candidate',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable read.',
-      feedbackReason:
-          'A-Q did miss the board, but the ace blocker and backdoor draw give it '
-          'more potential than a pure missed hand.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'value',
-      label: 'Value',
-      isCorrect: false,
-      preferredLabel: 'Bluff candidate',
-      betterAnswerLabel: 'Bluff candidate',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Close call.',
-      feedbackReason:
-          'A-Q has no pair here. Value hands have made equity that opponents '
-          'will call with worse.',
-    ),
-  ],
+  caption:
+      'BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.',
+  hint: 'Would you beat either unpaired hand if no one improves?',
+  question: 'Which plan fits J-T under this rule?',
+  options: _w6BluffCandidateOptionsV1('J-T'),
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('As Qc'),
+    heroCards: _act0LessonCardsV1('Js Tc'),
     boardCards: _act0LessonCardsV1('Kh 7d 2c'),
     centerLabel: 'Read the flop',
   ),
@@ -20709,10 +20714,10 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
 final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
   lessonId: 'w6_table_value_line_transfer',
   caption:
-      'Real table. K-8-4 rainbow. Hero holds K-J on the button after BB checks.',
-  hint:
-      'Bucket first, then line: top pair is value, so the clean action is bet for value.',
-  question: 'What is the clean flop action?',
+      'BB checks. In this example, BB calls a half-pot bet with weaker kings and hands such as 8-7.',
+  hint: 'Compare your hand with the hands BB will call with.',
+  question:
+      'What should you do to earn chips from the weaker hands BB will call with?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_value',
@@ -20720,20 +20725,20 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean transfer.',
+      feedbackTitle: 'A worse hand can call.',
       feedbackReason:
-          'On a real table, K-J on K-8-4 lands in the value bucket. Once the bucket is clear, the clean line is bet for value.',
+          'BB calls with weaker kings and hands such as 8-7 in this example. That makes a half-pot bet a value bet.',
     ),
     Act0RunnerOptionV1(
       id: 'check_back',
-      label: 'Check back',
+      label: 'Check',
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable, but passive.',
+      feedbackTitle: 'A check gives up the weaker calls.',
       feedbackReason:
-          'Checking is legal, but it leaves value behind. Top pair on a dry board wants a value line more often than a quiet check.',
+          'You can check after BB checks. The stated calling rule gives you a reason to bet instead.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_bluff',
@@ -20742,9 +20747,9 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Right action, wrong reason.',
+      feedbackTitle: 'Look for the weaker calls.',
       feedbackReason:
-          'The bet is fine, but the reason matters. This is not bluff pressure. It is a value line because top pair can get called by worse.',
+          'The point of the bet is to collect chips from worse hands that call. BB does not have to fold a better hand.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -20758,8 +20763,8 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Bucket first, line second.',
       body:
-          'On a real table, top pair on a dry board belongs to value. Once the bucket is clear, the clean line is bet for value instead of guessing.',
-      focusLabels: <String>['Real table', 'Value bucket', 'Bet for value'],
+          'A bet can earn chips when the opponent calls with a worse hand. Start by deciding which hands would call.',
+      focusLabels: <String>['Hand strength', 'Weaker hands', 'What calls?'],
     ),
   ],
 );
@@ -20768,7 +20773,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
   lessonId: 'w6_turn_pressure_shift_transfer',
   feedbackSignalId: 'range_bucket_shift',
   caption:
-      'Real table. Flop K-7-2 made A-Q a bluff candidate. BB called, and the turn pairs the 2.',
+      'You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.',
   hint:
       'When the board pairs and the first bluff gets called, some pressure lines cool off.',
   question:
@@ -20804,11 +20809,11 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket now.',
       feedbackReason:
-          'A-Q has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.',
+          'J-T has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.',
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('As Qd'),
+    heroCards: _act0LessonCardsV1('Jd Ts'),
     boardCards: _act0LessonCardsV1('Kc 7h 2s 2d'),
     centerLabel: 'After BB checks',
     openBb: 2.75,
@@ -21239,9 +21244,9 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Hero A-K',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp compare.',
+      feedbackTitle: 'The ace kicker wins.',
       feedbackReason:
-          'Both players have one pair of kings, so the kicker decides. A-K uses A as the best side card, which beats Q.',
+          'Both players have a pair of kings. The first side card is different: A for you, Q for the other player. A beats Q.',
     ),
     Act0RunnerOptionV1(
       id: 'villain_kq',
@@ -21250,9 +21255,9 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
       preferredLabel: 'Hero A-K',
       betterAnswerLabel: 'Hero A-K',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'One more compare.',
+      feedbackTitle: 'Compare the first side card.',
       feedbackReason:
-          'Do not stop at pair. Both players share kings, but Hero keeps the better kicker in the best five.',
+          'After the pair of kings, compare the highest side card. Your ace beats the other player’s queen.',
     ),
     Act0RunnerOptionV1(
       id: 'tie',
@@ -21261,9 +21266,9 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
       preferredLabel: 'Hero A-K',
       betterAnswerLabel: 'Hero A-K',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close read.',
+      feedbackTitle: 'The first difference breaks the tie.',
       feedbackReason:
-          'The pair matches, but the showdown is not tied. The fifth card still matters when it is part of the best five.',
+          'Compare K-K-A-9-7 with K-K-Q-9-7. The first different card is A versus Q, so the ace wins.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -21500,7 +21505,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '100 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Bucket first: ask before acting.',
+      feedbackTitle: 'The matching stacks set the limit.',
       feedbackReason:
           'When both stacks are equal, that shared stack is the effective stack.',
     ),
@@ -21634,7 +21639,7 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Depth changes commitment.',
       body:
-          'At 20 BB, the stack runs out sooner. At 100 BB, players have more chips for later bets on the same streets.',
+          'A short stack runs out sooner. It also limits how much you can win when a small pair makes a set or suited connectors make a strong hand. At 100 BB, you have more chips for bets on the same streets.',
       focusLabels: <String>['20 BB', '100 BB', 'More room', 'More risk'],
     ),
   ],
@@ -21646,41 +21651,42 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_20bb_wider',
-  caption: 'Compare this short-stack A-J suited spot with a deeper one.',
-  hint: 'Shorter stacks reduce the postflop burden.',
-  question: 'Which depth leaves less room for large bets on later streets?',
+  caption:
+      'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
+  hint: 'Subtract each possible bet from the stack you have left.',
+  question: 'Which bet fits your plan?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '20bb',
-      label: '20 BB',
+      label: 'Bet 2 BB',
       isCorrect: true,
-      preferredLabel: '20 BB',
+      preferredLabel: 'Bet 2 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'You keep 18 BB.',
       feedbackReason:
-          'At 20 BB, fewer chips are available for later bets. That changes the room you have to maneuver.',
+          'You have 20 BB behind. Betting 2 BB leaves 18 BB for the turn and river.',
     ),
     Act0RunnerOptionV1(
       id: '100bb',
-      label: '100 BB',
+      label: 'Bet 4 BB',
       isCorrect: false,
-      preferredLabel: '20 BB',
-      betterAnswerLabel: '20 BB',
+      preferredLabel: 'Bet 2 BB',
+      betterAnswerLabel: 'Bet 2 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      feedbackTitle: 'Four leaves 16 BB.',
       feedbackReason:
-          'At 100 BB, more chips can go in over the same streets. The 20 BB stack caps those later bets sooner.',
+          'Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.',
     ),
     Act0RunnerOptionV1(
       id: 'same',
-      label: 'Same either way',
+      label: 'Go all-in',
       isCorrect: false,
-      preferredLabel: '20 BB',
-      betterAnswerLabel: '20 BB',
+      preferredLabel: 'Bet 2 BB',
+      betterAnswerLabel: 'Bet 2 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Very close.',
+      feedbackTitle: 'All-in leaves nothing behind.',
       feedbackReason:
-          'Stack depth changes both risk and commitment. The same hand does not play the same way at every depth.',
+          'At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to shove.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -21696,41 +21702,42 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
 final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_100bb_tighter',
-  caption: 'Now look at the same hand with more chips behind.',
-  hint: 'More streets create more ways to make a second-best hand.',
-  question: 'What changes when the hand is 100 BB deep?',
+  caption:
+      'BB checks. Plan to bet 4 BB on the flop and 8 BB on the turn. Assume BB calls both.',
+  hint: 'Subtract both earlier bets from the smaller stack.',
+  question: 'Which river bet would both stacks still cover?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'more_risk',
-      label: 'More room and more risk',
+      label: '75 BB',
       isCorrect: true,
-      preferredLabel: 'More room and more risk',
+      preferredLabel: '75 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: 'Both stacks cover 75 BB.',
       feedbackReason:
-          'Deep stacks create more room to maneuver, but they also punish weak top pairs and dominated hands more often.',
+          'Both started the flop with 100 BB behind. After putting in 12 BB each, both have 88 BB left. A 75 BB river bet fits.',
     ),
     Act0RunnerOptionV1(
       id: 'less_risk',
-      label: 'Less risk than 20 BB',
+      label: '90 BB',
       isCorrect: false,
-      preferredLabel: 'More room and more risk',
-      betterAnswerLabel: 'More room and more risk',
+      preferredLabel: '75 BB',
+      betterAnswerLabel: '75 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Close call.',
+      feedbackTitle: 'Both stacks are now below 90 BB.',
       feedbackReason:
-          'Deep stacks do not remove risk. They increase it because more money can go in across more streets.',
+          'After 4 BB and 8 BB, only 88 BB is left per player. The flop and turn used part of both stacks.',
     ),
     Act0RunnerOptionV1(
       id: 'forced_jam',
-      label: 'Mostly all-in now',
+      label: '100 BB',
       isCorrect: false,
-      preferredLabel: 'More room and more risk',
-      betterAnswerLabel: 'More room and more risk',
+      preferredLabel: '75 BB',
+      betterAnswerLabel: '75 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Not quite.',
+      feedbackTitle: 'The original stack has already shrunk.',
       feedbackReason:
-          'Forced all-in logic belongs more to short stacks. With 100 BB, the key change is extra room and extra risk, not immediate all-in pressure.',
+          'There are no additional streets at this depth. There are more chips to bet on the same streets, but here the most either player can put in on the river is 88 BB.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -21746,41 +21753,42 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
 final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_40bb_middle',
-  caption: 'Now the same hand plays 40 BB effective.',
-  hint: 'This is not pure all-in depth and not carefree deep depth.',
-  question: 'What is the cleaner 40 BB read?',
+  caption:
+      'BB checks. Plan to bet 5 BB on the flop and 10 BB on the turn. Assume BB calls both.',
+  hint: 'Track the chips left after each bet.',
+  question: 'What is the largest river bet both stacks could cover?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'middle_ground',
-      label: 'Some room, but not carefree deep',
+      label: '25 BB',
       isCorrect: true,
-      preferredLabel: 'Some room, but not carefree deep',
+      preferredLabel: '25 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Both players have 25 BB left.',
       feedbackReason:
-          '40 BB sits in the middle. You still have room, but depth still creates future-street risk.',
+          'Each puts in 5 BB and then 10 BB. From 40 BB behind on the flop, that leaves 25 BB on the river.',
     ),
     Act0RunnerOptionV1(
       id: 'pure_jam',
-      label: 'Mostly all-in or fold only',
+      label: '40 BB',
       isCorrect: false,
-      preferredLabel: 'Some room, but not carefree deep',
-      betterAnswerLabel: 'Some room, but not carefree deep',
+      preferredLabel: '25 BB',
+      betterAnswerLabel: '25 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too shallow.',
+      feedbackTitle: 'Some of the stack went in earlier.',
       feedbackReason:
-          'That overstates short-stack pressure. 40 BB keeps more play than pure all-in depth.',
+          '40 BB is the depth before the two bets. Once each player has put in 15 BB, the river limit is lower.',
     ),
     Act0RunnerOptionV1(
       id: 'same_100',
-      label: 'It plays just like 100 BB deep',
+      label: '30 BB',
       isCorrect: false,
-      preferredLabel: 'Some room, but not carefree deep',
-      betterAnswerLabel: 'Some room, but not carefree deep',
+      preferredLabel: '25 BB',
+      betterAnswerLabel: '25 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too relaxed.',
+      feedbackTitle: 'Count the flop bet as well.',
       feedbackReason:
-          '40 BB has meaningful room, but it is still less forgiving than full deep-stack play.',
+          'Subtracting the turn bet alone leaves 30 BB. Subtract the 5 BB flop bet too, which leaves 25 BB.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -21839,10 +21847,9 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_ajs_btn_25bb_transfer',
   caption:
-      'Real table. CO opens 2.5 BB. Hero is BTN with A-J suited at 25 BB effective.',
-  hint:
-      'Read hand, position, then notice how the shorter depth simplifies the future.',
-  question: 'What is the cleaner stack-depth read here?',
+      'CO opens to 2.5 BB. Assume the blinds fold. CO calls a raise to 7.5 BB with A-T suited, but folds A-T suited to an all-in.',
+  hint: 'Look for the raise that a weaker ace will call.',
+  question: 'Which raise gets more chips from the weaker ace?',
   table: _act0CoOpenLessonTableV1(
     startingDepthBb: 25,
     heroCards: _heroAJsCards,
@@ -21851,35 +21858,35 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'cleaner_shallow',
-      label: 'Use the short-stack read',
+      label: 'Raise to 7.5 BB',
       isCorrect: true,
-      preferredLabel: 'Use the short-stack read',
+      preferredLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong transfer read.',
+      feedbackTitle: 'A-T suited calls the raise.',
       feedbackReason:
-          'At 25 BB effective, there are fewer chips for later bets. To choose between folding, calling and raising, you still need an estimate of what CO opens.',
+          'A-T suited pays the extra 5 BB under the stated rule. At 25 BB effective, a call leaves both players 17.5 BB behind.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_100',
-      label: 'Treat depth as irrelevant',
+      label: 'Call 2.5 BB',
       isCorrect: false,
-      preferredLabel: 'Use the short-stack read',
-      betterAnswerLabel: 'Use the short-stack read',
+      preferredLabel: 'Raise to 7.5 BB',
+      betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Hand right, depth wrong.',
+      feedbackTitle: 'A call does not make CO add chips.',
       feedbackReason:
-          'A-J suited is still A-J suited, but stack depth changes how much future money and domination risk remain. 25 BB is simpler than 100 BB.',
+          'Calling keeps A-T suited in, but puts no extra chips in from CO. The question asks which raise gets paid.',
     ),
     Act0RunnerOptionV1(
       id: 'too_fragile_now',
-      label: 'Treat it as too fragile',
+      label: 'Go all-in for 25 BB',
       isCorrect: false,
-      preferredLabel: 'Use the short-stack read',
-      betterAnswerLabel: 'Use the short-stack read',
+      preferredLabel: 'Raise to 7.5 BB',
+      betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Tempting deep-stack thought.',
+      feedbackTitle: 'A-T suited folds to the shove.',
       feedbackReason:
-          'Depth alone cannot tell you whether A-J suited is too weak. The shorter effective stack limits the size of later bets.',
+          'CO folds the weaker ace to a shove in this example. The smaller raise gets the call instead.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -21896,9 +21903,9 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_ajs_btn_100bb_transfer',
   caption:
-      'Same spot again. CO opens 2.5 BB. Hero is BTN with A-J suited at 100 BB effective.',
-  hint: 'The hand did not change. The stack did.',
-  question: 'What changes when this spot becomes 100 BB deep?',
+      'CO opens to 2.5 BB. Assume the blinds fold. CO folds weaker aces to any raise. A-Q and A-K reraise a small raise and call a shove.',
+  hint: 'Find the action that keeps weaker aces in.',
+  question: 'Which action keeps the weaker aces in the pot?',
   table: _act0CoOpenLessonTableV1(
     startingDepthBb: 100,
     heroCards: _heroAJsCards,
@@ -21907,35 +21914,35 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'more_fragile_deep',
-      label: 'Treat it as deeper',
+      label: 'Call 2.5 BB',
       isCorrect: true,
-      preferredLabel: 'Treat it as deeper',
+      preferredLabel: 'Call 2.5 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean contrast.',
+      feedbackTitle: 'A call keeps the weaker aces in.',
       feedbackReason:
-          'Deep stacks give more room and position to maneuver, but they also create more risk because much more money is left behind when A-J suited makes a second-best pair or draw.',
+          'A call keeps the weaker aces in and leaves 97.5 BB behind on each side. More chips can go in on the same later streets, so reassess if CO bets big.',
     ),
     Act0RunnerOptionV1(
       id: 'same_clean_call',
-      label: 'Treat it like 25 BB',
+      label: 'Raise to 7.5 BB',
       isCorrect: false,
-      preferredLabel: 'Treat it as deeper',
-      betterAnswerLabel: 'Treat it as deeper',
+      preferredLabel: 'Call 2.5 BB',
+      betterAnswerLabel: 'Call 2.5 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Price-only read.',
+      feedbackTitle: 'A raise folds the hands you want to keep.',
       feedbackReason:
-          'The price is part of the spot, but deep stacks change the future risk behind that price. The same call is not equally simple at every depth.',
+          'In this example CO folds the weaker aces to either raise and raises again with stronger hands such as A-Q.',
     ),
     Act0RunnerOptionV1(
       id: 'shove_now',
-      label: 'Use all-in-or-fold logic',
+      label: 'Go all-in for 100 BB',
       isCorrect: false,
-      preferredLabel: 'Treat it as deeper',
-      betterAnswerLabel: 'Treat it as deeper',
+      preferredLabel: 'Call 2.5 BB',
+      betterAnswerLabel: 'Call 2.5 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too shallow a plan.',
+      feedbackTitle: 'The shove risks the whole stack.',
       feedbackReason:
-          'All-in-or-fold logic belongs more to short stacks. At 100 BB, the main change is more future-street room and more ways to make an expensive mistake.',
+          'Under the stated model, the weaker aces fold. The larger stack lets you lose more when your ace is outkicked.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -21956,7 +21963,7 @@ final _w7DepthShiftRecapRunner = _w7DepthShiftIntroRunner.copyWith(
   question: 'What changes when stack depth changes?',
   feedbackTitle: 'Depth takeaway.',
   feedbackReason:
-      'The same hand can play wider short and tighter deep. Stack depth changes both risk and commitment.',
+      'A shorter stack limits future losses, but also limits what you can win when a small pair makes a set or suited connectors make a big hand.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Same hand, new plan.',
@@ -21980,7 +21987,8 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   lessonId: 'w7_spr_intro',
   lessonTitle: 'Room or commitment',
   caption: 'SPR tells you how much room is left after the flop.',
-  hint: 'Low SPR means little room. High SPR means more room to maneuver.',
+  hint:
+      'Low SPR means less money is left relative to the pot. Check your hand and the price before going all-in.',
   question: 'What does low SPR usually mean?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -22017,7 +22025,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'SPR 2 means there is not much room left. One bet can make the hand close to committed.',
+          'At SPR 2 there are two pots left in the effective stack. A large bet can put much of it at risk, but whether to commit depends on your hand and the price.',
     ),
     Act0RunnerOptionV1(
       id: 'float',
@@ -22337,7 +22345,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '6-max',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Board fit: sharp read.',
+      feedbackTitle: 'Fewer players are left to act.',
       feedbackReason:
           '6-max widens many opens because fewer players are left behind to wake up with premiums.',
     ),

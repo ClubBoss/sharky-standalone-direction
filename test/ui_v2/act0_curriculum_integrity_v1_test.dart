@@ -303,6 +303,48 @@ void main() {
       }
     });
 
+    test('W8 betting plans fit the effective stack and price at the table', () {
+      num chips(String label) => num.parse(label.split(' ').first);
+      for (final (id, previouslyPutIn, plannedBet, leftAfter) in [
+        ('w7_20bb_wider', 0, 'Bet 2 BB', 18),
+        ('w7_40bb_middle', 15, '25 BB', 0),
+        ('w7_100bb_tighter', 12, '75 BB', 13),
+      ]) {
+        final runner = task('world_8', id).runner;
+        final option = runner.options.singleWhere((item) => item.isCorrect);
+        final opponent = runner.table.seats.singleWhere(
+          (seat) => seat.isInHand && !seat.isHero,
+        );
+        expect(option.label, plannedBet, reason: id);
+        final bet = chips(option.label.replaceFirst('Bet ', ''));
+        for (final stack in [runner.table.heroSeat, opponent]) {
+          expect(
+            chips(stack.stackLabel!) - previouslyPutIn - bet,
+            leftAfter,
+            reason: id,
+          );
+        }
+      }
+
+      for (final (id, action, remaining) in [
+        ('w7_ajs_btn_25bb_transfer', 'Raise to 7.5 BB', 17.5),
+        ('w7_ajs_btn_100bb_transfer', 'Call 2.5 BB', 97.5),
+      ]) {
+        final runner = task('world_8', id).runner;
+        final option = runner.options.singleWhere((item) => item.isCorrect);
+        expect(runner.table.toCallLabel, 'To call 2.5 BB', reason: id);
+        expect(option.label, action, reason: id);
+        final totalContribution = chips(
+          option.label.replaceFirst(RegExp(r'^(Raise to|Call) '), ''),
+        );
+        expect(
+          chips(runner.table.heroSeat.stackLabel!) - totalContribution,
+          remaining,
+          reason: id,
+        );
+      }
+    });
+
     test('W8 compares full ring using a six-max preflop example', () {
       final formatLesson = Act0ShellStateV1.sample
           .worldById('world_8')
