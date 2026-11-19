@@ -373,6 +373,14 @@ void main() {
         ];
       }
     }
+    // P7 classifies a false showdown outcome as wrong.
+    final showdownRecap =
+        expectedComparison['showdown_review'] as Map<String, dynamic>;
+    final winChoice = (showdownRecap['options'] as List)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((choice) => choice['id'] == 'hero_cards_only');
+    expect(winChoice['quality'], 'suboptimal');
+    winChoice['quality'] = 'wrong';
     // P7 aligns the KQo call cue with the chart. Seat and card focus stay pinned.
     final mediumOpen =
         expectedComparison['continue_or_let_go_medium_open']

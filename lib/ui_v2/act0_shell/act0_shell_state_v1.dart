@@ -13672,7 +13672,7 @@ final _worldOneCheckpointRunner = _showdownKickerRunner.copyWith(
       label: 'You win',
       isCorrect: false,
       preferredLabel: 'Split the pot',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Start with the shared straight.',
       feedbackReason:
           'Your eight can make a lower straight. Your best five are the five shared cards.',
@@ -16501,7 +16501,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Borderline needs context.',
       body:
-          'QJs can be useful, but it is not the same as a pocket pair that wants to continue almost anywhere.',
+          'QJs is Medium. JJ and TT are Strong, so the chart opens them from UTG through BTN.',
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['QJs', 'Context matters'],
     ),
@@ -17325,7 +17325,10 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
   question: 'What does protection deny?',
   options: const <Act0RunnerOptionV1>[],
   table: _world4PurposeIntroRunner.table.copyWith(
-    heroCards: _heroQdQsCards,
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'Q', suit: 's'),
+      Act0CardStateV1(rank: 'J', suit: 'd'),
+    ],
     boardCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'Q', suit: 'h'),
       Act0CardStateV1(rank: '9', suit: 'd'),
@@ -17337,7 +17340,7 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Deny free cards.',
       body:
-          'Protection makes the next card cost chips. With two queens on Q-9-4, an opponent holding ace-king can move ahead by pairing an ace or king.',
+          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An opponent with ace-king can move ahead if the next card is an ace or king.',
       focusLabels: <String>['Next card', 'Cost', 'Deny'],
     ),
   ],
@@ -17374,10 +17377,6 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
     ),
   ],
   table: _world4ProtectionIntroRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 'd'),
-    ],
     highlightedCardIds: const <String>['hero_0', 'board_0', 'board_1'],
   ),
 );
