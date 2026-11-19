@@ -21759,7 +21759,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong transfer.',
       feedbackReason:
-          'If BB can eliminate you, a call that barely gains chips can still hurt your tournament chances. Require a bigger edge.',
+          'If BB can eliminate you, a call that barely gains chips can still hurt your tournament chances. The extra edge you need is the risk premium.',
     ),
     Act0RunnerOptionV1(
       id: 'call_chip_ev',
