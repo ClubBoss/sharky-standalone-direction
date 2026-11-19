@@ -187,7 +187,7 @@ void main() {
       expect(runner.runner.phase, Act0LessonPhaseV1.theory);
       expect(
         find.textContaining(
-          'Read one table spot, answer once, then see the exact reason.',
+          'Blinds are forced bets posted before anyone decides.',
         ),
         findsOneWidget,
       );

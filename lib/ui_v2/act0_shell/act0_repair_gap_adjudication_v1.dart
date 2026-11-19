@@ -1560,6 +1560,8 @@ const _foundationSharedRepairGoals = <String, String>{
   'cards_ranks_suits_rank_drill': 'card_rank_order',
   'blinds_first_actor': 'six_max_initial_preflop_first_actor',
   'blinds_review': 'six_max_initial_preflop_first_actor',
+  'blinds_postflop_button': 'last_actor_after_flop',
+  'positions_review': 'last_actor_after_flop',
   'blinds_last_actor': 'six_max_unraised_initial_pass_bb_option',
   'blinds_theory': 'big_blind_baseline',
   'blinds_posts_drill': 'big_blind_baseline',
@@ -1614,7 +1616,7 @@ _buildFoundationRepairDefaults() {
         exercises.add(exercise);
         // Prefer the first choice in this lesson. For theory or a summary
         // with choices, use its own frame unless there is a drill to launch.
-        if (task.entryPhase == Act0LessonPhaseV1.drill) {
+        if (task.phase == Act0LessonPhaseV1.drill) {
           final goal = act0FoundationRepairGoalForTaskV1(task.taskId);
           sameLesson.putIfAbsent(goal, () => exercise);
         }
