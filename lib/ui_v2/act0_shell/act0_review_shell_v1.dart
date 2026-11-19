@@ -530,9 +530,7 @@ class _DueReviewCardV1 extends StatelessWidget {
               ),
               onPressed: () => onStart(item),
               child: Text(
-                hasOpenMistakeForTask
-                    ? 'Try without help'
-                    : 'Review now',
+                hasOpenMistakeForTask ? 'Try without help' : 'Review now',
               ),
             ),
           ),

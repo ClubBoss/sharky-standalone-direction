@@ -75,7 +75,7 @@ void main() {
       ).first;
       expect(state.independentTasks, 2);
       expect(state.tasksToRevisit, 0);
-      expect(state.stateLabel, 'Independent answers');
+      expect(state.stateLabel, 'Answers without help');
     },
   );
 
@@ -114,7 +114,7 @@ void main() {
       final states = _states(records);
       expect(states.length, 6);
       for (final state in states) {
-        expect(state.stateLabel, 'Independent answers');
+        expect(state.stateLabel, 'Answers without help');
         expect(state.independentTasks, state.taskCount);
         expect(state.tasksToRevisit, 0);
       }
@@ -149,7 +149,7 @@ void main() {
         other,
         _answer(0, 4),
       ]).firstWhere((s) => s.label == 'Table sense');
-      expect(after.stateLabel, 'Independent answers');
+      expect(after.stateLabel, 'Answers without help');
       expect(after.tasksToRevisit, 0);
       expect(after.independentTasks, 2);
       expect(

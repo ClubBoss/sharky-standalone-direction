@@ -126,7 +126,7 @@ void main() {
           find.byKey(const Key('act0_shell_block_summary_accuracy')),
         )
         .data!;
-    expect(line, contains('Assessment not verified'));
+    expect(line, contains('No result without help recorded yet'));
     expect(line, isNot(contains('0/4 assessed correct')));
     expect(find.text('Assessed accuracy'), findsNothing);
     expect(find.text('One clean read'), findsNothing);
@@ -151,7 +151,7 @@ void main() {
           find.byKey(const Key('act0_shell_block_summary_accuracy')),
         )
         .data!;
-    expect(line, contains('Assessment not verified'));
+    expect(line, contains('No result without help recorded yet'));
     expect(line, isNot(contains('0/0')));
     expect(find.text('One clean read'), findsNothing);
   });
