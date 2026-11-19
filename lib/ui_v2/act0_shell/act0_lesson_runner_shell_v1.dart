@@ -3256,14 +3256,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         : act0TableForChoreographyFrameV1(table, activeChoreographyFrame);
     // Both board overlays and seat-card renderers consume this projection.
     // Keep the source table intact for teaching, requested help and feedback.
+    final isActiveAssessment = _isActiveAssessmentStateV1(
+      isTeaching: isTeaching,
+      isTheory: isTheory,
+      isReview: isReview,
+      runner: runner,
+    );
     final presentationTable = act0PredecisionCardFocusV1(
-      choreographedTable,
-      isActiveAssessment: _isActiveAssessmentStateV1(
-        isTeaching: isTeaching,
-        isTheory: isTheory,
-        isReview: isReview,
-        runner: runner,
-      ),
+      isActiveAssessment && widget.worldNumber >= 1 && widget.worldNumber <= 4
+          ? choreographedTable.copyWith(highlightedSeatIds: const [])
+          : choreographedTable,
+      isActiveAssessment: isActiveAssessment,
     );
     final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
