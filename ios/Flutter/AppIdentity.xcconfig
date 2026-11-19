@@ -1,0 +1,5 @@
+// Replace with the registered App ID for TestFlight (O4).
+SHARKY_BUNDLE_ID = com.example.pokerAnalyzer
+
+// Set the Apple Developer Team ID for automatic signing (O4).
+// DEVELOPMENT_TEAM = ABCDE12345
