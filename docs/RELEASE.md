@@ -48,7 +48,7 @@ The beta is English only, iPhone only, portrait. It works offline, needs no acco
 Thank you for testing Sharky! Please play for 20–30 minutes, as you normally would.
 
 1. Start as a new player and finish the first lessons of World 1.
-2. Get at least one answer wrong on purpose. Does the explanation make clear why, and does the repeat help?
+2. Get at least one answer wrong on purpose. Can you name the clue you missed after reading the explanation? If Review offers a repair, open it and check whether it practices that clue. If a scheduled review is due, does its card make clear what you are coming back to practice?
 3. Close the app fully and open it again. You should continue where you stopped, with the same XP.
 4. Try Practice and the You tab. Do they show what you actually did?
 
