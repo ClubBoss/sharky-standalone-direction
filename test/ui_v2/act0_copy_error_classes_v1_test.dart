@@ -4,16 +4,12 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 // Learner-copy error classes, each checked across the whole W1–W12 route.
 //
-// Class: a poker term shows up
-// in learner text before any lesson explains it. A term counts as explained
-// at the first task whose teaching step uses it, or that defines it inline
-// (the `inline` pattern). Use inside the same lesson as the explanation is
-// allowed: that lesson is what teaches it. The terms come from the in-lesson
-// glossary dictionary (`act0_glossary_v1.dart`).
+// Keep the existing W1–W12 terminology anchors. The stricter W1–W4
+// definition-before-use contract lives in act0_learning_order_v1_test.dart.
 final _terms = act0GlossaryTermsV1.where((t) => t.teachOrderChecked);
 
 void main() {
-  test('W1–W12 terms are explained before they are used', () {
+  test('W1–W12 retain existing teaching anchors for tracked terms', () {
     final tasks = <({String lesson, String task, String teach, String rest})>[];
     for (final w in Act0ShellStateV1.sample.worlds) {
       for (final l in w.lessons) {
