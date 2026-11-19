@@ -99,9 +99,12 @@ void main() {
         ),
         isEmpty,
       );
-      expect(task.title, 'Fold weak hands');
+      expect(task.title, 'Fold to exit');
       expect(task.rewardXp, 5);
-      expect(runner.caption, 'HJ bets and your hand is weak.');
+      expect(
+        runner.caption,
+        'HJ bets 2 BB on an ace-high flop. You hold two queens.',
+      );
       expect(
         runner.hint,
         'Folding saves chips when continuing is not worth it.',

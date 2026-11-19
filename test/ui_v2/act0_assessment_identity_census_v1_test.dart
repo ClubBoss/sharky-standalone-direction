@@ -164,7 +164,119 @@ void main() {
       'They have the same combo count': 'They appear equally often',
       'They have the same weight': 'They appear equally often',
     };
-    var beforeCopyEdits = encoded;
+    // Reverse only reviewed P1 identity deltas for the historical comparison.
+    const priorL1Options = {
+      'first_table_guide_one_clear_choice': [
+        [
+          "co_still_acting",
+          "CO/cutoff already folded, so You at BTN act next",
+          false,
+          "suboptimal",
+          "You are BTN, blinds are posted, and no board is out yet",
+        ],
+        [
+          "hero_btn_preflop_setup",
+          "You are BTN, blinds are posted, and no board is out yet",
+          true,
+          "correct",
+          "You are BTN, blinds are posted, and no board is out yet",
+        ],
+        [
+          "hero_has_no_cards",
+          "Blinds are posted, but You at BTN have no cards",
+          false,
+          "wrong",
+          "You are BTN, blinds are posted, and no board is out yet",
+        ],
+      ],
+      'what_poker_is_win_ways': [
+        ["largest_stack", "Largest stack", false, "wrong", "Everyone folds"],
+        [
+          "best_hand_showdown",
+          "Best hand at showdown",
+          false,
+          "suboptimal",
+          "Everyone folds",
+        ],
+        ["everyone_folds", "Everyone folds", true, "correct", "Everyone folds"],
+      ],
+      'what_poker_is_review': [
+        [
+          "largest_stack",
+          "The largest stack still held by a player",
+          false,
+          "wrong",
+          "Chips already committed to the middle",
+        ],
+        [
+          "everyone_folds",
+          "Everyone folds before showdown",
+          false,
+          "wrong",
+          "Chips already committed to the middle",
+        ],
+        [
+          "pot_committed_chips",
+          "Chips already committed to the middle",
+          true,
+          "correct",
+          "Chips already committed to the middle",
+        ],
+      ],
+      'hand_rankings_royal_flush_drill': [
+        ["royal_flush", "Royal flush", true, "correct", "Royal flush"],
+        ["ace_high_flush", "Ace-high flush", false, "wrong", "Royal flush"],
+      ],
+      'weak_ace_warning_weak_ace_kicker_compare': [
+        [
+          "two_big_cards_auto",
+          "Two broadway cards always continue after an open",
+          false,
+          "wrong",
+          "It keeps position and avoids weak-ace domination",
+        ],
+        [
+          "less_dominated",
+          "It keeps position and avoids weak-ace domination",
+          true,
+          "correct",
+          "It keeps position and avoids weak-ace domination",
+        ],
+      ],
+      'button_advantage_button_vs_cutoff': [
+        ["utg", "UTG", false, "wrong", "BTN"],
+        ["btn", "BTN", true, "correct", "BTN"],
+      ],
+      'same_hand_different_seat_w3_same_hand_intro': [
+        ["utg", "UTG", false, "wrong", "BTN"],
+        ["btn", "BTN", true, "correct", "BTN"],
+      ],
+      'same_hand_different_seat_w3_same_hand_call': [
+        ["fold", "Fold", false, "wrong", "Call"],
+        ["call", "Call", true, "correct", "Call"],
+      ],
+      'w4_cheap_price_marginal_call': [
+        ["fold", "Fold", false, "wrong", "Call"],
+        ["raise", "Raise", false, "suboptimal", "Call"],
+        ["call", "Call", true, "correct", "Call"],
+      ],
+      'w4_big_price_marginal_fold': [
+        ["call", "Call", false, "wrong", "Fold"],
+        ["raise", "Raise", false, "wrong", "Fold"],
+        ["fold", "Fold", true, "correct", "Fold"],
+      ],
+      'w4_checkpoint_table_price': [
+        ["fold", "Fold", false, "wrong", "Call"],
+        ["raise", "Raise", false, "suboptimal", "Call"],
+        ["call", "Call", true, "correct", "Call"],
+      ],
+    };
+    final beforeL1 = jsonDecode(encoded) as List<dynamic>;
+    for (final row in beforeL1.cast<List<dynamic>>()) {
+      final options = priorL1Options[row[2]];
+      if (options != null) row[5] = options;
+    }
+    var beforeCopyEdits = jsonEncode(beforeL1);
     for (final e in priorCopyLabels.entries) {
       beforeCopyEdits = beforeCopyEdits.replaceAll(
         jsonEncode(e.key),

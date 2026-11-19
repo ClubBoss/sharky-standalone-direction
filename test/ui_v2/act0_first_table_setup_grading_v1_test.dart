@@ -22,7 +22,7 @@ Act0LessonTaskV1 get _task => Act0ShellStateV1.sample
 void main() {
   // Independent meaning oracle from this finite scene: Hero is BTN with KTs;
   // blinds are posted; CO has folded; there is no board. The CO answer states
-  // a true subset, while saying Hero has no cards contradicts visible K and T.
+  // the wrong actor, while saying Hero has no cards contradicts visible K and T.
   for (final control
       in <
         ({
@@ -45,7 +45,7 @@ void main() {
           result: 'suboptimal',
           correct: false,
           quality: Act0FeedbackQualityV1.suboptimal,
-          reason: 'CO/cutoff already folded',
+          reason: 'CO has already folded',
         ),
         (
           choice: 'hero_has_no_cards',

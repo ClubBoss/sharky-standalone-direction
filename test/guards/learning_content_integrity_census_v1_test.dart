@@ -163,14 +163,14 @@ void main() {
       print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
       expect(snapshot['optionCounts'], <String, int>{
-        '2': 121,
-        '3': 169,
+        '2': 124,
+        '3': 166,
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
         '0': 112,
-        '1': 116,
-        '2': 63,
+        '1': 119,
+        '2': 60,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
@@ -197,18 +197,18 @@ void main() {
         ),
         isTrue,
       );
-      expect(repairSnapshot['sameSignalMapped'], 271);
-      expect(repairSnapshot['fallbackOnly'], 20);
+      expect(repairSnapshot['sameSignalMapped'], 270);
+      expect(repairSnapshot['fallbackOnly'], 21);
       expect(repairSnapshot['unresolvedProductGap'], 3);
       expect(repairSnapshot['unrecordedFallback'], 1);
-      // The M-ratio exercise had borrowed a price-read mapping from a 0 BB
-      // call label. Restore that entry only for the historical comparison.
+      // The historical comparison restores the old M-ratio price mapping
+      // and the intro's old seat mapping. The live rows use their actual goals.
       final zone = repair.singleWhere(
         (row) => row.row.task.taskId == 'w9_m_ratio_table_window_transfer',
       );
       expect(zone.mappingType, 'exact');
       expect(zone.fallbackOnly, isTrue);
-      final priorDeclaredMappings = currentGaps.length + 1;
+      final priorDeclaredMappings = currentGaps.length + 2;
       final historicalRepairComparison = <String, Object?>{
         ...repairSnapshot,
         'sameSignalMapped':
@@ -219,11 +219,11 @@ void main() {
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
       };
-      expect(repairSnapshot['incorrectOptions'], 462);
-      expect(repairSnapshot['exactReplayCovered'], 15 + 1);
+      expect(repairSnapshot['incorrectOptions'], 459);
+      expect(repairSnapshot['exactReplayCovered'], 17);
       expect(historicalRepairComparison['sameSignalMapped'], 276 - 1);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
-      expect(repairSnapshot['intentionalExactReplay'], 15 + 1);
+      expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
       expect(repairSnapshot['unrecordedFallback'], 1);
       expect(repairSnapshot['unmapped'], 0);
@@ -233,7 +233,7 @@ void main() {
         'confused_private_board_cards': 16,
         'confused_table_identity': 12,
         'misread_action_legality': 14,
-        'misread_bet_price': 17,
+        'misread_bet_price': 14,
         'misread_bet_purpose': 8,
         'misread_board_texture': 14,
         'misread_draw_outs': 21,
@@ -251,11 +251,15 @@ void main() {
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
       expect(act0RepairGapAdjudicationsV1.take(37), hasLength(37));
-      expect(act0RepairGapAdjudicationsV1, hasLength(40));
+      expect(act0RepairGapAdjudicationsV1, hasLength(41));
       final fallbackInventory = (repairSnapshot['fallbackInventory'] as List)
           .cast<Map<String, Object?>>();
-      // One explicitly versioned context definition moves from an inherited
-      // seat target to intentional same-context replay. No other count moves.
+      // Both context questions have explicit same-task replay, preserving
+      // the current question without claiming independent transfer.
+      final introFallback = fallbackInventory.singleWhere(
+        (row) => row['task'] == 'same_hand_different_seat_w3_same_hand_intro',
+      );
+      expect(introFallback['currentFallback'], 'intentional_exact');
       final contextFallback = fallbackInventory.singleWhere(
         (row) => row['task'] == 'same_hand_different_seat_w3_same_hand_recap',
       );
@@ -329,7 +333,10 @@ void main() {
       final value = rows.singleWhere(
         (row) => row.task.taskId == 'w4_value_missed',
       );
-      expect(value.task.runner.question, startsWith('What action best'));
+      expect(
+        value.task.runner.question,
+        contains('assume BB calls 3 BB with a weaker ace'),
+      );
       expect(
         value.task.runner.options.singleWhere((option) => option.isCorrect).id,
         'bet_half',
@@ -361,14 +368,14 @@ void main() {
     expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
     expect(rows.map((row) => row.task.taskId).toSet(), hasLength(293));
     expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
-      '2': 123,
-      '3': 169,
+      '2': 126,
+      '3': 166,
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
       '0': 113,
-      '1': 117,
-      '2': 63,
+      '1': 120,
+      '2': 60,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
@@ -480,7 +487,7 @@ void main() {
         for (final option in row.incorrectOptions)
           _incorrectOptionRow(row, option),
     ];
-    expect(incorrect, hasLength(464));
+    expect(incorrect, hasLength(461));
     final currentGaps = allRepair
         .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
         .toList();
@@ -488,21 +495,21 @@ void main() {
       currentGaps.map((row) => row.row.task.taskId).toSet(),
       _newW01OrderGapIds,
     );
-    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(273));
-    expect(allRepair.where((row) => row.fallbackOnly), hasLength(20));
+    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(272));
+    expect(allRepair.where((row) => row.fallbackOnly), hasLength(21));
     expect(
       allRepair.where((row) => row.sameSignalMapped).length +
           currentGaps.length +
-          1,
+          2,
       278 - 1,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
           currentGaps.length -
-          1,
+          2,
       15 + 1,
     );
-    expect(allRepair.where((row) => row.exactReplay), hasLength(15 + 1));
+    expect(allRepair.where((row) => row.exactReplay), hasLength(17));
     expect(
       incorrect.where(
         (row) => row.currentErrorType == 'misread_mindset_discipline',
@@ -677,7 +684,7 @@ void main() {
     }
     expect(rows, hasLength(293));
     expect(rows.map((r) => r.task.taskId).toSet(), hasLength(293));
-    expect(allChoices, hasLength(464));
+    expect(allChoices, hasLength(461));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -742,14 +749,14 @@ void main() {
       'world_4/small_half_pot/w4_half_pot_bet/two',
       'world_4/small_half_pot/w4_half_pot_bet/six',
     });
-    expect(unknown, hasLength(444));
-    expect(admitted.length + knownHeld.length + unknown.length, 464);
+    expect(unknown, hasLength(441));
+    expect(admitted.length + knownHeld.length + unknown.length, 461);
     print(
       const JsonEncoder.withIndent('  ').convert({
         'scope': 'CURRENT_TYPED_DISPOSITION_NOT_FULL_SEMANTIC_COVERAGE',
         'originalZeroGapDoD': 'HOLD_NOT_AWARDED',
         'assessedRows': 293,
-        'wrongChoices': 464,
+        'wrongChoices': 461,
         'staticAdmittedFamiliarChoices': admitted.length,
         'heldKnownChoices': knownHeld.length,
         'heldUnreviewedChoices': unknown.length,

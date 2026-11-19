@@ -9,19 +9,19 @@ void main() {
   const contracts = <String, (String, String)>{
     'cards_ranks_suits_recap': ('How many cards make your final hand?', 'five'),
     'fold_discipline_fold_recap': (
-      'What is the disciplined action with this weak ace facing an open?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined action with this weak ace facing an open?',
       'fold',
     ),
     'weak_ace_warning_w3_dominated_recap': (
-      'What is the disciplined action with this weak ace facing an open?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined action with this weak ace facing an open?',
       'fold',
     ),
     'apply_recap': (
-      'What is the disciplined action with this weak ace facing an open?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined action with this weak ace facing an open?',
       'fold',
     ),
     'continue_or_let_go_continue_recap': (
-      'What is the cleaner continue with this playable hand facing an open?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision facing the raise?',
       'call',
     ),
   };

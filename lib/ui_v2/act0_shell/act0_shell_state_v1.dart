@@ -436,7 +436,6 @@ const Set<String> act0F1TableNativeTaskIdsV1 = <String>{
   'early_vs_late_w2_late_position',
   'early_vs_late_w2_early_position',
   'early_vs_late_w2_position_recap',
-  'same_hand_different_seat_w3_same_hand_intro',
   'same_hand_different_seat_w3_same_hand_recap',
   'position_apply_intro',
   'position_checkpoint_position_checkpoint_intro',
@@ -1125,6 +1124,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   bool? isFolded,
   bool? hasActed,
   bool? isOccupied,
+  bool? isLastAggressor,
   bool clearCommitment = false,
   Act0SeatBetStateV1? bet,
   List<Act0CardStateV1>? holeCards,
@@ -1144,7 +1144,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     isInHand: isInHand ?? seat.isInHand,
     isFolded: isFolded ?? seat.isFolded,
     hasActed: hasActed ?? seat.hasActed,
-    isLastAggressor: seat.isLastAggressor,
+    isLastAggressor: isLastAggressor ?? seat.isLastAggressor,
     isOccupied: isOccupied ?? seat.isOccupied,
     stackLabel: stackLabel ?? seat.stackLabel,
     holeCards: holeCards ?? seat.holeCards,
@@ -2192,12 +2192,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'actions_fold_drill',
-        title: 'Fold weak hands',
+        title: 'Fold to exit',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0W01ExplicitFoldMechanicalContextV1(_foldActionRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.fixMistakes,
-        summary: 'Train the clean exit when continuing would only burn chips.',
+        summary:
+            'Recognize the action that gives up the hand without paying the bet.',
         lockedSummary:
             'Finish the opener first, then come back to this repair node.',
       ),
@@ -2222,13 +2223,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'actions_raise_drill',
-        title: 'Raise on the Button',
+        title: 'Raise the price',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0W01FoldedToBtnMechanicalContextV1(_whatYouCanDoRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
-            'Use raise in the cleanest beginner spot: unopened action on the Button.',
+            'Recognize which option increases the price for the next player.',
         lockedSummary:
             'First learn the action menu, then unlock the aggressive option.',
       ),
@@ -2765,7 +2766,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'showdown_foldout_drill',
-        title: 'Everyone folds',
+        title: 'Everyone else folds',
         phase: Act0LessonPhaseV1.drill,
         runner: _showdownRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -3483,13 +3484,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_intro',
         title: 'Context first',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world3SameHandIntroRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world3SameHandIntroRunner.options,
-            correctOptionId: 'btn',
-            correctIndex: 1,
-          ),
-        ),
+        runner: _world3SameHandIntroRunner,
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -3503,12 +3498,12 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w3_same_hand_call',
-        title: 'Call frame',
+        title: 'Players behind',
         phase: Act0LessonPhaseV1.drill,
         runner: _world3CutoffCallRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
             _world3CutoffCallRunner.options,
-            correctOptionId: 'call',
+            correctOptionId: 'players_behind',
             correctIndex: 1,
           ),
         ),
@@ -4837,7 +4832,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _world4CheapPriceMarginalCallRunner.options,
             correctOptionId: 'call',
-            correctIndex: 2,
+            correctIndex: 1,
           ),
         ),
         rewardXp: 8,
@@ -4851,7 +4846,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _world4BigPriceMarginalFoldRunner.options,
             correctOptionId: 'fold',
-            correctIndex: 2,
+            correctIndex: 1,
           ),
         ),
         rewardXp: 8,
@@ -4986,7 +4981,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _world4PriceTableTransferRunner.options,
             correctOptionId: 'call',
-            correctIndex: 2,
+            correctIndex: 1,
           ),
         ),
         rewardXp: 10,
@@ -8133,8 +8128,8 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
   beatCount: 8,
   phase: Act0LessonPhaseV1.theory,
   caption: 'You are on the Button with KTs.',
-  hint: 'Folded to you. Raising can win blinds or build a bigger pot.',
-  question: 'Choose how to play your first action.',
+  hint: 'Compare how many chips each action adds to the pot.',
+  question: 'Which action increases the price above the big blind?',
   options: <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -8145,7 +8140,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more step.',
       feedbackReason:
-          'With nobody in the pot yet on the Button, folding gives up a playable spot.',
+          'Folding gives up the hand without adding chips. It does not change what the next player needs to call.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Hero acts', 'Blinds posted', 'KTs'],
@@ -8158,9 +8153,9 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Calling is legal, but raise is sharper.',
+      feedbackTitle: 'Calling matches the blind.',
       feedbackReason:
-          'Calling is legal and not a disaster, but it starts passively on the Button. Raising can win the blinds right away and build a better pot.',
+          'Calling puts in 1 BB and matches the blind. Raising to 3 BB sets a higher price for the next player.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Call is legal', 'Raise sharper', 'Button'],
@@ -8174,7 +8169,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'With nobody in the pot yet on the Button, raising takes the lead and pressures the blinds.',
+          'Raising to 3 BB increases the price above the 1 BB blind.',
       repairFocusSeatIds: <String>['btn'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Button raise', 'Hero acts'],
@@ -8182,7 +8177,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
   ],
   feedbackTitle: 'Solid understanding.',
   feedbackReason:
-      'Raising is the clean first-in Button action; calling only matches the blind.',
+      'Raising sets a higher price. Calling pays the price already set.',
   primaryCtaLabel: 'Continue',
   nextLessonId: 'read_board',
   returnTarget: 'learn',
@@ -8278,7 +8273,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'No one entered yet.',
       body:
-          'Calling only matches the blind. First in usually means raise or fold.',
+          'First in means the first player to put chips in voluntarily after the blinds. Calling matches the blind. Raising increases the price.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['First in', 'Button'],
     ),
@@ -8318,8 +8313,9 @@ const _firstHandRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Two',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Getting warmer.',
-      feedbackReason: 'You start with two private cards.',
+      feedbackTitle: 'Look at both private cards.',
+      feedbackReason:
+          'The dealer gave you both cards at your seat. Count them together before the shared cards arrive.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Hero cards'],
     ),
@@ -9072,7 +9068,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct beginner transfer.',
       feedbackReason:
-          'Hero can only win the matched chips, not the extra 80 BB still behind CO. The short stack contests what got matched in front of it, not chips nobody put in.',
+          'You can win the 20 BB CO matched. That limit stays fixed for this hand, even if CO bets more against another player.',
     ),
     Act0RunnerOptionV1(
       id: 'entire_covering_stack',
@@ -9083,7 +9079,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too many chips counted.',
       feedbackReason:
-          'Hero cannot win chips CO never matched. Extra chips behind a covering stack stay out of Hero\'s contest until they are actually committed.',
+          'Your all-in caps CO’s contribution to the pot you can win at 20 BB. Any further chips CO bets against another player stay in a separate pot.',
     ),
     Act0RunnerOptionV1(
       id: 'nothing_until_showdown',
@@ -9297,20 +9293,20 @@ final _winWaysRunner = _meetTableRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'everyone_folds',
-      label: 'Everyone folds',
+      label: 'Everyone else folds',
       isCorrect: true,
-      preferredLabel: 'Everyone folds',
+      preferredLabel: 'Everyone else folds',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'That is the early ending.',
       feedbackReason:
-          'If everyone folds, the hand ends before showdown and the last player standing wins the pot immediately.',
+          'If everyone else folds, the hand ends before showdown and the last player standing wins the pot immediately.',
     ),
     Act0RunnerOptionV1(
       id: 'largest_stack',
       label: 'Largest stack',
       isCorrect: false,
-      preferredLabel: 'Everyone folds',
-      betterAnswerLabel: 'Everyone folds',
+      preferredLabel: 'Everyone else folds',
+      betterAnswerLabel: 'Everyone else folds',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more step.',
       feedbackReason:
@@ -9320,8 +9316,8 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       id: 'best_hand_showdown',
       label: 'Best hand at showdown',
       isCorrect: false,
-      preferredLabel: 'Everyone folds',
-      betterAnswerLabel: 'Everyone folds',
+      preferredLabel: 'Everyone else folds',
+      betterAnswerLabel: 'Everyone else folds',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'That is the other ending.',
       feedbackReason:
@@ -9583,8 +9579,8 @@ final _checkActionRunner = _firstHandRunner.copyWith(
 final _foldActionRunner = _readBoardRunner.copyWith(
   lessonId: 'actions_fold',
   lessonTitle: 'Fold, check, call, raise',
-  lessonSubtitle: 'Facing a bet with a weak hand can be a fold.',
-  caption: 'HJ bets and your hand is weak.',
+  lessonSubtitle: 'Folding gives up the hand.',
+  caption: 'HJ bets 2 BB on an ace-high flop. You hold two queens.',
   hint: 'Folding saves chips when continuing is not worth it.',
   question: 'Which action gives up the hand?',
   options: const <Act0RunnerOptionV1>[
@@ -9605,7 +9601,8 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Getting warmer.',
-      feedbackReason: 'Calling spends chips to continue with a weak hand.',
+      feedbackReason:
+          'Calling pays 2 BB to stay in the hand. Your queens still beat some hands.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -9615,7 +9612,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
-      feedbackReason: 'Raising adds more chips with a weak hand.',
+      feedbackReason: 'Raising puts in more chips and keeps you in the hand.',
     ),
   ],
   table: _readBoardRunner.table.copyWith(
@@ -9674,7 +9671,8 @@ final _foldActionRunner = _readBoardRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'A bet creates a price.',
-      body: 'If your hand is not worth the price, folding saves chips.',
+      body:
+          'Folding ends your part in the hand without paying the call. The flop alone does not tell you whether folding is best.',
       focusSeatIds: <String>['btn', 'hj'],
       focusLabels: <String>['Facing bet', 'Fold saves'],
     ),
@@ -11140,7 +11138,7 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
   lessonTitle: 'Hand rankings, on the table',
   caption: 'A royal flush is T-J-Q-K-A all in one suit.',
   hint: 'A flush with an ace is not royal unless the ranks run to ace.',
-  question: 'What does hero have here?',
+  question: 'What is the highest hand category you can make?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'royal_flush',
@@ -11154,13 +11152,13 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'ace_high_flush',
-      label: 'Ace-high flush',
+      label: 'Ace-high flush without a straight',
       isCorrect: false,
       preferredLabel: 'Royal flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Same suit, but stronger.',
       feedbackReason:
-          'Hero does have an ace-high flush, but the five hearts also run T-J-Q-K-A in sequence. That makes it the royal flush, not just a normal ace-high flush.',
+          'The five hearts run T-J-Q-K-A in sequence. An ace-high flush without a straight would have a gap in its ranks.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11495,8 +11493,8 @@ final _showdownRunner = _readBoardRunner.copyWith(
   lessonId: 'showdown_winning',
   lessonTitle: 'Showdown & winning',
   caption: 'A hand can end by folds or by showdown.',
-  hint: 'If everyone folds, the last player wins now.',
-  question: 'What happens if everyone folds to you?',
+  hint: 'If everyone else folds, the last player wins now.',
+  question: 'What happens if everyone else folds to you?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'win_now',
@@ -11505,7 +11503,7 @@ final _showdownRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Win now',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
-      feedbackReason: 'When everyone folds, the last player wins the pot.',
+      feedbackReason: 'When everyone else folds, the last player wins the pot.',
     ),
     Act0RunnerOptionV1(
       id: 'show_cards',
@@ -11536,11 +11534,11 @@ final _showdownIntroRunner = _showdownRunner.copyWith(
   lessonId: 'showdown_intro',
   caption: 'A hand can end before or at showdown.',
   hint: 'Folds end it early. Showdown compares hands.',
-  question: 'What happens if everyone folds to you?',
+  question: 'What happens if everyone else folds to you?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Two endings.',
-      body: 'Win when everyone folds, or win by best hand at showdown.',
+      body: 'Win when everyone else folds, or win by best hand at showdown.',
       focusLabels: <String>['Folds', 'Showdown'],
     ),
   ],
@@ -11772,7 +11770,7 @@ final _tableRecapRunner = _winWaysRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'everyone_folds',
-      label: 'Everyone folds before showdown',
+      label: 'Everyone else folds before showdown',
       isCorrect: false,
       preferredLabel: 'Chips already committed to the middle',
       betterAnswerLabel: 'Chips already committed to the middle',
@@ -11969,7 +11967,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
   question: 'In this live hand, what can still decide the pot?',
   feedbackTitle: 'That is the live loop.',
   feedbackReason:
-      'A real hand still ends the same two clean ways: everyone folds, or players reach showdown and the best hand wins.',
+      'A real hand still ends the same two clean ways: everyone else folds, or players reach showdown and the best hand wins.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_or_showdown',
@@ -12014,7 +12012,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Real hand, same endings.',
       body:
-          'Even in a real hand, the pot still ends one of two ways: everyone folds, or players reach showdown.',
+          'Even in a real hand, the pot still ends one of two ways: everyone else folds, or players reach showdown.',
       focusLabels: <String>['Fold', 'Showdown', 'Pot 1.5 BB'],
     ),
   ],
@@ -12233,15 +12231,15 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'co_still_acting',
-      label: 'CO/cutoff already folded, so You at BTN act next',
+      label: 'CO still has to act before you at BTN',
       isCorrect: false,
       preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       betterAnswerLabel:
           'You are BTN, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close, but name the full setup.',
+      feedbackTitle: 'Check who acts next.',
       feedbackReason:
-          'CO/cutoff already folded and action is on You now. The full clue also includes BTN, posted blinds, your cards, and no board yet.',
+          'CO has already folded. The action is on you, the blinds are posted, and the board is still empty.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
@@ -12556,7 +12554,8 @@ final _actionWordsRunner = _whatYouCanDoRunner.copyWith(
 final _legalActionRunner = _checkActionRunner.copyWith(
   lessonId: 'legal_actions',
   caption: 'Legal actions depend on whether a bet is facing you.',
-  hint: 'No bet means check is available; facing a bet means call or fold.',
+  hint:
+      'When no chips are owed, you can check. Facing a bet, a call matches the price and a fold exits. A raise may also be available.',
   question:
       'No bet faces you. Which action keeps you in the hand without adding chips?',
   teachingSteps: const <Act0TeachingStepV1>[
@@ -13646,7 +13645,8 @@ final _world3ButtonOpenRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'Folded to BTN with KTs.',
   hint: 'First in and late position: opening is the clean action.',
-  question: 'What is the simple first-in action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple first-in action?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Late playable hand.',
@@ -13697,7 +13697,8 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonId: 'w3_cutoff_open',
   caption: 'Folded to CO with AJo.',
   hint: 'Cutoff is late, but Button and blinds still remain behind.',
-  question: 'What is the cleaner first-in action from CO?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the cleaner first-in action from CO?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise',
@@ -13823,7 +13824,8 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'Unopened pot. Hero is early with J8o.',
   hint: 'Early position removes the comfort from weak offsuit hands.',
-  question: 'What is the clean action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -13915,7 +13917,8 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'CO opened. Hero is BTN with KQo.',
   hint: 'Playable hand in position: call keeps the hand in.',
-  question: 'What is the simple response?',
+  question:
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the simple response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14017,7 +14020,8 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
   caption: 'HJ opened. Hero is BTN with KQo.',
   hint:
       'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
-  question: 'What is the simple continue?',
+  question:
+      '6-max micro-stakes practice: assume HJ raises with many hands, and CO and the blinds fold. What is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14108,39 +14112,40 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
 final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w2_kqo_contrast',
   caption: 'CO opened. Hero is BTN with KQo instead of A7o.',
-  hint: 'Same seat, different hand class, much less domination risk.',
-  question: 'Why is KQo the cleaner continue?',
+  hint: 'Look for a shared rank, then compare the other card.',
+  question: 'What is different about how these hands can be dominated?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'less_dominated',
-      label: 'It keeps position and avoids weak-ace domination',
+      label: 'A7o shares an ace with AK and has the lower second card',
       isCorrect: true,
-      preferredLabel: 'It keeps position and avoids weak-ace domination',
+      preferredLabel: 'A7o shares an ace with AK and has the lower second card',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong contrast read.',
       feedbackReason:
-          'KQo still plays in position, and it is not trapped by stronger aces the way A7o is.',
+          'A7o shares its ace with AK or AQ and has the lower second card. KQo avoids that specific comparison, but it can be dominated by AK or AQ itself.',
     ),
     Act0RunnerOptionV1(
       id: 'two_big_cards_auto',
-      label: 'Two broadway cards always continue after an open',
+      label: 'KQo shares its queen with AK and has the lower second card',
       isCorrect: false,
-      preferredLabel: 'It keeps position and avoids weak-ace domination',
-      betterAnswerLabel: 'It keeps position and avoids weak-ace domination',
+      preferredLabel: 'A7o shares an ace with AK and has the lower second card',
+      betterAnswerLabel:
+          'A7o shares an ace with AK and has the lower second card',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'The clean reason is not auto-continue. It is the mix of position and lower domination risk.',
+          'AK has no queen. KQo shares its king with AK, and the queen loses to the ace.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Compare the hand class.',
       body:
-          'KQo still has broadway strength, while A7o runs into stronger aces too often.',
+          'Both hands can be dominated. Use the shared rank and compare the other card.',
       focusSeatIds: <String>['co', 'btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['KQo', 'Less domination'],
+      focusLabels: <String>['Shared rank', 'Second card'],
     ),
   ],
 );
@@ -14150,7 +14155,8 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
   caption: 'CO opened. Hero is BTN with QJs.',
   hint:
       'Playable suited broadways can continue, but the reason is still seat plus hand class.',
-  question: 'What is the simple continue?',
+  question:
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14210,30 +14216,28 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
 final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_cutoff_call_kqo',
   caption: 'HJ opened. Hero is CO with KQo.',
-  hint: 'Same hand, one seat earlier, still facing an opener.',
-  question: 'What is the cleaner response from CO?',
-  options: const <Act0RunnerOptionV1>[
+  hint: 'Count which players have yet to respond to the opening raise.',
+  question: 'Who still has to act after you on the first pass?',
+  options: const [
     Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '2.5 BB',
+      id: 'players_behind',
+      label: 'BTN, SB, and BB',
       isCorrect: true,
-      preferredLabel: 'Call',
+      preferredLabel: 'BTN, SB, and BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong frame read.',
+      feedbackTitle: 'Three players are behind you.',
       feedbackReason:
-          'KQo can still continue from CO, but the seat is less comfortable than BTN because one more strong seat stays behind.',
+          'HJ has raised and you act next from CO. BTN and both blinds still have their first response to make.',
     ),
     Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
+      id: 'blinds_only',
+      label: 'SB and BB',
       isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
+      preferredLabel: 'BTN, SB, and BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'A bit too cautious.',
+      feedbackTitle: 'Include the button.',
       feedbackReason:
-          'The seat is tighter than BTN, but KQo still has enough strength to continue facing one HJ open.',
+          'BTN sits between you and the blinds and has yet to respond to the raise.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -14253,40 +14257,37 @@ final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
     heroSeatId: 'co',
     activeSeatId: 'co',
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Same hand, tighter seat.',
+      title: 'Who can act behind you?',
       body:
-          'KQo still continues here, but one earlier seat makes the call a little less comfortable.',
-      focusSeatIds: <String>['hj', 'co'],
-      focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['CO', 'KQo', 'Call'],
+          'When you face a raise, check who still has a turn. Their actions can change the price and how many players see the flop.',
     ),
   ],
 );
 
-final _world3WeakFacingFoldPressureRunner = _world3WeakFacingFoldRunner
-    .copyWith(
-      lessonId: 'w3_weak_facing_fold_pressure',
-      hint: 'Late position adds comfort, not permission.',
-      question: 'What does discipline say here?',
-      teachingSteps: const <Act0TeachingStepV1>[
-        Act0TeachingStepV1(
-          title: 'Comfort is not a rescue.',
-          body:
-              'J8o stays too weak even when the Button acts after the opener.',
-          focusSeatIds: <String>['btn'],
-          focusCardIds: <String>['hero_0', 'hero_1'],
-          focusLabels: <String>['J8o', 'Still fold'],
-        ),
-      ],
-    );
+final _world3WeakFacingFoldPressureRunner = _world3WeakFacingFoldRunner.copyWith(
+  lessonId: 'w3_weak_facing_fold_pressure',
+  hint: 'Late position adds comfort, not permission.',
+  question:
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What does discipline say here?',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Comfort is not a rescue.',
+      body: 'J8o stays too weak even when the Button acts after the opener.',
+      focusSeatIds: <String>['btn'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['J8o', 'Still fold'],
+    ),
+  ],
+);
 
 final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_position_btn_call_kjs',
   caption: 'HJ opened. Hero is BTN with KJs.',
   hint: 'Late position helps when the hand can still continue cleanly.',
-  question: 'What is the simple response?',
+  question:
+      '6-max micro-stakes practice: assume HJ raises with many hands, and CO and the blinds fold. What is the simple response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'call',
@@ -14469,7 +14470,8 @@ final _world3WeakFacingFoldRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_weak_facing_fold',
   caption: 'CO opened. Hero is BTN with J8o.',
   hint: 'Position helps, but this hand is still too weak to continue.',
-  question: 'What is the clean response?',
+  question:
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the clean response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14518,7 +14520,7 @@ final _world3FacingOpenRecapRunner = _world3PlayableCallRunner.copyWith(
   caption: 'Lesson learned: facing an open creates a price.',
   hint: 'Playable hands can call; weak hands can still fold.',
   question:
-      'What is the cleaner continue with this playable hand facing an open?',
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is your decision facing the raise?',
   feedbackTitle: 'Facing-open takeaway.',
   feedbackReason:
       'Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.',
@@ -14555,7 +14557,8 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonTitle: 'Position preflop',
   caption: 'Unopened pot. Hero is late with ATo.',
   hint: 'Late position supports a clean open with this playable hand.',
-  question: 'What is the simple action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise',
@@ -14604,7 +14607,8 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
   lessonTitle: 'Position preflop',
   caption: 'Unopened pot. Hero is early with ATo.',
   hint: 'The same hand is less comfortable from early position.',
-  question: 'What is the disciplined action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the disciplined action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14768,7 +14772,34 @@ final _w3LateSeatContrastRunner = _latePositionRunner.copyWith(
   lessonId: 'w3_late_seat_contrast',
   caption: 'CO is late, but BTN still acts after CO.',
   hint: 'Compare the two latest seats directly.',
-  question: 'Which seat is later than CO?',
+  question:
+      'Which of these seats acts later on the first pass before the flop?',
+  table: _latePositionRunner.table.copyWith(
+    selectableSeatIds: const ['btn', 'co'],
+  ),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'btn',
+      label: 'BTN',
+      seatId: 'btn',
+      isCorrect: true,
+      preferredLabel: 'BTN',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Button acts later.',
+      feedbackReason: 'The first pass goes from CO to BTN, then to the blinds.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'co',
+      label: 'CO',
+      seatId: 'co',
+      isCorrect: false,
+      preferredLabel: 'BTN',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Follow the seats in order.',
+      feedbackReason:
+          'The cutoff acts before the button on the first preflop pass.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Late has levels.',
@@ -15121,7 +15152,31 @@ final _world3SameHandIntroRunner = _world3PositionIntroRunner.copyWith(
   lessonTitle: 'Same hand, different frame',
   caption: 'The same hand can change action when the frame changes.',
   hint: 'First in, facing open, and early position are different frames.',
-  question: 'What should you re-check?',
+  question:
+      'What should you re-check before deciding how to play the same hand?',
+  table: _world3PositionIntroRunner.table.copyWith(selectableSeatIds: const []),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'cards_and_seat',
+      label: 'Your cards and seat',
+      isCorrect: false,
+      preferredLabel: 'Your cards, seat, and earlier action',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the action too.',
+      feedbackReason:
+          'The same cards at the same seat can face an earlier raise or an unopened pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'full_context',
+      label: 'Your cards, seat, and earlier action',
+      isCorrect: true,
+      preferredLabel: 'Your cards, seat, and earlier action',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the whole situation.',
+      feedbackReason:
+          'Your cards tell you what you hold, your seat tells you who is left to act, and the earlier action tells you whether somebody has already raised.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'No permanent answer.',
@@ -15289,7 +15344,8 @@ final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
   lessonTitle: 'Dominated hand warning',
   caption: 'CO opened. Hero is BTN with A7o.',
   hint: 'This can be behind stronger aces, so folding is clean.',
-  question: 'What is the disciplined response?',
+  question:
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold',
@@ -15336,7 +15392,8 @@ final _world3DominatedRecapRunner = _world3DominatedFoldRunner.copyWith(
   lessonId: 'w3_dominated_recap',
   caption: 'Lesson learned: familiar cards still need context.',
   hint: 'Do not continue just because one card looks high.',
-  question: 'What is the disciplined action with this weak ace facing an open?',
+  question:
+      '6-max micro-stakes practice: assume CO raises with many hands and the blinds fold. What is the disciplined action with this weak ace facing an open?',
   feedbackTitle: 'Discipline takeaway.',
   feedbackReason:
       'Some hands look playable but are often behind stronger versions after an open.',
@@ -15580,7 +15637,8 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Medium needs position.',
-      body: 'KQo is playable but not strong enough to play from anywhere.',
+      body:
+          'The hand bucket describes the starting cards. The seat and any earlier raise affect what you do with them.',
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['KQo', 'Medium'],
     ),
@@ -15651,7 +15709,8 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'BTN. Pot unopened. Hero holds K♦ Q♣.',
   hint: 'Medium hand in the best seat. Raising is sharper than limping.',
-  question: 'What is the best first-in action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the best first-in action?',
   table: _world3ButtonOpenRunner.table.copyWith(
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'K', suit: 'd'),
@@ -15749,7 +15808,8 @@ final _w1DisciplineApplyEarlyFoldRunner = _world3EarlyFoldRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'UTG. Pot unopened. Hero holds 8♠ 4♦.',
   hint: 'Early position, trash bucket. Discipline says fold.',
-  question: 'What is the clean action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
   feedbackTitle: 'Discipline holds.',
   feedbackReason:
       'Early position with a trash hand needs no extra thought. Fold and wait.',
@@ -15786,7 +15846,8 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'BTN. Pot unopened. Hero holds A♠ J♦.',
   hint: 'Late position, strong hand, no one entered. Clean open.',
-  question: 'What is the clean action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
   feedbackTitle: 'Discipline confirms.',
   feedbackReason:
       'AJo on the button is a strong late-position open when the pot is clean.',
@@ -15818,7 +15879,8 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
   lessonSubtitle: 'Hand Discipline',
   caption: 'HJ. Pot unopened. Hero holds K♦ Q♣.',
   hint: 'Medium hand, middle seat, unopened pot. Open with a clear reason.',
-  question: 'What is the clean action?',
+  question:
+      '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the clean action?',
   feedbackTitle: 'HJ open is clean.',
   feedbackReason:
       'KQo is a medium hand, and HJ can open it when the pot is unopened.',
@@ -16125,7 +16187,8 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
   caption: 'Hero has top pair on A-7-2 after BB checks.',
   hint:
       'Read Hero hand strength and the likely response before naming purpose.',
-  question: 'What is the main purpose?',
+  question:
+      'You bet to get a call from a weaker ace. What is the purpose of the bet?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'value',
@@ -16169,9 +16232,11 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
 final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_bluff_purpose',
-  caption: 'Hero missed on A-7-2 after BB checks.',
+  caption:
+      'On A-7-2, BB checks. You are considering a bet to make a better hand fold.',
   hint: 'Read whether a bet can tell a credible story before naming purpose.',
-  question: 'What is the main purpose?',
+  question:
+      'You bet to make a better hand fold. What is the purpose of the bet?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bluff',
@@ -16191,7 +16256,7 @@ final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Getting warmer.',
       feedbackReason:
-          'Hero missed, so the bet is not asking weaker hands to pay.',
+          'The goal is a fold from a better hand. A value bet instead seeks calls from weaker hands.',
     ),
   ],
   table: _world4PurposeIntroRunner.table.copyWith(
@@ -16205,7 +16270,8 @@ final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Bluff wants folds.',
-      body: 'When hero has no pair, the bet works only if folds happen.',
+      body:
+          'A bluff tries to win the pot now by making a better hand fold. If called, you can still improve or win at showdown.',
       focusLabels: <String>['Missed', 'Fold pressure'],
     ),
   ],
@@ -16249,9 +16315,10 @@ final _world4ValueIntroRunner = _world4ValuePurposeRunner.copyWith(
 final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
   lessonId: 'w4_value_bet',
   lessonTitle: 'Value bets',
-  caption: 'Top pair on a safe flop. BB can call worse.',
+  caption: 'Read the action and the stated goal.',
   hint: 'A half-pot bet is a simple value size here.',
-  question: 'What action fits the purpose?',
+  question:
+      'In this 6-max micro-stakes example, assume BB calls a 3 BB bet with a weaker ace. Which option gives BB a chance to call with that weaker ace?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -16282,9 +16349,10 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
 
 final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
   lessonId: 'w4_value_missed',
-  caption: 'Hero has top pair and worse hands can still call a bet.',
+  caption: 'Read the action and the stated goal.',
   hint: 'When worse hands can call, betting is the lesson.',
-  question: 'What action best collects value from worse hands here?',
+  question:
+      'In this 6-max micro-stakes example, assume BB calls 3 BB with a weaker ace after checking. Which option can get chips from that weaker ace this round?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
@@ -16349,9 +16417,10 @@ final _world4BluffIntroRunner = _world4BluffPurposeRunner.copyWith(
 final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
   lessonId: 'w4_bluff_pressure',
   lessonTitle: 'Bluff pressure',
-  caption: 'Hero missed, but BB checked and can fold.',
+  caption: 'Read the action and the stated goal.',
   hint: 'A small bet can apply pressure without risking too much.',
-  question: 'What action matches the bluff purpose?',
+  question:
+      'In this 6-max micro-stakes example, assume BB folds better hands to a small bet. Your goal is to make one of those hands fold now. Which option can make BB fold now?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_small',
@@ -16371,9 +16440,9 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       preferredLabel: 'Bet one-third',
       betterAnswerLabel: 'Bet one-third',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Legal, but betting is sharper.',
+      feedbackTitle: 'Checking leaves both players in.',
       feedbackReason:
-          'Checking is legal and not a disaster, but a small bet creates fold pressure at low cost.',
+          'Checking closes this round without asking BB to fold. Betting gives BB a decision.',
     ),
   ],
   table: _act0W4BtnBbSixBbFlopV1(
@@ -16383,9 +16452,10 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
 
 final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
   lessonId: 'w4_bad_bluff',
-  caption: 'Villain called big already. Fold pressure is low.',
+  caption: 'Read the action and the stated goal.',
   hint: 'A bluff is weaker when the opponent is not folding.',
-  question: 'What is the safer beginner action?',
+  question:
+      'In this 6-max micro-stakes example, assume BB calls a pot-size bet with every better hand and folds every worse hand. Which option avoids paying for a bluff that cannot make a better hand fold?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
@@ -16395,7 +16465,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Check is the cleaner line.',
       feedbackReason:
-          'When fold pressure is low, checking avoids a forced bluff.',
+          'Checking lets you see the next card for free. The model gives the bluff no chance to fold a better hand.',
     ),
     Act0RunnerOptionV1(
       id: 'pot_bet',
@@ -16407,7 +16477,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Almost got it.',
       feedbackReason:
-          'A pot-size bluff is too ambitious when fold pressure is unclear.',
+          'The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.',
     ),
   ],
   table: _act0W4BtnBbSixBbFlopV1(
@@ -16462,9 +16532,10 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
 final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_protection_bet',
-  caption: 'Hero has top pair. Checking gives villain a free next card.',
+  caption: 'Read the action and the stated goal.',
   hint: 'Betting protects value by denying that free card.',
-  question: 'What action fits protection?',
+  question:
+      'BB has checked. In this 6-max micro-stakes example, assume BB can beat your pair on the next card. Which option makes BB pay to see the next card or fold?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -16574,7 +16645,8 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Price to continue.',
-      body: 'Pot = what you can win. To call = what you risk.',
+      body:
+          'To call X into a pot of Y after the opponent’s bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.',
       focusLabels: <String>['Pot', 'To call', 'Price'],
     ),
   ],
@@ -16607,10 +16679,11 @@ List<Act0ActionTrailItemV1> _world4PriceActionTrailV1(String amountLabel) =>
 final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_good_price_call',
-  caption: 'Pot is 8 BB. To call is 1 BB with one pair.',
-  hint: 'Small price, paired hand: calling is acceptable.',
-  question: 'What action fits the price?',
-  options: const <Act0RunnerOptionV1>[
+  caption: 'Compare the call amount with the pot.',
+  hint: 'Compare the stated chance with the share of the final pot you pay.',
+  question:
+      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 25% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+  options: const [
     Act0RunnerOptionV1(
       id: 'call',
       label: 'Call',
@@ -16618,26 +16691,25 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          'Pot 8 BB gives you something real to win, to call is only 1 BB, and one pair is enough reason to continue.',
+          '1 ÷ (1 + 8) is about 11.1%. Your 25% chance is above that threshold, so call.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: false,
       preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Nearly there.',
+      feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Do not look only at the hand. Pot 8 BB is worth fighting for, to call is only 1 BB, and one pair is enough to continue once.',
+          'Folding gives up a profitable call in this model: 25% is higher than the roughly 11.1% you need.',
     ),
   ],
   table: _world4PriceIntroRunner.table.copyWith(
     potLabel: 'Pot 8 BB',
     toCallLabel: 'To call 1 BB',
-    centerLabel: 'Small price',
+    centerLabel: 'Turn decision',
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'T', suit: 's'),
       Act0CardStateV1(rank: '7', suit: 'd'),
@@ -16661,19 +16733,20 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
 
 final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_bad_price_fold',
-  caption: 'Pot is 8 BB. To call is 7 BB with a weak pair.',
-  hint: 'The price is high and the hand is not strong enough.',
-  question: 'What action fits the price?',
-  options: const <Act0RunnerOptionV1>[
+  caption: 'Compare the call amount with the pot.',
+  hint: 'Compare the stated chance with the share of the final pot you pay.',
+  question:
+      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 25% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+  options: const [
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          'Pot 8 BB is not enough to justify risking 7 BB with a weak pair. The hand is too thin for that price.',
+          '7 ÷ (7 + 14) is about 33.3%. Your 25% chance is below that threshold, so fold.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -16681,17 +16754,16 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       amountLabel: '7 BB',
       isCorrect: false,
       preferredLabel: 'Fold',
-      betterAnswerLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'One more step.',
+      feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Calling spends 7 BB to win a pot that is only 8 BB, and a weak pair is not a strong enough reason.',
+          'Calling puts 7 BB at risk. The required chance is about 33.3%, but you win only 25% of the time.',
     ),
   ],
   table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 8 BB',
+    potLabel: 'Pot 14 BB',
     toCallLabel: 'To call 7 BB',
-    centerLabel: 'High price',
+    centerLabel: 'Turn decision',
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: '8', suit: 's'),
       Act0CardStateV1(rank: '7', suit: 'd'),
@@ -16709,11 +16781,11 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
 
 final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_cheap_price_marginal_call',
-  caption: 'Pot is 10 BB. To call is 1 BB with middle pair.',
-  hint:
-      'A cheap call can be okay when the pot is large enough and the hand still has value.',
-  question: 'What action fits the price?',
-  options: const <Act0RunnerOptionV1>[
+  caption: 'Compare the call amount with the pot.',
+  hint: 'Compare the stated chance with the share of the final pot you pay.',
+  question:
+      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 15% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+  options: const [
     Act0RunnerOptionV1(
       id: 'call',
       label: 'Call',
@@ -16721,38 +16793,25 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Good price read.',
+      feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          'Pot 10 BB offers plenty to win, to call is only 1 BB, and middle pair is enough reason to continue once.',
+          '1 ÷ (1 + 10) is about 9.1%. Your 15% chance is above that threshold, so call.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: false,
       preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too tight here.',
+      feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Folding ignores the price. Pot 10 BB is large, to call is tiny, and middle pair is enough to keep going.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise',
-      label: 'Raise',
-      amountLabel: '4 BB',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
-      feedbackReason:
-          'Raising adds more risk than this spot asks for. The clean read is use the cheap 1 BB price and call.',
+          'Folding gives up a profitable call in this model: 15% is higher than the roughly 9.1% you need.',
     ),
   ],
   table: _world4GoodPriceCallRunner.table.copyWith(
     potLabel: 'Pot 10 BB',
     toCallLabel: 'To call 1 BB',
-    centerLabel: 'Cheap price, middle pair',
+    centerLabel: 'Turn decision',
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: '9', suit: 's'),
       Act0CardStateV1(rank: '7', suit: 'd'),
@@ -16767,32 +16826,24 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
     seats: _world4PriceSeatsV1('1 BB'),
     actionTrail: _world4PriceActionTrailV1('1 BB'),
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Cheap price, honest hand.',
-      body:
-          'Do not look only at fear. Pot 10 BB and To call 1 BB make middle pair worth one calm continue.',
-      focusLabels: <String>['Pot 10 BB', 'To call 1 BB', 'Middle pair'],
-    ),
-  ],
 );
 
 final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
   lessonId: 'w4_big_price_marginal_fold',
-  caption: 'Pot is 9 BB. To call is 6 BB with top pair, weak kicker.',
-  hint:
-      'A bigger call needs a stronger reason. Hand strength alone is not enough here.',
-  question: 'What action fits the price?',
-  options: const <Act0RunnerOptionV1>[
+  caption: 'Compare the call amount with the pot.',
+  hint: 'Compare the stated chance with the share of the final pot you pay.',
+  question:
+      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 25% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+  options: const [
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong discipline.',
+      feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          'Top pair sounds good, but Pot 9 BB is not enough to justify risking 6 BB with a weak kicker.',
+          '6 ÷ (6 + 13) is about 31.6%. Your 25% chance is below that threshold, so fold.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -16800,29 +16851,16 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
       amountLabel: '6 BB',
       isCorrect: false,
       preferredLabel: 'Fold',
-      betterAnswerLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Look at the price too.',
+      feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Do not stop at top pair. To call 6 BB is a big risk compared with the 9 BB pot and this marginal hand.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise',
-      label: 'Raise',
-      amountLabel: '12 BB',
-      isCorrect: false,
-      preferredLabel: 'Fold',
-      betterAnswerLabel: 'Fold',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too much pressure back.',
-      feedbackReason:
-          'Raising adds even more risk when the call price already asks too much from a thin top pair.',
+          'Calling puts 6 BB at risk. The required chance is about 31.6%, but you win only 25% of the time.',
     ),
   ],
   table: _world4BadPriceFoldRunner.table.copyWith(
-    potLabel: 'Pot 9 BB',
+    potLabel: 'Pot 13 BB',
     toCallLabel: 'To call 6 BB',
-    centerLabel: 'Top pair, big price',
+    centerLabel: 'Turn decision',
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'Q', suit: 's'),
       Act0CardStateV1(rank: '7', suit: 'd'),
@@ -16837,34 +16875,24 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
     seats: _world4PriceSeatsV1('6 BB'),
     actionTrail: _world4PriceActionTrailV1('6 BB'),
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Big price needs more.',
-      body:
-          'Top pair is not an auto-continue. Pot 9 BB and To call 6 BB mean the hand needs a stronger reason.',
-      focusLabels: <String>[
-        'Pot 9 BB',
-        'To call 6 BB',
-        'Top pair, weak kicker',
-      ],
-    ),
-  ],
 );
 
 final _world4PriceRecapRunner = _world4PriceIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w4_price_recap',
   caption: 'Lesson learned: every call has a price.',
-  hint: 'Compare the price to hand strength and future cards.',
+  hint:
+      'Compare the chance of winning with the fraction of the final pot paid by the call.',
   question: 'What should you read before calling?',
   feedbackTitle: 'Price takeaway.',
   feedbackReason:
-      'A call is not just staying curious. Pot tells what you can win, To call tells what you must risk, and the hand must be strong enough for that trade.',
+      'The price gives the required winning chance. Compare it with how often you expect to win.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Price checklist.',
-      body: 'Read pot, to-call, and hand strength before calling.',
-      focusLabels: <String>['Pot', 'To call', 'Hand'],
+      body:
+          'Read the pot after the bet, the amount to call, and your chance to win.',
+      focusLabels: <String>['Pot', 'To call', 'Chance to win'],
     ),
   ],
 );
@@ -17035,11 +17063,11 @@ final _world4CheckpointIntroRunner = _world4PurposeIntroRunner.copyWith(
 
 final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_price_table_transfer',
-  caption: 'Real table. Pot is 7 BB. To call is 2 BB. Hero has second pair.',
-  hint:
-      'Do not look only at your hand. Compare hand strength with the price before reacting.',
-  question: 'What is the clean turn action?',
-  options: const <Act0RunnerOptionV1>[
+  caption: 'Compare the call amount with the pot.',
+  hint: 'Compare the stated chance with the share of the final pot you pay.',
+  question:
+      '6-max micro-stakes model: the bettor is your only opponent. If you call, you win 30% of the time. Assume no ties or more bets after this call. Between call and fold, which earns more in this model?',
+  options: const [
     Act0RunnerOptionV1(
       id: 'call',
       label: 'Call',
@@ -17047,32 +17075,19 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean table read.',
+      feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          'Pot 7 BB is worth contesting, To call is only 2 BB, and second pair is enough to continue once.',
+          '2 ÷ (2 + 7) is about 22.2%. Your 30% chance is above that threshold, so call.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: false,
       preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too cautious here.',
+      feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Folding ignores the price. The pot is 7 BB, the call costs only 2 BB, and the hand still has enough value.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise',
-      label: 'Raise',
-      amountLabel: '6 BB',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
-      feedbackReason:
-          'Raising spends more than this price read needs. The clean transfer is call the small price with second pair.',
+          'Folding gives up a profitable call in this model: 30% is higher than the roughly 22.2% you need.',
     ),
   ],
   table: _act0CurrentStreetTableV1(
@@ -17080,7 +17095,7 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       streetLabel: 'Turn',
       potLabel: 'Pot 7 BB',
       toCallLabel: 'To call 2 BB',
-      centerLabel: 'Second pair, live table',
+      centerLabel: 'Turn decision',
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'c'),
         Act0CardStateV1(rank: '9', suit: 'd'),
@@ -17107,23 +17122,15 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       ),
     },
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Live table price read.',
-      body:
-          'Pot tells what you can win. To call tells what you must risk. Compare both with second pair before choosing.',
-      focusLabels: <String>['Pot 7 BB', 'To call 2 BB', 'Second pair'],
-    ),
-  ],
 );
 
 final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
   lessonId: 'w4_purpose_price_table_transfer',
-  caption:
-      'Real table. Pot is 6 BB. BTN bets 2 BB with top pair on a dry flop.',
+  caption: 'Read the action and the stated goal.',
   hint:
       'Read both halves together: the bet has a value purpose, and the small size gives BB a cheap continue price.',
-  question: 'What is the clean read?',
+  question:
+      'In this 6-max micro-stakes example, BTN bets 2 BB into 6 BB to get called by weaker aces. What is the clean read?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'small_value_price',
@@ -17160,8 +17167,23 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
   ],
   table: _act0CurrentStreetTableV1(
     _world4ValueBetRunner.table.copyWith(
-      potLabel: 'Pot 6 BB',
-      toCallLabel: '',
+      potLabel: 'Pot 8 BB',
+      toCallLabel: 'To call 2 BB',
+      decisionSeatId: 'bb',
+      seats: [
+        for (final seat in _world4ValueBetRunner.table.seats)
+          if (seat.seatId == 'bb')
+            _act0CopySeatStateV1(seat, isActive: true, hasActed: false)
+          else if (seat.seatId == 'btn')
+            _act0CopySeatStateV1(
+              seat,
+              isActive: false,
+              hasActed: true,
+              isLastAggressor: true,
+            )
+          else
+            seat,
+      ],
       centerLabel: 'Value plus price',
       activeSeatId: 'bb',
       heroCards: const <Act0CardStateV1>[
@@ -17174,6 +17196,7 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
         Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
       ],
       actionTrail: const <Act0ActionTrailItemV1>[
+        ..._w4BtnBbSixBbFlopTrailV1,
         Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
         Act0ActionTrailItemV1(label: 'BB acts'),
       ],
@@ -17201,7 +17224,7 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
 final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w4_checkpoint_review',
-  caption: 'Lesson learned: betting is purpose plus price.',
+  caption: 'Lesson learned: read the bet purpose, size, and call price.',
   hint: 'Value, bluff, protection, and call price are now one system.',
   question: 'What makes a bet easier to understand?',
   options: const <Act0RunnerOptionV1>[

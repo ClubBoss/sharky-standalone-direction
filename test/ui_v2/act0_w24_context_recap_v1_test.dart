@@ -100,76 +100,67 @@ Act0LearningEvidenceRecordV1 _record({
 );
 
 void main() {
-  test(
-    'active recap retains context goal and versioned contextual choices',
-    () {
-      final task = _task();
-      expect(task.phase, Act0LessonPhaseV1.review);
-      expect(task.entryPhase, Act0LessonPhaseV1.drill);
-      expect(task.stepKind, Act0LessonStepKindV1.review);
-      expect(task.resolvedTaskFamily, Act0TaskFamilyV1.review);
-      expect(task.rewardXp, 12);
+  test('active recap retains context goal and versioned contextual choices', () {
+    final task = _task();
+    expect(task.phase, Act0LessonPhaseV1.review);
+    expect(task.entryPhase, Act0LessonPhaseV1.drill);
+    expect(task.stepKind, Act0LessonStepKindV1.review);
+    expect(task.resolvedTaskFamily, Act0TaskFamilyV1.review);
+    expect(task.rewardXp, 12);
+    expect(task.runner.question, 'What prevents one-hand-one-answer thinking?');
+    expect(task.runner.teachingSteps.single.title, 'Frame checklist.');
+    expect(
+      task.runner.teachingSteps.single.body,
+      'Ask if the pot is unopened or if a raise already happened.',
+    );
+    expect(task.runner.options.map((option) => option.id), <String>[
+      'one_answer',
+      'framework',
+    ]);
+    expect(
+      task.runner.options.singleWhere((option) => option.isCorrect).id,
+      'framework',
+    );
+    expect(task.runner.table.selectableSeatIds, isEmpty);
+    final normalized = normalizeAct0SeatTapRunnerV1(task.runner);
+    expect(normalized.options, hasLength(2));
+    expect(normalized.table.selectableSeatIds, isEmpty);
+    expect(normalized.options.every((option) => option.seatId == null), isTrue);
+    // The context questions use answers, while seat questions still use the table.
+    const seatControls = <String, List<String>>{
+      'button_advantage_button_vs_cutoff': <String>['btn', 'co'],
+      'button_advantage_find_button': <String>['btn', 'co'],
+    };
+    for (final entry in seatControls.entries) {
+      final control = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.taskList)
+          .singleWhere((task) => task.taskId == entry.key);
       expect(
-        task.runner.question,
-        'What prevents one-hand-one-answer thinking?',
+        control.runner.table.selectableSeatIds,
+        entry.value,
+        reason: 'Keep the source-owned seat controls: ${entry.key}',
       );
-      expect(task.runner.teachingSteps.single.title, 'Frame checklist.');
+      final normalizedControl = normalizeAct0SeatTapRunnerV1(control.runner);
+      expect(normalizedControl.table.selectableSeatIds, hasLength(6));
       expect(
-        task.runner.teachingSteps.single.body,
-        'Ask if the pot is unopened or if a raise already happened.',
+        normalizedControl.table.selectableSeatIds,
+        containsAll(entry.value),
       );
-      expect(task.runner.options.map((option) => option.id), <String>[
-        'one_answer',
-        'framework',
-      ]);
-      expect(
-        task.runner.options.singleWhere((option) => option.isCorrect).id,
-        'framework',
+    }
+    for (final option in normalized.options) {
+      final receipt = act0FirstValueSkillReceiptForRunnerV1(
+        runner: normalized,
+        option: option,
+        taskFamily: task.resolvedTaskFamily,
       );
-      expect(task.runner.table.selectableSeatIds, isEmpty);
-      final normalized = normalizeAct0SeatTapRunnerV1(task.runner);
-      expect(normalized.options, hasLength(2));
-      expect(normalized.table.selectableSeatIds, isEmpty);
-      expect(
-        normalized.options.every((option) => option.seatId == null),
-        isTrue,
-      );
-      // The recap override must not clear the ancestor or real seat tasks.
-      const seatControls = <String, List<String>>{
-        'same_hand_different_seat_w3_same_hand_intro': <String>['btn', 'utg'],
-        'button_advantage_find_button': <String>['btn', 'co'],
-      };
-      for (final entry in seatControls.entries) {
-        final control = Act0ShellStateV1.sample.worlds
-            .expand((world) => world.lessons)
-            .expand((lesson) => lesson.taskList)
-            .singleWhere((task) => task.taskId == entry.key);
-        expect(
-          control.runner.table.selectableSeatIds,
-          entry.value,
-          reason: 'Keep the source-owned seat controls: ${entry.key}',
-        );
-        final normalizedControl = normalizeAct0SeatTapRunnerV1(control.runner);
-        expect(normalizedControl.table.selectableSeatIds, hasLength(6));
-        expect(
-          normalizedControl.table.selectableSeatIds,
-          containsAll(entry.value),
-        );
-      }
-      for (final option in normalized.options) {
-        final receipt = act0FirstValueSkillReceiptForRunnerV1(
-          runner: normalized,
-          option: option,
-          taskFamily: task.resolvedTaskFamily,
-        );
-        expect(receipt, isNotNull);
-        expect(receipt!.skillAtomId, 'position_action_order');
-        expect(receipt.sourceSignalId, 'position_action_order');
-        expect(receipt.sourceSignalLabel, 'Bucket, seat, frame');
-        expect(receipt.nextRepId, 'repeat_position_action_order');
-      }
-    },
-  );
+      expect(receipt, isNotNull);
+      expect(receipt!.skillAtomId, 'position_action_order');
+      expect(receipt.sourceSignalId, 'position_action_order');
+      expect(receipt.sourceSignalLabel, 'Bucket, seat, frame');
+      expect(receipt.nextRepId, 'repeat_position_action_order');
+    }
+  });
 
   test(
     'context source rejects stale identity, question, options and metadata',

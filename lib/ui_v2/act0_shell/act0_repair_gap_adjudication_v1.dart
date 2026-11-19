@@ -733,6 +733,21 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     compatibilityImpact:
         'Raw history, source fingerprints and once-only XP retained; no new repair evidence or launch authority',
   ),
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_3',
+    sourceLessonId: 'same_hand_different_seat',
+    sourceTaskId: 'same_hand_different_seat_w3_same_hand_intro',
+    misconception: 'checking hand and position without reading earlier action',
+    conceptErrorId: 'misread_position_action_order',
+    priorFallback: 'unrecorded_exact_source_fallback',
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.intentionalExactReplay,
+    learnerEquivalenceRationale:
+        'Retry the current context question and check what changed before acting.',
+    difficultyRelationship: _sameDifficulty,
+    recheckPath: _recheck,
+    compatibilityImpact: _compat,
+  ),
 ];
 
 Act0RepairGapAdjudicationV1? act0RepairGapAdjudicationForSourceTaskV1(
@@ -914,7 +929,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "763bdc70a1956d4fc0847311361db6cd44d7122d0a5fd794eda1c8532820fbe5",
+        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -939,7 +954,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "763bdc70a1956d4fc0847311361db6cd44d7122d0a5fd794eda1c8532820fbe5",
+        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -986,7 +1001,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "81d0d1436bdd6e746b778b5190432359d9886f07254c57f5670f0160b4848207",
+        "f6f479796af86b65cc69dc03f4182b9e2a30a2f895f666aae56f7372497f8adc",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1002,7 +1017,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "777922545fa3e2c8a8b14cc2b6e8097c45fdcd5c542d7fe82bed1f9f87355c88",
+        "3fa9ff035a51f73cf42612f17908a2953fa7e11a15c3c4705e25f5d6e936ff34",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1018,7 +1033,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "dade4890f9f7ed5cedc6729a6b313efaa0b561cfab36789062d9d1fad9380179",
+        "852db40f8dd6346fb987a13a490b374d4d521866e719d0d6d0d287c121ccaecd",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1066,7 +1081,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "763bdc70a1956d4fc0847311361db6cd44d7122d0a5fd794eda1c8532820fbe5",
+        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
     relationId: "selected_w1_042_fold_v1",
@@ -1093,7 +1108,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "763bdc70a1956d4fc0847311361db6cd44d7122d0a5fd794eda1c8532820fbe5",
+        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
     relationId: "selected_w1_043_call_v1",

@@ -134,16 +134,10 @@ const Map<String, String> act0PrechoiceNeutralLessonTitleByIdV1 =
 /// Neutral English question wording where the authored question gives the
 /// answer away. The recap river scene stays and its step becomes an honest
 /// table read; "continue" stems no longer name Call against Fold.
-const Map<String, String>
-act0PrechoiceNeutralQuestionByTaskIdV1 = <String, String>{
-  'your_first_hand_recap': 'Which street is on the table now?',
-  // "continue" names Call against Fold before the choice.
-  'weak_ace_warning_w3_strong_continue': 'What is the simple response?',
-  'discipline_checkpoint_checkpoint_borderline_continue':
-      'What is the simple response?',
-  'continue_or_let_go_continue_recap':
-      'What is the cleaner response with this playable hand facing an open?',
-};
+const Map<String, String> act0PrechoiceNeutralQuestionByTaskIdV1 =
+    <String, String>{
+      'your_first_hand_recap': 'Which street is on the table now?',
+    };
 
 /// Owner decision (2026-11-08): World 4's authored name 'Bet Purpose / Price'
 /// equals the World 4 recap answer 'Purpose and price'. Learners see the
