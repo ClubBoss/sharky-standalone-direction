@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_solver/poker_solver.dart';
 
 void main() {
   group('Act0 Wave 1 canonical correctness and trust', () {
@@ -126,10 +127,7 @@ void main() {
         'blank_turn_killed',
         'four_or_nine',
       ]);
-      expect(
-        correctOption(transfer).feedbackReason,
-        'The same ladder still works on a real table. A 4 or 9 completes the straight, so those remain the live outs before you judge the 3 BB decision.',
-      );
+      expect(correctOption(transfer).id, 'four_or_nine');
       final risky = taskFor(
         worldId: 'world_5',
         lessonId: 'outs_improvement',
@@ -144,6 +142,70 @@ void main() {
         correctOption(risky).feedbackReason,
         'Both cards complete the straight, but 5-club is safer because it helps Hero without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
       );
+    });
+
+    test('W5 live draw feedback distinguishes making a hand from winning', () {
+      const cases = [
+        (
+          taskId: 'outs_improvement_w5_table_outs_straight_transfer',
+          correctId: 'four_or_nine',
+          drawCards: ['4c', '4d', '4h', '4s', '9c', '9d', '9h', '9s'],
+          river: '9c',
+          opponentCards: ['Js', 'Td'],
+          heroRank: 'Straight',
+          opponentRank: 'Straight',
+          exampleCopy: 'holding J-T a higher straight',
+        ),
+        (
+          taskId: 'outs_improvement_w5_table_outs_flush_transfer',
+          correctId: 'heart_outs',
+          drawCards: ['2h', '3h', '5h', '6h', '8h', '9h', 'Jh', 'Qh', 'Kh'],
+          river: '2h',
+          opponentCards: ['Ts', 'Td'],
+          heroRank: 'Flush',
+          opponentRank: 'Full House',
+          exampleCopy: 'holding two tens would make a full house',
+        ),
+      ];
+
+      for (final example in cases) {
+        final task = taskFor(
+          worldId: 'world_5',
+          lessonId: 'outs_improvement',
+          taskId: example.taskId,
+        );
+        final table = task.runner.table;
+        final board = table.boardCards.map((card) => card.label);
+        final heroCards = table.heroCards.map((card) => card.label);
+        final known = {...board, ...heroCards};
+        for (final river in example.drawCards) {
+          expect(known, isNot(contains(river)), reason: example.taskId);
+          final hero = Hand.solveHand([...board, river, ...heroCards]);
+          expect(
+            hero.name,
+            example.heroRank,
+            reason: '${example.taskId} $river',
+          );
+        }
+
+        final hero = Hand.solveHand([...board, example.river, ...heroCards]);
+        final opponent = Hand.solveHand([
+          ...board,
+          example.river,
+          ...example.opponentCards,
+        ]);
+        expect(
+          {...known, example.river, ...example.opponentCards},
+          hasLength(9),
+          reason: example.taskId,
+        );
+        expect(opponent.name, example.opponentRank, reason: example.taskId);
+        expect(Hand.winners([hero, opponent]).single, same(opponent));
+        final correct = correctOption(task);
+        expect(correct.id, example.correctId);
+        expect(correct.feedbackReason, contains(example.exampleCopy));
+        expect(task.rewardXp, 10);
+      }
     });
 
     test('W5 factual repairs preserve five accepted W3 assessment revisions', () {
