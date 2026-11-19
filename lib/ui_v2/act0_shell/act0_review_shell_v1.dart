@@ -511,12 +511,12 @@ class _DueReviewCardV1 extends StatelessWidget {
                 ? 'Apply the same idea to a new hand.'
                 : hasOpenMistakeForTask
                 ? item.lapseCount > 0
-                      ? 'The last recheck of this task was missed. The mistake is still open: use guided repair below, or take this separate scheduled recheck independently.'
-                      : 'This task also has an open mistake. Use guided repair below, or take this separate scheduled recheck independently.'
+                      ? 'The last recheck of this task was missed. The mistake is still open: use guided repair below, or try this scheduled review without help.'
+                      : 'This task also has an open mistake. Use guided repair below, or try this scheduled review without help.'
                 : hasOtherOpenMistakes
                 ? 'This scheduled recheck is for another task, separate from the open mistake below.'
                 : item.lapseCount > 0
-                ? 'This task is due for another independent scheduled recheck.'
+                ? 'This hand is ready for another try without help.'
                 : 'A repaired clue is due for a spaced review.',
             style: Act0AcademyReadingStyleV1.muted,
           ),
@@ -531,7 +531,7 @@ class _DueReviewCardV1 extends StatelessWidget {
               onPressed: () => onStart(item),
               child: Text(
                 hasOpenMistakeForTask
-                    ? 'Check independently now'
+                    ? 'Try without help'
                     : 'Review now',
               ),
             ),

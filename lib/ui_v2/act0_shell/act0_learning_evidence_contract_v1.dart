@@ -821,6 +821,7 @@ class Act0LearningEvidenceHistoryV1 {
   static const int maxRecords = 200;
 
   final List<Act0LearningEvidenceRecordV1> records;
+
   // Compact first-fact anchors per source task (Placement separate). Retain
   // actual records only: observation, mistake, known help, and independent
   // correct. Missing legacy facts remain missing rather than reconstructed.
@@ -964,6 +965,35 @@ class Act0LearningEvidenceHistoryV1 {
       // assert original completeness; a hash is not an external origin proof.
       hasCompleteLineage: (lineage['complete'] as bool) && hasFullSeal,
     );
+  }
+
+  List<String> practiceDayKeysLastWeek(
+    DateTime now, {
+    Iterable<String> savedDays = const [],
+  }) {
+    // Build civil-day keys in local time and move across dates in UTC to
+    // account for clock changes within the seven-day window.
+    String localDayKey(DateTime instant) =>
+        instant.toLocal().toIso8601String().substring(0, 10);
+
+    final local = now.toLocal();
+    final today = DateTime.utc(local.year, local.month, local.day);
+    final week = {
+      for (var i = 6; i >= 0; i--)
+        today.subtract(Duration(days: i)).toIso8601String().substring(0, 10),
+    };
+    final practiced = <String>{...savedDays};
+    for (final record in [...records, ...sourceAnchors]) {
+      final answeredAt = record.recordedAtUtc;
+      if (answeredAt == null ||
+          answeredAt.isAfter(now) ||
+          record.isPlacementAssessment ||
+          record.isDiagnosticLearningEntry) {
+        continue;
+      }
+      practiced.add(localDayKey(answeredAt));
+    }
+    return week.where(practiced.contains).toList(growable: false);
   }
 
   Act0LearningEvidenceHistoryV1 append(Act0LearningEvidenceRecordV1 record) {

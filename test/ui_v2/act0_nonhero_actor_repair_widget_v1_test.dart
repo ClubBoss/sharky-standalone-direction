@@ -337,7 +337,11 @@ void main() {
     await _mount(t);
     await _tab(t, 'Learn');
     await _tap(t, 'act0_shell_current_mission_cta');
+    final source = _runner(t).runner;
+    final step = 'Step ${source.beatIndex} of ${source.beatCount}';
+    expect(find.text(step), findsOneWidget);
     await _choice(t, subject.wrong, subject.task);
+    expect(find.text(step), findsOneWidget);
 
     final before = await _saved(t);
     final intent = (before['openRepairIntents'] as List)
@@ -349,11 +353,16 @@ void main() {
     expect(before['completedTaskIds'], isNot(contains(subject.task)));
     await _tap(t, 'act0_shell_feedback_continue_cta');
     expect(_runner(t).selectedTaskId, target);
+    expect(find.text('$step\nExtra practice'), findsOneWidget);
     await _choice(t, 'utg', target);
+    expect(find.text('$step\nExtra practice'), findsOneWidget);
     await _tap(t, 'act0_shell_feedback_continue_cta');
     expect(_runner(t).selectedTaskId, subject.task);
+    expect(find.text(step), findsOneWidget);
     final after = await _saved(t);
     expect(after['completedTaskIds'], isNot(contains(subject.task)));
+    expect(before['practiceDayKeys'], hasLength(1));
+    expect(after['practiceDayKeys'], before['practiceDayKeys']);
   });
 
   final observations = <String, Object?>{};
@@ -637,10 +646,7 @@ void main() {
           );
         });
       }
-      expect(
-        find.text('Matching repair not confirmed · miss saved'),
-        findsWidgets,
-      );
+      expect(find.text('Mistake saved for another try'), findsWidgets);
       await _tap(
         t,
         act0AcademyReviewPreviewV1
@@ -648,10 +654,7 @@ void main() {
             : 'act0_shell_review_practice_cta',
       );
       expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
-      expect(
-        find.text('Matching repair not confirmed · miss saved'),
-        findsWidgets,
-      );
+      expect(find.text('Mistake saved for another try'), findsWidgets);
       final restored = await _saved(t);
       final oldIntent = (restored['openRepairIntents'] as List)
           .map(Act0RepairIntentV1.tryParse)

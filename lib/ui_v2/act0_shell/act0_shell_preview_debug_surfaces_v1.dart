@@ -219,6 +219,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
     _resolvedMistakeTaskIds.clear();
     _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
     _studyObservationsV1 = const [];
+    _savedPracticeDaysV1 = const [];
     _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
     _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
     _reviewResolutionReceiptHistoryV1 =

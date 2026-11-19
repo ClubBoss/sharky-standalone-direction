@@ -1030,7 +1030,7 @@ void main() {
       expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
       expect(
         find.text(
-          'This miss is saved. A matching repair has not been confirmed yet.',
+          'This mistake is saved. You can try it again when you’re ready.',
         ),
         findsOneWidget,
       );

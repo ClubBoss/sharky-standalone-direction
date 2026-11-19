@@ -1374,11 +1374,11 @@ void main() {
         );
         expect(
           currentReceipt.nextEvidenceRequirement,
-          contains('separate application check'),
+          contains('new hand without help'),
         );
         expect(
           banked.proofs.single.copyLine,
-          contains('separate application check'),
+          contains('new hand without help'),
         );
         final legacyPayload = Map<String, Object?>.of(outcome.toPayload())
           ..remove('repairIntent');

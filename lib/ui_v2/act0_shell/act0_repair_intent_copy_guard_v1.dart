@@ -146,9 +146,7 @@ List<String> _sameSignalRepairSessionSummaryLinesV1({
     return const <String>[];
   }
   if (repaired) {
-    return <String>[
-      'Local proof: you repeated $compactClue and chose cleanly.',
-    ];
+    return <String>['You read $compactClue again and chose correctly.'];
   }
   final focusClue = _learnerFacingNextFocusClueV1(clueLabel);
   return <String>[

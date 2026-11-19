@@ -59,6 +59,42 @@ void main() {
     },
   );
 
+  test('practice days count distinct local dates in the last seven days', () {
+    final now = DateTime(2026, 3, 9, 16);
+    final history = Act0LearningEvidenceHistoryV1(
+      records: [
+        _record(order: 1, recordedAt: DateTime(2026, 3, 2, 12)),
+        _record(order: 2, recordedAt: DateTime(2026, 3, 3, 12)),
+        _record(order: 3, recordedAt: DateTime(2026, 3, 9, 10)),
+        _record(order: 4, recordedAt: DateTime(2026, 3, 9, 11)),
+        _record(order: 5, recordedAt: DateTime(2026, 3, 9, 17)),
+        _record(order: 6),
+        _record(
+          order: 7,
+          recordedAt: DateTime(2026, 3, 4, 12),
+          runKind: act0PlacementAssessmentRunKindV1,
+        ),
+      ],
+    );
+
+    final restored = Act0LearningEvidenceHistoryV1.tryParse(
+      history.toPayload(),
+    )!;
+    expect(restored.practiceDayKeysLastWeek(now), ['2026-03-03', '2026-03-09']);
+    final days = restored.practiceDayKeysLastWeek(
+      now,
+      savedDays: ['2026-03-07', '2026-03-09', '2026-03-02', 'invalid'],
+    );
+    expect(days, ['2026-03-03', '2026-03-07', '2026-03-09']);
+    expect(
+      const Act0LearningEvidenceHistoryV1().practiceDayKeysLastWeek(
+        DateTime(2026, 3, 10, 8),
+        savedDays: days,
+      ),
+      ['2026-03-07', '2026-03-09'],
+    );
+  });
+
   test('history ignores malformed records and bounds retained evidence', () {
     final records = <Map<String, Object?>>[
       _record(order: 1).toPayload(),
@@ -777,6 +813,7 @@ Act0LearningEvidenceRecordV1 _record({
   int? runOrdinal,
   String startedBy = '',
   String sessionId = '',
+  DateTime? recordedAt,
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: '$order:world_1:actions_legal_context:fold',
@@ -797,5 +834,6 @@ Act0LearningEvidenceRecordV1 _record({
     runOrdinal: runOrdinal,
     startedBy: startedBy,
     sessionId: sessionId,
+    recordedAtUtc: recordedAt?.toUtc(),
   );
 }

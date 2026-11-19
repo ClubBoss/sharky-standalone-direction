@@ -107,8 +107,7 @@ String? act0PersonalizedReturnReasonLineV1(
       focusLabel == null
           ? 'You were working on this table clue. One rep keeps it honest.'
           : 'You were working on the $focusLabel. One rep keeps it honest.',
-    act0LastSessionProofSkippedV1 =>
-      'Start with one table read and build today\'s proof.',
+    act0LastSessionProofSkippedV1 => 'Start by reading one table.',
     _ => null,
   };
 }

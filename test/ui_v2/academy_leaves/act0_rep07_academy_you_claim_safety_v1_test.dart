@@ -44,16 +44,19 @@ void main() {
 
   for (final activity in <Act0AcademyYouLeafInputV1>[
     const Act0AcademyYouLeafInputV1(levelLabel: 'Level 99', xpLine: '99999 XP'),
-    const Act0AcademyYouLeafInputV1(streakDays: 30, completedTaskCount: 0),
+    const Act0AcademyYouLeafInputV1(
+      practiceDaysLastWeek: 7,
+      completedTaskCount: 0,
+    ),
     const Act0AcademyYouLeafInputV1(
       levelLabel: 'Level 99',
       xpLine: '99999 XP',
-      streakDays: 30,
+      practiceDaysLastWeek: 7,
       completedTaskCount: 500,
     ),
   ]) {
     testWidgets(
-      'activity (${activity.xpLine}/${activity.streakDays}) cannot imply skill',
+      'activity (${activity.xpLine}/${activity.practiceDaysLastWeek}) cannot imply skill',
       (tester) async {
         await showYou(tester, activity);
         expect(
@@ -109,12 +112,9 @@ void main() {
         150,
         scrollable: find.byType(Scrollable),
       );
-      expect(find.text('1 repairs banked'), findsOneWidget);
+      expect(find.text('1 mistake corrected'), findsOneWidget);
       expect(find.text('1 with later supporting evidence'), findsOneWidget);
-      expect(
-        find.text('1 independent review due - 1 spot to repair'),
-        findsOneWidget,
-      );
+      expect(find.text('1 review due - 1 spot to repair'), findsOneWidget);
       expectNoMasteryClaim(tester);
       expect(tester.takeException(), isNull);
     },

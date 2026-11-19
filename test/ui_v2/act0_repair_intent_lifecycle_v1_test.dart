@@ -478,7 +478,7 @@ void main() {
         find.text('Continue to the next diagnostic question.'),
         findsNothing,
       );
-      expect(find.text('Read banked'), findsNothing);
+      expect(find.text('Level up'), findsNothing);
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
       );

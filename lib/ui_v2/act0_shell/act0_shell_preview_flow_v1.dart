@@ -880,6 +880,20 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
+  int _practiceDaysLastWeekV1(Act0ProfileStateV1 profile) {
+    if (!_usesPersistedProgress) {
+      return profile.streakLast7.where((practiced) => practiced).length;
+    }
+    return _recentPracticeDayKeysV1().length;
+  }
+
+  List<String> _recentPracticeDayKeysV1() {
+    return _learningEvidenceHistoryV1.practiceDayKeysLastWeek(
+      widget.clock.nowUtc(),
+      savedDays: [..._savedPracticeDaysV1, _lastDailyDate],
+    );
+  }
+
   int _effectiveStreakDays(Act0ShellStateV1 base) {
     if (_debugFreshLearnerV1) {
       return 0;

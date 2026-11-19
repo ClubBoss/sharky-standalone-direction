@@ -69,12 +69,12 @@ class Act0W14SkillStateV1 {
       : tasksToRevisit > 0
       ? 'Needs practice'
       : independentTasks > 0
-      ? 'Independent answers'
+      ? 'Answers without help'
       : 'Practice recorded';
 
   String get explanation => answeredTasks == 0
       ? 'No lesson answers recorded yet.'
-      : 'Tasks answered independently: $independentTasks. '
+      : 'Tasks answered without help: $independentTasks. '
             'Helped or unverified: $helpedOrUnverifiedTasks. '
             'Recent tasks to revisit: $tasksToRevisit.';
 }

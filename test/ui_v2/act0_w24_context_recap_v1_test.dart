@@ -1023,14 +1023,11 @@ void main() {
         expectHeld(remounted);
         await tester.tap(find.text('Review').last);
         await tester.pumpAndSettle();
-        expect(
-          find.text('Matching repair not confirmed · miss saved'),
-          findsWidgets,
-        );
+        expect(find.text('Mistake saved for another try'), findsWidgets);
         await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
         expect(
           find.text(
-            'This miss is saved. A matching repair has not been confirmed yet.',
+            'This mistake is saved. You can try it again when you’re ready.',
           ),
           findsOneWidget,
         );

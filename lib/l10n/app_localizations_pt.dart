@@ -24,7 +24,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get yourPacks => 'Your Packs';
 
   @override
-  String get recentPacks => 'Recently Practised';
+  String get recentPacks => 'Recently Practiced';
 
   @override
   String get popularPacks => '🔥 Popular';

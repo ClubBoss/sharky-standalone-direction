@@ -5413,7 +5413,7 @@ Q: Suppose a sound decision loses a high-variance pot. What is the best immediat
 HINT [theoryOnly]: Process verdict comes before emotional verdict.
 TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Outcome proves decision quality — Bias warning. Outcome-first judgement is tempting because the result feels vivid and final. But the dominant cue is decision quality. One result cannot grade the process by itself.
+  - [wrong] Outcome proves decision quality — Bias warning. Outcome-first judgment is tempting because the result feels vivid and final. But the dominant cue is decision quality. One result cannot grade the process by itself.
     BETTER ANSWER: Audit process first, then outcome
   - [suboptimal] Skip review to avoid frustration — Protective instinct. Avoiding review feels protective because it lowers frustration in the moment. But the cleaner bridge is short cue review first, so emotion does not hide the actual lesson.
     BETTER ANSWER: Audit process first, then outcome

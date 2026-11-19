@@ -1533,8 +1533,8 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
                 completedRepCount != null &&
                 cleanRepCount == completedRepCount &&
                 cleanRepCount > 0
-            ? '$family: independent correct practice complete. Try one fresh route spot next.'
-            : '$family: practice complete. Review one missed clue, then try it independently.',
+            ? '$family: you answered correctly without help. Try a new hand next.'
+            : '$family: practice complete. Review a mistake, then try again without help.',
         ru: '$family остаются в тонусе. Возьми другой пак, когда захочешь ещё один чистый повтор.',
       );
     }

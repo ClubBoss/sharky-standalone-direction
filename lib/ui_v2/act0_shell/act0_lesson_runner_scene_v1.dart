@@ -906,14 +906,21 @@ class _RunnerProgressV1 extends StatelessWidget {
     required this.runner,
     required this.onBack,
     required this.showGlossary,
+    this.extraPracticeProgress,
   });
 
   final Act0RunnerStateV1 runner;
   final VoidCallback onBack;
   final bool showGlossary;
+  final ({int step, int total})? extraPracticeProgress;
 
   @override
   Widget build(BuildContext context) {
+    final progress = extraPracticeProgress;
+    final step = progress?.step ?? runner.beatIndex;
+    final total = progress?.total ?? runner.beatCount;
+    final russian = act0AcademyLanguageV1(context) == 'ru';
+    final label = russian ? 'Шаг $step/$total' : 'Step $step of $total';
     return Row(
       children: [
         SizedBox(
@@ -936,7 +943,7 @@ class _RunnerProgressV1 extends StatelessWidget {
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
             child: LinearProgressIndicator(
               minHeight: Act0ShellTokensV1.progressHeight,
-              value: runner.beatIndex / runner.beatCount,
+              value: step / total,
               backgroundColor: Act0ShellTokensV1.surface3,
               color: Act0ShellTokensV1.primary,
             ),
@@ -963,9 +970,10 @@ class _RunnerProgressV1 extends StatelessWidget {
         ] else
           const SizedBox(width: Act0ShellTokensV1.gapMd),
         Text(
-          act0AcademyLanguageV1(context) == 'ru'
-              ? '\u0428\u0430\u0433 ${runner.beatIndex}/${runner.beatCount}'
-              : 'Step ${runner.beatIndex}/${runner.beatCount}',
+          progress == null
+              ? label
+              : '$label\n${russian ? 'Ещё практика' : 'Extra practice'}',
+          textAlign: TextAlign.end,
           style: Act0ShellTokensV1.body.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w900,

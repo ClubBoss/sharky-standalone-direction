@@ -494,7 +494,7 @@ void main() {
         expect(proof.proofs.single.currentVerificationState, isEmpty);
         expect(
           proof.proofs.single.currentVerificationLine,
-          'A separate application check on this learning goal is still needed.',
+          'Try the same skill on a new hand without help.',
         );
         expect(proof.aggregate.reinforcedFixCount, 0);
       }

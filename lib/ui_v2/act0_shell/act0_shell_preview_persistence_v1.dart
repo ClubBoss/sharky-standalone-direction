@@ -207,6 +207,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _studyObservationsV1 = parsed.studyObservations;
+      _savedPracticeDaysV1 = parsed.practiceDayKeys;
       _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
         widget.clock.nowUtc(),
       );
@@ -713,7 +714,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
         const SnackBar(
           content: Text(
-            'This miss is saved. A matching repair has not been confirmed yet.',
+            'This mistake is saved. You can try it again when you’re ready.',
           ),
         ),
       );
@@ -877,6 +878,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final currentStreak = _earnedStreakDaysTodayV1(today);
     if (dailyDone) _lastDailyDate = today;
     _persistedStreakDays = currentStreak;
+    _savedPracticeDaysV1 = _recentPracticeDayKeysV1();
     final returnSelection =
         _diagnosticLearningReturnV1 ?? _spacedReviewReturnV1;
     final snapshot = _Act0PersistedProgressV1(
@@ -917,6 +919,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       studyObservations: _studyObservationsV1,
+      practiceDayKeys: _savedPracticeDaysV1,
       pendingDecisionAssistance: List.unmodifiable(
         _pendingDecisionAssistanceV1.values,
       ),

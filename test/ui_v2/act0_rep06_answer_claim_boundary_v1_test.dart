@@ -85,7 +85,7 @@ void main() {
         expect(find.textContaining('XP'), findsNothing);
         expect(find.textContaining('Level'), findsNothing);
         expect(find.text('Table read improved'), findsNothing);
-        expect(find.text('Read banked'), findsNothing);
+        expect(find.text('Level up'), findsNothing);
         expect(tester.takeException(), isNull);
       },
     );

@@ -173,7 +173,7 @@ class Act0RunnerCompletionSummaryV1 {
 
   bool get leveledUp => endLevel > startLevel;
 
-  String get toastRewardLabel => leveledUp ? 'Read banked' : 'Clean rep';
+  String get toastRewardLabel => leveledUp ? 'Level up' : 'Clean rep';
 
   String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
 }
@@ -366,7 +366,7 @@ class Act0BlockCompletionSummaryV1 {
   }
 
   String get masteryLabel => switch (masteryStatus) {
-    Act0MasteryStatusV1.cleanPass => 'Clean pass',
+    Act0MasteryStatusV1.cleanPass => 'All correct',
     Act0MasteryStatusV1.solid => 'Solid',
     Act0MasteryStatusV1.needsReview => 'Needs review',
     Act0MasteryStatusV1.learning => 'Learning',
@@ -402,7 +402,7 @@ class Act0BlockCompletionSummaryV1 {
       return 'Review open';
     }
     if (completedClearCount > 0 && perfectClearCount == completedClearCount) {
-      return 'Perfect path';
+      return 'No misses';
     }
     if (perfectClearCount > 0 && completedClearCount > 0) {
       return '$perfectClearCount/$completedClearCount clean tasks';
@@ -1244,6 +1244,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.forceShowRepairOutcomeProof = false,
+    this.extraPracticeProgress,
     this.repairContinuesToSourceRecheck = false,
     this.isSourceRecheckAttempt = false,
     this.learningLoopStage,
@@ -1301,6 +1302,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final bool forceShowRepairOutcomeProof;
+  final ({int step, int total})? extraPracticeProgress;
   final bool repairContinuesToSourceRecheck;
   final bool isSourceRecheckAttempt;
 
@@ -4109,6 +4111,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               if (!_usesCanonicalIntegratedLearningSceneV1)
                 _RunnerProgressV1(
                   runner: runner,
+                  extraPracticeProgress: widget.extraPracticeProgress,
                   onBack: _handleRunnerBackV1,
                   showGlossary: isTheory || isTeaching || isReview,
                 ),
@@ -4547,6 +4550,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               (isTheory || isDrill || isReview))
             _RunnerProgressV1(
               runner: runner,
+              extraPracticeProgress: widget.extraPracticeProgress,
               onBack: _handleRunnerBackV1,
               showGlossary: isTheory || isTeaching || isReview,
             ),
