@@ -2830,6 +2830,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : playRunner;
     final accessibilityPrototypeStep =
         activePlayRunner != null &&
+            activePlayRunner.phase != Act0LessonPhaseV1.theory &&
+            (activePlayRunner.phase == Act0LessonPhaseV1.review ||
+                activePlayRunner.activeTeachingStep == null) &&
             act0ShouldActivateCompactAccessibilityPrototypeV1(
               context,
               question: activePlayRunner.question,

@@ -1744,7 +1744,7 @@ class _StreetReplayInlineV1 extends StatelessWidget {
         .where((step) => step.isCurrentStreet)
         .toList(growable: false);
     final visibleSteps = currentStreet.isEmpty ? replay.steps : currentStreet;
-    return Container(
+    final history = Container(
       key: const Key('act0_shell_street_replay_inline'),
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 9),
       decoration: BoxDecoration(
@@ -1795,6 +1795,20 @@ class _StreetReplayInlineV1 extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+    if (visibleSteps.length <= 3) return history;
+    // Long current-street histories must leave room for the answer buttons.
+    // Start at the pending decision and let the learner scroll back.
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height / 3,
+      ),
+      child: SingleChildScrollView(
+        key: const Key('act0_shell_street_replay_scroll'),
+        primary: false,
+        reverse: true,
+        child: history,
       ),
     );
   }
