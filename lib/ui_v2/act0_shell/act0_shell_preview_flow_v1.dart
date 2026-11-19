@@ -1,6 +1,16 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
 extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
+  void _openPracticeHubV1() {
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+    _returnToPlayHubOnBack = false;
+    _learnDetailLessonId = null;
+    _learnDetailWorldId = null;
+    _showWorldMenu = false;
+    _blockCompletionSummary = null;
+  }
+
   void _recordCompletedStudyV1(Act0LessonTaskV1 task) {
     if (_diagnosticLearningEntryV1 != null) return;
     final revision = act0AuthoredStudyRevisionV1(

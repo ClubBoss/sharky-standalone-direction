@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 // Deterministic/widget evidence only. Simulated clocks are not Human retention.
 import 'package:flutter/material.dart';
@@ -9,6 +11,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_record_card_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../support/act0_shell_presentation_finders_v1.dart';
 
 final _start = DateTime.utc(2026, 1, 1);
 final _now = _start.add(const Duration(days: 20));
@@ -49,6 +54,8 @@ Act0LearningEvidenceRecordV1 _response(
   String? session,
   int? hours,
   bool correct = true,
+  String runKind = '',
+  bool timestamped = true,
 }) {
   final task = Act0ShellStateV1.sample
       .lessonById('blinds_action_order')
@@ -88,12 +95,114 @@ Act0LearningEvidenceRecordV1 _response(
           task: task,
         )!,
     sessionId: session ?? 'session-$order',
-    recordedAtUtc: _start.add(Duration(hours: hours ?? order * 24)),
+    runKind: runKind,
+    recordedAtUtc: timestamped
+        ? _start.add(Duration(hours: hours ?? order * 24))
+        : null,
     reviewKind: Act0ReviewKindV1.spacedReview,
   );
 }
 
 void main() {
+  test(
+    'the weekly recap counts dated graded responses at the exact clock boundaries',
+    () {
+      final startHour = _now.difference(_start).inHours - 7 * 24;
+      final onBoundary = _response(1, hours: startHour);
+      final history = Act0LearningEvidenceHistoryV1(
+        records: [
+          onBoundary,
+          onBoundary,
+          _response(2, hours: startHour - 1),
+          _response(
+            3,
+            hours: startHour + 3,
+            assistance: Act0DecisionAssistanceV1.quickHint,
+          ),
+          _response(
+            4,
+            hours: startHour + 4,
+            assistance: Act0DecisionAssistanceV1.legacyUnknown,
+          ),
+          _response(5, hours: startHour + 5, correct: false),
+          _response(
+            6,
+            hours: startHour + 6,
+            runKind: act0PlacementAssessmentRunKindV1,
+          ),
+          _response(
+            7,
+            hours: startHour + 7,
+            runKind: act0DiagnosticLearningEntryRunKindV1,
+          ),
+          _response(8, hours: startHour + 7 * 24 + 1),
+          _response(9, timestamped: false),
+        ],
+      );
+      final summary = _project(
+        study: [_study(time: _now)],
+        history: history,
+      ).weeklyAnswers!;
+      expect(summary.answers, 4);
+      expect(summary.correctWithoutHelp, 1);
+      expect(summary.withHelp, 1);
+
+      final later = Act0WeeklyAnswersV1.fromHistory(
+        history,
+        _now.add(const Duration(days: 8)),
+      );
+      expect(later.answers, 0);
+      expect(_project(study: [_study(time: _now)]).weeklyAnswers!.answers, 0);
+    },
+  );
+
+  testWidgets('You shows saved weekly responses and opens the Practice hub', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final answer = _response(1, hours: _now.difference(_start).inHours - 1);
+    SharedPreferences.setMockInitialValues({
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 17,
+        'earnedXp': 0,
+        'completedTaskIds': [],
+        'skippedTaskIds': [],
+        'completedLessonIds': [],
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'what_poker_is_content',
+        'selectedTaskId': 'what_poker_is_pot_stack',
+        'learningEvidenceHistory': [answer.toPayload()],
+      }),
+    });
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          initialTab: Act0ShellTabV1.profile,
+          showPlacementOnStart: false,
+          clock: Act0FixedUtcClockV1(_now),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final action = find.byKey(const Key('act0_weekly_open_practice'));
+    final scrollable = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      action.hitTestable(),
+      280,
+      scrollable: scrollable,
+    );
+    expect(find.text('Past 7 days'), findsOneWidget);
+    expect(find.text('1 saved answer'), findsOneWidget);
+    expect(find.text('1 correct without help'), findsOneWidget);
+    await tester.tap(action);
+    await tester.pumpAndSettle();
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_play_screen'),
+      findsOneWidget,
+    );
+  });
+
   test(
     'study is an exact topic observation, never practice or independent proof',
     () {

@@ -11,6 +11,47 @@ const String act0ProfileEvidenceStateEligibleSignalV1 = 'eligible_signal_v1';
 const String act0ProfileEvidenceStateNeedsMorePracticeV1 =
     'needs_more_practice_v1';
 
+class Act0WeeklyAnswersV1 {
+  const Act0WeeklyAnswersV1({
+    required this.answers,
+    required this.correctWithoutHelp,
+    required this.withHelp,
+  });
+
+  final int answers;
+  final int correctWithoutHelp;
+  final int withHelp;
+
+  factory Act0WeeklyAnswersV1.fromHistory(
+    Act0LearningEvidenceHistoryV1 history,
+    DateTime now,
+  ) {
+    final start = now.subtract(const Duration(days: 7));
+    final unique = <String>{};
+    var correctWithoutHelp = 0;
+    var withHelp = 0;
+    for (final record in history.records) {
+      final answeredAt = record.recordedAtUtc;
+      if (answeredAt == null ||
+          answeredAt.isBefore(start) ||
+          answeredAt.isAfter(now) ||
+          record.isPlacementAssessment ||
+          record.isDiagnosticLearningEntry ||
+          act0RecordIsAuthoredTeachingV1(record) ||
+          !unique.add(record.recordId)) {
+        continue;
+      }
+      if (record.isIndependentCorrect) correctWithoutHelp++;
+      if (record.hasKnownAssistance) withHelp++;
+    }
+    return Act0WeeklyAnswersV1(
+      answers: unique.length,
+      correctWithoutHelp: correctWithoutHelp,
+      withHelp: withHelp,
+    );
+  }
+}
+
 class Act0ProfileEvidenceProjectionV1 {
   const Act0ProfileEvidenceProjectionV1({
     this.signals = const <Act0ProfileCapabilitySignalV1>[],
@@ -19,6 +60,7 @@ class Act0ProfileEvidenceProjectionV1 {
     this.practiceStates = const [],
     this.unverifiedStudyCount = 0,
     this.hasUnverifiedPractice = false,
+    this.weeklyAnswers,
   });
 
   final List<Act0ProfileCapabilitySignalV1> signals;
@@ -27,6 +69,7 @@ class Act0ProfileEvidenceProjectionV1 {
   final List<Act0ProfilePracticeStateV1> practiceStates;
   final int unverifiedStudyCount;
   final bool hasUnverifiedPractice;
+  final Act0WeeklyAnswersV1? weeklyAnswers;
 
   bool get hasSignals => signals.isNotEmpty;
 
@@ -110,6 +153,7 @@ class Act0ProfileEvidenceProjectionV1 {
     }
     return Act0ProfileEvidenceProjectionV1(
       recentEvidence: recent,
+      weeklyAnswers: Act0WeeklyAnswersV1.fromHistory(history, now),
       studiedTopics: List.unmodifiable(studied.values),
       unverifiedStudyCount: unverifiedStudyCount,
       hasUnverifiedPractice: history.records.any(
