@@ -141,10 +141,9 @@ void main() {
         'da8c4dc65ebc99979b01b3eb1c6e16d92626b95b4fbc4d4eb5df15d8585ff4c7';
     const currentExplicitW01ContextFingerprint =
         '32e9e58b4821edec4c04239e417ddce1e6acf8257d0f844a0deba67dc834f44b';
-    // A10 (one name per concept): W7-W11 option labels say all-in instead of
-    // jam/shove. Reversing exactly those labels restores the previous pin;
-    // IDs, correctness and grades are unchanged.
-    const a10AllInLabels = <String, String>{
+    // Reverse approved learner-facing label edits for the historical identity
+    // comparison. IDs, correctness and grades are compared as authored.
+    const priorCopyLabels = <String, String>{
       'Mostly all-in now': 'Mostly jam now',
       'Mostly all-in or fold only': 'Mostly shove-or-fold only',
       'Use all-in-or-fold logic': 'Use shove logic',
@@ -155,17 +154,29 @@ void main() {
       'Only go all-in with strong hands': 'Only shove strong hands',
       'Go all-in with any two cards every hand': 'Jam any two cards every hand',
       'Go all-in to deny equity': 'Jam to deny equity',
+      'Hero has top pair. An opponent could be drawing to a flush':
+          'Hero already has top pair, and the heart draw is still only pressure',
+      'Hero already has a flush': 'The heart draw is already a made flush',
+      'A possible flush draw cancels Hero’s pair':
+          'The draw matters, so the pair does not count yet',
+      'A-K has more combos': 'A-K appears more often',
+      'Pocket eights have more combos': 'Pocket eights appear more often',
+      'They have the same combo count': 'They appear equally often',
+      'They have the same weight': 'They appear equally often',
     };
-    var beforeA10 = encoded;
-    for (final e in a10AllInLabels.entries) {
-      beforeA10 = beforeA10.replaceAll(jsonEncode(e.key), jsonEncode(e.value));
+    var beforeCopyEdits = encoded;
+    for (final e in priorCopyLabels.entries) {
+      beforeCopyEdits = beforeCopyEdits.replaceAll(
+        jsonEncode(e.key),
+        jsonEncode(e.value),
+      );
     }
     expect(fingerprint, isNot(currentExplicitW01ContextFingerprint));
     expect(
-      sha256.convert(utf8.encode(beforeA10)).toString(),
+      sha256.convert(utf8.encode(beforeCopyEdits)).toString(),
       currentExplicitW01ContextFingerprint,
     );
-    final historicalComparison = jsonDecode(beforeA10) as List<dynamic>;
+    final historicalComparison = jsonDecode(beforeCopyEdits) as List<dynamic>;
     final position = historicalComparison.cast<List<dynamic>>().singleWhere(
       (row) => row[2] == 'positions_review',
     );
