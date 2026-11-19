@@ -821,6 +821,7 @@ class Act0RepairGoalContractV1 {
     'utg_seat_identity' => 'UTG seat',
     'dealer_button_seat' => 'Dealer button',
     'last_actor_after_flop' => 'Last seat after the flop',
+    'big_blind_baseline' => 'The 1 BB blind',
     'early_seat_players_behind' => 'Players left to act',
     'same_hand_different_seat' => 'Same hand from two seats',
     'value_bet_purpose' => 'Why you bet',
@@ -1047,7 +1048,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "what_poker_is",
     targetTaskId: "first_table_guide_shared_cards_repair",
     targetFingerprint:
-        "3123024a119c255339b82617e696da1aac5a1c503cb732a069ebc287f9d53f29",
+        "fa05949f0c38bc75151ee1f57de41caebf0c37eebd871d5440c2382e88bdeb42",
     targetCorrectChoiceId: "board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1560,11 +1561,15 @@ const _foundationSharedRepairGoals = <String, String>{
   'blinds_first_actor': 'six_max_initial_preflop_first_actor',
   'blinds_review': 'six_max_initial_preflop_first_actor',
   'blinds_last_actor': 'six_max_unraised_initial_pass_bb_option',
+  'blinds_theory': 'big_blind_baseline',
+  'blinds_posts_drill': 'big_blind_baseline',
   'actions_legal_context': 'no_bet_free_continue',
   'actions_check_drill': 'no_bet_free_continue',
   'your_first_hand_showdown': 'showdown_best_five',
   'showdown_best_hand_drill': 'showdown_best_five',
   'hand_discipline_buckets_premium': 'starting_hand_premium_bucket',
+  'continue_or_let_go_premium_continue': 'starting_hand_premium_bucket',
+  'discipline_checkpoint_checkpoint_premium': 'starting_hand_premium_bucket',
   'w4_half_pot_bet': 'half_pot_fraction',
 };
 

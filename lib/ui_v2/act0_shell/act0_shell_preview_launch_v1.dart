@@ -961,7 +961,10 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
       return false;
     }
     final sourceTaskId = selectedTask.taskId;
-    if (_openRepairIntentTargetForSourceTaskV1(sourceTaskId) == null) {
+    final repair = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    // The lesson already owns retries of this same exercise. Keep its
+    // progress and wrap-up flow; Home and Review can open the saved replay.
+    if (repair == null || repair.intent.isFoundationExactRehearsal) {
       return false;
     }
     final Act0MistakeCardV1? mistake =

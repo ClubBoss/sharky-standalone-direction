@@ -207,6 +207,11 @@ void main() {
       'intake_completed_v1': true,
       'act0_shell_progress_v1': jsonEncode({
         'schemaVersion': 20,
+        'pendingDecisionAssistance': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+        'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+            .lineagePayload(),
+        'durableRetentionHistory': <Object>[],
         'completedTaskIds': completedIds,
         'completedLessonIds': earlierLessons,
         'skippedTaskIds': <String>[],
@@ -230,6 +235,12 @@ void main() {
         _continueKeys.map((key) => find.byKey(Key(key))).toList(),
       ),
       isTrue,
+      reason: tester
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data)
+          .whereType<String>()
+          .take(25)
+          .join(' | '),
     );
     final runner = tester.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
@@ -462,15 +473,35 @@ void main() {
           complete = completed.containsAll(taskWorld.keys);
           if (complete) break;
         }
-        final moved = await _tapFirst(t, [
+        var moved = await _tapFirst(t, [
           find.byKey(const Key('act0_shell_theory_continue_cta')),
           for (final key in _continueKeys) find.byKey(Key(key)),
         ]);
+        if (!moved &&
+            find
+                .byKey(const Key('act0_academy_review_leaf'))
+                .evaluate()
+                .isNotEmpty) {
+          // A rehearsal started outside the lesson returns to Review. Resume
+          // through the actual Learn entry, just as after reopening the app.
+          await _tapFirst(t, [find.text('Learn').last]);
+          moved = await _tapFirst(t, [
+            find.byKey(const Key('act0_shell_current_mission_cta')),
+          ]);
+        }
+        final visible = moved
+            ? ''
+            : t
+                  .widgetList<Text>(find.byType(Text))
+                  .map((widget) => widget.data)
+                  .whereType<String>()
+                  .take(18)
+                  .join(' | ');
         expect(
           moved,
           isTrue,
           reason:
-              'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}',
+              'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}; visible: $visible',
         );
       }
       final snapshot = await _saved(t);

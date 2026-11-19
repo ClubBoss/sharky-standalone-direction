@@ -47,6 +47,7 @@ void main() {
     expect(
       _rows.where((r) => r.task.repairOnly).map((r) => r.task.taskId).toSet(),
       {
+        'first_table_guide_shared_cards_repair',
         'position_six_seats_position_repair_seat_id_btn',
         'position_six_seats_position_repair_seat_id_utg',
         'button_advantage_position_repair_btn_last_postflop',

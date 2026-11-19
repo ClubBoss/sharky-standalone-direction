@@ -68,6 +68,11 @@ class Act0RepairIntentV1 {
   final String mappingType;
   final String reasonCode;
 
+  bool get isFoundationExactRehearsal =>
+      relationId.startsWith('foundation_replay/') &&
+      sourceTaskId == targetTaskId &&
+      mappingType == 'intentional_exact';
+
   Map<String, Object> toPayload() {
     return <String, Object>{
       'schemaVersion': schemaVersion,

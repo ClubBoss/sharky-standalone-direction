@@ -7,7 +7,7 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand is on the table.
-TEACH: One loop first. Read one table spot, answer once, then see the exact reason.
+TEACH: One loop first. Blinds are forced bets posted before anyone decides. Look for SB and BB at two seats.
 TEACH LABELS: Read, Answer, Why
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Start with the table. Your two cards are private. The board is shared. The pot is the chips in the middle. BB also measures chips.
@@ -358,7 +358,7 @@ SEATS: UTG | HJ | CO | BTN dealer Qh Qs | SB | BB
 
 TASK hand_rankings_royal_flush_drill [drill] Hand ranking question
 AUTHORED TITLE: Royal flush check
-CAPTION: A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 all in hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.
+CAPTION: A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 of hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.
 TEACH: Royal flush is the ace-high straight flush. You use T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five cards of one suit also run in sequence to the ace.
 TEACH LABELS: T-J-Q-K-A, Same suit
 Q: What is the highest hand category you can make?
@@ -373,7 +373,7 @@ SEATS: UTG | HJ | CO | BTN dealer Kh Qh | SB | BB
 
 TASK hand_rankings_full_house_vs_flush_drill [drill] Hand ranking question
 AUTHORED TITLE: Full house beats flush
-CAPTION: At showdown, a full house beats a flush.
+CAPTION: When the cards are revealed, a full house beats a flush.
 TEACH: Compare the full best five. You use A-A-A with 7-7 for a full house. The other player uses five hearts for a flush, but the full house is stronger because it ranks higher.
 TEACH LABELS: A-A-A, 7-7, Full house ranks higher
 Q: Which shown hand is stronger?
@@ -392,13 +392,13 @@ CAPTION: Four of a kind beats a full house.
 TEACH: Four of a kind outranks a full house. You use Q-Q-Q-Q with a seven as the fifth card. The other player uses 7-7-7 with Q-Q for a full house, but four of a kind still wins.
 TEACH LABELS: Q-Q-Q-Q
 TEACH TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1 | Center Read the cards | Facts four of a kind, pocket pair, paired board
-Q: Who wins at showdown?
+Q: Who wins when both hands are shown?
 HINT [theoryOnly]: One player has all four queens. The other only has a full house.
 TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the cards | Facts four of a kind, pocket pair, paired board
 SEATS: UTG | HJ | CO Ac 7h | BTN dealer Qh Qs | SB | BB
   + [correct] Your four of a kind — Top hand found. You use all four queens. The other player makes a full house with three sevens and two queens, but four of a kind ranks above a full house.
     FEEDBACK TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
-  - [wrong] Other player: full house — Close on the ladder. The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house at showdown.
+  - [wrong] Other player: full house — Close on the ladder. The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house when the cards are shown.
     BETTER ANSWER: Your four of a kind
     FEEDBACK TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
 
@@ -467,6 +467,10 @@ SEATS: UTG | HJ | CO Ad Qd | BTN dealer As Kh | SB | BB
 
 TASK positions_theory [theory] Six seats
 CAPTION: The six seats are UTG, HJ, CO, BTN, SB, and BB.
+TEACH: Before and after the first cards Preflop means no board cards yet. The flop has three board cards.
+TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
+TEACH: The next two cards The turn is the fourth board card. The river is the fifth.
+TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Read the seat labels. BTN is Button. UTG means Under the Gun. HJ is Hijack. CO is Cutoff. Blinds are forced bets before the cards are played.
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Seats have names. UTG means under the gun, the first seat to act. HJ is hijack. CO is cutoff. BTN is button, and SB plus BB are the blinds.
@@ -956,7 +960,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player fol
 TASK your_first_hand_showdown [review] Showdown read
 ENTRY: drill
 CAPTION: Start by reading the cards each player can use.
-TEACH: Showdown compares hands. Your best five are A-A-K-J-7. The big blind uses J-J-A-K-7. Your pair of aces beats the pair of jacks.
+TEACH: Showdown compares hands. Showdown is when players compare their best five after revealing their cards. Here, your aces beat the big blind's jacks.
 TEACH LABELS: A-A-K-J-7, You win
 Q: Who wins, and which five cards win the pot?
 HINT [theoryOnly]: Compare the final five-card hand.
@@ -1224,7 +1228,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 TASK hand_discipline_buckets_intro [theory] Four buckets
 CAPTION: Preflop starts by sorting the hand into a simple bucket.
 TEACH: Read the two-card code. T means ten. Suited means two cards of the same suit. Offsuit means two cards with different suits. KTs is king-ten suited. J8o is jack-eight offsuit.
-TEACH: Groups and seats, before a raise. Sharky starting chart for 6-max micro-stakes practice. Use the first matching row.
+TEACH: Groups and seats, before a raise. Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.
 
 Premium | AA–QQ, AK suited | Open from UTG through BTN.
 
@@ -1330,7 +1334,7 @@ REVIEW: Preflop choices get calmer when you name the hand bucket before choosing
 TASK fold_discipline_discipline_intro [theory] Fold is a tool
 CAPTION: HJ bets 2 BB on an ace-high flop. You hold two queens.
 TEACH: Before anyone raises An open is the first raise before the flop. The opener is the player who makes that raise.
-TEACH: Calling before a raise Calling the big blind before anyone has raised is called limping.
+TEACH: Calling before a raise Limping means calling the big blind before anyone has raised.
 TEACH: A bet creates a price. Folding ends your part in the hand without paying the call. The flop alone does not tell you whether folding is best.
 TEACH LABELS: Facing a bet, Gives up the hand
 TEACH TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, hj | Card focus board_0, board_1, board_2 | Center Facing a bet | Facts one pair, pocket pair, rainbow
@@ -1399,7 +1403,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
 
 TASK weak_ace_warning_w3_dominated_intro [theory] Trouble hands
 CAPTION: Some familiar hands are trouble when stronger versions open.
-TEACH: Compare similar hands Broadway ranks are T, J, Q, K and A. If two hands share a rank, the hand with the weaker side card is dominated.
+TEACH: Compare similar hands Broadway ranks are T, J, Q, K, and A. Dominated means the hands share a rank and one has the weaker side card.
 TEACH: Acting after your opponent You are in position when you act after the other player. Acting later gives you information. A weak ace can still lose to a stronger ace.
 Q: What kind of hand needs caution?
 HINT [theoryOnly]: A weak ace can be behind a better ace.
@@ -5513,16 +5517,16 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 ===== WORLD 1 · LESSON what_poker_is · First Table Guide =====
 
 TASK first_table_guide_shared_cards_repair [drill] Read the cards
-CAPTION: Compare the cards at your seat and in the middle.
+CAPTION: There are two groups of cards in view.
 Q: Which cards can everyone use?
 HINT [theoryOnly]: Look at the cards in the middle.
-TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Facts one pair, pocket pair, rainbow
+TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Pot 5 BB | Seat BTN | Facts high card, rainbow, backdoor straight
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Board cards — Board cards are shared. Board cards are shared by everyone still in the hand.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
   - [wrong] Private cards — On the right track. Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.
     BETTER ANSWER: Board cards
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
 
 ===== WORLD 3 · LESSON position_six_seats · The 6 positions =====
 

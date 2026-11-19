@@ -1831,6 +1831,20 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _privateBoardRunner.copyWith(
           lessonId: 'first_table_guide_shared_cards_repair',
           lessonTitle: 'First Table Guide',
+          caption: 'There are two groups of cards in view.',
+          feedbackReason:
+              'Everyone can use the cards in the middle. Your two cards belong only to you.',
+          table: _privateBoardRunner.table.copyWith(
+            heroCards: const [
+              Act0CardStateV1(rank: 'K', suit: 'c'),
+              Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
+            ],
+            boardCards: const [
+              Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
+              Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
+              Act0CardStateV1(rank: '2', suit: 'c'),
+            ],
+          ),
           teachingSteps: const [],
         ),
         rewardXp: 0,
@@ -2136,6 +2150,19 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Six seats',
         phase: Act0LessonPhaseV1.theory,
         runner: _positionsRunner.copyWith(
+          teachingSteps: [
+            const Act0TeachingStepV1(
+              title: 'Before and after the first cards',
+              body:
+                  'Preflop means no board cards yet. The flop has three board cards.',
+            ),
+            const Act0TeachingStepV1(
+              title: 'The next two cards',
+              body:
+                  'The turn is the fourth board card. The river is the fifth.',
+            ),
+            ..._positionsRunner.teachingSteps,
+          ],
           options: _act0AuthoredCorrectOptionAtV1(
             const <Act0RunnerOptionV1>[
               Act0RunnerOptionV1(
@@ -2496,7 +2523,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           _checkActionRunner,
           heroCards: const [
             Act0CardStateV1(rank: 'T', suit: 's'),
-            Act0CardStateV1(rank: '8', suit: 'd'),
+            Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
           ],
         ),
         rewardXp: 5,
@@ -2651,13 +2678,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _act0FirstHandAkRunnerV1(
           _showdownBestHandRunner.copyWith(
             question: 'Who wins, and which five cards win the pot?',
-            teachingSteps: const [
-              Act0TeachingStepV1(
-                title: 'Showdown compares hands.',
-                body:
-                    "When betting is over and players remain, they show their cards and compare each player's best five.",
-              ),
-            ],
             options: const [
               Act0RunnerOptionV1(
                 id: 'first_actor',
@@ -3709,7 +3729,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
           handName: 'ace-six offsuit',
           cards: const [
             Act0CardStateV1(rank: 'A', suit: 's'),
-            Act0CardStateV1(rank: '6', suit: 'd'),
+            Act0CardStateV1(rank: '6', suit: 'd', tone: Act0CardToneV1.red),
           ],
           correctIndex: 1,
         ),
@@ -3739,7 +3759,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
           handName: 'ace-five offsuit',
           cards: const [
             Act0CardStateV1(rank: 'A', suit: 's'),
-            Act0CardStateV1(rank: '5', suit: 'd'),
+            Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
           ],
           correctIndex: 0,
         ),
@@ -3914,7 +3934,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             const Act0TeachingStepV1(
               title: 'Calling before a raise',
               body:
-                  'Calling the big blind before anyone has raised is called limping.',
+                  'Limping means calling the big blind before anyone has raised.',
             ),
             ..._foldActionRunner.teachingSteps,
           ],
@@ -3987,7 +4007,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           handName: 'king-seven offsuit',
           cards: const [
             Act0CardStateV1(rank: 'K', suit: 's'),
-            Act0CardStateV1(rank: '7', suit: 'd'),
+            Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
           ],
           correctIndex: 0,
         ),
@@ -4705,7 +4725,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           table: _world3PositionDisciplineRunner.table.copyWith(
             centerLabel: 'Before the first raise',
             heroCards: const [
-              Act0CardStateV1(rank: 'A', suit: 'd'),
+              Act0CardStateV1(rank: 'A', suit: 'd', tone: Act0CardToneV1.red),
               Act0CardStateV1(rank: 'Q', suit: 'c'),
             ],
           ),
@@ -9299,7 +9319,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
             Act0TeachingStepV1(
               title: 'Showdown compares hands.',
               body:
-                  'Your best five are A-A-K-J-7. The big blind uses J-J-A-K-7. Your pair of aces beats the pair of jacks.',
+                  "Showdown is when players compare their best five after revealing their cards. Here, your aces beat the big blind's jacks.",
               focusCardIds: [
                 'hero_0',
                 'hero_1',
@@ -11788,7 +11808,7 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
   lessonId: 'royal_flush_rank',
   lessonTitle: 'Hand rankings, on the table',
   caption:
-      'A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 all in hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.',
+      'A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 of hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.',
   hint: 'A flush with an ace is not royal unless the ranks run to ace.',
   question: 'What is the highest hand category you can make?',
   options: const <Act0RunnerOptionV1>[
@@ -11856,7 +11876,7 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
 final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
   lessonId: 'full_house_vs_flush',
   lessonTitle: 'Hand rankings, on the table',
-  caption: 'At showdown, a full house beats a flush.',
+  caption: 'When the cards are revealed, a full house beats a flush.',
   hint: 'Build both best five hands before choosing the stronger one.',
   // Only BTN and the other player are shown; four live seats stay hidden, so this compares
   // the two shown hands and does not name a winner of the whole pot.
@@ -11935,7 +11955,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Four of a kind beats a full house.',
   hint: 'One player has all four queens. The other only has a full house.',
-  question: 'Who wins at showdown?',
+  question: 'Who wins when both hands are shown?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_quads',
@@ -11955,7 +11975,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close on the ladder.',
       feedbackReason:
-          'The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house at showdown.',
+          'The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house when the cards are shown.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -12722,7 +12742,8 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'One loop first.',
-      body: 'Read one table spot, answer once, then see the exact reason.',
+      body:
+          'Blinds are forced bets posted before anyone decides. Look for SB and BB at two seats.',
       focusLabels: <String>['Read', 'Answer', 'Why'],
     ),
     Act0TeachingStepV1(
@@ -14326,7 +14347,7 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Groups and seats, before a raise.',
       body:
-          'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.\n\nMedium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.\n\nMedium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.\n\nWeak | Other hands in this course model | Fold.',
+          'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.\n\nMedium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.\n\nMedium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.\n\nWeak | Other hands in this course model | Fold.',
     ),
     Act0TeachingStepV1(
       title: 'On BTN after a raise.',
@@ -16274,7 +16295,7 @@ final _world3DominatedIntroRunner = _world3FacingOpenIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare similar hands',
       body:
-          'Broadway ranks are T, J, Q, K and A. If two hands share a rank, the hand with the weaker side card is dominated.',
+          'Broadway ranks are T, J, Q, K, and A. Dominated means the hands share a rank and one has the weaker side card.',
     ),
     Act0TeachingStepV1(
       title: 'Acting after your opponent',
@@ -17382,7 +17403,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
   table: _world4ValueBetRunner.table.copyWith(
     heroCards: const [
       Act0CardStateV1(rank: 'A', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 'd'),
+      Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
     ],
   ),
   hint: 'Compare what happens to the pot after each choice.',
@@ -17890,7 +17911,8 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
 final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_cheap_price_marginal_call',
   caption: 'The turn is a two. HJ bet 1 BB.',
-  lessonSubtitle: 'Middle pair matches the second-highest rank on the flop.',
+  lessonSubtitle:
+      'Middle pair means a private card matches the second-highest rank on the flop.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
       '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
