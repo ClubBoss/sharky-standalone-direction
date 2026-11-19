@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
 // Long session through the real app shell on iPhone 14 Pro: a fresh learner
-// goes through the whole of Worlds 1–4 by tapping like a person, the app is
+// goes through the whole of Worlds 1–6 by tapping like a person, the app is
 // restarted in every world, and progress must carry on from where it stopped.
 // Any exception thrown by the app fails the test.
 const _continueKeys = [
@@ -99,7 +99,7 @@ Future<Map<String, dynamic>> _saved(WidgetTester t) async {
 
 void main() {
   testWidgets(
-    'a fresh learner finishes W1-W4 with mistakes, retries and four restarts',
+    'a fresh learner finishes W1–W6 with mistakes, retries and six restarts',
     (t) async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
       t.view.physicalSize = const Size(393, 852);
@@ -107,7 +107,7 @@ void main() {
       addTearDown(t.view.resetPhysicalSize);
       addTearDown(t.view.resetDevicePixelRatio);
       final worlds = Act0ShellStateV1.sample.worlds
-          .where((w) => w.worldNumber >= 1 && w.worldNumber <= 4)
+          .where((w) => w.worldNumber >= 1 && w.worldNumber <= 6)
           .toList();
       final taskWorld = {
         for (final w in worlds)
@@ -128,7 +128,7 @@ void main() {
       await _mount(t, firstRun: true);
       await _onboard(t);
 
-      for (var step = 0; step < 2600 && !complete; step++) {
+      for (var step = 0; step < 3600 && !complete; step++) {
         final runnerFinder = find.byType(Act0LessonRunnerShellV1);
         if (runnerFinder.evaluate().isNotEmpty) {
           final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
@@ -243,15 +243,15 @@ void main() {
           .cast<String>()
           .toSet();
       expect(taskWorld.keys.toSet().difference(completed), isEmpty);
-      expect(taskWorld.length, 181);
-      expect(missedWorlds, {1, 2, 3, 4});
-      expect(restartedWorlds, {1, 2, 3, 4});
+      expect(taskWorld.length, 250);
+      expect(missedWorlds, {1, 2, 3, 4, 5, 6});
+      expect(restartedWorlds, {1, 2, 3, 4, 5, 6});
       expect(snapshot['skippedTaskIds'], isEmpty);
       expect(
         snapshot['earnedXp'],
         completed.fold<int>(0, (sum, id) => sum + (rewards[id] ?? 0)),
       );
-      expect(confirmedMisses, {1, 2, 3, 4});
+      expect(confirmedMisses, {1, 2, 3, 4, 5, 6});
       expect(t.takeException(), isNull);
     },
     timeout: const Timeout(Duration(minutes: 5)),
