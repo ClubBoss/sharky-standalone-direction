@@ -418,10 +418,108 @@ void main() {
         ],
       ],
     };
+    // Reconstruct the reviewed P4 choice labels and two mechanical grades.
+    const priorL1PrechoiceOptions = {
+      'first_table_guide_one_clear_choice': [
+        [
+          "co_still_acting",
+          "Two private cards and three shared cards",
+          false,
+          "suboptimal",
+          "Two private cards and no shared cards",
+        ],
+        [
+          "hero_btn_preflop_setup",
+          "Two private cards and no shared cards",
+          true,
+          "correct",
+          "Two private cards and no shared cards",
+        ],
+        [
+          "hero_has_no_cards",
+          "No private cards and no shared cards",
+          false,
+          "wrong",
+          "Two private cards and no shared cards",
+        ],
+      ],
+      'showdown_kicker_drill': [
+        ["kicker", "Kicker", true, "correct", "Kicker"],
+        ["seat", "Seat name", false, "wrong", "Kicker"],
+      ],
+      'positions_theory': [
+        ["top", "UTG", false, "wrong", "BTN (your seat)"],
+        ["random", "BB", false, "wrong", "BTN (your seat)"],
+        ["bottom", "BTN (your seat)", true, "correct", "BTN (your seat)"],
+      ],
+      'actions_theory': [
+        ["raise", "Raise", true, "correct", "Raise"],
+        ["fold", "Fold", false, "wrong", "Raise"],
+        ["call", "Call", false, "suboptimal", "Raise"],
+      ],
+      'actions_raise_drill': [
+        ["fold", "Fold", false, "wrong", "Raise"],
+        ["call", "Call", false, "suboptimal", "Raise"],
+        ["raise", "Raise", true, "correct", "Raise"],
+      ],
+      'actions_review': [
+        ["raise", "Raise", true, "correct", "Raise"],
+        ["fold", "Fold", false, "wrong", "Raise"],
+        ["call", "Call", false, "suboptimal", "Raise"],
+      ],
+      'button_advantage_button_recap': [
+        ["top", "UTG", false, "wrong", "BTN (your seat)"],
+        ["bottom", "BTN (your seat)", true, "correct", "BTN (your seat)"],
+        ["random", "BB", false, "wrong", "BTN (your seat)"],
+      ],
+      'early_vs_late_w2_position_recap': [
+        ["top", "UTG", false, "wrong", "BTN (your seat)"],
+        ["bottom", "BTN (your seat)", true, "correct", "BTN (your seat)"],
+        ["random", "BB", false, "wrong", "BTN (your seat)"],
+      ],
+      'w4_value_purpose': [
+        ["bluff", "Bluff", false, "wrong", "Value"],
+        ["value", "Value", true, "correct", "Value"],
+      ],
+      'w4_bluff_purpose': [
+        ["value", "Value", false, "wrong", "Bluff"],
+        ["bluff", "Bluff", true, "correct", "Bluff"],
+      ],
+      'w4_checkpoint_value': [
+        ["bluff", "Bluff", false, "wrong", "Value"],
+        ["value", "Value", true, "correct", "Value"],
+      ],
+      'w4_checkpoint_table_purpose_price': [
+        [
+          "small_value_price",
+          "Small value bet that sets a cheap continue price",
+          true,
+          "correct",
+          "Small value bet that sets a cheap continue price",
+        ],
+        [
+          "pot_bluff",
+          "Pot-size bluff trying to force folds",
+          false,
+          "wrong",
+          "Small value bet that sets a cheap continue price",
+        ],
+        [
+          "random_size",
+          "Random bet with no clear job",
+          false,
+          "suboptimal",
+          "Small value bet that sets a cheap continue price",
+        ],
+      ],
+    };
     final beforeL1 = jsonDecode(encoded) as List<dynamic>;
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
-      final options = priorL1Options[row[2]] ?? priorL1TeachingOptions[row[2]];
+      final options =
+          priorL1Options[row[2]] ??
+          priorL1TeachingOptions[row[2]] ??
+          priorL1PrechoiceOptions[row[2]];
       if (options != null) row[5] = options;
     }
     var beforeCopyEdits = jsonEncode(beforeL1);

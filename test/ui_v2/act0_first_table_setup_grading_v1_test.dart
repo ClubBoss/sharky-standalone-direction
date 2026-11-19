@@ -40,9 +40,9 @@ void main() {
         ),
         (
           choice: 'co_still_acting',
-          result: 'suboptimal',
+          result: 'incorrect',
           correct: false,
-          quality: Act0FeedbackQualityV1.suboptimal,
+          quality: Act0FeedbackQualityV1.wrong,
           reason: 'The shared cards have yet to appear',
         ),
         (

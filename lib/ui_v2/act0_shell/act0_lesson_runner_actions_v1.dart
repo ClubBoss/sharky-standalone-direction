@@ -278,6 +278,21 @@ String _genericDecisionHintV1({
   // pot, seats and cards together, so it must not override that subject.
   final focus = focusText.toLowerCase();
   final normalized = text.toLowerCase();
+  if (focus.contains('what suit') || focus.contains('which suit')) {
+    return 'Match the suit symbol or letter on the named card to the suit key.';
+  }
+  if (focus.contains('which rank') || focus.contains('what rank')) {
+    return 'Compare the ranks on the named cards in deck order.';
+  }
+  if (focus.contains('which bucket') || focus.contains('which group')) {
+    return 'Read your two cards first. Match the ranks and suits to the chart.';
+  }
+  if (focus.contains('which earns more') && focus.contains('win')) {
+    return 'Use the visible pot and the amount you would add to find the required chance.';
+  }
+  if (focus.contains('sharky starting chart')) {
+    return 'Find the chart row for your two cards. Check your seat and who raised.';
+  }
   final isBoardFocus =
       focus.contains('board') ||
       focus.contains('community card') ||

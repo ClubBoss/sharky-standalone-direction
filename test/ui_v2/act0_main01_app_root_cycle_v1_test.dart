@@ -431,7 +431,7 @@ void main() {
           await _choose(tester, 'co_still_acting');
           expect(
             _runner(tester).runner.reviewQuality,
-            Act0FeedbackQualityV1.suboptimal,
+            Act0FeedbackQualityV1.wrong,
           );
           await _expectFeedbackClearance(tester);
         }
