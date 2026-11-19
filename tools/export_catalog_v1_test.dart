@@ -26,6 +26,7 @@ void main() {
             'lesson': l.lessonId,
             'task': t.taskId,
             'phase': t.phase.name,
+            'repairOnly': t.repairOnly,
             'family': t.resolvedTaskFamily.name,
             'composition': t.resolvedCompositionFamily.name,
             'tableScope': r.table.scope.name,

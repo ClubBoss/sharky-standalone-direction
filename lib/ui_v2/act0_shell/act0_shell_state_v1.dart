@@ -14108,7 +14108,7 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Groups and seats, before a raise.',
       body:
-          'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ or AJ suited | Open from UTG through BTN.\n\nMedium | 99–22, AQ offsuit, KQ, QJ suited, AJ offsuit, AT, KT, QT | Open AQ offsuit, KQ and AT from HJ or later. With the other hands in this row, use CO or BTN.\n\nWeak | Other hands in this course model | Fold.',
+          'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.\n\nMedium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.\n\nMedium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.\n\nWeak | Other hands in this course model | Fold.',
     ),
     Act0TeachingStepV1(
       title: 'On BTN after a raise.',
@@ -14366,7 +14366,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'AJo can open first in from the Cutoff before only three seats remain behind.',
+          'The starting chart raises this hand from CO before BTN and the blinds act.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -14731,7 +14731,7 @@ const _kqoButtonFacingRaiseChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Clean execution.',
     feedbackReason:
-        'BTN versus a CO open, KQo can continue in position. For this beginner baseline, call is the simple continue.',
+        'The Sharky starting chart calls one CO raise with KQo on BTN.',
   ),
   Act0RunnerOptionV1(
     id: 'fold',
@@ -14790,7 +14790,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'BTN versus an HJ open, KQo can still continue in position. For this beginner baseline, call is the simple continue.',
+          'The Sharky starting chart calls one HJ raise with KQo on BTN.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14878,7 +14878,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'BTN versus a CO open, QJs can continue in position. For this beginner baseline, call is the simple continue.',
+          'The Sharky starting chart calls one CO raise with QJs on BTN.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -14998,7 +14998,7 @@ final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          'BTN versus an HJ open, KJs can continue in position. For this beginner baseline, call is the simple continue.',
+          'The Sharky starting chart calls one HJ raise with KJs on BTN.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -15059,8 +15059,7 @@ final _world4CallFrameRunner = _world3PlayableCallRunner.copyWith(
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Frame read first.',
-      feedbackReason:
-          'Once CO opened, AJs on the Button fits the call frame. For this beginner baseline, call is the simple continue.',
+      feedbackReason: 'AJs on BTN can call here after a single CO raise.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -16558,7 +16557,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
           'Limping KQo is legal but starts the hand passively. Raising opens the pot and pressures the blinds.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Limp legal', 'Raise sharper', 'BTN'],
+      repairFocusLabels: <String>['Call 1 BB', 'Chart says raise', 'BTN'],
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -16650,17 +16649,17 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonTitle: 'Discipline at the table',
   lessonSubtitle: 'Hand Discipline',
   caption: 'BTN. Pot unopened. You hold A♠ J♦.',
-  hint: 'Late position, strong hand, no one entered. Clean open.',
+  hint: 'Match AJo and BTN to the chart before a raise.',
   question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'Discipline confirms.',
   feedbackReason:
-      'AJo is Medium. The Sharky starting chart opens it from CO or BTN when no one has raised.',
+      'AJo is Medium. The Sharky starting chart opens it from HJ through BTN when no one has raised.',
   table: _world3ButtonOpenRunner.table.copyWith(
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'A', suit: 's'),
       Act0CardStateV1(rank: 'J', suit: 'd'),
     ],
-    centerLabel: 'Strong late',
+    centerLabel: 'Medium on BTN',
     activeSeatId: 'btn',
     highlightedSeatIds: const <String>['btn'],
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
@@ -16668,9 +16667,9 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   options: _sharkyOpenChartChoices,
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Strong hand, good seat.',
+      title: 'AJo in the starting chart.',
       body:
-          'AJo is in the Medium group. BTN acts last after the flop. Pot is clean. Open.',
+          'AJo is in the Medium group. Before a raise, its opening seats are HJ, CO and BTN. BTN acts last after the flop.',
       focusSeatIds: <String>['btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['AJo', 'BTN', 'Open'],

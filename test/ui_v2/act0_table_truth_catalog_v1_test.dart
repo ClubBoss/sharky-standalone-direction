@@ -373,11 +373,21 @@ void main() {
         ];
       }
     }
+    // P7 aligns the KQo call cue with the chart. Seat and card focus stay pinned.
+    final mediumOpen =
+        expectedComparison['continue_or_let_go_medium_open']
+            as Map<String, dynamic>;
+    final limpChoice = (mediumOpen['options'] as List)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((choice) => choice['id'] == 'call');
+    expect(limpChoice['repairLabels'], ['Limp legal', 'Raise sharper', 'BTN']);
+    limpChoice['repairLabels'] = ['Call 1 BB', 'Chart says raise', 'BTN'];
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only reviewed MAIN01 quality cells, the exact three W01 theory option contracts and the exact W24 and L1 grading corrections may differ; every other identity, XP, family and repair field remains frozen',
+          'Only explicitly reviewed MAIN01, W01, W24 and L1 fields may '
+          'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {
       'asm05_new_known_holes_turn_call_10': {
