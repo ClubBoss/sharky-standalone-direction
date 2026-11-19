@@ -64,7 +64,12 @@ void main() {
           }
           final stacks = [for (final s in table.seats) _bb(s.stackLabel)];
           final pot = _bb(table.potLabel);
-          if (t.runner.caption.contains('100 BB') &&
+          // W1's fully authored decision frames start with 100 BB per seat.
+          // Their teaching captions no longer repeat the starting stacks.
+          final hasUniformStartingStacks =
+              (w.worldNumber == 1 && table.decisionSeatId != null) ||
+              t.runner.caption.contains('100 BB');
+          if (hasUniformStartingStacks &&
               stacks.length == 6 &&
               !stacks.contains(null) &&
               pot != null) {
