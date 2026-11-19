@@ -185,6 +185,63 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets('P8 keeps progress earned before the full hand moved', (
+    tester,
+  ) async {
+    const earlierLessons = [
+      'what_poker_is',
+      'cards_ranks_suits',
+      'hand_rankings_table',
+      'hand_rankings_upper',
+      'your_first_hand',
+    ];
+    final world = Act0ShellStateV1.sample.worldById('world_1');
+    final completed = [
+      for (final lesson in world.lessons)
+        if (earlierLessons.contains(lesson.lessonId)) ...lesson.courseTaskList,
+    ];
+    final completedIds = completed.map((task) => task.taskId).toList();
+    final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_welcome_completed_v1': true,
+      'intake_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 20,
+        'completedTaskIds': completedIds,
+        'completedLessonIds': earlierLessons,
+        'skippedTaskIds': <String>[],
+        'earnedXp': xp,
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'your_first_hand',
+        'selectedTaskId': 'your_first_hand_recap',
+      }),
+    });
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await _mount(tester);
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+    await tester.pumpAndSettle();
+    expect(
+      await _tapFirst(
+        tester,
+        _continueKeys.map((key) => find.byKey(Key(key))).toList(),
+      ),
+      isTrue,
+    );
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'blinds_action_order');
+    final saved = await _saved(tester);
+    expect(saved['completedTaskIds'], unorderedEquals(completedIds));
+    expect(saved['earnedXp'], xp);
+    expect(saved['skippedTaskIds'], isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('W9 long inline history keeps the current decision playable', (
     t,
   ) async {

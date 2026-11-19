@@ -758,15 +758,13 @@ class _CenterStatDisplayV1 {
 
 bool _isActiveAssessmentStateV1({
   required bool isTeaching,
-  required bool isTheory,
   required bool isReview,
   required Act0RunnerStateV1 runner,
-}) {
-  return !isTeaching &&
-      !isTheory &&
-      !isReview &&
-      (runner.selectedOptionId ?? '').trim().isEmpty;
-}
+}) =>
+    !isTeaching &&
+    !isReview &&
+    runner.options.isNotEmpty &&
+    (runner.selectedOptionId ?? '').trim().isEmpty;
 
 String _normalizeAnswerLeakTextV1(String text) {
   return text
@@ -1038,7 +1036,6 @@ String _resolveTableCueDisplayV1({
   required Act0RunnerStateV1 runner,
   required Act0TableStateV1 table,
   required bool isTeaching,
-  required bool isTheory,
   required bool isReview,
   required Act0TaskFamilyV1? taskFamily,
   required bool hasSeatTargets,
@@ -1049,7 +1046,6 @@ String _resolveTableCueDisplayV1({
   }
   if (!_isActiveAssessmentStateV1(
     isTeaching: isTeaching,
-    isTheory: isTheory,
     isReview: isReview,
     runner: runner,
   )) {
@@ -1125,7 +1121,6 @@ _CenterStatDisplayV1 _resolveCenterStatDisplayV1(
   required _RunnerBottomContextV1 bottomContext,
   required String centerCueLabel,
   required bool isTeaching,
-  required bool isTheory,
   required bool isReview,
   required Act0TaskFamilyV1? taskFamily,
   required bool hasSeatTargets,
@@ -1133,7 +1128,6 @@ _CenterStatDisplayV1 _resolveCenterStatDisplayV1(
   final potLabel = table.potLabel.trim();
   final isActiveAssessment = _isActiveAssessmentStateV1(
     isTeaching: isTeaching,
-    isTheory: isTheory,
     isReview: isReview,
     runner: runner,
   );

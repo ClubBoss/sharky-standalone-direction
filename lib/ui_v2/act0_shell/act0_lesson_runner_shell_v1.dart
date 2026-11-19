@@ -2530,7 +2530,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     if (_decisionAssistanceKindV1 == Act0DecisionAssistanceV1.none &&
         _isActiveAssessmentStateV1(
           isTeaching: _isTeaching,
-          isTheory: _isTheory,
           isReview: _isReview,
           runner: widget.runner,
         )) {
@@ -3261,7 +3260,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     // Keep the source table intact for teaching, requested help and feedback.
     final isActiveAssessment = _isActiveAssessmentStateV1(
       isTeaching: isTeaching,
-      isTheory: isTheory,
       isReview: isReview,
       runner: runner,
     );
@@ -3313,7 +3311,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       runner: runner,
       table: table,
       isTeaching: isTeaching,
-      isTheory: isTheory,
       isReview: isReview,
       taskFamily: widget.selectedTaskFamily,
       hasSeatTargets: hasSeatTargets,
@@ -3325,7 +3322,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       bottomContext: bottomContext,
       centerCueLabel: centerLabelOverride,
       isTeaching: isTeaching,
-      isTheory: isTheory,
       isReview: isReview,
       taskFamily: widget.selectedTaskFamily,
       hasSeatTargets: hasSeatTargets,
@@ -3344,10 +3340,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         : act0PrechoiceDisplayTitleV1(
             taskId: widget.selectedTaskId ?? '',
             authoredTitle: authoredTaskTitle,
-            isAssessment: runner.options.isNotEmpty && !isTheory,
+            isAssessment: runner.options.isNotEmpty,
             hasSubmittedCurrentDecision: !_isActiveAssessmentStateV1(
               isTeaching: isTeaching,
-              isTheory: isTheory,
               isReview: isReview,
               runner: runner,
             ),

@@ -183,6 +183,42 @@ Set<String> _questionWords(String text) => _words(text)
 
 const _streets = {'Preflop': 0, 'Flop': 3, 'Turn': 4, 'River': 5};
 
+final _seatOrder = RegExp(
+  r'\b(?:act(?:s|ed|ing)?|is|go(?:es)?) (first|earliest|earlier|last|latest|later)\b'
+  r'|\b(first|earliest|last|latest) to act\b',
+);
+
+final _sharedBoardQuestion = RegExp(
+  r'\b(?:can (?:everyone|every player|all players) use|'
+  r'(?:everyone|every player|all players) can use)\b',
+);
+final _sharedBoardAnswer = RegExp(
+  r'\b(?:board cards|shared board|community cards)\b',
+);
+
+String? _seatOrderSignature(CatalogTask row, Act0RunnerOptionV1 correct) {
+  final seat = correct.seatId;
+  if (seat == null) return null;
+  final question = _words(catalogQuestion(row.task));
+  final order = _seatOrder.firstMatch(question);
+  if (order == null) return null;
+  final direction = switch (order[1] ?? order[2]) {
+    'first' || 'earliest' || 'earlier' => 'first',
+    _ => 'last',
+  };
+  final street = switch (question) {
+    _ when RegExp(r'\b(preflop|before the flop)\b').hasMatch(question) =>
+      'Preflop',
+    _
+        when RegExp(
+          r'\b(on|after) the (?:flop)\b|\bpostflop\b',
+        ).hasMatch(question) =>
+      'Flop',
+    _ => row.task.runner.table.streetLabel,
+  };
+  return '$seat/$street/$direction';
+}
+
 bool _isAction(Act0RunnerOptionV1 option) =>
     startingChartActions.contains(option.id) ||
     RegExp(
@@ -208,21 +244,27 @@ final _actualRankQuestion = RegExp(
   caseSensitive: false,
 );
 
-CatalogAudit runCatalogAudit() {
+CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
+  final tasks = rows ?? catalogTasks;
   final audit = CatalogAudit();
   final chart = CatalogStartingChart.foundation();
-  final orderByTask = {for (final row in catalogTasks) row.task.taskId: row};
+  final orderByTask = {for (final row in tasks) row.task.taskId: row};
   final knownRepairGoals = <String, Set<String>>{};
   for (final contract in act0RepairGoalContractsV1) {
     knownRepairGoals
         .putIfAbsent(contract.sourceTaskId, () => {})
         .add(contract.goalId);
+    if (contract.hasValidatedTarget) {
+      knownRepairGoals
+          .putIfAbsent(contract.targetTaskId, () => {})
+          .add(contract.goalId);
+    }
   }
-  final strategyKeys = <(int, String), List<CatalogTask>>{};
+  final repeatKeys = <(int, String), List<CatalogTask>>{};
   final knowledge = <({CatalogTask row, String answer, Set<String> words})>[];
   final inherited = <(String, String), CatalogTask>{};
 
-  for (final row in catalogTasks) {
+  for (final row in tasks) {
     final task = row.task;
     final r = task.runner;
     final t = r.table;
@@ -347,7 +389,15 @@ CatalogAudit runCatalogAudit() {
     }
 
     if (correct != null && !task.repairOnly) {
-      if (_isAction(correct) && facts.code != null && heroSeat != null) {
+      final seatOrder = _seatOrderSignature(row, correct);
+      if (seatOrder != null) {
+        final group = repeatKeys.putIfAbsent((
+          row.world.worldNumber,
+          seatOrder,
+        ), () => []);
+        _checkRepeat(audit, row, group, seatOrder);
+        group.add(row);
+      } else if (_isAction(correct) && facts.code != null && heroSeat != null) {
         // Price differences do not make the same Foundation first-in / facing
         // one open exercise a different skill. Postflop keeps the board ranks.
         final context = preflop
@@ -367,7 +417,7 @@ CatalogAudit runCatalogAudit() {
           context,
           _action(correct),
         ].join('/');
-        final group = strategyKeys.putIfAbsent((
+        final group = repeatKeys.putIfAbsent((
           row.world.worldNumber,
           key,
         ), () => []);
@@ -399,6 +449,7 @@ CatalogAudit runCatalogAudit() {
 
     if (correct != null) {
       final answer = _words(correct.label);
+      final question = _words(catalogQuestion(task));
       final answerTokens = answer.split(' ');
       final optionTokens = r.options
           .where((o) => !o.isCorrect)
@@ -407,6 +458,7 @@ CatalogAudit runCatalogAudit() {
       for (final field in _copy(row)) {
         if (field.surface != 'caption' &&
             field.surface != 'center' &&
+            field.surface != 'callout' &&
             field.surface != 'hint' &&
             !field.surface.startsWith('teach.'))
           continue;
@@ -436,11 +488,25 @@ CatalogAudit runCatalogAudit() {
             (answerTokens.length > 1 ||
                 field.surface == 'center' ||
                 field.surface.contains('.focus.'));
+        final revealsSharedBoard =
+            answer == 'board cards' &&
+            !task.repairOnly &&
+            _sharedBoardQuestion.hasMatch(question) &&
+            const {
+              'caption',
+              'center',
+              'callout',
+              'hint',
+            }.contains(field.surface) &&
+            _sharedBoardAnswer.hasMatch(text);
         audit.check(
           '6.answer_copy',
           row,
           field.surface,
-          !direct && !echoesAnswer && !explicitSeatAnswer,
+          !direct &&
+              !echoesAnswer &&
+              !explicitSeatAnswer &&
+              !revealsSharedBoard,
           field.surface +
               ': "' +
               field.text +
@@ -618,25 +684,20 @@ CatalogAudit runCatalogAudit() {
         currentFingerprintForIdentity:
             act0CurrentAuthoredSourceFingerprintForIdentityV1,
       );
-      // Choices with no repair intent are outside this check: the consumer
-      // did not create a held obligation for them.
-      if (intent == null) continue;
-      final resolved = intent.mappingType != 'unresolved_product_gap';
+      if (intent == null && row.world.worldNumber > 4) continue;
+      final resolved =
+          intent != null && intent.mappingType != 'unresolved_product_gap';
       audit.check(
         '10.repair_resolves',
         row,
         o.id,
         resolved,
-        'Wrong option "${o.label}" creates a held repair obligation (${intent.missedSignalId}).',
+        intent == null
+            ? 'Wrong option "${o.label}" has no repair intent.'
+            : 'Wrong option "${o.label}" creates a held repair obligation (${intent.missedSignalId}).',
       );
-      if (!resolved) continue;
+      if (intent == null || !resolved) continue;
       final target = orderByTask[intent.targetTaskId];
-      final source = act0RepairGoalContractForSourceV1(
-        worldId: row.world.worldId,
-        lessonId: row.lesson.lessonId,
-        taskId: task.taskId,
-        choiceId: o.id,
-      );
       final earlier =
           target != null &&
           (target.world.worldNumber < row.world.worldNumber ||
@@ -649,17 +710,17 @@ CatalogAudit runCatalogAudit() {
         earlier,
         'Repair points to a missing or later task ' + intent.targetTaskId,
       );
-      final targetGoals = knownRepairGoals[intent.targetTaskId];
+      final targetGoals = {
+        ...?knownRepairGoals[intent.targetTaskId],
+        if (target != null && target.world.worldNumber <= 4)
+          act0FoundationRepairGoalForTaskV1(intent.targetTaskId),
+      };
       audit.check(
         '10.repair_goal',
         row,
         o.id,
-        source == null || targetGoals == null
-            ? null
-            : targetGoals.contains(source.goalId),
-        'Source goal ' +
-            (source?.goalId ?? '?') +
-            ', target goals $targetGoals.',
+        targetGoals.contains(intent.goalId),
+        'Source goal ${intent.goalId}, target goals $targetGoals.',
       );
     }
   }

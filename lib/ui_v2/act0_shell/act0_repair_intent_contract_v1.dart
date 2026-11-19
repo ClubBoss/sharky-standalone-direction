@@ -237,7 +237,14 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     lessonId: sourceLessonId,
     taskId: sourceTaskId,
   );
-  if (receipt == null && concept == null) {
+  final goal = act0RepairGoalContractForSourceV1(
+    worldId: sourceWorldId,
+    lessonId: sourceLessonId,
+    taskId: sourceTaskId,
+    choiceId: selectedOption.id,
+    diagnosticVariantId: diagnosticVariantId,
+  );
+  if (receipt == null && concept == null && goal == null) {
     return null;
   }
 
@@ -249,19 +256,23 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
       sourceTaskId == act0PositionPersonalizationSourceTaskIdV1;
   final skillAtomId = canonicalPositionSource
       ? act0PositionPersonalizationSkillIdV1
-      : receipt?.skillAtomId ?? concept!.eligibleRepairFamily;
+      : receipt?.skillAtomId ?? concept?.eligibleRepairFamily ?? goal!.goalId;
   final skillLabel = canonicalPositionSource
       ? 'Table position read'
-      : receipt?.skillLabel ?? concept!.learnerInterpretation;
+      : receipt?.skillLabel ??
+            concept?.learnerInterpretation ??
+            goal!.learnerGoalLabel;
   final sourceSignalId = canonicalPositionSource
       ? act0PositionPersonalizationSignalIdV1
-      : receipt?.sourceSignalId ?? concept!.id;
+      : receipt?.sourceSignalId ?? concept?.id ?? goal!.goalId;
   final sourceSignalLabel = canonicalPositionSource
       ? 'Button'
-      : receipt?.sourceSignalLabel ?? concept!.learnerInterpretation;
+      : receipt?.sourceSignalLabel ??
+            concept?.learnerInterpretation ??
+            goal!.learnerGoalLabel;
   final nextRepId = canonicalPositionSource
       ? 'repeat_table_position_read'
-      : receipt?.nextRepId ?? 'repeat_${concept!.eligibleRepairFamily}';
+      : receipt?.nextRepId ?? 'repeat_$skillAtomId';
   mapSameSignalRep?.call(
     nextRepId: nextRepId,
     skillAtomId: skillAtomId,
@@ -270,13 +281,6 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     receiptOutcome: receiptOutcome,
   );
 
-  final goal = act0RepairGoalContractForSourceV1(
-    worldId: sourceWorldId,
-    lessonId: sourceLessonId,
-    taskId: sourceTaskId,
-    choiceId: selectedOption.id,
-    diagnosticVariantId: diagnosticVariantId,
-  );
   final canonicalChoices = runner.options
       .where((o) => o.id == selectedOption.id)
       .toList();
@@ -325,9 +329,8 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
       selectedOption.quality.name == goal.sourceChoiceQuality &&
       _sameRepairOptionV1(canonicalChoices.single, selectedOption) &&
       currentSourceBound &&
-      (!diagnostic ||
-          (expected.length == 1 &&
-              expected.single.id == goal.sourceCorrectChoiceId));
+      expected.length == 1 &&
+      expected.single.id == goal.sourceCorrectChoiceId;
   // Persist structural source IDs for a held obligation, never as a fallback
   // target. All launchers must consume the semantic eligibility helper.
   final validatedTarget =
