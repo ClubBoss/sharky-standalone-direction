@@ -343,6 +343,36 @@ void main() {
       choice['correct'] = isCall;
       choice['quality'] = isCall ? 'correct' : 'wrong';
     }
+    // P6 updates the learner label for the two first-hand card exercises.
+    // Keep the underlying card focus, choices and grading from the fixture.
+    for (final id in [
+      'your_first_hand_preflop',
+      'your_first_hand_private_cards_recheck',
+    ]) {
+      final row = expectedComparison[id] as Map<String, dynamic>;
+      for (final option
+          in (row['options'] as List).cast<Map<String, dynamic>>()) {
+        expect(option['repairLabels'], ['Hero cards']);
+        option['repairLabels'] = ['Your cards'];
+      }
+    }
+    for (final id in [
+      'actions_theory',
+      'actions_raise_drill',
+      'actions_review',
+    ]) {
+      final row = expectedComparison[id] as Map<String, dynamic>;
+      final options = (row['options'] as List).cast<Map<String, dynamic>>();
+      for (final choiceId in ['fold', 'raise']) {
+        final option = options.singleWhere((value) => value['id'] == choiceId);
+        final labels = (option['repairLabels'] as List).cast<String>();
+        expect(labels, contains('Hero acts'));
+        option['repairLabels'] = [
+          for (final label in labels)
+            label == 'Hero acts' ? 'Your turn' : label,
+        ];
+      }
+    }
     expect(
       historicalComparison,
       expectedComparison,

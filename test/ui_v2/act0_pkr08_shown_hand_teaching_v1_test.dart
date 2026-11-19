@@ -12,9 +12,9 @@ import '../support/act0_pot_showdown_truth_v1.dart';
 const _bestHandTaskXp = <String, int>{'what_poker_is_showdown_win': 4};
 const _tieTaskXp = <String, int>{'showdown_tie_drill': 7};
 const _bestHandBody =
-    'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Only these two hands are shown, so this compares just them.';
+    'Your best five are Q-Q-A-J-7. CO uses J-J-A-K-7. Your queens beat CO’s jacks.';
 const _tieBody =
-    'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.';
+    'You and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.';
 
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)
@@ -34,7 +34,7 @@ void main() {
       expect(teaching.body, expectedBody);
       expect(
         teaching.focusLabels,
-        isTie ? ['Shown hands tie'] : ['Q-Q-A-J-7', 'Hero beats CO'],
+        isTie ? ['Shown hands tie'] : ['Q-Q-A-J-7', 'You beat CO'],
       );
       expect(task.rewardXp, entry.value);
       expect(
@@ -115,10 +115,7 @@ void main() {
         find.textContaining(expectedBody, findRichText: true),
         findsWidgets,
       );
-      expect(
-        find.textContaining('Hero wins', findRichText: true),
-        findsNothing,
-      );
+      expect(find.textContaining('You win', findRichText: true), findsNothing);
       expect(
         find.textContaining('so they split the pot', findRichText: true),
         findsNothing,

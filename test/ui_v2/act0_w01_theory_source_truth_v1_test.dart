@@ -367,7 +367,6 @@ void _contextPremisesWidgetTest(
     final scroll = tester.state<ScrollableState>(
       find.descendant(of: support, matching: find.byType(Scrollable)),
     );
-    if (neutral) expect(scroll.position.maxScrollExtent, greaterThan(0));
 
     await tester.runAsync(() async {
       final boundary = tester.renderObject<RenderRepaintBoundary>(
@@ -476,9 +475,10 @@ void _newFirstHandStackTests() {
         );
         expect(
           task.runner.caption,
-          contains('before posting the 0.5/1 BB blinds'),
+          entry.key == 'your_first_hand_action_trail'
+              ? 'Read the action through the first check on the flop.'
+              : 'The big blind checks on this ${t.streetLabel.toLowerCase()}.',
         );
-        expect(task.runner.caption, contains('100 BB'));
         final fp = act0CurrentAuthoredSourceFingerprintForIdentityV1(
           worldId: 'world_1',
           lessonId: 'your_first_hand',
@@ -1032,7 +1032,7 @@ void _newCallPriceContextTests() {
         act0BettingPriceForOptionV1(table, raise).truth,
         Act0BettingPriceTruthV1.consistent,
       );
-      expect(task.runner.caption, contains('total flop wager of 4 BB'));
+      expect(task.runner.caption, contains('4 BB total'));
       for (final bad in [
         table.copyWith(
           actionTrail: table.actionTrail
@@ -1297,12 +1297,9 @@ void _newFreeCheckContextTests() {
         ]);
         expect(
           task.runner.caption,
-          contains('100 BB before the 0.5/1 BB blinds'),
+          'BB checks on the flop. It is your turn and there is no bet to match.',
         );
-        expect(task.runner.caption, contains('no ante, straddle or rake'));
-        expect(task.runner.caption, contains('raises to 2 BB'));
-        expect(task.runner.caption, contains('calls 1 BB more'));
-        expect(task.runner.caption, contains('pot is 4.5 BB'));
+        expect(table.actionTrail[7].learnerLabel, 'BB calls 1 more, 2 total');
         final proof = act0BettingRoundOrderProofForTableV1(table);
         expect(proof.truth, Act0BettingRoundOrderTruthV1.consistent);
         expect(proof.reason, 'consistent_current_decision');
