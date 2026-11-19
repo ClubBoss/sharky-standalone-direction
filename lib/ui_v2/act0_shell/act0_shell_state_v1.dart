@@ -869,6 +869,7 @@ class Act0TableStateV1 {
     this.focusCalloutLabel = '',
     this.emptyBoardLabel = '',
     this.actionTrail = const <Act0ActionTrailItemV1>[],
+    this.autoPlayHistory = true,
     this.activeSeatId,
     this.decisionSeatId,
     this.heroSeatId,
@@ -893,6 +894,7 @@ class Act0TableStateV1 {
   final String focusCalloutLabel;
   final String emptyBoardLabel;
   final List<Act0ActionTrailItemV1> actionTrail;
+  final bool autoPlayHistory;
   final String? activeSeatId;
   // Source-owned current actor; independent of answer-revealing display focus.
   final String? decisionSeatId;
@@ -927,6 +929,7 @@ class Act0TableStateV1 {
     String? focusCalloutLabel,
     String? emptyBoardLabel,
     List<Act0ActionTrailItemV1>? actionTrail,
+    bool? autoPlayHistory,
     String? activeSeatId,
     String? decisionSeatId,
     bool clearDecisionSeatId = false,
@@ -958,6 +961,7 @@ class Act0TableStateV1 {
       focusCalloutLabel: focusCalloutLabel ?? this.focusCalloutLabel,
       emptyBoardLabel: emptyBoardLabel ?? this.emptyBoardLabel,
       actionTrail: actionTrail ?? this.actionTrail,
+      autoPlayHistory: autoPlayHistory ?? this.autoPlayHistory,
       activeSeatId: activeSeatId ?? this.activeSeatId,
       decisionSeatId: clearDecisionSeatId
           ? null
@@ -16728,6 +16732,7 @@ Act0TableStateV1 _act0W4FacingTurnPriceV1(
     amountLabel: bb(price),
   );
   return table.copyWith(
+    autoPlayHistory: false,
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),

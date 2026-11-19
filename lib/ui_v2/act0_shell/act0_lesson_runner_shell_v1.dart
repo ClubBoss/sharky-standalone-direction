@@ -1718,10 +1718,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     _cancelTableChoreographyV1();
     _tableChoreographyRunKey = taskIdentity;
     _tableChoreographyBeatIndex = -1;
-    _tableChoreographyPlan = act0TableChoreographyPlanForTableV1(
-      widget.runner.table,
-      actorFocusSafe: _tableChoreographyActorFocusSafeV1(),
-    );
+    final table = widget.runner.table;
+    _tableChoreographyPlan = table.autoPlayHistory
+        ? act0TableChoreographyPlanForTableV1(
+            table,
+            actorFocusSafe: _tableChoreographyActorFocusSafeV1(),
+          )
+        : null;
 
     final plan = _tableChoreographyPlan;
     if (plan == null || settleImmediately) {
