@@ -395,7 +395,7 @@ void main() {
         taskId: 'hand_discipline_buckets_borderline',
       );
       expect(task.title, 'Borderline hand');
-      expect(task.runner.caption, 'Hero holds Qs Js before the flop.');
+      expect(task.runner.caption, 'You hold Qs Js before the flop.');
       expect(
         task.runner.table.heroSeat.holeCards.map((card) => card.label),
         <String>['Qs', 'Js'],

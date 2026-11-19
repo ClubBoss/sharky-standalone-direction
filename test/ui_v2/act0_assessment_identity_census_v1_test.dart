@@ -545,6 +545,107 @@ void main() {
         ["fold", "Fold", true, "correct", "Fold"],
       ],
     };
+    const priorL1LanguageOptions = {
+      "hand_rankings_full_house_vs_flush_drill": [
+        ["co_flush", "Other player: flush", false, "wrong", "Hero full house"],
+        [
+          "hero_full_house",
+          "Hero full house",
+          true,
+          "correct",
+          "Hero full house",
+        ],
+      ],
+      "hand_rankings_quads_vs_full_house_drill": [
+        [
+          "hero_quads",
+          "Hero four of a kind",
+          true,
+          "correct",
+          "Hero four of a kind",
+        ],
+        [
+          "co_full_house",
+          "Other player: full house",
+          false,
+          "wrong",
+          "Hero four of a kind",
+        ],
+      ],
+      "hand_rankings_royal_vs_flush_drill": [
+        [
+          "co_ace_high_flush",
+          "Other player: ace-high flush",
+          false,
+          "wrong",
+          "Hero royal flush",
+        ],
+        [
+          "hero_royal_flush",
+          "Hero royal flush",
+          true,
+          "correct",
+          "Hero royal flush",
+        ],
+      ],
+      "what_poker_is_all_in_meaning": [
+        [
+          "automatic_win",
+          "Hero wins the pot automatically",
+          false,
+          "wrong",
+          "Hero put in all remaining chips",
+        ],
+        [
+          "all_remaining_committed",
+          "Hero put in all remaining chips",
+          true,
+          "correct",
+          "Hero put in all remaining chips",
+        ],
+        [
+          "largest_stack_only",
+          "Only the bigger stack matters now",
+          false,
+          "suboptimal",
+          "Hero put in all remaining chips",
+        ],
+      ],
+      "what_poker_is_showdown_win": [
+        ["first_actor", "First actor", false, "wrong", "Best hand"],
+        [
+          "hero_cards_only",
+          "Hero cards only",
+          false,
+          "suboptimal",
+          "Best hand",
+        ],
+        ["best_hand", "Best hand", true, "correct", "Best hand"],
+      ],
+      "what_poker_is_live_win_transfer": [
+        [
+          "fold_or_showdown",
+          "A fold or a showdown",
+          true,
+          "correct",
+          "A fold or a showdown",
+        ],
+        [
+          "button_wins_now",
+          "The button wins automatically",
+          false,
+          "wrong",
+          "A fold or a showdown",
+        ],
+        [
+          "hero_cards_decide_now",
+          "Hero cards decide it immediately",
+          false,
+          "suboptimal",
+          "A fold or a showdown",
+        ],
+      ],
+    };
     final beforeL1 = jsonDecode(encoded) as List<dynamic>;
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
@@ -552,7 +653,8 @@ void main() {
           priorL1Options[row[2]] ??
           priorL1TeachingOptions[row[2]] ??
           priorL1PrechoiceOptions[row[2]] ??
-          priorL1CheckpointOptions[row[2]];
+          priorL1CheckpointOptions[row[2]] ??
+          priorL1LanguageOptions[row[2]];
       if (options != null) row[5] = options;
     }
     var beforeCopyEdits = jsonEncode(beforeL1);

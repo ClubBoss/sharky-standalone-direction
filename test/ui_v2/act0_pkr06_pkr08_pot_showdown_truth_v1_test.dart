@@ -326,7 +326,7 @@ void main() {
       'w6_kicker_showdown_compare': 'Hero A-K',
       'w6_board_pair_strength_compare': 'Villain K-8',
       'w6_checkpoint_table_best_five': 'Split the pot',
-      'hand_rankings_quads_vs_full_house_drill': 'Hero four of a kind',
+      'hand_rankings_quads_vs_full_house_drill': 'Your four of a kind',
       'your_first_hand_showdown': 'You — A-A-K-J-7',
       'showdown_best_hand_drill': 'You · Q-Q-Q-K-8',
       'showdown_review': 'Split the pot',

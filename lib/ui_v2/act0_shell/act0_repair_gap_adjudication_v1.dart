@@ -835,7 +835,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "41911f19cc83b5c3ea7b2d8f5dd3b67dd5d5cb149e0b927f1bf0583ed71d4b0a",
+        "7ec0d17c371b896a3a79e0131cdfdbbbe49fe4d2ea19a0b076d6a66313d25216",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
@@ -850,7 +850,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetTaskId:
         "same_hand_different_seat_position_repair_same_hand_different_seat",
     targetFingerprint:
-        "682c4b58901ef39f72ffd88df17a24fced55922631d22cb7e83a2f1f0181aa37",
+        "b2a0f46571dfdf9fbbae49e43e2ab56ce94e1d246a84e535bde2644eff23b9ae",
     targetCorrectChoiceId: "seat_context",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -908,7 +908,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "button_advantage",
     targetTaskId: "button_advantage_position_repair_btn_last_postflop",
     targetFingerprint:
-        "fcd26031548528b24e51e47c59b35cd124b5e8876318f581dc2af6638d39332b",
+        "2b8f309d7443b2530417c8f4e3358e023742b1e0f6863919ff9c6e4a95640123",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1014,7 +1014,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "cards_ranks_suits",
     targetTaskId: "cards_ranks_suits_private_board",
     targetFingerprint:
-        "b7c258fa030533d4641b1c680be74ccb790d78fd1beccd06aad846beb62a8641",
+        "85f732a37988a12c279fa7392b1098928a80a88ab39dbbce9368211071f6939f",
     targetCorrectChoiceId: "board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1095,7 +1095,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
+        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
     sourceChoiceLabel: "Fold",
@@ -1107,7 +1107,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
+        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1120,7 +1120,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
+        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
     sourceChoiceLabel: "Call",
@@ -1132,7 +1132,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
+        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1145,7 +1145,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "first_actor",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "ae52e6735ebc72f283f320c6e26a6e704f9245991fb4c33395d311ac7cad1627",
+        "952036d4ffc9dc29e57d3570c61ed8a838e644fe88b41e695f19558aa6388e0e",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_as_action_order",
     relationId: "selected_w1_038_first_actor_v1",
@@ -1162,7 +1162,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hero_cards_only",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "ae52e6735ebc72f283f320c6e26a6e704f9245991fb4c33395d311ac7cad1627",
+        "952036d4ffc9dc29e57d3570c61ed8a838e644fe88b41e695f19558aa6388e0e",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_private_cards_only",
     relationId: "selected_w1_039_hero_cards_only_v1",
@@ -1179,7 +1179,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "6f2095cd3bc47e8ec12e6b3b3221732acfee4ddce189c010cf8706108049017b",
+        "1cb1e06856faf462f9eaaf7d4bd015061fd42c04b7eefa798f6e818e69c16a9a",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1227,7 +1227,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "two",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "e6968e360d6fc00b542a94c4bc9df521351732e3f73eecf6be4b8f09972d60f7",
+        "345623956f60f99989d8d273c8bd98dcdb686c386667b5c8fb583d6d5c35b045",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_one_third",
     relationId: "selected_w4_16_two_v1",
@@ -1243,7 +1243,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "six",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "e6968e360d6fc00b542a94c4bc9df521351732e3f73eecf6be4b8f09972d60f7",
+        "345623956f60f99989d8d273c8bd98dcdb686c386667b5c8fb583d6d5c35b045",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_whole",
     relationId: "selected_w4_17_six_v1",
@@ -1259,7 +1259,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
+        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
     relationId: "selected_w1_042_fold_v1",
@@ -1273,7 +1273,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
+        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1286,7 +1286,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "98ffa8ef68b6817ec0132306763c29cafe93e41c6fb20245f269e8340f280498",
+        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
     relationId: "selected_w1_043_call_v1",
@@ -1300,7 +1300,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a",
+        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1354,7 +1354,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'cards_ranks_suits',
     targetTaskId: 'cards_ranks_suits_private_board',
     targetFingerprint:
-        'b7c258fa030533d4641b1c680be74ccb790d78fd1beccd06aad846beb62a8641',
+        '85f732a37988a12c279fa7392b1098928a80a88ab39dbbce9368211071f6939f',
     targetCorrectChoiceId: 'board',
     targetChoiceIds: <String>{'board', 'private'},
     evidenceClass: 'diagnostic_learning_entry',
@@ -1382,7 +1382,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        'f6d537b42d87bdabcdb9f87bc1358289f9ac4b70eb87207d95497e3fe455d23a',
+        '17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',
@@ -1397,7 +1397,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "f1207d1b9102d02c534f1acd14cd660507004effe80db5c3b3f5433209f432a6",
+        "f9f8f3cc3b387f501e7461bbaad74e749c598f8efb4d12d39334997e25f2c0cb",
     sourceQuestion: "Who acts first preflop in this frame?",
     sourceChoiceReason: "The Button acts late, not first preflop.",
     sourceChoiceLabel: "BTN",
@@ -1408,7 +1408,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_first_actor",
     targetFingerprint:
-        "f1207d1b9102d02c534f1acd14cd660507004effe80db5c3b3f5433209f432a6",
+        "f9f8f3cc3b387f501e7461bbaad74e749c598f8efb4d12d39334997e25f2c0cb",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1422,7 +1422,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "sb",
     sourceCorrectChoiceId: "bb",
     sourceFingerprint:
-        "db22d39cac7ed64ad7f715871db0cbcae81eb4fa9aa84178d19eeb3e7fc5b969",
+        "b8e7b5cbdcab6a10bf5fe9f7483b384f94c1249d49dddf86345a445ee7c12c98",
     sourceQuestion: "Who has the next option before the flop here?",
     sourceChoiceReason: "The small blind acts before the big blind preflop.",
     sourceChoiceLabel: "SB",
@@ -1433,7 +1433,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_last_actor",
     targetFingerprint:
-        "db22d39cac7ed64ad7f715871db0cbcae81eb4fa9aa84178d19eeb3e7fc5b969",
+        "b8e7b5cbdcab6a10bf5fe9f7483b384f94c1249d49dddf86345a445ee7c12c98",
     targetCorrectChoiceId: "bb",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1447,7 +1447,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "0c022a9badd39ecc121676fe2daa8488b415759af4f631fb2adf3128724243ae",
+        "beabef2953789c0ade3ca1acf04ee59869010366d839257e43fcd7bb4e1cc082",
     sourceQuestion: "Who acts first preflop?",
     sourceChoiceReason: "The Button acts late, not first preflop.",
     sourceChoiceLabel: "BTN",
@@ -1458,7 +1458,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "0c022a9badd39ecc121676fe2daa8488b415759af4f631fb2adf3128724243ae",
+        "beabef2953789c0ade3ca1acf04ee59869010366d839257e43fcd7bb4e1cc082",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1472,7 +1472,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "1ce4f6eb3bcc0523425e78425c7a59a1c95d4324ea22cba37913839e836bffb9",
+        "0e7879637ce83e3f17de92b4cbf992d935f767a5d2902c03b9a6926a42486b2a",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is after UTG in this order.",
     sourceChoiceLabel: "HJ",
@@ -1483,7 +1483,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "positions_utg",
     targetFingerprint:
-        "1ce4f6eb3bcc0523425e78425c7a59a1c95d4324ea22cba37913839e836bffb9",
+        "0e7879637ce83e3f17de92b4cbf992d935f767a5d2902c03b9a6926a42486b2a",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

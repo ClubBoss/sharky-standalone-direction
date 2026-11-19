@@ -999,9 +999,8 @@ class Act0ActionTrailItemV1 {
   const Act0ActionTrailItemV1({required this.label, this.displayLabel})
     : kind = Act0ActionTrailKindV1.action;
 
-  const Act0ActionTrailItemV1.note({required this.label})
-    : displayLabel = null,
-      kind = Act0ActionTrailKindV1.note;
+  const Act0ActionTrailItemV1.note({required this.label, this.displayLabel})
+    : kind = Act0ActionTrailKindV1.note;
 
   final String label;
   final String? displayLabel;
@@ -2408,7 +2407,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'blinds_postflop_button',
-        title: 'Last postflop actor',
+        title: 'Last to act on the flop',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0W01ExplicitOrderRunnerV1(
           _postflopButtonActorRunner,
@@ -4462,7 +4461,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       Act0LessonTaskV1(
         taskId: 'position_repair_btn_last_postflop',
         repairOnly: true,
-        title: 'Repair BTN last postflop',
+        title: 'Who acts last on the flop?',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3BtnLastPostflopRepairRunner,
         rewardXp: 6,
@@ -8506,7 +8505,7 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
         'Folding gives up the hand without adding chips. It does not change what the next player needs to call.',
     repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
-    repairFocusLabels: <String>['Hero acts', 'Blinds posted', 'KTs'],
+    repairFocusLabels: <String>['Your turn', 'Blinds posted', 'KTs'],
   ),
   Act0RunnerOptionV1(
     id: 'call',
@@ -8538,7 +8537,7 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
     feedbackReason: 'Raising to 3 BB increases the price above the 1 BB blind.',
     repairFocusSeatIds: <String>['btn'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
-    repairFocusLabels: <String>['Button raise', 'Hero acts'],
+    repairFocusLabels: <String>['Button raise', 'Your turn'],
   ),
 ];
 
@@ -8629,7 +8628,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     streetLabel: 'Preflop',
     potLabel: 'Pot 1.5 BB',
     toCallLabel: 'To call 1 BB',
-    centerLabel: 'Action on hero',
+    centerLabel: 'Your turn',
     emptyBoardLabel: 'No board cards yet',
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
@@ -8650,7 +8649,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       title: 'Look before you act.',
       body: 'First ask: is anyone already in the pot?',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['Hero acts', 'Blinds posted'],
+      focusLabels: <String>['Your turn', 'Blinds posted'],
     ),
     Act0TeachingStepV1(
       title: 'No one entered yet.',
@@ -8684,7 +8683,7 @@ const _firstHandRunner = Act0RunnerStateV1(
       feedbackReason:
           'The dealer gave you both cards at your seat. Count them together before the shared cards arrive.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Hero cards'],
+      repairFocusLabels: <String>['Your cards'],
     ),
     Act0RunnerOptionV1(
       id: 'two',
@@ -8695,7 +8694,7 @@ const _firstHandRunner = Act0RunnerStateV1(
       feedbackTitle: 'Two cards: correct.',
       feedbackReason: 'You start with two private cards.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Hero cards'],
+      repairFocusLabels: <String>['Your cards'],
     ),
     Act0RunnerOptionV1(
       id: 'five',
@@ -8706,7 +8705,7 @@ const _firstHandRunner = Act0RunnerStateV1(
       feedbackTitle: 'On the right track.',
       feedbackReason: 'Five cards can make a hand, but you start with two.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Hero cards'],
+      repairFocusLabels: <String>['Your cards'],
     ),
   ],
   feedbackTitle: 'Two private cards: correct.',
@@ -8799,8 +8798,8 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
   lessonId: 'your_first_hand_private_cards_recheck',
   lessonTitle: 'Your first hand',
   lessonSubtitle: 'See your private cards before the board appears.',
-  caption: 'Hero has two private cards before any board cards appear.',
-  hint: 'Your private cards sit by the Hero seat.',
+  caption: 'You have two private cards before any board cards appear.',
+  hint: 'Look at the two cards beside you.',
   question: 'Which two private cards are yours?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -8810,10 +8809,9 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
       preferredLabel: 'A and K',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean private-card read.',
-      feedbackReason:
-          'Hero\'s two private cards are A and K. They belong to Hero before any board cards appear.',
+      feedbackReason: 'Your two cards are A and K. The board is still empty.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Hero cards'],
+      repairFocusLabels: <String>['Your cards'],
     ),
     Act0RunnerOptionV1(
       id: 'queen_queen',
@@ -8823,10 +8821,9 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
       betterAnswerLabel: 'A and K',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Good spot to recheck.',
-      feedbackReason:
-          'Those are not Hero\'s cards in this spot. Read the two cards beside Hero.',
+      feedbackReason: 'Look again at the two cards beside you.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Hero cards'],
+      repairFocusLabels: <String>['Your cards'],
     ),
     Act0RunnerOptionV1(
       id: 'board_cards',
@@ -8837,29 +8834,29 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not this street.',
       feedbackReason:
-          'Board cards are shared later. This recheck asks for Hero\'s two private cards.',
+          'Board cards are shared later. This recheck asks for your two private cards.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Hero cards'],
+      repairFocusLabels: <String>['Your cards'],
     ),
   ],
   feedbackTitle: 'Private cards locked in.',
   feedbackReason:
-      'You found Hero\'s two private cards before looking for any board cards.',
+      'You found your two private cards before looking for any board cards.',
   table: _firstHandRunner.table.copyWith(
     boardCards: const <Act0CardStateV1>[],
-    centerLabel: 'Hero private cards',
+    centerLabel: 'Your private cards',
     potLabel: 'Pot 1.5 BB',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
     emptyBoardLabel: 'No board cards yet',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Start with Hero\'s cards.',
+      title: 'Start with your cards.',
       body:
-          'Before the board appears, Hero has exactly two private cards. Read those two cards first.',
+          'Before the board appears, you have exactly two private cards. Read those two cards first.',
       focusSeatIds: <String>['btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['Hero cards'],
+      focusLabels: <String>['Your cards'],
     ),
   ],
 );
@@ -8987,13 +8984,25 @@ const _readBoardRunner = Act0RunnerStateV1(
 const _firstHandPreflopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
   Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-  Act0ActionTrailItemV1(label: 'UTG folds'),
-  Act0ActionTrailItemV1(label: 'HJ folds'),
-  Act0ActionTrailItemV1(label: 'CO calls 1 BB'),
-  Act0ActionTrailItemV1(label: 'BTN raises to 3 BB'),
+  Act0ActionTrailItemV1(label: 'UTG folds', displayLabel: 'First player folds'),
+  Act0ActionTrailItemV1(label: 'HJ folds', displayLabel: 'Next player folds'),
+  Act0ActionTrailItemV1(
+    label: 'CO calls 1 BB',
+    displayLabel: 'Player to your right calls 1 BB',
+  ),
+  Act0ActionTrailItemV1(
+    label: 'BTN raises to 3 BB',
+    displayLabel: 'You raise to 3 BB',
+  ),
   Act0ActionTrailItemV1(label: 'SB folds'),
-  Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
-  Act0ActionTrailItemV1(label: 'CO folds'),
+  Act0ActionTrailItemV1(
+    label: 'BB calls 2 BB more',
+    displayLabel: 'BB calls 2 more, 3 total',
+  ),
+  Act0ActionTrailItemV1(
+    label: 'CO folds',
+    displayLabel: 'Player to your right folds',
+  ),
 ];
 
 // New, explicitly declared 100 BB starting context for four existing snapshots.
@@ -9011,8 +9020,9 @@ Act0RunnerStateV1 _act0W01NewFirstHandStackContextV1(
     'bb': '97 BB',
   };
   return source.copyWith(
-    caption:
-        '${earlierFlop ? 'Replay the earlier flop snapshot. ' : ''}For this example, all six players start with 100 BB before posting the 0.5/1 BB blinds; no ante, straddle or rake. Pot: 7.5 BB. BTN and BB each have 97 BB behind. Read the board and recorded actions.',
+    caption: earlierFlop
+        ? 'Read the action through the first check on the flop.'
+        : 'The big blind checks on this ${source.table.streetLabel.toLowerCase()}.',
     table: source.table.copyWith(
       decisionSeatId: 'btn',
       seats: [
@@ -9036,7 +9046,12 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     final name = ['Preflop', 'Flop', 'Turn', 'River'][i];
     trail.add(Act0ActionTrailItemV1(label: '$name: BB checks'));
     if (i < streetIndex || finished)
-      trail.add(Act0ActionTrailItemV1(label: '$name: BTN checks'));
+      trail.add(
+        Act0ActionTrailItemV1(
+          label: '$name: BTN checks',
+          displayLabel: '$name: You check',
+        ),
+      );
   }
   final table = _act0CurrentStreetTableV1(runner.table).copyWith(
     heroCards: _heroAkCards,
@@ -9052,7 +9067,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     toCallLabel: '',
     activeSeatId: streetIndex > 0 && !finished ? 'btn' : '',
     centerLabel: showdown
-        ? 'Hero pair of aces beats BB pair of jacks'
+        ? 'Your pair of aces beats the big blind’s pair of jacks'
         : runner.table.centerLabel,
     actionTrail: trail,
     seats: [
@@ -9087,7 +9102,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
             Act0TeachingStepV1(
               title: 'Showdown compares hands.',
               body:
-                  'Hero best five are A-A-K-J-7, while BB best five are J-J-A-K-7. The pair of aces beats the pair of jacks.',
+                  'Your best five are A-A-K-J-7. The big blind uses J-J-A-K-7. Your pair of aces beats the pair of jacks.',
               focusCardIds: [
                 'hero_0',
                 'hero_1',
@@ -9095,7 +9110,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
                 'board_1',
                 'board_3',
               ],
-              focusLabels: ['A-A-K-J-7', 'Hero wins'],
+              focusLabels: ['A-A-K-J-7', 'You win'],
             ),
           ]
         : runner.teachingSteps,
@@ -9286,27 +9301,27 @@ final _potStackRunner = _meetTableRunner.copyWith(
 final _allInMeaningRunner = _potStackRunner.copyWith(
   lessonId: 'all_in_meaning',
   caption:
-      'Hero is all-in for 20 BB. CO called 20 BB and still has chips behind.',
+      'You are all-in for 20 BB. CO called 20 BB and still has chips behind.',
   hint:
       'All-in means one player has put in all remaining chips. The cards or folds still decide the pot.',
   question: 'What does all-in mean here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'all_remaining_committed',
-      label: 'Hero put in all remaining chips',
+      label: 'You put in all remaining chips',
       isCorrect: true,
-      preferredLabel: 'Hero put in all remaining chips',
+      preferredLabel: 'You put in all remaining chips',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct table read.',
       feedbackReason:
-          'All-in means Hero committed all remaining chips. It does not automatically win the pot, because cards or folds still decide what happens next.',
+          'All-in means you committed all remaining chips. It does not automatically win the pot, because cards or folds still decide what happens next.',
     ),
     Act0RunnerOptionV1(
       id: 'automatic_win',
-      label: 'Hero wins the pot automatically',
+      label: 'You win the pot automatically',
       isCorrect: false,
-      preferredLabel: 'Hero put in all remaining chips',
-      betterAnswerLabel: 'Hero put in all remaining chips',
+      preferredLabel: 'You put in all remaining chips',
+      betterAnswerLabel: 'You put in all remaining chips',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not a win condition.',
       feedbackReason:
@@ -9316,12 +9331,12 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
       id: 'largest_stack_only',
       label: 'Only the bigger stack matters now',
       isCorrect: false,
-      preferredLabel: 'Hero put in all remaining chips',
-      betterAnswerLabel: 'Hero put in all remaining chips',
+      preferredLabel: 'You put in all remaining chips',
+      betterAnswerLabel: 'You put in all remaining chips',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Stack size still has a role, but not that role.',
       feedbackReason:
-          'CO covering Hero matters for how many chips can be matched, but all-in first means Hero has no chips left behind. The bigger stack does not win by size alone.',
+          'CO has chips left. You put in your last chips. The hand still has to be decided.',
     ),
   ],
   table: _potStackRunner.table.copyWith(
@@ -9338,7 +9353,10 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
       Act0ActionTrailItemV1.note(label: 'UTG folds'),
       Act0ActionTrailItemV1.note(label: 'HJ folds'),
       Act0ActionTrailItemV1.note(label: 'CO calls 1 BB'),
-      Act0ActionTrailItemV1.note(label: 'Hero all-in 20 BB'),
+      Act0ActionTrailItemV1.note(
+        label: 'Hero all-in 20 BB',
+        displayLabel: 'You go all-in for 20 BB',
+      ),
       Act0ActionTrailItemV1.note(label: 'SB folds'),
       Act0ActionTrailItemV1.note(label: 'BB folds'),
       Act0ActionTrailItemV1.note(label: 'CO calls, 20 BB total'),
@@ -9423,10 +9441,9 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
 final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
   lessonId: 'matched_chips_transfer',
   caption:
-      'Real table. Hero is all-in for 20 BB. CO covers with 100 BB total but only called 20 BB.',
-  hint:
-      'Start with matched chips, not the biggest stack behind. Ask what Hero can actually contest right now.',
-  question: 'What can Hero win from CO first?',
+      'You put in your last 20 BB. CO calls 20 BB and still has chips left.',
+  hint: 'Count how much each player put in for this hand.',
+  question: 'How many chips can you win from CO in this hand?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'matched_amount_only',
@@ -9458,7 +9475,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Matched already matters.',
       feedbackReason:
-          'You do not need equal stacks everywhere first. Once Hero is all-in and CO matches 20 BB, those matched chips are already the honest contest.',
+          'You can win the 20 BB that CO matched. CO keeps the chips they did not put in.',
     ),
   ],
   table: _allInMeaningRunner.table.copyWith(
@@ -9525,7 +9542,10 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
       Act0ActionTrailItemV1.note(label: 'HJ folds'),
       Act0ActionTrailItemV1.note(label: 'SB posts 0.5 BB, then folds'),
       Act0ActionTrailItemV1.note(label: 'BB post is included in BB total'),
-      Act0ActionTrailItemV1.note(label: 'Hero all-in 20 BB'),
+      Act0ActionTrailItemV1.note(
+        label: 'Hero all-in 20 BB',
+        displayLabel: 'You go all-in for 20 BB',
+      ),
       Act0ActionTrailItemV1.note(label: 'CO contributes 50 BB total'),
       Act0ActionTrailItemV1.note(label: 'BB contributes 50 BB total'),
       Act0ActionTrailItemV1.note(label: 'CO and BB: 30 BB each to side'),
@@ -9761,7 +9781,7 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
   lessonId: 'private_board',
   lessonTitle: 'Cards, ranks & suits',
   caption: 'Private cards belong to you. Board cards are shared.',
-  hint: 'Your two cards stay near the hero seat.',
+  hint: 'Look for the two cards at your seat.',
   question: 'Which cards can everyone use?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -10056,7 +10076,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
     ],
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'HJ bets 2 BB'),
-      Act0ActionTrailItemV1(label: 'Hero acts'),
+      Act0ActionTrailItemV1(label: 'Hero acts', displayLabel: 'Your turn'),
     ],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -10159,7 +10179,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
     ],
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'HJ bets 1 BB'),
-      Act0ActionTrailItemV1(label: 'Hero acts'),
+      Act0ActionTrailItemV1(label: 'Hero acts', displayLabel: 'Your turn'),
     ],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -10184,7 +10204,7 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
   ];
   return source.copyWith(
     caption:
-        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds K and T of the same suit and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
+        'Everyone before you folds. You have K and T of the same suit on the Button. Calling costs 1 BB. Raising makes the price 3 BB total.',
     table: source.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
       tableFormat: Act0TableFormatV1.sixMax,
@@ -10264,7 +10284,7 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       const Act0TeachingStepV1(
         title: 'A new mechanical example.',
         body:
-            'Six players start with 100 BB before the 0.5/1 BB blinds, with no ante or rake. Preflop: UTG and HJ call 1 BB, CO folds, BTN calls 1 BB, SB adds 0.5 BB to 1 BB, BB checks: pot 5 BB. Flop: SB, BB and UTG check; HJ bets 2 BB. BTN next: pot 7 BB, call 2 BB; Raise 6 BB means 6 BB total.',
+            'HJ bets 2 BB after three checks. It is your turn. Calling costs 2 BB. Raising makes the price 6 BB total.',
         focusSeatIds: ['btn', 'hj'],
       ),
     ],
@@ -10286,7 +10306,10 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
         Act0ActionTrailItemV1(label: 'UTG checks'),
         Act0ActionTrailItemV1(label: 'HJ bets 2 BB'),
         // Current-decision instruction, not an executed betting action.
-        Act0ActionTrailItemV1.note(label: 'Hero acts'),
+        Act0ActionTrailItemV1.note(
+          label: 'Hero acts',
+          displayLabel: 'Your turn',
+        ),
       ],
       seats: [
         for (final seat in source.table.seats)
@@ -10339,7 +10362,7 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(Act0RunnerStateV1 source) {
   };
   return source.copyWith(
     caption:
-        'For this example, all six start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG, HJ and CO fold; BTN raises to 2 BB, SB folds and BB calls 1 BB more. On this flop BB checks; BTN acts next. The pot is 4.5 BB and no bet faces BTN.',
+        'BB checks on the flop. It is your turn and there is no bet to match.',
     table: source.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
       heroCards: cards,
@@ -10368,7 +10391,10 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(Act0RunnerStateV1 source) {
         Act0ActionTrailItemV1(label: 'CO folds'),
         Act0ActionTrailItemV1(label: 'BTN raises 2 BB'),
         Act0ActionTrailItemV1(label: 'SB folds'),
-        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(
+          label: 'BB calls 1 BB more',
+          displayLabel: 'BB calls 1 more, 2 total',
+        ),
         Act0ActionTrailItemV1(label: 'Flop: BB checks'),
       ],
       seats: [
@@ -10410,7 +10436,7 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
   };
   return source.copyWith(
     caption:
-        'For this example, all six start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG and CO folded. HJ, BTN, SB and BB each put in 1 BB preflop, then BB checked. On the flop SB and BB checked; HJ bet 1 BB. Pot 5 BB includes that bet. Raise 4 BB means a total flop wager of 4 BB.',
+        'HJ bets 1 BB on the flop. It is your turn. Raising makes the price 4 BB total.',
     table: source.table.copyWith(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
@@ -10426,7 +10452,10 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
         Act0ActionTrailItemV1(label: 'HJ calls 1 BB'),
         Act0ActionTrailItemV1(label: 'CO folds'),
         Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
-        Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+        Act0ActionTrailItemV1(
+          label: 'SB calls 0.5 BB more',
+          displayLabel: 'SB calls 0.5 more, 1 total',
+        ),
         Act0ActionTrailItemV1(label: 'BB checks'),
         Act0ActionTrailItemV1(label: 'Flop: SB checks'),
         Act0ActionTrailItemV1(label: 'Flop: BB checks'),
@@ -10501,7 +10530,7 @@ final _blindsOrderRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Action starts after BB.',
       body:
-          'If the big blind is 1 BB, then a 3 BB open means three times that price. Preflop, UTG is first to choose after the blinds post.',
+          'BB is a unit for chips. A bet of 3 BB is three times the big blind. UTG is first to choose before the flop.',
       focusSeatIds: <String>['utg', 'bb'],
       focusLabels: <String>['1 BB baseline', 'UTG first'],
     ),
@@ -10537,7 +10566,10 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
       Act0ActionTrailItemV1(label: 'HJ calls 1 BB'),
       Act0ActionTrailItemV1(label: 'CO calls 1 BB'),
       Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
-      Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+      Act0ActionTrailItemV1(
+        label: 'SB calls 0.5 BB more',
+        displayLabel: 'SB calls 0.5 more, 1 total',
+      ),
     ],
     if (flop) const Act0ActionTrailItemV1(label: 'BB checks'),
   ];
@@ -10586,10 +10618,10 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
       ),
   ];
   final context = flop
-      ? 'For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. Everyone matched 1 BB preflop and BB checked. Pot: 6 BB. All six have chips left and can act. No flop action yet. Consider only the initial clockwise pass.'
+      ? 'All six players are still in the hand. No one has acted on the flop yet. Read the first pass around the table.'
       : matched
-      ? 'For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG, HJ, CO and BTN called 1 BB; SB added 0.5 BB. No raise or fold. BB has not acted voluntarily. Everyone has 99 BB behind. Pot: 6 BB.'
-      : 'For this six-player hand, all start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posted 0.5 BB and BB posted 1 BB. No voluntary action yet. All six remain in the hand with chips behind. Pot: 1.5 BB.';
+      ? 'Everyone has matched 1 BB. The big blind has yet to choose an action.'
+      : 'The blinds have posted. No one has made a choice yet.';
   return source.copyWith(
     caption: context,
     question: question,
@@ -10599,7 +10631,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
         ? 'After the flop, count from the first live seat left of the button. BTN is last.'
         : 'Before the flop, start right after the big blind. BB is last.',
     feedbackReason: flop
-        ? 'In this initial postflop pass, with all six able to act, BTN is reached after SB, BB, UTG, HJ and CO.'
+        ? 'In the first pass after the flop, BTN comes after SB, BB, UTG, HJ and CO.'
         : matched
         ? 'After the five stated matches, BB has chips behind and has not acted voluntarily, so BB has the next option.'
         : 'In this six-seat preflop order, UTG acts before BTN.',
@@ -10647,7 +10679,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
       streetLabel: flop ? 'Flop' : 'Preflop',
       potLabel: matched ? 'Pot 6 BB' : 'Pot 1.5 BB',
       toCallLabel: '',
-      centerLabel: flop ? 'Initial postflop pass' : 'Initial preflop pass',
+      centerLabel: flop ? 'First pass on the flop' : 'Initial preflop pass',
       focusCalloutLabel: '',
       actionTrail: trail,
       activeSeatId: '',
@@ -10796,7 +10828,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Postflop order changes.',
+      title: 'Order after the flop.',
       body: 'After the flop, blinds act early and Button often acts last.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['BTN late'],
@@ -10810,15 +10842,15 @@ final _w3BtnLastPostflopRepairRunner = _postflopButtonActorRunner.copyWith(
   caption: 'Read the first pass after the flop.',
   hint: 'Trace one full round in the order shown.',
   feedbackTitle: 'BTN-last repaired.',
-  feedbackReason: 'Button acts after the blinds postflop in this hand.',
+  feedbackReason: 'Button acts after the blinds on the flop in this hand.',
   question: 'Which seat would end the first round of decisions after the flop?',
   options: _lastSeatAfterFlopChoices,
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Repair the postflop order.',
+      title: 'Read the order after the flop.',
       body: 'After the flop, Button is the late seat and acts last here.',
       focusSeatIds: <String>['btn'],
-      focusLabels: <String>['BTN acts last postflop'],
+      focusLabels: <String>['BTN acts last after the flop'],
     ),
   ],
 );
@@ -11221,7 +11253,7 @@ final _w3SixSeatsRecapRunner = _w3SixSeatsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too narrow.',
       feedbackReason:
-          'Button and blinds matter, but W3 needs all six seat names.',
+          'Count all six seats, including the three between the big blind and the Button.',
     ),
   ],
 );
@@ -11264,7 +11296,8 @@ final _latePositionRunner = _meetTableRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Late means more information.',
-      body: 'Late seats see more choices before they decide.',
+      body:
+          'Postflop means after the flop. The Button sees the other choices before it acts.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['Late seat'],
     ),
@@ -11276,7 +11309,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Hands are compared by their best five cards.',
   hint: 'A pair beats one high card.',
-  question: 'What does hero have here?',
+  question: 'What hand do you have here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'pair',
@@ -11285,7 +11318,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Pair',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Pair found.',
-      feedbackReason: 'Hero has a pair with the board.',
+      feedbackReason: 'You have a pair with the board.',
     ),
     Act0RunnerOptionV1(
       id: 'high_card',
@@ -11327,8 +11360,7 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'hand_ranking_intro',
   caption: 'Hand rank names describe made hands.',
-  hint:
-      'Start with the ladder: pair, two pair, trips, straight, flush, full house, quads, straight flush.',
+  hint: 'Start with high card, a pair, two pair, and three of a kind.',
   question: 'What do hand rankings compare?',
   feedbackTitle: 'Rankings compare hand strength.',
   feedbackReason: 'Hand rankings tell which made hand is stronger.',
@@ -11341,7 +11373,7 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Hand strength is the comparison.',
       feedbackReason:
-          'Rankings tell which made hand is stronger, such as a flush over a straight.',
+          'Rankings tell which made hand is stronger. A pair beats high card.',
     ),
     Act0RunnerOptionV1(
       id: 'seat_position',
@@ -11357,15 +11389,8 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Ranking ladder.',
       body:
-          'Hand names tell which made hand is stronger, all the way up to full house, quads, and straight flush.',
-      focusLabels: <String>[
-        'Pair',
-        'Two pair',
-        'Straight',
-        'Flush',
-        'Full house',
-        'Quads',
-      ],
+          'Learn the first four ranks in order: high card, a pair, two pair, and three of a kind.',
+      focusLabels: <String>['High card', 'Pair', 'Two pair', 'Three of a kind'],
     ),
   ],
 );
@@ -11373,7 +11398,7 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
 final _flushRankRunner = _readBoardRunner.copyWith(
   lessonId: 'flush_rank',
   lessonTitle: 'Hand rankings, on the table',
-  caption: 'Hero and the other player both show completed five-card hands.',
+  caption: 'You and the other player both show completed five-card hands.',
   hint: 'Compare the suit pattern and the rank sequence before choosing.',
   question: 'Which hand ranks higher?',
   options: const <Act0RunnerOptionV1>[
@@ -11433,7 +11458,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Flush means same suit.',
       body:
-          'Hero uses five hearts for a flush. the other player reaches a 7-8-9-T-J straight. This is an ace-high flush, not a royal flush, because the hearts do not run T-J-Q-K-A. Flushes rank above straights because they are rarer: roughly 5,100 combinations versus about 10,200.',
+          'You use five hearts for a flush. The other player reaches a 7-8-9-T-J straight. This is an ace-high flush, not a royal flush, because the hearts do not run T-J-Q-K-A. A flush ranks above a straight.',
       focusLabels: <String>[
         'Same suit',
         'Ace-high flush',
@@ -11449,7 +11474,7 @@ final _fullHouseRankRunner = _riverBoardRunner.copyWith(
   lessonTitle: 'Hand rankings, on the table',
   caption: 'A full house is three of one rank plus two of another.',
   hint: 'Trips plus a pair make a full house.',
-  question: 'What does hero have here?',
+  question: 'What hand do you have here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'full_house',
@@ -11459,7 +11484,7 @@ final _fullHouseRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Full house found.',
       feedbackReason:
-          'Hero uses A-A-A with 7-7, which makes a full house. That rank sits above a flush because the hand is stronger and rarer.',
+          'You use A-A-A with 7-7, which makes a full house. That rank sits above a flush because the hand is stronger and rarer.',
     ),
     Act0RunnerOptionV1(
       id: 'trips',
@@ -11469,7 +11494,7 @@ final _fullHouseRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One pair short.',
       feedbackReason:
-          'Trips are only part of the hand. Hero also has a pair of sevens, so the best five become a full house instead of bare trips.',
+          'You have three aces and a pair of sevens. Together they make a full house.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11499,7 +11524,7 @@ final _fullHouseRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Full house = trips plus pair.',
       body:
-          'The board gives Hero three aces, and Hero pocket sevens add the pair. That makes a full house, which outranks a flush.',
+          'The board gives you three aces, and your pocket sevens add the pair. That makes a full house, which outranks a flush.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
@@ -11517,7 +11542,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Four of a kind means all four cards of one rank.',
   hint: 'Look for all four queens.',
-  question: 'What does hero have here?',
+  question: 'What hand do you have here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'quads',
@@ -11527,7 +11552,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Quads spotted.',
       feedbackReason:
-          'Hero uses all four queens. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
+          'You use all four queens. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
     ),
     Act0RunnerOptionV1(
       id: 'full_house',
@@ -11537,7 +11562,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close on the ladder.',
       feedbackReason:
-          'A full house needs three of one rank and two of another. Here Hero has all four queens, so the hand is four of a kind.',
+          'A full house needs three of one rank and two of another. Here you have all four queens, so the hand is four of a kind.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11566,7 +11591,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Quads mean all four cards.',
       body:
-          'Hero uses Q-Q from hand and Q-Q from the board. All four queens count, so this hand outranks a full house.',
+          'You use Q-Q from hand and Q-Q from the board. All four queens count, so this hand outranks a full house.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
       focusLabels: <String>['Q-Q-Q-Q', 'Quads'],
     ),
@@ -11589,7 +11614,7 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Top of the ladder.',
       feedbackReason:
-          'Hero makes T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.',
+          'You make T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.',
     ),
     Act0RunnerOptionV1(
       id: 'ace_high_flush',
@@ -11629,7 +11654,7 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Royal flush is the ace-high straight flush.',
       body:
-          'Hero uses T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five suited cards also run in sequence to the ace.',
+          'You use T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five cards of one suit also run in sequence to the ace.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
@@ -11653,23 +11678,23 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_full_house',
-      label: 'Hero full house',
+      label: 'Your full house',
       isCorrect: true,
-      preferredLabel: 'Hero full house',
+      preferredLabel: 'Your full house',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct comparison.',
       feedbackReason:
-          'Hero makes A-A-A-7-7 for a full house. the other player has a heart flush, but a full house ranks above a flush.',
+          'You make A-A-A-7-7 for a full house. The other player has a heart flush, but a full house ranks above a flush.',
     ),
     Act0RunnerOptionV1(
       id: 'co_flush',
       label: 'Other player: flush',
       isCorrect: false,
-      preferredLabel: 'Hero full house',
+      preferredLabel: 'Your full house',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Strong hand, lower rank.',
       feedbackReason:
-          'the other player does make a flush, but Hero full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.',
+          'The other player does make a flush, but your full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11706,7 +11731,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare the full best five.',
       body:
-          'Hero uses A-A-A with 7-7 for a full house. the other player uses five hearts for a flush, but the full house is stronger because it ranks higher.',
+          'You use A-A-A with 7-7 for a full house. The other player uses five hearts for a flush, but the full house is stronger because it ranks higher.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -11728,23 +11753,23 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_quads',
-      label: 'Hero four of a kind',
+      label: 'Your four of a kind',
       isCorrect: true,
-      preferredLabel: 'Hero four of a kind',
+      preferredLabel: 'Your four of a kind',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Top hand found.',
       feedbackReason:
-          'Hero uses all four queens. the other player makes a full house with three sevens and two queens, but quads rank above a full house.',
+          'You use all four queens. The other player makes a full house with three sevens and two queens, but quads rank above a full house.',
     ),
     Act0RunnerOptionV1(
       id: 'co_full_house',
       label: 'Other player: full house',
       isCorrect: false,
-      preferredLabel: 'Hero four of a kind',
+      preferredLabel: 'Your four of a kind',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close on the ladder.',
       feedbackReason:
-          'the other player does make a full house, but Hero holds all four queens. Four of a kind outranks a full house at showdown.',
+          'The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house at showdown.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11781,7 +11806,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Quads outrank a full house.',
       body:
-          'Hero uses Q-Q-Q-Q with a seven kicker. the other player uses 7-7-7 with Q-Q for a full house, but four of a kind still wins.',
+          'You use Q-Q-Q-Q with a seven as the fifth card. The other player uses 7-7-7 with Q-Q for a full house, but four of a kind still wins.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
       focusLabels: <String>['Q-Q-Q-Q', 'Quads win'],
     ),
@@ -11797,23 +11822,23 @@ final _royalFlushVsFlushRunner = _riverBoardRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_royal_flush',
-      label: 'Hero royal flush',
+      label: 'Your royal flush',
       isCorrect: true,
-      preferredLabel: 'Hero royal flush',
+      preferredLabel: 'Your royal flush',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'Hero has the royal flush because the hearts run T-J-Q-K-A. the other player has only an ace-high flush, so Hero wins with the higher flush type.',
+          'You have the royal flush because the hearts run T-J-Q-K-A. The other player has only an ace-high flush, so you win with the higher flush type.',
     ),
     Act0RunnerOptionV1(
       id: 'co_ace_high_flush',
       label: 'Other player: ace-high flush',
       isCorrect: false,
-      preferredLabel: 'Hero royal flush',
+      preferredLabel: 'Your royal flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Same suit, different ceiling.',
       feedbackReason:
-          'the other player does make an ace-high flush, but the five hearts do not run to the ace in sequence. Hero straight flushes all the way to A, so it is the royal flush.',
+          'The other player does make an ace-high flush, but the five hearts do not run to the ace in sequence. You make a straight flush all the way to A, so it is the royal flush.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11850,7 +11875,7 @@ final _royalFlushVsFlushRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Royal flush is more than ace-high.',
       body:
-          'Hero uses T-J-Q-K-A in hearts. the other player also has five hearts, but only Hero connects the ranks all the way to the ace.',
+          'You use T-J-Q-K-A in hearts. The other player also has five hearts, but only you connect the ranks all the way to the ace.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
@@ -11878,7 +11903,7 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Two pair spotted.',
       feedbackReason:
-          'Count the matching ranks in the best five first: Hero makes two pair, and two pair outranks one pair.',
+          'Count the matching ranks in the best five first: you make two pair, and two pair outranks one pair.',
     ),
     Act0RunnerOptionV1(
       id: 'one_pair',
@@ -11888,7 +11913,7 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Very close.',
       feedbackReason:
-          'Count the matching ranks before judging the hand: one pair uses only one match, so it stays below Hero two pair in the best five.',
+          'Count the matching ranks before judging the hand: one pair uses only one match, so it stays below your two pair in the best five.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -11923,7 +11948,7 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Two pair uses two ranks.',
       body:
-          'Hero uses A with A and 7 with 7. the other player matches the J once, so Hero two pair is stronger than one pair.',
+          'You use A with A and 7 with 7. The other player matches the J once, so your two pair is stronger than one pair.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
       focusLabels: <String>['A + A', '7 + 7', 'Two pair'],
     ),
@@ -12017,7 +12042,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'hero_cards_only',
-      label: 'Hero cards only',
+      label: 'Your cards only',
       isCorrect: false,
       preferredLabel: 'Best hand',
       betterAnswerLabel: 'Best hand',
@@ -12035,7 +12060,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       'board_1',
       'board_3',
     ],
-    centerLabel: 'Hero pair of queens beats CO pair of jacks',
+    centerLabel: 'Your pair of queens beats CO’s pair of jacks',
     seats: _riverBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'co'
@@ -12058,7 +12083,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Showdown compares hands.',
       body:
-          'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Only these two hands are shown, so this compares just them.',
+          'Your best five are Q-Q-A-J-7. CO uses J-J-A-K-7. Your queens beat CO’s jacks.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -12066,7 +12091,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
         'board_1',
         'board_3',
       ],
-      focusLabels: <String>['Q-Q-A-J-7', 'Hero beats CO'],
+      focusLabels: <String>['Q-Q-A-J-7', 'You beat CO'],
     ),
   ],
 );
@@ -12404,8 +12429,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
   lessonId: 'w1_live_win_transfer',
   lessonTitle: 'What poker is',
   lessonSubtitle: 'Poker from Zero',
-  caption:
-      'Real table. Hero is BTN, blinds are posted, and the pot starts at 1.5 BB.',
+  caption: 'You are on the Button. The blinds have posted.',
   hint: 'After the first read, remember how this pot can still finish.',
   question: 'In this live hand, what can still decide the pot?',
   feedbackTitle: 'That is the live loop.',
@@ -12431,18 +12455,18 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more read.',
       feedbackReason:
-          'BTN tells you Hero acts late. The seat does not win the pot by itself.',
+          'The Button usually acts late. The hand still decides who wins.',
     ),
     Act0RunnerOptionV1(
       id: 'hero_cards_decide_now',
-      label: 'Hero cards decide it immediately',
+      label: 'Your cards decide it immediately',
       isCorrect: false,
       preferredLabel: 'A fold or a showdown',
       betterAnswerLabel: 'A fold or a showdown',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Partly right.',
       feedbackReason:
-          'Hero cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.',
+          'Your cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.',
     ),
   ],
   table: _tableObjectsRunner.table.copyWith(
@@ -12518,7 +12542,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'Your two cards are private. The board is shared. The pot is the chips in the middle. BB also measures chips. In hand examples, Hero means you.',
+          'Your two cards are private. The board is shared. The pot is the chips in the middle. BB also measures chips.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Your cards', 'Shared cards', 'Pot'],
       identityTeachingSemantics:
@@ -12862,7 +12886,7 @@ final _cardsRecapRunner = _bestFiveCardsRunner.copyWith(
   lessonId: 'cards_recap',
   caption: 'Lesson learned: cards have a job.',
   hint:
-      'Ranks compare strength, suits matter for flushes (five cards of one suit), board cards are shared.',
+      'A rank tells how high a card is. A suit is its symbol. Everyone can use the board.',
   question: 'How many cards make your final hand?',
   feedbackTitle: 'Card takeaway.',
   feedbackReason:
@@ -13234,7 +13258,8 @@ final _positionsRecapRunner = _positionsRunner.copyWith(
 final _tripsRankRunner = _riverBoardRunner.copyWith(
   lessonId: 'trips_rank',
   lessonTitle: 'Hand rankings, on the table',
-  caption: 'Trips and sets are three cards of one rank.',
+  caption:
+      'A set is three of a kind made from a pair in your private cards and one matching card on the board.',
   hint: 'Three of a kind beats two pair.',
   question: 'Which hand ranks higher?',
   options: const <Act0RunnerOptionV1>[
@@ -13312,7 +13337,8 @@ final _straightRankRunner = _riverBoardRunner.copyWith(
       preferredLabel: 'Five in a row',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
-      feedbackReason: 'Same suit makes a flush, not a straight.',
+      feedbackReason:
+          'Cards of one suit can have gaps. Look for five ranks in a row.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -13488,7 +13514,7 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Sometimes the board plays.',
       body:
-          'Hero and CO both use the same A-K-Q-J-T straight from the board here, so private cards do not improve either player.',
+          'You and CO both use the same A-K-Q-J-T straight from the board here, so private cards do not improve either player.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
@@ -13530,7 +13556,7 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Split means share.',
       body:
-          'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.',
+          'You and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.',
       focusLabels: <String>['Shown hands tie'],
     ),
   ],
@@ -14099,7 +14125,7 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
 
 final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w3_premium_bucket',
-  caption: 'Hero holds A♠ A♥ before the flop.',
+  caption: 'You hold A♠ A♥ before the flop.',
   hint: 'Start from the two-card strength before choosing the bucket.',
   question: 'Which bucket is AA?',
   options: const <Act0RunnerOptionV1>[
@@ -14453,7 +14479,7 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
   lessonId: 'w3_early_fold',
   lessonTitle: 'First-in open',
   lessonSubtitle: 'Preflop Basics',
-  caption: 'Unopened pot. Hero is early with J8o.',
+  caption: 'Unopened pot. You act early with J8o.',
   hint: 'Early position removes the comfort from weak offsuit hands.',
   question: 'By the Sharky starting chart, what is the clean action?',
   options: const <Act0RunnerOptionV1>[
@@ -14724,7 +14750,7 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
   lessonId: 'w3_playable_call',
   lessonTitle: 'Facing an open',
   lessonSubtitle: 'Preflop Basics',
-  caption: 'CO opened. Hero is BTN with KQo.',
+  caption: 'CO opened. You are BTN with KQo.',
   hint: 'Playable hand in position: call keeps the hand in.',
   question: 'By the Sharky starting chart, what is the simple response?',
   options: _kqoButtonFacingRaiseChoices,
@@ -14739,7 +14765,7 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Playable and in position.',
-      body: 'KQo can call a simple open when hero acts after CO.',
+      body: 'KQo can call a simple open when you act after CO.',
       focusSeatIds: <String>['co', 'btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['CO opens', 'BTN calls'],
@@ -14749,9 +14775,9 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
 
 final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w2_strong_continue_kqo',
-  caption: 'HJ opened. Hero is BTN with KQo.',
+  caption: 'HJ opened. You are BTN with KQo.',
   hint:
-      'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
+      'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves you in position with a playable broadway.',
   question:
       'By the Sharky starting chart, what is your decision in this model?',
   options: const <Act0RunnerOptionV1>[
@@ -14796,7 +14822,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
 
 final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w2_kqo_contrast',
-  caption: 'CO opened. Hero is BTN with KQo instead of A7o.',
+  caption: 'CO opened. You are BTN with KQo instead of A7o.',
   hint: 'Look for a shared rank, then compare the other card.',
   question: 'What is different about how these hands can be dominated?',
   options: const <Act0RunnerOptionV1>[
@@ -14837,7 +14863,7 @@ final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
 
 final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w2_borderline_continue_qjs',
-  caption: 'CO opened. Hero is BTN with QJs.',
+  caption: 'CO opened. You are BTN with QJs.',
   hint:
       'Playable suited broadways can continue, but the reason is still seat plus hand class.',
   question:
@@ -14900,7 +14926,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
 
 final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_cutoff_call_kqo',
-  caption: 'HJ opened. Hero is CO with KQo.',
+  caption: 'HJ opened. You are CO with KQo.',
   hint: 'Count which players have yet to respond to the opening raise.',
   question: 'Who still has to act after you on the first pass?',
   options: const [
@@ -14959,7 +14985,7 @@ final _world3WeakFacingFoldPressureRunner = _world3WeakFacingFoldRunner
 
 final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_position_btn_call_kjs',
-  caption: 'HJ opened. Hero is BTN with KJs.',
+  caption: 'HJ opened. You are BTN with KJs.',
   hint: 'Late position helps when the hand can still continue cleanly.',
   question: 'By the Sharky starting chart, what is the simple response?',
   options: const <Act0RunnerOptionV1>[
@@ -15166,7 +15192,7 @@ const _weakJackFacingRaiseChoices = <Act0RunnerOptionV1>[
 
 final _world3WeakFacingFoldRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_weak_facing_fold',
-  caption: 'CO opened. Hero is BTN with J8o.',
+  caption: 'CO opened. You are BTN with J8o.',
   hint: 'Position helps, but this hand is still too weak to continue.',
   question: 'By the Sharky starting chart, what is the clean response?',
   options: _weakJackFacingRaiseChoices,
@@ -15256,7 +15282,7 @@ const _additionalLateOpenChoices = <Act0RunnerOptionV1>[
 final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonId: 'w3_late_position_open',
   lessonTitle: 'Position preflop',
-  caption: 'Unopened pot. Hero is late with ATo.',
+  caption: 'Unopened pot. You act late with ATo.',
   hint: 'Late position supports a clean open with this playable hand.',
   question: 'By the Sharky starting chart, what is the simple action?',
   options: const <Act0RunnerOptionV1>[
@@ -15305,7 +15331,7 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
 final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
   lessonId: 'w3_position_not_free_pass',
   lessonTitle: 'Position preflop',
-  caption: 'Unopened pot. Hero is early with ATo.',
+  caption: 'Unopened pot. You act early with ATo.',
   hint: 'The same hand is less comfortable from early position.',
   question: 'By the Sharky starting chart, what is the disciplined action?',
   options: const <Act0RunnerOptionV1>[
@@ -15358,7 +15384,7 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
 
 final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
   lessonId: 'w3_hj_discipline_hold',
-  caption: 'Unopened pot. Hero is HJ with KTo.',
+  caption: 'Unopened pot. You are HJ with KTo.',
   hint:
       'Middle position still needs discipline when the offsuit hand gets loose.',
   options: const <Act0RunnerOptionV1>[
@@ -15419,7 +15445,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
 
 final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWith(
   lessonId: 'w3_checkpoint_early_fold_a9o',
-  caption: 'Unopened pot. Hero is UTG with A9o.',
+  caption: 'Unopened pot. You are UTG with A9o.',
   hint: 'A tempting ace still needs an early-seat discipline check.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -15761,7 +15787,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w3_table_position_notice',
   feedbackSignalId: 'players_behind',
-  caption: 'Real table. Hero is CO with QJs and three seats still act after.',
+  caption: 'Real table. You are CO with QJs and three seats still act after.',
   hint: 'Before choosing an action, notice what the seat order gives you.',
   question: 'What is the clean seat read here?',
   feedbackTitle: 'Seat read first.',
@@ -15787,7 +15813,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close call.',
       feedbackReason:
-          'Cutoff is late, but Button and the blinds still act after hero.',
+          'Cutoff is late, but Button and the blinds still act after you.',
     ),
     Act0RunnerOptionV1(
       id: 'late_free_pass',
@@ -15936,11 +15962,11 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
   lessonId: 'w3_repair_same_hand_different_seat',
   lessonTitle: 'Same hand, different seat',
   caption: 'Compare the two starting spots.',
-  hint: 'Look at who still acts after Hero before judging comfort.',
+  hint: 'Look at who still acts after you before judging comfort.',
   question: 'What changed most between the two frames?',
   feedbackTitle: 'Same-hand seat shift repaired.',
   feedbackReason:
-      'The cards stayed ATo. The seat changed who still acts after Hero, so the hand feels different.',
+      'The cards stayed ATo. The seat changed who still acts after you, so the hand feels different.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'seat_context',
@@ -15964,7 +15990,7 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Good spot to repair.',
       feedbackReason:
-          'The hand is still ATo. The missed signal is the seat and who still acts after Hero.',
+          'The hand is still ATo. The missed signal is the seat and who still acts after you.',
       repairFocusSeatIds: <String>['utg', 'co', 'btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Same hand', 'Players behind'],
@@ -15978,7 +16004,7 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Repair the table read.',
       feedbackReason:
-          'Position matters because it changes how many players still act after Hero.',
+          'Position matters because it changes how many players still act after you.',
       repairFocusSeatIds: <String>['utg', 'co', 'btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Same hand', 'Players behind'],
@@ -15996,7 +16022,10 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Frame 1: UTG has more behind'),
         Act0ActionTrailItemV1.note(label: 'Frame 2: CO has fewer behind'),
-        Act0ActionTrailItemV1.note(label: 'Hero compares seats'),
+        Act0ActionTrailItemV1.note(
+          label: 'Hero compares seats',
+          displayLabel: 'Compare the two seats',
+        ),
       ],
     ),
     heroSeatId: 'co',
@@ -16066,7 +16095,7 @@ const _weakAceFacingRaiseChoices = <Act0RunnerOptionV1>[
 final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
   lessonId: 'w3_dominated_fold',
   lessonTitle: 'Dominated hand warning',
-  caption: 'CO opened. Hero is BTN with A7o.',
+  caption: 'CO opened. You are BTN with A7o.',
   hint: 'This can be behind stronger aces, so folding is clean.',
   question: 'By the Sharky starting chart, what is the disciplined response?',
   options: _weakAceFacingRaiseChoices,
@@ -16231,7 +16260,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
   lessonId: 'w2_discipline_table_notice',
   lessonTitle: 'Hand discipline checkpoint',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Real table. Hero is HJ with J4o and the pot is unopened.',
+  caption: 'Real table. You are HJ with J4o and the pot is unopened.',
   hint: 'Use the bucket first before hope or curiosity shows up.',
   question: 'What is the clean discipline read?',
   feedbackTitle: 'Discipline read first.',
@@ -16307,7 +16336,7 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w1_strong_bucket',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Hero holds J♥ J♠ before the flop.',
+  caption: 'You hold J♥ J♠ before the flop.',
   hint: 'It is below the absolute top but does not need a perfect seat.',
   question: 'Which bucket is JJ?',
   options: const <Act0RunnerOptionV1>[
@@ -16367,7 +16396,7 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w1_medium_bucket',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Hero holds K♦ T♣ before the flop.',
+  caption: 'You hold K♦ T♣ before the flop.',
   hint: 'Two high unpaired cards can play, but seat and frame matter.',
   question: 'Which bucket is KTo?',
   options: const <Act0RunnerOptionV1>[
@@ -16427,7 +16456,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w2_borderline_bucket_qjs',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Hero holds Qs Js before the flop.',
+  caption: 'You hold Qs Js before the flop.',
   hint: 'Connected high cards can play, but they need position and frame.',
   question: 'Which bucket is QJs before context helps?',
   options: const <Act0RunnerOptionV1>[
@@ -16485,7 +16514,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonId: 'w1_medium_open',
   lessonTitle: 'Continue or let go',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'BTN. Pot unopened. Hero holds K♦ Q♣.',
+  caption: 'BTN. Pot unopened. You hold K♦ Q♣.',
   hint: 'Medium hand in the best seat. Raising is sharper than limping.',
   question: 'By the Sharky starting chart, what is the best first-in action?',
   table: _world3ButtonOpenRunner.table.copyWith(
@@ -16583,7 +16612,7 @@ final _w1DisciplineApplyEarlyFoldRunner = _world3EarlyFoldRunner.copyWith(
   lessonId: 'w1_apply_early_fold',
   lessonTitle: 'Discipline at the table',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'UTG. Pot unopened. Hero holds 8♠ 4♦.',
+  caption: 'UTG. Pot unopened. You hold 8♠ 4♦.',
   hint: 'Early position, weak bucket. Discipline says fold.',
   question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'Discipline holds.',
@@ -16620,7 +16649,7 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   lessonId: 'w1_apply_late_open',
   lessonTitle: 'Discipline at the table',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'BTN. Pot unopened. Hero holds A♠ J♦.',
+  caption: 'BTN. Pot unopened. You hold A♠ J♦.',
   hint: 'Late position, strong hand, no one entered. Clean open.',
   question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'Discipline confirms.',
@@ -16653,7 +16682,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
   lessonId: 'w1_apply_hj_medium',
   lessonTitle: 'Discipline at the table',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'HJ. Pot unopened. Hero holds K♦ Q♣.',
+  caption: 'HJ. Pot unopened. You hold K♦ Q♣.',
   hint: 'Medium hand, middle seat, unopened pot. Open with a clear reason.',
   question: 'By the Sharky starting chart, what is the clean action?',
   feedbackTitle: 'HJ open is clean.',
@@ -17341,7 +17370,8 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
       betterAnswerLabel: 'Bet half-pot',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Very close.',
-      feedbackReason: 'Checking lets villain see the next card for free.',
+      feedbackReason:
+          'Checking lets the other player see the next card for free.',
     ),
   ],
   table: _world4ProtectionIntroRunner.table.copyWith(
@@ -17367,7 +17397,8 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       preferredLabel: 'Free card',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
-      feedbackReason: 'Checking allowed villain to continue without paying.',
+      feedbackReason:
+          'Checking allowed the other player to continue without paying.',
     ),
     Act0RunnerOptionV1(
       id: 'made_pay',
@@ -17781,7 +17812,7 @@ final _world4SizingIntroRunner = _world4PurposeIntroRunner.copyWith(
 final _world4SmallBetRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_small_bet',
-  caption: 'Pot is 6 BB. Hero wants light pressure.',
+  caption: 'There are 6 BB in the pot.',
   hint: 'One-third pot is the smallest simple pressure size here.',
   question: 'Which size is one-third pot?',
   options: const <Act0RunnerOptionV1>[
@@ -17814,7 +17845,7 @@ final _world4SmallBetRunner = _world4SizingIntroRunner.copyWith(
 final _world4HalfPotRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_half_pot_bet',
-  caption: 'Pot is 6 BB. Hero wants the clean middle size.',
+  caption: 'There are 6 BB in the pot.',
   hint:
       'Half-pot means betting half the pot, not the smallest or biggest size.',
   question: 'Which size is half-pot?',

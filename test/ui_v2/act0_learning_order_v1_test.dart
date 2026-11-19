@@ -125,12 +125,12 @@ Set<String> _earlyUses() {
       read('${step.title} ${step.body}', canDefine: true);
       for (final action
           in step.table?.actionTrail ?? const <Act0ActionTrailItemV1>[]) {
-        read(action.label);
+        read(action.learnerLabel);
       }
     }
     read(runner.caption, canDefine: true);
     for (final action in runner.table.actionTrail) {
-      read(action.label);
+      read(action.learnerLabel);
     }
     read(runner.question, canDefine: true);
     if (runner.hintPolicy != Act0HintPolicyV1.hidden) read(runner.hint);
@@ -349,6 +349,45 @@ void main() {
       );
     });
   }
+
+  test('Foundation copy uses the learner name and plain hand facts', () {
+    final jargon = RegExp(
+      r'\b(?:hero|villain|w3|ante|antes|straddle|rake)\b',
+      caseSensitive: false,
+    );
+    final violations = <String>[];
+    for (final row in _route) {
+      final runner = row.task.runner;
+      final visible = <String>[
+        row.task.title,
+        runner.caption,
+        runner.hint,
+        runner.question,
+        runner.feedbackTitle,
+        runner.feedbackReason,
+        runner.table.centerLabel,
+        runner.table.focusCalloutLabel,
+        for (final item in runner.table.actionTrail) item.learnerLabel,
+        for (final step in runner.teachingSteps) ...[
+          step.title,
+          step.body,
+          ...step.focusLabels,
+          for (final item in step.table?.actionTrail ?? const [])
+            item.learnerLabel,
+        ],
+        for (final option in runner.options) ...[
+          option.label,
+          option.preferredLabel,
+          option.feedbackTitle,
+          option.feedbackReason,
+        ],
+      ];
+      for (final copy in visible.where(jargon.hasMatch)) {
+        violations.add('${row.task.taskId}: $copy');
+      }
+    }
+    expect(violations, isEmpty, reason: violations.join('\n'));
+  });
 
   guard('termsBeforeDefinition', _earlyUses);
   guard('exactRepeatsOutsideBudget', _exactRepeatViolations);

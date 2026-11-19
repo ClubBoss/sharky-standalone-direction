@@ -89,7 +89,7 @@ void main() {
           text: runner.teachingSteps.last.body,
           compact: true,
         ),
-        hasLength(3),
+        hasLength(2),
       );
       expect(
         act0AuditInstructionBlockV1(
@@ -135,6 +135,7 @@ void main() {
       ]);
       expect(table.actionTrail.last.isNote, isTrue);
       expect(table.actionTrail.last.label, 'Hero acts');
+      expect(table.actionTrail.last.learnerLabel, 'Your turn');
       expect(table.seats.where((s) => s.isInHand).length, 5);
       expect(table.seats.singleWhere((s) => s.isFolded).seatId, 'co');
       expect(table.seats.where((s) => s.bet != null).map((s) => s.seatId), [

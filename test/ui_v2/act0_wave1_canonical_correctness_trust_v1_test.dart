@@ -211,7 +211,7 @@ void main() {
     test('W3 model revisions keep five assessments anchored to current source', () {
       const expected = <String, String>{
         'same_hand_different_seat_same_hand_late_open':
-            '422e7fb3ee3883f617134a71da7331fddd447c4f8f44ab0e31aefba3367c1db3',
+            '489abaf807df0d67f1388b1ae275d0f427b56f58fe891c8afbd0f71d297ae416',
         'position_apply_late_open':
             'dfada935a04c5b0adbab820ff3fe43cb03f2674578875bd3331ddd10348c0268',
         'position_checkpoint_position_checkpoint_late_open':

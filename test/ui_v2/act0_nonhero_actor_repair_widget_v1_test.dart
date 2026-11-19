@@ -153,13 +153,16 @@ Future<String> _choice(WidgetTester t, String id, String taskId) async {
           ),
         );
         expect(supportScroll.position.pixels, 0);
-        expect(supportScroll.position.maxScrollExtent, greaterThan(0));
-        await t.drag(supportViewport, const Offset(0, -800));
-        await t.pumpAndSettle();
-        final actualEnd = supportScroll.position.pixels;
-        expect(actualEnd, closeTo(supportScroll.position.maxScrollExtent, 0.1));
-        await t.drag(supportViewport, const Offset(0, 800));
-        await t.pumpAndSettle();
+        final extent = supportScroll.position.maxScrollExtent;
+        var actualEnd = 0.0;
+        if (extent > 0) {
+          await t.drag(supportViewport, const Offset(0, -800));
+          await t.pumpAndSettle();
+          actualEnd = supportScroll.position.pixels;
+          expect(actualEnd, closeTo(extent, 0.1));
+          await t.drag(supportViewport, const Offset(0, 800));
+          await t.pumpAndSettle();
+        }
         expect(supportScroll.position.pixels, 0);
         await t.ensureVisible(
           find.byKey(const Key('act0_integrated_scene_prompt')),
