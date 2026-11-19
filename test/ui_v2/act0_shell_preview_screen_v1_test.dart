@@ -276,12 +276,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Learn route'), findsOneWidget);
-    expect(
-      find.text(
-        'This lesson teaches one table read: what each legal action means before you choose.',
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Hand rankings 1'), findsWidgets);
   });
 
   testWidgets('Wave 2 Learn fresh shows one current mission and one percent', (
@@ -304,7 +299,7 @@ void main() {
     final routeBoard = tester.widget<Text>(
       find.byKey(const Key('act0_shell_learn_route_board')),
     );
-    expect(routeBoard.data, '0 of 9 lessons');
+    expect(routeBoard.data, '0 of 10 lessons');
 
     await tester.tap(
       find.byKey(const Key('act0_shell_learn_v5_view_full_path')),
@@ -328,20 +323,20 @@ void main() {
     final journey = find.byKey(
       const Key('act0_shell_journey_preview_surface_v5'),
     );
-    expect(find.text('What poker is'), findsOneWidget);
+    expect(find.text('Cards, ranks & suits'), findsOneWidget);
     expect(
-      find.descendant(of: journey, matching: find.text('What poker is')),
+      find.descendant(of: journey, matching: find.text('Cards, ranks & suits')),
       findsNothing,
     );
     expect(
       find.descendant(of: journey, matching: find.text('First Table Guide')),
       findsOneWidget,
     );
-    expect(find.text('11%'), findsOneWidget);
+    expect(find.text('10%'), findsOneWidget);
     final routeBoard = tester.widget<Text>(
       find.byKey(const Key('act0_shell_learn_route_board')),
     );
-    expect(routeBoard.data, '1 of 9 lessons');
+    expect(routeBoard.data, '1 of 10 lessons');
     expect(
       find.byKey(const Key('act0_shell_current_mission_cta')),
       findsOneWidget,
@@ -358,8 +353,8 @@ void main() {
             .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
             .input;
         expect(input.earnedLessonCount, 4);
-        expect(input.courseLessonCount, 9);
-        expect(find.text('4 of 9 lessons complete'), findsOneWidget);
+        expect(input.courseLessonCount, 10);
+        expect(find.text('4 of 10 lessons complete'), findsOneWidget);
         expect(
           find.text(
             'Route proof is active. Next proof starts with one clean read.',
@@ -419,7 +414,7 @@ void main() {
 
     if (act0AcademyHomePreviewV1) {
       expect(find.text('First Table Guide'), findsOneWidget);
-      expect(find.text('0 of 9 lessons complete'), findsOneWidget);
+      expect(find.text('0 of 10 lessons complete'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_academy_home_leaf_next_card')),
         findsOneWidget,
@@ -433,7 +428,7 @@ void main() {
       expect(cta.hitTestable(), findsOneWidget);
     } else {
       expect(find.text('First Table Guide'), findsOneWidget);
-      expect(find.text('0 of 9 lessons complete'), findsOneWidget);
+      expect(find.text('0 of 10 lessons complete'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_home_daily_plan_card')),
         findsOneWidget,
@@ -454,9 +449,9 @@ void main() {
     );
 
     if (act0AcademyHomePreviewV1) {
-      expect(find.text('What poker is'), findsOneWidget);
-      expect(find.text('1 of 9 lessons complete'), findsOneWidget);
-      expect(find.text('11%'), findsOneWidget);
+      expect(find.text('Cards, ranks & suits'), findsOneWidget);
+      expect(find.text('1 of 10 lessons complete'), findsOneWidget);
+      expect(find.text('10%'), findsOneWidget);
       expect(
         tester
             .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
@@ -476,8 +471,8 @@ void main() {
         findsOneWidget,
       );
     } else {
-      expect(find.text('What poker is'), findsOneWidget);
-      expect(find.text('1 of 9 lessons complete'), findsOneWidget);
+      expect(find.text('Cards, ranks & suits'), findsOneWidget);
+      expect(find.text('1 of 10 lessons complete'), findsOneWidget);
       expect(
         find.text(
           'Route proof is active. Next proof starts with one clean read.',

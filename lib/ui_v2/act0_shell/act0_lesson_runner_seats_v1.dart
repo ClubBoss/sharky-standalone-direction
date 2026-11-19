@@ -1466,7 +1466,7 @@ class _ActionTrailV1State extends State<_ActionTrailV1> {
     final focusedIndex = items.isEmpty
         ? 0
         : _focusedIndex.clamp(0, visibleCount - 1);
-    final text = items.map((item) => item.label).join('  .  ');
+    final text = items.map((item) => item.learnerLabel).join('  .  ');
     if (!widget.isHandHistory) {
       return Text(
         'Table notes\n$text',
@@ -1965,7 +1965,7 @@ class _ActionTrailStepV1State extends State<_ActionTrailStepV1> {
               Text(
                 act0RuntimeLocalizedActionTrailLabelV1(
                   context,
-                  widget.item.label,
+                  widget.item.learnerLabel,
                 ),
                 key: Key('act0_shell_action_trail_step_label_${widget.index}'),
                 maxLines: 2,

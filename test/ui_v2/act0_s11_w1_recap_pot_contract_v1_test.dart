@@ -73,11 +73,14 @@ void main() {
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
-        final first = Act0ShellStateV1.sample.lessonById('what_poker_is');
         final lesson = Act0ShellStateV1.sample.lessonById(
           'what_poker_is_content',
         );
         final task = lesson.taskList.last;
+        final prerequisites = Act0ShellStateV1.sample
+            .worldById('world_1')
+            .lessons
+            .takeWhile((prior) => prior.lessonId != lesson.lessonId);
         // Representative deterministic entry fixture, not native/earned history.
         // No run IDs or graded records are injected. Learn Start owns those.
         SharedPreferences.setMockInitialValues({
@@ -86,12 +89,15 @@ void main() {
           _key: jsonEncode({
             'schemaVersion': 18,
             'completedTaskIds': [
-              ...first.taskList.map((t) => t.taskId),
+              for (final prior in prerequisites)
+                ...prior.taskList.map((t) => t.taskId),
               ...lesson.taskList
                   .take(lesson.taskList.length - 1)
                   .map((t) => t.taskId),
             ],
-            'completedLessonIds': [first.lessonId],
+            'completedLessonIds': prerequisites
+                .map((prior) => prior.lessonId)
+                .toList(),
             'selectedWorldId': 'world_1',
             'selectedLessonId': lesson.lessonId,
             'selectedTaskId': task.taskId,

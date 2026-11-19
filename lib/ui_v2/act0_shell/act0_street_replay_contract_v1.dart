@@ -1013,7 +1013,7 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     steps.add(
       Act0StreetReplayStepV1(
         street: activeStreet,
-        actionSummary: action,
+        actionSummary: table.actionTrail[index].displayLabel ?? action,
         actorLabel: parsedAction.actorLabel,
         actionTypeLabel: parsedAction.actionTypeLabel,
         amountLabel: parsedAction.amountLabel,

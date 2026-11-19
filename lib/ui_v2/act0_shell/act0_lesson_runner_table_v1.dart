@@ -1660,23 +1660,25 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ConstrainedBox(
-                    // Compact seats leave a fixed center lane between BB and HJ.
-                    // The full two-line label owns that lane; the decorative eye
-                    // did not, and was pushing the chip into both seat cards.
-                    constraints: BoxConstraints(maxWidth: compact ? 80 : 118),
-                    child: Text(
-                      label,
-                      key: const Key('act0_shell_wave1b_table_signal_text'),
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.visible,
-                      softWrap: true,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontSize: compact ? 8.8 : 9.6,
-                        fontWeight: FontWeight.w900,
-                        height: 1.0,
+                  Flexible(
+                    child: ConstrainedBox(
+                      // Compact seats leave a fixed center lane between BB and HJ.
+                      // The full two-line label owns that lane; the decorative eye
+                      // did not, and was pushing the chip into both seat cards.
+                      constraints: BoxConstraints(maxWidth: compact ? 80 : 118),
+                      child: Text(
+                        label,
+                        key: const Key('act0_shell_wave1b_table_signal_text'),
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: compact ? 8.8 : 9.6,
+                          fontWeight: FontWeight.w900,
+                          height: 1.0,
+                        ),
                       ),
                     ),
                   ),

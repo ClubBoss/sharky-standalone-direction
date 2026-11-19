@@ -156,7 +156,7 @@ void main() {
       expect(restored['completedLessonIds'], completed['completedLessonIds']);
       await _startLearnMission(tester);
       final nextLesson = Act0ShellStateV1.sample.lessonById(
-        'what_poker_is_content',
+        'cards_ranks_suits',
       );
       expect(_runner(tester).selectedTaskId, nextLesson.taskList.first.taskId);
       await _advanceTask(tester);

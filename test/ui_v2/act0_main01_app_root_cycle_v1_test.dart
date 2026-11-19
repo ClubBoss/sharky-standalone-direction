@@ -1512,7 +1512,7 @@ void main() {
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.taskList];
-    expect(lessons, hasLength(28));
+    expect(lessons, hasLength(29));
     expect(tasks, hasLength(181));
     expect(tasks.map((task) => task.taskId).toSet(), hasLength(181));
     expect(
@@ -1734,10 +1734,8 @@ void main() {
           expect(saved['skippedTaskIds'], isNot(contains(id)));
         }
         const offeredBody =
-            'Name the bet purpose first. '
-            'Value means worse hands can still call. '
-            'A bluff tries to make better hands fold. '
-            'Protection makes the next card cost money.';
+            'A value bet is a bet you expect weaker hands to call. '
+            'A bluff tries to make better hands fold.';
         final definition = find.textContaining(offeredBody);
         expect(definition, findsOneWidget);
         final paragraph = tester.renderObject<RenderParagraph>(definition);
@@ -1915,7 +1913,15 @@ void main() {
       completed['earnedXp'],
       tasks.fold<int>(0, (sum, task) => sum + task.rewardXp),
     );
-    expect(completed['studyObservations'], hasLength(28));
+    final studyObservations = (completed['studyObservations'] as List)
+        .cast<Map<String, dynamic>>();
+    expect(studyObservations, hasLength(28));
+    expect(
+      studyObservations
+          .where((row) => row['lessonId'] == 'blinds_action_order')
+          .map((row) => row['taskId']),
+      ['positions_theory', 'blinds_theory'],
+    );
     expect(w4OfferedSequenceTrace.map((row) => row['task_id']).toList(), [
       'w4_purpose_intro',
       'w4_value_purpose',

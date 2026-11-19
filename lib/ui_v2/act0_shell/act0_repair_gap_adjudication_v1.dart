@@ -372,7 +372,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'positions',
+    sourceLessonId: 'blinds_action_order',
     sourceTaskId: 'positions_utg',
     misconception: 'UTG seat identity',
     conceptErrorId: 'misread_table_position',
@@ -386,7 +386,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'positions',
+    sourceLessonId: 'blinds_action_order',
     sourceTaskId: 'positions_cutoff',
     misconception: 'cutoff seat identity',
     conceptErrorId: 'misread_table_position',
@@ -833,7 +833,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "top",
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
-        "707ca1e9b2c184a1b9530fc8afed3343e8500b125e7f9b50c5e04adaf9803023",
+        "6f4e0d177dc090a17254c82ca1fcd297fb01892d2e185a9ed1027aa689b2b92f",
     sourceQuestion:
         "Which label could change next hand while the player is still you?",
     sourceChoiceReason:
@@ -851,7 +851,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "random",
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
-        "707ca1e9b2c184a1b9530fc8afed3343e8500b125e7f9b50c5e04adaf9803023",
+        "6f4e0d177dc090a17254c82ca1fcd297fb01892d2e185a9ed1027aa689b2b92f",
     sourceQuestion:
         "Which label could change next hand while the player is still you?",
     sourceChoiceReason:
@@ -967,7 +967,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "first_actor",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "fa616bf2f5b020fdbdb30d40ce9f1ae7fc3db75b8b7ce0b1fac19fdcd1c30aa8",
+        "ae52e6735ebc72f283f320c6e26a6e704f9245991fb4c33395d311ac7cad1627",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_as_action_order",
     relationId: "selected_w1_038_first_actor_v1",
@@ -984,7 +984,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hero_cards_only",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "fa616bf2f5b020fdbdb30d40ce9f1ae7fc3db75b8b7ce0b1fac19fdcd1c30aa8",
+        "ae52e6735ebc72f283f320c6e26a6e704f9245991fb4c33395d311ac7cad1627",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_private_cards_only",
     relationId: "selected_w1_039_hero_cards_only_v1",
@@ -1289,12 +1289,12 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
-    sourceLessonId: "positions",
+    sourceLessonId: "blinds_action_order",
     sourceTaskId: "positions_utg",
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "48c22bd959c736e9e4b72a689af9386b4e9d3a9c4e960296d1b717d9599f7031",
+        "1ce4f6eb3bcc0523425e78425c7a59a1c95d4324ea22cba37913839e836bffb9",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is after UTG in this order.",
     sourceChoiceLabel: "HJ",
@@ -1302,10 +1302,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     misconceptionId: "utg_seat_read_as_hj",
     relationId: "w01_positions_utg_hj_intentional_exact_r1",
     targetWorldId: "world_1",
-    targetLessonId: "positions",
+    targetLessonId: "blinds_action_order",
     targetTaskId: "positions_utg",
     targetFingerprint:
-        "48c22bd959c736e9e4b72a689af9386b4e9d3a9c4e960296d1b717d9599f7031",
+        "1ce4f6eb3bcc0523425e78425c7a59a1c95d4324ea22cba37913839e836bffb9",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

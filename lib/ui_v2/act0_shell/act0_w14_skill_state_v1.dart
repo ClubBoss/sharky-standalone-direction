@@ -5,7 +5,7 @@ import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
 // Explicit curriculum ownership, independent of task-name substring guesses.
-// Every task in a lesson practices these topics; this is not a mastery score.
+// These are lesson topics; individual tasks can have a narrower topic.
 const act0W14LessonSkillsV1 = <String, List<String>>{
   'what_poker_is': ['Table sense'],
   'what_poker_is_content': ['Table sense'],
@@ -15,6 +15,7 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'blinds_action_order': ['Blind play', 'Table sense'],
   'positions': ['Position play'],
   'hand_rankings_table': ['Hand reading', 'Board reading'],
+  'hand_rankings_upper': ['Hand reading', 'Board reading'],
   'showdown_winning': ['Hand reading'],
   'hand_discipline_buckets': ['Hand reading', 'Betting decisions'],
   'fold_discipline': ['Hand reading', 'Betting decisions'],
@@ -35,6 +36,13 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'call_price': ['Betting decisions'],
   'small_half_pot': ['Betting decisions'],
   'price_checkpoint': ['Betting decisions'],
+};
+
+const _seatRecognitionTaskIds = {
+  'positions_theory',
+  'positions_button',
+  'positions_utg',
+  'positions_cutoff',
 };
 
 class Act0W14SkillStateV1 {
@@ -88,8 +96,12 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
     (world) => world.worldNumber >= 1 && world.worldNumber <= 4,
   )) {
     for (final lesson in world.lessons) {
-      final skills = act0W14LessonSkillsV1[lesson.lessonId] ?? const <String>[];
+      final lessonSkills =
+          act0W14LessonSkillsV1[lesson.lessonId] ?? const <String>[];
       for (final task in lesson.taskList) {
+        final skills = _seatRecognitionTaskIds.contains(task.taskId)
+            ? const ['Position play']
+            : lessonSkills;
         final key = identity(world.worldId, lesson.lessonId, task.taskId);
         taskSkills[key] = skills;
         for (final skill in skills) {

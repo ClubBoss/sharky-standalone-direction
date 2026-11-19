@@ -189,7 +189,7 @@ void main() {
         (
           task: taskFor(
             worldId: 'world_1',
-            lessonId: 'hand_rankings_table',
+            lessonId: 'hand_rankings_upper',
             taskId: 'hand_rankings_flush_drill',
           ),
           banned: <String>['flush beats straight'],
@@ -224,7 +224,7 @@ void main() {
             lessonId: 'hand_discipline_buckets',
             taskId: 'hand_discipline_buckets_trash',
           ),
-          banned: <String>['trash bucket'],
+          banned: <String>['trash bucket', 'weak bucket'],
         ),
         (
           task: taskFor(
@@ -283,7 +283,7 @@ void main() {
       expect(teachingText, contains('Premium'));
       expect(teachingText, contains('Strong'));
       expect(teachingText, contains('Medium'));
-      expect(teachingText, contains('Trash'));
+      expect(teachingText, contains('Weak'));
     });
 
     test(
@@ -442,7 +442,7 @@ void main() {
           for (final option in task.runner.options) {
             expect(option.feedbackReason, contains(hand), reason: task.taskId);
             expect(option.feedbackReason, contains(seat), reason: task.taskId);
-            expect(option.feedbackReason, contains('course baseline'));
+            expect(option.feedbackReason, contains('Sharky starting chart'));
             expect(option.feedbackReason, isNot(contains('J8o')));
             expect(
               option.feedbackReason,
@@ -638,7 +638,7 @@ void main() {
           expect(task.runner.question, parent.runner.question);
           expect(
             task.runner.question,
-            '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple action?',
+            'By the Sharky starting chart, what is the simple action?',
           );
           expect(task.runner.teachingSteps.single.title, 'Position checklist.');
           final historicalTask = Act0LessonTaskV1(
@@ -805,7 +805,7 @@ void main() {
           final prompt = find.byKey(const Key('act0_integrated_scene_prompt'));
           expect(
             tester.widget<Text>(prompt).data,
-            '6-max micro-stakes practice: assume opponents defend only with strong hands. What is the simple action?',
+            'By the Sharky starting chart, what is the simple action?',
           );
           final choice = find.byKey(Key('act0_shell_option_$choiceId'));
           expect(choice, findsOneWidget);

@@ -302,7 +302,10 @@ void main() {
     await tester.ensureVisible(full);
     await tester.tap(full);
     await tester.pumpAndSettle();
-    expect(find.text(task.runner.teachingSteps.first.body), findsWidgets);
+    expect(
+      find.byKey(const Key('act0_shell_theory_recall_body')),
+      findsOneWidget,
+    );
     await tester.tap(
       find.byKey(const Key('act0_shell_theory_recall_close_cta')),
     );

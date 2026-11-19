@@ -230,8 +230,8 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
     _debugFreshLearnerV1 = false;
     final state = widget.state ?? Act0ShellStateV1.sample;
     final world = state.worldById('world_1');
-    final completedLesson = _lessonById(world.lessons, 'what_poker_is');
-    final nextLesson = _lessonById(world.lessons, 'fold_check_call_raise');
+    final completedLesson = world.lessons.first;
+    final nextLesson = world.lessons[1];
     final completedTaskIds = completedLesson.taskList
         .map((task) => task.taskId)
         .toSet();

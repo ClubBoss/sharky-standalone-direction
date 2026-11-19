@@ -90,7 +90,15 @@ void main() {
       final records = <Act0LearningEvidenceRecordV1>[];
       for (var i = 0; i < _tasks.length; i++) {
         final source = _tasks[i];
-        final labels = act0W14LessonSkillsV1[source.lesson.lessonId]!;
+        final labels =
+            const {
+              'positions_theory',
+              'positions_button',
+              'positions_utg',
+              'positions_cutoff',
+            }.contains(source.task.taskId)
+            ? const ['Position play']
+            : act0W14LessonSkillsV1[source.lesson.lessonId]!;
         expect(labels, isNotEmpty, reason: source.task.taskId);
         final states = _states([_answer(i, i)]);
         expect(

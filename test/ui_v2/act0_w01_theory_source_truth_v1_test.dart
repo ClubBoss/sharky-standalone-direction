@@ -80,7 +80,8 @@ const _oldOrderFingerprints = <String, String>{
 
 void _explicitOrderFrameTests() {
   for (final entry in _oldOrderFingerprints.entries) {
-    final lesson = entry.key.startsWith('blinds_')
+    final lesson =
+        (entry.key.startsWith('blinds_') || entry.key == 'positions_utg')
         ? 'blinds_action_order'
         : 'positions';
     test(
@@ -531,7 +532,7 @@ void main() {
   });
   _explicitOrderFrameTests();
   test('W01 Button definition explains the marker for every choice', () {
-    final task = _task('positions', 'positions_theory');
+    final task = _task('blinds_action_order', 'positions_theory');
     expect(task.phase, Act0LessonPhaseV1.theory);
     expect(task.runner.options.map((option) => option.id), <String>[
       'top',

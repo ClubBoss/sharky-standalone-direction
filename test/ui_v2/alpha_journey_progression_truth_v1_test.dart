@@ -133,7 +133,7 @@ void main() {
       );
 
       await openLearn(tester);
-      expect(find.textContaining('0 of 9 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 10 lessons'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_current_mission_card')),
         findsOneWidget,
@@ -231,9 +231,7 @@ void main() {
       expect(runner.runner.phase, Act0LessonPhaseV1.drill);
       expect(runner.runner.lessonId, 'what_poker_is');
       expect(
-        find.textContaining(
-          'Which label could change next hand while the player is still you?',
-        ),
+        find.textContaining('Which cards belong to you alone?'),
         findsOneWidget,
       );
 
@@ -331,8 +329,8 @@ void main() {
       });
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('1 of 9 lessons'), findsOneWidget);
-      expect(find.text('What poker is'), findsWidgets);
+      expect(find.textContaining('1 of 10 lessons'), findsOneWidget);
+      expect(find.text('Cards, ranks & suits'), findsWidgets);
       await tester.tap(find.text('All lessons'));
       await tester.pumpAndSettle();
       final actionState = tester.widget<Text>(
@@ -364,7 +362,7 @@ void main() {
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
       expect(find.text('First Table Guide'), findsWidgets);
-      expect(find.textContaining('0 of 9 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 10 lessons'), findsOneWidget);
     },
   );
 
@@ -373,11 +371,11 @@ void main() {
     (tester) async {
       await seedValidActionPrecondition();
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('4 of 9 lessons'), findsOneWidget);
+      expect(find.textContaining('7 of 10 lessons'), findsOneWidget);
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_current_mission_card')),
-          matching: find.text('Fold, check, call, raise'),
+          matching: find.text('Actions and the price'),
         ),
         findsOneWidget,
       );

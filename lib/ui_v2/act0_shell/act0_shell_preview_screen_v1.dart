@@ -5347,7 +5347,7 @@ const _topicPackSpecsV1 = <_Act0TopicPackSpecV1>[
   ),
   _Act0TopicPackSpecV1(
     groupId: 'rankings',
-    lessonId: 'hand_rankings_table',
+    lessonId: 'hand_rankings_upper',
     taskId: 'hand_rankings_best_five_drill',
     title: 'Hand rankings',
     subtitle: 'Choose the best five cards on a real board.',
@@ -5486,6 +5486,7 @@ class _Act0PersistedProgressV1 {
     required this.selectedLessonId,
     required this.selectedTaskId,
     required this.earnedXp,
+    this.schemaVersion = 20,
     this.suppressLegacyRecheckAfterRecovery = false,
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
@@ -5524,6 +5525,7 @@ class _Act0PersistedProgressV1 {
     this.lastSessionLearnerState,
   });
 
+  final int schemaVersion;
   final Set<String> completedTaskIds;
   final Set<String> skippedTaskIds;
   final Set<String> completedLessonIds;
@@ -5667,27 +5669,8 @@ class _Act0PersistedProgressV1 {
         map['suppressLegacyRecheckAfterRecovery'] is! bool)
       return null;
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v17 as the shell snapshot evolves.
-    if (schemaVersion != 1 &&
-        schemaVersion != 2 &&
-        schemaVersion != 3 &&
-        schemaVersion != 4 &&
-        schemaVersion != 5 &&
-        schemaVersion != 6 &&
-        schemaVersion != 7 &&
-        schemaVersion != 8 &&
-        schemaVersion != 9 &&
-        schemaVersion != 10 &&
-        schemaVersion != 11 &&
-        schemaVersion != 12 &&
-        schemaVersion != 13 &&
-        schemaVersion != 14 &&
-        schemaVersion != 15 &&
-        schemaVersion != 16 &&
-        schemaVersion != 17 &&
-        schemaVersion != 18 &&
-        schemaVersion != 19 &&
-        schemaVersion != 20) {
+    // Accept v1-v20 as the shell snapshot evolves.
+    if (schemaVersion is! int || schemaVersion < 1 || schemaVersion > 20) {
       return null;
     }
     final pendingRaw = map['pendingDecisionAssistance'];
@@ -5841,6 +5824,7 @@ class _Act0PersistedProgressV1 {
       return null;
     }
     return _Act0PersistedProgressV1(
+      schemaVersion: schemaVersion,
       suppressLegacyRecheckAfterRecovery:
           map['suppressLegacyRecheckAfterRecovery'] == true,
       completedTaskIds: completedTaskIds,

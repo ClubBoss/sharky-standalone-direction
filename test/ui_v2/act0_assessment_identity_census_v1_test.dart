@@ -271,9 +271,157 @@ void main() {
         ["call", "Call", true, "correct", "Call"],
       ],
     };
+    // Reconstruct only the W1/W2 lesson moves and copy edits from P3.
+    const priorL1LessonIds = {
+      'hand_rankings_best_five_drill': 'hand_rankings_table',
+      'hand_rankings_flush_drill': 'hand_rankings_table',
+      'hand_rankings_full_house_drill': 'hand_rankings_table',
+      'hand_rankings_full_house_vs_flush_drill': 'hand_rankings_table',
+      'hand_rankings_quads_drill': 'hand_rankings_table',
+      'hand_rankings_quads_vs_full_house_drill': 'hand_rankings_table',
+      'hand_rankings_review': 'hand_rankings_table',
+      'hand_rankings_royal_flush_drill': 'hand_rankings_table',
+      'hand_rankings_royal_vs_flush_drill': 'hand_rankings_table',
+      'hand_rankings_straight_drill': 'hand_rankings_table',
+      'positions_button': 'positions',
+      'positions_cutoff': 'positions',
+      'positions_theory': 'positions',
+      'positions_utg': 'positions',
+      'showdown_kicker_drill': 'showdown_winning',
+    };
+    const priorL1TeachingOptions = {
+      'what_poker_is_theory': [
+        ["top", "UTG", false, "wrong", "BTN (your seat)"],
+        ["random", "BB", false, "wrong", "BTN (your seat)"],
+        ["bottom", "BTN (your seat)", true, "correct", "BTN (your seat)"],
+      ],
+      'what_poker_is_find_hero': [
+        ["top", "You", false, "wrong", "BTN"],
+        ["bottom", "BTN", true, "correct", "BTN"],
+        ["random", "Your private cards", false, "wrong", "BTN"],
+      ],
+      'first_table_guide_one_clear_choice': [
+        [
+          "co_still_acting",
+          "CO still has to act before you at BTN",
+          false,
+          "suboptimal",
+          "You are BTN, blinds are posted, and no board is out yet",
+        ],
+        [
+          "hero_btn_preflop_setup",
+          "You are BTN, blinds are posted, and no board is out yet",
+          true,
+          "correct",
+          "You are BTN, blinds are posted, and no board is out yet",
+        ],
+        [
+          "hero_has_no_cards",
+          "Blinds are posted, but You at BTN have no cards",
+          false,
+          "wrong",
+          "You are BTN, blinds are posted, and no board is out yet",
+        ],
+      ],
+      'your_first_hand_showdown': [
+        ["first_actor", "First actor", false, "wrong", "Best hand"],
+        [
+          "hero_cards_only",
+          "Hero cards only",
+          false,
+          "suboptimal",
+          "Best hand",
+        ],
+        ["best_hand", "Best hand", true, "correct", "Best hand"],
+      ],
+      'hand_rankings_theory': [
+        ["hand_strength", "Hand strength", true, "correct", "Hand strength"],
+        ["seat_position", "Seat position", false, "wrong", "Hand strength"],
+      ],
+      'hand_rankings_full_house_vs_flush_drill': [
+        ["co_flush", "CO flush", false, "wrong", "Hero full house"],
+        [
+          "hero_full_house",
+          "Hero full house",
+          true,
+          "correct",
+          "Hero full house",
+        ],
+      ],
+      'hand_rankings_quads_vs_full_house_drill': [
+        [
+          "hero_quads",
+          "Hero four of a kind",
+          true,
+          "correct",
+          "Hero four of a kind",
+        ],
+        [
+          "co_full_house",
+          "CO full house",
+          false,
+          "wrong",
+          "Hero four of a kind",
+        ],
+      ],
+      'hand_rankings_royal_vs_flush_drill': [
+        [
+          "co_ace_high_flush",
+          "CO ace-high flush",
+          false,
+          "wrong",
+          "Hero royal flush",
+        ],
+        [
+          "hero_royal_flush",
+          "Hero royal flush",
+          true,
+          "correct",
+          "Hero royal flush",
+        ],
+      ],
+      'hand_discipline_buckets_medium': [
+        ["strong", "Strong", false, "wrong", "Medium"],
+        ["trash", "Trash", false, "wrong", "Medium"],
+        ["medium", "Medium", true, "correct", "Medium"],
+      ],
+      'hand_discipline_buckets_trash': [
+        ["strong", "Strong", false, "wrong", "Trash"],
+        ["trash", "Trash", true, "correct", "Trash"],
+      ],
+      'hand_discipline_buckets_borderline': [
+        ["strong", "Strong", false, "suboptimal", "Medium"],
+        ["medium", "Medium", true, "correct", "Medium"],
+        ["trash", "Trash", false, "wrong", "Medium"],
+      ],
+      'discipline_checkpoint_checkpoint_table_discipline': [
+        [
+          "trash_fold",
+          "Trash bucket, clean fold",
+          true,
+          "correct",
+          "Trash bucket, clean fold",
+        ],
+        [
+          "looks_fun_open",
+          "Open too loose",
+          false,
+          "wrong",
+          "Trash bucket, clean fold",
+        ],
+        [
+          "maybe_limp",
+          "Limp the trash hand",
+          false,
+          "suboptimal",
+          "Trash bucket, clean fold",
+        ],
+      ],
+    };
     final beforeL1 = jsonDecode(encoded) as List<dynamic>;
     for (final row in beforeL1.cast<List<dynamic>>()) {
-      final options = priorL1Options[row[2]];
+      row[1] = priorL1LessonIds[row[2]] ?? row[1];
+      final options = priorL1Options[row[2]] ?? priorL1TeachingOptions[row[2]];
       if (options != null) row[5] = options;
     }
     var beforeCopyEdits = jsonEncode(beforeL1);

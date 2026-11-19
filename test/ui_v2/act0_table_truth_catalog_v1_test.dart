@@ -231,6 +231,17 @@ void main() {
         'repairLabels': <String>[],
       },
     ];
+    final firstTableOptions =
+        (expectedComparison['first_table_guide_one_clear_choice']
+                as Map<String, dynamic>)['options']
+            as List;
+    for (final option in firstTableOptions.cast<Map<String, dynamic>>()) {
+      option['repairLabels'] = const [
+        'Your cards',
+        'Shared cards',
+        'Board space',
+      ];
+    }
     final context = historicalComparison[contextTaskId] as Map<String, dynamic>;
     expect(expectedComparison[contextTaskId], <String, Object?>{
       'rewardXp': 12,
