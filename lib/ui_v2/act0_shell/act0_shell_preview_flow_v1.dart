@@ -424,11 +424,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     UiSoundV1.fire(
       option.isCorrect ? UiSoundEventV1.success : UiSoundEventV1.error,
     );
-    unawaited(
-      UiHapticsV1.fire(
-        option.isCorrect ? UiHapticEventV1.success : UiHapticEventV1.error,
-      ),
-    );
+    unawaited(UiHapticsV1.fire(UiHapticEventV1.answer));
   }
 
   void _fireBlockCompletionEffects(Act0BlockCompletionSummaryV1 summary) {
