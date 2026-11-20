@@ -873,7 +873,7 @@ void main() {
         ),
       ]) {
     testWidgets(
-      'SIMULATED held ${source.task} remains visible after a saved remount',
+      'SIMULATED ${source.task} rehearsal is available after a saved remount',
       (tester) async {
         tester.view.physicalSize = const Size(393, 852);
         tester.view.devicePixelRatio = 1;
@@ -998,14 +998,15 @@ void main() {
           await _w24Tap(tester, 'act0_shell_option_${source.choice}');
         }
         final saved = await _w24Saved(tester, disk);
-        void expectHeld(Map<String, dynamic> payload) {
+        void expectSavedMiss(Map<String, dynamic> payload) {
           final queue = Act0MultiRepairQueueV1.tryParse(
             payload['multiRepairQueue'],
           );
           final intent = queue.entries.single.repairIntent;
           expect(intent.sourceTaskId, source.task);
           expect(intent.choiceId, source.choice);
-          expect(intent.mappingType, 'unresolved_product_gap');
+          expect(intent.mappingType, 'intentional_exact');
+          expect(intent.targetTaskId, source.task);
           expect(intent.repairOccurrenceId, isNotEmpty);
           final history = _w24History(payload);
           final miss = history.provenanceRecords.singleWhere(
@@ -1018,24 +1019,14 @@ void main() {
           expect(payload['repairOutcomeProjection'], isEmpty);
         }
 
-        expectHeld(saved);
+        expectSavedMiss(saved);
         final remounted = await _w24Remount(tester, disk);
-        expectHeld(remounted);
+        expectSavedMiss(remounted);
         await tester.tap(find.text('Review').last);
         await tester.pumpAndSettle();
-        expect(
-          find.text('Matching repair not confirmed · miss saved'),
-          findsWidgets,
-        );
         await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
-        expect(
-          find.text(
-            'This miss is saved. A matching repair has not been confirmed yet.',
-          ),
-          findsOneWidget,
-        );
-        expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
-        expectHeld(await _w24Saved(tester, disk));
+        expect(_w24Runner(tester).selectedTaskId, source.task);
+        expectSavedMiss(await _w24Saved(tester, disk));
         expect(tester.takeException(), isNull);
       },
     );

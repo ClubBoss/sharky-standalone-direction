@@ -27,8 +27,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(369));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(369));
+    expect(tasks, hasLength(370));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(370));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -91,7 +91,19 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(369));
+    expect(entries, hasLength(370));
+    const boardRepair = 'first_table_guide_shared_cards_repair';
+    expect(entries.singleWhere((row) => row[2] == boardRepair), [
+      'world_1',
+      'what_poker_is',
+      boardRepair,
+      'drill',
+      'fixMistakes',
+      [
+        ['board', 'Board cards', true, 'correct', 'Board cards'],
+        ['private', 'Private cards', false, 'wrong', 'Board cards'],
+      ],
+    ]);
     final newEntries = entries
         .where((row) => _asm05NewTaskIds.contains(row[2]))
         .toList(growable: false);
@@ -120,7 +132,9 @@ void main() {
       ],
     ]);
     final legacyEntries = entries
-        .where((row) => !_asm05NewTaskIds.contains(row[2]))
+        .where(
+          (row) => !_asm05NewTaskIds.contains(row[2]) && row[2] != boardRepair,
+        )
         .toList(growable: false);
     expect(legacyEntries, hasLength(367));
     final encoded = jsonEncode(legacyEntries);
@@ -647,6 +661,47 @@ void main() {
       ],
     };
     final beforeL1 = jsonDecode(encoded) as List<dynamic>;
+    final beforeP8 = {
+      for (final row in beforeL1.cast<List<dynamic>>())
+        row[2] as String: (row[5] as List).cast<List<dynamic>>(),
+    };
+    for (final taskId in [
+      'your_first_hand_showdown',
+      'showdown_best_hand_drill',
+    ]) {
+      final wrong = beforeP8[taskId]!.singleWhere(
+        (row) => row[0] == 'hero_cards_only',
+      );
+      expect(wrong[2], isFalse);
+      expect(wrong[3], 'wrong');
+      wrong[3] = 'suboptimal';
+    }
+    final bestFive = beforeP8['hand_rankings_best_five_drill']!;
+    expect(bestFive, [
+      ['five', 'Four', true, 'correct', 'Four'],
+      ['seven', 'Jack', false, 'wrong', 'Four'],
+    ]);
+    bestFive[0][1] = 'Five';
+    bestFive[0][4] = 'Five';
+    bestFive[1][1] = 'Seven';
+    bestFive[1][4] = 'Five';
+    final trips = beforeP8['hand_rankings_trips_drill']!;
+    final threeOfAKind = trips.singleWhere((row) => row[0] == 'trips');
+    expect(threeOfAKind[1], 'Three of a kind');
+    threeOfAKind[1] = 'Trips';
+    for (final choice in trips) {
+      expect(choice[4], 'Three of a kind');
+      choice[4] = 'Trips';
+    }
+    final fullHouseTrips = beforeP8['hand_rankings_full_house_drill']!
+        .singleWhere((choice) => choice[0] == 'trips');
+    expect(fullHouseTrips[1], 'Three of a kind');
+    fullHouseTrips[1] = 'Trips';
+    final stack = beforeP8['what_poker_is_matched_chips_transfer']!.singleWhere(
+      (row) => row[0] == 'entire_covering_stack',
+    );
+    expect(stack[1], "The other player's whole 100 BB stack");
+    stack[1] = 'All 100 BB from the covering stack';
     const l2OptionDeltas = {
       'w6_value_range_action': (
         [
@@ -890,7 +945,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(369));
+    expect(taskIndex, hasLength(370));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

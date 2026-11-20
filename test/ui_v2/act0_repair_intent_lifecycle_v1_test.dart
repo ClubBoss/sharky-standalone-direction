@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -76,18 +75,9 @@ void main() {
     expect(intent?['sourceTaskId'], 'actions_raise_drill');
     expect(intent?['choiceId'], 'call');
     expect(intent?['result'], 'incorrect');
-    // This choice has no validated repair target, so the intent says so
-    // instead of inventing one (repair goal contracts, 2026-11-17).
-    expect(
-      act0RepairGoalContractForSourceV1(
-        worldId: 'world_1',
-        lessonId: 'fold_check_call_raise',
-        taskId: 'actions_raise_drill',
-        choiceId: 'call',
-      )?.hasValidatedTarget,
-      isNot(isTrue),
-    );
-    expect(intent?['mappingType'], 'unresolved_product_gap');
+    expect(intent?['mappingType'], 'intentional_exact');
+    expect(intent?['goalId'], 'exercise/actions_raise_drill');
+    expect(intent?['targetTaskId'], 'actions_raise_drill');
     expect(_openRepairIntentCount(tester), 1);
   });
 

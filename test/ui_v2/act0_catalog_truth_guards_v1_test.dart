@@ -21,6 +21,32 @@ const _sourcePath = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const _json = JsonEncoder.withIndent('  ');
 
+CatalogTask _catalogRow(String id) =>
+    catalogTasks.singleWhere((row) => row.task.taskId == id);
+
+CatalogTask _withRunner(
+  CatalogTask row,
+  Act0RunnerStateV1 runner, {
+  String? id,
+}) {
+  final task = row.task;
+  return (
+    world: row.world,
+    lesson: row.lesson,
+    lessonIndex: row.lessonIndex,
+    task: Act0LessonTaskV1(
+      taskId: id ?? task.taskId,
+      title: task.title,
+      phase: task.phase,
+      runner: runner,
+      rewardXp: task.rewardXp,
+      stepKind: task.stepKind,
+      taskFamily: task.taskFamily,
+      repairOnly: task.repairOnly,
+    ),
+  );
+}
+
 void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
   final log = Platform.environment['G1_REPORT_DIR'];
   if (log != null) {
@@ -162,6 +188,160 @@ void main() {
     },
   );
 
+  group('G1 rejects changed catalog rows', () {
+    test('G1·5 a paraphrase still repeats the same seat-order exercise', () {
+      final original = _catalogRow('blinds_postflop_button');
+      final duplicate = _withRunner(
+        original,
+        original.task.runner.copyWith(
+          question: 'Which seat acts latest after the flop?',
+        ),
+        id: 'duplicate_order',
+      );
+      final audit = runCatalogAudit(rows: [original, duplicate]);
+      expect(
+        audit.findings,
+        contains('5.semantic_repeat|duplicate_order|question'),
+      );
+    });
+
+    test('G1·6 answer seat in focus and a synonymous board cue', () {
+      final seat = _catalogRow('blinds_postflop_button');
+      final correctSeat = seat.task.runner.options
+          .singleWhere(act0RunnerOptionIsAuthoredCorrectV1)
+          .seatId!;
+      final highlighted = _withRunner(
+        seat,
+        seat.task.runner.copyWith(
+          table: seat.task.runner.table.copyWith(
+            highlightedSeatIds: [correctSeat],
+          ),
+        ),
+      );
+      final board = _catalogRow('cards_ranks_suits_private_board');
+      final revealed = _withRunner(
+        board,
+        board.task.runner.copyWith(
+          caption: '',
+          table: board.task.runner.table.copyWith(centerLabel: 'Shared board'),
+        ),
+      );
+      final audit = runCatalogAudit(rows: [highlighted, revealed]);
+      expect(
+        audit.findings,
+        contains('6.authored_seat_cue|${seat.task.taskId}|$correctSeat'),
+      );
+      expect(
+        audit.findings,
+        contains('6.answer_copy|${board.task.taskId}|center'),
+      );
+    });
+
+    test('G1·6 comparative captions cannot state the seat order', () {
+      final row = _catalogRow('button_advantage_button_vs_cutoff');
+      for (final caption in [
+        'CO is late, but BTN still acts after CO.',
+        'The cutoff goes before the button.',
+      ]) {
+        final revealed = _withRunner(
+          row,
+          row.task.runner.copyWith(caption: caption),
+        );
+        expect(
+          runCatalogAudit(rows: [revealed]).findings,
+          contains('6.answer_copy|${row.task.taskId}|caption'),
+        );
+      }
+      expect(
+        runCatalogAudit(rows: [row]).findings,
+        isNot(contains('6.answer_copy|${row.task.taskId}|caption')),
+      );
+    });
+
+    test('G1·7 tap targets contain an extra seat', () {
+      final row = _catalogRow('blinds_postflop_button');
+      final runner = row.task.runner;
+      final choices = runner.options.map((choice) => choice.seatId!).toSet();
+      final extra = runner.table.seats.firstWhere(
+        (seat) => !choices.contains(seat.seatId),
+      );
+      final mutated = _withRunner(
+        row,
+        runner.copyWith(
+          table: runner.table.copyWith(
+            selectableSeatIds: [...choices, extra.seatId],
+          ),
+        ),
+      );
+      expect(
+        runCatalogAudit(rows: [mutated]).findings,
+        contains('7.selectable_seats|${row.task.taskId}|table'),
+      );
+    });
+
+    test('G1·8 flop without cards and an absent highlighted card', () {
+      final row = _catalogRow('blinds_postflop_button');
+      final runner = row.task.runner;
+      final mutated = _withRunner(
+        row,
+        runner.copyWith(
+          table: runner.table.copyWith(
+            boardCards: const [],
+            highlightedCardIds: const ['board_2'],
+          ),
+        ),
+      );
+      final findings = runCatalogAudit(rows: [mutated]).findings;
+      expect(
+        findings,
+        contains('8.street_board_count|${row.task.taskId}|table'),
+      );
+      expect(
+        findings,
+        contains('8.card_focus_exists|${row.task.taskId}|board_2'),
+      );
+    });
+
+    test('G1·9 a different hand inherits a context-specific reason', () {
+      final source = _catalogRow('continue_or_let_go_premium_continue');
+      final target = _catalogRow('discipline_checkpoint_checkpoint_premium');
+      const wrongReason = 'This hand is a pocket pair of queens.';
+      final audit = runCatalogAudit(
+        rows: [
+          _withRunner(
+            source,
+            source.task.runner.copyWith(feedbackReason: wrongReason),
+          ),
+          _withRunner(
+            target,
+            target.task.runner.copyWith(feedbackReason: wrongReason),
+          ),
+        ],
+      );
+      expect(
+        audit.findings,
+        contains('9.inherited_copy|${target.task.taskId}|feedback'),
+      );
+    });
+
+    test('G1·10 a valid repair placed after its source is rejected', () {
+      final source = _catalogRow('button_advantage_find_button');
+      final target = _catalogRow(
+        'position_six_seats_position_repair_seat_id_btn',
+      );
+      final laterTarget = (
+        world: target.world,
+        lesson: target.lesson,
+        lessonIndex: source.lessonIndex + 1,
+        task: target.task,
+      );
+      expect(
+        runCatalogAudit(rows: [source, laterTarget]).findings,
+        contains('10.repair_order|${source.task.taskId}|co'),
+      );
+    });
+  });
+
   test('catalog truth debt admits only recorded findings', () {
     final audit = runCatalogAudit();
     auditCatalogReachability(File(_sourcePath).readAsStringSync(), audit);
@@ -170,6 +350,54 @@ void main() {
     expect(audit.checks['4.reachability'], greaterThan(300));
     _verifyBaseline(audit, 'source', 'source');
   });
+
+  testWidgets(
+    'first-lesson rehearsal and standalone choice hide the board answer',
+    (tester) async {
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      for (final id in [
+        'first_table_guide_shared_cards_repair',
+        'cards_ranks_suits_private_board',
+      ]) {
+        final row = _catalogRow(id);
+        final runner = row.task.runner;
+        await tester.pumpWidget(
+          MaterialApp(
+            key: ValueKey(id),
+            locale: const Locale('en'),
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: runner.copyWith(
+                  phase: row.task.entryPhase,
+                  teachingStepIndex: runner.teachingSteps.length,
+                ),
+                worldNumber: 1,
+                selectedWorldId: row.world.worldId,
+                selectedLessonId: row.lesson.lessonId,
+                selectedTaskId: id,
+                selectedTaskTitle: row.task.title,
+                selectedTaskFamily: row.task.resolvedTaskFamily,
+                compositionFamily: row.task.resolvedCompositionFamily,
+                tablePresentation: row.task.tablePresentation,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await pumpSourceChoreographyToDecisionV1(tester, runner.table);
+        expect(find.text('Which cards can everyone use?'), findsWidgets);
+        expect(find.text('Board cards'), findsOneWidget);
+        expect(find.text('Shared board', findRichText: true), findsNothing);
+        expect(tester.takeException(), isNull, reason: id);
+      }
+    },
+  );
 
   testWidgets('rendered pre-choice seat cues and controls', (tester) async {
     tester.view.physicalSize = const Size(393, 852);
@@ -223,6 +451,23 @@ void main() {
         answer,
         focus.isEmpty,
         'The pre-choice Runner marks the answer seat: $focus.',
+      );
+      final support = find.byKey(const Key('act0_learning_scene_v3_support'));
+      final captions = tester
+          .widgetList<Text>(support)
+          .map((text) => text.data ?? '');
+      if (task.taskId == 'button_advantage_button_vs_cutoff') {
+        expect(support, findsOneWidget);
+        final bounds = tester.getRect(support);
+        expect(bounds.height, greaterThan(0));
+        expect((Offset.zero & const Size(393, 852)).overlaps(bounds), isTrue);
+      }
+      audit.check(
+        '6.rendered_seat_order_copy',
+        row,
+        'caption',
+        !captions.any((caption) => revealsComparativeSeatOrder(row, caption)),
+        'The visible pre-choice caption discloses the seat order: $captions.',
       );
       final tapIds = [
         for (final seat in r.table.seats)

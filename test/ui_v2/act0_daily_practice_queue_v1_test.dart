@@ -46,7 +46,7 @@ void main() {
           count++;
         }
       }
-      expect(count, 124);
+      expect(count, 125);
     },
   );
 

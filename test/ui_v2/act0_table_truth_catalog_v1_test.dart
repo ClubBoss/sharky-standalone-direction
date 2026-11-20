@@ -373,14 +373,35 @@ void main() {
         ];
       }
     }
-    // P7 classifies a false showdown outcome as wrong.
-    final showdownRecap =
-        expectedComparison['showdown_review'] as Map<String, dynamic>;
-    final winChoice = (showdownRecap['options'] as List)
-        .cast<Map<String, dynamic>>()
-        .singleWhere((choice) => choice['id'] == 'hero_cards_only');
-    expect(winChoice['quality'], 'suboptimal');
-    winChoice['quality'] = 'wrong';
+    // P7–P8 classify false showdown outcomes and incomplete best fives as wrong.
+    for (final id in [
+      'showdown_review',
+      'your_first_hand_showdown',
+      'showdown_best_hand_drill',
+    ]) {
+      final showdown = expectedComparison[id] as Map<String, dynamic>;
+      final winChoice = (showdown['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((choice) => choice['id'] == 'hero_cards_only');
+      expect(winChoice['quality'], 'suboptimal');
+      winChoice['quality'] = 'wrong';
+    }
+    expectedComparison['first_table_guide_shared_cards_repair'] = {
+      'rewardXp': 0,
+      'family': 'repair',
+      'options': [
+        for (final id in ['board', 'private'])
+          {
+            'id': id,
+            'correct': id == 'board',
+            'quality': id == 'board' ? 'correct' : 'wrong',
+            'seat': null,
+            'repairSeats': <String>[],
+            'repairCards': <String>[],
+            'repairLabels': <String>[],
+          },
+      ],
+    };
     // P7 aligns the KQo call cue with the chart. Seat and card focus stay pinned.
     final mediumOpen =
         expectedComparison['continue_or_let_go_medium_open']

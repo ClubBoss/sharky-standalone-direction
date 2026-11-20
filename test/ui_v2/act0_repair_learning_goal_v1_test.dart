@@ -904,7 +904,7 @@ void main() {
 
   for (final source in _bad) {
     test(
-      '${source.task}/${source.choice}: missing goal proof holds the real miss',
+      '${source.task}/${source.choice}: familiar repair is available with a current witness',
       () {
         final intent = _intent(source);
         final history = _history(intent);
@@ -913,15 +913,23 @@ void main() {
           learningEvidence: history,
           currentFingerprintForIdentity: _fingerprint,
         );
-        expect(goal.isHeld, isTrue);
-        expect(goal.canLaunch, isFalse);
+        expect(goal.isHeld, isFalse);
+        expect(goal.canLaunch, isTrue);
+        expect(
+          act0RepairGoalResolutionForIntentV1(
+            intent,
+            learningEvidence: const Act0LearningEvidenceHistoryV1(),
+            currentFingerprintForIdentity: _fingerprint,
+          ).canLaunch,
+          isFalse,
+        );
         expect(goal.canClaimIndependentApplication, isFalse);
         final expectedGoal = source.world == 'world_2'
             ? 'starting_hand_premium_bucket'
             : source.world == 'world_4'
             ? 'half_pot_fraction'
             : source.task == 'what_poker_is_find_hero'
-            ? 'player_identity_and_seat_role'
+            ? 'shared_board_vs_private_cards'
             : 'showdown_best_five';
         expect(goal.goalId, expectedGoal);
         final resolution = Act0QueueResolutionStateV1.fromSources(
@@ -945,8 +953,8 @@ void main() {
           currentFingerprintForIdentity: _fingerprint,
         );
         expect(practice.items, hasLength(1));
-        expect(practice.items.single.launchTarget.isLaunchable, isFalse);
-        expect(practice.items.single.launchRequest, isNull);
+        expect(practice.items.single.launchTarget.isLaunchable, isTrue);
+        expect(practice.items.single.launchRequest, isNotNull);
       },
     );
   }

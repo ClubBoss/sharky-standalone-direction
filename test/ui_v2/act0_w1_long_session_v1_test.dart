@@ -185,6 +185,74 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets('P8 keeps progress earned before the full hand moved', (
+    tester,
+  ) async {
+    const earlierLessons = [
+      'what_poker_is',
+      'cards_ranks_suits',
+      'hand_rankings_table',
+      'hand_rankings_upper',
+      'your_first_hand',
+    ];
+    final world = Act0ShellStateV1.sample.worldById('world_1');
+    final completed = [
+      for (final lesson in world.lessons)
+        if (earlierLessons.contains(lesson.lessonId)) ...lesson.courseTaskList,
+    ];
+    final completedIds = completed.map((task) => task.taskId).toList();
+    final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_welcome_completed_v1': true,
+      'intake_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 20,
+        'pendingDecisionAssistance': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+        'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+            .lineagePayload(),
+        'durableRetentionHistory': <Object>[],
+        'completedTaskIds': completedIds,
+        'completedLessonIds': earlierLessons,
+        'skippedTaskIds': <String>[],
+        'earnedXp': xp,
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'your_first_hand',
+        'selectedTaskId': 'your_first_hand_recap',
+      }),
+    });
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await _mount(tester);
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+    await tester.pumpAndSettle();
+    expect(
+      await _tapFirst(
+        tester,
+        _continueKeys.map((key) => find.byKey(Key(key))).toList(),
+      ),
+      isTrue,
+      reason: tester
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data)
+          .whereType<String>()
+          .take(25)
+          .join(' | '),
+    );
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'blinds_action_order');
+    final saved = await _saved(tester);
+    expect(saved['completedTaskIds'], unorderedEquals(completedIds));
+    expect(saved['earnedXp'], xp);
+    expect(saved['skippedTaskIds'], isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('W9 long inline history keeps the current decision playable', (
     t,
   ) async {
@@ -282,6 +350,7 @@ void main() {
         step < (fullRoute ? 5200 : 3600) && !complete;
         step++
       ) {
+        Map<String, dynamic>? routeSnapshot;
         final runnerFinder = find.byType(Act0LessonRunnerShellV1);
         if (runnerFinder.evaluate().isNotEmpty) {
           final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
@@ -398,22 +467,74 @@ void main() {
             continue;
           }
         } else {
-          final snapshot = await _saved(t);
-          final completed = (snapshot['completedTaskIds'] as List)
+          routeSnapshot = await _saved(t);
+          final completed = (routeSnapshot['completedTaskIds'] as List)
               .cast<String>()
               .toSet();
           complete = completed.containsAll(taskWorld.keys);
           if (complete) break;
         }
-        final moved = await _tapFirst(t, [
+        // The summary can promote a saved review above the course route.
+        // This traversal follows the map once the in-lesson retry is done.
+        var moved = await _tapFirst(t, [
+          if (find.text('Practice this clue').evaluate().isNotEmpty)
+            find.byKey(const Key('act0_shell_block_summary_map_cta')),
           find.byKey(const Key('act0_shell_theory_continue_cta')),
           for (final key in _continueKeys) find.byKey(Key(key)),
         ]);
+        final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
+        final levels = find.byKey(const Key('act0_shell_levels_menu_button'));
+        if (!moved &&
+            find
+                .byKey(const Key('act0_academy_review_leaf'))
+                .evaluate()
+                .isNotEmpty) {
+          await _tapFirst(t, [find.text('Learn').last]);
+        }
+        if (!moved && levels.evaluate().isNotEmpty) {
+          routeSnapshot ??= await _saved(t);
+          final completed = (routeSnapshot['completedTaskIds'] as List)
+              .cast<String>()
+              .toSet();
+          final nextWorld = taskWorld.entries
+              .firstWhere((entry) => !completed.contains(entry.key))
+              .value;
+          // A summary can open the map of the world just completed. Choose
+          // the next unlocked world using the same menu a learner uses.
+          if (routeSnapshot['selectedWorldId'] != 'world_$nextWorld') {
+            expect(await _tapFirst(t, [levels]), isTrue);
+            final world = find.byKey(Key('act0_shell_world_$nextWorld'));
+            if (world.evaluate().isEmpty) {
+              await t.scrollUntilVisible(
+                world,
+                250,
+                scrollable: find.descendant(
+                  of: find.byKey(const Key('act0_shell_worlds_content_scroll')),
+                  matching: find.byType(Scrollable),
+                ),
+              );
+            }
+            expect(
+              await _tapFirst(t, [world]),
+              isTrue,
+              reason: 'The level menu should offer W$nextWorld',
+            );
+          }
+          moved = await _tapFirst(t, [mission]);
+        }
+        final visible = moved
+            ? ''
+            : t
+                  .widgetList<Text>(find.byType(Text))
+                  .map((widget) => widget.data)
+                  .whereType<String>()
+                  .take(18)
+                  .join(' | ');
         expect(
           moved,
           isTrue,
           reason:
-              'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}',
+              'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}; visible: $visible',
         );
       }
       final snapshot = await _saved(t);
