@@ -4,6 +4,8 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
+const act0SkillMapLastWorldV1 = 12;
+
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
 const act0W14LessonSkillsV1 = <String, List<String>>{
@@ -38,11 +40,61 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'price_checkpoint': ['Betting decisions'],
 };
 
-const _seatRecognitionTaskIds = {
-  'positions_theory',
-  'positions_button',
-  'positions_utg',
-  'positions_cutoff',
+const _extensionLessonSkills = <String, List<String>>{
+  'board_texture_basics': ['Board reading'],
+  'connected_boards': ['Board reading'],
+  'flush_draws': ['Board reading'],
+  'straight_draws': ['Board reading'],
+  'outs_improvement': ['Board reading'],
+  'turn_river_changes': ['Board reading'],
+  'range_bucket_basics': ['Range reading'],
+  'range_board_fit': ['Range reading'],
+  'range_pressure_lines': ['Range reading'],
+  'range_combo_counts': ['Range reading'],
+  'range_thinking_checkpoint': ['Range reading'],
+  'range_thinking_lite_combo_density': ['Range reading'],
+  'effective_stack_basics': ['Stack decisions'],
+  'same_hand_different_depth': ['Stack decisions'],
+  'spr_and_commitment': ['Stack decisions'],
+  'format_pressure': ['Position play'],
+  'survival_pressure_basics': ['Tournament decisions'],
+  'm_ratio_zones_lite': ['Tournament decisions'],
+  'bubble_risk_premium': ['Tournament decisions'],
+  'tournament_pressure_checkpoint': ['Tournament decisions'],
+  'player_type_basics': ['Player adjustment'],
+  'adjust_one_lever': ['Player adjustment'],
+  'exploit_guardrails': ['Player adjustment'],
+  'player_adjustment_checkpoint': ['Player adjustment'],
+  'session_plan_basics': ['Session routine'],
+  'table_trigger_reads': ['Session routine'],
+  'post_session_review_loop': ['Session routine'],
+  'real_play_transfer_checkpoint': ['Session routine'],
+  'decision_over_outcome': ['Mental game'],
+  'tilt_reset_protocol': ['Mental game'],
+  'confidence_and_discipline': ['Mental game'],
+  'mindset_bridge_checkpoint': ['Mental game'],
+};
+
+const _skillOverridesByTaskId = <String, List<String>>{
+  'positions_theory': ['Position play'],
+  'positions_button': ['Position play'],
+  'positions_utg': ['Position play'],
+  'positions_cutoff': ['Position play'],
+  'w7_format_table_notice': ['Stack decisions'],
+  'w7_stack_checkpoint': ['Stack decisions'],
+  'outs_improvement_w5_table_outs_flush_transfer': [
+    'Board reading',
+    'Betting decisions',
+  ],
+  'outs_improvement_w5_table_outs_straight_transfer': [
+    'Board reading',
+    'Betting decisions',
+  ],
+  'w11_trigger_small_price_continue': ['Session routine', 'Betting decisions'],
+  'w11_trigger_bad_price_fold': ['Session routine', 'Betting decisions'],
+  'asm05_new_known_holes_turn_call_10': ['Betting decisions'],
+  'asm05_new_known_holes_turn_call_40': ['Betting decisions'],
+  'w12_pretty_hand_bad_price_fold': ['Mental game', 'Betting decisions'],
 };
 
 class Act0W14SkillStateV1 {
@@ -93,15 +145,16 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
   String identity(String world, String lesson, String task) =>
       jsonEncode([world, lesson, task]);
   for (final world in worlds.where(
-    (world) => world.worldNumber >= 1 && world.worldNumber <= 4,
+    (world) =>
+        world.worldNumber >= 1 && world.worldNumber <= act0SkillMapLastWorldV1,
   )) {
     for (final lesson in world.lessons) {
       final lessonSkills =
-          act0W14LessonSkillsV1[lesson.lessonId] ?? const <String>[];
+          act0W14LessonSkillsV1[lesson.lessonId] ??
+          _extensionLessonSkills[lesson.lessonId] ??
+          const <String>[];
       for (final task in lesson.taskList) {
-        final skills = _seatRecognitionTaskIds.contains(task.taskId)
-            ? const ['Position play']
-            : lessonSkills;
+        final skills = _skillOverridesByTaskId[task.taskId] ?? lessonSkills;
         final key = identity(world.worldId, lesson.lessonId, task.taskId);
         taskSkills[key] = skills;
         for (final skill in skills) {

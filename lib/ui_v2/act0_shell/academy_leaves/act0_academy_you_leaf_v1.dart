@@ -227,7 +227,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                   iconColor: _muted,
                   collapsedIconColor: _muted,
                   expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-                  title: const Text('Skills · W1–W4'),
+                  title: const Text('Skills · W1–W$act0SkillMapLastWorldV1'),
                   subtitle: Text(
                     input.checkedW1Topics.isNotEmpty
                         ? 'W1 skipped by rules check'

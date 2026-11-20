@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_components_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 
 /// Loading state of the persisted preferences the caller owns
 /// (`AppSettingsService.instance.load()` in the accepted runtime).
@@ -62,10 +60,11 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
 
   final Act0AcademySettingsLeafInputV1 input;
 
-  static const _text = Act0ClubNightTokensV1.text;
-  static const _muted = Act0ClubNightTokensV1.text2;
-  static const _brass = Act0ClubNightTokensV1.brass;
-  static const _rule = Act0ClubNightTokensV1.hairline;
+  static const _text = Act0AcademyLeafPaletteV1.text;
+  static const _muted = Act0AcademyLeafPaletteV1.textMuted;
+  static const _aqua = Act0AcademyLeafPaletteV1.aqua;
+  static const _rule = Act0AcademyLeafPaletteV1.rule;
+  static const _gold = Color(0xFFE4BB68);
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +74,7 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
           'Sound effects',
           input.soundDetail,
           Act0AcademyLeafGlyphKindV1.sound,
+          color: const Color(0xFF86C9F5),
           trailing: Switch(
             key: const Key('act0_academy_settings_leaf_sound'),
             value: input.soundEnabled,
@@ -135,6 +135,7 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
           'Check your starting world',
           Act0AcademyLeafGlyphKindV1.placement,
           key: const Key('act0_academy_settings_leaf_placement'),
+          color: _gold,
           onTap: input.onRetakePlacement,
         ),
     ];
@@ -145,8 +146,6 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
           'Erase learning history, recovery copies and preferences',
           Act0AcademyLeafGlyphKindV1.privacy,
           key: const Key('act0_settings_delete_local_data'),
-          color: Act0ClubNightTokensV1.mistake,
-          titleColor: Act0ClubNightTokensV1.mistake,
           onTap: input.onDeleteLocalData,
         ),
       if (input.onOpenPrivacy != null)
@@ -171,23 +170,52 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
     final Widget body = switch (input.loadState) {
       Act0AcademySettingsLoadStateV1.loading => const Center(
         key: Key('act0_academy_settings_leaf_loading'),
-        child: CircularProgressIndicator(color: _brass),
+        child: CircularProgressIndicator(color: _aqua),
       ),
       Act0AcademySettingsLoadStateV1.failed => Center(
         child: TextButton(
           key: const Key('act0_academy_settings_leaf_retry'),
           onPressed: input.onRetryLoad,
-          style: TextButton.styleFrom(foregroundColor: _brass),
+          style: TextButton.styleFrom(foregroundColor: _aqua),
           child: const Text('Could not load preferences. Retry'),
         ),
       ),
       Act0AcademySettingsLoadStateV1.ready => ListView(
         key: const Key('act0_academy_settings_leaf_scroll'),
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+        padding: const EdgeInsets.fromLTRB(23, 18, 23, 24),
         children: [
-          Text(
+          const Text(
+            'YOUR EXPERIENCE',
+            style: TextStyle(
+              color: _aqua,
+              fontSize: 10,
+              letterSpacing: 2.2,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: 'Make Sharky\n'),
+                TextSpan(
+                  text: 'feel right.',
+                  style: TextStyle(color: _gold),
+                ),
+              ],
+            ),
+            style: TextStyle(
+              color: _text,
+              fontSize: 36,
+              height: 1.08,
+              letterSpacing: -1.3,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
             'A few choices for a focused learning experience.',
-            style: Act0ClubNightTokensV1.secondary,
+            style: TextStyle(color: _muted, fontSize: 13, height: 1.45),
           ),
           if (feel.isNotEmpty) ...[_label('FEEL & FEEDBACK'), _group(feel)],
           if (learning.isNotEmpty) ...[
@@ -205,50 +233,44 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
                 'Preferences are saved on this device.',
                 key: Key('act0_academy_settings_leaf_saved_note'),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Act0ClubNightTokensV1.caption,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: _muted, fontSize: 11),
               ),
             ),
         ],
       ),
     };
 
-    // Club Night switches: brass when on, raised when off.
+    // Donor #315 switch styling (aqua/teal), scoped to this leaf.
     final themed = Theme.of(context).copyWith(
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? Act0ClubNightTokensV1.onBrass
-              : Act0ClubNightTokensV1.text2,
-        ),
+        thumbColor: WidgetStateProperty.all(Colors.white),
         trackColor: WidgetStateProperty.resolveWith(
           (s) => s.contains(WidgetState.selected)
-              ? _brass
-              : Act0ClubNightTokensV1.raised,
+              ? const Color(0xFF1BBFB2)
+              : const Color(0xFF345354),
         ),
         trackOutlineColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? _brass
-              : Act0ClubNightTokensV1.hairlineStrong,
+          (s) => s.contains(WidgetState.selected) ? _aqua : _rule,
         ),
       ),
     );
-    return Theme(
-      data: themed,
-      child: Act0ClubTextScaleV1(child: _frame(body)),
-    );
+    return Theme(data: themed, child: _frame(body));
   }
 
   Widget _frame(Widget body) {
     return DecoratedBox(
       key: const Key('act0_academy_settings_leaf'),
-      decoration: const BoxDecoration(color: Act0ClubNightTokensV1.wall),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color(0xFF03282A), Color(0xFF001719), Color(0xFF001113)],
+        ),
+      ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 20, 8),
+            padding: const EdgeInsets.fromLTRB(18, 0, 23, 6),
             child: Row(
               children: [
                 if (input.onBack != null) ...[
@@ -260,22 +282,25 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
                       quarterTurns: 2,
                       child: Act0AcademyLeafGlyphV1(
                         kind: Act0AcademyLeafGlyphKindV1.forward,
-                        color: _brass,
+                        color: _muted,
                       ),
                     ),
                     style: IconButton.styleFrom(
+                      backgroundColor: const Color(0xFF0A2A2C),
                       minimumSize: const Size(44, 44),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13),
+                        side: const BorderSide(color: _rule),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 12),
                 ],
                 const Text(
                   'Settings',
                   style: TextStyle(
                     color: _text,
-                    fontSize: 28,
-                    height: 34 / 28,
-                    letterSpacing: -0.4,
+                    fontSize: 21,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -289,17 +314,25 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
   }
 
   Widget _label(String text) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-    child: Text(text, style: Act0ClubNightTokensV1.sectionLabel),
+    padding: const EdgeInsets.fromLTRB(4, 24, 4, 10),
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: _muted,
+        fontSize: 10,
+        letterSpacing: 2,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
   );
 
   Widget _group(List<Widget> rows) => Material(
     // Material surface so row ink is painted above the group colour.
-    color: Act0ClubNightTokensV1.surface,
+    color: const Color(0xCC0A2A2C),
     clipBehavior: Clip.antiAlias,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(Act0ClubNightTokensV1.radiusGroup),
-      side: Act0ClubNightTokensV1.cardBorder,
+      borderRadius: BorderRadius.circular(18),
+      side: const BorderSide(color: _rule),
     ),
     child: Column(
       children: [
@@ -317,8 +350,7 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
     String subtitle,
     Act0AcademyLeafGlyphKindV1 glyph, {
     Key? key,
-    Color color = Act0ClubNightTokensV1.text2,
-    Color titleColor = _text,
+    Color color = _aqua,
     Widget? trailing,
     VoidCallback? onTap,
   }) {
@@ -334,15 +366,17 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: titleColor,
-                    fontSize: 17,
-                    height: 22 / 17,
-                    fontWeight: FontWeight.w400,
+                  style: const TextStyle(
+                    color: _text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 3),
-                Text(subtitle, style: Act0ClubNightTokensV1.captionStyle),
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: _muted, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -351,7 +385,7 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
           else if (onTap != null)
             const Act0AcademyLeafGlyphV1(
               kind: Act0AcademyLeafGlyphKindV1.forward,
-              color: Act0ClubNightTokensV1.caption,
+              color: _muted,
               size: 18,
             ),
         ],

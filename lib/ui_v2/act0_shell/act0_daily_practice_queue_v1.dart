@@ -1,3 +1,5 @@
+const act0DailyPracticeLastWorldV1 = 12;
+
 /// A finite short set, separate from the day's activity goal and repair debt.
 class Act0DailyPracticeQueueV1 {
   const Act0DailyPracticeQueueV1({
