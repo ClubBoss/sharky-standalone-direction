@@ -1026,9 +1026,7 @@ void main() {
         expect(find.text('Mistake saved for another try'), findsWidgets);
         await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
         expect(
-          find.text(
-            'This mistake is saved. You can try it again when you’re ready.',
-          ),
+          find.text('This mistake is saved. Its practice is on hold.'),
           findsOneWidget,
         );
         expect(find.byType(Act0LessonRunnerShellV1), findsNothing);

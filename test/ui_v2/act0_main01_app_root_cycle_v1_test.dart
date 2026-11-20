@@ -1029,9 +1029,7 @@ void main() {
       await _tap(tester, 'act0_academy_home_leaf_cta');
       expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
       expect(
-        find.text(
-          'This mistake is saved. You can try it again when you’re ready.',
-        ),
+        find.text('This mistake is saved. Its practice is on hold.'),
         findsOneWidget,
       );
       final held = await _saved(tester);
