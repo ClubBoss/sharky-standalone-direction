@@ -205,8 +205,8 @@ Master Plan v5 и остальные документы в `docs/` — спра�
 | PKR-01.b | выполнен | Table Truth D1 (актор и очерёдность): все строки W5–W12 PASS (`act0_table_truth_catalog_v1_test`) |
 | PKR-02.b | выполнен | A10: минимальная ставка и рейз W1–W12, `act0_bet_rules_w14_v1_test` |
 | PKR-03.b | выполнен | Table Truth D4/D6: улицы и борд W5–W12 PASS. Полная история раздачи не сертифицирована в 183 заданиях — это HST (1.4), не порядок улиц |
-| PKR-04.b | частично | Банк и вклады не противоречат столу, но доказать банк по вкладам нельзя в 179 из 188 заданий: нет полного учёта вкладов и анте (Table Truth `D2.pot_feasibility` = NEEDS_SOURCE_CONTEXT; в W1–W4 так же у 77 заданий) → C1 |
-| PKR-05.b | частично | Цена колла проверена, но в 19 заданиях W5–W12 нет полных ставок текущей улицы (`D3.to_call_completeness`) → C1 |
+| PKR-04.b | частично | По вкладам подтверждены 104 банка W5–W12. Остались пять раздач с неполной историей улиц, перечисленные ниже (Table Truth D2). |
+| PKR-05.b | частично | По вкладам и стеку подтверждены 28 цен W5–W12, включая 0 BB после чека W10. В баббл-задаче W9 нужен остаток стека BTN для ограничения цены (Table Truth D3). |
 | PKR-06.b | выполнен | A10: стеки, all-in, side pot W1–W12, `act0_bet_rules_w14_v1_test`; side pot в 6 заданиях W5–W12 |
 | ASM-02.b | частично | Структура оценок W5–W12: ровно один верный вариант, оценки и «лучший ответ» согласованы (`act0_catalog_grades_unlock_v1_test`). Независимого покерного обоснования верного ответа нет → C2 |
 | ASM-03.b | частично | У каждого варианта W5–W12 есть заголовок и объяснение, неверные указывают на верный (`act0_catalog_grades_unlock_v1_test`). Не проверено, что объяснения не выдумывают оптимальность там, где она неизвестна → C2 |
@@ -223,8 +223,8 @@ Master Plan v5 и остальные документы в `docs/` — спра�
 
 | Что | Задания | Чего не хватает |
 |---|---|---|
-| C1 · цена колла (`D3.to_call_completeness`), W5–W12 — 14 | W5: `outs_improvement_w5_table_outs_flush_transfer`, `outs_improvement_w5_table_outs_straight_transfer`. W6: `w6_checkpoint_table_combo_weight`. W8: `w7_ajs_btn_25bb_transfer`, `w7_ajs_btn_100bb_transfer`. W9: `w9_bubble_table_risk_transfer`. W11: `w11_checkpoint_mixed_table_line`, `w11_trigger_bad_price_fold`, `w11_trigger_small_price_continue`. W12: `w12_checkpoint_full_loop_line`, `w12_pretty_hand_bad_price_fold`, `w12_revenge_raise_trap`, `asm05_new_known_holes_turn_call_10`, `asm05_new_known_holes_turn_call_40` | Ставки текущей улицы каждого игрока; для `w9_bubble_table_risk_transfer` ещё стеки |
-| C1 · банк из вкладов (`D2.pot_feasibility`), W5–W12 — 179 | W5 34, W6 32, W7 5, W8 23, W9 21, W10 22, W11 21, W12 21 — полный список в `ledger.json` | Вклады по улицам: блайнды, анте, ставки и коллы до текущего кадра |
+| C1 · цена колла (`D3.to_call_completeness`), W5–W12 — 1 | `w9_bubble_table_risk_transfer` | Остаток стека BTN в момент решения |
+| C1 · банк из вкладов (`D2.pot_feasibility`), W5–W12 — 5 | `w10_table_value_vs_caller_transfer`, `w11_checkpoint_mixed_table_line`, `w12_pretty_hand_bad_price_fold`, `w12_revenge_raise_trap`, `w12_checkpoint_full_loop_line` | Вклады по всем улицам до текущей ставки или чека |
 | C1 · то же в W1–W4 (закрыто для беты PKR-04.a/05.a) | банк — 77 заданий, цена — 64, в основном учебные кадры префлопа без истории | Те же вклады; до беты не требуется |
 | C2 · стратегия W5–W12 | W5: два разбора дро про колл. W6: `w6_value_range_action`, `w6_table_value_line_transfer`, `w6_bluff_candidate`, `range_checkpoint_pressure`. W8: пара A-J (`w7_ajs_btn_25bb_transfer`, `w7_ajs_btn_100bb_transfer`). W9: `w9_bubble_table_risk_transfer`. W10: `w10_table_value_vs_caller_transfer`. W11: `w11_checkpoint_mixed_table_line`. W12: решения против ставок соперника | Диапазоны соперника (W5, W6, W8 — CO, W10 — колл, W11–W12 — ставки); для W9 — выплаты и стеки. Источник — солвер или эксперт |
 | Вне C1/C2 | `w9_m_ratio_table_window_transfer` | Подтвердить отдельное упражнение в Review |
