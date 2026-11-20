@@ -399,6 +399,25 @@ void main() {
         .singleWhere((option) => option['id'] == 'strong');
     expect(strongQJs['quality'], 'suboptimal');
     strongQJs['quality'] = 'wrong';
+    for (final (taskId, optionId) in [
+      (
+        'position_checkpoint_position_checkpoint_table_notice',
+        'late_free_pass',
+      ),
+      (
+        'same_hand_different_seat_position_repair_same_hand_different_seat',
+        'position_unimportant',
+      ),
+      ('w4_bluff_pressure', 'check'),
+      ('w4_checkpoint_table_purpose_price', 'random_size'),
+    ]) {
+      final task = expectedComparison[taskId] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == optionId);
+      expect(option['quality'], 'suboptimal', reason: '$taskId / $optionId');
+      option['quality'] = 'wrong';
+    }
     // P7–P8 classify false showdown outcomes and incomplete best fives as wrong.
     for (final id in [
       'showdown_review',

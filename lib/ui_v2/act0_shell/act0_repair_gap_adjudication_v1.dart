@@ -1041,7 +1041,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetTaskId:
         "same_hand_different_seat_position_repair_same_hand_different_seat",
     targetFingerprint:
-        "b2a0f46571dfdf9fbbae49e43e2ab56ce94e1d246a84e535bde2644eff23b9ae",
+        "52fd3dfe161450705a5ec04250b5535e038aec3d418c6530685e6d03a0cc4310",
     targetCorrectChoiceId: "seat_context",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",

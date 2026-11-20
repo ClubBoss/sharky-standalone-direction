@@ -271,6 +271,13 @@ String _action(Act0RunnerOptionV1 option) {
   return match?[1] == 'open' ? 'raise' : match?[1] ?? option.id;
 }
 
+const _deterministicSeatAndBetTaskIds = {
+  'position_checkpoint_position_checkpoint_table_notice',
+  'same_hand_different_seat_position_repair_same_hand_different_seat',
+  'w4_bluff_pressure',
+  'w4_checkpoint_table_purpose_price',
+};
+
 final _actualRankQuestion = RegExp(
   r'\b(?:who wins|who (?:takes|gets) the pot|which (?:shown )?hand wins|'
   r'what happens to the pot|which (?:hand|rank) (?:is stronger|ranks higher)|'
@@ -424,6 +431,7 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
             }.contains(task.resolvedTaskFamily.name) ||
             _w1FactualGradeTaskIds.contains(task.taskId) ||
             task.taskId.startsWith('hand_discipline_buckets_') ||
+            _deterministicSeatAndBetTaskIds.contains(task.taskId) ||
             _actualRankQuestion.hasMatch(catalogQuestion(task)))) {
       for (final o in r.options.where((o) => !o.isCorrect)) {
         audit.check(
