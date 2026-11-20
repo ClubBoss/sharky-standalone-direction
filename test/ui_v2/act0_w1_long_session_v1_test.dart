@@ -480,6 +480,54 @@ void main() {
     expect(restored['completedTaskIds'], before['completedTaskIds']);
   });
 
+  testWidgets('a W9 yellow-zone miss reopens yellow-zone planning', (t) async {
+    const taskId = 'w9_m_ratio_table_window_transfer';
+    const targetId = 'w9_m_ratio_yellow_zone';
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_9',
+      taskId: taskId,
+    );
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_option_wait_for_red')),
+      ]),
+      isTrue,
+    );
+
+    Map<dynamic, dynamic> sourceRepair(Map<String, dynamic> saved) =>
+        (saved['openRepairIntents'] as List).cast<Map>().singleWhere(
+          (row) => row['sourceTaskId'] == taskId,
+        );
+    final before = await _saved(t);
+    final intent = sourceRepair(before);
+    expect(intent['targetTaskId'], targetId);
+    expect(intent['mappingType'], 'repair');
+    expect(before['earnedXp'], xp);
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      ]),
+      isTrue,
+    );
+    expect(
+      t
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      targetId,
+    );
+
+    await _mount(t);
+    final restored = await _saved(t);
+    expect(sourceRepair(restored), intent);
+    expect(
+      restored['learningEvidenceHistory'],
+      before['learningEvidenceHistory'],
+    );
+    expect(restored['earnedXp'], xp);
+    expect(restored['completedTaskIds'], before['completedTaskIds']);
+  });
+
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const lastWorld = fullRoute ? 12 : 7;
   for (final firstWorld in fullRoute ? [1, 2] : [1]) {

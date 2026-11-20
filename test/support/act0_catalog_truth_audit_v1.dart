@@ -822,7 +822,8 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
       );
       final targetGoals = {
         ...?knownRepairGoals[intent.targetTaskId],
-        if (target != null && target.world.worldNumber <= 8)
+        if (target != null &&
+            target.world.worldNumber <= act0SameGoalReplayThroughWorldV1)
           act0FoundationRepairGoalForTaskV1(intent.targetTaskId),
       };
       audit.check(
