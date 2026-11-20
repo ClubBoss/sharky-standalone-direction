@@ -1239,6 +1239,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.isAssistedDecision = false,
     this.localizeW1Ctas = false,
     this.preserveSourceOwnedQuestion = false,
+    this.showDecisionCoach = true,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -1297,6 +1298,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final bool localizeW1Ctas;
   // Placement quick-check reuses one task ID for three authored questions.
   final bool preserveSourceOwnedQuestion;
+  final bool showDecisionCoach;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -3180,13 +3182,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             fallback: runner.question,
             languageCode: act0AcademyLanguageV1(context),
           );
-    final learningRailSupportSegments = act0BuildLearningRailSupportSegmentsV1(
-      hint: hint,
-      focusLabels: widget.showLearningRailFocusLabels
-          ? teachingStep?.focusLabels ?? const <String>[]
-          : const <String>[],
-      compact: isRefinedDev2,
-    );
+    final learningRailSupportSegments =
+        widget.selectedTaskId == 'what_poker_is_theory'
+        ? <String>[hint]
+        : act0BuildLearningRailSupportSegmentsV1(
+            hint: hint,
+            focusLabels: widget.showLearningRailFocusLabels
+                ? teachingStep?.focusLabels ?? const <String>[]
+                : const <String>[],
+            compact: isRefinedDev2,
+          );
     // The lower-surface prototype treats authored theory as deterministic
     // pages. This reuses the content policy's bounded segments but includes
     // the prompt in the same page stream, so no content is hidden behind a
@@ -4412,6 +4417,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         support: support,
         scrollSupport: showAsm05ModelAssumptions || showSourceOrderPremises,
         focusPointsUp: focusPointsUp,
+        showCoach: widget.showDecisionCoach,
         focusLabel: focusLabel,
         progressLabel: progressLabel,
       );

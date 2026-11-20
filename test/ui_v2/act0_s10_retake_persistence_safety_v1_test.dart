@@ -51,7 +51,10 @@ void main() {
 
     await tester.pumpWidget(
       const MaterialApp(
-        home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+        home: Act0ShellPreviewScreenV1(
+          debugLegacyPlacementOnStart: true,
+          showPlacementOnStart: false,
+        ),
       ),
     );
     await tester.pumpAndSettle();

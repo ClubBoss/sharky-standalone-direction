@@ -342,6 +342,40 @@ void main() {
     });
   });
 
+  test(
+    'W1 rules check uses ten independent decisions with G1 source checks',
+    () {
+      expect(rulesCheckCatalogTasks, hasLength(10));
+      final questions = catalogTasks
+          .map((row) => catalogQuestion(row.task))
+          .toSet();
+      for (final row in rulesCheckCatalogTasks) {
+        expect(
+          questions.add(catalogQuestion(row.task)),
+          isTrue,
+          reason: row.task.taskId,
+        );
+        expect(
+          row.task.runner.options.where((option) => option.isCorrect),
+          hasLength(1),
+        );
+        expect(row.task.runner.hintPolicy, Act0HintPolicyV1.hidden);
+        expect(row.task.rewardXp, 0);
+      }
+      final findings = runCatalogAudit(
+        rows: [...catalogTasks, ...rulesCheckCatalogTasks],
+      ).findings;
+      expect(
+        findings.entries.where(
+          (entry) =>
+              entry.key.contains('|w1_rules_check_') &&
+              !entry.key.startsWith('10.'),
+        ),
+        isEmpty,
+      );
+    },
+  );
+
   test('catalog truth debt admits only recorded findings', () {
     final audit = runCatalogAudit();
     auditCatalogReachability(File(_sourcePath).readAsStringSync(), audit);

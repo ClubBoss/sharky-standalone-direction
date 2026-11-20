@@ -131,8 +131,8 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         ),
       if (input.onRetakePlacement != null)
         _row(
-          'Retake Placement',
-          'Revisit your starting assessment',
+          'Take the W1 rules check',
+          'Check your starting world',
           Act0AcademyLeafGlyphKindV1.placement,
           key: const Key('act0_academy_settings_leaf_placement'),
           color: _gold,

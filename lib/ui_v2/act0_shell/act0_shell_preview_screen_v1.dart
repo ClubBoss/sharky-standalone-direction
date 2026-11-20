@@ -3,6 +3,7 @@ import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
 import 'act0_daily_practice_queue_v1.dart';
 import 'act0_path_progress_v1.dart';
+import 'act0_w1_rules_check_v1.dart';
 import 'dart:async';
 import 'act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
@@ -96,6 +97,7 @@ part 'act0_shell_preview_learning_run_v1.dart';
 part 'act0_shell_preview_home_v1.dart';
 part 'act0_shell_preview_launch_v1.dart';
 part 'act0_shell_preview_placement_v1.dart';
+part 'act0_shell_preview_w1_rules_v1.dart';
 part 'act0_shell_preview_answer_v1.dart';
 part 'act0_shell_preview_profile_v1.dart';
 part 'act0_shell_preview_flow_v1.dart';
@@ -1229,6 +1231,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.initialPhase = Act0LessonPhaseV1.theory,
     this.state,
     this.showPlacementOnStart = true,
+    this.debugLegacyPlacementOnStart = false,
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
     this.telemetrySink,
@@ -1244,6 +1247,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final Act0LessonPhaseV1 initialPhase;
   final Act0ShellStateV1? state;
   final bool showPlacementOnStart;
+  final bool debugLegacyPlacementOnStart;
   final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
   final Act0TelemetrySinkV1? telemetrySink;
@@ -1827,6 +1831,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _dismissedHomeHandoffDay = '';
   int _learnLessonOpenSequenceV1 = 0;
   bool _showWelcome = false;
+  bool _showW1StartV1 = false;
+  bool _w1StartChosenV1 = false;
+  int _w1RulesBestScoreV1 = 0;
+  Set<String> _w1RulesFocusTaskIdsV1 = const {};
+  List<int>? _w1RulesAnswersV1;
+  Act0W1RulesResultV1? _w1RulesResultV1;
   bool _bootSurfaceReady = true;
   bool _welcomeCompletedV1 = false;
   bool _introductionSkippedV1 = false;
@@ -2014,13 +2024,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     setState(() {
       _welcomeCompletedV1 = welcomeCompleted;
       _introductionSkippedV1 = introductionSkipped;
-      _showPlacement = !intakeCompleted && !introductionSkipped;
+      final legacyPreview = kDebugMode && widget.debugLegacyPlacementOnStart;
+      _showPlacement =
+          legacyPreview && !intakeCompleted && !introductionSkipped;
       _showWelcome =
-          intakeCompleted && !welcomeCompleted && !introductionSkipped;
+          legacyPreview &&
+          intakeCompleted &&
+          !welcomeCompleted &&
+          !introductionSkipped;
+      if (_showWelcome) _tab = Act0ShellTabV1.home;
+      _showW1StartV1 =
+          !legacyPreview &&
+          !_w1StartChosenV1 &&
+          !intakeCompleted &&
+          !welcomeCompleted &&
+          !introductionSkipped &&
+          _completedTaskIds.isEmpty &&
+          _earnedXp == 0;
       _bootSurfaceReady = true;
-      if (_showWelcome) {
-        _tab = Act0ShellTabV1.home;
-      }
     });
   }
 
@@ -2719,6 +2740,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     _ensureDailyCountDayV1();
+    if (_bootSurfaceReady &&
+        (_showW1StartV1 ||
+            _w1RulesAnswersV1 != null ||
+            _w1RulesResultV1 != null)) {
+      return _buildW1RulesFlowV1();
+    }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
@@ -3289,6 +3316,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         worlds: worlds,
                         selectedWorldId: _selectedWorldId,
                         showWorldMenu: _showWorldMenu,
+                        onW1RulesCheck:
+                            selectedWorld.worldId == 'world_1' &&
+                                _canTakeW1RulesCheckV1
+                            ? _beginW1RulesCheckV1
+                            : null,
                         worldDetailId: _learnDetailWorldId,
                         lessons: selectedWorld.lessons,
                         selectedLessonId: _selectedLessonId,
@@ -3299,9 +3331,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         skippedTaskIds: _visibleSkippedTaskIds,
                         pathClosedTaskIds: _pathClosedTaskIds,
                         detailLessonId: effectiveLearnDetailLessonId,
-                        lessonOutcomeLabels: _lessonOutcomeLabels(
-                          selectedWorld.lessons,
-                        ),
+                        lessonOutcomeLabels: {
+                          for (final question in act0W1RulesQuestionsV1)
+                            if (_w1RulesFocusTaskIdsV1.contains(
+                              question.taskId,
+                            ))
+                              question.lessonId: 'Worth revisiting',
+                          ..._lessonOutcomeLabels(selectedWorld.lessons),
+                        },
                         onSelectWorld: (worldId) {
                           final world = _worldById(worlds, worldId);
                           setState(() {
@@ -4596,6 +4633,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
                         context,
+                        passedW1RulesCheck:
+                            _w1RulesBestScoreV1 >=
+                            Act0W1RulesResultV1.passingScore,
                         betaLearningMetrics:
                             widget.enableBetaMetrics && _usesPersistedProgress
                             ? () => Act0BetaLearningMetricsV1.fromProgress(
@@ -4668,8 +4708,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           onRecoveryOptions: _usesPersistedProgress
                               ? _openRecoveryOptionsV1
                               : null,
-                          onRetakePlacement: _openPlacementFlow,
-                          onReplayWelcome: _openWelcomeReplayV1,
+                          onRetakePlacement:
+                              kDebugMode && widget.debugLegacyPlacementOnStart
+                              ? _openPlacementFlow
+                              : _canTakeW1RulesCheckV1
+                              ? _beginW1RulesCheckV1
+                              : null,
+                          onReplayWelcome:
+                              kDebugMode && widget.debugLegacyPlacementOnStart
+                              ? _openWelcomeReplayV1
+                              : null,
                           onGoToHome: () =>
                               setState(() => _tab = Act0ShellTabV1.home),
                         ),
@@ -5554,6 +5602,9 @@ class _Act0PersistedProgressV1 {
     required this.selectedTaskId,
     required this.earnedXp,
     this.schemaVersion = 20,
+    this.w1StartChosen = false,
+    this.w1RulesBestScore = 0,
+    this.w1RulesFocusTaskIds = const {},
     this.suppressLegacyRecheckAfterRecovery = false,
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
@@ -5601,6 +5652,9 @@ class _Act0PersistedProgressV1 {
   final String selectedLessonId;
   final String selectedTaskId;
   final int earnedXp;
+  final bool w1StartChosen;
+  final int w1RulesBestScore;
+  final Set<String> w1RulesFocusTaskIds;
   final bool suppressLegacyRecheckAfterRecovery;
   final Map<String, int> profileSkillValues;
   final List<Act0SkillGainV1> recentSkillGains;
@@ -5662,6 +5716,10 @@ class _Act0PersistedProgressV1 {
       'selectedLessonId': selectedLessonId,
       'selectedTaskId': selectedTaskId,
       'earnedXp': earnedXp,
+      if (w1StartChosen) 'w1StartChosen': true,
+      if (w1RulesBestScore > 0) 'w1RulesBestScore': w1RulesBestScore,
+      if (w1RulesFocusTaskIds.isNotEmpty)
+        'w1RulesFocusTaskIds': w1RulesFocusTaskIds.toList(),
       'profileSkillValues': <String, int>{
         for (final key in sortedSkillKeys) key: profileSkillValues[key]!,
       },
@@ -5904,6 +5962,20 @@ class _Act0PersistedProgressV1 {
       selectedLessonId: selectedLessonId,
       selectedTaskId: selectedTaskId,
       earnedXp: earnedXp < 0 ? 0 : earnedXp,
+      w1StartChosen: map['w1StartChosen'] == true,
+      w1RulesBestScore: switch (map['w1RulesBestScore']) {
+        final int score
+            when score >= 0 && score <= act0W1RulesQuestionsV1.length =>
+          score,
+        _ => 0,
+      },
+      w1RulesFocusTaskIds: switch (map['w1RulesFocusTaskIds']) {
+        final List<Object?> ids => {
+          for (final question in act0W1RulesQuestionsV1)
+            if (ids.contains(question.taskId)) question.taskId,
+        },
+        _ => const {},
+      },
       profileSkillValues: profileSkillValues,
       recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,

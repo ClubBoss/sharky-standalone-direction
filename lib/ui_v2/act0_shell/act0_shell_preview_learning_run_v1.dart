@@ -771,6 +771,12 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _persistedStreakDays = 0;
       _lastDailyDate = '';
       _placementRetakeV1 = false;
+      _w1StartChosenV1 = false;
+      _w1RulesBestScoreV1 = 0;
+      _w1RulesFocusTaskIdsV1 = const {};
+      _showW1StartV1 = false;
+      _w1RulesAnswersV1 = null;
+      _w1RulesResultV1 = null;
       _showPlacement = showPlacement;
       _showWelcome = false;
       _welcomeCompletedV1 = false;

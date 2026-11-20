@@ -543,6 +543,7 @@ Future<void> _pumpPlacementDiagnosticHost(
         GlobalWidgetsLocalizations.delegate,
       ],
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
         showPlacementOnStart: true,
         telemetrySink: telemetrySink,
       ),
@@ -613,6 +614,7 @@ Future<void> _pumpLifecycleHost(
         GlobalWidgetsLocalizations.delegate,
       ],
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
         initialTab: Act0ShellTabV1.play,
         initialPhase: Act0LessonPhaseV1.drill,
         showPlacementOnStart: false,

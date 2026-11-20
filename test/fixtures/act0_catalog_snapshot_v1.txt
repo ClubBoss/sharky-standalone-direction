@@ -7,11 +7,8 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand is on the table.
-TEACH: One loop first. Blinds are forced bets posted before anyone decides. Look for SB and BB at two seats.
-TEACH LABELS: Read, Answer, Why
-TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-TEACH: Start with the table. Your two cards are private. The board is shared. The pot is the chips in the middle. BB also measures chips.
-TEACH LABELS: Your cards, Shared cards, Pot
+TEACH: Find your cards. The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot is the chips in the middle. Blinds are forced bets. SB and BB post them before anyone acts.
+TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Where are the two cards you can use on your own?
 HINT [theoryOnly]: Find the seat with two visible cards.
@@ -30,9 +27,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 TASK what_poker_is_find_hero [drill] Find your seat
 SUMMARY: Spot where Hero sits before anything else starts moving.
 CAPTION: Look at the cards in both parts of the table.
-TEACH: You means learner. The You badge is beside your two cards. The cards in the middle can be used by everyone still playing.
-TEACH LABELS: Your cards, Shared cards
-TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which cards belong to you alone?
 HINT [theoryOnly]: Compare the cards at your seat with the cards in the middle.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
@@ -5625,3 +5619,146 @@ TRAIL: Frame 1: UTG has more behind · Frame 2: CO has fewer behind · Compare t
   - [suboptimal] Seat does not matter for this hand — Repair the table read. Position matters because it changes how many players still act after you.
     BETTER ANSWER: Seat context changed the hand comfort
     REPAIR LABELS: Same hand, Players behind
+
+===== W1 RULES CHECK =====
+
+===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+
+TASK w1_rules_check_made_hand [drill] Hand rankings
+Q: At showdown, which hand wins in Hold’em?
+HINT [hidden]: (none)
+TABLE: Preflop | Seat BTN | Facts no applicable hand facts
+SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+  - [wrong] Two pair — Hand rankings Three of a kind ranks above two pair.
+    BETTER ANSWER: Three of a kind
+  + [correct] Three of a kind — Hand rankings Three of a kind ranks above two pair.
+  - [wrong] They tie — Hand rankings Three of a kind ranks above two pair.
+    BETTER ANSWER: Three of a kind
+
+===== WORLD 1 · LESSON showdown_winning · Rules checkpoint =====
+
+TASK w1_rules_check_ace_kicker [drill] Kickers and ties
+Q: You hold A♠ 7♥ and CO holds K♠ Q♦. On this board, who wins?
+HINT [hidden]: (none)
+TABLE: River | You As 7h | Board 9c 9d 6s 4h 2c | Seat BTN | Facts one pair, paired board
+SEATS: UTG empty | HJ empty | CO Ks Qd | BTN dealer As 7h | SB empty | BB empty
+  + [correct] You — Kickers and ties Both play a pair of nines. Your ace beats CO’s king as the highest kicker.
+    FEEDBACK TABLE: River | You As 7h | Board 9c 9d 6s 4h 2c | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+  - [wrong] CO — Kickers and ties Both play a pair of nines. Your ace beats CO’s king as the highest kicker.
+    BETTER ANSWER: You
+    FEEDBACK TABLE: River | You As 7h | Board 9c 9d 6s 4h 2c | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+  - [wrong] Split the pot — Kickers and ties Both play a pair of nines. Your ace beats CO’s king as the highest kicker.
+    BETTER ANSWER: You
+    FEEDBACK TABLE: River | You As 7h | Board 9c 9d 6s 4h 2c | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+
+TASK w1_rules_check_board_tie [drill] Kickers and ties
+Q: You hold 2♣ 3♦ and CO holds 7♥ 8♣. Who wins this pot?
+HINT [hidden]: (none)
+TABLE: River | You 2c 3d | Board As Kd Qc Jh Ts | Seat BTN | Facts straight, consecutive board
+SEATS: UTG empty | HJ empty | CO 7h 8c | BTN dealer 2c 3d | SB empty | BB empty
+  - [wrong] You — Kickers and ties Both players use the board’s ace-high straight. Cards outside the best five do not break a tie.
+    BETTER ANSWER: Split the pot
+    FEEDBACK TABLE: River | You 2c 3d | Board As Kd Qc Jh Ts | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight, consecutive board
+  - [wrong] CO — Kickers and ties Both players use the board’s ace-high straight. Cards outside the best five do not break a tie.
+    BETTER ANSWER: Split the pot
+    FEEDBACK TABLE: River | You 2c 3d | Board As Kd Qc Jh Ts | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight, consecutive board
+  + [correct] Split the pot — Kickers and ties Both players use the board’s ace-high straight. Cards outside the best five do not break a tie.
+    FEEDBACK TABLE: River | You 2c 3d | Board As Kd Qc Jh Ts | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight, consecutive board
+
+===== WORLD 1 · LESSON cards_ranks_suits · Cards, ranks & suits =====
+
+TASK w1_rules_check_best_straight [drill] Best five cards
+Q: You can play a straight. What is the top card in your best five?
+HINT [hidden]: (none)
+TABLE: River | You 8d Ah | Board 3c 4d 5h 6s 7c | Seat BTN | Facts straight, consecutive board
+SEATS: UTG empty | HJ empty | CO empty | BTN dealer 8d Ah | SB empty | BB empty
+  - [wrong] 7 — Best five cards Your best straight uses 4, 5, 6, 7, and 8. The ace is outside that five-card hand.
+    BETTER ANSWER: 8
+    FEEDBACK TABLE: River | You 8d Ah | Board 3c 4d 5h 6s 7c | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight, consecutive board
+  - [wrong] Ace — Best five cards Your best straight uses 4, 5, 6, 7, and 8. The ace is outside that five-card hand.
+    BETTER ANSWER: 8
+    FEEDBACK TABLE: River | You 8d Ah | Board 3c 4d 5h 6s 7c | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight, consecutive board
+  + [correct] 8 — Best five cards Your best straight uses 4, 5, 6, 7, and 8. The ace is outside that five-card hand.
+    FEEDBACK TABLE: River | You 8d Ah | Board 3c 4d 5h 6s 7c | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight, consecutive board
+
+===== WORLD 1 · LESSON blinds_action_order · Seats and blinds =====
+
+TASK w1_rules_check_preflop_after_hj [drill] Preflop order
+Q: At a six-player table before the flop, UTG has acted and HJ folds. Who acts next?
+HINT [hidden]: (none)
+TABLE: Preflop | Seat BTN | Facts no applicable hand facts
+SEATS: UTG | HJ folded | CO | BTN dealer | SB | BB
+  - [wrong] BTN — Preflop order After HJ, the first preflop pass goes to CO, then BTN, then the blinds.
+    BETTER ANSWER: CO
+  + [correct] CO — Preflop order After HJ, the first preflop pass goes to CO, then BTN, then the blinds.
+  - [wrong] BB — Preflop order After HJ, the first preflop pass goes to CO, then BTN, then the blinds.
+    BETTER ANSWER: CO
+
+===== WORLD 1 · LESSON positions · Why position matters =====
+
+TASK w1_rules_check_postflop_two_left [drill] Postflop order
+Q: A six-player hand is down to SB and BTN on the flop. Who acts first?
+HINT [hidden]: (none)
+TABLE: Flop | Board Kc 8d 5h | Seat BTN | Facts rainbow
+SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB | BB folded
+  + [correct] SB — Postflop order On the flop, the first player still in the hand clockwise after the dealer acts first. That is SB here.
+    FEEDBACK TABLE: Flop | Board Kc 8d 5h | Seat BTN | Card focus board_0, board_1, board_2 | Facts rainbow
+  - [wrong] BTN — Postflop order On the flop, the first player still in the hand clockwise after the dealer acts first. That is SB here.
+    BETTER ANSWER: SB
+    FEEDBACK TABLE: Flop | Board Kc 8d 5h | Seat BTN | Card focus board_0, board_1, board_2 | Facts rainbow
+  - [wrong] Whoever raised before the flop — Postflop order On the flop, the first player still in the hand clockwise after the dealer acts first. That is SB here.
+    BETTER ANSWER: SB
+    FEEDBACK TABLE: Flop | Board Kc 8d 5h | Seat BTN | Card focus board_0, board_1, board_2 | Facts rainbow
+
+===== WORLD 1 · LESSON blinds_action_order · Seats and blinds =====
+
+TASK w1_rules_check_forced_bets [drill] Blinds
+Q: At a six-player table with no ante or straddle, who must put chips in before the deal?
+HINT [hidden]: (none)
+TABLE: Preflop | Seat BTN | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  - [wrong] Only the big blind — Blinds The small blind and big blind are the forced bets in this setup.
+    BETTER ANSWER: The small blind and big blind
+  - [wrong] Every player — Blinds The small blind and big blind are the forced bets in this setup.
+    BETTER ANSWER: The small blind and big blind
+  + [correct] The small blind and big blind — Blinds The small blind and big blind are the forced bets in this setup.
+
+===== WORLD 1 · LESSON fold_check_call_raise · Actions and the price =====
+
+TASK w1_rules_check_check_behind [drill] Legal actions
+Q: It is your turn on the river. Every player before you checked. How can you stay in without adding chips?
+HINT [hidden]: (none)
+TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Facts no applicable hand facts
+SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
+  - [wrong] Call — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
+  + [correct] Check — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
+    FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
+  - [wrong] Fold — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
+
+TASK w1_rules_check_raise_call_price [drill] Price to call
+Q: You put in 3 BB on this street. An opponent raises to 8 BB. How much more does a call cost you?
+HINT [hidden]: (none)
+TABLE: Preflop | Seat BTN | Facts no applicable hand facts
+SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
+  + [correct] 5 BB — Price to call You already put in 3 BB. Add 5 BB to match the new total of 8 BB.
+  - [wrong] 8 BB — Price to call You already put in 3 BB. Add 5 BB to match the new total of 8 BB.
+    BETTER ANSWER: 5 BB
+  - [wrong] 11 BB — Price to call You already put in 3 BB. Add 5 BB to match the new total of 8 BB.
+    BETTER ANSWER: 5 BB
+
+===== WORLD 1 · LESSON what_poker_is_content · Stacks, all-in and the pot =====
+
+TASK w1_rules_check_uncalled_all_in [drill] All-in bets
+Q: Two players remain. You go all-in for 25 BB. Your opponent can call only 11 BB. How much of your bet is returned?
+HINT [hidden]: (none)
+TABLE: Preflop | Seat BTN | Facts no applicable hand facts
+SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
+  - [wrong] 11 BB — All-in bets Your opponent matches 11 BB. The remaining 14 BB of your bet is uncalled and comes back to you.
+    BETTER ANSWER: 14 BB
+  - [wrong] 25 BB — All-in bets Your opponent matches 11 BB. The remaining 14 BB of your bet is uncalled and comes back to you.
+    BETTER ANSWER: 14 BB
+  + [correct] 14 BB — All-in bets Your opponent matches 11 BB. The remaining 14 BB of your bet is uncalled and comes back to you.

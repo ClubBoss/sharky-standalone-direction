@@ -22,11 +22,13 @@ void main() {
 
   Widget host({
     bool showPlacementOnStart = false,
+    bool legacyPlacement = true,
     Act0ShellTabV1 initialTab = Act0ShellTabV1.home,
     Act0TelemetrySinkV1? telemetrySink,
   }) {
     return MaterialApp(
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: legacyPlacement,
         key: UniqueKey(),
         showPlacementOnStart: showPlacementOnStart,
         initialTab: initialTab,
@@ -163,19 +165,19 @@ void main() {
       final telemetry = Act0InMemoryTelemetrySinkV1();
       await pumpHost(
         tester,
-        host(showPlacementOnStart: true, telemetrySink: telemetry),
+        host(
+          showPlacementOnStart: true,
+          legacyPlacement: false,
+          telemetrySink: telemetry,
+        ),
       );
-      await completeFreshBeginnerOnboarding(tester);
-      // Placement/Welcome orientation must never fabricate an assessment.
+      await tester.tap(find.byKey(const Key('act0_shell_w1_start_basics')));
+      await tester.pumpAndSettle();
+      // Starting a lesson does not create an assessment.
       expect(
         telemetry.events.where((event) => event.name == 'user_choice'),
         isEmpty,
       );
-      await openLearn(tester);
-
-      await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
-      await tester.pumpAndSettle();
-
       // 1. The mission CTA opens real authored theory, not a placeholder:
       // the actual "Meet the table" exposition copy must be on screen
       // before any decision exists.
@@ -187,7 +189,7 @@ void main() {
       expect(runner.runner.phase, Act0LessonPhaseV1.theory);
       expect(
         find.textContaining(
-          'Blinds are forced bets posted before anyone decides.',
+          'Blinds are forced bets. SB and BB post them before anyone acts.',
         ),
         findsOneWidget,
       );
@@ -221,6 +223,7 @@ void main() {
           reason:
               'Stuck before reaching the first independent decision at step $step.',
         );
+        await tester.pump(const Duration(milliseconds: 900));
         await tester.tap(continueCta);
         await tester.pumpAndSettle();
       }

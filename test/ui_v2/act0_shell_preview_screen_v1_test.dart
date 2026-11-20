@@ -56,6 +56,7 @@ void main() {
         GlobalWidgetsLocalizations.delegate,
       ],
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
         initialTab: tab,
         showPlacementOnStart: showPlacementOnStart,
         state: overrideState,
@@ -130,6 +131,7 @@ void main() {
         GlobalWidgetsLocalizations.delegate,
       ],
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
         showPlacementOnStart: false,
         debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
           mode: Act0ControlledDemoCaptureModeV1.directState,
@@ -731,10 +733,14 @@ void main() {
             GlobalWidgetsLocalizations.delegate,
           ],
           home: Act0ShellPreviewScreenV1(
+            debugLegacyPlacementOnStart: true,
             showPlacementOnStart: false,
             debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
               mode: Act0ControlledDemoCaptureModeV1.directState,
               surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+              worldId: 'world_1',
+              lessonId: 'what_poker_is_content',
+              taskId: 'what_poker_is_pot_stack',
             ),
           ),
         ),
@@ -745,9 +751,7 @@ void main() {
           .runner;
 
       final totalTeachingSteps = currentRunner().teachingSteps.length;
-      // The real first-value theory task (`what_poker_is_theory`) authors
-      // several steps; fail loudly if that source fact ever changes under
-      // this test instead of silently testing nothing.
+      // A real two-step lesson keeps this guard independent of the new first launch.
       expect(totalTeachingSteps, greaterThan(1));
 
       for (
@@ -775,6 +779,7 @@ void main() {
           expect(current, expectedIndex + 1);
         }
 
+        await tester.pump(const Duration(milliseconds: 900));
         await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
         await tester.pumpAndSettle();
       }

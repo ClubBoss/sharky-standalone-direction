@@ -79,7 +79,10 @@ Future<void> _mount(WidgetTester tester) async {
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      home: Act0ShellPreviewScreenV1(key: UniqueKey()),
+      home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
+        key: UniqueKey(),
+      ),
     ),
   );
   await tester.pumpAndSettle();
