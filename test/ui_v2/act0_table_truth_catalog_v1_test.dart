@@ -163,31 +163,21 @@ void main() {
         .expand((lesson) => lesson.taskList)
         .map((task) => task.taskId)
         .toSet();
-    for (final (rule, proved, missing) in [
-      ('D2.pot_feasibility', 113, 28),
-      ('D3.to_call_completeness', 87, 11),
+    for (final (rule, count) in [
+      ('D2.pot_feasibility', 141),
+      ('D3.to_call_completeness', 98),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
       );
-      expect(proof.map((row) => row.result).toSet(), {
-        'PASS',
-        'NEEDS_SOURCE_CONTEXT',
-      }, reason: rule);
       expect(
-        proof
-            .where((row) => row.result == 'PASS')
-            .map((row) => row.taskId)
-            .toSet(),
-        hasLength(proved),
+        proof.where((row) => row.result != 'PASS').map((row) => row.key),
+        isEmpty,
         reason: rule,
       );
       expect(
-        proof
-            .where((row) => row.result == 'NEEDS_SOURCE_CONTEXT')
-            .map((row) => row.taskId)
-            .toSet(),
-        hasLength(missing),
+        proof.map((row) => row.taskId).toSet(),
+        hasLength(count),
         reason: rule,
       );
     }
