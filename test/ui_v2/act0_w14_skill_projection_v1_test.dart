@@ -191,8 +191,11 @@ void main() {
       'outs_improvement_w5_table_outs_straight_transfer',
     };
     final lessons = <String>{};
+    final tasksByWorld = <int, int>{};
     for (final (i, source) in _tasks.indexed) {
-      if (source.world.worldNumber < 5) continue;
+      final world = source.world.worldNumber;
+      if (world < 5) continue;
+      tasksByWorld.update(world, (count) => count + 1, ifAbsent: () => 1);
       lessons.add(source.lesson.lessonId);
       expect(
         _states([_answer(i, i + 1)])
@@ -208,6 +211,7 @@ void main() {
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
+    expect(tasksByWorld, {5: 34, 6: 35});
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {
