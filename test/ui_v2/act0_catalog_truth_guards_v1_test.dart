@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_claims_v1.dart';
@@ -20,6 +21,16 @@ const _baselinePath = 'test/fixtures/act0_catalog_truth_exceptions_v1.json';
 const _sourcePath = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const _json = JsonEncoder.withIndent('  ');
+
+final _praiseAtStart = RegExp(
+  r'^(?:(?:almost (?:got it|there|right)|clean execution|'
+  r'close (?:call|count|idea|on the ladder|read|start)|'
+  r'excellent spot|getting warmer|good (?:direction|instinct|read|spot|start)|'
+  r'nearly there|nice (?:count|read|work)|on the right track|one more step|'
+  r'playable (?:instinct|move|start|thought)|sharp read|solid understanding|'
+  r'spot on|strong choice|very close|well done)\b|(?:close|good)[.!?,])',
+  caseSensitive: false,
+);
 
 CatalogTask _catalogRow(String id) =>
     catalogTasks.singleWhere((row) => row.task.taskId == id);
@@ -122,6 +133,55 @@ void main() {
           (changed == null ? '?' : (changed.$1 + 1).toString()),
     );
     expect(lines.length, expected.length);
+  });
+
+  test('wrong catalog feedback starts without praise', () {
+    final violations = <String>[];
+    final coachViolations = <String>{};
+    for (final row in [...catalogTasks, ...rulesCheckCatalogTasks]) {
+      final runner = row.task.runner;
+      for (final option in runner.options) {
+        if (option.quality != Act0FeedbackQualityV1.wrong) continue;
+        final coachLine = runner.sharky.wrongReaction;
+        if (_praiseAtStart.hasMatch(coachLine.trimLeft())) {
+          coachViolations.add('Sharky wrong reaction: $coachLine');
+        }
+        for (final (field, text) in [
+          ('title', option.feedbackTitle),
+          ('reason', option.feedbackReason),
+        ]) {
+          if (_praiseAtStart.hasMatch(text.trimLeft())) {
+            violations.add('${row.task.taskId}/${option.id} $field: $text');
+          }
+        }
+      }
+    }
+    violations.addAll(coachViolations);
+    expect(violations, isEmpty, reason: violations.join('\n'));
+  });
+
+  testWidgets('shared wrong-answer coaching starts without praise', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) {
+            for (var seed = 0; seed < 4; seed++) {
+              final line = act0RuntimeFeedbackCoachLineV1(
+                context,
+                authoredLine: Act0SharkyCueV1.beginner.wrongReaction,
+                title: 'Not quite.',
+                quality: Act0FeedbackQualityV1.wrong,
+                variationSeed: '$seed',
+              );
+              expect(line, isNot(matches(_praiseAtStart)));
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
   });
 
   test('claim audit rejects a set presented as a pair and an absent card', () {
