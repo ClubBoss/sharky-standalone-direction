@@ -740,6 +740,125 @@ void main() {
       },
     };
     const l2OptionDeltas = {
+      'outs_improvement_w5_table_outs_flush_transfer': (
+        [
+          ["price_only", "Fold", false, "wrong", "Call 2 BB"],
+          ["heart_outs", "Call 2 BB", true, "correct", "Call 2 BB"],
+        ],
+        [
+          [
+            "ace_only",
+            "Only an ace matters now",
+            false,
+            "wrong",
+            "Any heart still completes the flush",
+          ],
+          [
+            "heart_outs",
+            "Any heart still completes the flush",
+            true,
+            "correct",
+            "Any heart still completes the flush",
+          ],
+          [
+            "price_only",
+            "Only the small price matters",
+            false,
+            "suboptimal",
+            "Any heart still completes the flush",
+          ],
+        ],
+      ),
+      'outs_improvement_w5_table_outs_straight_transfer': (
+        [
+          ["four_or_nine", "Fold", true, "correct", "Fold"],
+          ["blank_turn_killed", "Call 3 BB", false, "wrong", "Fold"],
+        ],
+        [
+          [
+            "king_pairs",
+            "Only a king can help now",
+            false,
+            "wrong",
+            "A 4 or 9 still completes the straight",
+          ],
+          [
+            "blank_turn_killed",
+            "Blank turn means give up",
+            false,
+            "suboptimal",
+            "A 4 or 9 still completes the straight",
+          ],
+          [
+            "four_or_nine",
+            "A 4 or 9 still completes the straight",
+            true,
+            "correct",
+            "A 4 or 9 still completes the straight",
+          ],
+        ],
+      ),
+      'turn_river_changes_w5_board_checkpoint': (
+        [
+          ["just_outs", "Fold", false, "wrong", "Call 1 BB"],
+          ["texture_draw_outs", "Call 1 BB", true, "correct", "Call 1 BB"],
+        ],
+        [
+          [
+            "just_outs",
+            "Just count outs",
+            false,
+            "suboptimal",
+            "Texture, draw, outs",
+          ],
+          [
+            "random_guess",
+            "Random guess",
+            false,
+            "wrong",
+            "Texture, draw, outs",
+          ],
+          [
+            "texture_draw_outs",
+            "Texture, draw, outs",
+            true,
+            "correct",
+            "Texture, draw, outs",
+          ],
+        ],
+      ),
+      'w6_value_wet_board': (
+        [
+          ["bluff", "BTN, the raiser", false, "wrong", "BB, the caller"],
+          ["value", "BB, the caller", true, "correct", "BB, the caller"],
+          [
+            "missed",
+            "They have the same number",
+            false,
+            "wrong",
+            "BB, the caller",
+          ],
+        ],
+        [
+          ["value", "Value", true, "correct", "Value"],
+          ["bluff", "Bluff candidate", false, "wrong", "Value"],
+          ["missed", "Missed", false, "wrong", "Value"],
+        ],
+      ),
+      'w6_board_fit_recap': (
+        [
+          ["caller", "BB, the caller", false, "wrong", "BTN, the raiser"],
+          [
+            "same",
+            "They have the same number",
+            false,
+            "wrong",
+            "BTN, the raiser",
+          ],
+          ["raiser", "BTN, the raiser", true, "correct", "BTN, the raiser"],
+        ],
+        [],
+      ),
       'w6_value_range_action': (
         [
           ['check', 'Check and see', false, 'suboptimal', 'Bet for value'],

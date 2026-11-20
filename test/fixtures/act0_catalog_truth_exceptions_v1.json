@@ -118,13 +118,6 @@
     "task_id": "outs_improvement_w5_straight_out",
     "world": 5
   },
-  "10.repair_resolves|outs_improvement_w5_table_outs_flush_transfer|ace_only": {
-    "reason": "Wrong option \"Only an ace matters now\" creates a held repair obligation (hero_cards_board_pot).",
-    "rule": "10.repair_resolves",
-    "target": "L2",
-    "task_id": "outs_improvement_w5_table_outs_flush_transfer",
-    "world": 5
-  },
   "10.repair_resolves|outs_improvement_w5_table_outs_flush_transfer|price_only": {
     "reason": "Wrong option \"Only the small price matters\" creates a held repair obligation (pot_to_call).",
     "rule": "10.repair_resolves",
@@ -134,13 +127,6 @@
   },
   "10.repair_resolves|outs_improvement_w5_table_outs_straight_transfer|blank_turn_killed": {
     "reason": "Wrong option \"Blank turn means give up\" creates a held repair obligation (pot_to_call).",
-    "rule": "10.repair_resolves",
-    "target": "L2",
-    "task_id": "outs_improvement_w5_table_outs_straight_transfer",
-    "world": 5
-  },
-  "10.repair_resolves|outs_improvement_w5_table_outs_straight_transfer|king_pairs": {
-    "reason": "Wrong option \"Only a king can help now\" creates a held repair obligation (hero_cards_board_pot).",
     "rule": "10.repair_resolves",
     "target": "L2",
     "task_id": "outs_improvement_w5_table_outs_straight_transfer",
@@ -274,13 +260,6 @@
   },
   "10.repair_resolves|turn_river_changes_w5_board_checkpoint|just_outs": {
     "reason": "Wrong option \"Just count outs\" creates a held repair obligation (hero_cards_board_pot).",
-    "rule": "10.repair_resolves",
-    "target": "L2",
-    "task_id": "turn_river_changes_w5_board_checkpoint",
-    "world": 5
-  },
-  "10.repair_resolves|turn_river_changes_w5_board_checkpoint|random_guess": {
-    "reason": "Wrong option \"Random guess\" creates a held repair obligation (hero_cards_board_pot).",
     "rule": "10.repair_resolves",
     "target": "L2",
     "task_id": "turn_river_changes_w5_board_checkpoint",
@@ -2247,13 +2226,6 @@
     "target": "после беты",
     "task_id": "w4_table_frame_notice"
   },
-  "6.answer_copy|board_texture_basics_w5_dry_board|teach.0.focus.0": {
-    "reason": "teach.0.focus.0: \"Dry\" discloses \"Dry\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "board_texture_basics_w5_dry_board",
-    "world": 5
-  },
   "6.answer_copy|range_checkpoint_board_fit|teach.0.focus.2": {
     "reason": "teach.0.focus.2: \"Missed\" discloses \"Missed\".",
     "rule": "6.answer_copy",
@@ -2310,13 +2282,6 @@
     "task_id": "w6_value_dry_board",
     "world": 6
   },
-  "6.answer_copy|w6_value_wet_board|teach.0.focus.1": {
-    "reason": "teach.0.focus.1: \"Value\" discloses \"Value\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "w6_value_wet_board",
-    "world": 6
-  },
   "6.answer_copy|w6_wrong_board|teach.0.focus.2": {
     "reason": "teach.0.focus.2: \"Missed\" discloses \"Missed\".",
     "rule": "6.answer_copy",
@@ -2359,13 +2324,6 @@
     "task_id": "turn_river_changes_w5_turn_texture_shift_transfer",
     "world": 5
   },
-  "9.inherited_copy|outs_improvement_w5_clean_vs_risky_out_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "outs_improvement_w5_clean_vs_risky_out_transfer",
-    "world": 5
-  },
   "9.inherited_copy|outs_improvement_w5_flush_out|feedback": {
     "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
     "rule": "9.inherited_copy",
@@ -2378,20 +2336,6 @@
     "rule": "9.inherited_copy",
     "target": "L2",
     "task_id": "outs_improvement_w5_straight_out",
-    "world": 5
-  },
-  "9.inherited_copy|outs_improvement_w5_table_outs_flush_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "outs_improvement_w5_table_outs_flush_transfer",
-    "world": 5
-  },
-  "9.inherited_copy|outs_improvement_w5_table_outs_straight_transfer|feedback": {
-    "reason": "feedback is identical to cards_ranks_suits_board_count on a different table: \"A flop has three board cards. Turn and river add one card each.\"",
-    "rule": "9.inherited_copy",
-    "target": "L2",
-    "task_id": "outs_improvement_w5_table_outs_straight_transfer",
     "world": 5
   },
   "9.inherited_copy|range_checkpoint_board_fit|feedback": {
