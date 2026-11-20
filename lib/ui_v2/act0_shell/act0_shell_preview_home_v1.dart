@@ -176,7 +176,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
           (world) =>
               world.isSelectable &&
               world.worldNumber >= 1 &&
-              world.worldNumber <= 6,
+              world.worldNumber <= act0DailyPracticeLastWorldV1,
         )
         .toList(growable: false);
     if (practiceWorlds.isEmpty) {

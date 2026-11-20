@@ -139,11 +139,11 @@ void main() {
   }
 
   test(
-    'every W1–W6 drill can enter a finite distinct set and survive restart',
+    'every W1–W8 drill can enter a finite distinct set and survive restart',
     () {
       var count = 0;
       for (final world in Act0ShellStateV1.sample.worlds.where(
-        (w) => w.worldNumber <= 6,
+        (w) => w.worldNumber <= act0DailyPracticeLastWorldV1,
       )) {
         final ids = [
           for (final lesson in world.lessons)
@@ -175,7 +175,7 @@ void main() {
           count++;
         }
       }
-      expect(count, 172);
+      expect(count, 192);
     },
   );
 
