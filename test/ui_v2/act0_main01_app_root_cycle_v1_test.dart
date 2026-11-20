@@ -1197,6 +1197,32 @@ void main() {
     });
   }
 
+  testWidgets('unreadable first-start preference offers a retry', (
+    tester,
+  ) async {
+    const welcomeKey = 'act0_welcome_completed_v1';
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      welcomeKey: 'unreadable fixture',
+    });
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+
+    final error = find.text('Sharky could not finish starting.');
+    expect(error, findsOneWidget);
+    expect(find.text('Recovery options'), findsNothing);
+    await _tap(tester, 'act0_recovery_retry');
+    expect(error, findsOneWidget);
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.get(welcomeKey), 'unreadable fixture');
+    expect(prefs.getString(_progressKey), isNull);
+    await prefs.setBool(welcomeKey, false);
+    await _tap(tester, 'act0_recovery_retry');
+    expect(error, findsNothing);
+    expect(find.text('Start with the basics'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'SIMULATED JRN-08 AppRoot retry preserves complete learning truth',
     (tester) async {

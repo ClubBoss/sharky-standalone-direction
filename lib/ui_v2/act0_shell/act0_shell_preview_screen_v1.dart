@@ -1430,6 +1430,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _progressLoadFailed = false;
+  bool _firstStartPreferencesLoadFailedV1 = false;
   // Set only after a successful load; until then in-memory state is defaults and
   // must never be written over acknowledged saved progress (e.g. from dispose).
   bool _progressRestoredV1 = false;
@@ -2007,28 +2008,37 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       if (!mounted || epoch != _recoveryEpochV1) return;
     }
+    var intakeCompleted = false;
+    var welcomeCompleted = false;
+    var introductionSkipped = false;
+    if (widget.showPlacementOnStart) {
+      try {
+        intakeCompleted = await ProgressService.isIntakeCompleted();
+        welcomeCompleted =
+            await Act0FirstStartPreferencesV1.hasCompletedWelcome();
+        introductionSkipped =
+            await Act0FirstStartPreferencesV1.hasSkippedIntroduction();
+      } catch (_) {
+        if (mounted && epoch == _recoveryEpochV1) {
+          setState(() {
+            _firstStartPreferencesLoadFailedV1 = true;
+            _bootSurfaceReady = true;
+          });
+        }
+        return;
+      }
+    }
     if (!mounted || epoch != _recoveryEpochV1) return;
     _progressRestoredV1 = true;
     _recordBetaVisitV1();
     if (_usesPersistedProgress && !_progressLoadFailed)
       _syncPracticeReminderV1();
     if (!widget.showPlacementOnStart) {
-      if (!mounted) {
-        return;
-      }
       setState(() {
         _showPlacement = false;
         _showWelcome = false;
         _bootSurfaceReady = true;
       });
-      return;
-    }
-    final intakeCompleted = await ProgressService.isIntakeCompleted();
-    final welcomeCompleted =
-        await Act0FirstStartPreferencesV1.hasCompletedWelcome();
-    final introductionSkipped =
-        await Act0FirstStartPreferencesV1.hasSkippedIntroduction();
-    if (!mounted || epoch != _recoveryEpochV1) {
       return;
     }
     setState(() {
@@ -2686,7 +2696,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final callbackDiagnosticEntryV1 = _diagnosticLearningEntryV1;
     final callbackDiagnosticRunIdV1 = _activeLearningEvidenceRunKeyV1?.runId;
     final openedAsSpacedReview = _spacedReviewReturnV1 != null;
-    if (_progressLoadFailed) {
+    if (_progressLoadFailed || _firstStartPreferencesLoadFailedV1) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Theme(
@@ -2698,7 +2708,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Your saved progress could not be read.'),
+                    Text(
+                      _progressLoadFailed
+                          ? 'Your saved progress could not be read.'
+                          : 'Sharky could not finish starting.',
+                    ),
                     if (_recoveryMessageV1 != null)
                       Padding(
                         padding: const EdgeInsets.all(16),
@@ -2720,25 +2734,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           : () {
                               setState(() {
                                 _progressLoadFailed = false;
+                                _firstStartPreferencesLoadFailedV1 = false;
                                 _bootSurfaceReady = false;
                               });
                               unawaited(_bootstrapFirstStartRouteV1());
                             },
                       child: const Text('Try again'),
                     ),
-                    TextButton(
-                      key: const Key('act0_recovery_options'),
-                      onPressed: _recoveryBusyV1
-                          ? null
-                          : _openRecoveryOptionsV1,
-                      child: const Text('Recovery options'),
-                    ),
-                    TextButton(
-                      onPressed: _recoveryBusyV1
-                          ? null
-                          : _requestDeleteLocalDataV1,
-                      child: const Text('Delete local data'),
-                    ),
+                    if (_progressLoadFailed) ...[
+                      TextButton(
+                        key: const Key('act0_recovery_options'),
+                        onPressed: _recoveryBusyV1
+                            ? null
+                            : _openRecoveryOptionsV1,
+                        child: const Text('Recovery options'),
+                      ),
+                      TextButton(
+                        onPressed: _recoveryBusyV1
+                            ? null
+                            : _requestDeleteLocalDataV1,
+                        child: const Text('Delete local data'),
+                      ),
+                    ],
                   ],
                 ),
               ),
