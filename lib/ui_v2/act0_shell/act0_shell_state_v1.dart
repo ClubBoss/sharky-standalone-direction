@@ -24794,16 +24794,66 @@ const _w11QJsPreflopTrail = <Act0ActionTrailItemV1>[
 ];
 
 const _w11QJsPreflopContributions = [
-  Act0ContributionV1(PokerStreet.preflop, 'sb', Act0ContributionKindV1.blind, .5),
-  Act0ContributionV1(PokerStreet.preflop, 'bb', Act0ContributionKindV1.blind, 1),
-  Act0ContributionV1(PokerStreet.preflop, 'utg', Act0ContributionKindV1.ante, .25),
-  Act0ContributionV1(PokerStreet.preflop, 'hj', Act0ContributionKindV1.ante, .25),
-  Act0ContributionV1(PokerStreet.preflop, 'co', Act0ContributionKindV1.ante, .25),
-  Act0ContributionV1(PokerStreet.preflop, 'btn', Act0ContributionKindV1.ante, .25),
-  Act0ContributionV1(PokerStreet.preflop, 'sb', Act0ContributionKindV1.ante, .25),
-  Act0ContributionV1(PokerStreet.preflop, 'bb', Act0ContributionKindV1.ante, .25),
-  Act0ContributionV1(PokerStreet.preflop, 'co', Act0ContributionKindV1.wager, 2.5),
-  Act0ContributionV1(PokerStreet.preflop, 'btn', Act0ContributionKindV1.wager, 2.5),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'sb',
+    Act0ContributionKindV1.blind,
+    .5,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'bb',
+    Act0ContributionKindV1.blind,
+    1,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'utg',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'hj',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'co',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'btn',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'sb',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'bb',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'co',
+    Act0ContributionKindV1.wager,
+    2.5,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'btn',
+    Act0ContributionKindV1.wager,
+    2.5,
+  ),
 ];
 const _w11QJsFlopBet = Act0ContributionV1(
   PokerStreet.flop,
