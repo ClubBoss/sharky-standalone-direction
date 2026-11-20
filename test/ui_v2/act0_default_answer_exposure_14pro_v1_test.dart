@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_f7_scene_gate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -115,6 +116,10 @@ void main() {
       tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
       tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
       addTearDown(tester.view.reset);
+      expect(
+        await tester.runAsync(() => Act0F7SceneGateV1.premiumStore.warmUp()),
+        isNotNull,
+      );
       await tester.pumpWidget(
         MaterialApp(
           home: Act0ShellPreviewScreenV1(

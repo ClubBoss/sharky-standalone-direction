@@ -4694,6 +4694,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                             ),
                             child: SingleChildScrollView(
                               primary: false,
+                              // Start at the answers when the preceding hand
+                              // history or guidance needs more room.
+                              reverse: true,
                               physics: const ClampingScrollPhysics(),
                               child: buildIntegratedLowerSurface(),
                             ),
