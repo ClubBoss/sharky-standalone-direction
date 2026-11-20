@@ -1863,7 +1863,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void initState() {
     super.initState();
     _reviewLifecycleV1 = AppLifecycleListener(
-      onHide: () => _betaWentToBackground = true,
+      onHide: () {
+        _betaWentToBackground = true;
+        if (_rememberLessonRunnerV1()) _persistProgress();
+      },
       onResume: () {
         if (mounted) {
           setState(() {});
@@ -2781,7 +2784,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _usesPersistedProgress &&
         act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.home);
     final recommendedDueReview = _launchableDueReviewV1(personalizedNextStep);
-    final homeDueReview = useDailyHome
+    final homeDueReview = useDailyHome && _tab == Act0ShellTabV1.home
         ? recommendedDueReview ?? _dueReviewItemsV1().firstOrNull
         : personalizedNextStep.reasonType ==
               act0ReturnReasonNoPersonalReasonAvailableV1
@@ -4013,7 +4016,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _teachingStepIndex = 0;
                                       return;
                                     }
-                                    _rememberLessonRunnerV1();
+                                    final remember = _rememberLessonRunnerV1();
                                     if (_returnToPlayHubOnBack) {
                                       _showPlayHub = true;
                                     } else {
@@ -4023,6 +4026,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _activateLearnVisitEligibilityV1();
                                       _tab = Act0ShellTabV1.learn;
                                     }
+                                    if (remember) _persistProgress();
                                   },
                                 ),
                                 onPreviousTheory: () =>
@@ -4906,7 +4910,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 if (leavingLearningRunSurface && !preserveRepairBridge) {
                   _closeLearningRunForLearnExitV1();
                 }
-                _rememberLessonRunnerV1();
+                final remember = _rememberLessonRunnerV1();
                 _tab = tab;
                 if (tab == Act0ShellTabV1.play) {
                   _showPlayHub = true;
@@ -4941,6 +4945,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _learnDetailWorldId = null;
                   _showWorldMenu = false;
                 }
+                if (remember) _persistProgress();
               }),
             ),
     );

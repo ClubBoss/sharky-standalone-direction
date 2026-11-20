@@ -567,9 +567,10 @@ void main() {
         jsonEncode(_w24TargetRecords(restoredDebt).single.toPayload()),
         missBytes,
       );
-      // Home resumes the real persisted same-target debt, with no fixture
-      // reseed and no private state restoration supplied by the test.
-      await _w24Tap(tester, 'act0_academy_home_leaf_cta');
+      // Review opens the real persisted same-target debt after remount.
+      await tester.tap(find.text('Review').last);
+      await tester.pumpAndSettle();
+      await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
       expect(_w24Runner(tester).selectedTaskId, _taskId);
       expect(_w24Runner(tester).repairReasonLine, isNotEmpty);
       await _w24Ready(tester);

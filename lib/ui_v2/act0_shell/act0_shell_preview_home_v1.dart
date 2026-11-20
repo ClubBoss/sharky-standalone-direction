@@ -1543,8 +1543,13 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       teachingStepIndex: _teachingStepIndex,
       selectedOptionId: _selectedOptionId,
     );
-    final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
-    if (_validLessonResumeV1(resume, worlds, _pathClosedTaskIds)) {
+    final worlds = (widget.state ?? Act0ShellStateV1.sample).worlds;
+    if (_validLessonResumeV1(
+      resume,
+      worlds,
+      _pathClosedTaskIds,
+      requireSelectable: false,
+    )) {
       _lessonResumeV1 = resume;
       return true;
     }
@@ -1554,15 +1559,22 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
   bool _validLessonResumeV1(
     _Act0LessonResumeV1 resume,
     List<Act0WorldCardV1> worlds,
-    Set<String> closedTasks,
-  ) {
+    Set<String> closedTasks, {
+    bool requireSelectable = true,
+  }) {
     if (closedTasks.contains(resume.taskId)) return false;
     final world = worlds
-        .where((world) => world.worldId == resume.worldId && world.isSelectable)
+        .where(
+          (world) =>
+              world.worldId == resume.worldId &&
+              (!requireSelectable || world.isSelectable),
+        )
         .firstOrNull;
     final lesson = world?.lessons
         .where(
-          (lesson) => lesson.lessonId == resume.lessonId && lesson.isSelectable,
+          (lesson) =>
+              lesson.lessonId == resume.lessonId &&
+              (!requireSelectable || lesson.isSelectable),
         )
         .firstOrNull;
     final task = lesson?.courseTaskList
@@ -1572,7 +1584,8 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         resume.teachingStepIndex > task.runner.teachingSteps.length) {
       return false;
     }
-    if (resume.phase != Act0LessonPhaseV1.review) {
+    if (resume.phase != Act0LessonPhaseV1.review ||
+        task.runner.options.isEmpty) {
       return resume.selectedOptionId == null;
     }
     return task.runner.options.any(

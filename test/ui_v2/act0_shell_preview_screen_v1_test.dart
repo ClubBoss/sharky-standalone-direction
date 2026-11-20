@@ -244,12 +244,8 @@ void main() {
     if (act0AcademyHomePreviewV1) {
       expect(find.byType(Act0AcademyHomeLeafV1), findsOneWidget);
       expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
-      expect(
-        find.text(
-          'Read the legal actions first so the first real hand is not a guess.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text('Start lesson'), findsOneWidget);
+      expect(find.byKey(const Key('act0_home_daily_practice')), findsNothing);
       expect(
         find.byKey(const Key('act0_academy_home_leaf_cta')),
         findsOneWidget,
@@ -471,7 +467,7 @@ void main() {
     }
   });
 
-  testWidgets('Wave 2 Home repair return keeps its personalized reason', (
+  testWidgets('Home resumes feedback and Review retains the open repair', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(393, 852);
@@ -545,22 +541,26 @@ void main() {
     expect(intent['targetTaskId'], 'actions_check_drill');
 
     if (act0AcademyHomePreviewV1) {
-      expect(find.text('Repair one weak spot'), findsOneWidget);
-      expect(find.text('Practice this spot'), findsOneWidget);
-      expect(
-        find.textContaining('You missed this clue last time.'),
-        findsOneWidget,
-      );
-      final input = tester
-          .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
-          .input;
-      expect(
-        input.nextAction!.subtitle,
-        contains('You missed this clue last time.'),
-      );
+      expect(find.text('Continue lesson'), findsOneWidget);
+      expect(find.text('Repair one weak spot'), findsNothing);
       await tester.tap(find.byKey(const Key('act0_academy_home_leaf_cta')));
       await tester.pumpAndSettle();
-      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      final savedFeedback = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(savedFeedback.selectedTaskId, 'actions_legal_context');
+      expect(savedFeedback.runner.selectedOptionId, 'fold');
+      expect(savedFeedback.runner.phase, Act0LessonPhaseV1.review);
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Review').last);
+      await tester.pumpAndSettle();
+      final repair = find.byKey(
+        const Key('act0_academy_review_leaf_repair_cta'),
+      );
+      await tester.ensureVisible(repair);
+      await tester.tap(repair);
+      await tester.pumpAndSettle();
       final runner = tester.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),
       );
