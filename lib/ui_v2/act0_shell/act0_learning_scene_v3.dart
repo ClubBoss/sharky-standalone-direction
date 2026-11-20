@@ -12,64 +12,6 @@ enum Act0LearningScenePhaseV3 {
   feedbackSuboptimal,
 }
 
-/// Presentation-only scaffold tier for a given B5 attention phase.
-///
-/// This governs *how much room Sharky's presence takes* — visibility,
-/// relative size, and whether the guide earns the stronger "spoken" card
-/// treatment — never *what Sharky is claiming*. Semantic truth (confirm /
-/// repair / coach / neutral) is owned exclusively by the existing
-/// evidence-gated [act0ResolveSharkyCompanionStateV1] resolver via
-/// [act0SharkySceneCoachStateV1]; this function must never be used to
-/// infer or manufacture that truth.
-enum Act0SharkyCoachScaffoldTierV1 {
-  /// DECIDE-family moments where the learner must still read the table
-  /// unaided: no avatar at all, byte-identical to the pre-Coach-Surface
-  /// guide.
-  off,
-
-  /// RECHECK/PROVE: Sharky stays present for continuity but visibly
-  /// smaller and plainer than any coached state — the reduced-scaffold
-  /// floor.
-  quiet,
-
-  /// UNDERSTAND / REPAIR: Sharky reads as the scene's speaking coach —
-  /// larger avatar, and (when the resolved state carries real evidence)
-  /// the notch-and-tint "spoken" card around the existing copy.
-  spoken,
-}
-
-({Act0SharkyCoachScaffoldTierV1 tier, double avatarSize})
-act0SharkySceneCoachScaffoldForAttentionPhaseV1(
-  Act0SceneAttentionPhaseV1 phase,
-) {
-  return switch (phase) {
-    Act0SceneAttentionPhaseV1.theory => (
-      tier: Act0SharkyCoachScaffoldTierV1.off,
-      avatarSize: 0.0,
-    ),
-    Act0SceneAttentionPhaseV1.decision => (
-      tier: Act0SharkyCoachScaffoldTierV1.off,
-      avatarSize: 0.0,
-    ),
-    Act0SceneAttentionPhaseV1.recheck => (
-      tier: Act0SharkyCoachScaffoldTierV1.quiet,
-      avatarSize: 30.0,
-    ),
-    Act0SceneAttentionPhaseV1.repair => (
-      tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 84.0,
-    ),
-    Act0SceneAttentionPhaseV1.correctFeedback => (
-      tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 80.0,
-    ),
-    Act0SceneAttentionPhaseV1.wrongFeedback => (
-      tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 88.0,
-    ),
-  };
-}
-
 /// The single semantic-truth owner for the Coach Surface: routes the
 /// caller's already-resolved structured evidence through the existing,
 /// canonical [act0ResolveSharkyCompanionStateV1] contract instead of
@@ -194,9 +136,8 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   const Act0LearningSceneGuideV3({
     super.key,
     required this.phase,
-    required this.attentionPhase,
     required this.sharkyState,
-    this.growthStage = Act0SharkyGrowthStageV1.foundation,
+    this.isAssistedFeedback = false,
     required this.eyebrow,
     required this.headline,
     required this.support,
@@ -208,23 +149,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
 
   final Act0LearningScenePhaseV3 phase;
 
-  /// The existing B5 attention-phase truth. Presentation only: it selects
-  /// Sharky's scaffold tier (visibility/size), never the semantic claim —
-  /// see [Act0SharkyCoachScaffoldTierV1].
-  final Act0SceneAttentionPhaseV1 attentionPhase;
-
   /// The semantic truth, already resolved by the caller from real
   /// structured evidence via [act0SharkySceneCoachStateV1] (which itself
   /// only wraps the canonical [act0ResolveSharkyCompanionStateV1]
   /// contract). This widget never re-derives or overrides it.
   final Act0SharkyCompanionStateV1 sharkyState;
 
-  /// Sharky's persistent growth stage — a separate axis from [sharkyState].
-  /// Callers pass the canonical resolved stage (see
-  /// [act0SharkyGrowthStageForWorldNumberV1]), never a style token. Defaults
-  /// to [Act0SharkyGrowthStageV1.foundation] only for callers that have not
-  /// wired the canonical resolver.
-  final Act0SharkyGrowthStageV1 growthStage;
+  final bool isAssistedFeedback;
   final String eyebrow;
   final String headline;
   final String support;
@@ -245,9 +176,6 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     };
     final scaler = MediaQuery.textScalerOf(context);
     final enlarged = scaler.scale(1) > 1.1;
-    final scaffold = act0SharkySceneCoachScaffoldForAttentionPhaseV1(
-      attentionPhase,
-    );
     final isEvidenceBacked = sharkyState != Act0SharkyCompanionStateV1.neutral;
     // Evidence-backed tone reads as Sharky's own claim; unclaimed moments
     // keep the scene's own phase tone exactly as before this surface
@@ -258,37 +186,26 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
             act0SharkyMoodForCompanionStateV1(sharkyState),
           )
         : phaseTone;
-    final showAvatar = scaffold.tier != Act0SharkyCoachScaffoldTierV1.off;
-    final showSpokenSurface =
-        scaffold.tier == Act0SharkyCoachScaffoldTierV1.spoken &&
-        isEvidenceBacked;
-
-    final compactFeedback =
-        focusPointsUp &&
-        phase != Act0LearningScenePhaseV3.theory &&
-        phase != Act0LearningScenePhaseV3.tableTask;
+    final feedbackRingTone = switch (phase) {
+      Act0LearningScenePhaseV3.feedbackWrong =>
+        Act0ShellTokensV1.repairAttention,
+      Act0LearningScenePhaseV3.feedbackCorrect =>
+        isAssistedFeedback
+            ? Act0ShellTokensV1.info
+            : Act0ShellTokensV1.successProof,
+      Act0LearningScenePhaseV3.feedbackSuboptimal => Act0ShellTokensV1.info,
+      Act0LearningScenePhaseV3.theory ||
+      Act0LearningScenePhaseV3.tableTask => null,
+    };
+    final showSpokenSurface = feedbackRingTone != null && isEvidenceBacked;
+    final compactFeedback = focusPointsUp && feedbackRingTone != null;
     final hasReason = compactFeedback && support.trim().isNotEmpty;
-    final Widget? avatar = showAvatar
-        ? ExcludeSemantics(
-            child: Act0SharkyCompanionAvatarV1(
-              key: const Key('act0_shell_learning_scene_sharky_avatar'),
-              state: sharkyState,
-              size: compactFeedback ? 20 : scaffold.avatarSize,
-              simpleFrame: compactFeedback || !showSpokenSurface,
-              growthStage: growthStage,
-            ),
-          )
-        : null;
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            if (compactFeedback && avatar != null) ...[
-              avatar,
-              const SizedBox(width: 6),
-            ],
             if (showSpokenSurface) ...[
               Text(
                 'Sharky',
@@ -465,13 +382,29 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     );
 
     final guideBody = Row(
-      crossAxisAlignment: showSpokenSurface
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!compactFeedback && avatar != null) ...[
-          avatar,
-          SizedBox(width: showSpokenSurface ? 10 : Act0ShellTokensV1.gapSm),
+        if (feedbackRingTone != null) ...[
+          ExcludeSemantics(
+            child: Container(
+              key: const Key('act0_shell_learning_scene_sharky_avatar'),
+              width: 56,
+              height: 56,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: feedbackRingTone, width: 2),
+              ),
+              child: Act0SharkyPresenceMascotV1(
+                mood: act0SharkyMoodForCompanionStateV1(
+                  Act0SharkyCompanionStateV1.neutral,
+                ),
+                tone: feedbackRingTone,
+                size: 44,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
         ],
         Expanded(
           child: showSpokenSurface && !compactFeedback

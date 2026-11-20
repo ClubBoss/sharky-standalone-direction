@@ -22,6 +22,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -473,6 +474,10 @@ void main() {
         addTearDown(tester.view.resetPadding);
         addTearDown(tester.view.resetViewPadding);
         await _openPendingHelpDecision(tester);
+        final avatar = find.byKey(
+          const Key('act0_shell_learning_scene_sharky_avatar'),
+        );
+        expect(avatar, findsNothing);
         if (feedbackCase == 'assisted') {
           await _tap(tester, 'act0_shell_theory_recall_cta');
           await _tap(tester, 'act0_shell_review_full_idea_cta');
@@ -489,6 +494,22 @@ void main() {
         final question = find.byKey(const Key('act0_shell_review_question'));
         expect(question.hitTestable(), findsOneWidget);
         expect(tester.widget<Text>(question).data, originalQuestion);
+        expect(avatar.hitTestable(), findsOneWidget);
+        expect(tester.getSize(avatar), const Size.square(56));
+        final ring =
+            tester.widget<Container>(avatar).decoration as BoxDecoration;
+        expect(ring.shape, BoxShape.circle);
+        expect((ring.border as Border).top.color, switch (feedbackCase) {
+          'wrong' => Act0ShellTokensV1.repairAttention,
+          'assisted' => Act0ShellTokensV1.info,
+          _ => Act0ShellTokensV1.successProof,
+        });
+        final reason = find.byKey(const Key('act0_learning_scene_v3_support'));
+        expect(
+          tester.getRect(avatar).right,
+          lessThan(tester.getRect(reason).left),
+        );
+
         await _expectFeedbackClearance(tester);
         final record = _rows(
           await _saved(tester),
@@ -505,6 +526,7 @@ void main() {
           expect(_runner(tester).selectedTaskId, _source);
           expect(_runner(tester).repairResultReceiptLine, isNull);
           await _advanceToPrompt(tester);
+          expect(avatar, findsNothing);
           expect(
             tester
                 .widget<Text>(
@@ -518,17 +540,20 @@ void main() {
           await _tap(tester, 'act0_shell_feedback_continue_cta');
           expect(_runner(tester).selectedTaskId, _mappedRepair);
           await _advanceToPrompt(tester);
+          expect(avatar, findsNothing);
           await _choose(tester, 'two_three_four');
           await _expectFeedbackClearance(tester);
         } else if (feedbackCase == 'correct') {
           await _tap(tester, 'act0_shell_feedback_continue_cta');
           expect(_runner(tester).selectedTaskId, _mappedRepair);
           await _advanceToPrompt(tester);
+          expect(avatar, findsNothing);
           await _choose(tester, 'two_three_four');
           await _expectFeedbackClearance(tester);
           await _tap(tester, 'act0_shell_feedback_continue_cta');
           expect(_runner(tester).selectedTaskId, _nextTask);
           await _advanceToPrompt(tester);
+          expect(avatar, findsNothing);
           await _choose(tester, 'co_still_acting');
           expect(
             _runner(tester).runner.reviewQuality,
