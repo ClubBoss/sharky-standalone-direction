@@ -4,7 +4,7 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
-const act0SkillMapLastWorldV1 = 10;
+const act0SkillMapLastWorldV1 = 12;
 
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
@@ -65,6 +65,14 @@ const _extensionLessonSkills = <String, List<String>>{
   'adjust_one_lever': ['Player adjustment'],
   'exploit_guardrails': ['Player adjustment'],
   'player_adjustment_checkpoint': ['Player adjustment'],
+  'session_plan_basics': ['Session routine'],
+  'table_trigger_reads': ['Session routine'],
+  'post_session_review_loop': ['Session routine'],
+  'real_play_transfer_checkpoint': ['Session routine'],
+  'decision_over_outcome': ['Mental game'],
+  'tilt_reset_protocol': ['Mental game'],
+  'confidence_and_discipline': ['Mental game'],
+  'mindset_bridge_checkpoint': ['Mental game'],
 };
 
 const _skillOverridesByTaskId = <String, List<String>>{
@@ -82,6 +90,11 @@ const _skillOverridesByTaskId = <String, List<String>>{
     'Board reading',
     'Betting decisions',
   ],
+  'w11_trigger_small_price_continue': ['Session routine', 'Betting decisions'],
+  'w11_trigger_bad_price_fold': ['Session routine', 'Betting decisions'],
+  'asm05_new_known_holes_turn_call_10': ['Betting decisions'],
+  'asm05_new_known_holes_turn_call_40': ['Betting decisions'],
+  'w12_pretty_hand_bad_price_fold': ['Mental game', 'Betting decisions'],
 };
 
 class Act0W14SkillStateV1 {

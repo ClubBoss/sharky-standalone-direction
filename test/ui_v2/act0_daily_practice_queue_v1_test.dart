@@ -26,6 +26,11 @@ void main() {
       firstTask: 'w9_cash_vs_tournament',
       secondTask: 'w10_nit_tag',
     ),
+    (
+      throughWorld: 12,
+      firstTask: 'w11_plan_focus_choice',
+      secondTask: 'w12_good_fold_bad_result',
+    ),
   ]) {
     testWidgets(
       'Daily Practice serves completed W${pair.throughWorld - 1}–W${pair.throughWorld} drills and resumes',
@@ -144,7 +149,7 @@ void main() {
   }
 
   test(
-    'every W1–W10 drill can enter a finite distinct set and survive restart',
+    'every W1–W12 drill can enter a finite distinct set and survive restart',
     () {
       var count = 0;
       for (final world in Act0ShellStateV1.sample.worlds.where(
@@ -180,7 +185,7 @@ void main() {
           count++;
         }
       }
-      expect(count, 221);
+      expect(count, 248);
     },
   );
 

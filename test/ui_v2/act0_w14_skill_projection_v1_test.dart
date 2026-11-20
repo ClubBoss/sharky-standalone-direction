@@ -8,7 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 final _worlds = Act0ShellStateV1.sample.worlds;
 final _tasks = [
   for (final world in _worlds.where(
-    (w) => w.worldNumber >= 1 && w.worldNumber <= 10,
+    (w) => w.worldNumber >= 1 && w.worldNumber <= 12,
   ))
     for (final lesson in world.lessons)
       for (final task in lesson.taskList)
@@ -243,7 +243,7 @@ void main() {
     final taskCounts = <int, int>{};
     for (final (i, source) in _tasks.indexed) {
       final world = source.world.worldNumber;
-      if (world < 9) continue;
+      if (world < 9 || world > 10) continue;
       taskCounts.update(world, (count) => count + 1, ifAbsent: () => 1);
       expect(
         _states([_answer(i, i + 1)])
@@ -254,6 +254,40 @@ void main() {
       );
     }
     expect(taskCounts, {9: 23, 10: 22});
+  });
+
+  test('every W11–W12 task projects to its authored topic', () {
+    const pricedSession = {
+      'w11_trigger_small_price_continue',
+      'w11_trigger_bad_price_fold',
+    };
+    const knownHoleCards = {
+      'asm05_new_known_holes_turn_call_10',
+      'asm05_new_known_holes_turn_call_40',
+    };
+    final taskCounts = <int, int>{};
+    for (final (i, source) in _tasks.indexed) {
+      final world = source.world.worldNumber;
+      if (world < 11) continue;
+      taskCounts.update(world, (count) => count + 1, ifAbsent: () => 1);
+      final id = source.task.taskId;
+      expect(
+        _states([_answer(i, i + 1)])
+            .where((state) => state.independentTasks > 0)
+            .map((state) => state.label)
+            .toSet(),
+        {
+          if (world == 11) 'Session routine',
+          if (world == 12 && !knownHoleCards.contains(id)) 'Mental game',
+          if (pricedSession.contains(id) ||
+              knownHoleCards.contains(id) ||
+              id == 'w12_pretty_hand_bad_price_fold')
+            'Betting decisions',
+        },
+        reason: id,
+      );
+    }
+    expect(taskCounts, {11: 21, 12: 22});
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {
