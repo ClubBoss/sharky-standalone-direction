@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart'
     show Act0SharkyMoodV1;
@@ -46,6 +47,10 @@ class Act0AcademyHomeLeafInputV1 {
     this.backdrop,
     this.onOpenDevMenu,
     this.onStartDailyPractice,
+    this.dayGoalDone,
+    this.returningAfterBreak = false,
+    this.resumeLabel,
+    this.onResumeLesson,
   });
 
   final String courseTitle;
@@ -58,6 +63,10 @@ class Act0AcademyHomeLeafInputV1 {
   final ImageProvider? backdrop;
   final VoidCallback? onOpenDevMenu;
   final VoidCallback? onStartDailyPractice;
+  final bool? dayGoalDone;
+  final bool returningAfterBreak;
+  final String? resumeLabel;
+  final VoidCallback? onResumeLesson;
 }
 
 /// Validated earned progress. Invalid or missing counts produce `null` so no
@@ -139,13 +148,34 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const _HomeGreetingV1(),
-              _LearningCycleV1(currentPhase: input.phase),
+              _HomeGreetingV1(returningAfterBreak: input.returningAfterBreak),
+              if (input.dayGoalDone == null)
+                _LearningCycleV1(currentPhase: input.phase),
               const SizedBox(height: 20),
               if (next != null) ...[
                 _NextActionCardV1(action: next),
                 const SizedBox(height: 10),
               ],
+              if (input.onResumeLesson != null && input.resumeLabel != null)
+                TextButton(
+                  key: const Key('act0_home_resume_lesson'),
+                  onPressed: input.onResumeLesson,
+                  child: Text(input.resumeLabel!, textAlign: TextAlign.center),
+                ),
+              if (input.dayGoalDone case final done?)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 6, 12, 14),
+                  child: Text(
+                    done
+                        ? 'Today’s goal complete'
+                        : 'Today’s goal: one lesson or review',
+                    key: const Key('act0_home_today_goal'),
+                    style: const TextStyle(
+                      color: Act0ClubNightTokensV1.text2,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               if (input.onStartDailyPractice != null)
                 Align(
                   alignment: Alignment.centerLeft,
@@ -168,7 +198,9 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
 }
 
 class _HomeGreetingV1 extends StatelessWidget {
-  const _HomeGreetingV1();
+  const _HomeGreetingV1({required this.returningAfterBreak});
+
+  final bool returningAfterBreak;
 
   @override
   Widget build(BuildContext context) {
@@ -177,18 +209,18 @@ class _HomeGreetingV1 extends StatelessWidget {
       // Min height keeps the donor rhythm; text scaling may grow it.
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 204),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome,',
-              style: TextStyle(
+              returningAfterBreak ? 'Welcome back' : 'Welcome,',
+              style: const TextStyle(
                 color: Act0AcademyLeafPaletteV1.textMuted,
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 4),
-            Text(
+            const SizedBox(height: 4),
+            const Text(
               "Let's learn",
               style: TextStyle(
                 color: Act0AcademyLeafPaletteV1.text,
@@ -198,8 +230,8 @@ class _HomeGreetingV1 extends StatelessWidget {
                 letterSpacing: -0.4,
               ),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               'Build your\npoker edge.',
               style: TextStyle(
                 color: Act0AcademyLeafPaletteV1.textMuted,

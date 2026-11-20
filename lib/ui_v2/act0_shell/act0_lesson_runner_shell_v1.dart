@@ -4351,13 +4351,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             'asm05_new_known_holes_turn_call_10',
             'asm05_new_known_holes_turn_call_40',
           }.contains(widget.selectedTaskId);
-      // Complete authored hand premises are task data, not answer help.
-      final showSourceOrderPremises =
+      // A played hand and an explicitly authored hypothetical scenario can
+      // both require caption facts. Feedback and hints have their own slots.
+      final showDecisionPremise =
           isDrill &&
           !isTeaching &&
           runner.selectedOptionId == null &&
-          runner.table.decisionSeatId != null;
-      final support = showSourceOrderPremises
+          (runner.table.decisionSeatId != null ||
+              runner.table.showDecisionPremise);
+      final support = showDecisionPremise
           ? act0LearnerFacingPremisesV1(runner.caption)
           : showAsm05ModelAssumptions
           ? '${runner.caption} ${runner.hint}'
@@ -4412,7 +4414,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         eyebrow: purpose,
         headline: headline,
         support: support,
-        scrollSupport: showAsm05ModelAssumptions || showSourceOrderPremises,
+        scrollSupport: showAsm05ModelAssumptions || showDecisionPremise,
         focusPointsUp: focusPointsUp,
         showCoach: widget.showDecisionCoach,
         focusLabel: focusLabel,

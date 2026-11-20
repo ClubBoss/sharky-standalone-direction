@@ -78,6 +78,11 @@ Widget act0AcademyHomeRuntimeV1(
   required int earnedLessons,
   required int totalLessons,
   required Act0AcademyHomePhaseV1? phase,
+  Act0AcademyHomeNextActionV1? dailyAction,
+  bool? dayGoalDone,
+  bool returningAfterBreak = false,
+  String? resumeLabel,
+  VoidCallback? onResumeLesson,
 }) {
   if (!act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.home)) return legacy;
   final lesson = legacy.currentLesson ?? legacy.state.currentLesson;
@@ -89,17 +94,26 @@ Widget act0AcademyHomeRuntimeV1(
       earnedLessonCount: earnedLessons,
       courseLessonCount: totalLessons,
       phase: phase,
-      nextAction: Act0AcademyHomeNextActionV1(
-        title: legacy.nextActionTitle ?? lesson.title,
-        subtitle: legacy.personalizedReturnReasonLine?.trim().isNotEmpty == true
-            ? legacy.personalizedReturnReasonLine!.trim()
-            : legacy.nextActionSubtitle ?? lesson.subtitle,
-        ctaLabel: legacy.nextActionCtaLabel,
-        onPressed: _guard(isCurrent, legacy.onContinue)!,
-      ),
+      nextAction:
+          dailyAction ??
+          Act0AcademyHomeNextActionV1(
+            title: legacy.nextActionTitle ?? lesson.title,
+            subtitle:
+                legacy.personalizedReturnReasonLine?.trim().isNotEmpty == true
+                ? legacy.personalizedReturnReasonLine!.trim()
+                : legacy.nextActionSubtitle ?? lesson.subtitle,
+            ctaLabel: legacy.nextActionCtaLabel,
+            onPressed: _guard(isCurrent, legacy.onContinue)!,
+          ),
       backdrop: _backdrop,
       onOpenDevMenu: _guard(isCurrent, legacy.onOpenDevMenu),
-      onStartDailyPractice: _guard(isCurrent, legacy.onStartDailyDrill),
+      onStartDailyPractice: dayGoalDone == null
+          ? _guard(isCurrent, legacy.onStartDailyDrill)
+          : null,
+      dayGoalDone: dayGoalDone,
+      returningAfterBreak: returningAfterBreak,
+      resumeLabel: resumeLabel,
+      onResumeLesson: _guard(isCurrent, onResumeLesson),
     ),
   );
 }

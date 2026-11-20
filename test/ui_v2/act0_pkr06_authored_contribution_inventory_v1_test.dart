@@ -243,7 +243,6 @@ void main() {
         expect(task.runner.options.map((option) => option.quality).toSet(), {
           Act0FeedbackQualityV1.correct,
           Act0FeedbackQualityV1.wrong,
-          Act0FeedbackQualityV1.suboptimal,
         });
       }
     },

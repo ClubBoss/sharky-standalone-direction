@@ -271,6 +271,58 @@ String _action(Act0RunnerOptionV1 option) {
   return match?[1] == 'open' ? 'raise' : match?[1] ?? option.id;
 }
 
+const _deterministicSeatAndBetTaskIds = {
+  'position_checkpoint_position_checkpoint_table_notice',
+  'same_hand_different_seat_position_repair_same_hand_different_seat',
+  'w4_bluff_pressure',
+  'w4_checkpoint_table_purpose_price',
+};
+
+// The catalog review freezes the exact wrong choices while checking the whole
+// question. These ask for a table fact or an action under an explicit rule.
+const fixedDrawRangeAndStackChoicesV1 = {
+  'flush_draws_w5_flush_draw_find': 'straight_draw',
+  'flush_draws_w5_made_hand_vs_flush_draw_transfer':
+      'draw_means_pair_does_not_count',
+  'flush_draws_w5_flush_draw_recheck_transfer': 'no_flush_pressure',
+  'straight_draws_w5_gutshot_draw': 'open_ended',
+  'straight_draws_w5_gutshot_contrast_transfer': 'gutshot',
+  'outs_improvement_w5_clean_vs_risky_out_transfer': 'five_hearts_riskier',
+  'turn_river_changes_w5_turn_texture_shift_transfer': 'size_only_changed',
+  'turn_river_changes_w5_river_draw_story_transfer': 'draw_hit_anyway',
+  'turn_river_changes_w5_street_repair': 'small_same_story',
+  'w6_wrong_board': 'bluff',
+  'w6_turn_shift_bucket': 'never_changes',
+  'w6_value_range_action': 'check',
+  'w6_table_value_line_transfer': 'check_back',
+  'range_checkpoint_value': 'bluff',
+  'range_checkpoint_board_fit': 'bluff',
+  'w6_suited_offsuit_weight_compare': 'same_weight',
+  'w6_pair_vs_suited_weight_compare': 'same_weight',
+  'w6_checkpoint_table_combo_weight': 'pair_nines',
+  'w6_board_pair_strength_compare': 'hero_aj',
+  'w6_wet_board_repair': 'smaller_same_story',
+  'w7_effective_stack_30bb': '115',
+  'w7_effective_stack_100bb': '50',
+  'w7_20bb_wider': '100bb',
+  'w7_100bb_tighter': 'forced_jam',
+  'w7_40bb_middle': 'same_100',
+  'w7_ajs_btn_25bb_transfer': 'too_fragile_now',
+  'w7_ajs_btn_100bb_transfer': 'same_clean_call',
+  'w7_low_spr_commit': 'same',
+  'w7_high_spr_room': 'none',
+  'w7_spr4_middle': 'same_as_eight',
+  'what_poker_is_side_pot_intro': 'side_pot_is_penalty',
+  'w7_6max_wider': 'same',
+  'w7_fullring_tighter': 'depth',
+  'w7_stack_checkpoint': 'range_only',
+};
+
+const _fixedTournamentComparisonTaskIds = {
+  'w9_survival_stack_tradeoff',
+  'w9_checkpoint_zone_line',
+};
+
 final _actualRankQuestion = RegExp(
   r'\b(?:who wins|who (?:takes|gets) the pot|which (?:shown )?hand wins|'
   r'what happens to the pot|which (?:hand|rank) (?:is stronger|ranks higher)|'
@@ -280,6 +332,18 @@ final _actualRankQuestion = RegExp(
   r'how much .{0,28}(?:call|pot))\b',
   caseSensitive: false,
 );
+
+// Each of these W1 prompts has a single factual table read or rule answer.
+const _w1FactualGradeTaskIds = {
+  'what_poker_is_table_read_transfer',
+  'what_poker_is_table_read_recheck',
+  'your_first_hand_private_cards_recheck',
+  'what_poker_is_all_in_meaning',
+  'what_poker_is_matched_chips_transfer',
+  'what_poker_is_win_ways',
+  'what_poker_is_showdown_win',
+  'what_poker_is_live_win_transfer',
+};
 
 CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
   final tasks = rows ?? catalogTasks;
@@ -410,6 +474,11 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
               'recognition',
               'counting',
             }.contains(task.resolvedTaskFamily.name) ||
+            _w1FactualGradeTaskIds.contains(task.taskId) ||
+            task.taskId.startsWith('hand_discipline_buckets_') ||
+            _deterministicSeatAndBetTaskIds.contains(task.taskId) ||
+            fixedDrawRangeAndStackChoicesV1.containsKey(task.taskId) ||
+            _fixedTournamentComparisonTaskIds.contains(task.taskId) ||
             _actualRankQuestion.hasMatch(catalogQuestion(task)))) {
       for (final o in r.options.where((o) => !o.isCorrect)) {
         audit.check(
@@ -753,7 +822,8 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
       );
       final targetGoals = {
         ...?knownRepairGoals[intent.targetTaskId],
-        if (target != null && target.world.worldNumber <= 4)
+        if (target != null &&
+            target.world.worldNumber <= act0SameGoalReplayThroughWorldV1)
           act0FoundationRepairGoalForTaskV1(intent.targetTaskId),
       };
       audit.check(

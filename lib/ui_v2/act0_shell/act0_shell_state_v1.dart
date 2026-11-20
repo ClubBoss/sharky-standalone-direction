@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+
+import 'act0_hand_contributions_v1.dart';
 import 'act0_asm05_authored_decision_truth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
 
@@ -867,6 +870,7 @@ enum Act0TableScopeV1 { unclassified, playedHand, orientation, explanation }
 class Act0TableStateV1 {
   const Act0TableStateV1({
     this.scope = Act0TableScopeV1.unclassified,
+    this.showDecisionPremise = false,
     required this.tableFormat,
     required this.playerCount,
     this.density = Act0TableDensityV1.compactLesson,
@@ -880,6 +884,7 @@ class Act0TableStateV1 {
     this.focusCalloutLabel = '',
     this.emptyBoardLabel = '',
     this.actionTrail = const <Act0ActionTrailItemV1>[],
+    this.handContributions,
     this.autoPlayHistory = true,
     this.activeSeatId,
     this.decisionSeatId,
@@ -892,6 +897,8 @@ class Act0TableStateV1 {
   });
 
   final Act0TableScopeV1 scope;
+  // The authored caption supplies facts required to answer this scenario.
+  final bool showDecisionPremise;
   final Act0TableFormatV1 tableFormat;
   final int playerCount;
   final Act0TableDensityV1 density;
@@ -905,6 +912,7 @@ class Act0TableStateV1 {
   final String focusCalloutLabel;
   final String emptyBoardLabel;
   final List<Act0ActionTrailItemV1> actionTrail;
+  final Act0HandContributionsV1? handContributions;
   final bool autoPlayHistory;
   final String? activeSeatId;
   // Source-owned current actor; independent of answer-revealing display focus.
@@ -928,6 +936,7 @@ class Act0TableStateV1 {
 
   Act0TableStateV1 copyWith({
     Act0TableScopeV1? scope,
+    bool? showDecisionPremise,
     Act0TableFormatV1? tableFormat,
     Act0TableDensityV1? density,
     List<Act0SeatStateV1>? seats,
@@ -940,6 +949,7 @@ class Act0TableStateV1 {
     String? focusCalloutLabel,
     String? emptyBoardLabel,
     List<Act0ActionTrailItemV1>? actionTrail,
+    Act0HandContributionsV1? handContributions,
     bool? autoPlayHistory,
     String? activeSeatId,
     String? decisionSeatId,
@@ -953,6 +963,7 @@ class Act0TableStateV1 {
   }) {
     return Act0TableStateV1(
       scope: scope ?? this.scope,
+      showDecisionPremise: showDecisionPremise ?? this.showDecisionPremise,
       tableFormat: tableFormat ?? this.tableFormat,
       playerCount: playerCount,
       density: density ?? this.density,
@@ -972,6 +983,12 @@ class Act0TableStateV1 {
       focusCalloutLabel: focusCalloutLabel ?? this.focusCalloutLabel,
       emptyBoardLabel: emptyBoardLabel ?? this.emptyBoardLabel,
       actionTrail: actionTrail ?? this.actionTrail,
+      handContributions:
+          handContributions ??
+          (actionTrail == null &&
+                  (streetLabel == null || streetLabel == this.streetLabel)
+              ? this.handContributions
+              : null),
       autoPlayHistory: autoPlayHistory ?? this.autoPlayHistory,
       activeSeatId: activeSeatId ?? this.activeSeatId,
       decisionSeatId: clearDecisionSeatId
@@ -1171,6 +1188,20 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   );
 }
 
+Act0HandContributionsV1 _act0SingleStreetBetContributionsV1({
+  required PokerStreet street,
+  required String bettor,
+  required double betBb,
+  required double buttonStackAtLeastBb,
+}) => Act0HandContributionsV1(
+  fromStreet: street,
+  throughStreet: street,
+  minimumStartingStackBbBySeat: {'btn': buttonStackAtLeastBb},
+  entries: [
+    Act0ContributionV1(street, bettor, Act0ContributionKindV1.wager, betBb),
+  ],
+);
+
 // Explicit authored current-street commitments; old street chips are collected.
 // This helper does not infer actors, amounts, folds or a pot from partial trails.
 Act0TableStateV1 _act0CurrentStreetTableV1(
@@ -1256,6 +1287,7 @@ Act0TableStateV1 _act0ReassignHeroSeatV1(
     activeSeatId: resolvedActiveSeatId,
     // A reassigned Hero turn must not retain the previous Hero's terminal
     // marker. Prior actions and independently authored opponent turns stay.
+    handContributions: table.handContributions,
     actionTrail: [
       for (var i = 0; i < table.actionTrail.length; i++)
         if (i == table.actionTrail.length - 1 &&
@@ -6320,7 +6352,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: "Get called by worse hands",
               betterAnswerLabel: "Get called by worse hands",
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Read the hands that call.",
               feedbackReason:
                   "The hands named as calls are behind your pair of queens. That makes this a value bet.",
@@ -6376,7 +6408,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: "Ace-high",
               betterAnswerLabel: "Ace-high",
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Check for a matching rank.",
               feedbackReason:
                   "There are no equal ranks among your two cards and this flop.",
@@ -6602,7 +6634,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: "BB, the caller",
               betterAnswerLabel: "BB, the caller",
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "BTN has one strong hand type.",
               feedbackReason:
                   "J-J makes a set. Neither A-A nor A-K makes two pair or better. BB has three strong hand types.",
@@ -7110,7 +7142,8 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'spr_and_commitment',
     title: 'Room or commitment',
-    subtitle: 'Low SPR means less room. High SPR means more room to maneuver.',
+    subtitle:
+        'A smaller stack relative to the pot leaves fewer betting choices.',
     phaseLabel: 'SPR',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -7216,7 +7249,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: '20 BB',
               betterAnswerLabel: '20 BB',
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: 'Thirty was the additional amount.',
               feedbackReason:
                   'After matching you for 20 BB, the deeper stacks each put in 30 BB more against each other.',
@@ -9273,6 +9306,11 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     toCallLabel: 'To call 1 BB',
     centerLabel: 'Your turn',
     emptyBoardLabel: 'No board cards yet',
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'btn': 100},
+      entries: _act0LessonBlinds,
+    ),
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -9474,7 +9512,7 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A and K',
       betterAnswerLabel: 'A and K',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not this street.',
       feedbackReason:
           'Board cards are shared later. This recheck asks for your two private cards.',
@@ -9716,6 +9754,30 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     centerLabel: showdown
         ? 'Your pair of aces beats the big blind’s pair of jacks'
         : runner.table.centerLabel,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.values[streetIndex],
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+    ),
     actionTrail: trail,
     seats: [
       for (final seat in runner.table.seats)
@@ -9962,7 +10024,7 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'You put in all remaining chips',
       betterAnswerLabel: 'You put in all remaining chips',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Stack size still has a role, but not that role.',
       feedbackReason:
           'CO has chips left. You put in your last chips. The hand still has to be decided.',
@@ -9977,6 +10039,31 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
     // actions were not in the earlier source. UTG/HJ fold, CO limps for 1 BB,
     // both blinds fold to Hero's all-in, then CO calls to 20 BB total, so
     // pot 41.5 BB = 0.5 + 1 + 20 + 20 is unchanged.
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'btn': 20},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          20,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          19,
+        ),
+      ],
+    ),
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1.note(label: 'Blinds: 1.5 BB'),
       Act0ActionTrailItemV1.note(label: 'UTG folds'),
@@ -10101,7 +10188,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
       betterAnswerLabel: 'Only the chips CO matched against the 20 BB all-in',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Matched already matters.',
       feedbackReason:
           'You can win the 20 BB that CO matched. CO keeps the chips they did not put in.',
@@ -10336,7 +10423,7 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Everyone else folds',
       betterAnswerLabel: 'Everyone else folds',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'That is the other ending.',
       feedbackReason:
           'Best hand at showdown is a real way to win, but this question asks for the early ending before cards are revealed.',
@@ -10849,6 +10936,11 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.preflop,
+        startingStackBbBySeat: {'btn': 100},
+        entries: [..._act0LessonBlinds],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -10926,6 +11018,43 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: {'btn': 100},
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'utg',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'sb',
+            Act0ContributionKindV1.wager,
+            0.5,
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+        ],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -11024,6 +11153,24 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
       selectableSeatIds: const [],
       selectedSeatId: '',
       focusCalloutLabel: '',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'bb',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+        ],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -11086,6 +11233,37 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
       highlightedCardIds: const [],
       focusCalloutLabel: '',
       selectedSeatId: '',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: {'btn': 100},
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'sb',
+            Act0ContributionKindV1.wager,
+            0.5,
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+        ],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -11322,6 +11500,44 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
       toCallLabel: '',
       centerLabel: flop ? 'First pass on the flop' : 'Initial preflop pass',
       focusCalloutLabel: '',
+      handContributions: Act0HandContributionsV1(
+        throughStreet: flop ? PokerStreet.flop : PokerStreet.preflop,
+        entries: [
+          ..._act0LessonBlinds,
+          if (matched) ...const [
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'utg',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'hj',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'co',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'btn',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'sb',
+              Act0ContributionKindV1.wager,
+              0.5,
+            ),
+          ],
+        ],
+      ),
       actionTrail: trail,
       activeSeatId: '',
       decisionSeatId: actor,
@@ -12687,7 +12903,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Best hand',
       betterAnswerLabel: 'Best hand',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Only part of the hand.',
       feedbackReason:
           'Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.',
@@ -13022,8 +13238,8 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 4 BB in the pot',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Part of the read.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the board and pot too.',
       feedbackReason:
           'Your cards matter, but the clean table read also includes the shared board and the pot.',
       repairFocusCardIds: <String>[
@@ -13104,8 +13320,8 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A fold or a showdown',
       betterAnswerLabel: 'A fold or a showdown',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Partly right.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The hand is still live.',
       feedbackReason:
           'Your cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.',
     ),
@@ -13276,8 +13492,8 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 6 BB in the pot',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable instinct.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the whole table.',
       feedbackReason:
           'Your cards matter, but a live table read also needs the shared board and pot before the decision starts.',
     ),
@@ -13349,6 +13565,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       'You read one spot, named the setup, and got one clear why back. That foundation makes later lessons move faster because later lessons keep reusing the same table-first scan.',
   table: _whatYouCanDoRunner.table.copyWith(
     centerLabel: 'Cards on the table',
+    handContributions: _whatYouCanDoRunner.table.handContributions,
     actionTrail: const [],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -13409,7 +13626,10 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   feedbackTitle: 'Tab jobs locked in.',
   feedbackReason:
       'Home shows what to do now, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress.',
-  table: _whatYouCanDoRunner.table.copyWith(actionTrail: const []),
+  table: _whatYouCanDoRunner.table.copyWith(
+    handContributions: _whatYouCanDoRunner.table.handContributions,
+    actionTrail: const [],
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Know the five jobs.',
@@ -14231,6 +14451,36 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
     highlightedCardIds: highlightedCardIds,
     heroCards: heroCards,
     boardCards: boardCards,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.river,
+      entries: [
+        ..._act0LessonBlinds,
+        const Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        const Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        for (final (street, bet) in [
+          (PokerStreet.flop, flopBetBb),
+          (PokerStreet.turn, turnBetBb),
+        ])
+          if (bet > 0)
+            for (final seat in ['co', 'btn'])
+              Act0ContributionV1(
+                street,
+                seat,
+                Act0ContributionKindV1.wager,
+                bet.toDouble(),
+              ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -14855,6 +15105,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
         Act0CardStateV1(rank: '8', suit: 'd'),
       ],
       centerLabel: 'J8o early',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -15047,6 +15298,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       activeSeatId: 'co',
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       centerLabel: 'Folded to CO',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
@@ -15312,6 +15564,19 @@ Act0TableStateV1 _act0FacingOpenTableV1(
     toCallLabel: 'To call $size',
     activeSeatId: hero,
     heroSeatId: hero,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {hero: 100},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          opener,
+          Act0ContributionKindV1.wager,
+          openingBb.toDouble(),
+        ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -16073,6 +16338,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
         Act0CardStateV1(rank: 'T', suit: 'c'),
       ],
       centerLabel: 'Middle position',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -16236,6 +16502,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
       ],
       centerLabel: 'CO after two folds',
       activeSeatId: 'co',
+      handContributions: _act0BlindsOnlyContributions,
     ),
     const {'utg', 'hj'},
   ),
@@ -16473,8 +16740,8 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN, SB, and BB still act after you',
       betterAnswerLabel: 'BTN, SB, and BB still act after you',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the players behind.',
       feedbackReason:
           'Late position helps, but it is not a free pass. First notice who still acts after you.',
     ),
@@ -16503,6 +16770,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
           .toList(growable: false),
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       centerLabel: 'CO with three seats behind',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
@@ -16653,7 +16921,7 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       isCorrect: false,
       preferredLabel: 'Seat context changed the hand comfort',
       betterAnswerLabel: 'Seat context changed the hand comfort',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Repair the table read.',
       feedbackReason:
           'Position matters because it changes how many players still act after you.',
@@ -16966,6 +17234,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
         ],
         highlightedSeatIds: const <String>['hj'],
         centerLabel: 'HJ, unopened pot',
+        handContributions: _act0BlindsOnlyContributions,
         actionTrail: const <Act0ActionTrailItemV1>[
           Act0ActionTrailItemV1(label: 'UTG folds'),
           Act0ActionTrailItemV1(label: 'HJ acts'),
@@ -17133,8 +17402,8 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Medium',
       betterAnswerLabel: 'Medium',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'A bit too high.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'QJs is in the Medium bucket.',
       feedbackReason:
           'Strong hands need less help from position and action frame. QJs still wants context before chips go in.',
     ),
@@ -17356,6 +17625,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       ],
       centerLabel: 'HJ, medium hand',
       activeSeatId: 'hj',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -17610,6 +17880,24 @@ Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
   return table.copyWith(
     potLabel: 'Pot 6 BB',
     toCallLabel: '',
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.75,
+        ),
+      ],
+    ),
     actionTrail: <Act0ActionTrailItemV1>[
       ..._w4BtnBbSixBbFlopTrailV1,
       if (btnCheckedBehind) Act0ActionTrailItemV1(label: 'BTN checks'),
@@ -17914,7 +18202,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet one-third',
       betterAnswerLabel: 'Bet one-third',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Checking leaves both players in.',
       feedbackReason:
           'Checking closes this round without asking BB to fold. Betting gives BB a decision.',
@@ -18157,6 +18445,31 @@ Act0TableStateV1 _act0W4FacingTurnPriceV1(
   );
   return table.copyWith(
     autoPlayHistory: false,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.turn,
+      startingStackBbBySeat: const {'btn': 100},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          preflopAmount,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          bettor,
+          Act0ContributionKindV1.wager,
+          preflopAmount - (fromBigBlind ? 1 : 0),
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          bettor,
+          Act0ContributionKindV1.wager,
+          price,
+        ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -18703,8 +19016,8 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Value · 2 BB to call',
       betterAnswerLabel: 'Value · 2 BB to call',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Look one layer deeper.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The price is 2 BB.',
       feedbackReason:
           'The purpose is value. BB must match the 2 BB bet shown on the table.',
     ),
@@ -18739,6 +19052,31 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
         Act0CardStateV1(rank: '7', suit: 'c'),
         Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
       ],
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: {'bb': 100},
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2.75,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'bb',
+            Act0ContributionKindV1.wager,
+            1.75,
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+        ],
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         ..._w4BtnBbSixBbFlopTrailV1,
         Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
@@ -18816,6 +19154,26 @@ List<Act0CardStateV1> _act0LessonCardsV1(String cards) => [
 
 // BTN opens, BB defends, and the small blind stays in the pot. Earlier
 // streets either check through or close with BTN betting and BB calling.
+const _act0LessonBlinds = [
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'sb',
+    Act0ContributionKindV1.blind,
+    .5,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'bb',
+    Act0ContributionKindV1.blind,
+    1,
+  ),
+];
+
+const _act0BlindsOnlyContributions = Act0HandContributionsV1(
+  throughStreet: PokerStreet.preflop,
+  entries: _act0LessonBlinds,
+);
+
 Act0TableStateV1 _act0BoardLessonTableV1({
   required List<Act0CardStateV1> heroCards,
   required List<Act0CardStateV1> boardCards,
@@ -18828,13 +19186,17 @@ Act0TableStateV1 _act0BoardLessonTableV1({
   num? bbBehindBb,
   List<String> highlightedCardIds = const [],
 }) {
-  final street = switch (boardCards.length) {
-    3 => 'Flop',
-    4 => 'Turn',
-    5 => 'River',
+  final bettingStreet = switch (boardCards.length) {
+    3 => PokerStreet.flop,
+    4 => PokerStreet.turn,
+    5 => PokerStreet.river,
     _ => throw ArgumentError.value(boardCards, 'boardCards'),
   };
+  final street = pokerStreetToString(bettingStreet);
   final collectedPerPlayer = openBb + flopBetBb + turnBetBb;
+  final heroBehind = heroBehindBb ?? 100 - collectedPerPlayer;
+  final bigBlindBehind = bbBehindBb ?? 100 - collectedPerPlayer - facingBb;
+  const wager = Act0ContributionKindV1.wager;
   const folds = {'utg', 'hj', 'co', 'sb'};
   return Act0TableStateV1(
     scope: Act0TableScopeV1.playedHand,
@@ -18849,6 +19211,58 @@ Act0TableStateV1 _act0BoardLessonTableV1({
     potLabel: 'Pot ${_act0BbLabelV1(2 * collectedPerPlayer + 0.5 + facingBb)}',
     toCallLabel: facingBb > 0 ? 'To call ${_act0BbLabelV1(facingBb)}' : '',
     centerLabel: centerLabel,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: bettingStreet,
+      startingStackBbBySeat: {
+        'btn': (heroBehind + collectedPerPlayer).toDouble(),
+        'bb': (bigBlindBehind + collectedPerPlayer + facingBb).toDouble(),
+      },
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          wager,
+          openBb.toDouble(),
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          wager,
+          (openBb - 1).toDouble(),
+        ),
+        if (boardCards.length >= 4 && flopBetBb > 0) ...[
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'btn',
+            wager,
+            flopBetBb.toDouble(),
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'bb',
+            wager,
+            flopBetBb.toDouble(),
+          ),
+        ],
+        if (boardCards.length == 5 && turnBetBb > 0) ...[
+          Act0ContributionV1(
+            PokerStreet.turn,
+            'btn',
+            wager,
+            turnBetBb.toDouble(),
+          ),
+          Act0ContributionV1(
+            PokerStreet.turn,
+            'bb',
+            wager,
+            turnBetBb.toDouble(),
+          ),
+        ],
+        if (facingBb > 0)
+          Act0ContributionV1(bettingStreet, 'bb', wager, facingBb.toDouble()),
+      ],
+    ),
     autoPlayHistory: false,
     highlightedSeatIds: const [],
     highlightedCardIds: highlightedCardIds,
@@ -18899,8 +19313,8 @@ Act0TableStateV1 _act0BoardLessonTableV1({
           isLastAggressor: seat.seatId == 'bb' && facingBb > 0,
           clearCommitment: true,
           stackLabel: _act0BbLabelV1(switch (seat.seatId) {
-            'btn' => heroBehindBb ?? 100 - collectedPerPlayer,
-            'bb' => bbBehindBb ?? 100 - collectedPerPlayer - facingBb,
+            'btn' => heroBehind,
+            'bb' => bigBlindBehind,
             'sb' => 99.5,
             _ => 100,
           }),
@@ -18941,6 +19355,11 @@ Act0TableStateV1 _act0UnopenedLessonTableV1({
     potLabel: 'Pot 1.5 BB',
     toCallLabel: 'To call 1 BB',
     centerLabel: centerLabel,
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'utg': 100},
+      entries: _act0LessonBlinds,
+    ),
     autoPlayHistory: false,
     highlightedSeatIds: const [],
     highlightedCardIds: const [],
@@ -19296,7 +19715,7 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flush draw',
       betterAnswerLabel: 'Flush draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Suit clue first.',
       feedbackReason:
           'The visible clue is the four-heart story. Start with same-suit pressure before inventing a rank-ladder draw.',
@@ -19416,7 +19835,7 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
           'Hero has top pair. An opponent could be drawing to a flush',
       betterAnswerLabel:
           'Hero has top pair. An opponent could be drawing to a flush',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Current hand first.',
       feedbackReason:
           'Hero’s pair of aces already counts. Another heart could help an opponent later.',
@@ -19474,7 +19893,7 @@ final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Hero has a flush draw, not a made flush yet',
       betterAnswerLabel: 'Hero has a flush draw, not a made flush yet',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the hearts.',
       feedbackReason:
           'The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.',
@@ -19517,6 +19936,7 @@ final _world5StraightIntroRunner = _world5ConnectedIntroRunner.copyWith(
 
 final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w5_straight_draw',
   caption: 'Hero has 6-5 and the board shows 8-7-2.',
   hint: 'A 4 or 9 can improve the rank ladder.',
@@ -19572,8 +19992,8 @@ final _world5GutshotDrawRunner = _world5StraightIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Gutshot straight draw',
       betterAnswerLabel: 'Gutshot straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close, but too wide.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Only a six completes it.',
       feedbackReason:
           'Open-ended draws improve from either end. Here only the 6 works, so the draw is narrower than open-ended.',
     ),
@@ -19610,7 +20030,7 @@ final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Open-ended straight draw',
       betterAnswerLabel: 'Open-ended straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Two ranks complete it.',
       feedbackReason:
           'A gutshot has one missing middle rank. Your 6-7-8-9 already run in order. A 5 or a ten completes the straight.',
@@ -19742,6 +20162,8 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
   caption: 'Compare the cards by suit.',
   lessonId: 'w5_flush_out',
   hint: 'Any heart is the improvement card type.',
+  feedbackReason:
+      'Four hearts are visible. One more heart completes the flush.',
   question: 'Which card type is the out?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19776,6 +20198,7 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
   caption: 'Compare your ranks with the flop.',
   lessonId: 'w5_straight_out',
   hint: 'Those cards complete the straight line.',
+  feedbackReason: 'The 5-6-7-8 sequence can finish with a 4 or a 9.',
   question: 'Which out improves Hero?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19906,7 +20329,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
       isCorrect: false,
       preferredLabel: '5-club is safer',
       betterAnswerLabel: '5-club is safer',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'It still helps, but it is riskier.',
       feedbackReason:
           '5-heart still completes Hero straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.',
@@ -20129,8 +20552,8 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
           'The board got more dangerous, so the old easy-value story needs caution',
       betterAnswerLabel:
           'The board got more dangerous, so the old easy-value story needs caution',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable patch.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the new board first.',
       feedbackReason:
           'Changing the size without repairing the board story still leaves the core read behind.',
     ),
@@ -20190,8 +20613,8 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
       isCorrect: false,
       preferredLabel: 'An opponent can now have a flush',
       betterAnswerLabel: 'An opponent can now have a flush',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Part of the picture.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Notice the third heart.',
       feedbackReason:
           'Before choosing a size, notice that the third heart lets an opponent make a flush.',
     ),
@@ -20242,8 +20665,8 @@ final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyW
       isCorrect: false,
       preferredLabel: 'The river missed the straight draw',
       betterAnswerLabel: 'The river missed the straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Tempting shortcut.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The ace misses the draw.',
       feedbackReason: 'The river ace does not extend 4-5-6-7 to a straight.',
     ),
   ],
@@ -20430,6 +20853,7 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
 Act0TableStateV1 _act0HypotheticalConceptTableV1(Act0TableStateV1 base) =>
     base.copyWith(
       scope: Act0TableScopeV1.explanation,
+      showDecisionPremise: true,
       heroCards: const <Act0CardStateV1>[],
       boardCards: const <Act0CardStateV1>[],
       streetLabel: '',
@@ -20491,8 +20915,8 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Check instead of betting again',
       betterAnswerLabel: 'Check instead of betting again',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable patch.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the new board first.',
       feedbackReason:
           'Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.',
     ),
@@ -20517,8 +20941,8 @@ final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
       title: 'Three buckets.',
       body:
           'After the flop, sort your hand into value (can bet for profit), '
-          'bluff candidate (can create fold pressure), or missed (no plan).',
-      focusLabels: <String>['Value', 'Bluff candidate', 'Missed'],
+          'bluff candidate (can make better hands fold), or missed (check or fold).',
+      focusLabels: <String>['Hand strength', 'Can it improve?', 'What folds?'],
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -20737,6 +21161,7 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
 // 8-7-6 two-tone: hero has K-Q (no pair, no draw) → missed, bluff-candidate suboptimal
 final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w6_wrong_board',
   caption: '8-7-6 two-tone. Hero holds K-Q.',
   hint: 'K-Q was strong preflop, but this board changed everything.',
@@ -20763,7 +21188,7 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Missed',
       betterAnswerLabel: 'Missed',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Read the board before choosing a bet.',
       feedbackReason:
           'K-Q missed. To decide whether to bluff, you still need to know which better hands the other player would fold.',
@@ -20887,7 +21312,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'It can slide toward missed',
       betterAnswerLabel: 'It can slide toward missed',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too static.',
       feedbackReason:
           'Buckets can shift across streets when the board changes and pressure disappears.',
@@ -20961,7 +21386,7 @@ final _w6PressureLinesIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Bucket shapes action.',
       body:
-          'Value hands bet for profit. Bluff candidates bet for fold equity. '
+          'Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. '
           'Missed hands usually check or fold.',
       focusLabels: <String>['Bet value', 'Bluff', 'Check-fold'],
     ),
@@ -21001,7 +21426,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A check gives a free card.',
       feedbackReason:
           'Checking is legal. Under this rule, a small bet earns chips from weaker pairs that would call.',
@@ -21113,7 +21538,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_barrel',
-      label: 'Always barrel as pressure',
+      label: 'Keep betting on every street',
       isCorrect: false,
       preferredLabel: 'Usually check or fold',
       betterAnswerLabel: 'Usually check or fold',
@@ -21149,7 +21574,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A check gives up the weaker calls.',
       feedbackReason:
           'You can check after BB checks. The stated calling rule gives you a reason to bet instead.',
@@ -21205,14 +21630,14 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
-      label: 'Barrel big again',
+      label: 'Make another big bet',
       isCorrect: false,
       preferredLabel: 'Check more often',
       betterAnswerLabel: 'Check more often',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
-          'In this stated lower-pressure spot, a larger second barrel does not repair the reason for betting. Reassess before forcing the flop plan.',
+          'BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_value',
@@ -21234,14 +21659,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     flopBetBb: 2.5,
     highlightedCardIds: const ['board_2', 'board_3'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Street changes can cool pressure.',
-      body:
-          'Suppose fold pressure has dropped on this paired turn. A former bluff candidate is not a forever-barrel pass: reassess before forcing the same line.',
-      focusLabels: <String>['Paired turn', 'Called flop', 'Check more often'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _w6PressureLinesRecapRunner = _w6PressureLinesIntroRunner.copyWith(
@@ -21299,6 +21717,14 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
 
 final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Count the cards of each rank.',
+      body:
+          'For two different ranks, each available card of the first rank can pair with each available card of the second rank.',
+      focusLabels: <String>['Available cards', 'Two ranks', 'Pair the cards'],
+    ),
+  ],
   lessonId: 'w6_ak_combos',
   caption: 'A-K can be suited or offsuit.',
   hint:
@@ -21321,8 +21747,8 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '16 combos',
       betterAnswerLabel: '16 combos',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close count.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           '12 counts only the offsuit versions. Add the 4 suited combos and A-K reaches 16 total combinations.',
     ),
@@ -21346,6 +21772,7 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
 
 final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w6_pair_combos',
   caption: 'Pocket eights are one pair family.',
   hint: 'You pick 2 suits out of the 4 eights in the deck.',
@@ -21367,8 +21794,8 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '6 combos',
       betterAnswerLabel: '6 combos',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close count.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           'Twelve is too high for one pair family. With four eights in the deck, only 6 suit pairings are possible.',
     ),
@@ -21413,8 +21840,8 @@ final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A-K has more combos',
       betterAnswerLabel: 'A-K has more combos',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           'The hand names may feel equally important, but combo weight is not equal: 16 beats 6.',
     ),
@@ -21467,6 +21894,8 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonSubtitle: 'Range Thinking',
   caption: 'Compare A-K suited with A-K offsuit before blockers.',
   hint: 'Offsuit hands usually have more combinations than suited hands.',
+  feedbackReason:
+      'With no cards removed, four combinations are suited and twelve are offsuit.',
   question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21496,8 +21925,8 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A-K offsuit',
       betterAnswerLabel: 'A-K offsuit',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the suited and offsuit combos.',
       feedbackReason:
           'The rank names match, but combo weight does not. Twelve offsuit combos clearly outweigh four suited combos.',
     ),
@@ -21523,6 +21952,8 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonSubtitle: 'Range Thinking',
   caption: 'Compare pocket nines with K-Q suited before blockers.',
   hint: 'Not every unpaired hand is denser than a pocket pair.',
+  feedbackReason:
+      'A pocket pair has six combinations. A specific suited hand has four.',
   question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21552,8 +21983,8 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Pocket nines',
       betterAnswerLabel: 'Pocket nines',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the pairs and suited combos.',
       feedbackReason:
           'These families are closer than A-K versus a pocket pair, but they are still not equal. Six pair combos outweigh four suited combos.',
     ),
@@ -21609,8 +22040,8 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A-K offsuit',
       betterAnswerLabel: 'A-K offsuit',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Reasonable guess.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the off-suit combinations.',
       feedbackReason:
           'CO opens all six pocket-nine combos here and all twelve A-K offsuit combos.',
     ),
@@ -21669,8 +22100,9 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
 
 final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w7_effective_stack_30bb',
-  caption: 'Hero has 200 BB. Villain has 30 BB.',
+  caption: 'You have 200 BB. The other player has 30 BB.',
   hint: 'Look for the smaller stack.',
   question: 'What is the effective stack?',
   options: const <Act0RunnerOptionV1>[
@@ -21701,8 +22133,8 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '30 BB',
       betterAnswerLabel: '30 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Use the smaller stack.',
       feedbackReason:
           'The average is 115 BB, but these players can only match 30 BB each.',
     ),
@@ -21740,7 +22172,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '100 BB',
       betterAnswerLabel: '100 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'Nothing cuts the stack in half here. With equal 100 BB stacks, the full 100 BB remains in play.',
@@ -21875,6 +22307,7 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 
 final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w7_20bb_wider',
   caption:
       'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
@@ -21897,7 +22330,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet 2 BB',
       betterAnswerLabel: 'Bet 2 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Four leaves 16 BB.',
       feedbackReason:
           'Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.',
@@ -21959,7 +22392,7 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '75 BB',
       betterAnswerLabel: '75 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The original stack has already shrunk.',
       feedbackReason:
           'There are no additional streets at this depth. There are more chips to bet on the same streets, but here the most either player can put in on the river is 88 BB.',
@@ -22010,7 +22443,7 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '25 BB',
       betterAnswerLabel: '25 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the flop bet as well.',
       feedbackReason:
           'Subtracting the turn bet alone leaves 30 BB. Subtract the 5 BB flop bet too, which leaves 25 BB.',
@@ -22041,6 +22474,22 @@ Act0TableStateV1 _act0CoOpenLessonTableV1({
     opener: 'co',
   );
   return table.copyWith(
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {
+        'btn': startingDepthBb.toDouble(),
+        'co': startingDepthBb.toDouble(),
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+      ],
+    ),
     actionTrail: [
       for (final item in table.actionTrail)
         if (item.label == 'CO opens 2.5 BB')
@@ -22108,7 +22557,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Raise to 7.5 BB',
       betterAnswerLabel: 'Raise to 7.5 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A-T suited folds to an all-in bet.',
       feedbackReason:
           'CO folds the weaker ace to an all-in bet in this example. The smaller raise gets the call instead.',
@@ -22153,7 +22602,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Call 2.5 BB',
       betterAnswerLabel: 'Call 2.5 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A raise folds the hands you want to keep.',
       feedbackReason:
           'In this example CO folds the weaker aces to either raise and raises again with stronger hands such as A-Q.',
@@ -22256,7 +22705,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'float',
-      label: 'Plenty of room to float and wait',
+      label: 'Plenty of chips left for later bets',
       isCorrect: false,
       preferredLabel: 'One bet can commit the hand',
       betterAnswerLabel: 'One bet can commit the hand',
@@ -22271,7 +22720,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'One bet can commit the hand',
       betterAnswerLabel: 'One bet can commit the hand',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'SPR changes the hand structure. SPR 2 is a much more commit-heavy situation than SPR 8.',
@@ -22296,9 +22745,9 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'room',
-      label: 'More room to maneuver',
+      label: 'More options for later bets',
       isCorrect: true,
-      preferredLabel: 'More room to maneuver',
+      preferredLabel: 'More options for later bets',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
@@ -22308,8 +22757,8 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       id: 'force',
       label: 'Immediate commitment',
       isCorrect: false,
-      preferredLabel: 'More room to maneuver',
-      betterAnswerLabel: 'More room to maneuver',
+      preferredLabel: 'More options for later bets',
+      betterAnswerLabel: 'More options for later bets',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
@@ -22319,12 +22768,12 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       id: 'none',
       label: 'No difference from preflop',
       isCorrect: false,
-      preferredLabel: 'More room to maneuver',
-      betterAnswerLabel: 'More room to maneuver',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      preferredLabel: 'More options for later bets',
+      betterAnswerLabel: 'More options for later bets',
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'SPR changes how postflop decisions feel. High SPR gives you more future streets and more flexibility.',
+          'SPR changes how postflop decisions feel. High SPR leaves more chips for later bets on the same streets.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -22371,10 +22820,10 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Middle ground: some room, some commitment',
       betterAnswerLabel: 'Middle ground: some room, some commitment',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'SPR 4 has less room and more commitment pressure than SPR 8. It is a middle node, not a deep one.',
+          'At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -22603,7 +23052,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: "Raise to 2.5 BB",
       betterAnswerLabel: "Raise to 2.5 BB",
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Use the size in the rule.",
       feedbackReason:
           "A raise fits the five players behind. In this example, the given size is 2.5 BB.",
@@ -22654,7 +23103,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: "Fold",
       betterAnswerLabel: "Fold",
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The number of players still matters.",
       feedbackReason:
           "A different bet size does not change how many players are left to act. Use the fold in the stated model.",
@@ -22767,7 +23216,7 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: "4",
       betterAnswerLabel: "4",
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Start with the smaller stack.",
       feedbackReason:
           "43 divided by 8 uses the larger stack. The 32 BB stack sets how much both players can match.",
@@ -22796,6 +23245,13 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
 );
 
+final _w9ExampleTableBase = _readBoardRunner.table.copyWith(
+  boardCards: _act0LessonCardsV1('Kc 7d 2s'),
+  potLabel: 'Pot 5 BB',
+  centerLabel: 'Combo count',
+  highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+);
+
 final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w9_survival_intro',
@@ -22815,12 +23271,7 @@ final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
       focusLabels: <String>['Tournament life', 'Survival', 'Bubble'],
     ),
   ],
-  table: _readBoardRunner.table.copyWith(
-    boardCards: _act0LessonCardsV1('Kc 7d 2s'),
-    potLabel: 'Pot 5 BB',
-    centerLabel: 'Combo count',
-    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
-  ),
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
 );
 
 final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
@@ -22943,8 +23394,8 @@ final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Tournament table',
       betterAnswerLabel: 'Tournament table',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Elimination changes the downside.',
       feedbackReason:
           'Hand strength matters in both formats, but tournament life changes the downside. The risk tradeoff is not equal.',
     ),
@@ -23115,7 +23566,7 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
   hint:
       'This is not red-zone panic yet, but the stack should not drift. Read what yellow-zone urgency changes first.',
   question: 'What is the cleaner first zone adjustment here?',
-  table: _w9MRatioIntroRunner.table.copyWith(
+  table: _w9ExampleTableBase.copyWith(
     heroCards: _heroAjCards,
     streetLabel: 'Preflop',
     boardCards: const <Act0CardStateV1>[],
@@ -23344,7 +23795,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   question: 'How should you adjust if losing to BB would eliminate you?',
   table: _act0CurrentStreetTableV1(
     _act0ExplicitFoldsV1(
-      _w9BubblePressureIntroRunner.table.copyWith(
+      _w9ExampleTableBase.copyWith(
         heroCards: _heroAjCards,
         boardCards: const [],
         streetLabel: 'Preflop',
@@ -23353,6 +23804,25 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
         potLabel: 'Pot 21 BB',
         toCallLabel: 'To call 15.5 BB',
         centerLabel: 'BTN, medium stack, bubble pressure',
+        handContributions: const Act0HandContributionsV1(
+          throughStreet: PokerStreet.preflop,
+          startingStackBbBySeat: {'bb': 18},
+          entries: [
+            ..._act0LessonBlinds,
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'btn',
+              Act0ContributionKindV1.wager,
+              2.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'bb',
+              Act0ContributionKindV1.wager,
+              17,
+            ),
+          ],
+        ),
         actionTrail: const [
           Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
           Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -23515,8 +23985,8 @@ final _w9CheckpointZoneLineRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Red-zone player',
       betterAnswerLabel: 'Red-zone player',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The red-zone player has fewer orbits.',
       feedbackReason:
           'Hand class matters, but pressure context differs by zone. Urgency is not equal across stacks.',
     ),
@@ -23632,12 +24102,12 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
   lessonTitle: 'Tournament pressure checkpoint',
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      'Real table. Medium stack near the bubble faces a covering big-stack open.',
-  hint: 'Read the pressure before you click call or all-in.',
+      'Near the bubble, suppose a covering big stack opens into your medium stack.',
+  hint: 'Consider who could be eliminated if the stacks go in.',
   question: 'What is the clean first pressure read?',
   feedbackTitle: 'Pressure read first.',
   feedbackReason:
-      'Real-table tournament transfer starts by naming who carries the risk premium and who carries the leverage.',
+      'Tournament pressure starts with naming who carries the risk premium and who carries the leverage.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'medium_stack_pressure',
@@ -23683,6 +24153,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
 );
 
 final _w10PlayerTypeIntroRunner = _w9BubblePressureIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w10_player_type_intro',
   lessonTitle: 'Who is at the table',
@@ -24007,6 +24478,11 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
     potLabel: 'Pot 6 BB',
     toCallLabel: '',
     centerLabel: 'Top pair vs caller',
+    handContributions: const Act0HandContributionsV1(
+      fromStreet: PokerStreet.flop,
+      throughStreet: PokerStreet.flop,
+      entries: [],
+    ),
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
       Act0ActionTrailItemV1(label: 'BB calls'),
@@ -24430,8 +24906,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
   lessonId: 'w10_table_adjustment_notice',
   lessonTitle: 'Player-adjustment checkpoint',
   lessonSubtitle: 'Player Adjustment',
-  caption:
-      'Real table. Both blinds have folded to your late steals again and again.',
+  caption: 'Suppose both blinds keep folding to your late steals.',
   hint: 'Choose the first exploit you can actually track at the table.',
   question: 'What is the clean first live adjustment?',
   feedbackTitle: 'Adjustment first, not chaos.',
@@ -24482,6 +24957,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
 );
 
 final _w11SessionPlanIntroRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w11_session_plan_intro',
   lessonTitle: 'Session plan in 30 seconds',
@@ -24526,7 +25002,7 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'One measurable focus for the whole session',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Stack risk: correct.',
+      feedbackTitle: 'One measurable focus.',
       feedbackReason:
           'A single measurable focus transfers training into real play with less mental overload.',
     ),
@@ -24590,7 +25066,7 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_plan_table_focus_transfer',
   caption:
-      'Real table. You have one hour before a tired evening session starts and the first orbit will move fast.',
+      'Your evening session starts in an hour. You are tired and the first orbit will move fast.',
   hint:
       'Pick one focus you can notice as a trigger during the session and review after the session ends.',
   question: 'What should Hero choose before sitting in?',
@@ -24764,6 +25240,76 @@ const _w11QJsPreflopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
 ];
 
+const _w11QJsPreflopContributions = [
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'sb',
+    Act0ContributionKindV1.blind,
+    .5,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'bb',
+    Act0ContributionKindV1.blind,
+    1,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'utg',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'hj',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'co',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'btn',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'sb',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'bb',
+    Act0ContributionKindV1.ante,
+    .25,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'co',
+    Act0ContributionKindV1.wager,
+    2.5,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'btn',
+    Act0ContributionKindV1.wager,
+    2.5,
+  ),
+];
+const _w11QJsFlopBet = Act0ContributionV1(
+  PokerStreet.flop,
+  'co',
+  Act0ContributionKindV1.wager,
+  2,
+);
+const _w11QJsStartingStacks = {'btn': 37.75, 'co': 37.75};
+
 final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_small_price_continue',
@@ -24779,6 +25325,11 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'BTN, top pair, small price',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: _w11QJsStartingStacks,
+        entries: [..._w11QJsPreflopContributions, _w11QJsFlopBet],
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         ..._w11QJsPreflopTrail,
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
@@ -24852,6 +25403,26 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       potLabel: 'Pot 24 BB',
       toCallLabel: 'To call 12 BB',
       centerLabel: 'BTN top pair, tight CO barrel',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.turn,
+        startingStackBbBySeat: _w11QJsStartingStacks,
+        entries: [
+          ..._w11QJsPreflopContributions,
+          _w11QJsFlopBet,
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+          Act0ContributionV1(
+            PokerStreet.turn,
+            'co',
+            Act0ContributionKindV1.wager,
+            12,
+          ),
+        ],
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         ..._w11QJsPreflopTrail,
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
@@ -25184,6 +25755,13 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       potLabel: 'Pot 13 BB',
       toCallLabel: 'To call 5 BB',
       centerLabel: 'BTN, top pair, 30 BB',
+      highlightedSeatIds: const ['hj', 'btn'],
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.flop,
+        bettor: 'hj',
+        betBb: 5,
+        buttonStackAtLeastBb: 30,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
         Act0ActionTrailItemV1(label: 'BTN calls'),
@@ -25303,6 +25881,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
 );
 
 final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_decision_quality_intro',
   lessonTitle: 'Decision quality over outcome',
@@ -25367,7 +25946,6 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
 );
 
 final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w12DecisionQualityIntroRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_bad_call_good_result',
   feedbackSignalId: 'process_over_outcome',
@@ -25657,6 +26235,12 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       potLabel: 'Pot 38 BB',
       toCallLabel: 'To call 18 BB',
       centerLabel: 'Top pair, bad river price',
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.river,
+        bettor: 'co',
+        betBb: 18,
+        buttonStackAtLeastBb: 100,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
         Act0ActionTrailItemV1(label: 'BTN calls'),
@@ -25738,6 +26322,12 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'Top pair, ego trap',
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.flop,
+        bettor: 'co',
+        betBb: 2,
+        buttonStackAtLeastBb: 35,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Villain needled you last orbit'),
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
@@ -25952,6 +26542,12 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'After mistake, stay clean',
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.flop,
+        bettor: 'co',
+        betBb: 2,
+        buttonStackAtLeastBb: 25,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),
         Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),

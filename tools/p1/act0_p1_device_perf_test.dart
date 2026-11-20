@@ -30,7 +30,7 @@ const _continueKeys = [
   'act0_shell_welcome_primary_cta',
   'act0_shell_main_cta',
   'act0_academy_home_leaf_cta',
-  'act0_shell_current_mission_cta',
+  'act0_shell_block_summary_map_cta',
 ];
 
 /// Frame timings collected by the engine, bucketed by the current world.
@@ -66,6 +66,7 @@ bool _nextControlReady() => find
       if (key is! ValueKey<String>) return false;
       final v = key.value;
       return _continueKeys.contains(v) ||
+          v == 'act0_shell_current_mission_cta' ||
           v.startsWith('act0_shell_option_') ||
           v.startsWith('act0_shell_seat_tap_') ||
           v.startsWith('act0_shell_placement_');
@@ -138,6 +139,58 @@ Future<void> _mount(WidgetTester t, {bool firstRun = false}) async {
   _actions.putIfAbsent('mount_home', () => []).add(sw.elapsedMilliseconds);
 }
 
+Future<Map<String, dynamic>> _savedProgress(SharedPreferences prefs) async {
+  await prefs.reload();
+  final head = prefs.getString('act0_shell_progress_v1_head');
+  if (head == null) return {};
+  return jsonDecode((jsonDecode(head) as Map)['payload'] as String)
+      as Map<String, dynamic>;
+}
+
+Set<String> _completedTasks(Map<String, dynamic> progress) =>
+    ((progress['completedTaskIds'] as List?) ?? const [])
+        .cast<String>()
+        .toSet();
+
+Future<bool> _resumeCourse(
+  WidgetTester t,
+  Map<String, int> taskWorld,
+  Map<String, dynamic> progress,
+) async {
+  if (find.byKey(const Key('act0_academy_review_leaf')).evaluate().isNotEmpty) {
+    final learn = find.text('Learn').hitTestable();
+    if (learn.evaluate().isNotEmpty) {
+      await t.tap(learn.last);
+      await _settle(t);
+    }
+  }
+  const mission = 'act0_shell_current_mission_cta';
+  const levels = 'act0_shell_levels_menu_button';
+  final completed = _completedTasks(progress);
+  final next = taskWorld.entries
+      .where((entry) => !completed.contains(entry.key))
+      .firstOrNull;
+  if (next != null &&
+      progress['selectedWorldId'] != 'world_${next.value}' &&
+      find.byKey(const Key(levels)).evaluate().isNotEmpty) {
+    if (!await _tapFirst(t, [levels])) return false;
+    final worldKey = 'act0_shell_world_${next.value}';
+    final world = find.byKey(Key(worldKey));
+    if (world.evaluate().isEmpty) {
+      await t.scrollUntilVisible(
+        world,
+        250,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_worlds_content_scroll')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+    }
+    if (!await _tapFirst(t, [worldKey])) return false;
+  }
+  return _tapFirst(t, [mission]);
+}
+
 Map<String, Object> _pct(List<num> raw) {
   if (raw.isEmpty) return {'n': 0};
   final v = [...raw]..sort();
@@ -190,7 +243,13 @@ void main() {
     final taskWorld = {
       for (final w in worlds)
         for (final l in w.lessons)
-          for (final task in l.taskList) task.taskId: w.worldNumber,
+          for (final task in l.courseTaskList) task.taskId: w.worldNumber,
+    };
+    final repairs = {
+      for (final w in worlds)
+        for (final l in w.lessons)
+          for (final task in l.taskList)
+            if (task.repairOnly) task.taskId: w.worldNumber,
     };
     final missed = <int>{};
     final remounted = <int>{};
@@ -200,21 +259,7 @@ void main() {
 
     _memory['start'] = _rssMb();
     await _mount(t, firstRun: true);
-    for (final k in [
-      'act0_shell_placement_intro_cta',
-      'act0_shell_placement_option_new',
-      'act0_shell_placement_next_cta',
-      'act0_shell_welcome_primary_cta',
-    ]) {
-      expect(await _tapFirst(t, [k]), isTrue, reason: k);
-    }
-    final demo = t
-        .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
-        .runner
-        .options
-        .firstWhere((o) => o.isCorrect);
-    expect(await _tapFirst(t, ['act0_shell_option_${demo.id}']), isTrue);
-    expect(await _tapFirst(t, ['act0_shell_welcome_primary_cta']), isTrue);
+    expect(await _tapFirst(t, ['act0_shell_w1_start_basics']), isTrue);
     _memory['after_onboarding'] = _rssMb();
 
     var stalls = 0;
@@ -225,7 +270,7 @@ void main() {
         final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
         final runner = shell.runner;
         final taskId = shell.selectedTaskId ?? '';
-        final world = taskWorld[taskId];
+        final world = taskWorld[taskId] ?? repairs[taskId];
         if (world == null) {
           reachedNext = true; // the route moved past the last measured world
           break;
@@ -261,7 +306,7 @@ void main() {
               isTrue,
             );
           }
-          answered.add(taskId);
+          if (taskWorld.containsKey(taskId)) answered.add(taskId);
           final done = answered.where((id) => taskWorld[id] == world).length;
           final all = taskWorld.values.where((n) => n == world).length;
           if (!remounted.contains(world) && done >= all ~/ 2) {
@@ -277,12 +322,33 @@ void main() {
           continue;
         }
       }
-      final moved = await _tapFirst(t, _continueKeys);
+      var moved = await _tapFirst(t, [
+        if (find.text('Practice this clue').evaluate().isNotEmpty)
+          'act0_shell_block_summary_map_cta',
+        ..._continueKeys,
+      ]);
+      if (!moved) {
+        final progress = await _savedProgress(prefs);
+        if (_completedTasks(progress).containsAll(taskWorld.keys)) {
+          reachedNext = true;
+          break;
+        }
+        moved = await _resumeCourse(t, taskWorld, progress);
+      }
       if (!moved) {
         // Teaching beats run on real timers: give them time before failing.
         await _wait(t, 600);
-        if (++stalls > 20)
-          fail('stalled at step $step after ${answered.length} answers');
+        if (++stalls > 20) {
+          final visible = t
+              .widgetList<Text>(find.byType(Text))
+              .map((widget) => widget.data)
+              .whereType<String>()
+              .take(18)
+              .join(' | ');
+          fail(
+            'stalled at step $step after ${answered.length} answers: $visible',
+          );
+        }
       } else {
         stalls = 0;
       }
@@ -292,16 +358,7 @@ void main() {
     await Future<void>.delayed(const Duration(seconds: 3));
     _memory['idle_3s_after'] = _rssMb();
 
-    final head = (await SharedPreferences.getInstance()).getString(
-      'act0_shell_progress_v1_head',
-    );
-    final completed = head == null
-        ? <String>{}
-        : ((jsonDecode((jsonDecode(head) as Map)['payload'] as String)
-                      as Map)['completedTaskIds']
-                  as List)
-              .cast<String>()
-              .toSet();
+    final completed = _completedTasks(await _savedProgress(prefs));
     expect(reachedNext, isTrue, reason: 'route did not pass W$_lastWorld');
     expect(taskWorld.keys.toSet().difference(completed), isEmpty);
     binding.reportData = <String, Object?>{

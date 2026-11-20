@@ -5,6 +5,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_catalog_truth_audit_v1.dart';
+
 const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_10',
   'asm05_new_known_holes_turn_call_40',
@@ -665,6 +667,55 @@ void main() {
       for (final row in beforeL1.cast<List<dynamic>>())
         row[2] as String: (row[5] as List).cast<List<dynamic>>(),
     };
+    const w1FactualGrades = {
+      'what_poker_is_table_read_transfer': 'hand_first_only',
+      'what_poker_is_table_read_recheck': 'hero_cards_only',
+      'your_first_hand_private_cards_recheck': 'board_cards',
+      'what_poker_is_all_in_meaning': 'largest_stack_only',
+      'what_poker_is_matched_chips_transfer': 'nothing_until_showdown',
+      'what_poker_is_win_ways': 'best_hand_showdown',
+      'what_poker_is_showdown_win': 'hero_cards_only',
+      'what_poker_is_live_win_transfer': 'hero_cards_decide_now',
+    };
+    for (final entry in w1FactualGrades.entries) {
+      final option = beforeP8[entry.key]!.singleWhere(
+        (row) => row[0] == entry.value,
+      );
+      expect(option[2], isFalse, reason: entry.key);
+      expect(option[3], 'wrong', reason: entry.key);
+      option[3] = 'suboptimal';
+    }
+    final strongQJs = beforeP8['hand_discipline_buckets_borderline']!
+        .singleWhere((row) => row[0] == 'strong');
+    expect(strongQJs[2], isFalse);
+    expect(strongQJs[3], 'wrong');
+    strongQJs[3] = 'suboptimal';
+    for (final (taskId, optionId) in [
+      (
+        'position_checkpoint_position_checkpoint_table_notice',
+        'late_free_pass',
+      ),
+      (
+        'same_hand_different_seat_position_repair_same_hand_different_seat',
+        'position_unimportant',
+      ),
+      ('w4_bluff_pressure', 'check'),
+      ('w4_checkpoint_table_purpose_price', 'random_size'),
+    ]) {
+      final option = beforeP8[taskId]!.singleWhere((row) => row[0] == optionId);
+      expect(option[2], isFalse);
+      expect(option[3], 'wrong', reason: '$taskId / $optionId');
+      option[3] = 'suboptimal';
+    }
+    for (final (taskId, choiceId) in [
+      ('w9_survival_stack_tradeoff', 'same_both'),
+      ('w9_checkpoint_zone_line', 'same_zone'),
+    ]) {
+      final choice = beforeP8[taskId]!.singleWhere((row) => row[0] == choiceId);
+      expect(choice[2], isFalse, reason: taskId);
+      expect(choice[3], 'wrong', reason: taskId);
+      choice[3] = 'suboptimal';
+    }
     for (final taskId in [
       'your_first_hand_showdown',
       'showdown_best_hand_drill',
@@ -1402,8 +1453,49 @@ void main() {
         ],
       ),
     };
+    const l2FactualGradeCorrections = {
+      'w6_ak_combos': 'twelve',
+      'w6_pair_combos': 'twelve',
+      'w6_combo_weight_compare': 'same_weight',
+    };
+    const l2PlainLanguage = {
+      'w6_missed_hand_action': (
+        'Keep betting on every street',
+        'Always barrel as pressure',
+      ),
+      'w6_turn_pressure_shift_transfer': (
+        'Make another big bet',
+        'Barrel big again',
+      ),
+      'w7_low_spr_commit': (
+        'Plenty of chips left for later bets',
+        'Plenty of room to float and wait',
+      ),
+      'w7_high_spr_room': (
+        'More options for later bets',
+        'More room to maneuver',
+      ),
+    };
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
+      final currentOptions = (row[5] as List).cast<List<dynamic>>();
+      final revisedChoiceId =
+          l2FactualGradeCorrections[row[2]] ??
+          fixedDrawRangeAndStackChoicesV1[row[2]];
+      if (revisedChoiceId case final choiceId?) {
+        final choice = currentOptions.singleWhere(
+          (option) => option[0] == choiceId,
+        );
+        expect(choice[3], 'wrong', reason: row[2] as String);
+        choice[3] = 'suboptimal';
+      }
+      if (l2PlainLanguage[row[2]] case (final current, final prior)) {
+        expect(currentOptions.any((option) => option[1] == current), isTrue);
+        for (final option in currentOptions) {
+          if (option[1] == current) option[1] = prior;
+          if (option[4] == current) option[4] = prior;
+        }
+      }
       if (l2CheckpointOptionDeltas[row[2]] case (final current, final prior)) {
         expect(row[5], current, reason: row[2] as String);
         row[5] = prior;

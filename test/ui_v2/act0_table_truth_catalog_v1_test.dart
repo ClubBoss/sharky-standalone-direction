@@ -4,11 +4,215 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 
 void main() {
+  test('contribution checks reject a changed pot or a missing price label', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w11_trigger_small_price_continue',
+        );
+    final table = source.runner.table;
+    final wrong = table.copyWith(potLabel: 'Pot 11 BB', toCallLabel: '');
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'mutation',
+      wrong,
+    );
+
+    expect(
+      {for (final row in findings) row.invariant: row.result},
+      {'D2.pot_feasibility': 'FAIL', 'D3.to_call_completeness': 'FAIL'},
+    );
+    expect(table.copyWith(actionTrail: const []).handContributions, isNull);
+  });
+
+  test('an omitted call label cannot hide a missing effective stack', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'mutation',
+      source.runner.table.copyWith(toCallLabel: ''),
+    );
+
+    expect(
+      {for (final row in findings) row.invariant: row.result},
+      {
+        'D2.pot_feasibility': 'PASS',
+        'D3.to_call_completeness': 'NEEDS_SOURCE_CONTEXT',
+      },
+    );
+  });
+
+  test('a played preflop pot without contributions keeps its source gap', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w9_m_ratio_table_window_transfer',
+        );
+
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'authored/preflop',
+      source.runner.table,
+    );
+
+    expect(findings.map((row) => (row.invariant, row.result)), [
+      ('D2.pot_feasibility', 'NEEDS_SOURCE_CONTEXT'),
+    ]);
+  });
+
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
+    final earlyWorldTasks = Act0ShellStateV1.sample.worlds
+        .where((world) => world.worldNumber <= 4)
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .map((task) => task.taskId)
+        .toSet();
+    for (final (rule, proved, missing) in [
+      ('D2.pot_feasibility', 113, 28),
+      ('D3.to_call_completeness', 55, 11),
+    ]) {
+      final proof = rows.where(
+        (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
+      );
+      expect(proof.map((row) => row.result).toSet(), {
+        'PASS',
+        'NEEDS_SOURCE_CONTEXT',
+      }, reason: rule);
+      expect(
+        proof
+            .where((row) => row.result == 'PASS')
+            .map((row) => row.taskId)
+            .toSet(),
+        hasLength(proved),
+        reason: rule,
+      );
+      expect(
+        proof
+            .where((row) => row.result == 'NEEDS_SOURCE_CONTEXT')
+            .map((row) => row.taskId)
+            .toSet(),
+        hasLength(missing),
+        reason: rule,
+      );
+    }
+    final middleWorldTasks = Act0ShellStateV1.sample.worlds
+        .where((world) => world.worldNumber >= 5 && world.worldNumber <= 8)
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .map((task) => task.taskId)
+        .toSet();
+    for (final (rule, count) in [
+      ('D2.pot_feasibility', 99),
+      ('D3.to_call_completeness', 19),
+    ]) {
+      final proof = rows
+          .where(
+            (row) =>
+                middleWorldTasks.contains(row.taskId) && row.invariant == rule,
+          )
+          .toList();
+      expect(
+        proof.map((row) => row.taskId).toSet(),
+        hasLength(count),
+        reason: rule,
+      );
+      expect(
+        proof.where((row) => row.result != 'PASS').map((row) => row.key),
+        isEmpty,
+      );
+    }
+    for (final id in [
+      'w11_trigger_small_price_continue',
+      'w11_trigger_bad_price_fold',
+    ]) {
+      final proof = rows
+          .where(
+            (row) =>
+                row.taskId == id &&
+                (row.invariant == 'D2.pot_feasibility' ||
+                    row.invariant == 'D3.to_call_completeness'),
+          )
+          .toList();
+      expect(proof.map((row) => row.invariant).toSet(), {
+        'D2.pot_feasibility',
+        'D3.to_call_completeness',
+      }, reason: id);
+      expect(
+        proof.map((row) => row.result).toSet(),
+        {'PASS'},
+        reason:
+            '$id: ${proof.where((row) => row.result != 'PASS').map((row) => row.key).join('\n')}',
+      );
+    }
+    final lateWorldTasks = Act0ShellStateV1.sample.worlds
+        .where((world) => world.worldNumber >= 9 && world.worldNumber <= 12)
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .map((task) => task.taskId)
+        .toSet();
+    const lateMissingSource = {
+      'D2.pot_feasibility': {
+        'w9_m_ratio_table_window_transfer',
+        'w10_table_value_vs_caller_transfer',
+        'w11_checkpoint_mixed_table_line',
+        'w12_checkpoint_full_loop_line',
+        'w12_pretty_hand_bad_price_fold',
+        'w12_revenge_raise_trap',
+      },
+      'D3.to_call_completeness': {'w9_bubble_table_risk_transfer'},
+    };
+    for (final MapEntry(key: rule, value: missing)
+        in lateMissingSource.entries) {
+      final proof = rows.where(
+        (row) => lateWorldTasks.contains(row.taskId) && row.invariant == rule,
+      );
+      expect(proof.where((row) => row.result == 'FAIL'), isEmpty, reason: rule);
+      expect(
+        proof
+            .where((row) => row.result == 'NEEDS_SOURCE_CONTEXT')
+            .map((row) => row.taskId)
+            .toSet(),
+        missing,
+        reason: rule,
+      );
+    }
+    const lateDecisionProof = {
+      'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
+      'w10_table_value_vs_caller_transfer': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_revenge_raise_trap': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'asm05_new_known_holes_turn_call_10': ('PASS', 'PASS'),
+      'asm05_new_known_holes_turn_call_40': ('PASS', 'PASS'),
+    };
+    for (final MapEntry(key: id, value: (pot, price))
+        in lateDecisionProof.entries) {
+      for (final (rule, verdict) in [
+        ('D2.pot_feasibility', pot),
+        ('D3.to_call_completeness', price),
+      ]) {
+        final proof = rows.where(
+          (row) => row.taskId == id && row.invariant == rule,
+        );
+        expect(proof.map((row) => row.result).toSet(), {
+          verdict,
+        }, reason: '$id $rule');
+      }
+    }
     final tasks = Act0ShellStateV1.sample.worlds
         .expand((w) => w.lessons)
         .expand((l) => l.taskList)
@@ -373,6 +577,62 @@ void main() {
         ];
       }
     }
+    const w1FactualGrades = {
+      'what_poker_is_table_read_transfer': 'hand_first_only',
+      'what_poker_is_table_read_recheck': 'hero_cards_only',
+      'your_first_hand_private_cards_recheck': 'board_cards',
+      'what_poker_is_all_in_meaning': 'largest_stack_only',
+      'what_poker_is_matched_chips_transfer': 'nothing_until_showdown',
+      'what_poker_is_win_ways': 'best_hand_showdown',
+      'what_poker_is_showdown_win': 'hero_cards_only',
+      'what_poker_is_live_win_transfer': 'hero_cards_decide_now',
+    };
+    for (final entry in w1FactualGrades.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((row) => row['id'] == entry.value);
+      expect(option['quality'], 'suboptimal', reason: entry.key);
+      option['quality'] = 'wrong';
+    }
+    final qjs =
+        expectedComparison['hand_discipline_buckets_borderline']
+            as Map<String, dynamic>;
+    final strongQJs = (qjs['options'] as List)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((option) => option['id'] == 'strong');
+    expect(strongQJs['quality'], 'suboptimal');
+    strongQJs['quality'] = 'wrong';
+    for (final (taskId, optionId) in [
+      (
+        'position_checkpoint_position_checkpoint_table_notice',
+        'late_free_pass',
+      ),
+      (
+        'same_hand_different_seat_position_repair_same_hand_different_seat',
+        'position_unimportant',
+      ),
+      ('w4_bluff_pressure', 'check'),
+      ('w4_checkpoint_table_purpose_price', 'random_size'),
+    ]) {
+      final task = expectedComparison[taskId] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == optionId);
+      expect(option['quality'], 'suboptimal', reason: '$taskId / $optionId');
+      option['quality'] = 'wrong';
+    }
+    for (final (taskId, choiceId) in [
+      ('w9_survival_stack_tradeoff', 'same_both'),
+      ('w9_checkpoint_zone_line', 'same_zone'),
+    ]) {
+      final task = expectedComparison[taskId] as Map<String, dynamic>;
+      final choice = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == choiceId);
+      expect(choice['quality'], 'suboptimal', reason: taskId);
+      choice['quality'] = 'wrong';
+    }
     // P7–P8 classify false showdown outcomes and incomplete best fives as wrong.
     for (final id in [
       'showdown_review',
@@ -499,6 +759,18 @@ void main() {
           },
       ];
     }
+    for (final (taskId, choiceId) in [
+      ('w6_ak_combos', 'twelve'),
+      ('w6_pair_combos', 'twelve'),
+      ('w6_combo_weight_compare', 'same_weight'),
+    ]) {
+      final task = expectedComparison[taskId] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == choiceId);
+      expect(option['quality'], 'suboptimal');
+      option['quality'] = 'wrong';
+    }
     final w6ValueOptions =
         (expectedComparison['w6_value_range_action']
                 as Map<String, dynamic>)['options']
@@ -507,6 +779,14 @@ void main() {
       (option) => option['id'] == 'fold',
     );
     oldFold['id'] = 'bet_bluff'; // BB checked; folding is not an offered line.
+    for (final entry in fixedDrawRangeAndStackChoicesV1.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == entry.value);
+      expect(option['quality'], 'suboptimal', reason: entry.key);
+      option['quality'] = 'wrong';
+    }
     expect(
       historicalComparison,
       expectedComparison,

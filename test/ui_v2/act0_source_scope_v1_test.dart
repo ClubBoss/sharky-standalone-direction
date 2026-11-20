@@ -121,12 +121,100 @@ void main() {
       'position_apply_intro',
       'position_checkpoint_position_checkpoint_intro',
     };
+    const w9HypotheticalIds = <String>{
+      'w9_survival_intro',
+      'w9_cash_vs_tournament',
+      'w9_short_stack_survival',
+      'w9_survival_stack_tradeoff',
+      'w9_survival_recap',
+      'w9_m_ratio_intro',
+      'w9_m_ratio_red_zone',
+      'w9_m_ratio_green_zone',
+      'w9_m_ratio_yellow_zone',
+      'w9_m_ratio_recap',
+      'w9_bubble_intro',
+      'w9_medium_stack_tighten',
+      'w9_big_stack_leverage',
+      'w9_bubble_short_stack',
+      'w9_bubble_recap',
+      'w9_checkpoint_intro',
+      'w9_checkpoint_survival_line',
+      'w9_checkpoint_zone_line',
+      'w9_checkpoint_bubble_line',
+      'w9_checkpoint_table_notice',
+      'w9_checkpoint_review',
+    };
+    const w10HypotheticalIds = <String>{
+      'w10_player_type_intro',
+      'w10_nit_tag',
+      'w10_loose_passive_tag',
+      'w10_overaggressive_tag',
+      'w10_player_type_recap',
+      'w10_one_lever_intro',
+      'w10_vs_nit_open_wider',
+      'w10_vs_caller_value_heavier',
+      'w10_vs_sticky_defender_tighten_steals',
+      'w10_one_lever_recap',
+      'w10_guardrails_intro',
+      'w10_overbluff_punish',
+      'w10_underbluff_fold_more',
+      'w10_guardrail_sample_size',
+      'w10_guardrails_recap',
+      'w10_checkpoint_intro',
+      'w10_checkpoint_tag_line',
+      'w10_checkpoint_lever_line',
+      'w10_checkpoint_guardrail_line',
+      'w10_checkpoint_table_notice',
+      'w10_checkpoint_review',
+    };
+    const w11HypotheticalIds = <String>{
+      'w11_session_plan_intro',
+      'w11_plan_focus_choice',
+      'w11_plan_avoid_overload',
+      'w11_plan_table_focus_transfer',
+      'w11_session_plan_recap',
+      'w11_trigger_intro',
+      'w11_trigger_overfold_blinds',
+      'w11_trigger_overcall_flop',
+      'w11_trigger_recap',
+      'w11_review_loop_intro',
+      'w11_review_pick_leak',
+      'w11_review_define_fix',
+      'w11_review_loop_recap',
+      'w11_checkpoint_intro',
+      'w11_checkpoint_plan_line',
+      'w11_checkpoint_trigger_line',
+      'w11_checkpoint_review_line',
+      'w11_checkpoint_review',
+    };
+    const w12HypotheticalIds = <String>{
+      'w12_decision_quality_intro',
+      'w12_good_fold_bad_result',
+      'w12_bad_call_good_result',
+      'w12_decision_quality_recap',
+      'w12_tilt_reset_intro',
+      'w12_after_bad_beat_reset',
+      'w12_after_mistake_reset',
+      'w12_tilt_reset_recap',
+      'w12_confidence_intro',
+      'w12_assertive_not_ego',
+      'w12_discipline_under_pressure',
+      'w12_confidence_recap',
+      'w12_checkpoint_intro',
+      'w12_checkpoint_process_line',
+      'w12_checkpoint_reset_line',
+      'w12_checkpoint_discipline_line',
+      'w12_checkpoint_review',
+    };
     const explanationIds = <String>{
+      ...w9HypotheticalIds,
+      ...w10HypotheticalIds,
+      ...w11HypotheticalIds,
+      ...w12HypotheticalIds,
       'what_poker_is_all_in_meaning',
       'what_poker_is_matched_chips_transfer',
       'same_hand_different_seat_position_repair_same_hand_different_seat',
       'what_poker_is_side_pot_intro',
-      'w12_bad_call_good_result',
     };
     const rangeSignals = <String, String>{
       'w6_turn_shift_bucket': 'range_bucket_shift',
@@ -221,7 +309,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(47));
-    expect(explanationIds, hasLength(5));
+    expect(explanationIds, hasLength(81));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -238,6 +326,17 @@ void main() {
           : Act0TableScopeV1.playedHand;
       expect(table.scope, expected, reason: task.taskId);
       expect(table.copyWith(centerLabel: 'A different cue').scope, expected);
+      if (w9HypotheticalIds.contains(task.taskId) ||
+          w10HypotheticalIds.contains(task.taskId) ||
+          w11HypotheticalIds.contains(task.taskId) ||
+          w12HypotheticalIds.contains(task.taskId)) {
+        expect(table.streetLabel, isEmpty, reason: task.taskId);
+        expect(table.heroCards, isEmpty, reason: task.taskId);
+        expect(table.boardCards, isEmpty, reason: task.taskId);
+        expect(table.potLabel, isEmpty, reason: task.taskId);
+        expect(table.toCallLabel, isEmpty, reason: task.taskId);
+        expect(table.actionTrail, isEmpty, reason: task.taskId);
+      }
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
         if (!_asm05NewTaskIds.contains(task.taskId)) legacyPlayed++;
@@ -383,8 +482,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 323);
-    expect(played, 325); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 247);
+    expect(played, 249); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,

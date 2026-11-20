@@ -220,7 +220,10 @@ Future<void> _openTab(WidgetTester tester, String label) async {
 }
 
 Future<void> _leaveSummary(WidgetTester tester) async {
-  final map = find.byKey(const Key('act0_shell_block_summary_map_cta'));
+  final home = find.byKey(const Key('act0_shell_block_summary_home_cta'));
+  final map = home.evaluate().isNotEmpty
+      ? home
+      : find.byKey(const Key('act0_shell_block_summary_map_cta'));
   if (map.evaluate().isNotEmpty) {
     await tester.ensureVisible(map);
     await tester.tap(map);
@@ -311,8 +314,7 @@ void main() {
                 .where((lesson) => completed.contains(lesson.lessonId))
                 .length,
           );
-          // Home can prioritize an unresolved repair; the actual curriculum
-          // must still advance beyond the completed Guide.
+          // The actual curriculum advances beyond the completed Guide.
           await _openTab(t, 'Learn');
           final learn = t.widget<Act0LearnPathShellV1>(
             find.byType(Act0LearnPathShellV1),
