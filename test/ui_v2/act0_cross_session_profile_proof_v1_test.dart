@@ -293,7 +293,7 @@ void main() {
           findsOneWidget,
         );
         expect(find.text('Fixes'), findsOneWidget);
-        expect(find.text('4 banked'), findsOneWidget);
+        expect(find.text('4 corrected'), findsOneWidget);
         expect(find.text('Reinforced'), findsOneWidget);
         expect(find.text('1 on a later hand'), findsOneWidget);
         expect(find.text('Concepts'), findsOneWidget);

@@ -542,7 +542,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     return switch (lesson.state) {
       Act0LessonStateV1.completed =>
         nextLesson == null
-            ? 'Already clear. Replay any step when you want a clean pass.'
+            ? 'Lesson complete. Replay any step for more practice.'
             : 'Already clear. Next open lesson: ${nextLesson.title}.',
       Act0LessonStateV1.current =>
         nextLesson == null

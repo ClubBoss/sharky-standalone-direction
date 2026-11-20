@@ -244,21 +244,23 @@ class Act0FixProofItemV1 {
       proofState == act0FixProofStateReinforcedByLaterEvidenceV1;
 
   // The relation contract, not a familiar correct answer, owns this cap.
-  Act0FixProofItemV1
-  withoutIndependentApplicationClaimV1() => Act0FixProofItemV1(
-    fixProofId: fixProofId,
-    queueItemId: queueItemId,
-    conceptFamilyId: conceptFamilyId,
-    repairFocusId: repairFocusId,
-    sourceTaskId: sourceTaskId,
-    repairSessionId: repairSessionId,
-    repairOutcomeRef: repairOutcomeRef,
-    proofState: isReinforced ? act0FixProofStateRepairCompletedV1 : proofState,
-    bankedAtOrder: bankedAtOrder,
-    messageKey: _messageRepairCompletedV1,
-    currentVerificationLine:
-        'A separate application check on this learning goal is still needed.',
-  );
+  Act0FixProofItemV1 withoutIndependentApplicationClaimV1() =>
+      Act0FixProofItemV1(
+        fixProofId: fixProofId,
+        queueItemId: queueItemId,
+        conceptFamilyId: conceptFamilyId,
+        repairFocusId: repairFocusId,
+        sourceTaskId: sourceTaskId,
+        repairSessionId: repairSessionId,
+        repairOutcomeRef: repairOutcomeRef,
+        proofState: isReinforced
+            ? act0FixProofStateRepairCompletedV1
+            : proofState,
+        bankedAtOrder: bankedAtOrder,
+        messageKey: _messageRepairCompletedV1,
+        currentVerificationLine:
+            'Try the same skill on a new hand without help.',
+      );
 
   String get copyLine {
     if (isReinforced) {

@@ -502,7 +502,7 @@ void main() {
     expect(projection.proofs.single.currentVerificationState, isEmpty);
     expect(
       projection.proofs.single.currentVerificationLine,
-      'A separate application check on this learning goal is still needed.',
+      'Try the same skill on a new hand without help.',
     );
     expect(projection.aggregate.reinforcedFixCount, 0);
   });

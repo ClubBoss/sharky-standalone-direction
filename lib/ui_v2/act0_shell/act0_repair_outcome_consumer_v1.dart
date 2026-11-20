@@ -157,7 +157,7 @@ Act0RepairOutcomeSessionReceiptV1? _sessionReceiptForFixProofV1(
       improvementLine,
   ];
   return Act0RepairOutcomeSessionReceiptV1(
-    title: "Fixes you've banked",
+    title: "Mistakes you've corrected",
     lines: List<String>.unmodifiable(receiptLines),
     isBankedFixProof: true,
     hasReinforcedEvidence: (aggregate?.reinforcedFixCount ?? 0) > 0,

@@ -195,8 +195,7 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
                       : fresh
                       ? 'Saved mistakes will appear here after a missed '
                             'decision.'
-                      : 'Your current repair queue is empty. Independent '
-                            'checks stay separate.',
+                      : 'You have no saved mistakes to retry.',
                   style: const TextStyle(
                     color: _muted,
                     fontSize: 14,
@@ -235,12 +234,12 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _eyebrow('INDEPENDENT REVIEW'),
+                    _eyebrow('SCHEDULED REVIEW'),
                     const SizedBox(height: 8),
                     Text(
                       due.length == 1
-                          ? '1 independent review due'
-                          : '${due.length} independent reviews due',
+                          ? '1 review due'
+                          : '${due.length} reviews due',
                       key: const Key('act0_academy_review_leaf_due_count'),
                       style: const TextStyle(
                         color: _text,
@@ -258,7 +257,7 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
                     const SizedBox(height: 14),
                     _cta(
                       key: const Key('act0_academy_review_leaf_start_due'),
-                      label: 'Start independent review',
+                      label: 'Start review',
                       primary: featured == null,
                       onPressed: input.onStartDueReview == null
                           ? null
@@ -269,12 +268,14 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
               ),
             ),
           ] else
-            const Padding(
-              padding: EdgeInsets.fromLTRB(6, 18, 6, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(6, 18, 6, 0),
               child: Text(
-                'No independent reviews are due right now.',
-                key: Key('act0_academy_review_leaf_no_due'),
-                style: TextStyle(color: _muted, fontSize: 13),
+                mistakes.isEmpty && input.savedChecks.isEmpty
+                    ? 'All caught up. Nothing to review now.'
+                    : 'No scheduled reviews right now.',
+                key: const Key('act0_academy_review_leaf_no_due'),
+                style: const TextStyle(color: _muted, fontSize: 13),
               ),
             ),
           for (final check in input.savedChecks) ...[

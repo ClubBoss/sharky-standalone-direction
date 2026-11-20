@@ -219,12 +219,15 @@ class Act0ShellStateV1 {
       xpLine: '120 / 200 XP',
       lessonsLine: '3 lessons complete',
       accuracyLine: '82% practice accuracy',
-      qualityLine: 'Perfect path open',
+      qualityLine: 'Ready for your next hand',
       consistencyActiveDays: 11,
       streakLast7: const <bool>[false, false, false, false, true, true, true],
       achievements: <Act0AchievementV1>[
         Act0AchievementV1(id: 'first_table_read', label: 'First clear read'),
-        Act0AchievementV1(id: 'three_day_streak', label: 'Three day rhythm'),
+        Act0AchievementV1(
+          id: 'three_day_streak',
+          label: 'Three Days of Practice',
+        ),
         Act0AchievementV1(
           id: 'first_perfect_drill',
           label: 'Clean drill chain',
@@ -25582,7 +25585,7 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Bias warning.',
       feedbackReason:
-          'Outcome-first judgement is tempting because the result feels vivid and final. But the dominant cue is decision quality. One result cannot grade the process by itself.',
+          'Outcome-first judgment is tempting because the result feels vivid and final. But the dominant cue is decision quality. One result cannot grade the process by itself.',
     ),
     Act0RunnerOptionV1(
       id: 'avoid_review',

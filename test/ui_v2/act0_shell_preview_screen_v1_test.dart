@@ -355,12 +355,7 @@ void main() {
         expect(input.earnedLessonCount, 4);
         expect(input.courseLessonCount, 10);
         expect(find.text('4 of 10 lessons complete'), findsOneWidget);
-        expect(
-          find.text(
-            'Route proof is active. Next proof starts with one clean read.',
-          ),
-          findsNothing,
-        );
+        expect(find.text('Continue with the next hand.'), findsNothing);
         expect(find.textContaining('mastery'), findsNothing);
       } else {
         expect(
@@ -370,10 +365,7 @@ void main() {
         final momentum = tester.widget<Text>(
           find.byKey(const Key('act0_shell_home_proof_momentum_text')),
         );
-        expect(
-          momentum.data,
-          'Route proof is active. Next proof starts with one clean read.',
-        );
+        expect(momentum.data, 'Continue with the next hand.');
         expect(find.textContaining('mastery'), findsNothing);
         expect(find.textContaining('streak'), findsNothing);
       }
@@ -460,12 +452,7 @@ void main() {
         1,
       );
       expect(find.textContaining('1 lessons complete'), findsNothing);
-      expect(
-        find.text(
-          'Route proof is active. Next proof starts with one clean read.',
-        ),
-        findsNothing,
-      );
+      expect(find.text('Continue with the next hand.'), findsNothing);
       expect(
         find.byKey(const Key('act0_academy_home_leaf_cta')),
         findsOneWidget,
@@ -473,12 +460,7 @@ void main() {
     } else {
       expect(find.text('Cards, ranks & suits'), findsOneWidget);
       expect(find.text('1 of 10 lessons complete'), findsOneWidget);
-      expect(
-        find.text(
-          'Route proof is active. Next proof starts with one clean read.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text('Continue with the next hand.'), findsOneWidget);
       expect(find.textContaining('1 lessons complete'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_home_daily_plan_card')),
@@ -611,7 +593,7 @@ void main() {
           .widget<Act0AcademyYouLeafV1>(find.byType(Act0AcademyYouLeafV1))
           .input;
       expect(input.completedTaskCount, 0);
-      expect(input.streakDays, 0);
+      expect(input.practiceDaysLastWeek, 0);
       expect(input.earnedMoments, isEmpty);
       expect(input.bankedRepairCount, 0);
       expect(input.reinforcedRepairCount, 0);
@@ -620,7 +602,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.text('Make your first independent correct decision.'),
+        find.text('Answer your first question correctly without help.'),
         findsOneWidget,
       );
       expect(find.text('Your record begins here'), findsOneWidget);
@@ -632,22 +614,25 @@ void main() {
         find.byKey(const Key('act0_academy_you_leaf_streak')),
         findsNothing,
       );
-      expect(find.text('Recent route proof'), findsNothing);
-      expect(find.text('Recent independent responses verified.'), findsNothing);
+      expect(find.text('Recent correct answers'), findsNothing);
+      expect(
+        find.text('You answered recent questions without help.'),
+        findsNothing,
+      );
       expect(find.text('You are building this skill.'), findsNothing);
       expect(find.text('Clean progress started'), findsNothing);
       expect(find.text('Clean reads are becoming a habit.'), findsNothing);
     } else {
-      expect(find.text('Proof starts here'), findsOneWidget);
+      expect(find.text('Start with your first hand'), findsOneWidget);
       expect(
         find.text('Your first clear read will appear here.'),
         findsOneWidget,
       );
       expect(find.textContaining('Not confirmed yet'), findsOneWidget);
-      expect(find.text('Recent route proof'), findsNothing);
+      expect(find.text('Recent correct answers'), findsNothing);
       expect(find.text('0 tasks complete'), findsOneWidget);
       expect(find.text('Starting now'), findsNothing);
-      expect(find.text('Proof will appear as you learn'), findsOneWidget);
+      expect(find.text('Your practice will appear here'), findsOneWidget);
       expect(find.textContaining('First Table Guide'), findsOneWidget);
       expect(find.text('Clean progress started'), findsNothing);
       expect(find.text('Clean reads are becoming a habit.'), findsNothing);
@@ -681,11 +666,14 @@ void main() {
             .widget<Act0AcademyYouLeafV1>(find.byType(Act0AcademyYouLeafV1))
             .input;
         expect(input.completedTaskCount, 7);
-        expect(input.streakDays, 3);
+        expect(input.practiceDaysLastWeek, 3);
         expect(input.bankedRepairCount, 0);
         expect(input.reinforcedRepairCount, 0);
         expect(find.text('7 tasks completed'), findsOneWidget);
-        expect(find.text('3 days - Learning streak'), findsOneWidget);
+        expect(
+          find.text('3 days practiced in the last 7 days'),
+          findsOneWidget,
+        );
         expect(
           find.byKey(const Key('act0_academy_you_leaf_tasks')),
           findsOneWidget,
@@ -694,18 +682,18 @@ void main() {
           find.byKey(const Key('act0_academy_you_leaf_streak')),
           findsOneWidget,
         );
-        expect(find.text('Recent route proof'), findsNothing);
+        expect(find.text('Recent correct answers'), findsNothing);
         expect(find.text('What Sharky can prove'), findsNothing);
         expect(
-          find.text('Recent independent responses verified.'),
+          find.text('You answered recent questions without help.'),
           findsNothing,
         );
         expect(find.text('You are building this skill.'), findsNothing);
       } else {
         expect(find.textContaining('Not confirmed yet'), findsOneWidget);
-        expect(find.text('Recent route proof'), findsNothing);
+        expect(find.text('Recent correct answers'), findsNothing);
         expect(
-          find.text('Recent practice; proof still pending'),
+          find.text('Practice saved. Try another hand without help.'),
           findsOneWidget,
         );
         expect(find.text('What Sharky can prove'), findsNothing);

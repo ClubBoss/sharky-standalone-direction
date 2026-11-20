@@ -58,7 +58,7 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
             ],
             line('Your learning evidence', title: true),
             line(
-              'Study, practice and independent responses are recorded separately.',
+              'You can see what you studied, practiced, and answered without help.',
             ),
             if (projection.studiedTopics.isEmpty)
               line('No study record for the current material yet.')
@@ -82,9 +82,7 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: line(topic.title),
                     ),
-                  line(
-                    'Study records do not establish independent skill confirmation.',
-                  ),
+                  line('To see answers without help, try a practice hand.'),
                 ],
               ),
             if (projection.unverifiedStudyCount > 0)

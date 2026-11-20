@@ -368,7 +368,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         outcome:
             _nextLesson(selectedWorld.lessons, selectedLesson.lessonId) == null
             ? _copyV1(
-                en: 'On return: keep the clean pass moving.',
+                en: 'Pick up with the next hand when you return.',
                 ru: 'Когда вернёшься, просто продолжай чистый проход.',
               )
             : _copyV1(
@@ -674,7 +674,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       hint: currentLessonCue,
       outcome: nextLesson == null
           ? _copyV1(
-              en: 'On return: keep the clean pass moving.',
+              en: 'Pick up with the next hand when you return.',
               ru: 'Когда вернёшься, просто продолжай чистый проход.',
             )
           : _copyV1(
@@ -1442,12 +1442,12 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     if (_streakSaveEarned()) {
       return const Act0SharkyCueV1(
         preSessionLine:
-            'Repair banked. This table clue is warmer for tomorrow.',
+            'You corrected a mistake. Try that skill again tomorrow.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine:
-            'Repair banked today. One useful hand tomorrow keeps the clue warm.',
+            'You corrected a mistake today. Practice it again tomorrow.',
         preSessionMood: Act0SharkyMoodV1.celebrate,
       );
     }
