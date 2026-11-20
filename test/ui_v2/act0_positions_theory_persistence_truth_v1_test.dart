@@ -711,6 +711,46 @@ Future<_Snapshot> _continueTeachingAfterDisabledTap(
 }
 
 void main() {
+  testWidgets(
+    'W1 nameplates reveal seat abbreviations on the definition page',
+    (tester) async {
+      await _mount(tester, _theoryTaskId);
+      final hero = find.byKey(const Key('act0_shell_hero_identity_btn'));
+      final name = find.descendant(of: hero, matching: find.text('BTN'));
+      final stack = find.descendant(of: hero, matching: find.text('100 BB'));
+      final opponent = find.byKey(const Key('act0_shell_seat_identity_utg'));
+      expect(_runner(tester).runner.teachingStepIndex, 0);
+      expect(name, findsNothing);
+      expect(stack, findsOneWidget);
+      expect(
+        find.descendant(of: opponent, matching: find.text('Player')),
+        findsOneWidget,
+      );
+
+      for (var index = 1; index <= 2; index++) {
+        await tester.pump(const Duration(milliseconds: 900));
+        final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+        final next = theory.evaluate().isNotEmpty
+            ? theory
+            : find.byKey(const Key('act0_shell_continue_cta'));
+        await tester.ensureVisible(next);
+        expect(next.hitTestable(), findsOneWidget);
+        await tester.tap(next);
+        await tester.pumpAndSettle();
+        expect(_runner(tester).runner.teachingStepIndex, index);
+        expect(name, index == 1 ? findsNothing : findsOneWidget);
+        expect(stack, findsOneWidget);
+      }
+      expect(find.textContaining('UTG means Under the Gun'), findsOneWidget);
+      expect(
+        find.descendant(of: opponent, matching: find.text('UTG')),
+        findsOneWidget,
+      );
+      expect(find.text('Player'), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final correct in [true, false]) {
     testWidgets(
       'ASM02 theory ${correct ? "BTN" : "UTG"} tap cannot become independent proof after save and reload',

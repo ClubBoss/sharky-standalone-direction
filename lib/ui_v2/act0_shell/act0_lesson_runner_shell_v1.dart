@@ -1221,6 +1221,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.selectedTaskTitle,
     this.selectedTaskFamily,
     this.tablePresentation = Act0TaskTablePresentationV1.legacy,
+    this.tableIdentityPolicy,
     this.theoryRecallStep,
     required this.onBack,
     required this.onContinueTheory,
@@ -1279,6 +1280,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? selectedTaskTitle;
   final Act0TaskFamilyV1? selectedTaskFamily;
   final Act0TaskTablePresentationV1 tablePresentation;
+  final Act0TableIdentityPolicyV1? tableIdentityPolicy;
   final Act0TeachingStepV1? theoryRecallStep;
   final VoidCallback onBack;
   final VoidCallback onContinueTheory;
@@ -3542,9 +3544,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         MediaQuery.sizeOf(context).shortestSide < 600;
     // Compact seats already render a distinct learner badge. Keep the text
     // label to the table position so the visible identity is "You" + "BTN".
-    final identityPolicy = usesSharedActiveRunnerAllocation
-        ? Act0TableIdentityPolicyV1.learnerPosition
-        : sourceIdentityPolicy;
+    final identityPolicy =
+        widget.tableIdentityPolicy ??
+        (usesSharedActiveRunnerAllocation
+            ? Act0TableIdentityPolicyV1.learnerPosition
+            : sourceIdentityPolicy);
     // B7: the canonical scene owns its own geometry, so the lower surface is a
     // scene-attached control shelf that sizes to its content instead of a slot
     // the scene had to fund.
@@ -4422,7 +4426,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
-    Widget buildRunnerScreen({bool registeredScene = false}) {
+    Widget buildRunnerScreen({Act0SceneRegistrationV1? registration}) {
+      final registeredScene = registration != null;
+      final decisionShelfMaxHeight =
+          registration == null ||
+              widget.worldNumber < 1 ||
+              widget.worldNumber > 4
+          ? null
+          : math.max(
+              0.0,
+              registration.viewport.height -
+                  registration
+                      .map(registration.profile.seatAnchorsFromHero.first)
+                      .dy -
+                  // Leave room for the nameplate and the shelf's upper fade.
+                  44.0,
+            );
       // Source premises must remain readable without covering an answer seat.
       // Reuse the existing scrollable guide shelf; the registered table stays
       // at its source-owned camera/seat anchors.
@@ -4667,7 +4686,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                   ),
                   KeyedSubtree(
                     key: const Key('act0_shell_shared_runner_lower_surface'),
-                    child: buildIntegratedLowerSurface(),
+                    child:
+                        decisionShelfMaxHeight != null && isDrill && !isTeaching
+                        ? ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: decisionShelfMaxHeight,
+                            ),
+                            child: SingleChildScrollView(
+                              primary: false,
+                              // Start at the answers when the preceding
+                              // hand history needs more room.
+                              reverse: showStreetReplayInline,
+                              physics: const ClampingScrollPhysics(),
+                              child: buildIntegratedLowerSurface(),
+                            ),
+                          )
+                        : buildIntegratedLowerSurface(),
                   ),
                 ],
               ),
@@ -4812,8 +4846,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           );
         },
       ),
-      foregroundBuilder: (context, registered) =>
-          buildRunnerScreen(registeredScene: registered),
+      foregroundBuilder: (context, registered) => LayoutBuilder(
+        builder: (context, constraints) => buildRunnerScreen(
+          registration: registered
+              ? act0PremiumTableSceneProfileV1.register(constraints.biggest)
+              : null,
+        ),
+      ),
     );
   }
 }

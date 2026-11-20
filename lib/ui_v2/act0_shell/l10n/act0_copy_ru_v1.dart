@@ -2915,6 +2915,8 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'table_word_big_blind': Act0SurfaceAtomCopyV1(text: 'Большой блайнд'),
   'table_word_now': Act0SurfaceAtomCopyV1(text: 'Сейчас'),
   'table_word_you': Act0SurfaceAtomCopyV1(text: 'Ты'),
+  'table_word_player': Act0SurfaceAtomCopyV1(text: 'Игрок'),
+  'table_word_empty_seat': Act0SurfaceAtomCopyV1(text: 'Пустое место'),
   'table_word_blind': Act0SurfaceAtomCopyV1(text: 'блайнд'),
   'table_word_acts': Act0SurfaceAtomCopyV1(text: 'действует'),
   'table_word_opens': Act0SurfaceAtomCopyV1(text: 'открывает'),
