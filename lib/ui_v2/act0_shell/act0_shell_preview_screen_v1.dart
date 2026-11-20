@@ -4727,6 +4727,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             widget.enableBetaMetrics && _usesPersistedProgress
                             ? () => Act0BetaLearningMetricsV1.fromProgress(
                                 firstWorld: baseState.worldById('world_1'),
+                                history: _learningEvidenceHistoryV1,
                                 completedTaskIds: _completedTaskIds,
                                 correctedMistakes:
                                     _fixProofProjectionV1().proofs.length,

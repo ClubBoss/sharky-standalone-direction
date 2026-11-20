@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -97,8 +99,152 @@ void main() {
       Act0BetaSurveyAnswerV1.yes,
       Act0BetaSurveyAnswerV1.unsure,
       null,
+      null,
+      null,
     ]);
   });
+
+  test(
+    'older three surveys retain their answers when new prompts appear',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        Act0BetaMetricsStoreV1.key: jsonEncode({
+          'version': 1,
+          'firstVisitUtc': _first.toIso8601String(),
+          'observedDay': 1,
+          'returnedDay2': true,
+          'returnedDay7': false,
+          'answers': ['yes', 'unsure', null],
+        }),
+      });
+      final before = (await Act0BetaMetricsStoreV1.read())!;
+      expect(before.answers, [
+        Act0BetaSurveyAnswerV1.yes,
+        Act0BetaSurveyAnswerV1.unsure,
+        null,
+        null,
+        null,
+      ]);
+      await Act0BetaMetricsStoreV1.setAnswer(3, Act0BetaSurveyAnswerV1.no);
+      final after = (await Act0BetaMetricsStoreV1.read())!;
+      expect(after.returnedDay2, isTrue);
+      expect(after.answers[3], Act0BetaSurveyAnswerV1.no);
+      expect(after.answers.first, Act0BetaSurveyAnswerV1.yes);
+    },
+  );
+
+  test(
+    'scores split first answers and count only new unassisted Day 7 reviews',
+    () {
+      final w1 = Act0ShellStateV1.sample.worldById('world_1');
+      final lesson = w1.lessons.first;
+      final ids = lesson.courseTaskList.map((task) => task.taskId).toList();
+      Act0LearningEvidenceRecordV1 record(
+        int order,
+        String task, {
+        required int hours,
+        bool correct = true,
+        Act0DecisionAssistanceV1 assistance = Act0DecisionAssistanceV1.none,
+        Act0ReviewKindV1 kind = Act0ReviewKindV1.initialAssessment,
+        String runKind = 'lesson',
+      }) => Act0LearningEvidenceRecordV1(
+        recordId: '$order',
+        createdOrder: order,
+        worldId: w1.worldId,
+        lessonId: lesson.lessonId,
+        taskId: task,
+        choiceId: correct ? 'right' : 'miss',
+        expectedChoiceId: 'right',
+        isCorrect: correct,
+        errorType: '',
+        repairFocusId: '',
+        skillAtomId: '',
+        decisionTimeBucket: '',
+        resultKind: correct ? 'correct' : 'incorrect',
+        runKind: runKind,
+        reviewKind: kind,
+        assistanceKind: assistance,
+        recordedAtUtc: _first.add(Duration(hours: hours)),
+      );
+      final history = Act0LearningEvidenceHistoryV1(
+        records: [
+          record(1, ids[1], hours: 1, correct: false),
+          record(2, ids[1], hours: 2),
+          record(
+            3,
+            ids[2],
+            hours: 3,
+            assistance: Act0DecisionAssistanceV1.quickHint,
+          ),
+          record(
+            4,
+            ids[3],
+            hours: 4,
+            assistance: Act0DecisionAssistanceV1.legacyUnknown,
+          ),
+          record(5, ids[4], hours: 24),
+          record(
+            6,
+            'early',
+            hours: 143,
+            kind: Act0ReviewKindV1.unseenTransfer,
+            runKind: 'spaced_review',
+          ),
+          record(
+            7,
+            ids[1],
+            hours: 144,
+            kind: Act0ReviewKindV1.unseenTransfer,
+            runKind: 'spaced_review',
+          ),
+          record(
+            8,
+            'new_correct',
+            hours: 144,
+            kind: Act0ReviewKindV1.unseenTransfer,
+            runKind: 'spaced_review',
+          ),
+          record(
+            9,
+            'new_wrong',
+            hours: 167,
+            correct: false,
+            kind: Act0ReviewKindV1.unseenTransfer,
+            runKind: 'spaced_review',
+          ),
+          record(
+            10,
+            'familiar',
+            hours: 167,
+            kind: Act0ReviewKindV1.exactReplay,
+            runKind: 'spaced_review',
+          ),
+          record(
+            11,
+            'ordinary',
+            hours: 167,
+            kind: Act0ReviewKindV1.unseenTransfer,
+          ),
+          record(
+            12,
+            'late',
+            hours: 168,
+            kind: Act0ReviewKindV1.unseenTransfer,
+            runKind: 'spaced_review',
+          ),
+        ],
+      );
+      final scores = Act0BetaLearningMetricsV1.fromProgress(
+        firstWorld: w1,
+        completedTaskIds: {},
+        correctedMistakes: 0,
+        history: history,
+      ).decisionsSince(_first);
+      expect(scores.onYourOwn, (correct: 0, total: 1));
+      expect(scores.withHelp, (correct: 1, total: 1));
+      expect(scores.day7NewReview, (correct: 1, total: 2));
+    },
+  );
 
   test(
     'invalid activity is unavailable instead of becoming a fresh cohort',
