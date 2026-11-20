@@ -31,6 +31,27 @@ void main() {
     expect(table.copyWith(actionTrail: const []).handContributions, isNull);
   });
 
+  test('an omitted call label cannot hide a missing effective stack', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'mutation',
+      source.runner.table.copyWith(toCallLabel: ''),
+    );
+
+    expect(
+      {for (final row in findings) row.invariant: row.result},
+      {
+        'D2.pot_feasibility': 'PASS',
+        'D3.to_call_completeness': 'NEEDS_SOURCE_CONTEXT',
+      },
+    );
+  });
+
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
     final earlyWorldTasks = Act0ShellStateV1.sample.worlds

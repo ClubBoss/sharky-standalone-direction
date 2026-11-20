@@ -2,6 +2,7 @@ import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 // Catalog invariants over the actual Runner projection. Not a betting engine.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 
@@ -53,12 +54,13 @@ List<TableTruthRow> auditTableContributionsV1(
   final ledger = t.handContributions;
   if (ledger != null) {
     try {
+      final actorSeatId = t.decisionSeatId ?? t.activeSeatId;
       final amounts = ledger.amounts(
         seatIds: t.seats
             .where((seat) => seat.isOccupied)
             .map((seat) => seat.seatId)
             .toSet(),
-        actorSeatId: t.decisionSeatId ?? t.activeSeatId,
+        actorSeatId: actorSeatId,
       );
       final sameStreet =
           t.streetLabel == pokerStreetToString(ledger.throughStreet);
@@ -86,10 +88,27 @@ List<TableTruthRow> auditTableContributionsV1(
         );
       }
       final due = amounts.toCallBb;
+      // An omitted label on a betting decision must preserve the source gap.
+      // A highlighted seat in a blind-only teaching frame is not such a decision.
+      final unresolvedActorPrice =
+          actorSeatId != null &&
+          due == null &&
+          ledger.entries.any(
+            (entry) =>
+                entry.street == ledger.throughStreet &&
+                entry.kind == Act0ContributionKindV1.wager,
+          ) &&
+          (t.decisionSeatId != null ||
+              t.seats.any(
+                (seat) =>
+                    seat.seatId != actorSeatId &&
+                    seat.bet?.kind == Act0SeatBetKindV1.allIn,
+              ));
       final checkUnpricedStreet =
           ledger.fromStreet != PokerStreet.preflop && due == 0;
       if (t.toCallLabel.isNotEmpty ||
           (due != null && due > 0) ||
+          unresolvedActorPrice ||
           checkUnpricedStreet) {
         if (sameStreet && due == null) {
           rows.add(
