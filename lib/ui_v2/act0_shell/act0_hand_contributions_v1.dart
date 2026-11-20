@@ -13,25 +13,37 @@ class Act0ContributionV1 {
   final double amountBb;
 }
 
-/// Source-owned contributions from hand start to one decision frame. Starting
-/// stacks are optional for pot proof, but required to cap a positive call.
+/// Source-owned contributions through one decision frame. Betting-street
+/// evidence can establish a call price even when earlier contributions are
+/// missing. Stack amounts refer to the beginning of the recorded interval.
 class Act0HandContributionsV1 {
   const Act0HandContributionsV1({
     required this.throughStreet,
     required this.entries,
+    this.fromStreet = PokerStreet.preflop,
     this.startingStackBbBySeat = const {},
+    this.minimumStartingStackBbBySeat = const {},
   });
 
+  final PokerStreet fromStreet;
   final PokerStreet throughStreet;
   final List<Act0ContributionV1> entries;
   final Map<String, double> startingStackBbBySeat;
+  final Map<String, double> minimumStartingStackBbBySeat;
 
   ({double potBb, double? toCallBb}) amounts({
     required Set<String> seatIds,
     String? actorSeatId,
   }) {
     const tolerance = 1e-9;
-    if (startingStackBbBySeat.entries.any(
+    if (fromStreet.index > throughStreet.index) {
+      throw const FormatException('Invalid contribution ledger street range');
+    }
+    final budgets = [
+      ...startingStackBbBySeat.entries,
+      ...minimumStartingStackBbBySeat.entries,
+    ];
+    if (budgets.any(
       (entry) =>
           !seatIds.contains(entry.key) ||
           !entry.value.isFinite ||
@@ -44,7 +56,7 @@ class Act0HandContributionsV1 {
 
     final addedBySeat = <String, double>{};
     final streetWagers = <String, double>{};
-    var currentStreet = PokerStreet.preflop;
+    var currentStreet = fromStreet;
     var pot = 0.0;
     for (final entry in entries) {
       final amount = entry.amountBb;
@@ -99,9 +111,18 @@ class Act0HandContributionsV1 {
     );
     final due = highestWager - (streetWagers[actorSeatId] ?? 0.0);
     if (due <= tolerance) return (potBb: pot, toCallBb: 0);
+    final invested = addedBySeat[actorSeatId] ?? 0.0;
     final stack = startingStackBbBySeat[actorSeatId];
-    if (stack == null) return (potBb: pot, toCallBb: null);
-    final behind = stack - (addedBySeat[actorSeatId] ?? 0.0);
+    if (stack == null) {
+      final floor = minimumStartingStackBbBySeat[actorSeatId];
+      return (
+        potBb: pot,
+        toCallBb: floor != null && floor - invested + tolerance >= due
+            ? due
+            : null,
+      );
+    }
+    final behind = stack - invested;
     return (
       potBb: pot,
       toCallBb: behind < due ? behind.clamp(0.0, due).toDouble() : due,

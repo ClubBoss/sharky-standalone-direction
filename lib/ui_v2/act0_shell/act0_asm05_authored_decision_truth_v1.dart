@@ -1,5 +1,7 @@
 import 'package:poker_analyzer/helpers/showdown_evaluator.dart';
 import 'package:poker_analyzer/models/card_model.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 /// NEW_AUTHORING_2026_11_08. Private, unregistered instructional source.
@@ -391,6 +393,22 @@ Act0TableStateV1 _decisionTable(Act0Asm05TurnSnapshotV1 source) =>
       potLabel: 'Pot ${source.potAtDecisionBb} BB',
       toCallLabel: 'To call ${source.additionalCallBb} BB',
       centerLabel: 'Turn decision snapshot',
+      handContributions: Act0HandContributionsV1(
+        throughStreet: PokerStreet.turn,
+        startingStackBbBySeat: {for (final seat in source.seatIds) seat: 100},
+        entries: [
+          for (final event in source.ledger)
+            if (event.addedHalfBb > 0)
+              Act0ContributionV1(
+                pokerStreetFromString(event.street),
+                event.seatId,
+                event.action == 'post'
+                    ? Act0ContributionKindV1.blind
+                    : Act0ContributionKindV1.wager,
+                event.addedHalfBb / 2,
+              ),
+        ],
+      ),
       actionTrail: List.unmodifiable([
         for (final e in source.ledger)
           Act0ActionTrailItemV1(

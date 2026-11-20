@@ -52,6 +52,34 @@ void main() {
     expect(settled.amounts(seatIds: seats).potBb, 6);
   });
 
+  test('a street ledger proves price only if the stack bound covers it', () {
+    const flop = PokerStreet.flop;
+    const entries = [
+      Act0ContributionV1(flop, 'btn', Act0ContributionKindV1.wager, 2),
+      Act0ContributionV1(flop, 'bb', Act0ContributionKindV1.wager, 7),
+    ];
+    const covers = Act0HandContributionsV1(
+      fromStreet: flop,
+      throughStreet: flop,
+      minimumStartingStackBbBySeat: {'btn': 7},
+      entries: entries,
+    );
+    const ambiguous = Act0HandContributionsV1(
+      fromStreet: flop,
+      throughStreet: flop,
+      minimumStartingStackBbBySeat: {'btn': 6},
+      entries: entries,
+    );
+    expect(covers.amounts(seatIds: {'btn', 'bb'}, actorSeatId: 'btn'), (
+      potBb: 9,
+      toCallBb: 5,
+    ));
+    expect(
+      ambiguous.amounts(seatIds: {'btn', 'bb'}, actorSeatId: 'btn').toCallBb,
+      isNull,
+    );
+  });
+
   test('amounts fail closed on an invalid seat or a later street', () {
     const unknownSeat = Act0HandContributionsV1(
       throughStreet: PokerStreet.preflop,

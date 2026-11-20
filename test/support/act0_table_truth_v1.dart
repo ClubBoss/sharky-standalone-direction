@@ -66,23 +66,51 @@ List<TableTruthRow> auditTableContributionsV1(
       final shownCall = potTruthBbV1(
         t.toCallLabel.replaceFirst('To call ', ''),
       );
-      check(
-        'D2.pot_feasibility',
-        sameStreet &&
-            shownPot != null &&
-            (shownPot - amounts.potBb).abs() < 1e-9,
-        'shown=${t.potLabel} from contributions=${amounts.potBb} BB',
-      );
-      final due = amounts.toCallBb;
-      if (t.toCallLabel.isNotEmpty || (due != null && due > 0)) {
+      if (!sameStreet || ledger.fromStreet == PokerStreet.preflop) {
         check(
-          'D3.to_call_completeness',
+          'D2.pot_feasibility',
           sameStreet &&
-              due != null &&
-              shownCall != null &&
-              (shownCall - due).abs() < 1e-9,
-          'shown=${t.toCallLabel} from commitments and remaining stack=$due BB',
+              shownPot != null &&
+              (shownPot - amounts.potBb).abs() < 1e-9,
+          'shown=${t.potLabel} from contributions=${amounts.potBb} BB',
         );
+      } else {
+        rows.add(
+          TableTruthRow(
+            taskId,
+            variant,
+            'D2.pot_feasibility',
+            'NEEDS_SOURCE_CONTEXT',
+            'Contributions before ${ledger.fromStreet.name} are missing.',
+          ),
+        );
+      }
+      final due = amounts.toCallBb;
+      final checkUnpricedStreet =
+          ledger.fromStreet != PokerStreet.preflop && due == 0;
+      if (t.toCallLabel.isNotEmpty ||
+          (due != null && due > 0) ||
+          checkUnpricedStreet) {
+        if (sameStreet && due == null) {
+          rows.add(
+            TableTruthRow(
+              taskId,
+              variant,
+              'D3.to_call_completeness',
+              'NEEDS_SOURCE_CONTEXT',
+              'The decision actor or stack bound is missing.',
+            ),
+          );
+        } else {
+          check(
+            'D3.to_call_completeness',
+            sameStreet &&
+                due != null &&
+                ((t.toCallLabel.isEmpty && due == 0) ||
+                    (shownCall != null && (shownCall - due).abs() < 1e-9)),
+            'shown=${t.toCallLabel} from commitments and remaining stack=$due BB',
+          );
+        }
       }
     } on FormatException catch (error) {
       check('D2.pot_feasibility', false, error.message);

@@ -1188,6 +1188,20 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   );
 }
 
+Act0HandContributionsV1 _act0SingleStreetBetContributionsV1({
+  required PokerStreet street,
+  required String bettor,
+  required double betBb,
+  required double buttonStackAtLeastBb,
+}) => Act0HandContributionsV1(
+  fromStreet: street,
+  throughStreet: street,
+  minimumStartingStackBbBySeat: {'btn': buttonStackAtLeastBb},
+  entries: [
+    Act0ContributionV1(street, bettor, Act0ContributionKindV1.wager, betBb),
+  ],
+);
+
 // Explicit authored current-street commitments; old street chips are collected.
 // This helper does not infer actors, amounts, folds or a pot from partial trails.
 Act0TableStateV1 _act0CurrentStreetTableV1(
@@ -23479,6 +23493,25 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
         potLabel: 'Pot 21 BB',
         toCallLabel: 'To call 15.5 BB',
         centerLabel: 'BTN, medium stack, bubble pressure',
+        handContributions: const Act0HandContributionsV1(
+          throughStreet: PokerStreet.preflop,
+          startingStackBbBySeat: {'bb': 18},
+          entries: [
+            ..._act0LessonBlinds,
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'btn',
+              Act0ContributionKindV1.wager,
+              2.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'bb',
+              Act0ContributionKindV1.wager,
+              17,
+            ),
+          ],
+        ),
         actionTrail: const [
           Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
           Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -24134,6 +24167,11 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
     potLabel: 'Pot 6 BB',
     toCallLabel: '',
     centerLabel: 'Top pair vs caller',
+    handContributions: const Act0HandContributionsV1(
+      fromStreet: PokerStreet.flop,
+      throughStreet: PokerStreet.flop,
+      entries: [],
+    ),
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
       Act0ActionTrailItemV1(label: 'BB calls'),
@@ -25407,6 +25445,12 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       toCallLabel: 'To call 5 BB',
       centerLabel: 'BTN, top pair, 30 BB',
       highlightedSeatIds: const ['hj', 'btn'],
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.flop,
+        bettor: 'hj',
+        betBb: 5,
+        buttonStackAtLeastBb: 30,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
         Act0ActionTrailItemV1(label: 'BTN calls'),
@@ -25880,6 +25924,12 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       potLabel: 'Pot 38 BB',
       toCallLabel: 'To call 18 BB',
       centerLabel: 'Top pair, bad river price',
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.river,
+        bettor: 'co',
+        betBb: 18,
+        buttonStackAtLeastBb: 100,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
         Act0ActionTrailItemV1(label: 'BTN calls'),
@@ -25961,6 +26011,12 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'Top pair, ego trap',
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.flop,
+        bettor: 'co',
+        betBb: 2,
+        buttonStackAtLeastBb: 35,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Villain needled you last orbit'),
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
@@ -26175,6 +26231,12 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'After mistake, stay clean',
+      handContributions: _act0SingleStreetBetContributionsV1(
+        street: PokerStreet.flop,
+        bettor: 'co',
+        betBb: 2,
+        buttonStackAtLeastBb: 25,
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),
         Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
