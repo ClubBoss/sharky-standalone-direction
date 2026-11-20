@@ -2302,28 +2302,62 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _requestDeleteLocalDataV1() async {
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showModalBottomSheet<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete local data?'),
-        content: const Text(
-          'This permanently erases your learning progress, answers, XP, '
-          'practice history, recovery copies and preferences on this device. '
-          'You will start again. It cannot be undone. '
-          'Apple backups and TestFlight feedback are managed separately by Apple.',
+      backgroundColor: Act0AcademyLeafPaletteV1.inkRaised,
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (sheetContext) => SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Delete local data?',
+                style: TextStyle(
+                  color: Act0AcademyLeafPaletteV1.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'This permanently erases your learning progress, answers, XP, '
+                'practice history, recovery copies and preferences on this device. '
+                'You will start again. It cannot be undone. '
+                'Apple backups and TestFlight feedback are managed separately by Apple.',
+                style: TextStyle(
+                  color: Act0AcademyLeafPaletteV1.textMuted,
+                  fontSize: 15,
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                key: const Key('act0_delete_data_cancel'),
+                onPressed: () => Navigator.pop(sheetContext, false),
+                style: TextButton.styleFrom(
+                  foregroundColor: Act0AcademyLeafPaletteV1.aquaSoft,
+                  minimumSize: const Size(48, 48),
+                ),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                key: const Key('act0_delete_data_confirm'),
+                onPressed: () => Navigator.pop(sheetContext, true),
+                style: FilledButton.styleFrom(
+                  foregroundColor: Act0AcademyLeafPaletteV1.ink,
+                  backgroundColor: Act0ShellTokensV1.danger,
+                  minimumSize: const Size(48, 48),
+                ),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            key: const Key('act0_delete_data_cancel'),
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            key: const Key('act0_delete_data_confirm'),
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
-        ],
       ),
     );
     if (confirmed == true && mounted) await _deleteLocalDataV1();
@@ -2691,8 +2725,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     if (!_bootSurfaceReady) {
-      return const Scaffold(
-        body: SafeArea(child: Center(child: CircularProgressIndicator())),
+      return const AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          backgroundColor: Act0AcademyLeafPaletteV1.ink,
+          body: SafeArea(
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Act0AcademyLeafPaletteV1.aqua,
+              ),
+            ),
+          ),
+        ),
       );
     }
     _ensureDailyCountDayV1();
@@ -2700,7 +2744,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (_showW1StartV1 ||
             _w1RulesAnswersV1 != null ||
             _w1RulesResultV1 != null)) {
-      return _buildW1RulesFlowV1();
+      return MediaQuery.withClampedTextScaling(
+        minScaleFactor: 1.0,
+        maxScaleFactor: 1.3,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: _buildW1RulesFlowV1(),
+        ),
+      );
     }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
@@ -4753,7 +4804,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // fixed text scale inside the runner.
     if (academySurface) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: premiumAcademy
+        value: premiumAcademy || _showWelcome || _showPlacement
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
         child: shell,
