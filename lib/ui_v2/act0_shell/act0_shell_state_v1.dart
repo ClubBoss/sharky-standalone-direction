@@ -867,6 +867,7 @@ enum Act0TableScopeV1 { unclassified, playedHand, orientation, explanation }
 class Act0TableStateV1 {
   const Act0TableStateV1({
     this.scope = Act0TableScopeV1.unclassified,
+    this.showDecisionPremise = false,
     required this.tableFormat,
     required this.playerCount,
     this.density = Act0TableDensityV1.compactLesson,
@@ -892,6 +893,8 @@ class Act0TableStateV1 {
   });
 
   final Act0TableScopeV1 scope;
+  // The authored caption supplies facts required to answer this scenario.
+  final bool showDecisionPremise;
   final Act0TableFormatV1 tableFormat;
   final int playerCount;
   final Act0TableDensityV1 density;
@@ -928,6 +931,7 @@ class Act0TableStateV1 {
 
   Act0TableStateV1 copyWith({
     Act0TableScopeV1? scope,
+    bool? showDecisionPremise,
     Act0TableFormatV1? tableFormat,
     Act0TableDensityV1? density,
     List<Act0SeatStateV1>? seats,
@@ -953,6 +957,7 @@ class Act0TableStateV1 {
   }) {
     return Act0TableStateV1(
       scope: scope ?? this.scope,
+      showDecisionPremise: showDecisionPremise ?? this.showDecisionPremise,
       tableFormat: tableFormat ?? this.tableFormat,
       playerCount: playerCount,
       density: density ?? this.density,
@@ -20435,6 +20440,7 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
 Act0TableStateV1 _act0HypotheticalConceptTableV1(Act0TableStateV1 base) =>
     base.copyWith(
       scope: Act0TableScopeV1.explanation,
+      showDecisionPremise: true,
       heroCards: const <Act0CardStateV1>[],
       boardCards: const <Act0CardStateV1>[],
       streetLabel: '',
