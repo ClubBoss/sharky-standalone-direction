@@ -463,6 +463,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('NEXT · REPAIR THE CLUE'), findsOneWidget);
       expect(find.text('Try the same table clue once more.'), findsOneWidget);
+      expect(find.text('Not this one · Fold').hitTestable(), findsOneWidget);
+      expect(find.text('Best answer · Check').hitTestable(), findsOneWidget);
+      expect(find.byIcon(Icons.close_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.check_rounded), findsOneWidget);
       expect(find.text('Try same clue'), findsOneWidget);
       expect(
         find.text('Continue to the next diagnostic question.'),
