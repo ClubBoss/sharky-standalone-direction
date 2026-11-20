@@ -461,7 +461,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('NEXT · REPAIR THE CLUE'), findsOneWidget);
+      expect(find.text('NEXT · REPAIR THE CLUE'), findsNothing);
       expect(find.text('Try the same table clue once more.'), findsOneWidget);
       expect(find.text('Not this one · Fold').hitTestable(), findsOneWidget);
       expect(find.text('Best answer · Check').hitTestable(), findsOneWidget);

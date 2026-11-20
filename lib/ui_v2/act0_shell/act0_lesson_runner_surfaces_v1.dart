@@ -1671,29 +1671,12 @@ class _LearningRailV1 extends StatelessWidget {
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      act0AcademyLanguageV1(context) == 'ru'
-                          ? '\u0421\u041c\u041e\u0422\u0420\u0418 \u041d\u0410 \u0421\u0422\u041e\u041b'
-                          : 'LOOK AT THE TABLE',
-                      key: const Key('act0_learning_scene_v3_table_focus'),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.info,
-                        fontSize: 9.4,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    if (pageCount > 1) ...[
-                      const SizedBox(height: 5),
-                      _LearningRailSupportDotsV1(
+                child: pageCount > 1
+                    ? _LearningRailSupportDotsV1(
                         count: pageCount,
                         current: currentPage,
-                      ),
-                    ],
-                  ],
-                ),
+                      )
+                    : const SizedBox.shrink(),
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               _LearningRailNavButtonV1(

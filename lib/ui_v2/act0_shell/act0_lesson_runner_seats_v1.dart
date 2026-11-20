@@ -61,6 +61,7 @@ class _SeatNodeV1 extends StatelessWidget {
       refined: refined,
       decisionPriceOwnedByTable: decisionPriceOwnedByTable,
       identityPolicy: identityPolicy,
+      positionAndStack: registeredScene,
     );
     final stackLabel = (seat.stackLabel ?? '').trim();
     final showsOpponentStack =
@@ -120,7 +121,7 @@ class _SeatNodeV1 extends StatelessWidget {
     final occupiedOpacity = !seat.isOccupied
         ? 0.42
         : folded || !seat.isInHand
-        ? (registeredScene ? 0.84 : 0.58)
+        ? 0.58
         : 1.0;
     final node = Container(
       key: Key('act0_shell_seat_node_${seat.seatId}'),
@@ -198,14 +199,18 @@ class _SeatNodeV1 extends StatelessWidget {
                     // label and read as a chip. A nameplate has to stay
                     // plate-shaped, so the reclaimed width goes back as
                     // padding rather than being given up.
-                    horizontal:
-                        (compact
-                            ? (refined ? 5 : 7)
-                            : (useSlimRefinedSeat ? 7 : (refined ? 9 : 8))) +
-                        (showsSeatGlyph ? 0 : 6),
-                    vertical:
-                        (useSlimRefinedSeat ? 5 : (refined ? 6 : 5)) -
-                        plateVerticalPad,
+                    horizontal: registeredScene
+                        ? 9
+                        : (compact
+                                  ? (refined ? 5 : 7)
+                                  : (useSlimRefinedSeat
+                                        ? 7
+                                        : (refined ? 9 : 8))) +
+                              (showsSeatGlyph ? 0 : 6),
+                    vertical: registeredScene
+                        ? 5
+                        : (useSlimRefinedSeat ? 5 : (refined ? 6 : 5)) -
+                              plateVerticalPad,
                   ),
                   decoration: Act0SceneNameplateV1.decoration(
                     radius: Act0ShellTokensV1.radiusSm,
@@ -330,7 +335,9 @@ class _SeatNodeV1 extends StatelessWidget {
                             maxLines: 2,
                             style: Act0ShellTokensV1.label.copyWith(
                               color: primaryLabelColor,
-                              fontSize: useSlimRefinedSeat
+                              fontSize: registeredScene
+                                  ? 9.0
+                                  : useSlimRefinedSeat
                                   ? 8.5
                                   : (refined ? 9.0 : 10),
                               letterSpacing: refined ? 0.1 : 0.4,
@@ -349,7 +356,9 @@ class _SeatNodeV1 extends StatelessWidget {
                                   'act0_shell_seat_sublabel_${seat.seatId}',
                                 ),
                                 style: Act0ShellTokensV1.muted.copyWith(
-                                  fontSize: useSlimRefinedSeat
+                                  fontSize: registeredScene
+                                      ? 8.5
+                                      : useSlimRefinedSeat
                                       ? 8.0
                                       : (refined ? 8.5 : 9),
                                   color: subLabelColor,
@@ -602,6 +611,7 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
   required bool refined,
   required bool decisionPriceOwnedByTable,
   required Act0TableIdentityPolicyV1 identityPolicy,
+  bool positionAndStack = false,
 }) {
   final markers = <_SeatMarkerKindV1>[
     if (seat.isDealerButton &&
@@ -619,6 +629,19 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
     // sublabel. An additional Act badge repeats that same state.
   ];
   final stackLabel = (seat.stackLabel ?? '').trim();
+
+  if (positionAndStack && active && !hero && stackLabel.isNotEmpty) {
+    final hasUnmarkedCommitment =
+        !decisionPriceOwnedByTable &&
+        (seat.currentBetLabel ?? seat.blindAmountLabel ?? '')
+            .trim()
+            .isNotEmpty &&
+        !_seatCurrentBetIsOwnedByChipV1(seat) &&
+        !_seatHasBlindPostChipV1(seat);
+    if (!hasUnmarkedCommitment) {
+      return _SeatMarkerDisplayV1(markers: markers, subLabel: stackLabel);
+    }
+  }
 
   if (!hero && active) {
     if (decisionPriceOwnedByTable) {
@@ -658,7 +681,7 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
     return _SeatMarkerDisplayV1(markers: markers, subLabel: blindAmountLabel);
   }
 
-  if (refined && !hero) {
+  if (!positionAndStack && refined && !hero) {
     if (seat.isDealerButton) {
       return _SeatMarkerDisplayV1(markers: markers);
     }
