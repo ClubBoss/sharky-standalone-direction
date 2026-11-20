@@ -31,6 +31,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.isSourceRecheckAttempt = false,
     this.repairSessionSummaryLines = const <String>[],
     this.forwardCtaLabel,
+    this.onTryAnotherExample,
     this.suppressRepairFocus = false,
     this.onBack,
     this.rapidMode = false,
@@ -71,6 +72,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool isSourceRecheckAttempt;
   final List<String> repairSessionSummaryLines;
   final String? forwardCtaLabel;
+  final VoidCallback? onTryAnotherExample;
   final bool suppressRepairFocus;
   final VoidCallback? onBack;
   final bool rapidMode;
@@ -352,6 +354,20 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             ),
             const SizedBox(width: Act0ShellTokensV1.gapSm),
           ],
+          if (onTryAnotherExample != null) ...[
+            Expanded(
+              child: TextButton(
+                key: const Key('act0_shell_feedback_another_example'),
+                onPressed: onTryAnotherExample,
+                style: TextButton.styleFrom(
+                  foregroundColor: Act0ShellTokensV1.info,
+                  minimumSize: const Size(48, 48),
+                ),
+                child: const Text('Try another example'),
+              ),
+            ),
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+          ],
           Expanded(
             child: FilledButton(
               key: const Key('act0_shell_feedback_continue_cta'),
@@ -480,8 +496,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           !suppressRepairFocus &&
           missedAnswer.isNotEmpty &&
           bestAnswer.isNotEmpty;
-      final nextActionLine =
-          suppressRepairFocus && forwardCtaLabel == 'Next check'
+      final nextActionLine = forwardCtaLabel == 'Continue lesson'
+          ? 'This mistake is saved in Review.'
+          : suppressRepairFocus && forwardCtaLabel == 'Next check'
           ? 'Continue to the next diagnostic question.'
           : suppressRepairFocus && forwardCtaLabel == 'See my start'
           ? 'See your suggested starting point.'

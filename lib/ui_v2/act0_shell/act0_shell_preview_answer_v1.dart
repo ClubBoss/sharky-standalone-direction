@@ -323,7 +323,8 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0RunnerOptionV1 option,
   ) {
     if (_diagnosticLearningEntryV1 != null ||
-        _activeSpacedReviewTaskV1 != null) {
+        _activeSpacedReviewTaskV1 != null ||
+        _lessonExampleSourceTaskIdV1 != null) {
       return;
     }
     if (_choiceWasAssistedV1) {
@@ -1575,6 +1576,152 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     return '$reason $cue';
   }
 
+  String? _secondLessonMissSourceV1(
+    Act0LessonTaskV1? task,
+    Act0RunnerStateV1? runner,
+  ) {
+    if (task == null ||
+        runner?.selectedOption?.quality != Act0FeedbackQualityV1.wrong ||
+        _phase != Act0LessonPhaseV1.review ||
+        _placementDiagnosticActive ||
+        _diagnosticLearningEntryV1 != null ||
+        _spacedReviewReturnV1 != null ||
+        _lessonExampleSourceTaskIdV1 != null ||
+        _rapidPracticeLoop) {
+      return null;
+    }
+    if (_activeSameSignalFeedbackRepairV1 &&
+        _activeRepairTaskId == task.taskId) {
+      return _activeRepairSourceTaskId;
+    }
+    if (_activeRepairTaskId != null) return null;
+    if (_lessonRunRetriedTaskIds.contains(task.taskId)) return task.taskId;
+
+    final recent = _learningEvidenceHistoryV1.records.reversed
+        .where(
+          (record) =>
+              record.createdOrder > (_lessonRunEvidenceStartOrderV1 ?? -1) &&
+              !record.isDiagnosticLearningEntry &&
+              !record.isPlacementAssessment,
+        )
+        .take(2)
+        .toList();
+    return recent.length == 2 &&
+            recent.every(
+              (record) =>
+                  record.worldId == _selectedWorldId &&
+                  record.lessonId == _selectedLessonId &&
+                  record.taskId == task.taskId &&
+                  !record.isCorrect,
+            )
+        ? task.taskId
+        : null;
+  }
+
+  _Act0FirstValueDailyRepTargetV1? _otherLessonExampleV1({
+    required String sourceTaskId,
+    required String attemptedTaskId,
+    required List<Act0WorldCardV1> worlds,
+  }) {
+    final example = act0RepairGapAdjudicationForSourceTaskV1(attemptedTaskId);
+    if (example == null ||
+        example.outcome != Act0RepairGapOutcomeV1.alternateSameSignalTarget ||
+        example.leaksOriginalAnswer ||
+        example.requiresFutureKnowledge ||
+        example.targetTaskId == sourceTaskId ||
+        !_completedTaskIds.contains(example.targetTaskId)) {
+      return null;
+    }
+    return _repairIntentTargetByIdsIfLaunchableV1(
+      worlds,
+      worldId: example.targetWorldId!,
+      lessonId: example.targetLessonId!,
+      taskId: example.targetTaskId!,
+      mappingType: example.mappingType,
+      allowSourceTask: false,
+      sourceTaskId: attemptedTaskId,
+    );
+  }
+
+  void _startOtherLessonExampleV1(
+    String sourceTaskId,
+    _Act0FirstValueDailyRepTargetV1 target,
+  ) {
+    final source = _mistakeRecords[sourceTaskId];
+    if (source == null) return;
+    // Retain the lesson cursor and its Review obligation while the learner
+    // revisits an already completed example. The optional attempt is unscored.
+    _lessonExampleSourceTaskIdV1 = sourceTaskId;
+    final world = _worldById(
+      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
+      target.worldId,
+    );
+    if (!_startTaskByIds(
+      world,
+      target.lessonId,
+      target.taskId,
+      skipTeaching: true,
+      evidenceRunKind: 'practice',
+      evidenceStartedBy: 'lesson_extra_example',
+    )) {
+      _lessonExampleSourceTaskIdV1 = null;
+      return;
+    }
+    _activeActionSequenceStageV1 = null;
+  }
+
+  bool _isExactLessonRetryV1(Act0LessonTaskV1 task) {
+    if (_lessonRunRetriedTaskIds.contains(task.taskId)) return true;
+    final lastAnswer = _learningEvidenceHistoryV1.records.lastOrNull;
+    return _phase == Act0LessonPhaseV1.drill &&
+        _teachingStepIndex >= task.runner.teachingSteps.length &&
+        _activeRepairTaskId == null &&
+        !_rapidPracticeLoop &&
+        lastAnswer != null &&
+        !lastAnswer.isCorrect &&
+        !lastAnswer.isPlacementAssessment &&
+        !lastAnswer.isDiagnosticLearningEntry &&
+        lastAnswer.worldId == _selectedWorldId &&
+        lastAnswer.lessonId == _selectedLessonId &&
+        lastAnswer.taskId == task.taskId;
+  }
+
+  void _continueAfterRepeatedLessonMissV1(String sourceTaskId) {
+    final source = _mistakeRecords[sourceTaskId];
+    if (source == null) return;
+    final world = _worldById(
+      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
+      source.worldId,
+    );
+    final lesson = _lessonById(world.lessons, source.lessonId);
+    if (!_completedTaskIds.contains(sourceTaskId)) {
+      _skippedTaskIds.add(sourceTaskId);
+      _visibleSkippedTaskIds.add(sourceTaskId);
+    }
+    _lessonExampleSourceTaskIdV1 = null;
+    _lessonRunWrapUpCompletedTaskIds.add(sourceTaskId);
+    _activeLessonWrapUpTaskId = null;
+    _activeSameSignalRecheckTaskId = null;
+    _activeSameSignalRecheckSourceTaskId = null;
+    _placementHandoffActive = false;
+    _clearActiveRepairLaunchV1();
+    _selectedWorldId = source.worldId;
+    _selectedLessonId = source.lessonId;
+    _selectedTaskId = sourceTaskId;
+    _selectedOptionId = null;
+    _teachingStepIndex = 0;
+    _returnToPlayHubOnBack = false;
+    if (_maybeShowBlockCompletionSummary(
+      selectedWorld: world,
+      selectedLesson: lesson,
+      selectedTask: _taskById(lesson, sourceTaskId),
+    )) {
+      _persistProgress();
+      return;
+    }
+    _advanceAfterTask(world, lesson);
+  }
+
   bool _shouldRetryInsideLesson(
     Act0LessonTaskV1 selectedTask,
     Act0RunnerStateV1 runner,
@@ -1602,6 +1749,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
         ? selectedTask.phase
         : Act0LessonPhaseV1.drill;
     _teachingStepIndex = runner.teachingSteps.length;
+    _persistProgress();
   }
 
   bool _maybeStartLessonWrapUpRetry(Act0LessonCardV1 selectedLesson) {

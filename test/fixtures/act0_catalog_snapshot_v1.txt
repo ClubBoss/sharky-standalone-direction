@@ -54,7 +54,7 @@ Q: What is the clean first table read?
 HINT [theoryOnly]: Read your cards, the shared board, and the pot before any action.
 TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read hand, board, pot | Facts one pair, top pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] 5 board cards are already out — On the right track. Only three shared cards are visible here. More cards can appear later in the hand.
+  - [wrong] 5 board cards are already out — Not quite. Only three shared cards are visible here. More cards can appear later in the hand.
     BETTER ANSWER: 2 private cards, 3 board cards, 6 BB in the pot
   + [correct] 2 private cards, 3 board cards, 6 BB in the pot — Excellent spot. That is the clean first live read. Separate your cards, the shared board, and chips in the middle before choosing anything.
   - [suboptimal] Only your hand matters first — Playable instinct. Your cards matter, but a live table read also needs the shared board and pot before the decision starts.
@@ -69,7 +69,7 @@ Q: What is the clean table read here?
 HINT [theoryOnly]: Read your cards, the shared board, and the pot before any action.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 4 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read hand, board, pot | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] 5 board cards are out — Good spot to recheck. Only three shared cards are visible in the middle here.
+  - [wrong] 5 board cards are out — Not quite. Only three shared cards are visible in the middle here.
     BETTER ANSWER: 2 private cards, 3 board cards, 4 BB in the pot
     REPAIR LABELS: Your cards, Board cards, Pot 4 BB
   - [suboptimal] Only your cards matter — Part of the read. Your cards matter, but the clean table read also includes the shared board and the pot.
@@ -147,9 +147,9 @@ Q: Which rank is higher here?
 HINT [theoryOnly]: Aces are high in this beginner drill.
 TABLE: Preflop | You As Kd | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Ranks and suits | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB post 0.5 BB | BB post 1 BB
-  - [wrong] King — Very close. Ace is higher than king in this beginner drill.
+  - [wrong] King — Not quite. Ace is higher than king in this beginner drill.
     BETTER ANSWER: Ace
-  - [wrong] Suit decides — Close call. Suit does not make one rank higher than another.
+  - [wrong] Suit decides — Not quite. Suit does not make one rank higher than another.
     BETTER ANSWER: Ace
   + [correct] Ace — Spot on. Compare top card first: ace outranks king in this spot.
 
@@ -163,7 +163,7 @@ HINT [theoryOnly]: Use the small letter beside the card rank.
 TABLE: Preflop | You Ah Kd | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Private cards | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB post 0.5 BB | BB post 1 BB
   + [correct] Hearts — Hearts is the suit. Card code check: A means ace and h means hearts.
-  - [wrong] Ace — Getting warmer. A is the rank. h is the suit.
+  - [wrong] Ace — Not quite. A is the rank. h is the suit.
     BETTER ANSWER: Hearts
 
 TASK cards_ranks_suits_private_board [drill] Private vs board
@@ -175,7 +175,7 @@ Q: Which cards can everyone use?
 HINT [theoryOnly]: Look at the cards in the middle.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Private cards — On the right track. Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.
+  - [wrong] Private cards — Not quite. Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.
     BETTER ANSWER: Board cards
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
   + [correct] Board cards — Board cards are shared. Board cards are shared by everyone still in the hand.
@@ -192,7 +192,7 @@ TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card foc
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Five — Spot on. The table can show up to five shared cards.
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts one pair, pocket pair
-  - [wrong] Two — Good direction. Two is your private card count, not the full board.
+  - [wrong] Two — Not quite. Two is your private card count, not the full board.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts one pair, pocket pair
 
@@ -206,7 +206,7 @@ TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card foc
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Five — Five cards form your hand. Your final poker hand is the best five cards.
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Shared board | Facts one pair, pocket pair
-  - [wrong] Seven — Almost got it. You may see seven cards, but only five form the hand.
+  - [wrong] Seven — Not quite. You may see seven cards, but only five form the hand.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Shared board | Facts one pair, pocket pair
 
@@ -220,7 +220,7 @@ Q: How many cards make your final hand?
 HINT [theoryOnly]: A rank tells how high a card is. A suit is its symbol. Everyone can use the board.
 TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3 | Center Shared board | Facts one pair, pocket pair
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Seven — Almost got it. You may see seven cards, but only five form the hand.
+  - [wrong] Seven — Not quite. You may see seven cards, but only five form the hand.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Shared board | Facts one pair, pocket pair
   + [correct] Five — Five cards form your hand. Your final poker hand is the best five cards.
@@ -253,7 +253,7 @@ Q: What hand do you have here?
 HINT [theoryOnly]: A pair beats one high card.
 TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus hero_0, board_0 | Center Shared board | Facts one pair, top pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] High card — Good direction. A matching rank makes a pair.
+  - [wrong] High card — Not quite. A matching rank makes a pair.
     BETTER ANSWER: Pair
     FEEDBACK TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center Shared board | Facts one pair, top pair, rainbow
   + [correct] Pair — Pair found. You have a pair with the board.
@@ -270,7 +270,7 @@ TABLE: River | You As 7d | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card foc
 SEATS: UTG | HJ | CO Kh Jh | BTN dealer As 7d | SB | BB
   + [correct] Two pair — Two pair spotted. Count the matching ranks in the best five first: you make two pair, and two pair outranks one pair.
     FEEDBACK TABLE: River | You As 7d | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts two pair
-  - [wrong] One pair — Very close. Count the matching ranks before judging the hand: one pair uses only one match, so it stays below your two pair in the best five.
+  - [wrong] One pair — Not quite. Count the matching ranks before judging the hand: one pair uses only one match, so it stays below your two pair in the best five.
     BETTER ANSWER: Two pair
     FEEDBACK TABLE: River | You As 7d | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts two pair
 
@@ -282,7 +282,7 @@ Q: Which hand ranks higher?
 HINT [theoryOnly]: Three of a kind beats two pair.
 TABLE: River | You Qh Qs | Board Qc 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0 | Center Shared board | Facts set, pocket pair
 SEATS: UTG | HJ | CO Jd 7h | BTN dealer Qh Qs | SB | BB
-  - [wrong] Two pair — Getting warmer. Two pair is below three of a kind.
+  - [wrong] Two pair — Not quite. Two pair is below three of a kind.
     BETTER ANSWER: Three of a kind
     FEEDBACK TABLE: River | You Qh Qs | Board Qc 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Shared board | Facts set, pocket pair
   + [correct] Three of a kind — Well done. Three of a kind ranks above two pair.
@@ -301,7 +301,7 @@ TABLE: River | You 8h 9s | Board 5d 6c 7s Jh Qd | Pot 5 BB | Seat BTN | Card foc
 SEATS: UTG | HJ | CO | BTN dealer 8h 9s | SB | BB
   + [correct] Five in a row — Excellent spot. A straight uses five ranks in sequence.
     FEEDBACK TABLE: River | You 8h 9s | Board 5d 6c 7s Jh Qd | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Shared board | Facts straight
-  - [wrong] Same suit — On the right track. Cards of one suit can have gaps. Look for five ranks in a row.
+  - [wrong] Same suit — Not quite. Cards of one suit can have gaps. Look for five ranks in a row.
     BETTER ANSWER: Five in a row
     FEEDBACK TABLE: River | You 8h 9s | Board 5d 6c 7s Jh Qd | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Shared board | Facts straight
 
@@ -314,7 +314,7 @@ Q: Which hand ranks higher?
 HINT [theoryOnly]: Compare the suit pattern and the rank sequence before choosing.
 TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Two completed hands | Facts flush
 SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
-  - [wrong] Straight — Almost got it. A straight uses connected ranks, but it does not need five cards of one suit, so it stays below a flush.
+  - [wrong] Straight — Not quite. A straight uses connected ranks, but it does not need five cards of one suit, so it stays below a flush.
     BETTER ANSWER: Flush
     FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
   + [correct] Flush — Flush found. Start with the suit match: five cards of one suit make a flush, and a flush ranks above a straight.
@@ -344,7 +344,7 @@ Q: What hand do you have here?
 HINT [theoryOnly]: Look for all four queens.
 TABLE: River | You Qh Qs | Board Qc Qd 7c 2d Jc | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1 | Center Read the cards | Facts four of a kind, pocket pair, paired board
 SEATS: UTG | HJ | CO | BTN dealer Qh Qs | SB | BB
-  - [wrong] Full house — Close on the ladder. A full house needs three of one rank and two of another. Here you have all four queens, so the hand is four of a kind.
+  - [wrong] Full house — Not quite. A full house needs three of one rank and two of another. Here you have all four queens, so the hand is four of a kind.
     BETTER ANSWER: Four of a kind
     FEEDBACK TABLE: River | You Qh Qs | Board Qc Qd 7c 2d Jc | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
   + [correct] Four of a kind — Four queens. You use all four queens. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.
@@ -392,7 +392,7 @@ TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card foc
 SEATS: UTG | HJ | CO Ac 7h | BTN dealer Qh Qs | SB | BB
   + [correct] Your four of a kind — Top hand found. You use all four queens. The other player makes a full house with three sevens and two queens, but four of a kind ranks above a full house.
     FEEDBACK TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
-  - [wrong] Other player: full house — Close on the ladder. The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house when the cards are shown.
+  - [wrong] Other player: full house — Not quite. The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house when the cards are shown.
     BETTER ANSWER: Your four of a kind
     FEEDBACK TABLE: River | You Qh Qs | Board Qc Qd 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
 
@@ -453,7 +453,7 @@ TABLE: River | You As Kh | Board Ac 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card foc
 SEATS: UTG | HJ | CO Ad Qd | BTN dealer As Kh | SB | BB
   + [correct] You, with a king — Solid understanding. Each player has two aces. Your king beats the other player’s queen among the remaining cards.
     FEEDBACK TABLE: River | You As Kh | Board Ac 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, co_0, co_1, board_1, board_2, board_3, board_4 | Center Showdown | Facts one pair, top pair
-  - [wrong] Other player, with a queen — One more step. Two aces tie at first. The other player’s queen loses to your king.
+  - [wrong] Other player, with a queen — Not quite. Two aces tie at first. The other player’s queen loses to your king.
     BETTER ANSWER: You, with a king
     FEEDBACK TABLE: River | You As Kh | Board Ac 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, co_0, co_1, board_1, board_2, board_3, board_4 | Center Showdown | Facts one pair, top pair
 
@@ -498,7 +498,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — One more step. CO is one seat before the Button.
+  - [wrong] CO [seat co] — Not quite. CO is one seat before the Button.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -512,7 +512,7 @@ HINT [theoryOnly]: Before the flop, start right after the big blind. BB is last.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Tap utg, hj | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] HJ [seat hj] — Getting warmer. HJ is after UTG in this order.
+  - [wrong] HJ [seat hj] — Not quite. HJ is after UTG in this order.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, hj | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] UTG [seat utg] — UTG seat found. UTG names the seat immediately after BB in this preflop order.
@@ -530,7 +530,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] CO [seat co] — CO is the seat before BTN. CO is the cutoff seat before the Button.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus co | Tap co, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] HJ [seat hj] — Nearly there. HJ is before CO in the six-seat order.
+  - [wrong] HJ [seat hj] — Not quite. HJ is before CO in the six-seat order.
     BETTER ANSWER: CO
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus co | Tap co, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -584,7 +584,7 @@ SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 1
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] UTG [seat utg] — UTG acts first preflop. UTG acts first before the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — Very close. The Button acts late, not first preflop.
+  - [wrong] BTN [seat btn] — Not quite. The Button acts late, not first preflop.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -598,7 +598,7 @@ HINT [theoryOnly]: Before the flop, start right after the big blind. BB is last.
 TABLE: Preflop | Pot 6 BB | Seat BTN | Decision bb | Tap bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG stack 99 BB call 1 BB | HJ stack 99 BB call 1 BB | CO stack 99 BB call 1 BB | BTN dealer stack 99 BB call 1 BB | SB stack 99 BB call 1 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO calls 1 BB · BTN calls 1 BB · SB calls 0.5 more, 1 total
-  - [wrong] SB [seat sb] — Close call. The small blind acts before the big blind preflop.
+  - [wrong] SB [seat sb] — Not quite. The small blind acts before the big blind preflop.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Preflop | Pot 6 BB | Seat BTN | Decision bb | Seat focus bb | Tap bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BB [seat bb] — Sharp read. The big blind can act last before the flop.
@@ -616,7 +616,7 @@ SEATS: UTG stack 99 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer stack 99 B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO calls 1 BB · BTN calls 1 BB · SB calls 0.5 more, 1 total · BB checks
   + [correct] BTN [seat btn] — BTN acts last after the flop. Button acts last after the flop in this hand.
     FEEDBACK TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus btn | Tap btn, utg | Center First pass on the flop | Facts rainbow
-  - [wrong] UTG [seat utg] — Nearly there. UTG is early, not the seat that acts last after the flop here.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early, not the seat that acts last after the flop here.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus btn | Tap btn, utg | Center First pass on the flop | Facts rainbow
 
@@ -630,7 +630,7 @@ HINT [theoryOnly]: That keeps blinds and late position rotating.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] CO [seat co] — One more step. CO is one seat before the Button.
+  - [wrong] CO [seat co] — Not quite. CO is one seat before the Button.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
@@ -649,7 +649,7 @@ SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 1
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] UTG [seat utg] — UTG acts first preflop. UTG acts first before the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — Very close. The Button acts late, not first preflop.
+  - [wrong] BTN [seat btn] — Not quite. The Button acts late, not first preflop.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -665,7 +665,7 @@ HINT [theoryOnly]: After the flop, count from the first live seat left of the bu
 TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Tap btn, utg | Center First pass on the flop | Facts rainbow
 SEATS: UTG stack 99 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO calls 1 BB · BTN calls 1 BB · SB calls 0.5 more, 1 total · BB checks
-  - [wrong] UTG [seat utg] — On the right track. UTG cannot act on a decision it has not seen. The Button can use the check before choosing.
+  - [wrong] UTG [seat utg] — Not quite. UTG cannot act on a decision it has not seen. The Button can use the check before choosing.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus btn | Tap btn, utg | Center First pass on the flop | Facts rainbow
   + [correct] BTN [seat btn] — Late seat found. The Button sees the earlier checks before choosing a response. UTG has less information when it acts.
@@ -683,7 +683,7 @@ SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 1
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] UTG [seat utg] — Solid understanding. Five players can still act after UTG. The Button has only the two blinds behind.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap btn, utg | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — One more step. Only the two blinds can act after the Button on this first pass.
+  - [wrong] BTN [seat btn] — Not quite. Only the two blinds can act after the Button on this first pass.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap btn, utg | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -722,7 +722,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   + [correct] Raise [3 BB] — Strong choice. Raising to 3 BB increases the price above the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] Fold — One more step. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
+  - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
     BETTER ANSWER: Raise
     REPAIR LABELS: Your turn, Blinds posted, KTs
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
@@ -742,10 +742,10 @@ HINT [theoryOnly]: When no chips are owed, you can check. Facing a bet, a call m
 TABLE: Flop | You 9c 8d | Board Kh 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
-  - [wrong] Fold — Nearly there. Folding gives up the hand. Checking is free here.
+  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
   + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
-  - [wrong] Call — One more step. Calling means matching a bet. There is no bet here.
+  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
     BETTER ANSWER: Check
 
 TASK actions_check_drill [drill] Check when no bet
@@ -759,10 +759,10 @@ HINT [theoryOnly]: Read the amount required to stay in the hand.
 TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
-  - [wrong] Fold — Nearly there. Folding gives up the hand. Checking is free here.
+  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
   + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
-  - [wrong] Call — One more step. Calling means matching a bet. There is no bet here.
+  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
     BETTER ANSWER: Check
 
 TASK actions_fold_drill [drill] Fold to exit
@@ -779,9 +779,9 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | 
 SEATS: UTG stack 99 BB | HJ stack 97 BB bet 2 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 1 BB · BB checks · Flop: SB checks · BB checks · UTG checks · HJ bets 2 BB · Your turn
   + [correct] Fold — Fold gives up this hand. Fold gives up the hand and saves the call.
-  - [wrong] Call [2 BB] — Getting warmer. Calling pays 2 BB to stay in the hand. Your queens still beat some hands.
+  - [wrong] Call [2 BB] — Not quite. Calling pays 2 BB to stay in the hand. Your queens still beat some hands.
     BETTER ANSWER: Fold
-  - [wrong] Raise [6 BB] — On the right track. Raising puts in more chips and keeps you in the hand.
+  - [wrong] Raise [6 BB] — Not quite. Raising puts in more chips and keeps you in the hand.
     BETTER ANSWER: Fold
 
 TASK actions_call_drill [drill] Call a price
@@ -795,9 +795,9 @@ HINT [theoryOnly]: Read the price and ask what each action changes.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Center Facing a price | Facts one pair, pocket pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ stack 98 BB bet 1 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 0.5 more, 1 total · BB checks · Flop: SB checks · Flop: BB checks · Flop: HJ bets 1 BB
-  - [wrong] Fold — Good direction. Folding gives up instead of continuing.
+  - [wrong] Fold — Not quite. Folding gives up instead of continuing.
     BETTER ANSWER: Call
-  - [wrong] Raise [4 BB] — Almost got it. Raising adds more chips than calling, which only matches the current bet.
+  - [wrong] Raise [4 BB] — Not quite. Raising adds more chips than calling, which only matches the current bet.
     BETTER ANSWER: Call
   + [correct] Call [1 BB] — Call matches the current bet. Calling matches the current price.
 
@@ -814,7 +814,7 @@ HINT [theoryOnly]: Compare how many chips each action adds to the pot.
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  - [wrong] Fold — One more step. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
+  - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
     BETTER ANSWER: Raise
     REPAIR LABELS: Your turn, Blinds posted, KTs
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
@@ -840,7 +840,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   + [correct] Raise [3 BB] — Strong choice. Raising to 3 BB increases the price above the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] Fold — One more step. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
+  - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
     BETTER ANSWER: Raise
     REPAIR LABELS: Your turn, Blinds posted, KTs
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
@@ -871,7 +871,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player fol
     BETTER ANSWER: Two
     REPAIR LABELS: Your cards
     FEEDBACK TABLE: Preflop | You As Kd | Pot 7.5 BB | Seat BTN | Seat focus btn | Card focus hero_0, hero_1 | Center Private cards | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] Five — On the right track. Five cards can make a hand, but you start with two.
+  - [wrong] Five — Not quite. Five cards can make a hand, but you start with two.
     BETTER ANSWER: Two
     REPAIR LABELS: Your cards
     FEEDBACK TABLE: Preflop | You As Kd | Pot 7.5 BB | Seat BTN | Seat focus btn | Card focus hero_0, hero_1 | Center Private cards | Empty board No board cards yet | Facts no applicable hand facts
@@ -888,7 +888,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Kd | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player folds · Player to your right calls 1 BB · You raise to 3 BB · SB folds · BB calls 2 more, 3 total · Player to your right folds
   + [correct] A and K — Clean private-card read. Your two cards are A and K. The board is still empty.
     REPAIR LABELS: Your cards
-  - [wrong] Q and Q — Good spot to recheck. Look again at the two cards beside you.
+  - [wrong] Q and Q — Not quite. Look again at the two cards beside you.
     BETTER ANSWER: A and K
     REPAIR LABELS: Your cards
   - [suboptimal] The board cards — Not this street. Board cards are shared later. This recheck asks for your two private cards.
@@ -906,12 +906,12 @@ HINT [theoryOnly]: Everyone can use the board.
 TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Shared board | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 99 BB | BTN dealer As Kd stack 97 BB | SB folded stack 99.5 BB | BB stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player folds · Player to your right calls 1 BB · You raise to 3 BB · SB folds · BB calls 2 more, 3 total · Player to your right folds · Flop: BB checks
-  - [wrong] Two — Good direction. The flop has three board cards.
+  - [wrong] Two — Not quite. The flop has three board cards.
     BETTER ANSWER: Three
     FEEDBACK TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, top pair, rainbow
   + [correct] Three — Well done. A flop has three board cards.
     FEEDBACK TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, top pair, rainbow
-  - [wrong] Five — Almost got it. All five board cards are out only on the last street, the river.
+  - [wrong] Five — Not quite. All five board cards are out only on the last street, the river.
     BETTER ANSWER: Three
     FEEDBACK TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, top pair, rainbow
 
@@ -924,12 +924,12 @@ HINT [theoryOnly]: Flop has three cards. Turn makes four.
 TABLE: Turn | You As Kd | Board Ah 7c 2d Jc | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Shared board | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 99 BB | BTN dealer As Kd stack 97 BB | SB folded stack 99.5 BB | BB stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player folds · Player to your right calls 1 BB · You raise to 3 BB · SB folds · BB calls 2 more, 3 total · Player to your right folds · Flop: BB checks · Flop: You check · Turn: BB checks
-  - [wrong] Three — Good direction. Three cards is the flop. Turn makes four.
+  - [wrong] Three — Not quite. Three cards is the flop. Turn makes four.
     BETTER ANSWER: Four
     FEEDBACK TABLE: Turn | You As Kd | Board Ah 7c 2d Jc | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Shared board | Facts one pair, top pair
   + [correct] Four — Turn is the fourth board card. The turn is the fourth board card.
     FEEDBACK TABLE: Turn | You As Kd | Board Ah 7c 2d Jc | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Shared board | Facts one pair, top pair
-  - [wrong] Five — Almost got it. Five board cards appear on the river.
+  - [wrong] Five — Not quite. Five board cards appear on the river.
     BETTER ANSWER: Four
     FEEDBACK TABLE: Turn | You As Kd | Board Ah 7c 2d Jc | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Shared board | Facts one pair, top pair
 
@@ -944,10 +944,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 99 BB 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player folds · Player to your right calls 1 BB · You raise to 3 BB · SB folds · BB calls 2 more, 3 total · Player to your right folds · Flop: BB checks · Flop: You check · Turn: BB checks · Turn: You check · River: BB checks
   + [correct] Five — River is the fifth board card. The river completes five board cards.
     FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Shared board | Facts one pair, top pair
-  - [wrong] Four — Very close. Four cards is the turn. River makes five.
+  - [wrong] Four — Not quite. Four cards is the turn. River makes five.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Shared board | Facts one pair, top pair
-  - [wrong] Six — Close call. Hold'em uses five board cards, not six.
+  - [wrong] Six — Not quite. Hold'em uses five board cards, not six.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Shared board | Facts one pair, top pair
 
@@ -979,7 +979,7 @@ HINT [theoryOnly]: Read it left to right.
 TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Shared board | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 99 BB | BTN dealer As Kd stack 97 BB | SB folded stack 99.5 BB | BB stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player folds · Player to your right calls 1 BB · You raise to 3 BB · SB folds · BB calls 2 more, 3 total · Player to your right folds · Flop: BB checks
-  - [wrong] SB blind posted — Very close. Posting blinds happened before the hand developed.
+  - [wrong] SB blind posted — Not quite. Posting blinds happened before the hand developed.
     BETTER ANSWER: Flop: BB checks
     FEEDBACK TABLE: Flop | You As Kd | Board Ah 7c 2d | Pot 7.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, top pair, rainbow
   + [correct] Flop: BB checks — Right timeline. The last action in the history is the newest one, so Flop: BB checks comes after the blind posts and preflop action.
@@ -998,7 +998,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Kd | SB folded | BB Kh
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player folds · Player to your right calls 1 BB · You raise to 3 BB · SB folds · BB calls 2 more, 3 total · Player to your right folds · Flop: BB checks · Flop: You check · Turn: BB checks · Turn: You check · River: BB checks · River: You check
   + [correct] River — Correct order. A hand moves preflop, flop, turn, then river. The river comes right after the turn.
     FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Shared board | Facts one pair, top pair
-  - [wrong] Flop — Close call. The flop comes before the turn.
+  - [wrong] Flop — Not quite. The flop comes before the turn.
     BETTER ANSWER: River
     FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Shared board | Facts one pair, top pair
 
@@ -1022,7 +1022,7 @@ TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, 
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] Pot — Clean execution. The pot is the chips in the middle.
-  - [wrong] Stack — Nearly there. Your stack stays with your seat. The pot is the shared chips in the middle that everyone is playing for.
+  - [wrong] Stack — Not quite. Your stack stays with your seat. The pot is the shared chips in the middle that everyone is playing for.
     BETTER ANSWER: Pot
 
 TASK what_poker_is_all_in_meaning [drill] All-in meaning
@@ -1067,7 +1067,7 @@ HINT [theoryOnly]: Early lessons only need these two endings.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] Largest stack — One more step. A larger stack can apply pressure later, but it does not end this pot by itself. Before showdown, you win only when everyone else folds.
+  - [wrong] Largest stack — Not quite. A larger stack can apply pressure later, but it does not end this pot by itself. Before showdown, you win only when everyone else folds.
     BETTER ANSWER: Everyone else folds
   - [suboptimal] Best hand at showdown — That is the other ending. Best hand at showdown is a real way to win, but this question asks for the early ending before cards are revealed.
     BETTER ANSWER: Everyone else folds
@@ -1082,7 +1082,7 @@ Q: What decides a showdown?
 HINT [theoryOnly]: Compare the final five-card hand.
 TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3 | Center Your pair of queens beats CO’s pair of jacks | Facts one pair, pocket pair
 SEATS: UTG | HJ | CO Kh Jh | BTN dealer Qh Qs | SB | BB
-  - [wrong] First actor — Nearly there. Seat order decides who acts first, not who wins at showdown. Once cards are revealed, players compare the best full hand they can make from private cards plus the shared board.
+  - [wrong] First actor — Not quite. Seat order decides who acts first, not who wins at showdown. Once cards are revealed, players compare the best full hand they can make from private cards plus the shared board.
     BETTER ANSWER: Best hand
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Your pair of queens beats CO’s pair of jacks | Facts one pair, pocket pair
   - [suboptimal] Your cards only — Only part of the hand. Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.
@@ -1134,7 +1134,7 @@ Q: What happens if everyone else folds to you?
 HINT [theoryOnly]: Folds end it early. Showdown compares hands.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Shared board | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Show cards — Close call. No showdown is needed when everyone else folds.
+  - [wrong] Show cards — Not quite. No showdown is needed when everyone else folds.
     BETTER ANSWER: Win now
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, pocket pair, rainbow
   + [correct] Win now — Sharp read. When everyone else folds, the last player wins the pot.
@@ -1150,7 +1150,7 @@ Q: What happens when the last other player folds before showing any cards?
 HINT [theoryOnly]: If everyone else folds, the last player wins now.
 TABLE: Flop | You Jh Js | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Shared board | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Show cards — Close call. No showdown is needed when everyone else folds.
+  - [wrong] Show cards — Not quite. No showdown is needed when everyone else folds.
     BETTER ANSWER: Win now
     FEEDBACK TABLE: Flop | You Jh Js | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, pocket pair, rainbow
   + [correct] Win now — Sharp read. When everyone else folds, the last player wins the pot.
@@ -1180,7 +1180,7 @@ Q: If both players use the same board, what can happen?
 HINT [theoryOnly]: Then both players may play the board.
 TABLE: River | You Qh Qs | Board Ah Kd Qc Js Th | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Center Shared board | Facts straight, pocket pair, consecutive board
 SEATS: UTG | HJ | CO Ks 4c | BTN dealer Qh Qs | SB | BB
-  - [wrong] BTN wins — Good direction. Seat position does not win when the same hand plays.
+  - [wrong] BTN wins — Not quite. Seat position does not win when the same hand plays.
     BETTER ANSWER: Tie
     FEEDBACK TABLE: River | You Qh Qs | Board Ah Kd Qc Js Th | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4, hero_0, hero_1 | Center Shared board | Facts straight, pocket pair, consecutive board
   + [correct] Tie — Spot on. If the same five cards play, the pot can be split.
@@ -1194,7 +1194,7 @@ Q: What happens to the pot on a tie?
 HINT [theoryOnly]: This can happen when the same best five cards play.
 TABLE: River | You Qh Qs | Board Ah Kd Qc Js Th | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Center Shared board | Facts straight, pocket pair, consecutive board
 SEATS: UTG | HJ | CO Ks 4c | BTN dealer Qh Qs | SB | BB
-  - [wrong] First seat wins — Almost got it. Acting order does not break a tied hand.
+  - [wrong] First seat wins — Not quite. Acting order does not break a tied hand.
     BETTER ANSWER: Split
     FEEDBACK TABLE: River | You Qh Qs | Board Ah Kd Qc Js Th | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4, hero_0, hero_1 | Center Shared board | Facts straight, pocket pair, consecutive board
   + [correct] Split — Clean execution. A tied pot is split between tied players.
@@ -1251,7 +1251,7 @@ TABLE: Preflop | You As Ah | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn |
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Ah stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   + [correct] Premium — Solid understanding. AA belongs to premium pairs and usually raises to grow the pot with the best hand.
-  - [wrong] Medium — One more step. AA is stronger than a medium hand.
+  - [wrong] Medium — Not quite. AA is stronger than a medium hand.
     BETTER ANSWER: Premium
 
 TASK hand_discipline_buckets_strong [drill] Strong hand
@@ -1263,10 +1263,10 @@ HINT [theoryOnly]: It is below the absolute top but does not need a perfect seat
 TABLE: Preflop | You Jh Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Card focus hero_0, hero_1 | Center Pocket jacks | Empty board No board cards yet | Facts pocket pair
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Jh Js stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Premium — Getting warmer. Premium is reserved for the absolute top hands like AA, KK, and AKs.
+  - [wrong] Premium — Not quite. Premium is reserved for the absolute top hands like AA, KK, and AKs.
     BETTER ANSWER: Strong
   + [correct] Strong — Excellent spot. JJ is a strong hand — second bucket. Very playable, but not premium.
-  - [wrong] Medium — On the right track. JJ is above medium. Medium hands need more context to play well.
+  - [wrong] Medium — Not quite. JJ is above medium. Medium hands need more context to play well.
     BETTER ANSWER: Strong
 
 TASK hand_discipline_buckets_medium [drill] Medium hand
@@ -1278,9 +1278,9 @@ HINT [theoryOnly]: Two high unpaired cards can play, but seat and frame matter.
 TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Card focus hero_0, hero_1 | Center KTo preflop | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Kd Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Strong — Good direction. Strong hands need less context. KTo wants a good position and a clear frame.
+  - [wrong] Strong — Not quite. Strong hands need less context. KTo wants a good position and a clear frame.
     BETTER ANSWER: Medium
-  - [wrong] Weak — Almost got it. KTo is in the medium row. In this model, it opens from CO or BTN if nobody has raised.
+  - [wrong] Weak — Not quite. KTo is in the medium row. In this model, it opens from CO or BTN if nobody has raised.
     BETTER ANSWER: Medium
   + [correct] Medium — Spot on. KTo is a medium hand — good enough to play but needs a comfortable spot.
 
@@ -1293,7 +1293,7 @@ HINT [theoryOnly]: Weak early hands should not be forced into action.
 TABLE: Preflop | You Js 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center J8o early | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG Js 8d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  - [wrong] Strong — Getting warmer. Offsuit disconnected hands are not strong starters.
+  - [wrong] Strong — Not quite. Offsuit disconnected hands are not strong starters.
     BETTER ANSWER: Weak
   + [correct] Weak — Well done. J8o from early position belongs in the weak bucket.
 
@@ -1338,9 +1338,9 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | 
 SEATS: UTG stack 99 BB | HJ stack 97 BB bet 2 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 1 BB · BB checks · Flop: SB checks · BB checks · UTG checks · HJ bets 2 BB · Your turn
   + [correct] Fold — Fold gives up this hand. Fold gives up the hand and saves the call.
-  - [wrong] Call [2 BB] — Getting warmer. Calling pays 2 BB to stay in the hand. Your queens still beat some hands.
+  - [wrong] Call [2 BB] — Not quite. Calling pays 2 BB to stay in the hand. Your queens still beat some hands.
     BETTER ANSWER: Fold
-  - [wrong] Raise [6 BB] — On the right track. Raising puts in more chips and keeps you in the hand.
+  - [wrong] Raise [6 BB] — Not quite. Raising puts in more chips and keeps you in the hand.
     BETTER ANSWER: Fold
 
 TASK fold_discipline_early_fold [drill] Early weak hand
@@ -1352,7 +1352,7 @@ HINT [theoryOnly]: Early position removes the comfort from weak offsuit hands.
 TABLE: Preflop | You Js 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center J8o early | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG Js 8d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  - [wrong] Raise — On the right track. Position is early and the hand bucket is too weak.
+  - [wrong] Raise — Not quite. Position is early and the hand bucket is too weak.
     BETTER ANSWER: Fold
   + [correct] Fold — Excellent spot. Weak offsuit hands from early position can simply fold.
 
@@ -1367,7 +1367,7 @@ TABLE: Preflop | You Js 8d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Js 8d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — J8o still folds versus a CO open. BTN versus a CO open, J8o is still too weak to continue.
-  - [wrong] Call [2.5 BB] — Very close. Late position helps, but J8o is still too weak versus a CO open.
+  - [wrong] Call [2.5 BB] — Not quite. Late position helps, but J8o is still too weak versus a CO open.
     BETTER ANSWER: Fold
 
 TASK fold_discipline_discipline_stack_protect [drill] Protect stack
@@ -1427,7 +1427,7 @@ HINT [theoryOnly]: Broadway cards are T, J, Q, K, and A. One seat earlier from t
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center HJ opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
-  - [wrong] Fold — Almost got it. Folding is still too tight. KQo keeps enough strength and position against an HJ open.
+  - [wrong] Fold — Not quite. Folding is still too tight. KQo keeps enough strength and position against an HJ open.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one HJ raise with KQo on BTN.
 
@@ -1500,7 +1500,7 @@ HINT [theoryOnly]: Medium hand in the best seat. Raising is sharper than limping
 TABLE: Preflop | You Kd Qc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Card focus hero_0, hero_1 | Center Medium, good seat | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Kd Qc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — Very close. KQo on the Button has enough to open. Folding here wastes a strong seat.
+  - [wrong] Fold — Not quite. KQo on the Button has enough to open. Folding here wastes a strong seat.
     BETTER ANSWER: Raise
     REPAIR LABELS: BTN, KQo, Fold wastes it
   + [correct] Raise [2.5 BB] — Raise is the sharp Button play. KQo on the Button is a clean first-in open.
@@ -1531,7 +1531,7 @@ HINT [theoryOnly]: Playable hand in position: call keeps the hand in.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Fold — Almost got it. Folding is too tight here. BTN versus a CO open, KQo can continue in position.
+  - [wrong] Fold — Not quite. Folding is too tight here. BTN versus a CO open, KQo can continue in position.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with KQo on BTN.
 
@@ -1545,7 +1545,7 @@ HINT [theoryOnly]: Playable hands can call; weak hands can still fold.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Fold — Almost got it. Folding is too tight here. BTN versus a CO open, KQo can continue in position.
+  - [wrong] Fold — Not quite. Folding is too tight here. BTN versus a CO open, KQo can continue in position.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with KQo on BTN.
 
@@ -1572,7 +1572,7 @@ TABLE: Preflop | You 8s 4d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG 8s 4d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   + [correct] Fold — Excellent spot. Weak offsuit hands from early position can simply fold.
-  - [wrong] Raise — On the right track. Position is early and the hand bucket is too weak.
+  - [wrong] Raise — Not quite. Position is early and the hand bucket is too weak.
     BETTER ANSWER: Fold
 
 TASK apply_btn_open [drill] BTN, medium hand
@@ -1679,7 +1679,7 @@ TABLE: Preflop | You Jc 4d | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | S
 SEATS: UTG folded | HJ Jc 4d | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ acts
   + [correct] Weak · Fold — Well done. That is the transfer. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.
-  - [wrong] Medium · Raise — One more step. This is exactly the leak hand-discipline is trying to prevent. J4o does not become playable because it looks fun.
+  - [wrong] Medium · Raise — Not quite. This is exactly the leak hand-discipline is trying to prevent. J4o does not become playable because it looks fun.
     BETTER ANSWER: Weak · Fold
   - [suboptimal] Weak · Call — Playable thought. An unopened pot does not rescue a weak bucket. Discipline still says let it go instead of leaking a limp.
     BETTER ANSWER: Weak · Fold
@@ -1694,7 +1694,7 @@ HINT [theoryOnly]: Next world adds position: the same bucket can change action b
 TABLE: Preflop | You As 7d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center Weak ace | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer As 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Auto action — Nearly there. One bucket does not force one action. Position changes comfort.
+  - [wrong] Auto action — Not quite. One bucket does not force one action. Position changes comfort.
     BETTER ANSWER: Seat context
   + [correct] Seat context — Solid understanding. Bucket is step one. Seat context is the next check before choosing action.
 
@@ -1835,7 +1835,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — On the right track. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1850,7 +1850,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — One more step. CO is one seat before the Button.
+  - [wrong] CO [seat co] — Not quite. CO is one seat before the Button.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1881,7 +1881,7 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus boar
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] BTN [seat btn] — BTN acts last after the flop. Button acts last after the flop in this hand.
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
-  - [wrong] UTG [seat utg] — Nearly there. UTG is early, not the seat that acts last after the flop here.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early, not the seat that acts last after the flop here.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
 
@@ -1934,7 +1934,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — On the right track. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1948,7 +1948,7 @@ HINT [theoryOnly]: Follow how the order moves from the blinds to the dealer mark
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] UTG [seat utg] — On the right track. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
@@ -1966,7 +1966,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] UTG [seat utg] — Solid understanding. UTG is the early preflop seat.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — One more step. BTN is late and usually has more information.
+  - [wrong] BTN [seat btn] — Not quite. BTN is late and usually has more information.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1979,7 +1979,7 @@ HINT [theoryOnly]: More players still to act behind you means you should open fe
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active utg | Seat focus utg | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] UTG gets the same information as BTN — One more step. BTN is later and sees much more first. UTG is pressured because almost everyone still acts after it.
+  - [wrong] UTG gets the same information as BTN — Not quite. BTN is later and sees much more first. UTG is pressured because almost everyone still acts after it.
     BETTER ANSWER: Five players still act after UTG
   + [correct] Five players still act after UTG — Solid understanding. That is the early-seat problem. More players still act, so weak opens get punished more often.
 
@@ -1994,7 +1994,7 @@ TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active co | Seat focus co, btn, sb, bb 
 SEATS: UTG folded | HJ folded | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
   + [correct] Fewer players still act after CO — Excellent spot. That is the late-position edge: more information first, fewer players left to respond after you.
-  - [wrong] CO already acts last every street — On the right track. CO is late, but BTN and the blinds still remain. The real edge is fewer players behind than UTG faces.
+  - [wrong] CO already acts last every street — Not quite. CO is late, but BTN and the blinds still remain. The real edge is fewer players behind than UTG faces.
     BETTER ANSWER: Fewer players still act after CO
 
 TASK early_vs_late_w2_position_recap [review] Position recap
@@ -2113,7 +2113,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — On the right track. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2195,7 +2195,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — On the right track. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2234,7 +2234,7 @@ TABLE: Preflop | You Ks Js | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Ks Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
   + [correct] Call [2.5 BB] — Sharp read. The Sharky starting chart calls one HJ raise with KJs on BTN.
-  - [wrong] Fold — Close call. KJs keeps enough strength and position here, so folding gives up a workable continue.
+  - [wrong] Fold — Not quite. KJs keeps enough strength and position here, so folding gives up a workable continue.
     BETTER ANSWER: Call
 
 TASK position_checkpoint_position_checkpoint_table_notice [drill] Real-table seat read
@@ -2246,7 +2246,7 @@ HINT [theoryOnly]: Before choosing an action, notice what the seat order gives y
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Seat focus co, btn, sb, bb | Center CO with three seats behind | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO Qs Js | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
-  - [wrong] You already act last — Close call. Cutoff is late, but Button and the blinds still act after you.
+  - [wrong] You already act last — Not quite. Cutoff is late, but Button and the blinds still act after you.
     BETTER ANSWER: BTN, SB, and BB still act after you
   - [suboptimal] Late seat makes every hand easy — Playable thought. Late position helps, but it is not a free pass. First notice who still acts after you.
     BETTER ANSWER: BTN, SB, and BB still act after you
@@ -2286,7 +2286,7 @@ HINT [theoryOnly]: Compare each hand’s best five on the same board.
 TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0 | Center Flop | Facts one pair, top pair, rainbow
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] A-K — One more step. A-K makes the same pair and wins with its king. A-J has a lower side card than your queen.
+  - [wrong] A-K — Not quite. A-K makes the same pair and wins with its king. A-J has a lower side card than your queen.
     BETTER ANSWER: A-J
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
   + [correct] A-J — Your queen beats the jack. A-Q and A-J both make a pair of aces. Your queen beats the jack, so a call from A-J can pay your value bet.
@@ -2301,7 +2301,7 @@ HINT [theoryOnly]: Compare what your cards and the other hand make on this board
 TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Flop | Facts high card, rainbow, backdoor flush, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] BB calls with a weaker hand — Getting warmer. A pair of sevens beats your unpaired hand now. A call from that pair would not be a call from a weaker hand.
+  - [wrong] BB calls with a weaker hand — Not quite. A pair of sevens beats your unpaired hand now. A call from that pair would not be a call from a weaker hand.
     BETTER ANSWER: BB folds a better hand
     FEEDBACK TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Flop | Facts high card, rainbow, backdoor flush, backdoor straight
   + [correct] BB folds a better hand — A better hand could fold. BB has a pair of sevens. You have no pair, so making BB fold that better hand is a bluff.
@@ -2344,7 +2344,7 @@ HINT [theoryOnly]: One-third pot is the smallest simple pressure size here.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Before the bet | Facts one pair, pocket pair, rainbow
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] 6 BB — Getting warmer. 6 BB into 6 BB is pot-size, not one-third.
+  - [wrong] 6 BB — Not quite. 6 BB into 6 BB is pot-size, not one-third.
     BETTER ANSWER: 2 BB
   + [correct] 2 BB — Excellent spot. 2 BB into 6 BB is one-third pot.
 
@@ -2360,9 +2360,9 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Se
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
   + [correct] 3 BB — Spot on. Into a 6 BB pot, 3 BB is exactly a half-pot size.
-  - [wrong] 2 BB — On the right track. 2 BB into 6 BB is one-third pot, not half-pot.
+  - [wrong] 2 BB — Not quite. 2 BB into 6 BB is one-third pot, not half-pot.
     BETTER ANSWER: 3 BB
-  - [wrong] 6 BB — Good direction. 6 BB into 6 BB is pot-size, not half-pot.
+  - [wrong] 6 BB — Not quite. 6 BB into 6 BB is pot-size, not half-pot.
     BETTER ANSWER: 3 BB
 
 TASK w4_pot_bet [drill] Pot-size bet
@@ -2377,7 +2377,7 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Se
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
   + [correct] 6 BB — Clean execution. 6 BB into 6 BB is a pot-size bet.
-  - [wrong] 2 BB — Almost got it. 2 BB is one-third pot here, not pot-size.
+  - [wrong] 2 BB — Not quite. 2 BB is one-third pot here, not pot-size.
     BETTER ANSWER: 6 BB
 
 TASK w4_sizing_recap [review] Sizing recap
@@ -2501,7 +2501,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
   + [correct] Bet half-pot [3 BB] — Excellent spot. Half-pot asks weaker hands to pay without using a huge size.
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
-  - [wrong] Check — On the right track. Checking can miss value when worse hands can call.
+  - [wrong] Check — Not quite. Checking can miss value when worse hands can call.
     BETTER ANSWER: Bet half-pot
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
 
@@ -2566,7 +2566,7 @@ HINT [theoryOnly]: Use the response the question gives for better hands.
 TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Low fold pressure | Facts high card, rainbow, backdoor flush, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] Bet pot-size [6 BB] — Almost got it. The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.
+  - [wrong] Bet pot-size [6 BB] — Not quite. The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.
     BETTER ANSWER: Check
   + [correct] Check — Check is the cleaner line. Checking lets you see the next card for free. The model gives the bluff no chance to fold a better hand.
 
@@ -2605,7 +2605,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
   + [correct] Bet half-pot [3 BB] — Sharp read. The bet makes the next card cost something.
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
-  - [wrong] Check — Very close. Checking lets the other player see the next card for free.
+  - [wrong] Check — Not quite. Checking lets the other player see the next card for free.
     BETTER ANSWER: Bet half-pot
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 
@@ -2618,7 +2618,7 @@ HINT [theoryOnly]: Ask what the opponent receives by not facing a bet.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks · BTN checks
-  - [wrong] Made pay — Close call. Both players checked, so neither paid to see the next card.
+  - [wrong] Made pay — Not quite. Both players checked, so neither paid to see the next card.
     BETTER ANSWER: Free card
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
   + [correct] Free card — Strong choice. Checking allowed the other player to continue without paying.
@@ -2723,7 +2723,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
   + [correct] Purpose and price — Purpose and price connected. A bet tells a purpose, creates a size, and gives the caller a price. Next, the board cards tell you which bet purpose fits.
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Name purpose | Facts one pair, pocket pair, rainbow
-  - [wrong] Random size — Very close. Random sizes hide the lesson. Good beginner bets have a clear job.
+  - [wrong] Random size — Not quite. Random sizes hide the lesson. Good beginner bets have a clear job.
     BETTER ANSWER: Purpose and price
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Name purpose | Facts one pair, pocket pair, rainbow
 
@@ -2754,7 +2754,7 @@ TABLE: Flop | You Ah Tc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | 
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Dry — Sharp read. Spread ranks and mixed suits make this a dry board.
-  - [wrong] Wet — Close call. Wet boards show more connected ranks or suit pressure.
+  - [wrong] Wet — Not quite. Wet boards show more connected ranks or suit pressure.
     BETTER ANSWER: Dry
 
 TASK board_texture_basics_w5_wet_board [drill] Read another flop
@@ -2764,7 +2764,7 @@ HINT [theoryOnly]: Notice the connected ranks and two hearts before choosing tex
 TABLE: Flop | You Js Td | Board Th 9h 8c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts one pair, top pair, two-tone, consecutive board, open-ended, completion cards 8
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Dry — Nearly there. This is not dry. Connected ranks plus two hearts mean future cards can change the story fast, so the board already carries wet pressure.
+  - [wrong] Dry — Not quite. This is not dry. Connected ranks plus two hearts mean future cards can change the story fast, so the board already carries wet pressure.
     BETTER ANSWER: Wet
   + [correct] Wet — Strong choice. The connected ranks and two hearts create many changes. Straight paths, heart pressure, and future cards can all change the next decision quickly.
 
@@ -2801,7 +2801,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Disconnected — Solid understanding. The ranks are far apart, so it is disconnected.
     FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  - [wrong] Connected — One more step. Connected boards have close ranks, not big gaps.
+  - [wrong] Connected — Not quite. Connected boards have close ranks, not big gaps.
     BETTER ANSWER: Disconnected
     FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
@@ -2814,7 +2814,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Connected ranks — Well done. 9-8-7 leaves room for straights. For example, a player holding J-T already has one.
     FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
-  - [wrong] Paired board — Getting warmer. A paired board repeats a rank. This board connects ranks.
+  - [wrong] Paired board — Not quite. A paired board repeats a rank. This board connects ranks.
     BETTER ANSWER: Connected ranks
     FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
 
@@ -2851,7 +2851,7 @@ HINT [theoryOnly]: One more heart can improve Hero to a flush.
 TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 7h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Made flush — On the right track. Not complete yet. With four hearts showing, flush pressure is live, but a made flush needs five cards of the same suit.
+  - [wrong] Made flush — Not quite. Not complete yet. With four hearts showing, flush pressure is live, but a made flush needs five cards of the same suit.
     BETTER ANSWER: Flush draw
     FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
   - [suboptimal] Straight draw — Suit clue first. The visible clue is the four-heart story. Start with same-suit pressure before inventing a rank-ladder draw.
@@ -2867,7 +2867,7 @@ HINT [theoryOnly]: Rainbow means three different suits on the flop.
 TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Jc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Yes — Good direction. A rainbow flop does not show flush pressure yet.
+  - [wrong] Yes — Not quite. A rainbow flop does not show flush pressure yet.
     BETTER ANSWER: No
     FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
   + [correct] No — Spot on. Different suits make no obvious flush draw.
@@ -2942,7 +2942,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Straight draw — Clean execution. Nearby ranks create straight outs.
     FEEDBACK TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
-  - [wrong] Flush draw — Almost got it. The clue is rank connection, not matching suits.
+  - [wrong] Flush draw — Not quite. The clue is rank connection, not matching suits.
     BETTER ANSWER: Straight draw
     FEEDBACK TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
 
@@ -2953,7 +2953,7 @@ HINT [theoryOnly]: Big gaps mean no obvious straight draw.
 TABLE: Flop | You Jc 8h | Board Ad 6s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jc 8h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Yes — Very close. Straight pressure needs closer ranks.
+  - [wrong] Yes — Not quite. Straight pressure needs closer ranks.
     BETTER ANSWER: No
     FEEDBACK TABLE: Flop | You Jc 8h | Board Ad 6s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow
   + [correct] No — Gap board identified. The ranks are too far apart for an obvious straight path.
@@ -3024,7 +3024,7 @@ HINT [theoryOnly]: Any heart is the improvement card type.
 TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh 8h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Club — Close call. The flush path is hearts, so hearts are the outs.
+  - [wrong] Club — Not quite. The flush path is hearts, so hearts are the outs.
     BETTER ANSWER: Heart
     FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
   + [correct] Heart — Sharp read. A heart can complete the flush.
@@ -3038,7 +3038,7 @@ TABLE: Flop | You 6h 5c | Board 8s 7d 2h | Pot 5.5 BB | Seat BTN | Active btn | 
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 6h 5c stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] 9 — Strong choice. Private 5-6, shared board cards 7-8: any 9 completes the straight.
-  - [wrong] K — Nearly there. A king does not connect this rank ladder.
+  - [wrong] K — Not quite. A king does not connect this rank ladder.
     BETTER ANSWER: 9
 
 TASK outs_improvement_w5_table_outs_flush_transfer [drill] Flush draw and price
@@ -3118,7 +3118,7 @@ HINT [theoryOnly]: Count matching suits before and after the turn.
 TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts flush, gutshot, completion cards 4
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qc 9c stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN checks · Turn: BB checks
-  - [wrong] Blank — One more step. The turn adds a club to the four clubs you could see on the flop. That changes the hand.
+  - [wrong] Blank — Not quite. The turn adds a club to the four clubs you could see on the flop. That changes the hand.
     BETTER ANSWER: Draw hit
     FEEDBACK TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Read the turn | Facts flush, gutshot, completion cards 4
   + [correct] Draw hit — Solid understanding. The turn jack brings the fifth club between your hand and the board. You now have a flush.
@@ -3131,7 +3131,7 @@ HINT [theoryOnly]: Count matching suits on the final board.
 TABLE: River | You As 8s | Board Ts 7s 3d 6c Qd | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4 | Center Read the river | Facts high card
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As 8s stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB checks
-  - [wrong] Draw hit — Getting warmer. No spade arrived on the turn or river. The flop draw never completed.
+  - [wrong] Draw hit — Not quite. No spade arrived on the turn or river. The flop draw never completed.
     BETTER ANSWER: Draw missed
     FEEDBACK TABLE: River | You As 8s | Board Ts 7s 3d 6c Qd | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Read the river | Facts high card
   + [correct] Draw missed — Well done. You still see only four spades. The river queen is a diamond, so the flush draw missed.
@@ -3206,10 +3206,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Value — Clean execution. Top pair with a good kicker is a strong value hand on this dry board.
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts one pair, top pair, rainbow
-  - [wrong] Bluff candidate — Close call. K-Q hit the king. Bluff candidates are hands that missed and can still fold opponents out.
+  - [wrong] Bluff candidate — Not quite. K-Q hit the king. Bluff candidates are hands that missed and can still fold opponents out.
     BETTER ANSWER: Value
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts one pair, top pair, rainbow
-  - [wrong] Missed — Nearly there. K-Q flopped top pair. Missed hands do not connect to the board at all.
+  - [wrong] Missed — Not quite. K-Q flopped top pair. Missed hands do not connect to the board at all.
     BETTER ANSWER: Value
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts one pair, top pair, rainbow
 
@@ -3320,7 +3320,7 @@ HINT [theoryOnly]: When pressure drops, the bucket can slide.
 TABLE: Turn | You Jh 9d | Board Ad 7s 4c 4h | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Center Read the turn | Facts one pair, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh 9d stack 95.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
-  - [wrong] It becomes value automatically — Almost got it. Losing fold pressure does not make the hand value automatically.
+  - [wrong] It becomes value automatically — Not quite. Losing fold pressure does not make the hand value automatically.
     BETTER ANSWER: It can slide toward missed
   - [suboptimal] The bucket never changes after flop — Too static. Buckets can shift across streets when the board changes and pressure disappears.
     BETTER ANSWER: It can slide toward missed
@@ -3472,7 +3472,7 @@ SEATS: UTG Tc 9h stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [suboptimal] 12 combos — Close count. 12 counts only the offsuit versions. Add the 4 suited combos and A-K reaches 16 total combinations.
     BETTER ANSWER: 16 combos
-  - [wrong] 6 combos — Nearly there. Six combos is the count for a pocket pair. A-K has 16 possible suit combinations before removing known cards.
+  - [wrong] 6 combos — Not quite. Six combos is the count for a pocket pair. A-K has 16 possible suit combinations before removing known cards.
     BETTER ANSWER: 16 combos
   + [correct] 16 combos — Nice count. A-K has 16 combos before blockers: 4 suited and 12 offsuit combinations. Blockers would remove visible or known cards from those private-card combinations.
 
@@ -3488,7 +3488,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] 6 combos — Nice count. Choose two of the four suits. That gives six possible pairs before removing known cards.
   - [suboptimal] 12 combos — Close count. Twelve is too high for one pair family. With four eights in the deck, only 6 suit pairings are possible.
     BETTER ANSWER: 6 combos
-  - [wrong] 16 combos — One more step. Sixteen combos belongs to two different ranks like A-K, not to one pocket pair.
+  - [wrong] 16 combos — Not quite. Sixteen combos belongs to two different ranks like A-K, not to one pocket pair.
     BETTER ANSWER: 6 combos
 
 TASK w6_combo_weight_compare [drill] Which family appears more?
@@ -3503,7 +3503,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [suboptimal] They have the same combo count — Close start. The hand names may feel equally important, but combo weight is not equal: 16 beats 6.
     BETTER ANSWER: A-K has more combos
   + [correct] A-K has more combos — Nice count. Before removing known cards, A-K has 16 combos and pocket eights have 6.
-  - [wrong] Pocket eights have more combos — Getting warmer. Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.
+  - [wrong] Pocket eights have more combos — Not quite. Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.
     BETTER ANSWER: A-K has more combos
 
 TASK w6_combo_counts_recap [review] Combo recap
@@ -3816,7 +3816,7 @@ HINT [theoryOnly]: Look for the smaller stack.
 TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, pocket pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 7s 7c stack 200 BB | SB folded stack 99.5 BB | BB stack 30 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks
-  - [wrong] 200 BB — On the right track. Your own stack can be deeper, but the hand risk is capped by the smaller stack across from you.
+  - [wrong] 200 BB — Not quite. Your own stack can be deeper, but the hand risk is capped by the smaller stack across from you.
     BETTER ANSWER: 30 BB
     FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
   - [suboptimal] 115 BB — Close idea. The average is 115 BB, but these players can only match 30 BB each.
@@ -3837,7 +3837,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [suboptimal] 50 BB — Not quite. Nothing cuts the stack in half here. With equal 100 BB stacks, the full 100 BB remains in play.
     BETTER ANSWER: 100 BB
     FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
-  - [wrong] 200 BB — Good direction. Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.
+  - [wrong] 200 BB — Not quite. Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.
     BETTER ANSWER: 100 BB
     FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
   + [correct] 100 BB — The matching stacks set the limit. When both stacks are equal, that shared stack is the effective stack.
@@ -3854,7 +3854,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] 18 BB effective stack — Sharp read. That is the real live-table risk. The smaller stack sets the hand depth.
     FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
-  - [wrong] Your own 120 BB stack — Almost got it. That answer is tempting because your stack looks bigger and feels more powerful. The cleaner read is the smaller 18 BB stack, because that is the number that actually caps what can go in.
+  - [wrong] Your own 120 BB stack — Not quite. That answer is tempting because your stack looks bigger and feels more powerful. The cleaner read is the smaller 18 BB stack, because that is the number that actually caps what can go in.
     BETTER ANSWER: 18 BB effective stack
     FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
   - [suboptimal] 138 BB total in play — Not quite. Total chips are a real table detail, so this looks useful at first. But total chips do not drive the plan here. The dominant cue is the effective stack that caps the real risk.
@@ -4002,7 +4002,7 @@ HINT [theoryOnly]: Little room is left.
 TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 10 BB | SB folded stack 99.5 BB | BB stack 12 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Plenty of room to float and wait — Nearly there. That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.
+  - [wrong] Plenty of room to float and wait — Not quite. That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.
     BETTER ANSWER: One bet can commit the hand
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   + [correct] One bet can commit the hand — Excellent spot. At SPR 2 there are two pots left in the effective stack. A large bet can put much of it at risk, but whether to commit depends on your hand and the price.
@@ -4020,7 +4020,7 @@ HINT [theoryOnly]: A lot of stack is still behind.
 TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As 9c stack 40 BB | SB folded stack 99.5 BB | BB stack 42 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Immediate commitment — One more step. Immediate commitment is a low-SPR feature. High SPR creates more room, not less.
+  - [wrong] Immediate commitment — Not quite. Immediate commitment is a low-SPR feature. High SPR creates more room, not less.
     BETTER ANSWER: More room to maneuver
     FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   + [correct] More room to maneuver — Spot on. High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.
@@ -4211,7 +4211,7 @@ Q: Which frame should be stronger in a tournament?
 HINT [theoryOnly]: Compare cash-game reload logic with tournament survival.
 TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Play it exactly like cash — Almost got it. Cash and tournament contexts are not the same. Tournament life creates extra downside for busting.
+  - [wrong] Play it exactly like cash — Not quite. Cash and tournament contexts are not the same. Tournament life creates extra downside for busting.
     BETTER ANSWER: Survival pressure matters more
   - [suboptimal] Avoid all risk until paid — Playable caution. Risk control is useful, but freezing is too passive. Good tournament play balances survival with selective aggression.
     BETTER ANSWER: Survival pressure matters more
@@ -4228,7 +4228,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [suboptimal] Wait only for premium pairs — Too tight here. Waiting only for monsters often costs too many blinds. In short-stack spots you need practical urgency, not perfect cards.
     BETTER ANSWER: Take a reasonable all-in spot, first in or over a raise
   + [correct] Take a reasonable all-in spot, first in or over a raise — Excellent spot. At very low stack depth, survival comes from acting before you get blinded out. Controlled urgency beats passive waiting.
-  - [wrong] Open small and fold to pressure — Very close. Open-fold lines with very short stacks burn too many chips. Tournament pressure rewards cleaner commit-or-fold plans.
+  - [wrong] Open small and fold to pressure — Not quite. Open-fold lines with very short stacks burn too many chips. Tournament pressure rewards cleaner commit-or-fold plans.
     BETTER ANSWER: Take a reasonable all-in spot, first in or over a raise
 
 TASK w9_survival_stack_tradeoff [drill] Life vs reload
@@ -4239,7 +4239,7 @@ Q: Which table should pass more thin stack-off spots?
 HINT [theoryOnly]: The same thin edge does not carry the same downside.
 TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Cash table — Close call. Cash chips still matter, but reload makes busting less final. Tournament pressure creates the bigger penalty for thin stack-offs.
+  - [wrong] Cash table — Not quite. Cash chips still matter, but reload makes busting less final. Tournament pressure creates the bigger penalty for thin stack-offs.
     BETTER ANSWER: Tournament table
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   + [correct] Tournament table — Spot on. Tournament life adds elimination risk. That makes thin stack-offs more expensive than in reloadable cash spots.
@@ -4281,7 +4281,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Use controlled urgency — Clean execution. Red-zone stacks cannot drift. Tournament pressure rewards timely commitment when edges appear.
   - [suboptimal] Wait for perfect premium only — Too narrow. Perfect-card waiting in red zone usually leaks fold equity and stack health. You need practical action windows.
     BETTER ANSWER: Use controlled urgency
-  - [wrong] Flat-call wide and see flops — Nearly there. Short tournament stacks often play poorly as passive flats. Clearer commit-or-fold lines are usually stronger.
+  - [wrong] Flat-call wide and see flops — Not quite. Short tournament stacks often play poorly as passive flats. Clearer commit-or-fold lines are usually stronger.
     BETTER ANSWER: Use controlled urgency
 
 TASK w9_m_ratio_green_zone [drill] Green zone patience
@@ -4308,7 +4308,7 @@ TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus boar
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Prepare action windows before red-zone panic — Sharp read. Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner all-in and steal windows here.
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
-  - [wrong] Ignore urgency until the red zone — One more step. Waiting until the stack is critical often removes good options. Yellow zone is where you prepare instead of drift.
+  - [wrong] Ignore urgency until the red zone — Not quite. Waiting until the stack is critical often removes good options. Yellow zone is where you prepare instead of drift.
     BETTER ANSWER: Prepare action windows before red-zone panic
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Force any spot immediately — Too rushed. Yellow zone needs sharper planning, not panic. You still want selective aggression with room for better spots.
@@ -4360,7 +4360,7 @@ Q: What is usually the sharper adjustment?
 HINT [theoryOnly]: Bust risk is expensive here.
 TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Call off as wide as chip EV says — Getting warmer. Pure chip-EV calls can be too loose near bubble pressure. Tournament survival increases the cost of busting.
+  - [wrong] Call off as wide as chip EV says — Not quite. Pure chip-EV calls can be too loose near bubble pressure. Tournament survival increases the cost of busting.
     BETTER ANSWER: Tighten marginal calls
   + [correct] Tighten marginal calls — Strong choice. Risk premium near the bubble means medium stacks should avoid thin call-offs and protect tournament life.
   - [suboptimal] Fold everything until paid — Playable caution. Over-folding gives away too much. The sharper line is selective discipline, not total shutdown.
@@ -4393,7 +4393,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [suboptimal] Fold every hand until payouts begin — Too passive. Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.
     BETTER ANSWER: Still take practical all-in spots before blinded out
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
-  - [wrong] Call off too light — On the right track. Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.
+  - [wrong] Call off too light — Not quite. Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.
     BETTER ANSWER: Still take practical all-in spots before blinded out
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
@@ -4470,7 +4470,7 @@ Q: What is often the cleaner medium-stack plan?
 HINT [theoryOnly]: Risk premium should influence the response.
 TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Defend as wide as normal chip EV spot — Good direction. Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.
+  - [wrong] Defend as wide as normal chip EV spot — Not quite. Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
   + [correct] Tighten defend and avoid thin all-ins — Clean execution. Bubble risk premium raises the bar for medium-stack stack-offs against covering stacks.
   - [suboptimal] Fold every hand until payout — Too passive. Full shutdown leaks too much equity. The stronger line is disciplined but still competitive.
@@ -4484,7 +4484,7 @@ Q: What is the clean first pressure read?
 HINT [theoryOnly]: Read the pressure before you click call or all-in.
 TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Treat it like cash — Very close. That answer is tempting because the hand may still look playable in chip-EV terms. But the dominant cue is bubble pressure: the medium stack pays a much bigger bust-out cost than in cash, so call freedom tightens.
+  - [wrong] Treat it like cash — Not quite. That answer is tempting because the hand may still look playable in chip-EV terms. But the dominant cue is bubble pressure: the medium stack pays a much bigger bust-out cost than in cash, so call freedom tightens.
     BETTER ANSWER: Respect bubble pressure
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Fold everything — Playable caution. This looks disciplined because bubble fear is real. But full shutdown folds too much. The cleaner read is selective pressure awareness: tighten versus leverage, not panic-fold every spot.
@@ -5433,7 +5433,7 @@ TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Seat BTN | Facts high card, rainbow, 
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Board cards — Board cards are shared. Board cards are shared by everyone still in the hand.
     FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Seat BTN | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
-  - [wrong] Private cards — On the right track. Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.
+  - [wrong] Private cards — Not quite. Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.
     BETTER ANSWER: Board cards
     FEEDBACK TABLE: Flop | You Kc 9d | Board 8h 5d 2c | Seat BTN | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
 
@@ -5451,7 +5451,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — One more step. CO is one seat before the Button.
+  - [wrong] CO [seat co] — Not quite. CO is one seat before the Button.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -5465,7 +5465,7 @@ HINT [theoryOnly]: Find the first seat after the big blind.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] HJ [seat hj] — Getting warmer. HJ is after UTG in this order.
+  - [wrong] HJ [seat hj] — Not quite. HJ is after UTG in this order.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] UTG [seat utg] — UTG seat found. UTG acts first preflop, so UTG should open fewer hands.
@@ -5484,7 +5484,7 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus boar
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] BTN [seat btn] — BTN acts last after the flop. Button acts last after the flop in this hand.
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
-  - [wrong] UTG [seat utg] — Nearly there. UTG is early, not the seat that acts last after the flop here.
+  - [wrong] UTG [seat utg] — Not quite. UTG is early, not the seat that acts last after the flop here.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
 
@@ -5500,7 +5500,7 @@ HINT [theoryOnly]: Count who still acts after UTG.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active utg | Seat focus utg | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] UTG already has late-position information — Good spot to repair. UTG acts before the rest of the table, so the missed signal is players behind.
+  - [wrong] UTG already has late-position information — Not quite. UTG acts before the rest of the table, so the missed signal is players behind.
     BETTER ANSWER: Five players still act after UTG
   + [correct] Five players still act after UTG — UTG pressure repaired. Five players still act after UTG, so the seat has less information.
 
@@ -5521,7 +5521,7 @@ SEATS: UTG | HJ | CO Ad Tc | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 
 TRAIL: Frame 1: UTG has more behind · Frame 2: CO has fewer behind · Compare the two seats
   + [correct] Seat context changed the hand comfort — Seat context repaired. Same hand, different seat: early has more players behind; later has fewer players behind.
     REPAIR LABELS: Same hand, Players behind
-  - [wrong] The cards changed strength by themselves — Good spot to repair. The hand is still ATo. The missed signal is the seat and who still acts after you.
+  - [wrong] The cards changed strength by themselves — Not quite. The hand is still ATo. The missed signal is the seat and who still acts after you.
     BETTER ANSWER: Seat context changed the hand comfort
     REPAIR LABELS: Same hand, Players behind
   - [suboptimal] Seat does not matter for this hand — Repair the table read. Position matters because it changes how many players still act after you.
@@ -5539,7 +5539,7 @@ HINT [theoryOnly]: Repair the street-change read before repeating the flop plan.
 TABLE: Turn | You Ad Qs | Board Ah 7c 6d 8c | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Qs stack 95.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
-  - [wrong] Nothing changed, so keep the same flop plan — On the right track. The turn links 6-7-8 and brings a second club. Read the new draws before repeating a flop bet.
+  - [wrong] Nothing changed, so keep the same flop plan — Not quite. The turn links 6-7-8 and brings a second club. Read the new draws before repeating a flop bet.
     BETTER ANSWER: The board got more dangerous, so the old easy-value story needs caution
     FEEDBACK TABLE: Turn | You Ad Qs | Board Ah 7c 6d 8c | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, board_0, board_1, board_2 | Center Read the turn | Facts one pair, top pair
   - [suboptimal] Bet smaller but keep the same old story — Playable patch. Changing the size without repairing the board story still leaves the core read behind.
@@ -5557,7 +5557,7 @@ HINT [theoryOnly]: Use the stated behavior of the other player.
 TABLE: Turn | You 5c 4d | Board Kc 9s 2d Ts | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts high card
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 5c 4d stack 95.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
-  - [wrong] Make the same bluff again — Very close. The turn adds new draws. Under the model, the better hands now call, so the earlier bluff no longer has the same purpose.
+  - [wrong] Make the same bluff again — Not quite. The turn adds new draws. Under the model, the better hands now call, so the earlier bluff no longer has the same purpose.
     BETTER ANSWER: Check instead of betting again
   + [correct] Check instead of betting again — Nice repair. The turn adds draws, and the model says BB now calls with the better hands. Checking avoids betting just to repeat the flop plan.
   - [suboptimal] Bet smaller but keep the same dry-board story — Playable patch. Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.

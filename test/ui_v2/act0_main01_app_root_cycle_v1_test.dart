@@ -16,6 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -502,6 +503,167 @@ void main() {
       },
     );
   }
+
+  testWidgets('a second miss can continue the lesson without earning XP', (
+    tester,
+  ) async {
+    await _openPendingHelpDecision(tester);
+    final initial = await _saved(tester);
+    await _choose(tester, 'five_board_now');
+    expect(find.text('Continue lesson'), findsNothing);
+    await _tap(tester, 'act0_shell_feedback_continue_cta');
+    await _advanceToPrompt(tester);
+    expect(_runner(tester).selectedTaskId, _source);
+    expect(find.textContaining('Extra practice'), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => _pendingWrites().flush());
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+    if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      await _advanceToPrompt(tester);
+    }
+    expect(_runner(tester).selectedTaskId, _source);
+    expect(find.textContaining('Extra practice'), findsWidgets);
+
+    await _choose(tester, 'five_board_now');
+    expect(find.text('Continue lesson'), findsOneWidget);
+    await _tap(tester, 'act0_shell_feedback_continue_cta');
+    expect(_runner(tester).selectedTaskId, _mappedRepair);
+    final saved = await _saved(tester);
+    expect(saved['earnedXp'], initial['earnedXp']);
+    expect(saved['completedTaskIds'], isNot(contains(_source)));
+    expect(saved['skippedTaskIds'], contains(_source));
+    expect(
+      _rows(saved, 'openRepairIntents').map((row) => row['sourceTaskId']),
+      contains(_source),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a second miss can launch a different authored example', (
+    tester,
+  ) async {
+    await _openPendingHelpDecision(tester);
+    final saved = await _saved(tester);
+    final world = Act0ShellStateV1.sample.worldById('world_1');
+    const lessonId = 'what_poker_is_content';
+    const firstId = 'what_poker_is_review';
+    const otherId = 'what_poker_is_live_win_transfer';
+    final precedingLessons = world.lessons
+        .takeWhile((lesson) => lesson.lessonId != lessonId)
+        .toList();
+    final lesson = world.lessons.singleWhere(
+      (lesson) => lesson.lessonId == lessonId,
+    );
+    final task = lesson.courseTaskList.singleWhere(
+      (task) => task.taskId == firstId,
+    );
+    await _replaceCheckpointFixture(tester, {
+      ...saved,
+      'completedTaskIds': [
+        for (final previous in precedingLessons)
+          for (final task in previous.courseTaskList) task.taskId,
+        for (final item in lesson.courseTaskList.takeWhile(
+          (item) => item.taskId != firstId,
+        ))
+          item.taskId,
+      ],
+      'completedLessonIds': [
+        for (final previous in precedingLessons) previous.lessonId,
+      ],
+      'selectedWorldId': world.worldId,
+      'selectedLessonId': lessonId,
+      'selectedTaskId': firstId,
+      'resumeInRunner': true,
+      'resumePhase': 'drill',
+      'resumeTeachingStepIndex': task.runner.teachingSteps.length,
+    });
+    if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_current_mission_cta');
+    }
+    await _advanceToPrompt(tester);
+    expect(_runner(tester).selectedTaskId, firstId);
+    final wrong = _runner(tester).runner.options.firstWhere(
+      (option) => option.quality == Act0FeedbackQualityV1.wrong,
+    );
+    await _choose(tester, wrong.id);
+    await _tap(tester, 'act0_shell_feedback_continue_cta');
+    await _advanceToPrompt(tester);
+    expect(_runner(tester).selectedTaskId, firstId);
+    final retryWrong = _runner(tester).runner.options.firstWhere(
+      (option) => option.quality == Act0FeedbackQualityV1.wrong,
+    );
+    await _choose(tester, retryWrong.id);
+    expect(find.text('Continue lesson'), findsOneWidget);
+    await _tap(tester, 'act0_shell_feedback_another_example');
+    await _advanceToPrompt(tester);
+    expect(_runner(tester).selectedTaskId, otherId);
+    expect(find.textContaining('Extra practice'), findsOneWidget);
+    final duringExample = await _saved(tester);
+    expect(duringExample['selectedTaskId'], firstId);
+    expect(duringExample['earnedXp'], saved['earnedXp']);
+    final exampleAnswer = _runner(
+      tester,
+    ).runner.options.singleWhere((option) => option.isCorrect);
+    await _choose(tester, exampleAnswer.id);
+    await _tap(tester, 'act0_shell_feedback_continue_cta');
+    final completed = await _saved(tester);
+    expect(completed['earnedXp'], saved['earnedXp']);
+    expect(completed['skippedTaskIds'], contains(firstId));
+    expect(completed['completedTaskIds'], isNot(contains(firstId)));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('an independent replay earns deferred XP once after restart', (
+    tester,
+  ) async {
+    await _openPendingHelpDecision(tester);
+    final initial = await _saved(tester);
+    await _tap(tester, 'act0_shell_theory_recall_cta');
+    await _tap(tester, 'act0_shell_review_full_idea_cta');
+    await _tap(tester, 'act0_shell_theory_recall_close_cta');
+    await _choose(tester, 'two_three_six');
+    await _tap(tester, 'act0_shell_feedback_continue_cta');
+    final helped = await _saved(tester);
+    expect(helped['earnedXp'], initial['earnedXp']);
+    expect(helped['completedTaskIds'], contains(_source));
+    expect(helped['tasksWithDeferredXp'], contains(_source));
+
+    await _remount(tester);
+    await _replayTableReadForXpV1(tester);
+    final independentlyEarned = await _saved(tester);
+    final reward = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .first
+        .courseTaskList
+        .singleWhere((task) => task.taskId == _source)
+        .rewardXp;
+    expect(
+      independentlyEarned['earnedXp'],
+      (initial['earnedXp'] as int) + reward,
+    );
+    expect(independentlyEarned['tasksWithDeferredXp'], isNull);
+
+    await _remount(tester);
+    await _replayTableReadForXpV1(tester);
+    expect((await _saved(tester))['earnedXp'], independentlyEarned['earnedXp']);
+
+    final legacyPaid = Map<String, dynamic>.from(helped)
+      ..remove('tasksWithDeferredXp')
+      ..['earnedXp'] = independentlyEarned['earnedXp'];
+    await _replaceCheckpointFixture(tester, legacyPaid);
+    await _replayTableReadForXpV1(tester);
+    expect((await _saved(tester))['earnedXp'], legacyPaid['earnedXp']);
+    expect(tester.takeException(), isNull);
+  });
 
   for (final feedbackCase in ['assisted', 'wrong', 'correct']) {
     testWidgets(
@@ -2570,6 +2732,21 @@ Future<void> _advanceOrdinaryW1ToRank(WidgetTester tester) async {
     await _tap(tester, 'act0_shell_current_mission_cta');
   }
   fail('Ordinary W1 prefix did not reach the authored rank repair source.');
+}
+
+Future<void> _replayTableReadForXpV1(WidgetTester tester) async {
+  await tester.tap(find.text('Learn').last);
+  await tester.pumpAndSettle();
+  final world = Act0ShellStateV1.sample.worldById('world_1');
+  final lesson = world.lessons.first;
+  tester
+      .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+      .onStartTask(lesson.lessonId, _source);
+  await tester.pumpAndSettle();
+  expect(_runner(tester).selectedTaskId, _source);
+  await _advanceToPrompt(tester);
+  await _choose(tester, 'two_three_six');
+  await _tap(tester, 'act0_shell_feedback_continue_cta');
 }
 
 Future<void> _foundationReplayTheory(

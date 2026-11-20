@@ -500,7 +500,13 @@ Future<_Snapshot> _continueAfterDecision(
       ),
       hasLength(1),
     );
-    expect(after.payload['earnedXp'], _task(fixture.taskId).rewardXp);
+    final answer = after.history.records.single;
+    expect(
+      after.payload['earnedXp'],
+      answer.assistanceKind == Act0DecisionAssistanceV1.none
+          ? _task(fixture.taskId).rewardXp
+          : 0,
+    );
     expect(after.payload['selectedTaskId'], currentRunner.selectedTaskId);
     // Completion and successor navigation queue snapshots in one callback;
     // production may coalesce them. Join the acknowledged final route while
