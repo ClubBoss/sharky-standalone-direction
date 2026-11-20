@@ -1935,15 +1935,21 @@ class _ActionTrailStepV1State extends State<_ActionTrailStepV1> {
   Widget build(BuildContext context) {
     final refined = widget.refined;
     final isLatest = widget.isLatest;
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    final visible = reduceMotion || _visible;
     return AnimatedSlide(
       key: Key('act0_shell_action_trail_step_${widget.index}'),
-      duration: Duration(milliseconds: refined ? 260 : 220),
+      duration: reduceMotion
+          ? Duration.zero
+          : Duration(milliseconds: refined ? 260 : 220),
       curve: Curves.easeOutCubic,
-      offset: _visible ? Offset.zero : const Offset(0.10, 0),
+      offset: visible ? Offset.zero : const Offset(0.10, 0),
       child: AnimatedOpacity(
-        duration: Duration(milliseconds: refined ? 240 : 200),
+        duration: reduceMotion
+            ? Duration.zero
+            : Duration(milliseconds: refined ? 240 : 200),
         curve: Curves.easeOut,
-        opacity: _visible ? 1 : 0,
+        opacity: visible ? 1 : 0,
         child: Container(
           key: isLatest
               ? const Key('act0_shell_action_trail_latest_step')
