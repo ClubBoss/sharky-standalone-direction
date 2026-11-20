@@ -5534,7 +5534,7 @@ class _Act0PersistedProgressV1 {
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.studyObservations = const [],
-    this.practiceDayKeys = const [],
+    this.practiceDayKeys,
     this.pendingDecisionAssistance = const [],
     this.hasPendingAssistanceProvenance = true,
     this.lessonRunEvidenceBoundaries = const <String, int?>{},
@@ -5582,7 +5582,7 @@ class _Act0PersistedProgressV1 {
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final List<Act0StudyObservationV1> studyObservations;
-  final List<String> practiceDayKeys;
+  final List<String>? practiceDayKeys;
   final List<_Act0PendingDecisionAssistanceV1> pendingDecisionAssistance;
   final bool hasPendingAssistanceProvenance;
   final Map<String, int?> lessonRunEvidenceBoundaries;
@@ -5660,7 +5660,7 @@ class _Act0PersistedProgressV1 {
         for (final observation in studyObservations) observation.toPayload(),
       ],
       'learningEvidenceLineage': learningEvidenceHistory.lineagePayload(),
-      if (practiceDayKeys.isNotEmpty) 'practiceDayKeys': practiceDayKeys,
+      if (practiceDayKeys case final keys?) 'practiceDayKeys': keys,
       'lessonRunEvidenceBoundaries': <String, int?>{
         for (final entry in lessonRunEvidenceBoundaries.entries)
           entry.key: entry.value,
@@ -5890,8 +5890,12 @@ class _Act0PersistedProgressV1 {
       learningEvidenceHistory: learningEvidenceHistory,
       studyObservations: studyObservations,
       practiceDayKeys: switch (map['practiceDayKeys']) {
-        final List<Object?> days => days.whereType<String>().take(7).toList(),
-        _ => const [],
+        final List<Object?> days =>
+          days
+              .whereType<String>()
+              .take(Act0LearningEvidenceHistoryV1.maxStoredPracticeDays)
+              .toList(growable: false),
+        _ => null,
       },
       pendingDecisionAssistance: pendingDecisionAssistance,
       hasPendingAssistanceProvenance: map.containsKey(

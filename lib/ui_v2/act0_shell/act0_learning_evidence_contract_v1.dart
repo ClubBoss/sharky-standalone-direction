@@ -335,6 +335,16 @@ class Act0LearningEvidenceRecordV1 {
   bool get isDiagnosticLearningEntry =>
       runKind.trim() == act0DiagnosticLearningEntryRunKindV1;
 
+  String? get localPracticeDayKey {
+    final answeredAt = recordedAtUtc;
+    if (answeredAt == null ||
+        isPlacementAssessment ||
+        isDiagnosticLearningEntry) {
+      return null;
+    }
+    return answeredAt.toLocal().toIso8601String().substring(0, 10);
+  }
+
   bool get isAssistedCorrect => isCorrect && hasKnownAssistance;
 
   bool get hasKnownAssistance =>
@@ -819,6 +829,8 @@ class Act0LearningEvidenceHistoryV1 {
   });
 
   static const int maxRecords = 200;
+  // Keep two extra civil dates in case travel moves the local date backwards.
+  static const int maxStoredPracticeDays = 9;
 
   final List<Act0LearningEvidenceRecordV1> records;
 
@@ -969,30 +981,24 @@ class Act0LearningEvidenceHistoryV1 {
 
   List<String> practiceDayKeysLastWeek(
     DateTime now, {
-    Iterable<String> savedDays = const [],
+    Iterable<String>? savedDays,
   }) {
-    // Build civil-day keys in local time and move across dates in UTC to
-    // account for clock changes within the seven-day window.
-    String localDayKey(DateTime instant) =>
-        instant.toLocal().toIso8601String().substring(0, 10);
-
+    // Use UTC arithmetic on local calendar components to step across dates.
     final local = now.toLocal();
     final today = DateTime.utc(local.year, local.month, local.day);
     final week = {
       for (var i = 6; i >= 0; i--)
         today.subtract(Duration(days: i)).toIso8601String().substring(0, 10),
     };
-    final practiced = <String>{...savedDays};
-    for (final record in [...records, ...sourceAnchors]) {
-      final answeredAt = record.recordedAtUtc;
-      if (answeredAt == null ||
-          answeredAt.isAfter(now) ||
-          record.isPlacementAssessment ||
-          record.isDiagnosticLearningEntry) {
-        continue;
-      }
-      practiced.add(localDayKey(answeredAt));
-    }
+    // A saved day records the local date at answer time. Only a legacy
+    // snapshot without saved dates derives days from UTC evidence.
+    final practiced =
+        savedDays?.toSet() ??
+        {
+          for (final record in [...records, ...sourceAnchors])
+            if (record.recordedAtUtc?.isAfter(now) == false)
+              if (record.localPracticeDayKey case final String key) key,
+        };
     return week.where(practiced.contains).toList(growable: false);
   }
 

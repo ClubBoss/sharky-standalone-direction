@@ -85,13 +85,30 @@ void main() {
       now,
       savedDays: ['2026-03-07', '2026-03-09', '2026-03-02', 'invalid'],
     );
-    expect(days, ['2026-03-03', '2026-03-07', '2026-03-09']);
+    expect(days, ['2026-03-07', '2026-03-09']);
     expect(
       const Act0LearningEvidenceHistoryV1().practiceDayKeysLastWeek(
         DateTime(2026, 3, 10, 8),
         savedDays: days,
       ),
       ['2026-03-07', '2026-03-09'],
+    );
+  });
+
+  test('a saved practice day survives a time-zone change across midnight', () {
+    final nowInNewZone = DateTime(2026, 11, 20, 2);
+    final history = Act0LearningEvidenceHistoryV1(
+      records: [_record(order: 1, recordedAt: DateTime(2026, 11, 20, 1, 30))],
+    );
+    // The same instant was 23:30 on November 19 at answer time.
+    expect(history.practiceDayKeysLastWeek(nowInNewZone), ['2026-11-20']);
+    expect(
+      history.practiceDayKeysLastWeek(nowInNewZone, savedDays: ['2026-11-19']),
+      ['2026-11-19'],
+    );
+    expect(
+      history.practiceDayKeysLastWeek(nowInNewZone, savedDays: []),
+      isEmpty,
     );
   });
 

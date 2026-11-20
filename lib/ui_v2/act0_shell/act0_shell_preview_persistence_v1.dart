@@ -207,7 +207,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _studyObservationsV1 = parsed.studyObservations;
-      _savedPracticeDaysV1 = parsed.practiceDayKeys;
+      final legacyPracticeDays = parsed.practiceDayKeys == null
+          ? _learningEvidenceHistoryV1.practiceDayKeysLastWeek(
+              widget.clock.nowUtc(),
+            )
+          : const <String>[];
+      _savedPracticeDaysV1 =
+          parsed.practiceDayKeys ??
+          (legacyPracticeDays.isEmpty && earnedDay.isNotEmpty
+              ? [earnedDay]
+              : legacyPracticeDays);
       _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
         widget.clock.nowUtc(),
       );
@@ -876,7 +885,6 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final currentStreak = _earnedStreakDaysTodayV1(today);
     if (dailyDone) _lastDailyDate = today;
     _persistedStreakDays = currentStreak;
-    _savedPracticeDaysV1 = _recentPracticeDayKeysV1();
     final returnSelection =
         _diagnosticLearningReturnV1 ?? _spacedReviewReturnV1;
     final snapshot = _Act0PersistedProgressV1(
@@ -1144,6 +1152,14 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           orElse: () => null,
         );
     if (latestRecord != null && !wasAlreadyRecorded) {
+      final day = latestRecord.localPracticeDayKey;
+      if (day != null && !_savedPracticeDaysV1.contains(day)) {
+        final days = [..._savedPracticeDaysV1, day]
+          ..sort((a, b) => b.compareTo(a));
+        _savedPracticeDaysV1 = days
+            .take(Act0LearningEvidenceHistoryV1.maxStoredPracticeDays)
+            .toList(growable: false);
+      }
       if (_activePracticeGroupId == 'daily') _ensureDailyCountDayV1();
       if (_activePracticeGroupId == 'daily' &&
           latestRecord.runKind == 'practice' &&
