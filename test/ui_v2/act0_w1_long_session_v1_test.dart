@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
@@ -58,27 +59,23 @@ Future<bool> _tapFirst(WidgetTester t, List<Finder> finders) async {
   return false;
 }
 
-// First run exactly as a new learner does it: placement "new", then Welcome
-// with its demo answer, then Home.
-Future<void> _onboard(WidgetTester t) async {
-  for (final k in [
-    'act0_shell_placement_intro_cta',
-    'act0_shell_placement_option_new',
-    'act0_shell_placement_next_cta',
-    'act0_shell_welcome_primary_cta',
-  ]) {
-    await t.tap(find.byKey(Key(k)));
+Future<void> _onboard(WidgetTester t, {required bool useRulesCheck}) async {
+  Future<void> tap(String key) async {
+    final button = find.byKey(Key(key)).hitTestable();
+    expect(button, findsOneWidget);
+    await t.tap(button);
     await t.pumpAndSettle();
   }
-  final demo = t
-      .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
-      .runner
-      .options
-      .firstWhere((o) => o.isCorrect);
-  await t.tap(find.byKey(Key('act0_shell_option_${demo.id}')));
-  await t.pumpAndSettle();
-  await t.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
-  await t.pumpAndSettle();
+
+  if (useRulesCheck) {
+    await tap('act0_shell_w1_start_check');
+    for (final question in act0W1RulesQuestionsV1) {
+      await tap('act0_shell_option_choice_${question.correctChoice}');
+    }
+    await tap('act0_shell_w1_rules_continue');
+  } else {
+    await tap('act0_shell_w1_start_basics');
+  }
 }
 
 Future<Map<String, dynamic>> _saved(WidgetTester t) async {
@@ -306,263 +303,294 @@ void main() {
 
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const lastWorld = fullRoute ? 12 : 7;
-  final expectedWorlds = {
-    for (var world = 1; world <= lastWorld; world++) world,
-  };
-  testWidgets(
-    'a fresh learner finishes W1–W$lastWorld with mistakes, retries and restarts',
-    (t) async {
-      SharedPreferences.setMockInitialValues(<String, Object>{});
-      t.view.physicalSize = const Size(393, 852);
-      t.view.devicePixelRatio = 1;
-      addTearDown(t.view.resetPhysicalSize);
-      addTearDown(t.view.resetDevicePixelRatio);
-      final worlds = Act0ShellStateV1.sample.worlds
-          .where((w) => w.worldNumber >= 1 && w.worldNumber <= lastWorld)
-          .toList();
-      final taskWorld = {
-        for (final w in worlds)
-          for (final l in w.lessons)
-            for (final task in l.courseTaskList) task.taskId: w.worldNumber,
-      };
-      final repairWorld = {
-        for (final w in worlds)
-          for (final l in w.lessons)
-            for (final task in l.taskList)
-              if (task.repairOnly) task.taskId: w.worldNumber,
-      };
-      final rewards = {
-        for (final w in worlds)
-          for (final l in w.lessons)
-            for (final task in l.taskList) task.taskId: task.rewardXp,
-      };
-      final answered = <String>{};
-      final missedWorlds = <int>{};
-      final confirmedMisses = <int>{};
-      final restartedWorlds = <int>{};
-      final enteredWorlds = <int>{};
-      var complete = false;
-      await _mount(t, firstRun: true);
-      await _onboard(t);
+  for (final firstWorld in fullRoute ? [1, 2] : [1]) {
+    final expectedWorlds = {
+      for (var world = firstWorld; world <= lastWorld; world++) world,
+    };
+    final useRulesCheck = firstWorld == 2;
+    testWidgets(
+      'a fresh learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
+      (t) async {
+        SharedPreferences.setMockInitialValues(<String, Object>{});
+        t.view.physicalSize = const Size(393, 852);
+        t.view.devicePixelRatio = 1;
+        addTearDown(t.view.resetPhysicalSize);
+        addTearDown(t.view.resetDevicePixelRatio);
+        final worlds = Act0ShellStateV1.sample.worlds
+            .where(
+              (w) => w.worldNumber >= firstWorld && w.worldNumber <= lastWorld,
+            )
+            .toList();
+        final taskWorld = {
+          for (final w in worlds)
+            for (final l in w.lessons)
+              for (final task in l.courseTaskList) task.taskId: w.worldNumber,
+        };
+        final repairWorld = {
+          for (final w in worlds)
+            for (final l in w.lessons)
+              for (final task in l.taskList)
+                if (task.repairOnly) task.taskId: w.worldNumber,
+        };
+        final rewards = {
+          for (final w in worlds)
+            for (final l in w.lessons)
+              for (final task in l.taskList) task.taskId: task.rewardXp,
+        };
+        final answered = <String>{};
+        final missedWorlds = <int>{};
+        final confirmedMisses = <int>{};
+        final restartedWorlds = <int>{};
+        final enteredWorlds = <int>{};
+        var complete = false;
+        await _mount(t, firstRun: true);
+        await _onboard(t, useRulesCheck: useRulesCheck);
 
-      for (
-        var step = 0;
-        step < (fullRoute ? 5200 : 3600) && !complete;
-        step++
-      ) {
-        Map<String, dynamic>? routeSnapshot;
-        final runnerFinder = find.byType(Act0LessonRunnerShellV1);
-        if (runnerFinder.evaluate().isNotEmpty) {
-          final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
-          final runner = shell.runner;
-          final taskId = shell.selectedTaskId ?? '';
-          final world = taskWorld[taskId] ?? repairWorld[taskId];
-          if (world == null) break; // Never answer a future-world task.
-          if (repairWorld.containsKey(taskId)) {
-            expect(confirmedMisses, contains(world), reason: taskId);
-          }
-          if (enteredWorlds.add(world)) {
-            if (taskId == 'visible_ace_combo_reduction_intro') {
-              expect(runner.phase, Act0LessonPhaseV1.theory);
-              expect(runner.options, hasLength(4));
+        for (
+          var step = 0;
+          step < (fullRoute ? 5200 : 3600) && !complete;
+          step++
+        ) {
+          Map<String, dynamic>? routeSnapshot;
+          final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+          if (runnerFinder.evaluate().isNotEmpty) {
+            final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
+            final runner = shell.runner;
+            final taskId = shell.selectedTaskId ?? '';
+            final world = taskWorld[taskId] ?? repairWorld[taskId];
+            if (world == null) break; // Never answer a future-world task.
+            if (repairWorld.containsKey(taskId)) {
+              expect(confirmedMisses, contains(world), reason: taskId);
+            }
+            if (enteredWorlds.add(world)) {
+              if (taskId == 'visible_ace_combo_reduction_intro') {
+                expect(runner.phase, Act0LessonPhaseV1.theory);
+                expect(runner.options, hasLength(4));
+                expect(
+                  find.byKey(
+                    const Key('act0_shell_accessibility_answer_group'),
+                  ),
+                  findsNothing,
+                );
+                expect(
+                  find.byKey(const Key('act0_shell_continue_cta')),
+                  findsOneWidget,
+                );
+              }
+              final snapshot = await _saved(t);
+              final completed = (snapshot['completedTaskIds'] as List)
+                  .cast<String>()
+                  .toSet();
+              final prerequisites = taskWorld.entries
+                  .where((e) => e.value < world)
+                  .map((e) => e.key)
+                  .toSet();
               expect(
-                find.byKey(const Key('act0_shell_accessibility_answer_group')),
-                findsNothing,
-              );
-              expect(
-                find.byKey(const Key('act0_shell_continue_cta')),
-                findsOneWidget,
+                completed.containsAll(prerequisites),
+                isTrue,
+                reason:
+                    'W$world unlocked before ${prerequisites.difference(completed)}',
               );
             }
-            final snapshot = await _saved(t);
-            final completed = (snapshot['completedTaskIds'] as List)
+            if (_tapLog.isEmpty || _tapLog.last != '@$taskId')
+              _tapLog.add('@$taskId');
+            final deciding =
+                runner.phase == Act0LessonPhaseV1.drill &&
+                runner.activeTeachingStep == null &&
+                runner.selectedOptionId == null &&
+                runner.options.isNotEmpty;
+            if (deciding) {
+              await pumpSourceChoreographyToDecisionV1(t, runner.table);
+              final wrong = runner.options.where((o) => !o.isCorrect).toList();
+              final injectMiss =
+                  !missedWorlds.contains(world) && wrong.isNotEmpty;
+              final choice = injectMiss
+                  ? wrong.first
+                  : runner.options.firstWhere((o) => o.isCorrect);
+              if (injectMiss) missedWorlds.add(world);
+              final tapped = await _tapFirst(t, [
+                if (runner.sizingConfig.isEnabled)
+                  find.byKey(Key('act0_shell_sizing_preset_${choice.id}')),
+                find.byKey(Key('act0_shell_option_${choice.id}')),
+                if (choice.seatId case final seatId?) ...[
+                  find.byKey(Key('act0_shell_seat_tap_$seatId')),
+                  find.descendant(
+                    of: find.byKey(Key('act0_shell_seat_tap_$seatId')),
+                    matching: find.text(seatId.toUpperCase()),
+                  ),
+                ],
+              ]);
+              expect(tapped, isTrue, reason: '$taskId: no answer');
+              if (runner.sizingConfig.isEnabled) {
+                expect(
+                  await _tapFirst(t, [
+                    find.byKey(const Key('act0_shell_sizing_confirm_cta')),
+                  ]),
+                  isTrue,
+                );
+              }
+              if (injectMiss) {
+                expect(
+                  find.byKey(const Key('act0_shell_feedback_continue_cta')),
+                  findsOneWidget,
+                  reason: '$taskId should show a way to continue from feedback',
+                );
+                final missSnapshot = await _saved(t);
+                final evidence =
+                    (missSnapshot['learningEvidenceHistory'] as List)
+                        .cast<Map>();
+                expect(
+                  evidence.any(
+                    (r) => r['taskId'] == taskId && r['isCorrect'] == false,
+                  ),
+                  isTrue,
+                );
+                confirmedMisses.add(world);
+              }
+              answered.add(taskId);
+              final worldAnswered = answered
+                  .where((id) => taskWorld[id] == world)
+                  .length;
+              final worldTotal = taskWorld.values
+                  .where((n) => n == world)
+                  .length;
+              if (!restartedWorlds.contains(world) &&
+                  worldAnswered >= worldTotal ~/ 2) {
+                final before = await _saved(t);
+                await _mount(t);
+                final after = await _saved(t);
+                expect(after['completedTaskIds'], before['completedTaskIds']);
+                expect(after['earnedXp'], before['earnedXp']);
+                expect(after['selectedWorldId'], before['selectedWorldId']);
+                expect(after['selectedTaskId'], before['selectedTaskId']);
+                restartedWorlds.add(world);
+                // A learner can return to Learn even while an open repair is shown on Home.
+                await _tapFirst(t, [find.text('Learn').last]);
+                await _tapFirst(t, [
+                  find.byKey(const Key('act0_shell_current_mission_cta')),
+                ]);
+              }
+              continue;
+            }
+          } else {
+            routeSnapshot = await _saved(t);
+            final completed = (routeSnapshot['completedTaskIds'] as List)
                 .cast<String>()
                 .toSet();
-            final prerequisites = taskWorld.entries
-                .where((e) => e.value < world)
-                .map((e) => e.key)
+            complete = completed.containsAll(taskWorld.keys);
+            if (complete) break;
+          }
+          // The summary can promote a saved review above the course route.
+          // This traversal follows the map once the in-lesson retry is done.
+          var moved = await _tapFirst(t, [
+            if (find.text('Practice this clue').evaluate().isNotEmpty)
+              find.byKey(const Key('act0_shell_block_summary_map_cta')),
+            find.byKey(const Key('act0_shell_theory_continue_cta')),
+            for (final key in _continueKeys) find.byKey(Key(key)),
+          ]);
+          final mission = find.byKey(
+            const Key('act0_shell_current_mission_cta'),
+          );
+          final levels = find.byKey(const Key('act0_shell_levels_menu_button'));
+          if (!moved &&
+              find
+                  .byKey(const Key('act0_academy_review_leaf'))
+                  .evaluate()
+                  .isNotEmpty) {
+            await _tapFirst(t, [find.text('Learn').last]);
+          }
+          if (!moved && levels.evaluate().isNotEmpty) {
+            routeSnapshot ??= await _saved(t);
+            final completed = (routeSnapshot['completedTaskIds'] as List)
+                .cast<String>()
                 .toSet();
-            expect(
-              completed.containsAll(prerequisites),
-              isTrue,
-              reason:
-                  'W$world unlocked before ${prerequisites.difference(completed)}',
-            );
-          }
-          if (_tapLog.isEmpty || _tapLog.last != '@$taskId')
-            _tapLog.add('@$taskId');
-          final deciding =
-              runner.phase == Act0LessonPhaseV1.drill &&
-              runner.activeTeachingStep == null &&
-              runner.selectedOptionId == null &&
-              runner.options.isNotEmpty;
-          if (deciding) {
-            await pumpSourceChoreographyToDecisionV1(t, runner.table);
-            final wrong = runner.options.where((o) => !o.isCorrect).toList();
-            final injectMiss =
-                !missedWorlds.contains(world) && wrong.isNotEmpty;
-            final choice = injectMiss
-                ? wrong.first
-                : runner.options.firstWhere((o) => o.isCorrect);
-            if (injectMiss) missedWorlds.add(world);
-            final tapped = await _tapFirst(t, [
-              if (runner.sizingConfig.isEnabled)
-                find.byKey(Key('act0_shell_sizing_preset_${choice.id}')),
-              find.byKey(Key('act0_shell_option_${choice.id}')),
-              if (choice.seatId case final seatId?) ...[
-                find.byKey(Key('act0_shell_seat_tap_$seatId')),
-                find.descendant(
-                  of: find.byKey(Key('act0_shell_seat_tap_$seatId')),
-                  matching: find.text(seatId.toUpperCase()),
-                ),
-              ],
-            ]);
-            expect(tapped, isTrue, reason: '$taskId: no answer');
-            if (runner.sizingConfig.isEnabled) {
+            final nextWorld = taskWorld.entries
+                .firstWhere((entry) => !completed.contains(entry.key))
+                .value;
+            // A summary can open the map of the world just completed. Choose
+            // the next unlocked world using the same menu a learner uses.
+            if (routeSnapshot['selectedWorldId'] != 'world_$nextWorld') {
+              expect(await _tapFirst(t, [levels]), isTrue);
+              final world = find.byKey(Key('act0_shell_world_$nextWorld'));
+              if (world.evaluate().isEmpty) {
+                await t.scrollUntilVisible(
+                  world,
+                  250,
+                  scrollable: find.descendant(
+                    of: find.byKey(
+                      const Key('act0_shell_worlds_content_scroll'),
+                    ),
+                    matching: find.byType(Scrollable),
+                  ),
+                );
+              }
               expect(
-                await _tapFirst(t, [
-                  find.byKey(const Key('act0_shell_sizing_confirm_cta')),
-                ]),
+                await _tapFirst(t, [world]),
                 isTrue,
+                reason: 'The level menu should offer W$nextWorld',
               );
             }
-            if (injectMiss) {
-              expect(
-                find.byKey(const Key('act0_shell_feedback_continue_cta')),
-                findsOneWidget,
-                reason: '$taskId should show a way to continue from feedback',
-              );
-              final missSnapshot = await _saved(t);
-              final evidence = (missSnapshot['learningEvidenceHistory'] as List)
-                  .cast<Map>();
-              expect(
-                evidence.any(
-                  (r) => r['taskId'] == taskId && r['isCorrect'] == false,
-                ),
-                isTrue,
-              );
-              confirmedMisses.add(world);
-            }
-            answered.add(taskId);
-            final worldAnswered = answered
-                .where((id) => taskWorld[id] == world)
-                .length;
-            final worldTotal = taskWorld.values.where((n) => n == world).length;
-            if (!restartedWorlds.contains(world) &&
-                worldAnswered >= worldTotal ~/ 2) {
-              final before = await _saved(t);
-              await _mount(t);
-              final after = await _saved(t);
-              expect(after['completedTaskIds'], before['completedTaskIds']);
-              expect(after['earnedXp'], before['earnedXp']);
-              expect(after['selectedWorldId'], before['selectedWorldId']);
-              expect(after['selectedTaskId'], before['selectedTaskId']);
-              restartedWorlds.add(world);
-              // A learner can return to Learn even while an open repair is shown on Home.
-              await _tapFirst(t, [find.text('Learn').last]);
-              await _tapFirst(t, [
-                find.byKey(const Key('act0_shell_current_mission_cta')),
-              ]);
-            }
-            continue;
+            moved = await _tapFirst(t, [mission]);
           }
-        } else {
-          routeSnapshot = await _saved(t);
-          final completed = (routeSnapshot['completedTaskIds'] as List)
-              .cast<String>()
-              .toSet();
-          complete = completed.containsAll(taskWorld.keys);
-          if (complete) break;
+          final visible = moved
+              ? ''
+              : t
+                    .widgetList<Text>(find.byType(Text))
+                    .map((widget) => widget.data)
+                    .whereType<String>()
+                    .take(18)
+                    .join(' | ');
+          expect(
+            moved,
+            isTrue,
+            reason:
+                'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}; visible: $visible',
+          );
         }
-        // The summary can promote a saved review above the course route.
-        // This traversal follows the map once the in-lesson retry is done.
-        var moved = await _tapFirst(t, [
-          if (find.text('Practice this clue').evaluate().isNotEmpty)
-            find.byKey(const Key('act0_shell_block_summary_map_cta')),
-          find.byKey(const Key('act0_shell_theory_continue_cta')),
-          for (final key in _continueKeys) find.byKey(Key(key)),
-        ]);
-        final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
-        final levels = find.byKey(const Key('act0_shell_levels_menu_button'));
-        if (!moved &&
-            find
-                .byKey(const Key('act0_academy_review_leaf'))
-                .evaluate()
-                .isNotEmpty) {
-          await _tapFirst(t, [find.text('Learn').last]);
-        }
-        if (!moved && levels.evaluate().isNotEmpty) {
-          routeSnapshot ??= await _saved(t);
-          final completed = (routeSnapshot['completedTaskIds'] as List)
-              .cast<String>()
-              .toSet();
-          final nextWorld = taskWorld.entries
-              .firstWhere((entry) => !completed.contains(entry.key))
-              .value;
-          // A summary can open the map of the world just completed. Choose
-          // the next unlocked world using the same menu a learner uses.
-          if (routeSnapshot['selectedWorldId'] != 'world_$nextWorld') {
-            expect(await _tapFirst(t, [levels]), isTrue);
-            final world = find.byKey(Key('act0_shell_world_$nextWorld'));
-            if (world.evaluate().isEmpty) {
-              await t.scrollUntilVisible(
-                world,
-                250,
-                scrollable: find.descendant(
-                  of: find.byKey(const Key('act0_shell_worlds_content_scroll')),
-                  matching: find.byType(Scrollable),
-                ),
-              );
-            }
-            expect(
-              await _tapFirst(t, [world]),
-              isTrue,
-              reason: 'The level menu should offer W$nextWorld',
-            );
-          }
-          moved = await _tapFirst(t, [mission]);
-        }
-        final visible = moved
-            ? ''
-            : t
-                  .widgetList<Text>(find.byType(Text))
-                  .map((widget) => widget.data)
-                  .whereType<String>()
-                  .take(18)
-                  .join(' | ');
+        final snapshot = await _saved(t);
+        final completed = (snapshot['completedTaskIds'] as List)
+            .cast<String>()
+            .toSet();
+        expect(taskWorld.keys.toSet().difference(completed), isEmpty);
+        final w1Ids = Act0ShellStateV1.sample
+            .worldById('world_1')
+            .lessons
+            .expand((lesson) => lesson.courseTaskList)
+            .map((task) => task.taskId)
+            .toSet();
+        final expectedCount = fullRoute ? 364 : 250;
         expect(
-          moved,
-          isTrue,
-          reason:
-              'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}; visible: $visible',
+          taskWorld.length,
+          useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
         );
-      }
-      final snapshot = await _saved(t);
-      final completed = (snapshot['completedTaskIds'] as List)
-          .cast<String>()
-          .toSet();
-      expect(taskWorld.keys.toSet().difference(completed), isEmpty);
-      expect(taskWorld.length, fullRoute ? 364 : 250);
-      if (fullRoute) {
-        expect(completed, contains('w12_checkpoint_full_loop_line'));
-        expect(completed, contains('w12_checkpoint_review'));
-      }
-      expect(missedWorlds, expectedWorlds);
-      expect(restartedWorlds, expectedWorlds);
-      expect(snapshot['skippedTaskIds'], isEmpty);
-      expect(
-        snapshot['earnedXp'],
-        completed.fold<int>(0, (sum, id) => sum + (rewards[id] ?? 0)),
-      );
-      expect(confirmedMisses, expectedWorlds);
-      if (fullRoute) {
-        await _mount(t);
-        final restored = await _saved(t);
-        expect(restored['completedTaskIds'], snapshot['completedTaskIds']);
-        expect(restored['earnedXp'], snapshot['earnedXp']);
-      }
-      expect(t.takeException(), isNull);
-    },
-    timeout: const Timeout(Duration(minutes: fullRoute ? 8 : 5)),
-  );
+        if (useRulesCheck) expect(completed.intersection(w1Ids), isEmpty);
+        if (fullRoute) {
+          expect(completed, contains('w12_checkpoint_full_loop_line'));
+          expect(completed, contains('w12_checkpoint_review'));
+        }
+        expect(missedWorlds, expectedWorlds);
+        expect(restartedWorlds, expectedWorlds);
+        expect(snapshot['skippedTaskIds'], isEmpty);
+        expect(
+          snapshot['earnedXp'],
+          completed.fold<int>(
+            useRulesCheck
+                ? act0W1RulesQuestionsV1.length *
+                      Act0W1RulesResultV1.xpPerCorrectAnswer
+                : 0,
+            (sum, id) => sum + (rewards[id] ?? 0),
+          ),
+        );
+        expect(confirmedMisses, expectedWorlds);
+        if (fullRoute) {
+          await _mount(t);
+          final restored = await _saved(t);
+          expect(restored['completedTaskIds'], snapshot['completedTaskIds']);
+          expect(restored['earnedXp'], snapshot['earnedXp']);
+        }
+        expect(t.takeException(), isNull);
+      },
+      timeout: const Timeout(Duration(minutes: fullRoute ? 8 : 5)),
+    );
+  }
 }

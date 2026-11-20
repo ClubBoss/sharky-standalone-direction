@@ -16,6 +16,7 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
   List<Act0WorldCardV1> authoredWorlds, {
   required Set<String> pathClosedTaskIds,
   required Set<String> earnedTaskIds,
+  bool passedW1RulesCheck = false,
 }) {
   var previousWorldComplete = true;
   var lockedWorldSeen = false;
@@ -27,12 +28,15 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
       isImmediateLockedWorld: !previousWorldComplete && !lockedWorldSeen,
       completedTaskIds: pathClosedTaskIds,
       earnedTaskIds: earnedTaskIds,
+      passedByRulesCheck: passedW1RulesCheck && world.worldId == 'world_1',
     );
     worlds.add(progressed);
     if (progressed.status == Act0WorldStateV1.locked) {
       lockedWorldSeen = true;
     }
-    previousWorldComplete = progressed.status == Act0WorldStateV1.completed;
+    previousWorldComplete =
+        progressed.status == Act0WorldStateV1.completed ||
+        progressed.status == Act0WorldStateV1.passedByRulesCheck;
   }
   return worlds;
 }
@@ -52,6 +56,7 @@ Act0WorldCardV1 _progressWorldV1(
   required bool isImmediateLockedWorld,
   required Set<String> completedTaskIds,
   required Set<String> earnedTaskIds,
+  required bool passedByRulesCheck,
 }) {
   final progressTaskIds = completedTaskIds;
   if (world.lessons.isEmpty) {
@@ -67,7 +72,7 @@ Act0WorldCardV1 _progressWorldV1(
     (lesson) => act0LessonCompleteWithTaskIdsV1(lesson, progressTaskIds),
   );
   final available = previousWorldComplete;
-  final currentLessonId = available && !allComplete
+  final currentLessonId = available && !allComplete && !passedByRulesCheck
       ? world.lessons
             .firstWhere(
               (lesson) =>
@@ -81,6 +86,7 @@ Act0WorldCardV1 _progressWorldV1(
         lesson,
         worldAvailable: available,
         currentLessonId: currentLessonId,
+        availableByRulesCheck: passedByRulesCheck,
         completedTaskIds: progressTaskIds,
       ),
   ];
@@ -106,6 +112,8 @@ Act0WorldCardV1 _progressWorldV1(
       ? Act0WorldStateV1.locked
       : allComplete
       ? Act0WorldStateV1.completed
+      : passedByRulesCheck
+      ? Act0WorldStateV1.passedByRulesCheck
       : Act0WorldStateV1.current;
   return world.copyWith(
     status: status,
@@ -134,6 +142,7 @@ Act0LessonCardV1 _progressLessonV1(
   Act0LessonCardV1 lesson, {
   required bool worldAvailable,
   required String? currentLessonId,
+  required bool availableByRulesCheck,
   required Set<String> completedTaskIds,
 }) {
   final completed = act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds);
@@ -142,15 +151,18 @@ Act0LessonCardV1 _progressLessonV1(
       ? Act0LessonStateV1.completed
       : current
       ? Act0LessonStateV1.current
+      : availableByRulesCheck
+      ? Act0LessonStateV1.available
       : Act0LessonStateV1.locked;
   return lesson.copyWith(
     state: state,
     primaryCtaLabel: completed
         ? 'Replay'
-        : current
+        : current || availableByRulesCheck
         ? 'Start'
         : 'Locked',
-    isSelectable: worldAvailable && (completed || current),
+    isSelectable:
+        worldAvailable && (completed || current || availableByRulesCheck),
     isLocked: !worldAvailable || state == Act0LessonStateV1.locked,
   );
 }

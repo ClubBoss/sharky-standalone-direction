@@ -502,7 +502,7 @@ void main() {
           SharedPreferencesStorePlatform.instance = priorPlatform;
         }
       });
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       expect(
         find.byKey(const Key('act0_academy_home_leaf_cta')),
@@ -943,7 +943,9 @@ void main() {
             SharedPreferencesStorePlatform.instance = priorPlatform;
           }
         });
-        await tester.pumpWidget(const AppRoot());
+        await tester.pumpWidget(
+          const AppRoot(debugLegacyPlacementOnStart: true),
+        );
         await tester.pumpAndSettle();
         await tester.tap(find.text('Learn').last);
         await tester.pumpAndSettle();
@@ -1221,7 +1223,7 @@ Future<Map<String, dynamic>> _w24Remount(
   SharedPreferences.resetStatic();
   expect(identical(SharedPreferencesStorePlatform.instance, disk), isTrue);
   expect(disk.values, durableBefore);
-  await tester.pumpWidget(const AppRoot());
+  await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
   await tester.pumpAndSettle();
   expect(disk.readCount, greaterThan(readsBefore));
   expect(

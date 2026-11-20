@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'act0_durable_learning_time_contract_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
+import 'act0_w1_rules_check_v1.dart';
 
 class Act0DurableRetentionHistoryV1 {
   const Act0DurableRetentionHistoryV1({
@@ -66,6 +67,39 @@ class Act0DurableRetentionHistoryV1 {
     return Act0DurableRetentionHistoryV1(
       families: List<Act0DurableRetentionFamilyV1>.unmodifiable(updated),
     );
+  }
+
+  Act0DurableRetentionHistoryV1 scheduleW1CheckMisses(
+    Iterable<Act0W1RulesQuestionV1> missed,
+    DateTime nowUtc,
+  ) {
+    final now = nowUtc.toUtc();
+    final updated = [
+      ...families,
+      for (final question in missed)
+        if (familyById(question.taskId) == null)
+          Act0DurableRetentionFamilyV1(
+            conceptFamilyId: question.taskId,
+            worldId: 'world_1',
+            sourceLessonId: question.lessonId,
+            sourceTaskId: question.taskId,
+            retentionState: Act0RetentionStateV1.needsRepair,
+            nextDueAtUtc: now.add(
+              Act0DurableLearningTimingV1.recoveryToFirstReview,
+            ),
+            lastSpacedReviewAtUtc: null,
+            spacedSuccessStage: 0,
+            lapseCount: 0,
+            incorrectCount: 1,
+            correctCount: 0,
+            lastRecordedAtUtc: now,
+            lastCreatedOrder: -1,
+            lastSessionId: '',
+            lastReviewKind: Act0ReviewKindV1.initialAssessment,
+            hasLegacyUnspacedEvidence: false,
+          ),
+    ]..sort((a, b) => a.conceptFamilyId.compareTo(b.conceptFamilyId));
+    return Act0DurableRetentionHistoryV1(families: List.unmodifiable(updated));
   }
 
   Act0DurableRetentionHistoryV1 refreshedAt(DateTime nowUtc) {
@@ -208,6 +242,7 @@ class Act0DurableRetentionFamilyV1 {
     return due != null &&
         !nowUtc.toUtc().isBefore(due) &&
         (retentionState == Act0RetentionStateV1.due ||
+            retentionState == Act0RetentionStateV1.needsRepair ||
             retentionState ==
                 Act0RetentionStateV1.recoveredPendingSpacedReview ||
             retentionState == Act0RetentionStateV1.durable ||
@@ -507,6 +542,12 @@ int _compareDueItems(Act0DueReviewItemV1 a, Act0DueReviewItemV1 b) {
 String act0ConceptFamilyIdForDurableEvidenceV1(
   Act0LearningEvidenceRecordV1 record,
 ) {
+  if (record.worldId == 'world_1' &&
+      act0W1RulesQuestionsV1.any(
+        (question) => question.taskId == record.taskId,
+      )) {
+    return record.taskId;
+  }
   for (final value in <String>[
     record.conceptFamilyId,
     record.repairFocusId,

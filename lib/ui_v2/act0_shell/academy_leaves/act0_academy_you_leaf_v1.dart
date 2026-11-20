@@ -48,6 +48,7 @@ class Act0AcademyYouLeafInputV1 {
     this.openRepairCount = 0,
     this.dueReviewCount = 0,
     this.skills = const <Act0W14SkillStateV1>[],
+    this.passedW1RulesCheck = false,
     this.onOpenReview,
     this.onOpenPractice,
     this.onOpenLearn,
@@ -67,6 +68,7 @@ class Act0AcademyYouLeafInputV1 {
   final int openRepairCount;
   final int dueReviewCount;
   final List<Act0W14SkillStateV1> skills;
+  final bool passedW1RulesCheck;
   final VoidCallback? onOpenReview;
   final VoidCallback? onOpenPractice;
   final VoidCallback? onOpenLearn;
@@ -219,8 +221,10 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                 collapsedIconColor: _muted,
                 expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
                 title: const Text('Skills · W1–W4'),
-                subtitle: const Text(
-                  'Saved answers, not a mastery score.',
+                subtitle: Text(
+                  input.passedW1RulesCheck
+                      ? 'W1 skipped by rules check'
+                      : 'Saved answers, not a mastery score.',
                   style: TextStyle(color: _muted),
                 ),
                 children: [

@@ -27,6 +27,7 @@ void main() {
   }) {
     return MaterialApp(
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
         key: UniqueKey(),
         showPlacementOnStart: showPlacementOnStart,
         initialTab: initialTab,

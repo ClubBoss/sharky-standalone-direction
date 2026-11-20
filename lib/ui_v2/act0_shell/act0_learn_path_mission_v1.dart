@@ -766,28 +766,29 @@ class _LearnRouteSpineNodeV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stateTone = switch (lesson.state) {
-      Act0LessonStateV1.current => Act0ShellTokensV1.primary,
+      Act0LessonStateV1.current ||
+      Act0LessonStateV1.available => Act0ShellTokensV1.primary,
       Act0LessonStateV1.completed => Act0ShellTokensV1.textMuted,
       Act0LessonStateV1.locked =>
         isNextUp ? Act0ShellTokensV1.gold : Act0ShellTokensV1.textDim,
     };
     final lineAlpha = switch (lesson.state) {
-      Act0LessonStateV1.current => 0.26,
+      Act0LessonStateV1.current || Act0LessonStateV1.available => 0.26,
       Act0LessonStateV1.completed => 0.14,
       Act0LessonStateV1.locked => isNextUp ? 0.22 : 0.12,
     };
     final nodeFillAlpha = switch (lesson.state) {
-      Act0LessonStateV1.current => 0.15,
+      Act0LessonStateV1.current || Act0LessonStateV1.available => 0.15,
       Act0LessonStateV1.completed => 0.07,
       Act0LessonStateV1.locked => isNextUp ? 0.12 : 0.05,
     };
     final nodeBorderAlpha = switch (lesson.state) {
-      Act0LessonStateV1.current => 0.58,
+      Act0LessonStateV1.current || Act0LessonStateV1.available => 0.58,
       Act0LessonStateV1.completed => 0.24,
       Act0LessonStateV1.locked => isNextUp ? 0.42 : 0.22,
     };
     final label = switch (lesson.state) {
-      Act0LessonStateV1.current => '$index',
+      Act0LessonStateV1.current || Act0LessonStateV1.available => '$index',
       Act0LessonStateV1.completed => '$index',
       Act0LessonStateV1.locked => '$index',
     };

@@ -181,6 +181,7 @@ Widget act0AcademyReviewRuntimeV1(
 Widget act0AcademyYouRuntimeV1(
   BuildContext context, {
   List<Act0W14SkillStateV1> skills = const [],
+  bool passedW1RulesCheck = false,
   required Act0ProfileShellV1 legacy,
   Act0BetaLearningMetricsV1 Function()? betaLearningMetrics,
   DateTime Function()? nowUtc,
@@ -198,6 +199,7 @@ Widget act0AcademyYouRuntimeV1(
   return Act0AcademyYouLeafV1(
     input: Act0AcademyYouLeafInputV1(
       skills: skills,
+      passedW1RulesCheck: passedW1RulesCheck,
       displayName: legacy.profile.playerName,
       levelLabel: legacy.profile.level,
       xpLine: legacy.profile.xpLine,
@@ -237,7 +239,7 @@ Widget act0AcademyYouRuntimeV1(
                     onRetakePlacement: _guard(
                       isCurrent,
                       legacy.onRetakePlacement,
-                    )!,
+                    ),
                     onRecoveryOptions: _guard(
                       isCurrent,
                       legacy.onRecoveryOptions,
@@ -260,7 +262,7 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
     this.onOpenBetaMetrics,
   });
   final VoidCallback? onReplayWelcome;
-  final VoidCallback onRetakePlacement;
+  final VoidCallback? onRetakePlacement;
   final VoidCallback? onRecoveryOptions;
   final VoidCallback? onDeleteLocalData;
   final void Function(BuildContext)? onOpenBetaMetrics;
@@ -360,7 +362,9 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
             onReplayWelcome: widget.onReplayWelcome == null
                 ? null
                 : () => _returnToShell(widget.onReplayWelcome!),
-            onRetakePlacement: () => _returnToShell(widget.onRetakePlacement),
+            onRetakePlacement: widget.onRetakePlacement == null
+                ? null
+                : () => _returnToShell(widget.onRetakePlacement!),
             onRecoveryOptions: widget.onRecoveryOptions == null
                 ? null
                 : () => _returnToShell(widget.onRecoveryOptions!),

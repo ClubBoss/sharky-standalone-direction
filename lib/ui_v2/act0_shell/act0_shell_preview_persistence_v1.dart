@@ -107,6 +107,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final worldsAfterProgress = _progressWorldsWithTaskIds(
       state,
       closedTaskIds,
+      w1RulesBestScore: parsed.w1RulesBestScore,
     );
     final persistedWorld = _worldById(
       worldsAfterProgress,
@@ -206,6 +207,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
+      _w1StartChosenV1 = parsed.w1StartChosen;
+      _w1RulesBestScoreV1 = parsed.w1RulesBestScore;
+      _w1RulesFocusTaskIdsV1 = parsed.w1RulesFocusTaskIds;
       _studyObservationsV1 = parsed.studyObservations;
       _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
         widget.clock.nowUtc(),
@@ -888,6 +892,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       selectedLessonId: returnSelection?.lessonId ?? _selectedLessonId,
       selectedTaskId: returnSelection?.taskId ?? _selectedTaskId,
       earnedXp: _earnedXp,
+      w1StartChosen: _w1StartChosenV1,
+      w1RulesBestScore: _w1RulesBestScoreV1,
+      w1RulesFocusTaskIds: _w1RulesFocusTaskIdsV1,
       profileSkillValues: _profileSkillValues,
       recentSkillGains: _recentSkillGains,
       lastActiveDay: today,

@@ -63,7 +63,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await _pump(
       tester,
-      const Act0ShellPreviewScreenV1(showPlacementOnStart: true),
+      const Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
+        showPlacementOnStart: true,
+      ),
     );
     await tester.pumpAndSettle();
   }

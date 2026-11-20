@@ -201,6 +201,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.headline,
     required this.support,
     this.scrollSupport = false,
+    this.showCoach = true,
     this.focusPointsUp = false,
     this.focusLabel,
     this.progressLabel,
@@ -230,6 +231,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   final String support;
   // Opt in only for complete source-owned model premises, never answer hints.
   final bool scrollSupport;
+  final bool showCoach;
   final bool focusPointsUp;
   final String? focusLabel;
   final String? progressLabel;
@@ -258,8 +260,10 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
             act0SharkyMoodForCompanionStateV1(sharkyState),
           )
         : phaseTone;
-    final showAvatar = scaffold.tier != Act0SharkyCoachScaffoldTierV1.off;
+    final showAvatar =
+        showCoach && scaffold.tier != Act0SharkyCoachScaffoldTierV1.off;
     final showSpokenSurface =
+        showCoach &&
         scaffold.tier == Act0SharkyCoachScaffoldTierV1.spoken &&
         isEvidenceBacked;
 

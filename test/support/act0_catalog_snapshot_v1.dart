@@ -18,6 +18,20 @@ final catalogTasks = [
         (world: world, lesson: lesson, task: task, lessonIndex: index),
 ];
 
+final rulesCheckCatalogTasks = [
+  for (final entry in act0NewReviewTasksV1)
+    if (entry.task.taskId.startsWith('w1_rules_check_'))
+      (
+        world: Act0ShellStateV1.sample.worldById(entry.worldId),
+        lesson: Act0ShellStateV1.sample.lessonById(entry.lessonId),
+        task: entry.task,
+        lessonIndex: Act0ShellStateV1.sample
+            .worldById(entry.worldId)
+            .lessons
+            .indexWhere((lesson) => lesson.lessonId == entry.lessonId),
+      ),
+];
+
 String catalogQuestion(Act0LessonTaskV1 task) =>
     (act0IsPrechoiceAssessmentTaskV1(task)
         ? act0PrechoiceNeutralQuestionByTaskIdV1[task.taskId]
@@ -115,7 +129,7 @@ Iterable<String> _section(Iterable<CatalogTask> rows) sync* {
             hasSubmittedCurrentDecision: false,
           );
     }
-    yield 'CAPTION: ' + runner.caption;
+    if (runner.caption.isNotEmpty) yield 'CAPTION: ' + runner.caption;
     for (final step in runner.teachingSteps) {
       yield 'TEACH: ' + step.title + ' ' + step.body;
       if (step.ctaLabel != 'Next') yield 'TEACH CTA: ${step.ctaLabel}';
@@ -197,5 +211,8 @@ String renderCatalogSnapshot() =>
       '===== REPAIR-ONLY TASKS =====',
       '',
       ..._section(catalogTasks.where((row) => row.task.repairOnly)),
+      '===== W1 RULES CHECK =====',
+      '',
+      ..._section(rulesCheckCatalogTasks),
     ].join('\n').trimRight() +
     '\n');

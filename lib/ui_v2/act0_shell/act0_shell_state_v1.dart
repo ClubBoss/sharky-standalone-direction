@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'act0_asm05_authored_decision_truth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
 
+import 'act0_w1_rules_check_v1.dart';
+
 part 'act0_shell_review_tasks_v1.dart';
 
 enum Act0ShellTabV1 { home, learn, play, review, profile }
 
-enum Act0LessonStateV1 { completed, current, locked }
+enum Act0LessonStateV1 { completed, current, locked, available }
 
-enum Act0WorldStateV1 { completed, current, locked }
+enum Act0WorldStateV1 { completed, current, locked, passedByRulesCheck }
 
 enum Act0LessonPhaseV1 { theory, drill, review }
 
@@ -12751,17 +12753,11 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'One loop first.',
+      title: 'Find your cards.',
       body:
-          'Blinds are forced bets posted before anyone decides. Look for SB and BB at two seats.',
-      focusLabels: <String>['Read', 'Answer', 'Why'],
-    ),
-    Act0TeachingStepV1(
-      title: 'Start with the table.',
-      body:
-          'Your two cards are private. The board is shared. The pot is the chips in the middle. BB also measures chips.',
+          'The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot holds the chips. SB and BB post the blinds before anyone acts.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['Your cards', 'Shared cards', 'Pot'],
+      focusLabels: <String>['Your cards', 'Board', 'Pot'],
       identityTeachingSemantics:
           Act0TableIdentityTeachingSemanticsV1.learnerOnly,
     ),
@@ -12816,17 +12812,7 @@ final _firstTableGuideFindHeroRunner = _meetTableRunner.copyWith(
     heroCards: _heroKtCards,
     selectableSeatIds: const <String>[],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'You means learner.',
-      body:
-          'The You badge is beside your two cards. The cards in the middle can be used by everyone still playing.',
-      focusSeatIds: <String>['btn'],
-      focusLabels: <String>['Your cards', 'Shared cards'],
-      identityTeachingSemantics:
-          Act0TableIdentityTeachingSemanticsV1.learnerOnly,
-    ),
-  ],
+  teachingSteps: const <Act0TeachingStepV1>[],
 );
 
 final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
