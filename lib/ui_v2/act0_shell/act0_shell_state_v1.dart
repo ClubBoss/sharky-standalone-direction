@@ -17134,8 +17134,8 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Medium',
       betterAnswerLabel: 'Medium',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'A bit too high.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'QJs is in the Medium bucket.',
       feedbackReason:
           'Strong hands need less help from position and action frame. QJs still wants context before chips go in.',
     ),

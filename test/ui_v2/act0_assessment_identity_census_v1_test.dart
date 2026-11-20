@@ -683,6 +683,11 @@ void main() {
       expect(option[3], 'wrong', reason: entry.key);
       option[3] = 'suboptimal';
     }
+    final strongQJs = beforeP8['hand_discipline_buckets_borderline']!
+        .singleWhere((row) => row[0] == 'strong');
+    expect(strongQJs[2], isFalse);
+    expect(strongQJs[3], 'wrong');
+    strongQJs[3] = 'suboptimal';
     for (final taskId in [
       'your_first_hand_showdown',
       'showdown_best_hand_drill',
