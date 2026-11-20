@@ -1,8 +1,11 @@
 import 'package:poker_solver/poker_solver.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
 // Catalog invariants over the actual Runner projection. Not a betting engine.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
+
+import 'act0_pot_showdown_truth_v1.dart' show potTruthBbV1;
 
 class TableTruthRow {
   TableTruthRow(
@@ -37,6 +40,80 @@ class TableTruthRow {
 String cardIdentity(Act0CardStateV1 c) =>
     '${c.rank == '10' ? 'T' : c.rank}${c.suit}';
 const streets = {'Preflop': 0, 'Flop': 3, 'Turn': 4, 'River': 5};
+
+List<TableTruthRow> auditTableContributionsV1(
+  String taskId,
+  String variant,
+  Act0TableStateV1 t,
+) {
+  final rows = <TableTruthRow>[];
+  void check(String invariant, bool ok, String detail) => rows.add(
+    TableTruthRow(taskId, variant, invariant, ok ? 'PASS' : 'FAIL', detail),
+  );
+  final ledger = t.handContributions;
+  if (ledger != null) {
+    try {
+      final amounts = ledger.amounts(
+        seatIds: t.seats
+            .where((seat) => seat.isOccupied)
+            .map((seat) => seat.seatId)
+            .toSet(),
+        actorSeatId: t.decisionSeatId ?? t.activeSeatId,
+      );
+      final sameStreet =
+          t.streetLabel == pokerStreetToString(ledger.throughStreet);
+      final shownPot = potTruthBbV1(t.potLabel.replaceFirst('Pot ', ''));
+      final shownCall = potTruthBbV1(
+        t.toCallLabel.replaceFirst('To call ', ''),
+      );
+      check(
+        'D2.pot_feasibility',
+        sameStreet &&
+            shownPot != null &&
+            (shownPot - amounts.potBb).abs() < 1e-9,
+        'shown=${t.potLabel} from contributions=${amounts.potBb} BB',
+      );
+      final due = amounts.toCallBb;
+      if (t.toCallLabel.isNotEmpty || (due != null && due > 0)) {
+        check(
+          'D3.to_call_completeness',
+          sameStreet &&
+              due != null &&
+              shownCall != null &&
+              (shownCall - due).abs() < 1e-9,
+          'shown=${t.toCallLabel} from commitments and remaining stack=$due BB',
+        );
+      }
+    } on FormatException catch (error) {
+      check('D2.pot_feasibility', false, error.message);
+      if (t.toCallLabel.isNotEmpty) {
+        check('D3.to_call_completeness', false, error.message);
+      }
+    }
+  } else {
+    if (t.streetLabel != 'Preflop')
+      rows.add(
+        TableTruthRow(
+          taskId,
+          variant,
+          'D2.pot_feasibility',
+          'NEEDS_SOURCE_CONTEXT',
+          'No complete contribution/ante ledger; visible current-street bets are not whole-pot inputs.',
+        ),
+      );
+    if (t.toCallLabel.isNotEmpty)
+      rows.add(
+        TableTruthRow(
+          taskId,
+          variant,
+          'D3.to_call_completeness',
+          'NEEDS_SOURCE_CONTEXT',
+          'Need complete current-street commitments; missing chips do not identify an actor.',
+        ),
+      );
+  }
+  return rows;
+}
 
 List<TableTruthRow> auditTableTruth() {
   final rows = <TableTruthRow>[];
@@ -469,26 +546,7 @@ List<TableTruthRow> auditTableTruth() {
                 'clue=$id',
               );
             }
-            if (t.streetLabel != 'Preflop')
-              rows.add(
-                TableTruthRow(
-                  task.taskId,
-                  v,
-                  'D2.pot_feasibility',
-                  'NEEDS_SOURCE_CONTEXT',
-                  'No complete contribution/ante ledger; visible current-street bets are not whole-pot inputs.',
-                ),
-              );
-            if (t.toCallLabel.isNotEmpty)
-              rows.add(
-                TableTruthRow(
-                  task.taskId,
-                  v,
-                  'D3.to_call_completeness',
-                  'NEEDS_SOURCE_CONTEXT',
-                  'Need complete current-street commitments; missing chips do not identify an actor.',
-                ),
-              );
+            rows.addAll(auditTableContributionsV1(task.taskId, v, t));
           }
         }
       }
