@@ -281,13 +281,13 @@ const act0PremiumTableSceneProfileV1 = Act0SceneProfileV1(
   // Commitments sit on measured felt, between each player's cards and the
   // board, never on the rail.
   betAnchorsFromHero: [
-    Offset(0.615, 0.715),
-    // Keep blind labels clear of the adjacent informative nameplates,
-    // including their text-scaled bounds; card and seat anchors stay fixed.
-    Offset(0.37, 0.685),
-    Offset(0.358, 0.54),
-    Offset(0.52, 0.442),
-    Offset(0.682, 0.515),
+    // The two nearest commitments clear the hero's cards and nameplate.
+    Offset(0.69, 0.755),
+    Offset(0.28, 0.755),
+    // Side commitments finish above the board's first and last slots.
+    Offset(0.358, 0.507),
+    Offset(0.52, 0.458),
+    Offset(0.682, 0.507),
     Offset(0.715, 0.685),
   ],
   boardAnchor: Offset(0.52, 0.574),

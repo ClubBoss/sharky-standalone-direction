@@ -4426,7 +4426,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
-    Widget buildRunnerScreen({bool registeredScene = false}) {
+    Widget buildRunnerScreen({Act0SceneRegistrationV1? registration}) {
+      final registeredScene = registration != null;
+      final decisionShelfMaxHeight = registration == null
+          ? null
+          : math.max(
+              0.0,
+              registration.viewport.height -
+                  registration
+                      .map(registration.profile.seatAnchorsFromHero.first)
+                      .dy -
+                  // Leave room for the nameplate and the shelf's upper fade.
+                  44.0,
+            );
       // Source premises must remain readable without covering an answer seat.
       // Reuse the existing scrollable guide shelf; the registered table stays
       // at its source-owned camera/seat anchors.
@@ -4671,7 +4683,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                   ),
                   KeyedSubtree(
                     key: const Key('act0_shell_shared_runner_lower_surface'),
-                    child: buildIntegratedLowerSurface(),
+                    child:
+                        decisionShelfMaxHeight != null && isDrill && !isTeaching
+                        ? ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: decisionShelfMaxHeight,
+                            ),
+                            child: SingleChildScrollView(
+                              primary: false,
+                              physics: const ClampingScrollPhysics(),
+                              child: buildIntegratedLowerSurface(),
+                            ),
+                          )
+                        : buildIntegratedLowerSurface(),
                   ),
                 ],
               ),
@@ -4816,8 +4840,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           );
         },
       ),
-      foregroundBuilder: (context, registered) =>
-          buildRunnerScreen(registeredScene: registered),
+      foregroundBuilder: (context, registered) => LayoutBuilder(
+        builder: (context, constraints) => buildRunnerScreen(
+          registration: registered
+              ? act0PremiumTableSceneProfileV1.register(constraints.biggest)
+              : null,
+        ),
+      ),
     );
   }
 }

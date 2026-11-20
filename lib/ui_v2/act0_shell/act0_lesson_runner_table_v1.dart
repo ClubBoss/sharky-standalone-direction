@@ -947,32 +947,38 @@ class _Act0TableV1 extends StatelessWidget {
           p.potAnchor,
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: r.destinationRect.width * .48,
+              maxWidth: r.destinationRect.width * (hasPrice ? .60 : .23),
             ),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 5,
-              runSpacing: 3,
+            // The fixed rail between board and hero has room for one row.
+            // Allow long values to wrap within their own pill.
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                _CenterPriorityStatV1(
-                  key: const Key('act0_shell_wave1_pot_priority_stat'),
-                  legacyKey: const Key('act0_shell_center_pot_stat'),
-                  label: act0RuntimeLocalizedPotLabelV1(
-                    context,
-                    potLabelOverride ?? table.potLabel,
-                  ),
-                  tone: Act0ShellTokensV1.gold,
-                  compact: true,
-                  pulse: table.actionTrail.isNotEmpty,
-                ),
-                if (hasPrice)
-                  _CenterPriorityStatV1(
-                    key: const Key('act0_shell_wave1_price_priority_stat'),
-                    legacyKey: const Key('act0_shell_center_to_call_stat'),
-                    label: act0RuntimeLocalizedToCallLabelV1(context, price),
-                    tone: Act0ShellTokensV1.info,
+                Flexible(
+                  child: _CenterPriorityStatV1(
+                    key: const Key('act0_shell_wave1_pot_priority_stat'),
+                    legacyKey: const Key('act0_shell_center_pot_stat'),
+                    label: act0RuntimeLocalizedPotLabelV1(
+                      context,
+                      potLabelOverride ?? table.potLabel,
+                    ),
+                    tone: Act0ShellTokensV1.gold,
                     compact: true,
+                    pulse: table.actionTrail.isNotEmpty,
                   ),
+                ),
+                if (hasPrice) ...[
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: _CenterPriorityStatV1(
+                      key: const Key('act0_shell_wave1_price_priority_stat'),
+                      legacyKey: const Key('act0_shell_center_to_call_stat'),
+                      label: act0RuntimeLocalizedToCallLabelV1(context, price),
+                      tone: Act0ShellTokensV1.info,
+                      compact: true,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -1971,9 +1977,12 @@ class _SeatPlacementV1 extends StatelessWidget {
     final tierScale = !depthTieredPrototype
         ? 1.0
         : Act0ScenePerspectiveV1.canonical.plateScaleAt(point.dy);
+    // The registered hero cards are painted separately from the seat node.
+    // Clear their lower edge without moving the cards or the image anchors.
+    final heroNameplateClearance = registeredScene && hero ? 8.0 : 0.0;
     return Positioned(
       left: tableWidth * point.dx,
-      top: tableHeight * point.dy,
+      top: tableHeight * point.dy + heroNameplateClearance,
       child: FractionalTranslation(
         translation: const Offset(-0.5, -0.5),
         child: Transform.scale(

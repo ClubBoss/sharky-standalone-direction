@@ -45,6 +45,21 @@ Rect _paintBounds(WidgetTester tester, Finder finder) {
   );
 }
 
+Rect _visibleBounds(WidgetTester tester, Finder finder) {
+  var bounds = _paintBounds(tester, finder);
+  RenderObject child = tester.renderObject(finder);
+  for (var parent = child.parent; parent != null; parent = child.parent) {
+    final clip = parent.describeApproximatePaintClip(child);
+    if (clip != null) {
+      bounds = bounds.intersect(
+        MatrixUtils.transformRect(parent.getTransformTo(null), clip),
+      );
+    }
+    child = parent;
+  }
+  return bounds;
+}
+
 void _expectStationaryTable(
   Rect reference,
   Rect actual, {
@@ -134,17 +149,17 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  const geometryTasks = [
-    'what_poker_is_find_hero',
-    'what_poker_is_table_read_transfer',
-    'first_table_guide_shared_cards_repair',
-    'actions_call_drill',
-    'your_first_hand_showdown',
-    'apply_btn_open',
-    'position_six_seats_positions_utg',
-    'w4_checkpoint_table_price',
+  final geometryTasks = [
+    for (final world in Act0ShellStateV1.sample.worlds.take(4))
+      for (final lesson in world.lessons)
+        for (final task in lesson.taskList)
+          if (task.entryPhase != Act0LessonPhaseV1.theory &&
+              task.runner.options.any((option) => option.isCorrect) &&
+              task.runner.options.any((option) => !option.isCorrect))
+            (world: world, lesson: lesson, task: task),
   ];
-  for (final id in geometryTasks) {
+  for (final (:world, :lesson, :task) in geometryTasks) {
+    final id = task.taskId;
     testWidgets('V3 table geometry and readable cards · $id', (tester) async {
       tester.view.physicalSize = const Size(393, 852);
       tester.view.devicePixelRatio = 1;
@@ -155,15 +170,6 @@ void main() {
         isNotNull,
       );
 
-      final world = Act0ShellStateV1.sample.worlds.singleWhere(
-        (world) => world.lessons.any(
-          (lesson) => lesson.taskList.any((task) => task.taskId == id),
-        ),
-      );
-      final lesson = world.lessons.singleWhere(
-        (lesson) => lesson.taskList.any((task) => task.taskId == id),
-      );
-      final task = lesson.taskList.singleWhere((task) => task.taskId == id);
       final source = task.runner;
       final wrong = source.options.firstWhere((option) => !option.isCorrect);
       final correct = source.options.firstWhere((option) => option.isCorrect);
@@ -228,6 +234,7 @@ void main() {
       );
       var checkedCardFrames = 0;
       final states = [
+        (phase: Act0LessonPhaseV1.drill, selected: null, scale: 1.0),
         (phase: Act0LessonPhaseV1.drill, selected: wrong.id, scale: 1.0),
         (phase: Act0LessonPhaseV1.review, selected: wrong.id, scale: 1.0),
         (phase: Act0LessonPhaseV1.review, selected: correct.id, scale: 1.0),
@@ -249,18 +256,32 @@ void main() {
           find.byKey(const Key('act0_integrated_scene_prompt')),
           find.byKey(const Key('act0_shell_review_question')),
         ];
-        final nameplates = find.byWidgetPredicate((widget) {
+        final tableLabels = find.byWidgetPredicate((widget) {
           final key = widget.key;
           return key is ValueKey<String> &&
               (key.value.startsWith('act0_shell_seat_identity_') ||
-                  key.value.startsWith('act0_shell_hero_identity_'));
+                  key.value.startsWith('act0_shell_hero_identity_') ||
+                  key.value.startsWith('act0_shell_bet_chip_owner_') ||
+                  const {
+                    'act0_shell_center_pot_stat',
+                    'act0_shell_center_to_call_stat',
+                    'act0_f7_street',
+                    'act0_f7_clue',
+                  }.contains(key.value));
         });
-        final cover = [
-          for (final control in controls)
-            if (control.evaluate().isNotEmpty) _paintBounds(tester, control),
-          for (var i = 0; i < nameplates.evaluate().length; i++)
-            _paintBounds(tester, nameplates.at(i)),
-        ];
+        final overlays =
+            [
+                  ...controls.where((control) => control.evaluate().isNotEmpty),
+                  for (var i = 0; i < tableLabels.evaluate().length; i++)
+                    tableLabels.at(i),
+                ]
+                .map(
+                  (finder) => (
+                    key: finder.evaluate().single.widget.key,
+                    bounds: _visibleBounds(tester, finder),
+                  ),
+                )
+                .toList();
         final cards = find.byWidgetPredicate((widget) {
           final key = widget.key;
           return key is ValueKey<String> &&
@@ -270,9 +291,9 @@ void main() {
           final card = cards.at(i);
           final bounds = _paintBounds(tester, card);
           checkedCardFrames++;
-          for (final overlay in cover) {
+          for (final overlay in overlays) {
             expect(
-              overlay.overlaps(bounds),
+              overlay.bounds.overlaps(bounds),
               isFalse,
               reason:
                   '$id $state: overlay $overlay covers ${card.evaluate().single.widget.key} at $bounds',
