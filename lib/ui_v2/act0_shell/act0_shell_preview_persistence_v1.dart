@@ -726,7 +726,11 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       if (!mounted) return;
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
         const SnackBar(
-          content: Text('This mistake is saved. Its practice is on hold.'),
+          backgroundColor: Act0AcademyLeafPaletteV1.inkRaised,
+          content: Text(
+            'This mistake is saved. Its practice is on hold.',
+            style: TextStyle(color: Act0AcademyLeafPaletteV1.text),
+          ),
         ),
       );
     });
