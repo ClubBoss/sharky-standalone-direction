@@ -188,7 +188,9 @@ void main() {
       expect(runner.selectedTaskId, 'what_poker_is_theory');
       expect(runner.runner.phase, Act0LessonPhaseV1.theory);
       expect(
-        find.textContaining('SB and BB post the blinds before anyone acts.'),
+        find.textContaining(
+          'Blinds are forced bets. SB and BB post them before anyone acts.',
+        ),
         findsOneWidget,
       );
 
