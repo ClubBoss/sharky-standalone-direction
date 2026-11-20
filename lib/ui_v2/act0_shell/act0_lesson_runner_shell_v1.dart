@@ -4454,8 +4454,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final dockIntegratedFeedbackGuide =
           _usesCanonicalIntegratedLearningSceneV1 &&
           usesSharedActiveRunnerAllocation &&
-          (isReview || dockSourceSeatGuide) &&
-          registeredScene;
+          (isReview || (dockSourceSeatGuide && registeredScene));
 
       Widget buildIntegratedLowerSurface() {
         final actionDock = buildRunnerActionDock(
@@ -4544,6 +4543,33 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               runner: runner,
               onBack: _handleRunnerBackV1,
               showGlossary: isTheory || isTeaching || isReview,
+            ),
+          if (isReview && dockIntegratedFeedbackGuide && question.isNotEmpty)
+            Container(
+              margin: const EdgeInsets.fromLTRB(14, 5, 14, 1),
+              padding: const EdgeInsets.fromLTRB(12, 5, 10, 6),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.surface.withValues(alpha: 0.95),
+                border: const Border(
+                  left: BorderSide(color: Act0ShellTokensV1.primary, width: 3),
+                ),
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 52),
+                child: SingleChildScrollView(
+                  primary: false,
+                  child: Text(
+                    question,
+                    key: const Key('act0_shell_review_question'),
+                    style: Act0ShellTokensV1.body.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      height: 1.08,
+                    ),
+                  ),
+                ),
+              ),
             ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               usesSharedActiveRunnerAllocation &&

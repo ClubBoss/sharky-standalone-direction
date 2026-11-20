@@ -376,6 +376,94 @@ void main() {
     );
   }
 
+  testWidgets('The longest authored W1–W4 reason can be read with CTA pinned', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+    tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPadding);
+    addTearDown(tester.view.resetViewPadding);
+
+    final choices = [
+      for (final number in [1, 2, 3, 4])
+        for (final lesson
+            in Act0ShellStateV1.sample.worldById('world_$number').lessons)
+          for (final task in lesson.taskList)
+            for (final option in task.runner.options)
+              (number: number, lesson: lesson, task: task, option: option),
+    ];
+    final longest = choices.reduce(
+      (a, b) => a.option.feedbackReason.length >= b.option.feedbackReason.length
+          ? a
+          : b,
+    );
+    final runner = longest.task.runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
+      selectedOptionId: longest.option.id,
+      teachingStepIndex: longest.task.runner.teachingSteps.length,
+    );
+    var continued = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            worldNumber: longest.number,
+            selectedWorldId: 'world_${longest.number}',
+            selectedLessonId: longest.lesson.lessonId,
+            selectedTaskId: longest.task.taskId,
+            selectedTaskFamily: longest.task.resolvedTaskFamily,
+            compositionFamily: longest.task.resolvedCompositionFamily,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () => continued = true,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final question = find.byKey(const Key('act0_shell_review_question'));
+    final reason = find.byKey(const Key('act0_learning_scene_v3_support'));
+    final viewport = find.byKey(
+      const Key('act0_shell_feedback_guide_viewport'),
+    );
+    final next = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    final initialButtonRect = tester.getRect(next);
+    expect(question.hitTestable(), findsOneWidget);
+    expect(tester.widget<Text>(reason).data, runner.reviewReason.trim());
+    expect(tester.widget<Text>(reason).maxLines, isNull);
+    expect(
+      tester.getRect(viewport).contains(tester.getTopLeft(reason)),
+      isTrue,
+    );
+    final reasonText = tester.renderObject<RenderParagraph>(reason);
+    final reasonLength = reasonText.text.toPlainText().length;
+    final lastLine = reasonText
+        .getBoxesForSelection(
+          TextSelection(
+            baseOffset: reasonLength - 1,
+            extentOffset: reasonLength,
+          ),
+        )
+        .last;
+    Offset lastLineCenter() =>
+        reasonText.localToGlobal(lastLine.toRect().center);
+    expect(tester.getRect(viewport).contains(lastLineCenter()), isFalse);
+    await Scrollable.ensureVisible(tester.element(reason), alignment: 1);
+    await tester.pumpAndSettle();
+    expect(tester.getRect(viewport).contains(lastLineCenter()), isTrue);
+    expect(tester.getRect(next), initialButtonRect);
+    expect(question.hitTestable(), findsOneWidget);
+    await tester.tap(next);
+    expect(continued, isTrue);
+    expect(tester.takeException(), isNull);
+  });
+
   for (final feedbackCase in ['assisted', 'wrong', 'correct']) {
     testWidgets(
       'SIMULATED feedback clears visible source seats and keeps continuation usable - $feedbackCase',
@@ -394,7 +482,13 @@ void main() {
         final answer = feedbackCase == 'wrong'
             ? options.singleWhere((o) => o.id == 'five_board_now')
             : options.singleWhere((o) => o.isCorrect);
+        final originalQuestion = tester
+            .widget<Text>(find.byKey(const Key('act0_integrated_scene_prompt')))
+            .data;
         await _choose(tester, answer.id);
+        final question = find.byKey(const Key('act0_shell_review_question'));
+        expect(question.hitTestable(), findsOneWidget);
+        expect(tester.widget<Text>(question).data, originalQuestion);
         await _expectFeedbackClearance(tester);
         final record = _rows(
           await _saved(tester),
@@ -411,6 +505,14 @@ void main() {
           expect(_runner(tester).selectedTaskId, _source);
           expect(_runner(tester).repairResultReceiptLine, isNull);
           await _advanceToPrompt(tester);
+          expect(
+            tester
+                .widget<Text>(
+                  find.byKey(const Key('act0_integrated_scene_prompt')),
+                )
+                .data,
+            originalQuestion,
+          );
           await _choose(tester, 'two_three_six');
           await _expectFeedbackClearance(tester);
           await _tap(tester, 'act0_shell_feedback_continue_cta');
