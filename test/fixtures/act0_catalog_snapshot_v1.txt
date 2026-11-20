@@ -4883,14 +4883,14 @@ TASK w11_trigger_small_price_continue [drill] Small-price continue
 CAPTION: Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Both started the flop with 35 BB behind. On J-7-4 rainbow, CO bets 2 BB into 8 BB.
 TEACH: Price plus position can support a continue. Read seat, hand, board, and price together. A marginal made hand can continue when the price is small and position keeps control.
 TEACH LABELS: Position, Top pair, Small price, Dry board
-Q: What is the cleaner response?
+Q: Which line keeps weaker bets in and lets you reassess on the turn?
 HINT [theoryOnly]: Real play means combining cues, not naming one concept.
 TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
 SEATS: UTG | HJ | CO bet 2 BB | BTN dealer | SB | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO raises 2.5 BB · BTN calls 2.5 BB · Flop: CO bets 2 BB
   + [correct] Call once in position — Clean table read. A 2 BB call makes a 12 BB pot, an immediate threshold of about 17%. A call in position is reasonable if CO bets enough hands you beat. CO’s range and later betting determine how much equity you realize.
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
-  - [wrong] Fold now — Too tight. The small bet and your position give you a reason to consider continuing. CO’s betting range and what happens on later streets can make folding reasonable.
+  - [wrong] Fold now — A fold ends this hand. A call keeps CO’s weaker bets in and gives you a turn decision. If CO’s betting range is very strong, folding can still be reasonable.
     BETTER ANSWER: Call once in position
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
   - [suboptimal] Raise for protection now — Playable but noisy. Raising can feel proactive, but it bloats the pot too early. The sharper transfer line is use position and the cheap price first.
@@ -5033,7 +5033,7 @@ TASK w11_checkpoint_mixed_table_line [drill] Mixed table line
 CAPTION: Real table. HJ opens 2.5 BB. Hero calls BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.
 TEACH: Real play combines cues. Real play means combining seat, hand, board, price, and stack depth before acting. One cue alone is usually too thin.
 TEACH LABELS: Position, Top pair, Two-tone board, 30 BB
-Q: What is the cleaner integrated response?
+Q: Which line continues in position and keeps HJ’s weaker bets in?
 HINT [theoryOnly]: Read seat, hand, board, price, and stack before choosing.
 TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
 SEATS: UTG | HJ bet 5 BB | CO | BTN dealer | SB | BB
@@ -5043,7 +5043,7 @@ TRAIL: HJ opens 2.5 BB · BTN calls · HJ bets 5 BB
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
   + [correct] Call in position and keep the range wide — Integrated read. A 5 BB call makes an 18 BB pot, an immediate threshold of about 28%. Calling in position can keep weaker bets and draws in. HJ’s betting range and later action determine the best line.
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
-  - [wrong] Fold to the c-bet — Too cautious. Before folding, weigh top pair, position and the 5 BB price together. A very strong HJ betting range could still make folding reasonable.
+  - [wrong] Fold to the c-bet — A fold ends this hand. A call keeps HJ’s weaker bets and draws in and lets you act last on the turn. A very strong HJ betting range could still make folding reasonable.
     BETTER ANSWER: Call in position and keep the range wide
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
 
