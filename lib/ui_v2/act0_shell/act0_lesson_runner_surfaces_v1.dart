@@ -1653,6 +1653,24 @@ class _LearningRailV1 extends StatelessWidget {
     if (contextOwnsTeachingCopy) {
       final pageCount = math.max(1, supportSegments.length);
       final currentPage = activeSupportSegmentIndex.clamp(0, pageCount - 1);
+      if (!canGoBack && pageCount == 1) {
+        return Padding(
+          key: const Key('act0_shell_learning_rail'),
+          padding: const EdgeInsets.fromLTRB(14, 9, 14, 8),
+          child: SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              key: const Key('act0_shell_continue_cta'),
+              onPressed: canAdvance ? onAdvance : null,
+              style: Act0ShellTokensV1.primaryButtonStyle(
+                height: Act0ShellTokensV1.compactCtaHeight,
+              ),
+              child: Text(advanceLabel),
+            ),
+          ),
+        );
+      }
+
       return Semantics(
         container: true,
         label: 'Theory navigation, page ${currentPage + 1} of $pageCount',
@@ -1661,15 +1679,17 @@ class _LearningRailV1 extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(14, 9, 14, 8),
           child: Row(
             children: [
-              _LearningRailNavButtonV1(
-                icon: Icons.arrow_back_ios_new_rounded,
-                buttonKey: const Key('act0_shell_previous_cta'),
-                semanticLabel: backSemanticLabel,
-                enabled: canGoBack,
-                onPressed: onBack,
-                compact: true,
-              ),
-              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              if (canGoBack) ...[
+                _LearningRailNavButtonV1(
+                  icon: Icons.arrow_back_ios_new_rounded,
+                  buttonKey: const Key('act0_shell_previous_cta'),
+                  semanticLabel: backSemanticLabel,
+                  enabled: canGoBack,
+                  onPressed: onBack,
+                  compact: true,
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+              ],
               Expanded(
                 child: pageCount > 1
                     ? _LearningRailSupportDotsV1(

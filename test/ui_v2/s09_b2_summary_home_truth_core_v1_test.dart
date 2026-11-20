@@ -166,6 +166,7 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
         reason:
             'task=$taskId, option=${answer.id}, phase=${runner.runner.phase}, visible=${tester.widgetList<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1)).length}',
       );
+      await tester.pump(const Duration(milliseconds: 900));
       await tester.tap(next);
       await tester.pumpAndSettle();
     }
