@@ -7110,7 +7110,8 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'spr_and_commitment',
     title: 'Room or commitment',
-    subtitle: 'Low SPR means less room. High SPR means more room to maneuver.',
+    subtitle:
+        'A smaller stack relative to the pot leaves fewer betting choices.',
     phaseLabel: 'SPR',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -19517,6 +19518,7 @@ final _world5StraightIntroRunner = _world5ConnectedIntroRunner.copyWith(
 
 final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w5_straight_draw',
   caption: 'Hero has 6-5 and the board shows 8-7-2.',
   hint: 'A 4 or 9 can improve the rank ladder.',
@@ -19742,6 +19744,8 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
   caption: 'Compare the cards by suit.',
   lessonId: 'w5_flush_out',
   hint: 'Any heart is the improvement card type.',
+  feedbackReason:
+      'Four hearts are visible. One more heart completes the flush.',
   question: 'Which card type is the out?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19776,6 +19780,7 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
   caption: 'Compare your ranks with the flop.',
   lessonId: 'w5_straight_out',
   hint: 'Those cards complete the straight line.',
+  feedbackReason: 'The 5-6-7-8 sequence can finish with a 4 or a 9.',
   question: 'Which out improves Hero?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20517,8 +20522,8 @@ final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
       title: 'Three buckets.',
       body:
           'After the flop, sort your hand into value (can bet for profit), '
-          'bluff candidate (can create fold pressure), or missed (no plan).',
-      focusLabels: <String>['Value', 'Bluff candidate', 'Missed'],
+          'bluff candidate (can make better hands fold), or missed (check or fold).',
+      focusLabels: <String>['Hand strength', 'Can it improve?', 'What folds?'],
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -20737,6 +20742,7 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
 // 8-7-6 two-tone: hero has K-Q (no pair, no draw) → missed, bluff-candidate suboptimal
 final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w6_wrong_board',
   caption: '8-7-6 two-tone. Hero holds K-Q.',
   hint: 'K-Q was strong preflop, but this board changed everything.',
@@ -20961,7 +20967,7 @@ final _w6PressureLinesIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Bucket shapes action.',
       body:
-          'Value hands bet for profit. Bluff candidates bet for fold equity. '
+          'Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. '
           'Missed hands usually check or fold.',
       focusLabels: <String>['Bet value', 'Bluff', 'Check-fold'],
     ),
@@ -21113,7 +21119,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_barrel',
-      label: 'Always barrel as pressure',
+      label: 'Keep betting on every street',
       isCorrect: false,
       preferredLabel: 'Usually check or fold',
       betterAnswerLabel: 'Usually check or fold',
@@ -21205,14 +21211,14 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
-      label: 'Barrel big again',
+      label: 'Make another big bet',
       isCorrect: false,
       preferredLabel: 'Check more often',
       betterAnswerLabel: 'Check more often',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
-          'In this stated lower-pressure spot, a larger second barrel does not repair the reason for betting. Reassess before forcing the flop plan.',
+          'BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_value',
@@ -21234,14 +21240,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     flopBetBb: 2.5,
     highlightedCardIds: const ['board_2', 'board_3'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Street changes can cool pressure.',
-      body:
-          'Suppose fold pressure has dropped on this paired turn. A former bluff candidate is not a forever-barrel pass: reassess before forcing the same line.',
-      focusLabels: <String>['Paired turn', 'Called flop', 'Check more often'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _w6PressureLinesRecapRunner = _w6PressureLinesIntroRunner.copyWith(
@@ -21299,6 +21298,14 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
 
 final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Count the cards of each rank.',
+      body:
+          'For two different ranks, each available card of the first rank can pair with each available card of the second rank.',
+      focusLabels: <String>['Available cards', 'Two ranks', 'Pair the cards'],
+    ),
+  ],
   lessonId: 'w6_ak_combos',
   caption: 'A-K can be suited or offsuit.',
   hint:
@@ -21321,8 +21328,8 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '16 combos',
       betterAnswerLabel: '16 combos',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close count.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           '12 counts only the offsuit versions. Add the 4 suited combos and A-K reaches 16 total combinations.',
     ),
@@ -21346,6 +21353,7 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
 
 final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w6_pair_combos',
   caption: 'Pocket eights are one pair family.',
   hint: 'You pick 2 suits out of the 4 eights in the deck.',
@@ -21367,8 +21375,8 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '6 combos',
       betterAnswerLabel: '6 combos',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close count.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           'Twelve is too high for one pair family. With four eights in the deck, only 6 suit pairings are possible.',
     ),
@@ -21413,8 +21421,8 @@ final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A-K has more combos',
       betterAnswerLabel: 'A-K has more combos',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           'The hand names may feel equally important, but combo weight is not equal: 16 beats 6.',
     ),
@@ -21467,6 +21475,8 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonSubtitle: 'Range Thinking',
   caption: 'Compare A-K suited with A-K offsuit before blockers.',
   hint: 'Offsuit hands usually have more combinations than suited hands.',
+  feedbackReason:
+      'With no cards removed, four combinations are suited and twelve are offsuit.',
   question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21523,6 +21533,8 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   lessonSubtitle: 'Range Thinking',
   caption: 'Compare pocket nines with K-Q suited before blockers.',
   hint: 'Not every unpaired hand is denser than a pocket pair.',
+  feedbackReason:
+      'A pocket pair has six combinations. A specific suited hand has four.',
   question: 'Which family has more possible combos?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21669,8 +21681,9 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
 
 final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w7_effective_stack_30bb',
-  caption: 'Hero has 200 BB. Villain has 30 BB.',
+  caption: 'You have 200 BB. The other player has 30 BB.',
   hint: 'Look for the smaller stack.',
   question: 'What is the effective stack?',
   options: const <Act0RunnerOptionV1>[
@@ -21875,6 +21888,7 @@ final _w7DepthShiftIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 
 final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
+  teachingSteps: const [],
   lessonId: 'w7_20bb_wider',
   caption:
       'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
@@ -22256,7 +22270,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'float',
-      label: 'Plenty of room to float and wait',
+      label: 'Plenty of chips left for later bets',
       isCorrect: false,
       preferredLabel: 'One bet can commit the hand',
       betterAnswerLabel: 'One bet can commit the hand',
@@ -22296,9 +22310,9 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'room',
-      label: 'More room to maneuver',
+      label: 'More options for later bets',
       isCorrect: true,
-      preferredLabel: 'More room to maneuver',
+      preferredLabel: 'More options for later bets',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
@@ -22308,8 +22322,8 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       id: 'force',
       label: 'Immediate commitment',
       isCorrect: false,
-      preferredLabel: 'More room to maneuver',
-      betterAnswerLabel: 'More room to maneuver',
+      preferredLabel: 'More options for later bets',
+      betterAnswerLabel: 'More options for later bets',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
@@ -22319,8 +22333,8 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       id: 'none',
       label: 'No difference from preflop',
       isCorrect: false,
-      preferredLabel: 'More room to maneuver',
-      betterAnswerLabel: 'More room to maneuver',
+      preferredLabel: 'More options for later bets',
+      betterAnswerLabel: 'More options for later bets',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not quite.',
       feedbackReason:
@@ -22374,7 +22388,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'SPR 4 has less room and more commitment pressure than SPR 8. It is a middle node, not a deep one.',
+          'At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.',
     ),
   ],
   table: _act0BoardLessonTableV1(

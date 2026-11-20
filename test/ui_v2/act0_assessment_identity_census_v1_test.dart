@@ -1402,8 +1402,46 @@ void main() {
         ],
       ),
     };
+    const l2FactualGradeCorrections = {
+      'w6_ak_combos': 'twelve',
+      'w6_pair_combos': 'twelve',
+      'w6_combo_weight_compare': 'same_weight',
+    };
+    const l2PlainLanguage = {
+      'w6_missed_hand_action': (
+        'Keep betting on every street',
+        'Always barrel as pressure',
+      ),
+      'w6_turn_pressure_shift_transfer': (
+        'Make another big bet',
+        'Barrel big again',
+      ),
+      'w7_low_spr_commit': (
+        'Plenty of chips left for later bets',
+        'Plenty of room to float and wait',
+      ),
+      'w7_high_spr_room': (
+        'More options for later bets',
+        'More room to maneuver',
+      ),
+    };
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
+      final currentOptions = (row[5] as List).cast<List<dynamic>>();
+      if (l2FactualGradeCorrections[row[2]] case final choiceId?) {
+        final choice = currentOptions.singleWhere(
+          (option) => option[0] == choiceId,
+        );
+        expect(choice[3], 'wrong', reason: row[2] as String);
+        choice[3] = 'suboptimal';
+      }
+      if (l2PlainLanguage[row[2]] case (final current, final prior)) {
+        expect(currentOptions.any((option) => option[1] == current), isTrue);
+        for (final option in currentOptions) {
+          if (option[1] == current) option[1] = prior;
+          if (option[4] == current) option[4] = prior;
+        }
+      }
       if (l2CheckpointOptionDeltas[row[2]] case (final current, final prior)) {
         expect(row[5], current, reason: row[2] as String);
         row[5] = prior;

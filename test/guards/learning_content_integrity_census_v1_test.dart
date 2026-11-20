@@ -630,6 +630,9 @@ void main() {
   });
   test('every wrong choice has a deterministic current typed disposition', () {
     final rows = _assessedRows();
+    final order = {
+      for (final (index, row) in rows.indexed) row.task.taskId: index,
+    };
     final admitted = <String>{};
     final foundationDefaults = <String>{};
     final knownHeld = <String>{};
@@ -672,7 +675,7 @@ void main() {
           final admittedContract = contract!;
           if (admittedContract.relationId.startsWith('foundation_replay/')) {
             foundationDefaults.add(key);
-            expect(row.worldNumber, lessThanOrEqualTo(4));
+            expect(row.worldNumber, lessThanOrEqualTo(8));
             expect(admittedContract.canClaimIndependentApplication, isFalse);
             expect(admittedContract.canClaimMatchedRecheck, isFalse);
           } else {
@@ -684,10 +687,30 @@ void main() {
           expect(intent.targetTaskId, admittedContract.targetTaskId);
           expect(intent.sourceFingerprint, admittedContract.sourceFingerprint);
           expect(intent.targetFingerprint, admittedContract.targetFingerprint);
+          if (row.worldNumber >= 5 &&
+              row.worldNumber <= 8 &&
+              !row.task.repairOnly) {
+            final targetIndex = order[intent.targetTaskId]!;
+            final target = rows[targetIndex];
+            if (target.task.repairOnly) {
+              expect(target.worldId, row.worldId, reason: key);
+              expect(target.lessonId, row.lessonId, reason: key);
+            } else {
+              expect(
+                targetIndex,
+                lessThanOrEqualTo(order[row.task.taskId]!),
+                reason: key,
+              );
+            }
+            if (row.task.taskId == 'visible_king_combo_reduction_intro') {
+              expect(intent.targetTaskId, row.task.taskId);
+              expect(intent.mappingType, 'intentional_exact');
+            }
+          }
         } else {
           (contract == null ? unknown : knownHeld).add(key);
           expect(
-            row.worldNumber > 4 || row.task.repairOnly,
+            row.worldNumber > 8 || row.task.repairOnly,
             isTrue,
             reason: key,
           );
@@ -777,8 +800,8 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(185));
-    expect(unknown, hasLength(251));
+    expect(foundationDefaults, hasLength(308));
+    expect(unknown, hasLength(128));
     expect(
       admitted.length +
           foundationDefaults.length +

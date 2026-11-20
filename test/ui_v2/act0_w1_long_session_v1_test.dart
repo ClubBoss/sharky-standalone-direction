@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,6 +97,92 @@ Future<Map<String, dynamic>> _saved(WidgetTester t) async {
             as Map<String, dynamic>;
   });
   return result!;
+}
+
+Future<int> _openSavedCourseTask(
+  WidgetTester t, {
+  required String worldId,
+  required String taskId,
+}) async {
+  final state = Act0ShellStateV1.sample;
+  final world = state.worldById(worldId);
+  final lesson = world.lessons.singleWhere(
+    (lesson) => lesson.courseTaskList.any((task) => task.taskId == taskId),
+  );
+  final earlierLessons = [
+    for (final earlierWorld in state.worlds.takeWhile(
+      (candidate) => candidate.worldId != worldId,
+    ))
+      ...earlierWorld.lessons,
+    ...world.lessons.takeWhile(
+      (candidate) => candidate.lessonId != lesson.lessonId,
+    ),
+  ];
+  final completed = [
+    for (final earlier in earlierLessons) ...earlier.courseTaskList,
+    ...lesson.courseTaskList.takeWhile((task) => task.taskId != taskId),
+  ];
+  final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+  SharedPreferences.setMockInitialValues({
+    'act0_welcome_completed_v1': true,
+    'intake_completed_v1': true,
+    'act0_shell_progress_v1': jsonEncode({
+      'schemaVersion': 20,
+      'pendingDecisionAssistance': <Object>[],
+      'learningEvidenceHistory': <Object>[],
+      'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+          .lineagePayload(),
+      'durableRetentionHistory': <Object>[],
+      'completedTaskIds': completed.map((task) => task.taskId).toList(),
+      'completedLessonIds': earlierLessons
+          .map((lesson) => lesson.lessonId)
+          .toList(),
+      'skippedTaskIds': <String>[],
+      'earnedXp': xp,
+      'selectedWorldId': worldId,
+      'selectedLessonId': lesson.lessonId,
+      'selectedTaskId': taskId,
+    }),
+  });
+  t.view.physicalSize = const Size(393, 852);
+  t.view.devicePixelRatio = 1;
+  addTearDown(t.view.reset);
+  await _mount(t);
+  await t.runAsync(() async {
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+  });
+  await t.pumpAndSettle();
+  await _tapFirst(t, [find.text('Learn')]);
+  expect(
+    await _tapFirst(t, [
+      find.byKey(const Key('act0_shell_current_mission_cta')),
+      find.byKey(const Key('act0_academy_home_leaf_cta')),
+    ]),
+    isTrue,
+    reason: t
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data)
+        .whereType<String>()
+        .take(25)
+        .join(' | '),
+  );
+  final shell = find.byType(Act0LessonRunnerShellV1);
+  expect(t.widget<Act0LessonRunnerShellV1>(shell).selectedTaskId, taskId);
+  while (t.widget<Act0LessonRunnerShellV1>(shell).runner.activeTeachingStep !=
+      null) {
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_theory_continue_cta')),
+        find.byKey(const Key('act0_shell_continue_cta')),
+      ]),
+      isTrue,
+    );
+  }
+  await pumpSourceChoreographyToDecisionV1(
+    t,
+    t.widget<Act0LessonRunnerShellV1>(shell).runner.table,
+  );
+  return xp;
 }
 
 void main() {
@@ -299,6 +386,98 @@ void main() {
       findsOneWidget,
     );
     expect(t.takeException(), isNull);
+  });
+
+  testWidgets('a W7 king miss persists the same exercise for replay', (
+    t,
+  ) async {
+    const taskId = 'visible_king_combo_reduction_intro';
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_7',
+      taskId: taskId,
+    );
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_option_king_combos_unchanged')),
+      ]),
+      isTrue,
+    );
+    Map<dynamic, dynamic> repair(Map<String, dynamic> snapshot) =>
+        (snapshot['openRepairIntents'] as List).cast<Map>().singleWhere(
+          (row) => row['sourceTaskId'] == taskId,
+        );
+    final before = await _saved(t);
+    final intent = repair(before);
+    expect(intent['targetTaskId'], taskId);
+    expect(intent['mappingType'], 'intentional_exact');
+    expect(intent['repairOccurrenceId'], isNotEmpty);
+    expect(before['earnedXp'], xp);
+
+    await _mount(t);
+    final restored = await _saved(t);
+    expect(repair(restored), intent);
+    expect(restored['earnedXp'], xp);
+    expect(restored['completedTaskIds'], before['completedTaskIds']);
+  });
+
+  testWidgets('a W6 suited-combo miss opens the earlier suited comparison', (
+    t,
+  ) async {
+    const taskId = 'w6_checkpoint_table_best_five';
+    const targetId = 'w6_pair_vs_suited_weight_compare';
+    final firstSuitedComparison = act0RepairGoalContractForSourceV1(
+      worldId: 'world_6',
+      lessonId: 'range_thinking_checkpoint',
+      taskId: targetId,
+      choiceId: 'kq_suited',
+    );
+    expect(firstSuitedComparison?.targetTaskId, targetId);
+    expect(firstSuitedComparison?.mappingType, 'intentional_exact');
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_6',
+      taskId: taskId,
+    );
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_option_hero_wins')),
+      ]),
+      isTrue,
+    );
+
+    Map<dynamic, dynamic> sourceRepair(Map<String, dynamic> saved) =>
+        (saved['openRepairIntents'] as List).cast<Map>().singleWhere(
+          (row) => row['sourceTaskId'] == taskId,
+        );
+    Map<dynamic, dynamic> sourceAnswer(Map<String, dynamic> saved) =>
+        (saved['learningEvidenceHistory'] as List).cast<Map>().singleWhere(
+          (row) => row['taskId'] == taskId,
+        );
+    final before = await _saved(t);
+    expect(sourceRepair(before)['targetTaskId'], targetId);
+    expect(sourceAnswer(before)['choiceId'], 'hero_wins');
+    expect(sourceAnswer(before)['isCorrect'], isFalse);
+    expect(before['earnedXp'], xp);
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      ]),
+      isTrue,
+    );
+    expect(
+      t
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      targetId,
+    );
+
+    await _mount(t);
+    final restored = await _saved(t);
+    expect(sourceRepair(restored), sourceRepair(before));
+    expect(sourceAnswer(restored), sourceAnswer(before));
+    expect(restored['earnedXp'], xp);
+    expect(restored['completedTaskIds'], before['completedTaskIds']);
   });
 
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
