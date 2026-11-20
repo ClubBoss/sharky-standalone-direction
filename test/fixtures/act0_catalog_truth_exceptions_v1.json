@@ -2289,25 +2289,11 @@
     "task_id": "w6_ak_combos",
     "world": 6
   },
-  "6.answer_copy|w6_missed_dry_board|teach.0.focus.2": {
-    "reason": "teach.0.focus.2: \"Missed\" discloses \"Missed\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "w6_missed_dry_board",
-    "world": 6
-  },
   "6.answer_copy|w6_pair_combos|teach.0.focus.1": {
     "reason": "teach.0.focus.1: \"6 combos\" discloses \"6 combos\".",
     "rule": "6.answer_copy",
     "target": "L2",
     "task_id": "w6_pair_combos",
-    "world": 6
-  },
-  "6.answer_copy|w6_table_value_line_transfer|teach.0.focus.2": {
-    "reason": "teach.0.focus.2: \"Bet for value\" discloses \"Bet for value\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "w6_table_value_line_transfer",
     "world": 6
   },
   "6.answer_copy|w6_turn_pressure_shift_transfer|teach.0.focus.2": {
@@ -2337,13 +2323,6 @@
     "target": "L2",
     "task_id": "w6_wrong_board",
     "world": 6
-  },
-  "6.answer_copy|w7_20bb_wider|teach.0.focus.0": {
-    "reason": "teach.0.focus.0: \"20 BB\" discloses \"20 BB\".",
-    "rule": "6.answer_copy",
-    "target": "L2",
-    "task_id": "w7_20bb_wider",
-    "world": 8
   },
   "6.answer_copy|w7_6max_wider|teach.0.focus.0": {
     "reason": "teach.0.focus.0: \"6-max\" discloses \"6-max\".",

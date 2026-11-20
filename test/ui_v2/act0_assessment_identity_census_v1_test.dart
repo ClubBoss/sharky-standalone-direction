@@ -702,6 +702,43 @@ void main() {
     );
     expect(stack[1], "The other player's whole 100 BB stack");
     stack[1] = 'All 100 BB from the covering stack';
+    const pressureLabels = {
+      'Missed: check': 'Missed',
+      'Consider a bluff': 'Bluff candidate',
+      'Value: bet': 'Value',
+    };
+    const l2AssessmentLabels = {
+      'w6_missed_dry_board': pressureLabels,
+      'w6_bluff_candidate': pressureLabels,
+      'range_checkpoint_pressure': pressureLabels,
+      'w6_value_range_action': {'Check': 'Check and see'},
+      'w6_table_value_line_transfer': {'Check': 'Check back'},
+      'w7_20bb_wider': {
+        'Bet 2 BB': '20 BB',
+        'Bet 4 BB': '100 BB',
+        'Go all-in': 'Same either way',
+      },
+      'w7_40bb_middle': {
+        '25 BB': 'Some room, but not carefree deep',
+        '40 BB': 'Mostly all-in or fold only',
+        '30 BB': 'It plays just like 100 BB deep',
+      },
+      'w7_100bb_tighter': {
+        '75 BB': 'More room and more risk',
+        '90 BB': 'Less risk than 20 BB',
+        '100 BB': 'Mostly all-in now',
+      },
+      'w7_ajs_btn_25bb_transfer': {
+        'Raise to 7.5 BB': 'Use the short-stack read',
+        'Call 2.5 BB': 'Treat depth as irrelevant',
+        'Go all-in for 25 BB': 'Treat it as too fragile',
+      },
+      'w7_ajs_btn_100bb_transfer': {
+        'Call 2.5 BB': 'Treat it as deeper',
+        'Raise to 7.5 BB': 'Treat it like 25 BB',
+        'Go all-in for 100 BB': 'Use all-in-or-fold logic',
+      },
+    };
     const l2OptionDeltas = {
       'w6_value_range_action': (
         [
@@ -742,6 +779,19 @@ void main() {
     };
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
+      final assessmentLabels = l2AssessmentLabels[row[2]];
+      if (assessmentLabels != null) {
+        final choices = (row[5] as List).cast<List<dynamic>>();
+        expect(
+          choices.map((choice) => choice[1]),
+          containsAll(assessmentLabels.keys),
+          reason: row[2] as String,
+        );
+        for (final choice in choices) {
+          choice[1] = assessmentLabels[choice[1]] ?? choice[1];
+          choice[4] = assessmentLabels[choice[4]] ?? choice[4];
+        }
+      }
       if (l2OptionDeltas[row[2]] case (final current, final prior)) {
         expect(row[5], current, reason: row[2] as String);
         row[5] = prior;

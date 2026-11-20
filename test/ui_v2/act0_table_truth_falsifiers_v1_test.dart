@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -106,15 +107,65 @@ void main() {
     },
   );
 
-  test('AQ on K72 has one overcard in the actual correct feedback', () {
-    final runner = _task('w6_bluff_candidate').runner;
-    expect(
-      runner.options.singleWhere((o) => o.isCorrect).feedbackReason,
-      contains('one overcard'),
-    );
-    expect(
-      runner.options.map((o) => o.feedbackReason).join(' '),
-      isNot(contains('two overcards')),
-    );
+  test('W6 compares high-card hands under the stated BB model', () {
+    String code(Act0CardStateV1 card) => '${card.rank}${card.suit}';
+    for (final (taskId, expectedChoice, heroWins) in [
+      ('w6_missed_dry_board', 'missed', true),
+      ('w6_bluff_candidate', 'bluff', false),
+      ('range_checkpoint_pressure', 'bluff', false),
+    ]) {
+      final runner = _task(taskId).runner;
+      final board = [...runner.table.boardCards.map(code), '4d', '5s'];
+      expect(runner.options.singleWhere((o) => o.isCorrect).id, expectedChoice);
+      final hero = Hand.solveHand([
+        ...board,
+        ...runner.table.heroCards.map(code),
+      ]);
+      for (final holding in [
+        ['Qh', 'Jc'],
+        ['Ad', '9c'],
+      ]) {
+        final opponent = Hand.solveHand([...board, ...holding]);
+        expect(
+          Hand.winners([hero, opponent]),
+          [heroWins ? hero : opponent],
+          reason: '$taskId with BB holding ${holding.join()} on a blank runout',
+        );
+      }
+    }
+  });
+
+  test('W6 value-bet examples beat the named calls', () {
+    String code(Act0CardStateV1 card) => '${card.rank}${card.suit}';
+    for (final (taskId, expectedChoice, callers) in [
+      (
+        'w6_value_range_action',
+        'bet',
+        [
+          ['Kc', 'Jc'],
+          ['7h', '6d'],
+        ],
+      ),
+      (
+        'w6_table_value_line_transfer',
+        'bet_value',
+        [
+          ['Kc', 'Tc'],
+          ['8h', '7c'],
+        ],
+      ),
+    ]) {
+      final runner = _task(taskId).runner;
+      final board = [...runner.table.boardCards.map(code), '3h', '2d'];
+      expect(runner.options.singleWhere((o) => o.isCorrect).id, expectedChoice);
+      final hero = Hand.solveHand([
+        ...board,
+        ...runner.table.heroCards.map(code),
+      ]);
+      for (final holding in callers) {
+        final opponent = Hand.solveHand([...board, ...holding]);
+        expect(Hand.winners([hero, opponent]), [hero], reason: taskId);
+      }
+    }
   });
 }
