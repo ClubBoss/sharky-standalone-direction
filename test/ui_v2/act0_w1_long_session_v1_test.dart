@@ -564,6 +564,13 @@ void main() {
       'rewrite_everything',
       'w10_vs_nit_open_wider',
     ),
+    (
+      'a W11 planning miss reopens choosing one session focus',
+      'world_11',
+      'w11_checkpoint_plan_line',
+      'complex_plan',
+      'w11_plan_focus_choice',
+    ),
   ]) {
     testWidgets(name, (t) async {
       final xp = await _openSavedCourseTask(

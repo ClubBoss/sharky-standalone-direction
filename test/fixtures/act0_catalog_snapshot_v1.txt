@@ -4783,7 +4783,7 @@ TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, o
 TEACH LABELS: One focus, Reps, Post-session review
 Q: What is the best pre-session plan style?
 HINT [theoryOnly]: One focus keeps decisions clear under pressure.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Real-play transfer improves when your session starts with one target behavior, not a long checklist.
 
@@ -4793,11 +4793,11 @@ TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, o
 TEACH LABELS: One focus, Reps, Post-session review
 Q: What is the cleaner session objective?
 HINT [theoryOnly]: Simple focus beats wide ambition.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Track six improvements at once — Too much load. Too many goals blur feedback and weaken transfer. One target gives cleaner repetition.
     BETTER ANSWER: One measurable focus for the whole session
-  + [correct] One measurable focus for the whole session — Stack risk: correct. A single measurable focus transfers training into real play with less mental overload.
+  + [correct] One measurable focus for the whole session — One measurable focus. A single measurable focus transfers training into real play with less mental overload.
   - [suboptimal] No plan, just react — Playable fallback. Reactive play can still work, but transfer quality rises when one focus is defined before action starts.
     BETTER ANSWER: One measurable focus for the whole session
 
@@ -4807,7 +4807,7 @@ TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, o
 TEACH LABELS: One focus, Reps, Post-session review
 Q: How should this session goal be narrowed?
 HINT [theoryOnly]: Reduce cognitive load first.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Add more tracking categories — Wrong direction. More categories usually increase noise. Start simpler to get stable transfer behavior first.
     BETTER ANSWER: Narrow to one transfer goal next session
@@ -4816,21 +4816,18 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Narrow to one transfer goal next session — One goal clears the noise. Transfer improves when you narrow scope and collect cleaner evidence on one behavior.
 
 TASK w11_plan_table_focus_transfer [drill] Real-table focus plan
-CAPTION: Real table. You have one hour before a tired evening session starts and the first orbit will move fast.
+CAPTION: Your evening session starts in an hour. You are tired and the first orbit will move fast.
 TEACH: Plan the loop before the cards fly. Real table transfer starts before the first hand. One focus sets the session goal, one trigger tells you when to apply it, and one review note closes the loop after play.
 TEACH LABELS: Real table, One focus, Trigger, Review
 Q: What should Hero choose before sitting in?
 HINT [theoryOnly]: Pick one focus you can notice as a trigger during the session and review after the session ends.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Track only the blind-defense leak today — Clean transfer plan. That is the real-table transfer. One focus keeps the session executable, gives you one trigger to notice live, and leaves one clean review target after the session.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [wrong] Track every leak from the start — Too noisy. A crowded plan weakens transfer. If the session starts with too many goals, the live trigger is harder to see and the review becomes blur instead of one actionable output.
     BETTER ANSWER: Track only the blind-defense leak today
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Play first and decide later — Too loose a loop. Review still matters, but the loop is weaker without a one-focus plan. Real table transfer is stronger when the session starts with one focus, then checks one trigger, then closes with one review note.
     BETTER ANSWER: Track only the blind-defense leak today
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 TASK w11_session_plan_recap [review] Session-plan recap
 CAPTION: Lesson learned: one focus plan creates cleaner real-play transfer.
@@ -4838,7 +4835,7 @@ TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, o
 TEACH LABELS: One focus, Reps, Post-session review
 Q: What is the session-plan takeaway?
 HINT [theoryOnly]: Simple plan first, then repetitions.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Consistent one-focus planning improves execution quality and makes post-session review actionable.
 
@@ -4850,7 +4847,7 @@ TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player ove
 TEACH LABELS: Trigger, One lever, Observe result
 Q: What is a trigger read for transfer play?
 HINT [theoryOnly]: Trigger -> one lever -> observe result.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: A trigger read is a repeated in-session pattern that activates one preplanned adjustment.
 
@@ -4860,7 +4857,7 @@ TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player ove
 TEACH LABELS: Trigger, One lever, Observe result
 Q: What is the cleaner transfer action?
 HINT [theoryOnly]: Overfold trigger supports a preflop widen lever.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Add turn barrels against the blinds too — Too broad. The trigger is preflop overfolding. Use a matching preflop lever first, not a full postflop rewrite.
     BETTER ANSWER: Widen late steals slightly
@@ -4874,7 +4871,7 @@ TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player ove
 TEACH LABELS: Trigger, One lever, Observe result
 Q: What is the sharper one-lever response?
 HINT [theoryOnly]: Overcall trigger points to value-density change.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Probe with more bluffs first — Inverse exploit. Frequent callers reduce bluff EV. Value density is the cleaner transfer adjustment.
     BETTER ANSWER: Bet value heavier and trim bluffs
@@ -4924,7 +4921,7 @@ TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player ove
 TEACH LABELS: Trigger, One lever, Observe result
 Q: What is the trigger-read takeaway?
 HINT [theoryOnly]: Trigger must be repeated, not imagined.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Strong transfer uses repeated triggers and simple one-lever responses you can track over time.
 
@@ -4936,7 +4933,7 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What makes review actionable?
 HINT [theoryOnly]: One leak, one fix, one next session test.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Actionable review links one observed leak to one concrete repair task for the next session.
 
@@ -4946,7 +4943,7 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What is the clean first review action?
 HINT [theoryOnly]: Pick the leak that repeats most often first.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Fix all leaks at once tomorrow — Overload risk. Trying to repair everything usually weakens execution. Prioritize one leak for stronger transfer.
     BETTER ANSWER: Select one repeated leak as priority
@@ -4960,7 +4957,7 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: Which repair target is most actionable?
 HINT [theoryOnly]: Define an if-then fix for next session.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] If villain underbluffs, fold marginal bluff-catchers — Specific fix transfers. Specific if-then repair targets transfer directly into live decisions better than generic intentions.
   - [wrong] Play better rivers somehow — Too vague. Vague goals are hard to execute. Use behavior-specific repair rules instead.
@@ -4974,7 +4971,7 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What is the review-loop takeaway?
 HINT [theoryOnly]: Write one leak and one fix before ending session.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Post-session review converts play into learning only when it outputs one clear repair target for the next day.
 
@@ -4986,7 +4983,7 @@ TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, o
 TEACH LABELS: One focus, Reps, Post-session review
 Q: What is the best pre-session plan style?
 HINT [theoryOnly]: One focus keeps decisions clear under pressure.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Real-play transfer improves when your session starts with one target behavior, not a long checklist.
 
@@ -4996,7 +4993,7 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What is the clean transfer plan?
 HINT [theoryOnly]: Plan should stay simple and executable.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Set a complex multi-phase improvement plan — Too heavy. Complex plans collapse under fatigue. Transfer needs practical execution, not idealized complexity.
     BETTER ANSWER: Set one low-friction focus target
@@ -5010,7 +5007,7 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: Which transfer action is best?
 HINT [theoryOnly]: Pick one prepared live cue first.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Use both trigger and review changes now — Too broad. Multiple changes create noise and execution errors. Start with one live cue.
     BETTER ANSWER: Use one prepared live cue now
@@ -5024,16 +5021,13 @@ TEACH: Close the loop daily. Session plan starts the day, trigger reads guide li
 TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What is the strongest closeout action?
 HINT [theoryOnly]: Review should output one next-session repair task.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Review one leak — Loop closed cleanly. Transfer compounds when review creates one actionable output that directly shapes the next session plan.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [wrong] Write long notes — Incomplete loop. Long notes feel productive because they capture a lot. But the dominant cue here is actionability. Without one chosen repair, the next session still starts fuzzy.
     BETTER ANSWER: Review one leak
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Skip closeout — Common habit. Skipping closeout is tempting because the session is over and the key hands still feel fresh. But memory fades fast. The cleaner read is protect tomorrow with one explicit leak-and-fix note.
     BETTER ANSWER: Review one leak
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 TASK w11_checkpoint_mixed_table_line [drill] Mixed table line
 CAPTION: Real table. HJ opens 2.5 BB. Hero calls BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.
@@ -5041,17 +5035,17 @@ TEACH: Real play combines cues. Real play means combining seat, hand, board, pri
 TEACH LABELS: Position, Top pair, Two-tone board, 30 BB
 Q: What is the cleaner integrated response?
 HINT [theoryOnly]: Read seat, hand, board, price, and stack before choosing.
-TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
+TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
 SEATS: UTG | HJ bet 5 BB | CO | BTN dealer | SB | BB
 TRAIL: HJ opens 2.5 BB · BTN calls · HJ bets 5 BB
   - [suboptimal] Raise now for protection — Tempting pressure line. Protection is the tempting idea, but the full table read is more mixed: position helps, stack depth still leaves risk, and the board is not dry enough to force a bigger pot now.
     BETTER ANSWER: Call in position and keep the range wide
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
   + [correct] Call in position and keep the range wide — Integrated read. A 5 BB call brings the current 13 BB pot to 18 BB. That makes the immediate equity threshold about 28%. Top pair and position support a call in this example.
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
   - [wrong] Fold to the c-bet — Too cautious. The price is not tiny, but folding ignores hand quality and position. The clean action comes from all the cues together, not just one large-looking bet.
     BETTER ANSWER: Call in position and keep the range wide
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, 30 BB | Facts one pair, top pair, two-tone
 
 TASK w11_checkpoint_review [review] Real-play recap
 ENTRY: drill
@@ -5060,16 +5054,13 @@ TEACH: Loop beats intensity. Sustainable progress comes from repeating a clean t
 TEACH LABELS: Session plan, Trigger action, Review repair, Daily habit loop
 Q: What does real-play transfer produce when done well?
 HINT [theoryOnly]: This closes the core route and feeds your daily play-review habit loop. Next you build the mindset bridge.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] One large review block after the session — Too brittle. Transfer is compounding and iterative. One massive session is less reliable than steady loops.
     BETTER ANSWER: A repeatable daily transfer loop
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Study another concept before looping it — Partial progress. Content helps, but transfer happens only when lessons are converted into repeated session behavior and review.
     BETTER ANSWER: A repeatable daily transfer loop
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   + [correct] A repeatable daily transfer loop — Sharp read. That is the intended endpoint: practical, repeatable transfer from learning into daily table decisions.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 ===== WORLD 12 · LESSON decision_over_outcome · Decision quality over outcome =====
 

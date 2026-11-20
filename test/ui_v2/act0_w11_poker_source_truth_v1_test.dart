@@ -80,6 +80,25 @@ void main() {
     }
   });
 
+  test('W11 mixed-table focus highlights the actual HJ bettor', () {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w11_checkpoint_mixed_table_line',
+        );
+    final table = task.runner.table;
+    final bettor = table.seats.singleWhere((seat) => seat.bet != null);
+
+    expect(bettor.seatId, 'hj');
+    final hero = table.seats.singleWhere((seat) => seat.isHero);
+    expect(table.highlightedSeatIds, [bettor.seatId, hero.seatId]);
+    expect(bettor.bet!.amountLabel, '5 BB');
+    expect(table.potLabel, 'Pot 13 BB');
+    expect(table.toCallLabel, 'To call 5 BB');
+  });
+
   test('W11 QJs flop-to-turn is one coherent 35 BB effective hand', () {
     final lesson = Act0ShellStateV1.sample
         .worldById('world_11')

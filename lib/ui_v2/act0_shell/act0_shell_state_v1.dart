@@ -24608,7 +24608,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
 );
 
 final _w11SessionPlanIntroRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
-  table: _w9ExampleTableBase,
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w11_session_plan_intro',
   lessonTitle: 'Session plan in 30 seconds',
@@ -24653,7 +24653,7 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'One measurable focus for the whole session',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Stack risk: correct.',
+      feedbackTitle: 'One measurable focus.',
       feedbackReason:
           'A single measurable focus transfers training into real play with less mental overload.',
     ),
@@ -24717,7 +24717,7 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_plan_table_focus_transfer',
   caption:
-      'Real table. You have one hour before a tired evening session starts and the first orbit will move fast.',
+      'Your evening session starts in an hour. You are tired and the first orbit will move fast.',
   hint:
       'Pick one focus you can notice as a trigger during the session and review after the session ends.',
   question: 'What should Hero choose before sitting in?',
@@ -25406,6 +25406,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       potLabel: 'Pot 13 BB',
       toCallLabel: 'To call 5 BB',
       centerLabel: 'BTN, top pair, 30 BB',
+      highlightedSeatIds: const ['hj', 'btn'],
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
         Act0ActionTrailItemV1(label: 'BTN calls'),
@@ -25525,6 +25526,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
 );
 
 final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
+  table: _w9ExampleTableBase,
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_decision_quality_intro',
   lessonTitle: 'Decision quality over outcome',
