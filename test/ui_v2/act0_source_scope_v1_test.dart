@@ -121,7 +121,31 @@ void main() {
       'position_apply_intro',
       'position_checkpoint_position_checkpoint_intro',
     };
+    const w9HypotheticalIds = <String>{
+      'w9_survival_intro',
+      'w9_cash_vs_tournament',
+      'w9_short_stack_survival',
+      'w9_survival_stack_tradeoff',
+      'w9_survival_recap',
+      'w9_m_ratio_intro',
+      'w9_m_ratio_red_zone',
+      'w9_m_ratio_green_zone',
+      'w9_m_ratio_yellow_zone',
+      'w9_m_ratio_recap',
+      'w9_bubble_intro',
+      'w9_medium_stack_tighten',
+      'w9_big_stack_leverage',
+      'w9_bubble_short_stack',
+      'w9_bubble_recap',
+      'w9_checkpoint_intro',
+      'w9_checkpoint_survival_line',
+      'w9_checkpoint_zone_line',
+      'w9_checkpoint_bubble_line',
+      'w9_checkpoint_table_notice',
+      'w9_checkpoint_review',
+    };
     const explanationIds = <String>{
+      ...w9HypotheticalIds,
       'what_poker_is_all_in_meaning',
       'what_poker_is_matched_chips_transfer',
       'same_hand_different_seat_position_repair_same_hand_different_seat',
@@ -221,7 +245,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(47));
-    expect(explanationIds, hasLength(5));
+    expect(explanationIds, hasLength(26));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -238,6 +262,14 @@ void main() {
           : Act0TableScopeV1.playedHand;
       expect(table.scope, expected, reason: task.taskId);
       expect(table.copyWith(centerLabel: 'A different cue').scope, expected);
+      if (w9HypotheticalIds.contains(task.taskId)) {
+        expect(table.streetLabel, isEmpty, reason: task.taskId);
+        expect(table.heroCards, isEmpty, reason: task.taskId);
+        expect(table.boardCards, isEmpty, reason: task.taskId);
+        expect(table.potLabel, isEmpty, reason: task.taskId);
+        expect(table.toCallLabel, isEmpty, reason: task.taskId);
+        expect(table.actionTrail, isEmpty, reason: task.taskId);
+      }
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
         if (!_asm05NewTaskIds.contains(task.taskId)) legacyPlayed++;
@@ -383,8 +415,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 323);
-    expect(played, 325); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 302);
+    expect(played, 304); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,

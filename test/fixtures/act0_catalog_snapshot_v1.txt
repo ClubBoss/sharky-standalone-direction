@@ -4185,7 +4185,7 @@ TEACH: Life has value. In cash you can reload. In tournaments, stack loss can en
 TEACH LABELS: Tournament life, Survival, Bubble
 Q: What makes tournament chips different from cash chips?
 HINT [theoryOnly]: When you bust, your tournament run ends.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Tournament pressure means survival has value. Losing all chips ends the run, so not every thin chip-EV spot is equal.
 
@@ -4195,7 +4195,7 @@ TEACH: Life has value. In cash you can reload. In tournaments, stack loss can en
 TEACH LABELS: Tournament life, Survival, Bubble
 Q: Which frame should be stronger in a tournament?
 HINT [theoryOnly]: Compare cash-game reload logic with tournament survival.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Play it exactly like cash — Not quite. Cash and tournament contexts are not the same. Tournament life creates extra downside for busting.
     BETTER ANSWER: Survival pressure matters more
@@ -4209,7 +4209,7 @@ TEACH: Life has value. In cash you can reload. In tournaments, stack loss can en
 TEACH LABELS: Tournament life, Survival, Bubble
 Q: What is usually the sharper plan?
 HINT [theoryOnly]: Very short stacks cannot wait forever.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [suboptimal] Wait only for premium pairs — Too tight here. Waiting only for monsters often costs too many blinds. In short-stack spots you need practical urgency, not perfect cards.
     BETTER ANSWER: Take a reasonable all-in spot, first in or over a raise
@@ -4223,16 +4223,13 @@ TEACH: Life has value. In cash you can reload. In tournaments, stack loss can en
 TEACH LABELS: Tournament life, Survival, Bubble
 Q: Which table should pass more thin stack-off spots?
 HINT [theoryOnly]: The same thin edge does not carry the same downside.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Cash table — Not quite. Cash chips still matter, but reload makes busting less final. Tournament pressure creates the bigger penalty for thin stack-offs.
     BETTER ANSWER: Tournament table
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   + [correct] Tournament table — Spot on. Tournament life adds elimination risk. That makes thin stack-offs more expensive than in reloadable cash spots.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [wrong] Both should pass equally — Elimination changes the downside. Hand strength matters in both formats, but tournament life changes the downside. The risk tradeoff is not equal.
     BETTER ANSWER: Tournament table
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 TASK w9_survival_recap [review] Survival recap
 CAPTION: Lesson learned: tournament chips include survival value.
@@ -4240,7 +4237,7 @@ TEACH: Life has value. In cash you can reload. In tournaments, stack loss can en
 TEACH LABELS: Tournament life, Survival, Bubble
 Q: What is the key survival takeaway?
 HINT [theoryOnly]: Life pressure changes which thin spots are worth taking.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Tournament pressure does not remove aggression. It asks for cleaner risk selection because busting ends your run.
 
@@ -4252,7 +4249,7 @@ TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zon
 TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What does M-ratio help you read?
 HINT [theoryOnly]: Think in simple zones first, not formulas.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: M-ratio is a practical urgency signal. Lower zones mean less time and more pressure to act.
 
@@ -4262,7 +4259,7 @@ TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zon
 TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What is the sharper mindset?
 HINT [theoryOnly]: Low zone means blinds are hurting fast.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Use controlled urgency — Clean execution. Red-zone stacks cannot drift. Tournament pressure rewards timely commitment when edges appear.
   - [suboptimal] Wait for perfect premium only — Too narrow. Perfect-card waiting in red zone usually leaks fold equity and stack health. You need practical action windows.
@@ -4276,7 +4273,7 @@ TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zon
 TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What usually improves in green zone?
 HINT [theoryOnly]: You still have room to pick spots.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Force all-ins quickly — Not needed. Green zone does not require panic. You have time to use stronger setup and seat selection.
     BETTER ANSWER: Patience and table selection
@@ -4290,16 +4287,13 @@ TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zon
 TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What usually becomes sharper in yellow zone?
 HINT [theoryOnly]: Yellow zone asks for planning before panic.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Prepare action windows before red-zone panic — Sharp read. Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner all-in and steal windows here.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [wrong] Ignore urgency until the red zone — Not quite. Waiting until the stack is critical often removes good options. Yellow zone is where you prepare instead of drift.
     BETTER ANSWER: Prepare action windows before red-zone panic
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Force any spot immediately — Too rushed. Yellow zone needs sharper planning, not panic. You still want selective aggression with room for better spots.
     BETTER ANSWER: Prepare action windows before red-zone panic
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 TASK w9_m_ratio_table_window_transfer [drill] Yellow-zone table read
 CAPTION: Real table. Hero is BTN with A-J offsuit at 12 BB in yellow zone.
@@ -4322,7 +4316,7 @@ TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zon
 TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What is the M-ratio takeaway?
 HINT [theoryOnly]: Green keeps room. Red needs action soon.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Use M-ratio as a quick pressure map. The lower the zone, the less freedom you have to wait.
 
@@ -4334,7 +4328,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is risk premium in simple terms?
 HINT [theoryOnly]: Medium stacks often feel this pressure most.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Risk premium means you need extra hand strength before risking tournament life near payout pressure.
 
@@ -4344,7 +4338,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is usually the sharper adjustment?
 HINT [theoryOnly]: Bust risk is expensive here.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Call off as wide as chip EV says — Not quite. Pure chip-EV calls can be too loose near bubble pressure. Tournament survival increases the cost of busting.
     BETTER ANSWER: Tighten marginal calls
@@ -4358,7 +4352,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What usually improves for the big stack?
 HINT [theoryOnly]: Leverage works because others face elimination risk.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Apply selective open pressure — Solid understanding. Big stacks can leverage bubble pressure because medium stacks cannot call as freely.
   - [suboptimal] Avoid stealing to protect stack — Too passive. Protection matters, but freezing misses one of the strongest bubble advantages of covering stacks.
@@ -4372,16 +4366,13 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What usually stays true for the short stack?
 HINT [theoryOnly]: Short stacks still need survival spots, not endless folding.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Still take practical all-in spots before blinded out — Well done. Bubble pressure matters, but short stacks cannot fold forever. Survival still needs practical action windows before the stack disappears.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Fold every hand until payouts begin — Too passive. Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.
     BETTER ANSWER: Still take practical all-in spots before blinded out
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [wrong] Call off too light — Not quite. Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.
     BETTER ANSWER: Still take practical all-in spots before blinded out
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 TASK w9_bubble_table_risk_transfer [drill] Bubble risk at a real table
 CAPTION: Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble. No antes; BB goes all-in for 18 BB total. Pot 21 BB, 15.5 BB to call.
@@ -4404,7 +4395,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is the bubble-pressure takeaway?
 HINT [theoryOnly]: Medium stacks tighten more; big stacks can lean with leverage.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Risk premium is not fear. It is a context shift: medium stacks defend life, big stacks can pressure selectively.
 
@@ -4416,7 +4407,7 @@ TEACH: Life has value. In cash you can reload. In tournaments, stack loss can en
 TEACH LABELS: Tournament life, Survival, Bubble
 Q: What makes tournament chips different from cash chips?
 HINT [theoryOnly]: When you bust, your tournament run ends.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Tournament pressure means survival has value. Losing all chips ends the run, so not every thin chip-EV spot is equal.
 
@@ -4426,7 +4417,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is the best pressure line?
 HINT [theoryOnly]: Tournament life still needs action windows.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Disciplined urgency in reasonable spots — Excellent spot. Good tournament pressure play combines survival with timely action, not passive waiting.
   - [wrong] Panic with any two cards now — Too extreme. Urgency is real, but panic all-ins are not the target. You still choose spots with fold equity and blockers.
@@ -4440,7 +4431,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: Which player should act sooner?
 HINT [theoryOnly]: Zone changes urgency.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Green-zone player — Not quite. Green-zone players usually have room to wait for cleaner spots.
     BETTER ANSWER: Red-zone player
@@ -4454,7 +4445,7 @@ TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurt
 TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is often the cleaner medium-stack plan?
 HINT [theoryOnly]: Risk premium should influence the response.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Defend as wide as normal chip EV spot — Not quite. Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
@@ -4463,21 +4454,18 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Tighten defend and avoid thin all-ins
 
 TASK w9_checkpoint_table_notice [drill] Real-table pressure read
-CAPTION: Real table. Medium stack near the bubble faces a covering big-stack open.
+CAPTION: Near the bubble, suppose a covering big stack opens into your medium stack.
 TEACH: Name pressure before action. Real tournament spots get easier when you first identify who can pressure and who pays the bigger busting cost.
 TEACH LABELS: Bubble, Medium stack, Leverage
 Q: What is the clean first pressure read?
-HINT [theoryOnly]: Read the pressure before you click call or all-in.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+HINT [theoryOnly]: Consider who could be eliminated if the stacks go in.
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Treat it like cash — Not quite. That answer is tempting because the hand may still look playable in chip-EV terms. But the dominant cue is bubble pressure: the medium stack pays a much bigger bust-out cost than in cash, so call freedom tightens.
     BETTER ANSWER: Respect bubble pressure
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [suboptimal] Fold everything — Playable caution. This looks disciplined because bubble fear is real. But full shutdown folds too much. The cleaner read is selective pressure awareness: tighten versus leverage, not panic-fold every spot.
     BETTER ANSWER: Respect bubble pressure
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   + [correct] Respect bubble pressure — Sharp read. That is the transfer. Bubble pressure hits the medium stack harder, while the covering stack can apply leverage.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 TASK w9_checkpoint_review [review] Tournament pressure recap
 ENTRY: drill
@@ -4486,16 +4474,13 @@ TEACH: Pressure before exploit. First map pressure with stack and payout context
 TEACH LABELS: Survival pressure, M-ratio, Risk premium, Player adjustment
 Q: What does tournament-pressure thinking add before player adjustment?
 HINT [theoryOnly]: Next you will convert pressure reads into opponent-specific player adjustments.
-TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Combo count | Facts one pair, pocket pair, rainbow
+TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [suboptimal] Adjust only by player type — Playable start. Player reads matter, but tournament pressure changes incentives first. Good exploits combine both layers.
     BETTER ANSWER: Map pressure first, then adjust by player
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   - [wrong] Map pressure, then copy every player read — Order is right, adjustment is too broad. Pressure comes first, but player reads still need a specific tendency. Do not copy every exploit before checking who is overfolding, overcalling, or avoiding risk.
     BETTER ANSWER: Map pressure first, then adjust by player
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   + [correct] Map pressure first, then adjust by player — Pressure comes first. That sequence is the bridge to World 10: pressure context first, player-specific exploit second.
-    FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
 ===== WORLD 10 · LESSON player_type_basics · Who is at the table =====
 

@@ -1708,6 +1708,7 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
 }
 
 const _exerciseGoalPrefix = 'exercise/';
+const act0SameGoalReplayThroughWorldV1 = 9;
 
 // These are task-level goals shared by more than one exercise. A single
 // exercise with no equivalent keeps its own goal and supports familiar replay.
@@ -1760,6 +1761,14 @@ const _foundationSharedRepairGoals = <String, String>{
   'w7_effective_stack_100bb': 'smaller_effective_stack',
   'w7_6max_wider': 'first_position_by_table_size',
   'w7_fullring_tighter': 'first_position_by_table_size',
+  'w9_cash_vs_tournament': 'tournament_elimination_vs_reload',
+  'w9_survival_stack_tradeoff': 'tournament_elimination_vs_reload',
+  'w9_short_stack_survival': 'short_stack_action_window',
+  'w9_checkpoint_survival_line': 'short_stack_action_window',
+  'w9_m_ratio_yellow_zone': 'yellow_zone_action_window',
+  'w9_m_ratio_table_window_transfer': 'yellow_zone_action_window',
+  'w9_medium_stack_tighten': 'medium_stack_bubble_risk',
+  'w9_checkpoint_bubble_line': 'medium_stack_bubble_risk',
 };
 
 String act0FoundationRepairGoalForTaskV1(String taskId) =>
@@ -1780,7 +1789,9 @@ _buildFoundationRepairDefaults() {
   final earliest = <String, _FoundationRepairExercise>{};
   final contracts =
       <(String, String, String, String), Act0RepairGoalContractV1>{};
-  for (final world in Act0ShellStateV1.sample.worlds.take(8)) {
+  for (final world in Act0ShellStateV1.sample.worlds.take(
+    act0SameGoalReplayThroughWorldV1,
+  )) {
     final requireEarlierExercise = world.worldNumber >= 5;
     for (final lesson in world.lessons) {
       final sameLesson = <String, _FoundationRepairExercise>{};

@@ -22810,6 +22810,13 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
 );
 
+final _w9ExampleTableBase = _readBoardRunner.table.copyWith(
+  boardCards: _act0LessonCardsV1('Kc 7d 2s'),
+  potLabel: 'Pot 5 BB',
+  centerLabel: 'Combo count',
+  highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+);
+
 final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w9_survival_intro',
@@ -22829,12 +22836,7 @@ final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
       focusLabels: <String>['Tournament life', 'Survival', 'Bubble'],
     ),
   ],
-  table: _readBoardRunner.table.copyWith(
-    boardCards: _act0LessonCardsV1('Kc 7d 2s'),
-    potLabel: 'Pot 5 BB',
-    centerLabel: 'Combo count',
-    highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
-  ),
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
 );
 
 final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
@@ -23129,7 +23131,7 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
   hint:
       'This is not red-zone panic yet, but the stack should not drift. Read what yellow-zone urgency changes first.',
   question: 'What is the cleaner first zone adjustment here?',
-  table: _w9MRatioIntroRunner.table.copyWith(
+  table: _w9ExampleTableBase.copyWith(
     heroCards: _heroAjCards,
     streetLabel: 'Preflop',
     boardCards: const <Act0CardStateV1>[],
@@ -23358,7 +23360,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   question: 'How should you adjust if losing to BB would eliminate you?',
   table: _act0CurrentStreetTableV1(
     _act0ExplicitFoldsV1(
-      _w9BubblePressureIntroRunner.table.copyWith(
+      _w9ExampleTableBase.copyWith(
         heroCards: _heroAjCards,
         boardCards: const [],
         streetLabel: 'Preflop',
@@ -23646,12 +23648,12 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
   lessonTitle: 'Tournament pressure checkpoint',
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      'Real table. Medium stack near the bubble faces a covering big-stack open.',
-  hint: 'Read the pressure before you click call or all-in.',
+      'Near the bubble, suppose a covering big stack opens into your medium stack.',
+  hint: 'Consider who could be eliminated if the stacks go in.',
   question: 'What is the clean first pressure read?',
   feedbackTitle: 'Pressure read first.',
   feedbackReason:
-      'Real-table tournament transfer starts by naming who carries the risk premium and who carries the leverage.',
+      'Tournament pressure starts with naming who carries the risk premium and who carries the leverage.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'medium_stack_pressure',
@@ -23697,6 +23699,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
 );
 
 final _w10PlayerTypeIntroRunner = _w9BubblePressureIntroRunner.copyWith(
+  table: _w9ExampleTableBase,
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w10_player_type_intro',
   lessonTitle: 'Who is at the table',
