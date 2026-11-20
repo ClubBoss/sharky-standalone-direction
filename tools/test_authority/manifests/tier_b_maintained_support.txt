@@ -118,3 +118,5 @@ test/payments/payment_service_restore_verification_policy_v1_test.dart
 test/services/campaign_spine_runner_v1_test.dart
 test/services/energy_service_entitlement_ssot_test.dart
 test/services/outcome_summary_v1_test.dart
+test/ui_v2/act0_club_night_components_v1_test.dart
+test/guards/act0_club_night_color_literal_ratchet_v1_test.dart
