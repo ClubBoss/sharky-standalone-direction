@@ -825,6 +825,7 @@ class Act0RepairGoalContractV1 {
     'early_seat_players_behind' => 'Players left to act',
     'same_hand_different_seat' => 'Same hand from two seats',
     'value_bet_purpose' => 'Why you bet',
+    'range_advantage_on_board' => 'Which range fits the board',
     _ =>
       goalId.startsWith(_exerciseGoalPrefix)
           ? 'Same exercise'
@@ -836,6 +837,60 @@ class Act0RepairGoalContractV1 {
 }
 
 const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_6',
+    sourceLessonId: 'range_board_fit',
+    sourceTaskId: 'w6_board_fit_recap',
+    sourceChoiceId: 'caller',
+    sourceCorrectChoiceId: 'raiser',
+    sourceFingerprint:
+        '31f2937d21045d3ce2f8a34a06c3abda7fac3f8ea22384871d8a89e2a8dea0a1',
+    sourceQuestion:
+        'In these ranges, who has more hand types at two pair or better?',
+    sourceChoiceReason:
+        'BB’s pocket pairs stay one pair. Only the raiser has A-A, K-K, and A-K in this model.',
+    sourceChoiceLabel: 'BB, the caller',
+    goalId: 'range_advantage_on_board',
+    misconceptionId: 'range_advantage_ignores_board',
+    relationId: 'w6_board_fit_range_advantage_caller_v1',
+    targetWorldId: 'world_6',
+    targetLessonId: 'range_board_fit',
+    targetTaskId: 'w6_value_wet_board',
+    targetFingerprint:
+        '356f20ef898de355700003f0cb7992f0476a133064e213ef0a09f42b34f71441',
+    targetCorrectChoiceId: 'value',
+    targetChoiceIds: <String>{'bluff', 'value', 'missed'},
+    evidenceClass: 'familiar_rehearsal',
+    mappingType: 'repair',
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: 'world_6',
+    sourceLessonId: 'range_board_fit',
+    sourceTaskId: 'w6_board_fit_recap',
+    sourceChoiceId: 'same',
+    sourceCorrectChoiceId: 'raiser',
+    sourceFingerprint:
+        '31f2937d21045d3ce2f8a34a06c3abda7fac3f8ea22384871d8a89e2a8dea0a1',
+    sourceQuestion:
+        'In these ranges, who has more hand types at two pair or better?',
+    sourceChoiceReason:
+        'The raiser has two sets and one two-pair hand type. The caller has zero hand types at that strength.',
+    sourceChoiceLabel: 'They have the same number',
+    goalId: 'range_advantage_on_board',
+    misconceptionId: 'range_advantage_counts_weak_hands',
+    relationId: 'w6_board_fit_range_advantage_same_v1',
+    targetWorldId: 'world_6',
+    targetLessonId: 'range_board_fit',
+    targetTaskId: 'w6_value_wet_board',
+    targetFingerprint:
+        '356f20ef898de355700003f0cb7992f0476a133064e213ef0a09f42b34f71441',
+    targetCorrectChoiceId: 'value',
+    targetChoiceIds: <String>{'bluff', 'value', 'missed'},
+    evidenceClass: 'familiar_rehearsal',
+    mappingType: 'repair',
+    requireCapturedGoalWitness: true,
+  ),
   Act0RepairGoalContractV1(
     sourceWorldId: 'world_6',
     sourceLessonId: 'range_pressure_lines',

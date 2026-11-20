@@ -411,6 +411,46 @@ void main() {
         .singleWhere((choice) => choice['id'] == 'call');
     expect(limpChoice['repairLabels'], ['Limp legal', 'Raise sharper', 'BTN']);
     limpChoice['repairLabels'] = ['Call 1 BB', 'Chart says raise', 'BTN'];
+    // L2·3 grades the new price drills and range comparisons explicitly.
+    const l2DrawAndRangeOptions = {
+      'outs_improvement_w5_table_outs_flush_transfer': [
+        ('price_only', false),
+        ('heart_outs', true),
+      ],
+      'outs_improvement_w5_table_outs_straight_transfer': [
+        ('four_or_nine', true),
+        ('blank_turn_killed', false),
+      ],
+      'turn_river_changes_w5_board_checkpoint': [
+        ('just_outs', false),
+        ('texture_draw_outs', true),
+      ],
+      'w6_value_wet_board': [
+        ('bluff', false),
+        ('value', true),
+        ('missed', false),
+      ],
+      'w6_board_fit_recap': [
+        ('caller', false),
+        ('same', false),
+        ('raiser', true),
+      ],
+    };
+    for (final entry in l2DrawAndRangeOptions.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      task['options'] = [
+        for (final (id, correct) in entry.value)
+          {
+            'id': id,
+            'correct': correct,
+            'quality': correct ? 'correct' : 'wrong',
+            'seat': null,
+            'repairSeats': <String>[],
+            'repairCards': <String>[],
+            'repairLabels': <String>[],
+          },
+      ];
+    }
     final w6ValueOptions =
         (expectedComparison['w6_value_range_action']
                 as Map<String, dynamic>)['options']
