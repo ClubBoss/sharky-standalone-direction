@@ -305,31 +305,6 @@ act0FirstValueSameSignalRepMappingV1({
     );
   }
 
-  if (nextRepId == 'repeat_board_read' &&
-      skillAtomId == 'board_read' &&
-      sourceSignalId == 'board_cards') {
-    switch (sourceTask) {
-      case 'visible_king_combo_reduction_intro':
-        return target(
-          'world_7',
-          'range_thinking_lite_combo_density',
-          'paired_board_texture_lite_intro',
-        );
-      case 'paired_board_texture_lite_intro':
-        return target(
-          'world_7',
-          'range_thinking_lite_combo_density',
-          'visible_card_combo_density_transfer_check',
-        );
-      case 'visible_card_combo_density_transfer_check':
-        return target(
-          'world_7',
-          'range_thinking_lite_combo_density',
-          'visible_king_combo_reduction_intro',
-        );
-    }
-  }
-
   if (nextRepId == 'repeat_table_read' &&
       skillAtomId == 'table_read' &&
       sourceSignalId == 'stack_depth') {

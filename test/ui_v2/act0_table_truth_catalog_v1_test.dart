@@ -499,6 +499,18 @@ void main() {
           },
       ];
     }
+    for (final (taskId, choiceId) in [
+      ('w6_ak_combos', 'twelve'),
+      ('w6_pair_combos', 'twelve'),
+      ('w6_combo_weight_compare', 'same_weight'),
+    ]) {
+      final task = expectedComparison[taskId] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == choiceId);
+      expect(option['quality'], 'suboptimal');
+      option['quality'] = 'wrong';
+    }
     final w6ValueOptions =
         (expectedComparison['w6_value_range_action']
                 as Map<String, dynamic>)['options']

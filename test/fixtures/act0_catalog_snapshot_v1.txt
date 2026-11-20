@@ -2933,8 +2933,6 @@ REVIEW: Check which next rank could give you five consecutive cards.
 
 TASK straight_draws_w5_straight_draw_find [drill] Read the four ranks
 CAPTION: Hero has 6-5 and the board shows 8-7-2.
-TEACH: Count the ranks that finish a straight. An open-ended draw can finish at either end of four ranks in a row. Here, 8-9-T-J can be finished by any 7 or queen: 8 outs. A gutshot has one gap, like 5-6-8-9. Only a 7 fills it: 4 outs.
-TEACH LABELS: Ranks, Ladder, Straight draw
 Q: What draw is visible?
 HINT [theoryOnly]: A 4 or 9 can improve the rank ladder.
 TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
@@ -3186,8 +3184,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_range_intro [theory] Three buckets
 CAPTION: A range is the group of hands that fit a situation.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can create fold pressure), or missed (no plan).
-TEACH LABELS: Value, Bluff candidate, Missed
+TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: What are range buckets?
 HINT [theoryOnly]: Value, bluff candidate, and missed are the three range buckets.
 TABLE: Flop | You Ad Js | Board Jh 8c 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts one pair, top pair, rainbow
@@ -3197,8 +3195,8 @@ REVIEW: A range collects the hands that fit a situation. Read the flop before pl
 
 TASK w6_value_dry_board [drill] Value on dry board
 CAPTION: K-7-2 rainbow. Hero holds K-Q.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can create fold pressure), or missed (no plan).
-TEACH LABELS: Value, Bluff candidate, Missed
+TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: Which range bucket is K-Q on this board?
 HINT [theoryOnly]: Top pair with a good kicker.
 TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Range bucket? | Facts one pair, top pair, rainbow
@@ -3215,8 +3213,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_missed_dry_board [drill] Missed on dry board
 CAPTION: BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can create fold pressure), or missed (no plan).
-TEACH LABELS: Value, Bluff candidate, Missed
+TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: Which plan fits A-Q under this rule?
 HINT [theoryOnly]: Compare the high cards if neither hand improves.
 TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Range bucket? | Facts high card, rainbow, backdoor straight
@@ -3233,8 +3231,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_table_bucket_notice [drill] First live read
 CAPTION: Real table. K-7-2 rainbow lands and you hold A-Q.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can create fold pressure), or missed (no plan).
-TEACH LABELS: Value, Bluff candidate, Missed
+TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: What should you ask first?
 HINT [theoryOnly]: Before picking a size, make the first useful read.
 TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3277,10 +3275,6 @@ REVIEW: The same private cards can make a strong hand on one board and miss anot
 
 TASK w6_wrong_board [drill] Missed on wet board
 CAPTION: 8-7-6 two-tone. Hero holds K-Q.
-TEACH: Board changes the bucket. A preflop strong hand can become missed if it does not connect with the flop.
-TEACH LABELS: Board fit, Value, Missed, Texture
-TEACH: Compare both ranges. Range advantage is about which player has more strong hands on this board. In this lesson, use only the hands listed for each player and count hand types that make two pair or better.
-TEACH LABELS: Preflop raiser, Caller, Two pair or better
 Q: Which range bucket is K-Q on 8-7-6?
 HINT [theoryOnly]: K-Q was strong preflop, but this board changed everything.
 TABLE: Flop | You Kd Qc | Board 8h 7h 6c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, two-tone, consecutive board
@@ -3347,7 +3341,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_pressure_lines_intro [theory] Bucket shapes action
 CAPTION: Each range bucket suggests a different action direction.
-TEACH: Bucket shapes action. Value hands bet for profit. Bluff candidates bet for fold equity. Missed hands usually check or fold.
+TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
 TEACH LABELS: Bet value, Bluff, Check-fold
 Q: What does a value hand do?
 HINT [theoryOnly]: Value bets to get called. Bluff candidates can bet to fold out better hands.
@@ -3358,7 +3352,7 @@ REVIEW: Before betting, decide whether you want a weaker hand to call or a bette
 
 TASK w6_value_range_action [drill] Value bets
 CAPTION: BB checks, then calls half-pot bets with weaker pairs such as K-J and 7-6.
-TEACH: Bucket shapes action. Value hands bet for profit. Bluff candidates bet for fold equity. Missed hands usually check or fold.
+TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
 TEACH LABELS: Bet value, Bluff, Check-fold
 Q: What is the purpose of a half-pot bet here?
 HINT [theoryOnly]: Think about which hands would pay to see the turn.
@@ -3373,7 +3367,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_bluff_candidate [drill] When better hands fold
 CAPTION: BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.
-TEACH: Bucket shapes action. Value hands bet for profit. Bluff candidates bet for fold equity. Missed hands usually check or fold.
+TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
 TEACH LABELS: Bet value, Bluff, Check-fold
 Q: Which plan fits J-T under this rule?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
@@ -3391,7 +3385,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_missed_hand_action [drill] Missed hand direction
 CAPTION: K-7-2 rainbow. Hero holds J-T with no draw.
-TEACH: Bucket shapes action. Value hands bet for profit. Bluff candidates bet for fold equity. Missed hands usually check or fold.
+TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
 TEACH LABELS: Bet value, Bluff, Check-fold
 Q: What is the clean action direction?
 HINT [theoryOnly]: Pure missed hands usually do not want a big pot.
@@ -3400,7 +3394,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Bet for value — Wrong bucket. Value betting belongs to made hands, not pure missed hands.
     BETTER ANSWER: Usually check or fold
-  - [suboptimal] Always barrel as pressure — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
+  - [suboptimal] Keep betting on every street — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
     BETTER ANSWER: Usually check or fold
   + [correct] Usually check or fold — Spot on. Pure missed hands conserve chips more often than they force action.
 
@@ -3424,14 +3418,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_turn_pressure_shift_transfer [drill] Turn pressure shift
 CAPTION: You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.
-TEACH: Street changes can cool pressure. Suppose fold pressure has dropped on this paired turn. A former bluff candidate is not a forever-barrel pass: reassess before forcing the same line.
-TEACH LABELS: Paired turn, Called flop, Check more often
 Q: Suppose fold pressure has dropped on this turn. What is the cleaner plan?
 HINT [theoryOnly]: When the board pairs and the first bluff gets called, some pressure lines cool off.
 TABLE: Turn | You Jd Ts | Board Kc 7h 2s 2d | Pot 11 BB | Seat BTN | Active btn | Decision btn | Card focus board_2, board_3 | Center After BB checks | Facts one pair, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Ts stack 94.75 BB | SB folded stack 99.5 BB | BB stack 94.75 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN bets 2.5 BB · BB calls 2.5 BB · Turn: BB checks
-  - [suboptimal] Barrel big again — Tempting, but noisy. In this stated lower-pressure spot, a larger second barrel does not repair the reason for betting. Reassess before forcing the flop plan.
+  - [suboptimal] Make another big bet — Tempting, but noisy. BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.
     BETTER ANSWER: Check more often
   + [correct] Check more often — Good pressure reset. Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.
   - [wrong] Bet for value — Wrong bucket now. J-T has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.
@@ -3463,14 +3455,14 @@ REVIEW: A hand family represents several different two-card combinations. Count 
 
 TASK w6_ak_combos [drill] AK combo count
 CAPTION: A-K can be suited or offsuit.
-TEACH: Families have counts. A combo is one exact two-card hand. Four aces times four kings gives 16 A-K combos. Four share a suit and 12 do not. A pocket pair has six ways to choose two of its four cards.
-TEACH LABELS: 16 combos, 6 combos, Range density
+TEACH: Count the cards of each rank. For two different ranks, each available card of the first rank can pair with each available card of the second rank.
+TEACH LABELS: Available cards, Two ranks, Pair the cards
 Q: How many combos does A-K have before blockers?
 HINT [theoryOnly]: Four aces can pair with four kings. A blocker is a visible or known card that removes possible private-card combinations.
 TABLE: Preflop | You Tc 9h | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Count combinations | Facts no applicable hand facts
 SEATS: UTG Tc 9h stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [suboptimal] 12 combos — Close count. 12 counts only the offsuit versions. Add the 4 suited combos and A-K reaches 16 total combinations.
+  - [wrong] 12 combos — Not quite. 12 counts only the offsuit versions. Add the 4 suited combos and A-K reaches 16 total combinations.
     BETTER ANSWER: 16 combos
   - [wrong] 6 combos — Not quite. Six combos is the count for a pocket pair. A-K has 16 possible suit combinations before removing known cards.
     BETTER ANSWER: 16 combos
@@ -3478,15 +3470,13 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK w6_pair_combos [drill] Pocket pair combo count
 CAPTION: Pocket eights are one pair family.
-TEACH: Families have counts. A combo is one exact two-card hand. Four aces times four kings gives 16 A-K combos. Four share a suit and 12 do not. A pocket pair has six ways to choose two of its four cards.
-TEACH LABELS: 16 combos, 6 combos, Range density
 Q: How many combos does 8-8 have?
 HINT [theoryOnly]: You pick 2 suits out of the 4 eights in the deck.
 TABLE: Preflop | You 8h 8c | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Count combinations | Facts pocket pair
 SEATS: UTG 8h 8c stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] 6 combos — Nice count. Choose two of the four suits. That gives six possible pairs before removing known cards.
-  - [suboptimal] 12 combos — Close count. Twelve is too high for one pair family. With four eights in the deck, only 6 suit pairings are possible.
+  - [wrong] 12 combos — Not quite. Twelve is too high for one pair family. With four eights in the deck, only 6 suit pairings are possible.
     BETTER ANSWER: 6 combos
   - [wrong] 16 combos — Not quite. Sixteen combos belongs to two different ranks like A-K, not to one pocket pair.
     BETTER ANSWER: 6 combos
@@ -3500,7 +3490,7 @@ HINT [theoryOnly]: One family has 16 combos. The other has 6.
 TABLE: Preflop | You 7d 6d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Count combinations | Facts no applicable hand facts
 SEATS: UTG 7d 6d stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [suboptimal] They have the same combo count — Close start. The hand names may feel equally important, but combo weight is not equal: 16 beats 6.
+  - [wrong] They have the same combo count — Not quite. The hand names may feel equally important, but combo weight is not equal: 16 beats 6.
     BETTER ANSWER: A-K has more combos
   + [correct] A-K has more combos — Nice count. Before removing known cards, A-K has 16 combos and pocket eights have 6.
   - [wrong] Pocket eights have more combos — Not quite. Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.
@@ -3622,7 +3612,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK range_checkpoint_pressure [drill] Pressure after a check
 CAPTION: On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.
-TEACH: Bucket shapes action. Value hands bet for profit. Bluff candidates bet for fold equity. Missed hands usually check or fold.
+TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
 TEACH LABELS: Bet value, Bluff, Check-fold
 Q: Which plan fits 9-6 under this rule?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
@@ -3808,9 +3798,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 REVIEW: Between two players, the smaller stack caps what the two can still match.
 
 TASK w7_effective_stack_30bb [drill] 200 vs 30
-CAPTION: Hero has 200 BB. Villain has 30 BB.
-TEACH: Smaller stack rules. If you have 200 BB and the other player has 30 BB, the effective stack is 30 BB. That smaller stack sets the real risk.
-TEACH LABELS: 200 BB, 30 BB, Effective stack
+CAPTION: You have 200 BB. The other player has 30 BB.
 Q: What is the effective stack?
 HINT [theoryOnly]: Look for the smaller stack.
 TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, pocket pair, rainbow
@@ -3887,8 +3875,6 @@ REVIEW: The same hand can face bigger bets on the same streets when more chips a
 
 TASK w7_20bb_wider [drill] 20 BB decision
 CAPTION: BB checks. You have top pair and want to keep at least 18 BB for later streets.
-TEACH: Depth changes commitment. A short stack runs out sooner. It also limits how much you can win when a small pair makes a set or suited connectors make a strong hand. At 100 BB, you have more chips for bets on the same streets.
-TEACH LABELS: 20 BB, 100 BB, More room, More risk
 Q: Which bet fits your plan?
 HINT [theoryOnly]: Subtract each possible bet from the stack you have left.
 TABLE: Flop | You Ah Jh | Board Ad 8c 4h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
@@ -4002,7 +3988,7 @@ HINT [theoryOnly]: Little room is left.
 TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 10 BB | SB folded stack 99.5 BB | BB stack 12 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Plenty of room to float and wait — Not quite. That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.
+  - [wrong] Plenty of chips left for later bets — Not quite. That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.
     BETTER ANSWER: One bet can commit the hand
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   + [correct] One bet can commit the hand — Excellent spot. At SPR 2 there are two pots left in the effective stack. A large bet can put much of it at risk, but whether to commit depends on your hand and the price.
@@ -4021,12 +4007,12 @@ TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | De
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As 9c stack 40 BB | SB folded stack 99.5 BB | BB stack 42 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
   - [wrong] Immediate commitment — Not quite. Immediate commitment is a low-SPR feature. High SPR creates more room, not less.
-    BETTER ANSWER: More room to maneuver
+    BETTER ANSWER: More options for later bets
     FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  + [correct] More room to maneuver — Spot on. High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.
+  + [correct] More options for later bets — Spot on. High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.
     FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   - [suboptimal] No difference from preflop — Not quite. SPR changes how postflop decisions feel. High SPR gives you more future streets and more flexibility.
-    BETTER ANSWER: More room to maneuver
+    BETTER ANSWER: More options for later bets
     FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
 
 TASK w7_spr4_middle [drill] SPR 4
@@ -4041,7 +4027,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Automatic commitment right now — Too shallow. That is more like very low SPR. SPR 4 is tighter than SPR 8, but not auto-commit by default.
     BETTER ANSWER: Middle ground: some room, some commitment
     FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
-  - [suboptimal] The same as SPR 8 — Too loose. SPR 4 has less room and more commitment pressure than SPR 8. It is a middle node, not a deep one.
+  - [suboptimal] The same as SPR 8 — Too loose. At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.
     BETTER ANSWER: Middle ground: some room, some commitment
     FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
   + [correct] Middle ground: some room, some commitment — Clean execution. SPR 4 often means you still have choices, but commitment pressure is already starting to matter.

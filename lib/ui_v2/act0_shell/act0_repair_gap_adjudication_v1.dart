@@ -829,6 +829,18 @@ class Act0RepairGoalContractV1 {
     'turn_changes_board_threats' => 'What the turn changes',
     'bluff_needs_better_folds' => 'Which better hands might fold',
     'range_advantage_on_board' => 'Which range fits the board',
+    'dry_or_wet_flop' => 'Dry or wet flop',
+    'connected_flop_ranks' => 'Connected ranks on the flop',
+    'recognize_flush_draw' => 'Count the cards in one suit',
+    'one_card_draw_price' => 'Compare the chance to hit with the price',
+    'recognize_range_bucket' => 'Which range bucket fits the hand',
+    'two_rank_combo_count' => 'Count combinations of two ranks',
+    'compare_combo_families' => 'Compare how many exact hands each family has',
+    'compare_suited_combo_families' =>
+      'Compare a suited hand with a pocket pair',
+    'visible_cards_reduce_combos' => 'How visible cards narrow the range',
+    'smaller_effective_stack' => 'Find the smaller stack',
+    'first_position_by_table_size' => 'Count the players left to act',
     _ =>
       goalId.startsWith(_exerciseGoalPrefix)
           ? 'Same exercise'
@@ -902,12 +914,12 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "barrel_big",
     sourceCorrectChoiceId: "check_more",
     sourceFingerprint:
-        "f5d700db2e72c04c3eb495e3bb7b6e0aec80ec3aa8d9d8d6f33a02b39b147b28",
+        "823635de5a9d3eb72907a3de7a7ff0f15e4bdadcef2c9006c01b1ff3b2e0952f",
     sourceQuestion:
         "Suppose fold pressure has dropped on this turn. What is the cleaner plan?",
     sourceChoiceReason:
-        "In this stated lower-pressure spot, a larger second barrel does not repair the reason for betting. Reassess before forcing the flop plan.",
-    sourceChoiceLabel: "Barrel big again",
+        "BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.",
+    sourceChoiceLabel: "Make another big bet",
     sourceChoiceQuality: "suboptimal",
     goalId: "bluff_needs_better_folds",
     misconceptionId: "repeat_bluff_after_callers_change",
@@ -1718,6 +1730,36 @@ const _foundationSharedRepairGoals = <String, String>{
   'continue_or_let_go_premium_continue': 'starting_hand_premium_bucket',
   'discipline_checkpoint_checkpoint_premium': 'starting_hand_premium_bucket',
   'w4_half_pot_bet': 'half_pot_fraction',
+  'board_texture_basics_w5_dry_board': 'dry_or_wet_flop',
+  'board_texture_basics_w5_wet_board': 'dry_or_wet_flop',
+  'connected_boards_w5_disconnected_board': 'connected_flop_ranks',
+  'connected_boards_w5_connected_board': 'connected_flop_ranks',
+  'flush_draws_w5_flush_draw_find': 'recognize_flush_draw',
+  'flush_draws_w5_no_flush_draw': 'recognize_flush_draw',
+  'flush_draws_w5_flush_draw_recheck_transfer': 'recognize_flush_draw',
+  'straight_draws_w5_gutshot_draw': 'read_straight_draw_shape',
+  'straight_draws_w5_gutshot_contrast_transfer': 'read_straight_draw_shape',
+  'outs_improvement_w5_table_outs_flush_transfer': 'one_card_draw_price',
+  'outs_improvement_w5_table_outs_straight_transfer': 'one_card_draw_price',
+  'turn_river_changes_w5_board_checkpoint': 'one_card_draw_price',
+  'w6_value_dry_board': 'recognize_range_bucket',
+  'w6_missed_dry_board': 'recognize_range_bucket',
+  'w6_wrong_board': 'recognize_range_bucket',
+  'w6_value_wet_board': 'range_advantage_on_board',
+  'w6_board_fit_recap': 'range_advantage_on_board',
+  'w6_board_pair_strength_compare': 'range_advantage_on_board',
+  'w6_ak_combos': 'two_rank_combo_count',
+  'range_checkpoint_combos': 'two_rank_combo_count',
+  'w6_combo_weight_compare': 'compare_combo_families',
+  'w6_pair_vs_suited_weight_compare': 'compare_suited_combo_families',
+  'w6_checkpoint_table_combo_weight': 'compare_combo_families',
+  'w6_checkpoint_table_best_five': 'compare_suited_combo_families',
+  'visible_king_combo_reduction_intro': 'visible_cards_reduce_combos',
+  'visible_card_combo_density_transfer_check': 'visible_cards_reduce_combos',
+  'w7_effective_stack_30bb': 'smaller_effective_stack',
+  'w7_effective_stack_100bb': 'smaller_effective_stack',
+  'w7_6max_wider': 'first_position_by_table_size',
+  'w7_fullring_tighter': 'first_position_by_table_size',
 };
 
 String act0FoundationRepairGoalForTaskV1(String taskId) =>
@@ -1738,7 +1780,8 @@ _buildFoundationRepairDefaults() {
   final earliest = <String, _FoundationRepairExercise>{};
   final contracts =
       <(String, String, String, String), Act0RepairGoalContractV1>{};
-  for (final world in Act0ShellStateV1.sample.worlds.take(4)) {
+  for (final world in Act0ShellStateV1.sample.worlds.take(8)) {
+    final requireEarlierExercise = world.worldNumber >= 5;
     for (final lesson in world.lessons) {
       final sameLesson = <String, _FoundationRepairExercise>{};
       final exercises = <_FoundationRepairExercise>[];
@@ -1769,7 +1812,9 @@ _buildFoundationRepairDefaults() {
       for (final source in exercises) {
         final task = source.task;
         final goal = act0FoundationRepairGoalForTaskV1(task.taskId);
-        final target = sameLesson[goal] ?? earliest[goal] ?? source;
+        final target = requireEarlierExercise
+            ? earliest[goal] ?? source
+            : sameLesson[goal] ?? earliest[goal] ?? source;
         final exact = identical(target.task, task);
         for (final choice in task.runner.options.where(
           (choice) => !choice.isCorrect,
@@ -1807,6 +1852,9 @@ _buildFoundationRepairDefaults() {
             mappingType: exact ? 'intentional_exact' : 'repair',
             requireCapturedGoalWitness: true,
           );
+        }
+        if (requireEarlierExercise && task.phase == Act0LessonPhaseV1.drill) {
+          earliest.putIfAbsent(goal, () => source);
         }
       }
       for (final entry in sameLesson.entries) {

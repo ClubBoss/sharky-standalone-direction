@@ -753,7 +753,7 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
       );
       final targetGoals = {
         ...?knownRepairGoals[intent.targetTaskId],
-        if (target != null && target.world.worldNumber <= 4)
+        if (target != null && target.world.worldNumber <= 8)
           act0FoundationRepairGoalForTaskV1(intent.targetTaskId),
       };
       audit.check(
