@@ -4701,8 +4701,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               }),
             ),
     );
-    // S08 admits native scaling around the Academy only. Keep the protected
-    // Table and other deferred surfaces in their existing rendering context.
+    // The task UI scales up to 1.3. Physical table labels keep their own
+    // fixed text scale inside the runner.
     if (academySurface) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: premiumAcademy
@@ -4713,7 +4713,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     return MediaQuery.withClampedTextScaling(
       minScaleFactor: 1.0,
-      maxScaleFactor: 1.0,
+      maxScaleFactor: 1.3,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: shell,

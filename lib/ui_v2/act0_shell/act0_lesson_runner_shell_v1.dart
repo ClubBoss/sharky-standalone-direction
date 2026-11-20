@@ -4001,7 +4001,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       Size? cameraStageSize,
       Act0SceneRegistrationV1? sceneRegistration,
     }) {
-      Widget tableStage = _RunnerTableStageV1(
+      final tableStage = _RunnerTableStageV1(
         sceneRegistration: sceneRegistration,
         attention: sceneAttention,
         table: presentationTable,
@@ -4048,24 +4048,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         lockSharedActiveTableGeometry: usesSharedActiveRunnerAllocation,
         integratedPerspectivePrototype: _usesCanonicalIntegratedLearningSceneV1,
       );
-      if (isAccessibilityFlow || usesSharedActiveRunnerAllocation) {
-        final effectiveOnFeltScale = isAccessibilityFlow
-            ? 1.0
-            : math.min(media.textScaler.scale(1), 1.2);
-        tableStage = MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.linear(effectiveOnFeltScale)),
-          child: tableStage,
-        );
-      }
       return Opacity(
         key: Key(
           'act0_shell_feedback_table_context_receded_'
           '$shouldDeemphasizeTableForRepairLearning',
         ),
         opacity: shouldDeemphasizeTableForRepairLearning ? 0.84 : 1,
-        child: tableStage,
+        child: MediaQuery.withNoTextScaling(child: tableStage),
       );
     }
 
@@ -4544,7 +4533,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 ),
               ),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 52),
+                constraints: BoxConstraints(
+                  maxHeight: media.textScaler.scale(52),
+                ),
                 child: SingleChildScrollView(
                   primary: false,
                   child: Text(
