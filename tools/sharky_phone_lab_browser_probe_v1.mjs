@@ -60,14 +60,14 @@ async function evaluate(cdp, expression) {
   return result.result?.value;
 }
 
-async function waitFor(cdp, expression, timeout = 30000) {
+async function waitFor(cdp, expression, timeout = 30000, ErrorType = Error) {
   const end = Date.now() + timeout; let value;
   while (Date.now() < end) {
     value = await evaluate(cdp, expression);
     if (value) return value;
     await sleep(300);
   }
-  throw new Error(`Timed out waiting for ${expression}; last=${JSON.stringify(value)}`);
+  throw new ErrorType(`Timed out waiting for ${expression}; last=${JSON.stringify(value)}`);
 }
 
 async function diagnostics(cdp) {
@@ -136,7 +136,7 @@ const startupStartedAt = Date.now();
 const chrome = spawn(chromeBin, [
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
   '--remote-debugging-port=9222','--remote-allow-origins=*',
-  '--user-data-dir=/tmp/sharky-phone-lab-chrome','--hide-scrollbars','about:blank'
+  '--user-data-dir=/tmp/sharky-phone-lab-chrome','--incognito','--hide-scrollbars','about:blank'
 ], { stdio: ['ignore','ignore','pipe'] });
 let chromeStderr='';
 let chromeSpawnError=null;
@@ -272,19 +272,38 @@ try {
   await navigate(cdp, `${baseUrl}/phone?profile=compact&surface=live&presentation=fit`);
   await waitForEvaluablePhone(cdp);
   report.stage = 'ASSERTING_BROWSER_EVIDENCE';
-  const live=await waitPhone(cdp,375,812,true,35000);
+  await waitPhone(cdp,375,812,true,35000);
+  const frameDocument = "document.querySelector('iframe').contentDocument";
+  const startButton = `[...${frameDocument}.querySelectorAll('flt-semantics[role=button]')]
+    .find(button => (button.getAttribute('aria-label') || button.textContent).trim() === 'Start with the basics')`;
+  await waitFor(cdp, `(() => {
+    if (${startButton}) return true;
+    const placeholder = ${frameDocument}.querySelector('flt-semantics-placeholder');
+    placeholder?.click();
+    return false;
+  })()`, 25000, AssertionFailure);
   const before=await screenshot(cdp,'compact-live-before.png');
-  const r=live.frame.rect; const x=r[0]+r[2]*0.5; const y=r[1]+r[3]*0.965;
-  await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x,y});
-  await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',buttons:1,clickCount:1});
-  await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',buttons:0,clickCount:1});
+  await evaluate(cdp, `(${startButton}).focus()`);
+  const enter = {key:'Enter',code:'Enter',windowsVirtualKeyCode:13};
+  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',...enter});
+  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',...enter});
+  const lessonState = await waitFor(cdp, `(() => {
+    const text = ${frameDocument}.querySelector('flt-semantics')?.textContent ?? '';
+    if (text.includes('Something went wrong')) return 'ERROR_SCREEN';
+    if (text.includes('The two cards by the You badge are yours.')) return 'W1_FIRST_LESSON';
+    return null;
+  })()`, 25000, AssertionFailure);
+  if (lessonState !== 'W1_FIRST_LESSON') {
+    await screenshot(cdp,'compact-live-first-after.png');
+    throw new AssertionFailure(`Start with the basics opened ${lessonState}`);
+  }
   await sleep(1500);
   const initialAfter=await screenshot(cdp,'compact-live-first-after.png');
   const transition=await stableChangedFrameV1(before,initialAfter,async attempt=>{
     await sleep(900);
     return screenshot(cdp,`compact-live-stable-${attempt}.png`);
   });
-  report.interaction_details={rendered_pointer:[Number(x.toFixed(1)),Number(y.toFixed(1))],before_sha256:before.sha256,after_sha256:transition.after.sha256,stable_sha256:transition.stable.sha256,stability_samples:transition.samples};
+  report.interaction_details={control:'Start with the basics',input:'Enter',destination:lessonState,before_sha256:before.sha256,after_sha256:transition.after.sha256,stable_sha256:transition.stable.sha256,stability_samples:transition.samples};
   if (transition.matched) {
     writeStableFramePairV1(outDir,transition);
     report.interaction='PASS';

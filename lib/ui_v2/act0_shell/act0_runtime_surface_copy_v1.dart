@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
@@ -669,6 +670,15 @@ String _pickDeterministicCoachLineV1(
 int _deterministicCoachIndexV1(String seed, int length) {
   if (length <= 1) {
     return 0;
+  }
+  if (kIsWeb) {
+    // Reproduce native int overflow without exceeding JavaScript's numeric range.
+    var hash = BigInt.from(17);
+    final multiplier = BigInt.from(37);
+    for (final codeUnit in seed.codeUnits) {
+      hash = (multiplier * hash + BigInt.from(codeUnit)).toSigned(64);
+    }
+    return (hash.abs().toSigned(64) % BigInt.from(length)).toInt();
   }
   var hash = 17;
   for (final codeUnit in seed.codeUnits) {
