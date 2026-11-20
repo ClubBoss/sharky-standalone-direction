@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart'
     show Act0SharkyMoodV1;
@@ -170,7 +171,7 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
                         : 'Today’s goal: one lesson or review',
                     key: const Key('act0_home_today_goal'),
                     style: const TextStyle(
-                      color: Act0AcademyLeafPaletteV1.textMuted,
+                      color: Act0ClubNightTokensV1.text2,
                       fontSize: 14,
                     ),
                   ),

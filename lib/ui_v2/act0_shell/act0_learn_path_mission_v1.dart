@@ -311,7 +311,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
             compact ? 15 : 18,
             17,
           ),
-          decoration: Act0AcademyDarkReadingStyleV1.cardDecoration(
+          decoration: Act0AcademyDesignTokensV1.cardDecoration(
             borderColor: accent.withValues(alpha: detailMode ? 0.60 : 0.32),
           ),
           child: Column(
@@ -341,7 +341,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                             : 'Learn route',
                         ru: detailMode ? 'Чтение урока' : 'Маршрут обучения',
                       ),
-                      style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
                         color: accent,
                         fontSize: 9.2,
                         letterSpacing: 0,
@@ -362,7 +362,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                               : 'Текущее чтение стола',
                         ),
 
-                        style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
                           letterSpacing: 0,
                           fontSize: 10.0,
                         ),
@@ -379,8 +379,10 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                   children: [
                     Text(
                       lessonTitle,
-                      style: Act0AcademyDarkReadingStyleV1.lessonHeading
-                          .copyWith(fontSize: 30, height: 1.16),
+                      style: Act0AcademyDesignTokensV1.lessonHeading.copyWith(
+                        fontSize: 30,
+                        height: 1.16,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     if (!firstLessonLanding) ...[
@@ -390,7 +392,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                           en: 'Why it matters',
                           ru: 'Зачем это нужно',
                         ),
-                        style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
                           color: accent,
                           fontSize: 9.2,
                         ),
@@ -400,7 +402,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                     Text(
                       support,
                       key: const Key('act0_shell_current_mission_support'),
-                      style: Act0AcademyDarkReadingStyleV1.supporting.copyWith(
+                      style: Act0AcademyDesignTokensV1.supporting.copyWith(
                         height: 1.28,
                       ),
                     ),
@@ -428,7 +430,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                             en: 'Current step · $stepIndex of $totalSteps',
                             ru: 'Текущий шаг · $stepIndex из $totalSteps',
                           ),
-                          style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                          style: Act0AcademyDesignTokensV1.label.copyWith(
                             color: accent,
                             letterSpacing: 0,
                             fontSize: 9.4,
@@ -437,7 +439,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                         const SizedBox(height: 3),
                         Text(
                           taskTitle,
-                          style: Act0AcademyDarkReadingStyleV1.body.copyWith(
+                          style: Act0AcademyDesignTokensV1.body.copyWith(
                             fontWeight: FontWeight.w800,
                             height: 1.12,
                           ),
@@ -452,7 +454,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                 child: FilledButton(
                   key: const Key('act0_shell_current_mission_cta'),
                   onPressed: onStart,
-                  style: Act0AcademyDarkReadingStyleV1.primaryButtonStyle(),
+                  style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
                   child: Text(
                     _learnCopyV1(
                       context,

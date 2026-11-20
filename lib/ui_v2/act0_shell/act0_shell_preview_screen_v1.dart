@@ -305,31 +305,6 @@ act0FirstValueSameSignalRepMappingV1({
     );
   }
 
-  if (nextRepId == 'repeat_board_read' &&
-      skillAtomId == 'board_read' &&
-      sourceSignalId == 'board_cards') {
-    switch (sourceTask) {
-      case 'visible_king_combo_reduction_intro':
-        return target(
-          'world_7',
-          'range_thinking_lite_combo_density',
-          'paired_board_texture_lite_intro',
-        );
-      case 'paired_board_texture_lite_intro':
-        return target(
-          'world_7',
-          'range_thinking_lite_combo_density',
-          'visible_card_combo_density_transfer_check',
-        );
-      case 'visible_card_combo_density_transfer_check':
-        return target(
-          'world_7',
-          'range_thinking_lite_combo_density',
-          'visible_king_combo_reduction_intro',
-        );
-    }
-  }
-
   if (nextRepId == 'repeat_table_read' &&
       skillAtomId == 'table_read' &&
       sourceSignalId == 'stack_depth') {
@@ -2014,10 +1989,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (widget.showPlacementOnStart) {
       try {
         intakeCompleted = await ProgressService.isIntakeCompleted();
-        welcomeCompleted =
-            await Act0FirstStartPreferencesV1.hasCompletedWelcome();
-        introductionSkipped =
-            await Act0FirstStartPreferencesV1.hasSkippedIntroduction();
+        (
+          welcomeCompleted: welcomeCompleted,
+          introductionSkipped: introductionSkipped,
+        ) = await Act0FirstStartPreferencesV1.readWelcomeDisposition();
       } catch (_) {
         if (mounted && epoch == _recoveryEpochV1) {
           setState(() {
@@ -2697,68 +2672,57 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final callbackDiagnosticRunIdV1 = _activeLearningEvidenceRunKeyV1?.runId;
     final openedAsSpacedReview = _spacedReviewReturnV1 != null;
     if (_progressLoadFailed || _firstStartPreferencesLoadFailedV1) {
-      return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Theme(
-          data: ThemeData.dark(useMaterial3: true),
-          child: Scaffold(
-            backgroundColor: Act0AcademyLeafPaletteV1.ink,
-            body: SafeArea(
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      _progressLoadFailed
-                          ? 'Your saved progress could not be read.'
-                          : 'Sharky could not finish starting.',
-                    ),
-                    if (_recoveryMessageV1 != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          _recoveryMessageV1!,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    if (_recoveryBusyV1) ...[
-                      const CircularProgressIndicator(),
-                      const Text(
-                        'Recovery in progress. Keep this screen open.',
-                      ),
-                    ],
-                    TextButton(
-                      key: const Key('act0_recovery_retry'),
-                      onPressed: _recoveryBusyV1
-                          ? null
-                          : () {
-                              setState(() {
-                                _progressLoadFailed = false;
-                                _firstStartPreferencesLoadFailedV1 = false;
-                                _bootSurfaceReady = false;
-                              });
-                              unawaited(_bootstrapFirstStartRouteV1());
-                            },
-                      child: const Text('Try again'),
-                    ),
-                    if (_progressLoadFailed) ...[
-                      TextButton(
-                        key: const Key('act0_recovery_options'),
-                        onPressed: _recoveryBusyV1
-                            ? null
-                            : _openRecoveryOptionsV1,
-                        child: const Text('Recovery options'),
-                      ),
-                      TextButton(
-                        onPressed: _recoveryBusyV1
-                            ? null
-                            : _requestDeleteLocalDataV1,
-                        child: const Text('Delete local data'),
-                      ),
-                    ],
-                  ],
+      return Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _progressLoadFailed
+                      ? 'Your saved progress could not be read.'
+                      : 'Sharky could not finish starting.',
                 ),
-              ),
+                if (_recoveryMessageV1 != null)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      _recoveryMessageV1!,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                if (_recoveryBusyV1) ...[
+                  const CircularProgressIndicator(),
+                  const Text('Recovery in progress. Keep this screen open.'),
+                ],
+                TextButton(
+                  key: const Key('act0_recovery_retry'),
+                  onPressed: _recoveryBusyV1
+                      ? null
+                      : () {
+                          setState(() {
+                            _progressLoadFailed = false;
+                            _firstStartPreferencesLoadFailedV1 = false;
+                            _bootSurfaceReady = false;
+                          });
+                          unawaited(_bootstrapFirstStartRouteV1());
+                        },
+                  child: const Text('Try again'),
+                ),
+                if (_progressLoadFailed) ...[
+                  TextButton(
+                    key: const Key('act0_recovery_options'),
+                    onPressed: _recoveryBusyV1 ? null : _openRecoveryOptionsV1,
+                    child: const Text('Recovery options'),
+                  ),
+                  TextButton(
+                    onPressed: _recoveryBusyV1
+                        ? null
+                        : _requestDeleteLocalDataV1,
+                    child: const Text('Delete local data'),
+                  ),
+                ],
+              ],
             ),
           ),
         ),
@@ -3135,8 +3099,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               }
             }),
           );
-    final darkLearningSurface =
-        _tab == Act0ShellTabV1.learn || _blockCompletionSummary != null;
     final repeatedMissSource = _secondLessonMissSourceV1(
       playSelectedTask,
       playRunner,
@@ -3155,11 +3117,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor:
-          premiumAcademy ||
-              darkLearningSurface ||
-              _showWelcome ||
-              _showPlacement
+      backgroundColor: premiumAcademy || _showWelcome || _showPlacement
           ? Act0AcademyLeafPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -3171,7 +3129,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             _progressSaveNoticeV1(),
             if (showTopBar)
               _TopBarV1(
-                academy: academySurface && !darkLearningSurface,
+                academy: academySurface,
                 state: state,
                 goalLabel: _compactDailyLabel(),
                 goalProgress: _dailyGoalProgressValueV1(),
@@ -4891,6 +4849,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             widget.enableBetaMetrics && _usesPersistedProgress
                             ? () => Act0BetaLearningMetricsV1.fromProgress(
                                 firstWorld: baseState.worldById('world_1'),
+                                history: _learningEvidenceHistoryV1,
                                 completedTaskIds: _completedTaskIds,
                                 correctedMistakes:
                                     _fixProofProjectionV1().proofs.length,
@@ -4986,7 +4945,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? null
           : _BottomNavV1(
               current: _tab,
-              premium: premiumAcademy || darkLearningSurface,
+              premium: premiumAcademy,
               academy: academySurface,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
@@ -5050,11 +5009,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // fixed text scale inside the runner.
     if (academySurface) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
-        value:
-            premiumAcademy ||
-                darkLearningSurface ||
-                _showWelcome ||
-                _showPlacement
+        value: premiumAcademy || _showWelcome || _showPlacement
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
         child: shell,
@@ -5494,6 +5449,7 @@ class _Act0NextUsefulHandCopyBridgeV1 {
     required this.safeTemplateId,
     required this.clueKey,
     required this.clueLabel,
+    required this.useQuestionReplayCopy,
     required this.skillKey,
     required this.skillLabel,
     required this.sourceTaskId,
@@ -5520,6 +5476,18 @@ class _Act0NextUsefulHandCopyBridgeV1 {
       safeTemplateId: safeTemplateId,
       clueKey: receipt.missedSignalId,
       clueLabel: receipt.missedSignalLabel,
+      // Course replay repeats the decision. Generic signal labels may
+      // describe the table rather than what the learner needs to practice.
+      useQuestionReplayCopy: const {
+        'world_5',
+        'world_6',
+        'world_7',
+        'world_8',
+        'world_9',
+        'world_10',
+        'world_11',
+        'world_12',
+      }.contains(receipt.targetWorldId),
       skillKey: receipt.skillAtomId,
       skillLabel: receipt.skillLabel,
       sourceTaskId: receipt.sourceTaskId,
@@ -5534,6 +5502,7 @@ class _Act0NextUsefulHandCopyBridgeV1 {
   final String safeTemplateId;
   final String clueKey;
   final String clueLabel;
+  final bool useQuestionReplayCopy;
   final String skillKey;
   final String skillLabel;
   final String sourceTaskId;
@@ -5545,6 +5514,7 @@ class _Act0NextUsefulHandCopyBridgeV1 {
     return act0RepairIntentCopyGuardLineV1(
           safeTemplateId: safeTemplateId,
           clueLabel: clueLabel,
+          useQuestionReplayCopy: useQuestionReplayCopy,
           skillLabel: skillLabel,
         ) ??
         '';

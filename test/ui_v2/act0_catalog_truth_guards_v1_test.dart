@@ -440,7 +440,15 @@ void main() {
     final audit = runCatalogAudit();
     auditCatalogReachability(File(_sourcePath).readAsStringSync(), audit);
     expect(audit.checks['2.starting_chart'], greaterThan(30));
-    expect(audit.checks['8.street_board_count'], greaterThan(300));
+    final streetFrames = catalogTasks.where(
+      (row) => const {
+        'Preflop',
+        'Flop',
+        'Turn',
+        'River',
+      }.contains(row.task.runner.table.streetLabel),
+    );
+    expect(audit.checks['8.street_board_count'], streetFrames.length);
     expect(audit.checks['4.reachability'], greaterThan(300));
     _verifyBaseline(audit, 'source', 'source');
   });

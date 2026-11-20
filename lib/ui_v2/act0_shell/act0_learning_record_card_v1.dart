@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'act0_club_night_components_v1.dart';
+import 'act0_club_night_tokens_v1.dart';
 import 'act0_profile_evidence_consumer_v1.dart';
 import 'act0_profile_evidence_projection_v1.dart';
 
@@ -15,24 +16,25 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const text = Act0AcademyLeafPaletteV1.text;
-    const muted = Act0AcademyLeafPaletteV1.textMuted;
+    const text = Act0ClubNightTokensV1.text;
+    const muted = Act0ClubNightTokensV1.text2;
     Widget line(String value, {bool title = false}) => Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         value,
         style: TextStyle(
           color: title ? text : muted,
-          fontSize: title ? 15 : 13,
+          fontSize: title ? 17 : 15,
           fontWeight: title ? FontWeight.w600 : FontWeight.w400,
         ),
       ),
     );
     final week = projection.weeklyAnswers;
-    return Act0AcademyLeafSurfaceV1(
+    return Act0ClubCardV1(
       key: const Key('act0_learning_record'),
+      padding: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(Act0ClubNightTokensV1.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,10 +53,15 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
                   TextButton(
                     key: const Key('act0_weekly_open_practice'),
                     onPressed: onOpenPractice,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Act0ClubNightTokensV1.brass,
+                      textStyle: Act0ClubNightTokensV1.link,
+                      minimumSize: const Size(44, 44),
+                    ),
                     child: const Text('Open Practice'),
                   ),
               ],
-              const Divider(),
+              const Divider(color: Act0ClubNightTokensV1.hairline),
             ],
             line('Your learning evidence', title: true),
             line(

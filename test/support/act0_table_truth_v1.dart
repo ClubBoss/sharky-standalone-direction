@@ -1,8 +1,12 @@
 import 'package:poker_solver/poker_solver.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
 // Catalog invariants over the actual Runner projection. Not a betting engine.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
+
+import 'act0_pot_showdown_truth_v1.dart' show potTruthBbV1;
 
 class TableTruthRow {
   TableTruthRow(
@@ -37,6 +41,129 @@ class TableTruthRow {
 String cardIdentity(Act0CardStateV1 c) =>
     '${c.rank == '10' ? 'T' : c.rank}${c.suit}';
 const streets = {'Preflop': 0, 'Flop': 3, 'Turn': 4, 'River': 5};
+
+List<TableTruthRow> auditTableContributionsV1(
+  String taskId,
+  String variant,
+  Act0TableStateV1 t,
+) {
+  final rows = <TableTruthRow>[];
+  void check(String invariant, bool ok, String detail) => rows.add(
+    TableTruthRow(taskId, variant, invariant, ok ? 'PASS' : 'FAIL', detail),
+  );
+  final ledger = t.handContributions;
+  if (ledger != null) {
+    try {
+      final actorSeatId = t.decisionSeatId ?? t.activeSeatId;
+      final amounts = ledger.amounts(
+        seatIds: t.seats
+            .where((seat) => seat.isOccupied)
+            .map((seat) => seat.seatId)
+            .toSet(),
+        actorSeatId: actorSeatId,
+      );
+      final sameStreet =
+          t.streetLabel == pokerStreetToString(ledger.throughStreet);
+      final shownPot = potTruthBbV1(t.potLabel.replaceFirst('Pot ', ''));
+      final shownCall = potTruthBbV1(
+        t.toCallLabel.replaceFirst('To call ', ''),
+      );
+      if (!sameStreet || ledger.fromStreet == PokerStreet.preflop) {
+        check(
+          'D2.pot_feasibility',
+          sameStreet &&
+              shownPot != null &&
+              (shownPot - amounts.potBb).abs() < 1e-9,
+          'shown=${t.potLabel} from contributions=${amounts.potBb} BB',
+        );
+      } else {
+        rows.add(
+          TableTruthRow(
+            taskId,
+            variant,
+            'D2.pot_feasibility',
+            'NEEDS_SOURCE_CONTEXT',
+            'Contributions before ${ledger.fromStreet.name} are missing.',
+          ),
+        );
+      }
+      final due = amounts.toCallBb;
+      // An omitted label on a betting decision must preserve the source gap.
+      // A highlighted seat in a blind-only teaching frame is not such a decision.
+      final unresolvedActorPrice =
+          actorSeatId != null &&
+          due == null &&
+          ledger.entries.any(
+            (entry) =>
+                entry.street == ledger.throughStreet &&
+                entry.kind == Act0ContributionKindV1.wager,
+          ) &&
+          (t.decisionSeatId != null ||
+              t.seats.any(
+                (seat) =>
+                    seat.seatId != actorSeatId &&
+                    seat.bet?.kind == Act0SeatBetKindV1.allIn,
+              ));
+      final checkUnpricedStreet =
+          ledger.fromStreet != PokerStreet.preflop && due == 0;
+      if (t.toCallLabel.isNotEmpty ||
+          (due != null && due > 0) ||
+          unresolvedActorPrice ||
+          checkUnpricedStreet) {
+        if (sameStreet && due == null) {
+          rows.add(
+            TableTruthRow(
+              taskId,
+              variant,
+              'D3.to_call_completeness',
+              'NEEDS_SOURCE_CONTEXT',
+              'The decision actor or stack bound is missing.',
+            ),
+          );
+        } else {
+          check(
+            'D3.to_call_completeness',
+            sameStreet &&
+                due != null &&
+                ((t.toCallLabel.isEmpty && due == 0) ||
+                    (shownCall != null && (shownCall - due).abs() < 1e-9)),
+            'shown=${t.toCallLabel} from commitments and remaining stack=$due BB',
+          );
+        }
+      }
+    } on FormatException catch (error) {
+      check('D2.pot_feasibility', false, error.message);
+      if (t.toCallLabel.isNotEmpty) {
+        check('D3.to_call_completeness', false, error.message);
+      }
+    }
+  } else {
+    final playedPreflopPot =
+        t.scope == Act0TableScopeV1.playedHand &&
+        (potTruthBbV1(t.potLabel.replaceFirst('Pot ', '')) ?? 0) > 0;
+    if (t.streetLabel != 'Preflop' || playedPreflopPot)
+      rows.add(
+        TableTruthRow(
+          taskId,
+          variant,
+          'D2.pot_feasibility',
+          'NEEDS_SOURCE_CONTEXT',
+          'No complete contribution/ante ledger; visible current-street bets are not whole-pot inputs.',
+        ),
+      );
+    if (t.toCallLabel.isNotEmpty)
+      rows.add(
+        TableTruthRow(
+          taskId,
+          variant,
+          'D3.to_call_completeness',
+          'NEEDS_SOURCE_CONTEXT',
+          'Need complete current-street commitments; missing chips do not identify an actor.',
+        ),
+      );
+  }
+  return rows;
+}
 
 List<TableTruthRow> auditTableTruth() {
   final rows = <TableTruthRow>[];
@@ -186,6 +313,10 @@ List<TableTruthRow> auditTableTruth() {
           final t = e.value;
           final v = e.key;
           if (t.scope != Act0TableScopeV1.playedHand) {
+            if (t.scope == Act0TableScopeV1.explanation &&
+                t.handContributions != null) {
+              rows.addAll(auditTableContributionsV1(task.taskId, v, t));
+            }
             rows.add(
               TableTruthRow(
                 task.taskId,
@@ -469,26 +600,7 @@ List<TableTruthRow> auditTableTruth() {
                 'clue=$id',
               );
             }
-            if (t.streetLabel != 'Preflop')
-              rows.add(
-                TableTruthRow(
-                  task.taskId,
-                  v,
-                  'D2.pot_feasibility',
-                  'NEEDS_SOURCE_CONTEXT',
-                  'No complete contribution/ante ledger; visible current-street bets are not whole-pot inputs.',
-                ),
-              );
-            if (t.toCallLabel.isNotEmpty)
-              rows.add(
-                TableTruthRow(
-                  task.taskId,
-                  v,
-                  'D3.to_call_completeness',
-                  'NEEDS_SOURCE_CONTEXT',
-                  'Need complete current-street commitments; missing chips do not identify an actor.',
-                ),
-              );
+            rows.addAll(auditTableContributionsV1(task.taskId, v, t));
           }
         }
       }

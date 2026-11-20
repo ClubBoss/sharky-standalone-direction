@@ -65,7 +65,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
         label: _learnCopyV1(context, en: 'Volume I', ru: 'Том I'),
         subtitle: _learnCopyV1(context, en: 'Foundations', ru: 'Основы'),
         stateLabel: _learnCopyV1(context, en: 'Active', ru: 'Активен'),
-        color: Act0AcademyDarkReadingStyleV1.primary,
+        color: Act0AcademyDesignTokensV1.focus,
       ),
       _VolumePillModelV1(
         id: 'volume_ii',
@@ -80,7 +80,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           en: 'Later frontier',
           ru: 'Поздний рубеж',
         ),
-        color: Act0AcademyDarkReadingStyleV1.textMuted,
+        color: Act0AcademyDesignTokensV1.inkMuted,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'This is a future landmark, not a lesson you can open today.',
@@ -105,7 +105,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           en: 'Advanced frontier',
           ru: 'Продвинутый рубеж',
         ),
-        color: Act0AcademyDarkReadingStyleV1.textMuted,
+        color: Act0AcademyDesignTokensV1.inkMuted,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'This is a future landmark, not a lesson you can open today.',
@@ -125,7 +125,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           child: BackdropFilter(
             filter: ui.ImageFilter.blur(sigmaX: 28, sigmaY: 28),
             child: Container(
-              color: Act0AcademyDarkReadingStyleV1.pageSurface.withValues(
+              color: Act0AcademyDesignTokensV1.pageSurface.withValues(
                 alpha: 0.96,
               ),
             ),
@@ -159,14 +159,14 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                     onPressed: onClose,
                     icon: const Icon(
                       Icons.arrow_back_rounded,
-                      color: Act0AcademyDarkReadingStyleV1.text,
+                      color: Act0AcademyDesignTokensV1.ink,
                     ),
                   ),
                   Expanded(
                     child: Text(
                       _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
                       textAlign: TextAlign.center,
-                      style: Act0AcademyDarkReadingStyleV1.sectionHeading,
+                      style: Act0AcademyDesignTokensV1.sectionHeading,
                     ),
                   ),
                   const SizedBox(width: 48),
@@ -185,8 +185,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                           en: '3 volumes · 36 worlds',
                           ru: '3 тома · 36 миров',
                         ),
-                        style: Act0AcademyDarkReadingStyleV1.supporting
-                            .copyWith(fontSize: 11.0),
+                        style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                          fontSize: 11.0,
+                        ),
                       ),
                     ),
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -247,7 +248,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Color.alphaBlend(
                           currentStateColor.withValues(alpha: 0.08),
-                          Act0AcademyDarkReadingStyleV1.pageSurface,
+                          Act0AcademyDesignTokensV1.pageSurface,
                         ),
                         borderRadius: BorderRadius.circular(
                           Act0AcademyDesignTokensV1.radiusCard,
@@ -276,7 +277,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                                 ru: 'Текущая основа',
                               ),
                             ),
-                            style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
                               color: currentStateColor,
                               letterSpacing: 0.5,
                             ),
@@ -292,7 +293,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_selected_world_status_line',
                             ),
 
-                            style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
                               color: currentStateColor.withValues(alpha: 0.90),
                               fontSize: 10.8,
                               letterSpacing: 0.36,
@@ -309,8 +310,8 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_selected_world_current_line',
                             ),
 
-                            style: Act0AcademyDarkReadingStyleV1.body.copyWith(
-                              color: Act0AcademyDarkReadingStyleV1.text,
+                            style: Act0AcademyDesignTokensV1.body.copyWith(
+                              color: Act0AcademyDesignTokensV1.ink,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -325,11 +326,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                                 'act0_shell_levels_selected_world_next_landmark',
                               ),
 
-                              style: Act0AcademyDarkReadingStyleV1.body
-                                  .copyWith(
-                                    color: Act0AcademyDarkReadingStyleV1
-                                        .needsReviewFg,
-                                  ),
+                              style: Act0AcademyDesignTokensV1.body.copyWith(
+                                color: Act0AcademyDesignTokensV1.needsReviewFg,
+                              ),
                             ),
                           ],
                           const SizedBox(height: 4),
@@ -343,10 +342,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_planned_foundation_line',
                             ),
 
-                            style: Act0AcademyDarkReadingStyleV1.supporting
+                            style: Act0AcademyDesignTokensV1.supporting
                                 .copyWith(
-                                  color:
-                                      Act0AcademyDarkReadingStyleV1.textMuted,
+                                  color: Act0AcademyDesignTokensV1.inkMuted,
                                   fontSize: 10.4,
                                 ),
                           ),
@@ -361,10 +359,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_later_frontier_line',
                             ),
 
-                            style: Act0AcademyDarkReadingStyleV1.supporting
+                            style: Act0AcademyDesignTokensV1.supporting
                                 .copyWith(
-                                  color:
-                                      Act0AcademyDarkReadingStyleV1.textMuted,
+                                  color: Act0AcademyDesignTokensV1.inkMuted,
                                   fontSize: 10.2,
                                 ),
                           ),
@@ -447,7 +444,7 @@ class _VolumePillV1 extends StatelessWidget {
           decoration: BoxDecoration(
             color: Color.alphaBlend(
               volume.color.withValues(alpha: active ? 0.10 : 0.05),
-              Act0AcademyDarkReadingStyleV1.pageSurface,
+              Act0AcademyDesignTokensV1.pageSurface,
             ),
             borderRadius: BorderRadius.circular(
               Act0AcademyDesignTokensV1.radiusCard,
@@ -463,7 +460,7 @@ class _VolumePillV1 extends StatelessWidget {
               Text(
                 volume.label,
 
-                style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   color: volume.color,
                   letterSpacing: 0.18,
                   fontSize: 8.5,
@@ -472,18 +469,18 @@ class _VolumePillV1 extends StatelessWidget {
               Text(
                 volume.subtitle,
 
-                style: Act0AcademyDarkReadingStyleV1.supporting.copyWith(
+                style: Act0AcademyDesignTokensV1.supporting.copyWith(
                   fontSize: 9.6,
                   height: 1.0,
                   color: active
-                      ? Act0AcademyDarkReadingStyleV1.textMuted
-                      : Act0AcademyDarkReadingStyleV1.textMuted,
+                      ? Act0AcademyDesignTokensV1.inkMuted
+                      : Act0AcademyDesignTokensV1.inkMuted,
                 ),
               ),
               Text(
                 volume.stateLabel,
 
-                style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   color: volume.color,
                   fontSize: 8.6,
                   letterSpacing: 0.08,
@@ -513,8 +510,8 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration:
           Act0ShellTokensV1.surfaceDecoration(
-            color: Act0AcademyDarkReadingStyleV1.pageSurface,
-            borderColor: Act0AcademyDarkReadingStyleV1.textMuted.withValues(
+            color: Act0AcademyDesignTokensV1.pageSurface,
+            borderColor: Act0AcademyDesignTokensV1.inkMuted.withValues(
               alpha: 0.36,
             ),
           ).copyWith(
@@ -528,21 +525,18 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
         children: [
           _StateBadgeV1(
             label: volume.stateLabel,
-            color: Act0AcademyDarkReadingStyleV1.textMuted,
+            color: Act0AcademyDesignTokensV1.inkMuted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(
-            volume.label,
-            style: Act0AcademyDarkReadingStyleV1.sectionHeading,
-          ),
+          Text(volume.label, style: Act0AcademyDesignTokensV1.sectionHeading),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(volume.subtitle, style: Act0AcademyDarkReadingStyleV1.body),
+          Text(volume.subtitle, style: Act0AcademyDesignTokensV1.body),
           if ((volume.unlockAfterLabel ?? '').isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Text(
               volume.unlockAfterLabel!,
               key: Key('act0_shell_${volume.id}_unlock_label'),
-              style: Act0AcademyDarkReadingStyleV1.body,
+              style: Act0AcademyDesignTokensV1.body,
             ),
           ],
           if ((volume.previewLine ?? '').isNotEmpty) ...[
@@ -550,14 +544,14 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
             Text(
               volume.previewLine!,
               key: Key('act0_shell_${volume.id}_preview_line'),
-              style: Act0AcademyDarkReadingStyleV1.supporting,
+              style: Act0AcademyDesignTokensV1.supporting,
             ),
           ],
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           OutlinedButton(
             key: Key('act0_shell_${volume.id}_continue_current_cta'),
             onPressed: () => Navigator.of(context).pop(),
-            style: Act0AcademyDarkReadingStyleV1.secondaryButtonStyle(),
+            style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
             child: Text(continueLabel),
           ),
         ],
@@ -675,9 +669,9 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                     color: widget.selected
                         ? Color.alphaBlend(
                             color.withValues(alpha: active ? 0.12 : 0.08),
-                            Act0AcademyDarkReadingStyleV1.pageSurface,
+                            Act0AcademyDesignTokensV1.pageSurface,
                           )
-                        : Act0AcademyDarkReadingStyleV1.surface.withValues(
+                        : Act0AcademyDesignTokensV1.cardSurface.withValues(
                             alpha: 0.88,
                           ),
                     borderRadius: BorderRadius.circular(nodeRadius),
@@ -740,8 +734,8 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                                 '${widget.world.worldNumber}',
                                 style: TextStyle(
                                   color: locked && !nextWorld
-                                      ? Act0AcademyDarkReadingStyleV1.textMuted
-                                      : Act0AcademyDarkReadingStyleV1.text,
+                                      ? Act0AcademyDesignTokensV1.inkMuted
+                                      : Act0AcademyDesignTokensV1.ink,
                                   fontSize: active ? 16 : 15,
                                   fontWeight: FontWeight.w900,
                                 ),
@@ -763,7 +757,7 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                                       en: 'World ${widget.world.worldNumber}',
                                       ru: '\u041c\u0438\u0440 ${widget.world.worldNumber}',
                                     ),
-                                    style: Act0AcademyDarkReadingStyleV1.label
+                                    style: Act0AcademyDesignTokensV1.label
                                         .copyWith(
                                           color: color,
                                           letterSpacing: 0.42,
@@ -778,21 +772,19 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                               act0AcademyWorldTitleV1(context, widget.world),
                               style: Act0ShellTokensV1.cardTitle.copyWith(
                                 color: locked && !nextWorld
-                                    ? Act0AcademyDarkReadingStyleV1.textMuted
-                                    : Act0AcademyDarkReadingStyleV1.text,
+                                    ? Act0AcademyDesignTokensV1.inkMuted
+                                    : Act0AcademyDesignTokensV1.ink,
                                 fontSize: widget.selected ? 14.2 : 13.8,
                               ),
                             ),
                             const SizedBox(height: 3),
                             Text(
                               subtitle,
-                              style: Act0AcademyDarkReadingStyleV1.supporting
+                              style: Act0AcademyDesignTokensV1.supporting
                                   .copyWith(
                                     color: locked && !nextWorld
-                                        ? Act0AcademyDarkReadingStyleV1
-                                              .textMuted
-                                        : Act0AcademyDarkReadingStyleV1
-                                              .textMuted,
+                                        ? Act0AcademyDesignTokensV1.inkMuted
+                                        : Act0AcademyDesignTokensV1.inkMuted,
                                     fontSize: 11.2,
                                     height: 1.25,
                                   ),
@@ -801,14 +793,13 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                               const SizedBox(height: 5),
                               Text(
                                 detailText,
-                                style: Act0AcademyDarkReadingStyleV1.label
-                                    .copyWith(
-                                      color: color.withValues(
-                                        alpha: locked ? 0.92 : 0.88,
-                                      ),
-                                      fontSize: 10.2,
-                                      letterSpacing: 0.28,
-                                    ),
+                                style: Act0AcademyDesignTokensV1.label.copyWith(
+                                  color: color.withValues(
+                                    alpha: locked ? 0.92 : 0.88,
+                                  ),
+                                  fontSize: 10.2,
+                                  letterSpacing: 0.28,
+                                ),
                               ),
                             ],
                           ],
@@ -845,12 +836,12 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final progressionLocked = _isProgressionLockedWorldV1(worlds, world);
     final color = progressionLocked
-        ? Act0AcademyDarkReadingStyleV1.needsReviewFg
+        ? Act0AcademyDesignTokensV1.needsReviewFg
         : switch (world.status) {
             Act0WorldStateV1.completed || Act0WorldStateV1.passedByRulesCheck =>
-              Act0AcademyDarkReadingStyleV1.primary,
-            Act0WorldStateV1.current => Act0AcademyDarkReadingStyleV1.primary,
-            Act0WorldStateV1.locked => Act0AcademyDarkReadingStyleV1.textMuted,
+              Act0AcademyDesignTokensV1.focus,
+            Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
+            Act0WorldStateV1.locked => Act0AcademyDesignTokensV1.inkMuted,
           };
     final worldTitle = act0AcademyWorldTitleV1(context, world);
     final worldSubtitle = act0AcademyWorldSubtitleV1(context, world);
@@ -876,7 +867,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration:
           Act0ShellTokensV1.surfaceDecoration(
-            color: Act0AcademyDarkReadingStyleV1.pageSurface,
+            color: Act0AcademyDesignTokensV1.pageSurface,
             borderColor: color.withValues(alpha: 0.48),
           ).copyWith(
             borderRadius: BorderRadius.circular(
@@ -898,8 +889,8 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                     en: 'Lesson path',
                     ru: 'Маршрут доказательств',
                   ),
-                  style: Act0AcademyDarkReadingStyleV1.label.copyWith(
-                    color: Act0AcademyDarkReadingStyleV1.needsReviewFg,
+                  style: Act0AcademyDesignTokensV1.label.copyWith(
+                    color: Act0AcademyDesignTokensV1.needsReviewFg,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -907,7 +898,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(worldTitle, style: Act0AcademyDarkReadingStyleV1.sectionHeading),
+          Text(worldTitle, style: Act0AcademyDesignTokensV1.sectionHeading),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
             progressionLocked
@@ -918,20 +909,17 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                   )
                 : act0DisplayWorldNameCopyV1(world.unlockLabel),
             key: const Key('act0_shell_world_unlock_label'),
-            style: Act0AcademyDarkReadingStyleV1.body.copyWith(
-              color: Act0AcademyDarkReadingStyleV1.text,
+            style: Act0AcademyDesignTokensV1.body.copyWith(
+              color: Act0AcademyDesignTokensV1.ink,
             ),
           ),
           if (progressionLocked) ...[
-            Text(
-              worldSubtitle,
-              style: Act0AcademyDarkReadingStyleV1.supporting,
-            ),
+            Text(worldSubtitle, style: Act0AcademyDesignTokensV1.supporting),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             OutlinedButton(
               key: const Key('act0_shell_world_continue_current_cta'),
               onPressed: onContinueCurrentWorld,
-              style: Act0AcademyDarkReadingStyleV1.secondaryButtonStyle(),
+              style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
               child: Text(
                 _learnCopyV1(
                   context,
@@ -944,8 +932,8 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapMd),
             Text(
               _learnCopyV1(context, en: 'Locked preview', ru: 'Предпросмотр'),
-              style: Act0AcademyDarkReadingStyleV1.label.copyWith(
-                color: Act0AcademyDarkReadingStyleV1.textMuted,
+              style: Act0AcademyDesignTokensV1.label.copyWith(
+                color: Act0AcademyDesignTokensV1.inkMuted,
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -955,7 +943,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                 en: 'This world opens later in the route. Stay on the current path first.',
                 ru: 'Этот мир откроется позже по маршруту. Сначала держись текущего пути.',
               ),
-              style: Act0AcademyDarkReadingStyleV1.supporting,
+              style: Act0AcademyDesignTokensV1.supporting,
             ),
           ],
         ],

@@ -1,7 +1,132 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  test('antes add to the pot without offsetting a capped call', () {
+    const preflop = PokerStreet.preflop;
+    const blind = Act0ContributionKindV1.blind;
+    const ante = Act0ContributionKindV1.ante;
+    const wager = Act0ContributionKindV1.wager;
+    const seats = {'sb', 'bb'};
+    const entries = [
+      Act0ContributionV1(preflop, 'sb', blind, .5),
+      Act0ContributionV1(preflop, 'bb', blind, 1),
+      Act0ContributionV1(preflop, 'sb', ante, .25),
+      Act0ContributionV1(preflop, 'bb', ante, .25),
+      Act0ContributionV1(preflop, 'sb', wager, 1.5),
+      Act0ContributionV1(preflop, 'bb', wager, 4),
+    ];
+    const short = Act0HandContributionsV1(
+      throughStreet: preflop,
+      startingStackBbBySeat: {'sb': 3, 'bb': 5.25},
+      entries: entries,
+    );
+    expect(short.amounts(seatIds: seats, actorSeatId: 'sb'), (
+      potBb: 7.5,
+      toCallBb: .75,
+    ));
+
+    const fullStack = Act0HandContributionsV1(
+      throughStreet: preflop,
+      startingStackBbBySeat: {'sb': 10},
+      entries: entries,
+    );
+    expect(fullStack.amounts(seatIds: seats, actorSeatId: 'sb').toCallBb, 3);
+
+    const settled = Act0HandContributionsV1(
+      throughStreet: preflop,
+      startingStackBbBySeat: {'sb': 3, 'bb': 5.25},
+      entries: [
+        ...entries,
+        Act0ContributionV1(preflop, 'sb', wager, .75),
+        Act0ContributionV1(
+          preflop,
+          'bb',
+          Act0ContributionKindV1.uncalledReturn,
+          2.25,
+        ),
+      ],
+    );
+    expect(settled.amounts(seatIds: seats).potBb, 6);
+  });
+
+  test('a street ledger proves price only if the stack bound covers it', () {
+    const flop = PokerStreet.flop;
+    const entries = [
+      Act0ContributionV1(flop, 'btn', Act0ContributionKindV1.wager, 2),
+      Act0ContributionV1(flop, 'bb', Act0ContributionKindV1.wager, 7),
+    ];
+    const covers = Act0HandContributionsV1(
+      fromStreet: flop,
+      throughStreet: flop,
+      minimumStartingStackBbBySeat: {'btn': 7},
+      entries: entries,
+    );
+    const ambiguous = Act0HandContributionsV1(
+      fromStreet: flop,
+      throughStreet: flop,
+      minimumStartingStackBbBySeat: {'btn': 6},
+      entries: entries,
+    );
+    expect(covers.amounts(seatIds: {'btn', 'bb'}, actorSeatId: 'btn'), (
+      potBb: 9,
+      toCallBb: 5,
+    ));
+    expect(
+      ambiguous.amounts(seatIds: {'btn', 'bb'}, actorSeatId: 'btn').toCallBb,
+      isNull,
+    );
+  });
+
+  test('amounts fail closed on an invalid seat or a later street', () {
+    const unknownSeat = Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      entries: [
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'unknown',
+          Act0ContributionKindV1.blind,
+          1,
+        ),
+      ],
+    );
+    const futureStreet = Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      entries: [
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+    );
+    for (final ledger in [unknownSeat, futureStreet]) {
+      expect(() => ledger.amounts(seatIds: {'btn'}), throwsFormatException);
+    }
+  });
+
+  test('W11 mixed-table focus highlights the actual HJ bettor', () {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w11_checkpoint_mixed_table_line',
+        );
+    final table = task.runner.table;
+    final bettor = table.seats.singleWhere((seat) => seat.bet != null);
+
+    expect(bettor.seatId, 'hj');
+    final hero = table.seats.singleWhere((seat) => seat.isHero);
+    expect(table.highlightedSeatIds, [bettor.seatId, hero.seatId]);
+    expect(bettor.bet!.amountLabel, '5 BB');
+    expect(table.potLabel, 'Pot 13 BB');
+    expect(table.toCallLabel, 'To call 5 BB');
+  });
+
   test('W11 QJs flop-to-turn is one coherent 35 BB effective hand', () {
     final lesson = Act0ShellStateV1.sample
         .worldById('world_11')

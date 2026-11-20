@@ -10,6 +10,58 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+// The legacy signal mapper can no longer read a physical clue from these
+// hypothetical questions. Their current typed repairs are verified separately.
+const _placeholderTableFallbackIds = <String>{
+  'w9_cash_vs_tournament',
+  'w9_short_stack_survival',
+  'w9_survival_stack_tradeoff',
+  'w9_m_ratio_red_zone',
+  'w9_m_ratio_green_zone',
+  'w9_m_ratio_yellow_zone',
+  'w9_medium_stack_tighten',
+  'w9_big_stack_leverage',
+  'w9_bubble_short_stack',
+  'w9_checkpoint_survival_line',
+  'w9_checkpoint_zone_line',
+  'w9_checkpoint_bubble_line',
+  'w9_checkpoint_table_notice',
+  'w9_checkpoint_review',
+  'w10_nit_tag',
+  'w10_loose_passive_tag',
+  'w10_overaggressive_tag',
+  'w10_vs_nit_open_wider',
+  'w10_vs_caller_value_heavier',
+  'w10_vs_sticky_defender_tighten_steals',
+  'w10_overbluff_punish',
+  'w10_underbluff_fold_more',
+  'w10_guardrail_sample_size',
+  'w10_checkpoint_tag_line',
+  'w10_checkpoint_lever_line',
+  'w10_checkpoint_guardrail_line',
+  'w10_checkpoint_table_notice',
+  'w10_checkpoint_review',
+  'w11_plan_focus_choice',
+  'w11_plan_avoid_overload',
+  'w11_plan_table_focus_transfer',
+  'w11_trigger_overfold_blinds',
+  'w11_trigger_overcall_flop',
+  'w11_review_pick_leak',
+  'w11_review_define_fix',
+  'w11_checkpoint_plan_line',
+  'w11_checkpoint_trigger_line',
+  'w11_checkpoint_review_line',
+  'w11_checkpoint_review',
+  'w12_good_fold_bad_result',
+  'w12_after_bad_beat_reset',
+  'w12_after_mistake_reset',
+  'w12_assertive_not_ego',
+  'w12_discipline_under_pressure',
+  'w12_checkpoint_reset_line',
+  'w12_checkpoint_discipline_line',
+  'w12_checkpoint_review',
+};
+
 const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_10',
   'asm05_new_known_holes_turn_call_40',
@@ -178,7 +230,7 @@ void main() {
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
         'TABLE_ACTION_DECISION': 32,
-        'TABLE_CLUE_OR_RANGE_INFERENCE': 26,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 26,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -198,10 +250,19 @@ void main() {
         ),
         isTrue,
       );
-      expect(repairSnapshot['sameSignalMapped'], 270);
-      expect(repairSnapshot['fallbackOnly'], 22);
+      expect(
+        repairSnapshot['sameSignalMapped'],
+        270 - _placeholderTableFallbackIds.length,
+      );
+      expect(
+        repairSnapshot['fallbackOnly'],
+        22 + _placeholderTableFallbackIds.length,
+      );
       expect(repairSnapshot['unresolvedProductGap'], 3);
-      expect(repairSnapshot['unrecordedFallback'], 2);
+      expect(
+        repairSnapshot['unrecordedFallback'],
+        2 + _placeholderTableFallbackIds.length,
+      );
       // The historical comparison restores the old M-ratio price mapping
       // and the intro's old seat mapping. The live rows use their actual goals.
       final zone = repair.singleWhere(
@@ -219,9 +280,13 @@ void main() {
       final historicalRepairComparison = <String, Object?>{
         ...repairSnapshot,
         'sameSignalMapped':
-            (repairSnapshot['sameSignalMapped'] as int) + priorDeclaredMappings,
+            (repairSnapshot['sameSignalMapped'] as int) +
+            priorDeclaredMappings +
+            _placeholderTableFallbackIds.length,
         'fallbackOnly':
-            (repairSnapshot['fallbackOnly'] as int) - priorDeclaredMappings,
+            (repairSnapshot['fallbackOnly'] as int) -
+            priorDeclaredMappings -
+            _placeholderTableFallbackIds.length,
         'unresolvedProductGap':
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
@@ -232,7 +297,10 @@ void main() {
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
-      expect(repairSnapshot['unrecordedFallback'], 2);
+      expect(
+        repairSnapshot['unrecordedFallback'],
+        2 + _placeholderTableFallbackIds.length,
+      );
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
         'confused_card_rank_suit': 5,
@@ -364,12 +432,12 @@ void main() {
       expect(intent?.missedSignalId, 'misread_tournament_pressure');
       expect(intent?.targetWorldId, 'world_9');
       expect(intent?.targetLessonId, 'm_ratio_zones_lite');
-      expect(intent?.targetTaskId, source.task.taskId);
-      expect(intent?.mappingType, 'unresolved_product_gap');
+      expect(intent?.targetTaskId, 'w9_m_ratio_yellow_zone');
+      expect(intent?.mappingType, 'repair');
     }
   });
 
-  test('two ASM05 rows retain full census without inventing semantic admission', () {
+  test('both ASM05 scenarios allow only their own familiar replay', () {
     final rows = _assessedRows();
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
@@ -391,7 +459,7 @@ void main() {
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
       'TABLE_ACTION_DECISION': 34,
-      'TABLE_CLUE_OR_RANGE_INFERENCE': 26,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 26,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -463,8 +531,8 @@ void main() {
       expect(repair.sameSignalMapped, isTrue);
       expect(repair.fallbackOnly, isFalse);
       expect(repair.exactReplay, isFalse);
-      // This raw mutual map is retained as provenance, not adopted as a
-      // semantic relation. Exact intake rows440/441 remain unreviewed.
+      // Preserve the raw mutual map for comparison. The live targets below
+      // only rehearse the exact source question.
       expect(
         act0CurrentAuthoredSourceFingerprintForIdentityV1(
           worldId: row.worldId,
@@ -476,7 +544,7 @@ void main() {
             : 'ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7',
       );
       final current = _repairRow(row).intents.single;
-      expect(current.mappingType, 'unresolved_product_gap');
+      expect(current.mappingType, 'intentional_exact');
       expect(current.targetTaskId, row.task.taskId);
       final goal = act0RepairGoalResolutionForIntentV1(
         current,
@@ -487,7 +555,7 @@ void main() {
       expect(goal.isHeld, isTrue);
       expect(goal.canLaunch, isFalse);
       expect(goal.canClaimIndependentApplication, isFalse);
-      expect(goal.reason, 'relation_unconfirmed');
+      expect(goal.canClaimMatchedRecheck, isFalse);
       extensionRepair.add(repair);
     }
 
@@ -505,18 +573,26 @@ void main() {
       currentGaps.map((row) => row.row.task.taskId).toSet(),
       _newW01OrderGapIds,
     );
-    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(272));
-    expect(allRepair.where((row) => row.fallbackOnly), hasLength(22));
+    expect(
+      allRepair.where((row) => row.sameSignalMapped),
+      hasLength(272 - _placeholderTableFallbackIds.length),
+    );
+    expect(
+      allRepair.where((row) => row.fallbackOnly),
+      hasLength(22 + _placeholderTableFallbackIds.length),
+    );
     expect(
       allRepair.where((row) => row.sameSignalMapped).length +
           currentGaps.length +
-          3,
+          3 +
+          _placeholderTableFallbackIds.length,
       278,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
           currentGaps.length -
-          3,
+          3 -
+          _placeholderTableFallbackIds.length,
       15 + 1,
     );
     expect(allRepair.where((row) => row.exactReplay), hasLength(17));
@@ -556,10 +632,14 @@ void main() {
     expect(
       allRepair
           .where((row) => row.mappingType == 'exact')
-          .map((row) => row.row.task.taskId),
-      ['button_advantage_find_button', 'w9_m_ratio_table_window_transfer'],
-      reason:
-          'The two superseded declared mappings are checked separately from typed repairs.',
+          .map((row) => row.row.task.taskId)
+          .toSet(),
+      {
+        'button_advantage_find_button',
+        'w9_m_ratio_table_window_transfer',
+        ..._placeholderTableFallbackIds,
+      },
+      reason: 'Legacy fallbacks do not stand in for checked typed repairs.',
     );
     expect(
       allRepair
@@ -630,6 +710,9 @@ void main() {
   });
   test('every wrong choice has a deterministic current typed disposition', () {
     final rows = _assessedRows();
+    final order = {
+      for (final (index, row) in rows.indexed) row.task.taskId: index,
+    };
     final admitted = <String>{};
     final foundationDefaults = <String>{};
     final knownHeld = <String>{};
@@ -672,7 +755,10 @@ void main() {
           final admittedContract = contract!;
           if (admittedContract.relationId.startsWith('foundation_replay/')) {
             foundationDefaults.add(key);
-            expect(row.worldNumber, lessThanOrEqualTo(4));
+            expect(
+              row.worldNumber,
+              lessThanOrEqualTo(act0SameGoalReplayThroughWorldV1),
+            );
             expect(admittedContract.canClaimIndependentApplication, isFalse);
             expect(admittedContract.canClaimMatchedRecheck, isFalse);
           } else {
@@ -684,10 +770,31 @@ void main() {
           expect(intent.targetTaskId, admittedContract.targetTaskId);
           expect(intent.sourceFingerprint, admittedContract.sourceFingerprint);
           expect(intent.targetFingerprint, admittedContract.targetFingerprint);
+          if (row.worldNumber >= 5 &&
+              row.worldNumber <= act0SameGoalReplayThroughWorldV1 &&
+              !row.task.repairOnly) {
+            final targetIndex = order[intent.targetTaskId]!;
+            final target = rows[targetIndex];
+            if (target.task.repairOnly) {
+              expect(target.worldId, row.worldId, reason: key);
+              expect(target.lessonId, row.lessonId, reason: key);
+            } else {
+              expect(
+                targetIndex,
+                lessThanOrEqualTo(order[row.task.taskId]!),
+                reason: key,
+              );
+            }
+            if (row.task.taskId == 'visible_king_combo_reduction_intro') {
+              expect(intent.targetTaskId, row.task.taskId);
+              expect(intent.mappingType, 'intentional_exact');
+            }
+          }
         } else {
           (contract == null ? unknown : knownHeld).add(key);
           expect(
-            row.worldNumber > 4 || row.task.repairOnly,
+            row.worldNumber > act0SameGoalReplayThroughWorldV1 ||
+                row.task.repairOnly,
             isTrue,
             reason: key,
           );
@@ -777,8 +884,8 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(185));
-    expect(unknown, hasLength(251));
+    expect(foundationDefaults, hasLength(426));
+    expect(unknown, hasLength(10));
     expect(
       admitted.length +
           foundationDefaults.length +

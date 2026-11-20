@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 
 /// Shared reading-surface paint only. Never consumed by the physical table,
 /// decision stage, grading, or persisted learner state.
@@ -94,78 +92,5 @@ class Act0AcademyReadingStyleV1 {
     minimumSize: WidgetStatePropertyAll(
       Size(fullWidth ? double.infinity : 0, height < 48 ? 48 : height),
     ),
-  );
-}
-
-/// The dark Academy palette used by Learn and lesson summaries.
-abstract final class Act0AcademyDarkReadingStyleV1 {
-  static const pageSurface = Act0AcademyLeafPaletteV1.ink;
-  static const surface = Act0AcademyLeafPaletteV1.inkRaised;
-  static const surface2 = pageSurface;
-  static const surface3 = Act0AcademyLeafPaletteV1.tealDeep;
-  static const text = Act0AcademyLeafPaletteV1.text;
-  static const textMuted = Act0AcademyLeafPaletteV1.textMuted;
-  static const primary = Act0AcademyLeafPaletteV1.aqua;
-  static const info = Act0AcademyLeafPaletteV1.aquaSoft;
-  static const gold = Act0AcademyLeafPaletteV1.repair;
-  static const danger = Act0ShellTokensV1.danger;
-  static const border = Act0AcademyLeafPaletteV1.rule;
-  static const correctFg = Act0AcademyLeafPaletteV1.aquaSoft;
-  static const correctBg = Act0AcademyLeafPaletteV1.tealDeep;
-  static const needsReviewFg = gold;
-  static const needsReviewBg = surface;
-
-  static const body = TextStyle(color: text, fontSize: 15, height: 1.4);
-  static const supporting = TextStyle(
-    color: textMuted,
-    fontSize: 13,
-    height: 1.4,
-  );
-  static const muted = supporting;
-  static const label = TextStyle(
-    color: textMuted,
-    fontSize: 12,
-    height: 1.35,
-    fontWeight: FontWeight.w600,
-  );
-  static const sectionHeading = TextStyle(
-    color: text,
-    fontSize: 22,
-    height: 1.2,
-    fontWeight: FontWeight.w700,
-  );
-  static const lessonHeading = TextStyle(
-    color: text,
-    fontSize: 28,
-    height: 1.16,
-    fontWeight: FontWeight.w700,
-  );
-  static const screenTitle = lessonHeading;
-
-  static BoxDecoration cardDecoration({Color? borderColor, Color? color}) =>
-      Act0AcademyDesignTokensV1.cardDecoration(
-        color: color ?? surface,
-        borderColor: borderColor ?? border,
-      );
-
-  static ButtonStyle primaryButtonStyle() => FilledButton.styleFrom(
-    backgroundColor: primary,
-    foregroundColor: pageSurface,
-    disabledBackgroundColor: surface3,
-    disabledForegroundColor: textMuted,
-    minimumSize: const Size.fromHeight(52),
-  );
-
-  static ButtonStyle premiumActionButtonStyle() => primaryButtonStyle();
-
-  static ButtonStyle secondaryButtonStyle() => tonalButtonStyle(tone: info);
-
-  static ButtonStyle tonalButtonStyle({
-    required Color tone,
-    bool fullWidth = false,
-  }) => OutlinedButton.styleFrom(
-    foregroundColor: tone,
-    minimumSize: Size(fullWidth ? double.infinity : 48, 48),
-    side: const BorderSide(color: border),
   );
 }

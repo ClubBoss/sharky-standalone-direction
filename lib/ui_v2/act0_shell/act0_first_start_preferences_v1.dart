@@ -42,6 +42,14 @@ class Act0FirstStartPreferencesV1 {
         }
       });
 
+  static Future<({bool welcomeCompleted, bool introductionSkipped})>
+  readWelcomeDisposition() => _withPreferences(
+    (prefs) async => (
+      welcomeCompleted: prefs.getBool(_welcomeCompletedKey) ?? false,
+      introductionSkipped: prefs.getBool(_introductionSkippedKey) ?? false,
+    ),
+  );
+
   static Future<bool> hasCompletedWelcome() => _withPreferences(
     (prefs) async => prefs.getBool(_welcomeCompletedKey) ?? false,
   );
