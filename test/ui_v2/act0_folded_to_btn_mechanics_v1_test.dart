@@ -251,6 +251,28 @@ void main() {
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         expect(find.text(task.runner.question), findsOneWidget);
+        for (final seat in task.runner.table.seats) {
+          final plate = find.byKey(Key('act0_shell_seat_node_${seat.seatId}'));
+          final stack = find.byKey(
+            Key('act0_shell_seat_sublabel_${seat.seatId}'),
+          );
+          expect(tester.widget<Text>(stack).data, seat.stackLabel);
+          final position = find.descendant(
+            of: plate,
+            matching: find.text(seat.seatLabel),
+          );
+          expect(position, findsOneWidget);
+          expect(
+            tester.getTopLeft(position).dy,
+            lessThan(tester.getTopLeft(stack).dy),
+          );
+          expect(
+            (tester.widget<Container>(plate).child as Opacity).opacity,
+            seat.isFolded ? 0.58 : 1.0,
+          );
+        }
+        expect(find.text('Tap a highlighted seat'), findsNothing);
+
         final caption = find.textContaining(
           act0LearnerFacingPremisesV1(task.runner.caption),
         );

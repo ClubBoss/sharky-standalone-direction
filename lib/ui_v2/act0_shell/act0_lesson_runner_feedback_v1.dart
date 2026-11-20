@@ -548,25 +548,22 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       ),
                     ),
                   ] else ...[
-                    Text(
-                      suppressRepairFocus && forwardCtaLabel == 'Next check'
-                          ? 'NEXT \u00B7 CONTINUE CHECK'
-                          : suppressRepairFocus &&
-                                forwardCtaLabel == 'See my start'
-                          ? 'NEXT \u00B7 YOUR START'
-                          : isWrong || isRepairFocusState
-                          ? 'NEXT \u00B7 REPAIR THE CLUE'
-                          : 'NEXT \u00B7 KEEP THE READ',
-                      key: const Key(
-                        'act0_shell_feedback_primary_result_label',
+                    if (suppressRepairFocus) ...[
+                      Text(
+                        forwardCtaLabel == 'See my start'
+                            ? 'NEXT \u00B7 YOUR START'
+                            : 'NEXT \u00B7 CONTINUE CHECK',
+                        key: const Key(
+                          'act0_shell_feedback_primary_result_label',
+                        ),
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: tone,
+                          fontSize: 10.0,
+                          letterSpacing: 0.45,
+                        ),
                       ),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: tone,
-                        fontSize: 10.0,
-                        letterSpacing: 0.45,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
+                      const SizedBox(height: 3),
+                    ],
                     Text(
                       nextActionLine,
                       key: const Key('act0_shell_feedback_rhythm_verdict'),
