@@ -144,8 +144,32 @@ void main() {
       'w9_checkpoint_table_notice',
       'w9_checkpoint_review',
     };
+    const w10HypotheticalIds = <String>{
+      'w10_player_type_intro',
+      'w10_nit_tag',
+      'w10_loose_passive_tag',
+      'w10_overaggressive_tag',
+      'w10_player_type_recap',
+      'w10_one_lever_intro',
+      'w10_vs_nit_open_wider',
+      'w10_vs_caller_value_heavier',
+      'w10_vs_sticky_defender_tighten_steals',
+      'w10_one_lever_recap',
+      'w10_guardrails_intro',
+      'w10_overbluff_punish',
+      'w10_underbluff_fold_more',
+      'w10_guardrail_sample_size',
+      'w10_guardrails_recap',
+      'w10_checkpoint_intro',
+      'w10_checkpoint_tag_line',
+      'w10_checkpoint_lever_line',
+      'w10_checkpoint_guardrail_line',
+      'w10_checkpoint_table_notice',
+      'w10_checkpoint_review',
+    };
     const explanationIds = <String>{
       ...w9HypotheticalIds,
+      ...w10HypotheticalIds,
       'what_poker_is_all_in_meaning',
       'what_poker_is_matched_chips_transfer',
       'same_hand_different_seat_position_repair_same_hand_different_seat',
@@ -245,7 +269,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(47));
-    expect(explanationIds, hasLength(26));
+    expect(explanationIds, hasLength(47));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -262,7 +286,8 @@ void main() {
           : Act0TableScopeV1.playedHand;
       expect(table.scope, expected, reason: task.taskId);
       expect(table.copyWith(centerLabel: 'A different cue').scope, expected);
-      if (w9HypotheticalIds.contains(task.taskId)) {
+      if (w9HypotheticalIds.contains(task.taskId) ||
+          w10HypotheticalIds.contains(task.taskId)) {
         expect(table.streetLabel, isEmpty, reason: task.taskId);
         expect(table.heroCards, isEmpty, reason: task.taskId);
         expect(table.boardCards, isEmpty, reason: task.taskId);
@@ -415,8 +440,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 302);
-    expect(played, 304); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 281);
+    expect(played, 283); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,

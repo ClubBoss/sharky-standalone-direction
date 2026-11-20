@@ -23699,7 +23699,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
 );
 
 final _w10PlayerTypeIntroRunner = _w9BubblePressureIntroRunner.copyWith(
-  table: _w9ExampleTableBase,
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w10_player_type_intro',
   lessonTitle: 'Who is at the table',
@@ -24447,8 +24447,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
   lessonId: 'w10_table_adjustment_notice',
   lessonTitle: 'Player-adjustment checkpoint',
   lessonSubtitle: 'Player Adjustment',
-  caption:
-      'Real table. Both blinds have folded to your late steals again and again.',
+  caption: 'Suppose both blinds keep folding to your late steals.',
   hint: 'Choose the first exploit you can actually track at the table.',
   question: 'What is the clean first live adjustment?',
   feedbackTitle: 'Adjustment first, not chaos.',
@@ -24499,6 +24498,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
 );
 
 final _w11SessionPlanIntroRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+  table: _w9ExampleTableBase,
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w11_session_plan_intro',
   lessonTitle: 'Session plan in 30 seconds',
