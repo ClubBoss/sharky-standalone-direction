@@ -302,8 +302,15 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           // learners read the complete authored theory rather than ellipsizing
           // source teaching facts. The physical table remains unchanged.
           if (phase == Act0LearningScenePhaseV3.theory || scrollSupport)
-            SizedBox(
-              height: (enlarged ? 3 : 2) * scaler.scale(11.4) * 1.16,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight:
+                    (phase == Act0LearningScenePhaseV3.theory
+                        ? 4
+                        : (enlarged ? 3 : 2)) *
+                    scaler.scale(11.4) *
+                    1.16,
+              ),
               child: Row(
                 children: [
                   Expanded(

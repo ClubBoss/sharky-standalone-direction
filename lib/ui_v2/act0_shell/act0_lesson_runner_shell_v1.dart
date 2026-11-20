@@ -3224,6 +3224,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final hasNextSupportSegment =
         cappedSupportSegmentIndex < effectiveLearningRailPages.length - 1;
     final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
+    final hasEarlierTheory =
+        hasPreviousSupportSegment || runner.teachingStepIndex > 0;
+    final useNextTheoryLabel =
+        _usesCanonicalIntegratedLearningSceneV1 || hasNextSupportSegment;
     final learningRailProgress = isRefinedDev2
         ? null
         : _learningRailProgressLabel(runner);
@@ -3821,31 +3825,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 supportSegments: effectiveLearningRailPages,
                 activeSupportSegmentIndex: cappedSupportSegmentIndex,
                 progressLabel: learningRailProgress,
-                backSemanticLabel:
-                    hasPreviousSupportSegment || runner.teachingStepIndex > 0
-                    ? 'Previous theory page'
-                    : 'Back to lesson',
-                canGoBack:
-                    hasPreviousSupportSegment ||
-                    runner.teachingStepIndex > 0 ||
-                    _usesCanonicalIntegratedLearningSceneV1,
+                backSemanticLabel: 'Previous theory page',
+                canGoBack: hasEarlierTheory,
                 onBack: hasPreviousSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex--)
-                    : (runner.teachingStepIndex > 0
-                          ? widget.onPreviousTheory
-                          : (_usesCanonicalIntegratedLearningSceneV1
-                                ? _handleRunnerBackV1
-                                : null)),
+                    : widget.onPreviousTheory,
                 canAdvance: _canAdvanceTheory,
                 onAdvance: hasNextSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex++)
                     : widget.onContinueTheory,
                 advanceLabel: act0AcademySurfaceAtomV1(
                   context,
-                  hasNextSupportSegment
+                  useNextTheoryLabel
                       ? 'runner_cta_next'
                       : 'home_checklist_continue_label',
-                  fallback: hasNextSupportSegment ? 'Next' : 'Continue',
+                  fallback: useNextTheoryLabel ? 'Next' : 'Continue',
                 ),
                 sharkyLine: theoryCoachLine,
                 sharkyMood: runner.sharky.preSessionMood,

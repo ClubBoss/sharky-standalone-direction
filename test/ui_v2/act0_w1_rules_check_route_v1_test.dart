@@ -99,6 +99,14 @@ void main() {
           tester.widget(find.byType(Act0LessonRunnerShellV1));
       expect(current().selectedTaskId, 'what_poker_is_theory');
       expect(current().runner.teachingSteps, hasLength(1));
+      final next = find.byKey(const Key('act0_shell_continue_cta'));
+      expect(
+        find.descendant(of: next, matching: find.text('Next')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_previous_cta')), findsNothing);
+      expect(tester.getSize(next).height, greaterThanOrEqualTo(48));
+
       await tester.pump(const Duration(milliseconds: 900));
       await _tapKey(tester, 'act0_shell_continue_cta');
       expect(current().selectedTaskId, 'what_poker_is_find_hero');

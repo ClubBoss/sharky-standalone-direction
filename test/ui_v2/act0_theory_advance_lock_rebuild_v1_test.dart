@@ -51,7 +51,7 @@ void main() {
     rebuild.value += 1;
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
-    final button = tester.widget<TextButton>(next);
+    final button = tester.widget<ButtonStyleButton>(next);
     expect(
       button.onPressed,
       isNotNull,

@@ -762,6 +762,23 @@ void main() {
         final runner = currentRunner();
         expect(runner.phase, Act0LessonPhaseV1.theory);
         expect(runner.teachingStepIndex, expectedIndex);
+        final next = find.byKey(const Key('act0_shell_continue_cta'));
+        expect(
+          find.descendant(of: next, matching: find.text('Next')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('act0_shell_previous_cta')),
+          expectedIndex == 0 ? findsNothing : findsOneWidget,
+        );
+        expect(
+          tester
+              .widget<Text>(
+                find.byKey(const Key('act0_learning_scene_v3_support')),
+              )
+              .data,
+          runner.teachingSteps[expectedIndex].body,
+        );
 
         final progressFinder = find.byKey(
           const Key('act0_learning_scene_v3_progress'),
