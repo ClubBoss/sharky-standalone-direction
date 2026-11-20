@@ -2248,7 +2248,7 @@ SEATS: UTG folded | HJ folded | CO Qs Js | BTN dealer stack 100 BB | SB post 0.5
 TRAIL: UTG folds · HJ folds · CO acts
   - [wrong] You already act last — Not quite. Cutoff is late, but Button and the blinds still act after you.
     BETTER ANSWER: BTN, SB, and BB still act after you
-  - [suboptimal] Late seat makes every hand easy — Playable thought. Late position helps, but it is not a free pass. First notice who still acts after you.
+  - [wrong] Late seat makes every hand easy — Count the players behind. Late position helps, but it is not a free pass. First notice who still acts after you.
     BETTER ANSWER: BTN, SB, and BB still act after you
   + [correct] BTN, SB, and BB still act after you — Strong choice. That is the real-table transfer. Count the players behind before treating the seat as comfortable.
 
@@ -2554,7 +2554,7 @@ TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Se
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
   + [correct] Bet one-third [2 BB] — Clean execution. A one-third bet creates fold pressure at a controlled price.
-  - [suboptimal] Check — Checking leaves both players in. Checking closes this round without asking BB to fold. Betting gives BB a decision.
+  - [wrong] Check — Checking leaves both players in. Checking closes this round without asking BB to fold. Betting gives BB a decision.
     BETTER ANSWER: Bet one-third
 
 TASK w4_bad_bluff [drill] Bad pressure
@@ -2707,7 +2707,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Bluff · 2 BB to call — Not this frame. The price is 2 BB. The stated weaker aces can call, so the purpose is value.
     BETTER ANSWER: Value · 2 BB to call
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 8 BB | To call 2 BB | Seat BTN | Active bb | Decision bb | Seat focus btn, bb | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After the flop bet | Facts one pair, top pair, rainbow
-  - [suboptimal] Value · 6 BB to call — Look one layer deeper. The purpose is value. BB must match the 2 BB bet shown on the table.
+  - [wrong] Value · 6 BB to call — The price is 2 BB. The purpose is value. BB must match the 2 BB bet shown on the table.
     BETTER ANSWER: Value · 2 BB to call
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 8 BB | To call 2 BB | Seat BTN | Active bb | Decision bb | Seat focus btn, bb | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After the flop bet | Facts one pair, top pair, rainbow
 
@@ -5510,7 +5510,7 @@ TRAIL: Frame 1: UTG has more behind · Frame 2: CO has fewer behind · Compare t
   - [wrong] The cards changed strength by themselves — Not quite. The hand is still ATo. The missed signal is the seat and who still acts after you.
     BETTER ANSWER: Seat context changed the hand comfort
     REPAIR LABELS: Same hand, Players behind
-  - [suboptimal] Seat does not matter for this hand — Repair the table read. Position matters because it changes how many players still act after you.
+  - [wrong] Seat does not matter for this hand — Repair the table read. Position matters because it changes how many players still act after you.
     BETTER ANSWER: Seat context changed the hand comfort
     REPAIR LABELS: Same hand, Players behind
 

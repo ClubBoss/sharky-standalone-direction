@@ -16474,8 +16474,8 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN, SB, and BB still act after you',
       betterAnswerLabel: 'BTN, SB, and BB still act after you',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the players behind.',
       feedbackReason:
           'Late position helps, but it is not a free pass. First notice who still acts after you.',
     ),
@@ -16654,7 +16654,7 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       isCorrect: false,
       preferredLabel: 'Seat context changed the hand comfort',
       betterAnswerLabel: 'Seat context changed the hand comfort',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Repair the table read.',
       feedbackReason:
           'Position matters because it changes how many players still act after you.',
@@ -17915,7 +17915,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet one-third',
       betterAnswerLabel: 'Bet one-third',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Checking leaves both players in.',
       feedbackReason:
           'Checking closes this round without asking BB to fold. Betting gives BB a decision.',
@@ -18704,8 +18704,8 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Value · 2 BB to call',
       betterAnswerLabel: 'Value · 2 BB to call',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Look one layer deeper.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The price is 2 BB.',
       feedbackReason:
           'The purpose is value. BB must match the 2 BB bet shown on the table.',
     ),

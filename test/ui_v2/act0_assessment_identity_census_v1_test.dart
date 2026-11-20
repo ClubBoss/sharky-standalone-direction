@@ -688,6 +688,23 @@ void main() {
     expect(strongQJs[2], isFalse);
     expect(strongQJs[3], 'wrong');
     strongQJs[3] = 'suboptimal';
+    for (final (taskId, optionId) in [
+      (
+        'position_checkpoint_position_checkpoint_table_notice',
+        'late_free_pass',
+      ),
+      (
+        'same_hand_different_seat_position_repair_same_hand_different_seat',
+        'position_unimportant',
+      ),
+      ('w4_bluff_pressure', 'check'),
+      ('w4_checkpoint_table_purpose_price', 'random_size'),
+    ]) {
+      final option = beforeP8[taskId]!.singleWhere((row) => row[0] == optionId);
+      expect(option[2], isFalse);
+      expect(option[3], 'wrong', reason: '$taskId / $optionId');
+      option[3] = 'suboptimal';
+    }
     for (final taskId in [
       'your_first_hand_showdown',
       'showdown_best_hand_drill',
