@@ -1160,6 +1160,7 @@ class Act0SharkyMascotV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final motionScale = switch (mood) {
       Act0SharkyMoodV1.happy => 1.08,
       Act0SharkyMoodV1.celebrate => 1.12,
@@ -1181,10 +1182,13 @@ class Act0SharkyMascotV1 extends StatelessWidget {
         key: const Key('act0_shell_sharky_mascot_motion'),
         child: TweenAnimationBuilder<double>(
           key: ValueKey('act0_shell_sharky_mascot_motion_${mood.name}'),
-          tween: Tween<double>(begin: 0, end: 1),
-          duration: const Duration(milliseconds: 420),
+          tween: Tween<double>(begin: 0, end: reduceMotion ? 0 : 1),
+          duration: reduceMotion
+              ? Duration.zero
+              : const Duration(milliseconds: 420),
           curve: Curves.easeOutCubic,
           builder: (context, value, child) {
+            if (reduceMotion) return child!;
             final easedScale = 1 + ((motionScale - 1) * value);
             final easedTilt = motionTilt * value;
             return Transform.rotate(
