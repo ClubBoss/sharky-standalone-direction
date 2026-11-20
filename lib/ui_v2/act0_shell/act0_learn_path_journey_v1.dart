@@ -89,7 +89,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           task: currentMissionTask,
           stepIndex: currentMissionStepIndex,
           totalSteps: currentMissionLesson.courseTaskList.length,
-          accent: Act0AcademyDesignTokensV1.focus,
+          accent: Act0AcademyDarkReadingStyleV1.primary,
           detailMode: detailMode,
           firstLessonLanding: firstLessonLanding,
           onStart: onStartMission,
@@ -158,8 +158,8 @@ class _WorldContextStripV5 extends StatelessWidget {
         child: Ink(
           key: const Key('act0_shell_learn_v5_world_context'),
           padding: EdgeInsets.fromLTRB(compact ? 12 : 14, 10, 12, 10),
-          decoration: Act0AcademyDesignTokensV1.cardDecoration(
-            borderColor: Act0AcademyDesignTokensV1.focus.withValues(
+          decoration: Act0AcademyDarkReadingStyleV1.cardDecoration(
+            borderColor: Act0AcademyDarkReadingStyleV1.primary.withValues(
               alpha: 0.42,
             ),
           ),
@@ -170,22 +170,22 @@ class _WorldContextStripV5 extends StatelessWidget {
                 height: compact ? 32 : 36,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Act0AcademyDesignTokensV1.focus.withValues(
+                  color: Act0AcademyDarkReadingStyleV1.primary.withValues(
                     alpha: 0.12,
                   ),
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusMd,
                   ),
                   border: Border.all(
-                    color: Act0AcademyDesignTokensV1.focus.withValues(
+                    color: Act0AcademyDarkReadingStyleV1.primary.withValues(
                       alpha: 0.28,
                     ),
                   ),
                 ),
                 child: Text(
                   '${world.worldNumber}',
-                  style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
-                    color: Act0AcademyDesignTokensV1.focus,
+                  style: Act0AcademyDarkReadingStyleV1.sectionHeading.copyWith(
+                    color: Act0AcademyDarkReadingStyleV1.primary,
                     fontSize: compact ? 15.5 : 16.5,
                     height: 1.0,
                   ),
@@ -205,8 +205,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                               en: 'Current world · W${world.worldNumber}',
                               ru: 'Текущий мир · W${world.worldNumber}',
                             ),
-                            style: Act0AcademyDesignTokensV1.label.copyWith(
-                              color: Act0AcademyDesignTokensV1.focus,
+                            style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                              color: Act0AcademyDarkReadingStyleV1.primary,
                               fontSize: 9.8,
                               letterSpacing: 0,
                             ),
@@ -218,10 +218,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                             child: Text(
                               moduleTitle,
 
-                              style: Act0AcademyDesignTokensV1.label.copyWith(
-                                fontSize: 9.4,
-                                letterSpacing: 0,
-                              ),
+                              style: Act0AcademyDarkReadingStyleV1.label
+                                  .copyWith(fontSize: 9.4, letterSpacing: 0),
                             ),
                           ),
                         ],
@@ -231,10 +229,11 @@ class _WorldContextStripV5 extends StatelessWidget {
                     Text(
                       act0AcademyWorldTitleV1(context, world),
 
-                      style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
-                        fontSize: compact ? 14.2 : 15.2,
-                        height: 1.04,
-                      ),
+                      style: Act0AcademyDarkReadingStyleV1.sectionHeading
+                          .copyWith(
+                            fontSize: compact ? 14.2 : 15.2,
+                            height: 1.04,
+                          ),
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -248,10 +247,11 @@ class _WorldContextStripV5 extends StatelessWidget {
                               key: const Key('act0_shell_learn_progress_bar'),
                               value: normalizedProgress,
                               minHeight: 3,
-                              backgroundColor: Act0AcademyDesignTokensV1.rule
+                              backgroundColor: Act0AcademyDarkReadingStyleV1
+                                  .border
                                   .withValues(alpha: 0.55),
                               valueColor: const AlwaysStoppedAnimation<Color>(
-                                Act0AcademyDesignTokensV1.focus,
+                                Act0AcademyDarkReadingStyleV1.primary,
                               ),
                             ),
                           ),
@@ -259,8 +259,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           '$progressPercent%',
-                          style: Act0AcademyDesignTokensV1.label.copyWith(
-                            color: Act0AcademyDesignTokensV1.focus,
+                          style: Act0AcademyDarkReadingStyleV1.label.copyWith(
+                            color: Act0AcademyDarkReadingStyleV1.primary,
                             fontSize: 10.0,
                             letterSpacing: 0.0,
                           ),
@@ -279,7 +279,7 @@ class _WorldContextStripV5 extends StatelessWidget {
                       ),
                       key: const Key('act0_shell_learn_route_board'),
 
-                      style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                      style: Act0AcademyDarkReadingStyleV1.supporting.copyWith(
                         fontSize: 9.8,
                         height: 1.0,
                       ),
@@ -312,11 +312,11 @@ class _WorldContextStripV5 extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         horizontal: compact ? 7 : 9,
                       ),
-                      foregroundColor: Act0AcademyDesignTokensV1.focus,
-                      backgroundColor: Act0AcademyDesignTokensV1.focus
+                      foregroundColor: Act0AcademyDarkReadingStyleV1.primary,
+                      backgroundColor: Act0AcademyDarkReadingStyleV1.primary
                           .withValues(alpha: 0.075),
                       side: BorderSide(
-                        color: Act0AcademyDesignTokensV1.focus.withValues(
+                        color: Act0AcademyDarkReadingStyleV1.primary.withValues(
                           alpha: 0.32,
                         ),
                       ),
@@ -329,7 +329,7 @@ class _WorldContextStripV5 extends StatelessWidget {
                     icon: Icon(
                       Icons.map_rounded,
                       size: 15,
-                      color: Act0AcademyDesignTokensV1.focus,
+                      color: Act0AcademyDarkReadingStyleV1.primary,
                     ),
                     label: compact
                         ? const SizedBox.shrink()
@@ -404,7 +404,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
                   ru: showFullPath ? 'Все уроки' : 'Дальше',
                 ),
                 key: const Key('act0_shell_journey_path_header'),
-                style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                style: Act0AcademyDarkReadingStyleV1.sectionHeading.copyWith(
                   fontSize: 14.4,
                   height: 1.05,
                 ),
@@ -414,11 +414,11 @@ class _JourneyPreviewV5 extends StatelessWidget {
               key: const Key('act0_shell_learn_v5_view_full_path'),
               onPressed: onToggleFullPath,
               style: TextButton.styleFrom(
-                foregroundColor: Act0AcademyDesignTokensV1.focus,
+                foregroundColor: Act0AcademyDarkReadingStyleV1.primary,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 minimumSize: const Size(0, 30),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                textStyle: Act0AcademyDesignTokensV1.label.copyWith(
+                textStyle: Act0AcademyDarkReadingStyleV1.label.copyWith(
                   fontSize: 10.0,
                   letterSpacing: 0.04,
                 ),
@@ -442,7 +442,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
           ),
           key: const Key('act0_shell_learn_week1_support_line'),
 
-          style: Act0AcademyDesignTokensV1.supporting,
+          style: Act0AcademyDarkReadingStyleV1.supporting,
         ),
         const SizedBox(height: 8),
         if (showFullPath)
@@ -454,7 +454,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
           ),
         DecoratedBox(
           key: const Key('act0_shell_journey_preview_surface_v5'),
-          decoration: Act0AcademyDesignTokensV1.cardDecoration(),
+          decoration: Act0AcademyDarkReadingStyleV1.cardDecoration(),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
             child: Column(
@@ -558,12 +558,12 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
     final isCurrent = lesson.state == Act0LessonStateV1.current;
     final isLocked = lesson.state == Act0LessonStateV1.locked;
     final accent = isNextUp
-        ? Act0AcademyDesignTokensV1.needsReviewFg
+        ? Act0AcademyDarkReadingStyleV1.needsReviewFg
         : isLocked
-        ? Act0AcademyDesignTokensV1.inkMuted
+        ? Act0AcademyDarkReadingStyleV1.textMuted
         : isEarnedCompleted
-        ? Act0AcademyDesignTokensV1.correctFg
-        : Act0AcademyDesignTokensV1.focus;
+        ? Act0AcademyDarkReadingStyleV1.correctFg
+        : Act0AcademyDarkReadingStyleV1.primary;
     final opacity = isCurrent
         ? 1.0
         : isEarnedCompleted
@@ -615,19 +615,19 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
         ? Icons.lock_rounded
         : Icons.circle_rounded;
     final fill = isCurrent
-        ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.06)
+        ? Act0AcademyDarkReadingStyleV1.primary.withValues(alpha: 0.06)
         : isEarnedCompleted
-        ? Act0AcademyDesignTokensV1.correctBg
+        ? Act0AcademyDarkReadingStyleV1.correctBg
         : isNextUp
-        ? Act0AcademyDesignTokensV1.needsReviewBg
-        : Act0AcademyDesignTokensV1.cardSurface;
+        ? Act0AcademyDarkReadingStyleV1.needsReviewBg
+        : Act0AcademyDarkReadingStyleV1.surface;
     final border = isCurrent
-        ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.32)
+        ? Act0AcademyDarkReadingStyleV1.primary.withValues(alpha: 0.32)
         : isEarnedCompleted
-        ? Act0AcademyDesignTokensV1.correctFg.withValues(alpha: 0.24)
+        ? Act0AcademyDarkReadingStyleV1.correctFg.withValues(alpha: 0.24)
         : isNextUp
-        ? Act0AcademyDesignTokensV1.needsReviewFg.withValues(alpha: 0.28)
-        : Act0AcademyDesignTokensV1.rule;
+        ? Act0AcademyDarkReadingStyleV1.needsReviewFg.withValues(alpha: 0.28)
+        : Act0AcademyDarkReadingStyleV1.border;
 
     return Opacity(
       opacity: opacity,
@@ -704,11 +704,12 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                                         'act0_shell_journey_v6_next_soft_gold',
                                       )
                                     : null,
-                                style: Act0AcademyDesignTokensV1.label.copyWith(
-                                  color: accent,
-                                  fontSize: 10.0,
-                                  letterSpacing: 0,
-                                ),
+                                style: Act0AcademyDarkReadingStyleV1.label
+                                    .copyWith(
+                                      color: accent,
+                                      fontSize: 10.0,
+                                      letterSpacing: 0,
+                                    ),
                               ),
                       ),
                       const SizedBox(width: 9),
@@ -722,11 +723,13 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             Text(
                               act0AcademyLessonTitleV1(context, lesson),
 
-                              style: Act0AcademyDesignTokensV1.sectionHeading
+                              style: Act0AcademyDarkReadingStyleV1
+                                  .sectionHeading
                                   .copyWith(
                                     color: isLocked
-                                        ? Act0AcademyDesignTokensV1.inkMuted
-                                        : Act0AcademyDesignTokensV1.ink,
+                                        ? Act0AcademyDarkReadingStyleV1
+                                              .textMuted
+                                        : Act0AcademyDarkReadingStyleV1.text,
                                     fontSize: isCompleted ? 12.8 : 13.6,
                                     height: 1.05,
                                   ),
@@ -735,7 +738,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             Text(
                               meta,
 
-                              style: Act0AcademyDesignTokensV1.supporting
+                              style: Act0AcademyDarkReadingStyleV1.supporting
                                   .copyWith(fontSize: 10.2, height: 1.0),
                             ),
                           ],
@@ -762,7 +765,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             key: Key(
                               'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                             ),
-                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                            style: Act0AcademyDarkReadingStyleV1.label.copyWith(
                               color: accent,
                               fontSize: 9.0,
                               letterSpacing: 0,
@@ -841,9 +844,9 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
       constraints: BoxConstraints(minHeight: minHeight),
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       decoration: BoxDecoration(
-        color: Act0AcademyDesignTokensV1.pageSurface,
+        color: Act0AcademyDarkReadingStyleV1.pageSurface,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-        border: Border.all(color: Act0AcademyDesignTokensV1.rule),
+        border: Border.all(color: Act0AcademyDarkReadingStyleV1.border),
       ),
       child: Column(
         key: const Key('act0_shell_journey_preview_closeout'),
@@ -854,7 +857,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
               Icon(
                 Icons.lock_open_rounded,
                 size: 14,
-                color: Act0AcademyDesignTokensV1.inkMuted,
+                color: Act0AcademyDarkReadingStyleV1.textMuted,
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -862,7 +865,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                   label,
                   key: const Key('act0_shell_learn_v5_future_summary'),
 
-                  style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                  style: Act0AcademyDarkReadingStyleV1.supporting.copyWith(
                     fontSize: 10.8,
                     height: 1.05,
                     fontWeight: FontWeight.w700,
@@ -871,7 +874,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
               ),
               Text(
                 _learnCopyV1(context, en: 'In order', ru: 'По порядку'),
-                style: Act0AcademyDesignTokensV1.label.copyWith(
+                style: Act0AcademyDarkReadingStyleV1.label.copyWith(
                   fontSize: 8.8,
                   letterSpacing: 0.08,
                 ),
@@ -891,16 +894,16 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                       Act0ShellTokensV1.radiusPill,
                     ),
                     color: i == 1
-                        ? Act0AcademyDesignTokensV1.focus.withValues(
+                        ? Act0AcademyDarkReadingStyleV1.primary.withValues(
                             alpha: 0.24,
                           )
-                        : Act0AcademyDesignTokensV1.rule,
+                        : Act0AcademyDarkReadingStyleV1.border,
                     border: Border.all(
                       color: i == 1
-                          ? Act0AcademyDesignTokensV1.focus.withValues(
+                          ? Act0AcademyDarkReadingStyleV1.primary.withValues(
                               alpha: 0.36,
                             )
-                          : Act0AcademyDesignTokensV1.rule,
+                          : Act0AcademyDarkReadingStyleV1.border,
                     ),
                   ),
                 ),
@@ -909,7 +912,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                     child: Container(
                       height: 1,
                       margin: const EdgeInsets.symmetric(horizontal: 7),
-                      color: Act0AcademyDesignTokensV1.rule,
+                      color: Act0AcademyDarkReadingStyleV1.border,
                     ),
                   ),
               ],
@@ -923,9 +926,11 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-                color: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.05),
+                color: Act0AcademyDarkReadingStyleV1.primary.withValues(
+                  alpha: 0.05,
+                ),
                 border: Border.all(
-                  color: Act0AcademyDesignTokensV1.focus.withValues(
+                  color: Act0AcademyDarkReadingStyleV1.primary.withValues(
                     alpha: 0.14,
                   ),
                 ),
@@ -937,7 +942,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                   ru: 'Путь впереди открывается по одной миссии.',
                 ),
 
-                style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                style: Act0AcademyDarkReadingStyleV1.supporting.copyWith(
                   fontSize: 10.8,
                   height: 1.12,
                 ),

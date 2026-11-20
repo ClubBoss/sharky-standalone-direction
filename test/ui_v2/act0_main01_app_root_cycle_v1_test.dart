@@ -1191,7 +1191,8 @@ void main() {
       // Launching from Home keeps the original miss and the earned progress.
       await _tap(tester, 'act0_academy_home_leaf_cta');
       expect(_runner(tester).selectedTaskId, _source);
-      expect(_runner(tester).runner.selectedOptionId, isNull);
+      expect(_runner(tester).runner.selectedOptionId, 'five_board_now');
+      expect(_runner(tester).runner.phase, Act0LessonPhaseV1.review);
       final resumed = await _saved(tester);
       expect(resumed['earnedXp'], missed['earnedXp']);
       expect(
@@ -1209,6 +1210,10 @@ void main() {
       expect(intent['repairOccurrenceId'], isNotEmpty);
       expect(_rows(resumed, 'repairOutcomeProjection'), isEmpty);
 
+      await _tap(tester, 'act0_shell_runner_back');
+      await tester.tap(find.text('Review').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_academy_review_leaf_repair_cta');
       await _foundationAdvanceToPrompt(tester);
       await _choose(tester, 'two_three_six');
       final answered = await _saved(tester);
@@ -1459,6 +1464,8 @@ void main() {
       ]) {
         expect(rankOpened[field], rankMissed[field]);
       }
+      expect(_runner(tester).runner.selectedOptionId, 'king');
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
       await _foundationAdvanceToPrompt(tester);
       await _choose(tester, 'ace');
       final rankAnswered = await _saved(tester);
@@ -1885,7 +1892,7 @@ void main() {
         } else {
           // Temporary Action orchestration does not complete legal-context.
           // Actual map navigation must retain access to outstanding tasks.
-          await _tap(tester, 'act0_shell_block_summary_map_cta');
+          await _tap(tester, 'act0_shell_block_summary_home_cta');
         }
         continue;
       }
@@ -2064,14 +2071,14 @@ void main() {
           final restored = await _saved(tester);
           expect(_foundationLearningTruth(restored), before);
           expect(restored['selectedTaskId'], next.taskId);
-          // Answer history survives, while completion still awaits Continue.
-          // Home-first boot restarts this incomplete task. The next outer loop
-          // makes a fresh scripted attempt; it is not duplicate delivery.
+          // Home-first boot opens the saved feedback on Continue, preserving
+          // the original answer and avoiding a second submission.
           await _tap(tester, 'act0_academy_home_leaf_cta');
           expect(_runner(tester).selectedTaskId, next.taskId);
-          expect(_runner(tester).runner.selectedOptionId, isNull);
+          expect(_runner(tester).runner.selectedOptionId, answer.id);
+          expect(_runner(tester).runner.phase, Act0LessonPhaseV1.review);
+          expect((await _saved(tester))['earnedXp'], answered['earnedXp']);
           feedbackRemounted = true;
-          continue;
         }
         await _tap(tester, 'act0_shell_feedback_continue_cta');
       }
@@ -2556,7 +2563,7 @@ Future<void> _advanceOrdinaryW1ToRank(WidgetTester tester) async {
         tester,
         next != null && allowed.contains(next) && !completed.contains(next)
             ? 'act0_shell_block_summary_continue_cta'
-            : 'act0_shell_block_summary_map_cta',
+            : 'act0_shell_block_summary_home_cta',
       );
       continue;
     }

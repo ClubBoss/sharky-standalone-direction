@@ -19,10 +19,10 @@ void main() {
     );
     final pageDecoration = pageCard.decoration as BoxDecoration;
     expect(pageDecoration.gradient, isNull);
-    expect(pageDecoration.color, Act0AcademyReadingStyleV1.surface);
+    expect(pageDecoration.color, Act0AcademyDarkReadingStyleV1.surface);
     expect(
       pageDecoration.border,
-      Border.all(color: Act0AcademyReadingStyleV1.border),
+      Border.all(color: Act0AcademyDarkReadingStyleV1.border),
     );
 
     final hero = tester.widget<Container>(
@@ -31,7 +31,9 @@ void main() {
     final heroDecoration = hero.decoration as BoxDecoration;
     expect(
       heroDecoration.border,
-      Border.all(color: Act0AcademyReadingStyleV1.gold.withValues(alpha: 0.28)),
+      Border.all(
+        color: Act0AcademyDarkReadingStyleV1.gold.withValues(alpha: 0.28),
+      ),
     );
 
     for (final lowerCardKey in <String>[
@@ -43,7 +45,7 @@ void main() {
       final lowerDecoration = lowerCard.decoration as BoxDecoration;
       expect(
         lowerDecoration.border,
-        Border.all(color: Act0AcademyReadingStyleV1.border),
+        Border.all(color: Act0AcademyDarkReadingStyleV1.border),
         reason: '$lowerCardKey must use the standard Folio hairline, not gold',
       );
     }
@@ -61,7 +63,7 @@ void main() {
         <WidgetState>{},
       );
 
-      expect(resolvedForeground, Act0AcademyReadingStyleV1.info);
+      expect(resolvedForeground, Act0AcademyDarkReadingStyleV1.info);
       expect(
         find.ancestor(
           of: find.text('Practice this next'),

@@ -308,6 +308,36 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       _blockCompletionSummary = null;
       _persistedStreakDays = restoredStreakDays;
       _lastDailyDate = earnedDay;
+      _lastShortSessionDayV1 = parsed.lastShortSessionDay;
+      _returningAfterBreakV1 =
+          parsed.lastActiveDay.isNotEmpty &&
+          isNewDay &&
+          !act0AreConsecutiveCivilDaysV1(parsed.lastActiveDay, today);
+      _firstLessonReminderAnsweredV1 = parsed.firstLessonReminderAnswered;
+      final restoredPhase = Act0LessonPhaseV1.values
+          .where((phase) => phase.name == parsed.resumePhase)
+          .firstOrNull;
+      final savedResume =
+          parsed.lessonResume ??
+          (parsed.resumeInRunner && restoredPhase != null
+              ? (
+                  worldId: parsed.selectedWorldId,
+                  lessonId: parsed.selectedLessonId,
+                  taskId: parsed.selectedTaskId,
+                  phase: restoredPhase,
+                  teachingStepIndex: parsed.resumeTeachingStepIndex,
+                  selectedOptionId: parsed.resumeSelectedOptionId,
+                )
+              : null);
+      _lessonResumeV1 =
+          savedResume != null &&
+              _validLessonResumeV1(
+                savedResume,
+                worldsAfterProgress,
+                closedTaskIds,
+              )
+          ? savedResume
+          : null;
       _dailyRepCountDay = today;
       _dailyPracticeQueue = parsed.dailyPracticeQueue;
       _dailyCompletedTaskIds
@@ -887,6 +917,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       acknowledgement?.complete(false);
       return;
     }
+    _rememberLessonRunnerV1();
     _ensureDailyCountDayV1();
     final today = _todayDateString();
     final dailyDone = _dailyCompletedRepCount >= 3;
@@ -910,6 +941,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       profileSkillValues: _profileSkillValues,
       recentSkillGains: _recentSkillGains,
       lastActiveDay: today,
+      lastShortSessionDay: _lastShortSessionDayV1,
+      firstLessonReminderAnswered: _firstLessonReminderAnsweredV1,
+      lessonResume: _lessonResumeV1,
       lastEarnedDailyDay: _lastDailyDate,
       dailyCompletedRepCount: _dailyCompletedRepCount,
       dailyPracticeQueue: _dailyPracticeQueue,

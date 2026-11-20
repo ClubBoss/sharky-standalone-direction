@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
@@ -115,13 +116,13 @@ Color _worldRouteStatusColorV1(
   Act0WorldCardV1 world,
 ) {
   return switch (world.status) {
-    Act0WorldStateV1.completed ||
-    Act0WorldStateV1.passedByRulesCheck => Act0AcademyDesignTokensV1.focus,
-    Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
+    Act0WorldStateV1.completed || Act0WorldStateV1.passedByRulesCheck =>
+      Act0AcademyDarkReadingStyleV1.primary,
+    Act0WorldStateV1.current => Act0AcademyDarkReadingStyleV1.primary,
     Act0WorldStateV1.locked =>
       _isImmediateNextWorldV1(worlds, world)
-          ? Act0AcademyDesignTokensV1.needsReviewFg
-          : Act0AcademyDesignTokensV1.inkMuted,
+          ? Act0AcademyDarkReadingStyleV1.needsReviewFg
+          : Act0AcademyDarkReadingStyleV1.textMuted,
   };
 }
 
@@ -674,7 +675,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
           Positioned.fill(
             child: ColoredBox(
               key: const Key('act0_shell_learn_page_background'),
-              color: Act0AcademyDesignTokensV1.pageSurface,
+              color: Act0AcademyDarkReadingStyleV1.pageSurface,
             ),
           ),
           NotificationListener<ScrollNotification>(

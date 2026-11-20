@@ -1521,6 +1521,132 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     return null;
   }
 
+  bool _rememberLessonRunnerV1() {
+    if (_tab != Act0ShellTabV1.play ||
+        _showPlayHub ||
+        _showPlacement ||
+        _showWelcome ||
+        _blockCompletionSummary != null ||
+        _placementDiagnosticActive ||
+        _diagnosticLearningEntryV1 != null ||
+        _spacedReviewReturnV1 != null ||
+        _rapidPracticeLoop ||
+        _activeRepairTaskId != null ||
+        _activeSameSignalRecheckTaskId != null) {
+      return false;
+    }
+    final resume = (
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+      phase: _phase,
+      teachingStepIndex: _teachingStepIndex,
+      selectedOptionId: _selectedOptionId,
+    );
+    final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
+    if (_validLessonResumeV1(resume, worlds, _pathClosedTaskIds)) {
+      _lessonResumeV1 = resume;
+      return true;
+    }
+    return false;
+  }
+
+  bool _validLessonResumeV1(
+    _Act0LessonResumeV1 resume,
+    List<Act0WorldCardV1> worlds,
+    Set<String> closedTasks,
+  ) {
+    if (closedTasks.contains(resume.taskId)) return false;
+    final world = worlds
+        .where((world) => world.worldId == resume.worldId && world.isSelectable)
+        .firstOrNull;
+    final lesson = world?.lessons
+        .where(
+          (lesson) => lesson.lessonId == resume.lessonId && lesson.isSelectable,
+        )
+        .firstOrNull;
+    final task = lesson?.courseTaskList
+        .where((task) => task.taskId == resume.taskId)
+        .firstOrNull;
+    if (task == null ||
+        resume.teachingStepIndex > task.runner.teachingSteps.length) {
+      return false;
+    }
+    if (resume.phase != Act0LessonPhaseV1.review) {
+      return resume.selectedOptionId == null;
+    }
+    return task.runner.options.any(
+      (option) => option.id == resume.selectedOptionId,
+    );
+  }
+
+  void _resumeHomeLessonV1(_Act0LessonResumeV1 resume) {
+    if (_lessonResumeV1 != resume) return;
+    final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
+    if (!_validLessonResumeV1(resume, worlds, _pathClosedTaskIds)) return;
+    final world = _worldById(worlds, resume.worldId);
+    if (!_startTaskByIds(
+      world,
+      resume.lessonId,
+      resume.taskId,
+      persist: false,
+    )) {
+      return;
+    }
+    _phase = resume.phase;
+    _teachingStepIndex = resume.teachingStepIndex;
+    _selectedOptionId = resume.selectedOptionId;
+    _choiceAssistanceV1 = _pendingAssistanceForV1(
+      resume.worldId,
+      resume.lessonId,
+      resume.taskId,
+    );
+    if (resume.phase == Act0LessonPhaseV1.review) {
+      final answer = _learningEvidenceHistoryV1.records.reversed
+          .where(
+            (record) =>
+                record.worldId == resume.worldId &&
+                record.lessonId == resume.lessonId &&
+                record.taskId == resume.taskId &&
+                record.choiceId == resume.selectedOptionId &&
+                !record.isDiagnosticLearningEntry &&
+                !record.isPlacementAssessment,
+          )
+          .firstOrNull;
+      _choiceAssistanceV1 =
+          answer?.assistanceKind ?? Act0DecisionAssistanceV1.legacyUnknown;
+      if (answer != null && !answer.isCorrect) {
+        _lessonRunMistakeTaskIds.add(resume.taskId);
+        _lessonRunPendingRetryTaskIds.add(resume.taskId);
+      }
+    }
+    _returnToPlayHubOnBack = false;
+    _persistProgress();
+  }
+
+  void _finishFirstLessonReminderV1(bool enable) {
+    if (_firstLessonReminderAnsweredV1) return;
+    final epoch = _recoveryEpochV1;
+    _setStateV1(() => _firstLessonReminderAnsweredV1 = true);
+    _persistProgress();
+    if (!enable) return;
+    _syncPracticeReminderV1();
+    unawaited(
+      Act0PracticeReminderV1.setEnabled(true).then<void>(
+        (_) {},
+        onError: (Object _) {
+          if (mounted && epoch == _recoveryEpochV1) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('The reminder could not be enabled.'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   void _startHomeNextAction(Act0WorldCardV1 selectedWorld) {
     final firstValueCarry = _actionableFirstValueReceiptCarryV1;
     if (firstValueCarry != null &&

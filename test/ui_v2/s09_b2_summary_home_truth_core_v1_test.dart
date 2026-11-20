@@ -311,20 +311,25 @@ Future<void> _answerCurrentRunnerV1(
   await tester.pumpAndSettle();
 }
 
-Future<void> _triggerHomeRepairV1(WidgetTester tester) async {
+Future<void> _triggerReviewRepairV1(WidgetTester tester) async {
   final back = find.byKey(const Key('act0_shell_runner_back'));
   if (back.evaluate().isNotEmpty) {
     await tester.tap(back);
     await tester.pumpAndSettle();
   }
-  final homeTab = find.descendant(
+  final review = find.descendant(
     of: find.byKey(const Key('act0_shell_bottom_nav')),
-    matching: find.text('Home'),
+    matching: find.text('Review'),
   );
-  await tester.ensureVisible(homeTab);
-  await tester.tap(homeTab);
+  await tester.ensureVisible(review);
+  await tester.tap(review);
   await tester.pumpAndSettle();
-  await _launchVisibleHomeRepairV1(tester);
+  final repair = find
+      .byKey(const Key('act0_academy_review_leaf_repair_cta'))
+      .first;
+  expect(repair, findsOneWidget);
+  await tester.ensureVisible(repair);
+  await tester.tap(repair);
   await tester.pumpAndSettle();
 }
 
@@ -335,7 +340,7 @@ Future<void> _launchLockedW24RepairV1(
   required bool fromPracticeQueue,
 }) async {
   if (!fromPracticeQueue) {
-    await _triggerHomeRepairV1(tester);
+    await _triggerReviewRepairV1(tester);
     return;
   }
   final practice = find.descendant(

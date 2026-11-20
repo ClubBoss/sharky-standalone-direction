@@ -1363,6 +1363,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       const Act0DurableRetentionHistoryV1();
   Act0ReviewKindV1? _pendingReviewKindV1;
   ({String worldId, String lessonId, String taskId})? _spacedReviewReturnV1;
+  var _spacedReviewReturnTabV1 = Act0ShellTabV1.review;
   Act0LessonTaskV1? _activeSpacedReviewTaskV1;
   final _openedSpacedReviewTaskIdsV1 = <String>{};
   bool _newSpacedReviewSavePendingV1 = false;
@@ -1493,6 +1494,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _persistedStreakDays = 0;
   // Date of the last earned 3/3 set, never merely the last app save.
   String _lastDailyDate = '';
+  String _lastShortSessionDayV1 = '';
+  bool _returningAfterBreakV1 = false;
+  bool _firstLessonReminderAnsweredV1 = false;
+  _Act0LessonResumeV1? _lessonResumeV1;
   // Date owning the in-memory 0–3 daily counter.
   late String _dailyRepCountDay = _todayDateString();
   int _retentionSequence = 0;
@@ -2677,48 +2682,61 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final callbackDiagnosticRunIdV1 = _activeLearningEvidenceRunKeyV1?.runId;
     final openedAsSpacedReview = _spacedReviewReturnV1 != null;
     if (_progressLoadFailed) {
-      return Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Your saved progress could not be read.'),
-                if (_recoveryMessageV1 != null)
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      _recoveryMessageV1!,
-                      textAlign: TextAlign.center,
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Theme(
+          data: ThemeData.dark(useMaterial3: true),
+          child: Scaffold(
+            backgroundColor: Act0AcademyLeafPaletteV1.ink,
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Your saved progress could not be read.'),
+                    if (_recoveryMessageV1 != null)
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          _recoveryMessageV1!,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    if (_recoveryBusyV1) ...[
+                      const CircularProgressIndicator(),
+                      const Text(
+                        'Recovery in progress. Keep this screen open.',
+                      ),
+                    ],
+                    TextButton(
+                      key: const Key('act0_recovery_retry'),
+                      onPressed: _recoveryBusyV1
+                          ? null
+                          : () {
+                              setState(() {
+                                _progressLoadFailed = false;
+                                _bootSurfaceReady = false;
+                              });
+                              unawaited(_bootstrapFirstStartRouteV1());
+                            },
+                      child: const Text('Try again'),
                     ),
-                  ),
-                if (_recoveryBusyV1) ...[
-                  const CircularProgressIndicator(),
-                  const Text('Recovery in progress. Keep this screen open.'),
-                ],
-                TextButton(
-                  key: const Key('act0_recovery_retry'),
-                  onPressed: _recoveryBusyV1
-                      ? null
-                      : () {
-                          setState(() {
-                            _progressLoadFailed = false;
-                            _bootSurfaceReady = false;
-                          });
-                          unawaited(_bootstrapFirstStartRouteV1());
-                        },
-                  child: const Text('Try again'),
+                    TextButton(
+                      key: const Key('act0_recovery_options'),
+                      onPressed: _recoveryBusyV1
+                          ? null
+                          : _openRecoveryOptionsV1,
+                      child: const Text('Recovery options'),
+                    ),
+                    TextButton(
+                      onPressed: _recoveryBusyV1
+                          ? null
+                          : _requestDeleteLocalDataV1,
+                      child: const Text('Delete local data'),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  key: const Key('act0_recovery_options'),
-                  onPressed: _recoveryBusyV1 ? null : _openRecoveryOptionsV1,
-                  child: const Text('Recovery options'),
-                ),
-                TextButton(
-                  onPressed: _recoveryBusyV1 ? null : _requestDeleteLocalDataV1,
-                  child: const Text('Delete local data'),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -2759,12 +2777,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final reviewState = _reviewState(state.review);
     late final reviewCoaching = _reviewPatternCoachingProjectionV1();
     final personalizedNextStep = _personalizedNextStepV1(reviewState);
-    // Home's NoPersonal reason falls back to the lesson card, never a review.
-    final homeDueReview =
-        personalizedNextStep.reasonType ==
-            act0ReturnReasonNoPersonalReasonAvailableV1
+    final useDailyHome =
+        _usesPersistedProgress &&
+        act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.home);
+    final recommendedDueReview = _launchableDueReviewV1(personalizedNextStep);
+    final homeDueReview = useDailyHome
+        ? recommendedDueReview ?? _dueReviewItemsV1().firstOrNull
+        : personalizedNextStep.reasonType ==
+              act0ReturnReasonNoPersonalReasonAvailableV1
         ? null
-        : _launchableDueReviewV1(personalizedNextStep);
+        : recommendedDueReview;
     final homeDueReviewTitle = homeDueReview == null
         ? null
         : _localizedLessonTitleV1(
@@ -3018,6 +3040,71 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
     }
     final effectiveLearnDetailLessonId = _learnDetailLessonId;
+    final savedLesson = _lessonResumeV1;
+    final resumableLesson =
+        savedLesson != null &&
+            _validLessonResumeV1(savedLesson, worlds, _pathClosedTaskIds)
+        ? savedLesson
+        : null;
+    final homeResumeLesson = resumableLesson == null
+        ? null
+        : _lessonById(
+            _worldById(worlds, resumableLesson.worldId).lessons,
+            resumableLesson.lessonId,
+          );
+    final homeResumeStep = homeResumeLesson == null
+        ? null
+        : 'Step ${_taskIndex(homeResumeLesson, resumableLesson!.taskId) + 1} '
+              'of ${homeResumeLesson.courseTaskList.length}';
+    final dailyLesson = _firstPlayableLesson(selectedWorld);
+    final dailyHomeAction = homeDueReview != null
+        ? Act0AcademyHomeNextActionV1(
+            title: 'Quick review',
+            subtitle: homeDueReviewTitle!,
+            ctaLabel: 'Quick review',
+            onPressed: () => setState(() {
+              if (recommendedDueReview != null) {
+                _recordPersonalizedNextStepOpenedV1(
+                  personalizedNextStep,
+                  'home',
+                );
+              }
+              _startDueReviewItemV1(homeDueReview);
+            }),
+          )
+        : homeResumeLesson != null
+        ? Act0AcademyHomeNextActionV1(
+            title: _localizedLessonTitleV1(homeResumeLesson),
+            subtitle: homeResumeStep!,
+            ctaLabel: 'Continue lesson',
+            onPressed: () =>
+                setState(() => _resumeHomeLessonV1(resumableLesson!)),
+          )
+        : Act0AcademyHomeNextActionV1(
+            title: _localizedLessonTitleV1(dailyLesson),
+            subtitle: _localizedLessonSubtitleV1(dailyLesson),
+            ctaLabel: selectedWorld.status == Act0WorldStateV1.completed
+                ? 'See lessons'
+                : 'Start lesson',
+            onPressed: () => setState(() {
+              if (selectedWorld.status == Act0WorldStateV1.completed) {
+                _tab = Act0ShellTabV1.learn;
+                _restoreSelectableLearnFocusV1();
+                return;
+              }
+              final task = _firstIncompleteTask(dailyLesson);
+              if (_startTaskByIds(
+                selectedWorld,
+                dailyLesson.lessonId,
+                task.taskId,
+              )) {
+                _returnToPlayHubOnBack = false;
+                _resetLessonRunMetrics();
+              }
+            }),
+          );
+    final darkLearningSurface =
+        _tab == Act0ShellTabV1.learn || _blockCompletionSummary != null;
     final academySurface =
         !_bootSurfaceReady ||
         (_showPlacement && !_placementDiagnosticActive) ||
@@ -3025,7 +3112,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: premiumAcademy || _showWelcome || _showPlacement
+      backgroundColor:
+          premiumAcademy ||
+              darkLearningSurface ||
+              _showWelcome ||
+              _showPlacement
           ? Act0AcademyLeafPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -3037,7 +3128,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             _progressSaveNoticeV1(),
             if (showTopBar)
               _TopBarV1(
-                academy: academySurface,
+                academy: academySurface && !darkLearningSurface,
                 state: state,
                 goalLabel: _compactDailyLabel(),
                 goalProgress: _dailyGoalProgressValueV1(),
@@ -3143,6 +3234,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   )
                                   .length,
                         totalLessons: selectedWorld.lessons.length,
+                        dailyAction: useDailyHome ? dailyHomeAction : null,
+                        dayGoalDone: useDailyHome
+                            ? _lastShortSessionDayV1 == _todayDateString()
+                            : null,
+                        returningAfterBreak:
+                            useDailyHome && _returningAfterBreakV1,
+                        resumeLabel:
+                            useDailyHome &&
+                                homeDueReview != null &&
+                                homeResumeStep != null
+                            ? 'Continue lesson · $homeResumeStep'
+                            : null,
+                        onResumeLesson: resumableLesson == null
+                            ? null
+                            : () => setState(
+                                () => _resumeHomeLessonV1(resumableLesson),
+                              ),
                         phase: homeDueReview != null
                             ? Act0AcademyHomePhaseV1.recall
                             : switch (personalizedNextStep.recommendedAction) {
@@ -3545,6 +3653,36 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
                                 summary: _blockCompletionSummary!,
+                                openMissedSpots:
+                                    _blockCompletionSummary!.isWorldComplete
+                                    ? _openMistakeCountForWorldV1(selectedWorld)
+                                    : _openMistakeCountForLessonV1(
+                                        selectedLesson,
+                                      ),
+                                onBackToHome: useDailyHome
+                                    ? () => setState(() {
+                                        _blockCompletionSummary = null;
+                                        _showPlayHub = true;
+                                        _tab = Act0ShellTabV1.home;
+                                        _restoreSelectableLearnFocusV1();
+                                        _persistProgress();
+                                      })
+                                    : null,
+                                onFirstLessonReminder:
+                                    useDailyHome &&
+                                        !_firstLessonReminderAnsweredV1 &&
+                                        Act0PracticeReminderV1.isSupported &&
+                                        selectedLesson.lessonId ==
+                                            baseState
+                                                .worlds
+                                                .first
+                                                .lessons
+                                                .first
+                                                .lessonId &&
+                                        _blockCompletionSummary!
+                                            .curriculumCompleted
+                                    ? _finishFirstLessonReminderV1
+                                    : null,
                                 firstCorrectEarnedThisRun:
                                     _firstCorrectReadEarnedInCurrentLessonRunV1(),
                                 nextUsefulHand: _summaryHomeHandoffV1(
@@ -3875,6 +4013,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _teachingStepIndex = 0;
                                       return;
                                     }
+                                    _rememberLessonRunnerV1();
                                     if (_returnToPlayHubOnBack) {
                                       _showPlayHub = true;
                                     } else {
@@ -4236,6 +4375,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       return;
                                     }
                                     if (openedAsSpacedReview) {
+                                      if (playRunner?.selectedOption != null) {
+                                        _lastShortSessionDayV1 =
+                                            _todayDateString();
+                                      }
                                       _returnFromSpacedReviewV1(
                                         callbackDiagnosticRunIdV1,
                                       );
@@ -4742,7 +4885,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? null
           : _BottomNavV1(
               current: _tab,
-              premium: premiumAcademy,
+              premium: premiumAcademy || darkLearningSurface,
               academy: academySurface,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
@@ -4763,6 +4906,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 if (leavingLearningRunSurface && !preserveRepairBridge) {
                   _closeLearningRunForLearnExitV1();
                 }
+                _rememberLessonRunnerV1();
                 _tab = tab;
                 if (tab == Act0ShellTabV1.play) {
                   _showPlayHub = true;
@@ -4804,7 +4948,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // fixed text scale inside the runner.
     if (academySurface) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: premiumAcademy || _showWelcome || _showPlacement
+        value:
+            premiumAcademy ||
+                darkLearningSurface ||
+                _showWelcome ||
+                _showPlacement
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
         child: shell,
@@ -5599,6 +5747,15 @@ class _Act0PendingDecisionAssistanceV1 {
   }
 }
 
+typedef _Act0LessonResumeV1 = ({
+  String worldId,
+  String lessonId,
+  String taskId,
+  Act0LessonPhaseV1 phase,
+  int teachingStepIndex,
+  String? selectedOptionId,
+});
+
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
@@ -5616,6 +5773,9 @@ class _Act0PersistedProgressV1 {
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
+    this.lastShortSessionDay = '',
+    this.firstLessonReminderAnswered = false,
+    this.lessonResume,
     this.lastEarnedDailyDay = '',
     this.hasEarnedDailyDayField = false,
     this.dailyCompletedRepCount = 0,
@@ -5666,6 +5826,9 @@ class _Act0PersistedProgressV1 {
   final Map<String, int> profileSkillValues;
   final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
+  final String lastShortSessionDay;
+  final bool firstLessonReminderAnswered;
+  final _Act0LessonResumeV1? lessonResume;
   final String lastEarnedDailyDay;
   // Whether the incoming stored payload carried the new provenance key.
   final bool hasEarnedDailyDayField;
@@ -5739,6 +5902,17 @@ class _Act0PersistedProgressV1 {
           },
       ],
       'lastActiveDay': lastActiveDay,
+      'lastShortSessionDay': lastShortSessionDay,
+      'firstLessonReminderAnswered': firstLessonReminderAnswered,
+      if (lessonResume case final resume?)
+        'lessonResume': {
+          'worldId': resume.worldId,
+          'lessonId': resume.lessonId,
+          'taskId': resume.taskId,
+          'phase': resume.phase.name,
+          'teachingStepIndex': resume.teachingStepIndex,
+          'selectedOptionId': resume.selectedOptionId,
+        },
       'lastEarnedDailyDay': lastEarnedDailyDay,
       'dailyCompletedRepCount': dailyCompletedRepCount,
       'dailyPracticeQueue': dailyPracticeQueue.toPayload(),
@@ -5787,6 +5961,34 @@ class _Act0PersistedProgressV1 {
       if (resumeSelectedOptionId != null)
         'resumeSelectedOptionId': resumeSelectedOptionId!,
     });
+  }
+
+  static _Act0LessonResumeV1? _parseLessonResumeV1(Object? value) {
+    if (value is! Map<String, dynamic>) return null;
+    final world = value['worldId'];
+    final lesson = value['lessonId'];
+    final task = value['taskId'];
+    final index = value['teachingStepIndex'];
+    final choice = value['selectedOptionId'];
+    final phase = Act0LessonPhaseV1.values
+        .where((phase) => phase.name == value['phase'])
+        .firstOrNull;
+    if (world is! String ||
+        lesson is! String ||
+        task is! String ||
+        index is! int ||
+        index < 0 ||
+        phase == null ||
+        (choice != null && choice is! String))
+      return null;
+    return (
+      worldId: world,
+      lessonId: lesson,
+      taskId: task,
+      phase: phase,
+      teachingStepIndex: index,
+      selectedOptionId: choice as String?,
+    );
   }
 
   static _Act0PersistedProgressV1? tryParse(String raw) {
@@ -5986,6 +6188,9 @@ class _Act0PersistedProgressV1 {
       profileSkillValues: profileSkillValues,
       recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,
+      lastShortSessionDay: (map['lastShortSessionDay'] ?? '').toString(),
+      firstLessonReminderAnswered: map['firstLessonReminderAnswered'] == true,
+      lessonResume: _parseLessonResumeV1(map['lessonResume']),
       lastEarnedDailyDay: lastEarnedDailyDay,
       hasEarnedDailyDayField: map.containsKey('lastEarnedDailyDay'),
       dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),
