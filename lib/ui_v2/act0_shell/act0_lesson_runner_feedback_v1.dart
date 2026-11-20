@@ -132,7 +132,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             (!refined &&
                 fullViewportHeight > 900 &&
                 fullViewportHeight <= 980));
-    const missedCueTone = Color(0xFF90A4C7);
+    const missedCueTone = Color(0xFFFFA296);
     final tone = hasProofEarnedState
         ? Act0ShellTokensV1.gold
         : isRepairFocusState
@@ -145,7 +145,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final icon = hasProofEarnedState
         ? Icons.verified_rounded
         : isWrong
-        ? Icons.search_off_rounded
+        ? Icons.close_rounded
         : isSuboptimal
         ? Icons.trending_up_rounded
         : Icons.check_rounded;
@@ -469,6 +469,17 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? 'Missed cue'
         : 'Correct read';
     if (sceneOwnsFeedbackExplanation) {
+      final missedAnswer = _premiumSafeFeedbackOptionLabelV1(
+        selectedLabel.trim(),
+      );
+      final bestAnswer = _premiumSafeFeedbackOptionLabelV1(
+        betterLabel.trim().isEmpty ? preferredLabel.trim() : betterLabel.trim(),
+      );
+      final showAnswerContrast =
+          isWrong &&
+          !suppressRepairFocus &&
+          missedAnswer.isNotEmpty &&
+          bestAnswer.isNotEmpty;
       final nextActionLine =
           suppressRepairFocus && forwardCtaLabel == 'Next check'
           ? 'Continue to the next diagnostic question.'
@@ -494,6 +505,20 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_feedback_primary_result_block'),
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (showAnswerContrast) ...[
+                    _FeedbackAnswerRowV1(
+                      icon: Icons.close_rounded,
+                      color: missedCueTone,
+                      label: 'Not this one · $missedAnswer',
+                    ),
+                    const SizedBox(height: 3),
+                    _FeedbackAnswerRowV1(
+                      icon: Icons.check_rounded,
+                      color: Act0ShellTokensV1.successProof,
+                      label: 'Best answer · $bestAnswer',
+                    ),
+                    const SizedBox(height: 7),
+                  ],
                   // Source-owned proof must be visible before reporting it viewed.
                   // The scene already owns the causal explanation; this compact
                   // slot owns the earned result without moving the table or CTA.
@@ -581,6 +606,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 children: [
                   if (hasBoundedHeight)
                     Expanded(child: resultBody)
+                  else if (showAnswerContrast)
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 42),
+                      child: resultBody,
+                    )
                   else
                     resultBody,
                   const SizedBox(height: 7),
@@ -1220,6 +1250,39 @@ String _compactFeedbackActionLabelV1(String label) => switch (label.trim()) {
     'Fewer queen hands remain; exact hand unknown.',
   _ => label,
 };
+
+class _FeedbackAnswerRowV1 extends StatelessWidget {
+  const _FeedbackAnswerRowV1({
+    required this.icon,
+    required this.color,
+    required this.label,
+  });
+
+  final IconData icon;
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            label,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: color,
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class _FeedbackVerdictDividerV1 extends StatelessWidget {
   const _FeedbackVerdictDividerV1();
