@@ -186,7 +186,7 @@ void main() {
     expect(call.isCorrect, isFalse);
     expect(fold.feedbackReason, contains('33%'));
     expect(fold.feedbackReason, contains('rarely bluffs'));
-    expect(fold.feedbackReason, contains('not an automatic rule'));
+    expect(fold.feedbackReason, contains('what happens on the river'));
     expect(call.feedbackReason, contains('33%'));
     expect(12 / (12 + 12 + 12), closeTo(1 / 3, 1e-8));
   });

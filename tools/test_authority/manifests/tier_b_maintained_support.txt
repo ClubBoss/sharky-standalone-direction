@@ -47,6 +47,7 @@ test/ui_v2/act0_asm05_authored_decision_truth_v1_test.dart
 test/ui_v2/act0_asm05_catalog_runner_admission_v1_test.dart
 test/ui_v2/act0_asm05_preview_consumer_proof_v1_test.dart
 test/ui_v2/act0_assisted_learning_provenance_v1_test.dart
+test/ui_v2/act0_c2_strategy_source_truth_v1_test.dart
 test/ui_v2/act0_call_more_running_pot_v1_test.dart
 test/ui_v2/act0_consecutive_actor_guard_v1_test.dart
 test/ui_v2/act0_cross_session_profile_proof_v1_test.dart
