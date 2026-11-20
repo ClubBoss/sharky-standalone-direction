@@ -251,13 +251,75 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
     'Flush draw',
     r'\bflush draws?\b',
     'Four cards of the same suit between your hand and the board. One '
-        'more card of that suit would make a flush.',
+        'more card of that suit would make a flush. With four seen, nine remain.',
   ),
   Act0GlossaryTermV1(
     'Dry board',
     r'\bdry (?:board|flop)\b',
     'A board whose cards give players few ways to complete a straight '
         'or a flush on the next card.',
+  ),
+  Act0GlossaryTermV1(
+    'Wet board',
+    r'\bwet (?:board|flop)\b',
+    'A board that gives players many ways to draw to a straight or flush, '
+        'often through close ranks or matching suits.',
+  ),
+  Act0GlossaryTermV1(
+    'Rainbow flop',
+    r'\brainbow\b',
+    'A flop with three different suits.',
+  ),
+  Act0GlossaryTermV1(
+    'Two-tone flop',
+    r'\btwo[ -]tone\b',
+    'A flop with exactly two cards of one suit and one card of another.',
+  ),
+  Act0GlossaryTermV1(
+    'Paired board',
+    r'\bpaired (?:board|flop)\b',
+    'A board with two cards that share a rank.',
+  ),
+  Act0GlossaryTermV1(
+    'Open-ended straight draw',
+    r'\bopen[ -]ended\b',
+    'Four ranks in a row that can make a straight at either end. '
+        'Four cards of each rank can finish it, for eight outs.',
+  ),
+  Act0GlossaryTermV1(
+    'Gutshot',
+    r'\bgutshots?\b',
+    'A straight draw with one missing rank inside it. Any of the four '
+        'cards of that rank can complete the straight.',
+  ),
+  Act0GlossaryTermV1(
+    'Out',
+    r'\bouts?\b',
+    'An unseen card that would improve your hand. Count how many would '
+        'actually win before using outs to decide whether to call.',
+  ),
+  Act0GlossaryTermV1(
+    'Blank',
+    r'\bblanks?\b',
+    'A new board card that changes little for the hand or draw you are tracking.',
+  ),
+  Act0GlossaryTermV1(
+    'Combo',
+    r'\bcombos?\b',
+    'One exact pair of private cards. Two different ranks have 16 combos '
+        'before seeing any cards: four suited and 12 offsuit. A pocket pair has six. '
+        'Seeing one card of the relevant rank can reduce 16 to 12 or six to three.',
+  ),
+  Act0GlossaryTermV1(
+    'SPR',
+    r'\bspr\b|\bstack-to-pot ratio\b',
+    'The stack-to-pot ratio. Divide the effective stack (the smaller '
+        'remaining stack heads-up) by the current pot.',
+  ),
+  Act0GlossaryTermV1(
+    'Full ring',
+    r'\bfull[ -]ring\b',
+    'A table with nine seats in this course.',
   ),
   Act0GlossaryTermV1(
     'Suited',
@@ -309,6 +371,12 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
     r'\branges?\b',
     'All the hands a player could hold in this spot, not just one hand.',
     teachOrderChecked: true,
+  ),
+  Act0GlossaryTermV1(
+    'Range advantage',
+    r'\brange advantage\b',
+    'An edge in hand strength across one player’s possible hands compared '
+        'with the other player’s on the same board.',
   ),
   Act0GlossaryTermV1(
     'Equity',
