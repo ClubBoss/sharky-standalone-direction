@@ -143,7 +143,7 @@ class Act0ClubCardV1 extends StatelessWidget {
   }
 }
 
-enum Act0ClubTagToneV1 { brass, correct, neutral }
+enum Act0ClubTagToneV1 { brass, correct, neutral, mistake }
 
 /// A capsule label: "Extra practice", "On your own", "With help", "Day 2".
 class Act0ClubTagV1 extends StatelessWidget {
@@ -162,6 +162,7 @@ class Act0ClubTagV1 extends StatelessWidget {
       Act0ClubTagToneV1.brass => (_T.brassSoft, _T.brass),
       Act0ClubTagToneV1.correct => (_T.correctSoft, _T.correct),
       Act0ClubTagToneV1.neutral => (_T.raised, _T.text2),
+      Act0ClubTagToneV1.mistake => (_T.mistakeSoft, _T.mistake),
     };
     return Container(
       constraints: const BoxConstraints(minHeight: 26),
@@ -431,7 +432,7 @@ class Act0ClubTabBarV1 extends StatelessWidget {
   }
 }
 
-/// Screen header: 28 pt title on the left, optional line under it and an
+/// Screen header with a title on the left, optional line under it and an
 /// optional trailing control (for example the settings gear on You).
 class Act0ClubScreenHeaderV1 extends StatelessWidget {
   const Act0ClubScreenHeaderV1({
