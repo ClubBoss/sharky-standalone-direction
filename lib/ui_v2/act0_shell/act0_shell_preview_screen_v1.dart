@@ -13,6 +13,8 @@ import 'act0_beta_metrics_v1.dart';
 import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'act0_club_night_launch_v1.dart';
+import 'act0_club_night_tokens_v1.dart';
 
 import 'package:flutter/foundation.dart'
     show kDebugMode, kReleaseMode, visibleForTesting;
@@ -2730,19 +2732,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     if (!_bootSurfaceReady) {
-      return const AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Scaffold(
-          backgroundColor: Act0AcademyLeafPaletteV1.ink,
-          body: SafeArea(
-            child: Center(
-              child: CircularProgressIndicator(
-                color: Act0AcademyLeafPaletteV1.aqua,
-              ),
-            ),
-          ),
-        ),
-      );
+      // Same view as the app launch: one wall, no second spinner.
+      return const Act0ClubNightLaunchViewV1();
     }
     _ensureDailyCountDayV1();
     if (_bootSurfaceReady &&
@@ -3131,7 +3122,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: premiumAcademy || _showWelcome || _showPlacement
+      backgroundColor: premiumAcademy
+          ? Act0ClubNightTokensV1.wall
+          : _showWelcome || _showPlacement
           ? Act0AcademyLeafPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -6753,10 +6746,8 @@ class _BottomNavV1 extends StatelessWidget {
           child: DecoratedBox(
             decoration: premium
                 ? const BoxDecoration(
-                    color: Act0AcademyLeafPaletteV1.ink,
-                    border: Border(
-                      top: BorderSide(color: Act0AcademyLeafPaletteV1.rule),
-                    ),
+                    color: Act0ClubNightTokensV1.wall,
+                    border: Border(top: Act0ClubNightTokensV1.cardBorder),
                   )
                 : academy
                 ? const BoxDecoration(
@@ -6854,8 +6845,8 @@ class _NavItemV1 extends StatelessWidget {
     final selected = tab == current;
     final color = premium
         ? (selected
-              ? Act0AcademyLeafPaletteV1.aqua
-              : Act0AcademyLeafPaletteV1.textMuted)
+              ? Act0ClubNightTokensV1.brass
+              : Act0ClubNightTokensV1.caption)
         : academy
         ? (selected
               ? Act0AcademyDesignTokensV1.focus
@@ -6880,7 +6871,8 @@ class _NavItemV1 extends StatelessWidget {
               minWidth: 44,
             ),
             child: Container(
-              decoration: academy && selected
+              // Club Night marks the active tab by brass and label only.
+              decoration: academy && selected && !premium
                   ? BoxDecoration(
                       border: Border(
                         bottom: BorderSide(color: color, width: 2),
@@ -6894,7 +6886,7 @@ class _NavItemV1 extends StatelessWidget {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      Icon(icon, size: 21, color: color),
+                      Icon(icon, size: premium ? 26 : 21, color: color),
                       if (hasBadge)
                         Positioned(
                           top: -3,
@@ -6923,17 +6915,18 @@ class _NavItemV1 extends StatelessWidget {
                   Text(
                     label,
                     textAlign: TextAlign.center,
-                    style:
-                        (academy
-                                ? Act0AcademyDesignTokensV1.supporting
-                                : const TextStyle())
-                            .copyWith(
-                              color: color,
-                              fontSize: 10,
-                              fontWeight: selected
-                                  ? FontWeight.w800
-                                  : FontWeight.w600,
-                            ),
+                    style: premium
+                        ? Act0ClubNightTokensV1.tab.copyWith(color: color)
+                        : (academy
+                                  ? Act0AcademyDesignTokensV1.supporting
+                                  : const TextStyle())
+                              .copyWith(
+                                color: color,
+                                fontSize: 10,
+                                fontWeight: selected
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                              ),
                   ),
                 ],
               ),
