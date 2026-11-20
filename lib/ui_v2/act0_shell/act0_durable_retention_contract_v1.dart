@@ -69,14 +69,27 @@ class Act0DurableRetentionHistoryV1 {
     );
   }
 
-  Act0DurableRetentionHistoryV1 scheduleW1CheckMisses(
+  Act0DurableRetentionHistoryV1 reconcileW1CheckMisses(
     Iterable<Act0W1RulesQuestionV1> missed,
     DateTime nowUtc,
   ) {
     final now = nowUtc.toUtc();
+    final missedByTaskId = {
+      for (final question in missed) question.taskId: question,
+    };
+    final checkTaskIds = act0W1RulesQuestionsV1
+        .map((question) => question.taskId)
+        .toSet();
+    // A new check supersedes its provisional entries. Evidence recorded
+    // during actual practice keeps its own review schedule.
     final updated = [
-      ...families,
-      for (final question in missed)
+      for (final family in families)
+        if (!checkTaskIds.contains(family.conceptFamilyId) ||
+            family.lastCreatedOrder != -1 ||
+            family.lastReviewKind != Act0ReviewKindV1.initialAssessment ||
+            missedByTaskId.containsKey(family.conceptFamilyId))
+          family,
+      for (final question in missedByTaskId.values)
         if (familyById(question.taskId) == null)
           Act0DurableRetentionFamilyV1(
             conceptFamilyId: question.taskId,

@@ -12,6 +12,9 @@ class Act0W1RulesQuestionV1 {
     this.hero = '',
     this.board = '',
     this.opponent = '',
+    this.occupiedSeats = const ['BTN'],
+    this.foldedSeats = const [],
+    this.actedSeats = const [],
   });
 
   final String id;
@@ -24,6 +27,9 @@ class Act0W1RulesQuestionV1 {
   final String hero;
   final String board;
   final String opponent;
+  final List<String> occupiedSeats;
+  final List<String> foldedSeats;
+  final List<String> actedSeats;
 
   String get taskId => 'w1_rules_check_$id';
   String get correctLabel => choices[correctChoice];
@@ -31,6 +37,7 @@ class Act0W1RulesQuestionV1 {
   Act0RunnerStateV1 runner(int index) {
     final heroCards = _rulesCards(hero);
     final boardCards = _rulesCards(board);
+    final opponentCards = _rulesCards(opponent);
     return Act0RunnerStateV1(
       lessonId: lessonId,
       lessonTitle: 'W1 rules check',
@@ -83,26 +90,42 @@ class Act0W1RulesQuestionV1 {
           for (final seat in act0CanonicalSeatOrderForFormatV1(
             Act0TableFormatV1.sixMax,
           ))
-            Act0SeatStateV1(
-              seatId: seat.toLowerCase(),
-              seatLabel: seat,
-              displayName: seat == 'BTN' ? 'You' : seat,
-              isHero: seat == 'BTN',
-              isDealerButton: seat == 'BTN',
-              isOccupied:
-                  seat == 'BTN' || (seat == 'CO' && opponent.isNotEmpty),
-              holeCards: switch (seat) {
-                'BTN' => heroCards,
-                'CO' => _rulesCards(opponent),
-                _ => const [],
-              },
-              cardsVisibleMode:
-                  seat == 'BTN' || (seat == 'CO' && opponent.isNotEmpty)
-                  ? Act0CardsVisibleModeV1.faceUp
-                  : Act0CardsVisibleModeV1.none,
-            ),
+            _seat(seat, heroCards, opponentCards),
         ],
       ),
+    );
+  }
+
+  Act0SeatStateV1 _seat(
+    String seat,
+    List<Act0CardStateV1> heroCards,
+    List<Act0CardStateV1> opponentCards,
+  ) {
+    final cards = switch (seat) {
+      'BTN' => heroCards,
+      'CO' => opponentCards,
+      _ => const <Act0CardStateV1>[],
+    };
+    final occupied = occupiedSeats.contains(seat) || cards.isNotEmpty;
+    final folded = foldedSeats.contains(seat);
+    return Act0SeatStateV1(
+      seatId: seat.toLowerCase(),
+      seatLabel: seat,
+      displayName: seat == 'BTN' ? 'You' : seat,
+      isHero: seat == 'BTN',
+      isDealerButton: seat == 'BTN',
+      isSmallBlind: occupied && seat == 'SB',
+      isBigBlind: occupied && seat == 'BB',
+      isOccupied: occupied,
+      isInHand: occupied && !folded,
+      isFolded: folded,
+      hasActed: folded || actedSeats.contains(seat),
+      holeCards: cards,
+      cardsVisibleMode: cards.isNotEmpty
+          ? Act0CardsVisibleModeV1.faceUp
+          : occupied && !folded
+          ? Act0CardsVisibleModeV1.faceDown
+          : Act0CardsVisibleModeV1.none,
     );
   }
 }
@@ -112,6 +135,8 @@ List<Act0CardStateV1> _rulesCards(String cards) => [
     for (final card in cards.split(' '))
       Act0CardStateV1(rank: card[0], suit: card[1]),
 ];
+
+const _sixSeats = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
 
 const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
   Act0W1RulesQuestionV1(
@@ -172,6 +197,9 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     correctChoice: 1,
     reason:
         'After HJ, the first preflop pass goes to CO, then BTN, then the blinds.',
+    occupiedSeats: _sixSeats,
+    foldedSeats: ['HJ'],
+    actedSeats: ['UTG', 'HJ'],
   ),
   Act0W1RulesQuestionV1(
     id: 'postflop_two_left',
@@ -184,6 +212,8 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     reason:
         'On the flop, the first player still in the hand clockwise after the dealer acts first. That is SB here.',
     board: 'Kc 8d 5h',
+    occupiedSeats: _sixSeats,
+    foldedSeats: ['UTG', 'HJ', 'CO', 'BB'],
   ),
   Act0W1RulesQuestionV1(
     id: 'forced_bets',
@@ -198,6 +228,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     ],
     correctChoice: 2,
     reason: 'The small blind and big blind are the forced bets in this setup.',
+    occupiedSeats: _sixSeats,
   ),
   Act0W1RulesQuestionV1(
     id: 'check_behind',
@@ -210,6 +241,8 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     reason:
         'You can check when there is no bet to match. A fold takes you out of the hand.',
     board: '2s 6c 9d Jh Qc',
+    occupiedSeats: ['CO', 'BTN'],
+    actedSeats: ['CO'],
   ),
   Act0W1RulesQuestionV1(
     id: 'raise_call_price',
@@ -220,6 +253,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     choices: ['5 BB', '8 BB', '11 BB'],
     correctChoice: 0,
     reason: 'You already put in 3 BB. Add 5 BB to match the new total of 8 BB.',
+    occupiedSeats: ['CO', 'BTN'],
   ),
   Act0W1RulesQuestionV1(
     id: 'uncalled_all_in',
@@ -231,6 +265,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     correctChoice: 2,
     reason:
         'Your opponent matches 11 BB. The remaining 14 BB of your bet is uncalled and comes back to you.',
+    occupiedSeats: ['CO', 'BTN'],
   ),
 ];
 

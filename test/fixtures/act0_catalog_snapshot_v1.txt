@@ -5680,7 +5680,7 @@ TASK w1_rules_check_preflop_after_hj [drill] Preflop order
 Q: At a six-player table before the flop, UTG has acted and HJ folds. Who acts next?
 HINT [hidden]: (none)
 TABLE: Preflop | Seat BTN | Facts no applicable hand facts
-SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+SEATS: UTG | HJ folded | CO | BTN dealer | SB | BB
   - [wrong] BTN — Preflop order After HJ, the first preflop pass goes to CO, then BTN, then the blinds.
     BETTER ANSWER: CO
   + [correct] CO — Preflop order After HJ, the first preflop pass goes to CO, then BTN, then the blinds.
@@ -5693,7 +5693,7 @@ TASK w1_rules_check_postflop_two_left [drill] Postflop order
 Q: A six-player hand is down to SB and BTN on the flop. Who acts first?
 HINT [hidden]: (none)
 TABLE: Flop | Board Kc 8d 5h | Seat BTN | Facts rainbow
-SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB | BB folded
   + [correct] SB — Postflop order On the flop, the first player still in the hand clockwise after the dealer acts first. That is SB here.
     FEEDBACK TABLE: Flop | Board Kc 8d 5h | Seat BTN | Card focus board_0, board_1, board_2 | Facts rainbow
   - [wrong] BTN — Postflop order On the flop, the first player still in the hand clockwise after the dealer acts first. That is SB here.
@@ -5709,7 +5709,7 @@ TASK w1_rules_check_forced_bets [drill] Blinds
 Q: At a six-player table with no ante or straddle, who must put chips in before the deal?
 HINT [hidden]: (none)
 TABLE: Preflop | Seat BTN | Facts no applicable hand facts
-SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Only the big blind — Blinds The small blind and big blind are the forced bets in this setup.
     BETTER ANSWER: The small blind and big blind
   - [wrong] Every player — Blinds The small blind and big blind are the forced bets in this setup.
@@ -5722,7 +5722,7 @@ TASK w1_rules_check_check_behind [drill] Legal actions
 Q: It is your turn on the river. Every player before you checked. How can you stay in without adding chips?
 HINT [hidden]: (none)
 TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Facts no applicable hand facts
-SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
   - [wrong] Call — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
     BETTER ANSWER: Check
     FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
@@ -5736,7 +5736,7 @@ TASK w1_rules_check_raise_call_price [drill] Price to call
 Q: You put in 3 BB on this street. An opponent raises to 8 BB. How much more does a call cost you?
 HINT [hidden]: (none)
 TABLE: Preflop | Seat BTN | Facts no applicable hand facts
-SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
   + [correct] 5 BB — Price to call You already put in 3 BB. Add 5 BB to match the new total of 8 BB.
   - [wrong] 8 BB — Price to call You already put in 3 BB. Add 5 BB to match the new total of 8 BB.
     BETTER ANSWER: 5 BB
@@ -5749,7 +5749,7 @@ TASK w1_rules_check_uncalled_all_in [drill] All-in bets
 Q: Two players remain. You go all-in for 25 BB. Your opponent can call only 11 BB. How much of your bet is returned?
 HINT [hidden]: (none)
 TABLE: Preflop | Seat BTN | Facts no applicable hand facts
-SEATS: UTG empty | HJ empty | CO empty | BTN dealer | SB empty | BB empty
+SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
   - [wrong] 11 BB — All-in bets Your opponent matches 11 BB. The remaining 14 BB of your bet is uncalled and comes back to you.
     BETTER ANSWER: 14 BB
   - [wrong] 25 BB — All-in bets Your opponent matches 11 BB. The remaining 14 BB of your bet is uncalled and comes back to you.

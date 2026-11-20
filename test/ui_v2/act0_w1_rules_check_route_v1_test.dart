@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
@@ -40,8 +41,31 @@ Future<void> _tapKey(WidgetTester tester, String name) async {
 
 Future<void> _runCheck(WidgetTester tester, int right) async {
   await _tapKey(tester, 'act0_shell_w1_start_check');
+  await _answerCheck(tester, right);
+}
+
+Future<void> _answerCheck(WidgetTester tester, int right) async {
   for (final (index, question) in act0W1RulesQuestionsV1.indexed) {
     expect(find.text(question.question), findsWidgets);
+    if (question.id == 'preflop_after_hj' ||
+        question.id == 'postflop_two_left') {
+      final runner = tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .runner;
+      final seats = runner.table.seats;
+      expect(seats.where((seat) => seat.isOccupied), hasLength(6));
+      expect(runner.table.highlightedSeatIds, isEmpty);
+      expect(
+        seats.where((seat) => seat.isInHand).map((seat) => seat.seatId),
+        unorderedEquals(
+          question.id == 'preflop_after_hj'
+              ? ['utg', 'co', 'btn', 'sb', 'bb']
+              : ['sb', 'btn'],
+        ),
+      );
+      expect(seats.singleWhere((seat) => seat.seatId == 'hj').isFolded, isTrue);
+    }
+
     expect(find.text('Need a hint?'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_learning_scene_sharky_avatar')),
@@ -179,11 +203,91 @@ void main() {
     },
   );
 
+  testWidgets('passing a retake clears only the old check reviews', (
+    tester,
+  ) async {
+    usePhone(tester);
+    final dueAt = _today.add(const Duration(days: 1));
+    final lessonReview = Act0DurableRetentionFamilyV1(
+      conceptFamilyId: 'hero_cards',
+      worldId: 'world_1',
+      sourceLessonId: 'what_poker_is',
+      sourceTaskId: 'what_poker_is_find_hero',
+      retentionState: Act0RetentionStateV1.recoveredPendingSpacedReview,
+      nextDueAtUtc: dueAt,
+      lastSpacedReviewAtUtc: null,
+      spacedSuccessStage: 0,
+      lapseCount: 0,
+      incorrectCount: 1,
+      correctCount: 1,
+      lastRecordedAtUtc: _today,
+      lastCreatedOrder: 2,
+      lastSessionId: 'review-regression',
+      lastReviewKind: Act0ReviewKindV1.immediateRepair,
+      hasLegacyUnspacedEvidence: false,
+    );
+    SharedPreferences.setMockInitialValues({
+      _progressKey: jsonEncode({
+        'schemaVersion': 18,
+        'completedTaskIds': ['what_poker_is_theory'],
+        'completedLessonIds': [],
+        'skippedTaskIds': [],
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'what_poker_is',
+        'selectedTaskId': 'what_poker_is_find_hero',
+        'earnedXp': 5,
+        'durableRetentionHistory': [lessonReview.toPayload()],
+      }),
+    });
+    await _mount(tester);
+
+    Future<void> openSettingsCheck() async {
+      await tester.tap(find.text('You').last);
+      await tester.pumpAndSettle();
+      await _tapKey(tester, 'act0_academy_you_leaf_settings');
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_academy_settings_leaf_placement')),
+      );
+      await _tapKey(tester, 'act0_academy_settings_leaf_placement');
+    }
+
+    await openSettingsCheck();
+    await _answerCheck(tester, 8);
+    final failed = await _saved(tester);
+    expect(failed['earnedXp'], 21);
+    expect(failed['durableRetentionHistory'], hasLength(3));
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await _mount(tester, clock: _today.add(const Duration(hours: 1)));
+    await openSettingsCheck();
+    await _answerCheck(tester, 10);
+    final passed = await _saved(tester);
+    expect(passed['earnedXp'], 25);
+    expect(passed['w1RulesFocusTaskIds'], isNull);
+    expect(passed['durableRetentionHistory'], [lessonReview.toPayload()]);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await _mount(tester, clock: _today.add(const Duration(hours: 25)));
+    await tester.tap(find.text('Review').last);
+    await tester.pumpAndSettle();
+    expect(find.text('1 independent review due'), findsOneWidget);
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_academy_review_leaf_start_due')),
+    );
+    await _tapKey(tester, 'act0_academy_review_leaf_start_due');
+    expect(
+      tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      lessonReview.sourceTaskId,
+    );
+  });
+
   testWidgets('old saved progress opens without a W1 check', (tester) async {
     usePhone(tester);
     SharedPreferences.setMockInitialValues({
       _progressKey: jsonEncode({
-        'schemaVersion': 20,
+        'schemaVersion': 18,
         'completedTaskIds': ['what_poker_is_theory'],
         'completedLessonIds': [],
         'skippedTaskIds': [],
@@ -195,6 +299,8 @@ void main() {
     });
     await _mount(tester);
     expect(find.byKey(const Key('act0_shell_w1_start_basics')), findsNothing);
+    expect(find.text('Your saved progress could not be read.'), findsNothing);
+    expect(find.text('Learn'), findsWidgets);
     final saved = await _saved(tester);
     expect(saved['earnedXp'], 5);
     expect(saved['completedTaskIds'], ['what_poker_is_theory']);

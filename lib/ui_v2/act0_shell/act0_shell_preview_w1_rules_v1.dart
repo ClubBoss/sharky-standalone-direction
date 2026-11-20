@@ -31,16 +31,14 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
             _w1RulesBestScoreV1 * Act0W1RulesResultV1.xpPerCorrectAnswer;
         _w1RulesBestScoreV1 = result.score;
       }
-      _w1RulesFocusTaskIdsV1 = result.passed
-          ? const <String>{}
-          : result.missedQuestions.map((question) => question.taskId).toSet();
-      if (!result.passed) {
-        _durableRetentionHistoryV1 = _durableRetentionHistoryV1
-            .scheduleW1CheckMisses(
-              result.missedQuestions,
-              widget.clock.nowUtc(),
-            );
-      }
+      final missed = result.passed
+          ? const <Act0W1RulesQuestionV1>[]
+          : result.missedQuestions.toList();
+      _w1RulesFocusTaskIdsV1 = missed
+          .map((question) => question.taskId)
+          .toSet();
+      _durableRetentionHistoryV1 = _durableRetentionHistoryV1
+          .reconcileW1CheckMisses(missed, widget.clock.nowUtc());
       _selectRulesStartWorldV1(result.passed ? 'world_2' : 'world_1');
       _persistProgress();
       _recordW1RulesEventV1(
