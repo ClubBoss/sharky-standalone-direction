@@ -281,6 +281,18 @@ final _actualRankQuestion = RegExp(
   caseSensitive: false,
 );
 
+// Each of these W1 prompts has a single factual table read or rule answer.
+const _w1FactualGradeTaskIds = {
+  'what_poker_is_table_read_transfer',
+  'what_poker_is_table_read_recheck',
+  'your_first_hand_private_cards_recheck',
+  'what_poker_is_all_in_meaning',
+  'what_poker_is_matched_chips_transfer',
+  'what_poker_is_win_ways',
+  'what_poker_is_showdown_win',
+  'what_poker_is_live_win_transfer',
+};
+
 CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
   final tasks = rows ?? catalogTasks;
   final audit = CatalogAudit();
@@ -410,6 +422,7 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
               'recognition',
               'counting',
             }.contains(task.resolvedTaskFamily.name) ||
+            _w1FactualGradeTaskIds.contains(task.taskId) ||
             _actualRankQuestion.hasMatch(catalogQuestion(task)))) {
       for (final o in r.options.where((o) => !o.isCorrect)) {
         audit.check(

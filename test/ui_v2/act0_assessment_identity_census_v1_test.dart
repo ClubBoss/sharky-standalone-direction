@@ -665,6 +665,24 @@ void main() {
       for (final row in beforeL1.cast<List<dynamic>>())
         row[2] as String: (row[5] as List).cast<List<dynamic>>(),
     };
+    const w1FactualGrades = {
+      'what_poker_is_table_read_transfer': 'hand_first_only',
+      'what_poker_is_table_read_recheck': 'hero_cards_only',
+      'your_first_hand_private_cards_recheck': 'board_cards',
+      'what_poker_is_all_in_meaning': 'largest_stack_only',
+      'what_poker_is_matched_chips_transfer': 'nothing_until_showdown',
+      'what_poker_is_win_ways': 'best_hand_showdown',
+      'what_poker_is_showdown_win': 'hero_cards_only',
+      'what_poker_is_live_win_transfer': 'hero_cards_decide_now',
+    };
+    for (final entry in w1FactualGrades.entries) {
+      final option = beforeP8[entry.key]!.singleWhere(
+        (row) => row[0] == entry.value,
+      );
+      expect(option[2], isFalse, reason: entry.key);
+      expect(option[3], 'wrong', reason: entry.key);
+      option[3] = 'suboptimal';
+    }
     for (final taskId in [
       'your_first_hand_showdown',
       'showdown_best_hand_drill',

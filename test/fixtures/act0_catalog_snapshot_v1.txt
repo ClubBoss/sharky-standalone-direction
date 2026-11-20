@@ -57,7 +57,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] 5 board cards are already out — Not quite. Only three shared cards are visible here. More cards can appear later in the hand.
     BETTER ANSWER: 2 private cards, 3 board cards, 6 BB in the pot
   + [correct] 2 private cards, 3 board cards, 6 BB in the pot — Excellent spot. That is the clean first live read. Separate your cards, the shared board, and chips in the middle before choosing anything.
-  - [suboptimal] Only your hand matters first — Playable instinct. Your cards matter, but a live table read also needs the shared board and pot before the decision starts.
+  - [wrong] Only your hand matters first — Read the whole table. Your cards matter, but a live table read also needs the shared board and pot before the decision starts.
     BETTER ANSWER: 2 private cards, 3 board cards, 6 BB in the pot
 
 TASK what_poker_is_table_read_recheck [drill] Table read recheck
@@ -72,7 +72,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] 5 board cards are out — Not quite. Only three shared cards are visible in the middle here.
     BETTER ANSWER: 2 private cards, 3 board cards, 4 BB in the pot
     REPAIR LABELS: Your cards, Board cards, Pot 4 BB
-  - [suboptimal] Only your cards matter — Part of the read. Your cards matter, but the clean table read also includes the shared board and the pot.
+  - [wrong] Only your cards matter — Read the board and pot too. Your cards matter, but the clean table read also includes the shared board and the pot.
     BETTER ANSWER: 2 private cards, 3 board cards, 4 BB in the pot
     REPAIR LABELS: Your cards, Board cards, Pot 4 BB
   + [correct] 2 private cards, 3 board cards, 4 BB in the pot — Clean table read. Same scan, new numbers: you have two private cards, the board has three shared cards, and the pot is 4 BB.
@@ -891,7 +891,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player fol
   - [wrong] Q and Q — Not quite. Look again at the two cards beside you.
     BETTER ANSWER: A and K
     REPAIR LABELS: Your cards
-  - [suboptimal] The board cards — Not this street. Board cards are shared later. This recheck asks for your two private cards.
+  - [wrong] The board cards — Not this street. Board cards are shared later. This recheck asks for your two private cards.
     BETTER ANSWER: A and K
     REPAIR LABELS: Your cards
 
@@ -1038,7 +1038,7 @@ TRAIL: Blinds: 1.5 BB · UTG folds · HJ folds · CO calls 1 BB · You go all-in
   - [wrong] You win the pot automatically — Not a win condition. All-in does not automatically win. If another player calls, the hand can still go to showdown and the cards still decide the pot.
     BETTER ANSWER: You put in all remaining chips
   + [correct] You put in all remaining chips — Correct table read. All-in means you committed all remaining chips. It does not automatically win the pot, because cards or folds still decide what happens next.
-  - [suboptimal] Only the bigger stack matters now — Stack size still has a role, but not that role. CO has chips left. You put in your last chips. The hand still has to be decided.
+  - [wrong] Only the bigger stack matters now — Stack size still has a role, but not that role. CO has chips left. You put in your last chips. The hand still has to be decided.
     BETTER ANSWER: You put in all remaining chips
 
 TASK what_poker_is_matched_chips_transfer [drill] Matched chips
@@ -1053,7 +1053,7 @@ SEATS: UTG folded | HJ folded | CO stack 80 BB call 20 BB | BTN dealer stack 0 B
 TRAIL: Blinds: 1.5 BB · UTG folds · HJ folds · CO calls 1 BB · You go all-in for 20 BB · SB folds · BB folds · CO calls, 20 BB total
   - [wrong] The other player's whole 100 BB stack — Too many chips counted. Your all-in caps CO’s contribution to the pot you can win at 20 BB. Any further chips CO bets against another player stay in a separate pot.
     BETTER ANSWER: Only the chips CO matched against the 20 BB all-in
-  - [suboptimal] Nothing counts until every stack is equal — Matched already matters. You can win the 20 BB that CO matched. CO keeps the chips they did not put in.
+  - [wrong] Nothing counts until every stack is equal — Matched already matters. You can win the 20 BB that CO matched. CO keeps the chips they did not put in.
     BETTER ANSWER: Only the chips CO matched against the 20 BB all-in
   + [correct] Only the chips CO matched against the 20 BB all-in — Correct beginner transfer. You can win the 20 BB CO matched. That limit stays fixed for this hand, even if CO bets more against another player.
 
@@ -1069,7 +1069,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] Largest stack — Not quite. A larger stack can apply pressure later, but it does not end this pot by itself. Before showdown, you win only when everyone else folds.
     BETTER ANSWER: Everyone else folds
-  - [suboptimal] Best hand at showdown — That is the other ending. Best hand at showdown is a real way to win, but this question asks for the early ending before cards are revealed.
+  - [wrong] Best hand at showdown — That is the other ending. Best hand at showdown is a real way to win, but this question asks for the early ending before cards are revealed.
     BETTER ANSWER: Everyone else folds
   + [correct] Everyone else folds — That is the early ending. If everyone else folds, the hand ends before showdown and the last player standing wins the pot immediately.
 
@@ -1085,7 +1085,7 @@ SEATS: UTG | HJ | CO Kh Jh | BTN dealer Qh Qs | SB | BB
   - [wrong] First actor — Not quite. Seat order decides who acts first, not who wins at showdown. Once cards are revealed, players compare the best full hand they can make from private cards plus the shared board.
     BETTER ANSWER: Best hand
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Your pair of queens beats CO’s pair of jacks | Facts one pair, pocket pair
-  - [suboptimal] Your cards only — Only part of the hand. Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.
+  - [wrong] Your cards only — Only part of the hand. Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.
     BETTER ANSWER: Best hand
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Your pair of queens beats CO’s pair of jacks | Facts one pair, pocket pair
   + [correct] Best hand — Strong choice. At showdown, players use the best five-card hand they can make from private cards plus the shared board.
@@ -1104,7 +1104,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] A fold or a showdown — Exactly. The table can look busier, but the pot still closes by fold or by best hand at showdown.
   - [wrong] The button wins automatically — One more read. The Button usually acts late. The hand still decides who wins.
     BETTER ANSWER: A fold or a showdown
-  - [suboptimal] Your cards decide it immediately — Partly right. Your cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.
+  - [wrong] Your cards decide it immediately — The hand is still live. Your cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.
     BETTER ANSWER: A fold or a showdown
 
 TASK what_poker_is_review [review] Poker recap
