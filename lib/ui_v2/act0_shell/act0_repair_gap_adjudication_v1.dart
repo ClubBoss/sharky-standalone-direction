@@ -843,10 +843,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: 'bet_bluff',
     sourceCorrectChoiceId: 'bet',
     sourceFingerprint:
-        '6c7f31f299e5018fbd788fc9df4ab0df14f45be2f21fbd6a5427d22b3c5f8800',
-    sourceQuestion: 'What does K-Q do here?',
+        '65058cc72857188ec058af7a81314c897d733ef1bc094e28540c2849d555c7d4',
+    sourceQuestion: 'What is the purpose of a half-pot bet here?',
     sourceChoiceReason:
-        'A weaker pair can call here. The bet aims to get called by worse, rather than to make a better hand fold.',
+        'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
     sourceChoiceLabel: 'Bet as a bluff',
     goalId: 'value_bet_purpose',
     misconceptionId: 'value_bet_seen_as_bluff',
@@ -855,7 +855,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'range_pressure_lines',
     targetTaskId: 'w6_value_range_action',
     targetFingerprint:
-        '6c7f31f299e5018fbd788fc9df4ab0df14f45be2f21fbd6a5427d22b3c5f8800',
+        '65058cc72857188ec058af7a81314c897d733ef1bc094e28540c2849d555c7d4',
     targetCorrectChoiceId: 'bet',
     targetChoiceIds: <String>{'bet', 'check', 'bet_bluff'},
     evidenceClass: 'intentional_exact_replay',
