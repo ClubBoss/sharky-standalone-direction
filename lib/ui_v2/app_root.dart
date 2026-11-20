@@ -11,6 +11,7 @@ import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_launch_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
@@ -789,17 +790,7 @@ class _EntryGateState extends State<_EntryGate> {
       );
     }
     if (!_entryReady) {
-      return const AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Scaffold(
-          backgroundColor: Act0AcademyLeafPaletteV1.ink,
-          body: Center(
-            child: CircularProgressIndicator(
-              color: Act0AcademyLeafPaletteV1.aqua,
-            ),
-          ),
-        ),
-      );
+      return const Act0ClubNightLaunchViewV1();
     }
     final shell = Act0ShellPreviewScreenV1(
       debugHarnessEntry: _debugHarnessEntry,
