@@ -4375,7 +4375,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Still take practical all-in spots before blinded out
 
 TASK w9_bubble_table_risk_transfer [drill] Bubble risk at a real table
-CAPTION: Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble. No antes; BB goes all-in for 18 BB total. Pot 21 BB, 15.5 BB to call.
+CAPTION: BTN holds A-J offsuit with a medium stack near the bubble. There are no antes. BB goes all-in for 18 BB, 15.5 BB more than BTN put in. BTN’s remaining stack caps the call.
 TEACH: Bubble pressure changes the stack-off bar. An all-in for 18 BB tells you the big blind’s wager. To know whether a loss would eliminate you, compare it with your own stack. Payouts and other stacks determine how much extra equity you need.
 TEACH LABELS: Real table, Bubble, Medium stack, Big blind leverage
 Q: How should you adjust if losing to BB would eliminate you?
@@ -4606,17 +4606,17 @@ TEACH: Caller changes the mix. Use the check in this hand and the calling patter
 TEACH LABELS: Real table, Calls too wide, Value, Bluff
 Q: What is the cleaner first adjustment here?
 HINT [theoryOnly]: Call-heavy opponents pay value more often. Ask what changes first before adding more bluffs.
-TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Center Top pair vs caller | Facts one pair, top pair, rainbow
+TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Top pair vs caller | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: BTN opens 2.5 BB · BB calls · BB checks
   - [wrong] Bluff more versus passive BB — Wrong mix shift. Passive callers do not fold enough to make extra bluffs clean. The better first lever is value heavier, bluff lighter.
     BETTER ANSWER: Lean value, bluff less
-    FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
   + [correct] Lean value, bluff less — Sharp live adjustment. BB has checked. The earlier calls with weak pairs support leaning toward value with top pair. BB’s exact hand in this spot is still unknown.
-    FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
   - [suboptimal] Make every top pair hand huge immediately — Too coarse. The exploit is not to inflate every pot blindly. Keep the shift controlled: extract more value from callers without turning one read into a reckless line.
     BETTER ANSWER: Lean value, bluff less
-    FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
 
 TASK w10_one_lever_recap [review] One-lever recap
 CAPTION: Lesson learned: one lever gives cleaner exploit feedback loops.

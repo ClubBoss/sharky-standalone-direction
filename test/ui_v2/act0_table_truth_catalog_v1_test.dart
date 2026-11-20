@@ -72,6 +72,56 @@ void main() {
     ]);
   });
 
+  test('W10 uses the authored BTN open and BB call before the check', () {
+    final table = Act0ShellStateV1.sample
+        .worldById('world_10')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w10_table_value_vs_caller_transfer',
+        )
+        .runner
+        .table;
+
+    expect(table.potLabel, 'Pot 5.5 BB');
+    expect(table.toCallLabel, isEmpty);
+    expect(
+      table.handContributions!.entries.map(
+        (entry) => (entry.seatId, entry.amountBb),
+      ),
+      containsAll([('sb', 0.5), ('bb', 1.0), ('btn', 2.5), ('bb', 1.5)]),
+    );
+    expect(
+      table.handContributions!.amounts(
+        seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: 'btn',
+      ),
+      (potBb: 5.5, toCallBb: 0.0),
+    );
+  });
+
+  test('a partial street ledger caps its source bound by prior investment', () {
+    const expected = {
+      'w11_checkpoint_mixed_table_line': 22.0,
+      'w12_pretty_hand_bad_price_fold': 80.0,
+      'w12_revenge_raise_trap': 27.0,
+      'w12_checkpoint_full_loop_line': 17.0,
+    };
+    final tasks = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList);
+    expect({
+      for (final task in tasks.where(
+        (task) => expected.containsKey(task.taskId),
+      ))
+        task.taskId: task
+            .runner
+            .table
+            .handContributions!
+            .minimumStartingStackBbBySeat['btn'],
+    }, expected);
+  });
+
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
     final earlyWorldTasks = Act0ShellStateV1.sample.worlds
@@ -82,7 +132,7 @@ void main() {
         .toSet();
     for (final (rule, proved, missing) in [
       ('D2.pot_feasibility', 113, 28),
-      ('D3.to_call_completeness', 55, 11),
+      ('D3.to_call_completeness', 87, 11),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -116,7 +166,7 @@ void main() {
         .toSet();
     for (final (rule, count) in [
       ('D2.pot_feasibility', 99),
-      ('D3.to_call_completeness', 19),
+      ('D3.to_call_completeness', 99),
     ]) {
       final proof = rows
           .where(
@@ -166,7 +216,6 @@ void main() {
     const lateMissingSource = {
       'D2.pot_feasibility': {
         'w9_m_ratio_table_window_transfer',
-        'w10_table_value_vs_caller_transfer',
         'w11_checkpoint_mixed_table_line',
         'w12_checkpoint_full_loop_line',
         'w12_pretty_hand_bad_price_fold',
@@ -191,7 +240,7 @@ void main() {
     }
     const lateDecisionProof = {
       'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
-      'w10_table_value_vs_caller_transfer': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
       'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
       'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
       'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
