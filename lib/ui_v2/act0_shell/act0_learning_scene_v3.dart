@@ -203,6 +203,20 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         showCoach && feedbackRingTone != null && isEvidenceBacked;
     final compactFeedback = focusPointsUp && feedbackRingTone != null;
     final hasReason = compactFeedback && support.trim().isNotEmpty;
+    final prompt = Text(
+      headline,
+      key: const Key('act0_integrated_scene_prompt'),
+      style: Act0ShellTokensV1.body.copyWith(
+        color: hasReason ? Act0ShellTokensV1.textMuted : Act0ShellTokensV1.text,
+        fontSize: hasReason
+            ? 12
+            : showSpokenSurface
+            ? 16.4
+            : 16.0,
+        fontWeight: hasReason ? FontWeight.w700 : FontWeight.w900,
+        height: showSpokenSurface ? 1.10 : 1.08,
+      ),
+    );
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,37 +278,24 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
             key: const Key('act0_learning_scene_v3_support'),
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
-              fontSize: enlarged ? 14 : 13,
+              fontSize: 13,
               fontWeight: FontWeight.w700,
               height: 1.22,
             ),
           ),
           const SizedBox(height: 5),
         ],
-        Text(
-          headline,
-          key: const Key('act0_integrated_scene_prompt'),
-          maxLines: focusPointsUp
-              ? null
-              : showSpokenSurface
-              ? 3
-              : (enlarged ? 3 : 2),
-          overflow: focusPointsUp
-              ? TextOverflow.visible
-              : TextOverflow.ellipsis,
-          style: Act0ShellTokensV1.body.copyWith(
-            color: hasReason
-                ? Act0ShellTokensV1.textMuted
-                : Act0ShellTokensV1.text,
-            fontSize: hasReason
-                ? 12
-                : showSpokenSurface
-                ? (enlarged ? 15.4 : 16.4)
-                : (enlarged ? 15.2 : 16.0),
-            fontWeight: hasReason ? FontWeight.w700 : FontWeight.w900,
-            height: showSpokenSurface ? 1.10 : 1.08,
+        if (focusPointsUp)
+          prompt
+        else
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: scaler.scale(54)),
+            child: SingleChildScrollView(
+              key: const Key('act0_learning_scene_v3_prompt_scroll'),
+              primary: false,
+              child: prompt,
+            ),
           ),
-        ),
         if (!hasReason && support.trim().isNotEmpty) ...[
           SizedBox(height: showSpokenSurface ? 4 : 3),
           // Preserve the existing compact overlay footprint while letting
@@ -302,7 +303,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           // source teaching facts. The physical table remains unchanged.
           if (phase == Act0LearningScenePhaseV3.theory || scrollSupport)
             SizedBox(
-              height: (enlarged ? 3 : 2) * (enlarged ? 12.2 : 11.4) * 1.16,
+              height: (enlarged ? 3 : 2) * scaler.scale(11.4) * 1.16,
               child: Row(
                 children: [
                   Expanded(
@@ -318,7 +319,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
                         key: const Key('act0_learning_scene_v3_support'),
                         style: Act0ShellTokensV1.muted.copyWith(
                           color: Act0ShellTokensV1.textMuted,
-                          fontSize: enlarged ? 12.2 : 11.4,
+                          fontSize: 11.4,
                           height: 1.16,
                           fontWeight: FontWeight.w700,
                         ),

@@ -377,93 +377,131 @@ void main() {
     );
   }
 
-  testWidgets('The longest authored W1–W4 reason can be read with CTA pinned', (
+  testWidgets('the task honors larger text without scaling table labels', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(393, 852);
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
-    tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetPadding);
-    addTearDown(tester.view.resetViewPadding);
+    tester.platformDispatcher.textScaleFactorTestValue = 1.65;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await _openPendingHelpDecision(tester);
+    final runner = _runner(tester).runner;
+    final question = find.byKey(const Key('act0_integrated_scene_prompt'));
+    final plate = find.byKey(const Key('act0_shell_seat_node_btn'));
+    final position = find.descendant(of: plate, matching: find.text('BTN'));
+    final wrong = runner.options.firstWhere((option) => !option.isCorrect);
+    final answer = find.descendant(
+      of: find.byKey(Key('act0_shell_option_${wrong.id}')),
+      matching: find.text(wrong.label),
+    );
 
-    final choices = [
-      for (final number in [1, 2, 3, 4])
-        for (final lesson
-            in Act0ShellStateV1.sample.worldById('world_$number').lessons)
-          for (final task in lesson.taskList)
-            for (final option in task.runner.options)
-              (number: number, lesson: lesson, task: task, option: option),
-    ];
-    final longest = choices.reduce(
-      (a, b) => a.option.feedbackReason.length >= b.option.feedbackReason.length
-          ? a
-          : b,
-    );
-    final runner = longest.task.runner.copyWith(
-      phase: Act0LessonPhaseV1.review,
-      selectedOptionId: longest.option.id,
-      teachingStepIndex: longest.task.runner.teachingSteps.length,
-    );
-    var continued = false;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Act0LessonRunnerShellV1(
-            runner: runner,
-            worldNumber: longest.number,
-            selectedWorldId: 'world_${longest.number}',
-            selectedLessonId: longest.lesson.lessonId,
-            selectedTaskId: longest.task.taskId,
-            selectedTaskFamily: longest.task.resolvedTaskFamily,
-            compositionFamily: longest.task.resolvedCompositionFamily,
-            onBack: () {},
-            onContinueTheory: () {},
-            onChooseOption: (_) {},
-            onContinueReview: () => continued = true,
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    final question = find.byKey(const Key('act0_shell_review_question'));
-    final reason = find.byKey(const Key('act0_learning_scene_v3_support'));
-    final viewport = find.byKey(
-      const Key('act0_shell_feedback_guide_viewport'),
-    );
-    final next = find.byKey(const Key('act0_shell_feedback_continue_cta'));
-    final initialButtonRect = tester.getRect(next);
-    expect(question.hitTestable(), findsOneWidget);
-    expect(tester.widget<Text>(reason).data, runner.reviewReason.trim());
-    expect(tester.widget<Text>(reason).maxLines, isNull);
-    expect(
-      tester.getRect(viewport).contains(tester.getTopLeft(reason)),
-      isTrue,
-    );
-    final reasonText = tester.renderObject<RenderParagraph>(reason);
-    final reasonLength = reasonText.text.toPlainText().length;
-    final lastLine = reasonText
-        .getBoxesForSelection(
-          TextSelection(
-            baseOffset: reasonLength - 1,
-            extentOffset: reasonLength,
-          ),
-        )
-        .last;
-    Offset lastLineCenter() =>
-        reasonText.localToGlobal(lastLine.toRect().center);
-    expect(tester.getRect(viewport).contains(lastLineCenter()), isFalse);
-    await Scrollable.ensureVisible(tester.element(reason), alignment: 1);
-    await tester.pumpAndSettle();
-    expect(tester.getRect(viewport).contains(lastLineCenter()), isTrue);
-    expect(tester.getRect(next), initialButtonRect);
-    expect(question.hitTestable(), findsOneWidget);
-    await tester.tap(next);
-    expect(continued, isTrue);
+    void expectScale(Finder text, double size) {
+      final paragraph = tester.renderObject<RenderParagraph>(text);
+      expect(paragraph.textScaler.scale(10), closeTo(size, 0.001));
+      expect(paragraph.didExceedMaxLines, isFalse);
+    }
+
+    expectScale(question, 13);
+    expectScale(answer, 13);
+    expectScale(position, 10);
+    await _choose(tester, wrong.id);
+    expectScale(find.byKey(const Key('act0_shell_review_question')), 13);
+    expectScale(find.byKey(const Key('act0_learning_scene_v3_support')), 13);
+    await _expectFeedbackClearance(tester);
     expect(tester.takeException(), isNull);
   });
+
+  for (final scale in [1.0, 1.3]) {
+    testWidgets(
+      'The longest authored W1–W4 reason can be read with CTA pinned at $scale×',
+      (tester) async {
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+        tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(tester.view.resetPadding);
+        addTearDown(tester.view.resetViewPadding);
+
+        final choices = [
+          for (final number in [1, 2, 3, 4])
+            for (final lesson
+                in Act0ShellStateV1.sample.worldById('world_$number').lessons)
+              for (final task in lesson.taskList)
+                for (final option in task.runner.options)
+                  (number: number, lesson: lesson, task: task, option: option),
+        ];
+        final longest = choices.reduce(
+          (a, b) =>
+              a.option.feedbackReason.length >= b.option.feedbackReason.length
+              ? a
+              : b,
+        );
+        final runner = longest.task.runner.copyWith(
+          phase: Act0LessonPhaseV1.review,
+          selectedOptionId: longest.option.id,
+          teachingStepIndex: longest.task.runner.teachingSteps.length,
+        );
+        var continued = false;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: runner,
+                worldNumber: longest.number,
+                selectedWorldId: 'world_${longest.number}',
+                selectedLessonId: longest.lesson.lessonId,
+                selectedTaskId: longest.task.taskId,
+                selectedTaskFamily: longest.task.resolvedTaskFamily,
+                compositionFamily: longest.task.resolvedCompositionFamily,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () => continued = true,
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final question = find.byKey(const Key('act0_shell_review_question'));
+        final reason = find.byKey(const Key('act0_learning_scene_v3_support'));
+        final viewport = find.byKey(
+          const Key('act0_shell_feedback_guide_viewport'),
+        );
+        final next = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+        final initialButtonRect = tester.getRect(next);
+        expect(question.hitTestable(), findsOneWidget);
+        expect(tester.widget<Text>(reason).data, runner.reviewReason.trim());
+        expect(tester.widget<Text>(reason).maxLines, isNull);
+        expect(
+          tester.getRect(viewport).contains(tester.getTopLeft(reason)),
+          isTrue,
+        );
+        final reasonText = tester.renderObject<RenderParagraph>(reason);
+        final reasonLength = reasonText.text.toPlainText().length;
+        final lastLine = reasonText
+            .getBoxesForSelection(
+              TextSelection(
+                baseOffset: reasonLength - 1,
+                extentOffset: reasonLength,
+              ),
+            )
+            .last;
+        Offset lastLineCenter() =>
+            reasonText.localToGlobal(lastLine.toRect().center);
+        expect(tester.getRect(viewport).contains(lastLineCenter()), isFalse);
+        await Scrollable.ensureVisible(tester.element(reason), alignment: 1);
+        await tester.pumpAndSettle();
+        expect(tester.getRect(viewport).contains(lastLineCenter()), isTrue);
+        expect(tester.getRect(next), initialButtonRect);
+        expect(question.hitTestable(), findsOneWidget);
+        await tester.tap(next);
+        expect(continued, isTrue);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   for (final feedbackCase in ['assisted', 'wrong', 'correct']) {
     testWidgets(
