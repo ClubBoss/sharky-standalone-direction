@@ -700,6 +700,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _learnPopupTaskId = null;
       _completedLessonIds = <String>{};
       _completedTaskIds = <String>{};
+      _tasksWithDeferredXpV1.clear();
       _skippedTaskIds.clear();
       _visibleSkippedTaskIds.clear();
       _showWorldMenu = false;
