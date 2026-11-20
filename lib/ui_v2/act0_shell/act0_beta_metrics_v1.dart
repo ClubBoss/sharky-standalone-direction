@@ -3,6 +3,9 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'act0_completed_decision_contract_v1.dart';
+import 'act0_durable_learning_time_contract_v1.dart';
+import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_local_data_deletion_v1.dart';
 import 'act0_path_progress_v1.dart';
 import 'act0_shell_state_v1.dart';
@@ -13,7 +16,11 @@ const act0BetaSurveyQuestionsV1 = [
   'Did you know what to do in the first lesson?',
   'Did the explanation help you understand a mistake?',
   'Would you practice again tomorrow?',
+  'Did Home take you where you expected when you returned?',
+  'After missing twice, could you keep going?',
 ];
+
+const _initialBetaSurveyLengthV1 = 3;
 
 enum Act0BetaSurveyAnswerV1 { yes, no, unsure }
 
@@ -106,7 +113,8 @@ class Act0BetaActivityV1 {
           day > 7 ||
           (day2 && day < 1) ||
           (day7 && day < 6) ||
-          answers.length != act0BetaSurveyQuestionsV1.length) {
+          (answers.length != _initialBetaSurveyLengthV1 &&
+              answers.length != act0BetaSurveyQuestionsV1.length)) {
         return null;
       }
       final decoded = <Act0BetaSurveyAnswerV1?>[];
@@ -122,7 +130,15 @@ class Act0BetaActivityV1 {
         observedDay: day,
         returnedDay2: day2,
         returnedDay7: day7,
-        answers: decoded,
+        answers: [
+          ...decoded,
+          for (
+            var i = decoded.length;
+            i < act0BetaSurveyQuestionsV1.length;
+            i++
+          )
+            null,
+        ],
       );
     }
     return null;
@@ -199,12 +215,17 @@ class Act0BetaLearningMetricsV1 {
     required this.firstLessonCompleted,
     required this.worldOneCompleted,
     required this.correctedMistakes,
+    this.firstLessonId = '',
+    this.firstLessonTaskIds = const {},
+    this.history = const Act0LearningEvidenceHistoryV1(),
   });
 
   factory Act0BetaLearningMetricsV1.fromProgress({
     required Act0WorldCardV1 firstWorld,
     required Set<String> completedTaskIds,
     required int correctedMistakes,
+    Act0LearningEvidenceHistoryV1 history =
+        const Act0LearningEvidenceHistoryV1(),
   }) {
     final firstLesson = firstWorld.lessons.firstOrNull;
     bool completed(Act0LessonCardV1 lesson) =>
@@ -215,9 +236,67 @@ class Act0BetaLearningMetricsV1 {
       worldOneCompleted:
           firstLesson != null && firstWorld.lessons.every(completed),
       correctedMistakes: correctedMistakes,
+      firstLessonId: firstLesson?.lessonId ?? '',
+      firstLessonTaskIds: {
+        if (firstLesson != null)
+          for (final task in firstLesson.courseTaskList) task.taskId,
+      },
+      history: history,
     );
   }
 
   final bool firstLessonCompleted, worldOneCompleted;
   final int correctedMistakes;
+  final String firstLessonId;
+  final Set<String> firstLessonTaskIds;
+  final Act0LearningEvidenceHistoryV1 history;
+
+  ({
+    ({int correct, int total}) onYourOwn,
+    ({int correct, int total}) withHelp,
+    ({int correct, int total}) day7NewReview,
+  })
+  decisionsSince(DateTime firstVisitUtc) {
+    var own = (correct: 0, total: 0);
+    var helped = (correct: 0, total: 0);
+    var day7 = (correct: 0, total: 0);
+    final seenTasks = <(String, String, String)>{};
+    final firstLessonAnswersInBeta = <String>{};
+    for (final record in history.provenanceRecords) {
+      final recordedAt = record.recordedAtUtc;
+      if (recordedAt == null ||
+          record.isPlacementAssessment ||
+          record.isDiagnosticLearningEntry) {
+        continue;
+      }
+      final newTask = seenTasks.add((
+        record.worldId,
+        record.lessonId,
+        record.taskId,
+      ));
+      final elapsed = recordedAt.difference(firstVisitUtc);
+      if (elapsed.isNegative) continue;
+      final ownAnswer = record.assistanceKind == Act0DecisionAssistanceV1.none;
+      final correct = record.isCorrect ? 1 : 0;
+      if (elapsed < const Duration(days: 1) &&
+          record.worldId == 'world_1' &&
+          record.lessonId == firstLessonId &&
+          firstLessonTaskIds.contains(record.taskId) &&
+          firstLessonAnswersInBeta.add(record.taskId)) {
+        if (ownAnswer) {
+          own = (correct: own.correct + correct, total: own.total + 1);
+        } else if (record.hasKnownAssistance) {
+          helped = (correct: helped.correct + correct, total: helped.total + 1);
+        }
+      }
+      if (elapsed.inDays == 6 &&
+          ownAnswer &&
+          record.runKind == 'spaced_review' &&
+          record.reviewKind == Act0ReviewKindV1.unseenTransfer &&
+          newTask) {
+        day7 = (correct: day7.correct + correct, total: day7.total + 1);
+      }
+    }
+    return (onYourOwn: own, withHelp: helped, day7NewReview: day7);
+  }
 }

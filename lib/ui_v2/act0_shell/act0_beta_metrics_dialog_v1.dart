@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'act0_beta_metrics_v1.dart';
 
+import 'act0_practice_reminder_v1.dart';
+
 class Act0BetaMetricsDialogV1 extends StatefulWidget {
   const Act0BetaMetricsDialogV1({
     super.key,
@@ -48,6 +50,10 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
     null => 'Unavailable',
   };
 
+  String _scoreLabel(({int correct, int total}) attempts) => attempts.total == 0
+      ? 'No answers yet'
+      : '${attempts.correct}/${attempts.total} correct';
+
   @override
   Widget build(BuildContext context) {
     final learning = widget.learning;
@@ -58,6 +64,9 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
         builder: (context, snapshot) {
           final activity = snapshot.data;
           final now = widget.nowUtc();
+          final decisions = activity == null
+              ? null
+              : learning.decisionsSince(activity.firstVisitUtc);
           return SingleChildScrollView(
             child: ListBody(
               children: [
@@ -79,6 +88,22 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
                 else ...[
                   Text('Day 2: ${_returnLabel(activity?.day2At(now))}'),
                   Text('Day 7: ${_returnLabel(activity?.day7At(now))}'),
+                  if (decisions != null) ...[
+                    const SizedBox(height: 12),
+                    const Text('Day 1 first lesson · first answer per spot'),
+                    Text('On your own: ${_scoreLabel(decisions.onYourOwn)}'),
+                    Text('With help: ${_scoreLabel(decisions.withHelp)}'),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Day 7 new review, on your own: ${_scoreLabel(decisions.day7NewReview)}',
+                    ),
+                    if (Act0PracticeReminderV1.isSupported)
+                      ValueListenableBuilder<bool>(
+                        valueListenable: Act0PracticeReminderV1.enabled,
+                        builder: (_, enabled, _) =>
+                            Text('Reminder now: ${enabled ? 'On' : 'Off'}'),
+                      ),
+                  ],
                 ],
                 if (activity != null) ...[
                   const SizedBox(height: 16),
