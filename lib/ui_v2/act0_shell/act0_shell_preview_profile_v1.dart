@@ -91,7 +91,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
     final accuracy = totalAttempts == 0
         ? (_debugFreshLearnerV1 || _usesPersistedProgress)
               ? _copyV1(
-                  en: 'Practice proof starts with your first decision',
+                  en: 'Make a decision to start tracking your practice',
                   ru: 'Подтверждение начнётся с первого решения',
                 )
               : base.accuracyLine
@@ -152,7 +152,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
         ),
         Act0AchievementV1(
           id: 'three_day_streak',
-          label: 'Three day rhythm',
+          label: 'Three Days of Practice',
           locked: streakDays < 3,
         ),
         Act0AchievementV1(
@@ -224,10 +224,10 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
       );
     }
     if (completedCount > 0) {
-      return _copyV1(en: 'Perfect path open', ru: 'Идеал открыт');
+      return _copyV1(en: 'Ready for your next hand', ru: 'Идеал открыт');
     }
     return _copyV1(
-      en: 'First proof not yet earned',
+      en: 'Start with your first hand',
       ru: 'Первое доказательство ещё не получено',
     );
   }
@@ -323,7 +323,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
   String? _repairIntentSurfaceCopyLineV1(String sourceTaskId) {
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     if (intent != null && !_hasValidatedRepairTargetV1(intent)) {
-      return 'Matching repair not confirmed · miss saved';
+      return 'Mistake saved for another try';
     }
     final target = _openRepairIntentTargetForSourceTaskV1(
       sourceTaskId,

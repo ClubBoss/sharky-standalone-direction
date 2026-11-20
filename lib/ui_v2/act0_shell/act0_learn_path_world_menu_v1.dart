@@ -886,7 +886,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                 Text(
                   _learnCopyV1(
                     context,
-                    en: 'Proof path',
+                    en: 'Lesson path',
                     ru: 'Маршрут доказательств',
                   ),
                   style: Act0AcademyDesignTokensV1.label.copyWith(

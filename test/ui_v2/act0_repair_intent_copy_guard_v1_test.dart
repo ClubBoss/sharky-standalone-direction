@@ -82,9 +82,7 @@ void main() {
           exactReplay: false,
           clueLabel: 'No bet yet',
         ),
-        <String>[
-          'Local proof: you repeated the no-bet-yet clue and chose cleanly.',
-        ],
+        <String>['You read the no-bet-yet clue again and chose correctly.'],
       );
       expect(
         act0RepairSessionSummaryCopyGuardLinesV1(

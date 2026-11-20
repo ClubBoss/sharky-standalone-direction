@@ -69,7 +69,7 @@ void main() {
       ),
     );
     expect(find.text('What Sharky can prove'), findsNothing);
-    expect(find.text('Recent route proof'), findsNothing);
+    expect(find.text('Recent correct answers'), findsNothing);
     expect(find.text('Recent practice: Table sense.'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
@@ -99,10 +99,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('You are building this skill.'), findsNothing);
-    expect(
-      find.text('Independent confirmation is still needed.'),
-      findsOneWidget,
-    );
+    expect(find.text('Try a new hand without help.'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -123,7 +120,7 @@ void main() {
       ),
     );
     expect(find.text('What Sharky can prove'), findsNothing);
-    expect(find.text('Recent route proof'), findsNothing);
+    expect(find.text('Recent correct answers'), findsNothing);
     final card = find.byKey(
       const Key('act0_shell_profile_evidence_signal'),
       skipOffstage: false,
@@ -134,10 +131,7 @@ void main() {
       scrollable: find.byType(Scrollable),
     );
     await tester.pumpAndSettle();
-    expect(
-      find.text('Independent confirmation is still needed.'),
-      findsOneWidget,
-    );
+    expect(find.text('Try a new hand without help.'), findsOneWidget);
   });
 
   testWidgets('REP-07 practice counter does not show a skill-level bar', (
@@ -256,8 +250,7 @@ void main() {
             conceptLabelKey: 'table_read',
             messageKey: 'profile_proof_repair_completed_v1',
             currentVerificationState: act0RecentEvidenceConfirmationNeededV1,
-            currentVerificationLine:
-                'Independent confirmation is still needed.',
+            currentVerificationLine: 'Try a new hand without help.',
           ),
         ],
       ),
@@ -272,7 +265,7 @@ void main() {
       ),
     );
     expect(find.text('What Sharky can prove'), findsNothing);
-    expect(find.text('Recent route proof'), findsNothing);
+    expect(find.text('Recent correct answers'), findsNothing);
     expect(find.text('Saved repair evidence'), findsOneWidget);
     final card = find.byKey(
       const Key('act0_shell_profile_progress_proof'),
@@ -285,7 +278,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Repair evidence'), findsOneWidget);
-    expect(find.text('1 banked'), findsOneWidget);
+    expect(find.text('1 corrected'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -306,7 +299,7 @@ void main() {
       ),
     );
     expect(find.text('What Sharky can prove'), findsOneWidget);
-    expect(find.text('Recent route proof'), findsOneWidget);
+    expect(find.text('Recent correct answers'), findsOneWidget);
     final card = find.byKey(
       const Key('act0_shell_profile_evidence_signal'),
       skipOffstage: false,
@@ -317,7 +310,10 @@ void main() {
       scrollable: find.byType(Scrollable),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Recent independent responses verified.'), findsOneWidget);
+    expect(
+      find.text('You answered recent questions without help.'),
+      findsOneWidget,
+    );
     expect(find.textContaining('mastered'), findsNothing);
     expect(tester.takeException(), isNull);
   });

@@ -57,7 +57,7 @@ class Act0LearningReceiptV1 {
       Act0LearningReceiptLevelV1.sameClueRepaired =>
         'You corrected $focusLabel on the same clue. $nextEvidenceRequirement',
       Act0LearningReceiptLevelV1.laterRecheckHeld =>
-        '$focusLabel held on a later check. A different spot is the next proof.',
+        'You remembered $focusLabel. Try it in a different hand next.',
       Act0LearningReceiptLevelV1.differentSpotImproved =>
         transferVerdict == act0LearningTransferImprovingV1
             ? 'The read improved on a different hand.'
@@ -238,22 +238,22 @@ class Act0LearningReceiptV1 {
         Act0LearningReceiptLevelV1.sameClueRepaired =>
           familiarRepair
               ? 'Separate application evidence remains.'
-              : 'Later proof remains.',
+              : 'Try again on another day.',
         Act0LearningReceiptLevelV1.laterRecheckHeld =>
-          'Different-spot proof remains.',
+          'Try this in a different hand.',
         Act0LearningReceiptLevelV1.differentSpotImproved =>
           'No stronger claim is made.',
       },
       nextEvidenceRequirement: switch (level) {
         Act0LearningReceiptLevelV1.attempted =>
           currentViewUnconfirmed
-              ? 'Current confirmation is still needed for this learning goal.'
+              ? 'Try this skill again.'
               : hasCurrentRepairLink
               ? 'Answer the repair correctly.'
-              : 'A matching repair on this learning goal is still needed.',
+              : 'Try another hand that uses the same skill.',
         Act0LearningReceiptLevelV1.sameClueRepaired =>
           familiarRepair
-              ? 'A separate application check on this learning goal is still needed.'
+              ? 'Try the same skill on a new hand without help.'
               : 'Pass a later recheck.',
         Act0LearningReceiptLevelV1.laterRecheckHeld =>
           'Hold the clue on a different spot.',

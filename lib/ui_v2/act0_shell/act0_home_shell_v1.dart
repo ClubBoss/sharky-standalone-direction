@@ -672,10 +672,10 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
     final line = hasCompletedLessons
         ? localeIsRu
               ? 'Подтверждено: $completedLessons урока. Следующее доказательство начинается с одного чистого чтения.'
-              : 'Route proof is active. Next proof starts with one clean read.'
+              : 'Continue with the next hand.'
         : localeIsRu
         ? 'Твой маршрут готов. Первое доказательство начинается с одного чистого чтения.'
-        : 'Your route is ready. Next proof starts with one clean read.';
+        : 'Your route is ready. Start with the next hand.';
     return Row(
       key: const Key('act0_shell_home_proof_momentum_line'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1216,7 +1216,7 @@ String _dailyGoalSupportText(BuildContext context, String goalValue) {
     return act0AcademySurfaceAtomV1(
       context,
       'home_daily_goal_streak_saved',
-      fallback: 'Repair banked. You earned tomorrow\'s rhythm.',
+      fallback: 'You corrected a mistake today.',
     );
   }
   if (_isDailyGoalDoneValue(goalValue)) {

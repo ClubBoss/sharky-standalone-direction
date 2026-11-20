@@ -931,8 +931,7 @@ void main() {
     await _answerCorrectly(tester);
 
     const receipt = 'Fix landed: you saw the no-bet-yet clue before choosing.';
-    const summary =
-        'Local proof: you repeated the no-bet-yet clue and chose cleanly.';
+    const summary = 'You read the no-bet-yet clue again and chose correctly.';
     expect(find.text(receipt), findsNothing);
     expect(find.text(summary), findsNothing);
     const forbidden = <String>{

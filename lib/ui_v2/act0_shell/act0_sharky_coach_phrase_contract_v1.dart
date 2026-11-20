@@ -437,7 +437,7 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: context.worldNumber == 1
-            ? 'You banked the first table read.'
+            ? 'You got your first table read right.'
             : tier == Act0SharkyCoachTierV1.foundation
             ? 'World complete with a real table read.'
             : 'World complete with action, table, and price connected.',

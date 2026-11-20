@@ -787,7 +787,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ? '\u041e\u0446\u0435\u043d\u0435\u043d\u043e ${summary.taskCount} \u0437\u0430\u0434\u0430\u043d\u0438\u0439 · \u0432\u0435\u0440\u043d\u043e ${summary.correctCount} · \u043e\u0448\u0438\u0431\u043e\u043a ${summary.errorCount} · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}'
                           : '\u0421\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}')
                     : !summary.hasVerifiedAssessment
-                    ? 'Assessment not verified - independent result unknown'
+                    ? 'No result without help recorded yet'
                     : summary.assistedCount > 0
                     ? '${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.assistedCount} with help \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : '${summary.accuracyPercent}% accuracy (assessed) \u00B7 ${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',

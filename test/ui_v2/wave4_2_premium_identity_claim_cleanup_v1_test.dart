@@ -56,8 +56,8 @@ void main() {
       );
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
-      expect(find.text('Proof profile'), findsWidgets);
-      expect(find.text('Sharky keeps proof, not points.'), findsOneWidget);
+      expect(find.text('Your learning record'), findsWidgets);
+      expect(find.text('See your practice and progress here.'), findsOneWidget);
     },
   );
 
@@ -104,7 +104,7 @@ void main() {
       expect(find.textContaining('Level'), findsNothing);
       expect(find.text('Answer checked'), findsOneWidget);
       expect(find.text('Keep practicing'), findsOneWidget);
-      expect(find.text('Read banked'), findsNothing);
+      expect(find.text('Level up'), findsNothing);
       expect(find.text('Table read improved'), findsNothing);
     },
   );
