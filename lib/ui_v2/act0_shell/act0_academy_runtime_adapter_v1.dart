@@ -16,6 +16,7 @@ import 'academy_leaves/act0_academy_review_leaf_v1.dart';
 import 'academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'academy_leaves/act0_academy_you_leaf_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
+import 'act0_w1_rules_check_v1.dart';
 import 'act0_practice_reminder_v1.dart';
 
 // Owner-restored green presentation; explicit false keeps independent rollback.
@@ -200,7 +201,12 @@ Widget act0AcademyYouRuntimeV1(
   return Act0AcademyYouLeafV1(
     input: Act0AcademyYouLeafInputV1(
       skills: skills,
-      passedW1RulesCheck: passedW1RulesCheck,
+      checkedW1Topics: passedW1RulesCheck
+          ? act0W1RulesQuestionsV1
+                .map((question) => question.topic)
+                .toSet()
+                .toList()
+          : const <String>[],
       displayName: legacy.profile.playerName,
       levelLabel: legacy.profile.level,
       xpLine: legacy.profile.xpLine,

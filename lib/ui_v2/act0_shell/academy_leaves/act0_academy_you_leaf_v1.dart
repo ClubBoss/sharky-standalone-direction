@@ -48,7 +48,7 @@ class Act0AcademyYouLeafInputV1 {
     this.openRepairCount = 0,
     this.dueReviewCount = 0,
     this.skills = const <Act0W14SkillStateV1>[],
-    this.passedW1RulesCheck = false,
+    this.checkedW1Topics = const <String>[],
     this.onOpenReview,
     this.onOpenPractice,
     this.onOpenLearn,
@@ -68,7 +68,7 @@ class Act0AcademyYouLeafInputV1 {
   final int openRepairCount;
   final int dueReviewCount;
   final List<Act0W14SkillStateV1> skills;
-  final bool passedW1RulesCheck;
+  final List<String> checkedW1Topics;
   final VoidCallback? onOpenReview;
   final VoidCallback? onOpenPractice;
   final VoidCallback? onOpenLearn;
@@ -221,12 +221,32 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                 expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
                 title: const Text('Skills · W1–W4'),
                 subtitle: Text(
-                  input.passedW1RulesCheck
+                  input.checkedW1Topics.isNotEmpty
                       ? 'W1 skipped by rules check'
                       : 'Saved answers, not a mastery score.',
                   style: TextStyle(color: _muted),
                 ),
                 children: [
+                  if (input.checkedW1Topics.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 6, 16, 14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Topics checked in the W1 rules check',
+                            style: TextStyle(
+                              color: _text,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            input.checkedW1Topics.join(' · '),
+                            style: const TextStyle(color: _muted),
+                          ),
+                        ],
+                      ),
+                    ),
                   for (final skill in input.skills)
                     Padding(
                       key: Key('act0_w14_skill_${skill.label}'),

@@ -269,6 +269,22 @@ void main() {
 
     await tester.pumpWidget(const SizedBox.shrink());
     await _mount(tester, clock: _today.add(const Duration(hours: 25)));
+    await tester.tap(find.text('You').last);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_academy_you_leaf_settings')),
+    );
+    await _tapKey(tester, 'act0_academy_you_leaf_settings');
+    expect(find.text('Take the W1 rules check'), findsNothing);
+    expect(find.text('Replay Welcome'), findsNothing);
+    await _tapKey(tester, 'act0_academy_settings_leaf_back');
+    final skills = find.byKey(const Key('act0_w14_skills'));
+    await tester.ensureVisible(skills);
+    await _tapKey(tester, 'act0_w14_skills');
+    expect(find.text('Topics checked in the W1 rules check'), findsOneWidget);
+    final topics = act0W1RulesQuestionsV1.map((item) => item.topic).toSet();
+    expect(find.text(topics.join(' · ')), findsOneWidget);
+
     await tester.tap(find.text('Review').last);
     await tester.pumpAndSettle();
     expect(find.text('1 review due'), findsOneWidget);
