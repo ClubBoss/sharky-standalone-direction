@@ -1000,7 +1000,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: 'bet_bluff',
     sourceCorrectChoiceId: 'bet',
     sourceFingerprint:
-        '0f0be8ad5c495493761f686e1015e44ac3108bdf2b6c10d3e7835cce89ed129a',
+        'd45607470d96309daf38e7921b41056603c59834f0954fad325948327ba8bbb7',
     sourceQuestion: 'What is the purpose of a half-pot bet here?',
     sourceChoiceReason:
         'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
@@ -1012,7 +1012,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'range_pressure_lines',
     targetTaskId: 'w6_value_range_action',
     targetFingerprint:
-        '0f0be8ad5c495493761f686e1015e44ac3108bdf2b6c10d3e7835cce89ed129a',
+        'd45607470d96309daf38e7921b41056603c59834f0954fad325948327ba8bbb7',
     targetCorrectChoiceId: 'bet',
     targetChoiceIds: <String>{'bet', 'check', 'bet_bluff'},
     evidenceClass: 'intentional_exact_replay',

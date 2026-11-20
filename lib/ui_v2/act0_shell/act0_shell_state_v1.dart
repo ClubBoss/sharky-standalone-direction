@@ -20286,7 +20286,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nine outs are enough at this price.',
       feedbackReason:
-          'Nine hearts out of 46 unseen cards hit about 1 time in 5. Calling 2 BB makes a 12 BB pot, so you need 1 win in 6. Call under the stated rule.',
+          'Call under the stated rule. Nine hearts out of 46 hit about 1 time in 5, above the 1-in-6 price. In a real hand, what the opponent could hold determines which rivers win.',
     ),
     Act0RunnerOptionV1(
       id: 'price_only',
@@ -20297,7 +20297,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the chance with the price.',
       feedbackReason:
-          'You need to win 2 out of 12 times. Nine winning cards out of 46 are enough. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts.',
+          'Under the stated rule, 9 winning rivers out of 46 beat the 2-in-12 price. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts and beat your flush.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -20389,7 +20389,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Eight outs are too few at this price.',
       feedbackReason:
-          'Any 4 or 9 completes the straight: 8 out of 46, or about 1 in 6. Calling 3 BB makes a 12 BB pot, so you need 1 win in 4. Fold under the stated rule.',
+          'Fold under the stated rule. A 4 or 9 makes your straight on 8 of 46 rivers, below the 1-in-4 price. In a real hand, what the opponent could hold determines which rivers win.',
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
@@ -20400,7 +20400,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A live draw can still cost too much.',
       feedbackReason:
-          'Eight outs win less often than the 3-in-12 price requires. In a real hand, a 9 can also give an opponent holding J-T a higher straight.',
+          'Under the stated rule, eight winning rivers fall short of the 3-in-12 price. In a real hand, a 9 can give an opponent holding J-T a higher straight.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -21423,7 +21423,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Weaker pairs can pay.',
       feedbackReason:
-          'In this example, BB calls a half-pot bet with weaker pairs such as K-J or 7-6. A call from a worse hand is what makes this a value bet.',
+          'BB can call this half-pot bet with weaker pairs such as K-J or 7-6. That gives the bet a value purpose. Comparing bet with check requires knowing how often BB calls or raises with each hand.',
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -21434,7 +21434,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A check gives a free card.',
       feedbackReason:
-          'Checking is legal. Under this rule, a small bet earns chips from weaker pairs that would call.',
+          'Checking is legal. The question asks what a half-pot bet does under the stated rule. It can get a call from a weaker pair.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_bluff',
@@ -21467,7 +21467,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'A bet can fold out a better hand.',
     feedbackReason:
-        'If no one improves, both Q-J and A-9 beat $hand. Since both fold to a half-pot bet in this example, $hand is a bluff candidate.',
+        'If no one improves, both Q-J and A-9 beat $hand. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.',
   ),
   Act0RunnerOptionV1(
     id: 'missed',
@@ -21571,7 +21571,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A worse hand can call.',
       feedbackReason:
-          'BB calls with weaker kings and hands such as 8-7 in this example. That makes a half-pot bet a value bet.',
+          'Under this rule, weaker kings and hands such as 8-7 can pay you. That is a reason to bet for value. The best size and frequency depend on BB’s full response range.',
     ),
     Act0RunnerOptionV1(
       id: 'check_back',
@@ -22543,7 +22543,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A-T suited calls the raise.',
       feedbackReason:
-          'A-T suited pays the extra 5 BB under the stated rule. At 25 BB effective, a call leaves both players 17.5 BB behind.',
+          'Under the stated rule, A-T suited pays the extra 5 BB. Both players then have 17.5 BB behind. The best line against CO’s full range would depend on what else opens and responds to a raise.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_100',
@@ -22599,7 +22599,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A call keeps the weaker aces in.',
       feedbackReason:
-          'A call keeps the weaker aces in and leaves 97.5 BB behind on each side. More chips can go in on the same later streets, so reassess if CO bets big.',
+          'Under the stated rule, a call keeps weaker aces in and leaves both players 97.5 BB behind. The best line against CO’s full range depends on the mix of hands and how they play later.',
     ),
     Act0RunnerOptionV1(
       id: 'same_clean_call',
@@ -23863,7 +23863,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong transfer.',
       feedbackReason:
-          'If BB can eliminate you, a call that barely gains chips can still hurt your tournament chances. The extra edge you need is the risk premium.',
+          'If BB can eliminate you, you may need more equity than chip odds suggest. That extra equity is the risk premium. Whether A-J should call depends on BB’s all-in range, the remaining stacks and the payouts.',
     ),
     Act0RunnerOptionV1(
       id: 'call_chip_ev',
@@ -24497,7 +24497,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong mix shift.',
       feedbackReason:
-          'Passive callers do not fold enough to make extra bluffs clean. The better first lever is value heavier, bluff lighter.',
+          'The weak-pair calls you saw are a reason to try value first. Whether extra bluffs pay depends on how often BB folds to your size.',
     ),
     Act0RunnerOptionV1(
       id: 'lean_value',
@@ -24507,7 +24507,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp live adjustment.',
       feedbackReason:
-          'BB has checked. The earlier calls with weak pairs support leaning toward value with top pair. BB’s exact hand in this spot is still unknown.',
+          'The earlier weak-pair calls support trying a value bet with top pair. The best size and whether a bet beats checking depend on how often this BB calls, folds or raises with each hand.',
     ),
     Act0RunnerOptionV1(
       id: 'force_big_pot',
@@ -25350,7 +25350,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean table read.',
       feedbackReason:
-          'A 2 BB call adds to the 10 BB already in the pot. That is about 17% immediate pot odds. Top pair and position support a call here.',
+          'A 2 BB call makes a 12 BB pot, an immediate threshold of about 17%. A call in position is reasonable if CO bets enough hands you beat. CO’s range and later betting determine how much equity you realize.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_now',
@@ -25361,7 +25361,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too tight.',
       feedbackReason:
-          'Folding is tempting if you fear later streets, but the price is kind, the board is dry, and position keeps the continue clean for now.',
+          'The small bet and your position give you a reason to consider continuing. CO’s betting range and what happens on later streets can make folding reasonable.',
     ),
     Act0RunnerOptionV1(
       id: 'raise_now',
@@ -25456,7 +25456,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong contrast read.',
       feedbackReason:
-          'The pot is 24 BB after CO’s bet. Calling 12 BB would make it 36 BB, about 33% immediate pot odds. This opponent rarely bluffs this size, so folding is reasonable here, not an automatic rule against every opponent.',
+          'Calling 12 BB makes a 36 BB pot, about 33% immediate pot odds. Folding is reasonable given that CO rarely bluffs this size. How often CO bets hands you beat and what happens on the river determine the best line.',
     ),
     Act0RunnerOptionV1(
       id: 'jam_turn',
@@ -25795,7 +25795,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Integrated read.',
       feedbackReason:
-          'A 5 BB call brings the current 13 BB pot to 18 BB. That makes the immediate equity threshold about 28%. Top pair and position support a call in this example.',
+          'A 5 BB call makes an 18 BB pot, an immediate threshold of about 28%. Calling in position can keep weaker bets and draws in. HJ’s betting range and later action determine the best line.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_to_pressure',
@@ -25806,7 +25806,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too cautious.',
       feedbackReason:
-          'The price is not tiny, but folding ignores hand quality and position. The clean action comes from all the cues together, not just one large-looking bet.',
+          'Before folding, weigh top pair, position and the 5 BB price together. A very strong HJ betting range could still make folding reasonable.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -26266,7 +26266,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Calm fold.',
       feedbackReason:
-          'Calling 18 BB adds to the current 38 BB pot. You need about 32% equity if the call closes the action. The tight player’s repeated betting is the reason to be cautious.',
+          'Calling 18 BB makes a 56 BB pot, so you need about 32% equity if the call closes the action. Folding is reasonable if K-Q falls below that threshold against CO’s betting range. The tight read supports caution, and the exact range is unknown.',
     ),
     Act0RunnerOptionV1(
       id: 'hero_call',
@@ -26288,7 +26288,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too dramatic.',
       feedbackReason:
-          'This is the opposite of stable discipline. The table read says stop rather than escalate a thin bluff-catcher into a much larger mistake.',
+          'A raise risks more chips. It needs a reason to expect worse hands to call or better hands to fold. The bet size and the tight read give no evidence of either.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -26362,7 +26362,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Stable line.',
       feedbackReason:
-          'You have top pair in position and face a small bet on a dry board. One bluff in the previous hand tells you little about what CO holds now.',
+          'A 2 BB call makes a 12 BB pot, about 17% immediate pot odds. Calling is a reasonable way to keep the pot small if CO bets enough weaker hands. One earlier bluff gives little evidence about CO’s range here.',
     ),
     Act0RunnerOptionV1(
       id: 'snap_fold_noise',
@@ -26596,7 +26596,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong reset.',
       feedbackReason:
-          'Start this decision with top pair, position and the small bet you face. Review the previous bluff separately so it does not drive this call.',
+          'Start with top pair, position and the 2 BB price. Calling is a reasonable controlled line if CO bets enough weaker hands. The optimal line depends on CO’s range and later action. Review the previous bluff separately.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
