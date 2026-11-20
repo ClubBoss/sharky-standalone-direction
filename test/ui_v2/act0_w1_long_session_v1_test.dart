@@ -405,6 +405,25 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets(
+    'W8 exact replay describes the same question without a board clue',
+    (t) async {
+      const taskId = 'w7_effective_stack_30bb';
+      await _openSavedCourseTask(t, worldId: 'world_8', taskId: taskId);
+      expect(
+        await _tapFirst(t, [find.byKey(const Key('act0_shell_option_200'))]),
+        isTrue,
+      );
+
+      final state = t.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+      final replay =
+          state.debugReviewSupportCopySnapshotV1() as Map<String, Object?>;
+      expect(replay['targetTaskId'], taskId);
+      expect(replay['lineKind'], 'exact_replay_repair');
+      expect(replay['renderedLine'], 'Try this question again.');
+    },
+  );
+
   testWidgets('a correct W5 retry offers to continue the lesson', (t) async {
     const taskId = 'board_texture_basics_w5_dry_board';
     await _openSavedCourseTask(t, worldId: 'world_5', taskId: taskId);

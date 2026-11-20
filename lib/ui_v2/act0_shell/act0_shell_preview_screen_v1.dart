@@ -5300,6 +5300,7 @@ class _Act0NextUsefulHandCopyBridgeV1 {
     required this.safeTemplateId,
     required this.clueKey,
     required this.clueLabel,
+    required this.useQuestionReplayCopy,
     required this.skillKey,
     required this.skillLabel,
     required this.sourceTaskId,
@@ -5326,6 +5327,18 @@ class _Act0NextUsefulHandCopyBridgeV1 {
       safeTemplateId: safeTemplateId,
       clueKey: receipt.missedSignalId,
       clueLabel: receipt.missedSignalLabel,
+      // Course replay repeats the decision. Generic signal labels may
+      // describe the table rather than what the learner needs to practice.
+      useQuestionReplayCopy: const {
+        'world_5',
+        'world_6',
+        'world_7',
+        'world_8',
+        'world_9',
+        'world_10',
+        'world_11',
+        'world_12',
+      }.contains(receipt.targetWorldId),
       skillKey: receipt.skillAtomId,
       skillLabel: receipt.skillLabel,
       sourceTaskId: receipt.sourceTaskId,
@@ -5340,6 +5353,7 @@ class _Act0NextUsefulHandCopyBridgeV1 {
   final String safeTemplateId;
   final String clueKey;
   final String clueLabel;
+  final bool useQuestionReplayCopy;
   final String skillKey;
   final String skillLabel;
   final String sourceTaskId;
@@ -5351,6 +5365,7 @@ class _Act0NextUsefulHandCopyBridgeV1 {
     return act0RepairIntentCopyGuardLineV1(
           safeTemplateId: safeTemplateId,
           clueLabel: clueLabel,
+          useQuestionReplayCopy: useQuestionReplayCopy,
           skillLabel: skillLabel,
         ) ??
         '';

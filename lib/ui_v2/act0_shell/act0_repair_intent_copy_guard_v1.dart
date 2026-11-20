@@ -31,6 +31,7 @@ String? act0RepairIntentCopyGuardLineV1({
   required String safeTemplateId,
   required String clueLabel,
   required String skillLabel,
+  bool useQuestionReplayCopy = false,
 }) {
   if (!act0RepairIntentCopyTemplateAllowlistV1.contains(safeTemplateId)) {
     return null;
@@ -43,6 +44,8 @@ String? act0RepairIntentCopyGuardLineV1({
   final line = switch (safeTemplateId) {
     'repair_same_clue_v1' when sameSignalClue.isNotEmpty =>
       'You missed $sameSignalClue. This rep repeats the same clue.',
+    'repair_exact_replay_v1' when useQuestionReplayCopy =>
+      'Try this question again.',
     'repair_exact_replay_v1' when exactReplayClue.isNotEmpty =>
       'Replay this spot to fix $exactReplayClue.',
     'fallback_next_hand_v1' when skill.isNotEmpty =>
