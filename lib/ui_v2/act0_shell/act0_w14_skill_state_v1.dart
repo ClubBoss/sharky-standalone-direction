@@ -4,7 +4,7 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
-const act0SkillMapLastWorldV1 = 8;
+const act0SkillMapLastWorldV1 = 10;
 
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
@@ -57,6 +57,14 @@ const _extensionLessonSkills = <String, List<String>>{
   'same_hand_different_depth': ['Stack decisions'],
   'spr_and_commitment': ['Stack decisions'],
   'format_pressure': ['Position play'],
+  'survival_pressure_basics': ['Tournament decisions'],
+  'm_ratio_zones_lite': ['Tournament decisions'],
+  'bubble_risk_premium': ['Tournament decisions'],
+  'tournament_pressure_checkpoint': ['Tournament decisions'],
+  'player_type_basics': ['Player adjustment'],
+  'adjust_one_lever': ['Player adjustment'],
+  'exploit_guardrails': ['Player adjustment'],
+  'player_adjustment_checkpoint': ['Player adjustment'],
 };
 
 const _skillOverridesByTaskId = <String, List<String>>{
