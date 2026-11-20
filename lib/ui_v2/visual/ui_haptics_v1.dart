@@ -5,7 +5,7 @@ import 'package:poker_analyzer/services/app_settings_service.dart';
 /// Canonical haptics contract for v2 (non-table) UI surfaces.
 /// The settings screen already exposes a [haptics_enabled] toggle stored by
 /// [AppSettingsService], so we rely on that toggle to gate the feedback calls.
-enum UiHapticEventV1 { success, error }
+enum UiHapticEventV1 { success, error, answer }
 
 class UiHapticsV1 {
   UiHapticsV1._();
@@ -14,6 +14,7 @@ class UiHapticsV1 {
       {
         UiHapticEventV1.success: HapticFeedback.lightImpact,
         UiHapticEventV1.error: HapticFeedback.heavyImpact,
+        UiHapticEventV1.answer: HapticFeedback.lightImpact,
       };
 
   static Map<UiHapticEventV1, Future<void> Function()> _handlers = Map.from(
