@@ -42,7 +42,7 @@ class Act0W1RulesQuestionV1 {
       lessonId: lessonId,
       lessonTitle: 'W1 rules check',
       lessonSubtitle: '',
-      beatIndex: index,
+      beatIndex: index + 1,
       beatCount: act0W1RulesQuestionsV1.length,
       phase: Act0LessonPhaseV1.drill,
       caption: '',

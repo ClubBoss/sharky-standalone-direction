@@ -12758,7 +12758,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Find your cards.',
       body:
-          'The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot holds the chips. SB and BB post the blinds before anyone acts.',
+          'The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot is the chips in the middle. Blinds are forced bets. SB and BB post them before anyone acts.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Your cards', 'Board', 'Pot'],
       identityTeachingSemantics:

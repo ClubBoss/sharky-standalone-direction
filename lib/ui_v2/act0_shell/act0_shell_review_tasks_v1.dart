@@ -10,19 +10,6 @@ final act0NewReviewTasksV1 =
         Act0LessonTaskV1 task,
       })
     >[
-      for (final (index, question) in act0W1RulesQuestionsV1.indexed)
-        (
-          worldId: 'world_1',
-          lessonId: question.lessonId,
-          conceptFamilyId: question.taskId,
-          task: Act0LessonTaskV1(
-            taskId: question.taskId,
-            title: question.topic,
-            phase: Act0LessonPhaseV1.drill,
-            rewardXp: 0,
-            runner: question.runner(index),
-          ),
-        ),
       (
         worldId: 'world_1',
         lessonId: 'fold_check_call_raise',
@@ -72,12 +59,31 @@ final act0NewReviewTasksV1 =
       ),
     ];
 
+// Misses from the W1 rules check replay by their own source identity.
+final act0W1RulesReviewTasksV1 = [
+  for (final (index, question) in act0W1RulesQuestionsV1.indexed)
+    (
+      worldId: 'world_1',
+      lessonId: question.lessonId,
+      conceptFamilyId: question.taskId,
+      task: Act0LessonTaskV1(
+        taskId: question.taskId,
+        title: question.topic,
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 0,
+        runner: question.runner(index),
+      ),
+    ),
+];
+
 Act0LessonTaskV1? act0ReviewOnlyTaskV1(
   String worldId,
   String lessonId,
   String taskId,
 ) {
-  for (final entry in act0NewReviewTasksV1) {
+  for (final entry in act0NewReviewTasksV1.followedBy(
+    act0W1RulesReviewTasksV1,
+  )) {
     if (entry.worldId == worldId &&
         entry.lessonId == lessonId &&
         entry.task.taskId == taskId) {

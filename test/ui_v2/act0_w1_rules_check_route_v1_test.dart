@@ -47,6 +47,7 @@ Future<void> _runCheck(WidgetTester tester, int right) async {
 Future<void> _answerCheck(WidgetTester tester, int right) async {
   for (final (index, question) in act0W1RulesQuestionsV1.indexed) {
     expect(find.text(question.question), findsWidgets);
+    expect(find.text('Step ${index + 1} of 10'), findsOneWidget);
     if (question.id == 'preflop_after_hj' ||
         question.id == 'postflop_two_left') {
       final runner = tester

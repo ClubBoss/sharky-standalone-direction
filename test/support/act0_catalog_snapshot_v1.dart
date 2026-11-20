@@ -19,17 +19,16 @@ final catalogTasks = [
 ];
 
 final rulesCheckCatalogTasks = [
-  for (final entry in act0NewReviewTasksV1)
-    if (entry.task.taskId.startsWith('w1_rules_check_'))
-      (
-        world: Act0ShellStateV1.sample.worldById(entry.worldId),
-        lesson: Act0ShellStateV1.sample.lessonById(entry.lessonId),
-        task: entry.task,
-        lessonIndex: Act0ShellStateV1.sample
-            .worldById(entry.worldId)
-            .lessons
-            .indexWhere((lesson) => lesson.lessonId == entry.lessonId),
-      ),
+  for (final entry in act0W1RulesReviewTasksV1)
+    (
+      world: Act0ShellStateV1.sample.worldById(entry.worldId),
+      lesson: Act0ShellStateV1.sample.lessonById(entry.lessonId),
+      task: entry.task,
+      lessonIndex: Act0ShellStateV1.sample
+          .worldById(entry.worldId)
+          .lessons
+          .indexWhere((lesson) => lesson.lessonId == entry.lessonId),
+    ),
 ];
 
 String catalogQuestion(Act0LessonTaskV1 task) =>
