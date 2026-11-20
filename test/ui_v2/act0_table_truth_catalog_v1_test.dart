@@ -451,6 +451,54 @@ void main() {
           },
       ];
     }
+    // Exact checkpoint grades replace the retired choice content.
+    const l2CheckpointGrades = {
+      'straight_draws_w5_gutshot_contrast_transfer': [
+        ("gutshot", false, "suboptimal"),
+        ("open_ended", true, "correct"),
+        ("made_straight", false, "wrong"),
+      ],
+      'range_checkpoint_value': [
+        ("value", true, "correct"),
+        ("bluff", false, "suboptimal"),
+        ("missed", false, "wrong"),
+      ],
+      'range_checkpoint_combos': [
+        ("twelve", false, "wrong"),
+        ("six", false, "wrong"),
+        ("sixteen", true, "correct"),
+      ],
+      'w6_kicker_showdown_compare': [
+        ("hero_ak", true, "correct"),
+        ("villain_kq", false, "wrong"),
+        ("tie", false, "wrong"),
+      ],
+      'w6_checkpoint_table_best_five': [
+        ("hero_wins", false, "wrong"),
+        ("split", true, "correct"),
+        ("villain_wins", false, "wrong"),
+      ],
+      'w7_format_table_notice': [
+        ("open_same", false, "wrong"),
+        ("depth_only", false, "wrong"),
+        ("tighten_early", true, "correct"),
+      ],
+    };
+    for (final entry in l2CheckpointGrades.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      task['options'] = [
+        for (final (id, correct, quality) in entry.value)
+          {
+            'id': id,
+            'correct': correct,
+            'quality': quality,
+            'seat': null,
+            'repairSeats': <String>[],
+            'repairCards': <String>[],
+            'repairLabels': <String>[],
+          },
+      ];
+    }
     final w6ValueOptions =
         (expectedComparison['w6_value_range_action']
                 as Map<String, dynamic>)['options']

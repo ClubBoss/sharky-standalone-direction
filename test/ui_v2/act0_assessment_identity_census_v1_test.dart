@@ -739,6 +739,512 @@ void main() {
         'Go all-in for 100 BB': 'Use all-in-or-fold logic',
       },
     };
+    const l2CheckpointOptionDeltas = {
+      'straight_draws_w5_gutshot_contrast_transfer': (
+        [
+          [
+            "gutshot",
+            "Gutshot straight draw",
+            false,
+            "suboptimal",
+            "Open-ended straight draw",
+          ],
+          [
+            "open_ended",
+            "Open-ended straight draw",
+            true,
+            "correct",
+            "Open-ended straight draw",
+          ],
+          [
+            "made_straight",
+            "Made straight",
+            false,
+            "wrong",
+            "Open-ended straight draw",
+          ],
+        ],
+        [
+          [
+            "gutshot",
+            "Gutshot straight draw",
+            true,
+            "correct",
+            "Gutshot straight draw",
+          ],
+          [
+            "open_ended",
+            "Open-ended straight draw",
+            false,
+            "suboptimal",
+            "Gutshot straight draw",
+          ],
+          [
+            "made_straight",
+            "Made straight",
+            false,
+            "wrong",
+            "Gutshot straight draw",
+          ],
+        ],
+      ),
+      'turn_river_changes_w5_turn_texture_shift_transfer': (
+        [
+          [
+            "nothing_changed",
+            "Nothing changed, so keep the same easy plan",
+            false,
+            "wrong",
+            "An opponent can now have a flush",
+          ],
+          [
+            "board_got_wetter",
+            "An opponent can now have a flush",
+            true,
+            "correct",
+            "An opponent can now have a flush",
+          ],
+          [
+            "size_only_changed",
+            "Only the bet size matters now",
+            false,
+            "suboptimal",
+            "An opponent can now have a flush",
+          ],
+        ],
+        [
+          [
+            "nothing_changed",
+            "Nothing changed, so keep the same easy plan",
+            false,
+            "wrong",
+            "The board got wetter and more connected",
+          ],
+          [
+            "board_got_wetter",
+            "The board got wetter and more connected",
+            true,
+            "correct",
+            "The board got wetter and more connected",
+          ],
+          [
+            "size_only_changed",
+            "Only the bet size matters now",
+            false,
+            "suboptimal",
+            "The board got wetter and more connected",
+          ],
+        ],
+      ),
+      'turn_river_changes_w5_river_draw_story_transfer': (
+        [
+          [
+            "river_restarts_story",
+            "The river starts a new story from zero",
+            false,
+            "wrong",
+            "The river missed the straight draw",
+          ],
+          [
+            "draw_hit_anyway",
+            "The draw probably got there anyway",
+            false,
+            "suboptimal",
+            "The river missed the straight draw",
+          ],
+          [
+            "draw_missed_story",
+            "The river missed the straight draw",
+            true,
+            "correct",
+            "The river missed the straight draw",
+          ],
+        ],
+        [
+          [
+            "river_restarts_story",
+            "The river starts a new story from zero",
+            false,
+            "wrong",
+            "The same draw story missed",
+          ],
+          [
+            "draw_hit_anyway",
+            "The draw probably got there anyway",
+            false,
+            "suboptimal",
+            "The same draw story missed",
+          ],
+          [
+            "draw_missed_story",
+            "The same draw story missed",
+            true,
+            "correct",
+            "The same draw story missed",
+          ],
+        ],
+      ),
+      'w6_wet_board_repair': (
+        [
+          [
+            "nothing_changed",
+            "Make the same bluff again",
+            false,
+            "wrong",
+            "Check instead of betting again",
+          ],
+          [
+            "respect_wetter_board",
+            "Check instead of betting again",
+            true,
+            "correct",
+            "Check instead of betting again",
+          ],
+          [
+            "smaller_same_story",
+            "Bet smaller but keep the same dry-board story",
+            false,
+            "suboptimal",
+            "Check instead of betting again",
+          ],
+        ],
+        [
+          [
+            "nothing_changed",
+            "Nothing changed, keep the same dry-board plan",
+            false,
+            "wrong",
+            "The board got wetter, so the old thin-value plan needs caution",
+          ],
+          [
+            "respect_wetter_board",
+            "The board got wetter, so the old thin-value plan needs caution",
+            true,
+            "correct",
+            "The board got wetter, so the old thin-value plan needs caution",
+          ],
+          [
+            "smaller_same_story",
+            "Bet smaller but keep the same dry-board story",
+            false,
+            "suboptimal",
+            "The board got wetter, so the old thin-value plan needs caution",
+          ],
+        ],
+      ),
+      'range_checkpoint_value': (
+        [
+          [
+            "value",
+            "Get called by worse hands",
+            true,
+            "correct",
+            "Get called by worse hands",
+          ],
+          [
+            "bluff",
+            "Make stronger hands fold",
+            false,
+            "suboptimal",
+            "Get called by worse hands",
+          ],
+          [
+            "missed",
+            "Give up on a missed flop",
+            false,
+            "wrong",
+            "Get called by worse hands",
+          ],
+        ],
+        [
+          ["value", "Value", true, "correct", "Value"],
+          ["bluff", "Bluff candidate", false, "wrong", "Value"],
+          ["missed", "Missed", false, "wrong", "Value"],
+        ],
+      ),
+      'range_checkpoint_board_fit': (
+        [
+          ["missed", "Ace-high", true, "correct", "Ace-high"],
+          ["bluff", "One pair", false, "suboptimal", "Ace-high"],
+          ["value", "A made straight", false, "wrong", "Ace-high"],
+        ],
+        [
+          ["missed", "Missed", true, "correct", "Missed"],
+          ["bluff", "Bluff candidate", false, "suboptimal", "Missed"],
+          ["value", "Value", false, "wrong", "Missed"],
+        ],
+      ),
+      'range_checkpoint_combos': (
+        [
+          ["twelve", "12", false, "wrong", "16"],
+          ["six", "6", false, "wrong", "16"],
+          ["sixteen", "16", true, "correct", "16"],
+        ],
+        [
+          ["twelve", "12 combos", false, "suboptimal", "16 combos"],
+          ["six", "6 combos", false, "wrong", "16 combos"],
+          ["sixteen", "16 combos", true, "correct", "16 combos"],
+        ],
+      ),
+      'w6_kicker_showdown_compare': (
+        [
+          ["hero_ak", "9-8 and 6-5", true, "correct", "9-8 and 6-5"],
+          ["villain_kq", "A-K and Q-J", false, "wrong", "9-8 and 6-5"],
+          ["tie", "9-9 and 6-6", false, "wrong", "9-8 and 6-5"],
+        ],
+        [
+          ["hero_ak", "Hero A-K", true, "correct", "Hero A-K"],
+          ["villain_kq", "Villain K-Q", false, "wrong", "Hero A-K"],
+          ["tie", "Tie", false, "suboptimal", "Hero A-K"],
+        ],
+      ),
+      'w6_board_pair_strength_compare': (
+        [
+          ["hero_aj", "BTN, the raiser", false, "suboptimal", "BB, the caller"],
+          ["villain_k8", "BB, the caller", true, "correct", "BB, the caller"],
+          [
+            "tie",
+            "They have the same number",
+            false,
+            "wrong",
+            "BB, the caller",
+          ],
+        ],
+        [
+          ["hero_aj", "Hero A-J", false, "suboptimal", "Villain K-8"],
+          ["villain_k8", "Villain K-8", true, "correct", "Villain K-8"],
+          ["tie", "Tie", false, "wrong", "Villain K-8"],
+        ],
+      ),
+      'w6_checkpoint_table_best_five': (
+        [
+          ["hero_wins", "A-T suited", false, "wrong", "Pocket sevens"],
+          ["split", "Pocket sevens", true, "correct", "Pocket sevens"],
+          [
+            "villain_wins",
+            "They have the same count",
+            false,
+            "wrong",
+            "Pocket sevens",
+          ],
+        ],
+        [
+          ["hero_wins", "Hero wins with aces", false, "wrong", "Split the pot"],
+          [
+            "villain_wins",
+            "Villain wins with kings",
+            false,
+            "suboptimal",
+            "Split the pot",
+          ],
+          ["split", "Split the pot", true, "correct", "Split the pot"],
+        ],
+      ),
+      'range_checkpoint_review': (
+        [
+          [
+            "range_plus_stack_depth",
+            "One ace is already on the board",
+            true,
+            "correct",
+            "One ace is already on the board",
+          ],
+          [
+            "range_plus_pot_size",
+            "The pot is 5.5 BB",
+            false,
+            "suboptimal",
+            "One ace is already on the board",
+          ],
+          [
+            "range_only",
+            "BTN has the dealer marker",
+            false,
+            "wrong",
+            "One ace is already on the board",
+          ],
+        ],
+        [
+          [
+            "range_plus_stack_depth",
+            "Range plus stack depth",
+            true,
+            "correct",
+            "Range plus stack depth",
+          ],
+          [
+            "range_plus_pot_size",
+            "Range plus pot size",
+            false,
+            "suboptimal",
+            "Range plus stack depth",
+          ],
+          [
+            "range_only",
+            "Range plus board texture only",
+            false,
+            "wrong",
+            "Range plus stack depth",
+          ],
+        ],
+      ),
+      'visible_card_combo_reduction_recap': (
+        [
+          ["only_board_low_cards_matter", "16", false, "wrong", "12"],
+          ["visible_cards_show_exact_hand", "6", false, "wrong", "12"],
+          [
+            "visible_rank_reduces_matching_rank_combos",
+            "12",
+            true,
+            "correct",
+            "12",
+          ],
+        ],
+        [
+          [
+            "only_board_low_cards_matter",
+            "Only a paired board can change how many matching-rank combinations remain.",
+            false,
+            "wrong",
+            "Fewer queen-containing combinations remain; no exact hand is proved.",
+          ],
+          [
+            "visible_cards_show_exact_hand",
+            "The visible queens prove the opponent’s exact hand.",
+            false,
+            "wrong",
+            "Fewer queen-containing combinations remain; no exact hand is proved.",
+          ],
+          [
+            "visible_rank_reduces_matching_rank_combos",
+            "Fewer queen-containing combinations remain; no exact hand is proved.",
+            true,
+            "correct",
+            "Fewer queen-containing combinations remain; no exact hand is proved.",
+          ],
+        ],
+      ),
+      'what_poker_is_side_pot_intro': (
+        [
+          ["hero_main_only", "20 BB", true, "correct", "20 BB"],
+          ["hero_wins_everything", "50 BB", false, "wrong", "20 BB"],
+          ["side_pot_is_penalty", "30 BB", false, "suboptimal", "20 BB"],
+        ],
+        [
+          [
+            "hero_main_only",
+            "Hero can win the main pot, but not the side pot",
+            true,
+            "correct",
+            "Hero can win the main pot, but not the side pot",
+          ],
+          [
+            "hero_wins_everything",
+            "Hero can win every chip once all-in",
+            false,
+            "wrong",
+            "Hero can win the main pot, but not the side pot",
+          ],
+          [
+            "side_pot_is_penalty",
+            "The side pot is a penalty for the short stack",
+            false,
+            "suboptimal",
+            "Hero can win the main pot, but not the side pot",
+          ],
+        ],
+      ),
+      'w7_6max_wider': (
+        [
+          ["fullring", "Fold", false, "wrong", "Raise to 2.5 BB"],
+          ["same", "Raise to 8 BB", false, "suboptimal", "Raise to 2.5 BB"],
+          ["6max", "Raise to 2.5 BB", true, "correct", "Raise to 2.5 BB"],
+        ],
+        [
+          ["fullring", "Full ring", false, "wrong", "6-max"],
+          ["same", "Same in both", false, "suboptimal", "6-max"],
+          ["6max", "6-max", true, "correct", "6-max"],
+        ],
+      ),
+      'w7_fullring_tighter': (
+        [
+          ["tighter", "Fold", true, "correct", "Fold"],
+          ["wider", "Raise to 2.5 BB", false, "wrong", "Fold"],
+          ["depth", "Raise to 8 BB", false, "suboptimal", "Fold"],
+        ],
+        [
+          ["tighter", "Open fewer hands", true, "correct", "Open fewer hands"],
+          ["wider", "Open more hands", false, "wrong", "Open fewer hands"],
+          [
+            "depth",
+            "Only stack depth matters",
+            false,
+            "suboptimal",
+            "Open fewer hands",
+          ],
+        ],
+      ),
+      'w7_format_table_notice': (
+        [
+          ["open_same", "Bet 10 BB", false, "wrong", "Bet 6 BB"],
+          ["depth_only", "Bet 12 BB", false, "wrong", "Bet 6 BB"],
+          ["tighten_early", "Bet 6 BB", true, "correct", "Bet 6 BB"],
+        ],
+        [
+          [
+            "open_same",
+            "Open just as wide as 6-max",
+            false,
+            "wrong",
+            "Count more players behind and tighten early opens a bit",
+          ],
+          [
+            "depth_only",
+            "Only watch stack depth, not player count",
+            false,
+            "suboptimal",
+            "Count more players behind and tighten early opens a bit",
+          ],
+          [
+            "tighten_early",
+            "Count more players behind and tighten early opens a bit",
+            true,
+            "correct",
+            "Count more players behind and tighten early opens a bit",
+          ],
+        ],
+      ),
+      'w7_stack_checkpoint': (
+        [
+          ["range_only", "About 5.4", false, "suboptimal", "4"],
+          ["range_plus_depth", "4", true, "correct", "4"],
+          ["chips_only", "32", false, "wrong", "4"],
+        ],
+        [
+          [
+            "range_only",
+            "Range only",
+            false,
+            "suboptimal",
+            "Range plus stack risk",
+          ],
+          [
+            "range_plus_depth",
+            "Range plus stack risk",
+            true,
+            "correct",
+            "Range plus stack risk",
+          ],
+          [
+            "chips_only",
+            "Range plus raw chip count",
+            false,
+            "wrong",
+            "Range plus stack risk",
+          ],
+        ],
+      ),
+    };
     const l2OptionDeltas = {
       'outs_improvement_w5_table_outs_flush_transfer': (
         [
@@ -898,6 +1404,10 @@ void main() {
     };
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
+      if (l2CheckpointOptionDeltas[row[2]] case (final current, final prior)) {
+        expect(row[5], current, reason: row[2] as String);
+        row[5] = prior;
+      }
       final assessmentLabels = l2AssessmentLabels[row[2]];
       if (assessmentLabels != null) {
         final choices = (row[5] as List).cast<List<dynamic>>();
