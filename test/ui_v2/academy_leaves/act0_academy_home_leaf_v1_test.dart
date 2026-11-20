@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart'
     show Act0SharkyMoodV1;
 
@@ -169,23 +170,49 @@ void main() {
     expect(find.text('4 days'), findsOneWidget);
   });
 
-  testWidgets('backdrop is optional and never references an undeclared asset', (
-    tester,
-  ) async {
-    await _pumpHome(tester, _input());
-    expect(
-      find.byKey(const Key('act0_academy_leaf_backdrop_fallback')),
-      findsOneWidget,
-    );
+  testWidgets('Club Night draws no photo under Home text', (tester) async {
+    await _pumpHome(tester, _input(backdrop: MemoryImage(_pixelPng)));
     expect(
       find.byKey(const Key('act0_academy_leaf_backdrop_image')),
       findsNothing,
     );
-
-    await _pumpHome(tester, _input(backdrop: MemoryImage(_pixelPng)));
     expect(
-      find.byKey(const Key('act0_academy_leaf_backdrop_image')),
-      findsOneWidget,
+      find.byKey(const Key('act0_academy_leaf_backdrop_fallback')),
+      findsNothing,
+    );
+    final wall = tester.widget<ColoredBox>(
+      find.byKey(const Key('act0_academy_home_leaf')),
+    );
+    expect(wall.color, Act0ClubNightTokensV1.wall);
+  });
+
+  testWidgets('the next step holds the one brass action on Home', (
+    tester,
+  ) async {
+    await _pumpHome(
+      tester,
+      _input(
+        nextAction: Act0AcademyHomeNextActionV1(
+          title: 'Hand rankings 2',
+          subtitle: 'Step 3 of 6',
+          ctaLabel: 'Continue',
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(find.byType(FilledButton), findsOneWidget);
+    final cta = tester.widget<FilledButton>(
+      find.byKey(const Key('act0_academy_home_leaf_cta')),
+    );
+    expect(
+      cta.style!.backgroundColor!.resolve(<WidgetState>{}),
+      Act0ClubNightTokensV1.brass,
+    );
+    expect(
+      tester
+          .getSize(find.byKey(const Key('act0_academy_home_leaf_cta')))
+          .height,
+      greaterThanOrEqualTo(Act0ClubNightTokensV1.controlHeight),
     );
   });
 

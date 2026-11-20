@@ -13,7 +13,6 @@ const String _tokensFile =
     'lib/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 
 const Map<String, int> _allowance = <String, int>{
-  'lib/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart': 19,
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart': 12,
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_onboarding_leaf_v1.dart': 2,
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart': 3,
