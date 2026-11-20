@@ -1519,7 +1519,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'board_cards',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        '6d0a0beaf2469d896d8984b1a24b2cf2f3a399ec37b4a50b2b3df2a29cf03d5a',
+        '004cc7da3d67627764b31439a3f62b056b9d5b62b1c4e361cf7bbea86d2e0163',
     diagnosticVariantId: 'board_private_cards',
     sourceQuestion: 'Which cards can everyone use?',
     sourceChoiceReason:
@@ -1547,7 +1547,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: 'check',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        '6d0a0beaf2469d896d8984b1a24b2cf2f3a399ec37b4a50b2b3df2a29cf03d5a',
+        '004cc7da3d67627764b31439a3f62b056b9d5b62b1c4e361cf7bbea86d2e0163',
     diagnosticVariantId: 'action_basics',
     sourceQuestion: 'No bet faces Hero. Which action is free?',
     sourceChoiceReason: 'Sharky will start simple.',

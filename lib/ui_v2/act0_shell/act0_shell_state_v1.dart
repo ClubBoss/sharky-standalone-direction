@@ -9474,7 +9474,7 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A and K',
       betterAnswerLabel: 'A and K',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not this street.',
       feedbackReason:
           'Board cards are shared later. This recheck asks for your two private cards.',
@@ -9962,7 +9962,7 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'You put in all remaining chips',
       betterAnswerLabel: 'You put in all remaining chips',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Stack size still has a role, but not that role.',
       feedbackReason:
           'CO has chips left. You put in your last chips. The hand still has to be decided.',
@@ -10101,7 +10101,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
       betterAnswerLabel: 'Only the chips CO matched against the 20 BB all-in',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Matched already matters.',
       feedbackReason:
           'You can win the 20 BB that CO matched. CO keeps the chips they did not put in.',
@@ -10336,7 +10336,7 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Everyone else folds',
       betterAnswerLabel: 'Everyone else folds',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'That is the other ending.',
       feedbackReason:
           'Best hand at showdown is a real way to win, but this question asks for the early ending before cards are revealed.',
@@ -12687,7 +12687,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Best hand',
       betterAnswerLabel: 'Best hand',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Only part of the hand.',
       feedbackReason:
           'Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.',
@@ -13022,8 +13022,8 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 4 BB in the pot',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Part of the read.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the board and pot too.',
       feedbackReason:
           'Your cards matter, but the clean table read also includes the shared board and the pot.',
       repairFocusCardIds: <String>[
@@ -13104,8 +13104,8 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A fold or a showdown',
       betterAnswerLabel: 'A fold or a showdown',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Partly right.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The hand is still live.',
       feedbackReason:
           'Your cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.',
     ),
@@ -13276,8 +13276,8 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 6 BB in the pot',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable instinct.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the whole table.',
       feedbackReason:
           'Your cards matter, but a live table read also needs the shared board and pot before the decision starts.',
     ),

@@ -373,6 +373,24 @@ void main() {
         ];
       }
     }
+    const w1FactualGrades = {
+      'what_poker_is_table_read_transfer': 'hand_first_only',
+      'what_poker_is_table_read_recheck': 'hero_cards_only',
+      'your_first_hand_private_cards_recheck': 'board_cards',
+      'what_poker_is_all_in_meaning': 'largest_stack_only',
+      'what_poker_is_matched_chips_transfer': 'nothing_until_showdown',
+      'what_poker_is_win_ways': 'best_hand_showdown',
+      'what_poker_is_showdown_win': 'hero_cards_only',
+      'what_poker_is_live_win_transfer': 'hero_cards_decide_now',
+    };
+    for (final entry in w1FactualGrades.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      final option = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((row) => row['id'] == entry.value);
+      expect(option['quality'], 'suboptimal', reason: entry.key);
+      option['quality'] = 'wrong';
+    }
     // P7–P8 classify false showdown outcomes and incomplete best fives as wrong.
     for (final id in [
       'showdown_review',
