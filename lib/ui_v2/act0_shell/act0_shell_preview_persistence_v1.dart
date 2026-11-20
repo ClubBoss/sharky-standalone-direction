@@ -889,8 +889,17 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final currentStreak = _earnedStreakDaysTodayV1(today);
     if (dailyDone) _lastDailyDate = today;
     _persistedStreakDays = currentStreak;
+    final lessonExampleSource = _mistakeRecords[_lessonExampleSourceTaskIdV1];
     final returnSelection =
-        _diagnosticLearningReturnV1 ?? _spacedReviewReturnV1;
+        _diagnosticLearningReturnV1 ??
+        _spacedReviewReturnV1 ??
+        (lessonExampleSource == null
+            ? null
+            : (
+                worldId: lessonExampleSource.worldId,
+                lessonId: lessonExampleSource.lessonId,
+                taskId: lessonExampleSource.taskId,
+              ));
     final snapshot = _Act0PersistedProgressV1(
       suppressLegacyRecheckAfterRecovery: _suppressLegacyRecheckAfterRecoveryV1,
       completedTaskIds: _completedTaskIds,

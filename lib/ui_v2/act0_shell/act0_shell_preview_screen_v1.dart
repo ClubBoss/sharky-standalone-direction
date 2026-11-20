@@ -1502,6 +1502,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   bool _activeSameSignalFeedbackRepairV1 = false;
+  String? _lessonExampleSourceTaskIdV1;
   String? _pendingFeedbackRepairSourceTaskIdV1;
   String? _pendingFeedbackRepairTaskIdV1;
   String? _activeSameSignalRecheckTaskId;
@@ -2780,14 +2781,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? _mistakeRecords[_pendingFeedbackRepairSourceTaskIdV1]
         : null;
     ({int step, int total})? extraPracticeProgress;
-    if (inlineRepairSource != null) {
+    final practiceSource =
+        inlineRepairSource ?? _mistakeRecords[_lessonExampleSourceTaskIdV1];
+    if (practiceSource != null) {
       final sourceLesson = _lessonById(
-        _worldById(worlds, inlineRepairSource.worldId).lessons,
-        inlineRepairSource.lessonId,
+        _worldById(worlds, practiceSource.worldId).lessons,
+        practiceSource.lessonId,
       );
       extraPracticeProgress = (
-        step: _taskIndex(sourceLesson, inlineRepairSource.taskId) + 1,
+        step: _taskIndex(sourceLesson, practiceSource.taskId) + 1,
         total: sourceLesson.courseTaskList.length,
+      );
+    } else if (playSelectedTask != null &&
+        (_isExactLessonRetryV1(playSelectedTask) ||
+            _activeLessonWrapUpTaskId == playSelectedTask.taskId)) {
+      extraPracticeProgress = (
+        step: _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
+        total: selectedLesson.courseTaskList.length,
       );
     }
     final sameSessionLearningDelta =
@@ -2967,6 +2977,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
     }
     final effectiveLearnDetailLessonId = _learnDetailLessonId;
+    final repeatedMissSource = _secondLessonMissSourceV1(
+      playSelectedTask,
+      playRunner,
+    );
+    final nextExample = repeatedMissSource == null
+        ? null
+        : _otherLessonExampleV1(
+            sourceTaskId: repeatedMissSource,
+            attemptedTaskId: playSelectedTask!.taskId,
+            worlds: worlds,
+          );
     final academySurface =
         !_bootSurfaceReady ||
         (_showPlacement && !_placementDiagnosticActive) ||
@@ -3710,7 +3731,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 reviewKindId: _routeReviewKindForTaskIdV1(
                                   playSelectedTask?.taskId ?? '',
                                 ).name,
-                                theoryRecallStep: theoryRecallStep,
+                                theoryRecallStep:
+                                    _lessonExampleSourceTaskIdV1 == null
+                                    ? theoryRecallStep
+                                    : null,
                                 framingProfile: runnerFramingProfile,
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
@@ -3752,9 +3776,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         playSelectedTask?.taskId
                                     ? _activeRepairSessionSummaryLines
                                     : const <String>[],
+                                onTryAnotherExample: nextExample == null
+                                    ? null
+                                    : () => _setStateForRunnerCallbackV1(
+                                        callbackEpochV1,
+                                        callbackDiagnosticEntryV1,
+                                        callbackDiagnosticRunIdV1,
+                                        () => _startOtherLessonExampleV1(
+                                          repeatedMissSource!,
+                                          nextExample,
+                                        ),
+                                      ),
                                 feedbackForwardCtaLabel:
-                                    _diagnosticLearningEntryV1 != null ||
-                                        _spacedReviewReturnV1 != null
+                                    repeatedMissSource != null ||
+                                        _lessonExampleSourceTaskIdV1 != null
+                                    ? 'Continue lesson'
+                                    : _diagnosticLearningEntryV1 != null ||
+                                          _spacedReviewReturnV1 != null
                                     ? 'Back to Review'
                                     : placementForwardCtaLabel ??
                                           (_activeRepairTaskId ==
@@ -3787,6 +3825,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     if (openedAsSpacedReview) {
                                       _returnFromSpacedReviewV1(
                                         callbackDiagnosticRunIdV1,
+                                      );
+                                      return;
+                                    }
+                                    final lessonExampleSource =
+                                        _lessonExampleSourceTaskIdV1;
+                                    if (lessonExampleSource != null) {
+                                      _continueAfterRepeatedLessonMissV1(
+                                        lessonExampleSource,
                                       );
                                       return;
                                     }
@@ -4091,6 +4137,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       )))
                                     return;
 
+                                  if (_lessonExampleSourceTaskIdV1 != null)
+                                    return;
                                   setState(() {
                                     if (_activeSpacedReviewTaskV1 != null) {
                                       _appendLearningEvidenceV1(decision);
@@ -4230,6 +4278,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _selectedOptionId = null;
                                       _phase = Act0LessonPhaseV1.theory;
                                       _teachingStepIndex = 0;
+                                      return;
+                                    }
+                                    final lessonMissToDefer =
+                                        _lessonExampleSourceTaskIdV1 ??
+                                        repeatedMissSource;
+                                    if (lessonMissToDefer != null) {
+                                      _continueAfterRepeatedLessonMissV1(
+                                        lessonMissToDefer,
+                                      );
                                       return;
                                     }
                                     if (_advanceActionSequenceReviewV1(
@@ -4428,7 +4485,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                               ?.isCorrect ??
                                           false;
                                       if (wrappedCorrect) {
-                                        _completeCurrentTask(playSelectedTask);
+                                        _completeCurrentTask(
+                                          playSelectedTask,
+                                          awardXp:
+                                              _choiceHasIndependentProvenanceV1,
+                                        );
                                       }
                                       _lessonRunWrapUpCompletedTaskIds.add(
                                         playSelectedTask.taskId,
@@ -4477,7 +4538,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       return;
                                     }
                                     _placementHandoffActive = false;
-                                    _completeCurrentTask(playSelectedTask);
+                                    _completeCurrentTask(
+                                      playSelectedTask,
+                                      awardXp:
+                                          (playRunner
+                                                  .selectedOption
+                                                  ?.isCorrect ??
+                                              false) &&
+                                          _choiceHasIndependentProvenanceV1,
+                                    );
                                     if (_maybeStartLessonWrapUpRetry(
                                       selectedLesson,
                                     )) {

@@ -41,15 +41,20 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     ]);
   }
 
-  void _completeCurrentTask(Act0LessonTaskV1 selectedTask) {
+  void _completeCurrentTask(
+    Act0LessonTaskV1 selectedTask, {
+    bool awardXp = true,
+  }) {
     if (_diagnosticLearningEntryV1 != null) return;
     final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
     _skippedTaskIds.remove(_selectedTaskId);
     _visibleSkippedTaskIds.remove(_selectedTaskId);
     _completedTaskIds.add(_selectedTaskId);
     if (!alreadyCompleted) {
-      _earnedXp += selectedTask.rewardXp;
-      _lessonRunXp += selectedTask.rewardXp;
+      if (awardXp) {
+        _earnedXp += selectedTask.rewardXp;
+        _lessonRunXp += selectedTask.rewardXp;
+      }
       _retentionSequence += 1;
     }
     _refreshRetentionMemoryStatusesV1();
