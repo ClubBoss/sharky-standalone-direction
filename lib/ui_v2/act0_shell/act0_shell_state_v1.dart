@@ -2944,6 +2944,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             correctIndex: 1,
           ),
           table: _showdownRunner.table.copyWith(
+            handContributions: _act0FoldoutPot,
             heroCards: const [
               Act0CardStateV1(rank: 'J', suit: 'h'),
               Act0CardStateV1(rank: 'J', suit: 's'),
@@ -10527,6 +10528,7 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
     ),
   ],
   table: _readBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.flop),
     centerLabel: '',
     highlightedCardIds: const <String>[],
     potLabel: 'Pot 5 BB',
@@ -11684,6 +11686,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
   question: 'Tap the seat that acts last after the flop.',
   options: _lastSeatAfterFlopChoices,
   table: _readBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerPositionPot,
     selectableSeatIds: const <String>['btn', 'utg'],
     highlightedSeatIds: const <String>['btn'],
     activeSeatId: 'btn',
@@ -12193,6 +12196,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
     ),
   ],
   table: _readBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.flop),
     heroCards: _heroAkCards,
     highlightedCardIds: const <String>['hero_0', 'board_0'],
     seats: _readBoardRunner.table.seats
@@ -12286,6 +12290,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
     ),
   ],
   table: _readBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     streetLabel: 'River',
     heroCards: _heroKhQhCards,
     boardCards: _boardFlushVsStraight,
@@ -12360,6 +12365,7 @@ final _fullHouseRankRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
     heroCards: _hero7s7hCards,
     boardCards: _boardTripsAces,
     highlightedCardIds: const <String>[
@@ -12428,6 +12434,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
     heroCards: _heroQqCards,
     boardCards: _boardQuadsQueens,
     highlightedCardIds: const <String>[
@@ -12490,6 +12497,7 @@ final _royalFlushRankRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
     heroCards: _heroKhQhCards,
     boardCards: _boardRoyalFlushHearts,
     highlightedCardIds: const <String>[
@@ -12560,6 +12568,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     heroCards: _heroAs7sCards,
     boardCards: _boardFullHouseVsFlush,
     highlightedCardIds: const <String>[
@@ -12635,6 +12644,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     heroCards: _heroQqCards,
     boardCards: _boardQuadsVsFullHouse,
     highlightedCardIds: const <String>[
@@ -12704,6 +12714,7 @@ final _royalFlushVsFlushRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     heroCards: _heroKhQhCards,
     boardCards: _boardRoyalFlushHearts,
     highlightedCardIds: const <String>[
@@ -12779,6 +12790,7 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     heroCards: _heroA7oCards,
     highlightedCardIds: const <String>[
       'hero_0',
@@ -12860,6 +12872,9 @@ final _showdownRunner = _readBoardRunner.copyWith(
 );
 
 final _showdownIntroRunner = _showdownRunner.copyWith(
+  table: _showdownRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.flop),
+  ),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'showdown_intro',
   caption: 'A hand can end before or at showdown.',
@@ -12915,6 +12930,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0HeadsUpShowdownPot,
     highlightedCardIds: const <String>[
       'hero_0',
       'hero_1',
@@ -12987,6 +13003,7 @@ final _showdownKickerRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0HeadsUpShowdownPot,
     heroCards: _heroAsKhCards,
     boardCards: _boardAce,
     highlightedCardIds: const <String>[
@@ -13168,6 +13185,10 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
     ),
   ],
   table: _readBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(
+      PokerStreet.flop,
+      openBb: 2.75,
+    ),
     heroCards: _heroAkCards,
     boardCards: _flopA72Cards,
     centerLabel: 'Read hand, board, pot',
@@ -13258,6 +13279,7 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
     ),
   ],
   table: _readBoardRunner.table.copyWith(
+    handContributions: _act0FourPlayerLimpedPot,
     heroCards: _heroQqCards,
     boardCards: _flopA72Cards,
     centerLabel: 'Read hand, board, pot',
@@ -13671,7 +13693,10 @@ final _boardCountRunner = _readBoardRunner.copyWith(
       feedbackReason: 'Two is your private card count, not the full board.',
     ),
   ],
-  table: _riverBoardRunner.table.copyWith(centerLabel: 'Read the cards'),
+  table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
+    centerLabel: 'Read the cards',
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'The board grows during the hand.',
@@ -13715,6 +13740,7 @@ final _bestFiveCardsRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
     highlightedCardIds: const <String>[
       'hero_0',
       'hero_1',
@@ -14134,6 +14160,7 @@ final _tripsRankRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     boardCards: _boardThreeQueens,
     highlightedCardIds: const <String>['hero_0', 'hero_1', 'board_0'],
     seats: _riverBoardRunner.table.seats
@@ -14193,6 +14220,7 @@ final _straightRankRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
     heroCards: _hero89Cards,
     boardCards: _boardStraight,
     highlightedCardIds: const <String>[
@@ -14356,6 +14384,7 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    handContributions: _act0FivePlayerComparisonPot,
     heroCards: _heroQqCards,
     boardCards: _boardBroadwayCards,
     highlightedCardIds: const <String>[
@@ -15110,7 +15139,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
         Act0CardStateV1(rank: '8', suit: 'd'),
       ],
       centerLabel: 'J8o early',
-      handContributions: _act0BlindsOnlyContributions,
+      handContributions: _act0UnopenedPriceContributionsV1('utg'),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -15303,7 +15332,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       activeSeatId: 'co',
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       centerLabel: 'Folded to CO',
-      handContributions: _act0BlindsOnlyContributions,
+      handContributions: _act0UnopenedPriceContributionsV1('co'),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
@@ -16343,7 +16372,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
         Act0CardStateV1(rank: 'T', suit: 'c'),
       ],
       centerLabel: 'Middle position',
-      handContributions: _act0BlindsOnlyContributions,
+      handContributions: _act0UnopenedPriceContributionsV1('hj'),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -16775,7 +16804,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
           .toList(growable: false),
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       centerLabel: 'CO with three seats behind',
-      handContributions: _act0BlindsOnlyContributions,
+      handContributions: _act0UnopenedPriceContributionsV1('co'),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
@@ -17239,7 +17268,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
         ],
         highlightedSeatIds: const <String>['hj'],
         centerLabel: 'HJ, unopened pot',
-        handContributions: _act0BlindsOnlyContributions,
+        handContributions: _act0UnopenedPriceContributionsV1('hj'),
         actionTrail: const <Act0ActionTrailItemV1>[
           Act0ActionTrailItemV1(label: 'UTG folds'),
           Act0ActionTrailItemV1(label: 'HJ acts'),
@@ -17630,7 +17659,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       ],
       centerLabel: 'HJ, medium hand',
       activeSeatId: 'hj',
-      handContributions: _act0BlindsOnlyContributions,
+      handContributions: _act0UnopenedPriceContributionsV1('hj'),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -19177,6 +19206,99 @@ const _act0LessonBlinds = [
 const _act0BlindsOnlyContributions = Act0HandContributionsV1(
   throughStreet: PokerStreet.preflop,
   entries: _act0LessonBlinds,
+);
+
+// Starting stacks belong to these authored examples, not the previous driver
+// of the reused preflop table. Only the two forced posts precede this turn.
+Act0HandContributionsV1 _act0UnopenedPriceContributionsV1(String actorSeatId) =>
+    Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {actorSeatId: 100},
+      entries: _act0LessonBlinds,
+    );
+
+// Cash examples without antes. These ledgers record chip movements, including
+// folded blinds. Earlier postflop streets check through unless a bet is listed.
+const _act0LessonWager = Act0ContributionKindV1.wager;
+
+List<Act0ContributionV1> _act0ButtonVsBigBlindPreflopV1(double openBb) => [
+  ..._act0LessonBlinds,
+  Act0ContributionV1(PokerStreet.preflop, 'btn', _act0LessonWager, openBb),
+  Act0ContributionV1(PokerStreet.preflop, 'bb', _act0LessonWager, openBb - 1),
+];
+
+Act0HandContributionsV1 _act0BoardReadingContributionsV1(
+  PokerStreet street, {
+  double openBb = 2.25,
+}) => Act0HandContributionsV1(
+  throughStreet: street,
+  entries: _act0ButtonVsBigBlindPreflopV1(openBb),
+);
+
+// UTG and BTN limp, SB completes, BB checks.
+const _act0FourPlayerLimpedEntries = [
+  ..._act0LessonBlinds,
+  Act0ContributionV1(PokerStreet.preflop, 'utg', _act0LessonWager, 1),
+  Act0ContributionV1(PokerStreet.preflop, 'btn', _act0LessonWager, 1),
+  Act0ContributionV1(PokerStreet.preflop, 'sb', _act0LessonWager, 0.5),
+];
+
+const _act0FourPlayerLimpedPot = Act0HandContributionsV1(
+  throughStreet: PokerStreet.flop,
+  entries: _act0FourPlayerLimpedEntries,
+);
+
+// For the action-order examples UTG is a live player and HJ also limps.
+const _act0FivePlayerPositionPot = Act0HandContributionsV1(
+  throughStreet: PokerStreet.flop,
+  entries: [
+    ..._act0LessonBlinds,
+    Act0ContributionV1(PokerStreet.preflop, 'utg', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'hj', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'btn', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'sb', _act0LessonWager, 0.5),
+  ],
+);
+
+// Only the two compared hands are exposed in these five-way checkdowns.
+const _act0FivePlayerComparisonPot = Act0HandContributionsV1(
+  throughStreet: PokerStreet.river,
+  entries: [
+    ..._act0LessonBlinds,
+    Act0ContributionV1(PokerStreet.preflop, 'hj', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'co', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'btn', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'sb', _act0LessonWager, 0.5),
+  ],
+);
+
+// CO and BTN limp, SB folds and BB checks. On the flop BB checks, CO
+// commits their last 0.75 BB, BTN calls, and BB folds before the runout.
+const _act0HeadsUpShowdownPot = Act0HandContributionsV1(
+  throughStreet: PokerStreet.river,
+  startingStackBbBySeat: {'co': 1.75, 'btn': 100},
+  entries: [
+    ..._act0LessonBlinds,
+    Act0ContributionV1(PokerStreet.preflop, 'co', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.preflop, 'btn', _act0LessonWager, 1),
+    Act0ContributionV1(PokerStreet.flop, 'co', _act0LessonWager, 0.75),
+    Act0ContributionV1(PokerStreet.flop, 'btn', _act0LessonWager, 0.75),
+  ],
+);
+
+// BB folds to BTN's flop bet. The uncalled chip is returned before award.
+final _act0FoldoutPot = Act0HandContributionsV1(
+  throughStreet: PokerStreet.flop,
+  entries: [
+    ..._act0ButtonVsBigBlindPreflopV1(2.25),
+    const Act0ContributionV1(PokerStreet.flop, 'btn', _act0LessonWager, 1),
+    const Act0ContributionV1(
+      PokerStreet.flop,
+      'btn',
+      Act0ContributionKindV1.uncalledReturn,
+      1,
+    ),
+  ],
 );
 
 Act0TableStateV1 _act0BoardLessonTableV1({
