@@ -95,10 +95,10 @@ class Act0AcademyHomeProgressV1 {
 }
 
 /// Club Night Home: one card holds the screen's brass action, then the lesson
-/// to continue, today's goal and the course. No photo under text; Sharky
-/// speaks in coaching moments, not on Home. [Act0AcademyHomeLeafInputV1.mood]
-/// and [Act0AcademyHomeLeafInputV1.backdrop] stay in the input for callers
-/// but are not drawn.
+/// to continue, today's goal and the course. Brass marks only that action;
+/// the backdrop photo is the card's cover above its text, never under it.
+/// Sharky speaks in coaching moments, not on Home, so
+/// [Act0AcademyHomeLeafInputV1.mood] stays in the input but is not drawn.
 class Act0AcademyHomeLeafV1 extends StatelessWidget {
   const Act0AcademyHomeLeafV1({super.key, required this.input});
 
@@ -137,7 +137,7 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
             ],
             if (next != null) ...[
               const SizedBox(height: _T.gapXl),
-              _NextActionCardV1(action: next),
+              _NextActionCardV1(action: next, cover: input.backdrop),
             ],
             if (resume != null && resumeLabel != null) ...[
               const SizedBox(height: _T.gapMd),
@@ -150,10 +150,22 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
             if (input.onStartDailyPractice != null)
               Align(
                 alignment: Alignment.centerLeft,
-                child: Act0ClubButtonsV1.link(
+                child: TextButton(
                   key: const Key('act0_home_daily_practice'),
-                  label: 'Daily practice',
                   onPressed: input.onStartDailyPractice,
+                  style: TextButton.styleFrom(
+                    foregroundColor: _T.text,
+                    minimumSize: const Size(_T.minTouch, _T.minTouch),
+                    textStyle: _T.link,
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Daily practice'),
+                      SizedBox(width: 2),
+                      Icon(Icons.chevron_right_rounded, size: 20),
+                    ],
+                  ),
                 ),
               ),
             const SizedBox(height: _T.gapXl),
@@ -238,46 +250,84 @@ class _HomeHeaderV1 extends StatelessWidget {
 }
 
 class _NextActionCardV1 extends StatelessWidget {
-  const _NextActionCardV1({required this.action});
+  const _NextActionCardV1({required this.action, this.cover});
+
+  final Act0AcademyHomeNextActionV1 action;
+  final ImageProvider? cover;
+
+  @override
+  Widget build(BuildContext context) {
+    final image = cover;
+    return Act0ClubCardV1(
+      key: const Key('act0_academy_home_leaf_next_card'),
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (image != null)
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(_T.radiusCard - 1),
+              ),
+              child: SizedBox(
+                height: 148,
+                child: Image(
+                  key: const Key('act0_academy_home_leaf_cover'),
+                  image: image,
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0.3, 0.1),
+                  excludeFromSemantics: true,
+                  errorBuilder: (_, _, _) => const ColoredBox(color: _T.raised),
+                ),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(_T.cardPadding),
+            child: _NextActionBodyV1(action: action),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NextActionBodyV1 extends StatelessWidget {
+  const _NextActionBodyV1({required this.action});
 
   final Act0AcademyHomeNextActionV1 action;
 
   @override
   Widget build(BuildContext context) {
-    return Act0ClubCardV1(
-      key: const Key('act0_academy_home_leaf_next_card'),
-      emphasized: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Act0ClubTagV1(label: 'Your next step'),
-          const SizedBox(height: _T.gapMd),
-          Text(
-            action.title,
-            key: const Key('act0_academy_home_leaf_next_title'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: _T.question,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Your next step', style: _T.sectionLabel),
+        const SizedBox(height: _T.gapXs),
+        Text(
+          action.title,
+          key: const Key('act0_academy_home_leaf_next_title'),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: _T.question,
+        ),
+        const SizedBox(height: _T.gapXs),
+        Text(
+          action.subtitle,
+          key: const Key('act0_academy_home_leaf_next_subtitle'),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: _T.secondary,
+        ),
+        const SizedBox(height: _T.gapLg),
+        SizedBox(
+          width: double.infinity,
+          child: Act0ClubButtonsV1.primary(
+            key: const Key('act0_academy_home_leaf_cta'),
+            label: action.ctaLabel,
+            onPressed: action.onPressed,
           ),
-          const SizedBox(height: _T.gapXs),
-          Text(
-            action.subtitle,
-            key: const Key('act0_academy_home_leaf_next_subtitle'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: _T.secondary,
-          ),
-          const SizedBox(height: _T.gapLg),
-          SizedBox(
-            width: double.infinity,
-            child: Act0ClubButtonsV1.primary(
-              key: const Key('act0_academy_home_leaf_cta'),
-              label: action.ctaLabel,
-              onPressed: action.onPressed,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -441,10 +491,10 @@ class _CycleStageV1 extends StatelessWidget {
               width: _T.minTouch,
               height: _T.minTouch,
               decoration: BoxDecoration(
-                color: isCurrent ? _T.brassSoft : _T.raised,
+                color: _T.raised,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isCurrent ? _T.brass : _T.hairlineStrong,
+                  color: isCurrent ? _T.text : _T.hairlineStrong,
                   width: isCurrent ? 1.5 : 1,
                 ),
               ),
@@ -454,7 +504,7 @@ class _CycleStageV1 extends StatelessWidget {
                     ? Key('act0_academy_home_leaf_active_stage_$number')
                     : null,
                 kind: glyph,
-                color: isCurrent ? _T.brass : _T.caption,
+                color: isCurrent ? _T.text : _T.caption,
                 size: 22,
               ),
             ),
@@ -514,10 +564,7 @@ class _CourseProgressCardV1 extends StatelessWidget {
                 Text(
                   '${p.percent}%',
                   key: const Key('act0_academy_home_leaf_percent'),
-                  style: _T.headline.copyWith(
-                    color: _T.brass,
-                    fontFeatures: _T.tabular,
-                  ),
+                  style: _T.headline.copyWith(fontFeatures: _T.tabular),
                 ),
             ],
           ),
@@ -545,7 +592,7 @@ class _CourseProgressCardV1 extends StatelessWidget {
                 semanticsLabel: p == null ? null : 'Course progress',
                 semanticsValue: p == null ? null : '${p.percent}%',
                 backgroundColor: _T.track,
-                color: _T.brass,
+                color: _T.text,
               ),
             ),
           ),

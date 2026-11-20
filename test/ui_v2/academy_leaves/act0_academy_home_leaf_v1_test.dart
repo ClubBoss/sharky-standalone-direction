@@ -170,20 +170,37 @@ void main() {
     expect(find.text('4 days'), findsOneWidget);
   });
 
-  testWidgets('Club Night draws no photo under Home text', (tester) async {
-    await _pumpHome(tester, _input(backdrop: MemoryImage(_pixelPng)));
+  testWidgets('the photo is the next-step cover, above its text', (
+    tester,
+  ) async {
+    Act0AcademyHomeNextActionV1 next() => Act0AcademyHomeNextActionV1(
+      title: 'Hand rankings 2',
+      subtitle: 'Step 3 of 6',
+      ctaLabel: 'Continue',
+      onPressed: () {},
+    );
+    await _pumpHome(
+      tester,
+      _input(nextAction: next(), backdrop: MemoryImage(_pixelPng)),
+    );
+    final cover = find.byKey(const Key('act0_academy_home_leaf_cover'));
+    expect(cover, findsOneWidget);
+    // Never under text: the cover ends before the title starts.
     expect(
-      find.byKey(const Key('act0_academy_leaf_backdrop_image')),
-      findsNothing,
+      tester.getRect(cover).bottom,
+      lessThanOrEqualTo(tester.getRect(find.text('Hand rankings 2')).top),
     );
     expect(
-      find.byKey(const Key('act0_academy_leaf_backdrop_fallback')),
+      find.byKey(const Key('act0_academy_leaf_backdrop_image')),
       findsNothing,
     );
     final wall = tester.widget<ColoredBox>(
       find.byKey(const Key('act0_academy_home_leaf')),
     );
     expect(wall.color, Act0ClubNightTokensV1.wall);
+
+    await _pumpHome(tester, _input(nextAction: next()));
+    expect(find.byKey(const Key('act0_academy_home_leaf_cover')), findsNothing);
   });
 
   testWidgets('the next step holds the one brass action on Home', (
