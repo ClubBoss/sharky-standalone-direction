@@ -11,7 +11,9 @@ import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_components_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_launch_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
@@ -569,77 +571,80 @@ class NonBlankFallbackSurfaceV1 extends StatelessWidget {
   final String? retryLabel;
   final VoidCallback? onRetry;
 
+  /// Club Night load error (map V0, R19): never a dead end. Sharky, a plain
+  /// title and message, Retry as the one brass action and a way back.
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        key: const Key('non_blank_fallback_surface_v1'),
-        color: const Color(0xFF0E1624),
-        alignment: Alignment.center,
-        child: SafeArea(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF13233D),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF3A537A)),
+    final canRetry = onRetry != null && retryLabel != null;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: Act0ClubNightTokensV1.wall,
+        body: Act0ClubTextScaleV1(
+          child: Container(
+            key: const Key('non_blank_fallback_surface_v1'),
+            color: Act0ClubNightTokensV1.wall,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  Act0ClubNightTokensV1.screenGutter,
+                  0,
+                  Act0ClubNightTokensV1.screenGutter,
+                  Act0ClubNightTokensV1.gapLg,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Color(0xFF98B4DE),
-                        size: 22,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        message,
-                        style: const TextStyle(
-                          color: Color(0xFFCDD8EA),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        children: [
-                          if (onRetry != null && retryLabel != null) ...[
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: onRetry,
-                                child: Text(retryLabel!),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const ExcludeSemantics(
+                                child: Act0ClubSharkyRingV1(
+                                  moment: Act0ClubSharkyMomentV1.hint,
+                                  size: 72,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.of(context).maybePop();
-                              },
-                              child: const Text('Back'),
-                            ),
+                              const SizedBox(
+                                height: Act0ClubNightTokensV1.gapLg,
+                              ),
+                              Semantics(
+                                header: true,
+                                child: Text(
+                                  title,
+                                  textAlign: TextAlign.center,
+                                  style: Act0ClubNightTokensV1.title,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: Act0ClubNightTokensV1.gapSm,
+                              ),
+                              Text(
+                                message,
+                                textAlign: TextAlign.center,
+                                style: Act0ClubNightTokensV1.body.copyWith(
+                                  color: Act0ClubNightTokensV1.text2,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    if (canRetry)
+                      Act0ClubButtonsV1.primary(
+                        label: retryLabel!,
+                        onPressed: onRetry,
+                      ),
+                    const SizedBox(height: Act0ClubNightTokensV1.gapXs),
+                    Act0ClubButtonsV1.link(
+                      label: 'Back',
+                      onPressed: () {
+                        Navigator.of(context).maybePop();
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
