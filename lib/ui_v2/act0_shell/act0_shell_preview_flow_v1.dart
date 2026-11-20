@@ -46,16 +46,20 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     bool awardXp = true,
   }) {
     if (_diagnosticLearningEntryV1 != null) return;
-    final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
-    _skippedTaskIds.remove(_selectedTaskId);
-    _visibleSkippedTaskIds.remove(_selectedTaskId);
-    _completedTaskIds.add(_selectedTaskId);
+    final taskId = _selectedTaskId;
+    final alreadyCompleted = !_completedTaskIds.add(taskId);
+    _skippedTaskIds.remove(taskId);
+    _visibleSkippedTaskIds.remove(taskId);
     if (!alreadyCompleted) {
-      if (awardXp) {
-        _earnedXp += selectedTask.rewardXp;
-        _lessonRunXp += selectedTask.rewardXp;
-      }
       _retentionSequence += 1;
+      if (!awardXp && selectedTask.rewardXp > 0) {
+        _tasksWithDeferredXpV1.add(taskId);
+      }
+    }
+    if (awardXp &&
+        (!alreadyCompleted || _tasksWithDeferredXpV1.remove(taskId))) {
+      _earnedXp += selectedTask.rewardXp;
+      _lessonRunXp += selectedTask.rewardXp;
     }
     _refreshRetentionMemoryStatusesV1();
     final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);

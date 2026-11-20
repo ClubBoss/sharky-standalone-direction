@@ -1447,6 +1447,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _learnPopupTaskId;
   late Set<String> _completedLessonIds;
   late Set<String> _completedTaskIds;
+  final Set<String> _tasksWithDeferredXpV1 = <String>{};
   final Set<String> _skippedTaskIds = <String>{};
   final Set<String> _visibleSkippedTaskIds = <String>{};
   bool _showWorldMenu = false;
@@ -2870,7 +2871,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         openedAsSpacedReview ||
             _diagnosticLearningEntryV1 != null ||
             playSelectedTask == null ||
-            playTaskAlreadyCompleted
+            (playTaskAlreadyCompleted &&
+                !_tasksWithDeferredXpV1.contains(playSelectedTask.taskId))
         ? 0
         : playSelectedTask.rewardXp;
     final playRunner = isPlayRunner
@@ -5680,6 +5682,7 @@ class _Act0PendingDecisionAssistanceV1 {
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
+    this.tasksWithDeferredXp = const {},
     required this.skippedTaskIds,
     required this.completedLessonIds,
     required this.selectedWorldId,
@@ -5731,6 +5734,7 @@ class _Act0PersistedProgressV1 {
 
   final int schemaVersion;
   final Set<String> completedTaskIds;
+  final Set<String> tasksWithDeferredXp;
   final Set<String> skippedTaskIds;
   final Set<String> completedLessonIds;
   final String selectedWorldId;
@@ -5793,6 +5797,8 @@ class _Act0PersistedProgressV1 {
       if (suppressLegacyRecheckAfterRecovery)
         'suppressLegacyRecheckAfterRecovery': true,
       'completedTaskIds': sortedTaskIds,
+      if (tasksWithDeferredXp.isNotEmpty)
+        'tasksWithDeferredXp': tasksWithDeferredXp.toList()..sort(),
       if (openedSpacedReviewTaskIds.isNotEmpty)
         'openedSpacedReviewTaskIds': openedSpacedReviewTaskIds.toList()..sort(),
       'skippedTaskIds': sortedSkippedTaskIds,
@@ -6041,6 +6047,11 @@ class _Act0PersistedProgressV1 {
       suppressLegacyRecheckAfterRecovery:
           map['suppressLegacyRecheckAfterRecovery'] == true,
       completedTaskIds: completedTaskIds,
+      // Older snapshots treated completed tasks as paid. Only explicit
+      // deferred entries may award XP on a later independent attempt.
+      tasksWithDeferredXp: _stringSet(
+        map['tasksWithDeferredXp'],
+      ).intersection(completedTaskIds),
       skippedTaskIds: skippedTaskIds,
       completedLessonIds: completedLessonIds,
       selectedWorldId: selectedWorldId,

@@ -16,6 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -620,7 +621,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('helped course answers do not earn independent XP', (
+  testWidgets('an independent replay earns deferred XP once after restart', (
     tester,
   ) async {
     await _openPendingHelpDecision(tester);
@@ -630,8 +631,37 @@ void main() {
     await _tap(tester, 'act0_shell_theory_recall_close_cta');
     await _choose(tester, 'two_three_six');
     await _tap(tester, 'act0_shell_feedback_continue_cta');
-    final saved = await _saved(tester);
-    expect(saved['earnedXp'], initial['earnedXp']);
+    final helped = await _saved(tester);
+    expect(helped['earnedXp'], initial['earnedXp']);
+    expect(helped['completedTaskIds'], contains(_source));
+    expect(helped['tasksWithDeferredXp'], contains(_source));
+
+    await _remount(tester);
+    await _replayTableReadForXpV1(tester);
+    final independentlyEarned = await _saved(tester);
+    final reward = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .first
+        .courseTaskList
+        .singleWhere((task) => task.taskId == _source)
+        .rewardXp;
+    expect(
+      independentlyEarned['earnedXp'],
+      (initial['earnedXp'] as int) + reward,
+    );
+    expect(independentlyEarned['tasksWithDeferredXp'], isNull);
+
+    await _remount(tester);
+    await _replayTableReadForXpV1(tester);
+    expect((await _saved(tester))['earnedXp'], independentlyEarned['earnedXp']);
+
+    final legacyPaid = Map<String, dynamic>.from(helped)
+      ..remove('tasksWithDeferredXp')
+      ..['earnedXp'] = independentlyEarned['earnedXp'];
+    await _replaceCheckpointFixture(tester, legacyPaid);
+    await _replayTableReadForXpV1(tester);
+    expect((await _saved(tester))['earnedXp'], legacyPaid['earnedXp']);
     expect(tester.takeException(), isNull);
   });
 
@@ -2702,6 +2732,21 @@ Future<void> _advanceOrdinaryW1ToRank(WidgetTester tester) async {
     await _tap(tester, 'act0_shell_current_mission_cta');
   }
   fail('Ordinary W1 prefix did not reach the authored rank repair source.');
+}
+
+Future<void> _replayTableReadForXpV1(WidgetTester tester) async {
+  await tester.tap(find.text('Learn').last);
+  await tester.pumpAndSettle();
+  final world = Act0ShellStateV1.sample.worldById('world_1');
+  final lesson = world.lessons.first;
+  tester
+      .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+      .onStartTask(lesson.lessonId, _source);
+  await tester.pumpAndSettle();
+  expect(_runner(tester).selectedTaskId, _source);
+  await _advanceToPrompt(tester);
+  await _choose(tester, 'two_three_six');
+  await _tap(tester, 'act0_shell_feedback_continue_cta');
 }
 
 Future<void> _foundationReplayTheory(

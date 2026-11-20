@@ -183,6 +183,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         : parsed.durableRetentionHistory;
     _setStateV1(() {
       _completedTaskIds = completedTaskIds;
+      _tasksWithDeferredXpV1
+        ..clear()
+        ..addAll(parsed.tasksWithDeferredXp.intersection(completedTaskIds));
       _diagnosticLearningEntryV1 = null;
       _diagnosticLearningReturnV1 = null;
       _spacedReviewReturnV1 = null;
@@ -907,6 +910,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final snapshot = _Act0PersistedProgressV1(
       suppressLegacyRecheckAfterRecovery: _suppressLegacyRecheckAfterRecoveryV1,
       completedTaskIds: _completedTaskIds,
+      tasksWithDeferredXp: _tasksWithDeferredXpV1,
       skippedTaskIds: _skippedTaskIds,
       completedLessonIds: _completedLessonIds,
       selectedWorldId: returnSelection?.worldId ?? _selectedWorldId,
