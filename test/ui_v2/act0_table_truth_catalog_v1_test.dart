@@ -33,6 +33,32 @@ void main() {
 
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
+    final middleWorldTasks = Act0ShellStateV1.sample.worlds
+        .where((world) => world.worldNumber >= 5 && world.worldNumber <= 8)
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .map((task) => task.taskId)
+        .toSet();
+    for (final (rule, count) in [
+      ('D2.pot_feasibility', 99),
+      ('D3.to_call_completeness', 19),
+    ]) {
+      final proof = rows
+          .where(
+            (row) =>
+                middleWorldTasks.contains(row.taskId) && row.invariant == rule,
+          )
+          .toList();
+      expect(
+        proof.map((row) => row.taskId).toSet(),
+        hasLength(count),
+        reason: rule,
+      );
+      expect(
+        proof.where((row) => row.result != 'PASS').map((row) => row.key),
+        isEmpty,
+      );
+    }
     for (final id in [
       'w11_trigger_small_price_continue',
       'w11_trigger_bad_price_fold',

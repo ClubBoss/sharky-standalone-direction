@@ -18834,6 +18834,21 @@ List<Act0CardStateV1> _act0LessonCardsV1(String cards) => [
 
 // BTN opens, BB defends, and the small blind stays in the pot. Earlier
 // streets either check through or close with BTN betting and BB calling.
+const _act0LessonBlinds = [
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'sb',
+    Act0ContributionKindV1.blind,
+    .5,
+  ),
+  Act0ContributionV1(
+    PokerStreet.preflop,
+    'bb',
+    Act0ContributionKindV1.blind,
+    1,
+  ),
+];
+
 Act0TableStateV1 _act0BoardLessonTableV1({
   required List<Act0CardStateV1> heroCards,
   required List<Act0CardStateV1> boardCards,
@@ -18846,13 +18861,17 @@ Act0TableStateV1 _act0BoardLessonTableV1({
   num? bbBehindBb,
   List<String> highlightedCardIds = const [],
 }) {
-  final street = switch (boardCards.length) {
-    3 => 'Flop',
-    4 => 'Turn',
-    5 => 'River',
+  final bettingStreet = switch (boardCards.length) {
+    3 => PokerStreet.flop,
+    4 => PokerStreet.turn,
+    5 => PokerStreet.river,
     _ => throw ArgumentError.value(boardCards, 'boardCards'),
   };
+  final street = pokerStreetToString(bettingStreet);
   final collectedPerPlayer = openBb + flopBetBb + turnBetBb;
+  final heroBehind = heroBehindBb ?? 100 - collectedPerPlayer;
+  final bigBlindBehind = bbBehindBb ?? 100 - collectedPerPlayer - facingBb;
+  const wager = Act0ContributionKindV1.wager;
   const folds = {'utg', 'hj', 'co', 'sb'};
   return Act0TableStateV1(
     scope: Act0TableScopeV1.playedHand,
@@ -18867,6 +18886,58 @@ Act0TableStateV1 _act0BoardLessonTableV1({
     potLabel: 'Pot ${_act0BbLabelV1(2 * collectedPerPlayer + 0.5 + facingBb)}',
     toCallLabel: facingBb > 0 ? 'To call ${_act0BbLabelV1(facingBb)}' : '',
     centerLabel: centerLabel,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: bettingStreet,
+      startingStackBbBySeat: {
+        'btn': (heroBehind + collectedPerPlayer).toDouble(),
+        'bb': (bigBlindBehind + collectedPerPlayer + facingBb).toDouble(),
+      },
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          wager,
+          openBb.toDouble(),
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          wager,
+          (openBb - 1).toDouble(),
+        ),
+        if (boardCards.length >= 4 && flopBetBb > 0) ...[
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'btn',
+            wager,
+            flopBetBb.toDouble(),
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'bb',
+            wager,
+            flopBetBb.toDouble(),
+          ),
+        ],
+        if (boardCards.length == 5 && turnBetBb > 0) ...[
+          Act0ContributionV1(
+            PokerStreet.turn,
+            'btn',
+            wager,
+            turnBetBb.toDouble(),
+          ),
+          Act0ContributionV1(
+            PokerStreet.turn,
+            'bb',
+            wager,
+            turnBetBb.toDouble(),
+          ),
+        ],
+        if (facingBb > 0)
+          Act0ContributionV1(bettingStreet, 'bb', wager, facingBb.toDouble()),
+      ],
+    ),
     autoPlayHistory: false,
     highlightedSeatIds: const [],
     highlightedCardIds: highlightedCardIds,
@@ -18917,8 +18988,8 @@ Act0TableStateV1 _act0BoardLessonTableV1({
           isLastAggressor: seat.seatId == 'bb' && facingBb > 0,
           clearCommitment: true,
           stackLabel: _act0BbLabelV1(switch (seat.seatId) {
-            'btn' => heroBehindBb ?? 100 - collectedPerPlayer,
-            'bb' => bbBehindBb ?? 100 - collectedPerPlayer - facingBb,
+            'btn' => heroBehind,
+            'bb' => bigBlindBehind,
             'sb' => 99.5,
             _ => 100,
           }),
@@ -18959,6 +19030,11 @@ Act0TableStateV1 _act0UnopenedLessonTableV1({
     potLabel: 'Pot 1.5 BB',
     toCallLabel: 'To call 1 BB',
     centerLabel: centerLabel,
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'utg': 100},
+      entries: _act0LessonBlinds,
+    ),
     autoPlayHistory: false,
     highlightedSeatIds: const [],
     highlightedCardIds: const [],
@@ -22073,6 +22149,22 @@ Act0TableStateV1 _act0CoOpenLessonTableV1({
     opener: 'co',
   );
   return table.copyWith(
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {
+        'btn': startingDepthBb.toDouble(),
+        'co': startingDepthBb.toDouble(),
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+      ],
+    ),
     actionTrail: [
       for (final item in table.actionTrail)
         if (item.label == 'CO opens 2.5 BB')
