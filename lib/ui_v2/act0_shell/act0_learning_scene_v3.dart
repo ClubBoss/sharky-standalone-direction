@@ -218,53 +218,57 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            if (showSpokenSurface) ...[
-              Text(
-                'Sharky',
-                key: const Key('act0_learning_scene_v3_coach_owner'),
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: tone,
-                  fontSize: 11.4,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 0.1,
+        if (eyebrow.isNotEmpty || (progressLabel ?? '').trim().isNotEmpty) ...[
+          Row(
+            children: [
+              if (showSpokenSurface) ...[
+                Text(
+                  'Sharky',
+                  key: const Key('act0_learning_scene_v3_coach_owner'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: tone,
+                    fontSize: 11.4,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.1,
+                  ),
                 ),
+                const SizedBox(width: 7),
+              ],
+              Expanded(
+                child: eyebrow.isEmpty
+                    ? const SizedBox.shrink()
+                    : Text(
+                        eyebrow,
+                        key: const Key('act0_integrated_scene_purpose'),
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color:
+                              showSpokenSurface ||
+                                  phase == Act0LearningScenePhaseV3.tableTask
+                              ? Act0ShellTokensV1.textMuted
+                              : tone,
+                          fontSize: showSpokenSurface ? 8.8 : 10.2,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: showSpokenSurface ? 0.35 : 0.65,
+                        ),
+                      ),
               ),
-              const SizedBox(width: 7),
+              if ((progressLabel ?? '').trim().isNotEmpty)
+                Text(
+                  progressLabel!,
+                  key: const Key('act0_learning_scene_v3_progress'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontSize: 9.4,
+                    letterSpacing: 0,
+                  ),
+                ),
             ],
-            Expanded(
-              child: Text(
-                eyebrow,
-                key: const Key('act0_integrated_scene_purpose'),
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                style: Act0ShellTokensV1.label.copyWith(
-                  color:
-                      showSpokenSurface ||
-                          phase == Act0LearningScenePhaseV3.tableTask
-                      ? Act0ShellTokensV1.textMuted
-                      : tone,
-                  fontSize: showSpokenSurface ? 8.8 : 10.2,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: showSpokenSurface ? 0.35 : 0.65,
-                ),
-              ),
-            ),
-            if ((progressLabel ?? '').trim().isNotEmpty)
-              Text(
-                progressLabel!,
-                key: const Key('act0_learning_scene_v3_progress'),
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                  fontSize: 9.4,
-                  letterSpacing: 0,
-                ),
-              ),
-          ],
-        ),
-        SizedBox(height: showSpokenSurface ? 3 : 2),
+          ),
+          SizedBox(height: showSpokenSurface ? 3 : 2),
+        ],
         if (hasReason) ...[
           Text(
             support,
@@ -423,7 +427,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     return Semantics(
       container: true,
       explicitChildNodes: focusPointsUp,
-      label: focusPointsUp ? null : '$eyebrow. $headline. $support',
+      label: focusPointsUp
+          ? null
+          : [
+              eyebrow,
+              headline,
+              support,
+            ].where((line) => line.trim().isNotEmpty).join('. '),
       child: Container(
         key: const Key('act0_wave_a_learning_context'),
         width: double.infinity,

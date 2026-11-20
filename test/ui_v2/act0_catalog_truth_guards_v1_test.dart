@@ -457,8 +457,9 @@ void main() {
           .widgetList<Text>(support)
           .map((text) => text.data ?? '');
       if (task.taskId == 'button_advantage_button_vs_cutoff') {
-        expect(support, findsOneWidget);
-        final bounds = tester.getRect(support);
+        final question = find.byKey(const Key('act0_integrated_scene_prompt'));
+        expect(question, findsOneWidget);
+        final bounds = tester.getRect(question);
         expect(bounds.height, greaterThan(0));
         expect((Offset.zero & const Size(393, 852)).overlaps(bounds), isTrue);
       }
