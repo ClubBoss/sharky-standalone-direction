@@ -14426,6 +14426,36 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
     highlightedCardIds: highlightedCardIds,
     heroCards: heroCards,
     boardCards: boardCards,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.river,
+      entries: [
+        ..._act0LessonBlinds,
+        const Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        const Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        for (final (street, bet) in [
+          (PokerStreet.flop, flopBetBb),
+          (PokerStreet.turn, turnBetBb),
+        ])
+          if (bet > 0)
+            for (final seat in ['co', 'btn'])
+              Act0ContributionV1(
+                street,
+                seat,
+                Act0ContributionKindV1.wager,
+                bet.toDouble(),
+              ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),

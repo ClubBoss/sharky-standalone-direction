@@ -40,7 +40,7 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, proved, missing) in [
-      ('D2.pot_feasibility', 108, 30),
+      ('D2.pot_feasibility', 110, 28),
       ('D3.to_call_completeness', 55, 11),
     ]) {
       final proof = rows.where(
