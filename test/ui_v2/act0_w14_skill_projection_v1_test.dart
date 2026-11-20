@@ -8,7 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 final _worlds = Act0ShellStateV1.sample.worlds;
 final _tasks = [
   for (final world in _worlds.where(
-    (w) => w.worldNumber >= 1 && w.worldNumber <= 4,
+    (w) => w.worldNumber >= 1 && w.worldNumber <= 6,
   ))
     for (final lesson in world.lessons)
       for (final task in lesson.taskList)
@@ -50,11 +50,13 @@ Act0LearningEvidenceRecordV1 _answer(
   );
 }
 
-List<Act0W14SkillStateV1> _states(List<Act0LearningEvidenceRecordV1> records) =>
-    act0W14SkillStatesV1(
-      worlds: _worlds,
-      history: Act0LearningEvidenceHistoryV1(records: records),
-    );
+List<Act0W14SkillStateV1> _states(
+  List<Act0LearningEvidenceRecordV1> records, {
+  List<Act0WorldCardV1>? worlds,
+}) => act0W14SkillStatesV1(
+  worlds: worlds ?? _worlds,
+  history: Act0LearningEvidenceHistoryV1(records: records),
+);
 
 List<Object> _snapshot(List<Act0W14SkillStateV1> states) => [
   for (final s in states)
@@ -82,14 +84,20 @@ void main() {
   test(
     'all 182 W1-W4 tasks have explicit curriculum topics and independent evidence',
     () {
-      expect(_tasks.length, 182);
+      final foundationWorlds = _worlds
+          .where((w) => w.worldNumber <= 4)
+          .toList();
+      final tasks = _tasks
+          .where((item) => item.world.worldNumber <= 4)
+          .toList();
+      expect(tasks.length, 182);
       expect(
-        _tasks.map((s) => s.lesson.lessonId).toSet(),
+        tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
       );
       final records = <Act0LearningEvidenceRecordV1>[];
-      for (var i = 0; i < _tasks.length; i++) {
-        final source = _tasks[i];
+      for (var i = 0; i < tasks.length; i++) {
+        final source = tasks[i];
         final labels =
             const {
               'positions_theory',
@@ -100,7 +108,7 @@ void main() {
             ? const ['Position play']
             : act0W14LessonSkillsV1[source.lesson.lessonId]!;
         expect(labels, isNotEmpty, reason: source.task.taskId);
-        final states = _states([_answer(i, i)]);
+        final states = _states([_answer(i, i)], worlds: foundationWorlds);
         expect(
           states
               .where((s) => s.independentTasks > 0)
@@ -111,7 +119,7 @@ void main() {
         );
         records.add(_answer(i, i));
       }
-      final states = _states(records);
+      final states = _states(records, worlds: foundationWorlds);
       expect(states.length, 6);
       for (final state in states) {
         expect(state.stateLabel, 'Answers without help');
@@ -162,6 +170,74 @@ void main() {
     },
   );
 
+  test('every W5–W6 task projects to its authored topic', () {
+    const boardLessons = {
+      'board_texture_basics',
+      'connected_boards',
+      'flush_draws',
+      'straight_draws',
+      'outs_improvement',
+      'turn_river_changes',
+    };
+    const rangeLessons = {
+      'range_bucket_basics',
+      'range_board_fit',
+      'range_pressure_lines',
+      'range_combo_counts',
+      'range_thinking_checkpoint',
+    };
+    const pricedOuts = {
+      'outs_improvement_w5_table_outs_flush_transfer',
+      'outs_improvement_w5_table_outs_straight_transfer',
+    };
+    final lessons = <String>{};
+    for (final (i, source) in _tasks.indexed) {
+      if (source.world.worldNumber < 5) continue;
+      lessons.add(source.lesson.lessonId);
+      expect(
+        _states([_answer(i, i + 1)])
+            .where((state) => state.independentTasks > 0)
+            .map((state) => state.label)
+            .toSet(),
+        {
+          if (boardLessons.contains(source.lesson.lessonId)) 'Board reading',
+          if (rangeLessons.contains(source.lesson.lessonId)) 'Range reading',
+          if (pricedOuts.contains(source.task.taskId)) 'Betting decisions',
+        },
+        reason: source.task.taskId,
+      );
+    }
+    expect(lessons, {...boardLessons, ...rangeLessons});
+  });
+
+  test('saved W6 help and stale answers cannot clear a miss', () {
+    final index = _tasks.indexWhere(
+      (item) => item.task.taskId == 'w6_ak_combos',
+    );
+    expect(index, isNonNegative);
+    final history = Act0LearningEvidenceHistoryV1(
+      records: [
+        _answer(index, 1, correct: false),
+        _answer(index, 2, assistance: Act0DecisionAssistanceV1.quickHint),
+        _answer(index, 3, fingerprint: 'older-content'),
+      ],
+    );
+    final restored = Act0LearningEvidenceHistoryV1.tryParseStorageString(
+      history.toStorageString(),
+    )!;
+    Act0W14SkillStateV1 range(List<Act0LearningEvidenceRecordV1> records) =>
+        _states(records).singleWhere((state) => state.label == 'Range reading');
+    final helped = range(restored.records);
+    expect(helped.answeredTasks, 1);
+    expect(helped.independentTasks, 0);
+    expect(helped.helpedOrUnverifiedTasks, 1);
+    expect(helped.tasksToRevisit, 1);
+    final retried = range([...restored.records, _answer(index, 4)]);
+    expect(retried.answeredTasks, 1);
+    expect(retried.independentTasks, 1);
+    expect(retried.tasksToRevisit, 0);
+  });
+
   test(
     'legacy, changed-source and helped answers never become independent proof',
     () {
@@ -205,15 +281,16 @@ void main() {
     'saved journal roundtrip preserves states across all worlds without double counting anchors',
     () {
       final records = [
-        for (var i = 0; i < _tasks.length; i++)
-          _answer(
-            i,
-            i,
-            correct: i % 3 != 0,
-            assistance: i % 3 == 1
-                ? Act0DecisionAssistanceV1.quickHint
-                : Act0DecisionAssistanceV1.none,
-          ),
+        for (final (i, task) in _tasks.indexed)
+          if (task.world.worldNumber <= 4)
+            _answer(
+              i,
+              i,
+              correct: i % 3 != 0,
+              assistance: i % 3 == 1
+                  ? Act0DecisionAssistanceV1.quickHint
+                  : Act0DecisionAssistanceV1.none,
+            ),
       ];
       final original = Act0LearningEvidenceHistoryV1(
         records: records,
