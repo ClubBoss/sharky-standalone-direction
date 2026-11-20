@@ -623,10 +623,8 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
     final subtitle = act0AcademyWorldSubtitleV1(context, widget.world);
     final previousWorld = _worldBeforeV1(widget.worlds, widget.world);
     final detailText = switch (widget.world.status) {
-      Act0WorldStateV1.completed => act0AcademyProgressLabelV1(
-        context,
-        widget.world.progressLabel,
-      ),
+      Act0WorldStateV1.completed || Act0WorldStateV1.passedByRulesCheck =>
+        act0AcademyProgressLabelV1(context, widget.world.progressLabel),
       Act0WorldStateV1.current => act0AcademyProgressLabelV1(
         context,
         widget.world.progressLabel,
@@ -840,13 +838,15 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
     final color = progressionLocked
         ? Act0AcademyDesignTokensV1.needsReviewFg
         : switch (world.status) {
-            Act0WorldStateV1.completed => Act0AcademyDesignTokensV1.focus,
+            Act0WorldStateV1.completed || Act0WorldStateV1.passedByRulesCheck =>
+              Act0AcademyDesignTokensV1.focus,
             Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
             Act0WorldStateV1.locked => Act0AcademyDesignTokensV1.inkMuted,
           };
     final worldTitle = act0AcademyWorldTitleV1(context, world);
     final worldSubtitle = act0AcademyWorldSubtitleV1(context, world);
     final stateLabel = switch (world.status) {
+      Act0WorldStateV1.passedByRulesCheck => 'Skipped by rules check',
       Act0WorldStateV1.completed => _learnCopyV1(
         context,
         en: 'Cleared',

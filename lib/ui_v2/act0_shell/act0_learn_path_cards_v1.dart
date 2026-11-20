@@ -299,7 +299,8 @@ class _PathCardV1 extends StatelessWidget {
     final completedAccent = Act0ShellTokensV1.primary;
     final icon = switch (lesson.state) {
       Act0LessonStateV1.completed => Icons.check_rounded,
-      Act0LessonStateV1.current => Icons.play_arrow_rounded,
+      Act0LessonStateV1.current ||
+      Act0LessonStateV1.available => Icons.play_arrow_rounded,
       Act0LessonStateV1.locked => Icons.lock_rounded,
     };
     final completedSteps = lesson.courseTaskList
@@ -759,7 +760,8 @@ class _PathCardV1 extends StatelessWidget {
 Color _stateColor(Act0LessonStateV1 state) {
   return switch (state) {
     Act0LessonStateV1.completed => Act0ShellTokensV1.primary,
-    Act0LessonStateV1.current => Act0ShellTokensV1.primary,
+    Act0LessonStateV1.current ||
+    Act0LessonStateV1.available => Act0ShellTokensV1.primary,
     Act0LessonStateV1.locked => Act0ShellTokensV1.textDim,
   };
 }
@@ -938,7 +940,8 @@ IconData _stepIcon(Act0LessonStepKindV1 kind) {
 
 Color _worldStateColor(Act0WorldStateV1 state) {
   return switch (state) {
-    Act0WorldStateV1.completed => Act0ShellTokensV1.primary,
+    Act0WorldStateV1.completed ||
+    Act0WorldStateV1.passedByRulesCheck => Act0ShellTokensV1.primary,
     Act0WorldStateV1.current => Act0ShellTokensV1.primary,
     Act0WorldStateV1.locked => Act0ShellTokensV1.textDim,
   };

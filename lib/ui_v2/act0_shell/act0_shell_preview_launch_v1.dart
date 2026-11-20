@@ -548,6 +548,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
         nextLesson == null
             ? 'On clear: move into Play and lock the pattern in.'
             : 'On clear: unlock ${nextLesson.title}.',
+      Act0LessonStateV1.available => 'Open for practice.',
       Act0LessonStateV1.locked => 'Opens after the current lesson is cleared.',
     };
   }

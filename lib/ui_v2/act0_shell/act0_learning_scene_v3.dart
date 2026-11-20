@@ -142,6 +142,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.headline,
     required this.support,
     this.scrollSupport = false,
+    this.showCoach = true,
     this.focusPointsUp = false,
     this.focusLabel,
     this.progressLabel,
@@ -161,6 +162,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   final String support;
   // Opt in only for complete source-owned model premises, never answer hints.
   final bool scrollSupport;
+  final bool showCoach;
   final bool focusPointsUp;
   final String? focusLabel;
   final String? progressLabel;
@@ -197,7 +199,8 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
       Act0LearningScenePhaseV3.theory ||
       Act0LearningScenePhaseV3.tableTask => null,
     };
-    final showSpokenSurface = feedbackRingTone != null && isEvidenceBacked;
+    final showSpokenSurface =
+        showCoach && feedbackRingTone != null && isEvidenceBacked;
     final compactFeedback = focusPointsUp && feedbackRingTone != null;
     final hasReason = compactFeedback && support.trim().isNotEmpty;
     final prompt = Text(
@@ -389,7 +392,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     final guideBody = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (feedbackRingTone != null) ...[
+        if (showCoach && feedbackRingTone != null) ...[
           ExcludeSemantics(
             child: Container(
               key: const Key('act0_shell_learning_scene_sharky_avatar'),

@@ -152,7 +152,7 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();
       await tester.runAsync(() => _pendingWrites().flush());
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Practice').last);
       await tester.pumpAndSettle();
@@ -243,7 +243,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
     await tester.runAsync(() => _pendingWrites().flush());
-    await tester.pumpWidget(const AppRoot());
+    await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
     await tester.pumpAndSettle();
     expect(await readSkill(), before);
     final restored = await _saved(tester);
@@ -1159,7 +1159,7 @@ void main() {
           await _pendingWrites().flush().timeout(const Duration(seconds: 2));
         });
       });
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       await _tap(tester, 'act0_shell_placement_skip_intro');
       await tester.tap(find.text('Learn').last);
@@ -1251,7 +1251,7 @@ void main() {
         });
       });
 
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       await _tap(tester, 'act0_shell_placement_intro_cta');
       await _tap(tester, 'act0_shell_placement_option_new');
@@ -1589,7 +1589,9 @@ void main() {
           await _pendingWrites().flush().timeout(const Duration(seconds: 2));
           await prefs.reload().timeout(const Duration(seconds: 2));
         });
-        await tester.pumpWidget(const AppRoot());
+        await tester.pumpWidget(
+          const AppRoot(debugLegacyPlacementOnStart: true),
+        );
         await tester.pumpAndSettle();
         expect(find.byType(Act0ShellPreviewScreenV1), findsOneWidget);
         expect(
@@ -1623,7 +1625,7 @@ void main() {
           await _pendingWrites().flush().timeout(const Duration(seconds: 2));
         });
       });
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       await _tap(tester, 'act0_shell_placement_skip_intro');
       expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
@@ -1669,7 +1671,7 @@ void main() {
         await _pendingWrites().flush().timeout(const Duration(seconds: 2));
         await prefs.remove('act0_introduction_skipped_v1');
       });
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       await _tap(tester, 'act0_shell_placement_skip_intro');
       expect(_stableProgress(await _saved(tester)), _stableProgress(earned));
@@ -1747,7 +1749,7 @@ void main() {
         await _pendingWrites().flush().timeout(const Duration(seconds: 2));
       });
     });
-    await tester.pumpWidget(const AppRoot());
+    await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
     await tester.pumpAndSettle();
     await _tap(tester, 'act0_shell_placement_skip_intro');
     final zero = await _saved(tester);
@@ -2163,7 +2165,7 @@ Future<void> _remount(WidgetTester tester) async {
   await tester.runAsync(() async {
     await _pendingWrites().flush().timeout(const Duration(seconds: 2));
   });
-  await tester.pumpWidget(const AppRoot());
+  await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
   await tester.pumpAndSettle();
 }
 
@@ -2323,7 +2325,7 @@ Future<void> _openPendingHelpDecision(WidgetTester tester) async {
       await _pendingWrites().flush().timeout(const Duration(seconds: 2));
     });
   });
-  await tester.pumpWidget(const AppRoot());
+  await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
   await tester.pumpAndSettle();
   await _tap(tester, 'act0_shell_placement_skip_intro');
   await tester.tap(find.text('Learn').last);
@@ -2362,7 +2364,7 @@ Future<void> _replaceCheckpointFixture(
     await prefs.setString('${_progressKey}_backup', envelope);
     await prefs.setString(_progressKey, raw);
   });
-  await tester.pumpWidget(const AppRoot());
+  await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
   await tester.pumpAndSettle();
 }
 

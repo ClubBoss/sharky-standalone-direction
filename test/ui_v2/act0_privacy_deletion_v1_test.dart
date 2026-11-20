@@ -170,7 +170,7 @@ void main() {
         'flutter.private_old_history': 'old data',
       })..cutAt = 1;
       SharedPreferencesStorePlatform.instance = disk;
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       expect(find.text('Data deletion unfinished'), findsOneWidget);
       expect(find.text('You'), findsNothing);
@@ -215,7 +215,7 @@ void main() {
         'private_old_history': 'old data',
         'haptics_enabled': false,
       });
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       await tester.tap(find.text('You').last);
       await tester.pumpAndSettle();
@@ -273,7 +273,7 @@ void main() {
       );
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       expect(
         find.byKey(const Key('act0_shell_placement_intro_cta')),

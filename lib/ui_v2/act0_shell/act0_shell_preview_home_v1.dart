@@ -7,11 +7,15 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
 
   List<Act0WorldCardV1> _progressWorldsWithTaskIds(
     Act0ShellStateV1 state,
-    Set<String> completedTaskIds,
-  ) => act0ProgressWorldsV1(
+    Set<String> completedTaskIds, {
+    int? w1RulesBestScore,
+  }) => act0ProgressWorldsV1(
     state.worlds,
     pathClosedTaskIds: completedTaskIds,
     earnedTaskIds: _completedTaskIds,
+    passedW1RulesCheck:
+        (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
+        Act0W1RulesResultV1.passingScore,
   );
 
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
