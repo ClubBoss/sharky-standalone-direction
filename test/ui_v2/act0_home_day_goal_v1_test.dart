@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../support/act0_source_choreography_test_wait_v1.dart';
@@ -80,6 +83,92 @@ Future<void> _finishFirstLesson(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets(
+    'due review is primary beside an unfinished lesson and counts today',
+    (tester) async {
+      final now = _dayOne.add(const Duration(days: 1));
+      const reviewTask = 'what_poker_is_find_hero';
+      const interruptedTask = 'what_poker_is_table_read_transfer';
+      const lessonId = 'what_poker_is';
+      final lesson = Act0ShellStateV1.sample.worldById('world_1').lessons.first;
+      final interrupted = lesson.courseTaskList.singleWhere(
+        (task) => task.taskId == interruptedTask,
+      );
+      final scheduled = Act0DurableRetentionFamilyV1(
+        conceptFamilyId: 'hero_button',
+        worldId: 'world_1',
+        sourceLessonId: lessonId,
+        sourceTaskId: reviewTask,
+        retentionState: Act0RetentionStateV1.recoveredPendingSpacedReview,
+        nextDueAtUtc: now,
+        lastSpacedReviewAtUtc: null,
+        spacedSuccessStage: 0,
+        lapseCount: 0,
+        incorrectCount: 1,
+        correctCount: 1,
+        lastRecordedAtUtc: _dayOne,
+        lastCreatedOrder: 2,
+        lastSessionId: 'fixture-day-one',
+        lastReviewKind: Act0ReviewKindV1.immediateRepair,
+        hasLegacyUnspacedEvidence: false,
+      );
+      SharedPreferences.setMockInitialValues({
+        'act0_welcome_completed_v1': true,
+        'intake_completed_v1': true,
+        'act0_shell_progress_v1': jsonEncode({
+          'schemaVersion': 20,
+          'learningEvidenceHistory': [],
+          'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+              .lineagePayload(),
+          'durableRetentionHistory': [scheduled.toPayload()],
+          'completedTaskIds': ['what_poker_is_theory', reviewTask],
+          'completedLessonIds': [],
+          'skippedTaskIds': [],
+          'earnedXp': 10,
+          'selectedWorldId': 'world_1',
+          'selectedLessonId': lessonId,
+          'selectedTaskId': interruptedTask,
+          'resumeInRunner': true,
+          'resumePhase': 'drill',
+          'resumeTeachingStepIndex': interrupted.runner.teachingSteps.length,
+          'pendingDecisionAssistance': [],
+        }),
+      });
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await _mount(tester, now);
+      final primary = find.byKey(const Key('act0_academy_home_leaf_cta'));
+      expect(
+        find.descendant(of: primary, matching: find.text('Quick review')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_home_resume_lesson')), findsOneWidget);
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+      expect(
+        tester.widget<Act0LessonRunnerShellV1>(runnerFinder).selectedTaskId,
+        reviewTask,
+      );
+      final answer = tester
+          .widget<Act0LessonRunnerShellV1>(runnerFinder)
+          .runner
+          .options
+          .singleWhere((option) => option.isCorrect);
+      await _tap(tester, 'act0_shell_option_${answer.id}');
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+      expect(find.text('Today’s goal complete'), findsOneWidget);
+      final savedAfter = await _snapshot();
+      expect(savedAfter['earnedXp'], 10);
+      expect(find.text('Continue lesson'), findsOneWidget);
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      final resumed = tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
+      expect(resumed.selectedTaskId, interruptedTask);
+      expect(resumed.runner.activeTeachingStep, isNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final enableReminder in [true, false]) {
     testWidgets(
       'lesson counts today and reminder choice is explicit ($enableReminder)',
