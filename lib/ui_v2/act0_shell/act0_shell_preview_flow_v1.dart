@@ -65,9 +65,10 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
     final world = _worldById(worlds, _selectedWorldId);
     final lesson = _lessonById(world.lessons, _selectedLessonId);
-    if (_lessonComplete(lesson)) {
-      _completedLessonIds.add(lesson.lessonId);
+    if (_lessonComplete(lesson) && _completedLessonIds.add(lesson.lessonId)) {
+      _lastShortSessionDayV1 = _todayDateString();
     }
+    if (_lessonResumeV1?.taskId == _selectedTaskId) _lessonResumeV1 = null;
     _persistProgress();
     if (!alreadyCompleted &&
         selectedTask.phase == Act0LessonPhaseV1.drill &&

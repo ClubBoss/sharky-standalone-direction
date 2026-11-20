@@ -15,6 +15,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     this.onOpenReview,
     this.onLaunchPracticeRepairQueueTarget,
     required this.onBackToMap,
+    this.onBackToHome,
+    this.openMissedSpots = 0,
+    this.onFirstLessonReminder,
   });
 
   final Act0BlockCompletionSummaryV1 summary;
@@ -32,6 +35,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
   onLaunchPracticeRepairQueueTarget;
   final VoidCallback onBackToMap;
+  final VoidCallback? onBackToHome;
+  final int openMissedSpots;
+  final ValueChanged<bool>? onFirstLessonReminder;
 
   VoidCallback? _callbackForCta(Act0MilestoneCtaKindV1 kind) {
     return switch (kind) {
@@ -201,12 +207,18 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     Widget primaryCtaButton() {
       return FilledButton(
         key: const Key('act0_shell_block_summary_continue_cta'),
-        onPressed: hasSourceNext
+        onPressed: onBackToHome != null && openMissedSpots > 0
+            ? onOpenReview
+            : hasSourceNext
             ? onNextUsefulHand
             : _callbackForCta(summary.primaryCtaKind),
         style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(),
         child: Text(
-          hasSourceNext
+          onBackToHome != null && openMissedSpots > 0
+              ? (openMissedSpots == 1
+                    ? 'Fix 1 missed spot'
+                    : 'Fix $openMissedSpots missed spots')
+              : hasSourceNext
               ? (localeIsRu
                     ? '\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0441\u043F\u043E\u0442'
                     : 'Practice this clue')
@@ -581,7 +593,36 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               nextActionCard(),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               primaryCtaButton(),
-              if (summary.secondaryCtaLabel != null) ...[
+              if (onFirstLessonReminder case final onReminder?) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                Text(
+                  'Want one reminder at 6 pm when practice is ready?',
+                  style: Act0AcademyReadingStyleV1.body,
+                ),
+                Wrap(
+                  spacing: Act0ShellTokensV1.gapSm,
+                  children: [
+                    TextButton(
+                      key: const Key('act0_first_lesson_reminder_yes'),
+                      onPressed: () => onReminder(true),
+                      child: const Text('Yes'),
+                    ),
+                    TextButton(
+                      key: const Key('act0_first_lesson_reminder_no'),
+                      onPressed: () => onReminder(false),
+                      child: const Text('No thanks'),
+                    ),
+                  ],
+                ),
+              ],
+              if (onBackToHome != null)
+                TextButton(
+                  key: const Key('act0_shell_block_summary_home_cta'),
+                  onPressed: onBackToHome,
+                  child: const Text('Back to Home'),
+                ),
+              if (onBackToHome == null &&
+                  summary.secondaryCtaLabel != null) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 OutlinedButton(
                   key: const Key('act0_shell_block_summary_quality_cta'),
@@ -607,10 +648,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              if (summary.hasNextLesson ||
-                  (summary.isWorldComplete &&
-                      summary.nextWorldTitle != null &&
-                      summary.nextWorldTitle!.isNotEmpty)) ...[
+              if (onBackToHome == null &&
+                  (summary.hasNextLesson ||
+                      (summary.isWorldComplete &&
+                          summary.nextWorldTitle != null &&
+                          summary.nextWorldTitle!.isNotEmpty))) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapXs),
                 TextButton(
                   key: const Key('act0_shell_block_summary_map_cta'),

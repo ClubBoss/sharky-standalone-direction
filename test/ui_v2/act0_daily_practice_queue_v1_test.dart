@@ -126,70 +126,85 @@ void main() {
       expect(Act0DailyPracticeQueueV1.tryParse(raw), isNull);
     }
   });
-  testWidgets('Home starts a small set once per day and preserves course XP', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(393, 852));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    final beforeMidnight = DateTime(2026, 11, 19, 23, 59);
-    const taskId = 'what_poker_is_table_read_transfer';
-    const progressKey = 'act0_shell_progress_v1';
-    SharedPreferences.setMockInitialValues({
-      progressKey: jsonEncode({
-        'schemaVersion': 17,
-        'completedTaskIds': [taskId],
-        'selectedWorldId': 'world_1',
-        'selectedLessonId': 'what_poker_is',
-        'selectedTaskId': taskId,
-        'earnedXp': 5,
-        'lastActiveDay': '2026-11-19',
-      }),
-    });
-    Future<void> mount(DateTime time) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          key: ValueKey(time),
-          home: Act0ShellPreviewScreenV1(
-            initialTab: Act0ShellTabV1.home,
-            showPlacementOnStart: false,
-            clock: Act0FixedUtcClockV1(time),
+  testWidgets(
+    'Practice starts a finite set and preserves course XP across days',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(393, 852));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final beforeMidnight = DateTime(2026, 11, 19, 23, 59);
+      const taskId = 'what_poker_is_table_read_transfer';
+      const progressKey = 'act0_shell_progress_v1';
+      SharedPreferences.setMockInitialValues({
+        progressKey: jsonEncode({
+          'schemaVersion': 17,
+          'completedTaskIds': [taskId],
+          'selectedWorldId': 'world_1',
+          'selectedLessonId': 'what_poker_is',
+          'selectedTaskId': taskId,
+          'earnedXp': 5,
+          'lastActiveDay': '2026-11-19',
+        }),
+      });
+      Future<void> mount(DateTime time) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            key: ValueKey(time),
+            home: Act0ShellPreviewScreenV1(
+              initialTab: Act0ShellTabV1.home,
+              showPlacementOnStart: false,
+              clock: Act0FixedUtcClockV1(time),
+            ),
           ),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      final daily = find.byKey(const Key('act0_academy_practice_leaf_start'));
+      Future<void> openPractice() async {
+        await tester.tap(
+          find.descendant(
+            of: find.byKey(const Key('act0_shell_bottom_nav')),
+            matching: find.text('Practice'),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(daily, findsOneWidget);
+      }
+
+      await mount(beforeMidnight);
+      expect(find.byKey(const Key('act0_home_daily_practice')), findsNothing);
+      await openPractice();
+      await tester.ensureVisible(daily);
+      await tester.tap(daily);
+      await tester.pumpAndSettle();
+      final answer = find.byKey(const Key('act0_shell_option_two_three_six'));
+      await tester.ensureVisible(answer);
+      await tester.tap(answer);
+      await tester.pumpAndSettle();
+      // Short sets use the existing rapid feedback advance.
+      await tester.pump(const Duration(milliseconds: 700));
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Home'),
         ),
       );
       await tester.pumpAndSettle();
-    }
+      expect(find.byKey(const Key('act0_home_daily_practice')), findsNothing);
+      final prefs = await SharedPreferences.getInstance();
+      var saved =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(saved['dailyCompletedRepCount'], 1);
+      expect(saved['earnedXp'], 5);
 
-    await mount(beforeMidnight);
-    final daily = find.byKey(const Key('act0_home_daily_practice'));
-    await tester.ensureVisible(daily);
-    await tester.tap(daily);
-    await tester.pumpAndSettle();
-    final answer = find.byKey(const Key('act0_shell_option_two_three_six'));
-    await tester.ensureVisible(answer);
-    await tester.tap(answer);
-    await tester.pumpAndSettle();
-    // Short sets use the existing rapid feedback advance.
-    await tester.pump(const Duration(milliseconds: 700));
-    await tester.pumpAndSettle();
-
-    await tester.tap(
-      find.descendant(
-        of: find.byKey(const Key('act0_shell_bottom_nav')),
-        matching: find.text('Home'),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(daily, findsNothing);
-    final prefs = await SharedPreferences.getInstance();
-    var saved =
-        jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-    expect(saved['dailyCompletedRepCount'], 1);
-    expect(saved['earnedXp'], 5);
-
-    await mount(DateTime(2026, 11, 22, 0, 1));
-    expect(daily, findsOneWidget);
-    saved = jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-    expect(saved['completedTaskIds'], [taskId]);
-    expect(saved['earnedXp'], 5);
-  });
+      await mount(DateTime(2026, 11, 22, 0, 1));
+      await openPractice();
+      expect(find.text('Start new set'), findsNothing);
+      saved = jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(saved['completedTaskIds'], [taskId]);
+      expect(saved['earnedXp'], 5);
+    },
+  );
 }

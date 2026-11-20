@@ -12,6 +12,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     String evidenceStartedBy = 'learn_route',
     Act0DiagnosticLearningEntryV1? diagnosticLearningEntry,
     Act0RepairIntentV1? repairLaunchIntent,
+    bool persist = true,
   }) {
     final lesson = _lessonById(selectedWorld.lessons, lessonId);
     final task = _taskById(lesson, taskId);
@@ -78,7 +79,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
         ? task.runner.teachingSteps.length
         : 0;
     _blockCompletionSummary = null;
-    _persistProgress();
+    if (persist) _persistProgress();
     return true;
   }
 
@@ -187,6 +188,9 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0WorldCardV1 world, {
     Act0LessonTaskV1? unseen,
   }) {
+    _spacedReviewReturnTabV1 = _tab == Act0ShellTabV1.home
+        ? Act0ShellTabV1.home
+        : Act0ShellTabV1.review;
     _spacedReviewReturnV1 = (
       worldId: _selectedWorldId,
       lessonId: _selectedLessonId,
@@ -227,7 +231,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _teachingStepIndex = 0;
     _showPlayHub = true;
     _returnToPlayHubOnBack = false;
-    _tab = Act0ShellTabV1.review;
+    _tab = _spacedReviewReturnTabV1;
     _persistProgress();
   }
 
