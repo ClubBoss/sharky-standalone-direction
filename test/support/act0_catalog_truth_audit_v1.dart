@@ -318,6 +318,11 @@ const fixedDrawRangeAndStackChoicesV1 = {
   'w7_stack_checkpoint': 'range_only',
 };
 
+const _fixedTournamentComparisonTaskIds = {
+  'w9_survival_stack_tradeoff',
+  'w9_checkpoint_zone_line',
+};
+
 final _actualRankQuestion = RegExp(
   r'\b(?:who wins|who (?:takes|gets) the pot|which (?:shown )?hand wins|'
   r'what happens to the pot|which (?:hand|rank) (?:is stronger|ranks higher)|'
@@ -473,6 +478,7 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
             task.taskId.startsWith('hand_discipline_buckets_') ||
             _deterministicSeatAndBetTaskIds.contains(task.taskId) ||
             fixedDrawRangeAndStackChoicesV1.containsKey(task.taskId) ||
+            _fixedTournamentComparisonTaskIds.contains(task.taskId) ||
             _actualRankQuestion.hasMatch(catalogQuestion(task)))) {
       for (final o in r.options.where((o) => !o.isCorrect)) {
         audit.check(
