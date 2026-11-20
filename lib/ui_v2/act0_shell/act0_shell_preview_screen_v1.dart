@@ -2744,7 +2744,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (_showW1StartV1 ||
             _w1RulesAnswersV1 != null ||
             _w1RulesResultV1 != null)) {
-      return _buildW1RulesFlowV1();
+      return MediaQuery.withClampedTextScaling(
+        minScaleFactor: 1.0,
+        maxScaleFactor: 1.3,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: _buildW1RulesFlowV1(),
+        ),
+      );
     }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
