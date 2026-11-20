@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
@@ -117,6 +119,99 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     },
   );
+
+  testWidgets('answers use one light tap without exposing quiz results', (
+    tester,
+  ) async {
+    usePhone(tester);
+    final calls = <Object?>[];
+    final platform = tester.binding.defaultBinaryMessenger;
+    platform.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method == 'HapticFeedback.vibrate') calls.add(call.arguments);
+      return null;
+    });
+    addTearDown(
+      () => platform.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    final settings = AppSettingsService.instance;
+    await settings.load();
+    addTearDown(() => settings.setHapticsEnabled(true));
+
+    await _mount(tester);
+    await _tapKey(tester, 'act0_shell_w1_start_check');
+    final first = act0W1RulesQuestionsV1[0];
+    final second = act0W1RulesQuestionsV1[1];
+    final third = act0W1RulesQuestionsV1[2];
+    await _tapKey(tester, 'act0_shell_option_choice_${first.correctChoice}');
+    final wrong = (second.correctChoice + 1) % second.choices.length;
+    await _tapKey(tester, 'act0_shell_option_choice_$wrong');
+    expect(calls, [
+      'HapticFeedbackType.lightImpact',
+      'HapticFeedbackType.lightImpact',
+    ]);
+    expect(find.byKey(const Key('act0_shell_feedback_card')), findsNothing);
+    await settings.setHapticsEnabled(false);
+    await _tapKey(tester, 'act0_shell_option_choice_${third.correctChoice}');
+    expect(calls, hasLength(2));
+  });
+
+  testWidgets('ordinary wrong and correct decisions use light haptics', (
+    tester,
+  ) async {
+    usePhone(tester);
+    final calls = <Object?>[];
+    final platform = tester.binding.defaultBinaryMessenger;
+    platform.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method == 'HapticFeedback.vibrate') calls.add(call.arguments);
+      return null;
+    });
+    addTearDown(
+      () => platform.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    await AppSettingsService.instance.load();
+    await _mount(tester);
+    await _tapKey(tester, 'act0_shell_w1_start_basics');
+    await tester.pump(const Duration(milliseconds: 900));
+    await _tapKey(tester, 'act0_shell_continue_cta');
+    Act0LessonRunnerShellV1 current() =>
+        tester.widget(find.byType(Act0LessonRunnerShellV1));
+    final wrong = current().runner.options.firstWhere(
+      (option) => !option.isCorrect,
+    );
+    await _tapKey(tester, 'act0_shell_option_${wrong.id}');
+    expect(calls, ['HapticFeedbackType.lightImpact']);
+    await _tapKey(tester, 'act0_shell_feedback_continue_cta');
+    for (
+      var step = 0;
+      step < 5 && current().runner.activeTeachingStep != null;
+      step++
+    ) {
+      await tester.pump(const Duration(milliseconds: 900));
+      final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+      await _tapKey(
+        tester,
+        theory.evaluate().isNotEmpty
+            ? 'act0_shell_theory_continue_cta'
+            : 'act0_shell_continue_cta',
+      );
+    }
+    final correct = current().runner.options.singleWhere(
+      (option) => option.isCorrect,
+    );
+    final optionKey = 'act0_shell_option_${correct.id}';
+    await _tapKey(
+      tester,
+      find.byKey(Key(optionKey)).evaluate().isNotEmpty
+          ? optionKey
+          : 'act0_shell_seat_tap_${correct.seatId}',
+    );
+    expect(calls, [
+      'HapticFeedbackType.lightImpact',
+      'HapticFeedbackType.lightImpact',
+    ]);
+    await _saved(tester);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 
   for (final correct in [9, 10]) {
     testWidgets(

@@ -18,6 +18,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
   void _answerW1RulesCheckV1(int index, int answer) {
     final answers = _w1RulesAnswersV1;
     if (answers == null || answers.length != index) return;
+    unawaited(UiHapticsV1.fire(UiHapticEventV1.answer));
     _setStateV1(() {
       answers.add(answer);
       if (answers.length != act0W1RulesQuestionsV1.length) return;
