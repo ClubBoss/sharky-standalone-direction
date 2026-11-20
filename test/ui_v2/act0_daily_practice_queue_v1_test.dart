@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,12 +10,110 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_daily_practice_queue_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  testWidgets('Daily Practice serves completed W5 and W6 drills and resumes', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    const progressKey = 'act0_shell_progress_v1';
+    const w5 = 'board_texture_basics_w5_dry_board';
+    const w6 = 'w6_value_dry_board';
+    final completed = [
+      for (final world in Act0ShellStateV1.sample.worlds)
+        for (final lesson in world.lessons)
+          for (final task in lesson.courseTaskList)
+            if (world.worldNumber <= 5 ||
+                task.taskId == 'w6_range_intro' ||
+                task.taskId == w6)
+              task,
+    ];
+    final completedIds = completed.map((task) => task.taskId).toList();
+    final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+    SharedPreferences.setMockInitialValues({
+      progressKey: jsonEncode({
+        'schemaVersion': 17,
+        'completedTaskIds': completedIds,
+        'selectedWorldId': 'world_6',
+        'selectedLessonId': 'range_bucket_basics',
+        'selectedTaskId': 'w6_missed_dry_board',
+        'earnedXp': xp,
+        'lastActiveDay': '2026-11-21',
+        'dailyCompletedTaskIds': [
+          for (final task in completed)
+            if (task.phase == Act0LessonPhaseV1.drill &&
+                task.taskId != w5 &&
+                task.taskId != w6)
+              task.taskId,
+        ],
+      }),
+    });
+
+    Future<void> openDaily() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          key: UniqueKey(),
+          home: Act0ShellPreviewScreenV1(
+            initialTab: Act0ShellTabV1.home,
+            showPlacementOnStart: false,
+            clock: Act0FixedUtcClockV1(DateTime.utc(2026, 11, 21, 12)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Practice'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final start = find.byKey(const Key('act0_academy_practice_leaf_start'));
+      expect(start, findsOneWidget);
+      await tester.ensureVisible(start);
+      await tester.tap(start);
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> answer(String taskId) async {
+      final shell = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(shell.selectedTaskId, taskId);
+      final correct = shell.runner.options.singleWhere(
+        (option) => option.isCorrect,
+      );
+      final button = find.byKey(Key('act0_shell_option_${correct.id}'));
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 700));
+      await tester.pumpAndSettle();
+    }
+
+    await openDaily();
+    await answer(w5);
+    await openDaily();
+    await answer(w6);
+    final prefs = await SharedPreferences.getInstance();
+    final saved = jsonDecode(prefs.getString(progressKey)!) as Map;
+    expect(saved['completedTaskIds'], unorderedEquals(completedIds));
+    expect(saved['earnedXp'], xp);
+    expect(
+      saved['dailyPracticeQueue']['answeredTaskIds'],
+      containsAll([w5, w6]),
+    );
+    expect(
+      saved['dailyPracticeQueue']['taskIds'],
+      isNot(contains('w6_missed_dry_board')),
+    );
+  });
+
   test(
-    'every W1-W4 drill can enter a finite distinct set and survive restart',
+    'every W1–W6 drill can enter a finite distinct set and survive restart',
     () {
       var count = 0;
       for (final world in Act0ShellStateV1.sample.worlds.where(
-        (w) => w.worldNumber <= 4,
+        (w) => w.worldNumber <= 6,
       )) {
         final ids = [
           for (final lesson in world.lessons)
@@ -46,7 +145,7 @@ void main() {
           count++;
         }
       }
-      expect(count, 125);
+      expect(count, 172);
     },
   );
 

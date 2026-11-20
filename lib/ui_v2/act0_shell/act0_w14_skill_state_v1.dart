@@ -4,6 +4,8 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
+const act0SkillMapLastWorldV1 = 6;
+
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
 const act0W14LessonSkillsV1 = <String, List<String>>{
@@ -38,11 +40,33 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'price_checkpoint': ['Betting decisions'],
 };
 
-const _seatRecognitionTaskIds = {
-  'positions_theory',
-  'positions_button',
-  'positions_utg',
-  'positions_cutoff',
+const _w56LessonSkills = <String, List<String>>{
+  'board_texture_basics': ['Board reading'],
+  'connected_boards': ['Board reading'],
+  'flush_draws': ['Board reading'],
+  'straight_draws': ['Board reading'],
+  'outs_improvement': ['Board reading'],
+  'turn_river_changes': ['Board reading'],
+  'range_bucket_basics': ['Range reading'],
+  'range_board_fit': ['Range reading'],
+  'range_pressure_lines': ['Range reading'],
+  'range_combo_counts': ['Range reading'],
+  'range_thinking_checkpoint': ['Range reading'],
+};
+
+const _skillOverridesByTaskId = <String, List<String>>{
+  'positions_theory': ['Position play'],
+  'positions_button': ['Position play'],
+  'positions_utg': ['Position play'],
+  'positions_cutoff': ['Position play'],
+  'outs_improvement_w5_table_outs_flush_transfer': [
+    'Board reading',
+    'Betting decisions',
+  ],
+  'outs_improvement_w5_table_outs_straight_transfer': [
+    'Board reading',
+    'Betting decisions',
+  ],
 };
 
 class Act0W14SkillStateV1 {
@@ -93,15 +117,16 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
   String identity(String world, String lesson, String task) =>
       jsonEncode([world, lesson, task]);
   for (final world in worlds.where(
-    (world) => world.worldNumber >= 1 && world.worldNumber <= 4,
+    (world) =>
+        world.worldNumber >= 1 && world.worldNumber <= act0SkillMapLastWorldV1,
   )) {
     for (final lesson in world.lessons) {
       final lessonSkills =
-          act0W14LessonSkillsV1[lesson.lessonId] ?? const <String>[];
+          act0W14LessonSkillsV1[lesson.lessonId] ??
+          _w56LessonSkills[lesson.lessonId] ??
+          const <String>[];
       for (final task in lesson.taskList) {
-        final skills = _seatRecognitionTaskIds.contains(task.taskId)
-            ? const ['Position play']
-            : lessonSkills;
+        final skills = _skillOverridesByTaskId[task.taskId] ?? lessonSkills;
         final key = identity(world.worldId, lesson.lessonId, task.taskId);
         taskSkills[key] = skills;
         for (final skill in skills) {
