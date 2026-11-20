@@ -10039,6 +10039,31 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
     // actions were not in the earlier source. UTG/HJ fold, CO limps for 1 BB,
     // both blinds fold to Hero's all-in, then CO calls to 20 BB total, so
     // pot 41.5 BB = 0.5 + 1 + 20 + 20 is unchanged.
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'btn': 20},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          20,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          19,
+        ),
+      ],
+    ),
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1.note(label: 'Blinds: 1.5 BB'),
       Act0ActionTrailItemV1.note(label: 'UTG folds'),
@@ -16477,6 +16502,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
       ],
       centerLabel: 'CO after two folds',
       activeSeatId: 'co',
+      handContributions: _act0BlindsOnlyContributions,
     ),
     const {'utg', 'hj'},
   ),

@@ -52,6 +52,26 @@ void main() {
     );
   });
 
+  test('a played preflop pot without contributions keeps its source gap', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w9_m_ratio_table_window_transfer',
+        );
+
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'authored/preflop',
+      source.runner.table,
+    );
+
+    expect(findings.map((row) => (row.invariant, row.result)), [
+      ('D2.pot_feasibility', 'NEEDS_SOURCE_CONTEXT'),
+    ]);
+  });
+
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
     final earlyWorldTasks = Act0ShellStateV1.sample.worlds
@@ -61,7 +81,7 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, proved, missing) in [
-      ('D2.pot_feasibility', 110, 28),
+      ('D2.pot_feasibility', 113, 28),
       ('D3.to_call_completeness', 55, 11),
     ]) {
       final proof = rows.where(
@@ -145,6 +165,7 @@ void main() {
         .toSet();
     const lateMissingSource = {
       'D2.pot_feasibility': {
+        'w9_m_ratio_table_window_transfer',
         'w10_table_value_vs_caller_transfer',
         'w11_checkpoint_mixed_table_line',
         'w12_checkpoint_full_loop_line',

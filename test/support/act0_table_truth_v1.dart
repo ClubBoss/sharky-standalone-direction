@@ -138,7 +138,10 @@ List<TableTruthRow> auditTableContributionsV1(
       }
     }
   } else {
-    if (t.streetLabel != 'Preflop')
+    final playedPreflopPot =
+        t.scope == Act0TableScopeV1.playedHand &&
+        (potTruthBbV1(t.potLabel.replaceFirst('Pot ', '')) ?? 0) > 0;
+    if (t.streetLabel != 'Preflop' || playedPreflopPot)
       rows.add(
         TableTruthRow(
           taskId,
@@ -310,6 +313,10 @@ List<TableTruthRow> auditTableTruth() {
           final t = e.value;
           final v = e.key;
           if (t.scope != Act0TableScopeV1.playedHand) {
+            if (t.scope == Act0TableScopeV1.explanation &&
+                t.handContributions != null) {
+              rows.addAll(auditTableContributionsV1(task.taskId, v, t));
+            }
             rows.add(
               TableTruthRow(
                 task.taskId,
