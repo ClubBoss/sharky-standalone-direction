@@ -5517,7 +5517,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_dry_board',
-        title: 'Dry board',
+        title: 'Two ways a flop can change',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5DryBoardRunner,
         rewardXp: 8,
@@ -5525,7 +5525,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_wet_board',
-        title: 'Wet board',
+        title: 'Read another flop',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5WetBoardRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5564,7 +5564,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_disconnected_board',
-        title: 'Disconnected board',
+        title: 'Read the rank gaps',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5DisconnectedBoardRunner,
         rewardXp: 8,
@@ -5572,7 +5572,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_connected_board',
-        title: 'Connected board',
+        title: 'Read the next flop',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5ConnectedBoardRunner,
         rewardXp: 9,
@@ -5606,7 +5606,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_flush_draw_recheck_transfer',
-        title: 'Flush draw or made flush',
+        title: 'Find your draw',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5FlushDrawRecheckTransferRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5631,7 +5631,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_flush_draw_find',
-        title: 'Find flush draw',
+        title: 'Count the matching suits',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5FlushDrawRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5645,7 +5645,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_no_flush_draw',
-        title: 'No flush draw',
+        title: 'Read the suits',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5NoFlushDrawRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5676,7 +5676,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     extraDrills: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_gutshot_contrast_transfer',
-        title: 'Gutshot or open-ended?',
+        title: 'Read another straight draw',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5GutshotContrastTransferRunner,
         rewardXp: 10,
@@ -5695,7 +5695,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_straight_draw_find',
-        title: 'Find straight draw',
+        title: 'Read the four ranks',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5StraightDrawRunner,
         rewardXp: 8,
@@ -5703,7 +5703,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_gap_board',
-        title: 'Gap board',
+        title: 'Read the gaps',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5GapBoardRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5717,7 +5717,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_gutshot_draw',
-        title: 'Gutshot draw',
+        title: 'Which rank fits?',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5GutshotDrawRunner,
         rewardXp: 9,
@@ -5797,7 +5797,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_flush_out',
-        title: 'Flush out',
+        title: 'Which suit helps?',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5FlushOutRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5811,7 +5811,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_straight_out',
-        title: 'Straight out',
+        title: 'Which rank helps?',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5StraightOutRunner,
         rewardXp: 9,
@@ -5836,7 +5836,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     extraDrills: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_turn_texture_shift_transfer',
-        title: 'Turn changes the texture',
+        title: 'Checkpoint: the new turn card',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5TurnTextureShiftTransferRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5851,7 +5851,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_river_draw_story_transfer',
-        title: 'River keeps the draw story honest',
+        title: 'Checkpoint: the last card',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5RiverDrawStoryTransferRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5876,7 +5876,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_turn_hits',
-        title: 'Turn hits',
+        title: 'Checkpoint: check the turn',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5TurnHitsRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5890,7 +5890,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_river_misses',
-        title: 'River misses',
+        title: 'Checkpoint: check the river',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5RiverMissesRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5916,6 +5916,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.fixMistakes,
         taskFamily: Act0TaskFamilyV1.repair,
+        repairOnly: true,
       ),
       Act0LessonTaskV1(
         taskId: 'w5_board_checkpoint',
@@ -6162,6 +6163,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.fixMistakes,
         taskFamily: Act0TaskFamilyV1.repair,
+        repairOnly: true,
       ),
       Act0LessonTaskV1(
         taskId: 'w6_pressure_lines_recap',
@@ -6256,7 +6258,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'range_checkpoint_intro',
-        title: 'Three-step read',
+        title: 'Read both sides of the flop',
         phase: Act0LessonPhaseV1.theory,
         runner: _w6RangeIntroRunner.copyWith(
           table: _act0BoardLessonTableV1(
@@ -6264,6 +6266,18 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             boardCards: _act0LessonCardsV1('Qh 7h 3c'),
             centerLabel: 'Read the range',
           ),
+          caption:
+              'Start with your own pair, then consider the hands BB can call with.',
+          question: 'Where can value come from here?',
+          teachingSteps: const <Act0TeachingStepV1>[
+            Act0TeachingStepV1(
+              title: 'Connect the hand to the range.',
+              body:
+                  'You pair the queen. If BB calls with a seven, a bet can earn chips. '
+                  'If only a stronger queen calls, the same bet has a different result.',
+              focusLabels: <String>['Your pair', 'Hands that call'],
+            ),
+          ],
           feedbackTitle: 'Put the reads together.',
           feedbackReason:
               'Read how the flop fits the hand, then consider weaker calls and the hands that might fold.',
@@ -6273,46 +6287,166 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'range_checkpoint_value',
-        title: 'Value on dry board',
+        title: 'A flop bet against a stated range',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6ValueDryBoardRunner.copyWith(
+          caption:
+              "BB checks. Assume BB calls half pot with Q-9 and 5-4; other unpaired hands fold.",
+          hint: 'Read the cards and the stated range.',
+          question: "What is a half-pot bet trying to achieve?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
+          teachingSteps: const [],
           table: _act0BoardLessonTableV1(
-            heroCards: _act0LessonCardsV1('Kh Qd'),
-            boardCards: _act0LessonCardsV1('Ks 7h 2c'),
-            centerLabel: 'Read the flop',
+            heroCards: _act0LessonCardsV1('Qd Tc'),
+            boardCards: _act0LessonCardsV1('Qs 5h 2d'),
+            centerLabel: 'Read the range',
           ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'value',
+              label: "Get called by worse hands",
+              isCorrect: true,
+              preferredLabel: "Get called by worse hands",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "A bet can earn weaker calls.",
+              feedbackReason:
+                  "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'bluff',
+              label: "Make stronger hands fold",
+              isCorrect: false,
+              preferredLabel: "Get called by worse hands",
+              betterAnswerLabel: "Get called by worse hands",
+              quality: Act0FeedbackQualityV1.suboptimal,
+              feedbackTitle: "Read the hands that call.",
+              feedbackReason:
+                  "The hands named as calls are behind your pair of queens. That makes this a value bet.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'missed',
+              label: "Give up on a missed flop",
+              isCorrect: false,
+              preferredLabel: "Get called by worse hands",
+              betterAnswerLabel: "Get called by worse hands",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "You paired the queen.",
+              feedbackReason:
+                  "You have a pair of queens. Both of the named calls make weaker hands.",
+            ),
+          ],
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'range_checkpoint_board_fit',
-        title: 'Board changes bucket',
+        title: 'Compare your hand with the flop',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6WrongBoardRunner.copyWith(
+          caption:
+              "BB can hold pairs and unpaired hands. First read your own cards.",
+          hint: 'Read the cards and the stated range.',
+          question: "What do your cards make on this flop?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "A-J does not pair on 9-6-2. Your best five start with an ace.",
+          teachingSteps: const [],
           table: _act0BoardLessonTableV1(
-            heroCards: _act0LessonCardsV1('Kh Qc'),
-            boardCards: _act0LessonCardsV1('8s 7s 6d'),
-            centerLabel: 'Read the flop',
+            heroCards: _act0LessonCardsV1('Ah Jc'),
+            boardCards: _act0LessonCardsV1('9h 6s 2c'),
+            centerLabel: 'Read the range',
           ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'missed',
+              label: "Ace-high",
+              isCorrect: true,
+              preferredLabel: "Ace-high",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "Your cards are unpaired.",
+              feedbackReason:
+                  "A-J does not pair on 9-6-2. Your best five start with an ace.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'bluff',
+              label: "One pair",
+              isCorrect: false,
+              preferredLabel: "Ace-high",
+              betterAnswerLabel: "Ace-high",
+              quality: Act0FeedbackQualityV1.suboptimal,
+              feedbackTitle: "Check for a matching rank.",
+              feedbackReason:
+                  "There are no equal ranks among your two cards and this flop.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'value',
+              label: "A made straight",
+              isCorrect: false,
+              preferredLabel: "Ace-high",
+              betterAnswerLabel: "Ace-high",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "Count five consecutive ranks.",
+              feedbackReason:
+                  "The cards do not form five consecutive ranks. Your hand is ace-high.",
+            ),
+          ],
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'range_checkpoint_combos',
-        title: 'Count the family',
+        title: 'Count a broadway hand',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6AkComboRunner.copyWith(
+          caption: "You have not seen an ace or a queen.",
+          hint: 'Read the cards and the stated range.',
+          question: "How many A-Q combinations are possible?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "There are four aces and four queens available, giving 16 exact two-card hands.",
+          teachingSteps: const [],
           table: _act0UnopenedLessonTableV1(
             heroCards: _act0LessonCardsV1('8c 7c'),
-            centerLabel: 'Count combinations',
+            centerLabel: 'Read the range',
           ),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w6AkComboRunner.options,
-            correctOptionId: 'sixteen',
-            correctIndex: 2,
-          ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'twelve',
+              label: "12",
+              isCorrect: false,
+              preferredLabel: "16",
+              betterAnswerLabel: "16",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "Count all suit combinations.",
+              feedbackReason:
+                  "Twelve counts only the offsuit hands. Four suited combinations are possible as well.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'six',
+              label: "6",
+              isCorrect: false,
+              preferredLabel: "16",
+              betterAnswerLabel: "16",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "A-Q has two different ranks.",
+              feedbackReason:
+                  "Six is the count for a pocket pair. For A-Q, any of four aces can go with any of four queens.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'sixteen',
+              label: "16",
+              isCorrect: true,
+              preferredLabel: "16",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "Four times four is sixteen.",
+              feedbackReason:
+                  "There are four aces and four queens available, giving 16 exact two-card hands.",
+            ),
+          ],
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
@@ -6368,6 +6502,9 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           caption:
               'On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.',
           question: 'Which plan fits 9-6 under this rule?',
+          feedbackTitle: 'A bet can fold better hands.',
+          feedbackReason:
+              'On K-8-3, 9-6 trails both Q-J and A-9. In this example, both of those hands fold to a half-pot bet.',
           table: _act0BoardLessonTableV1(
             heroCards: _act0LessonCardsV1('9h 6d'),
             boardCards: _act0LessonCardsV1('Kd 8s 3h'),
@@ -6384,30 +6521,170 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w6_kicker_showdown_compare',
-        title: 'Same pair, better kicker',
+        title: 'Find weaker calls',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6KickerShowdownCompareRunner,
+        runner: _world6RangeCheckpointRunner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          caption:
+              "BB checks. Assume BB calls half pot with any pair and folds hands without a pair.",
+          hint: 'Read the cards and the stated range.',
+          question: "Which option lists two weaker hands that would call?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "Both hands pair the flop and are behind your jacks. BB calls both under this rule.",
+          teachingSteps: const [],
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Jd Js'),
+            boardCards: _act0LessonCardsV1('9c 6s 2d'),
+            centerLabel: 'Read the range',
+          ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'hero_ak',
+              label: "9-8 and 6-5",
+              isCorrect: true,
+              preferredLabel: "9-8 and 6-5",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "Both weaker pairs call.",
+              feedbackReason:
+                  "Both hands pair the flop and are behind your jacks. BB calls both under this rule.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'villain_kq',
+              label: "A-K and Q-J",
+              isCorrect: false,
+              preferredLabel: "9-8 and 6-5",
+              betterAnswerLabel: "9-8 and 6-5",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "Both hands miss this flop.",
+              feedbackReason:
+                  "Neither hand has a pair. They fold under the stated rule.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'tie',
+              label: "9-9 and 6-6",
+              isCorrect: false,
+              preferredLabel: "9-8 and 6-5",
+              betterAnswerLabel: "9-8 and 6-5",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "Both callers are stronger.",
+              feedbackReason:
+                  "Both pocket pairs make three of a kind and beat your jacks. Look for weaker calls.",
+            ),
+          ],
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'w6_board_pair_strength_compare',
-        title: 'Paired board changes the winner',
+        title: 'Read the caller’s range',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6BoardPairStrengthCompareRunner,
+        runner: _world6RangeCheckpointRunner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          caption: "BTN opens J-J, A-A, A-K. BB calls J-8, 8-8, 4-4, 5-5.",
+          hint: 'Read the cards and the stated range.',
+          question:
+              "In these ranges, who has more hand types at two pair or better?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "J-8 makes two pair, while 8-8 and 4-4 make sets. BTN has only J-J at this strength.",
+          teachingSteps: const [],
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Jh Jc'),
+            boardCards: _act0LessonCardsV1('Js 8d 4h'),
+            centerLabel: 'Read the range',
+          ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'hero_aj',
+              label: "BTN, the raiser",
+              isCorrect: false,
+              preferredLabel: "BB, the caller",
+              betterAnswerLabel: "BB, the caller",
+              quality: Act0FeedbackQualityV1.suboptimal,
+              feedbackTitle: "BTN has one strong hand type.",
+              feedbackReason:
+                  "J-J makes a set. Neither A-A nor A-K makes two pair or better. BB has three strong hand types.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'villain_k8',
+              label: "BB, the caller",
+              isCorrect: true,
+              preferredLabel: "BB, the caller",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "Three hand types fit the caller.",
+              feedbackReason:
+                  "J-8 makes two pair, while 8-8 and 4-4 make sets. BTN has only J-J at this strength.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'tie',
+              label: "They have the same number",
+              isCorrect: false,
+              preferredLabel: "BB, the caller",
+              betterAnswerLabel: "BB, the caller",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "Count the two lists separately.",
+              feedbackReason:
+                  "BB has three kinds of strong hands: two sets and two pair. BTN has one set.",
+            ),
+          ],
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'w6_checkpoint_table_best_five',
-        title: 'Live-table best five',
+        title: 'Count the two possible families',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6CheckpointTableBestFiveRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w6CheckpointTableBestFiveRunner.options,
-            correctOptionId: 'split',
-            correctIndex: 2,
+        runner: _world6RangeCheckpointRunner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          caption:
+              "Compare pocket sevens with A-T suited before seeing a flop. All their ranks are available.",
+          hint: 'Read the cards and the stated range.',
+          question: "Which family has more exact two-card hands?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "There are six ways to pick two sevens. A-T suited has one combination for each of the four suits.",
+          teachingSteps: const [],
+          table: _act0UnopenedLessonTableV1(
+            heroCards: _act0LessonCardsV1('3h 6c'),
+            centerLabel: 'Read the range',
           ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'hero_wins',
+              label: "A-T suited",
+              isCorrect: false,
+              preferredLabel: "Pocket sevens",
+              betterAnswerLabel: "Pocket sevens",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "Only same-suit cards count here.",
+              feedbackReason:
+                  "A-T has 16 combinations overall, but only four are suited. The pair family has six.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'split',
+              label: "Pocket sevens",
+              isCorrect: true,
+              preferredLabel: "Pocket sevens",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "Six combinations are more than four.",
+              feedbackReason:
+                  "There are six ways to pick two sevens. A-T suited has one combination for each of the four suits.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'villain_wins',
+              label: "They have the same count",
+              isCorrect: false,
+              preferredLabel: "Pocket sevens",
+              betterAnswerLabel: "Pocket sevens",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "The counting rules differ.",
+              feedbackReason:
+                  "A pocket pair chooses two of four cards. A suited hand with two ranks has one combination per suit.",
+            ),
+          ],
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -6415,14 +6692,56 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'range_checkpoint_review',
-        title: 'Range recap',
+        title: 'World 6 checkpoint',
         phase: Act0LessonPhaseV1.review,
         runner: _world6RangeCheckpointRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world6RangeCheckpointRunner.options,
-            correctOptionId: 'range_plus_stack_depth',
-            correctIndex: 0,
+          caption:
+              "The flop shows an ace. Think about a range that allowed any pocket aces before the flop.",
+          hint: 'Read the cards and the stated range.',
+          question: "Which fact can narrow that range now?",
+          feedbackTitle: 'Read the range in this hand.',
+          feedbackReason:
+              "The ace on the flop removes any combination containing that exact card. World 7 shows you how to count what remains.",
+          teachingSteps: const [],
+          table: _act0BoardLessonTableV1(
+            heroCards: _act0LessonCardsV1('Tc 7d'),
+            boardCards: _act0LessonCardsV1('Ac 9h 3s'),
+            centerLabel: 'Read the range',
           ),
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'range_plus_stack_depth',
+              label: "One ace is already on the board",
+              isCorrect: true,
+              preferredLabel: "One ace is already on the board",
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: "A visible card cannot be in a private hand.",
+              feedbackReason:
+                  "The ace on the flop removes any combination containing that exact card. World 7 shows you how to count what remains.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'range_plus_pot_size',
+              label: "The pot is 5.5 BB",
+              isCorrect: false,
+              preferredLabel: "One ace is already on the board",
+              betterAnswerLabel: "One ace is already on the board",
+              quality: Act0FeedbackQualityV1.suboptimal,
+              feedbackTitle: "Pot size does not remove a card.",
+              feedbackReason:
+                  "Look for information about which private cards are still physically available.",
+            ),
+            Act0RunnerOptionV1(
+              id: 'range_only',
+              label: "BTN has the dealer marker",
+              isCorrect: false,
+              preferredLabel: "One ace is already on the board",
+              betterAnswerLabel: "One ace is already on the board",
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: "The marker only shows position.",
+              feedbackReason:
+                  "Position explains action order. A card on the board directly rules out hands that need it.",
+            ),
+          ],
         ),
         rewardXp: 16,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -6493,9 +6812,54 @@ List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
       taskId: 'visible_card_combo_reduction_recap',
       title: 'Visible-card recap',
       phase: Act0LessonPhaseV1.review,
-      runner: _w7VisibleCardRunnerFromSpecV1(
-        recapSpec,
-        phase: Act0LessonPhaseV1.review,
+      runner: _w7VisibleCardRunnerFromSpecV1(recapSpec, phase: Act0LessonPhaseV1.review).copyWith(
+        caption: 'Use the cards you can see at this table.',
+        question: 'How many A-Q combinations could BB still hold?',
+        hint: 'Count the aces and queens that are still available.',
+        table: _act0BoardLessonTableV1(
+          heroCards: _act0LessonCardsV1('Td 8d'),
+          boardCards: _act0LessonCardsV1('Qc 6h 2s'),
+          centerLabel: 'Count available cards',
+        ),
+        teachingSteps: const [],
+        feedbackTitle: 'Four choices times three.',
+        feedbackReason:
+            'Four aces and three queens remain, so there are 12 A-Q combinations. '
+            'World 8 uses stack depth to show how much those hands can risk.',
+        options: const <Act0RunnerOptionV1>[
+          Act0RunnerOptionV1(
+            id: 'only_board_low_cards_matter',
+            label: '16',
+            isCorrect: false,
+            preferredLabel: '12',
+            betterAnswerLabel: '12',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'One queen is already on the board.',
+            feedbackReason:
+                'Sixteen would count four queens. The visible queen leaves only three to pair with four aces.',
+          ),
+          Act0RunnerOptionV1(
+            id: 'visible_cards_show_exact_hand',
+            label: '6',
+            isCorrect: false,
+            preferredLabel: '12',
+            betterAnswerLabel: '12',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'A-Q has two different ranks.',
+            feedbackReason:
+                'Count any of the four aces with any of the three remaining queens. Six is the starting count for a pocket pair.',
+          ),
+          Act0RunnerOptionV1(
+            id: 'visible_rank_reduces_matching_rank_combos',
+            label: '12',
+            isCorrect: true,
+            preferredLabel: '12',
+            quality: Act0FeedbackQualityV1.correct,
+            feedbackTitle: 'Four aces times three queens.',
+            feedbackReason:
+                'Four aces and three queens remain. Four times three gives 12 exact hands. Next, stack depth sets how much either player can put in.',
+          ),
+        ],
       ),
       rewardXp: 12,
       stepKind: Act0LessonStepKindV1.review,
@@ -6808,13 +7172,61 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_side_pot_intro',
-        title: 'Side pot basics',
+        title: 'Read the short stack limit',
         phase: Act0LessonPhaseV1.drill,
-        runner: _sidePotIntroRunner,
+        runner: _sidePotIntroRunner.copyWith(
+          caption:
+              'You moved all-in. Both opponents had more chips and continued betting against each other.',
+          hint: 'Use your stack, not the amount the opponents added later.',
+          question:
+              'What was the most either opponent could match against you?',
+          feedbackTitle: 'The shorter stack sets the limit.',
+          feedbackReason:
+              'Each opponent could match up to your 20 BB. Any extra commitment was between the deeper stacks.',
+          table: _sidePotIntroRunner.table.copyWith(
+            centerLabel: 'Read the stack limit',
+            highlightedSeatIds: const [],
+          ),
+          teachingSteps: const [],
+          options: const <Act0RunnerOptionV1>[
+            Act0RunnerOptionV1(
+              id: 'hero_main_only',
+              label: '20 BB',
+              isCorrect: true,
+              preferredLabel: '20 BB',
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: 'Your stack capped the match at 20 BB.',
+              feedbackReason:
+                  'You went all-in for 20 BB, so that is all either bigger stack could match against you.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'hero_wins_everything',
+              label: '50 BB',
+              isCorrect: false,
+              preferredLabel: '20 BB',
+              betterAnswerLabel: '20 BB',
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: 'Use the smaller stack.',
+              feedbackReason:
+                  'The opponents each invested 50 BB, but their extra 30 BB was against each other. Each matched only your 20 BB.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'side_pot_is_penalty',
+              label: '30 BB',
+              isCorrect: false,
+              preferredLabel: '20 BB',
+              betterAnswerLabel: '20 BB',
+              quality: Act0FeedbackQualityV1.suboptimal,
+              feedbackTitle: 'Thirty was the additional amount.',
+              feedbackReason:
+                  'After matching you for 20 BB, the deeper stacks each put in 30 BB more against each other.',
+            ),
+          ],
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
-            'After short-stack commitment is clear, separate the matched main pot from the extra side-pot chips.',
+            'Find the short stack limit when deeper opponents keep betting.',
       ),
       Act0LessonTaskV1(
         taskId: 'w7_top_pair_spr2_transfer',
@@ -6878,7 +7290,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_6max_wider',
-        title: 'Compare opening ranges',
+        title: 'Checkpoint: act from first position',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7SixMaxWiderRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -6892,7 +7304,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_fullring_tighter',
-        title: 'Opening from UTG',
+        title: 'Checkpoint: add three seats',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7FullRingTighterRunner,
         rewardXp: 10,
@@ -6900,7 +7312,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_format_table_notice',
-        title: 'Count players behind',
+        title: 'Checkpoint: leave chips behind',
         phase: Act0LessonPhaseV1.drill,
         runner: _w7FormatTableNoticeRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -6923,7 +7335,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w7_stack_checkpoint',
-        title: 'Stack-depth checkpoint',
+        title: 'Checkpoint: compare stack and pot',
         phase: Act0LessonPhaseV1.review,
         runner: _world7StackCheckpointRunner,
         rewardXp: 16,
@@ -18610,7 +19022,7 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
 final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_dry_board',
-  caption: 'K-7-2 rainbow is spread out and different suits.',
+  caption: 'Read the three flop cards.',
   hint: 'Few obvious straight or flush paths are visible.',
   question: 'What texture is this?',
   options: const <Act0RunnerOptionV1>[
@@ -18645,8 +19057,8 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
 );
 
 final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
+  caption: 'Look at the flop ranks and suits.',
   lessonId: 'w5_wet_board',
-  caption: 'T-9-8 with two hearts can change quickly.',
   hint: 'Notice the connected ranks and two hearts before choosing texture.',
   question: 'What texture is this?',
   options: const <Act0RunnerOptionV1>[
@@ -18680,14 +19092,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
     centerLabel: 'Read the flop',
     highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Wet boards can turn fast.',
-      body:
-          'When ranks connect and two cards share a suit, more turn and river cards can change who is comfortable. Read that pressure before you choose an easy autopilot line.',
-      focusLabels: <String>['Connected', 'Two hearts', 'Future cards'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
@@ -18740,8 +19145,8 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
 );
 
 final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
+  caption: 'Look at the flop ranks.',
   lessonId: 'w5_disconnected_board',
-  caption: 'A-8-2 has large rank gaps.',
   hint: 'The ranks are far apart.',
   question: 'Is this board connected?',
   options: const <Act0RunnerOptionV1>[
@@ -18768,13 +19173,14 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Jh 9c'),
     boardCards: _act0LessonCardsV1('As 8d 2c'),
-    centerLabel: 'Read the ranks',
+    centerLabel: 'Read the flop',
   ),
+  teachingSteps: const [],
 );
 
 final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
+  caption: 'Compare the ranks on the flop.',
   lessonId: 'w5_connected_board',
-  caption: '9-8-7 is connected.',
   hint: "Close board ranks can connect with an opponent's private cards.",
   question: 'What is the key board clue?',
   options: const <Act0RunnerOptionV1>[
@@ -18803,16 +19209,9 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Qh Tc'),
     boardCards: _act0LessonCardsV1('9s 8h 7c'),
-    centerLabel: 'Read the ranks',
+    centerLabel: 'Read the flop',
   ),
-  teachingSteps: const [
-    Act0TeachingStepV1(
-      title: 'Read the rank gaps.',
-      body:
-          'Look at how close the three ranks are. Nearby ranks can fit into the same five-card straight.',
-      focusLabels: ['Ranks', 'Straight possibilities'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _world5ConnectedRecapRunner = _world5ConnectedIntroRunner.copyWith(
@@ -18919,9 +19318,9 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
 );
 
 final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
+  caption: 'Scan your cards and the flop.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_no_flush_draw',
-  caption: 'Hero has mixed suits and the board is rainbow.',
   hint: 'Rainbow means three different suits on the flop.',
   question: 'Is a flush draw obvious?',
   options: const <Act0RunnerOptionV1>[
@@ -18948,8 +19347,9 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Kd Jc'),
     boardCards: _act0LessonCardsV1('As 9h 4c'),
-    centerLabel: 'Read the suits',
+    centerLabel: 'Read the flop',
   ),
+  teachingSteps: const [],
 );
 
 final _world5FlushRecapRunner = _world5FlushIntroRunner.copyWith(
@@ -19040,9 +19440,9 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
 );
 
 final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
+  caption: 'Your hand and the flop are shown. The next card is still unknown.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_flush_draw_recheck_transfer',
-  caption: 'Hero holds Q-heart and 7-heart on A-heart, 8-club, 2-heart.',
   hint:
       'Use the visible hearts on the table first. One more heart can change the hand, but it has not arrived yet.',
   question: 'What is true right now?',
@@ -19083,17 +19483,10 @@ final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Qh 7h'),
     boardCards: _act0LessonCardsV1('Ah 8c 2h'),
-    centerLabel: 'Read the suits',
+    centerLabel: 'Read the draw',
     openBb: 3.25,
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Four same-suit cards still mean draw, not made hand.',
-      body:
-          'Count the visible hearts before naming the hand. Four hearts mean one more heart can complete the flush, but the flush is not real yet.',
-      focusLabels: <String>['Four hearts', 'One more heart', 'Not made yet'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _world5StraightIntroRunner = _world5ConnectedIntroRunner.copyWith(
@@ -19157,9 +19550,9 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
 );
 
 final _world5GutshotDrawRunner = _world5StraightIntroRunner.copyWith(
+  caption: 'Check which ranks could finish your hand.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_gutshot_draw',
-  caption: 'Hero has 9-8 and the board shows K-7-5.',
   hint: 'Only a 6 completes the missing middle rank.',
   question: 'What draw is visible?',
   options: const <Act0RunnerOptionV1>[
@@ -19199,79 +19592,63 @@ final _world5GutshotDrawRunner = _world5StraightIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('9s 8d'),
     boardCards: _act0LessonCardsV1('Kc 7h 5s'),
-    centerLabel: 'Read the ranks',
+    centerLabel: 'Read the draw',
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Gutshot means one middle card is missing.',
-      body:
-          'A gutshot is still a straight draw, but it is thinner than open-ended. Read the exact missing rank before acting like the straight is already there.',
-      focusLabels: <String>['Gutshot', 'Only 6', 'Not complete yet'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_gutshot_contrast_transfer',
-  caption: 'Hero has 9-8 and the board shows Q-7-5.',
-  hint:
-      'Read the exact missing rank before upgrading the draw. A gutshot is narrower than open-ended and still not a made straight.',
-  question: 'What is the clean read now?',
+  caption: 'Read your cards together with the flop.',
+  hint: 'Check both ends of the four ranks.',
+  question: 'Which straight draw do you have?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'gutshot',
       label: 'Gutshot straight draw',
-      isCorrect: true,
-      preferredLabel: 'Gutshot straight draw',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Correct transfer.',
+      isCorrect: false,
+      preferredLabel: 'Open-ended straight draw',
+      betterAnswerLabel: 'Open-ended straight draw',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Two ranks complete it.',
       feedbackReason:
-          'Only the 6 completes the middle rank, so this stays a gutshot. The straight is close, but it is not open-ended and not complete yet.',
+          'A gutshot has one missing middle rank. Your 6-7-8-9 already run in order. A 5 or a ten completes the straight.',
     ),
     Act0RunnerOptionV1(
       id: 'open_ended',
       label: 'Open-ended straight draw',
-      isCorrect: false,
-      preferredLabel: 'Gutshot straight draw',
-      betterAnswerLabel: 'Gutshot straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too many outs claimed.',
+      isCorrect: true,
+      preferredLabel: 'Open-ended straight draw',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Either end can finish it.',
       feedbackReason:
-          'Open-ended draws improve from either end. Here only the 6 works, so the board does not give Hero either-end improvement.',
+          'Your 6-7-8-9 run in order. Four fives and four tens can finish the straight, so there are eight outs to make it.',
     ),
     Act0RunnerOptionV1(
       id: 'made_straight',
       label: 'Made straight',
       isCorrect: false,
-      preferredLabel: 'Gutshot straight draw',
-      betterAnswerLabel: 'Gutshot straight draw',
+      preferredLabel: 'Open-ended straight draw',
+      betterAnswerLabel: 'Open-ended straight draw',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not there yet.',
-      feedbackReason:
-          'Hero still needs the 6 to finish five in a row. Until that card arrives, the straight is future potential, not a made hand.',
+      feedbackTitle: 'You still need a fifth rank.',
+      feedbackReason: 'Your four ranks need a 5 or a ten to make a straight.',
     ),
   ],
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('9d 8s'),
-    boardCards: _act0LessonCardsV1('Qh 7c 5d'),
-    centerLabel: 'Read the ranks',
+    boardCards: _act0LessonCardsV1('Qh 7c 6d'),
+    centerLabel: 'Read the draw',
     openBb: 2.75,
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Name the exact draw before acting on it.',
-      body:
-          'A gutshot uses one missing middle rank. If only the 6 completes the line, do not upgrade the hand into open-ended or treat it like a made straight.',
-      focusLabels: <String>['Only 6', 'Gutshot', 'Not made yet'],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
+  caption: 'Look at the ranks on the flop.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_gap_board',
-  caption: 'A-6-2 has large rank gaps.',
   hint: 'Big gaps mean no obvious straight draw.',
   question: 'Is straight pressure obvious?',
   options: const <Act0RunnerOptionV1>[
@@ -19299,8 +19676,9 @@ final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Jc 8h'),
     boardCards: _act0LessonCardsV1('Ad 6s 2c'),
-    centerLabel: 'Read the ranks',
+    centerLabel: 'Read the flop',
   ),
+  teachingSteps: const [],
 );
 
 final _world5StraightRecapRunner = _world5StraightIntroRunner.copyWith(
@@ -19361,8 +19739,8 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
 );
 
 final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
+  caption: 'Compare the cards by suit.',
   lessonId: 'w5_flush_out',
-  caption: 'Hero needs one more heart.',
   hint: 'Any heart is the improvement card type.',
   question: 'Which card type is the out?',
   options: const <Act0RunnerOptionV1>[
@@ -19391,11 +19769,12 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
     boardCards: _act0LessonCardsV1('Jh 3h 7s'),
     centerLabel: 'Read the draw',
   ),
+  teachingSteps: const [],
 );
 
 final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
+  caption: 'Compare your ranks with the flop.',
   lessonId: 'w5_straight_out',
-  caption: 'With 6-5 on 8-7-2, a 4 or 9 helps.',
   hint: 'Those cards complete the straight line.',
   question: 'Which out improves Hero?',
   options: const <Act0RunnerOptionV1>[
@@ -19432,6 +19811,7 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       'board_2',
     ],
   ),
+  teachingSteps: const [],
 );
 
 final _world5OutsRecapRunner = _world5OutsIntroRunner.copyWith(
@@ -19635,9 +20015,8 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
 final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_turn_hits',
-  caption: 'The turn brings a heart. The same flush story now completes.',
-  hint:
-      'The next street did not start a new story. It finished the heart draw.',
+  caption: 'Compare the first three board cards with the turn card.',
+  hint: 'Count matching suits before and after the turn.',
   question: 'What happened on the turn?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19648,7 +20027,7 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
-          'The new heart completes the same flush draw you were already tracking on the flop.',
+          'The turn jack brings the fifth club between your hand and the board. You now have a flush.',
     ),
     Act0RunnerOptionV1(
       id: 'blank',
@@ -19659,21 +20038,22 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more step.',
       feedbackReason:
-          'A heart is not blank when the flop already showed a live heart draw.',
+          'The turn adds a club to the four clubs you could see on the flop. That changes the hand.',
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ah 7h'),
-    boardCards: _act0LessonCardsV1('Th 4h 2c 9h'),
+    heroCards: _act0LessonCardsV1('Qc 9c'),
+    boardCards: _act0LessonCardsV1('Kc 6c 2h Jc'),
     centerLabel: 'Read the turn',
     highlightedCardIds: const ['board_3'],
   ),
 );
 
 final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
+  caption: 'Compare the river with the draw you started with.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_river_misses',
-  hint: 'The river did not help the draw you were tracking.',
+  hint: 'Count matching suits on the final board.',
   question: 'What happened by the river?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19684,7 +20064,7 @@ final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
       feedbackReason:
-          'The final card did not complete the same flush draw, so the story ends as a miss.',
+          'You still see only four spades. The river queen is a diamond, so the flush draw missed.',
     ),
     Act0RunnerOptionV1(
       id: 'draw_hit',
@@ -19695,16 +20075,16 @@ final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Getting warmer.',
       feedbackReason:
-          'No heart arrived on the river, so the tracked heart draw stayed incomplete.',
+          'No spade arrived on the turn or river. The flop draw never completed.',
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Kh 8h'),
-    boardCards: _act0LessonCardsV1('Jh 3h 7s 9c 2d'),
+    heroCards: _act0LessonCardsV1('As 8s'),
+    boardCards: _act0LessonCardsV1('Ts 7s 3d 6c Qd'),
     centerLabel: 'Read the river',
     highlightedCardIds: const ['board_4'],
   ),
-  caption: 'What did the 2 of diamonds change about the heart draw?',
+  teachingSteps: const [],
 );
 
 final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
@@ -19739,7 +20119,7 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason:
-          'Street-change worlds exist because later cards really do change the draw story. Ignoring the turn is the leak.',
+          'The turn links 6-7-8 and brings a second club. Read the new draws before repeating a flop bet.',
     ),
     Act0RunnerOptionV1(
       id: 'small_same_story',
@@ -19775,129 +20155,107 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
 );
 
 final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.copyWith(
+  caption: 'Compare the board before and after the turn.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_turn_texture_shift_transfer',
   feedbackSignalId: 'board_texture_change',
-  caption:
-      'Real table. Flop K-9-2 looked calm, but the turn brings the T of hearts.',
   hint:
       'Do not replay the flop read. Ask what the new turn card changed first.',
-  question: 'Flop K-9-2, then the T of hearts on the turn. What changed first?',
+  question: 'What new danger does the turn add?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'board_got_wetter',
-      label: 'The board got wetter and more connected',
+      label: 'An opponent can now have a flush',
       isCorrect: true,
-      preferredLabel: 'The board got wetter and more connected',
+      preferredLabel: 'An opponent can now have a flush',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean transfer read.',
       feedbackReason:
-          'That is the first real-table update. top pair is still real, but the heart and connected turn card make the same board more dangerous before you copy the flop plan.',
+          'The flop had two hearts. The turn adds a third, so a player holding two hearts can now have a flush. Your pair of nines stays a pair.',
     ),
     Act0RunnerOptionV1(
       id: 'nothing_changed',
       label: 'Nothing changed, so keep the same easy plan',
       isCorrect: false,
-      preferredLabel: 'The board got wetter and more connected',
-      betterAnswerLabel: 'The board got wetter and more connected',
+      preferredLabel: 'An opponent can now have a flush',
+      betterAnswerLabel: 'An opponent can now have a flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more street read.',
       feedbackReason:
-          'Turn cards are not cosmetic. The new card changes texture and future-card pressure, so the flop story cannot stay frozen.',
+          'The turn adds a third heart. Two private hearts can now make a flush.',
     ),
     Act0RunnerOptionV1(
       id: 'size_only_changed',
       label: 'Only the bet size matters now',
       isCorrect: false,
-      preferredLabel: 'The board got wetter and more connected',
-      betterAnswerLabel: 'The board got wetter and more connected',
+      preferredLabel: 'An opponent can now have a flush',
+      betterAnswerLabel: 'An opponent can now have a flush',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Part of the picture.',
       feedbackReason:
-          'Size matters, but not before the board read. The turn changed texture first, so action should start from that update.',
+          'Before choosing a size, notice that the third heart lets an opponent make a flush.',
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ks Jd'),
-    boardCards: _act0LessonCardsV1('Kc 9h 2s Th'),
+    heroCards: _act0LessonCardsV1('9s Qd'),
+    boardCards: _act0LessonCardsV1('9d 5h 2h 8h'),
     centerLabel: 'Read the turn',
     openBb: 2.75,
     flopBetBb: 1,
-    highlightedCardIds: const ['board_1', 'board_3'],
+    highlightedCardIds: const ['board_3'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Street changes can change texture.',
-      body:
-          'On a real table, a turn card can make the same board wetter, more connected, and less comfortable for one-pair autopilot. top pair can stay ahead while still needing more caution.',
-      focusLabels: <String>[
-        'Real table',
-        'Turn card',
-        'Wetter board',
-        'Reconnect the story',
-      ],
-    ),
-  ],
+  teachingSteps: const [],
 );
 
 final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyWith(
+  caption: 'Compare the turn card with the river.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_river_draw_story_transfer',
   hint:
       'Keep the same draw story in mind and decide whether it finished or missed.',
-  question: 'What is the clean river read first?',
+  question: 'What did the river do to your turn draw?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'draw_missed_story',
-      label: 'The same draw story missed',
+      label: 'The river missed the straight draw',
       isCorrect: true,
-      preferredLabel: 'The same draw story missed',
+      preferredLabel: 'The river missed the straight draw',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'No heart arrived, so the same draw story missed. The clean read is keep the same story all the way to the river instead of inventing a new one.',
+          'Your 4-5-6-7 needed a 3 or an 8. The river ace is neither, so the straight draw missed.',
     ),
     Act0RunnerOptionV1(
       id: 'river_restarts_story',
       label: 'The river starts a new story from zero',
       isCorrect: false,
-      preferredLabel: 'The same draw story missed',
-      betterAnswerLabel: 'The same draw story missed',
+      preferredLabel: 'The river missed the straight draw',
+      betterAnswerLabel: 'The river missed the straight draw',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too disconnected.',
       feedbackReason:
-          'River reads do not reset the hand. The right transfer is keep following the same draw story and mark it as a miss when the suit never lands.',
+          'Compare the ace with the two ranks you needed on the turn. You still have only four connected ranks.',
     ),
     Act0RunnerOptionV1(
       id: 'draw_hit_anyway',
       label: 'The draw probably got there anyway',
       isCorrect: false,
-      preferredLabel: 'The same draw story missed',
-      betterAnswerLabel: 'The same draw story missed',
+      preferredLabel: 'The river missed the straight draw',
+      betterAnswerLabel: 'The river missed the straight draw',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting shortcut.',
-      feedbackReason:
-          'That guess skips the board. The clean recheck is simpler: no heart means the same draw story missed.',
+      feedbackReason: 'The river ace does not extend 4-5-6-7 to a straight.',
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ah 7h'),
-    boardCards: _act0LessonCardsV1('Th 4h 2c 9s 3c'),
+    heroCards: _act0LessonCardsV1('6c 5d'),
+    boardCards: _act0LessonCardsV1('Js 7h 2d 4c As'),
     centerLabel: 'Read the river',
     openBb: 2.75,
     flopBetBb: 2,
-    highlightedCardIds: const ['board_0', 'board_1', 'board_4'],
+    highlightedCardIds: const ['board_4'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'One draw story across all streets.',
-      body:
-          'Do not start over on the river. Follow the same draw story through flop, turn, and river, then say clearly whether it hit or missed.',
-      focusLabels: <String>['Same story', 'Flop-turn-river', 'Hit or missed'],
-    ),
-  ],
-  caption:
-      'The flop and turn showed a heart draw. The river brings the 3 of clubs.',
+  teachingSteps: const [],
 );
 
 final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
@@ -20054,7 +20412,7 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       'Use bucketed ranges with board texture first, then carry the read into stack-depth risk decisions.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'World 7 checkpoint.',
+      title: 'World 6 checkpoint.',
       body:
           'Group hands into ranges, fit them to texture, then adjust risk by stack depth.',
       focusLabels: <String>['Range buckets', 'Texture fit', 'Stack depth'],
@@ -20087,9 +20445,11 @@ Act0TableStateV1 _act0HypotheticalConceptTableV1(Act0TableStateV1 base) =>
     );
 
 final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
+  caption:
+      'BB called your flop bluff and checks this turn. Assume BB will call again with the better hands in its range.',
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Kh Js'),
-    boardCards: _act0LessonCardsV1('Kd 8c 7d 9d'),
+    heroCards: _act0LessonCardsV1('5c 4d'),
+    boardCards: _act0LessonCardsV1('Kc 9s 2d Ts'),
     centerLabel: 'Read the turn',
     flopBetBb: 2,
     highlightedCardIds: const ['board_3'],
@@ -20099,60 +20459,46 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
   feedbackSignalId: 'board_texture_change',
   lessonTitle: 'Range meets board',
   lessonSubtitle: 'Range Thinking',
-  hint: 'Repair the board read before forcing the same old action.',
+  hint: 'Use the stated behavior of the other player.',
   feedbackTitle: 'Repair the board read.',
   feedbackReason:
-      'When the board gets wetter, thin value and easy bets need more caution. Repair the texture read before repeating the flop plan.',
+      'A bluff needs better hands to fold. The new turn model says BB will call with those hands.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'respect_wetter_board',
-      label: 'The board got wetter, so the old thin-value plan needs caution',
+      label: 'Check instead of betting again',
       isCorrect: true,
-      preferredLabel:
-          'The board got wetter, so the old thin-value plan needs caution',
+      preferredLabel: 'Check instead of betting again',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice repair.',
       feedbackReason:
-          'That is the fix. Connected turn cards can shift one-pair hands away from easy value and toward more disciplined control.',
+          'The turn adds draws, and the model says BB now calls with the better hands. Checking avoids betting just to repeat the flop plan.',
     ),
     Act0RunnerOptionV1(
       id: 'nothing_changed',
-      label: 'Nothing changed, keep the same dry-board plan',
+      label: 'Make the same bluff again',
       isCorrect: false,
-      preferredLabel:
-          'The board got wetter, so the old thin-value plan needs caution',
-      betterAnswerLabel:
-          'The board got wetter, so the old thin-value plan needs caution',
+      preferredLabel: 'Check instead of betting again',
+      betterAnswerLabel: 'Check instead of betting again',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Very close.',
       feedbackReason:
-          'The new turn card changed how many stronger and drawing hands can exist. Treating it like the same dry board is the leak.',
+          "The turn adds new draws. Under the model, the better hands now call, so the earlier bluff no longer has the same purpose.",
     ),
     Act0RunnerOptionV1(
       id: 'smaller_same_story',
       label: 'Bet smaller but keep the same dry-board story',
       isCorrect: false,
-      preferredLabel:
-          'The board got wetter, so the old thin-value plan needs caution',
-      betterAnswerLabel:
-          'The board got wetter, so the old thin-value plan needs caution',
+      preferredLabel: 'Check instead of betting again',
+      betterAnswerLabel: 'Check instead of betting again',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable patch.',
       feedbackReason:
           'Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.',
     ),
   ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Repair story before line.',
-      body:
-          'Here, the turn made the board wetter. Repair that board read before repeating the old one-pair plan.',
-      focusLabels: <String>['Wet turn', 'Repair read', 'One pair caution'],
-    ),
-  ],
-  caption:
-      'A 9 of diamonds arrives on K-8-7. Hero keeps the old one-pair plan.',
-  question: 'What needs fixing in the old one-pair plan?',
+  teachingSteps: const [],
+  question: 'Which plan fits the stated turn behavior?',
 );
 
 // ── W7: Visible Cards Change Ranges — fresh runners ──────────────────────────────
@@ -21290,195 +21636,6 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
   ],
 );
 
-final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w6_kicker_showdown_compare',
-  lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking',
-  caption: 'River board is K-7-2-9-4. Hero shows A-K. Villain shows K-Q.',
-  hint: 'Name the made hand first. Both players have one pair.',
-  question: 'Which hand is stronger at showdown?',
-  table: _act0CheckpointShowdownTableV1(
-    heroCards: _heroAkCards,
-    otherCards: _villainKqCards,
-    boardCards: _boardK7294Cards,
-    flopBetBb: 2.5,
-    highlightedCardIds: const ['hero_0', 'hero_1', 'board_0'],
-  ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'hero_ak',
-      label: 'Hero A-K',
-      isCorrect: true,
-      preferredLabel: 'Hero A-K',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'The ace kicker wins.',
-      feedbackReason:
-          'Both players have a pair of kings. The first side card is different: A for you, Q for the other player. A beats Q.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'villain_kq',
-      label: 'Villain K-Q',
-      isCorrect: false,
-      preferredLabel: 'Hero A-K',
-      betterAnswerLabel: 'Hero A-K',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Compare the first side card.',
-      feedbackReason:
-          'After the pair of kings, compare the highest side card. Your ace beats the other player’s queen.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'tie',
-      label: 'Tie',
-      isCorrect: false,
-      preferredLabel: 'Hero A-K',
-      betterAnswerLabel: 'Hero A-K',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'The first difference breaks the tie.',
-      feedbackReason:
-          'Compare K-K-A-9-7 with K-K-Q-9-7. The first different card is A versus Q, so the ace wins.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Pair first, kicker second.',
-      body:
-          'Name the made hand before judging the winner. If the pair matches, compare the kicker that still plays in the best five.',
-      focusLabels: <String>['One pair', 'Kicker', 'Best five'],
-    ),
-  ],
-);
-
-final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w6_board_pair_strength_compare',
-  lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking',
-  caption: 'River board is J-8-8-2-2. Hero shows A-J. Villain shows K-8.',
-  hint: 'The board helped both players. Compare the full five-card hand.',
-  question: 'Which hand is stronger at showdown?',
-  table: _act0CheckpointShowdownTableV1(
-    heroCards: _heroAjCards,
-    otherCards: _villainK8Cards,
-    boardCards: _boardJ8822Cards,
-    flopBetBb: 4,
-  ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'hero_aj',
-      label: 'Hero A-J',
-      isCorrect: false,
-      preferredLabel: 'Villain K-8',
-      betterAnswerLabel: 'Villain K-8',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Tempting read.',
-      feedbackReason:
-          'A-J makes two pair, jacks and eights, but K-8 makes a full house, eights full of twos. A full house beats two pair.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'villain_k8',
-      label: 'Villain K-8',
-      isCorrect: true,
-      preferredLabel: 'Villain K-8',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean compare.',
-      feedbackReason:
-          'K-8 makes 8-8-8-2-2, a full house, eights full of twos. That outranks Hero two pair.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'tie',
-      label: 'Tie',
-      isCorrect: false,
-      preferredLabel: 'Villain K-8',
-      betterAnswerLabel: 'Villain K-8',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'The board is paired, but both players did not land on the same best five. Villain improves beyond the shared board.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Board can help both players.',
-      body:
-          'Compare all five cards: Hero has jacks and eights with an ace kicker. Villain has three eights and two twos for a full house.',
-      focusLabels: <String>[
-        'Paired board',
-        'Full house',
-        'Two pair',
-        'Best five',
-      ],
-    ),
-  ],
-);
-
-final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w6_checkpoint_table_best_five',
-  lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking',
-  caption:
-      'Real table showdown. River board is A-K-Q-J-T. Hero shows A-5. Villain shows K-4.',
-  hint: 'Best five cards decide the hand, not the loudest private card.',
-  question: 'What is the clean read before the pot is pushed?',
-  table: _act0CheckpointShowdownTableV1(
-    heroCards: _heroA5Cards,
-    otherCards: _villainK4Cards,
-    boardCards: _boardBroadwayCards,
-    flopBetBb: 3,
-    turnBetBb: 3,
-    highlightedCardIds: const [
-      'board_0',
-      'board_1',
-      'board_2',
-      'board_3',
-      'board_4',
-    ],
-  ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'split',
-      label: 'Split the pot',
-      isCorrect: true,
-      preferredLabel: 'Split the pot',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong live read.',
-      feedbackReason:
-          'The straight is already on the board. Best five cards are A-K-Q-J-T for both players, so private kickers do not help.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'hero_wins',
-      label: 'Hero wins with aces',
-      isCorrect: false,
-      preferredLabel: 'Split the pot',
-      betterAnswerLabel: 'Split the pot',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'One more check.',
-      feedbackReason:
-          'Do not stop at the private cards. The board already makes the best five-card straight, so Hero ace does not outrank the board.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'villain_wins',
-      label: 'Villain wins with kings',
-      isCorrect: false,
-      preferredLabel: 'Split the pot',
-      betterAnswerLabel: 'Split the pot',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
-      feedbackReason:
-          'Villain king feels relevant, but both players use the same straight from the board. When the same best five play, the pot is split.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Board can lock the showdown.',
-      body:
-          'Best five cards decide the hand. When the full straight sits on the board, private cards do not break the tie.',
-      focusLabels: <String>['Best five', 'Board plays', 'Split pot'],
-    ),
-  ],
-);
-
 // Stack depth and risk ────────────────────────────────────────────────────
 
 final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
@@ -22406,142 +22563,159 @@ final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_6max_wider',
-  caption: _w7FullRingComparisonV1,
-  hint: 'Compare 6-max with 9-handed full ring.',
-  question: 'In which format can you usually open more hands from UTG?',
+  caption:
+      "Practice rule for A-J offsuit: raise to 2.5 BB with at most five players still to act. Otherwise fold.",
+  hint: 'Check the given limits before choosing.',
+  question: "You are first to act. What fits this table?",
+  feedbackTitle: "Count the players behind.",
+  feedbackReason:
+      "The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.",
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ac Jd'),
+    centerLabel: 'Read the seats',
+  ),
+  teachingSteps: const [],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '6max',
-      label: '6-max',
+      label: "Raise to 2.5 BB",
       isCorrect: true,
-      preferredLabel: '6-max',
+      preferredLabel: "Raise to 2.5 BB",
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Fewer players are left to act.',
+      feedbackTitle: "Five players are left to act.",
       feedbackReason:
-          '6-max widens many opens because fewer players are left behind to wake up with premiums.',
+          "The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.",
     ),
     Act0RunnerOptionV1(
       id: 'fullring',
-      label: 'Full ring',
+      label: "Fold",
       isCorrect: false,
-      preferredLabel: '6-max',
-      betterAnswerLabel: '6-max',
+      preferredLabel: "Raise to 2.5 BB",
+      betterAnswerLabel: "Raise to 2.5 BB",
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Getting warmer.',
+      feedbackTitle: "The rule allows a raise here.",
       feedbackReason:
-          'Full ring has more players left to act, so early-position ranges usually tighten rather than widen.',
+          "Count the players besides you. There are five, so A-J offsuit can open in this example.",
     ),
     Act0RunnerOptionV1(
       id: 'same',
-      label: 'Same in both',
+      label: "Raise to 8 BB",
       isCorrect: false,
-      preferredLabel: '6-max',
-      betterAnswerLabel: '6-max',
+      preferredLabel: "Raise to 2.5 BB",
+      betterAnswerLabel: "Raise to 2.5 BB",
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      feedbackTitle: "Use the size in the rule.",
       feedbackReason:
-          'The hand class stays the same, but the format changes pressure. Fewer players behind usually widens the opening range.',
+          "A raise fits the five players behind. In this example, the given size is 2.5 BB.",
     ),
   ],
-  table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('As Jd'),
-    centerLabel: 'Players behind',
-  ),
 );
 
 final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_fullring_tighter',
-  caption: _w7FullRingComparisonV1,
-  hint: 'More players still need to act.',
-  question: 'From UTG, how should you adjust your opens in full ring?',
+  caption:
+      "Add UTG+1, UTG+2 and LJ after you. Open A-J offsuit for 2.5 BB with at most five to act. Otherwise fold.",
+  hint: 'Check the given limits before choosing.',
+  question: "What fits the nine-player version of this hand?",
+  feedbackTitle: "More players can act after you.",
+  feedbackReason:
+      "Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.",
+  table: _act0UnopenedLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ah Js'),
+    centerLabel: 'Read the seats',
+  ),
+  teachingSteps: const [],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'tighter',
-      label: 'Open fewer hands',
+      label: "Fold",
       isCorrect: true,
-      preferredLabel: 'Open fewer hands',
+      preferredLabel: "Fold",
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
+      feedbackTitle: "Eight players are left to act.",
       feedbackReason:
-          'Full ring means more players behind. That added pressure usually tightens early-position opens.',
+          "Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.",
     ),
     Act0RunnerOptionV1(
       id: 'wider',
-      label: 'Open more hands',
+      label: "Raise to 2.5 BB",
       isCorrect: false,
-      preferredLabel: 'Open fewer hands',
-      betterAnswerLabel: 'Open fewer hands',
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'On the right track.',
+      feedbackTitle: "Count the three extra players.",
       feedbackReason:
-          'More players behind do not widen the range. They increase the chance of running into strength and usually tighten it.',
+          "A 2.5 BB raise fit the six-player example. With eight players left, the rule says to fold instead.",
     ),
     Act0RunnerOptionV1(
       id: 'depth',
-      label: 'Only stack depth matters',
+      label: "Raise to 8 BB",
       isCorrect: false,
-      preferredLabel: 'Open fewer hands',
-      betterAnswerLabel: 'Open fewer hands',
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Not quite.',
+      feedbackTitle: "The number of players still matters.",
       feedbackReason:
-          'Stack depth matters too, but format matters here because table size changes how many players are left to act.',
+          "A different bet size does not change how many players are left to act. Use the fold in the stated model.",
     ),
   ],
-  table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ac Jh'),
-    centerLabel: 'Players behind',
-  ),
 );
 
 final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_format_table_notice',
-  caption: _w7FullRingComparisonV1,
-  hint: 'Start by counting how many players are still behind you.',
-  question:
-      'You move to full ring at the same stack depth. What changes for your UTG opens?',
+  caption:
+      "BB checks. Pick a bet that leaves both players at least 9 BB if it is called.",
+  hint: 'Check the given limits before choosing.',
+  question: "Which bet fits that plan?",
+  feedbackTitle: "Track what remains after a call.",
+  feedbackReason:
+      "With 18 BB and 42 BB behind, a 6 BB bet and call leave 12 BB and 36 BB. Both are above 9 BB.",
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('Ad Td'),
+    boardCards: _act0LessonCardsV1('Ac 8h 4s'),
+    centerLabel: 'Read the stacks',
+    heroBehindBb: 18,
+    bbBehindBb: 42,
+    openBb: 3.75,
+    facingBb: 0,
+  ),
+  teachingSteps: const [],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'tighten_early',
-      label: 'Count more players behind and tighten early opens a bit',
-      isCorrect: true,
-      preferredLabel: 'Count more players behind and tighten early opens a bit',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      id: 'open_same',
+      label: "Bet 10 BB",
+      isCorrect: false,
+      preferredLabel: "Bet 6 BB",
+      betterAnswerLabel: "Bet 6 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "The shorter stack would have 8 BB.",
       feedbackReason:
-          'That is the real-table transfer: more players behind usually means tighter early-position pressure.',
+          "After matching 10 BB, your 18 BB stack would have 8 BB left. That is below the target.",
     ),
     Act0RunnerOptionV1(
-      id: 'open_same',
-      label: 'Open just as wide as 6-max',
-      isCorrect: false,
-      preferredLabel: 'Count more players behind and tighten early opens a bit',
-      betterAnswerLabel:
-          'Count more players behind and tighten early opens a bit',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too wide.',
+      id: 'tighten_early',
+      label: "Bet 6 BB",
+      isCorrect: true,
+      preferredLabel: "Bet 6 BB",
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Both players keep enough chips.",
       feedbackReason:
-          'Full ring adds players behind, so the same open widths are usually too loose early.',
+          "With 18 BB and 42 BB behind, a 6 BB bet and call leave 12 BB and 36 BB. Both are above 9 BB.",
     ),
     Act0RunnerOptionV1(
       id: 'depth_only',
-      label: 'Only watch stack depth, not player count',
+      label: "Bet 12 BB",
       isCorrect: false,
-      preferredLabel: 'Count more players behind and tighten early opens a bit',
-      betterAnswerLabel:
-          'Count more players behind and tighten early opens a bit',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Part of the picture.',
+      preferredLabel: "Bet 6 BB",
+      betterAnswerLabel: "Bet 6 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Follow the smaller stack.",
       feedbackReason:
-          'Depth matters too, but table format starts with how many players are left behind to wake up with strength.',
+          "A 12 BB bet can be called, but leaves only 6 BB in the shorter stack.",
     ),
   ],
-  table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ad Js'),
-    centerLabel: 'Players behind',
-  ),
 );
 
 final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
@@ -22570,68 +22744,56 @@ final _w7FormatRecapRunner = _w7FormatPressureIntroRunner.copyWith(
 final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w7_stack_checkpoint',
-  caption: 'Lesson learned: depth, SPR, and format all change risk.',
-  hint:
-      'Next you will see how tournament pressure makes stack risk even sharper.',
-  question: 'What does stack-depth thinking add to range thinking?',
-  feedbackTitle: 'Stack-depth checkpoint.',
+  caption: "BB checks on the flop. Read both stacks and the current pot.",
+  hint: 'Check the given limits before choosing.',
+  question: "What is the SPR here?",
+  feedbackTitle: "Calculate the stack-to-pot ratio.",
   feedbackReason:
-      'Range reading tells you what hand families exist. Stack depth tells you how much risk those families can absorb. Tournament pressure is the next layer.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Carry the range into risk.',
-      body:
-          'Group the range first, then ask how deep the hand plays, how much room is left, and what the format changes.',
-      focusLabels: <String>[
-        'Range',
-        'Effective stack',
-        'SPR',
-        'Tournament pressure',
-      ],
-    ),
-  ],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'range_only',
-      label: 'Range only',
-      isCorrect: false,
-      preferredLabel: 'Range plus stack risk',
-      betterAnswerLabel: 'Range plus stack risk',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable start.',
-      feedbackReason:
-          'Range is still the base, but stack depth changes commitment, room, and future risk. Tournament pressure builds on both.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'range_plus_depth',
-      label: 'Range plus stack risk',
-      isCorrect: true,
-      preferredLabel: 'Range plus stack risk',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
-      feedbackReason:
-          'Good planning now needs both parts: what range is present and how much risk that depth creates. Tournament pressure is the next step.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'chips_only',
-      label: 'Range plus raw chip count',
-      isCorrect: false,
-      preferredLabel: 'Range plus stack risk',
-      betterAnswerLabel: 'Range plus stack risk',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Count is not enough.',
-      feedbackReason:
-          'Raw chips plus range still misses the real stack-risk layer. Effective stack, SPR, and format explain how much pressure the range can handle.',
-    ),
-  ],
+      "The effective stack is 32 BB and the pot is 8 BB. The SPR is 4. In World 9 you will also consider the cost of losing your tournament stack.",
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Kc Qs'),
-    boardCards: _act0LessonCardsV1('Kh 8d 3s'),
-    centerLabel: 'Read the table',
+    heroCards: _act0LessonCardsV1('Qd Js'),
+    boardCards: _act0LessonCardsV1('Jc 9h 3s'),
+    centerLabel: 'Read the stacks',
     heroBehindBb: 32,
     bbBehindBb: 43,
     openBb: 3.75,
+    facingBb: 0,
   ),
+  teachingSteps: const [],
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'range_only',
+      label: "About 5.4",
+      isCorrect: false,
+      preferredLabel: "4",
+      betterAnswerLabel: "4",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Start with the smaller stack.",
+      feedbackReason:
+          "43 divided by 8 uses the larger stack. The 32 BB stack sets how much both players can match.",
+    ),
+    Act0RunnerOptionV1(
+      id: 'range_plus_depth',
+      label: "4",
+      isCorrect: true,
+      preferredLabel: "4",
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "32 divided by 8 is 4.",
+      feedbackReason:
+          "The effective stack is 32 BB and the pot is 8 BB. The SPR is 4. In World 9 you will also consider the cost of losing your tournament stack.",
+    ),
+    Act0RunnerOptionV1(
+      id: 'chips_only',
+      label: "32",
+      isCorrect: false,
+      preferredLabel: "4",
+      betterAnswerLabel: "4",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Divide by the pot.",
+      feedbackReason:
+          "32 BB is the effective stack. Divide it by the 8 BB pot to get an SPR of 4.",
+    ),
+  ],
 );
 
 final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
