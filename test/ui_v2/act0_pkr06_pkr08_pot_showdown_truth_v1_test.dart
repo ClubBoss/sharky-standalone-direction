@@ -351,6 +351,7 @@ void main() {
           body: Act0LessonRunnerShellV1(
             runner: runner.copyWith(
               teachingSteps: const [],
+              options: const [],
               phase: Act0LessonPhaseV1.theory,
             ),
             onBack: () {},

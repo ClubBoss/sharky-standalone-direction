@@ -501,8 +501,7 @@ void main() {
         );
         if (feedbackCase == 'wrong') {
           await _tap(tester, 'act0_shell_feedback_continue_cta');
-          // This ordinary table-read miss has no admitted repair target.
-          // Continue retains the authored source for a familiar lesson retry.
+          // Continue launches one familiar rehearsal of the same table read.
           expect(_runner(tester).selectedTaskId, _source);
           expect(_runner(tester).repairResultReceiptLine, isNull);
           await _advanceToPrompt(tester);
@@ -1126,31 +1125,51 @@ void main() {
       expect(_stableProgress(await _saved(tester)), _stableProgress(missed));
       await tester.tap(find.text('Home').last);
       await tester.pumpAndSettle();
-      // Home preserves this miss but cannot launch an unadmitted target.
-      // Back and the held CTA must preserve the actual saved wrong answer.
+      // Launching from Home keeps the original miss and the earned progress.
       await _tap(tester, 'act0_academy_home_leaf_cta');
-      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      expect(_runner(tester).selectedTaskId, _source);
+      expect(_runner(tester).runner.selectedOptionId, isNull);
+      final resumed = await _saved(tester);
+      expect(resumed['earnedXp'], missed['earnedXp']);
       expect(
-        find.text(
-          'This miss is saved. A matching repair has not been confirmed yet.',
-        ),
-        findsOneWidget,
-      );
-      final held = await _saved(tester);
-      expect(held['earnedXp'], missed['earnedXp']);
-      expect(
-        held['learningEvidenceHistory'],
+        resumed['learningEvidenceHistory'],
         missed['learningEvidenceHistory'],
       );
-      expect(held['completedTaskIds'], missed['completedTaskIds']);
-      expect(held['openRepairIntents'], missed['openRepairIntents']);
-      final heldIntent = _rows(
-        held,
+      expect(resumed['completedTaskIds'], missed['completedTaskIds']);
+      expect(resumed['openRepairIntents'], missed['openRepairIntents']);
+      final intent = _rows(
+        resumed,
         'openRepairIntents',
       ).singleWhere((row) => row['sourceTaskId'] == _source);
-      expect(heldIntent['mappingType'], 'unresolved_product_gap');
-      expect(heldIntent['repairOccurrenceId'], isNotEmpty);
-      expect(_rows(held, 'repairOutcomeProjection'), isEmpty);
+      expect(intent['mappingType'], 'intentional_exact');
+      expect(intent['targetTaskId'], _source);
+      expect(intent['repairOccurrenceId'], isNotEmpty);
+      expect(_rows(resumed, 'repairOutcomeProjection'), isEmpty);
+
+      await _foundationAdvanceToPrompt(tester);
+      await _choose(tester, 'two_three_six');
+      final answered = await _saved(tester);
+      final outcome = _rows(
+        answered,
+        'repairOutcomeProjection',
+      ).singleWhere((row) => row['sourceTaskId'] == _source);
+      expect(outcome['repairOccurrenceId'], intent['repairOccurrenceId']);
+      expect(outcome['isCorrect'], isTrue);
+      expect(answered['earnedXp'], missed['earnedXp']);
+      expect(
+        _rows(
+          answered,
+          'openRepairIntents',
+        ).where((row) => row['sourceTaskId'] == _source),
+        isEmpty,
+      );
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+      final finished = await _saved(tester);
+      expect(finished['earnedXp'], (missed['earnedXp'] as int) + 5);
+      expect(
+        (finished['completedTaskIds'] as List).where((id) => id == _source),
+        hasLength(1),
+      );
     },
   );
   testWidgets(
@@ -1205,7 +1224,7 @@ void main() {
       );
 
       await _choose(tester, 'five_board_now');
-      expect(_runner(tester).repairReasonLine, isNull);
+      expect(_runner(tester).repairReasonLine, contains('Replay this spot'));
       final missed = await _saved(tester);
       expect(missed['earnedXp'], 10, reason: 'A wrong choice earns no XP.');
       final miss = _rows(missed, 'learningEvidenceHistory').singleWhere(
@@ -1226,12 +1245,12 @@ void main() {
         missed,
         'openRepairIntents',
       ).singleWhere((row) => row['sourceTaskId'] == _source);
-      expect(heldIntent['mappingType'], 'unresolved_product_gap');
+      expect(heldIntent['mappingType'], 'intentional_exact');
+      expect(heldIntent['targetTaskId'], _source);
       expect(_rows(missed, 'repairOutcomeProjection'), isEmpty);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
 
-      // A held mapping permits the ordinary same-source lesson retry;
-      // this is familiar correction, not an admitted repair or recheck proof.
+      // The same-source rehearsal has no independent transfer claim.
       expect(_runner(tester).selectedTaskId, _source);
       expect(_runner(tester).repairResultReceiptLine, isNull);
       final retried = await _saved(tester);
@@ -1246,7 +1265,6 @@ void main() {
       expect(sourceCompleted['completedTaskIds'], contains(_source));
 
       // The ordinary lesson then visits the existing 4 BB task.
-      // No unadmitted guided appearance or repair completion is invented.
       expect(_runner(tester).selectedTaskId, _mappedRepair);
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_four');
@@ -1319,10 +1337,15 @@ void main() {
           'openRepairIntents',
         ).singleWhere((row) => row['sourceTaskId'] == _source),
         heldIntent,
-        reason:
-            'Familiar correction cannot falsely close unadmitted repair debt.',
+        reason: 'The recorded relation keeps the original miss identity.',
       );
-      expect(_rows(acknowledged, 'repairOutcomeProjection'), isEmpty);
+      final rehearsal = _rows(
+        acknowledged,
+        'repairOutcomeProjection',
+      ).singleWhere((row) => row['targetTaskId'] == _source);
+      expect(rehearsal['repairOccurrenceId'], miss['recordId']);
+      expect(rehearsal['selectedChoiceId'], 'two_three_six');
+      expect(rehearsal['isCorrect'], isTrue);
       final completed = (acknowledged['completedTaskIds'] as List)
           .cast<String>();
       expect(

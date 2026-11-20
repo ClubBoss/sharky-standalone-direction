@@ -232,7 +232,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
     final world = state.worldById('world_1');
     final completedLesson = world.lessons.first;
     final nextLesson = world.lessons[1];
-    final completedTaskIds = completedLesson.taskList
+    final completedTaskIds = completedLesson.courseTaskList
         .map((task) => task.taskId)
         .toSet();
     _selectedWorldId = world.worldId;
@@ -240,7 +240,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
     _completedTaskIds.addAll(completedTaskIds);
     _cleanTaskIds.addAll(completedTaskIds);
     _selectedLessonId = nextLesson.lessonId;
-    _selectedTaskId = nextLesson.taskList.first.taskId;
+    _selectedTaskId = nextLesson.courseTaskList.first.taskId;
     _persistedStreakDays = 3;
   }
 

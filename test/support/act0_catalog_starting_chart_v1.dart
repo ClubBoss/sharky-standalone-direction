@@ -41,7 +41,7 @@ String _groupName(_OpeningGroup group) =>
     group.name[0].toUpperCase() + group.name.substring(1);
 
 String renderStartingChartOpening() => [
-  'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row.',
+  'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.',
   for (final rule in _openingRules)
     '${_groupName(rule.group)} | ${rule.entries.join(', ')} | Open from ${rule.firstSeat} through BTN.',
   '$_weakGroup | Other hands in this course model | Fold.',

@@ -193,7 +193,8 @@ void main() {
       w1HeroButton.outcome,
       Act0RepairGapOutcomeV1.alternateSameSignalTarget,
     );
-    expect(w1HeroButton.targetTaskId, 'cards_ranks_suits_private_board');
+    expect(w1HeroButton.targetLessonId, w1HeroButton.sourceLessonId);
+    expect(w1HeroButton.targetTaskId, 'first_table_guide_shared_cards_repair');
     final coPlayersBehind = rows.singleWhere(
       (row) =>
           row.sourceTaskId ==
