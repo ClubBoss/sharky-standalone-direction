@@ -179,6 +179,27 @@ void main() {
     },
   );
 
+  testWidgets('old saved progress opens without a W1 check', (tester) async {
+    usePhone(tester);
+    SharedPreferences.setMockInitialValues({
+      _progressKey: jsonEncode({
+        'schemaVersion': 20,
+        'completedTaskIds': ['what_poker_is_theory'],
+        'completedLessonIds': [],
+        'skippedTaskIds': [],
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'what_poker_is',
+        'selectedTaskId': 'what_poker_is_find_hero',
+        'earnedXp': 5,
+      }),
+    });
+    await _mount(tester);
+    expect(find.byKey(const Key('act0_shell_w1_start_basics')), findsNothing);
+    final saved = await _saved(tester);
+    expect(saved['earnedXp'], 5);
+    expect(saved['completedTaskIds'], ['what_poker_is_theory']);
+  });
+
   testWidgets('leaving the check before answering starts W1 without an award', (
     tester,
   ) async {
