@@ -1708,7 +1708,7 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
 }
 
 const _exerciseGoalPrefix = 'exercise/';
-const act0SameGoalReplayThroughWorldV1 = 11;
+const act0SameGoalReplayThroughWorldV1 = 12;
 
 // These are task-level goals shared by more than one exercise. A single
 // exercise with no equivalent keeps its own goal and supports familiar replay.
@@ -1781,6 +1781,12 @@ const _foundationSharedRepairGoals = <String, String>{
   'w11_checkpoint_plan_line': 'choose_one_measurable_session_focus',
   'w11_review_pick_leak': 'choose_one_review_leak',
   'w11_checkpoint_review_line': 'choose_one_review_leak',
+  'w12_good_fold_bad_result': 'review_process_before_outcome',
+  'w12_checkpoint_process_line': 'review_process_before_outcome',
+  'w12_after_bad_beat_reset': 'reset_before_the_next_tilt_decision',
+  'w12_checkpoint_reset_line': 'reset_before_the_next_tilt_decision',
+  'w12_assertive_not_ego': 'choose_evidence_over_ego_pressure',
+  'w12_checkpoint_discipline_line': 'choose_evidence_over_ego_pressure',
 };
 
 String act0FoundationRepairGoalForTaskV1(String taskId) =>
