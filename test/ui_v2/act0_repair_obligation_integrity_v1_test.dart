@@ -181,6 +181,7 @@ Future<void> _ready(WidgetTester tester, String choice) async {
       findsOneWidget,
       reason: 'authored teaching route reaches $choice',
     );
+    await tester.pump(const Duration(milliseconds: 900));
     await tester.tap(next);
     await tester.pumpAndSettle();
   }
