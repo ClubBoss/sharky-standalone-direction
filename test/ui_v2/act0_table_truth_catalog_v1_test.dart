@@ -82,6 +82,30 @@ void main() {
             '$id: ${proof.where((row) => row.result != 'PASS').map((row) => row.key).join('\n')}',
       );
     }
+    const lateDecisionProof = {
+      'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
+      'w10_table_value_vs_caller_transfer': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_revenge_raise_trap': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'asm05_new_known_holes_turn_call_10': ('PASS', 'PASS'),
+      'asm05_new_known_holes_turn_call_40': ('PASS', 'PASS'),
+    };
+    for (final MapEntry(key: id, value: (pot, price))
+        in lateDecisionProof.entries) {
+      for (final (rule, verdict) in [
+        ('D2.pot_feasibility', pot),
+        ('D3.to_call_completeness', price),
+      ]) {
+        final proof = rows.where(
+          (row) => row.taskId == id && row.invariant == rule,
+        );
+        expect(proof.map((row) => row.result).toSet(), {
+          verdict,
+        }, reason: '$id $rule');
+      }
+    }
     final tasks = Act0ShellStateV1.sample.worlds
         .expand((w) => w.lessons)
         .expand((l) => l.taskList)
