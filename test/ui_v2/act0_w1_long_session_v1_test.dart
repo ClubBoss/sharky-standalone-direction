@@ -513,53 +513,68 @@ void main() {
     expect(restored['completedTaskIds'], before['completedTaskIds']);
   });
 
-  testWidgets('a W9 yellow-zone miss reopens yellow-zone planning', (t) async {
-    const taskId = 'w9_m_ratio_table_window_transfer';
-    const targetId = 'w9_m_ratio_yellow_zone';
-    final xp = await _openSavedCourseTask(
-      t,
-      worldId: 'world_9',
-      taskId: taskId,
-    );
-    expect(
-      await _tapFirst(t, [
-        find.byKey(const Key('act0_shell_option_wait_for_red')),
-      ]),
-      isTrue,
-    );
+  for (final (name, worldId, taskId, choiceId, targetId) in const [
+    (
+      'a W9 yellow-zone miss reopens yellow-zone planning',
+      'world_9',
+      'w9_m_ratio_table_window_transfer',
+      'wait_for_red',
+      'w9_m_ratio_yellow_zone',
+    ),
+    (
+      'a W10 blind-overfold miss reopens the one-lever exercise',
+      'world_10',
+      'w10_checkpoint_table_notice',
+      'rewrite_everything',
+      'w10_vs_nit_open_wider',
+    ),
+  ]) {
+    testWidgets(name, (t) async {
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: worldId,
+        taskId: taskId,
+      );
+      expect(
+        await _tapFirst(t, [find.byKey(Key('act0_shell_option_$choiceId'))]),
+        isTrue,
+      );
 
-    Map<dynamic, dynamic> sourceRepair(Map<String, dynamic> saved) =>
-        (saved['openRepairIntents'] as List).cast<Map>().singleWhere(
-          (row) => row['sourceTaskId'] == taskId,
-        );
-    final before = await _saved(t);
-    final intent = sourceRepair(before);
-    expect(intent['targetTaskId'], targetId);
-    expect(intent['mappingType'], 'repair');
-    expect(before['earnedXp'], xp);
-    expect(
-      await _tapFirst(t, [
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      ]),
-      isTrue,
-    );
-    expect(
-      t
-          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
-          .selectedTaskId,
-      targetId,
-    );
+      Map<dynamic, dynamic> sourceRepair(Map<String, dynamic> saved) =>
+          (saved['openRepairIntents'] as List).cast<Map>().singleWhere(
+            (row) => row['sourceTaskId'] == taskId,
+          );
+      final before = await _saved(t);
+      final intent = sourceRepair(before);
+      expect(intent['targetTaskId'], targetId);
+      expect(intent['mappingType'], 'repair');
+      expect(before['earnedXp'], xp);
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        ]),
+        isTrue,
+      );
+      expect(
+        t
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        targetId,
+      );
 
-    await _mount(t);
-    final restored = await _saved(t);
-    expect(sourceRepair(restored), intent);
-    expect(
-      restored['learningEvidenceHistory'],
-      before['learningEvidenceHistory'],
-    );
-    expect(restored['earnedXp'], xp);
-    expect(restored['completedTaskIds'], before['completedTaskIds']);
-  });
+      await _mount(t);
+      final restored = await _saved(t);
+      expect(sourceRepair(restored), intent);
+      expect(
+        restored['learningEvidenceHistory'],
+        before['learningEvidenceHistory'],
+      );
+      expect(restored['earnedXp'], xp);
+      expect(restored['completedTaskIds'], before['completedTaskIds']);
+    });
+  }
 
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const lastWorld = fullRoute ? 12 : 7;
