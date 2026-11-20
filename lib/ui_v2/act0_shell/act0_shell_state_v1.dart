@@ -5740,7 +5740,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     extraDrills: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_table_outs_flush_transfer',
-        title: 'Live heart outs',
+        title: 'Flush draw and price',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5TableOutsFlushTransferRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -5770,13 +5770,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_table_outs_straight_transfer',
-        title: 'Live straight outs',
+        title: 'Straight draw and price',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5TableOutsStraightTransferRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
             _world5TableOutsStraightTransferRunner.options,
             correctOptionId: 'four_or_nine',
-            correctIndex: 2,
+            correctIndex: 0,
           ),
         ),
         rewardXp: 10,
@@ -5919,11 +5919,11 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_board_checkpoint',
         title: 'Board checkpoint',
         phase: Act0LessonPhaseV1.review,
-        runner: _world5BoardCheckpointRunner.copyWith(
+        runner: _world5DrawPriceCheckpointRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
-            _world5BoardCheckpointRunner.options,
+            _world5DrawPriceCheckpointRunner.options,
             correctOptionId: 'texture_draw_outs',
-            correctIndex: 2,
+            correctIndex: 1,
           ),
         ),
         rewardXp: 15,
@@ -6024,7 +6024,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w6_value_wet_board',
-        title: 'Value on wet board',
+        title: 'Compare ranges on a low flop',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6ValueWetBoardRunner,
         rewardXp: 10,
@@ -6046,7 +6046,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w6_board_fit_recap',
-        title: 'Board fit recap',
+        title: 'Compare ranges on a high flop',
         phase: Act0LessonPhaseV1.review,
         runner: _w6BoardFitRecapRunner,
         rewardXp: 15,
@@ -6551,7 +6551,10 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
         title: _w7LearnerTheoryTitleV1(spec.taskId),
-        body: spec.learnerPrompt,
+        body: phase == Act0LessonPhaseV1.theory
+            ? 'If you see an ace, only three aces can be in another hand. '
+                  'A-A drops from 6 combos to 3. A-K drops from 4 × 4 = 16 combos to 3 × 4 = 12.'
+            : spec.learnerPrompt,
         focusLabels: <String>[spec.boardContext, 'What hands can still fit?'],
       ),
     ],
@@ -18599,9 +18602,18 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Texture first.',
-      body: 'Before action, ask if the board is calm or changing fast.',
-      focusLabels: <String>['Dry', 'Wet', 'Board'],
+      title: 'Look at ranks and suits.',
+      body:
+          'A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. '
+          'A wet board offers more draws through close ranks or matching suits.',
+      focusLabels: <String>['Rank gaps', 'Suits'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Name the flop shape.',
+      body:
+          'Rainbow means three different suits. Two-tone means two cards share a suit. '
+          'A paired board repeats a rank, such as 8-8-3.',
+      focusLabels: <String>['Number of suits', 'Repeated ranks'],
     ),
   ],
   feedbackTitle: 'Texture first.',
@@ -18854,9 +18866,10 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Same suit clue.',
+      title: 'Four cards of the same suit.',
       body:
-          'When you hold two hearts and the board has hearts, more hearts matter.',
+          'A flush draw has four cards of one suit between your hand and the board. '
+          'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.',
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
   ],
@@ -19106,8 +19119,10 @@ final _world5StraightIntroRunner = _world5ConnectedIntroRunner.copyWith(
   question: 'What does a straight draw use?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Rank ladder.',
-      body: 'Straight pressure comes from nearby ranks, not suits.',
+      title: 'Count the ranks that finish a straight.',
+      body:
+          'An open-ended draw can finish at either end of four ranks in a row. Here, 8-9-T-J can be finished by any 7 or queen: 8 outs. '
+          'A gutshot has one gap, like 5-6-8-9. Only a 7 fills it: 4 outs.',
       focusLabels: <String>['Ranks', 'Ladder', 'Straight draw'],
     ),
   ],
@@ -19329,7 +19344,8 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
   lessonId: 'w5_outs_intro',
   lessonTitle: 'Outs as improvement cards',
   caption: 'Outs are cards that can improve your hand.',
-  hint: 'At this level, just name the kind of card that helps.',
+  hint:
+      'Count the cards that complete the draw. Then compare the chance with the price.',
   question: 'What is an out?',
   options: const <Act0RunnerOptionV1>[],
   table: _act0BoardLessonTableV1(
@@ -19339,9 +19355,18 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Outs are helpers.',
-      body: 'An out is a future card that can improve your hand.',
-      focusLabels: <String>['Future card', 'Improve', 'Out'],
+      title: 'From outs to a chance.',
+      body:
+          'An out is a card that improves your hand. On the turn, you can see six cards and 46 are unseen. '
+          'On the river, 9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.',
+      focusLabels: <String>['Outs', 'One card left'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Compare with the price from World 4.',
+      body:
+          'Calling 1 BB into a pot of 7 BB makes an 8 BB pot. You need to win 1 out of 8 times. '
+          'If only your outs win and there is no more betting, 8 outs win about 1 time in 6. That is enough to call.',
+      focusLabels: <String>['Call 1 BB', 'Pot 7 BB', 'Chance to win'],
     ),
   ],
   feedbackTitle: 'Name the improving cards.',
@@ -19450,42 +19475,35 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_table_outs_flush_transfer',
   caption:
-      'Real table. Pot 10 BB. Hero has A-heart and 7-heart on T-heart, 4-heart, 2-club, 9-spade.',
+      'Assume every flush wins and all other rivers lose. No more betting.',
   hint:
-      'Before calling a small bet, name the live improvement cards that still help.',
-  question: 'Which improvement cards still matter first?',
+      'Count the hearts you cannot see, then compare your chance with 2 out of 12.',
+  question: 'Call 2 BB into the 10 BB pot, or fold?',
+  feedbackTitle: 'Compare the hit rate and the price.',
+  feedbackReason:
+      'Count only winning cards and compare that chance with the call divided by the final pot.',
+  teachingSteps: const [],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'heart_outs',
-      label: 'Any heart still completes the flush',
+      label: 'Call 2 BB',
       isCorrect: true,
-      preferredLabel: 'Any heart still completes the flush',
+      preferredLabel: 'Call 2 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Live outs first.',
+      feedbackTitle: 'Nine outs are enough at this price.',
       feedbackReason:
-          'Any remaining heart makes your flush. The 2 of hearts also pairs the board, so an opponent holding two tens would make a full house. Weigh your chance of winning against the 2 BB price.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'ace_only',
-      label: 'Only an ace matters now',
-      isCorrect: false,
-      preferredLabel: 'Any heart still completes the flush',
-      betterAnswerLabel: 'Any heart still completes the flush',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too narrow.',
-      feedbackReason:
-          'A non-heart ace gives you a pair. A heart completes your flush, and a heart that pairs the board can also help your opponent.',
+          'Nine hearts out of 46 unseen cards hit about 1 time in 5. Calling 2 BB makes a 12 BB pot, so you need 1 win in 6. Call under the stated rule.',
     ),
     Act0RunnerOptionV1(
       id: 'price_only',
-      label: 'Only the small price matters',
+      label: 'Fold',
       isCorrect: false,
-      preferredLabel: 'Any heart still completes the flush',
-      betterAnswerLabel: 'Any heart still completes the flush',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Sequence first.',
+      preferredLabel: 'Call 2 BB',
+      betterAnswerLabel: 'Call 2 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the chance with the price.',
       feedbackReason:
-          'Start with the hearts that complete your flush. Then consider how often the flush will win before you judge the 2 BB price.',
+          'You need to win 2 out of 12 times. Nine winning cards out of 46 are enough. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -19495,14 +19513,6 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
     openBb: 3.75,
     facingBb: 2,
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Name outs before price.',
-      body:
-          'A live table adds pressure, but the same transfer rule still holds: name the cards that improve Hero first, then judge the price.',
-      focusLabels: <String>['Real table', 'Heart outs', 'Price second'],
-    ),
-  ],
 );
 
 final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRunner.copyWith(
@@ -19569,42 +19579,34 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_table_outs_straight_transfer',
   caption:
-      'Real table. Pot 9 BB. Hero has 6-spade and 5-diamond on 8-club, 7-heart, 2-spade, K-diamond.',
-  hint:
-      'Keep the same rank ladder and ask which cards still finish it on a live turn.',
-  question: 'Which improvement cards still matter first?',
+      'Assume every straight wins and all other rivers lose. No more betting.',
+  hint: 'Count the ranks that finish your straight and the cards of each rank.',
+  question: 'Call 3 BB into the 9 BB pot, or fold?',
+  feedbackTitle: 'Compare the hit rate and the price.',
+  feedbackReason:
+      'Count only winning cards and compare that chance with the call divided by the final pot.',
+  teachingSteps: const [],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'four_or_nine',
-      label: 'A 4 or 9 still completes the straight',
+      label: 'Fold',
       isCorrect: true,
-      preferredLabel: 'A 4 or 9 still completes the straight',
+      preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Correct transfer.',
+      feedbackTitle: 'Eight outs are too few at this price.',
       feedbackReason:
-          'A 4 or 9 makes your straight. A 9 can also give an opponent holding J-T a higher straight. Weigh your chance of winning against the 3 BB price.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'king_pairs',
-      label: 'Only a king can help now',
-      isCorrect: false,
-      preferredLabel: 'A 4 or 9 still completes the straight',
-      betterAnswerLabel: 'A 4 or 9 still completes the straight',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Wrong improvement story.',
-      feedbackReason:
-          'A king pairs the board. A 4 or 9 completes your straight, though an opponent can still make a better hand.',
+          'Any 4 or 9 completes the straight: 8 out of 46, or about 1 in 6. Calling 3 BB makes a 12 BB pot, so you need 1 win in 4. Fold under the stated rule.',
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
-      label: 'Blank turn means give up',
+      label: 'Call 3 BB',
       isCorrect: false,
-      preferredLabel: 'A 4 or 9 still completes the straight',
-      betterAnswerLabel: 'A 4 or 9 still completes the straight',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Do not drop the ladder.',
+      preferredLabel: 'Fold',
+      betterAnswerLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'A live draw can still cost too much.',
       feedbackReason:
-          'You can still make a straight with a 4 or 9 on the river. How often that straight will win matters when you judge the 3 BB price.',
+          'Eight outs win less often than the 3-in-12 price requires. In a real hand, a 9 can also give an opponent holding J-T a higher straight.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -19614,14 +19616,6 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
     openBb: 2.75,
     facingBb: 3,
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Blank turns do not erase outs.',
-      body:
-          'A live turn card can miss without killing the draw. Keep the same straight ladder in mind and name the 4 or 9 outs before deciding.',
-      focusLabels: <String>['Real table', 'Rank ladder', '4 or 9'],
-    ),
-  ],
 );
 
 final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
@@ -19642,7 +19636,8 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'One card can matter.',
       body:
-          'The turn and river each add one shared card. Re-read the same board: did the draw hit, miss, or become stronger?',
+          'The turn and river each add one shared card. A blank is a card that changes little for the hand or draw you are tracking. '
+          'Check whether the new card completes the draw, adds more outs, or leaves it unchanged.',
       focusLabels: <String>['Turn', 'River', 'Draw story'],
     ),
   ],
@@ -19974,6 +19969,56 @@ final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
     heroCards: _act0LessonCardsV1('Qh Js'),
     boardCards: _act0LessonCardsV1('Td 9c 3h'),
     centerLabel: 'Read the flop',
+  ),
+);
+
+// Preserve the general review runner used by the W6 checkpoint family.
+final _world5DrawPriceCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
+  caption:
+      'Assume every straight wins and all other rivers lose. No more betting.',
+  hint: 'Find the gap in your four ranks. Compare your chance to the price.',
+  question: 'Call 1 BB into the 12 BB pot, or fold?',
+  feedbackTitle: 'Even four outs can be worth calling.',
+  feedbackReason:
+      'Four sevens out of 46 hit about 1 time in 12. Calling 1 BB makes a 13 BB pot. Your chance is enough at this price.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'texture_draw_outs',
+      label: 'Call 1 BB',
+      isCorrect: true,
+      preferredLabel: 'Call 1 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The low price makes a call worthwhile.',
+      feedbackReason:
+          'Only a 7 completes your straight. Four of 46 cards win, about 1 in 12. You only need 1 in 13 at this price.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'just_outs',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Call 1 BB',
+      betterAnswerLabel: 'Call 1 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the price before folding.',
+      feedbackReason:
+          'The 1 BB call makes a 13 BB pot. Four wins out of 46 beats the 1-in-13 price.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Put the chance and price together.',
+      body:
+          'First find which river cards would win. Then compare the chance of hitting with the call divided by the final pot.',
+      focusLabels: <String>['Winning cards', 'Call price'],
+    ),
+  ],
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('9c 8d'),
+    boardCards: _act0LessonCardsV1('6d 5h 2c Ks'),
+    centerLabel: 'Draw and price',
+    openBb: 2.75,
+    flopBetBb: 2.5,
+    facingBb: 1,
   ),
 );
 
@@ -20344,6 +20389,13 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
           'A preflop strong hand can become missed if it does not connect with the flop.',
       focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
     ),
+    Act0TeachingStepV1(
+      title: 'Compare both ranges.',
+      body:
+          'Range advantage is about which player has more strong hands on this board. '
+          'In this lesson, use only the hands listed for each player and count hand types that make two pair or better.',
+      focusLabels: <String>['Preflop raiser', 'Caller', 'Two pair or better'],
+    ),
   ],
   feedbackTitle: 'Read how the board fits.',
   feedbackReason:
@@ -20398,51 +20450,56 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
   ],
 );
 
-// 8-7-6 two-tone: hero has 9-8 (two pair) → value range
+const _w6RangeAdvantageModelV1 =
+    'BTN opens A-A, K-K, A-K, A-Q. BB calls 8-8, 7-7, 6-6, suited T-9.';
+
 final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_value_wet_board',
-  caption: 'Same 8-7-6 two-tone. Hero holds 9-8.',
-  hint: '9-8 has top pair and an open-ended straight draw.',
-  question: 'Which range bucket is 9-8 on 8-7-6?',
+  caption: _w6RangeAdvantageModelV1,
+  hint: 'Look for two pair, three of a kind, and straights in each list.',
+  question: 'In these ranges, who has more hand types at two pair or better?',
+  feedbackTitle: 'The caller has more strong hands.',
+  feedbackReason:
+      'BB has three sets and the T-9 straight in this model. BTN has no hand that makes two pair or better.',
   table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('9s 8c'),
+    heroCards: _act0LessonCardsV1('Ad Qc'),
     boardCards: _act0LessonCardsV1('8h 7h 6c'),
-    centerLabel: 'Read the flop',
+    centerLabel: 'Compare the ranges',
   ),
+  teachingSteps: const [],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'value',
-      label: 'Value',
-      isCorrect: true,
-      preferredLabel: 'Value',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      id: 'bluff',
+      label: 'BTN, the raiser',
+      isCorrect: false,
+      preferredLabel: 'BB, the caller',
+      betterAnswerLabel: 'BB, the caller',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The board fits the caller here.',
       feedbackReason:
-          '9-8 has top pair plus an open-ended straight draw. It has made-hand value and ways to improve, rather than belonging to the missed bucket.',
+          'A-A and K-K are one pair. BB can make a set with 8-8, 7-7, or 6-6, or a straight with T-9.',
     ),
     Act0RunnerOptionV1(
-      id: 'bluff',
-      label: 'Bluff candidate',
-      isCorrect: false,
-      preferredLabel: 'Value',
-      betterAnswerLabel: 'Value',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'On the right track.',
+      id: 'value',
+      label: 'BB, the caller',
+      isCorrect: true,
+      preferredLabel: 'BB, the caller',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The low ranks fit the caller.',
       feedbackReason:
-          '9-8 already has a real hand here. Bluff candidates are hands with '
-          'little made strength but enough fold pressure potential.',
+          'BB has four strong hand types: three sets and the T-9 straight. BTN has zero in the listed range.',
     ),
     Act0RunnerOptionV1(
       id: 'missed',
-      label: 'Missed',
+      label: 'They have the same number',
       isCorrect: false,
-      preferredLabel: 'Value',
-      betterAnswerLabel: 'Value',
+      preferredLabel: 'BB, the caller',
+      betterAnswerLabel: 'BB, the caller',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Good direction.',
+      feedbackTitle: 'Count both lists.',
       feedbackReason:
-          'Top pair plus an open-ended straight draw has both a made hand and useful improvement cards. It is not a missed hand.',
+          'BB has three sets and a straight. None of the listed BTN hands make two pair or better.',
     ),
   ],
 );
@@ -20509,27 +20566,52 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
 final _w6BoardFitRecapRunner = _w6BoardFitIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w6_board_fit_recap',
-  caption:
-      'Lesson learned: the same hand hits different buckets on different boards.',
-  hint: 'Always read the board before assigning a bucket.',
-  question: 'What decides which bucket a hand lands in?',
-  feedbackTitle: 'Board-fit takeaway.',
+  caption: _w6RangeAdvantageModelV1,
+  hint: 'Look for two pair and three of a kind in each list.',
+  question: 'In these ranges, who has more hand types at two pair or better?',
+  feedbackTitle: 'The raiser has more strong hands.',
   feedbackReason:
-      'Board texture decides whether your hand is value, bluff candidate, or missed — '
-      'not just its preflop strength.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Texture shifts buckets.',
-      body:
-          'Read the board, then assign the bucket. Preflop hand strength is only the starting point.',
-      focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
+      'BTN can make two pair with A-K, or a set with A-A or K-K. BB has none of those hands in this model.',
+  table: _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1('As Qd'),
+    boardCards: _act0LessonCardsV1('Ah Kc 4s'),
+    centerLabel: 'Compare the ranges',
+  ),
+  teachingSteps: const [],
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'caller',
+      label: 'BB, the caller',
+      isCorrect: false,
+      preferredLabel: 'BTN, the raiser',
+      betterAnswerLabel: 'BTN, the raiser',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The caller has no two pair or set.',
+      feedbackReason:
+          'BB’s pocket pairs stay one pair. Only the raiser has A-A, K-K, and A-K in this model.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'same',
+      label: 'They have the same number',
+      isCorrect: false,
+      preferredLabel: 'BTN, the raiser',
+      betterAnswerLabel: 'BTN, the raiser',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the strong hands on A-K-4.',
+      feedbackReason:
+          'The raiser has two sets and one two-pair hand type. The caller has zero hand types at that strength.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raiser',
+      label: 'BTN, the raiser',
+      isCorrect: true,
+      preferredLabel: 'BTN, the raiser',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The high ranks fit the raiser.',
+      feedbackReason:
+          'Only BTN has A-K for two pair and A-A or K-K for a set. A-Q makes one pair, so it does not count.',
     ),
   ],
-  table: _act0BoardLessonTableV1(
-    heroCards: _act0LessonCardsV1('Kd Jc'),
-    boardCards: _act0LessonCardsV1('4h 5h 6s'),
-    centerLabel: 'Read the flop',
-  ),
 );
 
 // Pressure lines lesson ───────────────────────────────────────────────────
@@ -20873,8 +20955,8 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Families have counts.',
       body:
-          'Some hand families have more possible versions than others. A-K has '
-          '16 combos; a pocket pair has 6.',
+          'A combo is one exact two-card hand. Four aces times four kings gives 16 A-K combos. '
+          'Four share a suit and 12 do not. A pocket pair has six ways to choose two of its four cards.',
       focusLabels: <String>['16 combos', '6 combos', 'Range density'],
     ),
   ],
@@ -21992,8 +22074,10 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   question: 'What does low SPR usually mean?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Low room, high room.',
-      body: 'SPR = stack vs pot. Low = commitment. High = room.',
+      title: 'Divide the smaller stack by the pot.',
+      body:
+          'SPR is the stack-to-pot ratio: effective stack divided by the current pot. '
+          'Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4.',
       focusLabels: <String>['Low SPR', 'Commitment', 'High SPR', 'Room'],
     ),
   ],
@@ -22319,7 +22403,8 @@ final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Fewer players behind.',
       body:
-          'From UTG, five players act after you in 6-max and eight act after you in full ring. With more players still to act, open fewer hands.',
+          'A full-ring table seats nine players. From UTG, eight players still act behind you, compared with five at a six-player table. '
+          'With more players to act, open fewer hands.',
       focusLabels: <String>['6-max', 'Full ring', 'Fewer players behind'],
     ),
   ],

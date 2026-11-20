@@ -120,9 +120,8 @@ void main() {
         taskId: 'outs_improvement_w5_table_outs_straight_transfer',
       );
       expect(transfer.runner.options.map((option) => option.id), <String>[
-        'king_pairs',
-        'blank_turn_killed',
         'four_or_nine',
+        'blank_turn_killed',
       ]);
       expect(correctOption(transfer).id, 'four_or_nine');
       final risky = taskFor(
@@ -200,8 +199,118 @@ void main() {
         expect(Hand.winners([hero, opponent]).single, same(opponent));
         final correct = correctOption(task);
         expect(correct.id, example.correctId);
-        expect(correct.feedbackReason, contains(example.exampleCopy));
+        expect(
+          task.runner.options.map((option) => option.feedbackReason),
+          anyElement(contains(example.exampleCopy)),
+        );
         expect(task.rewardXp, 10);
+      }
+    });
+
+    test(
+      'W5 draw grades compare physical outs with the current call price',
+      () {
+        const cases = [
+          (
+            lesson: 'outs_improvement',
+            task: 'outs_improvement_w5_table_outs_flush_transfer',
+            rank: 'Flush',
+            outs: 9,
+            pot: 10,
+            call: 2,
+          ),
+          (
+            lesson: 'outs_improvement',
+            task: 'outs_improvement_w5_table_outs_straight_transfer',
+            rank: 'Straight',
+            outs: 8,
+            pot: 9,
+            call: 3,
+          ),
+          (
+            lesson: 'turn_river_changes',
+            task: 'turn_river_changes_w5_board_checkpoint',
+            rank: 'Straight',
+            outs: 4,
+            pot: 12,
+            call: 1,
+          ),
+        ];
+        const ranks = '23456789TJQKA';
+        const suits = 'cdhs';
+        for (final example in cases) {
+          final task = taskFor(
+            worldId: 'world_5',
+            lessonId: example.lesson,
+            taskId: example.task,
+          );
+          final table = task.runner.table;
+          final seen = [
+            ...table.heroCards.map((card) => card.label),
+            ...table.boardCards.map((card) => card.label),
+          ];
+          final rivers = [
+            for (final rank in ranks.split(''))
+              for (final suit in suits.split(''))
+                if (!seen.contains('$rank$suit')) '$rank$suit',
+          ];
+          final outs = rivers
+              .where(
+                (river) =>
+                    Hand.solveHand([...seen, river]).name == example.rank,
+              )
+              .length;
+          expect(rivers, hasLength(46), reason: example.task);
+          expect(outs, example.outs, reason: example.task);
+          expect(table.potLabel, 'Pot ${example.pot} BB');
+          expect(table.toCallLabel, 'To call ${example.call} BB');
+          final canCall =
+              outs * (example.pot + example.call) >
+              example.call * rivers.length;
+          expect(
+            correctOption(task).label,
+            canCall ? 'Call ${example.call} BB' : 'Fold',
+            reason: example.task,
+          );
+        }
+      },
+    );
+
+    test('W6 the stronger example range changes with the flop', () {
+      const raiser = [
+        ['Ad', 'Ac'],
+        ['Kh', 'Kd'],
+        ['Ac', 'Kd'],
+        ['Ac', 'Qs'],
+      ];
+      const caller = [
+        ['8d', '8c'],
+        ['7d', '7c'],
+        ['6h', '6d'],
+        ['Ts', '9s'],
+      ];
+      const strong = {'Two Pair', 'Three of a Kind', 'Straight'};
+      for (final (id, raiserCount, callerCount) in [
+        ('w6_value_wet_board', 0, 4),
+        ('w6_board_fit_recap', 3, 0),
+      ]) {
+        final task = taskFor(
+          worldId: 'world_6',
+          lessonId: 'range_board_fit',
+          taskId: id,
+        );
+        final board = task.runner.table.boardCards.map((card) => card.label);
+        int strongHands(List<List<String>> range) => range.where((hand) {
+          expect({...board, ...hand}, hasLength(5));
+          return strong.contains(Hand.solveHand([...board, ...hand]).name);
+        }).length;
+
+        expect(strongHands(raiser), raiserCount, reason: id);
+        expect(strongHands(caller), callerCount, reason: id);
+        expect(
+          correctOption(task).label,
+          raiserCount > callerCount ? 'BTN, the raiser' : 'BB, the caller',
+        );
       }
     });
 
