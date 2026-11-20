@@ -43,4 +43,56 @@ void main() {
       findsNothing,
     );
   });
+  testWidgets('action history keeps visible steps with Reduce Motion', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(430, 932);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final lesson = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .singleWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final task = lesson.taskList.singleWhere(
+      (task) => task.taskId == 'actions_call_drill',
+    );
+    expect(task.runner.table.actionTrail, isNotEmpty);
+    final selected = task.runner.options.singleWhere(
+      (option) => option.isCorrect,
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(
+            disableAnimations: true,
+            size: Size(430, 932),
+          ),
+          child: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: Act0LessonPhaseV1.review,
+                selectedOptionId: selected.id,
+                teachingStepIndex: task.runner.teachingSteps.length,
+              ),
+              selectedWorldId: 'world_1',
+              selectedLessonId: lesson.lessonId,
+              selectedTaskId: task.taskId,
+              tableVisualVariant: Act0ShellTableVisualVariantV1.classic,
+              onBack: () {},
+              onContinueTheory: () {},
+              onContinueReview: () {},
+              onChooseOption: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    final first = find.byKey(const Key('act0_shell_action_trail_step_0'));
+    expect(tester.widget<AnimatedSlide>(first).duration, Duration.zero);
+    final opacity = tester.widget<AnimatedOpacity>(
+      find.descendant(of: first, matching: find.byType(AnimatedOpacity)),
+    );
+    expect(opacity.duration, Duration.zero);
+    expect(opacity.opacity, 1);
+  });
 }
