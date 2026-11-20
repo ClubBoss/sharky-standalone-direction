@@ -388,6 +388,39 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets('a correct W5 retry offers to continue the lesson', (t) async {
+    const taskId = 'board_texture_basics_w5_dry_board';
+    await _openSavedCourseTask(t, worldId: 'world_5', taskId: taskId);
+    final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_wet'))]),
+      isTrue,
+    );
+    expect(
+      find.descendant(of: cta, matching: find.text('Try same clue')),
+      findsOneWidget,
+    );
+    expect(await _tapFirst(t, [cta]), isTrue);
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_dry'))]),
+      isTrue,
+    );
+
+    expect(
+      find.descendant(of: cta, matching: find.text('Continue')),
+      findsOneWidget,
+    );
+    expect(find.text('Try the same table clue once more.'), findsNothing);
+    expect(await _tapFirst(t, [cta]), isTrue);
+    expect(
+      t
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      'board_texture_basics_w5_wet_board',
+    );
+  });
+
   testWidgets('a W7 king miss persists the same exercise for replay', (
     t,
   ) async {

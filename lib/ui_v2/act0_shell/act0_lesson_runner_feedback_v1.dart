@@ -100,6 +100,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         !rapidMode &&
         !suppressRepairFocus &&
         (repairReasonLine?.trim().isNotEmpty ?? false);
+    // An open Review item can still supply table focus after a correct
+    // lesson answer. It does not make the forward action another retry.
+    final isCorrectWithPendingRepair =
+        isRepairFocusState && quality == Act0FeedbackQualityV1.correct;
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
     final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
@@ -399,6 +403,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                 ? repairContinuesToSourceRecheck
                                       ? 'Check original read'
                                       : 'Continue to Review'
+                                : isCorrectWithPendingRepair
+                                ? 'Continue'
                                 : isWrong || isRepairFocusState
                                 ? isExactReplayRepair
                                       ? 'Try this spot again'
@@ -413,6 +419,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                               ? repairContinuesToSourceRecheck
                                     ? 'Check original read'
                                     : 'Continue to Review'
+                              : isCorrectWithPendingRepair
+                              ? 'Continue'
                               : isWrong || isRepairFocusState
                               ? isExactReplayRepair
                                     ? 'Try this spot again'
@@ -504,6 +512,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           ? 'See your suggested starting point.'
           : forwardCtaLabel == 'Continue to Review'
           ? 'Return to Review to choose the next repair. Open mistakes stay available.'
+          : isCorrectWithPendingRepair
+          ? null
           : isWrong || isRepairFocusState
           ? 'Try the same table clue once more.'
           : repairContinuesToSourceRecheck
@@ -581,18 +591,19 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                     ],
-                    Text(
-                      nextActionLine,
-                      key: const Key('act0_shell_feedback_rhythm_verdict'),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontSize: 13.2,
-                        height: 1.14,
-                        fontWeight: FontWeight.w800,
+                    if (nextActionLine != null)
+                      Text(
+                        nextActionLine,
+                        key: const Key('act0_shell_feedback_rhythm_verdict'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: 13.2,
+                          height: 1.14,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
                   ],
                 ],
               ),
