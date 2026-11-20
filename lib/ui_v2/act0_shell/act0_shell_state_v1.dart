@@ -1192,11 +1192,16 @@ Act0HandContributionsV1 _act0SingleStreetBetContributionsV1({
   required PokerStreet street,
   required String bettor,
   required double betBb,
-  required double buttonStackAtLeastBb,
+  required double effectiveStackAtHandStartBb,
+  required double potBeforeBetBb,
 }) => Act0HandContributionsV1(
   fromStreet: street,
   throughStreet: street,
-  minimumStartingStackBbBySeat: {'btn': buttonStackAtLeastBb},
+  // The amount BTN could have paid on earlier streets cannot exceed the
+  // entire pot before the current bet.
+  minimumStartingStackBbBySeat: {
+    'btn': effectiveStackAtHandStartBb - potBeforeBetBb,
+  },
   entries: [
     Act0ContributionV1(street, bettor, Act0ContributionKindV1.wager, betBb),
   ],
@@ -23789,7 +23794,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w9_bubble_table_risk_transfer',
   caption:
-      'Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble. No antes; BB goes all-in for 18 BB total. Pot 21 BB, 15.5 BB to call.',
+      'BTN holds A-J offsuit with a medium stack near the bubble. There are no antes. BB goes all-in for 18 BB, 15.5 BB more than BTN put in. BTN’s remaining stack caps the call.',
   hint:
       'Check whether losing the hand could eliminate you. That changes how much of an edge you need.',
   question: 'How should you adjust if losing to BB would eliminate you?',
@@ -24474,15 +24479,8 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       Act0CardStateV1(rank: '7', suit: 'd'),
       Act0CardStateV1(rank: '2', suit: 'c'),
     ],
-    streetLabel: 'Flop',
-    potLabel: 'Pot 6 BB',
-    toCallLabel: '',
     centerLabel: 'Top pair vs caller',
-    handContributions: const Act0HandContributionsV1(
-      fromStreet: PokerStreet.flop,
-      throughStreet: PokerStreet.flop,
-      entries: [],
-    ),
+    handContributions: _w6ValueRangeActionRunner.table.handContributions,
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
       Act0ActionTrailItemV1(label: 'BB calls'),
@@ -25760,7 +25758,8 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
         street: PokerStreet.flop,
         bettor: 'hj',
         betBb: 5,
-        buttonStackAtLeastBb: 30,
+        effectiveStackAtHandStartBb: 30,
+        potBeforeBetBb: 8,
       ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
@@ -26239,7 +26238,8 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
         street: PokerStreet.river,
         bettor: 'co',
         betBb: 18,
-        buttonStackAtLeastBb: 100,
+        effectiveStackAtHandStartBb: 100,
+        potBeforeBetBb: 20,
       ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
@@ -26326,7 +26326,8 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
         street: PokerStreet.flop,
         bettor: 'co',
         betBb: 2,
-        buttonStackAtLeastBb: 35,
+        effectiveStackAtHandStartBb: 35,
+        potBeforeBetBb: 8,
       ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Villain needled you last orbit'),
@@ -26546,7 +26547,8 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
         street: PokerStreet.flop,
         bettor: 'co',
         betBb: 2,
-        buttonStackAtLeastBb: 25,
+        effectiveStackAtHandStartBb: 25,
+        potBeforeBetBb: 8,
       ),
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),

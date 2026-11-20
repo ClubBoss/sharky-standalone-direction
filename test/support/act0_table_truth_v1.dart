@@ -105,7 +105,10 @@ List<TableTruthRow> auditTableContributionsV1(
                     seat.bet?.kind == Act0SeatBetKindV1.allIn,
               ));
       final checkUnpricedStreet =
-          ledger.fromStreet != PokerStreet.preflop && due == 0;
+          ledger.throughStreet != PokerStreet.preflop &&
+          due == 0 &&
+          (ledger.fromStreet != PokerStreet.preflop ||
+              (t.actionTrail.lastOrNull?.label.endsWith(' checks') ?? false));
       if (t.toCallLabel.isNotEmpty ||
           (due != null && due > 0) ||
           unresolvedActorPrice ||
@@ -117,7 +120,9 @@ List<TableTruthRow> auditTableContributionsV1(
               variant,
               'D3.to_call_completeness',
               'NEEDS_SOURCE_CONTEXT',
-              'The decision actor or stack bound is missing.',
+              actorSeatId == null
+                  ? 'The decision actor is missing.'
+                  : 'The remaining stack or a sufficient lower bound for $actorSeatId is missing.',
             ),
           );
         } else {
