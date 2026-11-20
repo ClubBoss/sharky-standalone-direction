@@ -73,7 +73,10 @@ void main() {
         expect(task.runner.options.map((o) => o.id), entry.value.$3);
         expect(task.runner.options.singleWhere((o) => o.isCorrect).id, 'raise');
         // The exercise checks which action raises the price.
-        expect(table.heroCards.map((card) => card.label), ['Ks', 'Ts']);
+        expect(
+          table.heroCards.map((card) => card.label),
+          id == 'actions_raise_drill' ? ['Qs', 'Js'] : ['Ks', 'Ts'],
+        );
         expect(table.boardCards, isEmpty);
         expect(table.playerCount, 6);
         expect(table.scope, Act0TableScopeV1.playedHand);

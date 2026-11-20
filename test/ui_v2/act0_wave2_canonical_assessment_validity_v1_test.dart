@@ -52,7 +52,23 @@ void main() {
         xp: 10,
       ),
     ]) {
-      test('${control.task} asks and explains the same postflop order', () {
+      final postflop = control.lesson == 'button_advantage';
+      final reasons = postflop
+          ? const {
+              'top':
+                  'UTG acts before BTN after the flop on this six-seat table.',
+              'bottom': 'BTN acts last after the flop on this six-seat table.',
+              'random':
+                  'BB acts before BTN after the flop on this six-seat table.',
+            }
+          : const {
+              'top': 'UTG sits between the big blind and HJ.',
+              'bottom':
+                  'Clockwise from CO, BTN is next, followed by the small blind.',
+              'random':
+                  'BB sits after the small blind, clockwise from the Button.',
+            };
+      test('${control.task} asks and explains the stated order', () {
         final task = taskFor(
           worldId: 'world_3',
           lessonId: control.lesson,
@@ -62,11 +78,24 @@ void main() {
         expect(task.entryPhase, Act0LessonPhaseV1.drill);
         expect(
           task.runner.question,
-          control.lesson == 'button_advantage'
+          postflop
               ? 'Which of these seats acts last on the flop when the dealer is still in the hand?'
-              : 'Which seat acts last after the flop here?',
+              : 'Which seat sits between CO and the small blind?',
         );
-        expect(task.runner.hint, 'Compare the live-seat order after the flop.');
+        expect(
+          task.runner.hint,
+          postflop
+              ? 'Compare the live-seat order after the flop.'
+              : 'Read the seat labels clockwise from CO.',
+        );
+        if (postflop) {
+          expect(task.runner.table.boardCards, hasLength(3));
+          expect(task.runner.table.potLabel, 'Pot 6 BB');
+          expect(
+            task.runner.table.seats.where((seat) => seat.bet != null),
+            isEmpty,
+          );
+        }
         expect(task.runner.options.map((option) => option.id), <String>[
           'top',
           'bottom',
@@ -79,17 +108,12 @@ void main() {
         ]);
         expect(task.runner.options.indexWhere((option) => option.isCorrect), 1);
         expect(task.rewardXp, control.xp);
-        const reasons = {
-          'top': 'UTG acts before BTN after the flop on this six-seat table.',
-          'bottom': 'BTN acts last after the flop on this six-seat table.',
-          'random': 'BB acts before BTN after the flop on this six-seat table.',
-        };
         for (final option in task.runner.options) {
           expect(option.feedbackReason, reasons[option.id]);
         }
       });
 
-      testWidgets('${control.task} shows postflop feedback after BB tap', (
+      testWidgets('${control.task} shows the relevant feedback after BB tap', (
         tester,
       ) async {
         final task = taskFor(
@@ -176,12 +200,7 @@ void main() {
             .where((text) => text.isNotEmpty)
             .toList();
         print('W3_POSITION_RENDER_${control.task}=${jsonEncode(text)}');
-        expect(
-          find.text(
-            'BB acts before BTN after the flop on this six-seat table.',
-          ),
-          findsOneWidget,
-        );
+        expect(find.text(reasons['random']!), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
     }
@@ -415,7 +434,7 @@ void main() {
       () {
         const expected = <String, (String, String, int)>{
           'same_hand_different_seat_same_hand_early_fold': ('ATo', 'UTG', 0),
-          'position_apply_early_fold': ('ATo', 'UTG', 0),
+          'position_apply_early_fold': ('AQo', 'UTG', 0),
           'position_apply_hj_fold': ('KTo', 'HJ', 1),
           'position_checkpoint_position_checkpoint_early_fold': (
             'A9o',

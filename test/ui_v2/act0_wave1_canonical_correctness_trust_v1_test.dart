@@ -328,13 +328,12 @@ void main() {
         'actions_call_drill': 'Call matches the current bet.',
         'blinds_postflop_button': 'BTN acts last after the flop.',
         'positions_cutoff': 'CO is the seat before BTN.',
-        'hand_rankings_best_five_drill': 'Five cards form your hand.',
+        'hand_rankings_best_five_drill': 'Use the highest side card.',
         'button_advantage_button_last': 'BTN acts last after the flop.',
         'button_advantage_position_repair_btn_last_postflop':
             'BTN acts last after the flop.',
         'fold_discipline_facing_fold': 'J8o still folds versus a CO open.',
-        'weak_ace_warning_weak_ace_pressure_fold':
-            'J8o still folds versus a CO open.',
+        'weak_ace_warning_weak_ace_pressure_fold': 'Use the Weak row.',
         'continue_or_let_go_weak_let_go': 'Use the Weak row.',
       };
       final tasks = <Act0LessonTaskV1>[

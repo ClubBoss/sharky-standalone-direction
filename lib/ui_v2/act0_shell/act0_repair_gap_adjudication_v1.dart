@@ -1,3 +1,6 @@
+import 'act0_authored_source_proof_v1.dart';
+import 'act0_shell_state_v1.dart';
+
 enum Act0RepairGapOutcomeV1 {
   alternateSameSignalTarget,
   intentionalExactReplay,
@@ -83,11 +86,11 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     misconception: 'confusing your private cards with the shared board',
     conceptErrorId: 'confused_private_board_cards',
     priorFallback: _priorW1HeroButtonWrongSignal,
-    candidateTargetIds: <String>['cards_ranks_suits_private_board'],
+    candidateTargetIds: <String>['first_table_guide_shared_cards_repair'],
     outcome: Act0RepairGapOutcomeV1.alternateSameSignalTarget,
     targetWorldId: 'world_1',
-    targetLessonId: 'cards_ranks_suits',
-    targetTaskId: 'cards_ranks_suits_private_board',
+    targetLessonId: 'what_poker_is',
+    targetTaskId: 'first_table_guide_shared_cards_repair',
     learnerEquivalenceRationale:
         'The source asks which cards belong only to you. The repair uses a '
         'different hand to identify which cards everyone can use.',
@@ -818,10 +821,14 @@ class Act0RepairGoalContractV1 {
     'utg_seat_identity' => 'UTG seat',
     'dealer_button_seat' => 'Dealer button',
     'last_actor_after_flop' => 'Last seat after the flop',
+    'big_blind_baseline' => 'The 1 BB blind',
     'early_seat_players_behind' => 'Players left to act',
     'same_hand_different_seat' => 'Same hand from two seats',
     'value_bet_purpose' => 'Why you bet',
-    _ => 'Repair not confirmed',
+    _ =>
+      goalId.startsWith(_exerciseGoalPrefix)
+          ? 'Same exercise'
+          : 'Repair not confirmed',
   };
   // Neither familiar vocabulary practice nor definition replay is application.
   bool get canClaimIndependentApplication => false;
@@ -922,7 +929,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "utg",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "ed64d42bd067a2724c91b565bbc0ee369986e09d7c162f8f403ad73765c3b442",
+        "301cfd15a1e24a3ee49b6561e60ca6b5d636934e6989e3683d85e56fb1da1bf2",
     sourceQuestion: "Tap the seat that acts last after the flop.",
     sourceChoiceReason:
         "UTG is early, not the seat that acts last after the flop here.",
@@ -935,7 +942,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "button_advantage",
     targetTaskId: "button_advantage_position_repair_btn_last_postflop",
     targetFingerprint:
-        "2b8f309d7443b2530417c8f4e3358e023742b1e0f6863919ff9c6e4a95640123",
+        "5769e8d6e42bffc92cf883653d6a347f82fe17a649f75ac85ae79ca94a85c86b",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1038,16 +1045,16 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     misconceptionId: "shared_board_as_private",
     relationId: "selected_w1_001_top_v1",
     targetWorldId: "world_1",
-    targetLessonId: "cards_ranks_suits",
-    targetTaskId: "cards_ranks_suits_private_board",
+    targetLessonId: "what_poker_is",
+    targetTaskId: "first_table_guide_shared_cards_repair",
     targetFingerprint:
-        "85f732a37988a12c279fa7392b1098928a80a88ab39dbbce9368211071f6939f",
+        "73e8ebb06ab849488e3f1bb37768aec7b7682644116dede7703c674521e660e5",
     targetCorrectChoiceId: "board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
     targetChoiceIds: <String>{"private", "board"},
     requireCapturedGoalWitness: true,
-    relationRevision: 2,
+    relationRevision: 3,
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
@@ -1074,7 +1081,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "king",
     sourceCorrectChoiceId: "ace",
     sourceFingerprint:
-        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+        "88306fc7b5bf505b9dc226a5419d5c59d52bdfe84ed4dacad3fd47f419bf24bc",
     sourceQuestion: "Which rank is higher here?",
     sourceChoiceReason: "Ace is higher than king in this beginner drill.",
     sourceChoiceLabel: "King",
@@ -1085,7 +1092,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "cards_ranks_suits",
     targetTaskId: "cards_ranks_suits_rank_drill",
     targetFingerprint:
-        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+        "88306fc7b5bf505b9dc226a5419d5c59d52bdfe84ed4dacad3fd47f419bf24bc",
     targetCorrectChoiceId: "ace",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1098,7 +1105,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "suit",
     sourceCorrectChoiceId: "ace",
     sourceFingerprint:
-        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+        "88306fc7b5bf505b9dc226a5419d5c59d52bdfe84ed4dacad3fd47f419bf24bc",
     sourceQuestion: "Which rank is higher here?",
     sourceChoiceReason: "Suit does not make one rank higher than another.",
     sourceChoiceLabel: "Suit decides",
@@ -1109,7 +1116,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "cards_ranks_suits",
     targetTaskId: "cards_ranks_suits_rank_drill",
     targetFingerprint:
-        "7193e8339dce418cc9f5c30be7905497678fafd54edd7d6354430224804966ff",
+        "88306fc7b5bf505b9dc226a5419d5c59d52bdfe84ed4dacad3fd47f419bf24bc",
     targetCorrectChoiceId: "ace",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1122,7 +1129,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
     sourceChoiceLabel: "Fold",
@@ -1134,7 +1141,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
+        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1147,7 +1154,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
     sourceChoiceLabel: "Call",
@@ -1159,7 +1166,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
+        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1172,7 +1179,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "first_actor",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "952036d4ffc9dc29e57d3570c61ed8a838e644fe88b41e695f19558aa6388e0e",
+        "3e7d72d87ebdd5d55424ae24cd532a1f7fe1d61c338f4ba016d7fc56b3d00a91",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_as_action_order",
     relationId: "selected_w1_038_first_actor_v1",
@@ -1189,7 +1196,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hero_cards_only",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "952036d4ffc9dc29e57d3570c61ed8a838e644fe88b41e695f19558aa6388e0e",
+        "3e7d72d87ebdd5d55424ae24cd532a1f7fe1d61c338f4ba016d7fc56b3d00a91",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_private_cards_only",
     relationId: "selected_w1_039_hero_cards_only_v1",
@@ -1222,7 +1229,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "f967cca193cb32ebcaa8f4d7432d2be899c4c7aaa3e2e4e582b5aa67d15623fc",
+        "6cdebe08501be219abe0fb95939a029a22e7e1e01e6709c6718d3e8961c040a2",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1238,7 +1245,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "32a5ed2ce6fd709c2c3ec5020e7fdc74f6475be5ee294a7bb37b22928a5c1bde",
+        "acfa089cf19ac099986ae33b7e13964f4c3f1b152d61af059210e0a9b3c1b62d",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1254,7 +1261,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "two",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "345623956f60f99989d8d273c8bd98dcdb686c386667b5c8fb583d6d5c35b045",
+        "1cb07814c58ecb00f54b39c359df686e721d976392f6d1b8d0703ee4bcf7d35d",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_one_third",
     relationId: "selected_w4_16_two_v1",
@@ -1270,7 +1277,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "six",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "345623956f60f99989d8d273c8bd98dcdb686c386667b5c8fb583d6d5c35b045",
+        "1cb07814c58ecb00f54b39c359df686e721d976392f6d1b8d0703ee4bcf7d35d",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_whole",
     relationId: "selected_w4_17_six_v1",
@@ -1286,7 +1293,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
+        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
     relationId: "selected_w1_042_fold_v1",
@@ -1300,7 +1307,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1313,7 +1320,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "6764b0de9da7fc6520f6734c14bc4dcde63415b80d7d401c4e020777f7566a6b",
+        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
     relationId: "selected_w1_043_call_v1",
@@ -1327,7 +1334,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1381,7 +1388,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'cards_ranks_suits',
     targetTaskId: 'cards_ranks_suits_private_board',
     targetFingerprint:
-        '85f732a37988a12c279fa7392b1098928a80a88ab39dbbce9368211071f6939f',
+        'fa4595ef7ba62cb0ec2e2eec9ea7f2b1b6fbd8d593a79e844904373920fc60ff',
     targetCorrectChoiceId: 'board',
     targetChoiceIds: <String>{'board', 'private'},
     evidenceClass: 'diagnostic_learning_entry',
@@ -1409,7 +1416,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        '17c1e975be8795b9566ceee52b386b05eecc15dd255dafd4dde1bf52f1d0eecb',
+        'fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',
@@ -1526,13 +1533,141 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
   required String choiceId,
   String diagnosticVariantId = '',
 }) {
+  final fallback = diagnosticVariantId.isEmpty
+      ? _foundationRepairDefaults[(worldId, lessonId, taskId, choiceId)]
+      : null;
   for (final row in act0RepairGoalContractsV1) {
     if (row.sourceWorldId == worldId &&
         row.sourceLessonId == lessonId &&
         row.sourceTaskId == taskId &&
         row.sourceChoiceId == choiceId &&
-        row.diagnosticVariantId == diagnosticVariantId)
-      return row;
+        row.diagnosticVariantId == diagnosticVariantId) {
+      return row.hasValidatedTarget || row.isDiagnosticLearningEntry
+          ? row
+          : fallback ?? row;
+    }
   }
-  return null;
+  return fallback;
+}
+
+const _exerciseGoalPrefix = 'exercise/';
+
+// These are task-level goals shared by more than one exercise. A single
+// exercise with no equivalent keeps its own goal and supports familiar replay.
+const _foundationSharedRepairGoals = <String, String>{
+  'what_poker_is_find_hero': 'shared_board_vs_private_cards',
+  'cards_ranks_suits_private_board': 'shared_board_vs_private_cards',
+  'cards_ranks_suits_rank_drill': 'card_rank_order',
+  'blinds_first_actor': 'six_max_initial_preflop_first_actor',
+  'blinds_review': 'six_max_initial_preflop_first_actor',
+  'blinds_postflop_button': 'last_actor_after_flop',
+  'positions_review': 'last_actor_after_flop',
+  'blinds_last_actor': 'six_max_unraised_initial_pass_bb_option',
+  'blinds_theory': 'big_blind_baseline',
+  'blinds_posts_drill': 'big_blind_baseline',
+  'actions_legal_context': 'no_bet_free_continue',
+  'actions_check_drill': 'no_bet_free_continue',
+  'your_first_hand_showdown': 'showdown_best_five',
+  'showdown_best_hand_drill': 'showdown_best_five',
+  'hand_discipline_buckets_premium': 'starting_hand_premium_bucket',
+  'continue_or_let_go_premium_continue': 'starting_hand_premium_bucket',
+  'discipline_checkpoint_checkpoint_premium': 'starting_hand_premium_bucket',
+  'w4_half_pot_bet': 'half_pot_fraction',
+};
+
+String act0FoundationRepairGoalForTaskV1(String taskId) =>
+    _foundationSharedRepairGoals[taskId] ?? '$_exerciseGoalPrefix$taskId';
+
+typedef _FoundationRepairExercise = ({
+  String worldId,
+  String lessonId,
+  Act0LessonTaskV1 task,
+  Act0RunnerOptionV1 correct,
+  String fingerprint,
+});
+
+final _foundationRepairDefaults = _buildFoundationRepairDefaults();
+
+Map<(String, String, String, String), Act0RepairGoalContractV1>
+_buildFoundationRepairDefaults() {
+  final earliest = <String, _FoundationRepairExercise>{};
+  final contracts =
+      <(String, String, String, String), Act0RepairGoalContractV1>{};
+  for (final world in Act0ShellStateV1.sample.worlds.take(4)) {
+    for (final lesson in world.lessons) {
+      final sameLesson = <String, _FoundationRepairExercise>{};
+      final exercises = <_FoundationRepairExercise>[];
+      for (final task in lesson.courseTaskList) {
+        final correct = task.runner.options.where(
+          act0RunnerOptionIsAuthoredCorrectV1,
+        );
+        if (correct.length != 1) continue;
+        final exercise = (
+          worldId: world.worldId,
+          lessonId: lesson.lessonId,
+          task: task,
+          correct: correct.single,
+          fingerprint: act0AuthoredSourceFingerprintV1(
+            worldId: world.worldId,
+            lessonId: lesson.lessonId,
+            task: task,
+          )!,
+        );
+        exercises.add(exercise);
+        // Prefer the first choice in this lesson. For theory or a summary
+        // with choices, use its own frame unless there is a drill to launch.
+        if (task.phase == Act0LessonPhaseV1.drill) {
+          final goal = act0FoundationRepairGoalForTaskV1(task.taskId);
+          sameLesson.putIfAbsent(goal, () => exercise);
+        }
+      }
+      for (final source in exercises) {
+        final task = source.task;
+        final goal = act0FoundationRepairGoalForTaskV1(task.taskId);
+        final target = sameLesson[goal] ?? earliest[goal] ?? source;
+        final exact = identical(target.task, task);
+        for (final choice in task.runner.options.where(
+          (choice) => !choice.isCorrect,
+        )) {
+          contracts[(
+            world.worldId,
+            lesson.lessonId,
+            task.taskId,
+            choice.id,
+          )] = Act0RepairGoalContractV1(
+            sourceWorldId: source.worldId,
+            sourceLessonId: source.lessonId,
+            sourceTaskId: task.taskId,
+            sourceChoiceId: choice.id,
+            sourceCorrectChoiceId: source.correct.id,
+            sourceFingerprint: source.fingerprint,
+            sourceQuestion: task.runner.question,
+            sourceChoiceReason: choice.feedbackReason,
+            sourceChoiceLabel: choice.label,
+            sourceChoiceQuality: choice.quality.name,
+            goalId: goal,
+            misconceptionId: choice.id,
+            relationId: 'foundation_replay/${task.taskId}/${choice.id}',
+            targetWorldId: target.worldId,
+            targetLessonId: target.lessonId,
+            targetTaskId: target.task.taskId,
+            targetFingerprint: target.fingerprint,
+            targetCorrectChoiceId: target.correct.id,
+            targetChoiceIds: target.task.runner.options
+                .map((option) => option.id)
+                .toSet(),
+            evidenceClass: exact
+                ? 'intentional_exact_replay'
+                : 'familiar_rehearsal',
+            mappingType: exact ? 'intentional_exact' : 'repair',
+            requireCapturedGoalWitness: true,
+          );
+        }
+      }
+      for (final entry in sameLesson.entries) {
+        earliest.putIfAbsent(entry.key, () => entry.value);
+      }
+    }
+  }
+  return contracts;
 }

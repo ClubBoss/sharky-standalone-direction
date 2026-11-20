@@ -172,7 +172,7 @@ void main() {
         '1': 118,
         '2': 60,
       });
-      expect(snapshot['longestCorrectPositionRun'], 5);
+      expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
@@ -386,7 +386,7 @@ void main() {
       '1': 119,
       '2': 60,
     });
-    expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 5);
+    expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
       'TABLE_ACTION_DECISION': 34,
@@ -572,63 +572,65 @@ void main() {
       expect(repair.sameSignalMapped || repair.exactReplay, isTrue);
     }
   });
-  test(
-    'new non-Hero BTN contexts retain exactly four held wrong-choice cases',
-    () {
-      final rows = _assessedRows()
-          .where((row) => _newW01OrderGapIds.contains(row.task.taskId))
-          .toList();
-      expect(rows.map((row) => row.task.taskId).toSet(), _newW01OrderGapIds);
-      final choices = <String>{};
-      for (final row in rows) {
-        final gap = act0RepairGapAdjudicationForSourceTaskV1(row.task.taskId)!;
-        expect(gap.outcome, Act0RepairGapOutcomeV1.unresolvedProductGap);
-        expect(gap.candidateTargetIds, isEmpty);
-        expect(gap.targetWorldId, isNull);
-        expect(gap.targetLessonId, isNull);
-        expect(gap.targetTaskId, isNull);
-        expect(row.task.runner.table.heroSeatId, 'co');
-        for (final option in row.incorrectOptions) {
-          choices.add('${row.task.taskId}/${option.id}');
-          final intent = buildAct0RepairIntentV1(
-            sourceWorldId: row.worldId,
-            sourceLessonId: row.lessonId,
-            sourceTaskId: row.task.taskId,
-            runner: row.task.runner,
-            selectedOption: option,
-            mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
-            currentFingerprintForIdentity:
-                act0CurrentAuthoredSourceFingerprintForIdentityV1,
-          )!;
-          expect(intent.skillAtomId, 'table_read');
-          expect(intent.missedSignalId, 'button');
-          expect(intent.missedSignalId, isNot('hero_button'));
-          expect(intent.mappingType, 'unresolved_product_gap');
-          expect(intent.targetTaskId, row.task.taskId);
-          final goal = act0RepairGoalResolutionForIntentV1(
-            intent,
-            learningEvidence: const Act0LearningEvidenceHistoryV1(),
-            currentFingerprintForIdentity:
-                act0CurrentAuthoredSourceFingerprintForIdentityV1,
-          );
-          expect(goal.isHeld, isTrue);
-          expect(goal.canLaunch, isFalse);
-          expect(goal.retainsObligation, isTrue);
-          expect(goal.canClaimIndependentApplication, isFalse);
-          expect(goal.reason, 'relation_unconfirmed');
-        }
+  test('non-Hero BTN contexts rehearse the current seat-order question', () {
+    final rows = _assessedRows()
+        .where((row) => _newW01OrderGapIds.contains(row.task.taskId))
+        .toList();
+    expect(rows.map((row) => row.task.taskId).toSet(), _newW01OrderGapIds);
+    final choices = <String>{};
+    for (final row in rows) {
+      final gap = act0RepairGapAdjudicationForSourceTaskV1(row.task.taskId)!;
+      expect(gap.outcome, Act0RepairGapOutcomeV1.unresolvedProductGap);
+      expect(gap.candidateTargetIds, isEmpty);
+      expect(gap.targetWorldId, isNull);
+      expect(gap.targetLessonId, isNull);
+      expect(gap.targetTaskId, isNull);
+      expect(row.task.runner.table.heroSeatId, 'co');
+      for (final option in row.incorrectOptions) {
+        choices.add('${row.task.taskId}/${option.id}');
+        final intent = buildAct0RepairIntentV1(
+          sourceWorldId: row.worldId,
+          sourceLessonId: row.lessonId,
+          sourceTaskId: row.task.taskId,
+          runner: row.task.runner,
+          selectedOption: option,
+          mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+          currentFingerprintForIdentity:
+              act0CurrentAuthoredSourceFingerprintForIdentityV1,
+        )!;
+        expect(intent.skillAtomId, 'table_read');
+        expect(intent.missedSignalId, 'button');
+        expect(intent.missedSignalId, isNot('hero_button'));
+        final isRecap = row.task.taskId == 'positions_review';
+        expect(intent.mappingType, isRecap ? 'repair' : 'intentional_exact');
+        expect(
+          intent.targetTaskId,
+          isRecap ? 'blinds_postflop_button' : row.task.taskId,
+        );
+        final goal = act0RepairGoalResolutionForIntentV1(
+          intent,
+          learningEvidence: const Act0LearningEvidenceHistoryV1(),
+          currentFingerprintForIdentity:
+              act0CurrentAuthoredSourceFingerprintForIdentityV1,
+        );
+        expect(goal.isHeld, isTrue);
+        expect(goal.canLaunch, isFalse);
+        expect(goal.retainsObligation, isTrue);
+        expect(goal.canClaimIndependentApplication, isFalse);
+        expect(goal.reason, 'source_occurrence_unconfirmed');
       }
-      expect(choices, <String>{
-        'blinds_postflop_button/utg',
-        'positions_late_seat/utg',
-        'positions_review/top',
-        'positions_review/random',
-      });
-    },
-  );
+    }
+    expect(choices, <String>{
+      'blinds_postflop_button/utg',
+      'positions_late_seat/utg',
+      'positions_review/top',
+      'positions_review/random',
+    });
+  });
   test('every wrong choice has a deterministic current typed disposition', () {
     final rows = _assessedRows();
     final admitted = <String>{};
+    final foundationDefaults = <String>{};
     final knownHeld = <String>{};
     final unknown = <String>{};
     final allChoices = <String>{};
@@ -666,8 +668,15 @@ void main() {
           choiceId: intent.choiceId,
         );
         if (contract?.hasValidatedTarget == true) {
-          admitted.add(key);
           final admittedContract = contract!;
+          if (admittedContract.relationId.startsWith('foundation_replay/')) {
+            foundationDefaults.add(key);
+            expect(row.worldNumber, lessThanOrEqualTo(4));
+            expect(admittedContract.canClaimIndependentApplication, isFalse);
+            expect(admittedContract.canClaimMatchedRecheck, isFalse);
+          } else {
+            admitted.add(key);
+          }
           expect(intent.mappingType, admittedContract.mappingType);
           expect(intent.targetWorldId, admittedContract.targetWorldId);
           expect(intent.targetLessonId, admittedContract.targetLessonId);
@@ -676,6 +685,11 @@ void main() {
           expect(intent.targetFingerprint, admittedContract.targetFingerprint);
         } else {
           (contract == null ? unknown : knownHeld).add(key);
+          expect(
+            row.worldNumber > 4 || row.task.repairOnly,
+            isTrue,
+            reason: key,
+          );
           expect(intent.mappingType, 'unresolved_product_gap');
           // Structural source IDs preserve the held entry; they are not a
           // fallback target or evidence that the source has been corrected.
@@ -756,18 +770,16 @@ void main() {
       'world_3/same_hand_different_seat/same_hand_different_seat_same_hand_early_fold/raise',
       'world_6/range_pressure_lines/w6_value_range_action/bet_bluff',
     });
-    expect(knownHeld, <String>{
-      'world_1/what_poker_is/what_poker_is_find_hero/random',
-      'world_1/your_first_hand/your_first_hand_showdown/first_actor',
-      'world_1/your_first_hand/your_first_hand_showdown/hero_cards_only',
-      'world_2/hand_discipline_buckets/hand_discipline_buckets_premium/medium',
-      'world_2/continue_or_let_go/continue_or_let_go_premium_continue/medium',
-      'world_2/discipline_checkpoint/discipline_checkpoint_checkpoint_premium/medium',
-      'world_4/small_half_pot/w4_half_pot_bet/two',
-      'world_4/small_half_pot/w4_half_pot_bet/six',
-    });
-    expect(unknown, hasLength(434));
-    expect(admitted.length + knownHeld.length + unknown.length, 461);
+    expect(knownHeld, isEmpty);
+    expect(foundationDefaults, hasLength(185));
+    expect(unknown, hasLength(257));
+    expect(
+      admitted.length +
+          foundationDefaults.length +
+          knownHeld.length +
+          unknown.length,
+      allChoices.length,
+    );
     print(
       const JsonEncoder.withIndent('  ').convert({
         'scope': 'CURRENT_TYPED_DISPOSITION_NOT_FULL_SEMANTIC_COVERAGE',
@@ -775,6 +787,7 @@ void main() {
         'assessedRows': 293,
         'wrongChoices': 461,
         'staticAdmittedFamiliarChoices': admitted.length,
+        'foundationDefaultChoices': foundationDefaults.length,
         'heldKnownChoices': knownHeld.length,
         'heldUnreviewedChoices': unknown.length,
         'allRawTaskIds': rows.map((r) => r.task.taskId).toList(),
@@ -789,7 +802,10 @@ List<_Row> _assessedRows() => <_Row>[
     if (RegExp(r'^world_([1-9]|1[0-2])$').hasMatch(world.worldId))
       for (final lesson in world.lessons)
         for (final task in lesson.taskList)
-          if (task.runner.options.length >= 2 &&
+          // The P8 orientation item is launched only for an existing miss.
+          // Its one wrong answer cannot create a standalone course obligation.
+          if (task.taskId != 'first_table_guide_shared_cards_repair' &&
+              task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==
                   1)
             _Row(world.worldId, lesson.lessonId, task),

@@ -69,8 +69,8 @@ void main() {
       expect(intent?.missedSignalId, 'hero_button');
       expect(intent?.skillAtomId, 'table_position_read');
       expect(intent?.targetWorldId, 'world_1');
-      expect(intent?.targetLessonId, 'cards_ranks_suits');
-      expect(intent?.targetTaskId, 'cards_ranks_suits_private_board');
+      expect(intent?.targetLessonId, 'what_poker_is');
+      expect(intent?.targetTaskId, 'first_table_guide_shared_cards_repair');
       expect(intent?.goalId, 'shared_board_vs_private_cards');
       expect(intent?.mappingType, 'repair');
       expect(intent?.reasonCode, 'same_signal_table_position_read_hero_button');
