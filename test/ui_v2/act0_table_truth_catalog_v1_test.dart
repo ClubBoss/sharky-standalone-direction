@@ -31,8 +31,83 @@ void main() {
     expect(table.copyWith(actionTrail: const []).handContributions, isNull);
   });
 
+  test('an omitted call label cannot hide a missing effective stack', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'mutation',
+      source.runner.table.copyWith(toCallLabel: ''),
+    );
+
+    expect(
+      {for (final row in findings) row.invariant: row.result},
+      {
+        'D2.pot_feasibility': 'PASS',
+        'D3.to_call_completeness': 'NEEDS_SOURCE_CONTEXT',
+      },
+    );
+  });
+
+  test('a played preflop pot without contributions keeps its source gap', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w9_m_ratio_table_window_transfer',
+        );
+
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'authored/preflop',
+      source.runner.table,
+    );
+
+    expect(findings.map((row) => (row.invariant, row.result)), [
+      ('D2.pot_feasibility', 'NEEDS_SOURCE_CONTEXT'),
+    ]);
+  });
+
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
+    final earlyWorldTasks = Act0ShellStateV1.sample.worlds
+        .where((world) => world.worldNumber <= 4)
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .map((task) => task.taskId)
+        .toSet();
+    for (final (rule, proved, missing) in [
+      ('D2.pot_feasibility', 113, 28),
+      ('D3.to_call_completeness', 55, 11),
+    ]) {
+      final proof = rows.where(
+        (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
+      );
+      expect(proof.map((row) => row.result).toSet(), {
+        'PASS',
+        'NEEDS_SOURCE_CONTEXT',
+      }, reason: rule);
+      expect(
+        proof
+            .where((row) => row.result == 'PASS')
+            .map((row) => row.taskId)
+            .toSet(),
+        hasLength(proved),
+        reason: rule,
+      );
+      expect(
+        proof
+            .where((row) => row.result == 'NEEDS_SOURCE_CONTEXT')
+            .map((row) => row.taskId)
+            .toSet(),
+        hasLength(missing),
+        reason: rule,
+      );
+    }
     final middleWorldTasks = Act0ShellStateV1.sample.worlds
         .where((world) => world.worldNumber >= 5 && world.worldNumber <= 8)
         .expand((world) => world.lessons)
@@ -90,6 +165,7 @@ void main() {
         .toSet();
     const lateMissingSource = {
       'D2.pot_feasibility': {
+        'w9_m_ratio_table_window_transfer',
         'w10_table_value_vs_caller_transfer',
         'w11_checkpoint_mixed_table_line',
         'w12_checkpoint_full_loop_line',

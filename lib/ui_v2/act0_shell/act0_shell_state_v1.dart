@@ -1287,6 +1287,7 @@ Act0TableStateV1 _act0ReassignHeroSeatV1(
     activeSeatId: resolvedActiveSeatId,
     // A reassigned Hero turn must not retain the previous Hero's terminal
     // marker. Prior actions and independently authored opponent turns stay.
+    handContributions: table.handContributions,
     actionTrail: [
       for (var i = 0; i < table.actionTrail.length; i++)
         if (i == table.actionTrail.length - 1 &&
@@ -9305,6 +9306,11 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     toCallLabel: 'To call 1 BB',
     centerLabel: 'Your turn',
     emptyBoardLabel: 'No board cards yet',
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'btn': 100},
+      entries: _act0LessonBlinds,
+    ),
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -9748,6 +9754,30 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     centerLabel: showdown
         ? 'Your pair of aces beats the big blind’s pair of jacks'
         : runner.table.centerLabel,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.values[streetIndex],
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+    ),
     actionTrail: trail,
     seats: [
       for (final seat in runner.table.seats)
@@ -10009,6 +10039,31 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
     // actions were not in the earlier source. UTG/HJ fold, CO limps for 1 BB,
     // both blinds fold to Hero's all-in, then CO calls to 20 BB total, so
     // pot 41.5 BB = 0.5 + 1 + 20 + 20 is unchanged.
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {'btn': 20},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          20,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          19,
+        ),
+      ],
+    ),
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1.note(label: 'Blinds: 1.5 BB'),
       Act0ActionTrailItemV1.note(label: 'UTG folds'),
@@ -10881,6 +10936,11 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.preflop,
+        startingStackBbBySeat: {'btn': 100},
+        entries: [..._act0LessonBlinds],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -10958,6 +11018,43 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: {'btn': 100},
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'utg',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'sb',
+            Act0ContributionKindV1.wager,
+            0.5,
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+        ],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -11056,6 +11153,24 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
       selectableSeatIds: const [],
       selectedSeatId: '',
       focusCalloutLabel: '',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'bb',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+        ],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -11118,6 +11233,37 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
       highlightedCardIds: const [],
       focusCalloutLabel: '',
       selectedSeatId: '',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: {'btn': 100},
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'sb',
+            Act0ContributionKindV1.wager,
+            0.5,
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            1,
+          ),
+        ],
+      ),
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -11354,6 +11500,44 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
       toCallLabel: '',
       centerLabel: flop ? 'First pass on the flop' : 'Initial preflop pass',
       focusCalloutLabel: '',
+      handContributions: Act0HandContributionsV1(
+        throughStreet: flop ? PokerStreet.flop : PokerStreet.preflop,
+        entries: [
+          ..._act0LessonBlinds,
+          if (matched) ...const [
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'utg',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'hj',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'co',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'btn',
+              Act0ContributionKindV1.wager,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'sb',
+              Act0ContributionKindV1.wager,
+              0.5,
+            ),
+          ],
+        ],
+      ),
       actionTrail: trail,
       activeSeatId: '',
       decisionSeatId: actor,
@@ -13381,6 +13565,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       'You read one spot, named the setup, and got one clear why back. That foundation makes later lessons move faster because later lessons keep reusing the same table-first scan.',
   table: _whatYouCanDoRunner.table.copyWith(
     centerLabel: 'Cards on the table',
+    handContributions: _whatYouCanDoRunner.table.handContributions,
     actionTrail: const [],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -13441,7 +13626,10 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   feedbackTitle: 'Tab jobs locked in.',
   feedbackReason:
       'Home shows what to do now, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress.',
-  table: _whatYouCanDoRunner.table.copyWith(actionTrail: const []),
+  table: _whatYouCanDoRunner.table.copyWith(
+    handContributions: _whatYouCanDoRunner.table.handContributions,
+    actionTrail: const [],
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Know the five jobs.',
@@ -14263,6 +14451,36 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
     highlightedCardIds: highlightedCardIds,
     heroCards: heroCards,
     boardCards: boardCards,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.river,
+      entries: [
+        ..._act0LessonBlinds,
+        const Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        const Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        for (final (street, bet) in [
+          (PokerStreet.flop, flopBetBb),
+          (PokerStreet.turn, turnBetBb),
+        ])
+          if (bet > 0)
+            for (final seat in ['co', 'btn'])
+              Act0ContributionV1(
+                street,
+                seat,
+                Act0ContributionKindV1.wager,
+                bet.toDouble(),
+              ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -14887,6 +15105,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
         Act0CardStateV1(rank: '8', suit: 'd'),
       ],
       centerLabel: 'J8o early',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -15079,6 +15298,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       activeSeatId: 'co',
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       centerLabel: 'Folded to CO',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
@@ -15344,6 +15564,19 @@ Act0TableStateV1 _act0FacingOpenTableV1(
     toCallLabel: 'To call $size',
     activeSeatId: hero,
     heroSeatId: hero,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: {hero: 100},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          opener,
+          Act0ContributionKindV1.wager,
+          openingBb.toDouble(),
+        ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -16105,6 +16338,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
         Act0CardStateV1(rank: 'T', suit: 'c'),
       ],
       centerLabel: 'Middle position',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -16268,6 +16502,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
       ],
       centerLabel: 'CO after two folds',
       activeSeatId: 'co',
+      handContributions: _act0BlindsOnlyContributions,
     ),
     const {'utg', 'hj'},
   ),
@@ -16535,6 +16770,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
           .toList(growable: false),
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       centerLabel: 'CO with three seats behind',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
@@ -16998,6 +17234,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
         ],
         highlightedSeatIds: const <String>['hj'],
         centerLabel: 'HJ, unopened pot',
+        handContributions: _act0BlindsOnlyContributions,
         actionTrail: const <Act0ActionTrailItemV1>[
           Act0ActionTrailItemV1(label: 'UTG folds'),
           Act0ActionTrailItemV1(label: 'HJ acts'),
@@ -17388,6 +17625,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       ],
       centerLabel: 'HJ, medium hand',
       activeSeatId: 'hj',
+      handContributions: _act0BlindsOnlyContributions,
       actionTrail: const [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -17642,6 +17880,24 @@ Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
   return table.copyWith(
     potLabel: 'Pot 6 BB',
     toCallLabel: '',
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.75,
+        ),
+      ],
+    ),
     actionTrail: <Act0ActionTrailItemV1>[
       ..._w4BtnBbSixBbFlopTrailV1,
       if (btnCheckedBehind) Act0ActionTrailItemV1(label: 'BTN checks'),
@@ -18189,6 +18445,31 @@ Act0TableStateV1 _act0W4FacingTurnPriceV1(
   );
   return table.copyWith(
     autoPlayHistory: false,
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.turn,
+      startingStackBbBySeat: const {'btn': 100},
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          preflopAmount,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          bettor,
+          Act0ContributionKindV1.wager,
+          preflopAmount - (fromBigBlind ? 1 : 0),
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          bettor,
+          Act0ContributionKindV1.wager,
+          price,
+        ),
+      ],
+    ),
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -18771,6 +19052,31 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
         Act0CardStateV1(rank: '7', suit: 'c'),
         Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
       ],
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: {'bb': 100},
+        entries: [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2.75,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'bb',
+            Act0ContributionKindV1.wager,
+            1.75,
+          ),
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+        ],
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         ..._w4BtnBbSixBbFlopTrailV1,
         Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
@@ -18862,6 +19168,11 @@ const _act0LessonBlinds = [
     1,
   ),
 ];
+
+const _act0BlindsOnlyContributions = Act0HandContributionsV1(
+  throughStreet: PokerStreet.preflop,
+  entries: _act0LessonBlinds,
+);
 
 Act0TableStateV1 _act0BoardLessonTableV1({
   required List<Act0CardStateV1> heroCards,
