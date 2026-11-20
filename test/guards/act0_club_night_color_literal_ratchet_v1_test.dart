@@ -17,6 +17,8 @@ const Map<String, int> _allowance = <String, int>{
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart': 12,
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_onboarding_leaf_v1.dart': 2,
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart': 3,
+  'lib/ui_v2/act0_shell/academy_leaves/act0_academy_settings_leaf_v1.dart': 9,
+  'lib/ui_v2/act0_shell/academy_leaves/act0_academy_you_leaf_v1.dart': 1,
   'lib/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart': 14,
   'lib/ui_v2/act0_shell/act0_academy_folio_v1.dart': 1,
   'lib/ui_v2/act0_shell/act0_academy_reading_style_v1.dart': 2,
