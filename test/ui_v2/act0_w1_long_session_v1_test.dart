@@ -337,6 +337,23 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('W9 shows its short-stack premise before answering', (t) async {
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_9',
+      taskId: 'w9_short_stack_survival',
+    );
+    expect(
+      find.text('You have 9 BB with blinds about to hit.'),
+      findsOneWidget,
+    );
+    expect(find.text('Very short stacks cannot wait forever.'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_option_take_spot')).hitTestable(),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('W9 long inline history keeps the current decision playable', (
     t,
   ) async {
