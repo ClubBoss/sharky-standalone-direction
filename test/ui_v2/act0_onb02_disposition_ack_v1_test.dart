@@ -47,6 +47,24 @@ void main() {
     expect(await Act0FirstStartPreferencesV1.hasSkippedIntroduction(), isTrue);
   });
 
+  test('startup reads both dispositions from one backend refresh', () async {
+    SharedPreferences.setMockInitialValues({
+      'act0_welcome_completed_v1': true,
+      'act0_introduction_skipped_v1': false,
+    });
+    await SharedPreferences.getInstance();
+    final original = SharedPreferencesStorePlatform.instance;
+    final gate = _DispositionGate(original, 'welcome', 'none');
+    SharedPreferencesStorePlatform.instance = gate;
+    addTearDown(() => SharedPreferencesStorePlatform.instance = original);
+
+    final disposition =
+        await Act0FirstStartPreferencesV1.readWelcomeDisposition();
+
+    expect(disposition, (welcomeCompleted: true, introductionSkipped: false));
+    expect(gate.refreshes, 1);
+  });
+
   for (final kind in ['welcome', 'skip']) {
     test('SIMULATED $kind acknowledged positive control', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -425,6 +443,7 @@ class _DispositionGate extends SharedPreferencesStorePlatform {
   final String failure;
   bool reject = true;
   int calls = 0;
+  int refreshes = 0;
   Completer<void>? held;
   Completer<void>? entered;
   void release() {
@@ -432,7 +451,11 @@ class _DispositionGate extends SharedPreferencesStorePlatform {
   }
 
   @override
-  Future<Map<String, Object>> getAll() => delegate.getAll();
+  Future<Map<String, Object>> getAll() {
+    refreshes++;
+    return delegate.getAll();
+  }
+
   @override
   Future<bool> setValue(String type, String key, Object value) async {
     if (key == this.key) {

@@ -1991,10 +1991,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     final intakeCompleted = await ProgressService.isIntakeCompleted();
-    final welcomeCompleted =
-        await Act0FirstStartPreferencesV1.hasCompletedWelcome();
-    final introductionSkipped =
-        await Act0FirstStartPreferencesV1.hasSkippedIntroduction();
+    final (:welcomeCompleted, :introductionSkipped) =
+        await Act0FirstStartPreferencesV1.readWelcomeDisposition();
     if (!mounted || epoch != _recoveryEpochV1) {
       return;
     }
