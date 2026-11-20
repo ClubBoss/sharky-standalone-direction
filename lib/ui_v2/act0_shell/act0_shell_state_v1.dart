@@ -25436,7 +25436,8 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   caption:
       'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Both started the flop with 35 BB behind. On J-7-4 rainbow, CO bets 2 BB into 8 BB.',
   hint: 'Real play means combining cues, not naming one concept.',
-  question: 'What is the cleaner response?',
+  question:
+      'Which line keeps weaker bets in and lets you reassess after the next card?',
   table: _act0CurrentStreetTableV1(
     _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroQJsCards,
@@ -25481,9 +25482,9 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       preferredLabel: 'Call once in position',
       betterAnswerLabel: 'Call once in position',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too tight.',
+      feedbackTitle: 'A fold ends this hand.',
       feedbackReason:
-          'The small bet and your position give you a reason to consider continuing. CO’s betting range and what happens on later streets can make folding reasonable.',
+          'A call keeps CO’s weaker bets in and gives you a turn decision. If CO’s betting range is very strong, folding can still be reasonable.',
     ),
     Act0RunnerOptionV1(
       id: 'raise_now',
@@ -25866,7 +25867,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   caption:
       'Real table. HJ opens 2.5 BB. Hero calls BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.',
   hint: 'Read seat, hand, board, price, and stack before choosing.',
-  question: 'What is the cleaner integrated response?',
+  question: 'Which line continues in position and keeps HJ’s weaker bets in?',
   table: _act0CurrentStreetTableV1(
     _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroAJsCards,
@@ -25926,9 +25927,9 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       preferredLabel: 'Call in position and keep the range wide',
       betterAnswerLabel: 'Call in position and keep the range wide',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too cautious.',
+      feedbackTitle: 'A fold ends this hand.',
       feedbackReason:
-          'Before folding, weigh top pair, position and the 5 BB price together. A very strong HJ betting range could still make folding reasonable.',
+          'A call keeps HJ’s weaker bets and draws in and lets you act last on the turn. A very strong HJ betting range could still make folding reasonable.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
