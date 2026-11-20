@@ -22957,8 +22957,8 @@ final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Tournament table',
       betterAnswerLabel: 'Tournament table',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Elimination changes the downside.',
       feedbackReason:
           'Hand strength matters in both formats, but tournament life changes the downside. The risk tradeoff is not equal.',
     ),
@@ -23529,8 +23529,8 @@ final _w9CheckpointZoneLineRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Red-zone player',
       betterAnswerLabel: 'Red-zone player',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The red-zone player has fewer orbits.',
       feedbackReason:
           'Hand class matters, but pressure context differs by zone. Urgency is not equal across stacks.',
     ),

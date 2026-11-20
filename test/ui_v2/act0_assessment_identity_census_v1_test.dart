@@ -707,6 +707,15 @@ void main() {
       expect(option[3], 'wrong', reason: '$taskId / $optionId');
       option[3] = 'suboptimal';
     }
+    for (final (taskId, choiceId) in [
+      ('w9_survival_stack_tradeoff', 'same_both'),
+      ('w9_checkpoint_zone_line', 'same_zone'),
+    ]) {
+      final choice = beforeP8[taskId]!.singleWhere((row) => row[0] == choiceId);
+      expect(choice[2], isFalse, reason: taskId);
+      expect(choice[3], 'wrong', reason: taskId);
+      choice[3] = 'suboptimal';
+    }
     for (final taskId in [
       'your_first_hand_showdown',
       'showdown_best_hand_drill',

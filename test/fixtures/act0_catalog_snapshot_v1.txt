@@ -4230,7 +4230,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
   + [correct] Tournament table — Spot on. Tournament life adds elimination risk. That makes thin stack-offs more expensive than in reloadable cash spots.
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
-  - [suboptimal] Both should pass equally — Close start. Hand strength matters in both formats, but tournament life changes the downside. The risk tradeoff is not equal.
+  - [wrong] Both should pass equally — Elimination changes the downside. Hand strength matters in both formats, but tournament life changes the downside. The risk tradeoff is not equal.
     BETTER ANSWER: Tournament table
     FEEDBACK TABLE: Flop | You Qh Qs | Board Kc 7d 2s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Combo count | Facts one pair, pocket pair, rainbow
 
@@ -4445,7 +4445,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Green-zone player — Not quite. Green-zone players usually have room to wait for cleaner spots.
     BETTER ANSWER: Red-zone player
   + [correct] Red-zone player — Spot on. Lower M-ratio means fewer orbits and higher urgency. Red-zone stacks need earlier action windows.
-  - [suboptimal] Both should act the same way — Close idea. Hand class matters, but pressure context differs by zone. Urgency is not equal across stacks.
+  - [wrong] Both should act the same way — The red-zone player has fewer orbits. Hand class matters, but pressure context differs by zone. Urgency is not equal across stacks.
     BETTER ANSWER: Red-zone player
 
 TASK w9_checkpoint_bubble_line [drill] Bubble risk premium line

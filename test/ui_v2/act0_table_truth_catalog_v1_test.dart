@@ -419,6 +419,17 @@ void main() {
       expect(option['quality'], 'suboptimal', reason: '$taskId / $optionId');
       option['quality'] = 'wrong';
     }
+    for (final (taskId, choiceId) in [
+      ('w9_survival_stack_tradeoff', 'same_both'),
+      ('w9_checkpoint_zone_line', 'same_zone'),
+    ]) {
+      final task = expectedComparison[taskId] as Map<String, dynamic>;
+      final choice = (task['options'] as List)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == choiceId);
+      expect(choice['quality'], 'suboptimal', reason: taskId);
+      choice['quality'] = 'wrong';
+    }
     // P7–P8 classify false showdown outcomes and incomplete best fives as wrong.
     for (final id in [
       'showdown_review',
