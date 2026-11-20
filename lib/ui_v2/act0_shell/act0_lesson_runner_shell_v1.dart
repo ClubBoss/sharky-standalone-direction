@@ -4428,7 +4428,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
     Widget buildRunnerScreen({Act0SceneRegistrationV1? registration}) {
       final registeredScene = registration != null;
-      final decisionShelfMaxHeight = registration == null
+      final decisionShelfMaxHeight =
+          registration == null ||
+              widget.worldNumber < 1 ||
+              widget.worldNumber > 4
           ? null
           : math.max(
               0.0,

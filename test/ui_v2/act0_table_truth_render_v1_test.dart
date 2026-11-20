@@ -301,6 +301,27 @@ void main() {
           }
         }
       }
+      // These authored questions have long answer panels on the compact
+      // viewport. Every choice must remain reachable at larger text size.
+      if (const {
+        'actions_check_drill',
+        'apply_hj_decision',
+        'w4_half_pot_bet',
+      }.contains(id)) {
+        await show(Act0LessonPhaseV1.drill, textScale: 1.3);
+        for (final option in source.options) {
+          final choice = find.byKey(Key('act0_shell_option_${option.id}'));
+          expect(choice, findsOneWidget);
+          await tester.ensureVisible(choice);
+          await tester.pumpAndSettle();
+          expect(choice.hitTestable(), findsOneWidget);
+          _expectStationaryTable(
+            reference,
+            _paintedTableBounds(tester),
+            stage: '$id: scroll to ${option.id} at 1.3×',
+          );
+        }
+      }
       if (source.table.heroCards.isNotEmpty ||
           source.table.boardCards.isNotEmpty) {
         expect(checkedCardFrames, greaterThan(0));
