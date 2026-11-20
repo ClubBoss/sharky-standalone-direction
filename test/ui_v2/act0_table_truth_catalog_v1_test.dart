@@ -33,6 +33,40 @@ void main() {
 
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
+    final earlyWorldTasks = Act0ShellStateV1.sample.worlds
+        .where((world) => world.worldNumber <= 4)
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .map((task) => task.taskId)
+        .toSet();
+    for (final (rule, proved, missing) in [
+      ('D2.pot_feasibility', 108, 30),
+      ('D3.to_call_completeness', 55, 11),
+    ]) {
+      final proof = rows.where(
+        (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
+      );
+      expect(proof.map((row) => row.result).toSet(), {
+        'PASS',
+        'NEEDS_SOURCE_CONTEXT',
+      }, reason: rule);
+      expect(
+        proof
+            .where((row) => row.result == 'PASS')
+            .map((row) => row.taskId)
+            .toSet(),
+        hasLength(proved),
+        reason: rule,
+      );
+      expect(
+        proof
+            .where((row) => row.result == 'NEEDS_SOURCE_CONTEXT')
+            .map((row) => row.taskId)
+            .toSet(),
+        hasLength(missing),
+        reason: rule,
+      );
+    }
     final middleWorldTasks = Act0ShellStateV1.sample.worlds
         .where((world) => world.worldNumber >= 5 && world.worldNumber <= 8)
         .expand((world) => world.lessons)
