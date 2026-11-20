@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+
+import 'act0_hand_contributions_v1.dart';
 import 'act0_asm05_authored_decision_truth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
 
@@ -880,6 +883,7 @@ class Act0TableStateV1 {
     this.focusCalloutLabel = '',
     this.emptyBoardLabel = '',
     this.actionTrail = const <Act0ActionTrailItemV1>[],
+    this.handContributions,
     this.autoPlayHistory = true,
     this.activeSeatId,
     this.decisionSeatId,
@@ -905,6 +909,7 @@ class Act0TableStateV1 {
   final String focusCalloutLabel;
   final String emptyBoardLabel;
   final List<Act0ActionTrailItemV1> actionTrail;
+  final Act0HandContributionsV1? handContributions;
   final bool autoPlayHistory;
   final String? activeSeatId;
   // Source-owned current actor; independent of answer-revealing display focus.
@@ -940,6 +945,7 @@ class Act0TableStateV1 {
     String? focusCalloutLabel,
     String? emptyBoardLabel,
     List<Act0ActionTrailItemV1>? actionTrail,
+    Act0HandContributionsV1? handContributions,
     bool? autoPlayHistory,
     String? activeSeatId,
     String? decisionSeatId,
@@ -972,6 +978,12 @@ class Act0TableStateV1 {
       focusCalloutLabel: focusCalloutLabel ?? this.focusCalloutLabel,
       emptyBoardLabel: emptyBoardLabel ?? this.emptyBoardLabel,
       actionTrail: actionTrail ?? this.actionTrail,
+      handContributions:
+          handContributions ??
+          (actionTrail == null &&
+                  (streetLabel == null || streetLabel == this.streetLabel)
+              ? this.handContributions
+              : null),
       autoPlayHistory: autoPlayHistory ?? this.autoPlayHistory,
       activeSeatId: activeSeatId ?? this.activeSeatId,
       decisionSeatId: clearDecisionSeatId
@@ -24781,6 +24793,26 @@ const _w11QJsPreflopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
 ];
 
+const _w11QJsPreflopContributions = [
+  Act0ContributionV1(PokerStreet.preflop, 'sb', Act0ContributionKindV1.blind, .5),
+  Act0ContributionV1(PokerStreet.preflop, 'bb', Act0ContributionKindV1.blind, 1),
+  Act0ContributionV1(PokerStreet.preflop, 'utg', Act0ContributionKindV1.ante, .25),
+  Act0ContributionV1(PokerStreet.preflop, 'hj', Act0ContributionKindV1.ante, .25),
+  Act0ContributionV1(PokerStreet.preflop, 'co', Act0ContributionKindV1.ante, .25),
+  Act0ContributionV1(PokerStreet.preflop, 'btn', Act0ContributionKindV1.ante, .25),
+  Act0ContributionV1(PokerStreet.preflop, 'sb', Act0ContributionKindV1.ante, .25),
+  Act0ContributionV1(PokerStreet.preflop, 'bb', Act0ContributionKindV1.ante, .25),
+  Act0ContributionV1(PokerStreet.preflop, 'co', Act0ContributionKindV1.wager, 2.5),
+  Act0ContributionV1(PokerStreet.preflop, 'btn', Act0ContributionKindV1.wager, 2.5),
+];
+const _w11QJsFlopBet = Act0ContributionV1(
+  PokerStreet.flop,
+  'co',
+  Act0ContributionKindV1.wager,
+  2,
+);
+const _w11QJsStartingStacks = {'btn': 37.75, 'co': 37.75};
+
 final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_small_price_continue',
@@ -24796,6 +24828,11 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       potLabel: 'Pot 10 BB',
       toCallLabel: 'To call 2 BB',
       centerLabel: 'BTN, top pair, small price',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.flop,
+        startingStackBbBySeat: _w11QJsStartingStacks,
+        entries: [..._w11QJsPreflopContributions, _w11QJsFlopBet],
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         ..._w11QJsPreflopTrail,
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
@@ -24869,6 +24906,26 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       potLabel: 'Pot 24 BB',
       toCallLabel: 'To call 12 BB',
       centerLabel: 'BTN top pair, tight CO barrel',
+      handContributions: const Act0HandContributionsV1(
+        throughStreet: PokerStreet.turn,
+        startingStackBbBySeat: _w11QJsStartingStacks,
+        entries: [
+          ..._w11QJsPreflopContributions,
+          _w11QJsFlopBet,
+          Act0ContributionV1(
+            PokerStreet.flop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2,
+          ),
+          Act0ContributionV1(
+            PokerStreet.turn,
+            'co',
+            Act0ContributionKindV1.wager,
+            12,
+          ),
+        ],
+      ),
       actionTrail: const <Act0ActionTrailItemV1>[
         ..._w11QJsPreflopTrail,
         Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),

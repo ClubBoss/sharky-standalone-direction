@@ -8,8 +8,54 @@ import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 
 void main() {
+  test('contribution checks reject a changed pot or a missing price label', () {
+    final source = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere(
+          (task) => task.taskId == 'w11_trigger_small_price_continue',
+        );
+    final table = source.runner.table;
+    final wrong = table.copyWith(potLabel: 'Pot 11 BB', toCallLabel: '');
+    final findings = auditTableContributionsV1(
+      source.taskId,
+      'mutation',
+      wrong,
+    );
+
+    expect(
+      {for (final row in findings) row.invariant: row.result},
+      {'D2.pot_feasibility': 'FAIL', 'D3.to_call_completeness': 'FAIL'},
+    );
+    expect(table.copyWith(actionTrail: const []).handContributions, isNull);
+  });
+
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
+    for (final id in [
+      'w11_trigger_small_price_continue',
+      'w11_trigger_bad_price_fold',
+    ]) {
+      final proof = rows
+          .where(
+            (row) =>
+                row.taskId == id &&
+                (row.invariant == 'D2.pot_feasibility' ||
+                    row.invariant == 'D3.to_call_completeness'),
+          )
+          .toList();
+      expect(proof.map((row) => row.invariant).toSet(), {
+        'D2.pot_feasibility',
+        'D3.to_call_completeness',
+      }, reason: id);
+      expect(
+        proof.map((row) => row.result).toSet(),
+        {'PASS'},
+        reason:
+            '$id: ${proof.where((row) => row.result != 'PASS').map((row) => row.key).join('\n')}',
+      );
+    }
     final tasks = Act0ShellStateV1.sample.worlds
         .expand((w) => w.lessons)
         .expand((l) => l.taskList)
