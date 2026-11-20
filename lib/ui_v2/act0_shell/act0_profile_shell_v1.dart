@@ -274,8 +274,8 @@ class _ProfileEvidenceSignalCardV1 extends StatelessWidget {
                   _profileCopyV1(
                     context,
                     en: signal.confirmationState == act0RecentEvidenceVerifiedV1
-                        ? 'Recent independent responses verified.'
-                        : 'Independent confirmation is still needed.',
+                        ? 'You answered recent questions without help.'
+                        : 'Try a new hand without help.',
                     ru: signal.confirmationState == act0RecentEvidenceVerifiedV1
                         ? '\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u044B.'
                         : '\u041F\u043E\u043A\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0439.',
@@ -396,10 +396,7 @@ String _profileHeaderSublineV1(
   required bool hasSavedRepairEvidence,
 }) {
   if (hasSavedRepairEvidence && !hasCurrentIndependentProof) {
-    return _profileCopyV1(
-      context,
-      en: 'Repair history saved; current proof pending',
-    );
+    return _profileCopyV1(context, en: 'Mistakes saved for another try');
   }
   final hasRecordedActivity = _profileHasRecordedActivityV1(profile);
   return _profileCopyV1(
@@ -407,8 +404,8 @@ String _profileHeaderSublineV1(
     en: hasCurrentIndependentProof
         ? 'What Sharky can prove'
         : hasRecordedActivity
-        ? 'Practice recorded; proof still pending'
-        : 'Proof will appear as you learn',
+        ? 'Practice saved. Try a new hand without help.'
+        : 'Your practice will appear here',
     ru: hasCurrentIndependentProof
         ? 'Что Шарки может подтвердить'
         : hasRecordedActivity
@@ -585,7 +582,7 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     Text(
                       _profileCopyV1(
                         context,
-                        en: 'Proof profile',
+                        en: 'Your learning record',
                         ru: 'Профиль доказательств',
                       ),
                       maxLines: 2,
@@ -598,7 +595,7 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     Text(
                       _profileCopyV1(
                         context,
-                        en: 'Sharky keeps proof, not points.',
+                        en: 'See your practice and progress here.',
                         ru: 'Шарки хранит доказательства, а не очки.',
                       ),
                       style: Act0AcademyReadingStyleV1.body.copyWith(
@@ -618,10 +615,10 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                 : _profileCopyV1(
                     context,
                     en: hasCurrentIndependentProof
-                        ? 'Recent route proof'
+                        ? 'Recent correct answers'
                         : hasRecordedActivity
-                        ? 'Recent practice; proof still pending'
-                        : 'Proof starts here',
+                        ? 'Practice saved. Try another hand without help.'
+                        : 'Start with your first hand',
                     ru: hasCurrentIndependentProof
                         ? 'Недавнее подтверждение маршрута'
                         : hasRecordedActivity
@@ -741,7 +738,7 @@ String _profileHeroWorldLineV1(
       ? _profileWeakSkillSupportBodyV1(context, weak)
       : _profileCopyV1(
           context,
-          en: 'Your profile below shows the skills, rhythm, and proof you have already built.',
+          en: 'See the skills you practiced and the progress you made.',
           ru: 'Ниже видно навыки, ритм и доказательства того, что уже закрепилось.',
         );
   return (headline: headline, body: body);
@@ -1150,7 +1147,7 @@ List<_ProfileProofTileDataV1> _crossSessionProofTilesV1(
   return <_ProfileProofTileDataV1>[
     _ProfileProofTileDataV1(
       title: _profileCopyV1(context, en: 'Fixes'),
-      value: '${proof.totalBankedFixCount} banked',
+      value: '${proof.totalBankedFixCount} corrected',
       icon: Icons.check_circle_outline_rounded,
       tone: Act0AcademyReadingStyleV1.gold,
       proofIconRole: Act0ProofIconRoleV1.repairCompleted,
@@ -3018,7 +3015,7 @@ void _showAchievementsSheet(BuildContext context, Act0ProfileStateV1 profile) {
               Text(
                 _profileCopyV1(
                   context,
-                  en: 'Proof from streaks, repairs, clean drills, and steady return.',
+                  en: 'Milestones from practice and corrected mistakes.',
                   ru: 'Доказательства из серий, исправлений, чистых дриллов и стабильных возвращений.',
                 ),
                 style: Act0AcademyReadingStyleV1.muted,

@@ -88,7 +88,7 @@ void main() {
       );
       expect(find.text('2'), findsOneWidget);
       expect(find.text('spots to repair'), findsOneWidget);
-      expect(find.text('1 independent review due'), findsOneWidget);
+      expect(find.text('1 review due'), findsOneWidget);
       await tester.tap(
         find.byKey(const Key('act0_academy_review_leaf_repair_cta')),
       );
@@ -174,6 +174,10 @@ void main() {
         const Act0AcademyReviewLeafV1(input: Act0AcademyReviewLeafInputV1()),
       );
       expect(find.text('No saved mistakes yet'), findsOneWidget);
+      expect(
+        find.text('All caught up. Nothing to review now.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('saved check forwards its own id', (tester) async {
@@ -316,7 +320,7 @@ void main() {
       expect(find.text('Ana'), findsOneWidget);
       expect(find.text('Level 2 - 60 XP'), findsOneWidget);
       expect(find.text('7 tasks completed'), findsOneWidget);
-      expect(find.text('2 repairs banked'), findsOneWidget);
+      expect(find.text('2 mistakes corrected'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_academy_you_leaf_reinforced')),
         findsNothing,

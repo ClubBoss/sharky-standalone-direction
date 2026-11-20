@@ -744,6 +744,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _learningEvidenceRunOrdinalV1 = 0;
       _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
       _studyObservationsV1 = const [];
+      _savedPracticeDaysV1 = const [];
       _durableRetentionHistoryV1 = const Act0DurableRetentionHistoryV1();
       _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
       _reviewResolutionReceiptHistoryV1 =

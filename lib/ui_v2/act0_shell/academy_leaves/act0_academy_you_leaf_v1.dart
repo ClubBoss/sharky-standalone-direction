@@ -39,7 +39,7 @@ class Act0AcademyYouLeafInputV1 {
     this.displayName,
     this.levelLabel = '',
     this.xpLine = '',
-    this.streakDays = 0,
+    this.practiceDaysLastWeek = 0,
     this.earnedMoments = const <Act0AchievementMomentViewModelV1>[],
     this.completedTaskCount,
     this.learningRecord,
@@ -58,7 +58,7 @@ class Act0AcademyYouLeafInputV1 {
   final String? displayName;
   final String levelLabel;
   final String xpLine;
-  final int streakDays;
+  final int practiceDaysLastWeek;
   final List<Act0AchievementMomentViewModelV1> earnedMoments;
   final int? completedTaskCount;
   final Act0ProfileEvidenceProjectionV1? learningRecord;
@@ -95,7 +95,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
     // unknown count never hides a supplied level or XP line.
     final fresh =
         moments.isEmpty &&
-        input.streakDays == 0 &&
+        input.practiceDaysLastWeek == 0 &&
         input.completedTaskCount == 0 &&
         input.openRepairCount == 0 &&
         input.dueReviewCount == 0;
@@ -174,13 +174,13 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                             style: const TextStyle(color: _muted, fontSize: 12),
                           ),
                         ],
-                        if (input.streakDays > 0)
+                        if (input.practiceDaysLastWeek > 0)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
-                              '${input.streakDays} '
-                              '${_plural(input.streakDays, 'day', 'days')}'
-                              ' - Learning streak',
+                              '${input.practiceDaysLastWeek} '
+                              '${_plural(input.practiceDaysLastWeek, 'day', 'days')}'
+                              ' practiced in the last 7 days',
                               key: const Key('act0_academy_you_leaf_streak'),
                               style: const TextStyle(
                                 color: _gold,
@@ -195,15 +195,14 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
               ),
             ),
           ),
-          if (!fresh && (subtitleParts.isNotEmpty || input.streakDays > 0))
+          if (!fresh &&
+              (subtitleParts.isNotEmpty || input.practiceDaysLastWeek > 0))
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
               child: Text(
                 input.xpLine.trim().isEmpty
-                    ? 'These counters track activity. Skill needs independent '
-                          'checks across hands and time.'
-                    : 'Level, XP and streaks track activity. Skill needs independent '
-                          'checks across hands and time.',
+                    ? 'This tracks your practice. Try new hands without help to see what you remember.'
+                    : 'Level, XP, and practice days track your activity. Try new hands without help to see what you remember.',
                 key: const Key('act0_academy_you_leaf_activity_boundary'),
                 style: const TextStyle(color: _muted, fontSize: 12),
               ),
@@ -306,7 +305,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Make your first independent correct decision.',
+                            'Answer your first question correctly without help.',
                             style: TextStyle(color: _muted, fontSize: 12),
                           ),
                         ],
@@ -330,7 +329,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                   : 'Spots to repair',
               subtitle: [
                 if (input.dueReviewCount > 0)
-                  '${input.dueReviewCount} independent '
+                  '${input.dueReviewCount} '
                       '${_plural(input.dueReviewCount, 'review', 'reviews')} due',
                 if (input.openRepairCount > 0)
                   '${input.openRepairCount} '
@@ -364,7 +363,8 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                   ),
                   if (input.bankedRepairCount > 0)
                     Text(
-                      '${input.bankedRepairCount} repairs banked',
+                      '${input.bankedRepairCount} '
+                      '${_plural(input.bankedRepairCount, 'mistake', 'mistakes')} corrected',
                       key: const Key('act0_academy_you_leaf_banked'),
                       style: const TextStyle(color: _muted, fontSize: 13),
                     ),

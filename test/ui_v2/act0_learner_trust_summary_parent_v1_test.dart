@@ -257,7 +257,7 @@ void main() {
         expect(summary.errorCount, 1);
         expect(summary.correctCount, summary.taskCount - 1);
         expect(summary.independentProvenanceKnown, isTrue);
-        expect(find.text('Clean pass'), findsNothing);
+        expect(find.text('All correct'), findsNothing);
         expect(find.text('Replay before next lesson'), findsNothing);
         final saved = await _persisted();
         expect(

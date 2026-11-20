@@ -77,7 +77,7 @@ String? _labelForSeedIdV1(String seedId) {
       // Keep the persisted seed identity while limiting the visible claim.
       return 'First practice recorded';
     case act0AchievementSeedThreeDayStreakV1:
-      return 'Three-day rhythm';
+      return 'Three Days of Practice';
   }
   return null;
 }

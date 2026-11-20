@@ -99,7 +99,7 @@ class Act0PracticeRepairQueueProjectionV1 {
             selectedId: intent.choiceId.trim(),
             betterId: '',
             context: goal?.isHeld == true
-                ? 'Matching repair not confirmed · miss saved'
+                ? 'Mistake saved for another try'
                 : intent.missedSignalLabel.trim(),
             priority: 0,
             sourceType: act0PracticeRepairQueueSourceActiveRepairV1,

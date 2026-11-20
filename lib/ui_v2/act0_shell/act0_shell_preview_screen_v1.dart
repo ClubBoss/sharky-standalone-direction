@@ -865,7 +865,7 @@ List<Act0RunnerOptionV1> _placementDiagnosticOptionsV1(
             : '2 private · 3 board · Pot 6 BB',
         feedbackReason: isRu
             ? 'Карт посчитано верно, но в центре лежит банк 6 BB.'
-            : 'The card counts are right, but the centre pot is 6 BB.',
+            : 'The card counts are right, but the pot in the center is 6 BB.',
         repairFocusCardIds: const <String>[
           'hero_0',
           'hero_1',
@@ -1352,6 +1352,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.quickHint ||
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.theoryRecall;
   List<Act0StudyObservationV1> _studyObservationsV1 = const [];
+  List<String> _savedPracticeDaysV1 = const [];
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
   Act0DurableRetentionHistoryV1 _durableRetentionHistoryV1 =
@@ -2570,7 +2571,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         valuePoints: const <String>[
           'more table-clue practice after the free foundation.',
           'Extra reps when one useful read feels worth sharpening.',
-          'deeper review of missed reads after you have proof it helps.',
+          'deeper review of missed decisions if it helps you.',
           'Longer route depth when you are ready.',
         ],
         trustLine:
@@ -2746,6 +2747,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final playSelectedTask = isPlayTab
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
+    final inlineRepairSource =
+        _activeSameSignalFeedbackRepairV1 &&
+            _activeRepairTaskId == playSelectedTask?.taskId
+        ? _mistakeRecords[_pendingFeedbackRepairSourceTaskIdV1]
+        : null;
+    ({int step, int total})? extraPracticeProgress;
+    if (inlineRepairSource != null) {
+      final sourceLesson = _lessonById(
+        _worldById(worlds, inlineRepairSource.worldId).lessons,
+        inlineRepairSource.lessonId,
+      );
+      extraPracticeProgress = (
+        step: _taskIndex(sourceLesson, inlineRepairSource.taskId) + 1,
+        total: sourceLesson.courseTaskList.length,
+      );
+    }
     final sameSessionLearningDelta =
         playSelectedTask != null &&
             _activeRepairTaskId != playSelectedTask.taskId
@@ -3685,6 +3702,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : sameSessionLearningDelta?.line,
                                 forceShowRepairOutcomeProof:
                                     sameSessionLearningDelta != null,
+                                extraPracticeProgress: extraPracticeProgress,
                                 repairContinuesToSourceRecheck:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId &&
@@ -4554,6 +4572,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         isCurrent: () =>
                             _acceptRecoveryCallbackV1(callbackEpochV1),
                         completedTasks: _completedTaskIds.length,
+                        practiceDaysLastWeek: _practiceDaysLastWeekV1(
+                          profileState,
+                        ),
                         openRepairs: reviewState.mistakes.length,
                         dueReviews: _dueReviewItemsV1().length,
                         earnedProjection:
@@ -5513,6 +5534,7 @@ class _Act0PersistedProgressV1 {
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.studyObservations = const [],
+    this.practiceDayKeys,
     this.pendingDecisionAssistance = const [],
     this.hasPendingAssistanceProvenance = true,
     this.lessonRunEvidenceBoundaries = const <String, int?>{},
@@ -5560,6 +5582,7 @@ class _Act0PersistedProgressV1 {
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final List<Act0StudyObservationV1> studyObservations;
+  final List<String>? practiceDayKeys;
   final List<_Act0PendingDecisionAssistanceV1> pendingDecisionAssistance;
   final bool hasPendingAssistanceProvenance;
   final Map<String, int?> lessonRunEvidenceBoundaries;
@@ -5637,6 +5660,7 @@ class _Act0PersistedProgressV1 {
         for (final observation in studyObservations) observation.toPayload(),
       ],
       'learningEvidenceLineage': learningEvidenceHistory.lineagePayload(),
+      if (practiceDayKeys case final keys?) 'practiceDayKeys': keys,
       'lessonRunEvidenceBoundaries': <String, int?>{
         for (final entry in lessonRunEvidenceBoundaries.entries)
           entry.key: entry.value,
@@ -5865,6 +5889,14 @@ class _Act0PersistedProgressV1 {
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
       studyObservations: studyObservations,
+      practiceDayKeys: switch (map['practiceDayKeys']) {
+        final List<Object?> days =>
+          days
+              .whereType<String>()
+              .take(Act0LearningEvidenceHistoryV1.maxStoredPracticeDays)
+              .toList(growable: false),
+        _ => null,
+      },
       pendingDecisionAssistance: pendingDecisionAssistance,
       hasPendingAssistanceProvenance: map.containsKey(
         'pendingDecisionAssistance',

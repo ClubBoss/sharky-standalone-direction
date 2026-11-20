@@ -207,6 +207,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _studyObservationsV1 = parsed.studyObservations;
+      final legacyPracticeDays = parsed.practiceDayKeys == null
+          ? _learningEvidenceHistoryV1.practiceDayKeysLastWeek(
+              widget.clock.nowUtc(),
+            )
+          : const <String>[];
+      _savedPracticeDaysV1 =
+          parsed.practiceDayKeys ??
+          (legacyPracticeDays.isEmpty && earnedDay.isNotEmpty
+              ? [earnedDay]
+              : legacyPracticeDays);
       _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
         widget.clock.nowUtc(),
       );
@@ -712,9 +722,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       if (!mounted) return;
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
         const SnackBar(
-          content: Text(
-            'This miss is saved. A matching repair has not been confirmed yet.',
-          ),
+          content: Text('This mistake is saved. Its practice is on hold.'),
         ),
       );
     });
@@ -917,6 +925,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       studyObservations: _studyObservationsV1,
+      practiceDayKeys: _savedPracticeDaysV1,
       pendingDecisionAssistance: List.unmodifiable(
         _pendingDecisionAssistanceV1.values,
       ),
@@ -1143,6 +1152,14 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           orElse: () => null,
         );
     if (latestRecord != null && !wasAlreadyRecorded) {
+      final day = latestRecord.localPracticeDayKey;
+      if (day != null && !_savedPracticeDaysV1.contains(day)) {
+        final days = [..._savedPracticeDaysV1, day]
+          ..sort((a, b) => b.compareTo(a));
+        _savedPracticeDaysV1 = days
+            .take(Act0LearningEvidenceHistoryV1.maxStoredPracticeDays)
+            .toList(growable: false);
+      }
       if (_activePracticeGroupId == 'daily') _ensureDailyCountDayV1();
       if (_activePracticeGroupId == 'daily' &&
           latestRecord.runKind == 'practice' &&

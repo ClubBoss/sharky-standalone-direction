@@ -78,7 +78,7 @@ void main() {
         findsNothing,
       );
       expect(find.text('Repair with guidance'), findsOneWidget);
-      await tester.tap(find.text('Check independently now'));
+      await tester.tap(find.text('Try without help'));
       expect(started.single.taskId, 'actions_check_drill');
     },
   );

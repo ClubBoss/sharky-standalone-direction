@@ -621,7 +621,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'One clue. One decision. One proof.',
+                            'Read the table and make one decision.',
                             style: TextStyle(
                               color: Act0AcademyLeafPaletteV1.textMuted,
                             ),
@@ -1151,7 +1151,7 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
                 Text(
                   _placementCopyV1(
                     context,
-                    en: 'One clue. One decision. One proof.',
+                    en: 'Read the table and make one decision.',
                     ru: 'Одна подсказка. Одно решение. Одно доказательство.',
                   ),
                   style: Act0AcademyDesignTokensV1.supporting.copyWith(

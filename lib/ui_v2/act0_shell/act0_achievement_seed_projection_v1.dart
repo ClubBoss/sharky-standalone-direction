@@ -122,7 +122,7 @@ class Act0AchievementSeedProjectionV1 {
         ),
         Act0AchievementSeedV1(
           id: act0AchievementSeedThreeDayStreakV1,
-          internalTitle: 'Three-day rhythm',
+          internalTitle: 'Three Days of Practice',
           sourceOwner: 'Act0ProfileStateV1.streakDays',
           state: safeStreakDays >= 3
               ? act0AchievementSeedStateEarnedV1
