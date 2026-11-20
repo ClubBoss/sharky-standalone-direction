@@ -20,6 +20,7 @@ void main() {
     await tester.pumpAndSettle();
     final skills = find.byKey(const Key('act0_w14_skills'));
     expect(skills, findsOneWidget);
+    expect(find.text('Skills · W1–W6'), findsOneWidget);
     await tester.ensureVisible(skills);
     await tester.tap(skills);
     await tester.pumpAndSettle();

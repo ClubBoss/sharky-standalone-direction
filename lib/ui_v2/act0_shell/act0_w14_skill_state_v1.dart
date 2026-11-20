@@ -4,6 +4,8 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
+const act0SkillMapLastWorldV1 = 6;
+
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
 const act0W14LessonSkillsV1 = <String, List<String>>{
@@ -115,7 +117,8 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
   String identity(String world, String lesson, String task) =>
       jsonEncode([world, lesson, task]);
   for (final world in worlds.where(
-    (world) => world.worldNumber >= 1 && world.worldNumber <= 6,
+    (world) =>
+        world.worldNumber >= 1 && world.worldNumber <= act0SkillMapLastWorldV1,
   )) {
     for (final lesson in world.lessons) {
       final lessonSkills =
