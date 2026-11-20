@@ -1447,6 +1447,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _learnPopupTaskId;
   late Set<String> _completedLessonIds;
   late Set<String> _completedTaskIds;
+  final Set<String> _tasksWithDeferredXpV1 = <String>{};
   final Set<String> _skippedTaskIds = <String>{};
   final Set<String> _visibleSkippedTaskIds = <String>{};
   bool _showWorldMenu = false;
@@ -1502,6 +1503,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   bool _activeSameSignalFeedbackRepairV1 = false;
+  String? _lessonExampleSourceTaskIdV1;
   String? _pendingFeedbackRepairSourceTaskIdV1;
   String? _pendingFeedbackRepairTaskIdV1;
   String? _activeSameSignalRecheckTaskId;
@@ -2831,14 +2833,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? _mistakeRecords[_pendingFeedbackRepairSourceTaskIdV1]
         : null;
     ({int step, int total})? extraPracticeProgress;
-    if (inlineRepairSource != null) {
+    final practiceSource =
+        inlineRepairSource ?? _mistakeRecords[_lessonExampleSourceTaskIdV1];
+    if (practiceSource != null) {
       final sourceLesson = _lessonById(
-        _worldById(worlds, inlineRepairSource.worldId).lessons,
-        inlineRepairSource.lessonId,
+        _worldById(worlds, practiceSource.worldId).lessons,
+        practiceSource.lessonId,
       );
       extraPracticeProgress = (
-        step: _taskIndex(sourceLesson, inlineRepairSource.taskId) + 1,
+        step: _taskIndex(sourceLesson, practiceSource.taskId) + 1,
         total: sourceLesson.courseTaskList.length,
+      );
+    } else if (playSelectedTask != null &&
+        (_isExactLessonRetryV1(playSelectedTask) ||
+            _activeLessonWrapUpTaskId == playSelectedTask.taskId)) {
+      extraPracticeProgress = (
+        step: _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
+        total: selectedLesson.courseTaskList.length,
       );
     }
     final sameSessionLearningDelta =
@@ -2860,7 +2871,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         openedAsSpacedReview ||
             _diagnosticLearningEntryV1 != null ||
             playSelectedTask == null ||
-            playTaskAlreadyCompleted
+            (playTaskAlreadyCompleted &&
+                !_tasksWithDeferredXpV1.contains(playSelectedTask.taskId))
         ? 0
         : playSelectedTask.rewardXp;
     final playRunner = isPlayRunner
@@ -3018,6 +3030,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
     }
     final effectiveLearnDetailLessonId = _learnDetailLessonId;
+    final repeatedMissSource = _secondLessonMissSourceV1(
+      playSelectedTask,
+      playRunner,
+    );
+    final nextExample = repeatedMissSource == null
+        ? null
+        : _otherLessonExampleV1(
+            sourceTaskId: repeatedMissSource,
+            attemptedTaskId: playSelectedTask!.taskId,
+            worlds: worlds,
+          );
     final academySurface =
         !_bootSurfaceReady ||
         (_showPlacement && !_placementDiagnosticActive) ||
@@ -3761,7 +3784,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 reviewKindId: _routeReviewKindForTaskIdV1(
                                   playSelectedTask?.taskId ?? '',
                                 ).name,
-                                theoryRecallStep: theoryRecallStep,
+                                theoryRecallStep:
+                                    _lessonExampleSourceTaskIdV1 == null
+                                    ? theoryRecallStep
+                                    : null,
                                 framingProfile: runnerFramingProfile,
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
@@ -3803,9 +3829,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         playSelectedTask?.taskId
                                     ? _activeRepairSessionSummaryLines
                                     : const <String>[],
+                                onTryAnotherExample: nextExample == null
+                                    ? null
+                                    : () => _setStateForRunnerCallbackV1(
+                                        callbackEpochV1,
+                                        callbackDiagnosticEntryV1,
+                                        callbackDiagnosticRunIdV1,
+                                        () => _startOtherLessonExampleV1(
+                                          repeatedMissSource!,
+                                          nextExample,
+                                        ),
+                                      ),
                                 feedbackForwardCtaLabel:
-                                    _diagnosticLearningEntryV1 != null ||
-                                        _spacedReviewReturnV1 != null
+                                    repeatedMissSource != null ||
+                                        _lessonExampleSourceTaskIdV1 != null
+                                    ? 'Continue lesson'
+                                    : _diagnosticLearningEntryV1 != null ||
+                                          _spacedReviewReturnV1 != null
                                     ? 'Back to Review'
                                     : placementForwardCtaLabel ??
                                           (_activeRepairTaskId ==
@@ -3838,6 +3878,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     if (openedAsSpacedReview) {
                                       _returnFromSpacedReviewV1(
                                         callbackDiagnosticRunIdV1,
+                                      );
+                                      return;
+                                    }
+                                    final lessonExampleSource =
+                                        _lessonExampleSourceTaskIdV1;
+                                    if (lessonExampleSource != null) {
+                                      _continueAfterRepeatedLessonMissV1(
+                                        lessonExampleSource,
                                       );
                                       return;
                                     }
@@ -4142,6 +4190,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       )))
                                     return;
 
+                                  if (_lessonExampleSourceTaskIdV1 != null)
+                                    return;
                                   setState(() {
                                     if (_activeSpacedReviewTaskV1 != null) {
                                       _appendLearningEvidenceV1(decision);
@@ -4283,6 +4333,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _teachingStepIndex = 0;
                                       return;
                                     }
+                                    final lessonMissToDefer =
+                                        _lessonExampleSourceTaskIdV1 ??
+                                        repeatedMissSource;
+                                    if (lessonMissToDefer != null) {
+                                      _continueAfterRepeatedLessonMissV1(
+                                        lessonMissToDefer,
+                                      );
+                                      return;
+                                    }
                                     if (_advanceActionSequenceReviewV1(
                                       selectedWorld: selectedWorld,
                                       selectedTask: playSelectedTask,
@@ -4417,9 +4476,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _rapidPracticeLoop = false;
                                       return;
                                     }
+                                    // Ungraded recap pages retain the same
+                                    // study reward as an explanation page.
+                                    final awardXp =
+                                        playRunner.options.isEmpty ||
+                                        ((playRunner
+                                                    .selectedOption
+                                                    ?.isCorrect ??
+                                                false) &&
+                                            _choiceHasIndependentProvenanceV1);
                                     if (_rapidPracticeLoop &&
                                         _activePracticeGroupId == 'daily') {
-                                      _completeCurrentTask(playSelectedTask);
+                                      _completeCurrentTask(
+                                        playSelectedTask,
+                                        awardXp: awardXp,
+                                      );
                                       if (_launchDailyPracticeQueueTaskV1())
                                         return;
                                       _syncPracticeReminderV1();
@@ -4453,7 +4524,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       return;
                                     }
                                     if (_rapidPracticeLoop) {
-                                      _completeCurrentTask(playSelectedTask);
+                                      _completeCurrentTask(
+                                        playSelectedTask,
+                                        awardXp: awardXp,
+                                      );
                                       final singleCleanRep =
                                           (playRunner
                                                   .selectedOption
@@ -4479,7 +4553,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                               ?.isCorrect ??
                                           false;
                                       if (wrappedCorrect) {
-                                        _completeCurrentTask(playSelectedTask);
+                                        _completeCurrentTask(
+                                          playSelectedTask,
+                                          awardXp: awardXp,
+                                        );
                                       }
                                       _lessonRunWrapUpCompletedTaskIds.add(
                                         playSelectedTask.taskId,
@@ -4528,7 +4605,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       return;
                                     }
                                     _placementHandoffActive = false;
-                                    _completeCurrentTask(playSelectedTask);
+                                    _completeCurrentTask(
+                                      playSelectedTask,
+                                      awardXp: awardXp,
+                                    );
                                     if (_maybeStartLessonWrapUpRetry(
                                       selectedLesson,
                                     )) {
@@ -5603,6 +5683,7 @@ class _Act0PendingDecisionAssistanceV1 {
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
+    this.tasksWithDeferredXp = const {},
     required this.skippedTaskIds,
     required this.completedLessonIds,
     required this.selectedWorldId,
@@ -5654,6 +5735,7 @@ class _Act0PersistedProgressV1 {
 
   final int schemaVersion;
   final Set<String> completedTaskIds;
+  final Set<String> tasksWithDeferredXp;
   final Set<String> skippedTaskIds;
   final Set<String> completedLessonIds;
   final String selectedWorldId;
@@ -5716,6 +5798,8 @@ class _Act0PersistedProgressV1 {
       if (suppressLegacyRecheckAfterRecovery)
         'suppressLegacyRecheckAfterRecovery': true,
       'completedTaskIds': sortedTaskIds,
+      if (tasksWithDeferredXp.isNotEmpty)
+        'tasksWithDeferredXp': tasksWithDeferredXp.toList()..sort(),
       if (openedSpacedReviewTaskIds.isNotEmpty)
         'openedSpacedReviewTaskIds': openedSpacedReviewTaskIds.toList()..sort(),
       'skippedTaskIds': sortedSkippedTaskIds,
@@ -5964,6 +6048,11 @@ class _Act0PersistedProgressV1 {
       suppressLegacyRecheckAfterRecovery:
           map['suppressLegacyRecheckAfterRecovery'] == true,
       completedTaskIds: completedTaskIds,
+      // Older snapshots treated completed tasks as paid. Only explicit
+      // deferred entries may award XP on a later independent attempt.
+      tasksWithDeferredXp: _stringSet(
+        map['tasksWithDeferredXp'],
+      ).intersection(completedTaskIds),
       skippedTaskIds: skippedTaskIds,
       completedLessonIds: completedLessonIds,
       selectedWorldId: selectedWorldId,
