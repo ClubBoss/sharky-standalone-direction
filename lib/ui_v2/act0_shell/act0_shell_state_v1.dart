@@ -25315,7 +25315,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Both started the flop with 35 BB behind. On J-7-4 rainbow, CO bets 2 BB into 8 BB.',
   hint: 'Real play means combining cues, not naming one concept.',
   question:
-      'Which line keeps weaker bets in and lets you reassess on the turn?',
+      'Which line keeps weaker bets in and lets you reassess after the next card?',
   table: _act0CurrentStreetTableV1(
     _legacyFacingOpenTableV1.copyWith(
       heroCards: _heroQJsCards,
