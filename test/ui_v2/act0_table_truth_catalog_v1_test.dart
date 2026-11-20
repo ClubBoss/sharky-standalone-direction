@@ -391,6 +391,14 @@ void main() {
       expect(option['quality'], 'suboptimal', reason: entry.key);
       option['quality'] = 'wrong';
     }
+    final qjs =
+        expectedComparison['hand_discipline_buckets_borderline']
+            as Map<String, dynamic>;
+    final strongQJs = (qjs['options'] as List)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((option) => option['id'] == 'strong');
+    expect(strongQJs['quality'], 'suboptimal');
+    strongQJs['quality'] = 'wrong';
     // P7–P8 classify false showdown outcomes and incomplete best fives as wrong.
     for (final id in [
       'showdown_review',

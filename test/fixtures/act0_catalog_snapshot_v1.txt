@@ -1306,7 +1306,7 @@ HINT [theoryOnly]: Connected high cards can play, but they need position and fra
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Card focus hero_0, hero_1 | Center QJs preflop | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Qs Js stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [suboptimal] Strong — A bit too high. Strong hands need less help from position and action frame. QJs still wants context before chips go in.
+  - [wrong] Strong — QJs is in the Medium bucket. Strong hands need less help from position and action frame. QJs still wants context before chips go in.
     BETTER ANSWER: Medium
   + [correct] Medium — Conditional bucket found. QJs sits in the medium border zone. It can continue in good context, but it is not a self-starting strong hand.
   - [wrong] Weak — Too low. QJs has connected high-card value. It is conditional, not weak.

@@ -423,6 +423,7 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
               'counting',
             }.contains(task.resolvedTaskFamily.name) ||
             _w1FactualGradeTaskIds.contains(task.taskId) ||
+            task.taskId.startsWith('hand_discipline_buckets_') ||
             _actualRankQuestion.hasMatch(catalogQuestion(task)))) {
       for (final o in r.options.where((o) => !o.isCorrect)) {
         audit.check(
