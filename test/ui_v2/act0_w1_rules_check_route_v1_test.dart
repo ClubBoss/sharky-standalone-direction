@@ -187,7 +187,7 @@ void main() {
       await _mount(tester, clock: _today.add(const Duration(hours: 25)));
       await tester.tap(find.text('Review').last);
       await tester.pumpAndSettle();
-      expect(find.text('2 independent reviews due'), findsOneWidget);
+      expect(find.text('2 reviews due'), findsOneWidget);
       await tester.ensureVisible(
         find.byKey(const Key('act0_academy_review_leaf_start_due')),
       );
@@ -270,7 +270,7 @@ void main() {
     await _mount(tester, clock: _today.add(const Duration(hours: 25)));
     await tester.tap(find.text('Review').last);
     await tester.pumpAndSettle();
-    expect(find.text('1 independent review due'), findsOneWidget);
+    expect(find.text('1 review due'), findsOneWidget);
     await tester.ensureVisible(
       find.byKey(const Key('act0_academy_review_leaf_start_due')),
     );
