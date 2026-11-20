@@ -5,6 +5,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_catalog_truth_audit_v1.dart';
+
 const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_10',
   'asm05_new_known_holes_turn_call_40',
@@ -1468,7 +1470,10 @@ void main() {
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
       final currentOptions = (row[5] as List).cast<List<dynamic>>();
-      if (l2FactualGradeCorrections[row[2]] case final choiceId?) {
+      final revisedChoiceId =
+          l2FactualGradeCorrections[row[2]] ??
+          fixedDrawRangeAndStackChoicesV1[row[2]];
+      if (revisedChoiceId case final choiceId?) {
         final choice = currentOptions.singleWhere(
           (option) => option[0] == choiceId,
         );

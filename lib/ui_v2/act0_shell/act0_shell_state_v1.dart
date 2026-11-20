@@ -6320,7 +6320,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: "Get called by worse hands",
               betterAnswerLabel: "Get called by worse hands",
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Read the hands that call.",
               feedbackReason:
                   "The hands named as calls are behind your pair of queens. That makes this a value bet.",
@@ -6376,7 +6376,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: "Ace-high",
               betterAnswerLabel: "Ace-high",
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Check for a matching rank.",
               feedbackReason:
                   "There are no equal ranks among your two cards and this flop.",
@@ -6602,7 +6602,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: "BB, the caller",
               betterAnswerLabel: "BB, the caller",
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "BTN has one strong hand type.",
               feedbackReason:
                   "J-J makes a set. Neither A-A nor A-K makes two pair or better. BB has three strong hand types.",
@@ -7217,7 +7217,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
               isCorrect: false,
               preferredLabel: '20 BB',
               betterAnswerLabel: '20 BB',
-              quality: Act0FeedbackQualityV1.suboptimal,
+              quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: 'Thirty was the additional amount.',
               feedbackReason:
                   'After matching you for 20 BB, the deeper stacks each put in 30 BB more against each other.',
@@ -19297,7 +19297,7 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flush draw',
       betterAnswerLabel: 'Flush draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Suit clue first.',
       feedbackReason:
           'The visible clue is the four-heart story. Start with same-suit pressure before inventing a rank-ladder draw.',
@@ -19417,7 +19417,7 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
           'Hero has top pair. An opponent could be drawing to a flush',
       betterAnswerLabel:
           'Hero has top pair. An opponent could be drawing to a flush',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Current hand first.',
       feedbackReason:
           'Hero’s pair of aces already counts. Another heart could help an opponent later.',
@@ -19475,7 +19475,7 @@ final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Hero has a flush draw, not a made flush yet',
       betterAnswerLabel: 'Hero has a flush draw, not a made flush yet',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the hearts.',
       feedbackReason:
           'The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.',
@@ -19574,8 +19574,8 @@ final _world5GutshotDrawRunner = _world5StraightIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Gutshot straight draw',
       betterAnswerLabel: 'Gutshot straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close, but too wide.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Only a six completes it.',
       feedbackReason:
           'Open-ended draws improve from either end. Here only the 6 works, so the draw is narrower than open-ended.',
     ),
@@ -19612,7 +19612,7 @@ final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Open-ended straight draw',
       betterAnswerLabel: 'Open-ended straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Two ranks complete it.',
       feedbackReason:
           'A gutshot has one missing middle rank. Your 6-7-8-9 already run in order. A 5 or a ten completes the straight.',
@@ -19911,7 +19911,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
       isCorrect: false,
       preferredLabel: '5-club is safer',
       betterAnswerLabel: '5-club is safer',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'It still helps, but it is riskier.',
       feedbackReason:
           '5-heart still completes Hero straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.',
@@ -20134,8 +20134,8 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
           'The board got more dangerous, so the old easy-value story needs caution',
       betterAnswerLabel:
           'The board got more dangerous, so the old easy-value story needs caution',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable patch.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the new board first.',
       feedbackReason:
           'Changing the size without repairing the board story still leaves the core read behind.',
     ),
@@ -20195,8 +20195,8 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
       isCorrect: false,
       preferredLabel: 'An opponent can now have a flush',
       betterAnswerLabel: 'An opponent can now have a flush',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Part of the picture.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Notice the third heart.',
       feedbackReason:
           'Before choosing a size, notice that the third heart lets an opponent make a flush.',
     ),
@@ -20247,8 +20247,8 @@ final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyW
       isCorrect: false,
       preferredLabel: 'The river missed the straight draw',
       betterAnswerLabel: 'The river missed the straight draw',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Tempting shortcut.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The ace misses the draw.',
       feedbackReason: 'The river ace does not extend 4-5-6-7 to a straight.',
     ),
   ],
@@ -20496,8 +20496,8 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Check instead of betting again',
       betterAnswerLabel: 'Check instead of betting again',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable patch.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the new board first.',
       feedbackReason:
           'Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.',
     ),
@@ -20769,7 +20769,7 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Missed',
       betterAnswerLabel: 'Missed',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Read the board before choosing a bet.',
       feedbackReason:
           'K-Q missed. To decide whether to bluff, you still need to know which better hands the other player would fold.',
@@ -20893,7 +20893,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'It can slide toward missed',
       betterAnswerLabel: 'It can slide toward missed',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too static.',
       feedbackReason:
           'Buckets can shift across streets when the board changes and pressure disappears.',
@@ -21007,7 +21007,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A check gives a free card.',
       feedbackReason:
           'Checking is legal. Under this rule, a small bet earns chips from weaker pairs that would call.',
@@ -21155,7 +21155,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A check gives up the weaker calls.',
       feedbackReason:
           'You can check after BB checks. The stated calling rule gives you a reason to bet instead.',
@@ -21506,8 +21506,8 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A-K offsuit',
       betterAnswerLabel: 'A-K offsuit',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close start.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the suited and offsuit combos.',
       feedbackReason:
           'The rank names match, but combo weight does not. Twelve offsuit combos clearly outweigh four suited combos.',
     ),
@@ -21564,8 +21564,8 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Pocket nines',
       betterAnswerLabel: 'Pocket nines',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the pairs and suited combos.',
       feedbackReason:
           'These families are closer than A-K versus a pocket pair, but they are still not equal. Six pair combos outweigh four suited combos.',
     ),
@@ -21621,8 +21621,8 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A-K offsuit',
       betterAnswerLabel: 'A-K offsuit',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Reasonable guess.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the off-suit combinations.',
       feedbackReason:
           'CO opens all six pocket-nine combos here and all twelve A-K offsuit combos.',
     ),
@@ -21714,8 +21714,8 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '30 BB',
       betterAnswerLabel: '30 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Close idea.',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Use the smaller stack.',
       feedbackReason:
           'The average is 115 BB, but these players can only match 30 BB each.',
     ),
@@ -21753,7 +21753,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '100 BB',
       betterAnswerLabel: '100 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'Nothing cuts the stack in half here. With equal 100 BB stacks, the full 100 BB remains in play.',
@@ -21911,7 +21911,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet 2 BB',
       betterAnswerLabel: 'Bet 2 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Four leaves 16 BB.',
       feedbackReason:
           'Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.',
@@ -21973,7 +21973,7 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '75 BB',
       betterAnswerLabel: '75 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The original stack has already shrunk.',
       feedbackReason:
           'There are no additional streets at this depth. There are more chips to bet on the same streets, but here the most either player can put in on the river is 88 BB.',
@@ -22024,7 +22024,7 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: '25 BB',
       betterAnswerLabel: '25 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the flop bet as well.',
       feedbackReason:
           'Subtracting the turn bet alone leaves 30 BB. Subtract the 5 BB flop bet too, which leaves 25 BB.',
@@ -22122,7 +22122,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Raise to 7.5 BB',
       betterAnswerLabel: 'Raise to 7.5 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A-T suited folds to an all-in bet.',
       feedbackReason:
           'CO folds the weaker ace to an all-in bet in this example. The smaller raise gets the call instead.',
@@ -22167,7 +22167,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Call 2.5 BB',
       betterAnswerLabel: 'Call 2.5 BB',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A raise folds the hands you want to keep.',
       feedbackReason:
           'In this example CO folds the weaker aces to either raise and raises again with stronger hands such as A-Q.',
@@ -22285,7 +22285,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'One bet can commit the hand',
       betterAnswerLabel: 'One bet can commit the hand',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'SPR changes the hand structure. SPR 2 is a much more commit-heavy situation than SPR 8.',
@@ -22335,10 +22335,10 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'More options for later bets',
       betterAnswerLabel: 'More options for later bets',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'SPR changes how postflop decisions feel. High SPR gives you more future streets and more flexibility.',
+          'SPR changes how postflop decisions feel. High SPR leaves more chips for later bets on the same streets.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -22385,7 +22385,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Middle ground: some room, some commitment',
       betterAnswerLabel: 'Middle ground: some room, some commitment',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
           'At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.',
@@ -22617,7 +22617,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: "Raise to 2.5 BB",
       betterAnswerLabel: "Raise to 2.5 BB",
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Use the size in the rule.",
       feedbackReason:
           "A raise fits the five players behind. In this example, the given size is 2.5 BB.",
@@ -22668,7 +22668,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: "Fold",
       betterAnswerLabel: "Fold",
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The number of players still matters.",
       feedbackReason:
           "A different bet size does not change how many players are left to act. Use the fold in the stated model.",
@@ -22781,7 +22781,7 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: "4",
       betterAnswerLabel: "4",
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Start with the smaller stack.",
       feedbackReason:
           "43 divided by 8 uses the larger stack. The 32 BB stack sets how much both players can match.",
