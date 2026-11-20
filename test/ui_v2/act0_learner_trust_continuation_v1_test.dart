@@ -159,7 +159,10 @@ void main() {
 
       await t.pumpWidget(
         const MaterialApp(
-          home: Act0ShellPreviewScreenV1(showPlacementOnStart: true),
+          home: Act0ShellPreviewScreenV1(
+            debugLegacyPlacementOnStart: true,
+            showPlacementOnStart: true,
+          ),
         ),
       );
       await t.pumpAndSettle();
@@ -197,7 +200,11 @@ void main() {
       expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
       await t.pumpWidget(const SizedBox());
       await t.pumpAndSettle();
-      await t.pumpWidget(const MaterialApp(home: Act0ShellPreviewScreenV1()));
+      await t.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(debugLegacyPlacementOnStart: true),
+        ),
+      );
       await t.pumpAndSettle();
       final academy = act0AcademyRuntimeEnabledV1(
         t.element(find.byType(Act0ShellPreviewScreenV1)),

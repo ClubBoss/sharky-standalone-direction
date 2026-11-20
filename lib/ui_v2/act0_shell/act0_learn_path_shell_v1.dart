@@ -92,6 +92,7 @@ String _worldRouteStatusLabelV1(
   Act0WorldCardV1 world,
 ) {
   return switch (world.status) {
+    Act0WorldStateV1.passedByRulesCheck => 'Skipped by rules check',
     Act0WorldStateV1.completed => _learnCopyV1(
       context,
       en: 'Cleared',
@@ -114,7 +115,8 @@ Color _worldRouteStatusColorV1(
   Act0WorldCardV1 world,
 ) {
   return switch (world.status) {
-    Act0WorldStateV1.completed => Act0AcademyDesignTokensV1.focus,
+    Act0WorldStateV1.completed ||
+    Act0WorldStateV1.passedByRulesCheck => Act0AcademyDesignTokensV1.focus,
     Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
     Act0WorldStateV1.locked =>
       _isImmediateNextWorldV1(worlds, world)
@@ -197,6 +199,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.worlds,
     required this.selectedWorldId,
     required this.showWorldMenu,
+    this.onW1RulesCheck,
     required this.worldDetailId,
     required this.lessons,
     required this.selectedLessonId,
@@ -230,6 +233,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final List<Act0WorldCardV1> worlds;
   final String selectedWorldId;
   final bool showWorldMenu;
+  final VoidCallback? onW1RulesCheck;
   final String? worldDetailId;
   final List<Act0LessonCardV1> lessons;
   final String selectedLessonId;
@@ -699,6 +703,17 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               controller: _learnScrollController,
               key: const Key('act0_shell_learn_screen'),
               slivers: [
+                if (widget.onW1RulesCheck != null && detailLessonId == null)
+                  SliverToBoxAdapter(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        key: const Key('act0_shell_w1_rules_map'),
+                        onPressed: widget.onW1RulesCheck,
+                        child: const Text('Skip this world by test'),
+                      ),
+                    ),
+                  ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     Act0ShellTokensV1.pageX,

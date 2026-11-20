@@ -28,6 +28,7 @@ Future<void> _mount(
   await tester.pumpWidget(
     MaterialApp(
       home: Act0ShellPreviewScreenV1(
+        debugLegacyPlacementOnStart: true,
         key: UniqueKey(),
         initialTab: resumeRunner ? Act0ShellTabV1.play : Act0ShellTabV1.home,
         showPlacementOnStart: fresh,

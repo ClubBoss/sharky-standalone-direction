@@ -130,7 +130,7 @@ void main() {
           SharedPreferencesStorePlatform.instance = original;
         }
       });
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
       await tester.pumpAndSettle();
       expect(find.byType(Act0WelcomeShellV1), findsOneWidget);
       Future<void> tap(Key key) async {
@@ -327,7 +327,9 @@ void main() {
         expect(find.text('Could not save. Please try again.'), findsOneWidget);
         await tester.pumpWidget(const SizedBox.shrink());
         await tester.pumpAndSettle();
-        await tester.pumpWidget(const AppRoot());
+        await tester.pumpWidget(
+          const AppRoot(debugLegacyPlacementOnStart: true),
+        );
         await tester.pumpAndSettle();
         expect(
           find.byKey(const Key('act0_shell_placement_skip_intro')),
@@ -485,7 +487,7 @@ Future<SharedPreferencesStorePlatform> _mountOnbFixture(
       SharedPreferencesStorePlatform.instance = original;
     }
   });
-  await tester.pumpWidget(const AppRoot());
+  await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
   await tester.pumpAndSettle();
   return original;
 }

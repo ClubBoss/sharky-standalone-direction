@@ -322,7 +322,13 @@ Route<dynamic>? buildLegacySurfaceRedirectRoute(RouteSettings settings) {
 }
 
 class AppRoot extends StatefulWidget {
-  const AppRoot({super.key, this.navigatorKey});
+  const AppRoot({
+    super.key,
+    this.navigatorKey,
+    this.debugLegacyPlacementOnStart = false,
+  });
+
+  final bool debugLegacyPlacementOnStart;
 
   final GlobalKey<NavigatorState>? navigatorKey;
 
@@ -405,7 +411,10 @@ class _AppRootState extends State<AppRoot> {
         },
         navigatorKey: widget.navigatorKey,
         onGenerateRoute: buildLegacySurfaceRedirectRoute,
-        home: _EntryGate(navigatorKey: widget.navigatorKey),
+        home: _EntryGate(
+          navigatorKey: widget.navigatorKey,
+          debugLegacyPlacementOnStart: widget.debugLegacyPlacementOnStart,
+        ),
       ),
     );
   }
@@ -640,7 +649,12 @@ class NonBlankFallbackSurfaceV1 extends StatelessWidget {
 }
 
 class _EntryGate extends StatefulWidget {
-  const _EntryGate({this.navigatorKey});
+  const _EntryGate({
+    this.navigatorKey,
+    required this.debugLegacyPlacementOnStart,
+  });
+
+  final bool debugLegacyPlacementOnStart;
 
   final GlobalKey<NavigatorState>? navigatorKey;
 
@@ -779,6 +793,7 @@ class _EntryGateState extends State<_EntryGate> {
     final shell = Act0ShellPreviewScreenV1(
       debugHarnessEntry: _debugHarnessEntry,
       showPlacementOnStart: _showPlacementOnStart,
+      debugLegacyPlacementOnStart: widget.debugLegacyPlacementOnStart,
       telemetrySink: act0CanonicalTelemetrySinkV1(
         hnpEnabled: _hnpTelemetryEnabled,
         isReleaseMode: kReleaseMode,

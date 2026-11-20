@@ -474,7 +474,9 @@ void main() {
                 child: child!,
               ),
             ),
-            home: const Act0ShellPreviewScreenV1(),
+            home: const Act0ShellPreviewScreenV1(
+              debugLegacyPlacementOnStart: true,
+            ),
           ),
         );
         await tester.pumpAndSettle();

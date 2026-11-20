@@ -48,7 +48,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   });
 
   final Act0ProfileStateV1 profile;
-  final VoidCallback onRetakePlacement;
+  final VoidCallback? onRetakePlacement;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
   final VoidCallback? onOpenPractice;
@@ -420,7 +420,7 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
     this.onReplayWelcome,
   });
 
-  final VoidCallback onRetakePlacement;
+  final VoidCallback? onRetakePlacement;
   final VoidCallback? onReplayWelcome;
 
   @override
@@ -3373,7 +3373,7 @@ class _AchievementCardV1 extends StatelessWidget {
 
 void _showFirstStartToolsSheetV1(
   BuildContext context, {
-  required VoidCallback onRetakePlacement,
+  required VoidCallback? onRetakePlacement,
   required VoidCallback? onReplayWelcome,
 }) {
   showModalBottomSheet<void>(
@@ -3408,8 +3408,7 @@ void _showFirstStartToolsSheetV1(
                 _profileCopyV1(
                   context,
                   atomId: 'profile_first_start_tools_body',
-                  fallback:
-                      'Replay the product intro or run placement again without touching your route progress.',
+                  fallback: 'Check the W1 rules to choose your starting world.',
                 ),
                 style: Act0AcademyReadingStyleV1.muted,
               ),
@@ -3435,22 +3434,23 @@ void _showFirstStartToolsSheetV1(
                         ),
                       ),
                     ),
-                  OutlinedButton.icon(
-                    key: const Key('act0_shell_profile_retake_placement'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onRetakePlacement();
-                    },
-                    style: Act0AcademyReadingStyleV1.quietButtonStyle(),
-                    icon: const Icon(Icons.route_rounded),
-                    label: Text(
-                      _profileCopyV1(
-                        context,
-                        atomId: 'profile_first_start_retake_placement',
-                        fallback: 'Retake placement',
+                  if (onRetakePlacement != null)
+                    OutlinedButton.icon(
+                      key: const Key('act0_shell_profile_retake_placement'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        onRetakePlacement();
+                      },
+                      style: Act0AcademyReadingStyleV1.quietButtonStyle(),
+                      icon: const Icon(Icons.route_rounded),
+                      label: Text(
+                        _profileCopyV1(
+                          context,
+                          atomId: 'profile_first_start_retake_placement',
+                          fallback: 'Take the W1 rules check',
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ],
