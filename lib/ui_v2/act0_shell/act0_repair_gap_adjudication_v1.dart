@@ -859,12 +859,12 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "gutshot",
     sourceCorrectChoiceId: "open_ended",
     sourceFingerprint:
-        "1697161418e2a51c51e763419c0277ac20a7ff18d3340108009e8fc4145ae471",
+        "d2a1a783662d59f4f0947c7f40ee75a338052bc4a7d4a267fcfd07da5714ac99",
     sourceQuestion: "Which straight draw do you have?",
     sourceChoiceReason:
         "A gutshot has one missing middle rank. Your 6-7-8-9 already run in order. A 5 or a ten completes the straight.",
     sourceChoiceLabel: "Gutshot straight draw",
-    sourceChoiceQuality: "suboptimal",
+    sourceChoiceQuality: "wrong",
     goalId: "read_straight_draw_shape",
     misconceptionId: "open_ended_seen_as_gutshot",
     relationId: "straight_draws_w5_gutshot_contrast_transfer_gutshot_l2_v1",
@@ -872,7 +872,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "straight_draws",
     targetTaskId: "straight_draws_w5_gutshot_draw",
     targetFingerprint:
-        "ea7a6bec2f9590618a7ac6423cd5d3fc3e2128d169f6a4415c6d4bbabc99da58",
+        "ef6656a0c16e0997e40ecd8a6862386f4f376bf63c855a6dcf900d85af01dbfd",
     targetCorrectChoiceId: "gutshot",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -886,7 +886,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "nothing_changed",
     sourceCorrectChoiceId: "board_got_wetter",
     sourceFingerprint:
-        "7147ae0a90ba32a4dbfea3d850dcee187df8953be9ea4419cd8cfea2225b6464",
+        "78d385632df419c307be28fdf2c53d111da1d4a2337c16f7f7ca80528a302449",
     sourceQuestion: "What new danger does the turn add?",
     sourceChoiceReason:
         "The turn adds a third heart. Two private hearts can now make a flush.",
@@ -900,7 +900,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "turn_river_changes",
     targetTaskId: "turn_river_changes_w5_street_repair",
     targetFingerprint:
-        "7f2ddf9f0ebe18c022427f609c6d024c02d54f07d5607de00891fb4d9a9e2189",
+        "f400c5f87136c37bae153807582c86edb7cbb3121deae9d19262e17fff4f12f6",
     targetCorrectChoiceId: "repair_story",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -928,7 +928,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "range_pressure_lines",
     targetTaskId: "w6_wet_board_repair",
     targetFingerprint:
-        "cc4654c26e975bbb6dcab81ff153d8ae2e36a44ac2cd8e0d6258018fd204a70d",
+        "748afdf9b2df3715b7172e2f48157ea5289b6027c7a739ff014b413d506e1cbd",
     targetCorrectChoiceId: "respect_wetter_board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1000,7 +1000,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: 'bet_bluff',
     sourceCorrectChoiceId: 'bet',
     sourceFingerprint:
-        '65058cc72857188ec058af7a81314c897d733ef1bc094e28540c2849d555c7d4',
+        '0f0be8ad5c495493761f686e1015e44ac3108bdf2b6c10d3e7835cce89ed129a',
     sourceQuestion: 'What is the purpose of a half-pot bet here?',
     sourceChoiceReason:
         'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
@@ -1012,7 +1012,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'range_pressure_lines',
     targetTaskId: 'w6_value_range_action',
     targetFingerprint:
-        '65058cc72857188ec058af7a81314c897d733ef1bc094e28540c2849d555c7d4',
+        '0f0be8ad5c495493761f686e1015e44ac3108bdf2b6c10d3e7835cce89ed129a',
     targetCorrectChoiceId: 'bet',
     targetChoiceIds: <String>{'bet', 'check', 'bet_bluff'},
     evidenceClass: 'intentional_exact_replay',
