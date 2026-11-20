@@ -7,7 +7,7 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand is on the table.
-TEACH: Find your cards. The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot holds the chips. SB and BB post the blinds before anyone acts.
+TEACH: Find your cards. The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot is the chips in the middle. Blinds are forced bets. SB and BB post them before anyone acts.
 TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Where are the two cards you can use on your own?
