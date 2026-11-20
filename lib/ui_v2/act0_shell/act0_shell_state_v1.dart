@@ -15738,7 +15738,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
 
 final _w3LateSeatContrastRunner = _latePositionRunner.copyWith(
   lessonId: 'w3_late_seat_contrast',
-  caption: 'CO is late, but BTN still acts after CO.',
+  caption: 'Compare CO and BTN in this hand.',
   hint: 'Compare the two latest seats directly.',
   question:
       'Which of these seats acts later on the first pass before the flop?',

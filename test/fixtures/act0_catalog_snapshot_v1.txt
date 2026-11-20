@@ -1892,7 +1892,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
 
 TASK button_advantage_button_vs_cutoff [drill] BTN vs CO
-CAPTION: CO is late, but BTN still acts after CO.
+CAPTION: Compare CO and BTN in this hand.
 TEACH: Late has levels. Cutoff is late, but Button still gets the final late-position edge.
 TEACH LABELS: CO
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active btn | Seat focus co, btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts

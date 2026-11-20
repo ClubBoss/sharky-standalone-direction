@@ -196,6 +196,43 @@ final _sharedBoardAnswer = RegExp(
   r'\b(?:board cards|shared board|community cards)\b',
 );
 
+// A comparative seat question can be spoiled by naming the same ordering
+// from either seat's perspective. Prose in the feedback is checked separately.
+final _comparativeSeatQuestion = RegExp(
+  r'\b(?:acts?|goes?) (?:earlier|later)\b',
+);
+
+bool revealsComparativeSeatOrder(CatalogTask row, String copy) {
+  if (!_comparativeSeatQuestion.hasMatch(_words(catalogQuestion(row.task)))) {
+    return false;
+  }
+  final options = row.task.runner.options;
+  final answer = options.where(act0RunnerOptionIsAuthoredCorrectV1).firstOrNull;
+  if (answer?.seatId == null) return false;
+
+  String names(Act0RunnerOptionV1 option) => switch (option.seatId) {
+    'btn' => '(?:btn|button|dealer button)',
+    'co' => '(?:co|cutoff)',
+    'sb' => '(?:sb|small blind)',
+    'bb' => '(?:bb|big blind)',
+    _ => RegExp.escape(_words(option.label)),
+  };
+  final text = _words(copy);
+  final answerNames = names(answer!);
+  const action = r' (?:still |always )?(?:acts?|goes?) ';
+  final direct = RegExp(
+    '\\b$answerNames$action(?:before|after|earlier|later|first|last)\\b',
+  );
+  if (direct.hasMatch(text)) return true;
+  return options
+      .where((option) => !option.isCorrect && option.seatId != null)
+      .any(
+        (option) => RegExp(
+          '\\b${names(option)}$action(?:before|after|earlier than|later than) (?:the )?$answerNames\\b',
+        ).hasMatch(text),
+      );
+}
+
 String? _seatOrderSignature(CatalogTask row, Act0RunnerOptionV1 correct) {
   final seat = correct.seatId;
   if (seat == null) return null;
@@ -499,6 +536,9 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
               'hint',
             }.contains(field.surface) &&
             _sharedBoardAnswer.hasMatch(text);
+        final revealsSeatOrder =
+            const {'caption', 'center', 'callout'}.contains(field.surface) &&
+            revealsComparativeSeatOrder(row, field.text);
         audit.check(
           '6.answer_copy',
           row,
@@ -506,7 +546,8 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
           !direct &&
               !echoesAnswer &&
               !explicitSeatAnswer &&
-              !revealsSharedBoard,
+              !revealsSharedBoard &&
+              !revealsSeatOrder,
           field.surface +
               ': "' +
               field.text +

@@ -237,6 +237,27 @@ void main() {
       );
     });
 
+    test('G1·6 comparative captions cannot state the seat order', () {
+      final row = _catalogRow('button_advantage_button_vs_cutoff');
+      for (final caption in [
+        'CO is late, but BTN still acts after CO.',
+        'The cutoff goes before the button.',
+      ]) {
+        final revealed = _withRunner(
+          row,
+          row.task.runner.copyWith(caption: caption),
+        );
+        expect(
+          runCatalogAudit(rows: [revealed]).findings,
+          contains('6.answer_copy|${row.task.taskId}|caption'),
+        );
+      }
+      expect(
+        runCatalogAudit(rows: [row]).findings,
+        isNot(contains('6.answer_copy|${row.task.taskId}|caption')),
+      );
+    });
+
     test('G1·7 tap targets contain an extra seat', () {
       final row = _catalogRow('blinds_postflop_button');
       final runner = row.task.runner;
@@ -430,6 +451,23 @@ void main() {
         answer,
         focus.isEmpty,
         'The pre-choice Runner marks the answer seat: $focus.',
+      );
+      final support = find.byKey(const Key('act0_learning_scene_v3_support'));
+      final captions = tester
+          .widgetList<Text>(support)
+          .map((text) => text.data ?? '');
+      if (task.taskId == 'button_advantage_button_vs_cutoff') {
+        expect(support, findsOneWidget);
+        final bounds = tester.getRect(support);
+        expect(bounds.height, greaterThan(0));
+        expect((Offset.zero & const Size(393, 852)).overlaps(bounds), isTrue);
+      }
+      audit.check(
+        '6.rendered_seat_order_copy',
+        row,
+        'caption',
+        !captions.any((caption) => revealsComparativeSeatOrder(row, caption)),
+        'The visible pre-choice caption discloses the seat order: $captions.',
       );
       final tapIds = [
         for (final seat in r.table.seats)
