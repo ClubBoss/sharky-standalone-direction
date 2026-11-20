@@ -6,18 +6,24 @@ void main() {
   group('Act0 feedback source contract', () {
     final sourcePath = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-    final titlePattern = RegExp(r"feedbackTitle:\s*'((?:\\'|[^'])*)'");
-    final reasonPattern = RegExp(r"feedbackReason:\s*'((?:\\'|[^'])*)'");
+    RegExp feedbackPattern(String field) => RegExp(
+      field + r'''\s*:\s*(?:'((?:\\.|[^'\\])*)'|"((?:\\.|[^"\\])*)")''',
+    );
+
+    String feedbackText(RegExpMatch match) => match[1] ?? match[2] ?? '';
+
+    final titlePattern = feedbackPattern('feedbackTitle');
+    final reasonPattern = feedbackPattern('feedbackReason');
 
     test('feedback titles and reasons are present and non-empty', () {
       final source = File(sourcePath).readAsStringSync();
       final titles = titlePattern
           .allMatches(source)
-          .map((m) => m.group(1) ?? '')
+          .map(feedbackText)
           .toList(growable: false);
       final reasons = reasonPattern
           .allMatches(source)
-          .map((m) => m.group(1) ?? '')
+          .map(feedbackText)
           .toList(growable: false);
 
       expect(titles, isNotEmpty, reason: 'feedbackTitle entries not found');
@@ -38,7 +44,7 @@ void main() {
       final source = File(sourcePath).readAsStringSync();
       final titles = titlePattern
           .allMatches(source)
-          .map((m) => m.group(1) ?? '')
+          .map(feedbackText)
           .toList(growable: false);
 
       final counts = <String, int>{};
@@ -75,10 +81,7 @@ void main() {
         'Playable move.',
       };
 
-      final titles = titlePattern
-          .allMatches(source)
-          .map((m) => m.group(1) ?? '')
-          .toSet();
+      final titles = titlePattern.allMatches(source).map(feedbackText).toSet();
 
       final presentBanned = bannedTitles.where(titles.contains).toList()
         ..sort();

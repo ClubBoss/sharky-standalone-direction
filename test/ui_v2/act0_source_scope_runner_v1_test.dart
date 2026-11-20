@@ -96,19 +96,17 @@ void main() {
   });
 
   for (final sourceCase in {
-    'w6_kicker_showdown_compare': 'Hero A-K',
-    'w6_checkpoint_table_best_five': 'Split the pot',
+    'w6_kicker_showdown_compare': '9-8 and 6-5',
+    'w6_board_pair_strength_compare': 'BB, the caller',
   }.entries) {
     testWidgets(
-      'disclosed source exercise retains its authored choice: ${sourceCase.key}',
+      'range exercise retains its authored choice: ${sourceCase.key}',
       (tester) async {
-        // No card/seat/participation mutation: preserve the real exercise.
-        // Its existing late-route scene hides the computed board-tap callout;
-        // do not claim a visible comparison or change that presentation here.
+        // Inspect the real range exercise without replacing its table.
         await _pump(tester, _task(sourceCase.key).runner);
         await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
         await tester.pumpAndSettle();
-        expect(find.text(sourceCase.value), findsOneWidget);
+        expect(find.text(sourceCase.value, findRichText: true), findsOneWidget);
         expect(find.textContaining('Split pot:'), findsNothing);
       },
     );

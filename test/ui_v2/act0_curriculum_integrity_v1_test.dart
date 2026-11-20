@@ -345,38 +345,43 @@ void main() {
       }
     });
 
-    test('W8 compares full ring using a six-max preflop example', () {
+    test('W8 compares formats and computes the stack limit on real tables', () {
       final formatLesson = Act0ShellStateV1.sample
           .worldById('world_8')
           .lessons
           .singleWhere((lesson) => lesson.lessonId == 'format_pressure');
-      for (final task in formatLesson.taskList.where(
-        (task) => task.taskId != 'w7_stack_checkpoint',
-      )) {
-        final runner = task.runner;
-        final table = runner.table;
-        expect(
-          table.tableFormat,
-          Act0TableFormatV1.sixMax,
-          reason: task.taskId,
-        );
+      for (final row in formatLesson.taskList) {
+        final table = row.runner.table;
+        expect(table.tableFormat, Act0TableFormatV1.sixMax, reason: row.taskId);
         expect(table.seats.where((seat) => seat.isOccupied), hasLength(6));
-        expect(table.heroSeat.seatLabel, 'UTG');
-        expect(table.streetLabel, 'Preflop');
-        for (final role in ['UTG+1', 'UTG+2', 'LJ']) {
-          expect(runner.caption, contains(role), reason: task.taskId);
-        }
       }
-      for (final id in ['w7_fullring_tighter', 'w7_format_table_notice']) {
-        final correct = task(
-          'world_8',
-          id,
-        ).runner.options.singleWhere((option) => option.isCorrect);
-        expect(
-          correct.label,
-          anyOf(contains('fewer hands'), contains('tighten')),
-        );
+      final six = task('world_8', 'w7_6max_wider').runner;
+      final full = task('world_8', 'w7_fullring_tighter').runner;
+      for (final runner in [six, full]) {
+        expect(runner.table.heroSeat.seatLabel, 'UTG');
+        expect(runner.table.streetLabel, 'Preflop');
       }
+      for (final role in ['UTG+1', 'UTG+2', 'LJ']) {
+        expect(full.caption, contains(role));
+      }
+      expect(
+        six.options.singleWhere((choice) => choice.isCorrect).label,
+        'Raise to 2.5 BB',
+      );
+      expect(
+        full.options.singleWhere((choice) => choice.isCorrect).label,
+        'Fold',
+      );
+      final stack = task('world_8', 'w7_format_table_notice').runner;
+      expect(stack.table.heroSeat.stackLabel, '18 BB');
+      expect(
+        stack.options.singleWhere((choice) => choice.isCorrect).label,
+        'Bet 6 BB',
+      );
+      final spr = task('world_8', 'w7_stack_checkpoint').runner;
+      expect(spr.table.heroSeat.stackLabel, '32 BB');
+      expect(spr.table.potLabel, 'Pot 8 BB');
+      expect(spr.options.singleWhere((choice) => choice.isCorrect).label, '4');
     });
   });
 }

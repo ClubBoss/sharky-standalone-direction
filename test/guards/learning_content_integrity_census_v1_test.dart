@@ -169,9 +169,9 @@ void main() {
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
-        '0': 113,
-        '1': 120,
-        '2': 59,
+        '0': 112,
+        '1': 122,
+        '2': 58,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
@@ -383,9 +383,9 @@ void main() {
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
-      '0': 114,
-      '1': 121,
-      '2': 59,
+      '0': 113,
+      '1': 123,
+      '2': 58,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
@@ -716,7 +716,7 @@ void main() {
     final diagnosticEntries = act0RepairGoalContractsV1
         .where((row) => row.isDiagnosticLearningEntry)
         .toList();
-    expect(ordinaryContracts, hasLength(29));
+    expect(ordinaryContracts, hasLength(32));
     expect(diagnosticEntries, hasLength(2));
     expect(
       ordinaryContracts.length + diagnosticEntries.length,
@@ -772,10 +772,13 @@ void main() {
       'world_6/range_pressure_lines/w6_value_range_action/bet_bluff',
       'world_6/range_board_fit/w6_board_fit_recap/caller',
       'world_6/range_board_fit/w6_board_fit_recap/same',
+      'world_5/straight_draws/straight_draws_w5_gutshot_contrast_transfer/gutshot',
+      'world_5/turn_river_changes/turn_river_changes_w5_turn_texture_shift_transfer/nothing_changed',
+      'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
     expect(foundationDefaults, hasLength(185));
-    expect(unknown, hasLength(254));
+    expect(unknown, hasLength(251));
     expect(
       admitted.length +
           foundationDefaults.length +

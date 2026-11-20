@@ -50,22 +50,27 @@ void main() {
         (l) => l.taskList.any((task) => task.taskId == id),
       );
       final task = lesson.taskList.singleWhere((task) => task.taskId == id);
-      Future<void> mount(bool teaching, {int teachingIndex = 0}) async {
+      Future<void> mount(
+        bool teaching, {
+        int teachingIndex = 0,
+        Act0LessonTaskV1? teachingTask,
+      }) async {
+        final exercise = teachingTask ?? task;
         await t.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: Act0LessonRunnerShellV1(
                 key: ValueKey(teaching),
-                runner: task.runner.copyWith(
+                runner: exercise.runner.copyWith(
                   phase: Act0LessonPhaseV1.drill,
                   teachingStepIndex: teaching
                       ? teachingIndex
-                      : task.runner.teachingSteps.length,
+                      : exercise.runner.teachingSteps.length,
                 ),
                 selectedWorldId: world.worldId,
                 selectedLessonId: lesson.lessonId,
-                selectedTaskId: id,
-                selectedTaskFamily: task.resolvedTaskFamily,
+                selectedTaskId: exercise.taskId,
+                selectedTaskFamily: exercise.resolvedTaskFamily,
                 tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
                 onBack: () {},
                 onContinueTheory: () {},
@@ -99,11 +104,14 @@ void main() {
         );
       }
       if (id.startsWith('straight')) {
-        await mount(true);
-        expect(
-          find.text('Gutshot means one middle card is missing.'),
-          findsWidgets,
+        expect(task.runner.teachingSteps, isEmpty);
+        await mount(
+          true,
+          teachingTask: lesson.taskList.singleWhere(
+            (exercise) => exercise.taskId == 'straight_draws_w5_straight_intro',
+          ),
         );
+        expect(find.textContaining('A gutshot has one gap'), findsWidgets);
         expect(
           find.byKey(const Key('act0_shell_option_gutshot')),
           findsNothing,
@@ -119,11 +127,8 @@ void main() {
         );
         expect(find.text(task.runner.hint), findsNothing);
       } else {
-        expect(
-          find.text('Gutshot means one middle card is missing.'),
-          findsNothing,
-        );
-        expect(find.text('Only a 6 helps'), findsNothing);
+        expect(find.textContaining('A gutshot has one gap'), findsNothing);
+        expect(find.text(task.runner.hint), findsNothing);
       }
       expect(t.takeException(), isNull);
     });
