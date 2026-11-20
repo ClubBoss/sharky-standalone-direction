@@ -59,11 +59,17 @@ void main() {
       var taps = 0;
       await tester.pumpWidget(
         _host(
-          Act0ClubPrimaryButtonV1(
+          Act0ClubButtonsV1.primary(
+            key: const Key('cta'),
             label: 'Start review',
             onPressed: () => taps++,
           ),
         ),
+      );
+      // The caller's key lands on the FilledButton itself.
+      expect(
+        tester.widget<FilledButton>(find.byKey(const Key('cta'))).onPressed,
+        isNotNull,
       );
       final size = tester.getSize(find.byType(FilledButton));
       expect(size.height, greaterThanOrEqualTo(_T.controlHeight));

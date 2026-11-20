@@ -29,20 +29,21 @@ class Act0ClubTextScaleV1 extends StatelessWidget {
   }
 }
 
-/// The one brass action on a screen.
-class Act0ClubPrimaryButtonV1 extends StatelessWidget {
-  const Act0ClubPrimaryButtonV1({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
+/// Club Night buttons. They return the plain Material buttons, so a caller's
+/// key lands on the [FilledButton], [OutlinedButton] or [TextButton] itself
+/// and existing finders such as `widget<FilledButton>(find.byKey(...))` keep
+/// working.
+class Act0ClubButtonsV1 {
+  const Act0ClubButtonsV1._();
 
-  final String label;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
+  /// The one brass action on a screen: 56 pt, full width.
+  static FilledButton primary({
+    Key? key,
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
     return FilledButton(
+      key: key,
       onPressed: onPressed,
       style: FilledButton.styleFrom(
         backgroundColor: _T.brass,
@@ -60,45 +61,27 @@ class Act0ClubPrimaryButtonV1 extends StatelessWidget {
       child: Text(label, textAlign: TextAlign.center),
     );
   }
-}
 
-/// A second choice next to the brass action.
-class Act0ClubSecondaryButtonV1 extends StatelessWidget {
-  const Act0ClubSecondaryButtonV1({
-    super.key,
-    required this.label,
-    required this.onPressed,
-    this.foreground = _T.text,
-    this.background = _T.raised,
-    this.border = _T.controlBorder,
-  });
-
-  /// Destructive variant: coral text on a soft coral fill.
-  const Act0ClubSecondaryButtonV1.destructive({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  }) : foreground = _T.mistake,
-       background = _T.mistakeSoft,
-       border = const BorderSide(color: _T.mistakeEdge, width: 1.5);
-
-  final String label;
-  final VoidCallback? onPressed;
-  final Color foreground;
-  final Color background;
-  final BorderSide border;
-
-  @override
-  Widget build(BuildContext context) {
+  /// A second choice next to the brass action.
+  static OutlinedButton secondary({
+    Key? key,
+    required String label,
+    required VoidCallback? onPressed,
+    bool destructive = false,
+  }) {
     return OutlinedButton(
+      key: key,
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        backgroundColor: background,
-        foregroundColor: foreground,
+        backgroundColor: destructive ? _T.mistakeSoft : _T.raised,
+        foregroundColor: destructive ? _T.mistake : _T.text,
+        disabledForegroundColor: _T.caption,
         minimumSize: const Size.fromHeight(_T.controlHeight),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         textStyle: _T.button,
-        side: border,
+        side: destructive
+            ? const BorderSide(color: _T.mistakeEdge, width: 1.5)
+            : _T.controlBorder,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(_T.radiusControl),
         ),
@@ -106,22 +89,15 @@ class Act0ClubSecondaryButtonV1 extends StatelessWidget {
       child: Text(label, textAlign: TextAlign.center),
     );
   }
-}
 
-/// A quiet brass text action, at least 44 pt tall.
-class Act0ClubLinkV1 extends StatelessWidget {
-  const Act0ClubLinkV1({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
-
-  final String label;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
+  /// A quiet brass text action, at least 44 pt tall.
+  static TextButton link({
+    Key? key,
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
     return TextButton(
+      key: key,
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: _T.brass,
