@@ -4423,9 +4423,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _rapidPracticeLoop = false;
                                       return;
                                     }
+                                    // Ungraded recap pages retain the same
+                                    // study reward as an explanation page.
+                                    final awardXp =
+                                        playRunner.options.isEmpty ||
+                                        ((playRunner
+                                                    .selectedOption
+                                                    ?.isCorrect ??
+                                                false) &&
+                                            _choiceHasIndependentProvenanceV1);
                                     if (_rapidPracticeLoop &&
                                         _activePracticeGroupId == 'daily') {
-                                      _completeCurrentTask(playSelectedTask);
+                                      _completeCurrentTask(
+                                        playSelectedTask,
+                                        awardXp: awardXp,
+                                      );
                                       if (_launchDailyPracticeQueueTaskV1())
                                         return;
                                       _syncPracticeReminderV1();
@@ -4459,7 +4471,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       return;
                                     }
                                     if (_rapidPracticeLoop) {
-                                      _completeCurrentTask(playSelectedTask);
+                                      _completeCurrentTask(
+                                        playSelectedTask,
+                                        awardXp: awardXp,
+                                      );
                                       final singleCleanRep =
                                           (playRunner
                                                   .selectedOption
@@ -4487,8 +4502,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       if (wrappedCorrect) {
                                         _completeCurrentTask(
                                           playSelectedTask,
-                                          awardXp:
-                                              _choiceHasIndependentProvenanceV1,
+                                          awardXp: awardXp,
                                         );
                                       }
                                       _lessonRunWrapUpCompletedTaskIds.add(
@@ -4540,12 +4554,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _placementHandoffActive = false;
                                     _completeCurrentTask(
                                       playSelectedTask,
-                                      awardXp:
-                                          (playRunner
-                                                  .selectedOption
-                                                  ?.isCorrect ??
-                                              false) &&
-                                          _choiceHasIndependentProvenanceV1,
+                                      awardXp: awardXp,
                                     );
                                     if (_maybeStartLessonWrapUpRetry(
                                       selectedLesson,
