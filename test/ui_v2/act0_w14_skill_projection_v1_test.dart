@@ -8,7 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 final _worlds = Act0ShellStateV1.sample.worlds;
 final _tasks = [
   for (final world in _worlds.where(
-    (w) => w.worldNumber >= 1 && w.worldNumber <= 6,
+    (w) => w.worldNumber >= 1 && w.worldNumber <= 8,
   ))
     for (final lesson in world.lessons)
       for (final task in lesson.taskList)
@@ -194,7 +194,7 @@ void main() {
     final tasksByWorld = <int, int>{};
     for (final (i, source) in _tasks.indexed) {
       final world = source.world.worldNumber;
-      if (world < 5) continue;
+      if (world < 5 || world > 6) continue;
       tasksByWorld.update(world, (count) => count + 1, ifAbsent: () => 1);
       lessons.add(source.lesson.lessonId);
       expect(
@@ -212,6 +212,30 @@ void main() {
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
     expect(tasksByWorld, {5: 34, 6: 35});
+  });
+
+  test('every W7–W8 task projects to its authored topic', () {
+    const formatStackTasks = {'w7_format_table_notice', 'w7_stack_checkpoint'};
+    final taskCounts = <int, int>{};
+    for (final (i, source) in _tasks.indexed) {
+      final world = source.world.worldNumber;
+      if (world < 7) continue;
+      taskCounts.update(world, (count) => count + 1, ifAbsent: () => 1);
+      final expectedSkill = switch (source.lesson.lessonId) {
+        'range_thinking_lite_combo_density' => 'Range reading',
+        'format_pressure' when !formatStackTasks.contains(source.task.taskId) =>
+          'Position play',
+        _ => 'Stack decisions',
+      };
+      expect(
+        _states([_answer(i, i + 1)])
+            .where((state) => state.independentTasks > 0)
+            .map((state) => state.label),
+        [expectedSkill],
+        reason: source.task.taskId,
+      );
+    }
+    expect(taskCounts, {7: 5, 8: 26});
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {

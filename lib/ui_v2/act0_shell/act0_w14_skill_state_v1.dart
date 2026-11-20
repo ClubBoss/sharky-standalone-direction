@@ -4,7 +4,7 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
-const act0SkillMapLastWorldV1 = 6;
+const act0SkillMapLastWorldV1 = 8;
 
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
@@ -40,7 +40,7 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'price_checkpoint': ['Betting decisions'],
 };
 
-const _w56LessonSkills = <String, List<String>>{
+const _extensionLessonSkills = <String, List<String>>{
   'board_texture_basics': ['Board reading'],
   'connected_boards': ['Board reading'],
   'flush_draws': ['Board reading'],
@@ -52,6 +52,11 @@ const _w56LessonSkills = <String, List<String>>{
   'range_pressure_lines': ['Range reading'],
   'range_combo_counts': ['Range reading'],
   'range_thinking_checkpoint': ['Range reading'],
+  'range_thinking_lite_combo_density': ['Range reading'],
+  'effective_stack_basics': ['Stack decisions'],
+  'same_hand_different_depth': ['Stack decisions'],
+  'spr_and_commitment': ['Stack decisions'],
+  'format_pressure': ['Position play'],
 };
 
 const _skillOverridesByTaskId = <String, List<String>>{
@@ -59,6 +64,8 @@ const _skillOverridesByTaskId = <String, List<String>>{
   'positions_button': ['Position play'],
   'positions_utg': ['Position play'],
   'positions_cutoff': ['Position play'],
+  'w7_format_table_notice': ['Stack decisions'],
+  'w7_stack_checkpoint': ['Stack decisions'],
   'outs_improvement_w5_table_outs_flush_transfer': [
     'Board reading',
     'Betting decisions',
@@ -123,7 +130,7 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
     for (final lesson in world.lessons) {
       final lessonSkills =
           act0W14LessonSkillsV1[lesson.lessonId] ??
-          _w56LessonSkills[lesson.lessonId] ??
+          _extensionLessonSkills[lesson.lessonId] ??
           const <String>[];
       for (final task in lesson.taskList) {
         final skills = _skillOverridesByTaskId[task.taskId] ?? lessonSkills;

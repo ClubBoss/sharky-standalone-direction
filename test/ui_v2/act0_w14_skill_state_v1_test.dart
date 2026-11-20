@@ -4,7 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('You explains the unstarted W1–W6 skill map', (tester) async {
+  testWidgets('You explains the unstarted W1–W8 skill map', (tester) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
     tester.view.physicalSize = const Size(393, 852);
     tester.view.devicePixelRatio = 1;
@@ -20,15 +20,16 @@ void main() {
     await tester.pumpAndSettle();
     final skills = find.byKey(const Key('act0_w14_skills'));
     expect(skills, findsOneWidget);
-    expect(find.text('Skills · W1–W6'), findsOneWidget);
+    expect(find.text('Skills · W1–W8'), findsOneWidget);
     await tester.ensureVisible(skills);
     await tester.tap(skills);
     await tester.pumpAndSettle();
-    expect(find.text('Not started'), findsNWidgets(7));
+    expect(find.text('Not started'), findsNWidgets(8));
     expect(find.text('Table sense'), findsOneWidget);
     expect(find.text('Position play'), findsOneWidget);
     expect(find.text('Range reading'), findsOneWidget);
-    expect(find.text('No lesson answers recorded yet.'), findsNWidgets(7));
+    expect(find.text('Stack decisions'), findsOneWidget);
+    expect(find.text('No lesson answers recorded yet.'), findsNWidgets(8));
     expect(
       tester.getTopLeft(find.text('Table sense')).dx,
       tester.getTopLeft(find.text('Hand reading')).dx,
