@@ -117,7 +117,7 @@ void main() {
       final queenChecks = tasks.where(
         (task) => task.runner.question.startsWith('Three queens are visible'),
       );
-      expect(queenChecks.length, 2);
+      expect(queenChecks, hasLength(1));
       for (final task in queenChecks) {
         final table = task.runner.table;
         final shownQueens = [

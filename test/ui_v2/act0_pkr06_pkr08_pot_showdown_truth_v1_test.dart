@@ -76,9 +76,6 @@ const _pkr06AuthoredResidual = <String>{};
 /// Graded answers that name a showdown outcome, with the source-determined
 /// winning seats. A pot is shared equally between tied winners.
 const _pkr08OutcomeClaims = <String, Set<String>>{
-  'w6_kicker_showdown_compare': {'btn'},
-  'w6_board_pair_strength_compare': {'co'},
-  'w6_checkpoint_table_best_five': {'btn', 'co'},
   'hand_rankings_quads_vs_full_house_drill': {'btn'},
   'your_first_hand_showdown': {'btn'},
   'showdown_best_hand_drill': {'btn'},
@@ -323,9 +320,6 @@ void main() {
   test('PKR08 graded winner matches the authored correct option', () {
     // The graded label must name exactly the oracle winner(s).
     const labels = <String, String>{
-      'w6_kicker_showdown_compare': 'Hero A-K',
-      'w6_board_pair_strength_compare': 'Villain K-8',
-      'w6_checkpoint_table_best_five': 'Split the pot',
       'hand_rankings_quads_vs_full_house_drill': 'Your four of a kind',
       'your_first_hand_showdown': 'You — A-A-K-J-7',
       'showdown_best_hand_drill': 'You · Q-Q-Q-K-8',
@@ -380,10 +374,7 @@ void main() {
 
   // Lessons whose Runner offers the interactive showdown read; this anchor
   // keeps the parity check from passing vacuously.
-  const runnerShowsRead = {
-    'w6_kicker_showdown_compare',
-    'w6_checkpoint_table_best_five',
-  };
+  const runnerShowsRead = {'showdown_best_hand_drill'};
   for (final id in _pkr08OutcomeClaims.keys) {
     testWidgets(
       'PKR08 Runner showdown read never contradicts the oracle: $id',
@@ -495,7 +486,7 @@ void main() {
   });
 
   test('PKR08 negative controls never invent a winner or payout', () {
-    final base = _task('w6_kicker_showdown_compare').runner.table;
+    final base = _task('showdown_best_hand_drill').runner.table;
     expect(resolveShowdownTruthV1(base).winners, ['btn']);
 
     // A live opponent with hidden cards blocks the verdict.
@@ -561,7 +552,11 @@ void main() {
                   suit: 's',
                   tone: Act0CardToneV1.dark,
                 ),
-                Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
+                Act0CardStateV1(
+                  rank: 'K',
+                  suit: 'c',
+                  tone: Act0CardToneV1.dark,
+                ),
               ],
             )
           : s,
@@ -592,7 +587,7 @@ void main() {
   });
 
   test('PKR08 hidden opponents after a Hero fold remain UNPROVED', () {
-    final t = _task('w6_kicker_showdown_compare').runner.table;
+    final t = _task('showdown_best_hand_drill').runner.table;
     final hero = t.seats.singleWhere((s) => s.isHero);
     final hidden =
         _mapSeats(

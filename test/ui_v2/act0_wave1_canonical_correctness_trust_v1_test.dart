@@ -34,7 +34,7 @@ void main() {
         '6s',
         '2c',
       ]);
-      expect(task.runner.caption, 'A-6-2 has large rank gaps.');
+      expect(task.runner.caption, 'Look at the ranks on the flop.');
       expect(task.runner.options.map((option) => option.id), <String>[
         'yes',
         'no',
@@ -101,7 +101,7 @@ void main() {
         lessonId: 'connected_boards',
         taskId: 'connected_boards_w5_disconnected_board',
       );
-      expect(disconnected.runner.caption, 'A-8-2 has large rank gaps.');
+      expect(disconnected.runner.caption, 'Look at the flop ranks.');
       expect(correctOption(disconnected).id, 'disconnected');
       final draw = taskFor(
         worldId: 'world_5',

@@ -39,13 +39,14 @@ void main() {
     });
   });
 
-  test('authored missed-draw river description matches the red diamond', () {
+  test('missed-draw feedback identifies the diamond shown on the river', () {
     final runner = _task('turn_river_changes_w5_river_misses').runner;
-    expect(runner.table.boardCards.last.rank, '2');
+    expect(runner.table.boardCards.last.rank, 'Q');
     expect(runner.table.boardCards.last.suit, 'd');
-    expect(runner.caption, contains('2 of diamonds'));
-    expect(runner.caption, isNot(contains('black 2')));
-    expect(runner.options.singleWhere((o) => o.isCorrect).id, 'draw_missed');
+    final correct = runner.options.singleWhere((option) => option.isCorrect);
+    expect(correct.id, 'draw_missed');
+    expect(correct.feedbackReason, contains('river queen is a diamond'));
+    expect(runner.caption, isNot(contains('diamond')));
   });
 
   for (final entry in const {

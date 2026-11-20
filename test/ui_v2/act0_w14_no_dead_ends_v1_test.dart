@@ -53,11 +53,13 @@ void main() {
         'button_advantage_position_repair_btn_last_postflop',
         'early_vs_late_position_repair_utg_players_behind',
         'same_hand_different_seat_position_repair_same_hand_different_seat',
+        'turn_river_changes_w5_street_repair',
+        'w6_wet_board_repair',
       },
     );
     expect(
       worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
-      hasLength(364),
+      hasLength(362),
     );
     final seen = <String>{};
     for (final id in allIds) {

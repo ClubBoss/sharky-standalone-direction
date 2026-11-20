@@ -18,8 +18,6 @@ void main() {
     'hand_rankings_best_five_drill',
     'w4_big_price_marginal_fold',
     'outs_improvement_w5_clean_vs_risky_out_transfer',
-    'w6_kicker_showdown_compare',
-    'w6_checkpoint_table_best_five',
   ]) {
     testWidgets('actual predecision has no authored solution focus: $taskId', (
       tester,
