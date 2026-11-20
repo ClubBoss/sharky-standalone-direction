@@ -25526,7 +25526,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
 );
 
 final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
-  table: _w9ExampleTableBase,
+  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_decision_quality_intro',
   lessonTitle: 'Decision quality over outcome',
@@ -25591,7 +25591,6 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
 );
 
 final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w12DecisionQualityIntroRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_bad_call_good_result',
   feedbackSignalId: 'process_over_outcome',

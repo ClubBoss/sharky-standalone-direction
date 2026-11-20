@@ -187,15 +187,34 @@ void main() {
       'w11_checkpoint_review_line',
       'w11_checkpoint_review',
     };
+    const w12HypotheticalIds = <String>{
+      'w12_decision_quality_intro',
+      'w12_good_fold_bad_result',
+      'w12_bad_call_good_result',
+      'w12_decision_quality_recap',
+      'w12_tilt_reset_intro',
+      'w12_after_bad_beat_reset',
+      'w12_after_mistake_reset',
+      'w12_tilt_reset_recap',
+      'w12_confidence_intro',
+      'w12_assertive_not_ego',
+      'w12_discipline_under_pressure',
+      'w12_confidence_recap',
+      'w12_checkpoint_intro',
+      'w12_checkpoint_process_line',
+      'w12_checkpoint_reset_line',
+      'w12_checkpoint_discipline_line',
+      'w12_checkpoint_review',
+    };
     const explanationIds = <String>{
       ...w9HypotheticalIds,
       ...w10HypotheticalIds,
       ...w11HypotheticalIds,
+      ...w12HypotheticalIds,
       'what_poker_is_all_in_meaning',
       'what_poker_is_matched_chips_transfer',
       'same_hand_different_seat_position_repair_same_hand_different_seat',
       'what_poker_is_side_pot_intro',
-      'w12_bad_call_good_result',
     };
     const rangeSignals = <String, String>{
       'w6_turn_shift_bucket': 'range_bucket_shift',
@@ -290,7 +309,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(47));
-    expect(explanationIds, hasLength(65));
+    expect(explanationIds, hasLength(81));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -309,7 +328,8 @@ void main() {
       expect(table.copyWith(centerLabel: 'A different cue').scope, expected);
       if (w9HypotheticalIds.contains(task.taskId) ||
           w10HypotheticalIds.contains(task.taskId) ||
-          w11HypotheticalIds.contains(task.taskId)) {
+          w11HypotheticalIds.contains(task.taskId) ||
+          w12HypotheticalIds.contains(task.taskId)) {
         expect(table.streetLabel, isEmpty, reason: task.taskId);
         expect(table.heroCards, isEmpty, reason: task.taskId);
         expect(table.boardCards, isEmpty, reason: task.taskId);
@@ -462,8 +482,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 263);
-    expect(played, 265); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 247);
+    expect(played, 249); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,

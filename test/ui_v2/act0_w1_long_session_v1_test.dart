@@ -571,6 +571,13 @@ void main() {
       'complex_plan',
       'w11_plan_focus_choice',
     ),
+    (
+      'a W12 outcome-bias miss reopens reviewing the decision',
+      'world_12',
+      'w12_checkpoint_process_line',
+      'outcome_only',
+      'w12_good_fold_bad_result',
+    ),
   ]) {
     testWidgets(name, (t) async {
       final xp = await _openSavedCourseTask(
