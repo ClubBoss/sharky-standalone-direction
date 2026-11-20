@@ -387,7 +387,14 @@ void main() {
     final runner = _runner(tester).runner;
     final question = find.byKey(const Key('act0_integrated_scene_prompt'));
     final plate = find.byKey(const Key('act0_shell_seat_node_btn'));
-    final position = find.descendant(of: plate, matching: find.text('BTN'));
+    final seatLabel = find.descendant(of: plate, matching: find.text('You'));
+    expect(find.text('BTN'), findsNothing);
+    expect(find.text('UTG'), findsNothing);
+    expect(find.text('Player'), findsWidgets);
+    expect(
+      find.byKey(const Key('act0_shell_learning_scene_sharky_avatar')),
+      findsNothing,
+    );
     final wrong = runner.options.firstWhere((option) => !option.isCorrect);
     final answer = find.descendant(
       of: find.byKey(Key('act0_shell_option_${wrong.id}')),
@@ -402,7 +409,7 @@ void main() {
 
     expectScale(question, 13);
     expectScale(answer, 13);
-    expectScale(position, 10);
+    expectScale(seatLabel, 10);
     await _choose(tester, wrong.id);
     expectScale(find.byKey(const Key('act0_shell_review_question')), 13);
     expectScale(find.byKey(const Key('act0_learning_scene_v3_support')), 13);

@@ -1221,6 +1221,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.selectedTaskTitle,
     this.selectedTaskFamily,
     this.tablePresentation = Act0TaskTablePresentationV1.legacy,
+    this.tableIdentityPolicy,
     this.theoryRecallStep,
     required this.onBack,
     required this.onContinueTheory,
@@ -1279,6 +1280,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? selectedTaskTitle;
   final Act0TaskFamilyV1? selectedTaskFamily;
   final Act0TaskTablePresentationV1 tablePresentation;
+  final Act0TableIdentityPolicyV1? tableIdentityPolicy;
   final Act0TeachingStepV1? theoryRecallStep;
   final VoidCallback onBack;
   final VoidCallback onContinueTheory;
@@ -3542,9 +3544,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         MediaQuery.sizeOf(context).shortestSide < 600;
     // Compact seats already render a distinct learner badge. Keep the text
     // label to the table position so the visible identity is "You" + "BTN".
-    final identityPolicy = usesSharedActiveRunnerAllocation
-        ? Act0TableIdentityPolicyV1.learnerPosition
-        : sourceIdentityPolicy;
+    final identityPolicy =
+        widget.tableIdentityPolicy ??
+        (usesSharedActiveRunnerAllocation
+            ? Act0TableIdentityPolicyV1.learnerPosition
+            : sourceIdentityPolicy);
     // B7: the canonical scene owns its own geometry, so the lower surface is a
     // scene-attached control shelf that sizes to its content instead of a slot
     // the scene had to fund.

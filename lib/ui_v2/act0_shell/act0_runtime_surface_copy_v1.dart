@@ -759,6 +759,13 @@ String act0RuntimeLocalizedSeatPrimaryLabelV1(
       Act0TableIdentityPolicyV1.currentProduction,
 }) {
   if (!hero) {
+    if (identityPolicy == Act0TableIdentityPolicyV1.learnerOnly) {
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        seat.isOccupied ? 'table_word_player' : 'table_word_empty_seat',
+        fallback: seat.isOccupied ? 'Player' : 'Empty seat',
+      );
+    }
     return seat.seatLabel;
   }
   final learner = act0LocalizedSurfaceAtomV1(

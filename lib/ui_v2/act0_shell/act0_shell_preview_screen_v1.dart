@@ -28,6 +28,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_founda
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_presentation_config_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
@@ -2833,6 +2834,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final playSelectedTask = isPlayTab
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
+    const seatNamesLessonId = 'blinds_action_order';
+    const seatNamesTaskId = 'positions_theory';
+    // The first two pages cover streets. The third page introduces the seats.
+    final seatNamesAvailable =
+        selectedWorld.worldNumber != 1 ||
+        _placementDiagnosticActive ||
+        _completedTaskIds.contains(seatNamesTaskId) ||
+        (!selectedWorld.lessons
+                .takeWhile((lesson) => lesson.lessonId != seatNamesLessonId)
+                .any((lesson) => lesson.lessonId == selectedLesson.lessonId) &&
+            (playSelectedTask?.taskId != seatNamesTaskId ||
+                _teachingStepIndex >= 2));
+
     final inlineRepairSource =
         _activeSameSignalFeedbackRepairV1 &&
             _activeRepairTaskId == playSelectedTask?.taskId
@@ -3874,6 +3888,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 tablePresentation:
                                     playSelectedTask?.tablePresentation ??
                                     Act0TaskTablePresentationV1.legacy,
+                                tableIdentityPolicy: seatNamesAvailable
+                                    ? null
+                                    : Act0TableIdentityPolicyV1.learnerOnly,
                                 accessibilityPrototypeStep:
                                     accessibilityPrototypeStep,
                                 onAccessibilityPrototypeStepChanged: (next) {

@@ -1,10 +1,292 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_f7_scene_gate_v1.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_presentation_config_v1.dart';
+
+import '../support/act0_source_choreography_test_wait_v1.dart';
+
+Rect _paintedTableBounds(WidgetTester tester) {
+  final plate = find.byKey(const Key('act0_f7_baked_room_cast_hero'));
+  if (plate.evaluate().isEmpty) {
+    return _paintBounds(tester, find.byKey(const Key('act0_shell_table_felt')));
+  }
+
+  final painter =
+      tester.widget<CustomPaint>(plate).painter!
+          as Act0F7RegisteredScenePainterV1;
+  final registration = painter.registration;
+  final render = tester.renderObject<RenderBox>(plate);
+  final points = registration.profile.tableBoundary
+      .map(registration.map)
+      .map((point) => render.localToGlobal(point))
+      .toList();
+  return Rect.fromLTRB(
+    points.map((point) => point.dx).reduce(math.min),
+    points.map((point) => point.dy).reduce(math.min),
+    points.map((point) => point.dx).reduce(math.max),
+    points.map((point) => point.dy).reduce(math.max),
+  );
+}
+
+Rect _paintBounds(WidgetTester tester, Finder finder) {
+  final box = tester.renderObject<RenderBox>(finder);
+  return MatrixUtils.transformRect(
+    box.getTransformTo(null),
+    Offset.zero & box.size,
+  );
+}
+
+void _expectStationaryTable(
+  Rect reference,
+  Rect actual, {
+  required String stage,
+}) {
+  final deltas = [
+    actual.left - reference.left,
+    actual.top - reference.top,
+    actual.right - reference.right,
+    actual.bottom - reference.bottom,
+    actual.width - reference.width,
+    actual.height - reference.height,
+  ];
+  expect(
+    deltas.map((delta) => delta.abs()).reduce(math.max),
+    lessThanOrEqualTo(0.5),
+    reason: '$stage changed the painted table from $reference to $actual',
+  );
+}
 
 void main() {
+  testWidgets('V3 table stays in place through the actual W1 retry', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    expect(
+      await tester.runAsync(() => Act0F7SceneGateV1.premiumStore.warmUp()),
+      isNotNull,
+    );
+
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start with the basics'));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+
+    final wrong = find.text('The shared cards in the middle');
+    expect(wrong.hitTestable(), findsOneWidget);
+    final reference = _paintedTableBounds(tester);
+    await tester.tap(wrong);
+    await tester.pump();
+    _expectStationaryTable(
+      reference,
+      _paintedTableBounds(tester),
+      stage: 'first answer frame',
+    );
+    await tester.pumpAndSettle();
+    final retry = find.text('Try same clue');
+    expect(retry.hitTestable(), findsOneWidget);
+    _expectStationaryTable(
+      reference,
+      _paintedTableBounds(tester),
+      stage: 'settled wrong feedback',
+    );
+
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    await tester.pumpAndSettle();
+    _expectStationaryTable(
+      reference,
+      _paintedTableBounds(tester),
+      stage: 'wrong feedback at 1.3×',
+    );
+    await tester.tap(retry);
+    await tester.pumpAndSettle();
+    final correct = find.text('Private cards');
+    expect(correct.hitTestable(), findsOneWidget);
+    expect(find.text('Shared board'), findsNothing);
+    _expectStationaryTable(
+      reference,
+      _paintedTableBounds(tester),
+      stage: 'retry decision at 1.3×',
+    );
+    await tester.tap(correct);
+    await tester.pumpAndSettle();
+    _expectStationaryTable(
+      reference,
+      _paintedTableBounds(tester),
+      stage: 'retry feedback at 1.3×',
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  const geometryTasks = [
+    'what_poker_is_find_hero',
+    'what_poker_is_table_read_transfer',
+    'first_table_guide_shared_cards_repair',
+    'actions_call_drill',
+    'your_first_hand_showdown',
+    'apply_btn_open',
+    'position_six_seats_positions_utg',
+    'w4_checkpoint_table_price',
+  ];
+  for (final id in geometryTasks) {
+    testWidgets('V3 table geometry and readable cards · $id', (tester) async {
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+      addTearDown(tester.view.reset);
+      expect(
+        await tester.runAsync(() => Act0F7SceneGateV1.premiumStore.warmUp()),
+        isNotNull,
+      );
+
+      final world = Act0ShellStateV1.sample.worlds.singleWhere(
+        (world) => world.lessons.any(
+          (lesson) => lesson.taskList.any((task) => task.taskId == id),
+        ),
+      );
+      final lesson = world.lessons.singleWhere(
+        (lesson) => lesson.taskList.any((task) => task.taskId == id),
+      );
+      final task = lesson.taskList.singleWhere((task) => task.taskId == id);
+      final source = task.runner;
+      final wrong = source.options.firstWhere((option) => !option.isCorrect);
+      final correct = source.options.firstWhere((option) => option.isCorrect);
+
+      Future<void> show(
+        Act0LessonPhaseV1 phase, {
+        String? selected,
+        double textScale = 1,
+      }) async {
+        tester.platformDispatcher.textScaleFactorTestValue = textScale;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: SafeArea(
+                child: Act0LessonRunnerShellV1(
+                  runner: source.copyWith(
+                    phase: phase,
+                    teachingStepIndex: source.teachingSteps.length,
+                    selectedOptionId: selected,
+                  ),
+                  worldNumber: world.worldNumber,
+                  selectedWorldId: world.worldId,
+                  selectedLessonId: lesson.lessonId,
+                  selectedTaskId: id,
+                  selectedTaskFamily: task.resolvedTaskFamily,
+                  compositionFamily: task.resolvedCompositionFamily,
+                  tablePresentation: task.tablePresentation,
+                  tableIdentityPolicy: lesson.lessonId == 'what_poker_is'
+                      ? Act0TableIdentityPolicyV1.learnerOnly
+                      : null,
+                  onBack: () {},
+                  onContinueTheory: () {},
+                  onContinueReview: () {},
+                  onChooseOption: (_) {},
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await pumpSourceChoreographyToDecisionV1(tester, source.table);
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: '$id $phase @$textScale',
+        );
+      }
+
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await show(Act0LessonPhaseV1.drill);
+      if (kAct0F7TableScenePreview && id == 'what_poker_is_find_hero') {
+        expect(
+          find.byKey(const Key('act0_f7_baked_room_cast_hero')),
+          findsOneWidget,
+        );
+      }
+      final reference = _paintedTableBounds(tester);
+      expect(reference.isEmpty, isFalse);
+      expect(
+        find.byKey(const Key('act0_shell_learning_scene_sharky_avatar')),
+        findsNothing,
+      );
+      var checkedCardFrames = 0;
+      final states = [
+        (phase: Act0LessonPhaseV1.drill, selected: wrong.id, scale: 1.0),
+        (phase: Act0LessonPhaseV1.review, selected: wrong.id, scale: 1.0),
+        (phase: Act0LessonPhaseV1.review, selected: correct.id, scale: 1.0),
+        (phase: Act0LessonPhaseV1.drill, selected: null, scale: 1.3),
+        (phase: Act0LessonPhaseV1.drill, selected: wrong.id, scale: 1.3),
+        (phase: Act0LessonPhaseV1.review, selected: wrong.id, scale: 1.3),
+        (phase: Act0LessonPhaseV1.review, selected: correct.id, scale: 1.3),
+      ];
+      for (final state in states) {
+        await show(
+          state.phase,
+          selected: state.selected,
+          textScale: state.scale,
+        );
+        final actual = _paintedTableBounds(tester);
+        _expectStationaryTable(reference, actual, stage: '$id $state');
+        final controls = [
+          find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
+          find.byKey(const Key('act0_integrated_scene_prompt')),
+          find.byKey(const Key('act0_shell_review_question')),
+        ];
+        final nameplates = find.byWidgetPredicate((widget) {
+          final key = widget.key;
+          return key is ValueKey<String> &&
+              (key.value.startsWith('act0_shell_seat_identity_') ||
+                  key.value.startsWith('act0_shell_hero_identity_'));
+        });
+        final cover = [
+          for (final control in controls)
+            if (control.evaluate().isNotEmpty) _paintBounds(tester, control),
+          for (var i = 0; i < nameplates.evaluate().length; i++)
+            _paintBounds(tester, nameplates.at(i)),
+        ];
+        final cards = find.byWidgetPredicate((widget) {
+          final key = widget.key;
+          return key is ValueKey<String> &&
+              key.value.startsWith('act0_shell_card_');
+        });
+        for (var i = 0; i < cards.evaluate().length; i++) {
+          final card = cards.at(i);
+          final bounds = _paintBounds(tester, card);
+          checkedCardFrames++;
+          for (final overlay in cover) {
+            expect(
+              overlay.overlaps(bounds),
+              isFalse,
+              reason:
+                  '$id $state: overlay $overlay covers ${card.evaluate().single.widget.key} at $bounds',
+            );
+          }
+        }
+      }
+      if (source.table.heroCards.isNotEmpty ||
+          source.table.boardCards.isNotEmpty) {
+        expect(checkedCardFrames, greaterThan(0));
+      }
+    });
+  }
+
   testWidgets(
     'fallback renderer respects source actor and street-owned chip identities',
     (t) async {

@@ -118,6 +118,15 @@ class _SeatNodeV1 extends StatelessWidget {
     // selectable touch glyph and the empty-seat mark are interaction truth and
     // stay exactly as they were.
     final showsSeatGlyph = hero || selectable || !seat.isOccupied;
+    final showsSeatName =
+        !hero || identityPolicy != Act0TableIdentityPolicyV1.learnerOnly;
+    final seatName = act0RuntimeLocalizedSeatPrimaryLabelV1(
+      context,
+      seat: seat,
+      hero: hero,
+      refined: refined,
+      identityPolicy: identityPolicy,
+    );
     final occupiedOpacity = !seat.isOccupied
         ? 0.42
         : folded || !seat.isInHand
@@ -193,7 +202,7 @@ class _SeatNodeV1 extends StatelessWidget {
                 Container(
                   key: hero
                       ? Key('act0_shell_hero_identity_${seat.seatId}')
-                      : null,
+                      : Key('act0_shell_seat_identity_${seat.seatId}'),
                   padding: EdgeInsets.symmetric(
                     // Without the glyph the plate would shrink-wrap to its
                     // label and read as a chip. A nameplate has to stay
@@ -324,25 +333,20 @@ class _SeatNodeV1 extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            act0RuntimeLocalizedSeatPrimaryLabelV1(
-                              context,
-                              seat: seat,
-                              hero: hero,
-                              refined: refined,
-                              identityPolicy: identityPolicy,
+                          if (showsSeatName)
+                            Text(
+                              seatName,
+                              maxLines: 2,
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: primaryLabelColor,
+                                fontSize: registeredScene
+                                    ? 9.0
+                                    : useSlimRefinedSeat
+                                    ? 8.5
+                                    : (refined ? 9.0 : 10),
+                                letterSpacing: refined ? 0.1 : 0.4,
+                              ),
                             ),
-                            maxLines: 2,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: primaryLabelColor,
-                              fontSize: registeredScene
-                                  ? 9.0
-                                  : useSlimRefinedSeat
-                                  ? 8.5
-                                  : (refined ? 9.0 : 10),
-                              letterSpacing: refined ? 0.1 : 0.4,
-                            ),
-                          ),
                           if (markerDisplay.subLabel != null)
                             KeyedSubtree(
                               key: showsOpponentStack
@@ -433,7 +437,9 @@ class _SeatNodeV1 extends StatelessWidget {
       selected:
           seatVisualState == _SeatVisualStateV1.wrongSelected ||
           seatVisualState == _SeatVisualStateV1.confirmedSelected,
-      label: 'Select ${seat.seatLabel}',
+      label: identityPolicy == Act0TableIdentityPolicyV1.learnerOnly
+          ? 'Select $seatName'
+          : 'Select ${seat.seatLabel}',
       onTap: onTap,
       child: GestureDetector(
         excludeFromSemantics: true,
