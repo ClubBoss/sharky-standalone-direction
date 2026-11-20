@@ -558,7 +558,7 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = fullRoute ? 364 : 250;
+        final expectedCount = fullRoute ? 362 : 248;
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

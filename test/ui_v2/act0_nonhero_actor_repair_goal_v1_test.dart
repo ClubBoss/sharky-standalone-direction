@@ -231,7 +231,7 @@ void main() {
       final newRows = act0RepairGoalContractsV1
           .where((row) => row.requireCapturedGoalWitness)
           .toList();
-      expect(newRows, hasLength(14));
+      expect(newRows, hasLength(17));
       expect(
         newRows
             .map((row) => '${row.sourceTaskId}/${row.sourceChoiceId}')
@@ -248,6 +248,9 @@ void main() {
           'w6_value_range_action/bet_bluff',
           'w6_board_fit_recap/caller',
           'w6_board_fit_recap/same',
+          'straight_draws_w5_gutshot_contrast_transfer/gutshot',
+          'turn_river_changes_w5_turn_texture_shift_transfer/nothing_changed',
+          'w6_turn_pressure_shift_transfer/barrel_big',
         },
       );
       expect(

@@ -825,6 +825,9 @@ class Act0RepairGoalContractV1 {
     'early_seat_players_behind' => 'Players left to act',
     'same_hand_different_seat' => 'Same hand from two seats',
     'value_bet_purpose' => 'Why you bet',
+    'read_straight_draw_shape' => 'Which ranks complete the draw',
+    'turn_changes_board_threats' => 'What the turn changes',
+    'bluff_needs_better_folds' => 'Which better hands might fold',
     'range_advantage_on_board' => 'Which range fits the board',
     _ =>
       goalId.startsWith(_exerciseGoalPrefix)
@@ -837,6 +840,93 @@ class Act0RepairGoalContractV1 {
 }
 
 const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_5",
+    sourceLessonId: "straight_draws",
+    sourceTaskId: "straight_draws_w5_gutshot_contrast_transfer",
+    sourceChoiceId: "gutshot",
+    sourceCorrectChoiceId: "open_ended",
+    sourceFingerprint:
+        "1697161418e2a51c51e763419c0277ac20a7ff18d3340108009e8fc4145ae471",
+    sourceQuestion: "Which straight draw do you have?",
+    sourceChoiceReason:
+        "A gutshot has one missing middle rank. Your 6-7-8-9 already run in order. A 5 or a ten completes the straight.",
+    sourceChoiceLabel: "Gutshot straight draw",
+    sourceChoiceQuality: "suboptimal",
+    goalId: "read_straight_draw_shape",
+    misconceptionId: "open_ended_seen_as_gutshot",
+    relationId: "straight_draws_w5_gutshot_contrast_transfer_gutshot_l2_v1",
+    targetWorldId: "world_5",
+    targetLessonId: "straight_draws",
+    targetTaskId: "straight_draws_w5_gutshot_draw",
+    targetFingerprint:
+        "ea7a6bec2f9590618a7ac6423cd5d3fc3e2128d169f6a4415c6d4bbabc99da58",
+    targetCorrectChoiceId: "gutshot",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{"gutshot", "open_ended", "made_straight"},
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_5",
+    sourceLessonId: "turn_river_changes",
+    sourceTaskId: "turn_river_changes_w5_turn_texture_shift_transfer",
+    sourceChoiceId: "nothing_changed",
+    sourceCorrectChoiceId: "board_got_wetter",
+    sourceFingerprint:
+        "7147ae0a90ba32a4dbfea3d850dcee187df8953be9ea4419cd8cfea2225b6464",
+    sourceQuestion: "What new danger does the turn add?",
+    sourceChoiceReason:
+        "The turn adds a third heart. Two private hearts can now make a flush.",
+    sourceChoiceLabel: "Nothing changed, so keep the same easy plan",
+    sourceChoiceQuality: "wrong",
+    goalId: "turn_changes_board_threats",
+    misconceptionId: "turn_threat_ignored",
+    relationId:
+        "turn_river_changes_w5_turn_texture_shift_transfer_nothing_changed_l2_v1",
+    targetWorldId: "world_5",
+    targetLessonId: "turn_river_changes",
+    targetTaskId: "turn_river_changes_w5_street_repair",
+    targetFingerprint:
+        "7f2ddf9f0ebe18c022427f609c6d024c02d54f07d5607de00891fb4d9a9e2189",
+    targetCorrectChoiceId: "repair_story",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{"repair_story", "same_story", "small_same_story"},
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_6",
+    sourceLessonId: "range_pressure_lines",
+    sourceTaskId: "w6_turn_pressure_shift_transfer",
+    sourceChoiceId: "barrel_big",
+    sourceCorrectChoiceId: "check_more",
+    sourceFingerprint:
+        "f5d700db2e72c04c3eb495e3bb7b6e0aec80ec3aa8d9d8d6f33a02b39b147b28",
+    sourceQuestion:
+        "Suppose fold pressure has dropped on this turn. What is the cleaner plan?",
+    sourceChoiceReason:
+        "In this stated lower-pressure spot, a larger second barrel does not repair the reason for betting. Reassess before forcing the flop plan.",
+    sourceChoiceLabel: "Barrel big again",
+    sourceChoiceQuality: "suboptimal",
+    goalId: "bluff_needs_better_folds",
+    misconceptionId: "repeat_bluff_after_callers_change",
+    relationId: "w6_turn_pressure_shift_transfer_barrel_big_l2_v1",
+    targetWorldId: "world_6",
+    targetLessonId: "range_pressure_lines",
+    targetTaskId: "w6_wet_board_repair",
+    targetFingerprint:
+        "cc4654c26e975bbb6dcab81ff153d8ae2e36a44ac2cd8e0d6258018fd204a70d",
+    targetCorrectChoiceId: "respect_wetter_board",
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    targetChoiceIds: <String>{
+      "respect_wetter_board",
+      "nothing_changed",
+      "smaller_same_story",
+    },
+    requireCapturedGoalWitness: true,
+  ),
   Act0RepairGoalContractV1(
     sourceWorldId: 'world_6',
     sourceLessonId: 'range_board_fit',
