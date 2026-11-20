@@ -27,6 +27,20 @@ const _placeholderTableFallbackIds = <String>{
   'w9_checkpoint_bubble_line',
   'w9_checkpoint_table_notice',
   'w9_checkpoint_review',
+  'w10_nit_tag',
+  'w10_loose_passive_tag',
+  'w10_overaggressive_tag',
+  'w10_vs_nit_open_wider',
+  'w10_vs_caller_value_heavier',
+  'w10_vs_sticky_defender_tighten_steals',
+  'w10_overbluff_punish',
+  'w10_underbluff_fold_more',
+  'w10_guardrail_sample_size',
+  'w10_checkpoint_tag_line',
+  'w10_checkpoint_lever_line',
+  'w10_checkpoint_guardrail_line',
+  'w10_checkpoint_table_notice',
+  'w10_checkpoint_review',
 };
 
 const _asm05NewTaskIds = <String>{
@@ -197,8 +211,8 @@ void main() {
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
         'TABLE_ACTION_DECISION': 32,
-        'TABLE_CLUE_OR_RANGE_INFERENCE': 20,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 6,
+        'TABLE_CLUE_OR_RANGE_INFERENCE': 13,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 13,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -427,8 +441,8 @@ void main() {
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
       'TABLE_ACTION_DECISION': 34,
-      'TABLE_CLUE_OR_RANGE_INFERENCE': 20,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 6,
+      'TABLE_CLUE_OR_RANGE_INFERENCE': 13,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 13,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -853,8 +867,8 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(340));
-    expect(unknown, hasLength(96));
+    expect(foundationDefaults, hasLength(370));
+    expect(unknown, hasLength(66));
     expect(
       admitted.length +
           foundationDefaults.length +
