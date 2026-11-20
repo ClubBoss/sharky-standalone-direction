@@ -1448,7 +1448,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         preSessionLine:
             'You corrected a mistake. Try that skill again tomorrow.',
         correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
+        wrongReaction: 'Check the clue again.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine:
             'You corrected a mistake today. Practice it again tomorrow.',
@@ -1462,7 +1462,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         preSessionLine:
             'Good work completing today\'s practice. Review an open mistake or try one fresh hand.',
         correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
+        wrongReaction: 'Check the clue again.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine: 'Next time, Sharky will keep the next useful hand ready.',
         preSessionMood: Act0SharkyMoodV1.celebrate,
@@ -1474,7 +1474,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       return const Act0SharkyCueV1(
         preSessionLine: 'Let\'s see how the table looks to you.',
         correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
+        wrongReaction: 'Check the clue again.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine: 'Every strong player started exactly here.',
         preSessionMood: Act0SharkyMoodV1.neutral,
@@ -1486,7 +1486,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       return const Act0SharkyCueV1(
         preSessionLine: 'Repair queue clear. Clean slate.',
         correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
+        wrongReaction: 'Check the clue again.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine: 'No open leaks. That is a real edge.',
         preSessionMood: Act0SharkyMoodV1.happy,
@@ -1498,7 +1498,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       return const Act0SharkyCueV1(
         preSessionLine: 'Clean run. The reads are sharpening.',
         correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
+        wrongReaction: 'Check the clue again.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine: 'Accuracy builds trust. You are building it.',
         preSessionMood: Act0SharkyMoodV1.happy,
@@ -1511,7 +1511,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       return const Act0SharkyCueV1(
         preSessionLine: 'Fix one weak spot before you stop.',
         correctReaction: 'Sharp read.',
-        wrongReaction: 'Good spot to fix.',
+        wrongReaction: 'Check the clue again.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine: 'One repair now saves two repairs tomorrow.',
         preSessionMood: Act0SharkyMoodV1.repair,
