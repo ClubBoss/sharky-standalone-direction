@@ -52,6 +52,14 @@ const _placeholderTableFallbackIds = <String>{
   'w11_checkpoint_trigger_line',
   'w11_checkpoint_review_line',
   'w11_checkpoint_review',
+  'w12_good_fold_bad_result',
+  'w12_after_bad_beat_reset',
+  'w12_after_mistake_reset',
+  'w12_assertive_not_ego',
+  'w12_discipline_under_pressure',
+  'w12_checkpoint_reset_line',
+  'w12_checkpoint_discipline_line',
+  'w12_checkpoint_review',
 };
 
 const _asm05NewTaskIds = <String>{
@@ -222,8 +230,7 @@ void main() {
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
         'TABLE_ACTION_DECISION': 32,
-        'TABLE_CLUE_OR_RANGE_INFERENCE': 4,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 22,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 26,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -430,7 +437,7 @@ void main() {
     }
   });
 
-  test('two ASM05 rows retain full census without inventing semantic admission', () {
+  test('both ASM05 scenarios allow only their own familiar replay', () {
     final rows = _assessedRows();
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
@@ -452,8 +459,7 @@ void main() {
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
       'TABLE_ACTION_DECISION': 34,
-      'TABLE_CLUE_OR_RANGE_INFERENCE': 4,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 22,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 26,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -525,8 +531,8 @@ void main() {
       expect(repair.sameSignalMapped, isTrue);
       expect(repair.fallbackOnly, isFalse);
       expect(repair.exactReplay, isFalse);
-      // This raw mutual map is retained as provenance, not adopted as a
-      // semantic relation. Exact intake rows440/441 remain unreviewed.
+      // Preserve the raw mutual map for comparison. The live targets below
+      // only rehearse the exact source question.
       expect(
         act0CurrentAuthoredSourceFingerprintForIdentityV1(
           worldId: row.worldId,
@@ -538,7 +544,7 @@ void main() {
             : 'ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7',
       );
       final current = _repairRow(row).intents.single;
-      expect(current.mappingType, 'unresolved_product_gap');
+      expect(current.mappingType, 'intentional_exact');
       expect(current.targetTaskId, row.task.taskId);
       final goal = act0RepairGoalResolutionForIntentV1(
         current,
@@ -549,7 +555,7 @@ void main() {
       expect(goal.isHeld, isTrue);
       expect(goal.canLaunch, isFalse);
       expect(goal.canClaimIndependentApplication, isFalse);
-      expect(goal.reason, 'relation_unconfirmed');
+      expect(goal.canClaimMatchedRecheck, isFalse);
       extensionRepair.add(repair);
     }
 
@@ -878,8 +884,8 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(398));
-    expect(unknown, hasLength(38));
+    expect(foundationDefaults, hasLength(426));
+    expect(unknown, hasLength(10));
     expect(
       admitted.length +
           foundationDefaults.length +
