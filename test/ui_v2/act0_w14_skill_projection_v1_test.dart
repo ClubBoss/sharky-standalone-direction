@@ -8,7 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 final _worlds = Act0ShellStateV1.sample.worlds;
 final _tasks = [
   for (final world in _worlds.where(
-    (w) => w.worldNumber >= 1 && w.worldNumber <= 8,
+    (w) => w.worldNumber >= 1 && w.worldNumber <= 10,
   ))
     for (final lesson in world.lessons)
       for (final task in lesson.taskList)
@@ -219,7 +219,7 @@ void main() {
     final taskCounts = <int, int>{};
     for (final (i, source) in _tasks.indexed) {
       final world = source.world.worldNumber;
-      if (world < 7) continue;
+      if (world < 7 || world > 8) continue;
       taskCounts.update(world, (count) => count + 1, ifAbsent: () => 1);
       final expectedSkill = switch (source.lesson.lessonId) {
         'range_thinking_lite_combo_density' => 'Range reading',
@@ -236,6 +236,24 @@ void main() {
       );
     }
     expect(taskCounts, {7: 5, 8: 26});
+  });
+
+  test('every W9–W10 task projects to its authored topic', () {
+    const topics = {9: 'Tournament decisions', 10: 'Player adjustment'};
+    final taskCounts = <int, int>{};
+    for (final (i, source) in _tasks.indexed) {
+      final world = source.world.worldNumber;
+      if (world < 9) continue;
+      taskCounts.update(world, (count) => count + 1, ifAbsent: () => 1);
+      expect(
+        _states([_answer(i, i + 1)])
+            .where((state) => state.independentTasks > 0)
+            .map((state) => state.label),
+        [topics[world]],
+        reason: source.task.taskId,
+      );
+    }
+    expect(taskCounts, {9: 23, 10: 22});
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {
