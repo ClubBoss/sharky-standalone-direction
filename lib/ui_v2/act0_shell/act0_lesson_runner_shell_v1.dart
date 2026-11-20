@@ -1251,6 +1251,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.learningLoopStage,
     this.repairSessionSummaryLines = const <String>[],
     this.feedbackForwardCtaLabel,
+    this.onTryAnotherExample,
     this.suppressFeedbackRepairFocus = false,
     this.framingProfile = Act0RunnerFramingProfileV1.neutral,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
@@ -1314,6 +1315,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0ActionSequenceStageV1? learningLoopStage;
   final List<String> repairSessionSummaryLines;
   final String? feedbackForwardCtaLabel;
+  final VoidCallback? onTryAnotherExample;
   final bool suppressFeedbackRepairFocus;
   final Act0RunnerFramingProfileV1 framingProfile;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
@@ -3747,6 +3749,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       isSourceRecheckAttempt: widget.isSourceRecheckAttempt,
       repairSessionSummaryLines: widget.repairSessionSummaryLines,
       forwardCtaLabel: widget.feedbackForwardCtaLabel,
+      onTryAnotherExample: widget.onTryAnotherExample,
       suppressRepairFocus: widget.suppressFeedbackRepairFocus,
       onBack: null,
       rapidMode: widget.rapidReviewMode,

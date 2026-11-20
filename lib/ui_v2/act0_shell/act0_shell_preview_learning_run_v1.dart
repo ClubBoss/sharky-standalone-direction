@@ -704,6 +704,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _returningAfterBreakV1 = false;
       _firstLessonReminderAnsweredV1 = false;
       _lessonResumeV1 = null;
+      _tasksWithDeferredXpV1.clear();
       _skippedTaskIds.clear();
       _visibleSkippedTaskIds.clear();
       _showWorldMenu = false;
