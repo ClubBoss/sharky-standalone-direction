@@ -639,7 +639,11 @@ List<String> _feedbackCoachCandidatesV1(
       ];
     case Act0FeedbackQualityV1.wrong:
       return <String>[
-        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Good spot to fix.'),
+        _coachLineV1(
+          context,
+          en: 'Check the clue again.',
+          ru: 'Check the clue again.',
+        ),
         _coachLineV1(
           context,
           en: 'This is repairable.',
@@ -714,6 +718,8 @@ const Set<String> _genericFeedbackCoachLineInputsV1 = <String>{
   'sharp read',
   'good spot to fix.',
   'good spot to fix',
+  'check the clue again.',
+  'check the clue again',
   'clean read.',
   'clean read',
 };
