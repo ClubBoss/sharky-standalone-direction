@@ -43,6 +43,55 @@ void main() {
     expect(chart.callHands, contains('KJs'));
   });
 
+  test('Q9 keeps Strong pairs and uses the BTN facing-open row for Medium', () {
+    final strong = _tasks
+        .singleWhere((task) => task.taskId == 'w2_narrow_three_bet_strong')
+        .runner;
+    final btn = _tasks
+        .singleWhere((task) => task.taskId == 'w2_narrow_three_bet_medium')
+        .runner
+        .table;
+    final co = strong.table;
+    List<Act0CardStateV1> hand(
+      String first,
+      String second, {
+      bool suited = false,
+    }) => [
+      Act0CardStateV1(rank: first, suit: 'h'),
+      Act0CardStateV1(rank: second, suit: suited ? 'h' : 'c'),
+    ];
+
+    expect(chart.expected(co, groupOnly: true), 'Strong');
+    expect(chart.expected(co, groupOnly: false, narrowThreeBet: true), 'call');
+    expect(
+      strong.options.singleWhere(act0RunnerOptionIsAuthoredCorrectV1).id,
+      'call',
+    );
+    for (final (table, cards, action) in [
+      (co, hand('J', 'J'), 'call'),
+      (co, hand('T', 'T'), 'call'),
+      (co, hand('K', 'T'), 'fold'),
+      (co, hand('Q', 'J', suited: true), 'fold'),
+      (btn, hand('K', 'T'), 'fold'),
+      (btn, hand('K', 'Q'), 'call'),
+      (btn, hand('K', 'J', suited: true), 'call'),
+      (btn, hand('Q', 'J', suited: true), 'call'),
+      (co, hand('A', 'K'), 'raise'),
+      (co, hand('A', '5'), 'fold'),
+    ]) {
+      expect(
+        chart.expected(
+          table.copyWith(heroCards: cards),
+          groupOnly: false,
+          narrowThreeBet: true,
+        ),
+        action,
+        reason:
+            '${table.heroSeatId} ${cards.map((card) => card.label).join(" ")}',
+      );
+    }
+  });
+
   test('W2–W3 chart decisions match the teaching rows and the table', () {
     var checked = 0;
     for (final task in _tasks) {
@@ -58,7 +107,11 @@ void main() {
         continue;
       }
       checked++;
-      final expected = chart.expected(runner.table, groupOnly: group);
+      final expected = chart.expected(
+        runner.table,
+        groupOnly: group,
+        narrowThreeBet: runner.lessonId == 'w2_narrow_three_bet',
+      );
       expect(
         startingChartActual(correct, expected),
         expected,

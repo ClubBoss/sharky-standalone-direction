@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
+import '../support/act0_w2_catalog_contract_v1.dart';
 
 void main() {
   test('contribution checks reject a changed pot or a missing price label', () {
@@ -164,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 143),
-      ('D3.to_call_completeness', 100),
+      ('D2.pot_feasibility', 148),
+      ('D3.to_call_completeness', 105),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -964,11 +965,57 @@ void main() {
         },
       ],
     };
+    Map<String, Object?> w2Choice(String id, {bool correct = false}) => {
+      'id': id,
+      'correct': correct,
+      'quality': correct ? 'correct' : 'wrong',
+      'seat': null,
+      'repairSeats': <String>[],
+      'repairCards': <String>[],
+      'repairLabels': <String>[],
+    };
+    for (final entry in w2AppendedWrongChoicesV1.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      (task['options'] as List).add(w2Choice(entry.value));
+    }
+    const w2ReasonChoices = {
+      'apply_recap': (['fold', 'call', 'seat_guarantee'], 'fold'),
+      'hand_discipline_buckets_recap': (
+        ['suit_only', 'bucket_and_seat', 'blinds_only'],
+        'bucket_and_seat',
+      ),
+      'fold_discipline_facing_fold': (
+        ['call', 'fold', 'raise_for_pot'],
+        'fold',
+      ),
+    };
+    for (final MapEntry(key: id, value: (choices, correct))
+        in w2ReasonChoices.entries) {
+      final task = expectedComparison[id] as Map<String, dynamic>;
+      task['options'] = [
+        for (final id in choices) w2Choice(id, correct: id == correct),
+      ];
+    }
+    for (final (id, xp, family, choices, correct) in [
+      ('intro', 6, 'learn', <String>[], ''),
+      ('premium', 9, 'decision', ['raise', 'call', 'fold'], 'raise'),
+      ('strong', 9, 'decision', ['raise', 'call', 'fold'], 'call'),
+      ('medium', 9, 'decision', ['premium', 'call', 'unopened'], 'call'),
+      ('fold', 12, 'review', ['raise', 'call', 'fold'], 'fold'),
+    ]) {
+      expectedComparison['w2_narrow_three_bet_$id'] = {
+        'rewardXp': xp,
+        'family': family,
+        'options': [
+          for (final id in choices) w2Choice(id, correct: id == correct),
+        ],
+      };
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7 and Q11 contracts may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2 packet may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

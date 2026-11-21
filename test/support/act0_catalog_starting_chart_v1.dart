@@ -121,7 +121,11 @@ class CatalogStartingChart {
     );
   }
 
-  String? expected(Act0TableStateV1 table, {required bool groupOnly}) {
+  String? expected(
+    Act0TableStateV1 table, {
+    required bool groupOnly,
+    bool narrowThreeBet = false,
+  }) {
     final code = startingHandCode(physicalCards(table.heroCards));
     if (code == null) return null;
     final row = opening[code];
@@ -130,8 +134,28 @@ class CatalogStartingChart {
 
     final seat = table.heroSeat.seatId.toUpperCase();
     final raisers = chartRaisers(table);
+    if (narrowThreeBet) {
+      if (raisers.length != 1 ||
+          !openers.contains(raisers.single) ||
+          _openingSeats.indexOf(seat) <=
+              _openingSeats.indexOf(raisers.single)) {
+        return null;
+      }
+      if (group == 'Premium' || code == 'AKo') return 'raise';
+      if (group == 'Strong') return 'call';
+      if (group == 'Medium' && seat == caller && callHands.contains(code)) {
+        return 'call';
+      }
+      return 'fold';
+    }
     if (raisers.isEmpty && _openingSeats.contains(seat)) {
       return (row?.seats.contains(seat) ?? false) ? 'raise' : 'fold';
+    }
+    if (raisers.length == 1 &&
+        raisers.single == 'HJ' &&
+        seat == 'CO' &&
+        group == weakGroup) {
+      return 'fold';
     }
     if (raisers.length == 1 &&
         openers.contains(raisers.single) &&

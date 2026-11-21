@@ -433,7 +433,12 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
       final foundation =
           row.world.worldNumber == 2 || row.world.worldNumber == 3;
       if (namesChart || foundation && (group || decision)) {
-        final expected = chart.expected(t, groupOnly: group);
+        final narrowThreeBet = row.lesson.lessonId == 'w2_narrow_three_bet';
+        final expected = chart.expected(
+          t,
+          groupOnly: group,
+          narrowThreeBet: narrowThreeBet,
+        );
         final actual = startingChartActual(correct, expected);
         if (expected == null) {
           audit.outsideChart[task.taskId] =
@@ -443,7 +448,7 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
           '2.starting_chart',
           row,
           correct.id,
-          expected == null ? null : expected == actual,
+          expected == null && !narrowThreeBet ? null : expected == actual,
           'Hand ${facts.code ?? '?'}, seat ${heroSeat?.seatId ?? '?'}, '
               'raises $raisers. Chart: $expected, grade: $actual.',
         );

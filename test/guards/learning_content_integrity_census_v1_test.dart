@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
     show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+import '../support/act0_w2_catalog_contract_v1.dart';
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
@@ -851,9 +852,9 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(304));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(304));
-    expect(allChoices, hasLength(482));
+    expect(rows, hasLength(309));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(309));
+    expect(allChoices, hasLength(511));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -921,7 +922,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(448));
+    expect(foundationDefaults, hasLength(477));
     expect(unknown, hasLength(10));
     expect(
       admitted.length +
@@ -955,6 +956,9 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
           // The P8 orientation item is launched only for an existing miss.
           // Its one wrong answer cannot create a standalone course obligation.
           if (task.taskId != 'first_table_guide_shared_cards_repair' &&
+              (!historical ||
+                  (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
+                      preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==
                   1)
@@ -963,7 +967,11 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
               lesson.lessonId,
               task,
               omittedChoiceId: historical
-                  ? q3AppendedChoicesV1[task.taskId]
+                  ? q3AppendedChoicesV1[task.taskId] ??
+                        w2AppendedWrongChoicesV1[task.taskId]
+                  : null,
+              historicalChoices: historical
+                  ? preW2ReasonChoicesV1[task.taskId]
                   : null,
             ),
 ];
@@ -1098,16 +1106,34 @@ int _longestRun(List<int> values) {
 }
 
 class _Row {
-  const _Row(this.worldId, this.lessonId, this.task, {this.omittedChoiceId});
+  const _Row(
+    this.worldId,
+    this.lessonId,
+    this.task, {
+    this.omittedChoiceId,
+    this.historicalChoices,
+  });
   final String worldId;
   final String lessonId;
   final Act0LessonTaskV1 task;
   final String? omittedChoiceId;
-  List<Act0RunnerOptionV1> get options => omittedChoiceId == null
-      ? task.runner.options
-      : task.runner.options
-            .where((option) => option.id != omittedChoiceId)
-            .toList();
+  final List<List<Object?>>? historicalChoices;
+
+  List<Act0RunnerOptionV1> get options {
+    final previous = historicalChoices;
+    if (previous != null) {
+      return [
+        for (final choice in previous)
+          task.runner.options.singleWhere((option) => option.id == choice[0]),
+      ];
+    }
+    return omittedChoiceId == null
+        ? task.runner.options
+        : task.runner.options
+              .where((option) => option.id != omittedChoiceId)
+              .toList();
+  }
+
   int get optionCount => options.length;
   int get correctIndex => options.indexWhere((option) => option.isCorrect);
   int get worldNumber => int.parse(worldId.substring('world_'.length));

@@ -23,6 +23,7 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'fold_discipline': ['Hand reading', 'Betting decisions'],
   'weak_ace_warning': ['Hand reading'],
   'continue_or_let_go': ['Hand reading', 'Betting decisions'],
+  'w2_narrow_three_bet': ['Hand reading', 'Betting decisions'],
   'hand_discipline_apply': ['Hand reading', 'Betting decisions'],
   'discipline_checkpoint': ['Hand reading', 'Betting decisions'],
   'position_six_seats': ['Position play'],

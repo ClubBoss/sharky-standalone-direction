@@ -392,6 +392,19 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     2,
+    _w2ThreeBetLessonId,
+    'pot_to_call',
+    _day7PreflopV1('co', 'Ah Kh', opener: 'hj', openBb: 3, showTurn: true),
+    question: _w2ThreeBetQuestion,
+    choices: const ['Call', 'Fold', 'Raise'],
+    correct: 2,
+    reason:
+        'AK suited is Premium in the starting chart. From CO, you can '
+        'reraise the 3 BB HJ open to build the pot in position. Calling '
+        'leaves the pot smaller, and folding gives up a Premium hand.',
+  ),
+  _day7ExampleV1(
+    2,
     "hand_discipline_apply",
     "pot_to_call",
     _day7PreflopV1("utg", "6d 2c", showTurn: true),

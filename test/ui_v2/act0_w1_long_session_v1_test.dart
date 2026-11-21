@@ -270,6 +270,66 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets('pre-Q9 save keeps World 2 credit and opens the new lesson', (
+    t,
+  ) async {
+    const q9 = 'w2_narrow_three_bet';
+    final state = Act0ShellStateV1.sample;
+    final earlier = [
+      for (final world in state.worlds.take(2))
+        for (final lesson in world.lessons)
+          if (lesson.lessonId != q9) lesson,
+    ];
+    final completed = [for (final lesson in earlier) ...lesson.courseTaskList];
+    final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+    final w3 = state.worldById('world_3').lessons.first;
+    SharedPreferences.setMockInitialValues({
+      'act0_welcome_completed_v1': true,
+      'intake_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 20,
+        'pendingDecisionAssistance': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+        'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+            .lineagePayload(),
+        'durableRetentionHistory': <Object>[],
+        'completedTaskIds': completed.map((task) => task.taskId).toList(),
+        'completedLessonIds': earlier.map((lesson) => lesson.lessonId).toList(),
+        'skippedTaskIds': <String>[],
+        'earnedXp': xp,
+        'selectedWorldId': 'world_3',
+        'selectedLessonId': w3.lessonId,
+        'selectedTaskId': w3.courseTaskList.first.taskId,
+      }),
+    });
+    t.view.physicalSize = const Size(393, 852);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.reset);
+    await _mount(t);
+    await t.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+    await t.pumpAndSettle();
+    expect(
+      await _tapFirst(
+        t,
+        _continueKeys.map((key) => find.byKey(Key(key))).toList(),
+      ),
+      isTrue,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, '${q9}_intro');
+    final saved = await _saved(t);
+    expect(
+      saved['completedTaskIds'],
+      unorderedEquals(completed.map((task) => task.taskId)),
+    );
+    expect(saved['earnedXp'], xp);
+    expect(saved['skippedTaskIds'], isEmpty);
+  });
+
   testWidgets('P8 keeps progress earned before the full hand moved', (
     tester,
   ) async {
@@ -916,7 +976,7 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 372 : 258);
+        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 377 : 263);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

@@ -3952,20 +3952,35 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
   required String handName,
   required List<Act0CardStateV1> cards,
   required int correctIndex,
+  bool cutoffFacingHijack = false,
 }) {
   final handCode = '${cards[0].rank}${cards[1].rank}o';
+  final opener = cutoffFacingHijack ? 'HJ' : 'CO';
+  final seatName = cutoffFacingHijack ? 'from CO' : 'on BTN';
   final wrongCallReason = cards[0].rank == 'A'
-      ? 'Calling 2.5 BB into a 4 BB pot on BTN with $handCode pays to play a weak ace that loses big pots when CO holds a stronger ace.'
-      : 'Calling 2.5 BB into a 4 BB pot on BTN with $handCode risks chips with a weak offsuit hand that loses big pots to CO\'s stronger high cards.';
+      ? 'Calling 2.5 BB into a 4 BB pot $seatName with $handCode pays to play a weak ace that loses big pots when $opener holds a stronger ace.'
+      : 'Calling 2.5 BB into a 4 BB pot $seatName with $handCode risks chips with a weak offsuit hand that loses big pots to $opener\'s stronger high cards.';
   return base.copyWith(
-    caption: 'CO raised. You are on the Button with $handName.',
+    caption: cutoffFacingHijack
+        ? 'HJ raised. You are in CO with $handName.'
+        : 'CO raised. You are on the Button with $handName.',
     hint: 'Read your two cards and find their group in the chart.',
     feedbackReason:
-        'The Sharky starting chart puts $handName in the Weak group against a CO raise.',
-    table: base.table.copyWith(
-      centerLabel: 'Facing the first raise',
-      heroCards: cards,
-    ),
+        'The Sharky starting chart puts $handName in the Weak group against a $opener raise.',
+    table: cutoffFacingHijack
+        ? _act0FacingOpenTableV1(
+            base.table.copyWith(
+              centerLabel: 'Facing the first raise',
+              heroCards: cards,
+              highlightedSeatIds: const [],
+            ),
+            opener: 'hj',
+            hero: 'co',
+          )
+        : base.table.copyWith(
+            centerLabel: 'Facing the first raise',
+            heroCards: cards,
+          ),
     options: _act0AuthoredCorrectOptionAtV1(
       [
         Act0RunnerOptionV1(
@@ -3976,7 +3991,7 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
           quality: Act0FeedbackQualityV1.correct,
           feedbackTitle: 'Use the Weak row.',
           feedbackReason:
-              'The Sharky starting chart puts $handName in the Weak group and folds it on BTN against a CO raise.',
+              'The Sharky starting chart puts $handName in the Weak group and folds it $seatName against a $opener raise.',
         ),
         Act0RunnerOptionV1(
           id: 'call',
@@ -3988,6 +4003,19 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
           feedbackTitle: 'Read the cards before the seat.',
           feedbackReason: wrongCallReason,
         ),
+        if (cutoffFacingHijack)
+          Act0RunnerOptionV1(
+            id: 'raise',
+            label: 'Reraise to 7.5 BB',
+            isCorrect: false,
+            preferredLabel: 'Fold',
+            betterAnswerLabel: 'Fold',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Keep the chips for a stronger hand.',
+            feedbackReason:
+                'Reraising $handCode from CO puts 7.5 BB at risk against '
+                'an HJ opener who can continue with much stronger hands.',
+          ),
       ],
       correctOptionId: 'fold',
       correctIndex: correctIndex,
@@ -4572,3 +4600,193 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
     ),
   ],
 );
+
+Act0LessonTaskV1 _w2WeakAceTask(Act0LessonTaskV1 task) {
+  final extra = switch (task.taskId) {
+    'w3_dominated_fold' => (
+      label: 'Reraise to 7.5 BB',
+      reason:
+          'Reraising to 7.5 BB with A6o on BTN risks more against CO. '
+          'A better ace can continue and leave you with the worse pair.',
+    ),
+    'w3_strong_continue' => (
+      label: 'Reraise to 7.5 BB',
+      reason:
+          'Against the 2.5 BB HJ open, the BTN call row includes KQo. '
+          'Reraising instead risks five extra blinds against better hands.',
+    ),
+    'w3_dominated_recap' => (
+      label: 'Reraise to 7.5 BB',
+      reason:
+          'A5o on BTN can lose to higher aces in CO. Putting in 7.5 BB '
+          'instead of folding makes that kicker problem costlier.',
+    ),
+    _ => null,
+  };
+  if (extra == null) return task;
+  return Act0LessonTaskV1(
+    taskId: task.taskId,
+    title: task.title,
+    phase: task.phase,
+    runner: _w2WithDistractor(
+      task.runner,
+      id: 'raise',
+      label: extra.label,
+      reason: extra.reason,
+    ),
+    rewardXp: task.rewardXp,
+    stepKind: task.stepKind,
+    taskFamily: task.taskFamily,
+    tablePresentation: task.tablePresentation,
+    repairOnly: task.repairOnly,
+    summary: task.summary,
+    lockedSummary: task.lockedSummary,
+  );
+}
+
+Act0RunnerStateV1 _w2WithDistractor(
+  Act0RunnerStateV1 runner, {
+  required String id,
+  required String label,
+  required String reason,
+}) {
+  final answer = runner.options.firstWhere(act0RunnerOptionIsAuthoredCorrectV1);
+  return runner.copyWith(
+    options: [
+      ...runner.options,
+      Act0RunnerOptionV1(
+        id: id,
+        label: label,
+        isCorrect: false,
+        preferredLabel: answer.label,
+        betterAnswerLabel: answer.label,
+        feedbackTitle: 'Read the hand and earlier action.',
+        feedbackReason: reason,
+        quality: Act0FeedbackQualityV1.wrong,
+      ),
+    ],
+  );
+}
+
+Act0RunnerStateV1 _w2ReasonDecision(
+  Act0RunnerStateV1 runner, {
+  required String question,
+  required String correctTitle,
+  required List<({String id, String label, String reason})> choices,
+  required int correct,
+}) => runner.copyWith(
+  question: question,
+  options: [
+    for (final (index, choice) in choices.indexed)
+      Act0RunnerOptionV1(
+        id: choice.id,
+        label: choice.label,
+        isCorrect: index == correct,
+        preferredLabel: choices[correct].label,
+        betterAnswerLabel: index == correct ? '' : choices[correct].label,
+        feedbackTitle: index == correct ? correctTitle : 'Use the table facts.',
+        feedbackReason: choice.reason,
+        quality: index == correct
+            ? Act0FeedbackQualityV1.correct
+            : Act0FeedbackQualityV1.wrong,
+      ),
+  ],
+  teachingSteps: const [],
+);
+
+Act0RunnerStateV1 _w2UnopenedSeat(
+  Act0RunnerStateV1 runner,
+  String hero,
+  String hand,
+) {
+  final authored = _day7PreflopV1(hero, hand, showTurn: true);
+  return runner.copyWith(
+    table: authored.copyWith(
+      centerLabel: runner.table.centerLabel,
+      highlightedCardIds: runner.table.highlightedCardIds,
+    ),
+  );
+}
+
+const _w2ThreeBetLessonId = 'w2_narrow_three_bet';
+const _w2ThreeBetQuestion =
+    'Under the narrow 3-bet rule, how should you respond to the open?';
+
+final _w2ThreeBetIntroRunner = _world3BucketsIntroRunner.copyWith(
+  lessonId: _w2ThreeBetLessonId,
+  lessonTitle: 'The narrow 3-bet',
+  caption: 'Face one opening raise with nobody else in the pot.',
+  hint: '',
+  question: 'What changes when you raise over an open?',
+  table: _day7PreflopV1('co', 'Ah Ac', opener: 'hj', showTurn: true),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'A 3-bet is a raise over the first raise.',
+      body:
+          'In these examples, HJ or CO opens once and you have position '
+          'against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). '
+          'Call with the other Strong hands: JJ, TT, AQs, and AJs. '
+          'With Medium hands, call from BTN with KQo, KJs, or QJs. '
+          'Fold the rest of Medium, including all Medium hands from CO, '
+          'and fold Weak hands. '
+          'If other players enter or you are out of position, the example no '
+          'longer applies.',
+    ),
+  ],
+);
+
+Act0RunnerStateV1 _w2ThreeBetDecision({
+  required String hero,
+  required String opener,
+  required String cards,
+  required String correctId,
+  required String raiseReason,
+  required String callReason,
+  required String foldReason,
+  double openBb = 2.5,
+}) {
+  final labels = {
+    'raise': 'Reraise to ${_act0BbLabelV1(openBb * 3)}',
+    'call': 'Call ${_act0BbLabelV1(openBb)}',
+    'fold': 'Fold',
+  };
+  final reasons = {
+    'raise': raiseReason,
+    'call': callReason,
+    'fold': foldReason,
+  };
+  return _w2ThreeBetIntroRunner.copyWith(
+    phase: Act0LessonPhaseV1.drill,
+    caption:
+        '${opener.toUpperCase()} opened to ${_act0BbLabelV1(openBb)}. '
+        'No one has called.',
+    question: _w2ThreeBetQuestion,
+    teachingSteps: const [],
+    table: _act0FacingOpenTableV1(
+      _legacyFacingOpenTableV1.copyWith(
+        heroCards: _act0LessonCardsV1(cards),
+        centerLabel: 'Facing one open',
+      ),
+      opener: opener,
+      hero: hero,
+      openingBb: openBb,
+    ),
+    options: [
+      for (final id in reasons.keys)
+        Act0RunnerOptionV1(
+          id: id,
+          label: labels[id]!,
+          isCorrect: correctId == id,
+          preferredLabel: labels[correctId]!,
+          betterAnswerLabel: correctId == id ? '' : labels[correctId]!,
+          quality: correctId == id
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          feedbackTitle: correctId == id
+              ? 'Correct.'
+              : 'Check the response rule.',
+          feedbackReason: reasons[id]!,
+        ),
+    ],
+  );
+}
