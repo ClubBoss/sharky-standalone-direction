@@ -2028,15 +2028,27 @@ void main() {
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
     expect(lessons, hasLength(29));
-    expect(tasks, hasLength(176));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(176));
+    expect(tasks, hasLength(178));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(178));
+    final sizingLesson = worlds.last.lessons.singleWhere(
+      (lesson) => lesson.lessonId == 'small_half_pot',
+    );
+    expect(sizingLesson.courseTaskList.map((task) => task.taskId), [
+      'w4_sizing_intro',
+      'w4_small_bet',
+      'w4_half_pot_bet',
+      'w4_pot_bet',
+      'w4_min_raise_preflop',
+      'w4_min_raise_postflop',
+      'w4_sizing_recap',
+    ]);
     expect(
       tasks.where(
         (task) =>
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(141),
+      hasLength(143),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();
@@ -2413,6 +2425,12 @@ void main() {
     );
     expect(visited, required);
     expect(answeredIds, assessedIds);
+    expect(
+      visited.where(
+        (id) => sizingLesson.courseTaskList.any((task) => task.taskId == id),
+      ),
+      sizingLesson.courseTaskList.map((task) => task.taskId),
+    );
     expect(w4PurposeDefinitionOffered, isTrue);
     expect(w4ChoicesAfterDefinition, {'w4_value_purpose', 'w4_bluff_purpose'});
     expect(

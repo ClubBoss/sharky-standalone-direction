@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 378 tasks · W1–W12
+SHARKY POKER — EN learning content, 380 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -2365,6 +2365,41 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: 6 BB
   - [wrong] 3 BB — Check the clue again. Three is half of six. A pot-size bet is equal to all six.
     BETTER ANSWER: 6 BB
+
+TASK w4_min_raise_preflop [drill] Preflop minimum raise
+CAPTION: HJ raises to 3 BB over the 1 BB blind. Your turn from CO.
+TEACH: Minimum raise rule. A legal raise must add at least the size of the last bet or raise. Over a 1 BB blind, a raise to 3 BB adds 2 BB, so the smallest legal reraise is 5 BB total.
+TEACH LABELS: +2 BB increase, 5 BB minimum
+TEACH TABLE: Preflop | You As Ks | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Seat focus bb, hj, co | Center Minimum reraise | Facts no applicable hand facts
+Q: What is the smallest legal reraise total from CO?
+HINT [theoryOnly]: Find how much HJ added above the 1 BB blind, then add at least that much to 3 BB.
+TABLE: Preflop | You As Ks | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Seat focus hj, co | Center Minimum reraise | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 97 BB raise 3 BB | CO As Ks stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB
+  - [wrong] Raise to 4 BB — Too small to be legal. 4 BB adds 1 BB to HJ's 3 BB raise, which is below the 2 BB increase from 1 BB to 3 BB, so 4 BB is illegal.
+    BETTER ANSWER: Raise to 5 BB
+    REPAIR LABELS: Minimum raise
+  + [correct] Raise to 5 BB — Legal minimum reraise. HJ raised 2 BB over the 1 BB blind (1 BB to 3 BB), so adding 2 BB makes 5 BB the smallest legal reraise. The rule sets the minimum, and with A-K suited you would usually choose a larger 3-bet here.
+    REPAIR LABELS: Minimum raise
+  - [wrong] Raise to 6 BB — Larger than the minimum. 6 BB adds 3 BB to HJ's 3 BB raise, which is legal but 1 BB larger than the 5 BB minimum reraise.
+    BETTER ANSWER: Raise to 5 BB
+    REPAIR LABELS: Minimum raise
+
+TASK w4_min_raise_postflop [drill] Flop minimum raise
+CAPTION: BB bets 4 BB on the flop into a 6.5 BB pot. Your turn from CO.
+Q: BB bets 4 BB on the flop. What is the smallest legal raise total from CO?
+HINT [theoryOnly]: Add at least the size of BB's 4 BB bet on top of the 4 BB call.
+TABLE: Flop | You Ah Qd | Board As 8c 3d | Pot 10.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Seat focus bb, co | Center Minimum raise | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Qd stack 97 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 93 BB bet 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB bets 4 BB
+  - [wrong] 6 BB — Too small to be legal. 6 BB adds 2 BB to BB's 4 BB bet, which is below the 4 BB bet size, so 6 BB is illegal.
+    BETTER ANSWER: 8 BB
+    REPAIR LABELS: Minimum raise
+  - [wrong] 12 BB — Larger than the minimum. 12 BB adds 8 BB to BB's 4 BB bet, which is legal but 4 BB larger than the 8 BB minimum raise.
+    BETTER ANSWER: 8 BB
+    REPAIR LABELS: Minimum raise
+  + [correct] 8 BB — Legal minimum raise. BB bet 4 BB on the flop, so adding 4 BB on top of 4 BB makes 8 BB the smallest legal raise.
+    REPAIR LABELS: Minimum raise
 
 TASK w4_sizing_recap [review] Sizing recap
 CAPTION: Lesson learned: size sets pressure and price.
@@ -6409,6 +6444,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3.75 BB · 
   - [wrong] 8 BB — Look again. The pot is 8 BB. Half of 8 BB is 4 BB.
     BETTER ANSWER: 4 BB
     FEEDBACK TABLE: Flop | You Kd 9d | Board Kh 7s 4h | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+
+TASK spaced_review_w4_small_half_pot_minimum_raise_v1 [drill] Review decision
+DAY 7 FAMILY: minimum_raise
+Q: BB bets 3 BB on the flop. What is the smallest legal raise total from CO?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc Jd | Board Kd 7c 2s | Pot 9 BB | Seat CO | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc Jd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 94.25 BB bet 3 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB bets 3 BB
+  - [wrong] 4.5 BB — Look again. BB bet 3 BB on the flop, so adding 3 BB on top of 3 BB makes 6 BB the smallest legal raise.
+    BETTER ANSWER: 6 BB
+    FEEDBACK TABLE: Flop | You Kc Jd | Board Kd 7c 2s | Pot 9 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] 6 BB — Correct. BB bet 3 BB on the flop, so adding 3 BB on top of 3 BB makes 6 BB the smallest legal raise.
+    FEEDBACK TABLE: Flop | You Kc Jd | Board Kd 7c 2s | Pot 9 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] 9 BB — Look again. BB bet 3 BB on the flop, so adding 3 BB on top of 3 BB makes 6 BB the smallest legal raise.
+    BETTER ANSWER: 6 BB
+    FEEDBACK TABLE: Flop | You Kc Jd | Board Kd 7c 2s | Pot 9 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 ===== WORLD 4 · LESSON call_price · Call price =====
 

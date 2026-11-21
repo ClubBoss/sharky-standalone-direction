@@ -3421,6 +3421,22 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.sizing,
       ),
       Act0LessonTaskV1(
+        taskId: 'w4_min_raise_preflop',
+        title: 'Preflop minimum raise',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world4MinRaisePreflopRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_min_raise_postflop',
+        title: 'Flop minimum raise',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world4MinRaisePostflopRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w4_sizing_recap',
         title: 'Sizing recap',
         phase: Act0LessonPhaseV1.review,

@@ -11,7 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
-    show q3AppendedChoicesV1, w7AppliedTaskIdsV1;
+    show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
@@ -91,9 +91,13 @@ void main() {
   test(
     'canonical W1-W12 census preserves raw IDs and legacy declared mappings',
     () {
-      final allRows = _assessedRows(
-        historical: true,
-      ).where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId)).toList();
+      final allRows = _assessedRows(historical: true)
+          .where(
+            (row) =>
+                !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
+                !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+          )
+          .toList();
       expect(allRows, hasLength(294));
       expect(
         allRows
@@ -465,9 +469,13 @@ void main() {
   });
 
   test('both ASM05 scenarios allow only their own familiar replay', () {
-    final rows = _assessedRows(
-      historical: true,
-    ).where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId)).toList();
+    final rows = _assessedRows(historical: true)
+        .where(
+          (row) =>
+              !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
+              !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+        )
+        .toList();
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
@@ -843,9 +851,9 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(302));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(302));
-    expect(allChoices, hasLength(478));
+    expect(rows, hasLength(304));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(304));
+    expect(allChoices, hasLength(482));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -913,7 +921,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(444));
+    expect(foundationDefaults, hasLength(448));
     expect(unknown, hasLength(10));
     expect(
       admitted.length +

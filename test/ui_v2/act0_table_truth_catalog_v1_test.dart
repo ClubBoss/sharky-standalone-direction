@@ -164,8 +164,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 141),
-      ('D3.to_call_completeness', 98),
+      ('D2.pot_feasibility', 143),
+      ('D3.to_call_completeness', 100),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -898,11 +898,77 @@ void main() {
         ],
       };
     }
+    expectedComparison['w4_min_raise_preflop'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        {
+          'id': 'four_bb',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': <String>[],
+          'repairCards': <String>[],
+          'repairLabels': <String>['Minimum raise'],
+        },
+        {
+          'id': 'five_bb',
+          'correct': true,
+          'quality': 'correct',
+          'seat': null,
+          'repairSeats': <String>[],
+          'repairCards': <String>[],
+          'repairLabels': <String>['Minimum raise'],
+        },
+        {
+          'id': 'six_bb',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': <String>[],
+          'repairCards': <String>[],
+          'repairLabels': <String>['Minimum raise'],
+        },
+      ],
+    };
+    expectedComparison['w4_min_raise_postflop'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        {
+          'id': 'six_bb',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': <String>[],
+          'repairCards': <String>[],
+          'repairLabels': <String>['Minimum raise'],
+        },
+        {
+          'id': 'twelve_bb',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': <String>[],
+          'repairCards': <String>[],
+          'repairLabels': <String>['Minimum raise'],
+        },
+        {
+          'id': 'eight_bb',
+          'correct': true,
+          'quality': 'correct',
+          'seat': null,
+          'repairSeats': <String>[],
+          'repairCards': <String>[],
+          'repairLabels': <String>['Minimum raise'],
+        },
+      ],
+    };
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2 and Q7 contracts may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7 and Q11 contracts may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {
