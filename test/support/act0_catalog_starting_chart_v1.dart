@@ -142,7 +142,10 @@ class CatalogStartingChart {
         return null;
       }
       if (group == 'Premium' || code == 'AKo') return 'raise';
-      if (group == 'Medium' && row!.seats.contains(seat)) return 'call';
+      if (group == 'Strong') return 'call';
+      if (group == 'Medium' && seat == caller && callHands.contains(code)) {
+        return 'call';
+      }
       return 'fold';
     }
     if (raisers.isEmpty && _openingSeats.contains(seat)) {

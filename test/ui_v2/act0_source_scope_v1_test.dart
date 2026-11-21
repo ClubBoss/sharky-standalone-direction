@@ -285,8 +285,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(384));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(384));
+    expect(tasks, hasLength(385));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(385));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -505,7 +505,7 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 263); // Authored contexts, not certified replay histories.
+    expect(played, 264); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,

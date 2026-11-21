@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 384 tasks · W1–W12
+SHARKY POKER — EN learning content, 385 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -1571,7 +1571,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
 
 TASK w2_narrow_three_bet_intro [theory] One open ahead
 CAPTION: Face one opening raise with nobody else in the pot.
-TEACH: A 3-bet is a raise over the first raise. In these examples, HJ or CO opens once and you have position against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). Call with Medium hands that the starting chart lets you open from your seat. Fold the other hands in this narrow model. If other players enter or you are out of position, the example no longer applies.
+TEACH: A 3-bet is a raise over the first raise. In these examples, HJ or CO opens once and you have position against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). Call with the other Strong hands: JJ, TT, AQs, and AJs. With Medium hands, call from BTN with KQo, KJs, or QJs. Fold the rest of Medium, including all Medium hands from CO, and fold Weak hands. If other players enter or you are out of position, the example no longer applies.
 Q: What changes when you raise over an open?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ah Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
@@ -1601,9 +1601,22 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB
   - [wrong] QJs is in the top group — Use the table facts. QJs is Medium. Treating it as Premium on BTN can put 5 BB more than a call at risk against CO.
     BETTER ANSWER: QJs is Medium and you act after CO
-  + [correct] QJs is Medium and you act after CO — QJs can call in position. QJs is in the CO–BTN row. Calling 2.5 BB keeps the pot smaller while you have position against CO.
+  + [correct] QJs is Medium and you act after CO — QJs can call in position. The chart calls one CO open with QJs from BTN. Paying 2.5 BB keeps the pot smaller while you act after CO.
   - [wrong] Nobody has raised yet — Use the table facts. CO already raised to 2.5 BB. Treating this as an unopened pot can turn a call into a more expensive reraise.
     BETTER ANSWER: QJs is Medium and you act after CO
+
+TASK w2_narrow_three_bet_strong [drill] Tens facing an HJ open
+CAPTION: HJ opened to 2.5 BB. No one has called.
+Q: Under the narrow 3-bet rule, how should you respond to the open?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You Th Tc | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Seat focus co, btn | Card focus hero_0, hero_1 | Center Facing one open | Facts pocket pair
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO Th Tc stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO acts
+  - [wrong] Reraise to 7.5 BB — Check the response rule. TT is Strong on CO. Reraising to 7.5 BB risks 5 BB more than the call against HJ.
+    BETTER ANSWER: Call 2.5 BB
+  + [correct] Call 2.5 BB — Correct. TT is Strong and CO acts after HJ on the flop if both continue. Calling 2.5 BB keeps the opening price.
+  - [wrong] Fold — Check the response rule. Folding TT on CO gives up a call with a Strong pair against one 2.5 BB open from HJ.
+    BETTER ANSWER: Call 2.5 BB
 
 TASK w2_narrow_three_bet_fold [review] A high card facing a raise
 ENTRY: drill

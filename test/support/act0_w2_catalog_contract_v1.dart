@@ -6,6 +6,11 @@ const w2Q9ChoiceContractV1 = <String, List<List<Object?>>>{
     ["call", "Call 2.5 BB", false, "wrong", "Reraise to 7.5 BB"],
     ["fold", "Fold", false, "wrong", "Reraise to 7.5 BB"],
   ],
+  "w2_narrow_three_bet_strong": [
+    ["raise", "Reraise to 7.5 BB", false, "wrong", "Call 2.5 BB"],
+    ["call", "Call 2.5 BB", true, "correct", "Call 2.5 BB"],
+    ["fold", "Fold", false, "wrong", "Call 2.5 BB"],
+  ],
   "w2_narrow_three_bet_medium": [
     [
       "premium",

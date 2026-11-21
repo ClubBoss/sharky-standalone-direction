@@ -2707,7 +2707,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
     title: 'The narrow 3-bet',
     subtitle: 'Choose when to reraise, call, or fold against one open.',
     phaseLabel: 'Reraise',
-    rewardXp: 36,
+    rewardXp: 45,
     sourceTasks: [
       Act0LessonTaskV1(
         taskId: 'intro',
@@ -2763,8 +2763,8 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
               id: 'call',
               label: 'QJs is Medium and you act after CO',
               reason:
-                  'QJs is in the CO–BTN row. Calling 2.5 BB keeps the '
-                  'pot smaller while you have position against CO.',
+                  'The chart calls one CO open with QJs from BTN. Paying '
+                  '2.5 BB keeps the pot smaller while you act after CO.',
             ),
             (
               id: 'unopened',
@@ -2775,6 +2775,28 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             ),
           ],
           correct: 1,
+        ),
+        rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'strong',
+        title: 'Tens facing an HJ open',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w2ThreeBetDecision(
+          hero: 'co',
+          opener: 'hj',
+          cards: 'Th Tc',
+          correctId: 'call',
+          raiseReason:
+              'TT is Strong on CO. Reraising to 7.5 BB risks '
+              '5 BB more than the call against HJ.',
+          callReason:
+              'TT is Strong and CO acts after HJ on the flop '
+              'if both continue. Calling 2.5 BB keeps the opening price.',
+          foldReason:
+              'Folding TT on CO gives up a call with a Strong '
+              'pair against one 2.5 BB open from HJ.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,

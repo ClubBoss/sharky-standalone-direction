@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 147),
-      ('D3.to_call_completeness', 104),
+      ('D2.pot_feasibility', 148),
+      ('D3.to_call_completeness', 105),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -999,6 +999,7 @@ void main() {
     for (final (id, xp, family, choices, correct) in [
       ('intro', 6, 'learn', <String>[], ''),
       ('premium', 9, 'decision', ['raise', 'call', 'fold'], 'raise'),
+      ('strong', 9, 'decision', ['raise', 'call', 'fold'], 'call'),
       ('medium', 9, 'decision', ['premium', 'call', 'unopened'], 'call'),
       ('fold', 12, 'review', ['raise', 'call', 'fold'], 'fold'),
     ]) {

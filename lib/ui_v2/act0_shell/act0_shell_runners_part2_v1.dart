@@ -4725,8 +4725,10 @@ final _w2ThreeBetIntroRunner = _world3BucketsIntroRunner.copyWith(
       body:
           'In these examples, HJ or CO opens once and you have position '
           'against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). '
-          'Call with Medium hands that the starting chart lets you '
-          'open from your seat. Fold the other hands in this narrow model. '
+          'Call with the other Strong hands: JJ, TT, AQs, and AJs. '
+          'With Medium hands, call from BTN with KQo, KJs, or QJs. '
+          'Fold the rest of Medium, including all Medium hands from CO, '
+          'and fold Weak hands. '
           'If other players enter or you are out of position, the example no '
           'longer applies.',
     ),
