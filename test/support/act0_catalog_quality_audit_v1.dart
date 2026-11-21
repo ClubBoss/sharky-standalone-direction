@@ -150,7 +150,6 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
   final tableCounts = <String, int>{};
   final qqCountsByWorld = <String, int>{};
   final seenTheoryByLesson = <String, Set<String>>{};
-  final seenWrongReasonTaskId = <String, String>{};
   final lessonScoredFormats = <String, List<String>>{};
   final lessonWordTotals = <String, int>{};
   final lessonScoredTotals = <String, int>{};
@@ -284,27 +283,17 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
         findings.add('20.hero_qq_per_world|$worldId|${task.taskId}');
       }
     }
-
-    // G1.20 (rule 21): Duplicate wrong-option feedbackReason across tasks.
-    if (!task.repairOnly && r.options.isNotEmpty) {
-      for (final o in r.options.where((o) => !o.isCorrect)) {
-        count('21.duplicate_wrong_reason');
-        final norm = o.feedbackReason.trim().toLowerCase().replaceAll(
-          _whitespacePattern,
-          ' ',
-        );
-        if (norm.length >= 20) {
-          final firstTaskId = seenWrongReasonTaskId.putIfAbsent(
-            norm,
-            () => task.taskId,
-          );
-          if (firstTaskId != task.taskId) {
-            findings.add('21.duplicate_wrong_reason|${task.taskId}|${o.id}');
-          }
-        }
-      }
-    }
   }
+
+  // Keep the original course ordering and anchor. Day 7 can reuse neither
+  // a course reason nor a reason from another review task. A review also
+  // needs distinct feedback per choice, including binary reviews.
+  auditDuplicateWrongReasonsV1(
+    course: targetRows,
+    day7: rows == null ? day7CatalogTasks : const [],
+    count: count,
+    findings: findings,
+  );
 
   for (final row
       in rows ??
@@ -376,4 +365,49 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
     checks: checks,
     findings: findings,
   );
+}
+
+void auditDuplicateWrongReasonsV1({
+  required Iterable<CatalogTask> course,
+  required Iterable<CatalogTask> day7,
+  required void Function(String) count,
+  required Set<String> findings,
+}) {
+  const rule = '21.duplicate_wrong_reason';
+  final firstTaskByReason = <String, String>{};
+  void scan(CatalogTask row, {required bool review}) {
+    final task = row.task;
+    if (task.repairOnly) return;
+    final reasons = {
+      for (final option in task.runner.options)
+        option.id: option.feedbackReason.trim().toLowerCase().replaceAll(
+          _whitespacePattern,
+          ' ',
+        ),
+    };
+    final occurrences = <String, int>{};
+    for (final reason in reasons.values) {
+      occurrences.update(reason, (n) => n + 1, ifAbsent: () => 1);
+    }
+    for (final option in task.runner.options.where((o) => !o.isCorrect)) {
+      count(rule);
+      final reason = reasons[option.id]!;
+      final repeatedInTask =
+          review && reason.isNotEmpty && occurrences[reason]! > 1;
+      final repeatedAcrossTasks =
+          reason.length >= 20 &&
+          firstTaskByReason.putIfAbsent(reason, () => task.taskId) !=
+              task.taskId;
+      if (repeatedInTask || repeatedAcrossTasks) {
+        findings.add('$rule|${task.taskId}|${option.id}');
+      }
+    }
+  }
+
+  for (final row in course) {
+    scan(row, review: false);
+  }
+  for (final row in day7) {
+    scan(row, review: true);
+  }
 }

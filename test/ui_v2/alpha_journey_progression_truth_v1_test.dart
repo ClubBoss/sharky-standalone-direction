@@ -86,19 +86,17 @@ void main() {
         jsonDecode(File(_fixturePath).readAsStringSync())
             as Map<String, dynamic>;
     expect(fixture['schema'], 'act0_progression_fixture_v1');
-    final lessonIds = (fixture['completed_lesson_ids'] as List<dynamic>)
-        .map((value) => value.toString())
-        .toList(growable: false);
     final state = Act0ShellStateV1.sample;
     final world = state.worldById(fixture['world_id'] as String);
-    final completedTaskIds = <String>[
-      for (final lessonId in lessonIds)
-        ...world.lessons
-            .firstWhere((lesson) => lesson.lessonId == lessonId)
-            .taskList
-            .map((task) => task.taskId),
-    ];
     final target = fixture['target'] as Map<String, dynamic>;
+    final prerequisites = world.lessons
+        .takeWhile((lesson) => lesson.lessonId != target['lesson_id'])
+        .toList();
+    final lessonIds = prerequisites.map((lesson) => lesson.lessonId).toList();
+    final completedTaskIds = [
+      for (final lesson in prerequisites)
+        for (final task in lesson.courseTaskList) task.taskId,
+    ];
     return <String, Object>{
       'schemaVersion': 16,
       'completedTaskIds': completedTaskIds,
@@ -135,7 +133,7 @@ void main() {
       );
 
       await openLearn(tester);
-      expect(find.textContaining('0 of 10 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 12 lessons'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_current_mission_card')),
         findsOneWidget,
@@ -187,12 +185,7 @@ void main() {
       expect(runner.selectedLessonId, 'what_poker_is');
       expect(runner.selectedTaskId, 'what_poker_is_theory');
       expect(runner.runner.phase, Act0LessonPhaseV1.theory);
-      expect(
-        find.textContaining(
-          'Blinds are forced bets. SB and BB post them before anyone acts.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.textContaining('Players share the board.'), findsOneWidget);
 
       bool atTaskWithOptions(String taskId) {
         final current = tester.widget<Act0LessonRunnerShellV1>(
@@ -332,7 +325,7 @@ void main() {
       });
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('1 of 10 lessons'), findsOneWidget);
+      expect(find.textContaining('1 of 12 lessons'), findsOneWidget);
       expect(find.text('Cards, ranks & suits'), findsWidgets);
       await tester.tap(find.text('All lessons'));
       await tester.pumpAndSettle();
@@ -365,7 +358,7 @@ void main() {
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
       expect(find.text('First Table Guide'), findsWidgets);
-      expect(find.textContaining('0 of 10 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 12 lessons'), findsOneWidget);
     },
   );
 
@@ -374,7 +367,7 @@ void main() {
     (tester) async {
       await seedValidActionPrecondition();
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('7 of 10 lessons'), findsOneWidget);
+      expect(find.textContaining('8 of 12 lessons'), findsOneWidget);
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_current_mission_card')),

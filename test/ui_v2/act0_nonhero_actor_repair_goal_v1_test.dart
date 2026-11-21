@@ -14,19 +14,19 @@ import '../support/act0_authored_repair_goal_fixture_v1.dart';
 
 const _subjects = [
   (
-    lesson: 'blinds_action_order',
+    lesson: 'blinds_order_practice',
     task: 'blinds_first_actor',
     choice: 'btn',
     goal: 'six_max_initial_preflop_first_actor',
   ),
   (
-    lesson: 'blinds_action_order',
+    lesson: 'blinds_order_practice',
     task: 'blinds_last_actor',
     choice: 'sb',
     goal: 'six_max_unraised_initial_pass_bb_option',
   ),
   (
-    lesson: 'blinds_action_order',
+    lesson: 'blinds_order_practice',
     task: 'blinds_review',
     choice: 'btn',
     goal: 'six_max_initial_preflop_first_actor',

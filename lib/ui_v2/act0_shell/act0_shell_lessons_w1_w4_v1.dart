@@ -3076,7 +3076,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
           ),
           const {
             'fold':
-                'Folding KQo on BTN against HJ\'s 2.5 BB open into a 4 BB pot gives up a profitable in-position call with a strong broadway hand.',
+                'HJ opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.',
           },
         ),
         rewardXp: 9,
@@ -3583,7 +3583,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             ),
             const {
               'fold':
-                  'Folding KQo on BTN against CO\'s 2.5 BB open into a 4 BB pot surrenders a profitable in-position continue with strong high-card value.',
+                  'CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.',
             },
           ),
           id: 'raise',
@@ -3955,7 +3955,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         runner: _w2WithDistractor(
           _act0WithWrongFeedbackReasonsV1(_world2BorderlineContinueRunner, const {
             'fold':
-                'Folding QJs on BTN against CO\'s 2.5 BB open into a 4 BB pot gives up a profitable in-position call with suited broadway playability.',
+                'CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding QJs on BTN gives up the call the Sharky starting chart allows against one CO open.',
           }),
           id: 'raise',
           label: 'Reraise to 7.5 BB',

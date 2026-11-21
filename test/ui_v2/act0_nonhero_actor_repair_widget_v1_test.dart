@@ -29,9 +29,9 @@ const _key = 'act0_shell_progress_v1';
 final _decisionGeometry = <String, Object?>{};
 var _frameSequence = 0;
 const _subjects = [
-  (lesson: 'blinds_action_order', task: 'blinds_first_actor', wrong: 'btn'),
-  (lesson: 'blinds_action_order', task: 'blinds_last_actor', wrong: 'sb'),
-  (lesson: 'blinds_action_order', task: 'blinds_review', wrong: 'btn'),
+  (lesson: 'blinds_order_practice', task: 'blinds_first_actor', wrong: 'btn'),
+  (lesson: 'blinds_order_practice', task: 'blinds_last_actor', wrong: 'sb'),
+  (lesson: 'blinds_order_practice', task: 'blinds_review', wrong: 'btn'),
   (lesson: 'blinds_action_order', task: 'positions_utg', wrong: 'hj'),
 ];
 

@@ -11,6 +11,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.",
+    wrongReasons: const {
+      0: 'Your cards are at CO. The marker is one seat later, so choosing your seat confuses two different clues.',
+      2: 'SB posted the small blind next to BTN. The blind post does not identify the dealer seat.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -37,6 +41,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.",
+    wrongReasons: const {
+      0: 'The 6 BB was in the pot before the turn bet. Calling that amount would pay for chips already in the middle.',
+      1: 'The 8 BB includes the new bet and the earlier pot. You match only the 2 BB added on the turn.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -174,6 +182,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "BB acts first after the flop. BTN gets to see that decision before acting.",
+    wrongReasons: const {
+      0: 'BB acts first on this turn and has no decision to watch before acting. Choosing BB reverses the order.',
+      2: 'The preflop opener does not set turn order. With BB and BTN left, BB acts first on this street.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -191,6 +203,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'Only you and BB remain on J-6-3. BB checks first, so you see one decision before your turn.',
+    wrongReasons: const {
+      0: 'BB already checked on J-6-3. Counting zero misses the action you saw before deciding.',
+      2: 'Just one opponent reached this flop. Counting two includes a player who folded.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -992,6 +1008,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         'The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.',
+    wrongReasons: const {
+      0: 'Your aces make a full house with the three sevens. The other player adds a fourth seven and wins, so the full house cannot take this pot.',
+      1: 'The three board sevens are shared, but one player adds a fourth. A split would ignore the stronger four of a kind.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -1007,6 +1027,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.',
+    wrongReasons: const {
+      1: 'The other player adds a five to two board fives. That leaves three fives, which lose to your three eights plus a pair of fives.',
+      2: 'The board supplies a pair of fives and one eight. Your two eights are private and improve your hand, so the board cannot make a tie.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -1018,6 +1042,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.',
+    wrongReasons: const {
+      0: 'SB’s 0.5 BB went in before decisions began. Treating that post as a voluntary action puts SB in the wrong place.',
+      2: 'BTN has the dealer marker but acts after the early seats preflop. Starting there skips UTG.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -1060,6 +1088,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         'BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.',
+    wrongReasons: const {
+      0: 'BTN already called the 1 BB blind. Acting again from BTN would skip BB’s first voluntary choice.',
+      1: 'SB added 0.5 BB to match the blind. That call is complete, and BB still has a chance to act.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -1071,6 +1103,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.',
+    wrongReasons: const {
+      0: 'CO is one seat before the current marker. Moving it there would go against the direction of play.',
+      2: 'BB is two seats past the current marker. Moving straight there skips the occupied SB seat.',
+    },
   ),
   _day7ExampleV1(
     5,
