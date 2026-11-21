@@ -5433,7 +5433,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Set one low-friction focus target
 
 TASK w11_checkpoint_trigger_line [drill] Trigger line
-CAPTION: The blinds fold a lot. River bets are rarely bluffs.
+CAPTION: The blinds give up often. River bets are rarely bluffs.
 Q: Which change fits?
 HINT [theoryOnly]: Pick one prepared live cue first.
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts

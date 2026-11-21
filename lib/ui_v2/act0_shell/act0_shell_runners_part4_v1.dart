@@ -3620,7 +3620,7 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
 final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_trigger_line',
-  caption: 'The blinds fold a lot. River bets are rarely bluffs.',
+  caption: 'The blinds give up often. River bets are rarely bluffs.',
   hint: 'Pick one prepared live cue first.',
   question: 'Which change fits?',
   teachingSteps: const <Act0TeachingStepV1>[],
