@@ -1056,14 +1056,14 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'call_ignore_price',
-      label: 'Call just because you have top pair',
+      label: 'Call just because you paired the ten',
       isCorrect: false,
       preferredLabel: 'Call',
       betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Check the price too.',
       feedbackReason:
-          'T-7 has top pair, but the 1 BB price and 25% win chance make this call profitable. Skipping the calculation can cost chips against a bigger bet.',
+          'T-7 makes a pair of tens, but the 1 BB price and 25% win chance make this call profitable. Skipping the calculation can cost chips against a bigger bet.',
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
@@ -1121,14 +1121,14 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_ignore_price',
-      label: 'Fold because middle pair is too weak to call',
+      label: 'Fold because a pair of eights is too weak to call',
       isCorrect: false,
       preferredLabel: 'Fold',
       betterAnswerLabel: 'Fold',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Use the price.',
       feedbackReason:
-          'Your pair of eights can win. The 7 BB call needs about 33% equity in this model, above the stated 25%. Folding every middle pair would also lose profitable calls.',
+          'Your pair of eights can win. The 7 BB call needs about 33% win chance in this model, above the stated 25%. Folding every pair of eights would also lose profitable calls.',
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
@@ -1189,7 +1189,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Check both sides.',
       feedbackReason:
-          'The 1 BB price needs about 9% equity, and the pair of nines wins 15%. A small bet alone is no reason to call if your chance is even lower than the price.',
+          'The 1 BB price needs about 9% win chance, and the pair of nines wins 15%. A small bet alone is no reason to call if your chance is even lower than the price.',
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
@@ -1818,7 +1818,7 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Compare both numbers.',
       feedbackReason:
-          'A-9 wins 30% in the model. That covers the 2 BB price which needs about 22% equity. A small bet can still be too expensive if your chance of winning is low.',
+          'A-9 wins 30% in the model. That covers the 2 BB price which needs about 22% win chance. A small bet can still be too expensive if your chance of winning is low.',
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
