@@ -9,6 +9,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_claims_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
+import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -21,6 +22,8 @@ import '../support/act0_source_choreography_test_wait_v1.dart';
 // G1_UPDATE_SNAPSHOT=1 flutter test test/ui_v2/act0_catalog_truth_guards_v1_test.dart --plain-name 'W1–W12 catalog snapshot'
 const _snapshotPath = 'test/fixtures/act0_catalog_snapshot_v1.txt';
 const _baselinePath = 'test/fixtures/act0_catalog_truth_exceptions_v1.json';
+const _qualityBaselinePath =
+    'test/fixtures/act0_catalog_quality_baseline_v1.json';
 
 const _json = JsonEncoder.withIndent('  ');
 
@@ -694,5 +697,298 @@ void main() {
     expect(audit.checks['6.rendered_seat_cue'], greaterThan(15));
     expect(audit.checks['6.rendered_seat_controls'], greaterThan(10));
     _verifyBaseline(audit, 'render', 'render');
+  });
+
+  test('G1·11–G1·19 catalog quality baseline admits no regressions', () {
+    final report = runCatalogQualityAudit();
+    final baselineFile = File(_qualityBaselinePath);
+    if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
+      baselineFile.createSync(recursive: true);
+      baselineFile.writeAsStringSync(
+        '${_json.convert(report.toBaselineJson())}\n',
+      );
+      return;
+    }
+
+    expect(
+      baselineFile.existsSync(),
+      isTrue,
+      reason: 'Missing quality baseline $_qualityBaselinePath',
+    );
+    final baseline =
+        jsonDecode(baselineFile.readAsStringSync()) as Map<String, dynamic>;
+    final baselineBtn =
+        (baseline['btn_share_by_world'] as Map<String, dynamic>? ?? const {});
+    for (final entry in report.btnShareByWorld.entries) {
+      final recorded = baselineBtn[entry.key] as Map<String, dynamic>?;
+      expect(
+        recorded,
+        isNotNull,
+        reason: 'New world > 50% BTN: ${entry.key} (${entry.value})',
+      );
+      final recordedBtn = recorded!['btn_count'] as int;
+      final recordedTotal = recorded['table_tasks'] as int;
+      expect(
+        entry.value.btnCount,
+        lessThanOrEqualTo(recordedBtn),
+        reason:
+            'BTN task count regressed in ${entry.key}: ${entry.value.btnCount} > $recordedBtn',
+      );
+      expect(
+        entry.value.btnCount * recordedTotal,
+        lessThanOrEqualTo(recordedBtn * entry.value.tableTasks),
+        reason:
+            'BTN share regressed in ${entry.key}: ${entry.value.btnCount}/${entry.value.tableTasks} > $recordedBtn/$recordedTotal',
+      );
+    }
+    for (final entry in baselineBtn.entries) {
+      final current = report.btnShareByWorld[entry.key];
+      final recordedBtn =
+          (entry.value as Map<String, dynamic>)['btn_count'] as int;
+      expect(
+        current,
+        isNotNull,
+        reason:
+            'Remove cleared world from quality baseline btn_share_by_world: ${entry.key}',
+      );
+      expect(
+        current!.btnCount,
+        recordedBtn,
+        reason:
+            'Ratchet down btn_count in quality baseline for ${entry.key}: ${current.btnCount} < $recordedBtn',
+      );
+    }
+
+    final allowedFindings =
+        ((baseline['findings'] as List<dynamic>?) ?? const [])
+            .cast<String>()
+            .toSet();
+    final actualFindings = report.findings;
+    final added = actualFindings.difference(allowedFindings).toList()..sort();
+    final removed = allowedFindings.difference(actualFindings).toList()..sort();
+    expect(
+      added,
+      isEmpty,
+      reason: 'New G1 quality regressions:\n${added.take(30).join('\n')}',
+    );
+    expect(
+      removed,
+      isEmpty,
+      reason:
+          'Remove resolved G1 quality findings from baseline:\n${removed.take(30).join('\n')}',
+    );
+  });
+
+  group('G1 quality guards reject regressions', () {
+    CatalogTask syntheticRow(
+      CatalogTask base, {
+      String? id,
+      Act0LessonPhaseV1? phase,
+      Act0RunnerStateV1? runner,
+      String? lessonId,
+    }) {
+      final task = _withRunner(base, runner ?? base.task.runner, id: id);
+      return (
+        world: base.world,
+        lesson: lessonId == null
+            ? base.lesson
+            : Act0LessonCardV1(
+                lessonId: lessonId,
+                title: base.lesson.title,
+                subtitle: base.lesson.subtitle,
+                state: base.lesson.state,
+                phaseLabel: base.lesson.phaseLabel,
+                primaryCtaLabel: base.lesson.primaryCtaLabel,
+                isSelectable: base.lesson.isSelectable,
+                isLocked: base.lesson.isLocked,
+                rewardXp: base.lesson.rewardXp,
+                runner: runner ?? base.task.runner,
+              ),
+        lessonIndex: base.lessonIndex,
+        task: phase == null
+            ? task.task
+            : Act0LessonTaskV1(
+                taskId: task.task.taskId,
+                title: task.task.title,
+                phase: phase,
+                runner: task.task.runner,
+                rewardXp: task.task.rewardXp,
+                stepKind: task.task.stepKind,
+                taskFamily: task.task.taskFamily,
+                repairOnly: task.task.repairOnly,
+              ),
+      );
+    }
+
+    test(
+      'rejects BTN > 50%, two-option W1–W5, long intro, duplicate theory, jargon, extreme wrong option, single-format streak, length corridor, and duplicate QQ',
+      () {
+        final w2Base = _catalogRow('hand_discipline_buckets_premium');
+        final tableBtn = w2Base.task.runner.table.copyWith(heroSeatId: 'btn');
+        final longBody = List.filled(105, 'word').join(' ');
+        const dupTheory =
+            'This exact paragraph repeats inside the same lesson unnecessarily.';
+        final stmtOptions = <Act0RunnerOptionV1>[
+          const Act0RunnerOptionV1(
+            id: 'right_stmt',
+            label: 'Because position lets you see actions first',
+            isCorrect: true,
+            preferredLabel: 'Because position lets you see actions first',
+            quality: Act0FeedbackQualityV1.correct,
+            feedbackTitle: 'Position matters.',
+            feedbackReason: 'Acting later gives you extra information.',
+          ),
+          const Act0RunnerOptionV1(
+            id: 'wrong_stmt',
+            label: 'Always raise regardless of seat',
+            isCorrect: false,
+            preferredLabel: 'Because position lets you see actions first',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Check position.',
+            feedbackReason: 'Early seats act before the rest of the table.',
+          ),
+          const Act0RunnerOptionV1(
+            id: 'other_stmt',
+            label: 'Cards change strength each street',
+            isCorrect: false,
+            preferredLabel: 'Because position lets you see actions first',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Different factor.',
+            feedbackReason: 'Focus on turn order.',
+          ),
+        ];
+        final qqCards = const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'Q', suit: 's'),
+          Act0CardStateV1(rank: 'Q', suit: 'h'),
+        ];
+
+        final rows = <CatalogTask>[
+          syntheticRow(
+            w2Base,
+            id: 'syn_intro_long',
+            phase: Act0LessonPhaseV1.theory,
+            lessonId: 'syn_short_lesson',
+            runner: w2Base.task.runner.copyWith(
+              table: tableBtn.copyWith(heroCards: qqCards),
+              teachingSteps: [
+                Act0TeachingStepV1(title: 'Too long', body: longBody),
+              ],
+              options: const [],
+            ),
+          ),
+          syntheticRow(
+            w2Base,
+            id: 'syn_two_opt',
+            lessonId: 'syn_streak_lesson',
+            runner: w2Base.task.runner.copyWith(
+              table: tableBtn.copyWith(heroCards: qqCards),
+              caption: 'Exploit baseline heuristic.',
+              teachingSteps: const [
+                Act0TeachingStepV1(title: 'A', body: dupTheory),
+              ],
+              options: stmtOptions.take(2).toList(),
+            ),
+          ),
+          for (var i = 0; i < 6; i++)
+            syntheticRow(
+              w2Base,
+              id: 'syn_streak_$i',
+              lessonId: 'syn_streak_lesson',
+              runner: w2Base.task.runner.copyWith(
+                table: tableBtn,
+                teachingSteps: i == 0
+                    ? const [Act0TeachingStepV1(title: 'Dup', body: dupTheory)]
+                    : const [],
+                options: stmtOptions,
+              ),
+            ),
+          syntheticRow(
+            w2Base,
+            id: 'syn_bloated_task',
+            lessonId: 'syn_long_lesson',
+            runner: w2Base.task.runner.copyWith(
+              table: tableBtn,
+              caption: List.filled(1000, 'chips').join(' '),
+              options: stmtOptions,
+            ),
+          ),
+          syntheticRow(
+            w2Base,
+            id: 'syn_allin_two_opt_ok',
+            lessonId: 'syn_allin_lesson',
+            runner: w2Base.task.runner.copyWith(
+              table: tableBtn.copyWith(
+                seats: [
+                  for (final seat in tableBtn.seats)
+                    seat.isHero
+                        ? seat
+                        : Act0SeatStateV1(
+                            seatId: seat.seatId,
+                            seatLabel: seat.seatLabel,
+                            displayName: seat.displayName,
+                            stackLabel: '0 BB',
+                            isHero: false,
+                            holeCards: seat.holeCards,
+                            cardsVisibleMode: seat.cardsVisibleMode,
+                            bet: seat.seatId == 'co'
+                                ? const Act0SeatBetStateV1(
+                                    kind: Act0SeatBetKindV1.allIn,
+                                    label: 'All-in',
+                                    amountLabel: '8 BB',
+                                  )
+                                : seat.bet,
+                          ),
+                ],
+              ),
+              options: const [
+                Act0RunnerOptionV1(
+                  id: 'call',
+                  label: 'Call',
+                  isCorrect: true,
+                  preferredLabel: 'Call',
+                  quality: Act0FeedbackQualityV1.correct,
+                  feedbackTitle: 'Profitable call.',
+                  feedbackReason: 'You get enough equity.',
+                ),
+                Act0RunnerOptionV1(
+                  id: 'fold',
+                  label: 'Fold',
+                  isCorrect: false,
+                  preferredLabel: 'Call',
+                  quality: Act0FeedbackQualityV1.wrong,
+                  feedbackTitle: 'Too tight.',
+                  feedbackReason: 'The call is cheap enough.',
+                ),
+              ],
+            ),
+          ),
+        ];
+
+        final report = runCatalogQualityAudit(rows: rows);
+        expect(report.btnShareByWorld, contains('world_2'));
+        expect(
+          report.findings,
+          containsAll([
+            '11.btn_share_per_world|world_2',
+            '12.two_option_w1_w5|syn_two_opt',
+            '13.intro_over_100_words|syn_intro_long',
+            '14.duplicate_theory_in_lesson|syn_streak_lesson|syn_streak_0',
+            '15.internal_jargon|syn_two_opt|exploit',
+            '15.internal_jargon|syn_two_opt|baseline',
+            '15.internal_jargon|syn_two_opt|heuristic',
+            '16.extreme_wrong_option|syn_two_opt|wrong_stmt',
+            '17.single_format_lesson|syn_streak_lesson|statement',
+            '18.same_format_streak|world_2|syn_two_opt|statement',
+            '19.lesson_length_corridor|syn_short_lesson|too_short',
+            '19.lesson_length_corridor|syn_long_lesson|too_long',
+            '20.hero_qq_per_world|world_2|syn_two_opt',
+          ]),
+        );
+        expect(
+          report.findings,
+          isNot(contains('12.two_option_w1_w5|syn_allin_two_opt_ok')),
+        );
+      },
+    );
   });
 }
