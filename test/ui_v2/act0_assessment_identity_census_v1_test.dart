@@ -217,7 +217,7 @@ void main() {
           'Fold every hand until payouts begin',
       'Plan to fold borderline hands like A-J against the covering blind':
           'Over-fold every close hand',
-      'Default to folding borderline hands like A-J to a big-stack open':
+      'Fold borderline hands like A-J by default against a big-stack open':
           'Fold every hand until payout',
       'Map pressure, then copy broad player reads':
           'Map pressure, then copy every player read',
@@ -267,7 +267,7 @@ void main() {
           'Wait for perfect premium only',
       'Go all-in with the next playable hand right away':
           'Force any spot immediately',
-      'Shove 7-2 offsuit over a tight early-position raise and a call':
+      'Go all-in with 7-2 offsuit over a tight early-position raise and a call':
           'Panic with any two cards now',
       'Fold until you pick up pocket aces': 'Wait only for aces',
       'Adjust by player type and ignore stack pressure':

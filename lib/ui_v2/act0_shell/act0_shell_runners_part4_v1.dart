@@ -1801,7 +1801,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Right caution, too extreme.',
       feedbackReason:
-          'Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB shoves worse hands and how the remaining stacks and payouts affect your risk premium.',
+          'Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB goes all-in with worse hands and how the remaining stacks and payouts affect your risk premium.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -1850,7 +1850,8 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'panic_any_two',
-      label: 'Shove 7-2 offsuit over a tight early-position raise and a call',
+      label:
+          'Go all-in with 7-2 offsuit over a tight early-position raise and a call',
       isCorrect: false,
       preferredLabel: 'Disciplined urgency in reasonable spots',
       betterAnswerLabel: 'Disciplined urgency in reasonable spots',
@@ -1947,7 +1948,8 @@ final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
-      label: 'Default to folding borderline hands like A-J to a big-stack open',
+      label:
+          'Fold borderline hands like A-J by default against a big-stack open',
       isCorrect: false,
       preferredLabel: 'Tighten defend and avoid thin all-ins',
       betterAnswerLabel: 'Tighten defend and avoid thin all-ins',

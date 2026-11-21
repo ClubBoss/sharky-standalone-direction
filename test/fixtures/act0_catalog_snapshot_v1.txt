@@ -4396,7 +4396,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call as wide as normal chip EV allows — Too loose for bubble pressure. Chip-only odds tell you the price of a call. If the call puts your tournament life at risk, payouts and the other stacks also matter.
     BETTER ANSWER: Tighten thin stack-offs versus the covering blind
   + [correct] Tighten thin stack-offs versus the covering blind — Strong table read. If BB can eliminate you, you may need more equity than chip odds suggest. That extra equity is the risk premium. Whether A-J should call depends on BB’s all-in range, the remaining stacks and the payouts.
-  - [suboptimal] Plan to fold borderline hands like A-J against the covering blind — Right caution, too extreme. Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB shoves worse hands and how the remaining stacks and payouts affect your risk premium.
+  - [suboptimal] Plan to fold borderline hands like A-J against the covering blind — Right caution, too extreme. Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB goes all-in with worse hands and how the remaining stacks and payouts affect your risk premium.
     BETTER ANSWER: Tighten thin stack-offs versus the covering blind
 
 TASK w9_bubble_recap [review] Bubble recap
@@ -4428,7 +4428,7 @@ HINT [theoryOnly]: Tournament life still needs action windows.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Disciplined urgency in reasonable spots — Excellent spot. Good tournament pressure play combines survival with timely action, not passive waiting.
-  - [wrong] Shove 7-2 offsuit over a tight early-position raise and a call — Too extreme. After a tight early raise and a call, two players have already committed chips. With 7-2 offsuit you have little chance to win when called and little leverage to make both fold. Look for a spot where you can act first.
+  - [wrong] Go all-in with 7-2 offsuit over a tight early-position raise and a call — Too extreme. After a tight early raise and a call, two players have already committed chips. With 7-2 offsuit you have little chance to win when called and little leverage to make both fold. Look for a spot where you can act first.
     BETTER ANSWER: Disciplined urgency in reasonable spots
   - [suboptimal] Fold until you pick up pocket aces — Too tight. Waiting for perfect hands often runs out the clock. Tournament pressure rewards practical urgency.
     BETTER ANSWER: Disciplined urgency in reasonable spots
@@ -4454,7 +4454,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Defend as wide as normal chip EV spot — Not quite. Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
   + [correct] Tighten defend and avoid thin all-ins — Clean execution. Bubble risk premium raises the bar for medium-stack stack-offs against covering stacks.
-  - [suboptimal] Default to folding borderline hands like A-J to a big-stack open — Too passive. Folding A-J can be right against a tight opener. A big stack can also open wide to pressure you, so read its range and your position before folding. Calling a raise and calling off your stack carry different risks.
+  - [suboptimal] Fold borderline hands like A-J by default against a big-stack open — Too passive. Folding A-J can be right against a tight opener. A big stack can also open wide to pressure you, so read its range and your position before folding. Calling a raise and calling off your stack carry different risks.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
 
 TASK w9_checkpoint_table_notice [drill] Real-table pressure read
