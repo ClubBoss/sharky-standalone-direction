@@ -117,7 +117,7 @@ void main() {
     }
   });
 
-  test('W10 uses the authored BTN open and BB call before the check', () {
+  test('W10 uses the authored CO open and BB call before the check', () {
     final table = Act0ShellStateV1.sample
         .worldById('world_10')
         .lessons
@@ -134,12 +134,12 @@ void main() {
       table.handContributions!.entries.map(
         (entry) => (entry.seatId, entry.amountBb),
       ),
-      containsAll([('sb', 0.5), ('bb', 1.0), ('btn', 2.5), ('bb', 1.5)]),
+      containsAll([('sb', 0.5), ('bb', 1.0), ('co', 2.5), ('bb', 1.5)]),
     );
     expect(
       table.handContributions!.amounts(
         seatIds: table.seats.map((seat) => seat.seatId).toSet(),
-        actorSeatId: 'btn',
+        actorSeatId: 'co',
       ),
       (potBb: 5.5, toCallBb: 0.0),
     );
@@ -376,11 +376,30 @@ void main() {
               ).readAsStringSync(),
             )
             as Map<String, dynamic>;
+    final w10Learning = {
+      for (final entry in contract.entries)
+        if (entry.key.startsWith('w10_')) entry.key: entry.value,
+    };
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(w10Learning))).toString(),
+      '30f317099467fc22ced9f7004fa009851f73348ad6ead65245d9d48449de11a5',
+    );
+    final preAtlasW10 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w10_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final historicalContract = Map<String, Object?>.from(contract)
       ..removeWhere(
-        (id, _) => admittedAdditions.contains(id) || id.startsWith('w9_'),
+
+        (id, _) =>
+            admittedAdditions.contains(id) || id.startsWith('w9_') ||
+            id.startsWith('w10_'),
       )
-      ..addAll((preAtlasW9['learning'] as Map).cast<String, Object?>());
+      ..addAll((preAtlasW9['learning'] as Map).cast<String, Object?>())
+      ..addAll((preAtlasW10['learning'] as Map).cast<String, Object?>());
     // Keep the historical fixture immutable. PR460 quality cells and the
     // exact owner-admitted W01 theory option contracts are checked separately;
     // persisted records are never rewritten by this comparison.

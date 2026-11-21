@@ -313,7 +313,7 @@ void main() {
             ),
           )
           .toList();
-      expect(rows, hasLength(206));
+      expect(rows, hasLength(215));
       for (final row in rows) {
         expect(row['curationScope'], cnt01OutsideScopeV1);
         expect(row['declaredPurpose'], cnt01UnknownV1);

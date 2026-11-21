@@ -33,8 +33,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(404));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(404));
+    expect(tasks, hasLength(413));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(413));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -97,7 +97,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(404));
+    expect(entries, hasLength(413));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -292,9 +292,30 @@ void main() {
               ).readAsStringSync(),
             )
             as Map<String, dynamic>;
+    // Compare the new W10 identities separately. Reconstruct the earlier
+    // frozen view from its own task and choice records.
+    expect(
+      sha256
+          .convert(
+            utf8.encode(
+              jsonEncode(entries.where((row) => row[0] == 'world_10').toList()),
+            ),
+          )
+          .toString(),
+      '473edd7ace18f2b8ff5af25c786324cb5555cdfb73a2a095d3574b58577c0e08',
+    );
+    final preAtlasW10 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w10_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final comparisonEntries = [
-      ...entries.where((row) => row[0] != 'world_9'),
+
+      ...entries.where((row) => !{'world_9', 'world_10'}.contains(row[0])),
       ...(preAtlasW9['identity'] as List).cast<List<Object?>>(),
+      ...(preAtlasW10['identity'] as List).cast<List<Object?>>(),
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
     final legacyEntries = comparisonEntries
         .where(
@@ -1978,7 +1999,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(404));
+    expect(taskIndex, hasLength(413));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

@@ -757,8 +757,8 @@ void main() {
     (
       'a W10 blind-overfold miss reopens the one-lever exercise',
       'world_10',
-      'w10_checkpoint_table_notice',
-      'rewrite_everything',
+      'w10_checkpoint_lever_line',
+      'fold',
       'w10_vs_nit_open_wider',
     ),
     (
@@ -907,6 +907,35 @@ void main() {
     );
     expect(
       find.textContaining('expected value', findRichText: true),
+      findsWidgets,
+      reason: t
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data ?? text.textSpan?.toPlainText())
+          .whereType<String>()
+          .toList()
+          .join(' | '),
+    );
+    expect(find.byKey(const Key('act0_shell_table')), findsNothing);
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('W10 text theory opens without a table', (t) async {
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_10',
+      taskId: 'w10_player_type_intro',
+      finishTeaching: false,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'w10_player_type_intro');
+    expect(
+      runner.runner.activeTeachingStep?.body,
+      contains('A nit plays few hands and folds a lot.'),
+    );
+    expect(
+      find.textContaining('A nit', findRichText: true),
       findsWidgets,
       reason: t
           .widgetList<Text>(find.byType(Text))
@@ -1197,7 +1226,7 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 396 : 275);
+        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 405 : 275);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

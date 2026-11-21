@@ -45,20 +45,13 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   'w9_bubble_cover_seat',
   'w9_bubble_recap',
   'w9_prize_model_inputs',
-  'w10_nit_tag',
-  'w10_loose_passive_tag',
-  'w10_overaggressive_tag',
-  'w10_vs_nit_open_wider',
-  'w10_vs_caller_value_heavier',
-  'w10_vs_sticky_defender_tighten_steals',
-  'w10_overbluff_punish',
-  'w10_underbluff_fold_more',
-  'w10_guardrail_sample_size',
-  'w10_checkpoint_tag_line',
-  'w10_checkpoint_lever_line',
-  'w10_checkpoint_guardrail_line',
-  'w10_checkpoint_table_notice',
-  'w10_checkpoint_review',
+  'w10_find_limper',
+  'w10_player_type_recap',
+  'w10_isolate_limper_bb',
+  'w10_one_lever_recap',
+  'w10_find_turn_raiser',
+  'w10_guardrails_recap',
+  'w10_river_price_check',
   'w11_plan_focus_choice',
   'w11_plan_avoid_overload',
   'w11_plan_table_focus_transfer',
@@ -108,7 +101,7 @@ void main() {
                 !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
           )
           .toList();
-      expect(allRows, hasLength(304));
+      expect(allRows, hasLength(316));
       expect(
         allRows
             .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
@@ -122,7 +115,7 @@ void main() {
       final rows = allRows
           .where((row) => !_asm05NewTaskIds.contains(row.task.taskId))
           .toList(growable: false);
-      expect(rows, hasLength(302));
+      expect(rows, hasLength(314));
 
       final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
       final repair = repairRows.map(_declaredRepairRow).toList(growable: false);
@@ -241,20 +234,20 @@ void main() {
 
       expect(snapshot['optionCounts'], <String, int>{
         '2': 136,
-        '3': 165,
+        '3': 177,
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
-        '0': 118,
-        '1': 125,
-        '2': 59,
+        '0': 122,
+        '1': 129,
+        '2': 63,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
-        'TABLE_ACTION_DECISION': 41,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 27,
+        'TABLE_ACTION_DECISION': 60,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 20,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -276,7 +269,7 @@ void main() {
       );
       expect(
         repairSnapshot['sameSignalMapped'],
-        280 - _legacyFallbacksWithoutSourceClue.length,
+        292 - _legacyFallbacksWithoutSourceClue.length,
       );
       expect(
         repairSnapshot['fallbackOnly'],
@@ -315,9 +308,9 @@ void main() {
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
       };
-      expect(repairSnapshot['incorrectOptions'], 469);
+      expect(repairSnapshot['incorrectOptions'], 493);
       expect(repairSnapshot['exactReplayCovered'], 17);
-      expect(historicalRepairComparison['sameSignalMapped'], 286);
+      expect(historicalRepairComparison['sameSignalMapped'], 298);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
@@ -337,7 +330,7 @@ void main() {
         'misread_board_texture': 13,
         'misread_draw_outs': 19,
         'misread_mindset_discipline': 26,
-        'misread_player_adjustment': 30,
+        'misread_player_adjustment': 54,
         'misread_poker_win_condition': 8,
         'misread_position_action_order': 47,
         'misread_range_card_removal': 65,
@@ -489,24 +482,24 @@ void main() {
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
-    expect(rows, hasLength(304));
+    expect(rows, hasLength(316));
     expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
-    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(304));
+    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(316));
     expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
       '2': 138,
-      '3': 165,
+      '3': 177,
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
-      '0': 119,
-      '1': 126,
-      '2': 59,
+      '0': 123,
+      '1': 130,
+      '2': 63,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
-      'TABLE_ACTION_DECISION': 43,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 27,
+      'TABLE_ACTION_DECISION': 62,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 20,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -612,7 +605,7 @@ void main() {
         for (final option in row.incorrectOptions)
           _incorrectOptionRow(row, option),
     ];
-    expect(incorrect, hasLength(471));
+    expect(incorrect, hasLength(495));
     final currentGaps = allRepair
         .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
         .toList();
@@ -622,7 +615,7 @@ void main() {
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped),
-      hasLength(282 - _legacyFallbacksWithoutSourceClue.length),
+      hasLength(294 - _legacyFallbacksWithoutSourceClue.length),
     );
     expect(
       allRepair.where((row) => row.fallbackOnly),
@@ -633,7 +626,7 @@ void main() {
           currentGaps.length +
           3 +
           _legacyFallbacksWithoutSourceClue.length,
-      288,
+      300,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
@@ -653,7 +646,7 @@ void main() {
     // assertion. A raw 'exact' fallback is not an accepted repair disposition.
     print(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_304',
+        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_316',
         'semanticAdmission': 'UNKNOWN_NOT_REVIEWED_NO_CREDIT',
         'sameSignalMapped': allRepair
             .where((row) => row.sameSignalMapped)
@@ -861,12 +854,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(329));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(329));
+    expect(rows, hasLength(341));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(341));
     expect(
       allChoices,
       hasLength(
-        577 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        601 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -939,7 +932,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        539 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        563 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(
