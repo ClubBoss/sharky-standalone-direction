@@ -239,8 +239,8 @@ void main() {
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
-        'TABLE_ACTION_DECISION': 32,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 26,
+        'TABLE_ACTION_DECISION': 34,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 24,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -487,8 +487,8 @@ void main() {
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
-      'TABLE_ACTION_DECISION': 34,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 26,
+      'TABLE_ACTION_DECISION': 36,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 24,
     });
 
     final extensionRepair = <_RepairRow>[];

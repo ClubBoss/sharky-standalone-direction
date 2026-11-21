@@ -41,7 +41,7 @@ final _jargonPattern = RegExp(
   caseSensitive: false,
 );
 final _extremeOptionPattern = RegExp(
-  r'\b(?:always|never|every|guaranteed|impossible|automatically)\b',
+  r'\b(?:always|never|every|guaranteed|impossible|automatically|all(?!-in(?:s)?\b)|any|only|forever)\b',
   caseSensitive: false,
 );
 final _actionOptionPattern = RegExp(

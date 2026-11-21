@@ -1229,7 +1229,7 @@ final _deckIntroRunner = _cardsRanksRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'rank_only',
-      label: 'Rank only',
+      label: 'The rank value',
       isCorrect: false,
       preferredLabel: 'Rank and suit',
       quality: Act0FeedbackQualityV1.wrong,
@@ -1247,7 +1247,7 @@ final _deckIntroRunner = _cardsRanksRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'suit_only',
-      label: 'Suit only',
+      label: 'The suit symbol',
       isCorrect: false,
       preferredLabel: 'Rank and suit',
       quality: Act0FeedbackQualityV1.wrong,
@@ -3441,7 +3441,7 @@ final _w3SixSeatsRecapRunner = _w3SixSeatsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'only_blinds',
-      label: 'BTN, SB, BB only',
+      label: 'BTN, SB, and BB',
       isCorrect: false,
       preferredLabel: 'UTG, HJ, CO, BTN, SB, BB',
       betterAnswerLabel: 'UTG, HJ, CO, BTN, SB, BB',
@@ -4249,7 +4249,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'hero_cards_only',
-      label: 'Your cards only',
+      label: 'The two private cards at your seat',
       isCorrect: false,
       preferredLabel: 'Best hand',
       betterAnswerLabel: 'Best hand',
