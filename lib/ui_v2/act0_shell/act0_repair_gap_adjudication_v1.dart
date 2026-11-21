@@ -1086,10 +1086,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "utg",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "301cfd15a1e24a3ee49b6561e60ca6b5d636934e6989e3683d85e56fb1da1bf2",
+        "86017c0b096c0aabbe90b1f51f1659c8c441496f570ed3c05d722d98a71b1adb",
     sourceQuestion: "Tap the seat that acts last after the flop.",
     sourceChoiceReason:
-        "UTG is early, not the seat that acts last after the flop here.",
+        "On this 5 BB flop (Ah 7c 2d), UTG acts before BTN rather than last, so tapping UTG misreads who gets to see everyone else act first.",
     sourceChoiceLabel: "UTG",
     sourceChoiceQuality: "wrong",
     goalId: "last_actor_after_flop",
@@ -1139,10 +1139,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "b34269285a6b25bdc8371ebb3896f96380cc0cd710f075e91c8fb21b639ead62",
+        "fbd51ee83e8b64301d1d51d23c2cf6a943a2a5a0a96670167d595df8ed7ed419",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
-    sourceChoiceReason: "CO is one seat before the Button.",
+    sourceChoiceReason:
+        "Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1638,9 +1639,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "beabef2953789c0ade3ca1acf04ee59869010366d839257e43fcd7bb4e1cc082",
+        "0877b8a9cd70bcf04f609062ffdc672e8d47cab704d48df3ed512bd657cc46ee",
     sourceQuestion: "Who acts first preflop?",
-    sourceChoiceReason: "The Button acts late, not first preflop.",
+    sourceChoiceReason:
+        "In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.",
     sourceChoiceLabel: "BTN",
     goalId: "six_max_initial_preflop_first_actor",
     misconceptionId: "first_preflop_actor_read_as_button",
@@ -1649,7 +1651,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "beabef2953789c0ade3ca1acf04ee59869010366d839257e43fcd7bb4e1cc082",
+        "0877b8a9cd70bcf04f609062ffdc672e8d47cab704d48df3ed512bd657cc46ee",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

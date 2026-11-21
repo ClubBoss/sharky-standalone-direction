@@ -149,6 +149,7 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
   final tableCounts = <String, int>{};
   final qqCountsByWorld = <String, int>{};
   final seenTheoryByLesson = <String, Set<String>>{};
+  final seenWrongReasonTaskId = <String, String>{};
   final lessonScoredFormats = <String, List<String>>{};
   final lessonWordTotals = <String, int>{};
   final lessonScoredTotals = <String, int>{};
@@ -280,6 +281,26 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
       );
       if (seenQq >= 2) {
         findings.add('20.hero_qq_per_world|$worldId|${task.taskId}');
+      }
+    }
+
+    // G1.20 (rule 21): Duplicate wrong-option feedbackReason across tasks.
+    if (!task.repairOnly && r.options.isNotEmpty) {
+      for (final o in r.options.where((o) => !o.isCorrect)) {
+        count('21.duplicate_wrong_reason');
+        final norm = o.feedbackReason.trim().toLowerCase().replaceAll(
+          _whitespacePattern,
+          ' ',
+        );
+        if (norm.length >= 20) {
+          final firstTaskId = seenWrongReasonTaskId.putIfAbsent(
+            norm,
+            () => task.taskId,
+          );
+          if (firstTaskId != task.taskId) {
+            findings.add('21.duplicate_wrong_reason|${task.taskId}|${o.id}');
+          }
+        }
       }
     }
   }

@@ -59,7 +59,8 @@
     "17.single_format_lesson": 45,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 63,
-    "20.hero_qq_per_world": 31
+    "20.hero_qq_per_world": 31,
+    "21.duplicate_wrong_reason": 468
   },
   "findings": [
     "11.btn_share_per_world|world_1",
@@ -258,6 +259,12 @@
     "20.hero_qq_per_world|world_4|w4_purpose_recap",
     "20.hero_qq_per_world|world_4|w4_sizing_intro",
     "20.hero_qq_per_world|world_4|w4_sizing_recap",
-    "20.hero_qq_per_world|world_4|w4_small_bet"
+    "20.hero_qq_per_world|world_4|w4_small_bet",
+    "21.duplicate_wrong_reason|actions_check_drill|call",
+    "21.duplicate_wrong_reason|actions_check_drill|fold",
+    "21.duplicate_wrong_reason|blinds_posts_drill|sb",
+    "21.duplicate_wrong_reason|position_apply_recap|call",
+    "21.duplicate_wrong_reason|position_checkpoint_position_checkpoint_late_open|call",
+    "21.duplicate_wrong_reason|position_checkpoint_position_checkpoint_review|call"
   ]
 }
