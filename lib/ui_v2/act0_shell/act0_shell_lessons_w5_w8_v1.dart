@@ -2369,6 +2369,15 @@ final _w6ContinuationBetDry = _w6ContinuationBetIntro.copyWith(
     showTurn: true,
   ),
   teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(id: 'bet_two', label: '2 BB', potFraction: 1 / 3),
+      Act0SizingPresetV1(id: 'bet_six', label: '6 BB', potFraction: 1),
+      Act0SizingPresetV1(id: 'bet_nine', label: '9 BB', potFraction: 1.5),
+    ],
+  ),
   options: const [
     Act0RunnerOptionV1(
       id: 'bet_two',

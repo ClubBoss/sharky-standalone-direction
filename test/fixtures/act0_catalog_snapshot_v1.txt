@@ -3864,6 +3864,7 @@ HINT [theoryOnly]: (none)
 TABLE: Flop | You Qc Jc | Board Qh 7s 2d | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qc Jc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+SIZES: 2 BB 0.3333333333333333 | 6 BB 1.0 | 9 BB 1.5
   + [correct] 2 BB — One third of the pot. In the 6 BB pot on Q-7-2 rainbow, a 2 BB bet with top pair gives weaker queens a manageable price.
     FEEDBACK TABLE: Flop | You Qc Jc | Board Qh 7s 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] 6 BB — That is a full-pot bet. On this dry flop, a 6 BB bet with QJ can drive out the weaker queens you want to call.
