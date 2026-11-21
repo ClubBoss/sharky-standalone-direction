@@ -1602,7 +1602,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "SB posted 0.5 BB as a blind. That post was forced.",
+                "SB posted 0.5 BB before UTG acted. Look for the first player who chose to put chips in.",
             seatId: "sb",
           ),
           Act0RunnerOptionV1(
@@ -1614,7 +1614,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "BB posted 1 BB as a blind. That is part of the cost of a hand.",
+                "The 1 BB post was due before the deal. After UTG folds, HJ is the first player to put in a chip by choice.",
             seatId: "bb",
           ),
         ],
@@ -2277,7 +2277,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "CO made the first turn bet of 5 BB. BB made the raise.",
+                "CO put in 5 BB after BB checked. That opens the turn betting. BB then raises to 20 BB.",
             seatId: "co",
           ),
           Act0RunnerOptionV1(
@@ -2289,7 +2289,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "BTN folded before the flop and put no chips in on the turn.",
+                "BTN folded to the 2.5 BB open before the flop. Only CO and BB reached the turn.",
             seatId: "btn",
           ),
         ],
@@ -2713,7 +2713,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "SB calls 90% with pairs. This pure 2 BB bluff loses 1.6 BB on average.",
+                "Your queen-high loses to SB's pairs. A 2 BB bluff wins the pot just 10% of the time and loses 1.6 BB on average.",
           ),
           Act0RunnerOptionV1(
             id: "bet_1_bb",
@@ -2724,7 +2724,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "The small bluff risks less, but 10% folds are still too few. It loses 0.7 BB on average.",
+                "A 1 BB bluff into 2 BB needs one fold in three. SB gives 10%, so the bet loses 0.7 BB on average.",
           ),
         ],
         feedbackTitle: '',
@@ -2809,7 +2809,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.suboptimal,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "AKs can open for value, but the one BTN bluff gives no sound reason to pay 2 BB more before the flop.",
+                "The pot is 1.5 BB. Raising to 4 BB commits 2 BB more than the course open. One shown bluff gives no evidence that the extra cost pays.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_2_bb",
@@ -2831,7 +2831,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.",
+                "CO has 60 BB and BTN covers with 63 BB. One bluff tells you too little to risk your stack before the flop.",
           ),
         ],
         feedbackTitle: '',

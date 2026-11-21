@@ -7642,10 +7642,10 @@ SEATS: UTG folded stack 70 BB | HJ stack 54 BB call 1 BB | CO Ad Ts stack 45 BB 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ calls 1 BB
   + [correct] HJ [seat hj] — Correct. HJ put in 1 BB before a raise. That call is a limp.
     FEEDBACK TABLE: Preflop | You Ad Ts | Pot 2.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap hj, sb, bb | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Look again. SB posted 0.5 BB as a blind. That post was forced.
+  - [wrong] SB [seat sb] — Look again. SB posted 0.5 BB before UTG acted. Look for the first player who chose to put chips in.
     BETTER ANSWER: HJ
     FEEDBACK TABLE: Preflop | You Ad Ts | Pot 2.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap hj, sb, bb | Facts no applicable hand facts
-  - [wrong] BB [seat bb] — Look again. BB posted 1 BB as a blind. That is part of the cost of a hand.
+  - [wrong] BB [seat bb] — Look again. The 1 BB post was due before the deal. After UTG folds, HJ is the first player to put in a chip by choice.
     BETTER ANSWER: HJ
     FEEDBACK TABLE: Preflop | You Ad Ts | Pot 2.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap hj, sb, bb | Facts no applicable hand facts
 
@@ -7738,10 +7738,10 @@ SEATS: UTG folded stack 65 BB | HJ folded stack 68 BB | CO As Js stack 50 BB bet
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 2.5 BB · Flop: BB checks · CO bets 2.5 BB · BB calls 2.5 BB · Turn: BB checks · CO bets 5 BB · Turn: BB raises to 20 BB
   + [correct] BB [seat bb] — Correct. BB raised to 20 BB after the 5 BB turn bet.
     FEEDBACK TABLE: Turn | You As Js | Board Jd 8h 4d 2h | Pot 35.5 BB | To call 15 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap bb, co, btn | Facts one pair, top pair
-  - [wrong] CO [seat co] — Look again. CO made the first turn bet of 5 BB. BB made the raise.
+  - [wrong] CO [seat co] — Look again. CO put in 5 BB after BB checked. That opens the turn betting. BB then raises to 20 BB.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Turn | You As Js | Board Jd 8h 4d 2h | Pot 35.5 BB | To call 15 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap bb, co, btn | Facts one pair, top pair
-  - [wrong] BTN [seat btn] — Look again. BTN folded before the flop and put no chips in on the turn.
+  - [wrong] BTN [seat btn] — Look again. BTN folded to the 2.5 BB open before the flop. Only CO and BB reached the turn.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Turn | You As Js | Board Jd 8h 4d 2h | Pot 35.5 BB | To call 15 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap bb, co, btn | Facts one pair, top pair
 
@@ -7787,10 +7787,10 @@ SEATS: UTG folded stack 55 BB | HJ folded stack 60 BB | CO folded stack 61 BB | 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds · SB calls 1 BB · BB checks · Flop: SB checks · BB checks · Turn: SB checks · BB checks · River: SB checks
   + [correct] Check — Correct. A 2 BB pure bluff into 2 needs 50% folds. SB gives 10%, so checking saves chips.
     FEEDBACK TABLE: River | You Qc Tc | Board Ad 7d 2s 8d 4s | Pot 2 BB | Seat BB | Active bb | Decision bb | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Bet 2 BB — Look again. SB calls 90% with pairs. This pure 2 BB bluff loses 1.6 BB on average.
+  - [wrong] Bet 2 BB — Look again. Your queen-high loses to SB's pairs. A 2 BB bluff wins the pot just 10% of the time and loses 1.6 BB on average.
     BETTER ANSWER: Check
     FEEDBACK TABLE: River | You Qc Tc | Board Ad 7d 2s 8d 4s | Pot 2 BB | Seat BB | Active bb | Decision bb | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Bet 1 BB — Look again. The small bluff risks less, but 10% folds are still too few. It loses 0.7 BB on average.
+  - [wrong] Bet 1 BB — Look again. A 1 BB bluff into 2 BB needs one fold in three. SB gives 10%, so the bet loses 0.7 BB on average.
     BETTER ANSWER: Check
     FEEDBACK TABLE: River | You Qc Tc | Board Ad 7d 2s 8d 4s | Pot 2 BB | Seat BB | Active bb | Decision bb | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
@@ -7804,8 +7804,8 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Ad Kd | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 SEATS: UTG folded stack 54 BB | HJ folded stack 61 BB | CO Ad Kd stack 60 BB | BTN dealer stack 63 BB | SB stack 54.5 BB post 0.5 BB | BB stack 57 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [suboptimal] Raise to 4 BB — Look again. AKs can open for value, but the one BTN bluff gives no sound reason to pay 2 BB more before the flop.
+  - [suboptimal] Raise to 4 BB — Look again. The pot is 1.5 BB. Raising to 4 BB commits 2 BB more than the course open. One shown bluff gives no evidence that the extra cost pays.
     BETTER ANSWER: Raise to 2 BB
   + [correct] Raise to 2 BB — Correct. AKs is Premium in CO. One BTN bluff is not enough to change the 2 BB open or set a new trap.
-  - [wrong] All-in to 60 BB — Look again. Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.
+  - [wrong] All-in to 60 BB — Look again. CO has 60 BB and BTN covers with 63 BB. One bluff tells you too little to risk your stack before the flop.
     BETTER ANSWER: Raise to 2 BB
