@@ -14,6 +14,7 @@ import '../support/act0_catalog_truth_audit_v1.dart'
     show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_w6_catalog_contract_v1.dart';
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
@@ -858,9 +859,9 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(317));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(317));
-    expect(allChoices, hasLength(562));
+    expect(rows, hasLength(319));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(allChoices, hasLength(566));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -928,7 +929,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(524));
+    expect(foundationDefaults, hasLength(528));
     expect(
       unknown.intersection(w3AppendedRepairChoiceIdsV1),
       w3AppendedRepairChoiceIdsV1,
@@ -969,13 +970,16 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
               (!historical ||
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
                       !w3NewChoiceContractV1.containsKey(task.taskId) &&
+                      !w6NewChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==
                   1)
             _Row(
               world.worldId,
-              lesson.lessonId,
+              historical && w6MovedToRangeReadingV1.contains(task.taskId)
+                  ? 'range_thinking_checkpoint'
+                  : lesson.lessonId,
               task,
               omittedChoiceId: historical
                   ? q3AppendedChoicesV1[task.taskId] ??
@@ -984,7 +988,8 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
                   : null,
               historicalChoices: historical
                   ? preW2ReasonChoicesV1[task.taskId] ??
-                        preW3ReasonChoicesV1[task.taskId]
+                        preW3ReasonChoicesV1[task.taskId] ??
+                        preW6ChoiceContractV1[task.taskId]
                   : null,
             ),
 ];

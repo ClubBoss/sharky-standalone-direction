@@ -184,6 +184,8 @@ void main() {
       'range_board_fit',
       'range_pressure_lines',
       'range_combo_counts',
+      'w6_continuation_bet',
+      'range_reading_review',
       'range_thinking_checkpoint',
     };
     const pricedOuts = {
@@ -211,7 +213,7 @@ void main() {
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
-    expect(tasksByWorld, {5: 34, 6: 35});
+    expect(tasksByWorld, {5: 34, 6: 38});
   });
 
   test('every W7–W8 task projects to its authored topic', () {

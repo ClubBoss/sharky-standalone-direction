@@ -196,6 +196,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       lessonId: _selectedLessonId,
       taskId: _selectedTaskId,
     );
+    _activeDueReviewItemV1 = item;
     _activeSpacedReviewTaskV1 =
         unseen ??
         act0ReviewOnlyTaskV1(item.worldId, item.lessonId, item.taskId);
@@ -220,6 +221,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     }
     _spacedReviewReturnV1 = null;
     _activeSpacedReviewTaskV1 = null;
+    _activeDueReviewItemV1 = null;
     _pendingReviewKindV1 = null;
     _activeLearningEvidenceRunKeyV1 = null;
     _activeActionSequenceStageV1 = null;

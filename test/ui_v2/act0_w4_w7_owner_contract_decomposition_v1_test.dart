@@ -59,6 +59,8 @@ void main() {
         'range_board_fit',
         'range_pressure_lines',
         'range_combo_counts',
+        'w6_continuation_bet',
+        'range_reading_review',
         'range_thinking_checkpoint',
       ]);
 

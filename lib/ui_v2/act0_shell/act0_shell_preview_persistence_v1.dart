@@ -190,6 +190,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       _diagnosticLearningReturnV1 = null;
       _spacedReviewReturnV1 = null;
       _activeSpacedReviewTaskV1 = null;
+      _activeDueReviewItemV1 = null;
       _newSpacedReviewSavePendingV1 = false;
       _openedSpacedReviewTaskIdsV1
         ..clear()
@@ -1271,8 +1272,17 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       }
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendLearningEvidence(latestRecord);
+      final dueReview = _activeDueReviewItemV1;
+      final dueFamily =
+          dueReview != null &&
+              latestRecord.worldId == dueReview.worldId &&
+              latestRecord.lessonId == dueReview.lessonId &&
+              latestRecord.taskId ==
+                  (dueReview.unseenTaskId ?? dueReview.taskId)
+          ? dueReview.conceptFamilyId
+          : null;
       _durableRetentionHistoryV1 = _durableRetentionHistoryV1
-          .applyEvidence(latestRecord)
+          .applyEvidence(latestRecord, dueConceptFamilyId: dueFamily)
           .refreshedAt(recordedAtUtc);
       if (widget.telemetrySink != null) {
         try {

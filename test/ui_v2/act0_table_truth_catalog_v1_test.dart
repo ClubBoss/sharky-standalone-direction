@@ -189,8 +189,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 107),
-      ('D3.to_call_completeness', 107),
+      ('D2.pot_feasibility', 110),
+      ('D3.to_call_completeness', 110),
     ]) {
       final proof = rows
           .where(
@@ -201,6 +201,15 @@ void main() {
       expect(
         proof.map((row) => row.taskId).toSet(),
         hasLength(count),
+        reason: rule,
+      );
+      expect(
+        proof.map((row) => row.taskId).toSet(),
+        containsAll([
+          'w6_continuation_bet_intro',
+          'w6_continuation_bet_dry_size',
+          'w6_continuation_bet_wet_check',
+        ]),
         reason: rule,
       );
       expect(
@@ -1153,11 +1162,31 @@ void main() {
         ],
       };
     }
+    for (final (id, xp, family, options, correct) in [
+      ('intro', 6, 'learn', <String>[], ''),
+      (
+        'dry_size',
+        9,
+        'decision',
+        ['bet_two', 'bet_six', 'bet_nine'],
+        'bet_two',
+      ),
+      ('wet_check', 9, 'review', ['bet_small', 'check', 'bet_large'], 'check'),
+    ]) {
+      expectedComparison['w6_continuation_bet_$id'] = {
+        'rewardXp': xp,
+        'family': family,
+        'options': [
+          for (final option in options)
+            w2Choice(option, correct: option == correct),
+        ],
+      };
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2 and World 3 packets may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2, 3 and 6 packets may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

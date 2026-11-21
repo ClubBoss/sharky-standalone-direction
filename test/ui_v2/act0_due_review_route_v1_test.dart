@@ -18,7 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test(
-    'all review-only hands have distinct valid checkpoints and unique grades',
+    'World 1 review-only check hands have distinct valid checkpoints and unique grades',
     () {
       final lesson = Act0ShellStateV1.sample.worlds
           .singleWhere((world) => world.worldId == 'world_1')
@@ -28,7 +28,10 @@ void main() {
       final reviewIds = <String>{};
       final seenBoards = <String>{};
       for (final entry in act0NewReviewTasksV1.where(
-        (entry) => entry.conceptFamilyId == "no_bet_yet",
+        (entry) =>
+            entry.worldId == 'world_1' &&
+            entry.lessonId == 'fold_check_call_raise' &&
+            entry.conceptFamilyId == 'no_bet_yet',
       )) {
         final task = entry.task;
         final table = task.runner.table;

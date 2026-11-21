@@ -4038,10 +4038,10 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
   lessonId: 'w6_turn_shift_bucket',
   feedbackSignalId: 'range_bucket_shift',
   caption:
-      'BTN bet the flop and BB called. Assume BB is less likely to fold after checking the paired turn.',
+      'BTN bet the flop and BB called. After checking the paired turn, BB calls with every hand that beats J9.',
   hint: 'When pressure drops, the bucket can slide.',
   question:
-      'Suppose a bluff candidate loses fold pressure on the turn. What can happen to its bucket?',
+      'With J9 on this turn, how should you adjust your former bluff plan?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'A bucket can change.',
@@ -4053,35 +4053,35 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'slide_missed',
-      label: 'It can slide toward missed',
+      label: 'Check behind',
       isCorrect: true,
-      preferredLabel: 'It can slide toward missed',
+      preferredLabel: 'Check behind',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
-          'Street changes can remove pressure and push a former bluff candidate closer to missed.',
+          'On A-7-4-4, J9 has no pair of its own, and better hands now call. Checking saves the chips a second bluff would risk.',
     ),
     Act0RunnerOptionV1(
       id: 'always_value',
-      label: 'It turns into value right away',
+      label: 'Bet for value',
       isCorrect: false,
-      preferredLabel: 'It can slide toward missed',
-      betterAnswerLabel: 'It can slide toward missed',
+      preferredLabel: 'Check behind',
+      betterAnswerLabel: 'Check behind',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Losing fold pressure does not make the hand value automatically.',
+          'J9 did not improve when the fours paired. Because weaker hands are not the stated callers, betting for value risks chips against better hands.',
     ),
     Act0RunnerOptionV1(
       id: 'never_changes',
-      label: 'The bucket stays fixed after the flop',
+      label: 'Bet as another bluff',
       isCorrect: false,
-      preferredLabel: 'It can slide toward missed',
-      betterAnswerLabel: 'It can slide toward missed',
+      preferredLabel: 'Check behind',
+      betterAnswerLabel: 'Check behind',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too static.',
       feedbackReason:
-          'Buckets can shift across streets when the board changes and pressure disappears.',
+          'The paired turn changes which hands BB continues with. Another bet risks chips without folding out a better hand.',
     ),
   ],
 );
@@ -4666,13 +4666,13 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   hint: 'Offsuit hands usually have more combinations than suited hands.',
   feedbackReason:
       'With no cards removed, four combinations are suited and twelve are offsuit.',
-  question: 'Which family has more possible combos?',
+  question: 'How many combinations are suited and how many are offsuit?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'ak_offsuit',
-      label: 'A-K offsuit',
+      label: '4 suited, 12 offsuit',
       isCorrect: true,
-      preferredLabel: 'A-K offsuit',
+      preferredLabel: '4 suited, 12 offsuit',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean weight read.',
       feedbackReason:
@@ -4680,10 +4680,10 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'ak_suited',
-      label: 'A-K suited',
+      label: '12 suited, 4 offsuit',
       isCorrect: false,
-      preferredLabel: 'A-K offsuit',
-      betterAnswerLabel: 'A-K offsuit',
+      preferredLabel: '4 suited, 12 offsuit',
+      betterAnswerLabel: '4 suited, 12 offsuit',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Easy trap.',
       feedbackReason:
@@ -4691,10 +4691,10 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'same_weight',
-      label: 'They have the same combo count',
+      label: '8 suited, 8 offsuit',
       isCorrect: false,
-      preferredLabel: 'A-K offsuit',
-      betterAnswerLabel: 'A-K offsuit',
+      preferredLabel: '4 suited, 12 offsuit',
+      betterAnswerLabel: '4 suited, 12 offsuit',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the suited and offsuit combos.',
       feedbackReason:
@@ -4786,8 +4786,7 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
       'CO opens preflop. Assume CO opens every A-K offsuit and every 9-9 combo.',
   hint:
       'Here every combo from either family takes the same action. Compare counts before removing known cards.',
-  question:
-      'Which family contributes more combos to this range before blockers?',
+  question: 'How many combos does each family contribute before blockers?',
   table: _act0CoOpenLessonTableV1(
     startingDepthBb: 100,
     heroCards: _unknownHoleCards,
@@ -4796,9 +4795,9 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'ak_offsuit',
-      label: 'A-K offsuit',
+      label: '12 AK offsuit, 6 pairs',
       isCorrect: true,
-      preferredLabel: 'A-K offsuit',
+      preferredLabel: '12 AK offsuit, 6 pairs',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Practical read.',
       feedbackReason:
@@ -4806,10 +4805,10 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'pair_nines',
-      label: 'Pocket nines',
+      label: '6 AK offsuit, 12 pairs',
       isCorrect: false,
-      preferredLabel: 'A-K offsuit',
-      betterAnswerLabel: 'A-K offsuit',
+      preferredLabel: '12 AK offsuit, 6 pairs',
+      betterAnswerLabel: '12 AK offsuit, 6 pairs',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the off-suit combinations.',
       feedbackReason:
@@ -4817,10 +4816,10 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'same_weight',
-      label: 'They have the same weight',
+      label: '9 AK offsuit, 9 pairs',
       isCorrect: false,
-      preferredLabel: 'A-K offsuit',
-      betterAnswerLabel: 'A-K offsuit',
+      preferredLabel: '12 AK offsuit, 6 pairs',
+      betterAnswerLabel: '12 AK offsuit, 6 pairs',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
