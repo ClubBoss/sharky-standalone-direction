@@ -2459,10 +2459,7 @@ final _w2FirstInIntroRunner =
       teachingSteps: [
         const Act0TeachingStepV1(
           title: 'You are first in.',
-          body:
-              'First in means the players before you folded. Nobody has '
-              'called or raised. If you raise first, you open the pot. Use '
-              'your cards and seat to decide whether to open.',
+          body: 'The players before you folded. You may open.',
         ),
         ..._world3BucketsIntroRunner.teachingSteps,
       ],
