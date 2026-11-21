@@ -2198,12 +2198,12 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             Act0TeachingStepV1(
               title: 'When cards reach the board',
               body:
-                  'Preflop has no board cards. The flop has three. The turn adds the fourth card and the river adds the fifth.',
+                  'Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.',
             ),
             Act0TeachingStepV1(
               title: 'Read the seat labels.',
               body:
-                  'UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is the Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.',
+                  'UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.',
               focusLabels: ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
             ),
           ],
@@ -15064,7 +15064,7 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Groups and seats, before a raise.',
       body:
-          'T means ten. In KTs, s means same suit. In J8o, o means different suits.\n\n'
+          'T means ten. Suited means same suit (s, like KTs). Offsuit means different suits (o, like J8o).\n\n'
           'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.\n\nMedium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.\n\nMedium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.\n\nWeak | Other hands in this course model | Fold.',
     ),
     Act0TeachingStepV1(
