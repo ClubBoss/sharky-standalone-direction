@@ -100,4 +100,78 @@ void main() {
     expect(route.length, greaterThan(50), reason: 'catalog went missing');
     expect(problems, isEmpty, reason: problems.take(40).join('\n'));
   });
+
+  group('Q15 world checkpoint weak-spot gate', () {
+    test(
+      'checkpoint stays locked with Clear weak spots when world has open mistakes',
+      () {
+        final w1 = _worlds.firstWhere((w) => w.worldId == 'world_1');
+        final checkpoint = w1.lessons.last;
+        expect(act0LessonIsWorldCheckpointV1(w1, checkpoint), isTrue);
+
+        final preCheckpointTaskIds = {
+          for (final lesson in w1.lessons.take(w1.lessons.length - 1))
+            for (final task in lesson.courseTaskList) task.taskId,
+        };
+
+        final gated = act0ProgressWorldsV1(
+          _worlds,
+          pathClosedTaskIds: preCheckpointTaskIds,
+          earnedTaskIds: preCheckpointTaskIds,
+          worldsWithOpenMistakes: const {'world_1'},
+        ).firstWhere((w) => w.worldId == 'world_1');
+
+        final gatedCheckpoint = gated.lessons.last;
+        expect(gatedCheckpoint.lessonId, checkpoint.lessonId);
+        expect(gatedCheckpoint.state, Act0LessonStateV1.locked);
+        expect(gatedCheckpoint.primaryCtaLabel, 'Clear weak spots');
+        expect(gatedCheckpoint.isSelectable, isFalse);
+        expect(gatedCheckpoint.isLocked, isTrue);
+
+        final cleared = act0ProgressWorldsV1(
+          _worlds,
+          pathClosedTaskIds: preCheckpointTaskIds,
+          earnedTaskIds: preCheckpointTaskIds,
+          worldsWithOpenMistakes: const <String>{},
+        ).firstWhere((w) => w.worldId == 'world_1');
+
+        final openCheckpoint = cleared.lessons.last;
+        expect(openCheckpoint.state, Act0LessonStateV1.current);
+        expect(openCheckpoint.primaryCtaLabel, 'Start');
+        expect(openCheckpoint.isSelectable, isTrue);
+        expect(openCheckpoint.isLocked, isFalse);
+      },
+    );
+
+    test(
+      'already-completed checkpoint stays completed and selectable despite open mistakes',
+      () {
+        final w1 = _worlds.firstWhere((w) => w.worldId == 'world_1');
+        final allW1Tasks = {
+          for (final lesson in w1.lessons)
+            for (final task in lesson.courseTaskList) task.taskId,
+        };
+
+        final progressed = act0ProgressWorldsV1(
+          _worlds,
+          pathClosedTaskIds: allW1Tasks,
+          earnedTaskIds: allW1Tasks,
+          worldsWithOpenMistakes: const {'world_1'},
+        ).firstWhere((w) => w.worldId == 'world_1');
+
+        final checkpoint = progressed.lessons.last;
+        expect(checkpoint.state, Act0LessonStateV1.completed);
+        expect(checkpoint.primaryCtaLabel, 'Replay');
+        expect(checkpoint.isSelectable, isTrue);
+        expect(checkpoint.isLocked, isFalse);
+      },
+    );
+
+    test('act0LessonIsWorldCheckpointV1 excludes non-checkpoint worlds', () {
+      final w5 = _worlds.firstWhere((w) => w.worldId == 'world_5');
+      final w8 = _worlds.firstWhere((w) => w.worldId == 'world_8');
+      expect(act0LessonIsWorldCheckpointV1(w5, w5.lessons.last), isFalse);
+      expect(act0LessonIsWorldCheckpointV1(w8, w8.lessons.last), isFalse);
+    });
+  });
 }

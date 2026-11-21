@@ -600,6 +600,12 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
             en: 'Current mission above',
             ru: 'Текущая миссия выше',
           )
+        : lesson.primaryCtaLabel == 'Clear weak spots'
+        ? _learnCopyV1(
+            context,
+            en: 'Clear weak spots in Review to unlock',
+            ru: 'Разбери слабые места в Разборе, чтобы открыть',
+          )
         : isNextUp
         ? _learnCopyV1(
             context,
@@ -963,6 +969,9 @@ bool _shouldShowJourneyLessonInWindowV1(
 ) {
   final lesson = lessons[index];
   if (lesson.state != Act0LessonStateV1.locked) {
+    return true;
+  }
+  if (lesson.primaryCtaLabel == 'Clear weak spots') {
     return true;
   }
   return index > 0 && lessons[index - 1].state == Act0LessonStateV1.current;

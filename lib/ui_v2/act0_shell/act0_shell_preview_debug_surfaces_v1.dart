@@ -212,6 +212,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
     _lastDailyDate = '';
     _dailyCompletedRepCount = 0;
     _dailyCompletedTaskIds.clear();
+    _dailyCompletedLessonIds.clear();
     _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
     _profileSkillValues.clear();
     _recentSkillGains.clear();

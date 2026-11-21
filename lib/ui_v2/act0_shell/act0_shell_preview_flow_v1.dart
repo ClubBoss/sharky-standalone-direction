@@ -774,6 +774,8 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     if (!_lessonComplete(lesson) || !_completedLessonIds.add(lesson.lessonId)) {
       return false;
     }
+    _ensureDailyCountDayV1();
+    _dailyCompletedLessonIds.add(lesson.lessonId);
     _recordBetaActivityV1(
       () => Act0BetaMetricsStoreV1.recordLesson(
         widget.clock.nowUtc(),

@@ -17,6 +17,7 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
   required Set<String> pathClosedTaskIds,
   required Set<String> earnedTaskIds,
   bool passedW1RulesCheck = false,
+  Set<String> worldsWithOpenMistakes = const <String>{},
 }) {
   var previousWorldComplete = true;
   var lockedWorldSeen = false;
@@ -29,6 +30,7 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
       completedTaskIds: pathClosedTaskIds,
       earnedTaskIds: earnedTaskIds,
       passedByRulesCheck: passedW1RulesCheck && world.worldId == 'world_1',
+      worldsWithOpenMistakes: worldsWithOpenMistakes,
     );
     worlds.add(progressed);
     if (progressed.status == Act0WorldStateV1.locked) {
@@ -40,6 +42,16 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
   }
   return worlds;
 }
+
+bool act0LessonIsWorldCheckpointV1(
+  Act0WorldCardV1 world,
+  Act0LessonCardV1 lesson,
+) =>
+    world.lessons.length > 1 &&
+    lesson.lessonId == world.lessons.last.lessonId &&
+    (lesson.lessonId.contains('checkpoint') ||
+        lesson.phaseLabel.toLowerCase().contains('checkpoint') ||
+        lesson.title.toLowerCase().contains('checkpoint'));
 
 bool act0LessonCompleteWithTaskIdsV1(
   Act0LessonCardV1 lesson,
@@ -57,6 +69,7 @@ Act0WorldCardV1 _progressWorldV1(
   required Set<String> completedTaskIds,
   required Set<String> earnedTaskIds,
   required bool passedByRulesCheck,
+  required Set<String> worldsWithOpenMistakes,
 }) {
   final progressTaskIds = completedTaskIds;
   if (world.lessons.isEmpty) {
@@ -72,22 +85,28 @@ Act0WorldCardV1 _progressWorldV1(
     (lesson) => act0LessonCompleteWithTaskIdsV1(lesson, progressTaskIds),
   );
   final available = previousWorldComplete;
+  final hasOpenMistakes = worldsWithOpenMistakes.contains(world.worldId);
   final currentLessonId = available && !allComplete && !passedByRulesCheck
-      ? world.lessons
-            .firstWhere(
-              (lesson) =>
-                  !act0LessonCompleteWithTaskIdsV1(lesson, progressTaskIds),
-            )
-            .lessonId
+      ? world.lessons.firstWhere((lesson) {
+          if (act0LessonCompleteWithTaskIdsV1(lesson, progressTaskIds)) {
+            return false;
+          }
+          if (hasOpenMistakes && act0LessonIsWorldCheckpointV1(world, lesson)) {
+            return false;
+          }
+          return true;
+        }, orElse: () => world.lessons.last).lessonId
       : null;
   final lessons = [
     for (final lesson in world.lessons)
       _progressLessonV1(
+        world,
         lesson,
         worldAvailable: available,
         currentLessonId: currentLessonId,
         availableByRulesCheck: passedByRulesCheck,
         completedTaskIds: progressTaskIds,
+        hasOpenMistakes: hasOpenMistakes,
       ),
   ];
   final completedCount = lessons
@@ -139,16 +158,25 @@ Act0WorldCardV1 _progressWorldV1(
 }
 
 Act0LessonCardV1 _progressLessonV1(
+  Act0WorldCardV1 world,
   Act0LessonCardV1 lesson, {
   required bool worldAvailable,
   required String? currentLessonId,
   required bool availableByRulesCheck,
   required Set<String> completedTaskIds,
+  required bool hasOpenMistakes,
 }) {
   final completed = act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds);
-  final current = lesson.lessonId == currentLessonId;
+  final checkpointBlocked =
+      worldAvailable &&
+      !completed &&
+      hasOpenMistakes &&
+      act0LessonIsWorldCheckpointV1(world, lesson);
+  final current = !checkpointBlocked && lesson.lessonId == currentLessonId;
   final state = completed
       ? Act0LessonStateV1.completed
+      : checkpointBlocked
+      ? Act0LessonStateV1.locked
       : current
       ? Act0LessonStateV1.current
       : availableByRulesCheck
@@ -158,11 +186,15 @@ Act0LessonCardV1 _progressLessonV1(
     state: state,
     primaryCtaLabel: completed
         ? 'Replay'
+        : checkpointBlocked
+        ? 'Clear weak spots'
         : current || availableByRulesCheck
         ? 'Start'
         : 'Locked',
     isSelectable:
-        worldAvailable && (completed || current || availableByRulesCheck),
+        worldAvailable &&
+        !checkpointBlocked &&
+        (completed || current || availableByRulesCheck),
     isLocked: !worldAvailable || state == Act0LessonStateV1.locked,
   );
 }

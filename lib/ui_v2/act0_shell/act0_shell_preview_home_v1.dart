@@ -5,6 +5,28 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     return _progressWorldsWithTaskIds(state, _pathClosedTaskIds);
   }
 
+  Set<String> _worldsWithOpenMistakesV1(Act0ShellStateV1 state) {
+    if (_mistakeRecords.isEmpty) {
+      return const <String>{};
+    }
+    // Only weak spots from pre-checkpoint lessons gate the world checkpoint.
+    // A miss inside the checkpoint lesson itself must not lock the learner out
+    // of resuming or finishing that checkpoint.
+    final worldIdByPreCheckpointLessonId = <String, String>{
+      for (final world in state.worlds)
+        for (final lesson in world.lessons)
+          if (!act0LessonIsWorldCheckpointV1(world, lesson))
+            lesson.lessonId: world.worldId,
+    };
+    return <String>{
+      for (final record in _mistakeRecords.values)
+        if (!_isMistakeDischargedV1(record.taskId))
+          if (worldIdByPreCheckpointLessonId[record.lessonId]
+              case final worldId?)
+            worldId,
+    };
+  }
+
   List<Act0WorldCardV1> _progressWorldsWithTaskIds(
     Act0ShellStateV1 state,
     Set<String> completedTaskIds, {
@@ -16,6 +38,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     passedW1RulesCheck:
         (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
         Act0W1RulesResultV1.passingScore,
+    worldsWithOpenMistakes: _worldsWithOpenMistakesV1(state),
   );
 
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
@@ -354,6 +377,39 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       );
     }
 
+    final dailyDeckEntry = _nextDailyDeckEntry(
+      state: widget.state ?? Act0ShellStateV1.sample,
+    );
+    if (_dailyCompletedLessonIds.length >= 3 &&
+        _dailyCompletedRepCount < 3 &&
+        dailyDeckEntry != null &&
+        (_dailyPracticeQueue.taskIds.isEmpty ||
+            _dailyPracticeQueue.nextTaskId != null)) {
+      return _Act0LearningRecommendationV1(
+        kind: _Act0LearningNextActionKindV1.dailyDrill,
+        label: _copyV1(en: 'Practice first', ru: 'Сначала практика'),
+        title: _copyV1(en: 'Practice a short set', ru: 'Короткая практика'),
+        subtitle: _copyV1(
+          en: 'You finished 3 lessons today. Practice a short set — the next lesson stays open in Learn.',
+          ru: 'Ты прошёл 3 урока за сегодня. Закрепи на практике — следующий урок остаётся открыт в Уроках.',
+        ),
+        ctaLabel: _recommendationCtaLabel(
+          _Act0LearningNextActionKindV1.dailyDrill,
+        ),
+        hint: _copyV1(
+          en: 'Short rep in Practice.',
+          ru: 'Быстрый дневной дрилл во вкладке Практика.',
+        ),
+        outcome: _copyV1(
+          en: 'Practice up to three spots.',
+          ru: 'Дневной набор: 3 чётких спота без лишнего шума.',
+        ),
+        lessonId: dailyDeckEntry.lessonId,
+        taskId: dailyDeckEntry.taskId,
+        practiceGroupId: 'daily',
+      );
+    }
+
     if (!_completedTaskIds.contains(currentTask.taskId)) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.continueLesson,
@@ -385,9 +441,6 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       );
     }
 
-    final dailyDeckEntry = _nextDailyDeckEntry(
-      state: widget.state ?? Act0ShellStateV1.sample,
-    );
     if (_dailyCompletedRepCount < 3 &&
         dailyDeckEntry != null &&
         (_dailyPracticeQueue.taskIds.isEmpty ||
@@ -646,7 +699,10 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       selectedWorld: selectedWorld,
       selectedLesson: selectedLesson,
     );
-    if (repairRecommendation.mistake != null) {
+    if (repairRecommendation.mistake != null ||
+        (_dailyCompletedLessonIds.length >= 3 &&
+            repairRecommendation.kind ==
+                _Act0LearningNextActionKindV1.dailyDrill)) {
       return repairRecommendation;
     }
     final currentTask = _firstIncompleteTask(selectedLesson);

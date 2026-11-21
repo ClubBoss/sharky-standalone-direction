@@ -1465,6 +1465,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
+  final Set<String> _dailyCompletedLessonIds = <String>{};
   Act0DailyPracticeQueueV1 _dailyPracticeQueue =
       const Act0DailyPracticeQueueV1();
   int _dailyCompletedRepCount = 0;
@@ -1983,6 +1984,33 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         return;
       }
       if (!mounted || epoch != _recoveryEpochV1) return;
+      if (widget.enableBetaMetrics) {
+        try {
+          final betaActivity = await Act0BetaMetricsStoreV1.read();
+          final todayBetaDay = betaActivity?.dayOf(widget.clock.nowUtc());
+          if (mounted &&
+              epoch == _recoveryEpochV1 &&
+              betaActivity != null &&
+              todayBetaDay != null) {
+            final validLessonIds = <String>{
+              for (final world
+                  in (widget.state ?? Act0ShellStateV1.sample).worlds)
+                for (final lesson in world.lessons) lesson.lessonId,
+            };
+            _ensureDailyCountDayV1();
+            for (final entry in betaActivity.lessonDays.entries) {
+              if (entry.value == todayBetaDay &&
+                  validLessonIds.contains(entry.key) &&
+                  _completedLessonIds.contains(entry.key)) {
+                _dailyCompletedLessonIds.add(entry.key);
+              }
+            }
+          }
+        } catch (_) {
+          // Beta activity read never blocks progress restore.
+        }
+        if (!mounted || epoch != _recoveryEpochV1) return;
+      }
     }
     var intakeCompleted = false;
     var welcomeCompleted = false;
@@ -3091,6 +3119,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             onPressed: () =>
                 setState(() => _resumeHomeLessonV1(resumableLesson!)),
           )
+        : _dailyCompletedLessonIds.length >= 3 &&
+              dailyGroup.isEnabled &&
+              _learningRecommendation(
+                    selectedWorld: selectedWorld,
+                    selectedLesson: dailyLesson,
+                  ).kind ==
+                  _Act0LearningNextActionKindV1.dailyDrill
+        ? Act0AcademyHomeNextActionV1(
+            title: _copyV1(en: 'Practice a short set', ru: 'Короткая практика'),
+            subtitle: _copyV1(
+              en: 'You finished 3 lessons today. Practice a short set — the next lesson stays open in Learn.',
+              ru: 'Ты прошёл 3 урока за сегодня. Закрепи на практике — следующий урок остаётся открыт в Уроках.',
+            ),
+            ctaLabel: _recommendationCtaLabel(
+              _Act0LearningNextActionKindV1.dailyDrill,
+            ),
+            onPressed: () =>
+                setState(() => _startPracticeGroup(dailyGroup, selectedWorld)),
+          )
         : Act0AcademyHomeNextActionV1(
             title: _localizedLessonTitleV1(dailyLesson),
             subtitle: _localizedLessonSubtitleV1(dailyLesson),
@@ -3847,6 +3894,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     progressedWorld.lessons,
                                     nextLessonId,
                                   );
+                                  if (!nextLesson.isSelectable ||
+                                      nextLesson.isLocked) {
+                                    _tab = Act0ShellTabV1.learn;
+                                    _showPlayHub = true;
+                                    final currentPlayableLesson =
+                                        _firstPlayableLesson(progressedWorld);
+                                    _seedLearnRouteFocusV1(
+                                      lessonId: currentPlayableLesson.lessonId,
+                                      taskId: _firstIncompleteTask(
+                                        currentPlayableLesson,
+                                      ).taskId,
+                                    );
+                                    _showWorldMenu = false;
+                                    _blockCompletionSummary = null;
+                                    return;
+                                  }
                                   _selectedLessonId = nextLesson.lessonId;
                                   _selectedTaskId = _firstIncompleteTask(
                                     nextLesson,
@@ -5880,6 +5943,7 @@ class _Act0PersistedProgressV1 {
     this.dailyCompletedRepCount = 0,
     this.dailyPracticeQueue = const Act0DailyPracticeQueueV1(),
     this.dailyCompletedTaskIds = const {},
+    this.dailyCompletedLessonIds = const {},
     this.persistedStreakDays = 0,
     this.retentionSequence = 0,
     this.retentionMemory = const <_Act0RetentionMemoryEntryV1>[],
@@ -5935,6 +5999,7 @@ class _Act0PersistedProgressV1 {
   final int dailyCompletedRepCount;
   final Act0DailyPracticeQueueV1 dailyPracticeQueue;
   final Set<String> dailyCompletedTaskIds;
+  final Set<String> dailyCompletedLessonIds;
   final int persistedStreakDays;
   final int retentionSequence;
   final List<_Act0RetentionMemoryEntryV1> retentionMemory;
@@ -6019,6 +6084,8 @@ class _Act0PersistedProgressV1 {
       'dailyCompletedRepCount': dailyCompletedRepCount,
       'dailyPracticeQueue': dailyPracticeQueue.toPayload(),
       'dailyCompletedTaskIds': dailyCompletedTaskIds.toList()..sort(),
+      if (dailyCompletedLessonIds.isNotEmpty)
+        'dailyCompletedLessonIds': dailyCompletedLessonIds.toList()..sort(),
       'persistedStreakDays': persistedStreakDays,
       'retentionSequence': retentionSequence,
       'retentionMemory': <Map<String, Object>>[
@@ -6305,6 +6372,7 @@ class _Act0PersistedProgressV1 {
           Act0DailyPracticeQueueV1.tryParse(map['dailyPracticeQueue']) ??
           const Act0DailyPracticeQueueV1(),
       dailyCompletedTaskIds: _stringSet(map['dailyCompletedTaskIds']),
+      dailyCompletedLessonIds: _stringSet(map['dailyCompletedLessonIds']),
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,
       retentionMemory: retentionMemory,
