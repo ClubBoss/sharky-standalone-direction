@@ -900,7 +900,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "turn_river_changes",
     targetTaskId: "turn_river_changes_w5_street_repair",
     targetFingerprint:
-        "f400c5f87136c37bae153807582c86edb7cbb3121deae9d19262e17fff4f12f6",
+        "33411f6662ac97f4d4cd6bf37dae4e74c8a3d6f2c4a4df5558a9e22d55ad8071",
     targetCorrectChoiceId: "repair_story",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",

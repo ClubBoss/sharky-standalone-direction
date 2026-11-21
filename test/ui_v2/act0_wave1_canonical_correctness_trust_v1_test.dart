@@ -109,7 +109,7 @@ void main() {
         lessonId: 'straight_draws',
         taskId: 'straight_draws_w5_straight_draw_find',
       );
-      expect(draw.runner.caption, 'Hero has 6-5 and the board shows 8-7-2.');
+      expect(draw.runner.caption, 'You have 6-5 and the board shows 8-7-2.');
       expect(correctOption(draw).id, 'straight_draw');
       expect(
         correctOption(draw).feedbackReason,
@@ -137,7 +137,7 @@ void main() {
       ]);
       expect(
         correctOption(risky).feedbackReason,
-        'Both cards complete the straight, but 5-club is safer because it helps Hero without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
+        'Both cards complete the straight, but 5-club is safer because it helps you without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
       );
     });
 

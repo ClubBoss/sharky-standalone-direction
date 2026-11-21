@@ -103,7 +103,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB p
 TASK first_table_guide_route_roles [review] Where to go next
 ENTRY: drill
 SUMMARY: Lock in what Home, Learn, Practice, Review, and You do after the first loop.
-CAPTION: After the first loop, each tab has one clear job.
+CAPTION: After the first round, each tab has one clear job.
 TEACH: Know the five jobs. Home shows what to do now. Learn shows what to study next. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.
 TEACH LABELS: Home, Learn, Practice, You
 Q: Where do you go to fix mistakes after a miss?
@@ -536,7 +536,7 @@ TEACH: Blinds force a starting pot. Blinds are real chips or money put in first.
 TEACH LABELS: Real money, Count in BB
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus sb, bb | Tap btn, bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Action starts after BB. BB is a unit for chips. A bet of 3 BB is three times the big blind. UTG is first to choose before the flop.
-TEACH LABELS: 1 BB baseline, UTG first
+TEACH LABELS: 1 BB unit, UTG first
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg, bb | Tap btn, bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which blind posts 1 BB?
 HINT [theoryOnly]: The first decision comes after the big blind.
@@ -546,33 +546,30 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] BTN [seat btn] — The button is a position. BTN marks the dealer button. BB posts the full 1 BB blind.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap btn, bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  + [correct] BB [seat bb] — Right baseline. BB posts the full 1 BB blind, so later prices count from that baseline.
+  + [correct] BB [seat bb] — Right unit. BB posts the full 1 BB blind, so later prices count from that 1 BB post.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap btn, bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Not the baseline. SB posts only 0.5 BB. BB is the full 1 BB post players count from.
+  - [wrong] SB [seat sb] — Not the 1 BB unit. SB posts only 0.5 BB. BB is the full 1 BB post players count from.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap btn, bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
-TASK blinds_posts_drill [drill] 1 BB baseline
-CAPTION: BB sets the 1 BB baseline for the hand.
-TEACH: BB is the 1 BB baseline. Find the seat marked BB, because later prices like 3 BB count from that 1 BB post.
-TEACH LABELS: 1 BB baseline, Count from BB
+TASK blinds_posts_drill [drill] 1 BB unit
+CAPTION: BB sets the 1 BB unit for the hand.
+TEACH: BB is the 1 BB unit. Find the seat marked BB, because later prices like 3 BB count from that 1 BB post.
+TEACH LABELS: 1 BB unit, Count from BB
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-Q: Tap the blind that sets the 1 BB baseline.
+Q: Tap the blind that sets the 1 BB unit.
 HINT [theoryOnly]: Later prices like 3 BB count from this post.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  + [correct] BB [seat bb] — Right baseline. BB posts the full 1 BB blind, so later prices count from that baseline.
+  + [correct] BB [seat bb] — Right unit. BB posts the full 1 BB blind, so later prices count from that 1 BB post.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Not the baseline. SB posts only 0.5 BB. BB is the full 1 BB post players count from.
+  - [wrong] SB [seat sb] — Not the 1 BB unit. SB posts only 0.5 BB. BB is the full 1 BB post players count from.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
 TASK blinds_first_actor [drill] First preflop actor
 CAPTION: The blinds have posted. No one has made a choice yet.
-TEACH: Preflop starts after the big blind. Before the flop, UTG acts first, right after the big blind. Then HJ, CO, BTN and SB act, and BB acts last.
-TEACH LABELS: Street, Recorded actions, Chips behind
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus btn | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 Q: Who acts first preflop in this frame?
 HINT [theoryOnly]: Before the flop, start right after the big blind. BB is last.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
@@ -586,9 +583,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK blinds_last_actor [drill] Last preflop actor
 CAPTION: Everyone has matched 1 BB. The big blind has yet to choose an action.
-TEACH: Preflop starts after the big blind. Before the flop, UTG acts first, right after the big blind. Then HJ, CO, BTN and SB act, and BB acts last.
-TEACH LABELS: Street, Recorded actions, Chips behind
-TEACH TABLE: Preflop | Pot 6 BB | Seat BTN | Decision bb | Seat focus btn | Tap bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 Q: Who has the next option before the flop here?
 HINT [theoryOnly]: Before the flop, start right after the big blind. BB is last.
 TABLE: Preflop | Pot 6 BB | Seat BTN | Decision bb | Tap bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
@@ -635,9 +629,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 TASK blinds_review [review] Order recap
 ENTRY: drill
 CAPTION: The blinds have posted. No one has made a choice yet.
-TEACH: Preflop starts after the big blind. Before the flop, UTG acts first, right after the big blind. Then HJ, CO, BTN and SB act, and BB acts last.
-TEACH LABELS: Street, Recorded actions, Chips behind
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus btn | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 Q: Who acts first preflop?
 HINT [theoryOnly]: Before the flop, start right after the big blind. BB is last.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
@@ -686,9 +677,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 TASK positions_review [review] Position recap
 ENTRY: drill
 CAPTION: All six players are still in the hand. No one has acted on the flop yet. Read the first pass around the table.
-TEACH: After the flop, the button acts last. From the flop on, the first live seat left of the button acts first. BTN acts last on every later street.
-TEACH LABELS: Street, Recorded actions, Chips behind
-TEACH TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus co | Tap utg, btn, bb | Center First pass on the flop | Facts rainbow
 Q: Which seat is latest after the flop here?
 HINT [theoryOnly]: Early seats decide sooner. Late seats see more before acting.
 TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Tap utg, btn, bb | Center First pass on the flop | Facts rainbow
@@ -1034,7 +1022,7 @@ HINT [theoryOnly]: All-in means one player has put in all remaining chips. The c
 TABLE: Preflop | Pot 41.5 BB | Seat BTN | Seat focus btn, co | Tap utg, btn, bb | Center All-in is all remaining chips | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO stack 80 BB call 20 BB | BTN dealer stack 0 BB allIn 20 BB | SB folded post 0.5 BB | BB folded post 1 BB
 TRAIL: Blinds: 1.5 BB · UTG folds · HJ folds · CO calls 1 BB · You go all-in for 20 BB · SB folds · BB folds · CO calls, 20 BB total
-  - [wrong] You win the pot automatically — Not a win condition. All-in does not automatically win. If another player calls, the hand can still go to showdown and the cards still decide the pot.
+  - [wrong] You win the pot right away — Not a win condition. All-in does not automatically win. If another player calls, the hand can still go to showdown and the cards still decide the pot.
     BETTER ANSWER: You put in all remaining chips
   + [correct] You put in all remaining chips — Correct table read. All-in means you committed all remaining chips. It does not automatically win the pot, because cards or folds still decide what happens next.
   - [wrong] Only the bigger stack matters now — Stack size still has a role, but not that role. CO has chips left. You put in your last chips. The hand still has to be decided.
@@ -1052,9 +1040,9 @@ SEATS: UTG folded | HJ folded | CO stack 80 BB call 20 BB | BTN dealer stack 0 B
 TRAIL: Blinds: 1.5 BB · UTG folds · HJ folds · CO calls 1 BB · You go all-in for 20 BB · SB folds · BB folds · CO calls, 20 BB total
   - [wrong] The other player's whole 100 BB stack — Too many chips counted. Your all-in caps CO’s contribution to the pot you can win at 20 BB. Any further chips CO bets against another player stay in a separate pot.
     BETTER ANSWER: Only the chips CO matched against the 20 BB all-in
-  - [wrong] Nothing counts until every stack is equal — Matched already matters. You can win the 20 BB that CO matched. CO keeps the chips they did not put in.
+  - [wrong] Nothing counts until all stacks are equal — Matched already matters. You can win the 20 BB that CO matched. CO keeps the chips they did not put in.
     BETTER ANSWER: Only the chips CO matched against the 20 BB all-in
-  + [correct] Only the chips CO matched against the 20 BB all-in — Correct beginner transfer. You can win the 20 BB CO matched. That limit stays fixed for this hand, even if CO bets more against another player.
+  + [correct] Only the chips CO matched against the 20 BB all-in — Correct matched-chips read. You can win the 20 BB CO matched. That limit stays fixed for this hand, even if CO bets more against another player.
 
 TASK what_poker_is_win_ways [drill] How pots are won
 SUMMARY: Read the table and choose before seeing the explanation.
@@ -1101,7 +1089,7 @@ TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Center BTN, bl
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] A fold or a showdown — Exactly. The table can look busier, but the pot still closes by fold or by best hand at showdown.
-  - [wrong] The button wins automatically — One more read. The Button usually acts late. The hand still decides who wins.
+  - [wrong] The button wins right away — One more read. The Button usually acts late. The hand still decides who wins.
     BETTER ANSWER: A fold or a showdown
   - [wrong] Your cards decide it immediately — The hand is still live. Your cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.
     BETTER ANSWER: A fold or a showdown
@@ -1220,20 +1208,20 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK hand_discipline_buckets_intro [theory] Four buckets
 CAPTION: Preflop starts by sorting the hand into a simple bucket.
-TEACH: Groups and seats, before a raise. T means ten. Suited means same suit (s, like KTs). Offsuit means different suits (o, like J8o).
+TEACH: Groups and seats, before a raise. T means ten. Suited means same suit (s); offsuit means different suits (o).
 
-Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.
+Sharky 6-max starting chart. Open means the first raise preflop.
 
-Premium | AA–QQ, AK suited | Open from UTG through BTN.
+Premium: AA–QQ, AK suited (UTG–BTN).
 
-Strong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.
+Strong: JJ–TT, AK offsuit, AQ suited, AJ suited (UTG–BTN).
 
-Medium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.
+Medium: AQ offsuit, AJ offsuit, KQ, AT (HJ–BTN).
 
-Medium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.
+Medium: 99–22, KJ, QJ suited, KT, QT (CO–BTN).
 
-Weak | Other hands in this course model | Fold.
-TEACH: On BTN after a raise. Against one HJ or CO raise, this chart calls on BTN with KQo, KJs or QJs. It folds Weak hands such as A7o and J8o. Read the opener, your seat, and your cards before applying the rule.
+Weak: other hands (Fold).
+TEACH: On BTN after a raise. Facing one HJ or CO raise, BTN calls with KQo, KJs or QJs and folds Weak hands (A7o, J8o).
 Q: What should you name before the action?
 HINT [theoryOnly]: Hand code writes the two ranks together. T means ten, s means suited, and o means offsuit.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
@@ -1682,7 +1670,7 @@ HINT [theoryOnly]: Use the bucket first before hope or curiosity shows up.
 TABLE: Preflop | You Jc 4d | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Seat focus hj | Card focus hero_0, hero_1 | Center HJ, unopened pot | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ Jc 4d | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ acts
-  + [correct] Weak · Fold — Well done. That is the transfer. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.
+  + [correct] Weak · Fold — Well done. That is the disciplined read. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.
   - [wrong] Medium · Raise — Not quite. This is exactly the leak hand-discipline is trying to prevent. J4o does not become playable because it looks fun.
     BETTER ANSWER: Weak · Fold
   - [suboptimal] Weak · Call — Playable thought. An unopened pot does not rescue a weak bucket. Discipline still says let it go instead of leaking a limp.
@@ -1814,8 +1802,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 TASK position_six_seats_positions_review [review] Six-seat recap
 ENTRY: drill
 CAPTION: Lesson learned: every 6-max seat has a name.
-TEACH: All six seats matter. UTG, HJ, CO, BTN, SB, and BB each point to a different place in the order.
-TEACH LABELS: UTG, HJ, CO, BTN, SB, BB
 Q: Which list names the six seats?
 HINT [theoryOnly]: Read all six labels before using position.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
@@ -1998,7 +1984,7 @@ TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active co | Seat focus co, btn, sb, bb 
 SEATS: UTG folded | HJ folded | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
   + [correct] Fewer players still act after CO — Excellent spot. That is the late-position edge: more information first, fewer players left to respond after you.
-  - [wrong] CO already acts last every street — Not quite. CO is late, but BTN and the blinds still remain. The real edge is fewer players behind than UTG faces.
+  - [wrong] CO already acts last on all streets — Not quite. CO is late, but BTN and the blinds still remain. The real edge is fewer players behind than UTG faces.
     BETTER ANSWER: Fewer players still act after CO
 
 TASK early_vs_late_w2_position_recap [review] Position recap
@@ -2254,9 +2240,9 @@ SEATS: UTG folded | HJ folded | CO Qs Js | BTN dealer stack 100 BB | SB post 0.5
 TRAIL: UTG folds · HJ folds · CO acts
   - [wrong] You already act last — Not quite. Cutoff is late, but Button and the blinds still act after you.
     BETTER ANSWER: BTN, SB, and BB still act after you
-  - [wrong] Late seat makes every hand easy — Count the players behind. Late position helps, but it is not a free pass. First notice who still acts after you.
+  - [wrong] Late seat makes most hands easy — Count the players behind. Late position helps, but it is not a free pass. First notice who still acts after you.
     BETTER ANSWER: BTN, SB, and BB still act after you
-  + [correct] BTN, SB, and BB still act after you — Strong choice. That is the real-table transfer. Count the players behind before treating the seat as comfortable.
+  + [correct] BTN, SB, and BB still act after you — Strong choice. That is the real-table read. Count the players behind before treating the seat as comfortable.
 
 TASK position_checkpoint_position_checkpoint_review [review] Position recap
 ENTRY: drill
@@ -2341,10 +2327,6 @@ REVIEW: One-third pot means betting one-third of the pot before your bet. Half-p
 
 TASK w4_small_bet [drill] One-third bet
 CAPTION: There are 6 BB in the pot.
-TEACH: Before and after a bet. The pot is 6 BB before your opponent bets 2 BB. The bet makes the pot 8 BB. Use the original 6 BB to measure the bet.
-TEACH LABELS: 6 BB before, 8 BB after
-TEACH: Use the pot before the bet. One-third pot means betting one-third of the pot before your bet. Half-pot means half the pot. Pot-size means a bet equal to the pot before your bet.
-TEACH LABELS: One-third, Half-pot, Pot-size
 Q: Which size is one-third pot?
 HINT [theoryOnly]: One-third pot is the smallest simple pressure size here.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Before the bet | Facts one pair, pocket pair, rainbow
@@ -2358,9 +2340,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_half_pot_bet [drill] Half-pot bet
 CAPTION: There are 6 BB in the pot.
-TEACH: Before and after a bet. The pot is 6 BB before your opponent bets 2 BB. The bet makes the pot 8 BB. Use the original 6 BB to measure the bet.
-TEACH LABELS: 6 BB before, 8 BB after
-TEACH: Use the pot before the bet. One-third pot means betting one-third of the pot before your bet. Half-pot means half the pot. Pot-size means a bet equal to the pot before your bet.
+TEACH: Medium bet size. A half-pot bet equals half the current pot before you bet, sitting between one-third pot and pot-size.
 TEACH LABELS: One-third, Half-pot, Pot-size
 Q: Which size is half-pot?
 HINT [theoryOnly]: Half-pot means betting half the pot, not the smallest or biggest size.
@@ -2375,10 +2355,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_pot_bet [drill] Pot-size bet
 CAPTION: Pot is 6 BB. A pot-size bet is heavy pressure.
-TEACH: Before and after a bet. The pot is 6 BB before your opponent bets 2 BB. The bet makes the pot 8 BB. Use the original 6 BB to measure the bet.
-TEACH LABELS: 6 BB before, 8 BB after
-TEACH: Use the pot before the bet. One-third pot means betting one-third of the pot before your bet. Half-pot means half the pot. Pot-size means a bet equal to the pot before your bet.
-TEACH LABELS: One-third, Half-pot, Pot-size
 Q: Which size is pot-size?
 HINT [theoryOnly]: Start with the pot just before the bet.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Before the bet | Facts one pair, pocket pair, rainbow
@@ -2501,8 +2477,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_value_missed [drill] Do not hide value
 CAPTION: BB checked. Your cards are an ace and a jack.
-TEACH: Compare the two private cards with the board. If both players pair the same rank, compare the remaining cards in their best five.
-TEACH LABELS: Board, Private cards
 Q: In this 6-max micro-stakes example, assume BB calls 3 BB with a weaker ace after checking. Which option can get chips from that weaker ace this round?
 HINT [theoryOnly]: Compare what happens to the pot after each choice.
 TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0 | Center Value spot | Facts one pair, top pair, rainbow
@@ -2553,8 +2527,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_bad_bluff [drill] Bad pressure
 CAPTION: You hold a king and a queen on ace, seven and two.
-TEACH: Compare the hands. Read what each player can make with the shared cards. Then consider how each of the choices would affect the bettor.
-TEACH LABELS: Private cards, Board
 Q: In this 6-max micro-stakes example, assume BB calls a pot-size bet with every better hand and folds every worse hand. Which option avoids paying for a bluff that cannot make a better hand fold?
 HINT [theoryOnly]: Use the response the question gives for better hands.
 TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Low fold pressure | Facts high card, rainbow, backdoor flush, backdoor straight
@@ -2590,8 +2562,6 @@ REVIEW: Protection makes the next card cost chips. You have a pair of queens on 
 
 TASK w4_protection_bet [drill] Protect pair
 CAPTION: BB checked on queen, nine and four.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
-TEACH LABELS: Next card, Cost, Deny
 Q: BB has checked. In this 6-max micro-stakes example, assume BB has ace-king and can pair either card. Which option makes BB pay to see the next card or fold?
 HINT [theoryOnly]: Betting protects value by denying that free card.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, board_0, board_1 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
@@ -2605,8 +2575,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_protection_check [drill] Free card risk
 CAPTION: Both players check. BB can beat your pair if the next card pairs an ace or king in their hand.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
-TEACH LABELS: Next card, Cost, Deny
 Q: What did checking allow?
 HINT [theoryOnly]: Ask what the opponent receives by not facing a bet.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
@@ -2620,7 +2588,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_protection_recap [review] Protection recap
 CAPTION: Lesson learned: protection denies a free next card.
-TEACH: Protection checklist. Ask if checking gives away the next card too cheaply.
+TEACH: Protection checklist. Ask if checking gives away the next card too cheaply. When your made hand can be beaten by later cards, betting makes the other player pay chips to continue instead of seeing a free turn card.
 TEACH LABELS: Next card, Free card, Bet
 Q: What does a protection bet deny?
 HINT [theoryOnly]: A value bet can also make the next card cost chips.
@@ -2730,10 +2698,6 @@ REVIEW: Rank gaps and matching suits tell you how much the next card can change.
 
 TASK board_texture_basics_w5_dry_board [drill] Two ways a flop can change
 CAPTION: Read the three flop cards.
-TEACH: Look at ranks and suits. A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. A wet board offers more draws through close ranks or matching suits.
-TEACH LABELS: Rank gaps, Suits
-TEACH: Name the flop shape. Rainbow means three different suits. Two-tone means two cards share a suit. A paired board repeats a rank, such as 8-8-3.
-TEACH LABELS: Number of suits, Repeated ranks
 Q: What texture is this?
 HINT [theoryOnly]: Few obvious straight or flush paths are visible.
 TABLE: Flop | You Ah Tc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -2756,7 +2720,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK board_texture_basics_w5_texture_recap [review] Texture recap
 CAPTION: Lesson learned: texture says how fast a board can change.
-TEACH: Texture checklist. Look at rank connection and suits before choosing an action.
+TEACH: Texture checklist. Look at rank connection and suits before choosing an action. Spread ranks with mixed suits stay calmer across streets because fewer draws can form. Close ranks or matching suits add draw pressure, while a paired flop cuts down matching combinations. Check both shapes first so your plan fits how fast the board can shift.
 TEACH LABELS: Ranks, Suits, Change
 Q: What is the first board read?
 HINT [theoryOnly]: Dry is calmer. Wet has more obvious improvement paths.
@@ -2829,11 +2793,11 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 REVIEW: Four cards of one suit leave you one card short of a flush.
 
 TASK flush_draws_w5_flush_draw_find [drill] Count the matching suits
-CAPTION: Hero has hearts and the board has hearts.
+CAPTION: You have hearts and the board has hearts.
 TEACH: Four hearts is pressure, not a made hand. Do not stop at matching suits. Four hearts means the draw is live, and one more heart changes the hand. Until then, it is still only a draw.
 TEACH LABELS: Four hearts, Not made yet, One more heart
 Q: What draw is visible?
-HINT [theoryOnly]: One more heart can improve Hero to a flush.
+HINT [theoryOnly]: One more heart can improve your hand to a flush.
 TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 7h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
@@ -2860,21 +2824,21 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK flush_draws_w5_made_hand_vs_flush_draw_transfer [drill] Made hand or future pressure
-CAPTION: Real table. Hero holds A-spade and J-club on A-heart, 8-heart, 4-club.
-TEACH: Made hand first, draw pressure second. Hero has top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.
+CAPTION: Real table. You hold A-spade and J-club on A-heart, 8-heart, 4-club.
+TEACH: Made hand first, draw pressure second. You have top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.
 TEACH LABELS: Top pair, Two hearts, Not made yet
 Q: What is the clean read first?
-HINT [theoryOnly]: Name Hero’s made hand, then read what the board could give an opponent.
+HINT [theoryOnly]: Name your made hand, then read what the board could give an opponent.
 TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1 | Center Made hand or draw? | Facts one pair, top pair, two-tone
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jc stack 96.25 BB | SB folded stack 99.5 BB | BB stack 96.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3.75 BB · SB folds · BB calls 2.75 BB more · Flop: BB checks
-  + [correct] Hero has top pair. An opponent could be drawing to a flush — Correct transfer. Hero has top pair and no hearts. An opponent with two hearts can make a flush if another heart comes.
+  + [correct] You have top pair. An opponent could be drawing to a flush — Correct live read. You have top pair and no hearts. An opponent with two hearts can make a flush if another heart comes.
     FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
-  - [wrong] Hero already has a flush — Not made yet. Hero has no hearts. With two hearts on the board, even an opponent holding two hearts would still need one more.
-    BETTER ANSWER: Hero has top pair. An opponent could be drawing to a flush
+  - [wrong] You already have a flush — Not made yet. You have no hearts. With two hearts on the board, even an opponent holding two hearts would still need one more.
+    BETTER ANSWER: You have top pair. An opponent could be drawing to a flush
     FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
-  - [wrong] A possible flush draw cancels Hero’s pair — Current hand first. Hero’s pair of aces already counts. Another heart could help an opponent later.
-    BETTER ANSWER: Hero has top pair. An opponent could be drawing to a flush
+  - [wrong] A possible flush draw cancels your pair — Current hand first. Your pair of aces already counts. Another heart could help an opponent later.
+    BETTER ANSWER: You have top pair. An opponent could be drawing to a flush
     FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
 
 TASK flush_draws_w5_flush_draw_recheck_transfer [drill] Find your draw
@@ -2884,13 +2848,13 @@ HINT [theoryOnly]: Use the visible hearts on the table first. One more heart can
 TABLE: Flop | You Qh 7h | Board Ah 8c 2h | Pot 7 BB | Seat BTN | Active btn | Decision btn | Center Read the draw | Facts high card, two-tone, flush draw, completion cards 9
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh 7h stack 96.75 BB | SB folded stack 99.5 BB | BB stack 96.75 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3.25 BB · SB folds · BB calls 2.25 BB more · Flop: BB checks
-  - [wrong] Hero already has a made flush — Still one card short. Four hearts create strong pressure, but four hearts are still not a made flush yet. Hero needs one more heart before calling it complete.
-    BETTER ANSWER: Hero has a flush draw, not a made flush yet
+  - [wrong] You already have a made flush — Still one card short. Four hearts create strong pressure, but four hearts are still not a made flush yet. You need one more heart before calling it complete.
+    BETTER ANSWER: You have a flush draw, not a made flush yet
     FEEDBACK TABLE: Flop | You Qh 7h | Board Ah 8c 2h | Pot 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, completion cards 9
-  + [correct] Hero has a flush draw, not a made flush yet — Correct recovery. There are four hearts visible, so Hero is one heart short of a flush. That keeps the hand in draw territory until one more heart appears.
+  + [correct] You have a flush draw, not a made flush yet — Correct recovery. There are four hearts visible, so you are one heart short of a flush. That keeps the hand in draw territory until one more heart appears.
     FEEDBACK TABLE: Flop | You Qh 7h | Board Ah 8c 2h | Pot 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, completion cards 9
-  - [wrong] There is no flush pressure yet — Count the hearts. The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.
-    BETTER ANSWER: Hero has a flush draw, not a made flush yet
+  - [wrong] There is no flush pressure yet — Count the hearts. The visible table already shows four hearts between your hand and the board. That creates real flush pressure even though the flush is not made yet.
+    BETTER ANSWER: You have a flush draw, not a made flush yet
     FEEDBACK TABLE: Flop | You Qh 7h | Board Ah 8c 2h | Pot 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, completion cards 9
 
 TASK flush_draws_w5_flush_recap [review] Flush recap
@@ -2918,7 +2882,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 REVIEW: Check which next rank could give you five consecutive cards.
 
 TASK straight_draws_w5_straight_draw_find [drill] Read the four ranks
-CAPTION: Hero has 6-5 and the board shows 8-7-2.
+CAPTION: You have 6-5 and the board shows 8-7-2.
 Q: What draw is visible?
 HINT [theoryOnly]: A 4 or 9 can improve the rank ladder.
 TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
@@ -3019,7 +2983,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK outs_improvement_w5_straight_out [drill] Which rank helps?
 CAPTION: Compare your ranks with the flop.
-Q: Which out improves Hero?
+Q: Which out improves your hand?
 HINT [theoryOnly]: Those cards complete the straight line.
 TABLE: Flop | You 6h 5c | Board 8s 7d 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the draw | Facts high card, rainbow, open-ended, completion cards 8
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 6h 5c stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
@@ -3044,21 +3008,21 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
 
 TASK outs_improvement_w5_clean_vs_risky_out_transfer [drill] Safer out or risky out
-CAPTION: Real table. Turn board shows A-heart, 7-heart, 6-club, 2-diamond. Hero has 9-spade and 8-diamond.
-TEACH: Not every helping card is equally clean. A card can improve Hero and still make the board more dangerous. Start with simple language: safer out when the board stays calmer, riskier out when the board adds new danger.
+CAPTION: Real table. Turn board shows A-heart, 7-heart, 6-club, 2-diamond. You have 9-spade and 8-diamond.
+TEACH: Not every helping card is equally clean. A card can improve your hand and still make the board more dangerous. Start with simple language: safer out when the board stays calmer, riskier out when the board adds new danger.
 TEACH LABELS: Safer card, Riskier card, Third heart
-Q: Which river is the safer out for Hero?
-HINT [theoryOnly]: Both a 5-club and a 5-heart complete Hero straight. Ask which one helps more cleanly and which one adds extra board danger.
+Q: Which river is the safer out for your hand?
+HINT [theoryOnly]: Both a 5-club and a 5-heart complete your straight. Ask which one helps more cleanly and which one adds extra board danger.
 TABLE: Turn | You 9s 8d | Board Ah 7h 6c 2d | Pot 10.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_1, board_2 | Center Compare two river cards | Facts high card, open-ended, completion cards 8
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9s 8d stack 95 BB | SB folded stack 99.5 BB | BB stack 95 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
-  - [wrong] 5-heart is just as clean — It still helps, but it is riskier. 5-heart still completes Hero straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.
+  - [wrong] 5-heart is just as clean — It still helps, but it is riskier. 5-heart still completes your straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.
     BETTER ANSWER: 5-club is safer
     FEEDBACK TABLE: Turn | You 9s 8d | Board Ah 7h 6c 2d | Pot 10.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_1, board_2, board_0, board_3 | Center Compare two river cards | Facts high card, open-ended, completion cards 8
-  - [wrong] Neither card helps yet — The straight really does complete. Hero already has 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether Hero improves, but which completing card is safer.
+  - [wrong] Neither card helps yet — The straight really does complete. You already have 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether you improve, but which completing card is safer.
     BETTER ANSWER: 5-club is safer
     FEEDBACK TABLE: Turn | You 9s 8d | Board Ah 7h 6c 2d | Pot 10.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_1, board_2, board_0, board_3 | Center Compare two river cards | Facts high card, open-ended, completion cards 8
-  + [correct] 5-club is safer — Correct intro read. Both cards complete the straight, but 5-club is safer because it helps Hero without adding a third heart. The straight is real either way, but this river keeps the board calmer.
+  + [correct] 5-club is safer — Correct intro read. Both cards complete the straight, but 5-club is safer because it helps you without adding a third heart. The straight is real either way, but this river keeps the board calmer.
     FEEDBACK TABLE: Turn | You 9s 8d | Board Ah 7h 6c 2d | Pot 10.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_1, board_2, board_0, board_3 | Center Compare two river cards | Facts high card, open-ended, completion cards 8
 
 TASK outs_improvement_w5_table_outs_straight_transfer [drill] Straight draw and price
@@ -3100,8 +3064,6 @@ REVIEW: Compare the new card to the previous board to see which draws finished o
 
 TASK turn_river_changes_w5_turn_hits [drill] Checkpoint: check the turn
 CAPTION: Compare the first three board cards with the turn card.
-TEACH: One card can matter. The turn and river each add one shared card. A blank is a card that changes little for the hand or draw you are tracking. Check whether the new card completes the draw, adds more outs, or leaves it unchanged.
-TEACH LABELS: Turn, River, Draw story
 Q: What happened on the turn?
 HINT [theoryOnly]: Count matching suits before and after the turn.
 TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts flush, gutshot, completion cards 4
@@ -3135,7 +3097,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN bets 1 BB · BB calls 1 BB · Turn: BB checks
   - [wrong] Nothing changed, so keep the same easy plan — One more street read. The turn adds a third heart. Two private hearts can now make a flush.
     BETTER ANSWER: An opponent can now have a flush
-  + [correct] An opponent can now have a flush — Clean transfer read. The flop had two hearts. The turn adds a third, so a player holding two hearts can now have a flush. Your pair of nines stays a pair.
+  + [correct] An opponent can now have a flush — Clean street read. The flop had two hearts. The turn adds a third, so a player holding two hearts can now have a flush. Your pair of nines stays a pair.
   - [wrong] Only the bet size matters now — Notice the third heart. Before choosing a size, notice that the third heart lets an opponent make a flush.
     BETTER ANSWER: An opponent can now have a flush
 
@@ -3185,8 +3147,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 REVIEW: A range collects the hands that fit a situation. Read the flop before placing a hand in a bucket.
 
 TASK w6_value_dry_board [drill] Value on dry board
-CAPTION: K-7-2 rainbow. Hero holds K-Q.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+CAPTION: K-7-2 rainbow. You hold K-Q.
+TEACH: Dry-board range buckets. After the flop, sort your hand into value (weaker hands can call), bluff candidate (better hands can fold), or missed (usually check or fold).
 TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: Which range bucket is K-Q on this board?
 HINT [theoryOnly]: Top pair with a good kicker.
@@ -3204,7 +3166,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_missed_dry_board [drill] Missed on dry board
 CAPTION: BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+TEACH: Compare the three buckets. Before acting postflop, sort your hand into value, bluff candidate, or missed by asking what calls and what folds.
 TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: Which plan fits A-Q under this rule?
 HINT [theoryOnly]: Compare the high cards if neither hand improves.
@@ -3222,8 +3184,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_table_bucket_notice [drill] First live read
 CAPTION: Real table. K-7-2 rainbow lands and you hold A-Q.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
-TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: What should you ask first?
 HINT [theoryOnly]: Before picking a size, make the first useful read.
 TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3232,8 +3192,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] What size should I bet right now? — Too fast. Size comes after the bucket. First decide if the hand is value, bluff candidate, or missed.
     BETTER ANSWER: Which bucket is my hand in?
     FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Which bucket is my hand in? — Nice start. That is the clean live-table transfer. Bucket first, then action.
-    FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  + [correct] Which bucket is my hand in? — Nice start. That is the clean live-table read. Bucket first, then action.
+    FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
   - [suboptimal] Was this hand strong preflop? — Useful start. Preflop strength matters, but the flop bucket is the first sharp live-table read now.
     BETTER ANSWER: Which bucket is my hand in?
     FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3265,7 +3225,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 REVIEW: The same private cards can make a strong hand on one board and miss another.
 
 TASK w6_wrong_board [drill] Missed on wet board
-CAPTION: 8-7-6 two-tone. Hero holds K-Q.
+CAPTION: 8-7-6 two-tone. You hold K-Q.
 Q: Which range bucket is K-Q on 8-7-6?
 HINT [theoryOnly]: K-Q was strong preflop, but this board changed everything.
 TABLE: Flop | You Kd Qc | Board 8h 7h 6c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, two-tone, consecutive board
@@ -3305,9 +3265,9 @@ HINT [theoryOnly]: When pressure drops, the bucket can slide.
 TABLE: Turn | You Jh 9d | Board Ad 7s 4c 4h | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Center Read the turn | Facts one pair, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh 9d stack 95.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
-  - [wrong] It becomes value automatically — Not quite. Losing fold pressure does not make the hand value automatically.
+  - [wrong] It turns into value right away — Not quite. Losing fold pressure does not make the hand value automatically.
     BETTER ANSWER: It can slide toward missed
-  - [wrong] The bucket never changes after flop — Too static. Buckets can shift across streets when the board changes and pressure disappears.
+  - [wrong] The bucket stays fixed after the flop — Too static. Buckets can shift across streets when the board changes and pressure disappears.
     BETTER ANSWER: It can slide toward missed
   + [correct] It can slide toward missed — Solid understanding. Street changes can remove pressure and push a former bluff candidate closer to missed.
 
@@ -3343,8 +3303,6 @@ REVIEW: Before betting, decide whether you want a weaker hand to call or a bette
 
 TASK w6_value_range_action [drill] Value bets
 CAPTION: BB checks, then calls half-pot bets with weaker pairs such as K-J and 7-6.
-TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
-TEACH LABELS: Bet value, Bluff, Check-fold
 Q: What is the purpose of a half-pot bet here?
 HINT [theoryOnly]: Think about which hands would pay to see the turn.
 TABLE: Flop | You Kh Qs | Board Kd 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center After BB checks | Facts one pair, top pair, rainbow
@@ -3358,8 +3316,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_bluff_candidate [drill] When better hands fold
 CAPTION: BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.
-TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
-TEACH LABELS: Bet value, Bluff, Check-fold
 Q: Which plan fits J-T under this rule?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3375,9 +3331,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_missed_hand_action [drill] Missed hand direction
-CAPTION: K-7-2 rainbow. Hero holds J-T with no draw.
-TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
-TEACH LABELS: Bet value, Bluff, Check-fold
+CAPTION: K-7-2 rainbow. You hold J-T with no draw.
 Q: What is the clean action direction?
 HINT [theoryOnly]: Pure missed hands usually do not want a big pot.
 TABLE: Flop | You Jd Th | Board Ks 7h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center After BB checks | Facts high card, rainbow, backdoor straight
@@ -3385,7 +3339,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Bet for value — Wrong bucket. Value betting belongs to made hands, not pure missed hands.
     BETTER ANSWER: Usually check or fold
-  - [suboptimal] Keep betting on every street — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
+  - [suboptimal] Keep betting across streets — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
     BETTER ANSWER: Usually check or fold
   + [correct] Usually check or fold — Spot on. Pure missed hands conserve chips more often than they force action.
 
@@ -3474,8 +3428,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK w6_combo_weight_compare [drill] Which family appears more?
 CAPTION: Compare A-K with pocket eights before blockers.
-TEACH: Families have counts. A combo is one exact two-card hand. Four aces times four kings gives 16 A-K combos. Four share a suit and 12 do not. A pocket pair has six ways to choose two of its four cards.
-TEACH LABELS: 16 combos, 6 combos, Range density
 Q: Which family has more possible combos?
 HINT [theoryOnly]: One family has 16 combos. The other has 6.
 TABLE: Preflop | You 7d 6d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Count combinations | Facts no applicable hand facts
@@ -3603,8 +3555,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK range_checkpoint_pressure [drill] Pressure after a check
 CAPTION: On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.
-TEACH: Bucket shapes action. Value bets can be paid by worse hands. Fold equity comes from the chance an opponent folds to your bet. Missed hands usually check or fold.
-TEACH LABELS: Bet value, Bluff, Check-fold
 Q: Which plan fits 9-6 under this rule?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3731,7 +3681,7 @@ HINT [theoryOnly]: Start from what is still possible.
 TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center 772 rainbow | Facts one pair, rainbow, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh 9s stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] The paired board leaves every seven-containing combination available. — Recheck the visible cards. Paired visible cards change which combinations remain.
+  - [wrong] The paired board leaves seven-containing combinations unchanged. — Recheck the visible cards. Paired visible cards change which combinations remain.
     BETTER ANSWER: Fewer seven-containing hands remain, but trips are still possible.
     FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
   + [correct] Fewer seven-containing hands remain, but trips are still possible. — Paired-board read. The two visible sevens reduce seven-containing private hands, but they do not remove every strong hand or prove one exact hand.
@@ -3911,8 +3861,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w7_effective_stack_100bb [drill] 100 vs 100
 CAPTION: Both players have the same stack behind on this flop.
-TEACH: Smaller stack rules. If you have 200 BB and the other player has 30 BB, the effective stack is 30 BB. That smaller stack sets the real risk.
-TEACH LABELS: 200 BB, 30 BB, Effective stack
 Q: What is the effective stack?
 HINT [theoryOnly]: Equal stacks keep the full depth in play.
 TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
@@ -3929,8 +3877,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w7_table_effective_notice [drill] Find the real risk
 CAPTION: You cover a player 120 BB to 18 BB on a real table.
-TEACH: Smaller stack rules. If you have 200 BB and the other player has 30 BB, the effective stack is 30 BB. That smaller stack sets the real risk.
-TEACH LABELS: 200 BB, 30 BB, Effective stack
 Q: What should you notice first before planning?
 HINT [theoryOnly]: Notice the number that caps the real risk.
 TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
@@ -3987,8 +3933,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w7_100bb_tighter [drill] 100 BB decision
 CAPTION: BB checks. Plan a 4 BB flop bet and an 8 BB turn bet. Assume BB calls both.
-TEACH: Depth changes commitment. A short stack runs out sooner. It also limits how much you can win when a small pair makes a set or suited connectors make a strong hand. At 100 BB, you have more chips for bets on the same streets.
-TEACH LABELS: 20 BB, 100 BB, More room, More risk
 Q: Which river bet would both stacks still cover?
 HINT [theoryOnly]: Subtract both earlier bets from the smaller stack.
 TABLE: Flop | You Ad Jd | Board Ah 8s 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
@@ -4005,8 +3949,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w7_40bb_middle [drill] 40 BB middle plan
 CAPTION: BB checks. Plan a 5 BB flop bet and a 10 BB turn bet. Assume BB calls both.
-TEACH: Depth changes commitment. A short stack runs out sooner. It also limits how much you can win when a small pair makes a set or suited connectors make a strong hand. At 100 BB, you have more chips for bets on the same streets.
-TEACH LABELS: 20 BB, 100 BB, More room, More risk
 Q: What is the largest river bet both stacks could cover?
 HINT [theoryOnly]: Track the chips left after each bet.
 TABLE: Flop | You Ac Jc | Board As 8d 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
@@ -4077,8 +4019,6 @@ REVIEW: Compare the smaller remaining stack with the pot to see how much could s
 
 TASK w7_low_spr_commit [drill] SPR 2
 CAPTION: SPR is 2 on the flop and you hold top pair.
-TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4.
-TEACH LABELS: Low SPR, Commitment, High SPR, Room
 Q: What does low SPR usually tell you?
 HINT [theoryOnly]: Little room is left.
 TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
@@ -4095,8 +4035,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w7_high_spr_room [drill] SPR 8
 CAPTION: SPR is 8 on the flop.
-TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4.
-TEACH LABELS: Low SPR, Commitment, High SPR, Room
 Q: What does high SPR usually give you?
 HINT [theoryOnly]: A lot of stack is still behind.
 TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
@@ -4113,8 +4051,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w7_spr4_middle [drill] SPR 4
 CAPTION: SPR is 4 with one pair and some stack still behind.
-TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4.
-TEACH LABELS: Low SPR, Commitment, High SPR, Room
 Q: What does SPR 4 usually feel like?
 HINT [theoryOnly]: Middle SPR is neither pure all-in nor huge freedom.
 TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
@@ -4144,7 +4080,7 @@ TRAIL: UTG folds · HJ folds · SB posts 0.5 BB, then folds · BB post is includ
     BETTER ANSWER: 20 BB
 
 TASK w7_top_pair_spr2_transfer [drill] Top pair at SPR 2
-CAPTION: Real table. K-7-2 rainbow flop. Hero has K-Q and SPR is 2.
+CAPTION: Real table. K-7-2 rainbow flop. You have K-Q and SPR is 2.
 TEACH: Same top pair, tighter room. Low SPR keeps less room behind, so commitment pressure becomes part of the first read instead of a later warning.
 TEACH LABELS: Top pair, SPR 2, Less room, Commitment
 Q: What does low SPR add to this top-pair spot?
@@ -4155,14 +4091,14 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Treat it like SPR 8 — Depth changed the job. The board and hand stayed the same, but SPR did not. At SPR 2, low room changes the pressure and makes the hand much closer to commitment than at SPR 8.
     BETTER ANSWER: Less room, more commitment pressure
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  + [correct] Less room, more commitment pressure — Clean SPR contrast. That is the low-SPR transfer. Top pair still needs board discipline, but SPR 2 leaves much less room and makes one bet push the hand closer to commitment.
+  + [correct] Less room, more commitment pressure — Clean SPR contrast. That is the low-SPR lesson in action. Top pair still needs board discipline, but SPR 2 leaves much less room and makes one bet push the hand closer to commitment.
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   - [suboptimal] Top pair matters, so stack pressure can wait — Only part of the picture. Top pair is the made hand, but low SPR is the pressure clue. Name the reduced room first, then judge how willing the hand is to keep money flowing.
     BETTER ANSWER: Less room, more commitment pressure
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
 
 TASK w7_top_pair_spr8_transfer [drill] Top pair at SPR 8
-CAPTION: Real table. K-7-2 rainbow flop. Hero has K-Q and SPR is 8.
+CAPTION: Real table. K-7-2 rainbow flop. You have K-Q and SPR is 8.
 TEACH: Top pair is not the same at every SPR. Read hand, board, and price first, then ask how much stack is still behind. High SPR keeps more room and more ways to make a costly mistake.
 TEACH LABELS: Top pair, SPR 8, Future risk
 Q: What does stack depth add to this top-pair spot?
@@ -4287,8 +4223,6 @@ REVIEW: Tournament pressure means survival has value. Losing all chips ends the 
 
 TASK w9_cash_vs_tournament [drill] Cash vs tournament
 CAPTION: You face a thin all-in edge with 20 BB.
-TEACH: Life has value. In cash you can reload. In tournaments, stack loss can end your whole run. That creates survival pressure before payouts and near the bubble.
-TEACH LABELS: Tournament life, Survival, Bubble
 Q: Which frame should be stronger in a tournament?
 HINT [theoryOnly]: Compare cash-game reload logic with tournament survival.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4301,8 +4235,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_short_stack_survival [drill] Short stack survival
 CAPTION: You have 9 BB with blinds about to hit.
-TEACH: Life has value. In cash you can reload. In tournaments, stack loss can end your whole run. That creates survival pressure before payouts and near the bubble.
-TEACH LABELS: Tournament life, Survival, Bubble
 Q: What is usually the sharper plan?
 HINT [theoryOnly]: Very short stacks cannot wait forever.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4315,8 +4247,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_survival_stack_tradeoff [drill] Life vs reload
 CAPTION: Cash table can reload. Tournament table cannot.
-TEACH: Life has value. In cash you can reload. In tournaments, stack loss can end your whole run. That creates survival pressure before payouts and near the bubble.
-TEACH LABELS: Tournament life, Survival, Bubble
 Q: Which table should pass more thin stack-off spots?
 HINT [theoryOnly]: The same thin edge does not carry the same downside.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4329,8 +4259,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_survival_recap [review] Survival recap
 CAPTION: Lesson learned: tournament chips include survival value.
-TEACH: Life has value. In cash you can reload. In tournaments, stack loss can end your whole run. That creates survival pressure before payouts and near the bubble.
-TEACH LABELS: Tournament life, Survival, Bubble
 Q: What is the key survival takeaway?
 HINT [theoryOnly]: Life pressure changes which thin spots are worth taking.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4351,8 +4279,6 @@ REVIEW: M-ratio is a practical urgency signal. Lower zones mean less time and mo
 
 TASK w9_m_ratio_red_zone [drill] Red zone urgency
 CAPTION: Your M-ratio is in the red zone.
-TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zone demands action soon. Use this to avoid both panic and passivity.
-TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What is the sharper mindset?
 HINT [theoryOnly]: Low zone means blinds are hurting fast.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4365,8 +4291,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_m_ratio_green_zone [drill] Green zone patience
 CAPTION: Your M-ratio is in the green zone.
-TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zone demands action soon. Use this to avoid both panic and passivity.
-TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What usually improves in green zone?
 HINT [theoryOnly]: You still have room to pick spots.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4379,8 +4303,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_m_ratio_yellow_zone [drill] Yellow zone planning
 CAPTION: Your M-ratio is in the yellow zone.
-TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zone demands action soon. Use this to avoid both panic and passivity.
-TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What usually becomes sharper in yellow zone?
 HINT [theoryOnly]: Yellow zone asks for planning before panic.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4392,7 +4314,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Prepare action windows before red-zone panic
 
 TASK w9_m_ratio_table_window_transfer [drill] Yellow-zone table read
-CAPTION: Real table. Hero is BTN with A-J offsuit at 12 BB in yellow zone.
+CAPTION: Real table. You are BTN with A-J offsuit at 12 BB in yellow zone.
 TEACH: Yellow zone starts the countdown. This is the changed frame: same M-ratio idea, live table now. Yellow zone is not freeze mode and not red-zone panic. It is the spot where urgency becomes actionable before the stack gets desperate.
 TEACH LABELS: Yellow zone, 12 BB, Urgency, Plan early
 Q: What is the cleaner first zone adjustment here?
@@ -4404,12 +4326,10 @@ TRAIL: Folded to BTN
     BETTER ANSWER: Plan a practical action window now
   - [suboptimal] Treat yellow zone like instant all-in panic — Right idea, wrong speed. Urgency is real, but yellow zone still leaves some room. The cleaner read is plan practical action windows before red-zone panic, not force every spot immediately.
     BETTER ANSWER: Plan a practical action window now
-  + [correct] Plan a practical action window now — Sharp transfer. That is the live-table yellow-zone transfer. You still have a little room, but urgency is real enough that you should prepare an action window before the stack slips into red zone.
+  + [correct] Plan a practical action window now — Sharp live read. That is the live-table yellow-zone adjustment. You still have a little room, but urgency is real enough that you should prepare an action window before the stack slips into red zone.
 
 TASK w9_m_ratio_recap [review] M-ratio recap
 CAPTION: Lesson learned: M-ratio zones map urgency.
-TEACH: Urgency by zone. Green zone has room. Yellow zone needs planning. Red zone demands action soon. Use this to avoid both panic and passivity.
-TEACH LABELS: M-ratio, Green, Yellow, Red
 Q: What is the M-ratio takeaway?
 HINT [theoryOnly]: Green keeps room. Red needs action soon.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4430,8 +4350,6 @@ REVIEW: Risk premium means you need extra hand strength before risking tournamen
 
 TASK w9_medium_stack_tighten [drill] Medium stack discipline
 CAPTION: You are a medium stack two spots from the money.
-TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.
-TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is usually the sharper adjustment?
 HINT [theoryOnly]: Bust risk is expensive here.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4444,8 +4362,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_big_stack_leverage [drill] Big stack leverage
 CAPTION: You cover both blinds near the bubble.
-TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.
-TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What usually improves for the big stack?
 HINT [theoryOnly]: Leverage works because others face elimination risk.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4453,19 +4369,17 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Apply selective open pressure — Solid understanding. Big stacks can leverage bubble pressure because medium stacks cannot call as freely.
   - [suboptimal] Avoid stealing to protect stack — Too passive. Protection matters, but freezing misses one of the strongest bubble advantages of covering stacks.
     BETTER ANSWER: Apply selective open pressure
-  - [wrong] Go all-in with any two cards every hand — Not that extreme. Leverage is selective, not reckless. You still need position, blockers, and player tendencies.
+  - [wrong] Go all-in with any two cards — Not that extreme. Leverage is selective, not reckless. You still need position, blockers, and player tendencies.
     BETTER ANSWER: Apply selective open pressure
 
 TASK w9_bubble_short_stack [drill] Short stack urgency
 CAPTION: You are the short stack near the bubble.
-TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.
-TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What usually stays true for the short stack?
 HINT [theoryOnly]: Short stacks still need survival spots, not endless folding.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Still take practical all-in spots before blinded out — Well done. Bubble pressure matters, but short stacks cannot fold forever. Survival still needs practical action windows before the stack disappears.
-  - [suboptimal] Fold every hand until payouts begin — Too passive. Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.
+  - [suboptimal] Fold almost any hand until payouts begin — Too passive. Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.
     BETTER ANSWER: Still take practical all-in spots before blinded out
   - [wrong] Call off too light — Not quite. Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.
     BETTER ANSWER: Still take practical all-in spots before blinded out
@@ -4481,14 +4395,12 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer raise 2.5 BB | SB folded 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds · BB all-in 18 BB
   - [wrong] Call as wide as normal chip EV allows — Too loose for bubble pressure. Chip-only odds tell you the price of a call. If the call puts your tournament life at risk, payouts and the other stacks also matter.
     BETTER ANSWER: Tighten thin stack-offs versus the covering blind
-  + [correct] Tighten thin stack-offs versus the covering blind — Strong transfer. If BB can eliminate you, you may need more equity than chip odds suggest. That extra equity is the risk premium. Whether A-J should call depends on BB’s all-in range, the remaining stacks and the payouts.
-  - [suboptimal] Over-fold every close hand — Right caution, too extreme. If losing would eliminate you, tighten marginal calls. Strong hands can still call when the edge is large enough.
+  + [correct] Tighten thin stack-offs versus the covering blind — Strong table read. If BB can eliminate you, you may need more equity than chip odds suggest. That extra equity is the risk premium. Whether A-J should call depends on BB’s all-in range, the remaining stacks and the payouts.
+  - [suboptimal] Over-fold all close hands — Right caution, too extreme. If losing would eliminate you, tighten marginal calls. Strong hands can still call when the edge is large enough.
     BETTER ANSWER: Tighten thin stack-offs versus the covering blind
 
 TASK w9_bubble_recap [review] Bubble recap
 CAPTION: Lesson learned: bubble pressure changes who can risk chips.
-TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.
-TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is the bubble-pressure takeaway?
 HINT [theoryOnly]: Medium stacks tighten more; big stacks can lean with leverage.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4523,8 +4435,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_checkpoint_zone_line [drill] Urgency by zone
 CAPTION: Two players face similar hand strength in different M-ratio zones.
-TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.
-TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: Which player should act sooner?
 HINT [theoryOnly]: Zone changes urgency.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4537,8 +4447,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w9_checkpoint_bubble_line [drill] Bubble risk premium line
 CAPTION: Near bubble: medium stack faces big-stack open.
-TEACH: Bubble pressure shifts ranges. Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.
-TEACH LABELS: Bubble, Risk premium, Medium stack, Leverage
 Q: What is often the cleaner medium-stack plan?
 HINT [theoryOnly]: Risk premium should influence the response.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4546,7 +4454,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Defend as wide as normal chip EV spot — Not quite. Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
   + [correct] Tighten defend and avoid thin all-ins — Clean execution. Bubble risk premium raises the bar for medium-stack stack-offs against covering stacks.
-  - [suboptimal] Fold every hand until payout — Too passive. Full shutdown leaks too much equity. The stronger line is disciplined but still competitive.
+  - [suboptimal] Fold almost any hand until payout — Too passive. Full shutdown leaks too much equity. The stronger line is disciplined but still competitive.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
 
 TASK w9_checkpoint_table_notice [drill] Real-table pressure read
@@ -4561,29 +4469,29 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Respect bubble pressure
   - [suboptimal] Fold everything — Playable caution. This looks disciplined because bubble fear is real. But full shutdown folds too much. The cleaner read is selective pressure awareness: tighten versus leverage, not panic-fold every spot.
     BETTER ANSWER: Respect bubble pressure
-  + [correct] Respect bubble pressure — Sharp read. That is the transfer. Bubble pressure hits the medium stack harder, while the covering stack can apply leverage.
+  + [correct] Respect bubble pressure — Sharp read. That is the key shift. Bubble pressure hits the medium stack harder, while the covering stack can apply leverage.
 
 TASK w9_checkpoint_review [review] Tournament pressure recap
 ENTRY: drill
 CAPTION: Lesson learned: tournament pressure changes risk and adjustment windows.
-TEACH: Pressure before exploit. First map pressure with stack and payout context. Then choose exploit lines based on who is overfolding, calling too wide, or avoiding risk.
+TEACH: Pressure before adjustment. First map pressure with stack and payout context. Then choose targeted lines based on who is overfolding, calling too wide, or avoiding risk.
 TEACH LABELS: Survival pressure, M-ratio, Risk premium, Player adjustment
 Q: What does tournament-pressure thinking add before player adjustment?
 HINT [theoryOnly]: Next you will convert pressure reads into opponent-specific player adjustments.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [suboptimal] Adjust only by player type — Playable start. Player reads matter, but tournament pressure changes incentives first. Good exploits combine both layers.
+  - [suboptimal] Adjust only by player type — Playable start. Player reads matter, but tournament pressure changes incentives first. Good adjustments combine both layers.
     BETTER ANSWER: Map pressure first, then adjust by player
-  - [wrong] Map pressure, then copy every player read — Order is right, adjustment is too broad. Pressure comes first, but player reads still need a specific tendency. Do not copy every exploit before checking who is overfolding, overcalling, or avoiding risk.
+  - [wrong] Map pressure, then copy broad player reads — Order is right, adjustment is too broad. Pressure comes first, but player reads still need a specific tendency. Do not copy every adjustment before checking who is overfolding, overcalling, or avoiding risk.
     BETTER ANSWER: Map pressure first, then adjust by player
-  + [correct] Map pressure first, then adjust by player — Pressure comes first. That sequence is the bridge to World 10: pressure context first, player-specific exploit second.
+  + [correct] Map pressure first, then adjust by player — Pressure comes first. That sequence is the bridge to World 10: pressure context first, player-specific adjustment second.
 
 ===== WORLD 10 · LESSON player_type_basics · Who is at the table =====
 
 TASK w10_player_type_intro [theory] One tendency first
 CAPTION: Tag one clear tendency before you change strategy.
-TEACH: Tag first, exploit second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the exploit from that one signal.
-TEACH LABELS: Tendency, Tag, Exploit
+TEACH: Tag first, adjust second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the adjustment from that one signal.
+TEACH LABELS: Tendency, Tag, Adjust
 Q: What is the first step in player adjustment?
 HINT [theoryOnly]: One useful read beats five vague labels.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4591,9 +4499,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Start by naming one reliable tendency. Then apply one targeted change instead of a full strategy rewrite.
 
 TASK w10_nit_tag [drill] Nit profile
-CAPTION: Villain folds to steals repeatedly and rarely 3-bets.
-TEACH: Tag first, exploit second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the exploit from that one signal.
-TEACH LABELS: Tendency, Tag, Exploit
+CAPTION: Opponent folds to steals repeatedly and rarely 3-bets.
 Q: What is the most useful quick tag?
 HINT [theoryOnly]: Tight fold-heavy behavior has one obvious label.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4601,13 +4507,11 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Overbluffing maniac — Opposite profile. A maniac over-aggresses. Here the evidence is repeated folds and low contest frequency; if the same player were raising and barreling often, the aggressive tag would become stronger.
     BETTER ANSWER: Tight-folding profile (nit)
   + [correct] Tight-folding profile (nit) — Strong choice. Frequent folds and low aggression map to a tight profile. That supports selective steal pressure.
-  - [suboptimal] Wait for one more orbit before adjusting — Playable caution. Avoid overfitting tiny samples, but repeated folds are enough to begin a light exploit adjustment. If this were only one folded orbit, waiting would be stronger.
+  - [suboptimal] Wait for one more orbit before adjusting — Playable caution. Avoid overfitting tiny samples, but repeated folds are enough to begin a light targeted adjustment. If this were only one folded orbit, waiting would be stronger.
     BETTER ANSWER: Tight-folding profile (nit)
 
 TASK w10_loose_passive_tag [drill] Loose-passive profile
-CAPTION: Villain calls often preflop and postflop but rarely raises.
-TEACH: Tag first, exploit second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the exploit from that one signal.
-TEACH LABELS: Tendency, Tag, Exploit
+CAPTION: Opponent calls often preflop and postflop but rarely raises.
 Q: Which profile matches the repeated calling pattern?
 HINT [theoryOnly]: Calling wide without raises signals a common profile.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4619,9 +4523,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Loose-passive caller — Solid understanding. Frequent calls with low raise rate is the classic loose-passive tendency.
 
 TASK w10_overaggressive_tag [drill] Over-aggressive profile
-CAPTION: Villain raises often. In several earlier hands, you saw them make two bets and then show a weak hand.
-TEACH: Tag first, exploit second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the exploit from that one signal.
-TEACH LABELS: Tendency, Tag, Exploit
+CAPTION: Opponent raises often. In several earlier hands, you saw them make two bets and then show a weak hand.
 Q: Which tag fits repeated pressure with weak showdowns?
 HINT [theoryOnly]: Frequent pressure with weak showdowns points to one useful tag.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4633,50 +4535,44 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Over-aggressive bluffer
 
 TASK w10_player_type_recap [review] Player-type recap
-CAPTION: Lesson learned: one tendency tag creates a cleaner exploit plan.
-TEACH: Tag first, exploit second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the exploit from that one signal.
-TEACH LABELS: Tendency, Tag, Exploit
+CAPTION: Lesson learned: one tendency tag creates a cleaner adjustment plan.
 Q: What is the tagging takeaway?
 HINT [theoryOnly]: Avoid complex labels before evidence is stable.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Start with one repeated tendency and one actionable adjustment. Complexity comes later if the read stays stable.
 
-===== WORLD 10 · LESSON adjust_one_lever · Adjust one lever =====
+===== WORLD 10 · LESSON adjust_one_lever · Adjust one piece =====
 
 TASK w10_one_lever_intro [theory] One change at a time
-CAPTION: Change one lever first: opening width, value density, or bluff rate.
+CAPTION: Change one piece first: opening width, value density, or bluff rate.
 TEACH: Precision over chaos. If a player overfolds, widen steals first. If a player overcalls, value-bet heavier first. Do not rewrite everything at once.
-TEACH LABELS: One lever, Steal wider, Value heavier
-Q: Why adjust one lever at a time?
+TEACH LABELS: One piece, Steal wider, Value heavier
+Q: Why adjust one piece at a time?
 HINT [theoryOnly]: Small precise changes are easier to trust and test.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Single-lever changes reduce chaos. You can see if the exploit works before layering more adjustments.
+REVIEW: Single-piece changes reduce chaos. You can see if the adjustment works before layering more changes.
 
 TASK w10_vs_nit_open_wider [drill] Steal more vs tight folds
 CAPTION: Blinds fold too much to late-position steals.
-TEACH: Precision over chaos. If a player overfolds, widen steals first. If a player overcalls, value-bet heavier first. Do not rewrite everything at once.
-TEACH LABELS: One lever, Steal wider, Value heavier
-Q: What is the clean first exploit?
+Q: What is the clean first adjustment?
 HINT [theoryOnly]: Overfolding behind you increases steal EV.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Add more turn pressure first — Too much change. That is a broad multi-lever shift. Start with a simpler preflop widen exploit first; extra barrels become better only after postflop folds also show up.
+  - [wrong] Add more turn pressure first — Too much change. That is a broad multi-piece shift. Start with a simpler preflop widen adjustment first; extra barrels become better only after postflop folds also show up.
     BETTER ANSWER: Open slightly wider in late position
   + [correct] Open slightly wider in late position — Excellent spot. Against overfolders, wider late opens capture blinds more often with low resistance.
-  - [suboptimal] Keep baseline until blinds show it again — Safe but misses value. Baseline is okay when uncertain, but repeated overfolding supports a measured widen adjustment. If the blinds defend again, baseline becomes stronger.
+  - [suboptimal] Keep default play until blinds show it again — Safe but misses value. Default play is okay when uncertain, but repeated overfolding supports a measured widen adjustment. If the blinds defend again, default play becomes stronger.
     BETTER ANSWER: Open slightly wider in late position
 
 TASK w10_vs_caller_value_heavier [drill] Value heavier vs callers
-CAPTION: Villain calls down too wide with weak pairs.
-TEACH: Precision over chaos. If a player overfolds, widen steals first. If a player overcalls, value-bet heavier first. Do not rewrite everything at once.
-TEACH LABELS: One lever, Steal wider, Value heavier
-Q: What is the cleaner exploit lever?
+CAPTION: Opponent calls down too wide with weak pairs.
+Q: What is the cleaner adjustment?
 HINT [theoryOnly]: Call-heavy opponents pay off thin value more often.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Bluff more anyway — Inverse exploit. If opponents call too much, bluffs lose EV. Heavier value is the direct exploit.
+  - [wrong] Bluff more anyway — Opposite adjustment. If opponents call too much, bluffs lose EV. Heavier value is the direct response.
     BETTER ANSWER: Value-bet heavier, bluff less often
   - [suboptimal] Only go all-in with strong hands — Too coarse. You want a value-heavy mix, not a one-size all-in strategy. Keep your line flexible and disciplined.
     BETTER ANSWER: Value-bet heavier, bluff less often
@@ -4684,16 +4580,14 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w10_vs_sticky_defender_tighten_steals [drill] Tighten steals vs sticky defenders
 CAPTION: Blinds defend wide and call postflop too often.
-TEACH: Precision over chaos. If a player overfolds, widen steals first. If a player overcalls, value-bet heavier first. Do not rewrite everything at once.
-TEACH LABELS: One lever, Steal wider, Value heavier
 Q: What is the better first adjustment?
-HINT [theoryOnly]: A sticky defender changes the cleanest steal lever.
+HINT [theoryOnly]: A sticky defender changes the cleanest steal focus.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Tighten the weakest steals and keep stronger value — Clean execution. If blinds defend too wide, weak auto-steals lose value. Keep the exploit specific by trimming trash and preserving stronger opens.
-  - [wrong] Steal even wider — Too loose. Sticky defenders reduce fold equity. The cleaner lever is to drop the weakest steals and rely on stronger value-heavy opens.
+  + [correct] Tighten the weakest steals and keep stronger value — Clean execution. If blinds defend too wide, weak auto-steals lose value. Keep the adjustment specific by trimming trash and preserving stronger opens.
+  - [wrong] Steal even wider — Too loose. Sticky defenders reduce fold equity. The cleaner change is to drop the weakest steals and rely on stronger value-heavy opens.
     BETTER ANSWER: Tighten the weakest steals and keep stronger value
-  - [suboptimal] Make no change until the sample is huge — Safe default. Massive samples are not required for a light one-lever adjustment. Repeated sticky defense is enough to trim the weakest steals.
+  - [suboptimal] Make no change until the sample is huge — Safe default. Massive samples are not required for a light one-piece adjustment. Repeated sticky defense is enough to trim the weakest steals.
     BETTER ANSWER: Tighten the weakest steals and keep stronger value
 
 TASK w10_table_value_vs_caller_transfer [drill] Value shift at the table
@@ -4710,90 +4604,82 @@ TRAIL: BTN opens 2.5 BB · BB calls · BB checks
     FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
   + [correct] Lean value, bluff less — Sharp live adjustment. The earlier weak-pair calls support trying a value bet with top pair. The best size and whether a bet beats checking depend on how often this BB calls, folds or raises with each hand.
     FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
-  - [suboptimal] Make every top pair hand huge immediately — Too coarse. The exploit is not to inflate every pot blindly. Keep the shift controlled: extract more value from callers without turning one read into a reckless line.
+  - [suboptimal] Push top pair into a huge pot immediately — Too coarse. The adjustment is not to inflate every pot blindly. Keep the shift controlled: extract more value from callers without turning one read into a reckless line.
     BETTER ANSWER: Lean value, bluff less
     FEEDBACK TABLE: Flop | You Kd Qc | Board Ks 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair vs caller | Facts one pair, top pair, rainbow
 
-TASK w10_one_lever_recap [review] One-lever recap
-CAPTION: Lesson learned: one lever gives cleaner exploit feedback loops.
-TEACH: Precision over chaos. If a player overfolds, widen steals first. If a player overcalls, value-bet heavier first. Do not rewrite everything at once.
-TEACH LABELS: One lever, Steal wider, Value heavier
-Q: What is the one-lever takeaway?
+TASK w10_one_lever_recap [review] One-change recap
+CAPTION: Lesson learned: one change gives cleaner feedback.
+Q: What is the one-change takeaway?
 HINT [theoryOnly]: Test one change before stacking new assumptions.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Exploit quality improves when changes are precise and testable. Broad rewrites create noise and confusion.
+REVIEW: Adjustment quality improves when changes are precise and testable. Broad rewrites create noise and confusion.
 
-===== WORLD 10 · LESSON exploit_guardrails · Exploit guardrails =====
+===== WORLD 10 · LESSON exploit_guardrails · Adjustment guardrails =====
 
-TASK w10_guardrails_intro [theory] Exploit without chaos
-CAPTION: Exploit does not mean abandoning discipline or hand quality.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
-Q: Why do exploit guardrails matter?
+TASK w10_guardrails_intro [theory] Adjust without chaos
+CAPTION: Adjusting does not mean abandoning discipline or hand quality.
+TEACH: Adjust with control. Use sample-aware reads, keep standard anchors, and avoid extreme swings from one or two hands.
+TEACH LABELS: Sample quality, Standard, Control
+Q: Why do adjustment guardrails matter?
 HINT [theoryOnly]: Guardrails keep you from over-adjusting on thin evidence.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Guardrails stop you from turning a useful exploit into a leak. Strong exploit play stays selective and evidence-based.
+REVIEW: Guardrails stop you from turning a useful adjustment into a leak. Strong adaptive play stays selective and evidence-based.
 
 TASK w10_overbluff_punish [drill] Punish overbluffs
-CAPTION: In earlier river showdowns on this line, Villain repeatedly showed missed draws after betting.
+CAPTION: In earlier river showdowns on this line, an opponent repeatedly showed missed draws after betting.
 TEACH: A blocker removes possible opponent hands. An opponent cannot hold a card you hold. A card that removes some of their strong value hands can make a close call more reasonable. Removing their missed draws instead can make a call worse.
 TEACH: One repeated read, one measured adjustment. A bluff-catcher beats bluffs but loses to value bets. Repeated overbluffing can justify defending a little more selectively. This is not a reason to call every river: keep the observed tendency and which hands your cards remove in view.
-Q: What is the cleaner exploit response?
+Q: What is the cleaner adjustment response?
 HINT [theoryOnly]: Overbluffing can be punished by wider bluff-catch windows.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Fold the weakest bluff-catchers first — Too passive. Versus overbluffers, over-folding gives away too much EV. You need selective bluff-catch defense; tighter folding becomes better against value-heavy lines.
     BETTER ANSWER: Bluff-catch a bit wider with blockers
-  - [suboptimal] Call more rivers without checking blockers — Too extreme. You should widen selectively, not call blindly. Guardrails keep exploit from becoming a punt; broader calls need blockers and a cleaner bluff-heavy read.
+  - [suboptimal] Call more rivers without checking blockers — Too extreme. You should widen selectively, not call blindly. Guardrails keep adjustments from becoming a punt; broader calls need blockers and a cleaner bluff-heavy read.
     BETTER ANSWER: Bluff-catch a bit wider with blockers
   + [correct] Bluff-catch a bit wider with blockers — Selective bluff-catch works. Against overbluffs, selective wider bluff-catching is profitable when your line blocks value combos.
 
 TASK w10_underbluff_fold_more [drill] Fold more vs underbluffs
-CAPTION: Villain reaches river with strong value and few bluffs.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
+CAPTION: Opponent reaches river with strong value and few bluffs.
 Q: How should low bluff frequency change your river calls?
 HINT [theoryOnly]: Underbluffing changes bluff-catch requirements.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Fold more marginal bluff-catchers — Sharp read. If bluff frequency is too low, marginal calls lose EV. Disciplined folds become the exploit.
-  - [suboptimal] Call normal baseline frequency — Reasonable default. Baseline is okay with uncertainty, but clear underbluff evidence supports tighter bluff-catch calls.
+  + [correct] Fold more marginal bluff-catchers — Sharp read. If bluff frequency is too low, marginal calls lose EV. Disciplined folds become the adjustment.
+  - [suboptimal] Call normal standard frequency — Reasonable default. Standard play is okay with uncertainty, but clear underbluff evidence supports tighter bluff-catch calls.
     BETTER ANSWER: Fold more marginal bluff-catchers
   - [wrong] Raise bluff more often — Wrong direction. Against underbluffers, aggressive bluff-raise lines usually burn chips. Tighten instead.
     BETTER ANSWER: Fold more marginal bluff-catchers
 
 TASK w10_guardrail_sample_size [drill] Respect sample size
 CAPTION: You saw two odd hands but no long pattern yet.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
-Q: What is the cleaner exploit posture?
+Q: What is the cleaner adjustment posture?
 HINT [theoryOnly]: Guardrails protect you when evidence is still thin.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Commit to a full counter-strategy immediately — Too reactive. Guardrails exist to stop overreaction on thin samples. Extreme counters create noise faster than value.
     BETTER ANSWER: Make only a small adjustment and keep watching
-  + [correct] Make only a small adjustment and keep watching — Strong choice. Two hands can justify attention, not a full strategy swing. Small exploit probes plus more evidence keep your line disciplined.
-  - [suboptimal] Ignore the hands completely — Too rigid. You should not overreact, but ignoring useful early evidence also wastes exploit edge. Watch and adjust lightly.
+  + [correct] Make only a small adjustment and keep watching — Strong choice. Two hands can justify attention, not a full strategy swing. Small probes plus more evidence keep your line disciplined.
+  - [suboptimal] Ignore the hands completely — Too rigid. You should not overreact, but ignoring useful early evidence also wastes edge. Watch and adjust lightly.
     BETTER ANSWER: Make only a small adjustment and keep watching
 
 TASK w10_guardrails_recap [review] Guardrails recap
-CAPTION: Lesson learned: exploits work best with guardrails and evidence.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
+CAPTION: Lesson learned: adjustments work best with guardrails and evidence.
 Q: What is the guardrail takeaway?
 HINT [theoryOnly]: Do not let one read become a full strategy collapse.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Exploit discipline means selective changes, stable baselines, and enough evidence before major shifts.
+REVIEW: Adjustment discipline means selective changes, stable standards, and enough evidence before major shifts.
 
 ===== WORLD 10 · LESSON player_adjustment_checkpoint · Player-adjustment checkpoint =====
 
-TASK w10_checkpoint_intro [theory] Three-step exploit loop
+TASK w10_checkpoint_intro [theory] Three-step adjustment cycle
 CAPTION: Tag one clear tendency before you change strategy.
-TEACH: Tag first, exploit second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the exploit from that one signal.
-TEACH LABELS: Tendency, Tag, Exploit
+TEACH: Tag first, adjust second. Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the adjustment from that one signal.
+TEACH LABELS: Tendency, Tag, Adjust
 Q: What is the first step in player adjustment?
 HINT [theoryOnly]: One useful read beats five vague labels.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4802,74 +4688,70 @@ REVIEW: Start by naming one reliable tendency. Then apply one targeted change in
 
 TASK w10_checkpoint_tag_line [drill] Tag then act
 CAPTION: Opponent folds blinds often but calls rivers too wide.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
+TEACH: Adjust with control. Use sample-aware reads, keep standard anchors, and avoid extreme swings from one or two hands.
+TEACH LABELS: Sample quality, Standard, Control
 Q: What is the cleaner first step?
-HINT [theoryOnly]: You can tag both tendencies, then choose one main lever first.
+HINT [theoryOnly]: You can tag both tendencies, then choose one main focus first.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Pair the blind steal with thinner river value — Too chaotic. Pairing two levers hides whether your exploit is working. Start with one controllable lever; the second adjustment is stronger after the first read holds.
+  - [wrong] Pair the blind steal with thinner river value — Too chaotic. Pairing two changes hides whether your adjustment is working. Start with one controllable focus; the second adjustment is stronger after the first read holds.
     BETTER ANSWER: Choose one primary tendency and act on it
   - [suboptimal] Wait for one more round before tagging — Safe default. Waiting can be reasonable with a thin sample, but reliable repeated reads deserve small targeted adjustment now.
     BETTER ANSWER: Choose one primary tendency and act on it
-  + [correct] Choose one primary tendency and act on it — Solid understanding. Prioritizing one tendency keeps the exploit coherent and measurable before layering more changes.
+  + [correct] Choose one primary tendency and act on it — Solid understanding. Prioritizing one tendency keeps the adjustment coherent and measurable before layering more changes.
 
-TASK w10_checkpoint_lever_line [drill] One-lever exploit line
+TASK w10_checkpoint_lever_line [drill] One-change adjustment line
 CAPTION: A tight blind fold profile appears in your sample.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
-Q: Which exploit line is the cleanest first move?
-HINT [theoryOnly]: Single-lever adjustment is the test.
+Q: Which adjustment line is the cleanest first move?
+HINT [theoryOnly]: Single-change adjustment is the test.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Widen late steals slightly — Well done. That is a clear one-lever exploit against fold-heavy blinds and is easy to track.
-  - [wrong] Change every sizing in all positions — Over-adjustment. This creates too much noise. One measured lever gives better feedback and lower risk.
+  + [correct] Widen late steals slightly — Well done. That is a clear one-piece adjustment against fold-heavy blinds and is easy to track.
+  - [wrong] Change all sizings across positions — Over-adjustment. This creates too much noise. One measured change gives better feedback and lower risk.
     BETTER ANSWER: Widen late steals slightly
-  - [suboptimal] Flat-call more in every seat — Not targeted. Calling wider everywhere does not directly attack blind overfolding. Keep the exploit specific.
+  - [suboptimal] Flat-call more from all seats — Not targeted. Calling wider everywhere does not directly attack blind overfolding. Keep the adjustment specific.
     BETTER ANSWER: Widen late steals slightly
 
 TASK w10_checkpoint_guardrail_line [drill] Guardrail discipline
-CAPTION: You saw one wild bluff from villain this orbit.
-TEACH: Exploit with control. Use sample-aware reads, keep baseline anchors, and avoid extreme swings from one or two hands.
-TEACH LABELS: Sample quality, Baseline, Control
+CAPTION: You saw one wild bluff from an opponent this orbit.
 Q: What is the best guardrail action?
 HINT [theoryOnly]: Single hand reads can be noisy.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Hard-counter every future street now — Too reactive. One hand is rarely enough for a full counter-strategy. Overreaction creates new leaks.
+  - [wrong] Hard-counter all future streets now — Too reactive. One hand is rarely enough for a full counter-strategy. Overreaction creates new leaks.
     BETTER ANSWER: Make a small adjustment and gather more evidence
-  + [correct] Make a small adjustment and gather more evidence — Excellent spot. Guardrails mean respecting uncertainty. Small exploit moves plus more data beats extreme reactions.
-  - [suboptimal] Ignore all reads forever — Too rigid. You should avoid overreaction, but never adjusting also misses exploit value. Baseline is best only if the table cue stops repeating.
+  + [correct] Make a small adjustment and gather more evidence — Excellent spot. Guardrails mean respecting uncertainty. Small moves plus more data beat extreme reactions.
+  - [suboptimal] Ignore all reads forever — Too rigid. You should avoid overreaction, but never adjusting also misses value. Default play is best only if the table cue stops repeating.
     BETTER ANSWER: Make a small adjustment and gather more evidence
 
-TASK w10_checkpoint_table_notice [drill] Real-table exploit read
+TASK w10_checkpoint_table_notice [drill] Real-table adjustment read
 CAPTION: Suppose both blinds keep folding to your late steals.
-TEACH: Carry one exploit to the table. Tag the tendency, pick one lever, and keep the change small enough that you can see whether it is working.
-TEACH LABELS: Repeated fold, One lever, Trackable change
+TEACH: Carry one change to the table. Tag the tendency, pick one focus, and keep the change small enough that you can see whether it is working.
+TEACH LABELS: Repeated fold, One focus, Trackable change
 Q: What is the clean first live adjustment?
-HINT [theoryOnly]: Choose the first exploit you can actually track at the table.
+HINT [theoryOnly]: Choose the first adjustment you can actually track at the table.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Widen steals and add more barrels too — Too broad. That answer is tempting because the pattern feels obvious and profitable. But the dominant cue is sample quality: one repeated blind-fold pattern supports one small tracked lever, not a whole strategy rewrite.
+  - [wrong] Widen steals and add more barrels too — Too broad. That answer is tempting because the pattern feels obvious and profitable. But the dominant cue is sample quality: one repeated blind-fold pattern supports one small tracked change, not a whole strategy rewrite.
     BETTER ANSWER: Widen late steals a bit
-  - [suboptimal] Ignore the pattern — Safe fallback. Baseline feels safe because it avoids overreaction. But repeated overfolding is enough evidence for one small exploit shift. The cleaner read is measured adjustment, not permanent passivity.
+  - [suboptimal] Ignore the pattern — Safe fallback. Standard play feels safe because it avoids overreaction. But repeated overfolding is enough evidence for one small shift. The cleaner read is measured adjustment, not permanent passivity.
     BETTER ANSWER: Widen late steals a bit
-  + [correct] Widen late steals a bit — Clean execution. That is the clean transfer: repeated blind overfolding supports one small late-position widen, not a full strategy rewrite.
+  + [correct] Widen late steals a bit — Clean execution. That is the clean live move: repeated blind overfolding supports one small late-position widen, not a full strategy rewrite.
 
 TASK w10_checkpoint_review [review] Player-adjustment recap
 ENTRY: drill
-CAPTION: Lesson learned: tag tendency, adjust one lever, keep guardrails.
-TEACH: Exploit with structure. Tag one tendency, choose one lever, keep guardrails, then test across table dynamics instead of one isolated hand.
-TEACH LABELS: Tendency tag, One lever, Guardrails, Real-play transfer
-Q: What does player adjustment add before real-play transfer?
-HINT [theoryOnly]: Next you will transfer these guardrails-based adjustments into real-play decisions across mixed table conditions.
+CAPTION: Lesson learned: tag tendency, make one change, keep guardrails.
+TEACH: Adjust with structure. Tag one tendency, choose one focus, keep guardrails, then test across table dynamics instead of one isolated hand.
+TEACH LABELS: Tendency tag, One focus, Guardrails, Real-play habits
+Q: What does player adjustment add before real-play practice?
+HINT [theoryOnly]: Next you will carry these guardrails-based adjustments into real-play decisions across mixed table conditions.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Structured exploit before transfer — Spot on. That is the W10 bridge to W11: structured adaptation first, then robust transfer across live play conditions.
-  - [wrong] Use table feel without a written loop — Too loose. Intuition helps, but without structure your adjustments become inconsistent and hard to trust. Table feel becomes useful after it is tied to one repeatable cue.
-    BETTER ANSWER: Structured exploit before transfer
-  - [suboptimal] Stay baseline until another table cue confirms it — Safe but capped. Baseline protects you, but learning to exploit safely is the point of this world before real-play transfer. Staying baseline is stronger when no tendency is reliable.
-    BETTER ANSWER: Structured exploit before transfer
+  + [correct] Structured adjustment before live play — Spot on. That is the W10 bridge to W11: structured adaptation first, then reliable habits across live play conditions.
+  - [wrong] Use table feel without a written routine — Too loose. Intuition helps, but without structure your adjustments become inconsistent and hard to trust. Table feel becomes useful after it is tied to one repeatable cue.
+    BETTER ANSWER: Structured adjustment before live play
+  - [suboptimal] Stay standard until another table cue confirms it — Safe but capped. Standard play protects you, but learning to adjust safely is the point of this world before real-play habits. Staying standard is stronger when no tendency is reliable.
+    BETTER ANSWER: Structured adjustment before live play
 
 ===== WORLD 11 · LESSON session_plan_basics · Session plan in 30 seconds =====
 
@@ -4881,54 +4763,48 @@ Q: What is the best pre-session plan style?
 HINT [theoryOnly]: One focus keeps decisions clear under pressure.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Real-play transfer improves when your session starts with one target behavior, not a long checklist.
+REVIEW: Real-play habits improve when your session starts with one target behavior, not a long checklist.
 
 TASK w11_plan_focus_choice [drill] Choose one focus
 CAPTION: You have 45 minutes and noisy tables today.
-TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, or fold discipline. Then evaluate that same focus after the session.
-TEACH LABELS: One focus, Reps, Post-session review
 Q: What is the cleaner session objective?
 HINT [theoryOnly]: Simple focus beats wide ambition.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Track six improvements at once — Too much load. Too many goals blur feedback and weaken transfer. One target gives cleaner repetition.
+  - [wrong] Track six improvements at once — Too much load. Too many goals blur feedback and weaken carryover. One target gives cleaner repetition.
     BETTER ANSWER: One measurable focus for the whole session
-  + [correct] One measurable focus for the whole session — One measurable focus. A single measurable focus transfers training into real play with less mental overload.
-  - [suboptimal] No plan, just react — Playable fallback. Reactive play can still work, but transfer quality rises when one focus is defined before action starts.
+  + [correct] One measurable focus for the whole session — One measurable focus. A single measurable focus carries study into real play with less mental overload.
+  - [suboptimal] No plan, just react — Playable fallback. Reactive play can still work, but session quality rises when one focus is defined before action starts.
     BETTER ANSWER: One measurable focus for the whole session
 
 TASK w11_plan_avoid_overload [drill] Avoid overload plan
 CAPTION: Your prior session had scattered notes and no clear pattern.
-TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, or fold discipline. Then evaluate that same focus after the session.
-TEACH LABELS: One focus, Reps, Post-session review
 Q: How should this session goal be narrowed?
 HINT [theoryOnly]: Reduce cognitive load first.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Add more tracking categories — Wrong direction. More categories usually increase noise. Start simpler to get stable transfer behavior first.
-    BETTER ANSWER: Narrow to one transfer goal next session
-  - [suboptimal] Avoid setting any goal again — Too passive. Removing goals avoids overload but also weakens deliberate transfer. Keep one simple target.
-    BETTER ANSWER: Narrow to one transfer goal next session
-  + [correct] Narrow to one transfer goal next session — One goal clears the noise. Transfer improves when you narrow scope and collect cleaner evidence on one behavior.
+  - [wrong] Add more tracking categories — Wrong direction. More categories usually increase noise. Start simpler to get stable table behavior first.
+    BETTER ANSWER: Narrow to one session goal next time
+  - [suboptimal] Avoid setting any goal again — Too passive. Removing goals avoids overload but also weakens deliberate practice. Keep one simple target.
+    BETTER ANSWER: Narrow to one session goal next time
+  + [correct] Narrow to one session goal next time — One goal clears the noise. Carryover improves when you narrow scope and collect cleaner evidence on one behavior.
 
 TASK w11_plan_table_focus_transfer [drill] Real-table focus plan
 CAPTION: Your evening session starts in an hour. You are tired and the first orbit will move fast.
-TEACH: Plan the loop before the cards fly. Real table transfer starts before the first hand. One focus sets the session goal, one trigger tells you when to apply it, and one review note closes the loop after play.
+TEACH: Plan the routine before the cards fly. Real-table practice starts before the first hand. One focus sets the session goal, one trigger tells you when to apply it, and one review note closes the cycle after play.
 TEACH LABELS: Real table, One focus, Trigger, Review
-Q: What should Hero choose before sitting in?
+Q: What should you choose before sitting in?
 HINT [theoryOnly]: Pick one focus you can notice as a trigger during the session and review after the session ends.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Track only the blind-defense leak today — Clean transfer plan. That is the real-table transfer. One focus keeps the session executable, gives you one trigger to notice live, and leaves one clean review target after the session.
-  - [wrong] Track every leak from the start — Too noisy. A crowded plan weakens transfer. If the session starts with too many goals, the live trigger is harder to see and the review becomes blur instead of one actionable output.
+  + [correct] Track only the blind-defense leak today — Clean session plan. That is the real-table habit. One focus keeps the session executable, gives you one trigger to notice live, and leaves one clean review target after the session.
+  - [wrong] Track all leaks from the start — Too noisy. A crowded plan weakens carryover. If the session starts with too many goals, the live trigger is harder to see and the review becomes blur instead of one actionable output.
     BETTER ANSWER: Track only the blind-defense leak today
-  - [suboptimal] Play first and decide later — Too loose a loop. Review still matters, but the loop is weaker without a one-focus plan. Real table transfer is stronger when the session starts with one focus, then checks one trigger, then closes with one review note.
+  - [suboptimal] Play first and decide later — Too loose a cycle. Review still matters, but the cycle is weaker without a one-focus plan. Real-table carryover is stronger when the session starts with one focus, checks one trigger, and closes with one review note.
     BETTER ANSWER: Track only the blind-defense leak today
 
 TASK w11_session_plan_recap [review] Session-plan recap
-CAPTION: Lesson learned: one focus plan creates cleaner real-play transfer.
-TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, or fold discipline. Then evaluate that same focus after the session.
-TEACH LABELS: One focus, Reps, Post-session review
+CAPTION: Lesson learned: one focus plan creates cleaner real-play habits.
 Q: What is the session-plan takeaway?
 HINT [theoryOnly]: Simple plan first, then repetitions.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -4937,41 +4813,37 @@ REVIEW: Consistent one-focus planning improves execution quality and makes post-
 
 ===== WORLD 11 · LESSON table_trigger_reads · In-session trigger reads =====
 
-TASK w11_trigger_intro [theory] Trigger-first loop
+TASK w11_trigger_intro [theory] Trigger-first routine
 CAPTION: When a trigger appears, apply one prepared adjustment quickly.
-TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player overcalls, value heavier. Use one lever per trigger.
-TEACH LABELS: Trigger, One lever, Observe result
-Q: What is a trigger read for transfer play?
-HINT [theoryOnly]: Trigger -> one lever -> observe result.
+TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player overcalls, value heavier. Use one adjustment per trigger.
+TEACH LABELS: Trigger, One change, Observe result
+Q: What is a trigger read for real play?
+HINT [theoryOnly]: Trigger -> one adjustment -> observe result.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: A trigger read is a repeated in-session pattern that activates one preplanned adjustment.
 
 TASK w11_trigger_overfold_blinds [drill] Blind overfold trigger
 CAPTION: Both blinds folded to 5 of your last 6 steals.
-TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player overcalls, value heavier. Use one lever per trigger.
-TEACH LABELS: Trigger, One lever, Observe result
-Q: What is the cleaner transfer action?
-HINT [theoryOnly]: Overfold trigger supports a preflop widen lever.
+Q: What is the cleaner table action?
+HINT [theoryOnly]: Overfold trigger supports a preflop widen adjustment.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Add turn barrels against the blinds too — Too broad. The trigger is preflop overfolding. Use a matching preflop lever first, not a full postflop rewrite.
+  - [wrong] Add turn barrels against the blinds too — Too broad. The trigger is preflop overfolding. Use a matching preflop adjustment first, not a full postflop rewrite.
     BETTER ANSWER: Widen late steals slightly
-  + [correct] Widen late steals slightly — Overfold means widen. This is a direct trigger-to-lever transfer with clear evidence and low complexity.
-  - [suboptimal] Wait one more orbit before using the trigger — Safe but misses edge. Static play is stable, but repeated triggers support small targeted transfer adjustments.
+  + [correct] Widen late steals slightly — Overfold means widen. This is a direct trigger-to-action adjustment with clear evidence and low complexity.
+  - [suboptimal] Wait one more orbit before using the trigger — Safe but misses edge. Static play is stable, but repeated triggers support small targeted adjustments.
     BETTER ANSWER: Widen late steals slightly
 
 TASK w11_trigger_overcall_flop [drill] Overcall trigger
-CAPTION: In several earlier showdowns, Villain showed a weak pair after calling bets on both flop and turn.
-TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player overcalls, value heavier. Use one lever per trigger.
-TEACH LABELS: Trigger, One lever, Observe result
-Q: What is the sharper one-lever response?
+CAPTION: In several earlier showdowns, an opponent showed a weak pair after calling bets on both flop and turn.
+Q: What is the sharper one-change response?
 HINT [theoryOnly]: Overcall trigger points to value-density change.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Probe with more bluffs first — Inverse exploit. Frequent callers reduce bluff EV. Value density is the cleaner transfer adjustment.
+  - [wrong] Probe with more bluffs first — Wrong adjustment. Frequent callers reduce bluff EV. Value density is the cleaner real-play adjustment.
     BETTER ANSWER: Bet value heavier and trim bluffs
-  - [suboptimal] Save the adjustment for review only — Too rigid. Rigid baseline avoids errors but gives up clear transfer edges from repeated triggers.
+  - [suboptimal] Save the adjustment for review only — Too rigid. Rigid default lines avoid errors but give up clear edges from repeated triggers.
     BETTER ANSWER: Bet value heavier and trim bluffs
   + [correct] Bet value heavier and trim bluffs — Callers want value. Those showdowns give you a reason to try more value bets and fewer bluffs against this player. Keep checking whether the pattern holds.
 
@@ -4989,7 +4861,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO raises 
   - [wrong] Fold now — A fold ends this hand. A call keeps CO’s weaker bets in and gives you a turn decision. If CO’s betting range is very strong, folding can still be reasonable.
     BETTER ANSWER: Call once in position
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
-  - [suboptimal] Raise for protection now — Playable but noisy. Raising can feel proactive, but it bloats the pot too early. The sharper transfer line is use position and the cheap price first.
+  - [suboptimal] Raise for protection now — Playable but noisy. Raising can feel proactive, but it bloats the pot too early. The sharper table line is use position and the cheap price first.
     BETTER ANSWER: Call once in position
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
 
@@ -5012,21 +4884,19 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO raises 
     FEEDBACK TABLE: Turn | You Qs Js | Board Jh 7c 4d 2s | Pot 24 BB | To call 12 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center BTN top pair, tight CO barrel | Facts one pair, top pair
 
 TASK w11_trigger_recap [review] Trigger recap
-CAPTION: Lesson learned: trigger reads convert pattern into one action lever.
-TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player overcalls, value heavier. Use one lever per trigger.
-TEACH LABELS: Trigger, One lever, Observe result
+CAPTION: Lesson learned: trigger reads convert pattern into one focused adjustment.
 Q: What is the trigger-read takeaway?
 HINT [theoryOnly]: Trigger must be repeated, not imagined.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Strong transfer uses repeated triggers and simple one-lever responses you can track over time.
+REVIEW: Strong play uses repeated triggers and simple single adjustments you can track over time.
 
-===== WORLD 11 · LESSON post_session_review_loop · Post-session review loop =====
+===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
 
 TASK w11_review_loop_intro [theory] One leak one fix
 CAPTION: After play, name one leak and one repair target for tomorrow.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
+TEACH: Close the cycle daily. Session plan starts the day, trigger reads guide live play, and review sets tomorrow’s focus. That cycle compounds skill.
+TEACH LABELS: Plan, Trigger, Review, Daily cycle
 Q: What makes review actionable?
 HINT [theoryOnly]: One leak, one fix, one next session test.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5035,45 +4905,41 @@ REVIEW: Actionable review links one observed leak to one concrete repair task fo
 
 TASK w11_review_pick_leak [drill] Pick priority leak
 CAPTION: Today you missed thin value and overcalled one river.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What is the clean first review action?
 HINT [theoryOnly]: Pick the leak that repeats most often first.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Fix all leaks at once tomorrow — Overload risk. Trying to repair everything usually weakens execution. Prioritize one leak for stronger transfer.
+  - [wrong] Fix all leaks at once tomorrow — Overload risk. Trying to repair everything usually weakens execution. Prioritize one leak for stronger carryover.
     BETTER ANSWER: Select one repeated leak as priority
-  - [suboptimal] Skip review and just play more volume — Volume helps. Volume without structured review slows improvement. One focused repair keeps the loop productive.
+  - [suboptimal] Skip review and just play more volume — Volume helps. Volume without structured review slows improvement. One focused repair keeps the habit productive.
     BETTER ANSWER: Select one repeated leak as priority
-  + [correct] Select one repeated leak as priority — Pick the repeat leak. Choosing one repeated leak gives the highest transfer value for the next focused session.
+  + [correct] Select one repeated leak as priority — Pick the repeat leak. Choosing one repeated leak gives the highest value for the next focused session.
 
 TASK w11_review_define_fix [drill] Define tomorrow fix
 CAPTION: Priority leak: overcalling rivers vs tight players.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: Which repair target is most actionable?
 HINT [theoryOnly]: Define an if-then fix for next session.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] If villain underbluffs, fold marginal bluff-catchers — Specific fix transfers. Specific if-then repair targets transfer directly into live decisions better than generic intentions.
+  + [correct] If an opponent underbluffs, fold marginal bluff-catchers — Specific fix carries over. Specific if-then repair targets carry directly into live decisions better than generic intentions.
   - [wrong] Play better rivers somehow — Too vague. Vague goals are hard to execute. Use behavior-specific repair rules instead.
-    BETTER ANSWER: If villain underbluffs, fold marginal bluff-catchers
-  - [suboptimal] Do not set any repair task — Missed chance. Skipping repair leaves the leak unchanged. A simple explicit fix improves next-session transfer.
-    BETTER ANSWER: If villain underbluffs, fold marginal bluff-catchers
+    BETTER ANSWER: If an opponent underbluffs, fold marginal bluff-catchers
+  - [suboptimal] Do not set any repair task — Missed chance. Skipping repair leaves the leak unchanged. A simple explicit fix improves next-session execution.
+    BETTER ANSWER: If an opponent underbluffs, fold marginal bluff-catchers
 
-TASK w11_review_loop_recap [review] Review-loop recap
-CAPTION: Lesson learned: review closes the transfer loop into tomorrow.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
-Q: What is the review-loop takeaway?
+TASK w11_review_loop_recap [review] Review-habit recap
+CAPTION: Lesson learned: review carries your work forward into tomorrow.
+TEACH: Carry one fix forward. A session only teaches if your review stays small and concrete. Pick one repeated mistake from today, ignore lucky or unlucky short-term noise, and write one clear if-then habit for tomorrow. Bringing that single note into the next pre-session plan turns daily hands into steady skill.
+TEACH LABELS: One leak, If-then fix, Next session
+Q: What is the post-session review takeaway?
 HINT [theoryOnly]: Write one leak and one fix before ending session.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Post-session review converts play into learning only when it outputs one clear repair target for the next day.
 
-===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play transfer checkpoint =====
+===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play session checkpoint =====
 
-TASK w11_checkpoint_intro [theory] Transfer loop map
+TASK w11_checkpoint_intro [theory] Session cycle map
 CAPTION: Pick one concrete focus before each real session starts.
 TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, or fold discipline. Then evaluate that same focus after the session.
 TEACH LABELS: One focus, Reps, Post-session review
@@ -5081,27 +4947,23 @@ Q: What is the best pre-session plan style?
 HINT [theoryOnly]: One focus keeps decisions clear under pressure.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Real-play transfer improves when your session starts with one target behavior, not a long checklist.
+REVIEW: Real-play habits improve when your session starts with one target behavior, not a long checklist.
 
 TASK w11_checkpoint_plan_line [drill] Plan line
 CAPTION: You start a session after a long workday with low energy.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
-Q: What is the clean transfer plan?
+Q: What is the clean session plan?
 HINT [theoryOnly]: Plan should stay simple and executable.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Set a complex multi-phase improvement plan — Too heavy. Complex plans collapse under fatigue. Transfer needs practical execution, not idealized complexity.
+  - [wrong] Set a complex multi-phase improvement plan — Too heavy. Complex plans collapse under fatigue. Real play needs practical execution, not idealized complexity.
     BETTER ANSWER: Set one low-friction focus target
-  + [correct] Set one low-friction focus target — Low-energy plan first. Low-energy sessions still transfer well when focus is clear, small, and measurable.
+  + [correct] Set one low-friction focus target — Low-energy plan first. Low-energy sessions still teach well when focus is clear, small, and measurable.
   - [suboptimal] Play with no objective — Simpler, but blind. No objective removes overload but also removes learning direction. One simple target is better.
     BETTER ANSWER: Set one low-friction focus target
 
 TASK w11_checkpoint_trigger_line [drill] Trigger line
 CAPTION: You notice repeated blind overfold and river underbluff patterns.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
-Q: Which transfer action is best?
+Q: Which table action is best?
 HINT [theoryOnly]: Pick one prepared live cue first.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
@@ -5109,24 +4971,22 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Use one prepared live cue now
   - [suboptimal] Log the trigger and wait for review — Review matters. Review is important, but the prepared cue has to guide the live decision.
     BETTER ANSWER: Use one prepared live cue now
-  + [correct] Use one prepared live cue now — One cue, one action. A single prepared cue keeps transfer disciplined and observable in real play.
+  + [correct] Use one prepared live cue now — One cue, one action. A single prepared cue keeps table play disciplined and observable.
 
 TASK w11_checkpoint_review_line [drill] Review line
 CAPTION: Session ends with mixed results and two recurring mistakes.
-TEACH: Close the loop daily. Session plan starts the day, trigger reads guide live play, review loop sets tomorrow focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily loop
 Q: What is the strongest closeout action?
 HINT [theoryOnly]: Review should output one next-session repair task.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Review one leak — Loop closed cleanly. Transfer compounds when review creates one actionable output that directly shapes the next session plan.
-  - [wrong] Write long notes — Incomplete loop. Long notes feel productive because they capture a lot. But the dominant cue here is actionability. Without one chosen repair, the next session still starts fuzzy.
+  + [correct] Review one leak — Cycle closed cleanly. Progress compounds when review creates one actionable output that directly shapes the next session plan.
+  - [wrong] Write long notes — Incomplete review. Long notes feel productive because they capture a lot. But the dominant cue here is actionability. Without one chosen repair, the next session still starts fuzzy.
     BETTER ANSWER: Review one leak
   - [suboptimal] Skip closeout — Common habit. Skipping closeout is tempting because the session is over and the key hands still feel fresh. But memory fades fast. The cleaner read is protect tomorrow with one explicit leak-and-fix note.
     BETTER ANSWER: Review one leak
 
 TASK w11_checkpoint_mixed_table_line [drill] Mixed table line
-CAPTION: Real table. HJ opens 2.5 BB. Hero calls BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.
+CAPTION: Real table. HJ opens 2.5 BB. You call BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.
 TEACH: Real play combines cues. Real play means combining seat, hand, board, price, and stack depth before acting. One cue alone is usually too thin.
 TEACH LABELS: Position, Top pair, Two-tone board, 30 BB
 Q: Which line continues in position and keeps HJ’s weaker bets in?
@@ -5145,18 +5005,18 @@ TRAIL: HJ opens 2.5 BB · BTN calls · HJ bets 5 BB
 
 TASK w11_checkpoint_review [review] Real-play recap
 ENTRY: drill
-CAPTION: Lesson learned: plan, trigger, and review form one daily transfer loop.
-TEACH: Loop beats intensity. Sustainable progress comes from repeating a clean transfer loop daily, not from occasional complex sessions.
-TEACH LABELS: Session plan, Trigger action, Review repair, Daily habit loop
-Q: What does real-play transfer produce when done well?
-HINT [theoryOnly]: This closes the core route and feeds your daily play-review habit loop. Next you build the mindset bridge.
+CAPTION: Lesson learned: plan, trigger, and review form one daily practice cycle.
+TEACH: Cycle beats intensity. Sustainable progress comes from repeating a clean study-to-table cycle daily, not from occasional complex sessions.
+TEACH LABELS: Session plan, Trigger action, Review repair, Daily habit
+Q: What does real-play carryover produce when done well?
+HINT [theoryOnly]: This closes the core route and feeds your daily play-review habit. Next you build the mindset bridge.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] One large review block after the session — Too brittle. Transfer is compounding and iterative. One massive session is less reliable than steady loops.
-    BETTER ANSWER: A repeatable daily transfer loop
-  - [suboptimal] Study another concept before looping it — Partial progress. Content helps, but transfer happens only when lessons are converted into repeated session behavior and review.
-    BETTER ANSWER: A repeatable daily transfer loop
-  + [correct] A repeatable daily transfer loop — Sharp read. That is the intended endpoint: practical, repeatable transfer from learning into daily table decisions.
+  - [wrong] One large review block after the session — Too brittle. Real-play skill compounds over time. One massive session is less reliable than steady daily habits.
+    BETTER ANSWER: A repeatable daily practice cycle
+  - [suboptimal] Study another concept before applying it — Partial progress. Content helps, but real change happens only when lessons are converted into repeated session behavior and review.
+    BETTER ANSWER: A repeatable daily practice cycle
+  + [correct] A repeatable daily practice cycle — Sharp read. That is the intended endpoint: practical, repeatable carryover from learning into daily table decisions.
 
 ===== WORLD 12 · LESSON decision_over_outcome · Decision quality over outcome =====
 
@@ -5171,23 +5031,19 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: A strong mindset evaluates whether the decision process was sound before reacting to outcome variance.
 
 TASK w12_good_fold_bad_result [drill] Good fold, bad result
-CAPTION: You folded a marginal bluff-catcher and villain later showed a bluff.
-TEACH: Process beats variance. Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.
-TEACH LABELS: Process, Variance, Outcome bias
+CAPTION: You folded a marginal bluff-catcher and an opponent later showed a bluff.
 Q: How should you review this fold?
 HINT [theoryOnly]: Do not auto-label by reveal result only.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Check the cues before judging the result — Process beats reveal. Review the price and the range you could reasonably give Villain before they showed the bluff. This reveal can inform future decisions.
+  + [correct] Check the cues before judging the result — Process beats reveal. Review the price and the range you could reasonably give the opponent before they showed the bluff. This reveal can inform future decisions.
   - [wrong] Mark the fold suspicious because it lost — Outcome trap. Single-hand reveal can mislead. Decision quality should be judged by range logic and context.
     BETTER ANSWER: Check the cues before judging the result
-  - [suboptimal] Move on after a quick note only — Avoids tilt. Ignoring helps emotions, but quick process review is better for learning transfer.
+  - [suboptimal] Move on after a quick note only — Avoids tilt. Ignoring helps emotions, but quick process review is better for long-term learning.
     BETTER ANSWER: Check the cues before judging the result
 
 TASK w12_bad_call_good_result [drill] Bad call, lucky win
 CAPTION: Suppose a loose call wins after a lucky river.
-TEACH: Process beats variance. Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.
-TEACH LABELS: Process, Variance, Outcome bias
 Q: Suppose a loose call wins after a lucky river. What is the best mindset response?
 HINT [theoryOnly]: Winning the pot does not guarantee a good decision.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5224,8 +5080,6 @@ TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds 
 
 TASK w12_decision_quality_recap [review] Process recap
 CAPTION: Lesson learned: process quality is the anchor under variance.
-TEACH: Process beats variance. Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.
-TEACH LABELS: Process, Variance, Outcome bias
 Q: What is the process-quality takeaway?
 HINT [theoryOnly]: Outcome is data, not verdict.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5236,7 +5090,7 @@ REVIEW: Stable improvement comes from process audits that survive both wins and 
 
 TASK w12_tilt_reset_intro [theory] Reset in under 20s
 CAPTION: One short reset can protect decision quality after emotional spikes.
-TEACH: Fast reset loop. Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.
+TEACH: Fast reset routine. Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.
 TEACH LABELS: Emotion label, Breath, Re-anchor
 Q: What is the purpose of a tilt reset?
 HINT [theoryOnly]: Pause, breathe, re-anchor to plan.
@@ -5246,8 +5100,6 @@ REVIEW: Tilt reset prevents one hand from contaminating the next decisions and k
 
 TASK w12_after_bad_beat_reset [drill] After bad beat
 CAPTION: You lose a big all-in as favorite and feel immediate anger.
-TEACH: Fast reset loop. Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.
-TEACH LABELS: Emotion label, Breath, Re-anchor
 Q: What is the cleaner immediate action?
 HINT [theoryOnly]: Reset before next hand starts.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5260,22 +5112,20 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w12_after_mistake_reset [drill] After your own mistake
 CAPTION: You realize you made an avoidable call error.
-TEACH: Fast reset loop. Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.
-TEACH LABELS: Emotion label, Breath, Re-anchor
 Q: What response keeps discipline highest?
 HINT [theoryOnly]: Use reset to prevent second error spiral.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Log leak briefly and reset to current hand — Log it, then reset. Quick logging plus reset preserves learning without carrying emotional noise into next hands.
-  - [wrong] Replay the mistake for the next few hands — Harmful loop. Self-attack increases future mistake risk. Keep review structured and calm.
+  - [wrong] Replay the mistake for the next few hands — Harmful spiral. Self-attack increases future mistake risk. Keep review structured and calm.
     BETTER ANSWER: Log leak briefly and reset to current hand
-  - [suboptimal] Skip the note and rely on memory — Protects emotion short term. Ignoring may reduce pain now, but short structured logging improves long-term transfer.
+  - [suboptimal] Skip the note and rely on memory — Protects emotion short term. Ignoring may reduce pain now, but short structured logging improves long-term habits.
     BETTER ANSWER: Log leak briefly and reset to current hand
 
 TASK w12_tilt_reset_recap [review] Reset recap
 CAPTION: Lesson learned: reset protects process under emotional pressure.
-TEACH: Fast reset loop. Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.
-TEACH LABELS: Emotion label, Breath, Re-anchor
+TEACH: Reset before the next deal. After a bad beat or a clear error, pause for one breath and label the reaction without judging yourself. Restate your single session focus and shrink the next few hands to simple, clean choices. A short deliberate reset keeps one rough pot from spreading across the rest of your session.
+TEACH LABELS: Pause briefly, Reset focus, Clean next hand
 Q: What is the reset takeaway?
 HINT [theoryOnly]: Fast reset now prevents leak cascade later.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5284,7 +5134,7 @@ REVIEW: Consistent small resets are a core bridge from knowledge to stable execu
 
 ===== WORLD 12 · LESSON confidence_and_discipline · Confidence with discipline =====
 
-TASK w12_confidence_intro [theory] Calm assertive baseline
+TASK w12_confidence_intro [theory] Calm assertive posture
 CAPTION: Confident play means clear actions, not ego battles.
 TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
 TEACH LABELS: Assertive, Evidence, Discipline
@@ -5295,23 +5145,21 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Best mindset combines calm assertiveness with disciplined filters on risk and evidence.
 
 TASK w12_assertive_not_ego [drill] Assertive, not ego
-CAPTION: Villain needles you after winning a pot.
-TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
-TEACH LABELS: Assertive, Evidence, Discipline
+CAPTION: An opponent needles you after winning a pot.
 Q: What is the stronger mindset line?
 HINT [theoryOnly]: Decision quality should not react to table talk.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Widen the next close spot to answer back — Ego trap. Point-proving lines usually detach from EV and increase variance mistakes.
-    BETTER ANSWER: Stick to process and planned exploit line
-  + [correct] Stick to process and planned exploit line — Process ignores table talk. Process-led confidence ignores ego hooks and preserves decision quality.
+    BETTER ANSWER: Stick to process and your planned line
+  + [correct] Stick to process and your planned line — Process ignores table talk. Process-led confidence ignores ego hooks and preserves decision quality.
   - [suboptimal] Play overly scared to avoid conflict — Safer but capped. Fear-based tightening can avoid blowups but also leaks EV. Keep calm assertive discipline instead.
-    BETTER ANSWER: Stick to process and planned exploit line
+    BETTER ANSWER: Stick to process and your planned line
 
 TASK w12_discipline_under_pressure [drill] Discipline under pressure
 CAPTION: Deep in session, fatigue rises and decisions speed up.
-TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
-TEACH LABELS: Assertive, Evidence, Discipline
+TEACH: Slow down on large pots. Fatigue speeds up choices. Take one brief pause before you call, bet, or fold in a large pot.
+TEACH LABELS: Fatigue cue, Brief pause, Large pot
 Q: What is the best pressure adjustment?
 HINT [theoryOnly]: Discipline means slowing only the critical spots.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5323,17 +5171,17 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Pause briefly on high-EV decision nodes — Pause on big nodes. Small targeted pauses preserve discipline where it matters most without killing flow.
 
 TASK w12_pretty_hand_bad_price_fold [drill] Pretty hand, bad price
-CAPTION: Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. Hero holds K-Q at 100 BB effective.
-TEACH: Pretty hands still obey price. Use the same loop even when the hand looks attractive: seat, hand, board, price, stack and action, then the clean action.
+CAPTION: Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. You hold K-Q at 100 BB effective.
+TEACH: Pretty hands still obey price. Use the same routine even when the hand looks attractive: seat, hand, board, price, stack and action, then the clean action.
 TEACH LABELS: Top pair, Bad price, Tight action, Fold clean
 Q: What is the cleaner disciplined action?
-HINT [theoryOnly]: Do not hero call only because the hand looks pretty.
+HINT [theoryOnly]: Do not make a stubborn call only because the hand looks pretty.
 TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center Top pair, bad river price | Facts one pair, top pair
 SEATS: UTG | HJ | CO bet 18 BB | BTN dealer | SB | BB
 TRAIL: CO opens 2.5 BB · BTN calls · CO barrels flop · CO barrels turn · CO bets 18 BB
   + [correct] Fold the river — Calm fold. Calling 18 BB makes a 56 BB pot, so you need about 32% equity if the call closes the action. Folding is reasonable if K-Q falls below that threshold against CO’s betting range. The tight read supports caution, and the exact range is unknown.
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Top pair, bad river price | Facts one pair, top pair
-  - [suboptimal] Hero-call top pair — Pretty-hand trap. The hand label makes this tempting, but real play rewards the full read: action trail, price, and opponent profile matter more than wanting to be right.
+  - [suboptimal] Call down anyway with top pair — Pretty-hand trap. The hand label makes this tempting, but real play rewards the full read: action trail, price, and opponent profile matter more than wanting to be right.
     BETTER ANSWER: Fold the river
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Top pair, bad river price | Facts one pair, top pair
   - [wrong] Raise large to end the decision now — Too dramatic. A raise risks more chips. It needs a reason to expect worse hands to call or better hands to fold. The bet size and the tight read give no evidence of either.
@@ -5341,14 +5189,14 @@ TRAIL: CO opens 2.5 BB · BTN calls · CO barrels flop · CO barrels turn · CO 
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Top pair, bad river price | Facts one pair, top pair
 
 TASK w12_revenge_raise_trap [drill] Do not raise to take control
-CAPTION: The same villain bluffed you last orbit and needles you now. New hand: Hero holds Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.
+CAPTION: The same opponent bluffed you last orbit and needles you now. New hand: You hold Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.
 TEACH: Noise is not a cue. Real play rewards stable decisions more than dramatic decisions. Ignore ego hooks and return to the table read.
 TEACH LABELS: Position, Small price, Top pair, No ego
 Q: What is the clean discipline line?
 HINT [theoryOnly]: Do not raise just to take control when the table read says stay simple.
 TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center Top pair, ego trap | Facts one pair, top pair, rainbow
 SEATS: UTG | HJ | CO bet 2 BB | BTN dealer | SB | BB
-TRAIL: Villain needled you last orbit · Flop: CO bets 2 BB
+TRAIL: CO needled you last orbit · Flop: CO bets 2 BB
   - [wrong] Raise now to take control back — Revenge leak. Taking control sounds assertive, but here it is emotional, not evidence-based. The clean action comes from hand, board, price, and position, not from wanting the last word.
     BETTER ANSWER: Call once and keep the pot controlled
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair, ego trap | Facts one pair, top pair, rainbow
@@ -5360,8 +5208,8 @@ TRAIL: Villain needled you last orbit · Flop: CO bets 2 BB
 
 TASK w12_confidence_recap [review] Confidence recap
 CAPTION: Lesson learned: calm confidence plus discipline is stable edge.
-TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
-TEACH LABELS: Assertive, Evidence, Discipline
+TEACH: Calm lines over ego. Confident discipline means choosing to bet, call, or fold from table evidence rather than table talk.
+TEACH LABELS: Evidence, Calm line, No ego
 Q: What is the confidence-discipline takeaway?
 HINT [theoryOnly]: Assertive line, evidence filter, no ego side quests.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5370,7 +5218,7 @@ REVIEW: Mindset edge comes from repeatable emotional control and disciplined exe
 
 ===== WORLD 12 · LESSON mindset_bridge_checkpoint · Mindset bridge checkpoint =====
 
-TASK w12_checkpoint_intro [theory] Mindset loop map
+TASK w12_checkpoint_intro [theory] Mindset routine map
 CAPTION: Short-term outcomes can lie. Process quality must stay the anchor.
 TEACH: Process beats variance. Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.
 TEACH LABELS: Process, Variance, Outcome bias
@@ -5382,8 +5230,6 @@ REVIEW: A strong mindset evaluates whether the decision process was sound before
 
 TASK w12_checkpoint_process_line [drill] Process line
 CAPTION: A correct line loses in a high-variance pot.
-TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
-TEACH LABELS: Assertive, Evidence, Discipline
 Q: Suppose a sound decision loses a high-variance pot. What is the best immediate response?
 HINT [theoryOnly]: Process verdict comes before emotional verdict.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5396,8 +5242,8 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w12_checkpoint_reset_line [drill] Reset line
 CAPTION: You feel tilt signs after two rough spots in a row.
-TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
-TEACH LABELS: Assertive, Evidence, Discipline
+TEACH: Reset before the next pot. Two rough pots in a row are a cue to pause, reset your focus, and return to disciplined call-or-fold choices.
+TEACH LABELS: Pause, Reset, Re-anchor
 Q: What is the cleaner bridge action?
 HINT [theoryOnly]: Reset should be fast and repeatable.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5410,8 +5256,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w12_checkpoint_discipline_line [drill] Discipline line
 CAPTION: A player taunts you into marginal high-variance spots.
-TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.
-TEACH LABELS: Assertive, Evidence, Discipline
 Q: Which line is strongest?
 HINT [theoryOnly]: Discipline means evidence over ego.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5419,41 +5263,41 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Take thin line to win respect — Ego leak. Respect-seeking lines detach from quality logic and create avoidable variance.
     BETTER ANSWER: Take only evidence-backed lines
   + [correct] Take only evidence-backed lines — Evidence beats respect. Evidence-first discipline is the stable bridge into deeper strategic worlds.
-  - [suboptimal] Fold every close spot now — Defensive but capped. Overfolding avoids ego spots but also misses edges. Evidence-based selectivity is stronger.
+  - [suboptimal] Fold all close spots now — Defensive but capped. Overfolding avoids ego spots but also misses edges. Evidence-based selectivity is stronger.
     BETTER ANSWER: Take only evidence-backed lines
 
-TASK w12_checkpoint_full_loop_line [drill] Full loop line
-CAPTION: You made a loose bluff last orbit. New hand: CO opens, Hero calls BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.
-TEACH: Stable loop beats emotional correction. A prior mistake should not rewrite the next decision. Real play gets stronger when the same clean loop survives noise, temptation, and regret.
+TASK w12_checkpoint_full_loop_line [drill] Full routine line
+CAPTION: You made a loose bluff last orbit. New hand: CO opens, You call BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.
+TEACH: Stable routine beats emotional correction. A prior mistake should not rewrite the next decision. Real play gets stronger when the same clean routine survives noise, temptation, and regret.
 TEACH LABELS: After mistake, Seat-hand-board-price, 25 BB, Stay stable
 Q: What keeps the next decision stable?
-HINT [theoryOnly]: Use the same decision loop even after a mistake: seat, hand, board, price, stack and action, then the clean action.
+HINT [theoryOnly]: Use the same decision routine even after a mistake: seat, hand, board, price, stack and action, then the clean action.
 TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
 SEATS: UTG | HJ | CO bet 2 BB | BTN dealer | SB | BB
 TRAIL: Last orbit: loose bluff · CO raises 2.5 BB · BTN calls 2.5 BB · Flop: CO bets 2 BB
-  - [wrong] Raise to recover confidence — Confidence chase. This is exactly the wrong bridge habit. Confidence should come from following the loop, not from forcing a louder action after a mistake.
-    BETTER ANSWER: Call with the same loop
+  - [wrong] Raise to recover confidence — Confidence chase. This is exactly the wrong bridge habit. Confidence should come from following the routine, not from forcing a louder action after a mistake.
+    BETTER ANSWER: Call with the same routine
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
-  - [suboptimal] Fold to play safer now — Too reactive. Fear after a mistake is still emotion steering the next hand. The cleaner bridge is keep the same seat-hand-board-price-stack loop and follow what this spot says.
-    BETTER ANSWER: Call with the same loop
+  - [suboptimal] Fold to play safer now — Too reactive. Fear after a mistake is still emotion steering the next hand. The cleaner bridge is keep the same seat-hand-board-price-stack routine and follow what this spot says.
+    BETTER ANSWER: Call with the same routine
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
-  + [correct] Call with the same loop — Strong reset. Start with top pair, position and the 2 BB price. Calling is a reasonable controlled line if CO bets enough weaker hands. The optimal line depends on CO’s range and later action. Review the previous bluff separately.
+  + [correct] Call with the same routine — Strong reset. Start with top pair, position and the 2 BB price. Calling is a reasonable controlled line if CO bets enough weaker hands. The optimal line depends on CO’s range and later action. Review the previous bluff separately.
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
 
 TASK w12_checkpoint_review [review] Mindset recap
 ENTRY: drill
 CAPTION: Lesson learned: process, reset, and discipline stabilize your game.
-TEACH: Stability before complexity. Strong strategy growth requires stable mindset loops. Process audits, resets, and discipline make advanced learning stick.
+TEACH: Stability before complexity. Strong strategy growth requires stable mindset habits. Process audits, resets, and discipline make advanced learning stick.
 TEACH LABELS: Process quality, Tilt reset, Discipline, Postflop growth
 Q: What does this final mindset checkpoint add?
 HINT [theoryOnly]: Next you carry this mindset into deeper postflop decision trees and pressure spots.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] A repeatable process-reset-discipline loop — Solid understanding. Mindset stability is what lets complex strategic lessons transfer instead of collapsing under pressure.
+  + [correct] A repeatable process-reset-discipline cycle — Solid understanding. Mindset stability is what lets complex strategic lessons stick instead of collapsing under pressure.
   - [wrong] Optional soft skill with little EV impact — Underestimation. Mindset errors are EV errors. Stability directly affects execution of every strategic concept.
-    BETTER ANSWER: A repeatable process-reset-discipline loop
+    BETTER ANSWER: A repeatable process-reset-discipline cycle
   - [suboptimal] One-time fix, no daily upkeep needed — Partly true start. Initial tools help, but mindset edge stays strong only through repeated daily use.
-    BETTER ANSWER: A repeatable process-reset-discipline loop
+    BETTER ANSWER: A repeatable process-reset-discipline cycle
 
 ===== REPAIR-ONLY TASKS =====
 
@@ -5565,7 +5409,7 @@ TRAIL: Frame 1: UTG has more behind · Frame 2: CO has fewer behind · Compare t
 ===== WORLD 5 · LESSON turn_river_changes · Turn and river changes =====
 
 TASK turn_river_changes_w5_street_repair [drill] Repair the turn read
-CAPTION: The 8 of clubs arrives on A-7-6. Hero still treats top pair like the flop stayed easy.
+CAPTION: The 8 of clubs arrives on A-7-6. You still treat top pair like the flop stayed easy.
 TEACH: Repair story before line. Turn and river are not cosmetic. If the board got more connected or completed a draw, re-read the whole story before acting.
 TEACH LABELS: Turn change, Repair read, One-pair caution
 Q: What needs fixing first?

@@ -184,17 +184,70 @@ void main() {
       'Still take practical all-in spots before blinded out':
           'Still take practical jam spots before blinded out',
       'Only go all-in with strong hands': 'Only shove strong hands',
-      'Go all-in with any two cards every hand': 'Jam any two cards every hand',
+      'Go all-in with any two cards': 'Jam any two cards every hand',
       'Go all-in to deny equity': 'Jam to deny equity',
-      'Hero has top pair. An opponent could be drawing to a flush':
+      'You have top pair. An opponent could be drawing to a flush':
           'Hero already has top pair, and the heart draw is still only pressure',
-      'Hero already has a flush': 'The heart draw is already a made flush',
-      'A possible flush draw cancels Hero’s pair':
+      'You already have a flush': 'The heart draw is already a made flush',
+      'A possible flush draw cancels your pair':
           'The draw matters, so the pair does not count yet',
       'A-K has more combos': 'A-K appears more often',
       'Pocket eights have more combos': 'Pocket eights appear more often',
       'They have the same combo count': 'They appear equally often',
       'They have the same weight': 'They appear equally often',
+      'You win the pot right away': 'You win the pot automatically',
+      'Nothing counts until all stacks are equal':
+          'Nothing counts until every stack is equal',
+      'The button wins right away': 'The button wins automatically',
+      'CO already acts last on all streets':
+          'CO already acts last every street',
+      'Late seat makes most hands easy': 'Late seat makes every hand easy',
+      'You have a flush draw, not a made flush yet':
+          'Hero has a flush draw, not a made flush yet',
+      'You already have a made flush': 'Hero already has a made flush',
+      'It turns into value right away': 'It becomes value automatically',
+      'The bucket stays fixed after the flop':
+          'The bucket never changes after flop',
+      'Keep betting across streets': 'Keep betting on every street',
+      'The paired board leaves seven-containing combinations unchanged.':
+          'The paired board leaves every seven-containing combination available.',
+      'Fold almost any hand until payouts begin':
+          'Fold every hand until payouts begin',
+      'Over-fold all close hands': 'Over-fold every close hand',
+      'Fold almost any hand until payout': 'Fold every hand until payout',
+      'Map pressure, then copy broad player reads':
+          'Map pressure, then copy every player read',
+      'Keep default play until blinds show it again':
+          'Keep baseline until blinds show it again',
+      'Push top pair into a huge pot immediately':
+          'Make every top pair hand huge immediately',
+      'Call normal standard frequency': 'Call normal baseline frequency',
+      'Change all sizings across positions':
+          'Change every sizing in all positions',
+      'Flat-call more from all seats': 'Flat-call more in every seat',
+      'Hard-counter all future streets now':
+          'Hard-counter every future street now',
+      'Structured adjustment before live play':
+          'Structured exploit before transfer',
+      'Use table feel without a written routine':
+          'Use table feel without a written loop',
+      'Stay standard until another table cue confirms it':
+          'Stay baseline until another table cue confirms it',
+      'Narrow to one session goal next time':
+          'Narrow to one transfer goal next session',
+      'Track all leaks from the start': 'Track every leak from the start',
+      'If an opponent underbluffs, fold marginal bluff-catchers':
+          'If villain underbluffs, fold marginal bluff-catchers',
+      'Study another concept before applying it':
+          'Study another concept before looping it',
+      'A repeatable daily practice cycle': 'A repeatable daily transfer loop',
+      'Stick to process and your planned line':
+          'Stick to process and planned exploit line',
+      'Call down anyway with top pair': 'Hero-call top pair',
+      'Fold all close spots now': 'Fold every close spot now',
+      'Call with the same routine': 'Call with the same loop',
+      'A repeatable process-reset-discipline cycle':
+          'A repeatable process-reset-discipline loop',
     };
     // Reverse only reviewed P1 identity deltas for the historical comparison.
     const priorL1Options = {
@@ -1476,7 +1529,7 @@ void main() {
     };
     const l2PlainLanguage = {
       'w6_missed_hand_action': (
-        'Keep betting on every street',
+        'Keep betting across streets',
         'Always barrel as pressure',
       ),
       'w6_turn_pressure_shift_transfer': (

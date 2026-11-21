@@ -1345,7 +1345,7 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'automatic_win',
-      label: 'You win the pot automatically',
+      label: 'You win the pot right away',
       isCorrect: false,
       preferredLabel: 'You put in all remaining chips',
       betterAnswerLabel: 'You put in all remaining chips',
@@ -1503,7 +1503,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Correct beginner transfer.',
+      feedbackTitle: 'Correct matched-chips read.',
       feedbackReason:
           'You can win the 20 BB CO matched. That limit stays fixed for this hand, even if CO bets more against another player.',
     ),
@@ -1520,7 +1520,7 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'nothing_until_showdown',
-      label: 'Nothing counts until every stack is equal',
+      label: 'Nothing counts until all stacks are equal',
       isCorrect: false,
       preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
       betterAnswerLabel: 'Only the chips CO matched against the 20 BB all-in',
@@ -2672,7 +2672,7 @@ final _blindsOrderRunner = _meetTableRunner.copyWith(
     ),
     ..._bigBlindPostRunner.options,
   ],
-  feedbackTitle: 'The big blind sets the baseline.',
+  feedbackTitle: 'The big blind sets the unit.',
   feedbackReason:
       'BB posts the full 1 BB blind. SB posts 0.5 BB in this lesson.',
   teachingSteps: const <Act0TeachingStepV1>[
@@ -2688,7 +2688,7 @@ final _blindsOrderRunner = _meetTableRunner.copyWith(
       body:
           'BB is a unit for chips. A bet of 3 BB is three times the big blind. UTG is first to choose before the flop.',
       focusSeatIds: <String>['utg', 'bb'],
-      focusLabels: <String>['1 BB baseline', 'UTG first'],
+      focusLabels: <String>['1 BB unit', 'UTG first'],
     ),
   ],
 );
