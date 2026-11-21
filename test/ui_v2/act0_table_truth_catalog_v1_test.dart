@@ -164,8 +164,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 143),
-      ('D3.to_call_completeness', 100),
+      ('D2.pot_feasibility', 147),
+      ('D3.to_call_completeness', 104),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -964,11 +964,75 @@ void main() {
         },
       ],
     };
+    Map<String, Object?> w2Choice(String id, {bool correct = false}) => {
+      'id': id,
+      'correct': correct,
+      'quality': correct ? 'correct' : 'wrong',
+      'seat': null,
+      'repairSeats': <String>[],
+      'repairCards': <String>[],
+      'repairLabels': <String>[],
+    };
+    const w2AddedWrongChoices = {
+      'fold_discipline_early_fold': 'call',
+      'fold_discipline_discipline_stack_protect': 'raise',
+      'fold_discipline_fold_recap': 'raise',
+      'weak_ace_warning_w3_dominated_fold': 'raise',
+      'weak_ace_warning_w3_strong_continue': 'raise',
+      'weak_ace_warning_weak_ace_pressure_fold': 'raise',
+      'weak_ace_warning_weak_ace_kicker_compare': 'ace_and_king_equal',
+      'weak_ace_warning_w3_dominated_recap': 'raise',
+      'continue_or_let_go_premium_continue': 'strong',
+      'continue_or_let_go_weak_let_go': 'raise',
+      'continue_or_let_go_medium_call_or_fold': 'raise',
+      'apply_utg_fold': 'call',
+      'apply_recap': 'seat_guarantee',
+      'discipline_checkpoint_checkpoint_premium': 'strong',
+      'discipline_checkpoint_checkpoint_fold': 'raise',
+      'discipline_checkpoint_checkpoint_borderline_continue': 'raise',
+      'discipline_checkpoint_checkpoint_review': 'fix_size',
+    };
+    for (final entry in w2AddedWrongChoices.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      (task['options'] as List).add(w2Choice(entry.value));
+    }
+    const w2ReasonChoices = {
+      'hand_discipline_buckets_recap': (
+        ['suit_only', 'bucket_and_seat', 'blinds_only'],
+        'bucket_and_seat',
+      ),
+      'fold_discipline_facing_fold': (
+        ['call', 'fold', 'raise_for_pot'],
+        'fold',
+      ),
+      'continue_or_let_go_continue_recap': (['open', 'call', 'fold'], 'call'),
+    };
+    for (final MapEntry(key: id, value: (choices, correct))
+        in w2ReasonChoices.entries) {
+      final task = expectedComparison[id] as Map<String, dynamic>;
+      task['options'] = [
+        for (final id in choices) w2Choice(id, correct: id == correct),
+      ];
+    }
+    for (final (id, xp, family, choices, correct) in [
+      ('intro', 6, 'learn', <String>[], ''),
+      ('premium', 9, 'decision', ['raise', 'call', 'fold'], 'raise'),
+      ('medium', 9, 'decision', ['premium', 'call', 'unopened'], 'call'),
+      ('fold', 12, 'review', ['raise', 'call', 'fold'], 'fold'),
+    ]) {
+      expectedComparison['w2_narrow_three_bet_$id'] = {
+        'rewardXp': xp,
+        'family': family,
+        'options': [
+          for (final id in choices) w2Choice(id, correct: id == correct),
+        ],
+      };
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7 and Q11 contracts may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2 packet may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

@@ -190,6 +190,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_2/fold_discipline',
       'world_2/weak_ace_warning',
       'world_2/continue_or_let_go',
+      'world_2/w2_narrow_three_bet',
       'world_2/hand_discipline_apply',
       'world_2/discipline_checkpoint',
     },

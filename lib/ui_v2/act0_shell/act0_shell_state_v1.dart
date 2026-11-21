@@ -1772,7 +1772,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     unlockLabel: act0LockedWorldUnlockLabelV1('Poker from Zero'),
     isSelectable: false,
     isLocked: true,
-    rewardXp: 220,
+    rewardXp: 256,
     lessons: _foundationLessonsV1(_handDisciplineLessons),
   ),
   Act0WorldCardV1(
