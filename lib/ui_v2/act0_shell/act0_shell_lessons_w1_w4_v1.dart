@@ -4858,10 +4858,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_protection_bet',
         title: 'Protect pair',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w4CheckedFlopScenarioV1(
-          _world4ProtectionBetRunner,
-          hero: 'co',
-        ),
+        runner: _world4ProtectionBetRunner,
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4883,7 +4880,10 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_protection_recap',
         title: 'Protection recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world4ProtectionRecapRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4ProtectionRecapRunner,
+          hero: 'co',
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
       ),

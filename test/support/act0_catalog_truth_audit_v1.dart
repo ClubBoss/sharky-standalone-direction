@@ -901,7 +901,7 @@ const w4OpeningSeatsV1 = <String, String>{
   'w4_bluff_intro': 'hj',
   'w4_bluff_pressure': 'co',
   'w4_bluff_recap': 'hj',
-  'w4_protection_bet': 'co',
+  'w4_protection_recap': 'co',
   'w4_checkpoint_intro': 'hj',
   'w4_checkpoint_review': 'co',
 };
