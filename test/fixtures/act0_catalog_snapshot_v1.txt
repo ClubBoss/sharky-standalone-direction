@@ -3777,20 +3777,20 @@ TEACH: Shown cards change the possible hands If you see an ace, only three aces 
 TEACH LABELS: A72 rainbow, What hands can still fit?
 Q: An ace is already visible on A72 rainbow. What does that do to ace-containing hands in the opponent's possible range?
 HINT [theoryOnly]: A shown card cannot also be in a private hand.
-TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center A72 rainbow | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Center A72 rainbow | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] There are fewer ace-containing combinations left. — Count what is still possible. One ace is already visible, so fewer ace-containing combinations remain possible. This does not tell us the exact hand; it only changes how many hands are available.
-    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
   - [wrong] The visible ace does not change the number of ace combinations. — Recheck the visible cards. Visible cards are unavailable to private hands, so the number of possible ace-containing hands changes.
     BETTER ANSWER: There are fewer ace-containing combinations left.
-    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
   - [wrong] Ace hands become more important, so count them first. — Recheck the visible cards. Counting ace hands first can be useful, but the key change is that one visible ace removes private-card combinations.
     BETTER ANSWER: There are fewer ace-containing combinations left.
-    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
   - [wrong] Ace hands are less common, so ignore them for now. — Recheck the visible cards. One visible ace reduces ace-containing hands, but some remain possible. Do not drop the whole rank from the range.
     BETTER ANSWER: There are fewer ace-containing combinations left.
-    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Js Tc | Board Ah 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center A72 rainbow | Facts high card, rainbow, backdoor straight
 
 TASK visible_king_combo_reduction_intro [drill] One king is already out
 CAPTION: K84 rainbow
@@ -3798,17 +3798,17 @@ TEACH: Shown cards change the possible hands A king is on the board. What happen
 TEACH LABELS: K84 rainbow, What hands can still fit?
 Q: A king is on the board. What happens to the opponent’s king-containing hands?
 HINT [theoryOnly]: A shown card cannot also be in a private hand.
-TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qd Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Jd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] The visible king leaves king-containing combinations unchanged. — Recheck the visible cards. Visible cards are removed from private hands, so the count of king-containing hands changes.
     BETTER ANSWER: The visible king leaves fewer king-containing combinations.
-    FEEDBACK TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
+    FEEDBACK TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
   + [correct] The visible king leaves fewer king-containing combinations. — Count what is still possible. The visible king cannot also be in a private hand, so fewer king-containing combinations remain possible.
-    FEEDBACK TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
+    FEEDBACK TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
   - [wrong] The visible king leaves no king-containing combinations. — Recheck the visible cards. One visible king reduces king hands, but some king-containing hands can still exist. Reduced does not mean irrelevant.
     BETTER ANSWER: The visible king leaves fewer king-containing combinations.
-    FEEDBACK TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
+    FEEDBACK TABLE: Flop | You Qd Jd | Board Kh 8c 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center K84 rainbow | Facts high card, rainbow, backdoor flush, backdoor straight
 
 TASK paired_board_texture_lite_intro [drill] Read the paired board
 CAPTION: 772 rainbow
@@ -3816,17 +3816,17 @@ TEACH: A pair on the board changes the count Two sevens are visible. What is tru
 TEACH LABELS: 772 rainbow, What hands can still fit?
 Q: Two sevens are visible. What is true about the opponent’s sevens?
 HINT [theoryOnly]: Start from what is still possible.
-TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center 772 rainbow | Facts one pair, rainbow, paired board
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh 9s stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Center 772 rainbow | Facts one pair, rainbow, paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 9s stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] The paired board leaves seven-containing combinations unchanged. — Recheck the visible cards. Paired visible cards change which combinations remain.
     BETTER ANSWER: Fewer seven-containing hands remain, but trips are still possible.
-    FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
+    FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
   + [correct] Fewer seven-containing hands remain, but trips are still possible. — Paired-board read. The two visible sevens reduce seven-containing private hands, but they do not remove every strong hand or prove one exact hand.
-    FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
+    FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
   - [wrong] The paired board proves the opponent has trips. — Recheck the visible cards. Trips are important, but a paired board changes counts instead of proving one exact hand.
     BETTER ANSWER: Fewer seven-containing hands remain, but trips are still possible.
-    FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
+    FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
 
 TASK visible_card_combo_density_transfer_check [drill] Use the same table clue
 CAPTION: QJ5 rainbow
@@ -3834,34 +3834,34 @@ TEACH: The same clue works across boards Three queens are visible. What can you 
 TEACH LABELS: QJ5 rainbow, What hands can still fit?
 Q: Three queens are visible. What can you conclude?
 HINT [theoryOnly]: (none)
-TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center QJ5 rainbow | Facts set, pocket pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qd Qs stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat CO | Active co | Decision co | Center QJ5 rainbow | Facts set, pocket pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Qs stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] A board must pair before matching-rank combinations drop. — Recheck the visible cards. Any visible rank can change available matching-rank combinations; a board does not need to be paired.
     BETTER ANSWER: Fewer queen-containing combinations remain; no exact hand is proved.
-    FEEDBACK TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center QJ5 rainbow | Facts set, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center QJ5 rainbow | Facts set, pocket pair, rainbow
   - [wrong] The visible queens prove the opponent’s exact hand. — Recheck the visible cards. Visible cards change available counts; they do not identify an exact hand.
     BETTER ANSWER: Fewer queen-containing combinations remain; no exact hand is proved.
-    FEEDBACK TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center QJ5 rainbow | Facts set, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center QJ5 rainbow | Facts set, pocket pair, rainbow
   + [correct] Fewer queen-containing combinations remain; no exact hand is proved. — Carry the clue forward. You hold two queens and the board shows a third. Only one queen is unaccounted for, so an opponent can still hold one queen. Pocket queens are impossible.
-    FEEDBACK TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center QJ5 rainbow | Facts set, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You Qd Qs | Board Qh Jc 5d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center QJ5 rainbow | Facts set, pocket pair, rainbow
 
 TASK visible_card_combo_reduction_recap [review] Visible-card recap
 ENTRY: drill
 CAPTION: Use the cards you can see at this table.
 Q: How many A-Q combinations could BB still hold?
 HINT [theoryOnly]: Count the aces and queens that are still available.
-TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Count available cards | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Td 8d stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Count available cards | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Td 8d stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] 16 — One queen is already on the board. Sixteen would count four queens. The visible queen leaves only three to pair with four aces.
     BETTER ANSWER: 12
-    FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
   - [wrong] 6 — A-Q has two different ranks. Count any of the four aces with any of the three remaining queens. Six is the starting count for a pocket pair.
     BETTER ANSWER: 12
-    FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
   + [correct] 12 — Four aces times three queens. Four aces and three queens remain. Four times three gives 12 exact hands. Next, stack depth sets how much either player can put in.
-    FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
 
 ===== WORLD 7 · LESSON w7_visible_cards_and_price · Read the table and compare the price =====
 
@@ -6851,3 +6851,89 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ all-in 18 BB
   - [wrong] 18 BB — Look again. HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.
     BETTER ANSWER: 7 BB
   + [correct] 7 BB — Correct. HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.
+
+===== WORLD 7 · LESSON range_thinking_lite_combo_density · Visible Cards Change Ranges =====
+
+TASK spaced_review_w7_range_thinking_lite_combo_density_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: How many pocket-king combinations could BB still hold?
+HINT [hidden]: (none)
+TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 8d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  + [correct] One — Correct. You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.
+    FEEDBACK TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Three — Look again. You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.
+    BETTER ANSWER: One
+    FEEDBACK TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Six — Look again. You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.
+    BETTER ANSWER: One
+    FEEDBACK TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
+TASK spaced_review_w7_range_thinking_lite_combo_density_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: How many K-Q combinations could BB hold if both suited and offsuit hands count?
+HINT [hidden]: (none)
+TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Facts high card, rainbow, gutshot, completion cards 4
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 8s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] 16 — Look again. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
+    BETTER ANSWER: 12
+    FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+  + [correct] 12 — Correct. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
+    FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+  - [wrong] 9 — Look again. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
+    BETTER ANSWER: 12
+    FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+
+===== WORLD 7 · LESSON w7_visible_cards_and_price · Read the table and compare the price =====
+
+TASK spaced_review_w7_w7_visible_cards_and_price_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+CAPTION: BB folds 40% to a 2 BB bet. In this model, the full bet is lost if BB calls, and checking has a value of zero.
+Q: How does the 2 BB bluff compare with checking in this model?
+HINT [hidden]: (none)
+TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Facts high card, two-tone, backdoor flush
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 9s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  + [correct] Bet earns 1.2 BB on average — Correct. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
+    FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
+  - [wrong] Check earns 1.2 BB more — Look again. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
+    BETTER ANSWER: Bet earns 1.2 BB on average
+    FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
+  - [wrong] Both average zero — Look again. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
+    BETTER ANSWER: Bet earns 1.2 BB on average
+    FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
+
+TASK spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Assume HJ holds a king and a queen, neither a heart. There will be no river bet. Count winning rivers before you compare the price.
+Q: Does the price justify calling with the flush draw?
+HINT [hidden]: (none)
+TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah 8h stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
+  - [wrong] Call — Look again. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] Fold — Correct. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
+    FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Raise — Look again. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+
+===== WORLD 7 · LESSON w7_visible_cards_range_checkpoint · Range and price checkpoint =====
+
+TASK spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+CAPTION: Assume HJ holds one of three equally likely hands: king-queen, ace-queen or ten-nine. Compare calling with folding.
+Q: Do your queens win often enough to pay for this river call?
+HINT [hidden]: (none)
+TABLE: River | You Qd Jc | Board Qh 8s 5d 4c 2h | Pot 10 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 93.25 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qd Jc stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 4 BB
+  - [wrong] Fold — Look again. Your queens with a jack kicker beat ten-nine high and lose to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
+    BETTER ANSWER: Call
+  + [correct] Call — Correct. Your queens with a jack kicker beat ten-nine high and lose to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
+  - [wrong] The price requires two wins out of three — Look again. Your queens with a jack kicker beat ten-nine high and lose to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
+    BETTER ANSWER: Call

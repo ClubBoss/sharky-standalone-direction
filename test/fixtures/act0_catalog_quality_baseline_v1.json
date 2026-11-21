@@ -32,10 +32,6 @@
       "btn_count": 26,
       "table_tasks": 35
     },
-    "world_7": {
-      "btn_count": 11,
-      "table_tasks": 13
-    },
     "world_8": {
       "btn_count": 22,
       "table_tasks": 26
@@ -59,7 +55,7 @@
     "21.duplicate_wrong_reason": 501,
     "22.bet_into_pot": 26,
     "23.pot_with_bet": 6,
-    "24.call_equity": 16,
+    "24.call_equity": 19,
     "25.street_stack": 26
   },
   "findings": [
@@ -71,7 +67,6 @@
     "11.btn_share_per_world|world_4",
     "11.btn_share_per_world|world_5",
     "11.btn_share_per_world|world_6",
-    "11.btn_share_per_world|world_7",
     "11.btn_share_per_world|world_8",
     "11.btn_share_per_world|world_9",
     "12.two_option_w1_w5|blinds_button_moves",

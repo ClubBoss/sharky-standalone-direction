@@ -570,7 +570,7 @@ void main() {
     final contrasts = <String, String>{};
     final action = RegExp(
       r'^(?:(Flop|Turn|River): )?([A-Z0-9+]+) '
-      r'(blind|raises(?: to)?|opens|calls|bets|all-in|checks|folds)(?: ([0-9.]+) BB)?$',
+      r'(blind|raises(?: to)?|opens|calls|bets|all-in|checks|folds)(?: ([0-9.]+) BB( more)?)?$',
     );
     for (final task in _world5To8Tasks()) {
       final table = task.runner.table;
@@ -591,8 +591,15 @@ void main() {
           liveAmounts.clear();
         }
         if (match[4] case final amount?) {
-          // An amount is the player's total commitment on that street.
-          liveAmounts[match[2]!] = double.parse(amount);
+          final player = match[2]!;
+          if (match[5] != null) {
+            expect(match[3], 'calls', reason: task.taskId);
+            liveAmounts[player] =
+                (liveAmounts[player] ?? 0) + double.parse(amount);
+          } else {
+            // A bare amount is the player's total commitment on this street.
+            liveAmounts[player] = double.parse(amount);
+          }
         }
       }
       final livePot = liveAmounts.values.fold(0.0, (sum, bb) => sum + bb);

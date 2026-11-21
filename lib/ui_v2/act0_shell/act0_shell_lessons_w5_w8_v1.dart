@@ -1691,11 +1691,14 @@ List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
         caption: 'Use the cards you can see at this table.',
         question: 'How many A-Q combinations could BB still hold?',
         hint: 'Count the aces and queens that are still available.',
-        table: _act0BoardLessonTableV1(
-          heroCards: _act0LessonCardsV1('Td 8d'),
-          boardCards: _act0LessonCardsV1('Qc 6h 2s'),
-          centerLabel: 'Count available cards',
-        ),
+        table: _day7PostflopV1(
+          'co',
+          'Td 8d',
+          'Qc 6h 2s',
+          openBb: 2.5,
+          checkedToHero: true,
+          showTurn: true,
+        ).copyWith(centerLabel: 'Count available cards'),
         teachingSteps: const [],
         feedbackTitle: 'Four choices times three.',
         feedbackReason:
@@ -1754,6 +1757,9 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     _ when phase == Act0LessonPhaseV1.review => _act0LessonCardsV1('Qh Qs'),
     _ => _heroQdQsCards,
   };
+  final boardCards = phase == Act0LessonPhaseV1.review
+      ? _act0LessonCardsV1('Qc Jd 5s')
+      : _w7VisibleBoardCardsForSpecV1(spec);
   return _w6ComboCountsIntroRunner.copyWith(
     lessonId: spec.taskId,
     lessonTitle: 'Visible Cards Change Ranges',
@@ -1784,13 +1790,14 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     ],
     feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
     feedbackReason: spec.feedbackReason,
-    table: _act0BoardLessonTableV1(
-      centerLabel: spec.boardContext,
-      heroCards: heroCards,
-      boardCards: phase == Act0LessonPhaseV1.review
-          ? _act0LessonCardsV1('Qc Jd 5s')
-          : _w7VisibleBoardCardsForSpecV1(spec),
-    ),
+    table: _day7PostflopV1(
+      'co',
+      heroCards.map((card) => card.label).join(' '),
+      boardCards.map((card) => card.label).join(' '),
+      openBb: 2.5,
+      checkedToHero: true,
+      showTurn: true,
+    ).copyWith(centerLabel: spec.boardContext),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
         title: _w7LearnerTheoryTitleV1(spec.taskId),
