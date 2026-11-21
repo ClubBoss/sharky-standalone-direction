@@ -2454,6 +2454,20 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
   ),
 ];
 
+final _w2FirstInIntroRunner =
+    _w2UnopenedSeat(_world3BucketsIntroRunner, 'co', 'Ks Ts').copyWith(
+      teachingSteps: [
+        const Act0TeachingStepV1(
+          title: 'You are first in.',
+          body:
+              'First in means the players before you folded. Nobody has '
+              'called or raised. If you raise first, you open the pot. Use '
+              'your cards and seat to decide whether to open.',
+        ),
+        ..._world3BucketsIntroRunner.teachingSteps,
+      ],
+    );
+
 final _handDisciplineLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'hand_discipline_buckets',
@@ -2465,13 +2479,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
     isSelectable: false,
     isLocked: true,
     rewardXp: 30,
-    runner: _w2UnopenedSeat(_world3BucketsIntroRunner, 'co', 'Ks Ts'),
+    runner: _w2FirstInIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'hand_discipline_buckets_intro',
         title: 'Four buckets',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w2UnopenedSeat(_world3BucketsIntroRunner, 'co', 'Ks Ts'),
+        runner: _w2FirstInIntroRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
