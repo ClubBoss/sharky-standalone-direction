@@ -26,6 +26,7 @@ void main() {
     final id = entry.key;
     final isTie = _tieTaskXp.containsKey(id);
     final expectedBody = isTie ? _tieBody : _bestHandBody;
+    final heroSeat = isTie ? 'utg' : 'hj';
 
     test('PKR08 shown-hand teaching stays within source evidence: $id', () {
       final task = _task(id);
@@ -52,13 +53,13 @@ void main() {
             seat.isHero ||
             seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceUp,
       );
-      expect(shown.map((seat) => seat.seatId).toSet(), {'btn', 'co'});
+      expect(shown.map((seat) => seat.seatId).toSet(), {heroSeat, 'co'});
       expect(
         live
             .where((seat) => !shown.contains(seat))
             .map((s) => s.seatId)
             .toSet(),
-        {'utg', 'hj', 'sb', 'bb'},
+        {'btn', 'sb', 'bb', if (isTie) 'hj' else 'utg'},
       );
 
       // Rank only the two shown hands. This is deliberately not a pot oracle.
@@ -80,7 +81,7 @@ void main() {
             .where((e) => bestShown.contains(e.value))
             .map((e) => e.key)
             .toSet(),
-        isTie ? {'btn', 'co'} : {'btn'},
+        isTie ? {heroSeat, 'co'} : {heroSeat},
       );
       final fullPot = resolveShowdownTruthV1(runner.table);
       expect(fullPot.verdict, PotTruthVerdictV1.unproved);

@@ -249,48 +249,53 @@ void main() {
   );
 
   for (final id in _allInIds) {
-    test('PKR06 $id authors legal preflop folds and a 19 BB final call', () {
-      final table = _task(id).runner.table;
-      expect(table.actionTrail.map((item) => item.label), [
-        'Blinds: 1.5 BB',
-        'UTG folds',
-        'HJ folds',
-        'CO calls 1 BB',
-        'Hero all-in 20 BB',
-        'SB folds',
-        'BB folds',
-        'CO calls, 20 BB total',
-      ]);
-      expect(_actions(table).length, 7);
-      final coCalls = _actions(
-        table,
-      ).where((action) => action.actor == 'CO').toList();
-      expect(coCalls.map((action) => action.chipVerb), ['call', 'call']);
-      expect(coCalls.map((action) => action.amount), [1.0, 20.0]);
-      expect(coCalls.last.raw, contains('20 BB total'));
-      expect(coCalls.last.amount! - coCalls.first.amount!, 19.0);
-      final contributions = _contributions(table);
-      expect(contributions, {
-        'utg': 0.0,
-        'hj': 0.0,
-        'co': 20.0,
-        'btn': 20.0,
-        'sb': 0.5,
-        'bb': 1.0,
-      });
-      expect(contributions.values.reduce((a, b) => a + b), 41.5);
-      expect(table.potLabel, 'Pot 41.5 BB');
-      expect(_seats(table)['co']!.stackLabel, '80 BB');
-      expect(_seats(table)['btn']!.stackLabel, '0 BB');
-      for (final seatId in ['utg', 'hj', 'sb', 'bb']) {
-        _expectFold(table, seatId);
-      }
-      expect(table.seats.where(_live).map((seat) => seat.seatId).toSet(), {
-        'btn',
-        'co',
-      });
-      expect(pkr06FindingsV1(id, table), isEmpty);
-    });
+    test(
+      'PKR06 $id authors legal preflop folds and a 20 BB call behind the HJ shove',
+      () {
+        final table = _task(id).runner.table;
+        expect(table.actionTrail.map((item) => item.label), [
+          'Blinds: 1.5 BB',
+          'UTG folds',
+          'Hero all-in 20 BB',
+          'CO calls, 20 BB total',
+          'BTN folds',
+          'SB folds',
+          'BB folds',
+        ]);
+        expect(_actions(table).length, 6);
+        final coCalls = _actions(
+          table,
+        ).where((action) => action.actor == 'CO').toList();
+        expect(coCalls.single.chipVerb, 'call');
+        expect(coCalls.single.amount, 20.0);
+        expect(coCalls.single.raw, contains('20 BB total'));
+        expect(table.heroSeat.seatId, 'hj');
+        final ledger = table.handContributions!;
+        expect(ledger.startingStackBbBySeat, {'hj': 20, 'co': 100});
+        expect(ledger.amounts(seatIds: _seats(table).keys.toSet()).potBb, 41.5);
+        final contributions = _contributions(table);
+        expect(contributions, {
+          'utg': 0.0,
+          'hj': 20.0,
+          'co': 20.0,
+          'btn': 0.0,
+          'sb': 0.5,
+          'bb': 1.0,
+        });
+        expect(contributions.values.reduce((a, b) => a + b), 41.5);
+        expect(table.potLabel, 'Pot 41.5 BB');
+        expect(_seats(table)['co']!.stackLabel, '80 BB');
+        expect(_seats(table)['hj']!.stackLabel, '0 BB');
+        for (final seatId in ['utg', 'btn', 'sb', 'bb']) {
+          _expectFold(table, seatId);
+        }
+        expect(table.seats.where(_live).map((seat) => seat.seatId).toSet(), {
+          'hj',
+          'co',
+        });
+        expect(pkr06FindingsV1(id, table), isEmpty);
+      },
+    );
   }
 
   test('PKR06 side pot preserves dead SB and restores the contributing BB', () {
@@ -363,9 +368,16 @@ void main() {
       expect(table.boardCards, isEmpty);
       expect(cards(table.heroCards), cards(baseline.heroCards));
       for (final seat in table.seats) {
+        final sameRole = id == _sidePotId
+            ? switch (seat.seatId) {
+                'hj' => 'btn',
+                'btn' => 'hj',
+                _ => seat.seatId,
+              }
+            : seat.seatId;
         expect(
           cards(seat.holeCards),
-          cards(_seats(baseline)[seat.seatId]!.holeCards),
+          cards(_seats(baseline)[sameRole]!.holeCards),
         );
       }
       final result = resolveShowdownTruthV1(table);

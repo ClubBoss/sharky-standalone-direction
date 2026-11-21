@@ -1281,12 +1281,15 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
   num turnBetBb = 0,
   List<String> highlightedCardIds = const [],
 }) {
+  const opponent = 'hj';
+  const hero = 'co';
   final contributedBb = 2.25 + flopBetBb + turnBetBb;
   return _showdownKickerRunner.table.copyWith(
     centerLabel: 'Showdown',
     streetLabel: 'River',
     potLabel: 'Pot ${_act0BbLabelV1(2 * contributedBb + 1.5)}',
     toCallLabel: '',
+    heroSeatId: hero,
     activeSeatId: '',
     clearDecisionSeatId: true,
     selectableSeatIds: const [],
@@ -1299,13 +1302,13 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
         ..._act0LessonBlinds,
         const Act0ContributionV1(
           PokerStreet.preflop,
-          'co',
+          opponent,
           Act0ContributionKindV1.wager,
           2.25,
         ),
         const Act0ContributionV1(
           PokerStreet.preflop,
-          'btn',
+          hero,
           Act0ContributionKindV1.wager,
           2.25,
         ),
@@ -1314,7 +1317,7 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
           (PokerStreet.turn, turnBetBb),
         ])
           if (bet > 0)
-            for (final seat in ['co', 'btn'])
+            for (final seat in [opponent, hero])
               Act0ContributionV1(
                 street,
                 seat,
@@ -1327,23 +1330,23 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
       const Act0ActionTrailItemV1(label: 'UTG folds'),
-      const Act0ActionTrailItemV1(label: 'HJ folds'),
-      const Act0ActionTrailItemV1(label: 'CO raises 2.25 BB'),
-      const Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'HJ raises 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'CO calls 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN folds'),
       const Act0ActionTrailItemV1(label: 'SB folds'),
       const Act0ActionTrailItemV1(label: 'BB folds'),
       for (final (street, bet) in [('Flop', flopBetBb), ('Turn', turnBetBb)])
         if (bet > 0) ...[
           Act0ActionTrailItemV1(
-            label: '$street: CO bets ${_act0BbLabelV1(bet)}',
+            label: '$street: HJ bets ${_act0BbLabelV1(bet)}',
           ),
-          Act0ActionTrailItemV1(label: 'BTN calls ${_act0BbLabelV1(bet)}'),
+          Act0ActionTrailItemV1(label: 'CO calls ${_act0BbLabelV1(bet)}'),
         ] else ...[
-          Act0ActionTrailItemV1(label: '$street: CO checks'),
-          const Act0ActionTrailItemV1(label: 'BTN checks'),
+          Act0ActionTrailItemV1(label: '$street: HJ checks'),
+          const Act0ActionTrailItemV1(label: 'CO checks'),
         ],
-      const Act0ActionTrailItemV1(label: 'River: CO checks'),
-      const Act0ActionTrailItemV1(label: 'BTN checks'),
+      const Act0ActionTrailItemV1(label: 'River: HJ checks'),
+      const Act0ActionTrailItemV1(label: 'CO checks'),
     ],
     autoPlayHistory: false,
     seats: [
@@ -1351,24 +1354,28 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
         _act0CopySeatStateV1(
           seat,
           isOccupied: true,
-          isInHand: seat.seatId == 'btn' || seat.seatId == 'co',
-          isFolded: seat.seatId != 'btn' && seat.seatId != 'co',
+          isHero: seat.seatId == hero,
+          displayName: seat.seatId == hero
+              ? 'Hero'
+              : _act0DefaultSeatDisplayNameV1(seat),
+          isInHand: seat.seatId == hero || seat.seatId == opponent,
+          isFolded: seat.seatId != hero && seat.seatId != opponent,
           isActive: false,
           hasActed: true,
           isLastAggressor: false,
           clearCommitment: true,
           stackLabel: switch (seat.seatId) {
-            'btn' || 'co' => _act0BbLabelV1(100 - contributedBb),
+            hero || opponent => _act0BbLabelV1(100 - contributedBb),
             'sb' => '99.5 BB',
             'bb' => '99 BB',
             _ => '100 BB',
           },
           holeCards: switch (seat.seatId) {
-            'co' => otherCards,
-            'btn' => heroCards,
+            opponent => otherCards,
+            hero => heroCards,
             _ => seat.holeCards,
           },
-          cardsVisibleMode: seat.seatId == 'btn' || seat.seatId == 'co'
+          cardsVisibleMode: seat.seatId == hero || seat.seatId == opponent
               ? Act0CardsVisibleModeV1.faceUp
               : Act0CardsVisibleModeV1.none,
         ),
@@ -4790,3 +4797,253 @@ Act0RunnerStateV1 _w2ThreeBetDecision({
     ],
   );
 }
+
+Act0RunnerStateV1 _w3AddAlternative(
+  Act0RunnerStateV1 runner, {
+  required String id,
+  required String label,
+  required String reason,
+  String? seat,
+  String? question,
+}) {
+  final correct = runner.options.singleWhere(
+    act0RunnerOptionIsAuthoredCorrectV1,
+  );
+  return runner.copyWith(
+    question: question,
+    table: seat == null
+        ? runner.table
+        : runner.table.copyWith(
+            selectableSeatIds: [...runner.table.selectableSeatIds, seat],
+          ),
+    options: [
+      ...runner.options,
+      Act0RunnerOptionV1(
+        id: id,
+        label: label,
+        seatId: seat,
+        isCorrect: false,
+        preferredLabel: correct.label,
+        betterAnswerLabel: correct.label,
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Read the earlier actions and seat order.',
+        feedbackReason: reason,
+      ),
+    ],
+  );
+}
+
+Act0RunnerStateV1 _w3OrientationFromSeat(
+  Act0RunnerStateV1 runner,
+  String observerSeat,
+) => runner.copyWith(
+  table: _act0ReassignHeroSeatV1(
+    runner.table,
+    heroSeatId: observerSeat,
+    activeSeatId: '',
+  ),
+);
+
+final _w3SeatOrderReasonRunner =
+    _w3OrientationFromSeat(_w3SixSeatsIntroRunner, 'utg').copyWith(
+      phase: Act0LessonPhaseV1.drill,
+      caption: 'Compare UTG to SB.',
+      question: 'What is the order after UTG?',
+      teachingSteps: const [],
+      table: _w3OrientationFromSeat(_w3SixSeatsIntroRunner, 'utg').table
+          .copyWith(highlightedSeatIds: const [], selectableSeatIds: const []),
+      options: const [
+        Act0RunnerOptionV1(
+          id: 'cutoff_first',
+          label: 'CO, HJ, BTN',
+          isCorrect: false,
+          preferredLabel: 'HJ, CO, BTN',
+          quality: Act0FeedbackQualityV1.wrong,
+          feedbackTitle: 'Follow the seat after UTG.',
+          feedbackReason:
+              'HJ is next after UTG in this 1.5 BB pot. Putting CO '
+              'first reverses which of the two can see the other act.',
+        ),
+        Act0RunnerOptionV1(
+          id: 'seat_order',
+          label: 'HJ, CO, BTN',
+          isCorrect: true,
+          preferredLabel: 'HJ, CO, BTN',
+          quality: Act0FeedbackQualityV1.correct,
+          feedbackTitle: 'Read three seats clockwise.',
+          feedbackReason:
+              'HJ acts after UTG, CO acts after HJ, and BTN acts '
+              'before the two blinds on the first preflop pass.',
+        ),
+        Act0RunnerOptionV1(
+          id: 'button_before_cutoff',
+          label: 'HJ, BTN, CO',
+          isCorrect: false,
+          preferredLabel: 'HJ, CO, BTN',
+          quality: Act0FeedbackQualityV1.wrong,
+          feedbackTitle: 'CO is before BTN.',
+          feedbackReason:
+              'On this six-seat table, CO sits immediately before '
+              'the dealer marker. Switching them reverses who sees the other act.',
+        ),
+      ],
+    );
+
+final _w3PositionApplyRecapRunner = _world3LateOpenRunner.copyWith(
+  caption: 'Folded to BTN with AJo.',
+  hint: 'Find your hand and seat in the chart.',
+  question: 'Why does the chart prefer an open here?',
+  table: _world3LateOpenRunner.table.copyWith(
+    heroCards: _act0LessonCardsV1('Ad Jc'),
+    centerLabel: 'No one has raised',
+  ),
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'AJo can put the blinds to a decision',
+      isCorrect: true,
+      preferredLabel: 'AJo can put the blinds to a decision',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Use the opening row.',
+      feedbackReason:
+          'AJo can raise first in from HJ through BTN. A 3 BB '
+          'raise gives you a chance to win the 1.5 BB already in the pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'A limp puts the blinds under more pressure',
+      isCorrect: false,
+      preferredLabel: 'AJo can put the blinds to a decision',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the prices.',
+      feedbackReason:
+          'Limping AJo on BTN for 1 BB lets BB check for free '
+          'and gives SB a cheaper path to the flop.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'off_chart',
+      label: 'AJo opens from HJ and CO alone',
+      isCorrect: false,
+      preferredLabel: 'AJo can put the blinds to a decision',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the whole opening row.',
+      feedbackReason:
+          'The HJ–BTN row includes the Button. Folding AJo here '
+          'gives up the chance to contest the posted 1.5 BB.',
+    ),
+  ],
+);
+
+Act0TableStateV1 _w3ButtonOrderTable(Act0TableStateV1 table, String cards) =>
+    _act0ReassignHeroSeatV1(
+      table.copyWith(heroCards: _act0LessonCardsV1(cards)),
+      heroSeatId: 'btn',
+      activeSeatId: '',
+    );
+
+final _w3ButtonOrderReasonRunner = _postflopButtonActorRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  caption: 'UTG and BTN still have cards on an A-7-2 flop.',
+  question: 'Why can BTN make a more informed first decision on this flop?',
+  teachingSteps: const [],
+  table: _w3ButtonOrderTable(
+    _postflopButtonActorRunner.table,
+    'Td Ts',
+  ).copyWith(selectableSeatIds: const []),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'sees_first_action',
+      label: 'BTN sees UTG act first',
+      isCorrect: true,
+      preferredLabel: 'BTN sees UTG act first',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Acting later gives information.',
+      feedbackReason:
+          'BTN can see whether UTG checks or bets at this 5 BB '
+          'pot before risking chips on the same flop.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'smaller_price',
+      label: 'BTN pays less for the same bet',
+      isCorrect: false,
+      preferredLabel: 'BTN sees UTG act first',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Position does not change the wager.',
+      feedbackReason:
+          'If UTG bets into this 5 BB pot, the amount BTN owes '
+          'comes from the wager. BTN does get to see that amount before acting.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'owns_first_turn',
+      label: 'BTN takes the first flop turn',
+      isCorrect: false,
+      preferredLabel: 'BTN sees UTG act first',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Look left of the Button.',
+      feedbackReason:
+          'UTG takes its first flop turn before BTN. Assuming BTN '
+          'acts first misses the chance to learn from UTG’s action.',
+    ),
+  ],
+);
+
+final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
+  lessonId: 'w3_play_from_blinds',
+  lessonTitle: 'Play from the blinds',
+  caption: 'BTN raised and you already posted a blind.',
+  question: 'How does posting a blind change the decision?',
+  hint: '',
+  options: const [],
+  table: _day7PreflopV1('bb', 'Qc Tc', opener: 'btn', showTurn: true),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Use the price that is still due.',
+      body:
+          'Against one BTN open from SB, reraise Premium, Strong, and the '
+          'HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, '
+          'KJ, QJs, KT, QT) and Weak hands. BB still acts behind you. In BB '
+          'after SB folds, your posted 1 BB lowers what you owe. If calling '
+          'ends betting, divide the extra call by the final pot: calling '
+          '1.5 BB makes 5.5 BB, needing about 27% equity (your pot share '
+          'from winning or splitting).',
+    ),
+  ],
+);
+
+Act0RunnerStateV1 _w3BlindDefenseRunner({
+  required String hero,
+  required String cards,
+  required String caption,
+  required String question,
+  required List<({String id, String label, String reason})> options,
+  required int correct,
+}) => _w3BlindDefenseIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  caption: caption,
+  question: question,
+  table: _day7PreflopV1(
+    hero,
+    cards,
+    opener: 'btn',
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+  teachingSteps: const [],
+  options: [
+    for (final (index, option) in options.indexed)
+      Act0RunnerOptionV1(
+        id: option.id,
+        label: option.label,
+        isCorrect: index == correct,
+        preferredLabel: options[correct].label,
+        betterAnswerLabel: index == correct ? '' : options[correct].label,
+        quality: index == correct
+            ? Act0FeedbackQualityV1.correct
+            : Act0FeedbackQualityV1.wrong,
+        feedbackTitle: index == correct
+            ? 'Correct.'
+            : 'Read the price and seat.',
+        feedbackReason: option.reason,
+      ),
+  ],
+);

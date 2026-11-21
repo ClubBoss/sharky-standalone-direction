@@ -111,10 +111,6 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
   );
 }
 
-String _day7HandKey(Act0TableStateV1 t) =>
-    '${t.heroSeatId ?? t.heroSeat.seatId}|${(t.heroCards.map(cardIdentity).toList()..sort()).join(',')}|'
-    '${t.boardCards.map(cardIdentity).join(',')}';
-
 void main() {
   test('W1–W12 catalog snapshot', () {
     final fixture = File(_snapshotPath);
@@ -144,6 +140,38 @@ void main() {
     );
     expect(lines.length, expected.length);
   });
+
+  test(
+    'W3 blind lesson charges the amount still due and checks its decisions',
+    () {
+      const frames = <String, (String, double, String)>{
+        'w3_play_from_blinds_small_blind_fold': ('sb', 2, 'fold'),
+        'w3_play_from_blinds_small_blind_raise': ('sb', 2, 'raise'),
+        'w3_play_from_blinds_small_blind_medium_raise': ('sb', 2, 'raise'),
+        'w3_play_from_blinds_small_blind_medium_fold': ('sb', 2, 'fold'),
+        'w3_play_from_blinds_big_blind_price': ('bb', 1.5, 'one_five'),
+        'w3_play_from_blinds_big_blind_defend': ('bb', 1.5, 'call'),
+      };
+      for (final MapEntry(key: id, value: (seat, price, correct))
+          in frames.entries) {
+        final runner = _catalogRow(id).task.runner;
+        final table = runner.table;
+        expect(table.heroSeatId, seat, reason: id);
+        expect(table.decisionSeatId, seat, reason: id);
+        final amounts = table.handContributions!.amounts(
+          actorSeatId: seat,
+          seatIds: table.seats.map((s) => s.seatId).toSet(),
+        );
+        expect(amounts.potBb, 4, reason: id);
+        expect(amounts.toCallBb, price, reason: id);
+        expect(
+          runner.options.singleWhere(act0RunnerOptionIsAuthoredCorrectV1).id,
+          correct,
+          reason: id,
+        );
+      }
+    },
+  );
 
   test('G1 Day 7 covers every pre-beta review family and lesson', () {
     final missing = act0Day7MissSourcesV1.keys.toSet().difference(
@@ -181,7 +209,7 @@ void main() {
     final courseHands = [
       ...catalogTasks,
       ...rulesCheckCatalogTasks,
-    ].map((row) => _day7HandKey(row.task.runner.table)).toSet();
+    ].map((row) => day7HandKeyV1(row.task.runner.table)).toSet();
     for (final row in day7CatalogTasks) {
       final task = row.task;
       final runner = task.runner;
@@ -189,7 +217,7 @@ void main() {
       final id = task.taskId;
       expect(seen.add(id), isTrue, reason: id);
       expect(courseIds.contains(id), isFalse, reason: id);
-      expect(courseHands.contains(_day7HandKey(table)), isFalse, reason: id);
+      expect(courseHands.contains(day7HandKeyV1(table)), isFalse, reason: id);
       expect(task.rewardXp, 0, reason: id);
       expect(runner.hint, isEmpty, reason: id);
       expect(runner.teachingSteps, isEmpty, reason: id);

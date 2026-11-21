@@ -169,12 +169,18 @@ void main() {
             Act0DecisionAssistanceV1.none,
           );
           expect(assistance, [Act0DecisionAssistanceV1.none]);
-          // Hero styling remains legitimate and unchanged; compare the non-Hero
-          // correct seat to its own eligible-neutral state, not to Hero's color.
           expect(correctStyle['hero'], isFalse);
-          expect(wrongStyle['hero'], isTrue);
-          expect(wrongStyle['state'], 'hero');
-          expect(wrongStyle['ringColor'], 1795843288);
+          final wrongIsHero = entry.key == 'early_vs_late_w2_early_position';
+          expect(wrongStyle['hero'], wrongIsHero);
+          expect(wrongStyle['selectable'], isTrue);
+          if (wrongIsHero) {
+            expect(wrongStyle['state'], 'hero');
+            expect(wrongStyle['ringColor'], 1795843288);
+          } else {
+            expect(wrongStyle['state'], 'selectable');
+            expect(correctStyle['ringColor'], wrongStyle['ringColor']);
+            expect(correctStyle['ringWidth'], wrongStyle['ringWidth']);
+          }
           expect(correctStyle['selectable'], isTrue);
           expect(
             correctStyle['state'],

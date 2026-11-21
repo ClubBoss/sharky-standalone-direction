@@ -2,7 +2,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import 'act0_atlas_practice_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
+import 'act0_table_truth_v1.dart' show cardIdentity;
 
 typedef Day7CoverageKeyV1 = (String world, String lesson, String family);
 typedef Day7MissSourceV1 = ({Act0LessonTaskV1 task, Act0RunnerOptionV1 miss});
@@ -54,6 +56,8 @@ bool day7MustBeCoveredV1(Day7CoverageKeyV1 key) => const {
   'world_2',
   'world_3',
   'world_4',
+  'world_5',
+  'world_6',
   'world_8',
 }.contains(key.$1);
 
@@ -61,3 +65,22 @@ final act0Day7CoverageV1 = {
   for (final entry in act0NewReviewTasksV1)
     (entry.worldId, entry.lessonId, entry.conceptFamilyId),
 };
+
+String day7HandKeyV1(Act0TableStateV1 t) =>
+    '${t.heroSeatId ?? t.heroSeat.seatId}|${(t.heroCards.map(cardIdentity).toList()..sort()).join(',')}|'
+    '${t.boardCards.map(cardIdentity).join(',')}';
+
+final _courseHands = {
+  for (final row in [...catalogTasks, ...rulesCheckCatalogTasks])
+    day7HandKeyV1(row.task.runner.table),
+};
+
+final _validDay7Keys = {
+  for (final row in act0NewReviewTasksV1)
+    if (!_courseHands.contains(day7HandKeyV1(row.task.runner.table)) &&
+        atlasDay7SkillMismatchV1(row.conceptFamilyId, row.task) == null &&
+        row.task.runner.options.where((option) => option.isCorrect).length == 1)
+      (row.worldId, row.lessonId, row.conceptFamilyId),
+};
+
+bool atlasDay7CoversV1(Day7CoverageKeyV1 key) => _validDay7Keys.contains(key);

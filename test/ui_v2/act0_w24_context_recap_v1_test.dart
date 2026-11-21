@@ -116,6 +116,7 @@ void main() {
     expect(task.runner.options.map((option) => option.id), <String>[
       'one_answer',
       'framework',
+      'seat_blind_only',
     ]);
     expect(
       task.runner.options.singleWhere((option) => option.isCorrect).id,
@@ -123,13 +124,13 @@ void main() {
     );
     expect(task.runner.table.selectableSeatIds, isEmpty);
     final normalized = normalizeAct0SeatTapRunnerV1(task.runner);
-    expect(normalized.options, hasLength(2));
+    expect(normalized.options, hasLength(3));
     expect(normalized.table.selectableSeatIds, isEmpty);
     expect(normalized.options.every((option) => option.seatId == null), isTrue);
     // The context questions use answers, while seat questions still use the table.
     const seatControls = <String, List<String>>{
-      'button_advantage_button_vs_cutoff': <String>['btn', 'co'],
-      'button_advantage_find_button': <String>['btn', 'co'],
+      'button_advantage_button_vs_cutoff': <String>['btn', 'co', 'hj'],
+      'button_advantage_find_button': <String>['btn', 'co', 'sb'],
     };
     for (final entry in seatControls.entries) {
       final control = Act0ShellStateV1.sample.worlds
@@ -167,8 +168,18 @@ void main() {
     () {
       final runner = _task().runner;
       final first = runner.options.first;
-      final last = runner.options.last;
+      final last = runner.options.singleWhere((option) => option.isCorrect);
+      final third = runner.options.singleWhere(
+        (option) => option.id == 'seat_blind_only',
+      );
       final invalid = <Act0RunnerStateV1>[
+        runner.copyWith(
+          options: [
+            first,
+            last,
+            _copyChoice(third, reason: 'Forged rationale.'),
+          ],
+        ),
         runner.copyWith(lessonId: 'position_apply'),
         runner.copyWith(question: 'Which seat acts last after the flop?'),
         runner.copyWith(phase: Act0LessonPhaseV1.theory),
@@ -273,7 +284,7 @@ void main() {
   test('context proof rejects detached old and forged selected choices', () {
     final task = _task();
     final wrong = task.runner.options.singleWhere(
-      (option) => !option.isCorrect,
+      (option) => option.id == 'one_answer',
     );
     final correct = task.runner.options.singleWhere(
       (option) => option.isCorrect,
@@ -386,7 +397,7 @@ void main() {
   test('context misconception has explicit honest same-source repair', () {
     final task = _task();
     final wrong = task.runner.options.singleWhere(
-      (option) => !option.isCorrect,
+      (option) => option.id == 'one_answer',
     );
     final intent = buildAct0RepairIntentV1(
       sourceWorldId: _world,
@@ -760,7 +771,11 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final selected in <String>['framework', 'one_answer']) {
+  for (final selected in <String>[
+    'framework',
+    'one_answer',
+    'seat_blind_only',
+  ]) {
     testWidgets(
       'SIMULATED context $selected uses real option controls and grade',
       (tester) async {
@@ -835,11 +850,11 @@ void main() {
         expect(decision.taskId, _taskId);
         expect(
           runner.reviewReason,
-          contains(
-            selected == 'framework'
-                ? 'hand bucket, position, and action frame'
-                : 'position or action frame changes',
-          ),
+          contains(switch (selected) {
+            'framework' => 'hand bucket, position, and action frame',
+            'one_answer' => 'position or action frame changes',
+            _ => 'your cards and whether anyone raised',
+          }),
         );
         expect(
           find
@@ -1123,12 +1138,13 @@ void _w24ExpectContextButtons(WidgetTester tester) {
   expect(runner.runner.options.map((option) => option.id), <String>[
     'one_answer',
     'framework',
+    'seat_blind_only',
   ]);
   expect(
     runner.runner.options.every((option) => option.seatId == null),
     isTrue,
   );
-  for (final id in <String>['one_answer', 'framework']) {
+  for (final id in <String>['one_answer', 'framework', 'seat_blind_only']) {
     expect(
       find.byKey(Key('act0_shell_option_$id')).hitTestable(),
       findsOneWidget,
@@ -1262,7 +1278,7 @@ void _w24ExpectCurrentEvidence(
   for (final row in rows) {
     expect(row.authoredSourceFingerprint, fingerprint);
     expect(row.authoredSourceFingerprint, isNot(_oldFingerprint));
-    expect(row.choiceId, anyOf('one_answer', 'framework'));
+    expect(row.choiceId, anyOf('one_answer', 'framework', 'seat_blind_only'));
     expect(row.runId, isNotEmpty);
     expect(row.sessionId, isNotEmpty);
     final proof = act0CurrentAuthoredSourceProofV1(row);

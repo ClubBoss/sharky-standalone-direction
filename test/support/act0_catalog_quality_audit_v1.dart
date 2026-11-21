@@ -41,7 +41,7 @@ final _jargonPattern = RegExp(
   r'\b(?:exploit(?:s|ed|ing|ative)?|loop|lever|transfer|baseline|villain|hero|heuristic|framework|calibration)\b',
   caseSensitive: false,
 );
-final _extremeOptionPattern = RegExp(
+final catalogExtremeOptionPatternV1 = RegExp(
   r'\b(?:always|never|every|guaranteed|impossible|automatically|all(?!-in(?:s)?\b)|any|only|forever)\b',
   caseSensitive: false,
 );
@@ -75,7 +75,7 @@ int _wordCount(String text) {
   return trimmed.split(_whitespacePattern).where((w) => w.isNotEmpty).length;
 }
 
-bool _isHeadsUpAllInCallFold(Act0RunnerStateV1 runner) {
+bool catalogIsHeadsUpAllInCallFoldV1(Act0RunnerStateV1 runner) {
   final labels = runner.options
       .map((o) => o.label.trim().toLowerCase())
       .toSet();
@@ -86,7 +86,7 @@ bool _isHeadsUpAllInCallFold(Act0RunnerStateV1 runner) {
       );
 }
 
-String _classifyScoredFormat(Act0LessonTaskV1 task) {
+String classifyCatalogScoredFormatV1(Act0LessonTaskV1 task) {
   final r = task.runner;
   final options = r.options;
   if (act0RunnerCompositionFamilyForTaskIdV1(task.taskId) ==
@@ -197,7 +197,7 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
     // G1.12: Two-option scored tasks in W1-W5.
     if (row.world.worldNumber <= 5 && r.options.isNotEmpty) {
       count('12.two_option_w1_w5');
-      if (r.options.length == 2 && !_isHeadsUpAllInCallFold(r)) {
+      if (r.options.length == 2 && !catalogIsHeadsUpAllInCallFoldV1(r)) {
         findings.add('12.two_option_w1_w5|${task.taskId}');
       }
     }
@@ -251,10 +251,10 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
       count('16.extreme_wrong_option');
       final correctHasExtreme = r.options
           .where(act0RunnerOptionIsAuthoredCorrectV1)
-          .any((o) => _extremeOptionPattern.hasMatch(o.label));
+          .any((o) => catalogExtremeOptionPatternV1.hasMatch(o.label));
       if (!correctHasExtreme) {
         for (final o in r.options.where((o) => !o.isCorrect)) {
-          if (_extremeOptionPattern.hasMatch(o.label)) {
+          if (catalogExtremeOptionPatternV1.hasMatch(o.label)) {
             findings.add('16.extreme_wrong_option|${task.taskId}|${o.id}');
           }
         }
@@ -263,7 +263,7 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
 
     // G1.17 & G1.18: Format diversity and consecutive streaks.
     if (r.options.isNotEmpty) {
-      final format = _classifyScoredFormat(task);
+      final format = classifyCatalogScoredFormatV1(task);
       lessonScoredTotals.update(lessonId, (n) => n + 1, ifAbsent: () => 1);
       lessonScoredFormats.putIfAbsent(lessonId, () => []).add(format);
       worldScoredSequence.putIfAbsent(worldId, () => []).add((

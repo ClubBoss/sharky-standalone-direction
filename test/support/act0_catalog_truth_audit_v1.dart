@@ -885,6 +885,69 @@ const q3AppendedChoicesV1 = <String, String>{
   'outs_improvement_w5_straight_out': 'ten',
 };
 
+const w4OpeningSeatsV1 = <String, String>{
+  'w4_value_purpose': 'co',
+  'w4_bluff_purpose': 'hj',
+  'w4_purpose_recap': 'co',
+  'w4_sizing_intro': 'hj',
+  'w4_small_bet': 'co',
+  'w4_half_pot_bet': 'hj',
+  'w4_pot_bet': 'co',
+  'w4_sizing_recap': 'hj',
+  'w4_value_intro': 'co',
+  'w4_value_bet': 'co',
+  'w4_value_missed': 'hj',
+  'w4_value_recap': 'co',
+  'w4_bluff_intro': 'hj',
+  'w4_bluff_pressure': 'co',
+  'w4_bluff_recap': 'hj',
+  'w4_protection_recap': 'co',
+  'w4_checkpoint_intro': 'hj',
+  'w4_checkpoint_review': 'co',
+};
+
+/// New W4 choices preserve task IDs and the original winning choice IDs.
+const w4AddedOptionQualityV1 = <String, (String, String)>{
+  'w4_value_purpose': ('same_pair', 'wrong'),
+  'w4_bluff_purpose': ('better_calls', 'wrong'),
+  'w4_good_price_call': ('call_ignore_price', 'suboptimal'),
+  'w4_bad_price_fold': ('fold_ignore_price', 'suboptimal'),
+  'w4_cheap_price_marginal_call': ('call_ignore_price', 'suboptimal'),
+  'w4_big_price_marginal_fold': ('wrong_threshold', 'wrong'),
+  'w4_value_bet': ('bet_pot', 'wrong'),
+  'w4_value_missed': ('bet_pot', 'wrong'),
+  'w4_bluff_pressure': ('bet_pot', 'wrong'),
+  'w4_bad_bluff': ('bet_small', 'wrong'),
+  'w4_protection_bet': ('bet_pot', 'suboptimal'),
+  'w4_protection_check': ('got_fold', 'wrong'),
+  'w4_checkpoint_value': ('same_pair', 'wrong'),
+  'w4_checkpoint_price': ('call_ignore_price', 'suboptimal'),
+  'w4_checkpoint_table_price': ('call_ignore_price', 'suboptimal'),
+  'w4_checkpoint_review': ('size_only', 'suboptimal'),
+};
+
+/// The W5 distractors keep the original winning choice IDs.
+const w5AddedOptionQualityV1 = <String, (String, String)>{
+  'board_texture_basics_w5_dry_board': ('semi_wet', 'wrong'),
+  'board_texture_basics_w5_wet_board': ('semi_wet', 'wrong'),
+  'connected_boards_w5_disconnected_board': ('paired', 'wrong'),
+  'connected_boards_w5_connected_board': ('disconnected_ranks', 'wrong'),
+  'flush_draws_w5_no_flush_draw': ('backdoor', 'wrong'),
+  'straight_draws_w5_straight_draw_find': ('one_rank', 'wrong'),
+  'straight_draws_w5_gap_board': ('ace_to_six', 'wrong'),
+  'outs_improvement_w5_table_outs_flush_transfer': (
+    'call_draw_alone',
+    'suboptimal',
+  ),
+  'outs_improvement_w5_table_outs_straight_transfer': (
+    'fold_wrong_out_count',
+    'suboptimal',
+  ),
+  'turn_river_changes_w5_turn_hits': ('one_club_short', 'wrong'),
+  'turn_river_changes_w5_river_misses': ('made_straight', 'wrong'),
+  'turn_river_changes_w5_board_checkpoint': ('call_cheap_only', 'suboptimal'),
+};
+
 /// Q7 extends the historical source census without replacing any legacy IDs.
 const w7AppliedTaskIdsV1 = <String>{
   'w7_flop_bluff_one_player',

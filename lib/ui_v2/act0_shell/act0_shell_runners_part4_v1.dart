@@ -42,7 +42,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('7s 7c'),
     boardCards: _act0LessonCardsV1('Ad 9h 3c'),
     centerLabel: 'Compare the stacks',
@@ -94,7 +94,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kd Td'),
     boardCards: _act0LessonCardsV1('Th 8d 3c'),
     centerLabel: 'Compare the stacks',
@@ -146,7 +146,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Js Jc'),
     boardCards: _act0LessonCardsV1('Td 7c 3h'),
     centerLabel: 'Compare the stacks',
@@ -174,7 +174,7 @@ final _w7EffectiveStackRecapRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kh Qh'),
     boardCards: _act0LessonCardsV1('Qc 9s 2d'),
     centerLabel: 'Compare the stacks',
@@ -584,7 +584,7 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ah Tc'),
     boardCards: _act0LessonCardsV1('Ac 8s 3d'),
     centerLabel: 'Stack and pot',
@@ -639,7 +639,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kd Qc'),
     boardCards: _act0LessonCardsV1('Kh 7d 3s'),
     centerLabel: 'Stack and pot',
@@ -691,7 +691,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('As 9c'),
     boardCards: _act0LessonCardsV1('Ad 7h 2s'),
     centerLabel: 'Stack and pot',
@@ -743,7 +743,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
-    heroSeatId: 'co',
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Jd 9d'),
     boardCards: _act0LessonCardsV1('Js 8c 3h'),
     centerLabel: 'Stack and pot',

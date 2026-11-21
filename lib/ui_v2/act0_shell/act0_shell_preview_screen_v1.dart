@@ -1341,6 +1341,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ({String worldId, String lessonId, String taskId})? _spacedReviewReturnV1;
   var _spacedReviewReturnTabV1 = Act0ShellTabV1.review;
   Act0LessonTaskV1? _activeSpacedReviewTaskV1;
+  Act0DueReviewItemV1? _activeDueReviewItemV1;
   final _openedSpacedReviewTaskIdsV1 = <String>{};
   bool _newSpacedReviewSavePendingV1 = false;
   late final AppLifecycleListener _reviewLifecycleV1;

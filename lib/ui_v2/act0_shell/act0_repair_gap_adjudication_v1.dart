@@ -1026,7 +1026,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "7ec0d17c371b896a3a79e0131cdfdbbbe49fe4d2ea19a0b076d6a66313d25216",
+        "5273d9d5bd4aa397f6bc64e5cf75769ffcdb3b3806667c0c39092bdf2b203ae6",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
@@ -1059,7 +1059,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "same_as_btn",
     sourceCorrectChoiceId: "more_players_behind",
     sourceFingerprint:
-        "f71593e6c5747f19148520c6468c66a3d0e399021169d5f9031c589b936e46a8",
+        "d5f59d55504b3b4b983a90c4db462b325687a131b190e303573cc18ca6ae7f3a",
     sourceQuestion: "Why does UTG need more discipline here?",
     sourceChoiceReason:
         "BTN is later and sees much more first. UTG is pressured because almost everyone still acts after it.",
@@ -1072,7 +1072,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "early_vs_late",
     targetTaskId: "early_vs_late_position_repair_utg_players_behind",
     targetFingerprint:
-        "a26d6368cbc9ea54100de527954b156d383211484fa256270d914d93d9c8c354",
+        "d3e8d7ede82b1dfb10018ff213401dac7e3817ccac8225b73fd895cc8bfefd13",
     targetCorrectChoiceId: "five_players_behind",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1086,7 +1086,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "utg",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "86017c0b096c0aabbe90b1f51f1659c8c441496f570ed3c05d722d98a71b1adb",
+        "e9f8c63c21a3f787258742c57e1b01e1bc47cd10145c561991ab46e6cc5c6924",
     sourceQuestion: "Tap the seat that acts last after the flop.",
     sourceChoiceReason:
         "On this 5 BB flop (Ah 7c 2d), UTG acts before BTN rather than last, so tapping UTG misreads who gets to see everyone else act first.",
@@ -1099,7 +1099,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "button_advantage",
     targetTaskId: "button_advantage_position_repair_btn_last_postflop",
     targetFingerprint:
-        "5769e8d6e42bffc92cf883653d6a347f82fe17a649f75ac85ae79ca94a85c86b",
+        "d849d56d7e220eeebdfdd0d46d8fd5ae947abddcfa494610bbac33821e64b4ab",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1113,7 +1113,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "56ea0dcbc9ceeeff4fc47dbf709fb3172632f5a50fbee1521a68c96d38288097",
+        "1340f77e34d243a0e649ebdb42b79ac2565ff80d1ea58418f3b440c61b10ce16",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is close, but this drill is asking for UTG.",
     sourceChoiceLabel: "HJ",
@@ -1125,7 +1125,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "position_six_seats",
     targetTaskId: "position_six_seats_position_repair_seat_id_utg",
     targetFingerprint:
-        "d5f5d80d40ba6c31def26693a49f1a8c055634dcb44bf3cb51aff3d4e687dc74",
+        "3dea8f3884a0111cfa18b3c72a63cbc6bed4735d346ae9a8516bfb08b8da2eea",
     targetCorrectChoiceId: "utg",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1139,7 +1139,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "fbd51ee83e8b64301d1d51d23c2cf6a943a2a5a0a96670167d595df8ed7ed419",
+        "e04ab98c73793dc93a6dccc3adb90a41450c21d1afffec02eefda54d91a1ade2",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
     sourceChoiceReason:
@@ -1153,7 +1153,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "position_six_seats",
     targetTaskId: "position_six_seats_position_repair_seat_id_btn",
     targetFingerprint:
-        "e437b0d9291fbbf1cb57c81f0024ec4f88a6f4f81bba2b88cee95fa091c59273",
+        "1d336b24bebdaef9ef3bfdbbf80271bbcfae28ac484c4687425e3c9a77116f64",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1167,7 +1167,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "3c87bb10325fdd7efc55d31d62c454b91729721cbe92a64048ad0dfd14ce00cc",
+        "e9ee749da20cfb134a19f03cf6567729ec3ae2f78117b5569eb7bc43398abe8c",
     sourceQuestion: "Tap BTN.",
     sourceChoiceReason: "CO is close, but this drill is asking for BTN.",
     sourceChoiceLabel: "CO",
@@ -1179,7 +1179,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "position_six_seats",
     targetTaskId: "position_six_seats_position_repair_seat_id_btn",
     targetFingerprint:
-        "e437b0d9291fbbf1cb57c81f0024ec4f88a6f4f81bba2b88cee95fa091c59273",
+        "1d336b24bebdaef9ef3bfdbbf80271bbcfae28ac484c4687425e3c9a77116f64",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1206,7 +1206,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "what_poker_is",
     targetTaskId: "first_table_guide_shared_cards_repair",
     targetFingerprint:
-        "73e8ebb06ab849488e3f1bb37768aec7b7682644116dede7703c674521e660e5",
+        "f08cfc7cfb742b642ded789d67f0a775812fa1241c7f5d87e7590083832a0331",
     targetCorrectChoiceId: "board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1299,7 +1299,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
+        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1324,7 +1324,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
+        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1337,7 +1337,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "first_actor",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "3e7d72d87ebdd5d55424ae24cd532a1f7fe1d61c338f4ba016d7fc56b3d00a91",
+        "02f27e80ede0747807f163ee45187da4800532f70efbe482bcdcee8175544334",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_as_action_order",
     relationId: "selected_w1_038_first_actor_v1",
@@ -1354,7 +1354,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hero_cards_only",
     sourceCorrectChoiceId: "best_hand",
     sourceFingerprint:
-        "3e7d72d87ebdd5d55424ae24cd532a1f7fe1d61c338f4ba016d7fc56b3d00a91",
+        "02f27e80ede0747807f163ee45187da4800532f70efbe482bcdcee8175544334",
     goalId: "showdown_best_five",
     misconceptionId: "showdown_private_cards_only",
     relationId: "selected_w1_039_hero_cards_only_v1",
@@ -1419,7 +1419,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "two",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "1cb07814c58ecb00f54b39c359df686e721d976392f6d1b8d0703ee4bcf7d35d",
+        "99a3ff4a7e25090083ffb8dade0b38cfbb92b8a458963111bb2d62513969e1f2",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_one_third",
     relationId: "selected_w4_16_two_v1",
@@ -1435,7 +1435,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "six",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "1cb07814c58ecb00f54b39c359df686e721d976392f6d1b8d0703ee4bcf7d35d",
+        "99a3ff4a7e25090083ffb8dade0b38cfbb92b8a458963111bb2d62513969e1f2",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_whole",
     relationId: "selected_w4_17_six_v1",
@@ -1451,7 +1451,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
+        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
     relationId: "selected_w1_042_fold_v1",
@@ -1478,7 +1478,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "14ef2cda9000242046e5abfa838e0958d70fcf0ce67be305bd8a65b49b2f67e3",
+        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
     relationId: "selected_w1_043_call_v1",
@@ -1509,7 +1509,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
         'One hand can change action when position or action frame changes.',
     sourceChoiceLabel: 'One answer per hand',
     sourceFingerprint:
-        '513ba09211a8d65162883b8c6d4de7645806bf652090e0927b7dc93b8a3015e1',
+        '989093fd89b895fc39127f44494634f0f76f2cc066af87062050c500fa0b60e3',
     goalId: 'preflop_bucket_seat_frame',
     misconceptionId: 'one_hand_one_answer',
     relationId: 'w24_context_familiar_replay_v1',
@@ -1517,7 +1517,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'same_hand_different_seat',
     targetTaskId: 'same_hand_different_seat_w3_same_hand_recap',
     targetFingerprint:
-        '513ba09211a8d65162883b8c6d4de7645806bf652090e0927b7dc93b8a3015e1',
+        '989093fd89b895fc39127f44494634f0f76f2cc066af87062050c500fa0b60e3',
     targetCorrectChoiceId: 'framework',
     targetChoiceIds: <String>{'framework', 'one_answer'},
     evidenceClass: 'intentional_exact_replay',
@@ -1589,7 +1589,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "f9f8f3cc3b387f501e7461bbaad74e749c598f8efb4d12d39334997e25f2c0cb",
+        "6f77d20814d535054b1f34eadd258db890336d7c54126b733f29979c7fe9bdee",
     sourceQuestion: "Who acts first preflop in this frame?",
     sourceChoiceReason: "The Button acts late, not first preflop.",
     sourceChoiceLabel: "BTN",
@@ -1600,7 +1600,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_first_actor",
     targetFingerprint:
-        "f9f8f3cc3b387f501e7461bbaad74e749c598f8efb4d12d39334997e25f2c0cb",
+        "6f77d20814d535054b1f34eadd258db890336d7c54126b733f29979c7fe9bdee",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1614,7 +1614,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "sb",
     sourceCorrectChoiceId: "bb",
     sourceFingerprint:
-        "b8e7b5cbdcab6a10bf5fe9f7483b384f94c1249d49dddf86345a445ee7c12c98",
+        "badb8cbdab70f35caf5f99e71fc25774e38a587b5ce155259279c553689ce625",
     sourceQuestion: "Who has the next option before the flop here?",
     sourceChoiceReason: "The small blind acts before the big blind preflop.",
     sourceChoiceLabel: "SB",
@@ -1625,7 +1625,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_last_actor",
     targetFingerprint:
-        "b8e7b5cbdcab6a10bf5fe9f7483b384f94c1249d49dddf86345a445ee7c12c98",
+        "badb8cbdab70f35caf5f99e71fc25774e38a587b5ce155259279c553689ce625",
     targetCorrectChoiceId: "bb",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1639,7 +1639,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "0877b8a9cd70bcf04f609062ffdc672e8d47cab704d48df3ed512bd657cc46ee",
+        "9aa94516750620168188d1dd35e7ffb6f86dc9b002a53af7d01c374ef7529c9d",
     sourceQuestion: "Who acts first preflop?",
     sourceChoiceReason:
         "In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.",
@@ -1651,7 +1651,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "0877b8a9cd70bcf04f609062ffdc672e8d47cab704d48df3ed512bd657cc46ee",
+        "9aa94516750620168188d1dd35e7ffb6f86dc9b002a53af7d01c374ef7529c9d",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1665,7 +1665,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "0e7879637ce83e3f17de92b4cbf992d935f767a5d2902c03b9a6926a42486b2a",
+        "3bb2f375c7e68bdd380853ef1e0888f2982b4308b0827838fcc5cdd0116bff23",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is after UTG in this order.",
     sourceChoiceLabel: "HJ",
@@ -1676,7 +1676,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "positions_utg",
     targetFingerprint:
-        "0e7879637ce83e3f17de92b4cbf992d935f767a5d2902c03b9a6926a42486b2a",
+        "3bb2f375c7e68bdd380853ef1e0888f2982b4308b0827838fcc5cdd0116bff23",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

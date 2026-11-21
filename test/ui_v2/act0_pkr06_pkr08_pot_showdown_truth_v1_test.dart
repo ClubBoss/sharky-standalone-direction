@@ -77,9 +77,9 @@ const _pkr06AuthoredResidual = <String>{};
 /// winning seats. A pot is shared equally between tied winners.
 const _pkr08OutcomeClaims = <String, Set<String>>{
   'hand_rankings_quads_vs_full_house_drill': {'btn'},
-  'your_first_hand_showdown': {'btn'},
-  'showdown_best_hand_drill': {'btn'},
-  'showdown_review': {'btn', 'co'},
+  'your_first_hand_showdown': {'co'},
+  'showdown_best_hand_drill': {'co'},
+  'showdown_review': {'hj', 'co'},
 };
 
 /// Outcome claims whose winner is not yet determined by source cards (live
@@ -487,12 +487,12 @@ void main() {
 
   test('PKR08 negative controls never invent a winner or payout', () {
     final base = _task('showdown_best_hand_drill').runner.table;
-    expect(resolveShowdownTruthV1(base).winners, ['btn']);
+    expect(resolveShowdownTruthV1(base).winners, ['co']);
 
     // A live opponent with hidden cards blocks the verdict.
     final hiddenOpponent = _mapSeats(
       base,
-      (s) => s.seatId == 'co'
+      (s) => s.seatId == 'hj'
           ? _seat(s, cardsVisibleMode: Act0CardsVisibleModeV1.faceDown)
           : s,
     );
@@ -506,12 +506,12 @@ void main() {
     final trailFoldLive = base.copyWith(
       actionTrail: [
         ...base.actionTrail,
-        const Act0ActionTrailItemV1.note(label: 'BTN folds'),
+        const Act0ActionTrailItemV1.note(label: 'CO folds'),
       ],
     );
     final trailFoldVerdict = resolveShowdownTruthV1(trailFoldLive);
     expect(trailFoldVerdict.verdict, PotTruthVerdictV1.unproved);
-    expect(trailFoldVerdict.reason, 'folded_seat_live:btn');
+    expect(trailFoldVerdict.reason, 'folded_seat_live:co');
 
     // A folded player is never paid even with the best cards.
     final foldedWinner = _mapSeats(
@@ -543,7 +543,7 @@ void main() {
     // Changing the real cards changes the winner: no fixed answer survives.
     final swapped = _mapSeats(
       base,
-      (s) => s.seatId == 'co'
+      (s) => s.seatId == 'hj'
           ? _seat(
               s,
               holeCards: const [
@@ -561,7 +561,7 @@ void main() {
             )
           : s,
     );
-    expect(resolveShowdownTruthV1(swapped).winners, ['co']);
+    expect(resolveShowdownTruthV1(swapped).winners, ['hj']);
 
     // Review 6714410161: fold flags without fold/showdown provenance must not
     // turn hidden live opponents into proven losers.

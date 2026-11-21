@@ -1476,7 +1476,7 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     title: 'Лучшее место',
     runnerPrompt: 'Одна и та же рука ощущается иначе рано и поздно.',
     runnerSupport: 'Поздние места действуют после большего числа решений.',
-    runnerQuestion: 'Почему поздняя позиция помогает?',
+    runnerQuestion: 'Кто увидит ход CO до своего первого решения после флопа?',
     teachingSteps: <Act0TeachingStepDisplayCopyV1>[
       Act0TeachingStepDisplayCopyV1(
         title: 'Позиция — это информация.',
@@ -1565,7 +1565,8 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     title: 'Информация меняется',
     runnerPrompt: 'Одна и та же рука ощущается иначе рано и поздно.',
     runnerSupport: 'Поздние места действуют после большего числа решений.',
-    runnerQuestion: 'Почему поздняя позиция помогает?',
+    runnerQuestion:
+        'У кого обычно больше всего информации до хода: у UTG, HJ или BTN?',
     teachingSteps: <Act0TeachingStepDisplayCopyV1>[
       Act0TeachingStepDisplayCopyV1(
         title: 'Позиция — это информация.',
@@ -1755,8 +1756,9 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     title: 'Позиция меняет решение',
     runnerPrompt: 'Позиция заранее подсказывает, насколько руке будет удобно.',
     runnerSupport:
-        'Баттон даёт больше свободы, ранние места требуют большей аккуратности. Чарты пока не нужны.',
-    runnerQuestion: 'Почему позиция так важна за столом?',
+        'Найди своё место и учти предыдущие действия, затем сверься со стартовой таблицей Sharky.',
+    runnerQuestion:
+        'За каким из этих мест до флопа остаётся меньше игроков, которым ещё предстоит ходить?',
   ),
   'position_apply_btn_open': Act0TaskDisplayCopyV1(
     title: 'Баттон: открыть сильную руку',
@@ -1767,17 +1769,18 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
   ),
   'position_apply_late_open': Act0TaskDisplayCopyV1(
     title: 'Поздняя позиция: открыть или зайти пассивно?',
-    runnerPrompt: 'Банк не открыт. Ты в поздней позиции с ATo.',
+    runnerPrompt: 'До BTN все сбросили. У тебя KTo.',
     runnerSupport:
         'В поздней позиции такая рука спокойно тянет на открытие, а не на пассивный вход.',
-    runnerQuestion: 'Какое действие здесь выглядит самым простым?',
+    runnerQuestion: 'Какое действие рекомендует стартовая таблица Sharky?',
   ),
   'position_apply_early_fold': Act0TaskDisplayCopyV1(
-    title: 'Ранняя позиция: та же рука уходит в пас',
-    runnerPrompt: 'Банк не открыт. Ты в ранней позиции с ATo.',
+    title: 'Первое решение с AQo',
+    runnerPrompt: 'Ты ходишь первым с AQo.',
     runnerSupport:
-        'Та же рука в ранней позиции чувствует себя заметно хуже и не требует упрямства.',
-    runnerQuestion: 'Какое действие здесь будет дисциплинированным?',
+        'Найди первое место, с которого эта рука открывается по таблице.',
+    runnerQuestion:
+        'Какое действие рекомендует стартовая таблица Sharky с AQo на UTG?',
   ),
   'position_apply_hj_fold': Act0TaskDisplayCopyV1(
     title: 'HJ: держим дисциплину',
@@ -1788,17 +1791,16 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
   ),
   'position_apply_recap': Act0TaskDisplayCopyV1(
     title: 'Повтор по позиции',
-    runnerPrompt:
-        'Главная мысль проста: позиция меняет комфорт ещё до действия.',
-    runnerSupport:
-        'Поздние места помогают, ранние требуют более крепкой руки и более чистой причины продолжать.',
-    runnerQuestion: 'На что нужно смотреть сразу после группы руки?',
+    runnerPrompt: 'До BTN все сбросили. У тебя AJo.',
+    runnerSupport: 'Найди свою руку и место в стартовой таблице.',
+    runnerQuestion: 'Почему таблица рекомендует открыть рейзом?',
   ),
   'position_checkpoint_position_checkpoint_intro': Act0TaskDisplayCopyV1(
     title: 'Сначала место',
     runnerPrompt: 'Одна и та же рука ощущается иначе рано и поздно.',
     runnerSupport: 'Поздние места действуют после большего числа решений.',
-    runnerQuestion: 'Почему поздняя позиция помогает?',
+    runnerQuestion:
+        'Кто из этих игроков увидит ход HJ до своего первого решения на префлопе?',
     teachingSteps: <Act0TeachingStepDisplayCopyV1>[
       Act0TeachingStepDisplayCopyV1(
         title: 'Позиция — это информация.',
@@ -1809,10 +1811,10 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
   ),
   'position_checkpoint_position_checkpoint_late_open': Act0TaskDisplayCopyV1(
     title: 'Поздняя позиция: открыть или зайти пассивно?',
-    runnerPrompt: 'Банк не открыт. Hero в поздней позиции с ATo.',
+    runnerPrompt: 'До BTN все сбросили. У тебя QTo.',
     runnerSupport:
         'Поздняя позиция поддерживает чистый опен с такой играбельной рукой.',
-    runnerQuestion: 'Какое действие здесь самое простое?',
+    runnerQuestion: 'Какое действие рекомендует стартовая таблица Sharky?',
     teachingSteps: <Act0TeachingStepDisplayCopyV1>[
       Act0TeachingStepDisplayCopyV1(
         title: 'Играбельная рука поздно.',
@@ -1864,10 +1866,10 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
   ),
   'position_checkpoint_position_checkpoint_review': Act0TaskDisplayCopyV1(
     title: 'Повтор по позиции',
-    runnerPrompt: 'Позиция меняет комфорт ещё до префлоп-решения.',
+    runnerPrompt: 'До BTN все сбросили. У тебя ATs.',
     runnerSupport:
         'Поздняя позиция помогает. Ранняя требует более крепкой руки и более чистой причины продолжать.',
-    runnerQuestion: 'На что нужно смотреть сразу после группы руки?',
+    runnerQuestion: 'Какое действие рекомендует стартовая таблица Sharky?',
     teachingSteps: <Act0TeachingStepDisplayCopyV1>[
       Act0TeachingStepDisplayCopyV1(
         title: 'Памятка по позиции.',

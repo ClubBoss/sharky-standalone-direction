@@ -76,13 +76,16 @@ void main() {
     expect(task.runner.options.map((option) => option.id), [
       'fewer_behind',
       'always_last',
+      'smaller_blinds',
     ]);
     expect(task.runner.options.map((option) => option.isCorrect), [
       true,
       false,
+      false,
     ]);
     expect(task.runner.options.map((option) => option.quality), [
       Act0FeedbackQualityV1.correct,
+      Act0FeedbackQualityV1.wrong,
       Act0FeedbackQualityV1.wrong,
     ]);
   });

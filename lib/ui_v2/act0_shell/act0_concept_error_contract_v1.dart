@@ -170,6 +170,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_3/early_vs_late',
       'world_3/same_hand_different_seat',
       'world_3/position_apply',
+      'world_3/w3_play_from_blinds',
       'world_3/position_checkpoint',
     },
     legacyAliases: <String>{
@@ -281,9 +282,11 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     lessonKeys: <String>{
       'world_6/range_bucket_basics',
       'world_6/range_board_fit',
+      'world_6/w6_continuation_bet',
       'world_6/range_combo_counts',
       'world_6/range_pressure_lines',
       'world_6/range_thinking_checkpoint',
+      'world_6/range_reading_review',
       'world_7/range_thinking_lite_combo_density',
       'world_7/w7_visible_cards_range_checkpoint',
     },
