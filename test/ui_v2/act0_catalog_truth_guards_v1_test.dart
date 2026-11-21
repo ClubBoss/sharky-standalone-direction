@@ -1215,6 +1215,45 @@ void main() {
         );
       },
     );
+    test('rejects a Day 7 reason reused from course or in the same review', () {
+      final base = _catalogRow('hand_discipline_buckets_premium');
+      const wrongReason =
+          'A loose call here pays a raise with a dominated hand.';
+      Act0RunnerOptionV1 choice(String id, bool correct, String reason) =>
+          Act0RunnerOptionV1(
+            id: id,
+            label: id,
+            isCorrect: correct,
+            preferredLabel: 'fold',
+            quality: correct
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Read the table.',
+            feedbackReason: reason,
+          );
+      CatalogTask row(String id, String right, String wrong) => syntheticRow(
+        base,
+        id: id,
+        runner: base.task.runner.copyWith(
+          options: [choice('fold', true, right), choice('call', false, wrong)],
+        ),
+      );
+      final findings = <String>{};
+      auditDuplicateWrongReasonsV1(
+        course: [row('course', 'Fold to the tighter opener.', wrongReason)],
+        day7: [
+          row('reused', 'Folding preserves the stack.', wrongReason),
+          row('binary', 'Recheck your price.', '  Recheck your price. '),
+          row('distinct', 'Keep your stack.', 'The deeper stack calls behind.'),
+        ],
+        count: (_) {},
+        findings: findings,
+      );
+      expect(findings, {
+        '21.duplicate_wrong_reason|reused|call',
+        '21.duplicate_wrong_reason|binary|call',
+      });
+    });
   });
 
   test(
