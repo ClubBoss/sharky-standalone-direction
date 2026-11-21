@@ -56,6 +56,7 @@ bool day7MustBeCoveredV1(Day7CoverageKeyV1 key) => const {
   'world_2',
   'world_3',
   'world_4',
+  'world_5',
   'world_6',
 }.contains(key.$1);
 

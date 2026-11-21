@@ -3044,38 +3044,42 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK board_texture_basics_w5_texture_intro [theory] Board texture
 CAPTION: Board texture asks how much the next cards can change.
-TEACH: Look at ranks and suits. A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. A wet board offers more draws through close ranks or matching suits.
+TEACH: Look at ranks and suits. A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. A wet board offers many plausible draws, as on three close ranks with two matching suits. Semi-wet sits between the extremes. Two matching suits with wide rank gaps are one example.
 TEACH LABELS: Rank gaps, Suits
 TEACH: Name the flop shape. Rainbow means three different suits. Two-tone means two cards share a suit. A paired board repeats a rank, such as 8-8-3.
 TEACH LABELS: Number of suits, Repeated ranks
 Q: What does board texture describe?
 HINT [theoryOnly]: Dry boards change less. Wet boards create more threats.
-TABLE: Flop | You Ac Jd | Board Ks 8h 3c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Ac Jd | Board Ks 8h 3c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ Ac Jd stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Rank gaps and matching suits tell you how much the next card can change.
 
 TASK board_texture_basics_w5_dry_board [drill] Two ways a flop can change
 CAPTION: Read the three flop cards.
 Q: What texture is this?
 HINT [theoryOnly]: Few obvious straight or flush paths are visible.
-TABLE: Flop | You Ah Tc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Ah Tc | Board Kc 7d 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Dry — Sharp read. Spread ranks and mixed suits make this a dry board.
-  - [wrong] Wet — Not quite. Wet boards show more connected ranks or suit pressure.
+  - [wrong] Wet — Not quite. K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against draws the flop barely supports.
+    BETTER ANSWER: Dry
+  - [wrong] Semi-wet — The flop has few short paths. K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to draws that need both remaining cards.
     BETTER ANSWER: Dry
 
 TASK board_texture_basics_w5_wet_board [drill] Read another flop
 CAPTION: Look at the flop ranks and suits.
 Q: What texture is this?
 HINT [theoryOnly]: Notice the connected ranks and two hearts before choosing texture.
-TABLE: Flop | You Js Td | Board Th 9h 8c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts one pair, top pair, two-tone, consecutive board, open-ended, completion cards 8
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Dry — Not quite. This is not dry. Connected ranks plus two hearts mean future cards can change the story fast, so the board already carries wet pressure.
+TABLE: Flop | You Js Td | Board Th 9h 8c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the flop | Facts one pair, top pair, two-tone, consecutive board, open-ended, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Td stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  - [wrong] Dry — Not quite. On T-9-8 with two hearts, a straight can already be made and hearts can complete a flush draw. Treating the flop as dry risks giving a free card on a board with many live draws.
     BETTER ANSWER: Wet
   + [correct] Wet — Strong choice. The connected ranks and two hearts create many changes. Straight paths, heart pressure, and future cards can all change the next decision quickly.
+  - [wrong] Semi-wet — Both sources of draws are present. T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.
+    BETTER ANSWER: Wet
 
 TASK board_texture_basics_w5_texture_recap [review] Texture recap
 CAPTION: Lesson learned: texture says how fast a board can change.
@@ -3083,59 +3087,67 @@ TEACH: Texture checklist. Look at rank connection and suits before choosing an a
 TEACH LABELS: Ranks, Suits, Change
 Q: What is the first board read?
 HINT [theoryOnly]: Dry is calmer. Wet has more obvious improvement paths.
-TABLE: Flop | You As Jc | Board 9d 9h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts one pair, rainbow, paired board
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You As Jc | Board 9d 9h 3s | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Center Read the flop | Facts one pair, rainbow, paired board
+SEATS: UTG folded stack 100 BB | HJ As Jc stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Read dry or wet first so the board tells you how much can change.
 
 ===== WORLD 5 · LESSON connected_boards · Connected boards =====
 
 TASK connected_boards_w5_connected_intro [theory] Connected ranks
 CAPTION: Connected ranks sit close together, like 9-8-7.
-TEACH: Ranks can connect. Cards close in rank create more straight possibilities.
+TEACH: Ranks can connect. Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.
 TEACH LABELS: 9, 8, 7, Connected
 Q: What makes a board connected?
 HINT [theoryOnly]: Close ranks create more straight paths.
-TABLE: Flop | You Qd Jc | Board 9h 8s 7d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, consecutive board, gutshot, completion cards 4
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qd Jc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Qd Jc | Board 9h 8s 7d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, consecutive board, gutshot, completion cards 4
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Jc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Three nearby ranks, such as 9-8-7, give private cards more ways to complete a straight.
 
 TASK connected_boards_w5_disconnected_board [drill] Read the rank gaps
 CAPTION: Look at the flop ranks.
-Q: Is this board connected?
+Q: Which rank pattern fits the flop?
 HINT [theoryOnly]: The ranks are far apart.
-TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh 9c stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the flop | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 9c stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Disconnected — Solid understanding. The ranks are far apart, so it is disconnected.
-    FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  - [wrong] Connected — Not quite. Connected boards have close ranks, not big gaps.
+    FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  - [wrong] Connected — Not quite. The ace, eight and two leave a wide gap around the eight. Reading the ranks as closely connected exaggerates the straight danger.
     BETTER ANSWER: Disconnected
-    FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  - [wrong] Paired — Check for a repeated rank. A-8-2 has three different ranks. The spacing leaves few straight paths, and thinking there is a pair distorts the hands you expect to face.
+    BETTER ANSWER: Disconnected
+    FEEDBACK TABLE: Flop | You Jh 9c | Board As 8d 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK connected_boards_w5_connected_board [drill] Read the next flop
 CAPTION: Compare the ranks on the flop.
 Q: What is the key board clue?
 HINT [theoryOnly]: Close board ranks can connect with an opponent's private cards.
-TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qh Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Connected ranks — Well done. 9-8-7 leaves room for straights. For example, a player holding J-T already has one.
-    FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
-  - [wrong] Paired board — Not quite. A paired board repeats a rank. This board connects ranks.
+    FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
+  - [wrong] Paired board — Not quite. 9-8-7 has three distinct ranks. Looking for a nonexistent pair can distract you from a made straight such as J-T.
     BETTER ANSWER: Connected ranks
-    FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
+    FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
+  - [wrong] Disconnected ranks — Read all three ranks together. The 9, 8 and 7 are consecutive. Missing that connection can make you overlook a made straight such as J-T.
+    BETTER ANSWER: Connected ranks
+    FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
 
 TASK connected_boards_w5_connected_recap [review] Connected recap
 CAPTION: Lesson learned: connected boards create straight pressure.
+TEACH: Check your own five cards too. The board on this recap is Q-9-8. Your J-T fits between the queen and the nine, so you have five in a row. Board connection is a warning for the whole table. Your two private cards determine whether you hold the straight or still need help.
+TEACH LABELS: Board ranks, Your five-card hand
 TEACH: Connected checklist. If ranks sit close together, slow down and watch straight paths.
 TEACH LABELS: Close ranks, Straight path
 Q: What do connected ranks create?
 HINT [theoryOnly]: Close ranks matter even before anyone bets.
-TABLE: Flop | You Js Td | Board Qc 9s 8h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the ranks | Facts straight, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Js Td | Board Qc 9s 8h | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the ranks | Facts straight, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Td stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Close ranks create more straight paths and more change.
 
 ===== WORLD 5 · LESSON flush_draws · Flush draws =====
@@ -3146,9 +3158,9 @@ TEACH: Four cards of the same suit. A flush draw has four cards of one suit betw
 TEACH LABELS: Suit, Heart, Flush draw
 Q: What does a flush draw need?
 HINT [theoryOnly]: Count suits on the board and in hand.
-TABLE: Flop | You Kh Jh | Board Qh 8h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Count matching suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh Jh stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Kh Jh | Board Qh 8h 3s | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Center Count matching suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ Kh Jh stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Four cards of one suit leave you one card short of a flush.
 
 TASK flush_draws_w5_flush_draw_find [drill] Count the matching suits
@@ -3157,30 +3169,33 @@ TEACH: Four hearts is pressure, not a made hand. Do not stop at matching suits. 
 TEACH LABELS: Four hearts, Not made yet, One more heart
 Q: What draw is visible?
 HINT [theoryOnly]: One more heart can improve your hand to a flush.
-TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 7h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah 7h stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Made flush — Not quite. Not complete yet. With four hearts showing, flush pressure is live, but a made flush needs five cards of the same suit.
     BETTER ANSWER: Flush draw
-    FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+    FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
   - [wrong] Straight draw — Suit clue first. The visible clue is the four-heart story. Start with same-suit pressure before inventing a rank-ladder draw.
     BETTER ANSWER: Flush draw
-    FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+    FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
   + [correct] Flush draw — Excellent spot. This is a flush draw, not a flush yet. Four hearts are visible, so one more heart can complete the hand.
-    FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+    FEEDBACK TABLE: Flop | You Ah 7h | Board Th 4h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
 
 TASK flush_draws_w5_no_flush_draw [drill] Read the suits
 CAPTION: Scan your cards and the flop.
-Q: Is a flush draw obvious?
+Q: How many more clubs do you need to make a flush by the river?
 HINT [theoryOnly]: Rainbow means three different suits on the flop.
-TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Jc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Yes — Not quite. A rainbow flop does not show flush pressure yet.
-    BETTER ANSWER: No
-    FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] No — Spot on. Different suits make no obvious flush draw.
-    FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the flop | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Jc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  - [wrong] 1 · flush draw — Not quite. J of clubs and 4 of clubs bring you to two clubs. A single club would only make three, so treating it as a flush draw can make you pay for a hand that cannot get there.
+    BETTER ANSWER: 3 · not enough cards remain
+    FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  + [correct] 3 · not enough cards remain — Spot on. You need three more clubs, and only the turn and river remain. You cannot finish a flush with this hand.
+    FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  - [wrong] 2 · backdoor flush — Count the clubs you can see. Your J of clubs and the 4 of clubs make two clubs so far. Two more bring the total to four and cannot make a flush.
+    BETTER ANSWER: 3 · not enough cards remain
+    FEEDBACK TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK flush_draws_w5_made_hand_vs_flush_draw_transfer [drill] Made hand or future pressure
 CAPTION: Real table. You hold A-spade and J-club on A-heart, 8-heart, 4-club.
@@ -3188,17 +3203,17 @@ TEACH: Made hand first, draw pressure second. You have top pair and no hearts. T
 TEACH LABELS: Top pair, Two hearts, Not made yet
 Q: What is the clean read first?
 HINT [theoryOnly]: Name your made hand, then read what the board could give an opponent.
-TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1 | Center Made hand or draw? | Facts one pair, top pair, two-tone
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jc stack 96.25 BB | SB folded stack 99.5 BB | BB stack 96.25 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3.75 BB · SB folds · BB calls 2.75 BB more · Flop: BB checks
+TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat CO | Active co | Decision co | Card focus hero_0, board_0, board_1 | Center Made hand or draw? | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Jc stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 96.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks
   + [correct] You have top pair. An opponent could be drawing to a flush — Correct live read. You have top pair and no hearts. An opponent with two hearts can make a flush if another heart comes.
-    FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat CO | Active co | Decision co | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
   - [wrong] You already have a flush — Not made yet. You have no hearts. With two hearts on the board, even an opponent holding two hearts would still need one more.
     BETTER ANSWER: You have top pair. An opponent could be drawing to a flush
-    FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat CO | Active co | Decision co | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
   - [wrong] A possible flush draw cancels your pair — Current hand first. Your pair of aces already counts. Another heart could help an opponent later.
     BETTER ANSWER: You have top pair. An opponent could be drawing to a flush
-    FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Jc | Board Ah 8h 4c | Pot 8 BB | Seat CO | Active co | Decision co | Card focus hero_0, board_0, board_1, hero_1, board_2 | Center Made hand or draw? | Facts one pair, top pair, two-tone
 
 TASK flush_draws_w5_flush_draw_recheck_transfer [drill] Find your draw
 CAPTION: Your hand and the flop are shown. The next card is still unknown.
@@ -3222,9 +3237,9 @@ TEACH: Flush checklist. Same-suit cards show whether one more suit can change th
 TEACH LABELS: Suits, One more card
 Q: What do you count for flush draws?
 HINT [theoryOnly]: Count matching suits before calling a board safe.
-TABLE: Flop | You Kc 9c | Board Ac 6c 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the suits | Facts high card, two-tone, flush draw, completion cards 9
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kc 9c stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Kc 9c | Board Ac 6c 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the suits | Facts high card, two-tone, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc 9c stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Count suits in your hand and on the board before calling it safe.
 
 ===== WORLD 5 · LESSON straight_draws · Straight draws =====
@@ -3235,22 +3250,25 @@ TEACH: Count the ranks that finish a straight. An open-ended draw can finish at 
 TEACH LABELS: Ranks, Ladder, Straight draw
 Q: What does a straight draw use?
 HINT [theoryOnly]: Look for rank ladders.
-TABLE: Flop | You Ts 9d | Board Jh 8c 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ts 9d stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Ts 9d | Board Jh 8c 3s | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 9d stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Check which next rank could give you five consecutive cards.
 
 TASK straight_draws_w5_straight_draw_find [drill] Read the four ranks
 CAPTION: You have 6-5 and the board shows 8-7-2.
-Q: What draw is visible?
+Q: How many different ranks finish your straight on the next card?
 HINT [theoryOnly]: A 4 or 9 can improve the rank ladder.
 TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 6s 5d stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] Straight draw — Clean execution. Nearby ranks create straight outs.
+  + [correct] 2 · open-ended straight draw — Clean execution. Your 5-6 and the board’s 7-8 form a four-card run. A 4 finishes it at the low end and a 9 at the high end.
     FEEDBACK TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
-  - [wrong] Flush draw — Not quite. The clue is rank connection, not matching suits.
-    BETTER ANSWER: Straight draw
+  - [wrong] 0 · flush draw instead — Not quite. There are no four matching suits between your cards and the board. The 5-6-7-8 run can improve immediately on a 4 or a 9. Ignoring those ranks misses part of your chance to win.
+    BETTER ANSWER: 2 · open-ended straight draw
+    FEEDBACK TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
+  - [wrong] 1 · inside straight draw — Check both ends of the run. With 6-5 on 8-7-2, either a 4 or a 9 completes a straight. Counting just one end discounts half the completion cards.
+    BETTER ANSWER: 2 · open-ended straight draw
     FEEDBACK TABLE: Flop | You 6s 5d | Board 8c 7h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, open-ended, completion cards 8
 
 TASK straight_draws_w5_gap_board [drill] Read the gaps
@@ -3264,6 +3282,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: No
     FEEDBACK TABLE: Flop | You Jc 8h | Board Ad 6s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow
   + [correct] No — Gap board identified. The ranks are too far apart for an obvious straight path.
+    FEEDBACK TABLE: Flop | You Jc 8h | Board Ad 6s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow
+  - [wrong] Yes, because ace connects directly to six — Place the ace at an end. An ace can be high or low, but A-6-2 still leaves wide gaps. Treating ace and six as neighbors overstates how easily a straight can arrive.
+    BETTER ANSWER: No
     FEEDBACK TABLE: Flop | You Jc 8h | Board Ad 6s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow
 
 TASK straight_draws_w5_gutshot_draw [drill] Which rank fits?
@@ -3319,26 +3340,26 @@ TEACH: Compare with the price from World 4. A 1 BB call into a 7 BB pot needs 1 
 TEACH LABELS: Call 1 BB, Pot 7 BB, Chance to win
 Q: What is an out?
 HINT [theoryOnly]: Count the cards that complete the draw. Then compare the chance with the price.
-TABLE: Flop | You Js Tc | Board Qd 9h 3c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the draw | Facts high card, rainbow, open-ended, completion cards 8
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Js Tc | Board Qd 9h 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the draw | Facts high card, rainbow, open-ended, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Identify the cards that complete your draw before deciding what price is worth paying.
 
 TASK outs_improvement_w5_flush_out [drill] Which suit helps?
 CAPTION: Compare the cards by suit.
 Q: Which card type is the out?
 HINT [theoryOnly]: Any heart is the improvement card type.
-TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh 8h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 8h stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Club — Not quite. The flush path is hearts, so hearts are the outs.
     BETTER ANSWER: Heart
-    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
   + [correct] Heart — Sharp read. A heart can complete the flush.
-    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
-  - [wrong] Spade — Check the clue again. A spade adds to the board without adding a heart. The flush needs one more heart.
+    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+  - [wrong] Spade — Check the clue again. A spade adds a spade to the turn without adding a heart. The flush needs one more heart.
     BETTER ANSWER: Heart
-    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
 
 TASK outs_improvement_w5_straight_out [drill] Which rank helps?
 CAPTION: Compare your ranks with the flop.
@@ -3364,6 +3385,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: Call 2 BB
     FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
   + [correct] Call 2 BB — Nine outs are enough at this price. Call under the stated rule. Nine hearts out of 46 hit about 1 time in 5, above the 1-in-6 price. In a real hand, what the opponent could hold determines which rivers win.
+    FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
+  - [suboptimal] Call because nine outs is a big draw — The action fits. Compare it with the cost. On T-4-2-9, A-7 of hearts hits on 9 of 46 rivers under the stated rule. That beats the 2-in-12 price. A bigger bet can make the same nine outs too expensive.
+    BETTER ANSWER: Call 2 BB
     FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
 
 TASK outs_improvement_w5_clean_vs_risky_out_transfer [drill] Safer out or risky out
@@ -3396,6 +3420,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call 3 BB — A live draw can still cost too much. Under the stated rule, eight winning rivers fall short of the 3-in-12 price. In a real hand, a 9 can give an opponent holding J-T a higher straight.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You 6s 5d | Board 8c 7h 2s Kd | Pot 9 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, open-ended, completion cards 8
+  - [suboptimal] Fold because four nines give too small a chance to win — The action fits. Count both ends. With 6-5 on 8-7-2-K, a 4 also makes a straight. Four cards of each rank still fall short of the 3-in-12 price. Miscounting can lose a profitable call at a lower price.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Turn | You 6s 5d | Board 8c 7h 2s Kd | Pot 9 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, open-ended, completion cards 8
 
 TASK outs_improvement_w5_outs_recap [review] Outs recap
 CAPTION: Lesson learned: outs are improvement cards.
@@ -3416,23 +3443,26 @@ TEACH: One card can matter. The turn and river each add one shared card. A blank
 TEACH LABELS: Turn, River, Draw story
 Q: What changes after the flop?
 HINT [theoryOnly]: Read the same draw story again after each new street card.
-TABLE: Turn | You Ks 9s | Board As 7s 4c 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts flush
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks 9s stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN checks · Turn: BB checks
+TABLE: Turn | You Ks 9s | Board As 7s 4c 2s | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_3 | Center Read the turn | Facts flush
+SEATS: UTG folded stack 100 BB | HJ Ks 9s stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks
 REVIEW: Compare the new card to the previous board to see which draws finished or stayed open.
 
 TASK turn_river_changes_w5_turn_hits [drill] Checkpoint: check the turn
-CAPTION: Compare the first three board cards with the turn card.
+CAPTION: Compare the first three flop cards with the turn card.
 Q: What happened on the turn?
 HINT [theoryOnly]: Count matching suits before and after the turn.
-TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts flush, gutshot, completion cards 4
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qc 9c stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN checks · Turn: BB checks
+TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_3 | Center Read the turn | Facts flush, gutshot, completion cards 4
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qc 9c stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks
   - [wrong] Blank — Not quite. The turn adds a club to the four clubs you could see on the flop. That changes the hand.
     BETTER ANSWER: Draw hit
-    FEEDBACK TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Read the turn | Facts flush, gutshot, completion cards 4
-  + [correct] Draw hit — Solid understanding. The turn jack brings the fifth club between your hand and the board. You now have a flush.
-    FEEDBACK TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Read the turn | Facts flush, gutshot, completion cards 4
+    FEEDBACK TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_3, board_0, board_1, board_2 | Center Read the turn | Facts flush, gutshot, completion cards 4
+  + [correct] Draw hit — Solid understanding. The turn jack brings the fifth club between your hand and the flop and turn. You now have a flush.
+    FEEDBACK TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_3, board_0, board_1, board_2 | Center Read the turn | Facts flush, gutshot, completion cards 4
+  - [wrong] Still one club short — Count the clubs in both places. Your Q and 9 of clubs plus K, 6 and J of clubs on the flop and turn make five. Missing a club in your hand can cost value from a made flush.
+    BETTER ANSWER: Draw hit
+    FEEDBACK TABLE: Turn | You Qc 9c | Board Kc 6c 2h Jc | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_3, board_0, board_1, board_2 | Center Read the turn | Facts flush, gutshot, completion cards 4
 
 TASK turn_river_changes_w5_river_misses [drill] Checkpoint: check the river
 CAPTION: Compare the river with the draw you started with.
@@ -3445,6 +3475,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: Draw missed
     FEEDBACK TABLE: River | You As 8s | Board Ts 7s 3d 6c Qd | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Read the river | Facts high card
   + [correct] Draw missed — Well done. You still see only four spades. The river queen is a diamond, so the flush draw missed.
+    FEEDBACK TABLE: River | You As 8s | Board Ts 7s 3d 6c Qd | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Read the river | Facts high card
+  - [wrong] Missed the flush but made a straight — Check for five consecutive ranks. On T-7-3-6-Q, A-8 has neither five spades nor five consecutive ranks. Mistaking the gaps for a straight can make you pay with ace-high.
+    BETTER ANSWER: Draw missed
     FEEDBACK TABLE: River | You As 8s | Board Ts 7s 3d 6c Qd | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_4, hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Read the river | Facts high card
 
 TASK turn_river_changes_w5_turn_texture_shift_transfer [drill] Checkpoint: the new turn card
@@ -3490,6 +3523,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: Call 1 BB
     FEEDBACK TABLE: Turn | You 9c 8d | Board 6d 5h 2c Ks | Pot 12 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, gutshot, completion cards 4
   + [correct] Call 1 BB — The low price makes a call worthwhile. Only a 7 completes your straight. Four of 46 cards win, about 1 in 12. You only need 1 in 13 at this price.
+    FEEDBACK TABLE: Turn | You 9c 8d | Board 6d 5h 2c Ks | Pot 12 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, gutshot, completion cards 4
+  - [suboptimal] Call because the bet is small — The action fits. Count the winners. On 6-5-2-K, a 7 is the winning rank for 9-8 under this rule. Four wins in 46 are enough for the 1-in-13 price. Calling small bets without counting can still lose chips.
+    BETTER ANSWER: Call 1 BB
     FEEDBACK TABLE: Turn | You 9c 8d | Board 6d 5h 2c Ks | Pot 12 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, gutshot, completion cards 4
 
 ===== WORLD 6 · LESSON range_bucket_basics · Range buckets =====
@@ -7164,6 +7200,191 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ all-in 18 BB
   - [wrong] 18 BB — Look again. HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.
     BETTER ANSWER: 7 BB
   + [correct] 7 BB — Correct. HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.
+
+===== WORLD 5 · LESSON board_texture_basics · Dry or wet board =====
+
+TASK spaced_review_w5_board_texture_basics_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: What is the texture of K-9-2 with three suits?
+HINT [hidden]: (none)
+TABLE: Flop | You Ad Tc | Board Kh 9d 2s | Pot 6 BB | Seat CO | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad Tc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  + [correct] Dry — Correct. The ranks have wide gaps and there is no pair of matching suits. Treating this as wet overstates how many draws the flop supports.
+    FEEDBACK TABLE: Flop | You Ad Tc | Board Kh 9d 2s | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  - [wrong] Semi-wet — Look again. The ranks have wide gaps and there is no pair of matching suits. Treating this as wet overstates how many draws the flop supports.
+    BETTER ANSWER: Dry
+    FEEDBACK TABLE: Flop | You Ad Tc | Board Kh 9d 2s | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  - [wrong] Wet — Look again. The ranks have wide gaps and there is no pair of matching suits. Treating this as wet overstates how many draws the flop supports.
+    BETTER ANSWER: Dry
+    FEEDBACK TABLE: Flop | You Ad Tc | Board Kh 9d 2s | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+
+===== WORLD 5 · LESSON connected_boards · Connected boards =====
+
+TASK spaced_review_w5_connected_boards_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Why can this rainbow flop still support straights?
+HINT [hidden]: (none)
+TABLE: Flop | You Ac 8h | Board Jh Tc 9s | Pot 6 BB | Seat CO | Facts high card, rainbow, consecutive board, open-ended, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac 8h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  + [correct] It has three consecutive ranks — Correct. The jack, ten and nine are consecutive. If you ignore the ranks because the flop is rainbow, you can miss a made straight such as K-Q.
+    FEEDBACK TABLE: Flop | You Ac 8h | Board Jh Tc 9s | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, consecutive board, open-ended, completion cards 8
+  - [wrong] It has a repeated rank — Look again. The jack, ten and nine are consecutive. If you ignore the ranks because the flop is rainbow, you can miss a made straight such as K-Q.
+    BETTER ANSWER: It has three consecutive ranks
+    FEEDBACK TABLE: Flop | You Ac 8h | Board Jh Tc 9s | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, consecutive board, open-ended, completion cards 8
+  - [wrong] It has three cards of one suit — Look again. The jack, ten and nine are consecutive. If you ignore the ranks because the flop is rainbow, you can miss a made straight such as K-Q.
+    BETTER ANSWER: It has three consecutive ranks
+    FEEDBACK TABLE: Flop | You Ac 8h | Board Jh Tc 9s | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, consecutive board, open-ended, completion cards 8
+
+===== WORLD 5 · LESSON flush_draws · Flush draws =====
+
+TASK spaced_review_w5_flush_draws_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: How many more hearts do you need for a flush?
+HINT [hidden]: (none)
+TABLE: Flop | You Kh 5h | Board Ah 8h 3s | Pot 6 BB | Seat CO | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 5h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  - [wrong] Two — Look again. Your two hearts and the two on the flop make four. Counting the two places together keeps you from undervaluing the draw.
+    BETTER ANSWER: One
+    FEEDBACK TABLE: Flop | You Kh 5h | Board Ah 8h 3s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+  + [correct] One — Correct. Your two hearts and the two on the flop make four. Counting the two places together keeps you from undervaluing the draw.
+    FEEDBACK TABLE: Flop | You Kh 5h | Board Ah 8h 3s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+  - [wrong] Three — Look again. Your two hearts and the two on the flop make four. Counting the two places together keeps you from undervaluing the draw.
+    BETTER ANSWER: One
+    FEEDBACK TABLE: Flop | You Kh 5h | Board Ah 8h 3s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+
+TASK spaced_review_w5_flush_draws_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: What does the third diamond mean for your hand?
+HINT [hidden]: (none)
+TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Facts high card, monotone, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qc 9d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  - [wrong] You have a made flush — Look again. Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.
+    BETTER ANSWER: You have a flush draw
+    FEEDBACK TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, monotone, flush draw, completion cards 9
+  - [wrong] You cannot make a flush with one diamond — Look again. Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.
+    BETTER ANSWER: You have a flush draw
+    FEEDBACK TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, monotone, flush draw, completion cards 9
+  + [correct] You have a flush draw — Correct. Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.
+    FEEDBACK TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, monotone, flush draw, completion cards 9
+
+===== WORLD 5 · LESSON straight_draws · Straight draws =====
+
+TASK spaced_review_w5_straight_draws_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Which ranks finish your straight on the next card?
+HINT [hidden]: (none)
+TABLE: Flop | You Ts 9d | Board 8c 7h 2d | Pot 6 BB | Seat CO | Facts high card, rainbow, open-ended, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 9d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  + [correct] A six or a jack — Correct. The 7-8-9-T run can finish at either end. Counting only the six overlooks the jack and halves the number of completion cards.
+    FEEDBACK TABLE: Flop | You Ts 9d | Board 8c 7h 2d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
+  - [wrong] A jack or an ace — Look again. The 7-8-9-T run can finish at either end. Counting only the six overlooks the jack and halves the number of completion cards.
+    BETTER ANSWER: A six or a jack
+    FEEDBACK TABLE: Flop | You Ts 9d | Board 8c 7h 2d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
+  - [wrong] A six — Look again. The 7-8-9-T run can finish at either end. Counting only the six overlooks the jack and halves the number of completion cards.
+    BETTER ANSWER: A six or a jack
+    FEEDBACK TABLE: Flop | You Ts 9d | Board 8c 7h 2d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
+
+TASK spaced_review_w5_straight_draws_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Which rank fills the inside gap in your straight?
+HINT [hidden]: (none)
+TABLE: Flop | You Jc 9d | Board Qs 8h 3c | Pot 6 BB | Seat CO | Facts high card, rainbow, gutshot, completion cards 4
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jc 9d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  - [wrong] Eight — Look again. The eight, nine, jack and queen leave a gap at ten. A king cannot finish these five ranks and would mislead your draw count.
+    BETTER ANSWER: Ten
+    FEEDBACK TABLE: Flop | You Jc 9d | Board Qs 8h 3c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+  + [correct] Ten — Correct. The eight, nine, jack and queen leave a gap at ten. A king cannot finish these five ranks and would mislead your draw count.
+    FEEDBACK TABLE: Flop | You Jc 9d | Board Qs 8h 3c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+  - [wrong] King — Look again. The eight, nine, jack and queen leave a gap at ten. A king cannot finish these five ranks and would mislead your draw count.
+    BETTER ANSWER: Ten
+    FEEDBACK TABLE: Flop | You Jc 9d | Board Qs 8h 3c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+
+===== WORLD 5 · LESSON outs_improvement · Outs as improvement cards =====
+
+TASK spaced_review_w5_outs_improvement_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Assume every spade makes your flush win. How many river cards win?
+HINT [hidden]: (none)
+TABLE: Turn | You Qs Js | Board Ks 6s 2h 4c | Pot 6 BB | Seat CO | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Js stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks
+  - [wrong] Four — Look again. You see four spades already, so nine of the thirteen remain. Counting too few can make you pass a price you could afford.
+    BETTER ANSWER: Nine
+    FEEDBACK TABLE: Turn | You Qs Js | Board Ks 6s 2h 4c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Eight — Look again. You see four spades already, so nine of the thirteen remain. Counting too few can make you pass a price you could afford.
+    BETTER ANSWER: Nine
+    FEEDBACK TABLE: Turn | You Qs Js | Board Ks 6s 2h 4c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] Nine — Correct. You see four spades already, so nine of the thirteen remain. Counting too few can make you pass a price you could afford.
+    FEEDBACK TABLE: Turn | You Qs Js | Board Ks 6s 2h 4c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+
+TASK spaced_review_w5_outs_improvement_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Assume the five and ten always win for your straight, and no other river wins. What does the 3 BB price favor?
+HINT [hidden]: (none)
+TABLE: Turn | You 7d 6c | Board 9h 8s 2c Qd | Pot 9 BB | To call 3 BB | Seat CO | Active co | Decision co | Facts high card, open-ended, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7d 6c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 94.25 BB bet 3 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB bets 3 BB
+  + [correct] Fold. Eight out of 46 is below the price — Correct. The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.
+  - [wrong] Call. Eight out of 46 is above the price — Look again. The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.
+    BETTER ANSWER: Fold. Eight out of 46 is below the price
+  - [wrong] Call. Any pair on the river would win too — Look again. The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.
+    BETTER ANSWER: Fold. Eight out of 46 is below the price
+
+===== WORLD 5 · LESSON turn_river_changes · Turn and river changes =====
+
+TASK spaced_review_w5_turn_river_changes_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: What happened to your heart draw by the river?
+HINT [hidden]: (none)
+TABLE: River | You Ah 9h | Board Th 5h 2c 7s 3d | Pot 6 BB | Seat CO | Facts high card
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah 9h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks
+  - [wrong] The river made it a flush — Look again. The turn is a spade and the river is a diamond. You still have four hearts. Calling as though you had a flush can cost chips.
+    BETTER ANSWER: It missed on both later streets
+    FEEDBACK TABLE: River | You Ah 9h | Board Th 5h 2c 7s 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+  + [correct] It missed on both later streets — Correct. The turn is a spade and the river is a diamond. You still have four hearts. Calling as though you had a flush can cost chips.
+    FEEDBACK TABLE: River | You Ah 9h | Board Th 5h 2c 7s 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] The turn made it a flush — Look again. The turn is a spade and the river is a diamond. You still have four hearts. Calling as though you had a flush can cost chips.
+    BETTER ANSWER: It missed on both later streets
+    FEEDBACK TABLE: River | You Ah 9h | Board Th 5h 2c 7s 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK spaced_review_w5_turn_river_changes_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: What did the turn change for your hand?
+HINT [hidden]: (none)
+TABLE: Turn | You Ad 6d | Board Kd 8d 3c 2d | Pot 6 BB | Seat CO | Facts flush
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad 6d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks
+  - [wrong] It gave you a pair — Look again. The 2 of diamonds joins K and 8 of diamonds on the board and your two diamonds. Missing the fifth card can cost a value bet.
+    BETTER ANSWER: It gave you a made flush
+    FEEDBACK TABLE: Turn | You Ad 6d | Board Kd 8d 3c 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts flush
+  - [wrong] It left your flush draw unfinished — Look again. The 2 of diamonds joins K and 8 of diamonds on the board and your two diamonds. Missing the fifth card can cost a value bet.
+    BETTER ANSWER: It gave you a made flush
+    FEEDBACK TABLE: Turn | You Ad 6d | Board Kd 8d 3c 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts flush
+  + [correct] It gave you a made flush — Correct. The 2 of diamonds joins K and 8 of diamonds on the board and your two diamonds. Missing the fifth card can cost a value bet.
+    FEEDBACK TABLE: Turn | You Ad 6d | Board Kd 8d 3c 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts flush
+
+TASK spaced_review_w5_turn_river_changes_board_texture_change_v1 [drill] Review decision
+DAY 7 FAMILY: board_texture_change
+Q: What should you reconsider after the ten of diamonds turns?
+HINT [hidden]: (none)
+TABLE: Turn | You Qc 9h | Board Js 7d 3d Td | Pot 6 BB | Seat CO | Facts high card, open-ended, gutshot, completion cards 8
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qc 9h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks
+  + [correct] Both the flush and straight possibilities — Correct. The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.
+    FEEDBACK TABLE: Turn | You Qc 9h | Board Js 7d 3d Td | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, open-ended, gutshot, completion cards 8
+  - [wrong] The board became rainbow — Look again. The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.
+    BETTER ANSWER: Both the flush and straight possibilities
+    FEEDBACK TABLE: Turn | You Qc 9h | Board Js 7d 3d Td | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, open-ended, gutshot, completion cards 8
+  - [wrong] Only the rank of your high card — Look again. The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.
+    BETTER ANSWER: Both the flush and straight possibilities
+    FEEDBACK TABLE: Turn | You Qc 9h | Board Js 7d 3d Td | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, open-ended, gutshot, completion cards 8
 
 ===== WORLD 6 · LESSON range_bucket_basics · Range buckets =====
 

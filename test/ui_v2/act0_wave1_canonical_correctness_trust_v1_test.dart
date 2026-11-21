@@ -38,6 +38,7 @@ void main() {
       expect(task.runner.options.map((option) => option.id), <String>[
         'yes',
         'no',
+        'ace_to_six',
       ]);
       expect(correctOption(task).id, 'no');
       expect(task.rewardXp, 9);
@@ -113,7 +114,7 @@ void main() {
       expect(correctOption(draw).id, 'straight_draw');
       expect(
         correctOption(draw).feedbackReason,
-        'Nearby ranks create straight outs.',
+        'Your 5-6 and the board’s 7-8 form a four-card run. A 4 finishes it at the low end and a 9 at the high end.',
       );
       final transfer = taskFor(
         worldId: 'world_5',
@@ -123,6 +124,7 @@ void main() {
       expect(transfer.runner.options.map((option) => option.id), <String>[
         'four_or_nine',
         'blank_turn_killed',
+        'fold_wrong_out_count',
       ]);
       expect(correctOption(transfer).id, 'four_or_nine');
       final risky = taskFor(

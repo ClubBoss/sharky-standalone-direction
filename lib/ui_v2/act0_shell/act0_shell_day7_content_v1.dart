@@ -973,6 +973,153 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
   ),
   _day7ExampleV1(
+    5,
+    "board_texture_basics",
+    "board_cards",
+    _day7PostflopV1("co", "Ad Tc", "Kh 9d 2s"),
+    question: "What is the texture of K-9-2 with three suits?",
+    choices: const ["Dry", "Semi-wet", "Wet"],
+    correct: 0,
+    reason:
+        "The ranks have wide gaps and there is no pair of matching suits. Treating this as wet overstates how many draws the flop supports.",
+  ),
+  _day7ExampleV1(
+    5,
+    "connected_boards",
+    "hero_cards_board_pot",
+    _day7PostflopV1("co", "Ac 8h", "Jh Tc 9s"),
+    question: "Why can this rainbow flop still support straights?",
+    choices: const [
+      "It has three consecutive ranks",
+      "It has a repeated rank",
+      "It has three cards of one suit",
+    ],
+    correct: 0,
+    reason:
+        "The jack, ten and nine are consecutive. If you ignore the ranks because the flop is rainbow, you can miss a made straight such as K-Q.",
+  ),
+  _day7ExampleV1(
+    5,
+    "flush_draws",
+    "hero_cards_board_pot",
+    _day7PostflopV1("co", "Kh 5h", "Ah 8h 3s"),
+    question: "How many more hearts do you need for a flush?",
+    choices: const ["Two", "One", "Three"],
+    correct: 1,
+    reason:
+        "Your two hearts and the two on the flop make four. Counting the two places together keeps you from undervaluing the draw.",
+  ),
+  _day7ExampleV1(
+    5,
+    "flush_draws",
+    "board_cards",
+    _day7PostflopV1("co", "Qc 9d", "Ad 6d 2d"),
+    question: "What does the third diamond mean for your hand?",
+    choices: const [
+      "You have a made flush",
+      "You cannot make a flush with one diamond",
+      "You have a flush draw",
+    ],
+    correct: 2,
+    reason:
+        "Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.",
+  ),
+  _day7ExampleV1(
+    5,
+    "straight_draws",
+    "hero_cards_board_pot",
+    _day7PostflopV1("co", "Ts 9d", "8c 7h 2d"),
+    question: "Which ranks finish your straight on the next card?",
+    choices: const ["A six or a jack", "A jack or an ace", "A six"],
+    correct: 0,
+    reason:
+        "The 7-8-9-T run can finish at either end. Counting only the six overlooks the jack and halves the number of completion cards.",
+  ),
+  _day7ExampleV1(
+    5,
+    "straight_draws",
+    "board_cards",
+    _day7PostflopV1("co", "Jc 9d", "Qs 8h 3c"),
+    question: "Which rank fills the inside gap in your straight?",
+    choices: const ["Eight", "Ten", "King"],
+    correct: 1,
+    reason:
+        "The eight, nine, jack and queen leave a gap at ten. A king cannot finish these five ranks and would mislead your draw count.",
+  ),
+  _day7ExampleV1(
+    5,
+    "outs_improvement",
+    "board_cards",
+    _day7PostflopV1("co", "Qs Js", "Ks 6s 2h 4c"),
+    question:
+        "Assume every spade makes your flush win. How many river cards win?",
+    choices: const ["Four", "Eight", "Nine"],
+    correct: 2,
+    reason:
+        "You see four spades already, so nine of the thirteen remain. Counting too few can make you pass a price you could afford.",
+  ),
+  _day7ExampleV1(
+    5,
+    "outs_improvement",
+    "hero_cards_board_pot",
+    _day7PostflopV1("co", "7d 6c", "9h 8s 2c Qd", betBb: 3, showTurn: true),
+    question:
+        "Assume the five and ten always win for your straight, and no other river wins. What does the 3 BB price favor?",
+    choices: const [
+      "Fold. Eight out of 46 is below the price",
+      "Call. Eight out of 46 is above the price",
+      "Call. Any pair on the river would win too",
+    ],
+    correct: 0,
+    reason:
+        "The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.",
+  ),
+  _day7ExampleV1(
+    5,
+    "turn_river_changes",
+    "hero_cards_board_pot",
+    _day7PostflopV1("co", "Ah 9h", "Th 5h 2c 7s 3d"),
+    question: "What happened to your heart draw by the river?",
+    choices: const [
+      "The river made it a flush",
+      "It missed on both later streets",
+      "The turn made it a flush",
+    ],
+    correct: 1,
+    reason:
+        "The turn is a spade and the river is a diamond. You still have four hearts. Calling as though you had a flush can cost chips.",
+  ),
+  _day7ExampleV1(
+    5,
+    "turn_river_changes",
+    "board_cards",
+    _day7PostflopV1("co", "Ad 6d", "Kd 8d 3c 2d"),
+    question: "What did the turn change for your hand?",
+    choices: const [
+      "It gave you a pair",
+      "It left your flush draw unfinished",
+      "It gave you a made flush",
+    ],
+    correct: 2,
+    reason:
+        "The 2 of diamonds joins K and 8 of diamonds on the board and your two diamonds. Missing the fifth card can cost a value bet.",
+  ),
+  _day7ExampleV1(
+    5,
+    "turn_river_changes",
+    "board_texture_change",
+    _day7PostflopV1("co", "Qc 9h", "Js 7d 3d Td"),
+    question: "What should you reconsider after the ten of diamonds turns?",
+    choices: const [
+      "Both the flush and straight possibilities",
+      "The board became rainbow",
+      "Only the rank of your high card",
+    ],
+    correct: 0,
+    reason:
+        "The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.",
+  ),
+  _day7ExampleV1(
     6,
     'range_bucket_basics',
     'hero_cards_board_pot',

@@ -212,6 +212,66 @@ void main() {
       expect(row.take(2), ['world_6', 'range_reading_review']);
       row[1] = 'range_thinking_checkpoint';
     }
+    for (final entry in w5AddedOptionQualityV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      final (id, quality) = entry.value;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last[0], id, reason: entry.key);
+      expect(choices.last[2], isFalse, reason: entry.key);
+      expect(choices.last[3], quality, reason: entry.key);
+      choices.removeLast();
+      switch (entry.key) {
+        case 'flush_draws_w5_no_flush_draw':
+          expect(choices, [
+            [
+              'yes',
+              '1 · flush draw',
+              false,
+              'wrong',
+              '3 · not enough cards remain',
+            ],
+            [
+              'no',
+              '3 · not enough cards remain',
+              true,
+              'correct',
+              '3 · not enough cards remain',
+            ],
+          ]);
+          task[5] = <List<Object?>>[
+            ['yes', 'Yes', false, 'wrong', 'No'],
+            ['no', 'No', true, 'correct', 'No'],
+          ];
+        case 'straight_draws_w5_straight_draw_find':
+          expect(choices, [
+            [
+              'straight_draw',
+              '2 · open-ended straight draw',
+              true,
+              'correct',
+              '2 · open-ended straight draw',
+            ],
+            [
+              'flush_draw',
+              '0 · flush draw instead',
+              false,
+              'wrong',
+              '2 · open-ended straight draw',
+            ],
+          ]);
+          task[5] = <List<Object?>>[
+            [
+              'straight_draw',
+              'Straight draw',
+              true,
+              'correct',
+              'Straight draw',
+            ],
+            ['flush_draw', 'Flush draw', false, 'wrong', 'Straight draw'],
+          ];
+      }
+    }
     final legacyEntries = entries
         .where(
           (row) =>
