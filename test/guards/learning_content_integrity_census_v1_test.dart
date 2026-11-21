@@ -869,7 +869,12 @@ void main() {
     }
     expect(rows, hasLength(319));
     expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
-    expect(allChoices, hasLength(566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length));
+    expect(
+      allChoices,
+      hasLength(
+        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+      ),
+    );
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -937,7 +942,12 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length));
+    expect(
+      foundationDefaults,
+      hasLength(
+        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+      ),
+    );
     expect(
       unknown.intersection(w3AppendedRepairChoiceIdsV1),
       w3AppendedRepairChoiceIdsV1,
