@@ -1863,7 +1863,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     worldId: 'world_9',
     worldNumber: 9,
     title: 'Tournament Pressure',
-    subtitle: 'Learn survival pressure and risk without equations.',
+    subtitle: 'Read your stack, chip price and payout risk.',
     status: Act0WorldStateV1.locked,
     progressLabel: act0LockedWorldProgressLabelV1(isImmediateNext: false),
     primaryCtaLabel: act0LockedWorldPrimaryCtaLabelV1(isImmediateNext: false),

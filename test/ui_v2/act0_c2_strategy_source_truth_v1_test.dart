@@ -63,7 +63,7 @@ void main() {
         'w7_ajs_btn_25bb_transfer': 'CO’s full range',
         'w7_ajs_btn_100bb_transfer': 'CO’s full range',
         'w9_bubble_table_risk_transfer':
-            'all-in range, the remaining stacks and the payouts',
+            'different raise range, set of stacks or set of prizes',
         'w10_table_value_vs_caller_transfer':
             'calls, folds or raises with each hand',
         'w11_trigger_small_price_continue': 'CO’s range and later betting',

@@ -39,10 +39,20 @@ void main() {
         .lessons
         .expand((lesson) => lesson.taskList)
         .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final table = source.runner.table;
+    final ledger = table.handContributions!;
+    final stacks = {...ledger.startingStackBbBySeat}..remove('btn');
     final findings = auditTableContributionsV1(
       source.taskId,
       'mutation',
-      source.runner.table.copyWith(toCallLabel: ''),
+      table.copyWith(
+        toCallLabel: '',
+        handContributions: Act0HandContributionsV1(
+          throughStreet: ledger.throughStreet,
+          entries: ledger.entries,
+          startingStackBbBySeat: stacks,
+        ),
+      ),
     );
 
     expect(
@@ -65,8 +75,8 @@ void main() {
 
     final findings = auditTableContributionsV1(
       source.taskId,
-      'authored/preflop',
-      source.runner.table,
+      'mutation/preflop',
+      source.runner.table.copyWith(actionTrail: const []),
     );
 
     expect(findings.map((row) => (row.invariant, row.result)), [
@@ -74,7 +84,7 @@ void main() {
     ]);
   });
 
-  test('W9 shows the wager and pot without claiming the exact call', () {
+  test('W9 shows the wager, pot and exact call from the stack ledger', () {
     final task = Act0ShellStateV1.sample
         .worldById('world_9')
         .lessons
@@ -84,11 +94,12 @@ void main() {
     final ledger = table.handContributions!;
     final seats = table.seats.map((seat) => seat.seatId).toSet();
     expect(table.potLabel, 'Pot 21 BB');
-    expect(table.toCallLabel, isEmpty);
-    expect(task.runner.caption, contains('15.5 BB more than BTN put in'));
+    expect(table.toCallLabel, 'To call 15.5 BB');
+    expect(ledger.startingStackBbBySeat['btn'], 18);
+    expect(ledger.startingStackBbBySeat['bb'], 50);
     expect(ledger.amounts(seatIds: seats, actorSeatId: 'btn'), (
       potBb: 21.0,
-      toCallBb: null,
+      toCallBb: 15.5,
     ));
     for (final (startingStack, price) in [(12.0, 9.5), (18.0, 15.5)]) {
       final withStack = Act0HandContributionsV1(
@@ -248,13 +259,12 @@ void main() {
         .toSet();
     const lateMissingSource = {
       'D2.pot_feasibility': {
-        'w9_m_ratio_table_window_transfer',
         'w11_checkpoint_mixed_table_line',
         'w12_checkpoint_full_loop_line',
         'w12_pretty_hand_bad_price_fold',
         'w12_revenge_raise_trap',
       },
-      'D3.to_call_completeness': {'w9_bubble_table_risk_transfer'},
+      'D3.to_call_completeness': <String>{},
     };
     for (final MapEntry(key: rule, value: missing)
         in lateMissingSource.entries) {
@@ -272,7 +282,7 @@ void main() {
       );
     }
     const lateDecisionProof = {
-      'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
+      'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
       'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
       'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
@@ -351,8 +361,26 @@ void main() {
     final presentAdditions = contract.keys.toSet().intersection(
       admittedAdditions,
     );
+    final w9Learning = {
+      for (final entry in contract.entries)
+        if (entry.key.startsWith('w9_')) entry.key: entry.value,
+    };
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(w9Learning))).toString(),
+      'ac9ae86c5283e58913c0a71cdf2cb83cbf8db1869dce1af14e927f1aff5cb0a3',
+    );
+    final preAtlasW9 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w9_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final historicalContract = Map<String, Object?>.from(contract)
-      ..removeWhere((id, _) => admittedAdditions.contains(id));
+      ..removeWhere(
+        (id, _) => admittedAdditions.contains(id) || id.startsWith('w9_'),
+      )
+      ..addAll((preAtlasW9['learning'] as Map).cast<String, Object?>());
     // Keep the historical fixture immutable. PR460 quality cells and the
     // exact owner-admitted W01 theory option contracts are checked separately;
     // persisted records are never rewritten by this comparison.

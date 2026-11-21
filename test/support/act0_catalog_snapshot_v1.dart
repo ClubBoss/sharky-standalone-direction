@@ -167,7 +167,7 @@ Iterable<String> _section(Iterable<CatalogTask> rows) sync* {
     yield 'HINT [${runner.hintPolicy.name}]: ' +
         (runner.hint.trim().isEmpty ? '(none)' : runner.hint);
     yield 'TABLE: $tableLine';
-    yield 'SEATS: ' + _seatLine(table);
+    if (table.seats.isNotEmpty) yield 'SEATS: ' + _seatLine(table);
     if (table.actionTrail.isNotEmpty) yield 'TRAIL: ' + _trail(table);
     if (runner.options.isEmpty && runner.feedbackReason.isNotEmpty)
       yield 'REVIEW: ${runner.feedbackReason}';
