@@ -18,9 +18,10 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_
 
 final t0 = DateTime.utc(2026, 1, 1);
 final now = t0.add(const Duration(days: 1000));
+const _currentBlindsLesson = 'blinds_order_practice';
 Act0LessonTaskV1 task(int i, {bool other = false, bool sameTask = false}) =>
     Act0ShellStateV1.sample
-        .lessonById(other ? 'fold_check_call_raise' : 'blinds_action_order')
+        .lessonById(other ? 'fold_check_call_raise' : _currentBlindsLesson)
         .taskList
         .singleWhere(
           (t) =>
@@ -54,7 +55,7 @@ Act0LearningEvidenceHistoryV1 append(
     option: selected,
     taskFamily: source.resolvedTaskFamily,
   )!;
-  final lesson = other ? 'fold_check_call_raise' : 'blinds_action_order';
+  final lesson = other ? 'fold_check_call_raise' : _currentBlindsLesson;
   return h.appendCompletedDecision(
     Act0CompletedDecisionV1(
       attemptKey: 'epoch|$i',

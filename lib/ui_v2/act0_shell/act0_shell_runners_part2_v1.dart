@@ -84,8 +84,7 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Repeat the same scan.',
-      body:
-          'Read your two cards, then the shared board, then the pot. Same scan, different spot.',
+      body: 'Read your cards, the board, and the pot.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -210,7 +209,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Find your cards.',
       body:
-          'The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot is the chips in the middle. Blinds are forced bets. SB and BB post them before anyone acts.',
+          'The two cards by You are yours. Players share the board. The pot holds the chips in the middle.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Your cards', 'Board', 'Pot'],
       identityTeachingSemantics:
@@ -317,8 +316,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Carry the first table scan.',
-      body:
-          'Real tables use the same simple scan.\n\nFind your two cards and the shared board.\n\nThen check how many chips are already in the pot.',
+      body: 'Find your cards, the shared board, and the chips in the pot.',
       focusLabels: <String>['2 private', '3 board', 'Pot'],
     ),
   ],
@@ -387,8 +385,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Your cards and the board.',
-      body:
-          'Look at your two cards, then check how many cards everyone can use in the middle.',
+      body: 'Count your cards and the shared cards separately.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Your cards', 'Shared cards'],
     ),
@@ -969,14 +966,21 @@ final _tripsRankRunner = _riverBoardRunner.copyWith(
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0FivePlayerComparisonPot,
-    boardCards: _boardThreeQueens,
+    heroCards: const [
+      Act0CardStateV1(rank: 'T', suit: 'h'),
+      Act0CardStateV1(rank: 'T', suit: 's'),
+    ],
+    boardCards: _boardThreeTens,
     highlightedCardIds: const <String>['hero_0', 'hero_1', 'board_0'],
     seats: _riverBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'btn'
               ? _act0CopySeatStateV1(
                   seat,
-                  holeCards: _heroQqCards,
+                  holeCards: const [
+                    Act0CardStateV1(rank: 'T', suit: 'h'),
+                    Act0CardStateV1(rank: 'T', suit: 's'),
+                  ],
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
               : seat.seatId == 'co'

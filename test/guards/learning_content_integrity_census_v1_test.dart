@@ -111,7 +111,9 @@ void main() {
           .where(
             (row) =>
                 !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-                !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+                !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+                row.task.taskId != 'first_table_guide_first_decision' &&
+                row.task.taskId != 'hand_rankings_compare_ace_straights',
           )
           .toList();
       expect(allRows, hasLength(294));
@@ -246,8 +248,8 @@ void main() {
       print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
       expect(snapshot['optionCounts'], <String, int>{
-        '2': 127,
-        '3': 164,
+        '2': 91,
+        '3': 200,
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
@@ -321,7 +323,7 @@ void main() {
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
       };
-      expect(repairSnapshot['incorrectOptions'], 458);
+      expect(repairSnapshot['incorrectOptions'], 494);
       expect(repairSnapshot['exactReplayCovered'], 17);
       expect(historicalRepairComparison['sameSignalMapped'], 276);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
@@ -333,9 +335,9 @@ void main() {
       );
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
-        'confused_card_rank_suit': 5,
-        'confused_chip_commitment_eligibility': 7,
-        'confused_private_board_cards': 18,
+        'confused_card_rank_suit': 6,
+        'confused_chip_commitment_eligibility': 8,
+        'confused_private_board_cards': 20,
         'confused_table_identity': 10,
         'misread_action_legality': 14,
         'misread_bet_price': 14,
@@ -345,13 +347,13 @@ void main() {
         'misread_mindset_discipline': 26,
         'misread_player_adjustment': 30,
         'misread_poker_win_condition': 8,
-        'misread_position_action_order': 47,
+        'misread_position_action_order': 53,
         'misread_range_card_removal': 65,
         'misread_real_play_process': 28,
-        'misread_showdown_hand_strength': 25,
+        'misread_showdown_hand_strength': 46,
         'misread_stack_depth_risk': 34,
         'misread_starting_hand_discipline': 37,
-        'misread_table_position': 18,
+        'misread_table_position': 23,
         'misread_tournament_pressure': 32,
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
@@ -489,7 +491,9 @@ void main() {
         .where(
           (row) =>
               !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-              !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+              !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+              row.task.taskId != 'first_table_guide_first_decision' &&
+              row.task.taskId != 'hand_rankings_compare_ace_straights',
         )
         .toList();
     final additions = rows
@@ -499,8 +503,8 @@ void main() {
     expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
     expect(rows.map((row) => row.task.taskId).toSet(), hasLength(294));
     expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
-      '2': 129,
-      '3': 164,
+      '2': 93,
+      '3': 200,
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
@@ -618,7 +622,7 @@ void main() {
         for (final option in row.incorrectOptions)
           _incorrectOptionRow(row, option),
     ];
-    expect(incorrect, hasLength(460));
+    expect(incorrect, hasLength(496));
     final currentGaps = allRepair
         .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
         .toList();
@@ -756,7 +760,9 @@ void main() {
     }
     expect(choices, <String>{
       'blinds_postflop_button/utg',
+      'blinds_postflop_button/bb',
       'positions_late_seat/utg',
+      'positions_late_seat/bb',
       'positions_review/top',
       'positions_review/random',
     });
@@ -867,12 +873,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(rows, hasLength(321));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(321));
     expect(
       allChoices,
       hasLength(
-        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        606 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -916,14 +922,14 @@ void main() {
       );
     }
     expect(admitted, <String>{
-      'world_1/blinds_action_order/blinds_first_actor/btn',
-      'world_1/blinds_action_order/blinds_last_actor/sb',
-      'world_1/blinds_action_order/blinds_review/btn',
+      'world_1/blinds_order_practice/blinds_first_actor/btn',
+      'world_1/blinds_order_practice/blinds_last_actor/sb',
+      'world_1/blinds_order_practice/blinds_review/btn',
       'world_1/blinds_action_order/positions_utg/hj',
       'world_1/cards_ranks_suits/cards_ranks_suits_rank_drill/king',
       'world_1/cards_ranks_suits/cards_ranks_suits_rank_drill/suit',
-      'world_1/fold_check_call_raise/actions_check_drill/fold',
-      'world_1/fold_check_call_raise/actions_check_drill/call',
+      'world_1/fold_check_call_raise/actions_check_drill/pay_small_blind',
+      'world_1/fold_check_call_raise/actions_check_drill/pay_big_blind',
       'world_1/fold_check_call_raise/actions_legal_context/fold',
       'world_1/fold_check_call_raise/actions_legal_context/call',
       'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap/one_answer',
@@ -945,7 +951,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        568 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(

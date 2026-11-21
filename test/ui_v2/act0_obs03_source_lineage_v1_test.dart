@@ -19,14 +19,14 @@ import '../../tools/act0_obs03_trace_inspector_v1.dart';
 final _t0 = DateTime.utc(2026, 1, 1);
 final _world = Act0ShellStateV1.sample.worldById('world_1');
 final _lesson = _world.lessons.firstWhere(
-  (l) => l.lessonId == 'blinds_action_order',
+  (l) => l.lessonId == 'blinds_order_practice',
 );
 
 Act0LearningEvidenceRecordV1 _record(
   int order,
   int hour, {
   String taskId = 'blinds_review',
-  String lessonId = 'blinds_action_order',
+  String lessonId = 'blinds_order_practice',
   int schemaVersion = 1,
   bool correct = true,
   Act0ReviewKindV1 kind = Act0ReviewKindV1.spacedReview,

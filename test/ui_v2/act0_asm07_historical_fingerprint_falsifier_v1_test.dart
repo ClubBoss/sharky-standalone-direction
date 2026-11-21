@@ -13,7 +13,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const _worldId = 'world_1';
-const _lessonId = 'blinds_action_order';
+const _historicalLessonId = 'blinds_action_order';
+const _lessonId = 'blinds_order_practice';
 const _taskId = 'blinds_review';
 const _skillAtomId = 'table_read';
 final _task = Act0ShellStateV1.sample
@@ -228,6 +229,10 @@ void main() {
         restored.map((record) => record.recordId),
         original.map((record) => record.recordId),
       );
+      expect(
+        restored.map((record) => record.lessonId),
+        everyElement(_historicalLessonId),
+      );
       expect(restored.map((record) => record.choiceId), everyElement('bb'));
       expect(
         restored.map((record) => record.expectedChoiceId),
@@ -309,6 +314,7 @@ void main() {
         _task.runner.options.map((option) => option.id).toSet(),
       );
       final oldEvidence = _record(
+        lessonId: _lessonId,
         order: 1,
         choiceId: 'utg',
         expectedChoiceId: 'utg',
@@ -336,6 +342,7 @@ void main() {
     ]);
     final record = current.records.first;
     final missingSourceRecord = _record(
+      lessonId: _lessonId,
       order: record.createdOrder,
       choiceId: record.choiceId,
       expectedChoiceId: record.expectedChoiceId,
@@ -389,14 +396,15 @@ Act0LearningEvidenceRecordV1 _record({
   required String expectedChoiceId,
   bool isCorrect = true,
   String worldId = _worldId,
+  String lessonId = _historicalLessonId,
   String authoredSourceFingerprint = '',
   String skillAtomId = _skillAtomId,
   Act0DecisionAssistanceV1 assistanceKind = Act0DecisionAssistanceV1.none,
 }) => Act0LearningEvidenceRecordV1(
-  recordId: 'synthetic_asm07_v1|$worldId|$_lessonId|$_taskId|$choiceId|$order',
+  recordId: 'synthetic_asm07_v1|$worldId|$lessonId|$_taskId|$choiceId|$order',
   createdOrder: order,
   worldId: worldId,
-  lessonId: _lessonId,
+  lessonId: lessonId,
   taskId: _taskId,
   sourceTaskId: _taskId,
   choiceId: choiceId,

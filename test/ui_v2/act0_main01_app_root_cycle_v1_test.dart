@@ -1932,7 +1932,7 @@ void main() {
 
       // Complete W1 prerequisites through the ordinary content path, including
       // the inline retry. The open Review item still gates the checkpoint.
-      for (var step = 0; step < 240; step++) {
+      for (var step = 0; step < prerequisites.length * 5; step++) {
         final summary = find.byType(Act0BlockCompletionShellV1);
         if (summary.evaluate().isNotEmpty) {
           final completed = (await _saved(tester))['completedTaskIds'] as List;
@@ -1977,7 +1977,8 @@ void main() {
         }
       }
       final locked = await _saved(tester);
-      expect(locked['completedTaskIds'], containsAll(prerequisites));
+      final completed = (locked['completedTaskIds'] as List).cast<String>();
+      expect(prerequisites.difference(completed.toSet()), isEmpty);
       expect(_rows(locked, 'openRepairIntents').single, miss);
       await tester.tap(find.text('Learn').last);
       await tester.pumpAndSettle();
@@ -2027,9 +2028,9 @@ void main() {
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
-    expect(lessons, hasLength(31));
-    expect(tasks, hasLength(192));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(192));
+    expect(lessons, hasLength(33));
+    expect(tasks, hasLength(194));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(194));
     final sizingLesson = worlds.last.lessons.singleWhere(
       (lesson) => lesson.lessonId == 'small_half_pot',
     );

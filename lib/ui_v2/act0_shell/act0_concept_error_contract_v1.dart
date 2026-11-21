@@ -116,6 +116,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     lessonKeys: <String>{
       'world_1/hand_rankings_table',
       'world_1/hand_rankings_upper',
+      'world_1/hand_rankings_comparisons',
       'world_1/showdown_winning',
     },
     taskKeys: <String>{
@@ -166,6 +167,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     eligibleRepairFamily: 'position_action_order',
     lessonKeys: <String>{
       'world_1/blinds_action_order',
+      'world_1/blinds_order_practice',
       'world_3/button_advantage',
       'world_3/early_vs_late',
       'world_3/same_hand_different_seat',

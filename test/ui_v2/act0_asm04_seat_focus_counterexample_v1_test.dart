@@ -7,7 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-// Historical 16 candidates; active seat-only inventory now contains 15.
+// Historical 16 candidates; the button-move task now answers with a count.
 // The W24 context recap is guarded in act0_w24_context_recap_v1_test.dart.
 // Separate test-only family investigation; no authorial or renderer changes.
 // A named-seat question is a legitimate prompt, not itself a leakage finding.
@@ -17,7 +17,7 @@ const _cases = {
   'blinds_first_actor': 'named-seat-recognition',
   'blinds_last_actor': 'named-seat-recognition',
   'blinds_postflop_button': 'relative-position-inference',
-  'blinds_button_moves': 'dealer-marker-recognition',
+  'blinds_button_moves': 'dealer-marker-count',
   'positions_button': 'named-seat-recognition',
   'positions_utg': 'named-seat-recognition',
   'positions_cutoff': 'named-seat-recognition',
@@ -110,6 +110,25 @@ void main() {
           'ringColor': (decoration.border! as Border).top.color.toARGB32(),
           'ringWidth': (decoration.border! as Border).top.width,
         };
+      }
+
+      if (task.taskId == 'blinds_button_moves') {
+        expect(task.runner.table.selectableSeatIds, isEmpty);
+        expect(
+          task.runner.options.every((option) => option.seatId == null),
+          isTrue,
+        );
+        expect(find.byKey(const Key('act0_shell_seat_tap_utg')), findsNothing);
+        expect(correct.label, '1 seat');
+        final answer = find.byKey(Key('act0_shell_option_${correct.id}'));
+        await tester.ensureVisible(answer);
+        await tester.tap(answer);
+        await tester.pump();
+        expect(decisions.single.selectedId, correct.id);
+        expect(decisions.single.isCorrect, isTrue);
+        expect(decisions.single.assistanceKind, Act0DecisionAssistanceV1.none);
+        expect(assistance, [Act0DecisionAssistanceV1.none]);
+        return;
       }
 
       final correctStyle = styleFor(correct.seatId!);

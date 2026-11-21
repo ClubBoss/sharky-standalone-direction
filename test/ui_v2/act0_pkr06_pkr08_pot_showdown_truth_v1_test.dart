@@ -322,7 +322,7 @@ void main() {
     const labels = <String, String>{
       'hand_rankings_quads_vs_full_house_drill': 'Your four of a kind',
       'your_first_hand_showdown': 'You — A-A-K-J-7',
-      'showdown_best_hand_drill': 'You · Q-Q-Q-K-8',
+      'showdown_best_hand_drill': 'You · 8-8-8-K-Q',
       'showdown_review': 'Split the pot',
     };
     for (final e in labels.entries) {

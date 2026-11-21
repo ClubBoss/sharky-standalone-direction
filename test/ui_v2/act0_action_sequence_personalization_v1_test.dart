@@ -440,7 +440,7 @@ void main() {
         sourceTaskId: task.taskId,
         runner: task.runner,
         selectedOption: task.runner.options.singleWhere(
-          (option) => option.id == 'fold',
+          (option) => option.id == 'pay_small_blind',
         ),
         currentFingerprintForIdentity: act0AuthoredRepairFixtureFingerprintV1,
       )!;

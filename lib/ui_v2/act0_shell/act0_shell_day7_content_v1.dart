@@ -6,11 +6,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     "what_poker_is",
     "hero_button",
     _day7PreflopV1("co", "Kh 6d"),
-    question: "Which two cards are private to you in this hand?",
-    choices: const ["Kh and 6d", "Every card you can see", "Only the king"],
-    correct: 0,
+    question: "Which seat shows the dealer marker?",
+    choices: const ["CO", "BTN", "SB"],
+    correct: 1,
     reason:
-        "Kh and 6d sit by your seat. Your two private cards cannot be used by another player.",
+        "The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.",
   ),
   _day7ExampleV1(
     1,
@@ -31,13 +31,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     1,
     "what_poker_is",
     "pot_to_call",
-    _day7PostflopV1("co", "Jh 8c", "Qd 7h 4s 2d", betBb: 2),
-    question:
-        "You missed the decision in this hand and left the lesson. Where can you work on that error?",
-    choices: const ["You", "Learn", "Review"],
+    _day7PostflopV1("co", "Jh 8c", "Qd 7h 4s 2d", betBb: 2, showTurn: true),
+    question: "How much does it cost to call on the turn?",
+    choices: const ["6 BB", "8 BB", "2 BB"],
     correct: 2,
     reason:
-        "Review brings back mistakes for another attempt. Learn is the course path and You holds your progress.",
+        "BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.",
   ),
   _day7ExampleV1(
     1,
@@ -166,7 +165,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     1,
-    "blinds_action_order",
+    "blinds_order_practice",
     "button",
     _day7PostflopV1("bb", "Js 9h", "8s 6c 2h 4s", opponent: "btn"),
     question:
@@ -178,13 +177,20 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     1,
-    "positions",
-    "button",
-    _day7PostflopV1("bb", "Ad 7c", "As Th 5d", opponent: "btn"),
-    question: "On this flop, who gets to react after the other player acts?",
-    choices: const ["Whoever has the bigger stack", "BB", "BTN"],
-    correct: 2,
-    reason: "BB acts before BTN after the flop, regardless of stack size.",
+    'positions',
+    'button',
+    _day7PostflopV1(
+      'co',
+      'Ts 9s',
+      'Jc 6h 3d',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    question: 'How many players act before your seat on this flop?',
+    choices: const ['0 players', '1 player', '2 players'],
+    correct: 1,
+    reason:
+        'Only you and BB remain on J-6-3. BB checks first, so you see one decision before your turn.',
   ),
   _day7ExampleV1(
     1,
@@ -971,6 +977,100 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_comparisons',
+    'board_cards',
+    _day7PostflopV1('bb', 'As Ac', '7c 7d 7h 8h 3s', shownHand: 'Kc 7s'),
+    question: 'Which hand ranks higher on this board?',
+    choices: const [
+      'Your sevens full of aces',
+      'The two hands tie',
+      'The other player’s four sevens',
+    ],
+    correct: 2,
+    reason:
+        'The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.',
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_comparisons',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', '8c 8s', '8h 5c 5d 2s Qh', shownHand: '5h Ad'),
+    question: 'Which hand wins this comparison?',
+    choices: const [
+      'Your eights full of fives',
+      'The other player’s three fives',
+      'The board ties',
+    ],
+    correct: 0,
+    reason:
+        'Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.',
+  ),
+  _day7ExampleV1(
+    1,
+    'blinds_order_practice',
+    'utg',
+    _day7PreflopV1('utg', 'Kh 9c', showTurn: true),
+    question: 'The blinds have posted. Which occupied seat acts first?',
+    choices: const ['SB', 'UTG', 'BTN'],
+    correct: 1,
+    reason:
+        'The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.',
+  ),
+  _day7ExampleV1(
+    1,
+    'blinds_order_practice',
+    'big_blind',
+    _day7TableV1(
+      hero: 'bb',
+      hand: 'Js 7h',
+      street: PokerStreet.preflop,
+      actor: 'bb',
+      folded: const {'utg', 'hj', 'co'},
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          0.5,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+      ],
+      bets: const {},
+    ),
+    question: 'Who still has the preflop option in this hand?',
+    choices: const ['BTN', 'SB', 'BB'],
+    correct: 2,
+    reason:
+        'BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.',
+  ),
+  _day7ExampleV1(
+    1,
+    'blinds_order_practice',
+    'misread_position_action_order',
+    _day7PreflopV1('hj', 'Kh 5d'),
+    question: 'Which occupied seat gets the new dealer marker after this hand?',
+    choices: const ['CO', 'SB', 'BB'],
+    correct: 1,
+    reason:
+        'The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.',
   ),
   _day7ExampleV1(
     5,

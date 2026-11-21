@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 156),
-      ('D3.to_call_completeness', 112),
+      ('D2.pot_feasibility', 158),
+      ('D3.to_call_completeness', 113),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1199,6 +1199,42 @@ void main() {
             w2Choice(option, correct: option == correct),
         ],
       };
+    }
+    expectedComparison['first_table_guide_first_decision'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        w3Option('fold'),
+        {...w3Option('call'), 'quality': 'suboptimal'},
+        w3Option('raise', correct: true),
+      ],
+    };
+    expectedComparison['hand_rankings_compare_ace_straights'] = {
+      'rewardXp': 7,
+      'family': 'compare',
+      'options': [
+        w3Option('broadway', correct: true),
+        w3Option('wheel'),
+        w3Option('tie'),
+      ],
+    };
+    final w1Revision =
+        jsonDecode(
+              File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final metadataChanges = w1Revision.entries.where(
+      (entry) => entry.value['tableMetadata'] != null,
+    );
+    expect(metadataChanges, hasLength(40));
+    for (final revision in metadataChanges) {
+      final change = revision.value['tableMetadata'];
+      expect(
+        historicalComparison[revision.key],
+        change['current'],
+        reason: revision.key,
+      );
+      historicalComparison[revision.key] = change['prior'];
     }
     expect(
       historicalComparison,

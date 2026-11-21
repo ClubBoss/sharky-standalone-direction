@@ -176,6 +176,216 @@ final _w1SeatedMatchedChipsRunner = _matchedChipsTransferRunner.copyWith(
   ),
 );
 
+Act0RunnerStateV1 _w1WithDistractorV1(
+  Act0RunnerStateV1 runner, {
+  required String id,
+  required String label,
+  required String reason,
+  String? seatId,
+}) {
+  final answer = runner.options.singleWhere(
+    act0RunnerOptionIsAuthoredCorrectV1,
+  );
+  return runner.copyWith(
+    options: [
+      ...runner.options,
+      Act0RunnerOptionV1(
+        id: id,
+        label: label,
+        seatId: seatId,
+        isCorrect: false,
+        preferredLabel: answer.preferredLabel,
+        betterAnswerLabel: answer.betterAnswerLabel,
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Read the deciding detail.',
+        feedbackReason: reason,
+      ),
+    ],
+    table: seatId == null
+        ? runner.table
+        : runner.table.copyWith(
+            selectableSeatIds: [...runner.table.selectableSeatIds, seatId],
+          ),
+  );
+}
+
+Act0TableStateV1 _w1WithPocketPairV1(
+  Act0TableStateV1 table,
+  String rank, {
+  String firstSuit = 'h',
+}) {
+  final cards = [
+    Act0CardStateV1(
+      rank: rank,
+      suit: firstSuit,
+      tone: firstSuit == 'h' ? Act0CardToneV1.red : Act0CardToneV1.dark,
+    ),
+    Act0CardStateV1(rank: rank, suit: 's'),
+  ];
+  return table.copyWith(
+    heroCards: cards,
+    seats: [
+      for (final seat in table.seats)
+        seat.isHero ? _act0CopySeatStateV1(seat, holeCards: cards) : seat,
+    ],
+  );
+}
+
+Act0RunnerStateV1 _w1WithNumericLabelsV1(
+  Act0RunnerStateV1 runner,
+  Map<String, String> labels, {
+  String? question,
+  Map<String, String> reasons = const {},
+  Map<String, String> ids = const {},
+  List<String>? focusSeats,
+}) {
+  final correct = runner.options.singleWhere(
+    act0RunnerOptionIsAuthoredCorrectV1,
+  );
+  final answer = labels[correct.label]!;
+  return runner.copyWith(
+    question: question,
+    table: runner.table.selectableSeatIds.isEmpty
+        ? runner.table
+        : runner.table.copyWith(selectableSeatIds: const []),
+    options: [
+      for (final option in runner.options)
+        Act0RunnerOptionV1(
+          id: ids[option.id] ?? option.id,
+          label: labels[option.label]!,
+          preferredLabel: answer,
+          isCorrect: option.isCorrect,
+          quality: option.quality,
+          feedbackTitle: option.feedbackTitle,
+          feedbackReason: reasons[option.id] ?? option.feedbackReason,
+          repairFocusSeatIds: focusSeats ?? option.repairFocusSeatIds,
+          repairFocusCardIds: option.repairFocusCardIds,
+          repairFocusLabels: option.repairFocusLabels,
+        ),
+    ],
+  );
+}
+
+final _w1FirstDecisionRunner = Act0RunnerStateV1(
+  lessonId: 'first_table_guide_first_decision',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: '',
+  beatIndex: 1,
+  beatCount: 1,
+  phase: Act0LessonPhaseV1.drill,
+  caption: 'You have two aces. A player raised to 2.5 BB.',
+  hint: '',
+  question: 'What is the best choice with your aces?',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      betterAnswerLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Your aces can play.',
+      feedbackReason:
+          'Folding two aces against one raise gives up the strongest starting hand and your chance to win the chips in the middle.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      amountLabel: '2.5 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      betterAnswerLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Calling keeps you in.',
+      feedbackReason:
+          'Matching HJ’s 2.5 BB keeps your aces in the hand at the current price. Raising gives HJ a chance to put more chips in while your hand is strongest.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: true,
+      preferredLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Raise with aces.',
+      feedbackReason:
+          'Two aces are in the Premium group. Against one raise, raise again to build the pot with your strongest starting hand.',
+    ),
+  ],
+  feedbackTitle: 'Raise with aces.',
+  feedbackReason:
+      'Aces are the strongest starting hand. Raise to build the pot.',
+  primaryCtaLabel: '',
+  nextLessonId: null,
+  returnTarget: '',
+  table: _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Three choices.',
+      body:
+          'Fold to give up the hand. Call to match the bet. Raise to set a higher price.',
+    ),
+  ],
+);
+
+final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
+  lessonId: 'hand_rankings_compare_ace_straights',
+  lessonTitle: 'Compare made hands',
+  lessonSubtitle: '',
+  beatIndex: 1,
+  beatCount: 1,
+  phase: Act0LessonPhaseV1.drill,
+  caption: 'Suppose the other player has 4♠ 5♥.',
+  hint: '',
+  question: 'Which straight wins, Broadway or A-2-3-4-5?',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'broadway',
+      label: 'Broadway wins',
+      isCorrect: true,
+      preferredLabel: 'Broadway wins',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The ace-high straight wins.',
+      feedbackReason:
+          'Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'wheel',
+      label: 'A-2-3-4-5 wins',
+      isCorrect: false,
+      preferredLabel: 'Broadway wins',
+      betterAnswerLabel: 'Broadway wins',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the top of the sequence.',
+      feedbackReason:
+          'The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'tie',
+      label: 'Both straights tie',
+      isCorrect: false,
+      preferredLabel: 'Broadway wins',
+      betterAnswerLabel: 'Broadway wins',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The ace plays at opposite ends.',
+      feedbackReason:
+          'The board ace starts the other player’s straight and tops yours. Splitting the pot gives away half of a pot that your higher straight wins.',
+    ),
+  ],
+  feedbackTitle: 'Compare the highest ranks.',
+  feedbackReason: 'An ace-high straight beats a five-high straight.',
+  primaryCtaLabel: '',
+  nextLessonId: null,
+  returnTarget: '',
+  table: _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Compare the highest rank.',
+      body:
+          'Broadway is T-J-Q-K-A, the ace-high straight. A-2-3-4-5 is the wheel, the five-high straight. A higher straight wins.',
+    ),
+  ],
+);
+
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
@@ -215,6 +425,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         summary: 'Spot where Hero sits before anything else starts moving.',
       ),
       Act0LessonTaskV1(
+        taskId: 'first_table_guide_first_decision',
+        title: 'Make your first choice',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1FirstDecisionRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'what_poker_is_table_read_transfer',
         title: 'Read the table',
         phase: Act0LessonPhaseV1.drill,
@@ -235,12 +453,25 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_table_read_recheck',
         title: 'Table read recheck',
         phase: Act0LessonPhaseV1.drill,
-        runner: _firstTableGuideReadTableRecheckRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _firstTableGuideReadTableRecheckRunner.options,
-            correctOptionId: 'two_three_four',
-            correctIndex: 2,
+        runner: _w1WithNumericLabelsV1(
+          _firstTableGuideReadTableRecheckRunner.copyWith(
+            table: _w1WithPocketPairV1(
+              _firstTableGuideReadTableRecheckRunner.table,
+              '8',
+            ),
+            options: _act0AuthoredCorrectOptionAtV1(
+              _firstTableGuideReadTableRecheckRunner.options,
+              correctOptionId: 'two_three_four',
+              correctIndex: 2,
+            ),
           ),
+          const {
+            '5 board cards are out': '5 board cards are out',
+            'Check your two cards and skip the board':
+                '2 private cards, no board',
+            '2 private cards, 3 board cards, 4 BB in the pot':
+                '2 private cards, 3 board cards, 4 BB in the pot',
+          },
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -285,29 +516,47 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'first_table_guide_shared_cards_repair',
         title: 'Read the cards',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W1SeatObserverV1(
-          _privateBoardRunner.copyWith(
-            lessonId: 'first_table_guide_shared_cards_repair',
-            lessonTitle: 'First Table Guide',
-            caption: 'There are two groups of cards in view.',
-            feedbackReason:
-                'Everyone can use the cards in the middle. Your two cards belong only to you.',
-            table: _privateBoardRunner.table.copyWith(
-              scope: Act0TableScopeV1.orientation,
-              potLabel: '',
-              heroCards: const [
-                Act0CardStateV1(rank: 'K', suit: 'c'),
-                Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
-              ],
-              boardCards: const [
-                Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
-                Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
-                Act0CardStateV1(rank: '2', suit: 'c'),
-              ],
+        runner: _w1WithDistractorV1(
+          _act0W1SeatObserverV1(
+            _privateBoardRunner.copyWith(
+              lessonId: 'first_table_guide_shared_cards_repair',
+              lessonTitle: 'First Table Guide',
+              caption: 'There are two groups of cards in view.',
+              feedbackReason:
+                  'Everyone can use the cards in the middle. Your two cards belong only to you.',
+              table: _privateBoardRunner.table.copyWith(
+                scope: Act0TableScopeV1.orientation,
+                potLabel: '',
+                heroCards: const [
+                  Act0CardStateV1(rank: 'K', suit: 'c'),
+                  Act0CardStateV1(
+                    rank: '9',
+                    suit: 'd',
+                    tone: Act0CardToneV1.red,
+                  ),
+                ],
+                boardCards: const [
+                  Act0CardStateV1(
+                    rank: '8',
+                    suit: 'h',
+                    tone: Act0CardToneV1.red,
+                  ),
+                  Act0CardStateV1(
+                    rank: '5',
+                    suit: 'd',
+                    tone: Act0CardToneV1.red,
+                  ),
+                  Act0CardStateV1(rank: '2', suit: 'c'),
+                ],
+              ),
+              teachingSteps: const [],
             ),
-            teachingSteps: const [],
+            'co',
           ),
-          'co',
+          id: 'burn_cards',
+          label: 'Cards set aside by the dealer',
+          reason:
+              'The three middle cards on 8-5-2 can play. Cards set aside by the dealer cannot complete any player’s hand.',
         ),
         rewardXp: 0,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -353,7 +602,29 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_suit_drill',
         title: 'Name a suit',
         phase: Act0LessonPhaseV1.drill,
-        runner: _suitsRunner,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _suitsRunner,
+            id: 'diamonds',
+            label: 'Diamonds',
+            reason:
+                'Ah ends in h for hearts. Kd ends in d for diamonds, so reading d here mixes up the two private cards.',
+          ),
+          const {
+            'Hearts': '1 heart',
+            'Ace': '0 hearts',
+            'Diamonds': '2 hearts',
+          },
+          question:
+              'Read which suit each private card has. How many are hearts?',
+          reasons: const {
+            'hearts': 'Ah is one heart. The other card, Kd, is a diamond.',
+            'rank': 'The A in Ah names the rank. The h shows one heart.',
+            'diamonds':
+                'Kd is the diamond. Ah is the one card with a heart suit.',
+          },
+          ids: const {},
+        ),
         taskFamily: Act0TaskFamilyV1.recognition,
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -362,12 +633,19 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_private_board',
         title: 'Private vs board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _privateBoardRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _privateBoardRunner.options,
-            correctOptionId: 'board',
-            correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _privateBoardRunner.copyWith(
+            table: _w1WithPocketPairV1(_privateBoardRunner.table, '9'),
+            options: _act0AuthoredCorrectOptionAtV1(
+              _privateBoardRunner.options,
+              correctOptionId: 'board',
+              correctIndex: 1,
+            ),
           ),
+          id: 'burn_cards',
+          label: 'Cards the dealer sets aside',
+          reason:
+              'The shared cards shown on A-7-2 stay in play. A card set aside by the dealer cannot be used in your best five.',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -376,7 +654,12 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_board_count',
         title: 'Board count',
         phase: Act0LessonPhaseV1.drill,
-        runner: _boardCountRunner,
+        runner: _w1WithNumericLabelsV1(
+          _boardCountRunner.copyWith(
+            table: _w1WithPocketPairV1(_boardCountRunner.table, '9'),
+          ),
+          const {'Five': '5 cards', 'Two': '2 cards', 'Three': '3 cards'},
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.counting,
@@ -385,7 +668,15 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_best_five',
         title: 'Best five idea',
         phase: Act0LessonPhaseV1.drill,
-        runner: _bestFiveCardsRunner,
+        runner: _w1WithDistractorV1(
+          _bestFiveCardsRunner.copyWith(
+            table: _w1WithPocketPairV1(_bestFiveCardsRunner.table, 'T'),
+          ),
+          id: 'three',
+          label: 'Three',
+          reason:
+              'Ah 7c 2d Jc 4s are five shared cards. Using only three cards leaves your final hand incomplete.',
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -393,18 +684,25 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_recap',
         title: 'Cards recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _cardsRecapRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _cardsRecapRunner.options,
-              correctOptionId: 'five',
-              correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _act0WithWrongFeedbackReasonsV1(
+            _cardsRecapRunner.copyWith(
+              table: _w1WithPocketPairV1(_cardsRecapRunner.table, 'T'),
+              options: _act0AuthoredCorrectOptionAtV1(
+                _cardsRecapRunner.options,
+                correctOptionId: 'five',
+                correctIndex: 1,
+              ),
             ),
+            const {
+              'seven':
+                  'With Th Ts and five board cards on Ah 7c 2d Jc 4s, counting seven cards misreads your hand because only the best five count in your final hand.',
+            },
           ),
-          const {
-            'seven':
-                'With Qh Qs and five board cards on Ah 7c 2d Jc 4s, counting seven cards misreads your hand because only the best five count in your final hand.',
-          },
+          id: 'two',
+          label: 'Two',
+          reason:
+              'Th Ts are your two private cards. Stopping there misses the shared cards that complete the best five.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -429,7 +727,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_theory',
         title: 'Hands use five cards',
         phase: Act0LessonPhaseV1.theory,
-        runner: _handRankingIntroRunner,
+        runner: _w1WithDistractorV1(
+          _handRankingIntroRunner,
+          id: 'suit_rank',
+          label: 'Which suit is strongest',
+          reason:
+              'Your private ace matches the board ace. Ranking suits instead of hands misses that one pair beats high card.',
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -437,12 +741,26 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_pair_drill',
         title: 'Find the pair',
         phase: Act0LessonPhaseV1.drill,
-        runner: _handRankingsRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _handRankingsRunner.options,
-            correctOptionId: 'pair',
-            correctIndex: 1,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _handRankingsRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _handRankingsRunner.options,
+                correctOptionId: 'pair',
+                correctIndex: 1,
+              ),
+            ),
+            id: 'two_pair',
+            label: 'Two pair',
+            reason:
+                'A-K matches the ace on A-7-2. Your king has no match, so counting it as another pair overstates the hand.',
           ),
+          const {
+            'High card': '0 pairs',
+            'Pair': '1 pair',
+            'Two pair': '2 pairs',
+          },
+          question: 'How many paired ranks are in your hand here?',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -451,7 +769,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_two_pair_drill',
         title: 'Two pair vs one pair',
         phase: Act0LessonPhaseV1.drill,
-        runner: _twoPairRunner,
+        runner: _w1WithDistractorV1(
+          _twoPairRunner,
+          id: 'high_card',
+          label: 'High card',
+          reason:
+              'A-7 matches both the shared ace and the shared seven. Calling it high card overlooks two pairs.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -459,12 +783,18 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_trips_drill',
         title: 'Trips or set',
         phase: Act0LessonPhaseV1.drill,
-        runner: _tripsRankRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _tripsRankRunner.options,
-            correctOptionId: 'trips',
-            correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _tripsRankRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _tripsRankRunner.options,
+              correctOptionId: 'trips',
+              correctIndex: 1,
+            ),
           ),
+          id: 'one_pair',
+          label: 'One pair',
+          reason:
+              'With two matching private cards and a third of the same rank on the board, counting one pair leaves out the third card that wins the comparison.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -480,14 +810,27 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
     primaryCtaLabel: 'Locked',
     isSelectable: false,
     isLocked: true,
-    rewardXp: 30,
+    rewardXp: 35,
     runner: _straightRankRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'hand_rankings_straight_drill',
         title: 'Find the straight',
         phase: Act0LessonPhaseV1.drill,
-        runner: _straightRankRunner,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _straightRankRunner,
+            id: 'matching_ranks',
+            label: 'Five cards with a pair',
+            reason:
+                'The 5-6-7 on the board joins your 8-9 with no rank repeated. Looking for a pair would miss this straight.',
+          ),
+          const {
+            'Five in a row': '5 ranks in a row',
+            'Same suit': '5 cards of one suit',
+            'Five cards with a pair': '5 cards including one pair',
+          },
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -495,12 +838,18 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_flush_drill',
         title: 'Flush beats straight',
         phase: Act0LessonPhaseV1.drill,
-        runner: _flushRankRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _flushRankRunner.options,
-            correctOptionId: 'flush',
-            correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _flushRankRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _flushRankRunner.options,
+              correctOptionId: 'flush',
+              correctIndex: 1,
+            ),
           ),
+          id: 'high_card',
+          label: 'High card',
+          reason:
+              'Your king and queen join three hearts on the board. Reading a high card misses the five matching suits that win.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -509,7 +858,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_full_house_drill',
         title: 'Full house shape',
         phase: Act0LessonPhaseV1.drill,
-        runner: _fullHouseRankRunner,
+        runner: _w1WithDistractorV1(
+          _fullHouseRankRunner,
+          id: 'four_of_a_kind',
+          label: 'Four of a kind',
+          reason:
+              'The board has three aces. Your two sevens form the pair, so there is no fourth ace for four of a kind.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -517,12 +872,26 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_quads_drill',
         title: 'Four of a kind',
         phase: Act0LessonPhaseV1.drill,
-        runner: _quadsRankRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _quadsRankRunner.options,
-            correctOptionId: 'quads',
-            correctIndex: 1,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _quadsRankRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _quadsRankRunner.options,
+                correctOptionId: 'quads',
+                correctIndex: 1,
+              ),
+            ),
+            id: 'three_of_a_kind',
+            label: 'Three of a kind',
+            reason:
+                'Two matching private cards join the two matching board cards. Three of a kind leaves out one card from the four of that rank.',
           ),
+          const {
+            'Four of a kind': '4 of one rank',
+            'Full house': '3 of one rank and a pair',
+            'Three of a kind': '3 of one rank',
+          },
+          question: 'What matching ranks make up your best hand?',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -531,20 +900,46 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_royal_flush_drill',
         title: 'Royal flush check',
         phase: Act0LessonPhaseV1.drill,
-        runner: _royalFlushRankRunner,
+        runner: _w1WithDistractorV1(
+          _royalFlushRankRunner,
+          id: 'mixed_straight',
+          label: 'Straight with mixed suits',
+          reason:
+              'The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'hand_rankings_comparisons',
+    title: 'Compare made hands',
+    subtitle: 'Use the best five to break a tie or rank two hands.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Ranks',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 43,
+    runner: _fullHouseVsFlushRunner,
+    tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'hand_rankings_full_house_vs_flush_drill',
         title: 'Full house beats flush',
         phase: Act0LessonPhaseV1.drill,
-        runner: _fullHouseVsFlushRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _fullHouseVsFlushRunner.options,
-            correctOptionId: 'hero_full_house',
-            correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _fullHouseVsFlushRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _fullHouseVsFlushRunner.options,
+              correctOptionId: 'hero_full_house',
+              correctIndex: 1,
+            ),
           ),
+          id: 'board_tie',
+          label: 'Tie on the shared board',
+          reason:
+              'The two shown hands use different private cards. Aces full of sevens rank higher than the other player’s flush, so these two shown hands do not tie.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -554,7 +949,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_quads_vs_full_house_drill',
         title: 'Four of a kind beats a full house',
         phase: Act0LessonPhaseV1.drill,
-        runner: _quadsVsFullHouseRunner,
+        runner: _w1WithDistractorV1(
+          _quadsVsFullHouseRunner,
+          id: 'board_tie',
+          label: 'The two shown hands tie',
+          reason:
+              'The pair in your hand completes four of a kind on this board. A tie would miss the difference between four of a kind and a full house.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -563,12 +964,26 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_royal_vs_flush_drill',
         title: 'Royal flush wins',
         phase: Act0LessonPhaseV1.drill,
-        runner: _royalFlushVsFlushRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _royalFlushVsFlushRunner.options,
-            correctOptionId: 'hero_royal_flush',
-            correctIndex: 1,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _royalFlushVsFlushRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _royalFlushVsFlushRunner.options,
+                correctOptionId: 'hero_royal_flush',
+                correctIndex: 1,
+              ),
+            ),
+            id: 'heart_tie',
+            label: 'The two heart hands tie',
+            reason:
+                'You finish the T-J-Q-K-A run in hearts. Treating it like the other flush ignores the connected ranks that win.',
           ),
+          const {
+            'Your royal flush': '5 in a row, yours',
+            'Other player: ace-high flush': '3 in a row, other player’s',
+            'The two heart hands tie': '3 in a row each',
+          },
+          question: 'Which run of hearts wins this comparison?',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -578,15 +993,36 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_best_five_drill',
         title: 'Choose best five',
         phase: Act0LessonPhaseV1.drill,
-        runner: _bestFiveShowdownRunner,
+        runner: _w1WithDistractorV1(
+          _bestFiveShowdownRunner,
+          id: 'omit_pair',
+          label: 'Seven',
+          reason:
+              'The sevens form one of your two pairs. The jack plays as a side card, leaving the four outside the best five.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_compare_ace_straights',
+        title: 'Two straights, one winner',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1CompareAceStraightsRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
       ),
       Act0LessonTaskV1(
         taskId: 'hand_rankings_review',
         title: 'Ranking recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _rankingRecapRunner,
+        runner: _w1WithDistractorV1(
+          _rankingRecapRunner,
+          id: 'tied_ranks',
+          label: 'They rank the same',
+          reason:
+              'Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.',
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -594,7 +1030,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_kicker_drill',
         title: 'Same pair, better kicker',
         phase: Act0LessonPhaseV1.drill,
-        runner: _showdownKickerRunner,
+        runner: _w1WithDistractorV1(
+          _showdownKickerRunner,
+          id: 'tie',
+          label: 'Both pairs tie',
+          reason:
+              'The board ace gives both players a pair of aces. Your king beats the queen as the highest side card, so splitting would miss the winner.',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -610,7 +1052,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
     primaryCtaLabel: 'Locked',
     isSelectable: false,
     isLocked: true,
-    rewardXp: 20,
+    rewardXp: 30,
     runner: _whatYouCanDoRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -680,7 +1122,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_button',
         title: 'Tap the Button',
         phase: Act0LessonPhaseV1.drill,
-        runner: _buttonSeatRunner,
+        runner: _w1WithDistractorV1(
+          _buttonSeatRunner,
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB posts 1 BB. The dealer marker sits by BTN, so choosing BB identifies the wrong role.',
+          seatId: 'bb',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -688,21 +1137,28 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_utg',
         title: 'Tap UTG',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _utgSeatRunner.copyWith(
-            // Recognition choices stay neutral; authored teaching keeps its focus.
-            table: _utgSeatRunner.table.copyWith(
-              highlightedSeatIds: const <String>[],
-              activeSeatId: '',
+        runner: _w1WithDistractorV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _utgSeatRunner.copyWith(
+              // Recognition choices stay neutral; authored teaching keeps its focus.
+              table: _utgSeatRunner.table.copyWith(
+                highlightedSeatIds: const <String>[],
+                activeSeatId: '',
+              ),
+              options: _act0AuthoredCorrectOptionAtV1(
+                _utgSeatRunner.options,
+                correctOptionId: 'utg',
+                correctIndex: 1,
+              ),
             ),
-            options: _act0AuthoredCorrectOptionAtV1(
-              _utgSeatRunner.options,
-              correctOptionId: 'utg',
-              correctIndex: 1,
-            ),
+            frame: _Act0W01OrderFrameV1.first,
+            taskId: 'positions_utg',
           ),
-          frame: _Act0W01OrderFrameV1.first,
-          taskId: 'positions_utg',
+          id: 'sb',
+          label: 'SB',
+          reason:
+              'SB has already posted half a blind. UTG follows BB in first-round order, so picking SB misses who acts first.',
+          seatId: 'sb',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -711,9 +1167,16 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_cutoff',
         title: 'Tap the cutoff',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W1SeatObserverV1(
-          _act0NeutralSeatAssessmentPreservingTeachingV1(_cutoffSeatRunner),
-          'hj',
+        runner: _w1WithDistractorV1(
+          _act0W1SeatObserverV1(
+            _act0NeutralSeatAssessmentPreservingTeachingV1(_cutoffSeatRunner),
+            'hj',
+          ),
+          id: 'sb',
+          label: 'SB',
+          reason:
+              'SB sits after the Button. The cutoff is the seat before it, so this would put the cutoff on the wrong side.',
+          seatId: 'sb',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -722,13 +1185,26 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_theory',
         title: 'Blinds post first',
         phase: Act0LessonPhaseV1.theory,
-        runner: _act0W1SeatObserverV1(
-          _blindsOrderRunner.copyWith(
-            table: _blindsOrderRunner.table.copyWith(
-              selectableSeatIds: const ['btn', 'bb', 'sb'],
+        runner: _w1WithNumericLabelsV1(
+          _act0W1SeatObserverV1(
+            _blindsOrderRunner.copyWith(
+              table: _blindsOrderRunner.table.copyWith(
+                selectableSeatIds: const ['btn', 'bb', 'sb'],
+              ),
             ),
+            'co',
           ),
-          'co',
+          const {'BTN': '0 BB', 'BB': '1 BB', 'SB': '0.5 BB'},
+          question: 'How many chips did BB post before anyone acted?',
+          focusSeats: const ['bb'],
+          reasons: const {
+            'button_is_not_a_blind':
+                'The Button did not post a blind. BB already has a 1 BB chip in front of that seat.',
+            'bb':
+                'BB posted the full 1 BB. That is the unit used to measure the 1.5 BB pot.',
+            'sb':
+                'The 0.5 BB post belongs to SB. Counting it as the big blind halves the unit.',
+          },
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
@@ -737,22 +1213,56 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_posts_drill',
         title: '1 BB unit',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W1SeatObserverV1(_bigBlindPostRunner, 'hj'),
+        runner: _w1WithDistractorV1(
+          _act0WithWrongFeedbackReasonsV1(
+            _act0W1SeatObserverV1(_bigBlindPostRunner, 'hj'),
+            const {
+              'sb':
+                  'The 0.5 BB next to SB is half of the 1 BB used to measure this pot.',
+            },
+          ),
+          id: 'btn',
+          label: 'BTN',
+          reason:
+              'BTN has not paid a blind in this hand. The 1 BB chips are in front of BB.',
+          seatId: 'btn',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'blinds_order_practice',
+    title: 'First and last to act',
+    subtitle: 'Read where the first betting pass starts and ends.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Order',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 25,
+    runner: _firstPreflopActorRunner,
+    tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'blinds_first_actor',
         title: 'First preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _act0NeutralSeatAssessmentPreservingTeachingV1(
-            _firstPreflopActorRunner,
-          ),
-          frame: _Act0W01OrderFrameV1.first,
-          taskId: 'blinds_first_actor',
-          question: 'Who acts first preflop in this frame?',
-        ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+        runner: _w1WithDistractorV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _act0NeutralSeatAssessmentPreservingTeachingV1(
+              _firstPreflopActorRunner,
+            ),
+            frame: _Act0W01OrderFrameV1.first,
+            taskId: 'blinds_first_actor',
+            question: 'Who acts first preflop in this frame?',
+          ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB posted 1 BB but has yet to act voluntarily. UTG chooses first after the blind posts.',
+          seatId: 'bb',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -760,23 +1270,30 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_last_actor',
         title: 'Last preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _lastPreflopActorRunner.copyWith(
-            // Recognition choices stay neutral; authored teaching keeps its focus.
-            table: _lastPreflopActorRunner.table.copyWith(
-              highlightedSeatIds: const <String>[],
-              activeSeatId: '',
+        runner: _w1WithDistractorV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _lastPreflopActorRunner.copyWith(
+              // Recognition choices stay neutral; authored teaching keeps its focus.
+              table: _lastPreflopActorRunner.table.copyWith(
+                highlightedSeatIds: const <String>[],
+                activeSeatId: '',
+              ),
+              options: _act0AuthoredCorrectOptionAtV1(
+                _lastPreflopActorRunner.options,
+                correctOptionId: 'bb',
+                correctIndex: 1,
+              ),
             ),
-            options: _act0AuthoredCorrectOptionAtV1(
-              _lastPreflopActorRunner.options,
-              correctOptionId: 'bb',
-              correctIndex: 1,
-            ),
-          ),
-          frame: _Act0W01OrderFrameV1.option,
-          taskId: 'blinds_last_actor',
-          question: 'Who has the next option before the flop here?',
-        ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+            frame: _Act0W01OrderFrameV1.option,
+            taskId: 'blinds_last_actor',
+            question: 'Who has the next option before the flop here?',
+          ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+          id: 'btn',
+          label: 'BTN',
+          reason:
+              'BTN has already matched the blind in this 6 BB pot. Choosing it again takes away BB’s remaining option.',
+          seatId: 'btn',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -784,10 +1301,17 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_postflop_button',
         title: 'Last to act on the flop',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _postflopButtonActorRunner,
-          frame: _Act0W01OrderFrameV1.flop,
-          taskId: 'blinds_postflop_button',
+        runner: _w1WithDistractorV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _postflopButtonActorRunner,
+            frame: _Act0W01OrderFrameV1.flop,
+            taskId: 'blinds_postflop_button',
+          ),
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB acts near the start of this flop. Choosing BB overlooks the Button, which sees the earlier actions.',
+          seatId: 'bb',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -796,21 +1320,40 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_button_moves',
         title: 'Button moves',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W1SeatObserverV1(
-          _act0WithWrongFeedbackReasonsV1(
-            _buttonMovesRunner.copyWith(
-              options: _act0AuthoredCorrectOptionAtV1(
-                _buttonMovesRunner.options,
-                correctOptionId: 'btn',
-                correctIndex: 1,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _act0W1SeatObserverV1(
+              _act0WithWrongFeedbackReasonsV1(
+                _buttonMovesRunner.copyWith(
+                  options: _act0AuthoredCorrectOptionAtV1(
+                    _buttonMovesRunner.options,
+                    correctOptionId: 'btn',
+                    correctIndex: 1,
+                  ),
+                ),
+                const {
+                  'co':
+                      'CO sits one seat before BTN in this 1.5 BB preflop pot, so picking CO misidentifies the dealer marker and who acts last after the flop.',
+                },
               ),
+              'utg',
             ),
-            const {
-              'co':
-                  'CO sits one seat before BTN in this 1.5 BB preflop pot, so picking CO misidentifies the dealer marker and who acts last after the flop.',
-            },
+            id: 'bb',
+            label: 'BB',
+            reason:
+                'BB shows the 1 BB post in this hand. Its blind chips mark a different role from the dealer marker beside BTN.',
+            seatId: 'bb',
           ),
-          'utg',
+          const {'CO': '0 seats', 'BTN': '1 seat', 'BB': '2 seats'},
+          question: 'How far does the dealer marker move after this hand?',
+          reasons: const {
+            'co':
+                'The marker at BTN does move. Leaving it in place would repeat the same blind positions.',
+            'btn':
+                'It goes one seat clockwise. Moving one seat changes who posts the blinds on the next hand.',
+            'bb':
+                'Moving two seats skips the next player. The marker moves one seat at a time.',
+          },
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -819,42 +1362,49 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_review',
         title: 'Order recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _act0W01ExplicitOrderRunnerV1(
-            _meetTableRunner.copyWith(
-              phase: Act0LessonPhaseV1.review,
-              lessonId: 'blinds_order_recap',
-              caption: 'Lesson learned: blinds post before the first choice.',
-              hint: 'Think about who makes the first voluntary choice.',
-              question: 'Who acts first preflop?',
-              feedbackTitle: 'Order takeaway.',
-              feedbackReason:
-                  'Preflop starts left of the big blind. After the flop, action starts left of the Button.',
-              options: _act0AuthoredCorrectOptionAtV1(
-                _firstPreflopActorRunner.options,
-                correctOptionId: 'utg',
-                correctIndex: 0,
-              ),
-              table: _meetTableRunner.table.copyWith(
-                highlightedSeatIds: const <String>[],
-                selectableSeatIds: const <String>['utg', 'btn'],
-              ),
-              teachingSteps: const <Act0TeachingStepV1>[
-                Act0TeachingStepV1(
-                  title: 'Order recap.',
-                  body: 'Blinds post before the first voluntary decision.',
-                  focusSeatIds: <String>['sb', 'bb'],
-                  focusLabels: <String>['Post first'],
+        runner: _w1WithDistractorV1(
+          _act0WithWrongFeedbackReasonsV1(
+            _act0W01ExplicitOrderRunnerV1(
+              _meetTableRunner.copyWith(
+                phase: Act0LessonPhaseV1.review,
+                lessonId: 'blinds_order_recap',
+                caption: 'Lesson learned: blinds post before the first choice.',
+                hint: 'Think about who makes the first voluntary choice.',
+                question: 'Who acts first preflop?',
+                feedbackTitle: 'Order takeaway.',
+                feedbackReason:
+                    'Preflop starts left of the big blind. After the flop, action starts left of the Button.',
+                options: _act0AuthoredCorrectOptionAtV1(
+                  _firstPreflopActorRunner.options,
+                  correctOptionId: 'utg',
+                  correctIndex: 0,
                 ),
-              ],
-            ),
-            frame: _Act0W01OrderFrameV1.first,
-            taskId: 'blinds_review',
-          ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
-          const {
-            'btn':
-                'In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.',
-          },
+                table: _meetTableRunner.table.copyWith(
+                  highlightedSeatIds: const <String>[],
+                  selectableSeatIds: const <String>['utg', 'btn'],
+                ),
+                teachingSteps: const <Act0TeachingStepV1>[
+                  Act0TeachingStepV1(
+                    title: 'Order recap.',
+                    body: 'Blinds post before the first voluntary decision.',
+                    focusSeatIds: <String>['sb', 'bb'],
+                    focusLabels: <String>['Post first'],
+                  ),
+                ],
+              ),
+              frame: _Act0W01OrderFrameV1.first,
+              taskId: 'blinds_review',
+            ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+            const {
+              'btn':
+                  'In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.',
+            },
+          ),
+          id: 'sb',
+          label: 'SB',
+          reason:
+              'The 0.5 BB post starts the pot. It does not make SB first to act voluntarily before the flop.',
+          seatId: 'sb',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -877,18 +1427,25 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_late_seat',
         title: 'Late seat meaning',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _latePositionRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _latePositionRunner.options,
-              correctOptionId: 'btn',
-              correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _latePositionRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _latePositionRunner.options,
+                correctOptionId: 'btn',
+                correctIndex: 1,
+              ),
             ),
+            frame: _Act0W01OrderFrameV1.flop,
+            taskId: 'positions_late_seat',
+            question:
+                'Who can use the information if UTG checks before their turn?',
           ),
-          frame: _Act0W01OrderFrameV1.flop,
-          taskId: 'positions_late_seat',
-          question:
-              'Who can use the information if UTG checks before their turn?',
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB acts before UTG after the flop in this hand. It cannot use a check that UTG has yet to make.',
+          seatId: 'bb',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -897,14 +1454,21 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_early_late',
         title: 'Early vs late',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _act0NeutralSeatAssessmentPreservingTeachingV1(
-            _earlyLatePositionRunner,
+        runner: _w1WithDistractorV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _act0NeutralSeatAssessmentPreservingTeachingV1(
+              _earlyLatePositionRunner,
+            ),
+            frame: _Act0W01OrderFrameV1.first,
+            taskId: 'positions_early_late',
+            question:
+                'Which seat has more players left to act behind it, UTG or BTN?',
           ),
-          frame: _Act0W01OrderFrameV1.first,
-          taskId: 'positions_early_late',
-          question:
-              'Which seat has more players left to act behind it, UTG or BTN?',
+          id: 'hj',
+          label: 'HJ',
+          reason:
+              'HJ follows UTG, so one fewer seat remains behind HJ on this first pass.',
+          seatId: 'hj',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -913,51 +1477,65 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_review',
         title: 'Position recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _act0W01ExplicitOrderRunnerV1(
-          _positionsRecapRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              const <Act0RunnerOptionV1>[
-                Act0RunnerOptionV1(
-                  id: 'top',
-                  label: 'UTG',
-                  seatId: 'utg',
-                  isCorrect: false,
-                  preferredLabel: 'BTN',
-                  quality: Act0FeedbackQualityV1.wrong,
-                  feedbackTitle: 'Read the order after the flop.',
-                  feedbackReason:
-                      'UTG acts before BTN after the flop in this six-seat hand.',
-                ),
-                Act0RunnerOptionV1(
-                  id: 'bottom',
-                  label: 'BTN',
-                  seatId: 'btn',
-                  isCorrect: true,
-                  preferredLabel: 'BTN',
-                  quality: Act0FeedbackQualityV1.correct,
-                  feedbackTitle: 'Order after the flop read.',
-                  feedbackReason:
-                      'BTN acts last after the flop in this six-seat hand.',
-                ),
-                Act0RunnerOptionV1(
-                  id: 'random',
-                  label: 'BB',
-                  seatId: 'bb',
-                  isCorrect: false,
-                  preferredLabel: 'BTN',
-                  quality: Act0FeedbackQualityV1.wrong,
-                  feedbackTitle: 'Read the order after the flop.',
-                  feedbackReason:
-                      'BB acts before BTN after the flop in this six-seat hand.',
-                ),
-              ],
-              correctOptionId: 'bottom',
-              correctIndex: 2,
+        runner: _w1WithNumericLabelsV1(
+          _act0W01ExplicitOrderRunnerV1(
+            _positionsRecapRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                const <Act0RunnerOptionV1>[
+                  Act0RunnerOptionV1(
+                    id: 'top',
+                    label: 'UTG',
+                    seatId: 'utg',
+                    isCorrect: false,
+                    preferredLabel: 'BTN',
+                    quality: Act0FeedbackQualityV1.wrong,
+                    feedbackTitle: 'Read the order after the flop.',
+                    feedbackReason:
+                        'UTG acts before BTN after the flop in this six-seat hand.',
+                  ),
+                  Act0RunnerOptionV1(
+                    id: 'bottom',
+                    label: 'BTN',
+                    seatId: 'btn',
+                    isCorrect: true,
+                    preferredLabel: 'BTN',
+                    quality: Act0FeedbackQualityV1.correct,
+                    feedbackTitle: 'Order after the flop read.',
+                    feedbackReason:
+                        'BTN acts last after the flop in this six-seat hand.',
+                  ),
+                  Act0RunnerOptionV1(
+                    id: 'random',
+                    label: 'BB',
+                    seatId: 'bb',
+                    isCorrect: false,
+                    preferredLabel: 'BTN',
+                    quality: Act0FeedbackQualityV1.wrong,
+                    feedbackTitle: 'Read the order after the flop.',
+                    feedbackReason:
+                        'BB acts before BTN after the flop in this six-seat hand.',
+                  ),
+                ],
+                correctOptionId: 'bottom',
+                correctIndex: 2,
+              ),
             ),
-          ),
-          frame: _Act0W01OrderFrameV1.flop,
-          taskId: 'positions_review',
-        ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+            frame: _Act0W01OrderFrameV1.flop,
+            taskId: 'positions_review',
+          ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
+          const {'UTG': '2 players', 'BTN': '5 players', 'BB': '1 player'},
+          question:
+              'How many players act before the Button on this first flop pass?',
+          focusSeats: const ['btn'],
+          reasons: const {
+            'top':
+                'Two is the number of blinds. UTG, HJ and CO also act before BTN on this flop.',
+            'bottom':
+                'SB, BB, UTG, HJ and CO are all still in. Those five seats act before BTN.',
+            'random':
+                'One would be a heads-up hand. This flop still has six players, five of them before BTN.',
+          },
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -1017,7 +1595,20 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_check_drill',
         title: 'Check when no bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
+        runner: _w1WithNumericLabelsV1(
+          _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
+          const {'Fold': '0.5 BB', 'Check': '0 BB', 'Call': '1 BB'},
+          question: 'How much does the Check action cost here?',
+          reasons: const {
+            'fold':
+                'The small blind posted earlier. BB checked on this flop, so you keep your 0.5 BB by checking behind.',
+            'check':
+                'BB checked on A-7-2. With 9-8 you can see the turn by checking for 0 BB.',
+            'call':
+                'The big blind was due before the flop. BB has checked, so there is no 1 BB bet to match now.',
+          },
+          ids: const {'fold': 'pay_small_blind', 'call': 'pay_big_blind'},
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         tablePresentation: Act0TaskTablePresentationV1.stablePractice,
@@ -1147,8 +1738,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_flop',
         title: 'Flop',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01NewFirstHandStackContextV1(
-          _act0FirstHandAkRunnerV1(_readBoardRunner),
+        runner: _w1WithNumericLabelsV1(
+          _act0W01NewFirstHandStackContextV1(
+            _act0FirstHandAkRunnerV1(_readBoardRunner),
+          ),
+          const {'Two': '2 cards', 'Three': '3 cards', 'Five': '5 cards'},
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -1157,8 +1751,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_turn',
         title: 'Turn card',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01NewFirstHandStackContextV1(
-          _act0FirstHandAkRunnerV1(_turnBoardRunner),
+        runner: _w1WithNumericLabelsV1(
+          _act0W01NewFirstHandStackContextV1(
+            _act0FirstHandAkRunnerV1(_turnBoardRunner),
+          ),
+          const {'Three': '3 cards', 'Four': '4 cards', 'Five': '5 cards'},
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -1167,14 +1764,17 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_river',
         title: 'River card',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01NewFirstHandStackContextV1(
-          _act0FirstHandAkRunnerV1(_riverBoardRunner).copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _riverBoardRunner.options,
-              correctOptionId: 'five',
-              correctIndex: 0,
+        runner: _w1WithNumericLabelsV1(
+          _act0W01NewFirstHandStackContextV1(
+            _act0FirstHandAkRunnerV1(_riverBoardRunner).copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _riverBoardRunner.options,
+                correctOptionId: 'five',
+                correctIndex: 0,
+              ),
             ),
           ),
+          const {'Five': '5 cards', 'Four': '4 cards', 'Six': '6 cards'},
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -1228,15 +1828,24 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_action_trail',
         title: 'Action history',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01NewFirstHandStackContextV1(
-          _act0FirstHandAkRunnerV1(_actionTrailRunner, history: true).copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _actionTrailRunner.options,
-              correctOptionId: 'bb_check',
-              correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _act0W01NewFirstHandStackContextV1(
+            _act0FirstHandAkRunnerV1(
+              _actionTrailRunner,
+              history: true,
+            ).copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _actionTrailRunner.options,
+                correctOptionId: 'bb_check',
+                correctIndex: 1,
+              ),
             ),
+            earlierFlop: true,
           ),
-          earlierFlop: true,
+          id: 'hj_limp',
+          label: 'HJ calls 1 BB',
+          reason:
+              'HJ puts 1 BB in before the flop. Stopping at that call misses BB’s later check on A-7-2.',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -1267,7 +1876,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_pot_stack',
         title: 'Pot and stack',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w1PotStackSeatedRunner,
+        runner: _w1WithDistractorV1(
+          _w1PotStackSeatedRunner,
+          id: 'blind',
+          label: 'Blind',
+          reason:
+              'The blind is one forced post. Once the 0.5 BB and 1 BB are in the middle, the pot names their combined total.',
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.learn,
         summary:
@@ -1293,12 +1908,19 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_matched_chips_transfer',
         title: 'Matched chips',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1SeatedMatchedChipsRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w1SeatedMatchedChipsRunner.options,
-            correctOptionId: 'matched_amount_only',
-            correctIndex: 2,
+        runner: _w1WithNumericLabelsV1(
+          _w1SeatedMatchedChipsRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w1SeatedMatchedChipsRunner.options,
+              correctOptionId: 'matched_amount_only',
+              correctIndex: 2,
+            ),
           ),
+          const {
+            'Only the chips CO matched against the 20 BB all-in': '20 BB',
+            "The other player's whole 100 BB stack": '100 BB',
+            'Nothing counts until all stacks are equal': '0 BB',
+          },
         ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -1329,7 +1951,22 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Win at showdown',
         phase: Act0LessonPhaseV1.drill,
         runner: _showdownBestHandRunner.copyWith(
-          table: _act0W1MoveHeroV1(_showdownBestHandRunner.table, 'hj'),
+          table:
+              _w1WithPocketPairV1(
+                _act0W1MoveHeroV1(_showdownBestHandRunner.table, 'hj'),
+                'K',
+                firstSuit: 'c',
+              ).copyWith(
+                centerLabel: 'Your pair of kings beats CO’s pair of jacks',
+              ),
+          teachingSteps: const [
+            Act0TeachingStepV1(
+              title: 'Showdown compares hands.',
+              body:
+                  'You use K-K-A-J-7. CO uses J-J-A-K-7. Your kings beat CO’s jacks.',
+              focusLabels: ['Best five', 'Kings beat jacks'],
+            ),
+          ],
           caption:
               'The last betting round is over and both players reveal their cards.',
           options: _act0AuthoredCorrectOptionAtV1(
@@ -1363,15 +2000,31 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_review',
         title: 'Poker recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _act0W1SeatObserverV1(
-          _tableRecapRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _tableRecapRunner.options,
-              correctOptionId: 'pot_committed_chips',
-              correctIndex: 2,
+        runner: _w1WithNumericLabelsV1(
+          _act0W1SeatObserverV1(
+            _tableRecapRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _tableRecapRunner.options,
+                correctOptionId: 'pot_committed_chips',
+                correctIndex: 2,
+              ),
             ),
+            'co',
           ),
-          'co',
+          const {
+            'The largest stack still held by a player': '100 BB',
+            'Everyone else folds before showdown': '0 BB',
+            'Chips already committed to the middle': '1.5 BB',
+          },
+          question: 'How many chips are in the pot after the blinds post?',
+          reasons: const {
+            'pot_committed_chips':
+                'The two posts are 0.5 BB and 1 BB. The 1.5 BB total is in the pot and the stacks stay by each seat.',
+            'largest_stack':
+                'The 100 BB shown belongs to your stack. The 0.5 BB and 1 BB posts make the 1.5 BB pot.',
+            'everyone_folds':
+                'Chips are already in the middle before anyone decides to fold. The two posts make 1.5 BB.',
+          },
         ),
         rewardXp: 3,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -1396,13 +2049,22 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_theory',
         title: 'Two ways to win',
         phase: Act0LessonPhaseV1.theory,
-        runner: _showdownIntroRunner.copyWith(
-          table: _act0W1MoveHeroV1(_showdownIntroRunner.table, 'co'),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _showdownIntroRunner.options,
-            correctOptionId: 'win_now',
-            correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _showdownIntroRunner.copyWith(
+            table: _w1WithPocketPairV1(
+              _act0W1MoveHeroV1(_showdownIntroRunner.table, 'co'),
+              '8',
+            ),
+            options: _act0AuthoredCorrectOptionAtV1(
+              _showdownIntroRunner.options,
+              correctOptionId: 'win_now',
+              correctIndex: 1,
+            ),
           ),
+          id: 'another_round',
+          label: 'Wait for the next card',
+          reason:
+              'When the other players fold on this flop, no one is left to contest the 5 BB pot. Waiting for another card delays an award that is already decided.',
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.learn,
@@ -1411,31 +2073,37 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_foldout_drill',
         title: 'Everyone else folds',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _showdownRunner.copyWith(
-            caption: 'The final player facing your bet folds.',
-            question:
-                'What happens when the last other player folds before showing any cards?',
-            options: _act0AuthoredCorrectOptionAtV1(
-              _foldoutChoices,
-              correctOptionId: 'win_now',
-              correctIndex: 1,
-            ),
-            table: _act0W1MoveHeroV1(
-              _showdownRunner.table.copyWith(
-                handContributions: _act0FoldoutPot,
-                heroCards: const [
-                  Act0CardStateV1(rank: 'J', suit: 'h'),
-                  Act0CardStateV1(rank: 'J', suit: 's'),
-                ],
+        runner: _w1WithDistractorV1(
+          _act0WithWrongFeedbackReasonsV1(
+            _showdownRunner.copyWith(
+              caption: 'The final player facing your bet folds.',
+              question:
+                  'What happens when the last other player folds before showing any cards?',
+              options: _act0AuthoredCorrectOptionAtV1(
+                _foldoutChoices,
+                correctOptionId: 'win_now',
+                correctIndex: 1,
               ),
-              'co',
+              table: _act0W1MoveHeroV1(
+                _showdownRunner.table.copyWith(
+                  handContributions: _act0FoldoutPot,
+                  heroCards: const [
+                    Act0CardStateV1(rank: 'J', suit: 'h'),
+                    Act0CardStateV1(rank: 'J', suit: 's'),
+                  ],
+                ),
+                'co',
+              ),
             ),
+            const {
+              'show_cards':
+                  'With everyone else folded on Ah 7c 2d, you already win the 5 BB pot in CO with Jh Js without revealing your cards or giving away free information.',
+            },
           ),
-          const {
-            'show_cards':
-                'With everyone else folded on Ah 7c 2d, you already win the 5 BB pot in CO with Jh Js without revealing your cards or giving away free information.',
-          },
+          id: 'return_pot',
+          label: 'Return the whole pot to the players',
+          reason:
+              'The last opponent folded on A-7-2. The uncalled bet is returned to you, and you also win the 5 BB already in the middle.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -1450,8 +2118,8 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           hint: 'Build one five-card hand for each player from the same board.',
           table: _act0CheckpointShowdownTableV1(
             heroCards: const [
-              Act0CardStateV1(rank: 'Q', suit: 'h'),
-              Act0CardStateV1(rank: 'Q', suit: 's'),
+              Act0CardStateV1(rank: '8', suit: 'd'),
+              Act0CardStateV1(rank: '8', suit: 's'),
             ],
             otherCards: const [
               Act0CardStateV1(rank: 'K', suit: 'c'),
@@ -1470,31 +2138,31 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
               id: 'first_actor',
               label: 'Other player · K-K-Q-T-8',
               isCorrect: false,
-              preferredLabel: 'You · Q-Q-Q-K-8',
+              preferredLabel: 'You · 8-8-8-K-Q',
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: 'Compare three of a kind with a pair.',
               feedbackReason:
-                  'The other player makes a pair of kings. Your three queens rank higher.',
+                  'The other player makes a pair of kings. Your three eights rank higher.',
             ),
             Act0RunnerOptionV1(
               id: 'hero_cards_only',
-              label: 'You · Q-Q-Q-K-4',
+              label: 'You · 8-8-8-K-4',
               isCorrect: false,
-              preferredLabel: 'You · Q-Q-Q-K-8',
+              preferredLabel: 'You · 8-8-8-K-Q',
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: 'Use the better side card.',
               feedbackReason:
-                  'You win with three queens. The eight plays instead of the four.',
+                  'You win with three eights. The queen plays instead of the four.',
             ),
             Act0RunnerOptionV1(
               id: 'best_hand',
-              label: 'You · Q-Q-Q-K-8',
+              label: 'You · 8-8-8-K-Q',
               isCorrect: true,
-              preferredLabel: 'You · Q-Q-Q-K-8',
+              preferredLabel: 'You · 8-8-8-K-Q',
               quality: Act0FeedbackQualityV1.correct,
-              feedbackTitle: 'Your three queens win.',
+              feedbackTitle: 'Your three eights win.',
               feedbackReason:
-                  'Your two queens and the queen on the board make three of a kind. The king and eight complete your best five.',
+                  'Your two eights and the eight on the board make three of a kind. The king and queen complete your best five.',
             ),
           ],
           teachingSteps: const <Act0TeachingStepV1>[],
@@ -1507,13 +2175,22 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_board_plays_drill',
         title: 'Board plays',
         phase: Act0LessonPhaseV1.drill,
-        runner: _boardPlaysRunner.copyWith(
-          table: _act0W1MoveHeroV1(_boardPlaysRunner.table, 'hj'),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _boardPlaysRunner.options,
-            correctOptionId: 'tie',
-            correctIndex: 1,
+        runner: _w1WithDistractorV1(
+          _boardPlaysRunner.copyWith(
+            table: _w1WithPocketPairV1(
+              _act0W1MoveHeroV1(_boardPlaysRunner.table, 'hj'),
+              '9',
+            ),
+            options: _act0AuthoredCorrectOptionAtV1(
+              _boardPlaysRunner.options,
+              correctOptionId: 'tie',
+              correctIndex: 1,
+            ),
           ),
+          id: 'private_cards_break_tie',
+          label: 'The higher private card wins',
+          reason:
+              'Both shown hands use the same ace-high straight. A private card outside the best five cannot break the tie.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -1523,13 +2200,30 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_tie_drill',
         title: 'Tie the pot',
         phase: Act0LessonPhaseV1.drill,
-        runner: _tiePotRunner.copyWith(
-          table: _act0W1MoveHeroV1(_tiePotRunner.table, 'utg'),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _tiePotRunner.options,
-            correctOptionId: 'split',
-            correctIndex: 1,
+        runner: _w1WithNumericLabelsV1(
+          _w1WithDistractorV1(
+            _tiePotRunner.copyWith(
+              table: _w1WithPocketPairV1(
+                _act0W1MoveHeroV1(_tiePotRunner.table, 'utg'),
+                '9',
+              ),
+              options: _act0AuthoredCorrectOptionAtV1(
+                _tiePotRunner.options,
+                correctOptionId: 'split',
+                correctIndex: 1,
+              ),
+            ),
+            id: 'replay_hand',
+            label: 'Deal again to decide the winner',
+            reason:
+                'A-K-Q-J-T is already the best five for both shown players. A new deal has no effect on how the current pot is split.',
           ),
+          const {
+            'Split': '50% each',
+            'First seat wins': '100% to the earlier seat',
+            'Deal again to decide the winner': '0% until another deal',
+          },
+          question: 'If these are the tied winners, what share does each take?',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2382,7 +3076,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
           ),
           const {
             'fold':
-                'HJ opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.',
+                'Folding KQo on BTN against HJ\'s 2.5 BB open into a 4 BB pot gives up a profitable in-position call with a strong broadway hand.',
           },
         ),
         rewardXp: 9,
@@ -2889,7 +3583,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             ),
             const {
               'fold':
-                  'CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.',
+                  'Folding KQo on BTN against CO\'s 2.5 BB open into a 4 BB pot surrenders a profitable in-position continue with strong high-card value.',
             },
           ),
           id: 'raise',
@@ -3261,7 +3955,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         runner: _w2WithDistractor(
           _act0WithWrongFeedbackReasonsV1(_world2BorderlineContinueRunner, const {
             'fold':
-                'CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding QJs on BTN gives up the call the Sharky starting chart allows against one CO open.',
+                'Folding QJs on BTN against CO\'s 2.5 BB open into a 4 BB pot gives up a profitable in-position call with suited broadway playability.',
           }),
           id: 'raise',
           label: 'Reraise to 7.5 BB',

@@ -63,7 +63,7 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       final task = _task(
         'world_1',
-        'blinds_action_order',
+        'blinds_order_practice',
         'blinds_first_actor',
       );
       final runner = normalizeAct0SeatTapRunnerV1(
@@ -78,7 +78,7 @@ void main() {
         tester,
         runner: runner,
         worldId: 'world_1',
-        lessonId: 'blinds_action_order',
+        lessonId: 'blinds_order_practice',
         taskId: task.taskId,
         onCompletedDecision: (value) => completed = value,
       );

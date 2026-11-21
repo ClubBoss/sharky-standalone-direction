@@ -45,7 +45,14 @@ void main() {
     expect(runner.options.map((o) => o.label).toSet(), {
       'Win now',
       'Show cards',
+      'Wait for the next card',
     });
+    final wait = runner.options.singleWhere((o) => o.id == 'another_round');
+    expect(wait.isCorrect, isFalse);
+    expect(
+      wait.feedbackReason,
+      contains('no one is left to contest the 5 BB pot'),
+    );
   });
 
   test('missed-draw feedback identifies the diamond shown on the river', () {
