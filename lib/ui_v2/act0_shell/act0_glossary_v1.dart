@@ -59,8 +59,10 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
   Act0GlossaryTermV1(
     'Positions (UTG, HJ, CO)',
     r'\bUTG\b|\bHJ\b|\bCO\b|\bposition',
-    'At a six-player table before the flop, UTG acts first, then HJ, CO, '
-        'BTN, SB and BB. Later seats see more actions before they decide.',
+    'First to act before the flop: under the gun (UTG), then hijack (HJ), '
+        'cutoff (CO), button (BTN), small blind (SB) and big blind (BB). '
+        'After the flop, the first player still in the hand clockwise from '
+        'the button acts first.',
   ),
   Act0GlossaryTermV1(
     'Private cards',
@@ -118,6 +120,13 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
     r'\bpot\b',
     'Chips committed by players in this hand. An all-in can create separate '
         'pots with different eligible players.',
+  ),
+  Act0GlossaryTermV1(
+    'Side pot',
+    r'\bside[- ]pots?\b',
+    'A separate pot made from extra chips that players with more chips '
+        'can still bet. A player who is already all-in can win the pot '
+        'their chips matched, not the extra chips.',
   ),
   Act0GlossaryTermV1(
     'To call (price)',
@@ -182,6 +191,17 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
         'voluntarily. The player who makes that raise is the opener.',
   ),
   Act0GlossaryTermV1(
+    '3-bet',
+    r'\b(?:3|three)[- ]bets?\b',
+    'The first re-raise before the flop, after an opening raise.',
+  ),
+  Act0GlossaryTermV1(
+    'Continuation bet (c-bet)',
+    r'\b(?:continuation|c)[- ]bets?\b',
+    'A bet on the flop by the player who made the last raise before '
+        'the flop. They can make it with a strong hand or as a bluff.',
+  ),
+  Act0GlossaryTermV1(
     'In position',
     r'\b(?:in|out of) position\b',
     'You are in position against a player when you act after them in '
@@ -242,6 +262,18 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
         'the second-highest rank on the board.',
   ),
   Act0GlossaryTermV1(
+    'Overpair',
+    r'\boverpairs?\b',
+    'A pair in your private cards that is higher than any card on the board. '
+        'Two queens are an overpair on a jack-high board.',
+  ),
+  Act0GlossaryTermV1(
+    'Overcard',
+    r'\bovercards?\b',
+    'A card higher than the rank you are comparing it with. An ace in '
+        'your hand is an overcard to a king-high flop.',
+  ),
+  Act0GlossaryTermV1(
     'Set',
     r'^set$|\b(?:a set|trips and sets|top set|middle set|bottom set)\b',
     'Three cards of the same rank made with a pair in your private cards '
@@ -252,6 +284,12 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
     r'\bflush draws?\b',
     'Four cards of the same suit between your hand and the board. One '
         'more card of that suit would make a flush. With four seen, nine remain.',
+  ),
+  Act0GlossaryTermV1(
+    'Backdoor draw',
+    r'\bback[- ]?door(?: draw| flush| straight)?\b',
+    'A draw on the flop that needs a helpful card on both the turn and '
+        'the river to become a made hand.',
   ),
   Act0GlossaryTermV1(
     'Dry board',
