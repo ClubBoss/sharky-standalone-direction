@@ -14,6 +14,7 @@ import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
+import '../support/act0_practice_generator_v1.dart';
 import '../support/act0_shell_source_files_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
@@ -991,4 +992,85 @@ void main() {
       },
     );
   });
+
+  test(
+    'offline 2-template practice generator satisfies G1, C1 contributions, and quality guards',
+    () {
+      final openFold = generateOpenFoldByChartTasksV1(count: 12, seed: 7);
+      final turnDecision = generateTurnCallPriceWithOutsTasksV1(
+        count: 12,
+        seed: 7,
+        mode: TurnOutsModeV1.callOrFoldAllIn,
+      );
+      final turnNumeric = generateTurnCallPriceWithOutsTasksV1(
+        count: 8,
+        seed: 19,
+        mode: TurnOutsModeV1.outsPriceNumeric,
+      );
+      final allGenerated = [...openFold, ...turnDecision, ...turnNumeric];
+      expect(allGenerated, hasLength(32));
+
+      final rows = [for (final item in allGenerated) item.toCatalogRow()];
+      final truthAudit = runCatalogAudit(rows: rows);
+      final unexpectedTruth = truthAudit.findings.keys
+          .where((key) => !key.startsWith('10.'))
+          .toList();
+      expect(unexpectedTruth, isEmpty, reason: unexpectedTruth.join('\n'));
+      expect(truthAudit.checks['2.starting_chart'], openFold.length);
+
+      for (final item in allGenerated) {
+        final r = item.task.runner;
+        final table = r.table;
+        expect(actorFlagsConsistent(table), isTrue, reason: item.task.taskId);
+        final contrib = auditTableContributionsV1(
+          item.task.taskId,
+          'generated',
+          table,
+        );
+        final contribMap = {for (final c in contrib) c.invariant: c.result};
+        expect(
+          contribMap['D2.pot_feasibility'],
+          'PASS',
+          reason: item.task.taskId,
+        );
+        expect(
+          contribMap['D3.to_call_completeness'],
+          'PASS',
+          reason: item.task.taskId,
+        );
+        for (final o in r.options.where((o) => !o.isCorrect)) {
+          expect(
+            _praiseAtStart.hasMatch(o.feedbackTitle.trim()),
+            isFalse,
+            reason: '${item.task.taskId}/${o.id}: ${o.feedbackTitle}',
+          );
+        }
+      }
+
+      final quality = runCatalogQualityAudit(rows: rows);
+      expect(quality.btnShareByWorld, isEmpty);
+      final disallowedQuality = quality.findings
+          .where(
+            (key) => const {
+              '12.',
+              '13.',
+              '14.',
+              '15.',
+              '16.',
+              '20.',
+            }.any(key.startsWith),
+          )
+          .toList();
+      expect(disallowedQuality, isEmpty, reason: disallowedQuality.join('\n'));
+
+      expect(
+        renderGeneratedSummaryMarkdownV1(openFold),
+        contains('gen_open_fold_'),
+      );
+      expect(
+        renderGeneratedDay7DartV1(turnDecision),
+        contains('generatedPracticeCandidatesV1'),
+      );
+    },
+  );
 }
