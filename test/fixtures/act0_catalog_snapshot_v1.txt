@@ -4229,7 +4229,7 @@ TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premi
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Play it exactly like cash — Not quite. Cash and tournament contexts are not the same. Tournament life creates extra downside for busting.
     BETTER ANSWER: Survival pressure matters more
-  - [suboptimal] Pass thin edges until the money is reached — Playable caution. Risk control is useful, but freezing is too passive. Good tournament play balances survival with selective aggression.
+  - [suboptimal] Fold even premium hands until payouts begin — Playable caution. At 20 BB, tournament life can make a thin all-in edge worth passing up. Folding even premium hands until payouts begin also gives up the much larger edges those hands can offer.
     BETTER ANSWER: Survival pressure matters more
   + [correct] Survival pressure matters more — Well done. Tournament chips are tied to staying alive. You still seek EV, but survival pressure changes which thin spots are worth taking.
 
@@ -4284,7 +4284,7 @@ HINT [theoryOnly]: Low zone means blinds are hurting fast.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Use controlled urgency — Clean execution. Red-zone stacks cannot drift. Tournament pressure rewards timely commitment when edges appear.
-  - [suboptimal] Wait for top pairs like AA or KK — Too narrow. Perfect-card waiting in red zone usually leaks fold equity and stack health. You need practical action windows.
+  - [suboptimal] Wait for a big pocket pair like AA or KK — Too narrow. Waiting for AA or KK can cost you the chance to win the blinds uncontested while your stack can still threaten opponents. Look for a playable hand and a good position to act sooner.
     BETTER ANSWER: Use controlled urgency
   - [wrong] Flat-call wide and see flops — Not quite. Short tournament stacks often play poorly as passive flats. Clearer commit-or-fold lines are usually stronger.
     BETTER ANSWER: Use controlled urgency
@@ -4396,7 +4396,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call as wide as normal chip EV allows — Too loose for bubble pressure. Chip-only odds tell you the price of a call. If the call puts your tournament life at risk, payouts and the other stacks also matter.
     BETTER ANSWER: Tighten thin stack-offs versus the covering blind
   + [correct] Tighten thin stack-offs versus the covering blind — Strong table read. If BB can eliminate you, you may need more equity than chip odds suggest. That extra equity is the risk premium. Whether A-J should call depends on BB’s all-in range, the remaining stacks and the payouts.
-  - [suboptimal] Fold strong top-range hands to avoid busting — Right caution, too extreme. If losing would eliminate you, tighten marginal calls. Strong hands can still call when the edge is large enough.
+  - [suboptimal] Plan to fold borderline hands like A-J against the covering blind — Right caution, too extreme. Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB shoves worse hands and how the remaining stacks and payouts affect your risk premium.
     BETTER ANSWER: Tighten thin stack-offs versus the covering blind
 
 TASK w9_bubble_recap [review] Bubble recap
@@ -4428,7 +4428,7 @@ HINT [theoryOnly]: Tournament life still needs action windows.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Disciplined urgency in reasonable spots — Excellent spot. Good tournament pressure play combines survival with timely action, not passive waiting.
-  - [wrong] Push weak offsuit hands before the blinds hit — Too extreme. Urgency is real, but panic all-ins are not the target. You still choose spots with fold equity and blockers.
+  - [wrong] Shove 7-2 offsuit over a tight early-position raise and a call — Too extreme. After a tight early raise and a call, two players have already committed chips. With 7-2 offsuit you have little chance to win when called and little leverage to make both fold. Look for a spot where you can act first.
     BETTER ANSWER: Disciplined urgency in reasonable spots
   - [suboptimal] Fold until you pick up pocket aces — Too tight. Waiting for perfect hands often runs out the clock. Tournament pressure rewards practical urgency.
     BETTER ANSWER: Disciplined urgency in reasonable spots
@@ -4454,7 +4454,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Defend as wide as normal chip EV spot — Not quite. Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
   + [correct] Tighten defend and avoid thin all-ins — Clean execution. Bubble risk premium raises the bar for medium-stack stack-offs against covering stacks.
-  - [suboptimal] Fold strong top-range pairs to avoid busting before payout — Too passive. Full shutdown leaks too much equity. The stronger line is disciplined but still competitive.
+  - [suboptimal] Default to folding borderline hands like A-J to a big-stack open — Too passive. Folding A-J can be right against a tight opener. A big stack can also open wide to pressure you, so read its range and your position before folding. Calling a raise and calling off your stack carry different risks.
     BETTER ANSWER: Tighten defend and avoid thin all-ins
 
 TASK w9_checkpoint_table_notice [drill] Real-table pressure read
@@ -4574,7 +4574,7 @@ TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premi
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Bluff more anyway — Opposite adjustment. If opponents call too much, bluffs lose EV. Heavier value is the direct response.
     BETTER ANSWER: Value-bet heavier, bluff less often
-  - [suboptimal] Use oversized all-in bets with strong hands — Too coarse. You want a value-heavy mix, not a one-size all-in strategy. Keep your line flexible and disciplined.
+  - [suboptimal] Value-bet your strongest hands and check the rest — Too coarse. Strong hands earn value, and some thinner bets do too when this opponent calls with weak pairs. Checking every medium-strength hand gives up those calls from worse.
     BETTER ANSWER: Value-bet heavier, bluff less often
   + [correct] Value-bet heavier, bluff less often — Spot on. Overcallers pay value and resist bluffs. Shift the mix toward value first.
 

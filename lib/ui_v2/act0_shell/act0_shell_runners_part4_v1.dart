@@ -1214,14 +1214,14 @@ final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
-      label: 'Pass thin edges until the money is reached',
+      label: 'Fold even premium hands until payouts begin',
       isCorrect: false,
       preferredLabel: 'Survival pressure matters more',
       betterAnswerLabel: 'Survival pressure matters more',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable caution.',
       feedbackReason:
-          'Risk control is useful, but freezing is too passive. Good tournament play balances survival with selective aggression.',
+          'At 20 BB, tournament life can make a thin all-in edge worth passing up. Folding even premium hands until payouts begin also gives up the much larger edges those hands can offer.',
     ),
   ],
 );
@@ -1366,14 +1366,14 @@ final _w9MZoneRedRunner = _w9MRatioIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'wait',
-      label: 'Wait for top pairs like AA or KK',
+      label: 'Wait for a big pocket pair like AA or KK',
       isCorrect: false,
       preferredLabel: 'Use controlled urgency',
       betterAnswerLabel: 'Use controlled urgency',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too narrow.',
       feedbackReason:
-          'Perfect-card waiting in red zone usually leaks fold equity and stack health. You need practical action windows.',
+          'Waiting for AA or KK can cost you the chance to win the blinds uncontested while your stack can still threaten opponents. Look for a playable hand and a good position to act sooner.',
     ),
     Act0RunnerOptionV1(
       id: 'flat_call',
@@ -1793,14 +1793,15 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_anything_close',
-      label: 'Fold strong top-range hands to avoid busting',
+      label:
+          'Plan to fold borderline hands like A-J against the covering blind',
       isCorrect: false,
       preferredLabel: 'Tighten thin stack-offs versus the covering blind',
       betterAnswerLabel: 'Tighten thin stack-offs versus the covering blind',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Right caution, too extreme.',
       feedbackReason:
-          'If losing would eliminate you, tighten marginal calls. Strong hands can still call when the edge is large enough.',
+          'Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB shoves worse hands and how the remaining stacks and payouts affect your risk premium.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -1849,14 +1850,14 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'panic_any_two',
-      label: 'Push weak offsuit hands before the blinds hit',
+      label: 'Shove 7-2 offsuit over a tight early-position raise and a call',
       isCorrect: false,
       preferredLabel: 'Disciplined urgency in reasonable spots',
       betterAnswerLabel: 'Disciplined urgency in reasonable spots',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too extreme.',
       feedbackReason:
-          'Urgency is real, but panic all-ins are not the target. You still choose spots with fold equity and blockers.',
+          'After a tight early raise and a call, two players have already committed chips. With 7-2 offsuit you have little chance to win when called and little leverage to make both fold. Look for a spot where you can act first.',
     ),
     Act0RunnerOptionV1(
       id: 'wait_only_aa',
@@ -1946,14 +1947,14 @@ final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
-      label: 'Fold strong top-range pairs to avoid busting before payout',
+      label: 'Default to folding borderline hands like A-J to a big-stack open',
       isCorrect: false,
       preferredLabel: 'Tighten defend and avoid thin all-ins',
       betterAnswerLabel: 'Tighten defend and avoid thin all-ins',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too passive.',
       feedbackReason:
-          'Full shutdown leaks too much equity. The stronger line is disciplined but still competitive.',
+          'Folding A-J can be right against a tight opener. A big stack can also open wide to pressure you, so read its range and your position before folding. Calling a raise and calling off your stack carry different risks.',
     ),
   ],
 );
@@ -2325,14 +2326,14 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'allin_only',
-      label: 'Use oversized all-in bets with strong hands',
+      label: 'Value-bet your strongest hands and check the rest',
       isCorrect: false,
       preferredLabel: 'Value-bet heavier, bluff less often',
       betterAnswerLabel: 'Value-bet heavier, bluff less often',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too coarse.',
       feedbackReason:
-          'You want a value-heavy mix, not a one-size all-in strategy. Keep your line flexible and disciplined.',
+          'Strong hands earn value, and some thinner bets do too when this opponent calls with weak pairs. Checking every medium-strength hand gives up those calls from worse.',
     ),
     Act0RunnerOptionV1(
       id: 'value_heavier',

@@ -183,7 +183,8 @@ void main() {
           'Take a reasonable jam or reshove spot',
       'Still take practical all-in spots before blinded out':
           'Still take practical jam spots before blinded out',
-      'Use oversized all-in bets with strong hands': 'Only shove strong hands',
+      'Value-bet your strongest hands and check the rest':
+          'Only shove strong hands',
       'Go all-in with wide hands without checking position':
           'Jam any two cards every hand',
       'Go all-in to deny equity': 'Jam to deny equity',
@@ -214,9 +215,9 @@ void main() {
           'The paired board leaves every seven-containing combination available.',
       'Fold playable all-in hands to try to ladder into the money':
           'Fold every hand until payouts begin',
-      'Fold strong top-range hands to avoid busting':
+      'Plan to fold borderline hands like A-J against the covering blind':
           'Over-fold every close hand',
-      'Fold strong top-range pairs to avoid busting before payout':
+      'Default to folding borderline hands like A-J to a big-stack open':
           'Fold every hand until payout',
       'Map pressure, then copy broad player reads':
           'Map pressure, then copy every player read',
@@ -259,12 +260,14 @@ void main() {
           'Only the bet size matters now',
       'A board must pair before matching-rank combinations drop.':
           'Only a paired board can change how many matching-rank combinations remain.',
-      'Pass thin edges until the money is reached': 'Avoid all risk until paid',
+      'Fold even premium hands until payouts begin':
+          'Avoid all risk until paid',
       'Wait for AA or KK before entering a pot': 'Wait only for premium pairs',
-      'Wait for top pairs like AA or KK': 'Wait for perfect premium only',
+      'Wait for a big pocket pair like AA or KK':
+          'Wait for perfect premium only',
       'Go all-in with the next playable hand right away':
           'Force any spot immediately',
-      'Push weak offsuit hands before the blinds hit':
+      'Shove 7-2 offsuit over a tight early-position raise and a call':
           'Panic with any two cards now',
       'Fold until you pick up pocket aces': 'Wait only for aces',
       'Adjust by player type and ignore stack pressure':
