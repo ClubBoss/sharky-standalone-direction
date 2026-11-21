@@ -2170,7 +2170,7 @@ final _w9MRatioRecapRunner = _w7FormatPressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: "shove_because_the_zone_is_red",
-      label: "Commit every chip whenever the zone is red",
+      label: "Commit your stack based on the red zone",
       isCorrect: false,
       preferredLabel: "Combine M with the hand and tournament context",
       betterAnswerLabel: "Combine M with the hand and tournament context",

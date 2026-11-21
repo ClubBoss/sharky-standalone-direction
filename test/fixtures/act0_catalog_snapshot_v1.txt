@@ -4790,7 +4790,7 @@ TABLE: Facts no applicable hand facts
   + [correct] Combine M with the hand and tournament context — Correct. The red-zone examples differed in position, cards and action, so their correct decisions differed too.
   - [suboptimal] Use M and cards but skip the payout context — Look again. You account for urgency and hand strength, but the 2 BB rival in the bubble example changed the cost of losing the stack.
     BETTER ANSWER: Combine M with the hand and tournament context
-  - [wrong] Commit every chip whenever the zone is red — Look again. Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.
+  - [wrong] Commit your stack based on the red zone — Look again. Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.
     BETTER ANSWER: Combine M with the hand and tournament context
 
 ===== WORLD 9 · LESSON bubble_risk_premium · Bubble risk premium =====
