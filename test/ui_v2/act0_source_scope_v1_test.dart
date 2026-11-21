@@ -3,6 +3,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
+import '../support/act0_catalog_truth_audit_v1.dart' show w7AppliedTaskIdsV1;
+
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)
     for (final lesson in world.lessons) ...lesson.taskList,
@@ -71,7 +73,7 @@ void main() {
     },
   );
 
-  test('370 authored contexts preserve legacy scopes and two ASM05 snapshots', () {
+  test('authored contexts preserve scopes across legacy, ASM05 and Q7 tasks', () {
     const orientationIds = <String>{
       'first_table_guide_shared_cards_repair',
       'what_poker_is_theory',
@@ -273,14 +275,18 @@ void main() {
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
     ];
-    expect(tasks, hasLength(370));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(370));
+    expect(tasks, hasLength(378));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(378));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
     expect(newTasks.map((task) => task.taskId), _asm05NewTaskIds);
     expect(
-      tasks.where((task) => !_asm05NewTaskIds.contains(task.taskId)),
+      tasks.where(
+        (task) =>
+            !_asm05NewTaskIds.contains(task.taskId) &&
+            !w7AppliedTaskIdsV1.contains(task.taskId),
+      ),
       hasLength(368),
     );
     for (final task in newTasks) {
@@ -339,7 +345,9 @@ void main() {
       }
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
-        if (!_asm05NewTaskIds.contains(task.taskId)) legacyPlayed++;
+        if (!_asm05NewTaskIds.contains(task.taskId) &&
+            !w7AppliedTaskIdsV1.contains(task.taskId))
+          legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
         if (rangeSignals.containsKey(task.taskId)) {
@@ -483,7 +491,7 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 249); // Authored contexts, not certified replay histories.
+    expect(played, 257); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
@@ -529,10 +537,11 @@ void main() {
   });
 
   test('W5–W8 banks and prices follow the recorded contributions', () {
-    final snapshots = <String>{};
+    final snapshots = <String, String>{};
+    final contrasts = <String, String>{};
     final action = RegExp(
       r'^(?:(Flop|Turn|River): )?([A-Z0-9+]+) '
-      r'(blind|raises|opens|calls|bets|checks|folds)(?: ([0-9.]+) BB)?$',
+      r'(blind|raises(?: to)?|opens|calls|bets|all-in|checks|folds)(?: ([0-9.]+) BB)?$',
     );
     for (final task in _world5To8Tasks()) {
       final table = task.runner.table;
@@ -578,8 +587,13 @@ void main() {
         table.potLabel,
         for (final seat in table.seats) seat.stackLabel,
       ].join('|');
-      expect(snapshots.add(snapshot), isTrue, reason: task.taskId);
+      final first = snapshots.putIfAbsent(snapshot, () => task.taskId);
+      if (first != task.taskId) contrasts[task.taskId] = first;
     }
+    expect(contrasts, {
+      'w7_clean_outs_lower_price': 'w7_count_winning_rivers',
+      'w7_river_two_bluffs_of_six': 'w7_river_one_bluff_of_six',
+    });
   });
 
   test('folded-to-BTN replay preserves all three prior folds', () {

@@ -188,8 +188,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 99),
-      ('D3.to_call_completeness', 99),
+      ('D2.pot_feasibility', 107),
+      ('D3.to_call_completeness', 107),
     ]) {
       final proof = rows
           .where(
@@ -859,11 +859,50 @@ void main() {
       expect(option['quality'], 'suboptimal', reason: entry.key);
       option['quality'] = 'wrong';
     }
+    for (final entry in q3AppendedChoicesV1.entries) {
+      final expected = expectedComparison[entry.key] as Map<String, dynamic>;
+      (expected['options'] as List).add({
+        'id': entry.value,
+        'correct': false,
+        'quality': 'wrong',
+        'seat': null,
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      });
+    }
+    for (final (taskId, family, correctChoice, choiceCount) in [
+      ('w7_flop_bluff_one_player', 'decision', 1, 2),
+      ('w7_flop_bluff_two_players', 'decision', 2, 2),
+      ('w7_count_winning_rivers', 'counting', 2, 3),
+      ('w7_clean_outs_lower_price', 'decision', 1, 2),
+      ('w7_clean_outs_higher_price', 'decision', 2, 2),
+      ('w7_river_one_bluff_of_six', 'transfer', 2, 2),
+      ('w7_river_two_bluffs_of_six', 'transfer', 1, 2),
+      ('w7_checkpoint_river_card_excludes_hand', 'transfer', 2, 2),
+    ]) {
+      expectedComparison[taskId] = {
+        'rewardXp': 10,
+        'family': family,
+        'options': [
+          for (var choice = 1; choice <= choiceCount; choice++)
+            {
+              'id': 'choice_$choice',
+              'correct': choice == correctChoice,
+              'quality': choice == correctChoice ? 'correct' : 'wrong',
+              'seat': null,
+              'repairSeats': <String>[],
+              'repairCards': <String>[],
+              'repairLabels': <String>[],
+            },
+        ],
+      };
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1 and L2 fields may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2 and Q7 contracts may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

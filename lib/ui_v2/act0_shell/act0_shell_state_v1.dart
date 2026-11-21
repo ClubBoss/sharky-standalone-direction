@@ -2196,18 +2196,18 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Six seats',
         phase: Act0LessonPhaseV1.theory,
         runner: _positionsRunner.copyWith(
-          teachingSteps: [
-            const Act0TeachingStepV1(
-              title: 'Before and after the first cards',
+          teachingSteps: const [
+            Act0TeachingStepV1(
+              title: 'When cards reach the board',
               body:
-                  'Preflop means no board cards yet. The flop has three board cards.',
+                  'Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.',
             ),
-            const Act0TeachingStepV1(
-              title: 'The next two cards',
+            Act0TeachingStepV1(
+              title: 'Read the seat labels.',
               body:
-                  'The turn is the fourth board card. The river is the fifth.',
+                  'UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.',
+              focusLabels: ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
             ),
-            ..._positionsRunner.teachingSteps,
           ],
           options: _act0AuthoredCorrectOptionAtV1(
             const <Act0RunnerOptionV1>[
@@ -5470,7 +5470,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         title: 'Call or fold',
         phase: Act0LessonPhaseV1.drill,
         runner: _world4BadPriceFoldRunner.copyWith(
-          caption: 'HJ bet 3 BB on the turn.',
+          caption: 'HJ bet 3 BB on the turn. $_world4PriceReminder',
           table: _act0W4FacingTurnPriceV1(
             _world4BadPriceFoldRunner.table,
             potBeforeBet: 7,
@@ -6817,7 +6817,381 @@ final _rangeThinkingFoundationLessons = <Act0LessonCardV1>[
 
 final _visibleCardRangeContinuationLessons = <Act0LessonCardV1>[
   _w7VisibleCardComboDensityLesson,
+  _w7PriceLessonV1,
+  _w7RangeCheckpointV1,
 ];
+
+final _w7PriceLessonV1 = _w7AppliedLessonV1(
+  id: 'w7_visible_cards_and_price',
+  title: 'Read the table and compare the price',
+  subtitle: 'See what changes when another player enters or the price goes up.',
+  tasks: [
+    _w7FlopTaskV1(multiway: false),
+    _w7FlopTaskV1(multiway: true),
+    _w7AppliedTaskV1(
+      id: 'w7_count_winning_rivers',
+      title: 'Which cards actually win?',
+      question:
+          'Suppose BB has K♣ Q♠. How many river cards give you the winning hand?',
+      caption: 'Only one card is left to come.',
+      table: _w7TurnPriceTableV1(3),
+      labels: const ['9', '12', '11'],
+      correctAt: 1,
+      feedback: const [
+        'Nine hearts make a winning flush. Three non-heart aces also win.',
+        'Nine hearts make a winning flush. The three unseen aces also win with a pair of aces.',
+        'Count the three unseen aces as well as all nine unseen hearts.',
+      ],
+      teaching: const [
+        Act0TeachingStepV1(
+          title: 'An out has to win',
+          body:
+              'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
+        ),
+      ],
+      family: Act0TaskFamilyV1.counting,
+    ),
+    _w7TurnPriceTaskV1(
+      id: 'w7_clean_outs_lower_price',
+      bet: 3,
+      correctAt: 0,
+      feedback:
+          'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+    ),
+    _w7TurnPriceTaskV1(
+      id: 'w7_clean_outs_higher_price',
+      bet: 6,
+      correctAt: 1,
+      feedback:
+          'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
+    ),
+  ],
+);
+
+final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
+  id: 'w7_visible_cards_range_checkpoint',
+  title: 'Range and price checkpoint',
+  subtitle:
+      'Make three river decisions from the hands that are still possible.',
+  tasks: [
+    _w7RiverTaskV1(
+      id: 'w7_river_one_bluff_of_six',
+      range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♣ Q♦',
+      correctAt: 1,
+      feedback:
+          'If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
+    ),
+    _w7RiverTaskV1(
+      id: 'w7_river_two_bluffs_of_six',
+      range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♠ 8♠',
+      correctAt: 0,
+      feedback:
+          'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+    ),
+    _w7UnseenRiverTaskV1(),
+  ],
+);
+
+Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
+  id: 'w7_checkpoint_river_card_excludes_hand',
+  title: 'The river all-in',
+  question:
+      'BB is all-in. Before the river, BB could have T♣ 8♣, T♠ 8♠, '
+      'T♦ 8♦, 9♥ 9♦ or 2♠ 2♦. Give all hands that are still possible '
+      'equal weight. Call or fold?',
+  caption: 'Read the final board.',
+  table: _w7AllInTableV1(
+    holeCards: 'Jh Jd',
+    boardCards: 'Js 9c 7c 4h 2s',
+    street: 'River',
+    bet: 5,
+  ),
+  labels: const ['Call', 'Fold'],
+  correctAt: 1,
+  feedback: const [
+    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
+        'If BB has a pair of nines, you win. The three ten-eight hands '
+        'make a straight. One win in four (25%) is below the roughly '
+        '28% needed to call 5 BB for a final pot of 18 BB.',
+    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
+        'If BB has a pair of nines, you win. The three ten-eight hands '
+        'make a straight. One win in four (25%) is below the roughly '
+        '28% this call needs.',
+  ],
+  family: Act0TaskFamilyV1.transfer,
+  kind: Act0LessonStepKindV1.proveIt,
+);
+
+Act0LessonCardV1 _w7AppliedLessonV1({
+  required String id,
+  required String title,
+  required String subtitle,
+  required List<Act0LessonTaskV1> tasks,
+}) => Act0LessonCardV1(
+  lessonId: id,
+  title: title,
+  subtitle: subtitle,
+  state: Act0LessonStateV1.locked,
+  phaseLabel: 'Visible Cards Change Ranges',
+  primaryCtaLabel: 'Locked',
+  isSelectable: false,
+  isLocked: true,
+  rewardXp: tasks.fold<int>(0, (total, task) => total + task.rewardXp),
+  runner: tasks.first.runner,
+  tasks: tasks,
+);
+
+Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
+  final opponents = multiway ? 'SB and BB both check.' : 'BB checks.';
+  final foldRate = multiway ? '16%' : '40%';
+  final table = _w7FlopTableV1(multiway: multiway);
+  final explanation = multiway
+      ? 'Everyone folds only 16% of the time in this example. The bet wins '
+            '9 BB on those folds but loses 3 BB the other 84% of the time. '
+            'That is a loss of about 1.1 BB on average. Checking risks 0 BB.'
+      : 'With one opponent, the bet wins 6.5 BB on the 40% of hands where '
+            'they fold and loses 3 BB otherwise. That is a gain of 0.8 BB '
+            'on average in this example.';
+  return _w7AppliedTaskV1(
+    id: multiway ? 'w7_flop_bluff_two_players' : 'w7_flop_bluff_one_player',
+    title: 'A flop decision',
+    question:
+        '$opponents Everyone folds to a 3 BB bet $foldRate of the time. For this '
+        'exercise, count the full bet as lost if anyone continues. Checking '
+        'has a value of 0 BB. Which action is better in this model?',
+    caption:
+        'Compare what you win on folds with what you risk when someone continues.',
+    table: table,
+    labels: const ['Bet 3 BB', 'Check'],
+    correctAt: multiway ? 1 : 0,
+    feedback: [explanation, explanation],
+    family: Act0TaskFamilyV1.decision,
+  );
+}
+
+Act0TableStateV1 _w7FlopTableV1({required bool multiway}) {
+  final heroCards = _act0LessonCardsV1('7h 6h');
+  final table = _act0BoardLessonTableV1(
+    heroCards: heroCards,
+    boardCards: _act0LessonCardsV1('As 9d 3c'),
+    centerLabel: 'Flop decision',
+  );
+  const wager = Act0ContributionKindV1.wager;
+  return table.copyWith(
+    heroSeatId: 'co',
+    activeSeatId: 'co',
+    decisionSeatId: 'co',
+    potLabel: multiway ? 'Pot 9 BB' : 'Pot 6.5 BB',
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      const Act0ActionTrailItemV1(label: 'HJ folds'),
+      const Act0ActionTrailItemV1(label: 'CO raises to 3 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN folds'),
+      if (multiway)
+        const Act0ActionTrailItemV1(
+          label: 'SB calls 3 BB',
+          displayLabel: 'SB calls 2.5 BB more',
+        )
+      else
+        const Act0ActionTrailItemV1(label: 'SB folds'),
+      const Act0ActionTrailItemV1(
+        label: 'BB calls 3 BB',
+        displayLabel: 'BB calls 2 BB more',
+      ),
+      if (multiway) const Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+      Act0ActionTrailItemV1(label: multiway ? 'BB checks' : 'Flop: BB checks'),
+    ],
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      startingStackBbBySeat: const {'co': 100, 'bb': 100, 'sb': 100},
+      entries: [
+        ..._act0LessonBlinds,
+        const Act0ContributionV1(PokerStreet.preflop, 'co', wager, 3),
+        if (multiway)
+          const Act0ContributionV1(PokerStreet.preflop, 'sb', wager, 2.5),
+        const Act0ContributionV1(PokerStreet.preflop, 'bb', wager, 2),
+      ],
+    ),
+    seats: [
+      for (final seat in table.seats)
+        _act0CopySeatStateV1(
+          seat,
+          clearCommitment: true,
+          isHero: seat.seatId == 'co',
+          isActive: seat.seatId == 'co',
+          hasActed: seat.seatId != 'co',
+          isInHand:
+              seat.seatId == 'co' ||
+              seat.seatId == 'bb' ||
+              (multiway && seat.seatId == 'sb'),
+          isFolded:
+              seat.seatId != 'co' &&
+              seat.seatId != 'bb' &&
+              (!multiway || seat.seatId != 'sb'),
+          stackLabel: switch (seat.seatId) {
+            'co' || 'bb' => '97 BB',
+            'sb' => multiway ? '97 BB' : '99.5 BB',
+            _ => '100 BB',
+          },
+          holeCards: seat.seatId == 'co' ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: switch (seat.seatId) {
+            'co' => Act0CardsVisibleModeV1.faceUp,
+            'bb' => Act0CardsVisibleModeV1.faceDown,
+            'sb' when multiway => Act0CardsVisibleModeV1.faceDown,
+            _ => Act0CardsVisibleModeV1.none,
+          },
+        ),
+    ],
+  );
+}
+
+Act0TableStateV1 _w7TurnPriceTableV1(int bet) => _w7AllInTableV1(
+  holeCards: 'Ah 8h',
+  boardCards: 'Kh 7h 2c 4d',
+  street: 'Turn',
+  bet: bet,
+);
+
+Act0LessonTaskV1 _w7TurnPriceTaskV1({
+  required String id,
+  required int bet,
+  required int correctAt,
+  required String feedback,
+}) => _w7AppliedTaskV1(
+  id: id,
+  title: 'A turn price',
+  question: 'BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?',
+  caption: 'Compare your chance to win with the price.',
+  table: _w7TurnPriceTableV1(bet),
+  labels: const ['Call', 'Fold'],
+  correctAt: correctAt,
+  feedback: [feedback, feedback],
+  family: Act0TaskFamilyV1.decision,
+);
+
+Act0LessonTaskV1 _w7RiverTaskV1({
+  required String id,
+  required String range,
+  required int correctAt,
+  required String feedback,
+}) => _w7AppliedTaskV1(
+  id: id,
+  title: 'A river decision',
+  question:
+      'BB is all-in and could have any of these equally likely hands: $range. Call or fold?',
+  caption: 'Use the stated range for this decision.',
+  table: _w7AllInTableV1(
+    holeCards: 'Qs Jd',
+    boardCards: 'Qh 9c 5s 4d 2c',
+    street: 'River',
+    bet: 4,
+  ),
+  labels: const ['Call', 'Fold'],
+  correctAt: correctAt,
+  feedback: [feedback, feedback],
+  family: Act0TaskFamilyV1.transfer,
+  kind: Act0LessonStepKindV1.proveIt,
+);
+
+Act0TableStateV1 _w7AllInTableV1({
+  required String holeCards,
+  required String boardCards,
+  required String street,
+  required int bet,
+}) {
+  final table = _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1(holeCards),
+    boardCards: _act0LessonCardsV1(boardCards),
+    centerLabel: '$street decision',
+    flopBetBb: 1.25,
+    facingBb: bet,
+    bbBehindBb: 0,
+  );
+  final amount = _act0BbLabelV1(bet);
+  return table.copyWith(
+    handContributions: table.handContributions,
+    actionTrail: [
+      ...table.actionTrail.take(table.actionTrail.length - 1),
+      Act0ActionTrailItemV1(
+        label: '$street: BB all-in $amount',
+        displayLabel: '$street: BB goes all-in for $amount',
+      ),
+    ],
+    seats: [
+      for (final seat in table.seats)
+        if (seat.seatId == 'bb')
+          _act0CopySeatStateV1(
+            seat,
+            clearCommitment: true,
+            bet: Act0SeatBetStateV1(
+              kind: Act0SeatBetKindV1.allIn,
+              label: 'BB',
+              amountLabel: amount,
+            ),
+          )
+        else
+          seat,
+    ],
+  );
+}
+
+Act0LessonTaskV1 _w7AppliedTaskV1({
+  required String id,
+  required String title,
+  required String question,
+  required String caption,
+  required Act0TableStateV1 table,
+  required List<String> labels,
+  required int correctAt,
+  required List<String> feedback,
+  required Act0TaskFamilyV1 family,
+  List<Act0TeachingStepV1> teaching = const [],
+  Act0LessonStepKindV1 kind = Act0LessonStepKindV1.practice,
+}) {
+  final phase = teaching.isEmpty
+      ? Act0LessonPhaseV1.drill
+      : Act0LessonPhaseV1.theory;
+  return Act0LessonTaskV1(
+    taskId: id,
+    title: title,
+    phase: phase,
+    rewardXp: 10,
+    taskFamily: family,
+    stepKind: teaching.isEmpty ? kind : Act0LessonStepKindV1.learn,
+    runner: _w6ComboCountsIntroRunner.copyWith(
+      lessonId: id,
+      lessonTitle: title,
+      lessonSubtitle: 'Visible Cards Change Ranges',
+      phase: phase,
+      caption: caption,
+      question: question,
+      hint: '',
+      table: table,
+      teachingSteps: teaching,
+      feedbackTitle: 'Compare the numbers.',
+      feedbackReason: feedback[correctAt],
+      options: [
+        for (var index = 0; index < labels.length; index++)
+          Act0RunnerOptionV1(
+            id: 'choice_${index + 1}',
+            label: labels[index],
+            isCorrect: index == correctAt,
+            preferredLabel: labels[correctAt],
+            betterAnswerLabel: index == correctAt ? null : labels[correctAt],
+            quality: index == correctAt
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            feedbackTitle: index == correctAt
+                ? 'That fits the table.'
+                : 'Check what can still win.',
+            feedbackReason: feedback[index],
+          ),
+      ],
+    ),
+  );
+}
 
 List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
   final tasks = <Act0LessonTaskV1>[];
@@ -13694,6 +14068,16 @@ final _boardCountRunner = _readBoardRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason: 'Two is your private card count, not the full board.',
     ),
+    Act0RunnerOptionV1(
+      id: 'three',
+      label: 'Three',
+      isCorrect: false,
+      preferredLabel: 'Five',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'The first group of shared cards has three. Two more can be dealt later.',
+    ),
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
@@ -13854,6 +14238,15 @@ final _streetOrderRecapRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason: 'The flop comes before the turn.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'preflop',
+      label: 'Preflop',
+      isCorrect: false,
+      preferredLabel: 'River',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason: 'Preflop happens before any board cards are dealt.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -15045,13 +15438,9 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
   options: const <Act0RunnerOptionV1>[],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Read the two-card code.',
-      body:
-          'T means ten. Suited means two cards of the same suit. Offsuit means two cards with different suits. KTs is king-ten suited. J8o is jack-eight offsuit.',
-    ),
-    Act0TeachingStepV1(
       title: 'Groups and seats, before a raise.',
       body:
+          'T means ten. Suited means same suit (s, like KTs). Offsuit means different suits (o, like J8o).\n\n'
           'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.\n\nMedium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.\n\nMedium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.\n\nWeak | Other hands in this course model | Fold.',
     ),
     Act0TeachingStepV1(
@@ -15087,6 +15476,16 @@ final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason: 'AA is stronger than a medium hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'strong',
+      label: 'Strong',
+      isCorrect: false,
+      preferredLabel: 'Premium',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'The chart puts aces with kings and queens in Premium. Strong starts below that group.',
     ),
   ],
   table: _whatYouCanDoRunner.table.copyWith(
@@ -15131,6 +15530,16 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason: 'Offsuit disconnected hands are not strong starters.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'medium',
+      label: 'Medium',
+      isCorrect: false,
+      preferredLabel: 'Weak',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'J8o is not in any chart row, so it belongs in Weak. The only jack hands in Medium are KJ, QJs, and AJo.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -15319,6 +15728,16 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       feedbackTitle: 'Legal, but passive.',
       feedbackReason:
           'Calling first in is still a limp. Cutoff is late enough to open the playable hand cleanly.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'Ace-jack offsuit is Medium. With everyone folded to the cutoff, this chart opens it.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -18326,7 +18745,7 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Deny free cards.',
       body:
-          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An opponent with ace-king can move ahead if the next card is an ace or king.',
+          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.',
       focusLabels: <String>['Next card', 'Cost', 'Deny'],
     ),
   ],
@@ -18573,10 +18992,14 @@ Act0TableStateV1 _act0W4FacingTurnPriceV1(
   );
 }
 
+const _world4PriceReminder =
+    'Compare your chance to win with the call divided by the pot after you call.';
+
 final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_good_price_call',
-  caption: 'HJ bet 1 BB on the turn.',
+  teachingSteps: const [],
+  caption: 'HJ bet 1 BB on the turn. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
       '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
@@ -18630,7 +19053,7 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
 
 final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_bad_price_fold',
-  caption: 'HJ bet 7 BB on the turn.',
+  caption: 'HJ bet 7 BB on the turn. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
       '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
@@ -18678,7 +19101,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
 
 final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_cheap_price_marginal_call',
-  caption: 'The turn is a two. HJ bet 1 BB.',
+  caption: 'The turn is a two. HJ bet 1 BB. $_world4PriceReminder',
   lessonSubtitle:
       'Middle pair means a private card matches the second-highest rank on the flop.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
@@ -18729,7 +19152,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
 
 final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
   lessonId: 'w4_big_price_marginal_fold',
-  caption: 'The turn is a two. HJ bet 6 BB.',
+  caption: 'The turn is a two. HJ bet 6 BB. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
       '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
@@ -18846,6 +19269,15 @@ final _world4SmallBetRunner = _world4SizingIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason: '6 BB into 6 BB is pot-size, not one-third.',
     ),
+    Act0RunnerOptionV1(
+      id: 'three',
+      label: '3 BB',
+      isCorrect: false,
+      preferredLabel: '2 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason: 'Three is half of six. One-third of six is two.',
+    ),
   ],
   table: _world4SizingIntroRunner.table.copyWith(
     potLabel: 'Pot 6 BB',
@@ -18923,6 +19355,16 @@ final _world4PotBetRunner = _world4SizingIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason: '2 BB is one-third pot here, not pot-size.',
     ),
+    Act0RunnerOptionV1(
+      id: 'three',
+      label: '3 BB',
+      isCorrect: false,
+      preferredLabel: '6 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'Three is half of six. A pot-size bet is equal to all six.',
+    ),
   ],
   table: _world4SizingIntroRunner.table.copyWith(
     potLabel: 'Pot 6 BB',
@@ -18968,7 +19410,7 @@ final _world4CheckpointIntroRunner = _world4PurposeIntroRunner.copyWith(
 
 final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
   lessonId: 'w4_price_table_transfer',
-  caption: 'BB bet 2 BB on the turn.',
+  caption: 'BB bet 2 BB on the turn. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
       '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?',
@@ -20268,17 +20710,17 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'From outs to a chance.',
+      title: 'Count the cards that help.',
       body:
-          'An out is a card that improves your hand. On the turn, you can see six cards and 46 are unseen. '
-          'On the river, 9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.',
+          'An out is an unseen card that improves your hand. With one card left and 46 unseen, '
+          '9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.',
       focusLabels: <String>['Outs', 'One card left'],
     ),
     Act0TeachingStepV1(
       title: 'Compare with the price from World 4.',
       body:
-          'Calling 1 BB into a pot of 7 BB makes an 8 BB pot. You need to win 1 out of 8 times. '
-          'If only your outs win and there is no more betting, 8 outs win about 1 time in 6. That is enough to call.',
+          'A 1 BB call into a 7 BB pot needs 1 win in 8. '
+          'If only those 8 outs win and there are no more bets, about 1 win in 6 beats that price.',
       focusLabels: <String>['Call 1 BB', 'Pot 7 BB', 'Chance to win'],
     ),
   ],
@@ -20313,6 +20755,16 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason: 'The flush path is hearts, so hearts are the outs.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'spade',
+      label: 'Spade',
+      isCorrect: false,
+      preferredLabel: 'Heart',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'A spade adds to the board without adding a heart. The flush needs one more heart.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -20349,6 +20801,16 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason: 'A king does not connect this rank ladder.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'ten',
+      label: 'T',
+      isCorrect: false,
+      preferredLabel: '9',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check the clue again.',
+      feedbackReason:
+          'A ten skips the nine. You need five consecutive ranks for a straight.',
     ),
   ],
   table: _act0BoardLessonTableV1(

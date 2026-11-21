@@ -210,6 +210,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_4/call_price',
       'world_4/small_half_pot',
       'world_4/price_checkpoint',
+      'world_7/w7_visible_cards_and_price',
     },
     legacyAliases: <String>{'missed_price_read', 'thin_price_read'},
   ),
@@ -224,6 +225,10 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_4/value_bets',
       'world_4/bluff_pressure',
       'world_4/protection_and_denial',
+    },
+    taskKeys: <String>{
+      'world_7/w7_visible_cards_and_price/w7_flop_bluff_one_player',
+      'world_7/w7_visible_cards_and_price/w7_flop_bluff_two_players',
     },
     legacyAliases: <String>{
       'missed_table_read',
@@ -256,6 +261,9 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_5/straight_draws',
       'world_5/outs_improvement',
     },
+    taskKeys: <String>{
+      'world_7/w7_visible_cards_and_price/w7_count_winning_rivers',
+    },
     legacyAliases: <String>{
       'missed_board_read',
       'thin_board_read',
@@ -276,6 +284,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_6/range_pressure_lines',
       'world_6/range_thinking_checkpoint',
       'world_7/range_thinking_lite_combo_density',
+      'world_7/w7_visible_cards_range_checkpoint',
     },
     legacyAliases: <String>{
       'missed_board_read',

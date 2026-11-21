@@ -61,6 +61,7 @@ void main() {
       expect(task.runner.options.map((option) => option.id), <String>[
         'nine',
         'king',
+        'ten',
       ]);
       final correct = correctOption(task);
       expect(correct.id, 'nine');

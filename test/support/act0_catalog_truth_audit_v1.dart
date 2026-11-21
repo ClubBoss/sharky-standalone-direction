@@ -866,3 +866,28 @@ void _checkRepeat(
         previous.map((old) => old.task.taskId).join(', '),
   );
 }
+
+/// Appended Q3 choices, with the existing two-option order preserved.
+const q3AppendedChoicesV1 = <String, String>{
+  'cards_ranks_suits_board_count': 'three',
+  'your_first_hand_recap': 'preflop',
+  'hand_discipline_buckets_premium': 'strong',
+  'hand_discipline_buckets_trash': 'medium',
+  'same_hand_different_seat_w3_same_hand_open': 'fold',
+  'w4_small_bet': 'three',
+  'w4_pot_bet': 'three',
+  'outs_improvement_w5_flush_out': 'spade',
+  'outs_improvement_w5_straight_out': 'ten',
+};
+
+/// Q7 extends the historical source census without replacing any legacy IDs.
+const w7AppliedTaskIdsV1 = <String>{
+  'w7_flop_bluff_one_player',
+  'w7_flop_bluff_two_players',
+  'w7_count_winning_rivers',
+  'w7_clean_outs_lower_price',
+  'w7_clean_outs_higher_price',
+  'w7_river_one_bluff_of_six',
+  'w7_river_two_bluffs_of_six',
+  'w7_checkpoint_river_card_excludes_hand',
+};

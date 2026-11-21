@@ -12,7 +12,7 @@ const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_40',
 };
 
-/// Assessment identity and grading consistency for all 369 W1-W12 tasks.
+/// Assessment identity and grading consistency for all current W1-W12 tasks.
 /// The 367 legacy rows retain their frozen contract; exactly two named
 /// NEW_AUTHORING ASM-05 rows extend it without replacing historical meaning.
 /// Reviewed MAIN01 quality cells and three W01 theory option contracts each
@@ -29,8 +29,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(370));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(370));
+    expect(tasks, hasLength(378));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(378));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -93,7 +93,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(370));
+    expect(entries, hasLength(378));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -133,9 +133,25 @@ void main() {
         ],
       ],
     ]);
+    for (final entry in q3AppendedChoicesV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last.take(1), [entry.value], reason: entry.key);
+      expect(choices.last[2], isFalse, reason: entry.key);
+      expect(choices.last[3], 'wrong', reason: entry.key);
+      choices.removeLast();
+    }
+    expect(
+      entries.where((row) => w7AppliedTaskIdsV1.contains(row[2])),
+      hasLength(8),
+    );
     final legacyEntries = entries
         .where(
-          (row) => !_asm05NewTaskIds.contains(row[2]) && row[2] != boardRepair,
+          (row) =>
+              !_asm05NewTaskIds.contains(row[2]) &&
+              !w7AppliedTaskIdsV1.contains(row[2]) &&
+              row[2] != boardRepair,
         )
         .toList(growable: false);
     expect(legacyEntries, hasLength(367));
@@ -1716,7 +1732,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(370));
+    expect(taskIndex, hasLength(378));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;
