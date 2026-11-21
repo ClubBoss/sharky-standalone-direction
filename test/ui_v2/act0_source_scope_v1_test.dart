@@ -531,6 +531,8 @@ void main() {
       ...w4MinRaiseTaskIdsV1,
       ...w11ExplicitStreetHistoryIds,
       ...w12ExplicitFlopHistoryIds,
+      // Full ledger now records each prior street and its contributions.
+      'w11_checkpoint_mixed_table_line',
       // The newly authored Call frame now supplies its full blind prefix,
       // folds, street actions and positive remaining stacks.
       'actions_call_drill',

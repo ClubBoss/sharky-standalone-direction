@@ -3703,39 +3703,60 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_mixed_table_line',
   caption:
-      'Real table. HJ opens 2.5 BB. You call BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.',
+      "HJ makes it 2.5 BB. You call on BTN. Both start the flop with 30 BB behind. HJ bets 5 BB into 8 BB.",
   hint: 'Read seat, hand, board, price, and stack before choosing.',
   question: 'Which line continues in position and keeps HJ’s weaker bets in?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroAJsCards,
-      boardCards: _boardA84TwoToneCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 13 BB',
-      toCallLabel: 'To call 5 BB',
-      centerLabel: 'BTN, top pair, 30 BB',
-      highlightedSeatIds: const ['hj', 'btn'],
-      handContributions: _act0SingleStreetBetContributionsV1(
+  table:
+      _day7TableV1(
+        hero: 'btn',
+        hand: _heroAJsCards.map((card) => card.label).join(' '),
         street: PokerStreet.flop,
-        bettor: 'hj',
-        betBb: 5,
-        effectiveStackAtHandStartBb: 30,
-        potBeforeBetBb: 8,
+        actor: 'btn',
+        board: _boardA84TwoToneCards,
+        folded: const {"utg", "co", "sb", "bb"},
+        stacks: const {'btn': 32.75, 'hj': 32.75},
+        entries: [
+          for (final entry in _w11QJsPreflopContributions)
+            if (entry.kind == Act0ContributionKindV1.wager &&
+                entry.seatId == 'co')
+              const Act0ContributionV1(
+                PokerStreet.preflop,
+                'hj',
+                Act0ContributionKindV1.wager,
+                2.5,
+              )
+            else
+              entry,
+          const Act0ContributionV1(
+            PokerStreet.flop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            5,
+          ),
+        ],
+        history: const [
+          Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+          Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+          Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+          Act0ActionTrailItemV1(label: "UTG folds"),
+          Act0ActionTrailItemV1(label: "HJ raises to 2.5 BB"),
+          Act0ActionTrailItemV1(label: "CO folds"),
+          Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+          Act0ActionTrailItemV1(label: "SB folds"),
+          Act0ActionTrailItemV1(label: "BB folds"),
+          Act0ActionTrailItemV1(label: "Flop: HJ bets 5 BB"),
+        ],
+        bets: const {
+          'hj': Act0SeatBetStateV1(
+            kind: Act0SeatBetKindV1.bet,
+            label: 'Bet',
+            amountLabel: '5 BB',
+          ),
+        },
+      ).copyWith(
+        showDecisionPremise: true,
+        highlightedSeatIds: const ['hj', 'btn'],
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'HJ bets 5 BB'),
-      ],
-    ),
-    bets: {
-      'hj': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'HJ',
-        amountLabel: '5 BB',
-      ),
-    },
-  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_for_protection',

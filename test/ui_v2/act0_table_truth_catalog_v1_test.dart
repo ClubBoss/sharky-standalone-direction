@@ -134,9 +134,8 @@ void main() {
     );
   });
 
-  test('a partial street ledger caps its source bound by prior investment', () {
+  test('remaining partial street ledgers preserve their source bounds', () {
     const expected = {
-      'w11_checkpoint_mixed_table_line': 22.0,
       'w12_pretty_hand_bad_price_fold': 80.0,
       'w12_revenge_raise_trap': 27.0,
       'w12_checkpoint_full_loop_line': 17.0,
@@ -154,6 +153,34 @@ void main() {
             .handContributions!
             .minimumStartingStackBbBySeat['btn'],
     }, expected);
+  });
+
+  test('W11 full ledgers prove the effective stack at the decision', () {
+    const expected = {'w11_checkpoint_mixed_table_line': 30.0};
+    final tasks = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList);
+    for (final task in tasks.where(
+      (task) => expected.containsKey(task.taskId),
+    )) {
+      final table = task.runner.table;
+      final ledger = table.handContributions!;
+      final hero = table.heroSeatId!;
+      final bettor = ledger.entries.last.seatId;
+      expect(ledger.fromStreet.name, 'preflop', reason: task.taskId);
+      expect(ledger.minimumStartingStackBbBySeat, isEmpty, reason: task.taskId);
+      for (final seat in [hero, bettor]) {
+        final invested = ledger.entries
+            .take(ledger.entries.length - 1)
+            .where((entry) => entry.seatId == seat)
+            .fold<double>(0, (sum, entry) => sum + entry.amountBb);
+        expect(
+          ledger.startingStackBbBySeat[seat]! - invested,
+          expected[task.taskId],
+          reason: task.taskId,
+        );
+      }
+    }
   });
 
   test('enumerates the live source and final runtime projections', () {
@@ -249,7 +276,6 @@ void main() {
     const lateMissingSource = {
       'D2.pot_feasibility': {
         'w9_m_ratio_table_window_transfer',
-        'w11_checkpoint_mixed_table_line',
         'w12_checkpoint_full_loop_line',
         'w12_pretty_hand_bad_price_fold',
         'w12_revenge_raise_trap',
@@ -274,7 +300,7 @@ void main() {
     const lateDecisionProof = {
       'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
-      'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('PASS', 'PASS'),
       'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
       'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
       'w12_revenge_raise_trap': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
