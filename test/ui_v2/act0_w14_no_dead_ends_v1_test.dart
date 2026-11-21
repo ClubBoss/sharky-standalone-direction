@@ -93,30 +93,38 @@ void main() {
       final theory = task.entryPhase == Act0LessonPhaseV1.theory;
       final recap = !theory && task.runner.options.isEmpty;
       var continued = 0;
+      String? selectedPresetId;
       final chosen = <Act0RunnerOptionV1>[];
       final decisions = <Act0CompletedDecisionV1>[];
       await tester.pumpWidget(
         MaterialApp(
           key: ValueKey(task.taskId),
           home: Scaffold(
-            body: Act0LessonRunnerShellV1(
-              runner: task.runner.copyWith(
-                phase: task.entryPhase,
-                teachingStepIndex: task.runner.teachingSteps.length,
+            body: StatefulBuilder(
+              builder: (context, setState) => Act0LessonRunnerShellV1(
+                runner: task.runner.copyWith(
+                  phase: task.entryPhase,
+                  teachingStepIndex: task.runner.teachingSteps.length,
+                  selectedPresetId: selectedPresetId,
+                ),
+                worldNumber: r.world.worldNumber,
+                selectedWorldId: r.world.worldId,
+                selectedLessonId: r.lesson.lessonId,
+                selectedTaskId: task.taskId,
+                selectedTaskTitle: task.title,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                compositionFamily: task.resolvedCompositionFamily,
+                tablePresentation: task.tablePresentation,
+                onBack: () {},
+                onContinueTheory: () => continued++,
+                onChooseOption: chosen.add,
+                onCompletedDecision: decisions.add,
+                onContinueReview: () => continued++,
+                onSelectSizingPreset: (preset) => setState(() {
+                  selectedPresetId = preset.id;
+                }),
+                onConfirmSizingPreset: () {},
               ),
-              worldNumber: r.world.worldNumber,
-              selectedWorldId: r.world.worldId,
-              selectedLessonId: r.lesson.lessonId,
-              selectedTaskId: task.taskId,
-              selectedTaskTitle: task.title,
-              selectedTaskFamily: task.resolvedTaskFamily,
-              compositionFamily: task.resolvedCompositionFamily,
-              tablePresentation: task.tablePresentation,
-              onBack: () {},
-              onContinueTheory: () => continued++,
-              onChooseOption: chosen.add,
-              onCompletedDecision: decisions.add,
-              onContinueReview: () => continued++,
             ),
           ),
         ),
@@ -161,6 +169,8 @@ void main() {
       }
       final correct = task.runner.options.firstWhere((o) => o.isCorrect);
       final candidates = [
+        if (task.runner.sizingConfig.isEnabled)
+          find.byKey(Key('act0_shell_sizing_preset_${correct.id}')),
         find.byKey(Key('act0_shell_option_${correct.id}')),
         if (correct.seatId != null)
           find.byKey(Key('act0_shell_seat_tap_${correct.seatId}')),
@@ -182,6 +192,15 @@ void main() {
       checked++;
       await tester.tap(target, warnIfMissed: false);
       await tester.pumpAndSettle();
+      if (task.runner.sizingConfig.isEnabled) {
+        final confirm = find.byKey(const Key('act0_shell_sizing_confirm_cta'));
+        if (confirm.hitTestable().evaluate().isEmpty) {
+          problems.add('${task.taskId}: sizing confirmation not tappable');
+          continue;
+        }
+        await tester.tap(confirm);
+        await tester.pumpAndSettle();
+      }
       final picked = chosen.isNotEmpty
           ? chosen.last.id
           : decisions.isNotEmpty
