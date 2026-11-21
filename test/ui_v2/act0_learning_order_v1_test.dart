@@ -8,7 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-const _source = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import '../support/act0_shell_source_files_v1.dart';
+
 const _baselineFile = 'test/fixtures/act0_learning_order_baseline_v1.json';
 
 final _route = [
@@ -305,15 +306,19 @@ class _RunnerCopyCheck extends RecursiveAstVisitor<void> {
   }
 }
 
-Set<String> _inheritedChoices(String source) {
-  final unit = parseString(content: source).unit;
-  final declarations = {
+Set<String> _inheritedChoices(Iterable<String> sources) {
+  final declarations = <String, Expression>{};
+  for (final source in sources) {
+    final unit = parseString(content: source).unit;
     for (final declaration
-        in unit.declarations.whereType<TopLevelVariableDeclaration>())
-      for (final variable in declaration.variables.variables)
-        if (variable.initializer != null)
-          variable.name.lexeme: variable.initializer!,
-  };
+        in unit.declarations.whereType<TopLevelVariableDeclaration>()) {
+      for (final variable in declaration.variables.variables) {
+        if (variable.initializer != null) {
+          declarations[variable.name.lexeme] = variable.initializer!;
+        }
+      }
+    }
+  }
   final worlds = declarations['_act0PreviewWorlds']! as ListLiteral;
   final check = _RunnerCopyCheck(declarations);
   var rootCount = 0;
@@ -393,7 +398,7 @@ void main() {
   guard('exactRepeatsOutsideBudget', _exactRepeatViolations);
   guard(
     'questionOverridesInheritingOptions',
-    () => _inheritedChoices(File(_source).readAsStringSync()),
+    () => _inheritedChoices(readAct0ShellStateCatalogSourcesV1()),
   );
   guard('wrongFeedbackEqualsCorrect', _feedbackCollisions);
 }
