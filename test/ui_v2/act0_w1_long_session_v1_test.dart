@@ -104,6 +104,7 @@ Future<int> _openSavedCourseTask(
   WidgetTester t, {
   required String worldId,
   required String taskId,
+  bool finishTeaching = true,
 }) async {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(worldId);
@@ -169,8 +170,9 @@ Future<int> _openSavedCourseTask(
   );
   final shell = find.byType(Act0LessonRunnerShellV1);
   expect(t.widget<Act0LessonRunnerShellV1>(shell).selectedTaskId, taskId);
-  while (t.widget<Act0LessonRunnerShellV1>(shell).runner.activeTeachingStep !=
-      null) {
+  while (finishTeaching &&
+      t.widget<Act0LessonRunnerShellV1>(shell).runner.activeTeachingStep !=
+          null) {
     expect(
       await _tapFirst(t, [
         find.byKey(const Key('act0_shell_theory_continue_cta')),
@@ -695,8 +697,8 @@ void main() {
     (
       'a W10 blind-overfold miss reopens the one-lever exercise',
       'world_10',
-      'w10_checkpoint_table_notice',
-      'rewrite_everything',
+      'w10_checkpoint_lever_line',
+      'fold',
       'w10_vs_nit_open_wider',
     ),
     (
@@ -826,6 +828,35 @@ void main() {
     );
     expect(saved['earnedXp'], priorXp);
     expect(saved['skippedTaskIds'], isEmpty);
+  });
+
+  testWidgets('W10 text theory opens without a table', (t) async {
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_10',
+      taskId: 'w10_player_type_intro',
+      finishTeaching: false,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'w10_player_type_intro');
+    expect(
+      runner.runner.activeTeachingStep?.body,
+      contains('A nit plays few hands and folds a lot.'),
+    );
+    expect(
+      find.textContaining('A nit', findRichText: true),
+      findsWidgets,
+      reason: t
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data ?? text.textSpan?.toPlainText())
+          .whereType<String>()
+          .toList()
+          .join(' | '),
+    );
+    expect(find.byKey(const Key('act0_shell_table')), findsNothing);
+    expect(t.takeException(), isNull);
   });
 
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
@@ -1106,7 +1137,7 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 389 : 275);
+        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 398 : 275);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

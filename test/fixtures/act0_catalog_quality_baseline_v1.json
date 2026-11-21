@@ -1,9 +1,5 @@
 {
   "btn_share_by_world": {
-    "world_10": {
-      "btn_count": 22,
-      "table_tasks": 22
-    },
     "world_11": {
       "btn_count": 21,
       "table_tasks": 21
@@ -33,21 +29,20 @@
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 200,
     "13.intro_over_100_words": 85,
-    "14.duplicate_theory_in_lesson": 231,
-    "15.internal_jargon": 397,
-    "16.extreme_wrong_option": 320,
-    "17.single_format_lesson": 48,
+    "14.duplicate_theory_in_lesson": 232,
+    "15.internal_jargon": 406,
+    "16.extreme_wrong_option": 332,
+    "17.single_format_lesson": 50,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 67,
     "20.hero_qq_per_world": 19,
-    "21.duplicate_wrong_reason": 568,
-    "22.bet_into_pot": 26,
+    "21.duplicate_wrong_reason": 592,
+    "22.bet_into_pot": 30,
     "23.pot_with_bet": 6,
-    "24.call_equity": 24,
+    "24.call_equity": 29,
     "25.street_stack": 26
   },
   "findings": [
-    "11.btn_share_per_world|world_10",
     "11.btn_share_per_world|world_11",
     "11.btn_share_per_world|world_12",
     "11.btn_share_per_world|world_5",
@@ -103,7 +98,6 @@
     "12.two_option_w1_w5|turn_river_changes_w5_turn_hits",
     "12.two_option_w1_w5|what_poker_is_pot_stack",
     "12.two_option_w1_w5|your_first_hand_action_trail",
-    "17.single_format_lesson|adjust_one_lever|statement",
     "17.single_format_lesson|blinds_action_order|seatTap",
     "17.single_format_lesson|bubble_risk_premium|statement",
     "17.single_format_lesson|cards_ranks_suits|statement",
@@ -112,13 +106,10 @@
     "17.single_format_lesson|hand_rankings_table|statement",
     "17.single_format_lesson|hand_rankings_upper|statement",
     "17.single_format_lesson|m_ratio_zones_lite|statement",
-    "17.single_format_lesson|player_adjustment_checkpoint|statement",
     "17.single_format_lesson|showdown_winning|statement",
     "17.single_format_lesson|straight_draws|statement",
     "17.single_format_lesson|tournament_pressure_checkpoint|statement",
     "17.single_format_lesson|what_poker_is_content|statement",
-    "18.same_format_streak|world_10|w10_guardrail_sample_size|statement",
-    "18.same_format_streak|world_10|w10_nit_tag|statement",
     "18.same_format_streak|world_11|w11_trigger_bad_price_fold|statement",
     "18.same_format_streak|world_1|actions_theory|actionDecision",
     "18.same_format_streak|world_1|positions_theory|seatTap",

@@ -86,6 +86,34 @@ void main() {
     },
   );
 
+  test('W10 counts winning cards against a known set', () {
+    final practice = _tasks['w10_outs_and_turn_price']!.runner;
+    final day7 = act0NewReviewTasksV1
+        .singleWhere(
+          (entry) =>
+              entry.task.taskId ==
+              'spaced_review_w10_exploit_guardrails_pot_to_call_v1',
+        )
+        .task
+        .runner;
+    for (final (runner, hand, price, best) in [
+      (practice, '9c 9d', 2 / 14.5, 'call_seven_outs'),
+      (day7, '8c 8d', 8 / 26.5, 'fold'),
+    ]) {
+      final table = runner.table;
+      final amounts = table.handContributions!.amounts(
+        seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: table.decisionSeatId,
+      );
+      final call = amounts.toCallBb!;
+      final actualPrice = call / (amounts.potBb + call);
+      expect(actualPrice, closeTo(price, 1e-9));
+      expect(_showdownShare(table, hand), closeTo(7 / 44, 1e-9));
+      expect(runner.options.singleWhere((option) => option.isCorrect).id, best);
+      expect(7 / 44 > actualPrice, best != 'fold');
+    }
+  });
+
   test('the same price permits opposite equity comparisons', () {
     // These are legal opponent holdings used as counterexamples. A bet does
     // not establish how often either holding is in the opponent's range.

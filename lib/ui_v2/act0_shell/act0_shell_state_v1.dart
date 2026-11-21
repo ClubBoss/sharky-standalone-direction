@@ -1877,7 +1877,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     worldId: 'world_10',
     worldNumber: 10,
     title: 'Player Adjustment',
-    subtitle: 'Adjust one lever at a time against real player types.',
+    subtitle: 'Change how you play when the table gives you a clear read.',
     status: Act0WorldStateV1.locked,
     progressLabel: act0LockedWorldProgressLabelV1(isImmediateNext: false),
     primaryCtaLabel: act0LockedWorldPrimaryCtaLabelV1(isImmediateNext: false),
