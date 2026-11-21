@@ -2765,7 +2765,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
   - [wrong] 46% · Call [6 BB] — Compare with the break-even chance. The pot is 13 BB before you add your call, so include the 6 BB once more. The break-even chance is about 32%, and Q-7 wins 25%.
     BETTER ANSWER: 32% · Fold
   + [correct] 32% · Fold — Price and chance compared. 6 ÷ (6 + 13) is about 31.6%. Your 25% chance is below that threshold, so fold.
-  - [suboptimal] 32% · Call — The threshold is close. Compare it with your chance. Calling 6 BB into the 13 BB pot makes 19 BB. Break-even is about 32%, and Q-7 wins 25%. Calling loses chips even though you identified the price.
+  - [wrong] 32% · Call — The threshold is close. Compare it with your chance. Calling 6 BB into the 13 BB pot makes 19 BB. Break-even is about 32%, and Q-7 wins 25%. Calling loses chips even though you identified the price.
     BETTER ANSWER: 32% · Fold
 
 TASK w4_price_recap [review] Price recap
@@ -2875,7 +2875,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Bet pot-size [6 BB] — Not quite. The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.
     BETTER ANSWER: Check
   + [correct] Check — Check is the cleaner line. Checking lets you see the next card for free. The model gives the bluff no chance to fold a better hand.
-  - [suboptimal] Bet one-third [2 BB] — A smaller losing bet still costs chips. A 2 BB bet risks less than 6 BB, but on A-7-2 the stated better hands still call. Checking lets K-Q see the turn without paying for those folds.
+  - [wrong] Bet one-third [2 BB] — A smaller losing bet still costs chips. A 2 BB bet risks less than 6 BB, but on A-7-2 the stated better hands still call. Checking lets K-Q see the turn without paying for those folds.
     BETTER ANSWER: Check
 
 TASK w4_bluff_recap [review] Bluff recap

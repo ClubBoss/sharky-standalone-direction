@@ -694,7 +694,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Check',
       betterAnswerLabel: 'Check',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A smaller losing bet still costs chips.',
       feedbackReason:
           'A 2 BB bet risks less than 6 BB, but on A-7-2 the stated better hands still call. Checking lets K-Q see the turn without paying for those folds.',
@@ -1246,7 +1246,7 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
       isCorrect: false,
       preferredLabel: '32% · Fold',
       betterAnswerLabel: '32% · Fold',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The threshold is close. Compare it with your chance.',
       feedbackReason:
           'Calling 6 BB into the 13 BB pot makes 19 BB. Break-even is about 32%, and Q-7 wins 25%. Calling loses chips even though you identified the price.',
