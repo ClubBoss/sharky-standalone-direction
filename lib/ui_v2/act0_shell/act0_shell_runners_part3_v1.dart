@@ -1447,6 +1447,7 @@ final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
       betterAnswerLabel: 'Raise to 5 BB',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too small to be legal.',
+      repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
           '4 BB adds 1 BB to HJ\'s 3 BB raise, which is below the 2 BB increase from 1 BB to 3 BB, so 4 BB is illegal.',
     ),
@@ -1457,8 +1458,9 @@ final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
       preferredLabel: 'Raise to 5 BB',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Legal minimum reraise.',
+      repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
-          'HJ raised 2 BB over the 1 BB blind (1 BB to 3 BB), so adding 2 BB makes 5 BB the smallest legal reraise.',
+          'HJ raised 2 BB over the 1 BB blind (1 BB to 3 BB), so adding 2 BB makes 5 BB the smallest legal reraise. The rule sets the minimum, and with A-K suited you would usually choose a larger 3-bet here.',
     ),
     Act0RunnerOptionV1(
       id: 'six_bb',
@@ -1468,6 +1470,7 @@ final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
       betterAnswerLabel: 'Raise to 5 BB',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Larger than the minimum.',
+      repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
           '6 BB adds 3 BB to HJ\'s 3 BB raise, which is legal but 1 BB larger than the 5 BB minimum reraise.',
     ),
@@ -1492,6 +1495,7 @@ final _world4MinRaisePostflopRunner = _world4SizingIntroRunner.copyWith(
       betterAnswerLabel: '8 BB',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too small to be legal.',
+      repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
           '6 BB adds 2 BB to BB\'s 4 BB bet, which is below the 4 BB bet size, so 6 BB is illegal.',
     ),
@@ -1503,6 +1507,7 @@ final _world4MinRaisePostflopRunner = _world4SizingIntroRunner.copyWith(
       betterAnswerLabel: '8 BB',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Larger than the minimum.',
+      repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
           '12 BB adds 8 BB to BB\'s 4 BB bet, which is legal but 4 BB larger than the 8 BB minimum raise.',
     ),
@@ -1513,6 +1518,7 @@ final _world4MinRaisePostflopRunner = _world4SizingIntroRunner.copyWith(
       preferredLabel: '8 BB',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Legal minimum raise.',
+      repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
           'BB bet 4 BB on the flop, so adding 4 BB on top of 4 BB makes 8 BB the smallest legal raise.',
     ),

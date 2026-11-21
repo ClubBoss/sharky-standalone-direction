@@ -678,7 +678,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     4,
     "small_half_pot",
-    "pot_to_call",
+    "minimum_raise",
     _day7PostflopV1("co", "Kc Jd", "Kd 7c 2s", betBb: 3),
     question:
         "BB bets 3 BB on the flop. What is the smallest legal raise total from CO?",
