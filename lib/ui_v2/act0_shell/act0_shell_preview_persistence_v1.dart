@@ -377,6 +377,13 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
               ? const <String>[]
               : parsed.dailyCompletedTaskIds.where(validTaskIds.contains),
         );
+      _dailyCompletedLessonIds
+        ..clear()
+        ..addAll(
+          isNewDay
+              ? const <String>[]
+              : parsed.dailyCompletedLessonIds.where(validLessonIds.contains),
+        );
       _dailyCompletedRepCount =
           (isNewDay ||
               unverifiedLegacyDailyCount ||
@@ -446,6 +453,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       // Daily deck resets on new day
       if (isNewDay) {
         _dailyCompletedTaskIds.clear();
+        _dailyCompletedLessonIds.clear();
         _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
         _dailyCompletedRepCount = 0;
         _rapidPracticeLoop = false;
@@ -920,6 +928,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     if (_dailyRepCountDay == today) return;
     _dailyCompletedRepCount = 0;
     _dailyCompletedTaskIds.clear();
+    _dailyCompletedLessonIds.clear();
     _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
     _dailyRepCountDay = today;
   }
@@ -988,6 +997,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       dailyCompletedRepCount: _dailyCompletedRepCount,
       dailyPracticeQueue: _dailyPracticeQueue,
       dailyCompletedTaskIds: _dailyCompletedTaskIds,
+      dailyCompletedLessonIds: _dailyCompletedLessonIds,
       persistedStreakDays: currentStreak,
       retentionSequence: _retentionSequence,
       retentionMemory: _retentionMemoryByTaskId.values.toList(growable: false),

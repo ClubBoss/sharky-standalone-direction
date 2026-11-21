@@ -742,6 +742,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _lessonRunQuickFixTaskIds.clear();
       _lessonRunDeepLeakTaskIds.clear();
       _dailyCompletedTaskIds.clear();
+      _dailyCompletedLessonIds.clear();
       _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
       _dailyCompletedRepCount = 0;
       _rapidPracticeLoop = false;

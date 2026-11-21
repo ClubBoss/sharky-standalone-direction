@@ -314,7 +314,13 @@ class _PathCardV1 extends StatelessWidget {
               ? '$completedSteps of $totalSteps steps complete'
               : '$totalSteps steps ready'
         : isLocked
-        ? isNextUp && index > 1
+        ? lesson.primaryCtaLabel == 'Clear weak spots'
+              ? _learnCopyV1(
+                  context,
+                  en: 'Clear weak spots in Review to unlock',
+                  ru: 'Разбери слабые места в Разборе, чтобы открыть',
+                )
+              : isNextUp && index > 1
               ? _learnCopyV1(
                   context,
                   en: 'Complete Lesson ${index - 1} to unlock',

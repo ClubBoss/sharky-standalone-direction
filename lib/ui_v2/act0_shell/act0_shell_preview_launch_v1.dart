@@ -549,7 +549,13 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
             ? 'On clear: move into Play and lock the pattern in.'
             : 'On clear: unlock ${nextLesson.title}.',
       Act0LessonStateV1.available => 'Open for practice.',
-      Act0LessonStateV1.locked => 'Opens after the current lesson is cleared.',
+      Act0LessonStateV1.locked =>
+        lesson.primaryCtaLabel == 'Clear weak spots'
+            ? _copyV1(
+                en: 'Clear open weak spots in Review before taking this checkpoint.',
+                ru: 'Разбери открытые слабые места в Разборе, прежде чем открыть чекпоинт.',
+              )
+            : 'Opens after the current lesson is cleared.',
     };
   }
 
@@ -1213,6 +1219,25 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
         );
       }
       return;
+    }
+    if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDrill) {
+      _ensureDailyCountDayV1();
+      final state = widget.state ?? Act0ShellStateV1.sample;
+      final eligible = _dailyDeckEntries(state).map((e) => e.taskId).toSet();
+      if (eligible.isNotEmpty) {
+        if (!_dailyPracticeQueue.isValidFor(eligible) ||
+            _dailyPracticeQueue.nextTaskId == null) {
+          _dailyPracticeQueue = Act0DailyPracticeQueueV1.start(
+            eligible,
+            practicedToday: _dailyCompletedTaskIds,
+          );
+        }
+        _emitPracticeStartedTelemetryV1(practiceGroupId: 'daily');
+        if (_launchDailyPracticeQueueTaskV1()) {
+          _returnToPlayHubOnBack = returnToPlayHub;
+          return;
+        }
+      }
     }
     final lessonId = recommendation.lessonId;
     final taskId = recommendation.taskId;
