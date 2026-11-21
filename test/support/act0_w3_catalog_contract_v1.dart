@@ -39,6 +39,11 @@ const w3NewChoiceContractV1 = <String, List<List<Object?>>>{
     ["call", "Call 2 BB", false, "wrong", "Reraise to 10 BB"],
     ["fold", "Fold", false, "wrong", "Reraise to 10 BB"],
   ],
+  "w3_play_from_blinds_small_blind_medium_raise": [
+    ["raise", "Reraise to 10 BB", true, "correct", "Reraise to 10 BB"],
+    ["call", "Call 2 BB", false, "wrong", "Reraise to 10 BB"],
+    ["fold", "Fold", false, "wrong", "Reraise to 10 BB"],
+  ],
   "w3_play_from_blinds_small_blind_medium_fold": [
     ["call", "Call 2 BB", false, "wrong", "Fold"],
     ["fold", "Fold", true, "correct", "Fold"],

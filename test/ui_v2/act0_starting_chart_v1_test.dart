@@ -147,13 +147,11 @@ void main() {
         expect(chartRaisers(table), ['BTN'], reason: task.taskId);
         switch (table.heroSeat.seatId) {
           case 'sb':
-            final group = chart.expected(table, groupOnly: true);
-            final expected = switch (group) {
-              'Premium' || 'Strong' => 'raise',
-              'Medium' || 'Weak' => 'fold',
-              _ => null,
-            };
-            expect(correct.id, expected, reason: task.taskId);
+            expect(
+              correct.id,
+              chart.smallBlindVsButton(table),
+              reason: task.taskId,
+            );
           case 'bb':
             final amounts = table.handContributions!.amounts(
               actorSeatId: table.heroSeatId,

@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 393 tasks · W1–W12
+SHARKY POKER — EN learning content, 394 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -2356,7 +2356,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w3_play_from_blinds_intro [theory] Two blinds, different choices
 CAPTION: BTN raised and you already posted a blind.
-TEACH: Use the price that is still due. Against one BTN open, use a simple small-blind rule across all four starting-chart groups: reraise Premium and Strong hands, and fold Medium and Weak hands. BB can still act behind you. When you are BB and SB folds, your posted 1 BB reduces what you owe. If the call ends betting, divide the extra call by the final pot after calling. A 1.5 BB call makes this pot 5.5 BB, so the price needs about 27% equity, your share of the pot from winning or splitting.
+TEACH: Use the price that is still due. Against one BTN open from SB, reraise Premium, Strong, and the HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, KJ, QJs, KT, QT) and Weak hands. BB still acts behind you. In BB after SB folds, your posted 1 BB lowers what you owe. If calling ends betting, divide the extra call by the final pot: calling 1.5 BB makes 5.5 BB, needing about 27% equity (your pot share from winning or splitting).
 Q: How does posting a blind change the decision?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Qc Tc | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
@@ -2390,17 +2390,30 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Fold — Read the price and seat. Folding AA from SB hands the 0.5 BB already posted to the pot and gives up a chance to build value against BTN.
     BETTER ANSWER: Reraise to 10 BB
 
-TASK w3_play_from_blinds_small_blind_medium_fold [drill] Small blind with a medium hand
+TASK w3_play_from_blinds_small_blind_medium_raise [drill] Small blind with an HJ medium hand
+CAPTION: BTN opens to 2.5 BB. BB has yet to act.
+Q: What does the small-blind rule say to do with AQo here?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You Ah Qd | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Ah Qd stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
+  + [correct] Reraise to 10 BB — Correct. AQo is in the HJ Medium row. Against a wide BTN open from SB, reraising to 10 BB (9.5 BB more) takes the lead and stops BB from entering cheaply.
+  - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB from SB with AQo leaves you out of position against BTN and invites BB in behind you for a cheap price.
+    BETTER ANSWER: Reraise to 10 BB
+  - [wrong] Fold — Read the price and seat. Folding AQo from SB against one BTN open gives up the 0.5 BB already posted and folds a hand strong enough to reraise in the HJ Medium row.
+    BETTER ANSWER: Reraise to 10 BB
+
+TASK w3_play_from_blinds_small_blind_medium_fold [drill] Small blind with a CO medium hand
 CAPTION: BTN opens to 2.5 BB. BB has yet to act.
 Q: What does the small-blind rule say to do with KJo here?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd Jc | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Kd Jc stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, Medium hands fold.
+  - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, the CO Medium row folds.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. KJo is in the Medium group. Against a BTN open from SB, only Premium and Strong hands reraise; folding KJo saves 2 BB out of position with BB still behind.
-  - [wrong] Reraise to 10 BB — Read the price and seat. Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a Medium hand when this rule reserves reraises for Premium and Strong hands.
+  + [correct] Fold — Correct. KJo is in the CO Medium row. Against a BTN open from SB, only Premium, Strong, and the HJ Medium row reraise; folding KJo saves 2 BB out of position with BB still behind.
+  - [wrong] Reraise to 10 BB — Read the price and seat. Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a CO Medium hand when this rule reserves reraises for Premium, Strong, and the HJ Medium row.
     BETTER ANSWER: Fold
 
 TASK w3_play_from_blinds_big_blind_price [drill] Read the remaining price

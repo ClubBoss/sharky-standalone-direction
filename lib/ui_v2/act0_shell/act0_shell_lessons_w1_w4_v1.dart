@@ -3818,7 +3818,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
     title: 'Play from the blinds',
     subtitle: 'Your posted blind changes the price of calling.',
     phaseLabel: 'Blinds',
-    rewardXp: 48,
+    rewardXp: 56,
     sourceTasks: [
       Act0LessonTaskV1(
         taskId: 'intro',
@@ -3897,8 +3897,42 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'small_blind_medium_raise',
+        title: 'Small blind with an HJ medium hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'Ah Qd',
+          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
+          question: 'What does the small-blind rule say to do with AQo here?',
+          options: const [
+            (
+              id: 'raise',
+              label: 'Reraise to 10 BB',
+              reason:
+                  'AQo is in the HJ Medium row. Against a wide BTN open from SB, reraising to 10 BB (9.5 BB more) takes the lead and stops BB from entering cheaply.',
+            ),
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Calling 2 BB from SB with AQo leaves you out of position against BTN and invites BB in behind you for a cheap price.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'Folding AQo from SB against one BTN open gives up the 0.5 BB already posted and folds a hand strong enough to reraise in the HJ Medium row.',
+            ),
+          ],
+          correct: 0,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'small_blind_medium_fold',
-        title: 'Small blind with a medium hand',
+        title: 'Small blind with a CO medium hand',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3BlindDefenseRunner(
           hero: 'sb',
@@ -3910,19 +3944,19 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               id: 'call',
               label: 'Call 2 BB',
               reason:
-                  'Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, Medium hands fold.',
+                  'Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, the CO Medium row folds.',
             ),
             (
               id: 'fold',
               label: 'Fold',
               reason:
-                  'KJo is in the Medium group. Against a BTN open from SB, only Premium and Strong hands reraise; folding KJo saves 2 BB out of position with BB still behind.',
+                  'KJo is in the CO Medium row. Against a BTN open from SB, only Premium, Strong, and the HJ Medium row reraise; folding KJo saves 2 BB out of position with BB still behind.',
             ),
             (
               id: 'raise',
               label: 'Reraise to 10 BB',
               reason:
-                  'Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a Medium hand when this rule reserves reraises for Premium and Strong hands.',
+                  'Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a CO Medium hand when this rule reserves reraises for Premium, Strong, and the HJ Medium row.',
             ),
           ],
           correct: 1,
