@@ -3092,7 +3092,7 @@ REVIEW: Read dry or wet first so the board tells you how much can change.
 
 TASK connected_boards_w5_connected_intro [theory] Connected ranks
 CAPTION: Connected ranks sit close together, like 9-8-7.
-TEACH: Ranks can connect. Cards close in rank create more straight possibilities.
+TEACH: Ranks can connect. Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.
 TEACH LABELS: 9, 8, 7, Connected
 Q: What makes a board connected?
 HINT [theoryOnly]: Close ranks create more straight paths.

@@ -2563,7 +2563,8 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Ranks can connect.',
-      body: 'Cards close in rank create more straight possibilities.',
+      body:
+          'Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.',
       focusLabels: <String>['9', '8', '7', 'Connected'],
     ),
   ],
