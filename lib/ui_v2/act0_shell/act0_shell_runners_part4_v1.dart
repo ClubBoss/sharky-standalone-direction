@@ -1463,7 +1463,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'panic_now',
-      label: 'Shove the next playable hand right away',
+      label: 'Go all-in with the next playable hand right away',
       isCorrect: false,
       preferredLabel: 'Prepare action windows before red-zone panic',
       betterAnswerLabel: 'Prepare action windows before red-zone panic',
@@ -1650,7 +1650,7 @@ final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'jam_any_two',
-      label: 'Open-shove wide hands without checking position',
+      label: 'Go all-in with wide hands without checking position',
       isCorrect: false,
       preferredLabel: 'Apply selective open pressure',
       betterAnswerLabel: 'Apply selective open pressure',
@@ -1682,7 +1682,7 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_to_money',
-      label: 'Fold playable shoves to try to ladder into the money',
+      label: 'Fold playable all-in hands to try to ladder into the money',
       isCorrect: false,
       preferredLabel: 'Still take practical all-in spots before blinded out',
       betterAnswerLabel: 'Still take practical all-in spots before blinded out',

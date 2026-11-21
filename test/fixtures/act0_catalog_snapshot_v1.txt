@@ -4310,7 +4310,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Prepare action windows before red-zone panic — Sharp read. Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner all-in and steal windows here.
   - [wrong] Ignore urgency until the red zone — Not quite. Waiting until the stack is critical often removes good options. Yellow zone is where you prepare instead of drift.
     BETTER ANSWER: Prepare action windows before red-zone panic
-  - [suboptimal] Shove the next playable hand right away — Too rushed. Yellow zone needs sharper planning, not panic. You still want selective aggression with room for better spots.
+  - [suboptimal] Go all-in with the next playable hand right away — Too rushed. Yellow zone needs sharper planning, not panic. You still want selective aggression with room for better spots.
     BETTER ANSWER: Prepare action windows before red-zone panic
 
 TASK w9_m_ratio_table_window_transfer [drill] Yellow-zone table read
@@ -4369,7 +4369,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Apply selective open pressure — Solid understanding. Big stacks can leverage bubble pressure because medium stacks cannot call as freely.
   - [suboptimal] Avoid stealing to protect stack — Too passive. Protection matters, but freezing misses one of the strongest bubble advantages of covering stacks.
     BETTER ANSWER: Apply selective open pressure
-  - [wrong] Open-shove wide hands without checking position — Not that extreme. Leverage is selective, not reckless. You still need position, blockers, and player tendencies.
+  - [wrong] Go all-in with wide hands without checking position — Not that extreme. Leverage is selective, not reckless. You still need position, blockers, and player tendencies.
     BETTER ANSWER: Apply selective open pressure
 
 TASK w9_bubble_short_stack [drill] Short stack urgency
@@ -4379,7 +4379,7 @@ HINT [theoryOnly]: Short stacks still need survival spots, not endless folding.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Still take practical all-in spots before blinded out — Well done. Bubble pressure matters, but short stacks cannot fold forever. Survival still needs practical action windows before the stack disappears.
-  - [suboptimal] Fold playable shoves to try to ladder into the money — Too passive. Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.
+  - [suboptimal] Fold playable all-in hands to try to ladder into the money — Too passive. Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.
     BETTER ANSWER: Still take practical all-in spots before blinded out
   - [wrong] Call off too light — Not quite. Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.
     BETTER ANSWER: Still take practical all-in spots before blinded out

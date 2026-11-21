@@ -184,7 +184,7 @@ void main() {
       'Still take practical all-in spots before blinded out':
           'Still take practical jam spots before blinded out',
       'Use oversized all-in bets with strong hands': 'Only shove strong hands',
-      'Open-shove wide hands without checking position':
+      'Go all-in with wide hands without checking position':
           'Jam any two cards every hand',
       'Go all-in to deny equity': 'Jam to deny equity',
       'You have top pair. An opponent could be drawing to a flush':
@@ -212,7 +212,7 @@ void main() {
       'Keep betting across streets': 'Keep betting on every street',
       'The paired board leaves seven-containing combinations unchanged.':
           'The paired board leaves every seven-containing combination available.',
-      'Fold playable shoves to try to ladder into the money':
+      'Fold playable all-in hands to try to ladder into the money':
           'Fold every hand until payouts begin',
       'Fold strong top-range hands to avoid busting':
           'Over-fold every close hand',
@@ -262,7 +262,8 @@ void main() {
       'Pass thin edges until the money is reached': 'Avoid all risk until paid',
       'Wait for AA or KK before entering a pot': 'Wait only for premium pairs',
       'Wait for top pairs like AA or KK': 'Wait for perfect premium only',
-      'Shove the next playable hand right away': 'Force any spot immediately',
+      'Go all-in with the next playable hand right away':
+          'Force any spot immediately',
       'Push weak offsuit hands before the blinds hit':
           'Panic with any two cards now',
       'Fold until you pick up pocket aces': 'Wait only for aces',
