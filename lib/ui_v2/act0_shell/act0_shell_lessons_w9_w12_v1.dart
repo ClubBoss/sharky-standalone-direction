@@ -374,9 +374,9 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
   ),
   Act0LessonCardV1(
     lessonId: 'adjust_one_lever',
-    title: 'Adjust one lever',
+    title: 'Adjust one piece',
     subtitle: 'Change one action size or frequency, not everything at once.',
-    phaseLabel: 'Single-lever',
+    phaseLabel: 'Single change',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
     isLocked: true,
@@ -428,7 +428,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w10_one_lever_recap',
-        title: 'One-lever recap',
+        title: 'One-change recap',
         phase: Act0LessonPhaseV1.review,
         runner: _w10OneLeverRecapRunner,
         rewardXp: 16,
@@ -438,8 +438,8 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
   ),
   Act0LessonCardV1(
     lessonId: 'exploit_guardrails',
-    title: 'Exploit guardrails',
-    subtitle: 'Exploit with discipline so your line stays coherent.',
+    title: 'Adjustment guardrails',
+    subtitle: 'Adjust with discipline so your line stays coherent.',
     phaseLabel: 'Guardrails',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -450,7 +450,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w10_guardrails_intro',
-        title: 'Exploit without chaos',
+        title: 'Adjust without chaos',
         phase: Act0LessonPhaseV1.theory,
         runner: _w10ExploitGuardrailsIntroRunner,
         rewardXp: 7,
@@ -495,7 +495,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
     lessonId: 'player_adjustment_checkpoint',
     title: 'Player-adjustment checkpoint',
     subtitle:
-        'Tag tendency, adjust one lever, keep guardrails, then transfer to real play.',
+        'Tag tendency, make one adjustment, keep guardrails, then carry to real play.',
     phaseLabel: 'Checkpoint',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -506,7 +506,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w10_checkpoint_intro',
-        title: 'Three-step exploit loop',
+        title: 'Three-step adjustment cycle',
         phase: Act0LessonPhaseV1.theory,
         runner: _w10PlayerTypeIntroRunner,
         rewardXp: 7,
@@ -522,7 +522,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w10_checkpoint_lever_line',
-        title: 'One-lever exploit line',
+        title: 'One-change adjustment line',
         phase: Act0LessonPhaseV1.drill,
         runner: _w10CheckpointLeverLineRunner,
         rewardXp: 10,
@@ -538,7 +538,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w10_checkpoint_table_notice',
-        title: 'Real-table exploit read',
+        title: 'Real-table adjustment read',
         phase: Act0LessonPhaseV1.drill,
         runner: _w10TableAdjustmentNoticeRunner,
         rewardXp: 10,
@@ -627,7 +627,7 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w11_trigger_intro',
-        title: 'Trigger-first loop',
+        title: 'Trigger-first routine',
         phase: Act0LessonPhaseV1.theory,
         runner: _w11TriggerReadIntroRunner,
         rewardXp: 7,
@@ -679,9 +679,9 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
   ),
   Act0LessonCardV1(
     lessonId: 'post_session_review_loop',
-    title: 'Post-session review loop',
+    title: 'Post-session review habit',
     subtitle: 'Convert one leak into one repair target for tomorrow.',
-    phaseLabel: 'Review loop',
+    phaseLabel: 'Review habit',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
     isLocked: true,
@@ -715,7 +715,7 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w11_review_loop_recap',
-        title: 'Review-loop recap',
+        title: 'Review-habit recap',
         phase: Act0LessonPhaseV1.review,
         runner: _w11ReviewLoopRecapRunner,
         rewardXp: 16,
@@ -725,8 +725,8 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
   ),
   Act0LessonCardV1(
     lessonId: 'real_play_transfer_checkpoint',
-    title: 'Real-play transfer checkpoint',
-    subtitle: 'Plan, trigger, review, then repeat as a daily loop.',
+    title: 'Real-play session checkpoint',
+    subtitle: 'Plan, trigger, review, then repeat as a daily cycle.',
     phaseLabel: 'Checkpoint',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
@@ -737,7 +737,7 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w11_checkpoint_intro',
-        title: 'Transfer loop map',
+        title: 'Session cycle map',
         phase: Act0LessonPhaseV1.theory,
         runner: _w11SessionPlanIntroRunner,
         rewardXp: 7,
@@ -918,7 +918,7 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w12_confidence_intro',
-        title: 'Calm assertive baseline',
+        title: 'Calm assertive posture',
         phase: Act0LessonPhaseV1.theory,
         runner: _w12ConfidenceDisciplineIntroRunner,
         rewardXp: 7,
@@ -983,7 +983,7 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w12_checkpoint_intro',
-        title: 'Mindset loop map',
+        title: 'Mindset routine map',
         phase: Act0LessonPhaseV1.theory,
         runner: _w12DecisionQualityIntroRunner,
         rewardXp: 7,
@@ -1015,7 +1015,7 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w12_checkpoint_full_loop_line',
-        title: 'Full loop line',
+        title: 'Full routine line',
         phase: Act0LessonPhaseV1.drill,
         runner: _w12CheckpointFullLoopLineRunner,
         rewardXp: 10,

@@ -680,10 +680,7 @@ void main() {
       expect(target.phase, Act0LessonPhaseV1.drill);
       expect(tasks[tasks.indexOf(source) + 1].taskId, target.taskId);
       expect(source.runner.question, 'Which blind posts 1 BB?');
-      expect(
-        target.runner.question,
-        'Tap the blind that sets the 1 BB baseline.',
-      );
+      expect(target.runner.question, 'Tap the blind that sets the 1 BB unit.');
       expect(target.runner.options.map((option) => option.id), <String>[
         'bb',
         'sb',
@@ -697,7 +694,7 @@ void main() {
       );
       final expectedReasons = <String, String>{
         'bb':
-            'BB posts the full 1 BB blind, so later prices count from that baseline.',
+            'BB posts the full 1 BB blind, so later prices count from that 1 BB post.',
         'sb':
             'SB posts only 0.5 BB. BB is the full 1 BB post players count from.',
       };

@@ -1766,7 +1766,9 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
       for (final choiceId in spec.choiceIds)
         Act0RunnerOptionV1(
           id: choiceId,
-          label: spec.choiceLabels[choiceId]!,
+          label: choiceId == 'pair_does_not_change_combos'
+              ? 'The paired board leaves seven-containing combinations unchanged.'
+              : spec.choiceLabels[choiceId]!,
           isCorrect: choiceId == spec.expectedChoiceId,
           preferredLabel: spec.choiceLabels[spec.expectedChoiceId]!,
           quality: choiceId == spec.expectedChoiceId

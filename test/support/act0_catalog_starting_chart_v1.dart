@@ -41,17 +41,16 @@ String _groupName(_OpeningGroup group) =>
     group.name[0].toUpperCase() + group.name.substring(1);
 
 String renderStartingChartOpening() => [
-  'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.',
+  'Sharky 6-max starting chart. Open means the first raise preflop.',
   for (final rule in _openingRules)
-    '${_groupName(rule.group)} | ${rule.entries.join(', ')} | Open from ${rule.firstSeat} through BTN.',
-  '$_weakGroup | Other hands in this course model | Fold.',
+    '${_groupName(rule.group)}: ${rule.entries.join(', ')} (${rule.firstSeat}–BTN).',
+  '$_weakGroup: other hands (Fold).',
 ].join('\n\n');
 
 String renderStartingChartFacingRaise() =>
-    'Against one ${_openerSeats.join(' or ')} raise, this chart calls on $_callerSeat with '
-    '${_callHands.take(_callHands.length - 1).join(', ')} or ${_callHands.last}. '
-    'It folds $_weakGroup hands such as A7o and J8o. '
-    'Read the opener, your seat, and your cards before applying the rule.';
+    'Facing one ${_openerSeats.join(' or ')} raise, $_callerSeat calls with '
+    '${_callHands.take(_callHands.length - 1).join(', ')} or ${_callHands.last} '
+    'and folds $_weakGroup hands (A7o, J8o).';
 
 typedef StartingChartRow = ({String group, List<String> seats});
 

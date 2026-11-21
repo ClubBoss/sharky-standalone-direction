@@ -412,6 +412,7 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
 final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
   lessonId: 'w4_value_missed',
   caption: 'BB checked. Your cards are an ace and a jack.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   table: _world4ValueBetRunner.table.copyWith(
     heroCards: const [
       Act0CardStateV1(rank: 'A', suit: 's'),
@@ -521,6 +522,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
 final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
   lessonId: 'w4_bad_bluff',
   caption: 'You hold a king and a queen on ace, seven and two.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Use the response the question gives for better hands.',
   question:
       'In this 6-max micro-stakes example, assume BB calls a pot-size bet with every better hand and folds every worse hand. Which option avoids paying for a bluff that cannot make a better hand fold?',
@@ -605,6 +607,7 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_protection_bet',
   caption: 'BB checked on queen, nine and four.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Betting protects value by denying that free card.',
   question:
       'BB has checked. In this 6-max micro-stakes example, assume BB has ace-king and can pair either card. Which option makes BB pay to see the next card or fold?',
@@ -683,7 +686,8 @@ final _world4ProtectionRecapRunner = _world4ProtectionIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Protection checklist.',
-      body: 'Ask if checking gives away the next card too cheaply.',
+      body:
+          'Ask if checking gives away the next card too cheaply. When your made hand can be beaten by later cards, betting makes the other player pay chips to continue instead of seeing a free turn card.',
       focusLabels: <String>['Next card', 'Free card', 'Bet'],
     ),
   ],
@@ -1097,6 +1101,7 @@ final _world4SmallBetRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_small_bet',
   caption: 'There are 6 BB in the pot.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'One-third pot is the smallest simple pressure size here.',
   question: 'Which size is one-third pot?',
   options: const <Act0RunnerOptionV1>[
@@ -1139,6 +1144,7 @@ final _world4HalfPotRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_half_pot_bet',
   caption: 'There are 6 BB in the pot.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint:
       'Half-pot means betting half the pot, not the smallest or biggest size.',
   question: 'Which size is half-pot?',
@@ -1183,6 +1189,7 @@ final _world4PotBetRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_pot_bet',
   caption: 'Pot is 6 BB. A pot-size bet is heavy pressure.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Start with the pot just before the bet.',
   question: 'Which size is pot-size?',
   options: const <Act0RunnerOptionV1>[
@@ -1863,6 +1870,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_dry_board',
   caption: 'Read the three flop cards.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Few obvious straight or flush paths are visible.',
   question: 'What texture is this?',
   options: const <Act0RunnerOptionV1>[
@@ -1947,7 +1955,8 @@ final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Texture checklist.',
-      body: 'Look at rank connection and suits before choosing an action.',
+      body:
+          'Look at rank connection and suits before choosing an action. Spread ranks with mixed suits stay calmer across streets because fewer draws can form. Close ranks or matching suits add draw pressure, while a paired flop cuts down matching combinations. Check both shapes first so your plan fits how fast the board can shift.',
       focusLabels: <String>['Ranks', 'Suits', 'Change'],
     ),
   ],
@@ -2105,8 +2114,8 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
 final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_flush_draw',
-  caption: 'Hero has hearts and the board has hearts.',
-  hint: 'One more heart can improve Hero to a flush.',
+  caption: 'You have hearts and the board has hearts.',
+  hint: 'One more heart can improve your hand to a flush.',
   question: 'What draw is visible?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -2219,47 +2228,46 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_made_hand_vs_flush_draw_transfer',
   caption:
-      'Real table. Hero holds A-spade and J-club on A-heart, 8-heart, 4-club.',
-  hint:
-      'Name Hero’s made hand, then read what the board could give an opponent.',
+      'Real table. You hold A-spade and J-club on A-heart, 8-heart, 4-club.',
+  hint: 'Name your made hand, then read what the board could give an opponent.',
   question: 'What is the clean read first?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'made_hand_with_draw_pressure',
-      label: 'Hero has top pair. An opponent could be drawing to a flush',
+      label: 'You have top pair. An opponent could be drawing to a flush',
       isCorrect: true,
       preferredLabel:
-          'Hero has top pair. An opponent could be drawing to a flush',
+          'You have top pair. An opponent could be drawing to a flush',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Correct transfer.',
+      feedbackTitle: 'Correct live read.',
       feedbackReason:
-          'Hero has top pair and no hearts. An opponent with two hearts can make a flush if another heart comes.',
+          'You have top pair and no hearts. An opponent with two hearts can make a flush if another heart comes.',
     ),
     Act0RunnerOptionV1(
       id: 'made_flush_now',
-      label: 'Hero already has a flush',
+      label: 'You already have a flush',
       isCorrect: false,
       preferredLabel:
-          'Hero has top pair. An opponent could be drawing to a flush',
+          'You have top pair. An opponent could be drawing to a flush',
       betterAnswerLabel:
-          'Hero has top pair. An opponent could be drawing to a flush',
+          'You have top pair. An opponent could be drawing to a flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not made yet.',
       feedbackReason:
-          'Hero has no hearts. With two hearts on the board, even an opponent holding two hearts would still need one more.',
+          'You have no hearts. With two hearts on the board, even an opponent holding two hearts would still need one more.',
     ),
     Act0RunnerOptionV1(
       id: 'draw_means_pair_does_not_count',
-      label: 'A possible flush draw cancels Hero’s pair',
+      label: 'A possible flush draw cancels your pair',
       isCorrect: false,
       preferredLabel:
-          'Hero has top pair. An opponent could be drawing to a flush',
+          'You have top pair. An opponent could be drawing to a flush',
       betterAnswerLabel:
-          'Hero has top pair. An opponent could be drawing to a flush',
+          'You have top pair. An opponent could be drawing to a flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Current hand first.',
       feedbackReason:
-          'Hero’s pair of aces already counts. Another heart could help an opponent later.',
+          'Your pair of aces already counts. Another heart could help an opponent later.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -2273,7 +2281,7 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
     Act0TeachingStepV1(
       title: 'Made hand first, draw pressure second.',
       body:
-          'Hero has top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.',
+          'You have top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.',
       focusLabels: <String>['Top pair', 'Two hearts', 'Not made yet'],
     ),
   ],
@@ -2289,35 +2297,35 @@ final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'flush_draw_only',
-      label: 'Hero has a flush draw, not a made flush yet',
+      label: 'You have a flush draw, not a made flush yet',
       isCorrect: true,
-      preferredLabel: 'Hero has a flush draw, not a made flush yet',
+      preferredLabel: 'You have a flush draw, not a made flush yet',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct recovery.',
       feedbackReason:
-          'There are four hearts visible, so Hero is one heart short of a flush. That keeps the hand in draw territory until one more heart appears.',
+          'There are four hearts visible, so you are one heart short of a flush. That keeps the hand in draw territory until one more heart appears.',
     ),
     Act0RunnerOptionV1(
       id: 'made_flush_now',
-      label: 'Hero already has a made flush',
+      label: 'You already have a made flush',
       isCorrect: false,
-      preferredLabel: 'Hero has a flush draw, not a made flush yet',
-      betterAnswerLabel: 'Hero has a flush draw, not a made flush yet',
+      preferredLabel: 'You have a flush draw, not a made flush yet',
+      betterAnswerLabel: 'You have a flush draw, not a made flush yet',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Still one card short.',
       feedbackReason:
-          'Four hearts create strong pressure, but four hearts are still not a made flush yet. Hero needs one more heart before calling it complete.',
+          'Four hearts create strong pressure, but four hearts are still not a made flush yet. You need one more heart before calling it complete.',
     ),
     Act0RunnerOptionV1(
       id: 'no_flush_pressure',
       label: 'There is no flush pressure yet',
       isCorrect: false,
-      preferredLabel: 'Hero has a flush draw, not a made flush yet',
-      betterAnswerLabel: 'Hero has a flush draw, not a made flush yet',
+      preferredLabel: 'You have a flush draw, not a made flush yet',
+      betterAnswerLabel: 'You have a flush draw, not a made flush yet',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the hearts.',
       feedbackReason:
-          'The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.',
+          'The visible table already shows four hearts between your hand and the board. That creates real flush pressure even though the flush is not made yet.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -2359,7 +2367,7 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   teachingSteps: const [],
   lessonId: 'w5_straight_draw',
-  caption: 'Hero has 6-5 and the board shows 8-7-2.',
+  caption: 'You have 6-5 and the board shows 8-7-2.',
   hint: 'A 4 or 9 can improve the rank ladder.',
   question: 'What draw is visible?',
   options: const <Act0RunnerOptionV1>[
@@ -2630,7 +2638,7 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
   lessonId: 'w5_straight_out',
   hint: 'Those cards complete the straight line.',
   feedbackReason: 'The 5-6-7-8 sequence can finish with a 4 or a 9.',
-  question: 'Which out improves Hero?',
+  question: 'Which out improves your hand?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'nine',
@@ -2749,10 +2757,10 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_clean_vs_risky_out_transfer',
   caption:
-      'Real table. Turn board shows A-heart, 7-heart, 6-club, 2-diamond. Hero has 9-spade and 8-diamond.',
+      'Real table. Turn board shows A-heart, 7-heart, 6-club, 2-diamond. You have 9-spade and 8-diamond.',
   hint:
-      'Both a 5-club and a 5-heart complete Hero straight. Ask which one helps more cleanly and which one adds extra board danger.',
-  question: 'Which river is the safer out for Hero?',
+      'Both a 5-club and a 5-heart complete your straight. Ask which one helps more cleanly and which one adds extra board danger.',
+  question: 'Which river is the safer out for your hand?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'five_clubs_cleaner',
@@ -2762,7 +2770,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Correct intro read.',
       feedbackReason:
-          'Both cards complete the straight, but 5-club is safer because it helps Hero without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
+          'Both cards complete the straight, but 5-club is safer because it helps you without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
     ),
     Act0RunnerOptionV1(
       id: 'five_hearts_riskier',
@@ -2773,7 +2781,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'It still helps, but it is riskier.',
       feedbackReason:
-          '5-heart still completes Hero straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.',
+          '5-heart still completes your straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.',
     ),
     Act0RunnerOptionV1(
       id: 'neither_helps',
@@ -2784,7 +2792,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The straight really does complete.',
       feedbackReason:
-          'Hero already has 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether Hero improves, but which completing card is safer.',
+          'You already have 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether you improve, but which completing card is safer.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -2799,7 +2807,7 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
     Act0TeachingStepV1(
       title: 'Not every helping card is equally clean.',
       body:
-          'A card can improve Hero and still make the board more dangerous. Start with simple language: safer out when the board stays calmer, riskier out when the board adds new danger.',
+          'A card can improve your hand and still make the board more dangerous. Start with simple language: safer out when the board stays calmer, riskier out when the board adds new danger.',
       focusLabels: <String>['Safer card', 'Riskier card', 'Third heart'],
     ),
   ],
@@ -2880,6 +2888,7 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_turn_hits',
   caption: 'Compare the first three board cards with the turn card.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Count matching suits before and after the turn.',
   question: 'What happened on the turn?',
   options: const <Act0RunnerOptionV1>[
@@ -3015,7 +3024,7 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
     highlightedCardIds: const ['board_3'],
   ),
   caption:
-      'The 8 of clubs arrives on A-7-6. Hero still treats top pair like the flop stayed easy.',
+      'The 8 of clubs arrives on A-7-6. You still treat top pair like the flop stayed easy.',
 );
 
 final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.copyWith(
@@ -3033,7 +3042,7 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
       isCorrect: true,
       preferredLabel: 'An opponent can now have a flush',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean transfer read.',
+      feedbackTitle: 'Clean street read.',
       feedbackReason:
           'The flop had two hearts. The turn adds a third, so a player holding two hearts can now have a flush. Your pair of nines stays a pair.',
     ),
@@ -3400,7 +3409,8 @@ final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
 final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_value_dry_board',
-  caption: 'K-7-2 rainbow. Hero holds K-Q.',
+  caption: 'K-7-2 rainbow. You hold K-Q.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Top pair with a good kicker.',
   question: 'Which range bucket is K-Q on this board?',
   options: const <Act0RunnerOptionV1>[
@@ -3448,6 +3458,7 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
 final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_missed_dry_board',
+  teachingSteps: const <Act0TeachingStepV1>[],
   caption:
       'BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.',
   hint: 'Compare the high cards if neither hand improves.',
@@ -3497,6 +3508,7 @@ final _w6TableBucketNoticeRunner = _w6RangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_table_bucket_notice',
   caption: 'Real table. K-7-2 rainbow lands and you hold A-Q.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Before picking a size, make the first useful read.',
   question: 'What should you ask first?',
   table: _act0BoardLessonTableV1(
@@ -3513,7 +3525,7 @@ final _w6TableBucketNoticeRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice start.',
       feedbackReason:
-          'That is the clean live-table transfer. Bucket first, then action.',
+          'That is the clean live-table read. Bucket first, then action.',
     ),
     Act0RunnerOptionV1(
       id: 'size_first',
@@ -3604,7 +3616,7 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   teachingSteps: const [],
   lessonId: 'w6_wrong_board',
-  caption: '8-7-6 two-tone. Hero holds K-Q.',
+  caption: '8-7-6 two-tone. You hold K-Q.',
   hint: 'K-Q was strong preflop, but this board changed everything.',
   question: 'Which range bucket is K-Q on 8-7-6?',
   table: _act0BoardLessonTableV1(
@@ -3738,7 +3750,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_value',
-      label: 'It becomes value automatically',
+      label: 'It turns into value right away',
       isCorrect: false,
       preferredLabel: 'It can slide toward missed',
       betterAnswerLabel: 'It can slide toward missed',
@@ -3749,7 +3761,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'never_changes',
-      label: 'The bucket never changes after flop',
+      label: 'The bucket stays fixed after the flop',
       isCorrect: false,
       preferredLabel: 'It can slide toward missed',
       betterAnswerLabel: 'It can slide toward missed',
@@ -3846,6 +3858,7 @@ final _w6PressureLinesIntroRunner = _w6RangeIntroRunner.copyWith(
 final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_value_range_action',
+  teachingSteps: const <Act0TeachingStepV1>[],
   caption:
       'BB checks, then calls half-pot bets with weaker pairs such as K-J and 7-6.',
   hint: 'Think about which hands would pay to see the turn.',
@@ -3932,6 +3945,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
 final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_bluff_candidate',
+  teachingSteps: const <Act0TeachingStepV1>[],
   caption:
       'BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.',
   hint: 'Would you beat either unpaired hand if no one improves?',
@@ -3947,7 +3961,8 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
 final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_missed_hand_action',
-  caption: 'K-7-2 rainbow. Hero holds J-T with no draw.',
+  caption: 'K-7-2 rainbow. You hold J-T with no draw.',
+  teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Pure missed hands usually do not want a big pot.',
   question: 'What is the clean action direction?',
   table: _act0BoardLessonTableV1(
@@ -3979,7 +3994,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_barrel',
-      label: 'Keep betting on every street',
+      label: 'Keep betting across streets',
       isCorrect: false,
       preferredLabel: 'Usually check or fold',
       betterAnswerLabel: 'Usually check or fold',
@@ -4261,6 +4276,7 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
 final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_combo_weight_compare',
+  teachingSteps: const <Act0TeachingStepV1>[],
   caption: 'Compare A-K with pocket eights before blockers.',
   hint: 'One family has 16 combos. The other has 6.',
   question: 'Which family has more possible combos?',

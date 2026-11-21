@@ -121,7 +121,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'button_wins_now',
-      label: 'The button wins automatically',
+      label: 'The button wins right away',
       isCorrect: false,
       preferredLabel: 'A fold or a showdown',
       betterAnswerLabel: 'A fold or a showdown',
@@ -402,7 +402,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   beatIndex: 5,
   beatCount: 5,
   phase: Act0LessonPhaseV1.review,
-  caption: 'After the first loop, each tab has one clear job.',
+  caption: 'After the first round, each tab has one clear job.',
   hint: 'Home shows what to do now. Learn shows what to study next.',
   question: 'Where do you go to fix mistakes after a miss?',
   options: const <Act0RunnerOptionV1>[
@@ -728,9 +728,9 @@ final _actionRecapRunner = _whatYouCanDoRunner.copyWith(
 final _bigBlindPostRunner = _tableObjectsRunner.copyWith(
   lessonId: 'big_blind_post',
   lessonTitle: 'Blinds & action order',
-  caption: 'BB sets the 1 BB baseline for the hand.',
+  caption: 'BB sets the 1 BB unit for the hand.',
   hint: 'Later prices like 3 BB count from this post.',
-  question: 'Tap the blind that sets the 1 BB baseline.',
+  question: 'Tap the blind that sets the 1 BB unit.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bb',
@@ -739,9 +739,9 @@ final _bigBlindPostRunner = _tableObjectsRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Right baseline.',
+      feedbackTitle: 'Right unit.',
       feedbackReason:
-          'BB posts the full 1 BB blind, so later prices count from that baseline.',
+          'BB posts the full 1 BB blind, so later prices count from that 1 BB post.',
     ),
     Act0RunnerOptionV1(
       id: 'sb',
@@ -750,18 +750,18 @@ final _bigBlindPostRunner = _tableObjectsRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not the baseline.',
+      feedbackTitle: 'Not the 1 BB unit.',
       feedbackReason:
           'SB posts only 0.5 BB. BB is the full 1 BB post players count from.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'BB is the 1 BB baseline.',
+      title: 'BB is the 1 BB unit.',
       body:
           'Find the seat marked BB, because later prices like 3 BB count from that 1 BB post.',
       focusSeatIds: <String>['bb'],
-      focusLabels: <String>['1 BB baseline', 'Count from BB'],
+      focusLabels: <String>['1 BB unit', 'Count from BB'],
     ),
   ],
 );
@@ -1853,13 +1853,18 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Groups and seats, before a raise.',
       body:
-          'T means ten. Suited means same suit (s, like KTs). Offsuit means different suits (o, like J8o).\n\n'
-          'Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.\n\nPremium | AA–QQ, AK suited | Open from UTG through BTN.\n\nStrong | JJ–TT, AK offsuit, AQ suited, AJ suited | Open from UTG through BTN.\n\nMedium | AQ offsuit, AJ offsuit, KQ, AT | Open from HJ through BTN.\n\nMedium | 99–22, KJ, QJ suited, KT, QT | Open from CO through BTN.\n\nWeak | Other hands in this course model | Fold.',
+          'T means ten. Suited means same suit (s); offsuit means different suits (o).\n\n'
+          'Sharky 6-max starting chart. Open means the first raise preflop.\n\n'
+          'Premium: AA–QQ, AK suited (UTG–BTN).\n\n'
+          'Strong: JJ–TT, AK offsuit, AQ suited, AJ suited (UTG–BTN).\n\n'
+          'Medium: AQ offsuit, AJ offsuit, KQ, AT (HJ–BTN).\n\n'
+          'Medium: 99–22, KJ, QJ suited, KT, QT (CO–BTN).\n\n'
+          'Weak: other hands (Fold).',
     ),
     Act0TeachingStepV1(
       title: 'On BTN after a raise.',
       body:
-          'Against one HJ or CO raise, this chart calls on BTN with KQo, KJs or QJs. It folds Weak hands such as A7o and J8o. Read the opener, your seat, and your cards before applying the rule.',
+          'Facing one HJ or CO raise, BTN calls with KQo, KJs or QJs and folds Weak hands (A7o, J8o).',
     ),
   ],
 );
@@ -3340,7 +3345,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_last',
-      label: 'CO already acts last every street',
+      label: 'CO already acts last on all streets',
       isCorrect: false,
       preferredLabel: 'Fewer players still act after CO',
       betterAnswerLabel: 'Fewer players still act after CO',
@@ -3589,7 +3594,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'That is the real-table transfer. Count the players behind before treating the seat as comfortable.',
+          'That is the real-table read. Count the players behind before treating the seat as comfortable.',
     ),
     Act0RunnerOptionV1(
       id: 'acts_last',
@@ -3604,7 +3609,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'late_free_pass',
-      label: 'Late seat makes every hand easy',
+      label: 'Late seat makes most hands easy',
       isCorrect: false,
       preferredLabel: 'BTN, SB, and BB still act after you',
       betterAnswerLabel: 'BTN, SB, and BB still act after you',
@@ -4068,7 +4073,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
       feedbackReason:
-          'That is the transfer. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.',
+          'That is the disciplined read. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.',
     ),
     Act0RunnerOptionV1(
       id: 'looks_fun_open',
