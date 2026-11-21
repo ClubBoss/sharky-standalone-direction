@@ -4380,7 +4380,7 @@ TEACH: Bubble pressure changes the stack-off bar. An all-in for 18 BB tells you 
 TEACH LABELS: Real table, Bubble, Medium stack, Big blind leverage
 Q: How should you adjust if losing to BB would eliminate you?
 HINT [theoryOnly]: Check whether losing the hand could eliminate you. That changes how much of an edge you need.
-TABLE: Preflop | You As Jd | Pot 21 BB | To call 15.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center BTN, medium stack, bubble pressure | Facts no applicable hand facts
+TABLE: Preflop | You As Jd | Pot 21 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center BTN, medium stack, bubble pressure | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer raise 2.5 BB | SB folded | BB allIn 18 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds · BB all-in 18 BB
   - [wrong] Call as wide as normal chip EV allows — Too loose for bubble pressure. Chip-only odds tell you the price of a call. If the call puts your tournament life at risk, payouts and the other stacks also matter.

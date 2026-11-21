@@ -384,6 +384,17 @@ void main() {
     );
     expect(runner.selectedTaskId, 'w9_bubble_table_risk_transfer');
     await pumpSourceChoreographyToDecisionV1(t, runner.runner.table);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_center_pot_stat')),
+        matching: find.text('Pot 21 BB'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_center_to_call_stat')),
+      findsNothing,
+    );
     final history = find.byKey(const Key('act0_shell_street_replay_scroll'));
     expect(history, findsOneWidget);
     final scroll = t.state<ScrollableState>(

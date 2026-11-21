@@ -96,7 +96,10 @@ void main() {
       final pot = sums.values.fold<double>(0, (a, b) => a + b);
       expect(pot, 21);
       expect(table.potLabel, 'Pot $pot BB'.replaceFirst('21.0', '21'));
-      expect(table.toCallLabel, 'To call ${sums['BB']! - sums['BTN']!} BB');
+      final unmatchedBb = sums['BB']! - sums['BTN']!;
+      expect(unmatchedBb, 15.5);
+      expect(task.runner.caption, contains('$unmatchedBb BB more'));
+      expect(table.toCallLabel, isEmpty);
       expect(table.activeSeatId, table.heroSeat.seatId);
       expect(
         table.seats
