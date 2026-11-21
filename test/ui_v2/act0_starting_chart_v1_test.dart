@@ -22,7 +22,7 @@ void main() {
       steps
           .singleWhere((s) => s.title == 'Groups and seats, before a raise.')
           .body,
-      'T means ten. In KTs, s means same suit. In J8o, o means different suits.\n\n'
+      'T means ten. Suited means same suit (s, like KTs). Offsuit means different suits (o, like J8o).\n\n'
       '${renderStartingChartOpening()}',
     );
     expect(

@@ -764,6 +764,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams', 'all-in'};
       case 'shoves':
       case 'jam':
       case 'jams':
+      case 'all-in':
         // All-in: above the price it reopens like a bet/raise to that total;
         // at or below it, it is an all-in call. Either way the actor is done.
         allIn.add(action.actor);

@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 370 tasks · W1–W12
+SHARKY POKER — EN learning content, 378 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -1298,7 +1298,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   - [wrong] Strong — Not quite. Offsuit disconnected hands are not strong starters.
     BETTER ANSWER: Weak
   + [correct] Weak — Well done. J8o from early position belongs in the weak bucket.
-  - [wrong] Medium — Check the clue again. Jack-eight offsuit has a wider rank gap than the jack hands in the Medium rows.
+  - [wrong] Medium — Check the clue again. J8o is not in any chart row, so it belongs in Weak. The only jack hands in Medium are KJ, QJs, and AJo.
     BETTER ANSWER: Weak
 
 TASK hand_discipline_buckets_borderline [drill] Borderline hand
@@ -3774,6 +3774,111 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
   + [correct] 12 — Four aces times three queens. Four aces and three queens remain. Four times three gives 12 exact hands. Next, stack depth sets how much either player can put in.
     FEEDBACK TABLE: Flop | You Td 8d | Board Qc 6h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Count available cards | Facts high card, rainbow, backdoor straight
+
+===== WORLD 7 · LESSON w7_visible_cards_and_price · Read the table and compare the price =====
+
+TASK w7_flop_bluff_one_player [drill] A flop decision
+CAPTION: Compare what you win on folds with what you risk when someone continues.
+Q: BB checks. Everyone folds to a 3 BB bet 40% of the time. For this exercise, count the full bet as lost if anyone continues. Checking has a value of 0 BB. Which action is better in this model?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Center Flop decision | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7h 6h stack 97 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks
+  + [correct] Bet 3 BB — That fits the table. With one opponent, the bet wins 6.5 BB on the 40% of hands where they fold and loses 3 BB otherwise. That is a gain of 0.8 BB on average in this example.
+    FEEDBACK TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Flop decision | Facts high card, rainbow, backdoor straight
+  - [wrong] Check — Check what can still win. With one opponent, the bet wins 6.5 BB on the 40% of hands where they fold and loses 3 BB otherwise. That is a gain of 0.8 BB on average in this example.
+    BETTER ANSWER: Bet 3 BB
+    FEEDBACK TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Flop decision | Facts high card, rainbow, backdoor straight
+
+TASK w7_flop_bluff_two_players [drill] A flop decision
+CAPTION: Compare what you win on folds with what you risk when someone continues.
+Q: SB and BB both check. Everyone folds to a 3 BB bet 16% of the time. For this exercise, count the full bet as lost if anyone continues. Checking has a value of 0 BB. Which action is better in this model?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 9 BB | Seat CO | Active co | Decision co | Center Flop decision | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7h 6h stack 97 BB | BTN folded dealer stack 100 BB | SB stack 97 BB | BB stack 97 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB calls 2.5 BB more · BB calls 2 BB more · Flop: SB checks · BB checks
+  - [wrong] Bet 3 BB — Check what can still win. Everyone folds only 16% of the time in this example. The bet wins 9 BB on those folds but loses 3 BB the other 84% of the time. That is a loss of about 1.1 BB on average. Checking risks 0 BB.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 9 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Flop decision | Facts high card, rainbow, backdoor straight
+  + [correct] Check — That fits the table. Everyone folds only 16% of the time in this example. The bet wins 9 BB on those folds but loses 3 BB the other 84% of the time. That is a loss of about 1.1 BB on average. Checking risks 0 BB.
+    FEEDBACK TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 9 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Flop decision | Facts high card, rainbow, backdoor straight
+
+TASK w7_count_winning_rivers [theory] Which cards actually win?
+CAPTION: Only one card is left to come.
+TEACH: An out has to win An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.
+Q: Suppose BB has K♣ Q♠. How many river cards give you the winning hand?
+HINT [theoryOnly]: (none)
+TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 11 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 3 BB
+  - [wrong] 9 — Check what can still win. Nine hearts make a winning flush. Three non-heart aces also win.
+    BETTER ANSWER: 12
+  + [correct] 12 — That fits the table. Nine hearts make a winning flush. The three unseen aces also win with a pair of aces.
+  - [wrong] 11 — Check what can still win. Count the three unseen aces as well as all nine unseen hearts.
+    BETTER ANSWER: 12
+
+TASK w7_clean_outs_lower_price [drill] A turn price
+CAPTION: Compare your chance to win with the price.
+Q: BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?
+HINT [theoryOnly]: (none)
+TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 11 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 3 BB
+  + [correct] Call — That fits the table. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
+  - [wrong] Fold — Check what can still win. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
+    BETTER ANSWER: Call
+
+TASK w7_clean_outs_higher_price [drill] A turn price
+CAPTION: Compare your chance to win with the price.
+Q: BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?
+HINT [theoryOnly]: (none)
+TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 14 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 6 BB
+  - [wrong] Call — Check what can still win. You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.
+    BETTER ANSWER: Fold
+  + [correct] Fold — That fits the table. You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.
+
+===== WORLD 7 · LESSON w7_visible_cards_range_checkpoint · Range and price checkpoint =====
+
+TASK w7_river_one_bluff_of_six [drill] A river decision
+CAPTION: Use the stated range for this decision.
+Q: BB is all-in and could have any of these equally likely hands: K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♣ Q♦. Call or fold?
+HINT [theoryOnly]: (none)
+TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 4 BB
+  - [wrong] Call — Check what can still win. If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
+  + [correct] Fold — That fits the table. If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
+
+TASK w7_river_two_bluffs_of_six [drill] A river decision
+CAPTION: Use the stated range for this decision.
+Q: BB is all-in and could have any of these equally likely hands: K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♠ 8♠. Call or fold?
+HINT [theoryOnly]: (none)
+TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 4 BB
+  + [correct] Call — That fits the table. You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
+  - [wrong] Fold — Check what can still win. You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.
+    BETTER ANSWER: Call
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
+
+TASK w7_checkpoint_river_card_excludes_hand [drill] The river all-in
+CAPTION: Read the final board.
+Q: BB is all-in. Before the river, BB could have T♣ 8♣, T♠ 8♠, T♦ 8♦, 9♥ 9♦ or 2♠ 2♦. Give all hands that are still possible equal weight. Call or fold?
+HINT [theoryOnly]: (none)
+TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts set, pocket pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 5 BB
+  - [wrong] Call — Check what can still win. The 2♠ is on the board. BB cannot have a pair of twos from that list. If BB has a pair of nines, you win. The three ten-eight hands make a straight. One win in four (25%) is below the roughly 28% needed to call 5 BB for a final pot of 18 BB.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts set, pocket pair
+  + [correct] Fold — That fits the table. The 2♠ is on the board. BB cannot have a pair of twos from that list. If BB has a pair of nines, you win. The three ten-eight hands make a straight. One win in four (25%) is below the roughly 28% this call needs.
+    FEEDBACK TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts set, pocket pair
 
 ===== WORLD 8 · LESSON effective_stack_basics · Effective stack =====
 

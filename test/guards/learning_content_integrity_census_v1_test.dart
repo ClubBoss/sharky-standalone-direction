@@ -10,7 +10,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-import '../support/act0_catalog_truth_audit_v1.dart' show q3AppendedChoicesV1;
+import '../support/act0_catalog_truth_audit_v1.dart'
+    show q3AppendedChoicesV1, w7AppliedTaskIdsV1;
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
@@ -90,7 +91,9 @@ void main() {
   test(
     'canonical W1-W12 census preserves raw IDs and legacy declared mappings',
     () {
-      final allRows = _assessedRows(historical: true);
+      final allRows = _assessedRows(
+        historical: true,
+      ).where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId)).toList();
       expect(allRows, hasLength(294));
       expect(
         allRows
@@ -462,7 +465,9 @@ void main() {
   });
 
   test('both ASM05 scenarios allow only their own familiar replay', () {
-    final rows = _assessedRows(historical: true);
+    final rows = _assessedRows(
+      historical: true,
+    ).where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId)).toList();
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
@@ -838,9 +843,9 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(294));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(294));
-    expect(allChoices, hasLength(469));
+    expect(rows, hasLength(302));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(302));
+    expect(allChoices, hasLength(478));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -908,7 +913,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(435));
+    expect(foundationDefaults, hasLength(444));
     expect(unknown, hasLength(10));
     expect(
       admitted.length +

@@ -869,3 +869,15 @@ const q3AppendedChoicesV1 = <String, String>{
   'outs_improvement_w5_flush_out': 'spade',
   'outs_improvement_w5_straight_out': 'ten',
 };
+
+/// Q7 extends the historical source census without replacing any legacy IDs.
+const w7AppliedTaskIdsV1 = <String>{
+  'w7_flop_bluff_one_player',
+  'w7_flop_bluff_two_players',
+  'w7_count_winning_rivers',
+  'w7_clean_outs_lower_price',
+  'w7_clean_outs_higher_price',
+  'w7_river_one_bluff_of_six',
+  'w7_river_two_bluffs_of_six',
+  'w7_checkpoint_river_card_excludes_hand',
+};

@@ -53,6 +53,8 @@ const _extensionLessonSkills = <String, List<String>>{
   'range_combo_counts': ['Range reading'],
   'range_thinking_checkpoint': ['Range reading'],
   'range_thinking_lite_combo_density': ['Range reading'],
+  'w7_visible_cards_and_price': ['Betting decisions'],
+  'w7_visible_cards_range_checkpoint': ['Range reading', 'Betting decisions'],
   'effective_stack_basics': ['Stack decisions'],
   'same_hand_different_depth': ['Stack decisions'],
   'spr_and_commitment': ['Stack decisions'],
@@ -80,6 +82,9 @@ const _skillOverridesByTaskId = <String, List<String>>{
   'positions_button': ['Position play'],
   'positions_utg': ['Position play'],
   'positions_cutoff': ['Position play'],
+  'w7_count_winning_rivers': ['Board reading'],
+  'w7_clean_outs_lower_price': ['Board reading', 'Betting decisions'],
+  'w7_clean_outs_higher_price': ['Board reading', 'Betting decisions'],
   'w7_format_table_notice': ['Stack decisions'],
   'w7_stack_checkpoint': ['Stack decisions'],
   'outs_improvement_w5_table_outs_flush_transfer': [
