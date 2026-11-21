@@ -5,13 +5,39 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     return _progressWorldsWithTaskIds(state, _pathClosedTaskIds);
   }
 
+  bool _isMistakeClearableInReviewV1(
+    String sourceTaskId, {
+    required Act0ShellStateV1 state,
+  }) {
+    if (_isMistakeDischargedV1(sourceTaskId)) {
+      return false;
+    }
+    final diagnosticIntent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    if (diagnosticIntent != null &&
+        _diagnosticLearningEntryForIntentV1(diagnosticIntent) != null) {
+      return true;
+    }
+    final retentionStatus = _retentionMemoryByTaskId[sourceTaskId]?.status;
+    if (retentionStatus == _Act0RetentionMemoryStatusV1.agedRecheck ||
+        retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate) {
+      return true;
+    }
+    return _openRepairIntentTargetForSourceTaskV1(
+          sourceTaskId,
+          state: state,
+          includeOwed: true,
+        ) !=
+        null;
+  }
+
   Set<String> _worldsWithOpenMistakesV1(Act0ShellStateV1 state) {
     if (_mistakeRecords.isEmpty) {
       return const <String>{};
     }
-    // Only weak spots from pre-checkpoint lessons gate the world checkpoint.
-    // A miss inside the checkpoint lesson itself must not lock the learner out
-    // of resuming or finishing that checkpoint.
+    // Only weak spots from pre-checkpoint lessons that have an available
+    // Review repair target gate the world checkpoint. Neither a miss inside the
+    // checkpoint lesson itself nor a held mistake without a launchable repair
+    // target may lock the learner out of the checkpoint.
     final worldIdByPreCheckpointLessonId = <String, String>{
       for (final world in state.worlds)
         for (final lesson in world.lessons)
@@ -20,7 +46,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     };
     return <String>{
       for (final record in _mistakeRecords.values)
-        if (!_isMistakeDischargedV1(record.taskId))
+        if (_isMistakeClearableInReviewV1(record.taskId, state: state))
           if (worldIdByPreCheckpointLessonId[record.lessonId]
               case final worldId?)
             worldId,
