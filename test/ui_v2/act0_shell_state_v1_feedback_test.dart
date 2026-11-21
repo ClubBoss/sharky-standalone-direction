@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+
+import '../support/act0_shell_source_files_v1.dart';
 
 void main() {
   group('Act0 feedback source contract', () {
-    final sourcePath = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
-
     RegExp feedbackPattern(String field) => RegExp(
       field + r'''\s*:\s*(?:'((?:\\.|[^'\\])*)'|"((?:\\.|[^"\\])*)")''',
     );
@@ -16,7 +14,7 @@ void main() {
     final reasonPattern = feedbackPattern('feedbackReason');
 
     test('feedback titles and reasons are present and non-empty', () {
-      final source = File(sourcePath).readAsStringSync();
+      final source = readAct0ShellStateCatalogJoinedSourceV1();
       final titles = titlePattern
           .allMatches(source)
           .map(feedbackText)
@@ -41,7 +39,7 @@ void main() {
     });
 
     test('feedback title diversity stays above minimum threshold', () {
-      final source = File(sourcePath).readAsStringSync();
+      final source = readAct0ShellStateCatalogJoinedSourceV1();
       final titles = titlePattern
           .allMatches(source)
           .map(feedbackText)
@@ -72,7 +70,7 @@ void main() {
     });
 
     test('known synthetic/generic title fallbacks are not present', () {
-      final source = File(sourcePath).readAsStringSync();
+      final source = readAct0ShellStateCatalogJoinedSourceV1();
       final bannedTitles = <String>{
         'Nice read.',
         'Almost there.',

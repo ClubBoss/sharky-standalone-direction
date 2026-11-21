@@ -19,17 +19,28 @@ Expression? _argument(ArgumentList list, String name) => list.arguments
     .firstOrNull
     ?.expression;
 
-void auditCatalogReachability(String source, CatalogAudit audit) {
-  final unit = parseString(content: source).unit;
-  final bindings = <String, AstNode>{
+void auditCatalogReachability(String source, CatalogAudit audit) =>
+    auditCatalogReachabilitySources([source], audit);
+
+void auditCatalogReachabilitySources(
+  Iterable<String> sources,
+  CatalogAudit audit,
+) {
+  final bindings = <String, AstNode>{};
+  for (final source in sources) {
+    final unit = parseString(content: source).unit;
     for (final top
-        in unit.declarations.whereType<TopLevelVariableDeclaration>())
-      for (final variable in top.variables.variables)
-        if (variable.initializer != null)
-          variable.name.lexeme: variable.initializer!,
-    for (final top in unit.declarations.whereType<FunctionDeclaration>())
-      top.name.lexeme: top.functionExpression.body,
-  };
+        in unit.declarations.whereType<TopLevelVariableDeclaration>()) {
+      for (final variable in top.variables.variables) {
+        if (variable.initializer != null) {
+          bindings[variable.name.lexeme] = variable.initializer!;
+        }
+      }
+    }
+    for (final top in unit.declarations.whereType<FunctionDeclaration>()) {
+      bindings[top.name.lexeme] = top.functionExpression.body;
+    }
+  }
   final reachable = _CatalogDeclarations(bindings)
     ..visitBinding('_act0PreviewWorlds');
   final declared = _CatalogDeclarations(const {});
@@ -64,7 +75,7 @@ class _CatalogDeclarations extends RecursiveAstVisitor<void> {
 
   final Map<String, AstNode> bindings;
   final visited = <String>{};
-  final tasks = <int, (String, String)>{};
+  final tasks = <AstNode, (String, String)>{};
   var owner = '';
 
   void visitBinding(String name) {
@@ -81,7 +92,7 @@ class _CatalogDeclarations extends RecursiveAstVisitor<void> {
     if (args == null) return;
     final id = _argument(args, 'taskId');
     if (id is StringLiteral && id.stringValue != null) {
-      tasks[node.offset] = (id.stringValue!, owner);
+      tasks[node] = (id.stringValue!, owner);
     }
   }
 

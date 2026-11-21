@@ -13,6 +13,7 @@ import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
+import '../support/act0_shell_source_files_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
@@ -20,7 +21,6 @@ import '../support/act0_source_choreography_test_wait_v1.dart';
 // G1_UPDATE_SNAPSHOT=1 flutter test test/ui_v2/act0_catalog_truth_guards_v1_test.dart --plain-name 'W1–W12 catalog snapshot'
 const _snapshotPath = 'test/fixtures/act0_catalog_snapshot_v1.txt';
 const _baselinePath = 'test/fixtures/act0_catalog_truth_exceptions_v1.json';
-const _sourcePath = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const _json = JsonEncoder.withIndent('  ');
 
@@ -534,7 +534,10 @@ void main() {
 
   test('catalog truth debt admits only recorded findings', () {
     final audit = runCatalogAudit();
-    auditCatalogReachability(File(_sourcePath).readAsStringSync(), audit);
+    auditCatalogReachabilitySources(
+      readAct0ShellStateCatalogSourcesV1(),
+      audit,
+    );
     expect(audit.checks['2.starting_chart'], greaterThan(30));
     final streetFrames = catalogTasks.where(
       (row) => const {
