@@ -8,6 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_w6_catalog_contract_v1.dart';
 
 const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_10',
@@ -31,8 +32,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(394));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(394));
+    expect(tasks, hasLength(397));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(397));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -95,7 +96,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(394));
+    expect(entries, hasLength(397));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -176,6 +177,21 @@ void main() {
       expect(task.last, entry.value, reason: entry.key);
       task[5] = preW3ReasonChoicesV1[entry.key];
     }
+    for (final entry in w6NewChoiceContractV1.entries) {
+      final row = entries.singleWhere((row) => row[2] == entry.key);
+      expect(row.take(2), ['world_6', 'w6_continuation_bet']);
+      expect(row.last, entry.value, reason: entry.key);
+    }
+    for (final entry in w6CurrentChoiceContractV1.entries) {
+      final row = entries.singleWhere((row) => row[2] == entry.key);
+      expect(row.last, entry.value, reason: entry.key);
+      row[5] = preW6ChoiceContractV1[entry.key];
+    }
+    for (final id in w6MovedToRangeReadingV1) {
+      final row = entries.singleWhere((row) => row[2] == id);
+      expect(row.take(2), ['world_6', 'range_reading_review']);
+      row[1] = 'range_thinking_checkpoint';
+    }
     final legacyEntries = entries
         .where(
           (row) =>
@@ -184,6 +200,7 @@ void main() {
               !w4MinRaiseTaskIdsV1.contains(row[2]) &&
               !w2Q9ChoiceContractV1.containsKey(row[2]) &&
               !w3NewChoiceContractV1.containsKey(row[2]) &&
+              !w6NewChoiceContractV1.containsKey(row[2]) &&
               row[2] != boardRepair,
         )
         .toList(growable: false);
@@ -1857,7 +1874,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(394));
+    expect(taskIndex, hasLength(397));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

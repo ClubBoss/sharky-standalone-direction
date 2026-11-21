@@ -282,6 +282,8 @@ void main() {
     final w2Q9TaskIds = w2Q9ChoiceContractV1.keys.toSet();
     final w3NewTaskIds = w3NewChoiceContractV1.keys.toSet();
     expect(tasks.map((task) => task.taskId).toSet(), containsAll(w3NewTaskIds));
+    final w6TaskIds = w6NewChoiceContractV1.keys.toSet();
+    expect(tasks.map((task) => task.taskId).toSet(), containsAll(w6TaskIds));
     expect(
       tasks
           .where((task) => w2Q9TaskIds.contains(task.taskId))
@@ -289,8 +291,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(394));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(394));
+    expect(tasks, hasLength(397));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -302,7 +304,8 @@ void main() {
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
-            !w3NewTaskIds.contains(task.taskId),
+            !w3NewTaskIds.contains(task.taskId &&
+            !w6TaskIds.contains(task.taskId),
       ),
       hasLength(368),
     );
@@ -366,7 +369,8 @@ void main() {
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
-            !w3NewTaskIds.contains(task.taskId))
+            !w3NewTaskIds.contains(task.taskId &&
+            !w6TaskIds.contains(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -511,7 +515,7 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 272); // Authored contexts, not certified replay histories.
+    expect(played, 275); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
@@ -583,7 +587,7 @@ void main() {
     final contrasts = <String, String>{};
     final action = RegExp(
       r'^(?:(Flop|Turn|River): )?([A-Z0-9+]+) '
-      r'(blind|raises(?: to)?|opens|calls|bets|all-in|checks|folds)(?: ([0-9.]+) BB)?$',
+      r'(blind|raises(?: to)?|opens|calls|bets|all-in|checks|folds)(?: ([0-9.]+) BB( more)?)?$',
     );
     for (final task in _world5To8Tasks()) {
       final table = task.runner.table;
@@ -604,8 +608,11 @@ void main() {
           liveAmounts.clear();
         }
         if (match[4] case final amount?) {
-          // An amount is the player's total commitment on that street.
-          liveAmounts[match[2]!] = double.parse(amount);
+          final seat = match[2]!;
+          final increment = match[5] != null;
+          if (increment) expect(match[3], 'calls', reason: task.taskId);
+          liveAmounts[seat] =
+              double.parse(amount) + (increment ? liveAmounts[seat] ?? 0 : 0);
         }
       }
       final livePot = liveAmounts.values.fold(0.0, (sum, bb) => sum + bb);

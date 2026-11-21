@@ -2325,7 +2325,8 @@ Act0RunnerStateV1 _w6FromCutoff(Act0RunnerStateV1 runner) {
 
 final _w6ContinuationBetIntro = _w6BoardFitIntroRunner.copyWith(
   lessonId: 'w6_continuation_bet',
-  caption: 'CO raised and BB called, then checked the flop. Ask which weaker hands could pay a small bet and which draws BB could continue with.',
+  caption:
+      'CO raised and BB called, then checked the flop. Read the three ranks and suits first. Ask which weaker hands could pay a small bet and which draws BB could continue with.',
   question: 'How does the flop change your next decision?',
   hint: '',
   feedbackTitle: 'Read the flop before betting.',
@@ -2347,7 +2348,7 @@ final _w6ContinuationBetIntro = _w6BoardFitIntroRunner.copyWith(
           'Against one caller who checks, a small bet is a good starting plan when you have a made hand on a dry flop. '
           'On a wet flop, check back if you missed and have no useful draw. '
           'The dry and wet textures tell you how many hands can connect, as in World 5. '
-          'Look at the three ranks and suits first. On a dry rainbow flop, a one-third-pot bet leaves weaker hands a smaller call. '
+          'On a dry rainbow flop, a one-third-pot bet leaves weaker hands a smaller call. '
           'Connected two-tone flops give callers more ways to continue.',
     ),
   ],
