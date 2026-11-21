@@ -2836,7 +2836,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : null;
     const seatNamesLessonId = 'blinds_action_order';
     const seatNamesTaskId = 'positions_theory';
-    // The first two pages cover streets. The third page introduces the seats.
+    // The final page of this introduction names the seats.
     final seatNamesAvailable =
         selectedWorld.worldNumber != 1 ||
         _placementDiagnosticActive ||
@@ -2845,7 +2845,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 .takeWhile((lesson) => lesson.lessonId != seatNamesLessonId)
                 .any((lesson) => lesson.lessonId == selectedLesson.lessonId) &&
             (playSelectedTask?.taskId != seatNamesTaskId ||
-                _teachingStepIndex >= 2));
+                _teachingStepIndex >=
+                    playSelectedTask!.runner.teachingSteps.length - 1));
 
     final inlineRepairSource =
         _activeSameSignalFeedbackRepairV1 &&

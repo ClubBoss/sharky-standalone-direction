@@ -17,11 +17,13 @@ void main() {
         .singleWhere((t) => t.taskId == 'hand_discipline_buckets_intro')
         .runner
         .teachingSteps;
+    expect(steps, hasLength(2));
     expect(
       steps
           .singleWhere((s) => s.title == 'Groups and seats, before a raise.')
           .body,
-      renderStartingChartOpening(),
+      'T means ten. In KTs, s means same suit. In J8o, o means different suits.\n\n'
+      '${renderStartingChartOpening()}',
     );
     expect(
       steps.singleWhere((s) => s.title == 'On BTN after a raise.').body,

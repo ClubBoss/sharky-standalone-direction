@@ -856,3 +856,16 @@ void _checkRepeat(
         previous.map((old) => old.task.taskId).join(', '),
   );
 }
+
+/// Appended Q3 choices, with the existing two-option order preserved.
+const q3AppendedChoicesV1 = <String, String>{
+  'cards_ranks_suits_board_count': 'three',
+  'your_first_hand_recap': 'preflop',
+  'hand_discipline_buckets_premium': 'strong',
+  'hand_discipline_buckets_trash': 'medium',
+  'same_hand_different_seat_w3_same_hand_open': 'fold',
+  'w4_small_bet': 'three',
+  'w4_pot_bet': 'three',
+  'outs_improvement_w5_flush_out': 'spade',
+  'outs_improvement_w5_straight_out': 'ten',
+};

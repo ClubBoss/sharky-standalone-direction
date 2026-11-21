@@ -320,7 +320,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       final restoredPhase = Act0LessonPhaseV1.values
           .where((phase) => phase.name == parsed.resumePhase)
           .firstOrNull;
-      final savedResume =
+      var savedResume =
           parsed.lessonResume ??
           (parsed.resumeInRunner && restoredPhase != null
               ? (
@@ -332,6 +332,33 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
                   selectedOptionId: parsed.resumeSelectedOptionId,
                 )
               : null);
+      // Q3 shortened these authored sequences. Keep their task and feedback
+      // cursor when loading an older save, then run the ordinary validation.
+      if (savedResume != null) {
+        final oldStep = savedResume.teachingStepIndex;
+        final step = switch (savedResume.taskId) {
+          'positions_theory' when oldStep >= 2 && oldStep <= 5 => 1,
+          'hand_discipline_buckets_intro' when oldStep >= 2 && oldStep <= 3 =>
+            1,
+          'w4_good_price_call' ||
+          'w4_bad_price_fold' ||
+          'w4_cheap_price_marginal_call' ||
+          'w4_big_price_marginal_fold' ||
+          'w4_checkpoint_price' ||
+          'w4_checkpoint_table_price' when oldStep > 0 && oldStep <= 2 => 0,
+          _ => oldStep,
+        };
+        if (step != oldStep) {
+          savedResume = (
+            worldId: savedResume.worldId,
+            lessonId: savedResume.lessonId,
+            taskId: savedResume.taskId,
+            phase: savedResume.phase,
+            teachingStepIndex: step,
+            selectedOptionId: savedResume.selectedOptionId,
+          );
+        }
+      }
       _lessonResumeV1 =
           savedResume != null &&
               _validLessonResumeV1(

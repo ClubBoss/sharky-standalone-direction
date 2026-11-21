@@ -149,7 +149,11 @@ Future<_Snapshot> _read(_Fixture fixture) async {
   return _Snapshot(payload, history!);
 }
 
-Future<_Fixture> _mount(WidgetTester tester, String taskId) async {
+Future<_Fixture> _mount(
+  WidgetTester tester,
+  String taskId, {
+  int? legacyTeachingStep,
+}) async {
   tester.view.physicalSize = const Size(393, 852);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -184,6 +188,11 @@ Future<_Fixture> _mount(WidgetTester tester, String taskId) async {
       'selectedWorldId': _worldId,
       'selectedLessonId': _lessonId,
       'selectedTaskId': taskId,
+      if (legacyTeachingStep != null) ...{
+        'resumeInRunner': true,
+        'resumePhase': 'theory',
+        'resumeTeachingStepIndex': legacyTeachingStep,
+      },
       'earnedXp': 0,
       'learningEvidenceHistory': emptyHistory.toPayload(),
       'learningEvidenceLineage': emptyHistory.lineagePayload(),
@@ -202,17 +211,30 @@ Future<_Fixture> _mount(WidgetTester tester, String taskId) async {
       SharedPreferencesStorePlatform.instance = priorPlatform;
     }
   });
-  await tester.pumpWidget(_host(fixture.sink, Act0ShellTabV1.learn));
+  await tester.pumpWidget(
+    _host(
+      fixture.sink,
+      legacyTeachingStep == null ? Act0ShellTabV1.learn : Act0ShellTabV1.home,
+    ),
+  );
   await tester.pumpAndSettle();
   await _flush(tester, fixture);
   // The real Learn launch creates the run/session identity. Merely booting
   // initialTab:play would skip that source-owned lifecycle operation.
-  final launch = find.byKey(const Key('act0_shell_current_mission_cta'));
+  final launch = find.byKey(
+    Key(
+      legacyTeachingStep == null
+          ? 'act0_shell_current_mission_cta'
+          : 'act0_academy_home_leaf_cta',
+    ),
+  );
   expect(launch, findsOneWidget);
   await tester.ensureVisible(launch);
   await tester.pumpAndSettle();
   expect(launch.hitTestable(), findsOneWidget);
-  expect(tester.widget<FilledButton>(launch).onPressed, isNotNull);
+  if (legacyTeachingStep == null) {
+    expect(tester.widget<FilledButton>(launch).onPressed, isNotNull);
+  }
   await tester.tap(launch);
   await tester.pumpAndSettle();
   await _flush(tester, fixture);
@@ -727,20 +749,20 @@ void main() {
         findsOneWidget,
       );
 
-      for (var index = 1; index <= 2; index++) {
-        await tester.pump(const Duration(milliseconds: 900));
-        final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
-        final next = theory.evaluate().isNotEmpty
-            ? theory
-            : find.byKey(const Key('act0_shell_continue_cta'));
-        await tester.ensureVisible(next);
-        expect(next.hitTestable(), findsOneWidget);
-        await tester.tap(next);
-        await tester.pumpAndSettle();
-        expect(_runner(tester).runner.teachingStepIndex, index);
-        expect(name, index == 1 ? findsNothing : findsOneWidget);
-        expect(stack, findsOneWidget);
-      }
+      await tester.pump(const Duration(milliseconds: 900));
+      final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+      final next = theory.evaluate().isNotEmpty
+          ? theory
+          : find.byKey(const Key('act0_shell_continue_cta'));
+      await tester.ensureVisible(next);
+      expect(next.hitTestable(), findsOneWidget);
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+      final runner = _runner(tester).runner;
+      expect(runner.teachingSteps, hasLength(2));
+      expect(runner.teachingStepIndex, 1);
+      expect(name, findsOneWidget);
+      expect(stack, findsOneWidget);
       expect(find.textContaining('UTG means Under the Gun'), findsOneWidget);
       expect(
         find.descendant(of: opponent, matching: find.text('UTG')),
@@ -750,6 +772,20 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('an old W1 page resumes at the remaining seat lesson', (
+    tester,
+  ) async {
+    final fixture = await _mount(tester, _theoryTaskId, legacyTeachingStep: 4);
+    expect(_runner(tester).runner.teachingStepIndex, 1);
+    expect(find.textContaining('UTG means Under the Gun'), findsOneWidget);
+    final restored = await _read(fixture);
+    expect(restored.payload['earnedXp'], 0);
+    expect(
+      restored.payload['completedTaskIds'],
+      isNot(contains(_theoryTaskId)),
+    );
+  });
 
   for (final correct in [true, false]) {
     testWidgets(
