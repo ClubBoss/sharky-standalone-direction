@@ -5536,40 +5536,40 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Pause briefly on high-EV decision nodes — Pause on big nodes. Small targeted pauses preserve discipline where it matters most without killing flow.
 
 TASK w12_pretty_hand_bad_price_fold [drill] Pretty hand, bad price
-CAPTION: Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. You hold K-Q at 100 BB effective.
+CAPTION: CO bets both the flop and the turn. Both start the river with 100 BB behind. CO rarely bluffs and bets 18 BB into 20 BB.
 TEACH: Pretty hands still obey price. Use the same routine even when the hand looks attractive: seat, hand, board, price, stack and action, then the clean action.
 TEACH LABELS: Top pair, Bad price, Tight action, Fold clean
 Q: What is the cleaner disciplined action?
 HINT [theoryOnly]: Do not make a stubborn call only because the hand looks pretty.
-TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center Top pair, bad river price | Facts one pair, top pair
-SEATS: UTG | HJ | CO bet 18 BB | BTN dealer | SB | BB
-TRAIL: CO opens 2.5 BB · BTN calls · CO barrels flop · CO barrels turn · CO bets 18 BB
+TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 99.75 BB | HJ folded stack 99.75 BB | CO stack 82 BB bet 18 BB | BTN dealer Kd Qc stack 100 BB | SB folded stack 99.25 BB | BB folded stack 98.75 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB folds · Flop: CO bets 2.5 BB · BTN calls 2.5 BB · Turn: CO bets 3.5 BB · BTN calls 3.5 BB · River: CO bets 18 BB
   + [correct] Fold the river — Calm fold. Calling 18 BB makes a 56 BB pot, so you need about 32% equity if the call closes the action. Folding is reasonable if K-Q falls below that threshold against CO’s betting range. The tight read supports caution, and the exact range is unknown.
-    FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Top pair, bad river price | Facts one pair, top pair
+    FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [suboptimal] Call down anyway with top pair — Pretty-hand trap. Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.
     BETTER ANSWER: Fold the river
-    FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Top pair, bad river price | Facts one pair, top pair
+    FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] Raise large to end the decision now — Too dramatic. The river pot is now 38 BB after CO’s 18 BB bet. A large raise adds risk against a tight range when better hands may call and worse hands may fold.
     BETTER ANSWER: Fold the river
-    FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Top pair, bad river price | Facts one pair, top pair
+    FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
 TASK w12_revenge_raise_trap [drill] Do not raise to take control
-CAPTION: The same opponent bluffed you last orbit and needles you now. New hand: You hold Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.
+CAPTION: CO bluffed you last orbit and taunts you now. Both start the flop with 35 BB behind. CO bets 2 BB into 8 BB.
 TEACH: Noise is not a cue. Real play rewards stable decisions more than dramatic decisions. Ignore ego hooks and return to the table read.
 TEACH LABELS: Position, Small price, Top pair, No ego
 Q: What is the clean discipline line?
 HINT [theoryOnly]: Do not raise just to take control when the table read says stay simple.
-TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center Top pair, ego trap | Facts one pair, top pair, rainbow
-SEATS: UTG | HJ | CO bet 2 BB | BTN dealer | SB | BB
-TRAIL: CO needled you last orbit · Flop: CO bets 2 BB
-  - [wrong] Raise now to take control back — Revenge leak. On the J-7-4 flop from BTN at 35 BB effective facing CO's 2 BB bet into an 8 BB pot, raising out of revenge bloats the pot and folds out CO's bluffs while isolating you against stronger hands.
+TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 99.75 BB | HJ folded stack 99.75 BB | CO stack 33 BB bet 2 BB | BTN dealer Qs Js stack 35 BB | SB folded stack 99.25 BB | BB folded stack 98.75 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO needled you last orbit · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB folds · Flop: CO bets 2 BB
+  - [wrong] Raise now to take control back — Revenge leak. On the J-7-4 flop from BTN at 35 BB effective facing CO's 2 BB bet into an 8 BB pot, raising out of revenge can grow the pot and fold out CO's bluffs while isolating you against stronger hands.
     BETTER ANSWER: Call once and keep the pot controlled
-    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair, ego trap | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] Call once and keep the pot controlled — Stable line. A 2 BB call makes a 12 BB pot, about 17% immediate pot odds. Calling is a reasonable way to keep the pot small if CO bets enough weaker hands. One earlier bluff gives little evidence about CO’s range here.
-    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair, ego trap | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [suboptimal] Fold now to avoid the annoying player — Emotion still steering. CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.
     BETTER ANSWER: Call once and keep the pot controlled
-    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Top pair, ego trap | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w12_confidence_recap [review] Confidence recap
 CAPTION: Lesson learned: calm confidence plus discipline is stable edge.
@@ -5632,22 +5632,22 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Take only evidence-backed lines
 
 TASK w12_checkpoint_full_loop_line [drill] Full routine line
-CAPTION: You made a loose bluff last orbit. New hand: CO opens, You call BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.
+CAPTION: Your bluff failed last orbit. Both start this flop with 25 BB behind. CO bets 2 BB into 8 BB.
 TEACH: Stable routine beats emotional correction. A prior mistake should not rewrite the next decision. Real play gets stronger when the same clean routine survives noise, temptation, and regret.
 TEACH LABELS: After mistake, Seat-hand-board-price, 25 BB, Stay stable
 Q: What keeps the next decision stable?
 HINT [theoryOnly]: Use the same decision routine even after a mistake: seat, hand, board, price, stack and action, then the clean action.
-TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
-SEATS: UTG | HJ | CO bet 2 BB | BTN dealer | SB | BB
-TRAIL: Last orbit: loose bluff · CO raises 2.5 BB · BTN calls 2.5 BB · Flop: CO bets 2 BB
+TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 99.75 BB | HJ folded stack 99.75 BB | CO stack 23 BB bet 2 BB | BTN dealer As Js stack 25 BB | SB folded stack 99.25 BB | BB folded stack 98.75 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · Last orbit: loose bluff · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB folds · Flop: CO bets 2 BB
   - [wrong] Raise to recover confidence — Confidence chase. CO bets 2 BB into 8 BB on A-8-4. Raising to make up for last orbit’s loose bluff builds a larger pot and may drive out the weaker hands you could keep in by calling.
     BETTER ANSWER: Call with the same routine
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
   - [suboptimal] Fold to play safer now — Too reactive. CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.
     BETTER ANSWER: Call with the same routine
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
   + [correct] Call with the same routine — Strong reset. Start with top pair, position and the 2 BB price. Calling is a reasonable controlled line if CO bets enough weaker hands. The optimal line depends on CO’s range and later action. Review the previous bluff separately.
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center After mistake, stay clean | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
 
 TASK w12_checkpoint_review [review] Mindset recap
 ENTRY: drill

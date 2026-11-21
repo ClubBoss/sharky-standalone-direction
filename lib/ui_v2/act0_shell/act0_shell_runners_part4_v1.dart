@@ -4206,40 +4206,74 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_pretty_hand_bad_price_fold',
   caption:
-      'Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. You hold K-Q at 100 BB effective.',
+      "CO bets both the flop and the turn. Both start the river with 100 BB behind. CO rarely bluffs and bets 18 BB into 20 BB.",
   hint: 'Do not make a stubborn call only because the hand looks pretty.',
   question: 'What is the cleaner disciplined action?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroKqCards,
-      boardCards: _boardK7294Cards,
-      streetLabel: 'River',
-      potLabel: 'Pot 38 BB',
-      toCallLabel: 'To call 18 BB',
-      centerLabel: 'Top pair, bad river price',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.river,
-        bettor: 'co',
-        betBb: 18,
-        effectiveStackAtHandStartBb: 100,
-        potBeforeBetBb: 20,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroKqCards.map((card) => card.label).join(' '),
+    street: PokerStreet.river,
+    actor: 'btn',
+    board: _boardK7294Cards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 108.75, 'co': 108.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO barrels flop'),
-        Act0ActionTrailItemV1(label: 'CO barrels turn'),
-        Act0ActionTrailItemV1(label: 'CO bets 18 BB'),
-      ],
-    ),
-    bets: {
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        3.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.turn,
+        'btn',
+        Act0ContributionKindV1.wager,
+        3.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.river,
+        'co',
+        Act0ContributionKindV1.wager,
+        18,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: CO bets 3.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 3.5 BB"),
+      Act0ActionTrailItemV1(label: "River: CO bets 18 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '18 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_river',
@@ -4293,38 +4327,48 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_revenge_raise_trap',
   caption:
-      'The same opponent bluffed you last orbit and needles you now. New hand: You hold Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.',
+      "CO bluffed you last orbit and taunts you now. Both start the flop with 35 BB behind. CO bets 2 BB into 8 BB.",
   hint:
       'Do not raise just to take control when the table read says stay simple.',
   question: 'What is the clean discipline line?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Top pair, ego trap',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.flop,
-        bettor: 'co',
-        betBb: 2,
-        effectiveStackAtHandStartBb: 35,
-        potBeforeBetBb: 8,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroQJsCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: 'btn',
+    board: _boardJ74FlopCards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 37.75, 'co': 37.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1.note(label: 'CO needled you last orbit'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: {
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1.note(label: "CO needled you last orbit"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '2 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_to_take_control',
@@ -4335,7 +4379,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Revenge leak.',
       feedbackReason:
-          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge bloats the pot and folds out CO\'s bluffs while isolating you against stronger hands.',
+          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge can grow the pot and fold out CO\'s bluffs while isolating you against stronger hands.',
     ),
     Act0RunnerOptionV1(
       id: 'call_once',
@@ -4532,40 +4576,48 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_checkpoint_full_loop_line',
   caption:
-      'You made a loose bluff last orbit. New hand: CO opens, You call BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.',
+      "Your bluff failed last orbit. Both start this flop with 25 BB behind. CO bets 2 BB into 8 BB.",
   hint:
       'Use the same decision routine even after a mistake: seat, hand, board, price, stack and action, then the clean action.',
   question: 'What keeps the next decision stable?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroAJsCards,
-      boardCards: _boardA84TwoToneCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'After mistake, stay clean',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.flop,
-        bettor: 'co',
-        betBb: 2,
-        effectiveStackAtHandStartBb: 25,
-        potBeforeBetBb: 8,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroAJsCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: 'btn',
+    board: _boardA84TwoToneCards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 27.75, 'co': 27.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: {
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1.note(label: "Last orbit: loose bluff"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '2 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_to_recover',

@@ -180,10 +180,6 @@
     "21.duplicate_wrong_reason|actions_check_drill|call",
     "21.duplicate_wrong_reason|actions_check_drill|fold",
     "21.duplicate_wrong_reason|blinds_posts_drill|sb",
-    "25.street_stack|world_11|w11_checkpoint_mixed_table_line|caption|30 BB effective|no source amount",
-    "25.street_stack|world_12|w12_checkpoint_full_loop_line|caption|25 BB effective|no source amount",
-    "25.street_stack|world_12|w12_pretty_hand_bad_price_fold|caption|100 BB effective|no source amount",
-    "25.street_stack|world_12|w12_revenge_raise_trap|caption|35 BB effective|no source amount",
-    "25.street_stack|world_12|w12_revenge_raise_trap|option[raise_to_take_control].reason|35 BB effective|no source amount"
+    "25.street_stack|world_11|w11_checkpoint_mixed_table_line|caption|30 BB effective|no source amount"
   ]
 }

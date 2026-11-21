@@ -531,6 +531,8 @@ void main() {
       ...w4MinRaiseTaskIdsV1,
       ...w11ExplicitStreetHistoryIds,
       ...w12ExplicitFlopHistoryIds,
+      // Full ledger now records each prior street and its contributions.
+      'w12_pretty_hand_bad_price_fold',
       // The newly authored Call frame now supplies its full blind prefix,
       // folds, street actions and positive remaining stacks.
       'actions_call_drill',
