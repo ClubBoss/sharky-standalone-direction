@@ -111,10 +111,6 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
   );
 }
 
-String _day7HandKey(Act0TableStateV1 t) =>
-    '${t.heroSeatId ?? t.heroSeat.seatId}|${(t.heroCards.map(cardIdentity).toList()..sort()).join(',')}|'
-    '${t.boardCards.map(cardIdentity).join(',')}';
-
 void main() {
   test('W1–W12 catalog snapshot', () {
     final fixture = File(_snapshotPath);
@@ -213,7 +209,7 @@ void main() {
     final courseHands = [
       ...catalogTasks,
       ...rulesCheckCatalogTasks,
-    ].map((row) => _day7HandKey(row.task.runner.table)).toSet();
+    ].map((row) => day7HandKeyV1(row.task.runner.table)).toSet();
     for (final row in day7CatalogTasks) {
       final task = row.task;
       final runner = task.runner;
@@ -221,7 +217,7 @@ void main() {
       final id = task.taskId;
       expect(seen.add(id), isTrue, reason: id);
       expect(courseIds.contains(id), isFalse, reason: id);
-      expect(courseHands.contains(_day7HandKey(table)), isFalse, reason: id);
+      expect(courseHands.contains(day7HandKeyV1(table)), isFalse, reason: id);
       expect(task.rewardXp, 0, reason: id);
       expect(runner.hint, isEmpty, reason: id);
       expect(runner.teachingSteps, isEmpty, reason: id);
