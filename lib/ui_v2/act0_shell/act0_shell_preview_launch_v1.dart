@@ -68,9 +68,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (adjudication?.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap) {
       return null;
     }
-    final worlds = _progressedWorlds(
-      state ?? widget.state ?? Act0ShellStateV1.sample,
-    );
+    final worlds = (state ?? widget.state ?? Act0ShellStateV1.sample).worlds;
     if (adjudication?.outcome ==
         Act0RepairGapOutcomeV1.intentionalExactReplay) {
       return _sameSignalRepTargetIfLaunchableV1(
@@ -221,9 +219,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (!_hasValidatedRepairTargetV1(intent)) {
       return null;
     }
-    final worlds = _progressedWorlds(
-      state ?? widget.state ?? Act0ShellStateV1.sample,
-    );
+    final worlds = (state ?? widget.state ?? Act0ShellStateV1.sample).worlds;
     final mappedTarget = _repairIntentTargetByIdsIfLaunchableV1(
       worlds,
       worldId: intent.targetWorldId,

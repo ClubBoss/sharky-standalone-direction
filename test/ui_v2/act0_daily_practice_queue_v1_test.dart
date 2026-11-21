@@ -8,6 +8,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_daily_practice_queue_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_path_progress_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
@@ -507,12 +509,14 @@ void main() {
   );
 
   testWidgets(
-    'Learn shows checkpoint locked with weak-spot hint when world has open mistakes',
+    'held mistake without an available same-day Review target does not lock world checkpoint',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(393, 852));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       final w1 = Act0ShellStateV1.sample.worldById('world_1');
-      final preCheckpointLessons = w1.lessons.take(w1.lessons.length - 1);
+      final preCheckpointLessons = w1.lessons
+          .take(w1.lessons.length - 1)
+          .toList();
       final preCheckpointTasks = [
         for (final lesson in preCheckpointLessons) ...lesson.courseTaskList,
       ];
@@ -586,19 +590,106 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text(checkpoint.title), findsOneWidget);
-      expect(find.text('Clear weak spots in Review to unlock'), findsOneWidget);
-      final stateText = tester.widget<Text>(
+      expect(find.text('Clear weak spots in Review to unlock'), findsNothing);
+      expect(
         find.byKey(
           Key('act0_shell_learn_lesson_state_text_${checkpoint.lessonId}'),
         ),
+        findsNothing,
       );
-      expect(stateText.data, 'Locked');
-      await tester.ensureVisible(find.text(checkpoint.title));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(checkpoint.title));
-      await tester.pumpAndSettle();
-      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_current_mission_cta')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  test(
+    'checkpoint locks only for worlds with clearable mistakes and reopens once cleared',
+    () {
+      final worlds = Act0ShellStateV1.sample.worlds;
+      final w1 = worlds.first;
+      final preCheckpointTaskIds = <String>{
+        for (final lesson in w1.lessons.take(w1.lessons.length - 1))
+          for (final task in lesson.courseTaskList) task.taskId,
+      };
+      Act0LessonCardV1 checkpointOf(Set<String> open) => act0ProgressWorldsV1(
+        worlds,
+        pathClosedTaskIds: preCheckpointTaskIds,
+        earnedTaskIds: preCheckpointTaskIds,
+        worldsWithOpenMistakes: open,
+      ).first.lessons.last;
+
+      final locked = checkpointOf({'world_1'});
+      expect(locked.state, Act0LessonStateV1.locked);
+      expect(locked.primaryCtaLabel, 'Clear weak spots');
+      expect(locked.isSelectable, isFalse);
+
+      // Same day, after Review clears the weak spot, the world is no longer
+      // reported as having clearable mistakes and the checkpoint reopens.
+      final reopened = checkpointOf(const <String>{});
+      expect(reopened.state, Act0LessonStateV1.current);
+      expect(reopened.isSelectable, isTrue);
+    },
+  );
+
+  test(
+    'every W1-W12 pre-checkpoint mistake either has a launchable same-day Review target or is excluded from checkpoint lock',
+    () {
+      final worlds = Act0ShellStateV1.sample.worlds;
+      final tasksByKey = <String, Act0LessonTaskV1>{
+        for (final world in worlds)
+          for (final lesson in world.lessons)
+            for (final task in lesson.taskList)
+              '${world.worldId}|${lesson.lessonId}|${task.taskId}': task,
+      };
+      var clearableCount = 0;
+      var nonLockingHeldCount = 0;
+
+      for (final world in worlds) {
+        for (final lesson in world.lessons) {
+          if (act0LessonIsWorldCheckpointV1(world, lesson)) {
+            continue;
+          }
+          for (final task in lesson.courseTaskList) {
+            for (final option in task.runner.options.where(
+              (o) => !o.isCorrect,
+            )) {
+              final contract = act0RepairGoalContractForSourceV1(
+                worldId: world.worldId,
+                lessonId: lesson.lessonId,
+                taskId: task.taskId,
+                choiceId: option.id,
+              );
+              if (contract != null && contract.hasValidatedTarget) {
+                final targetKey =
+                    '${contract.targetWorldId}|${contract.targetLessonId}|${contract.targetTaskId}';
+                final targetTask = tasksByKey[targetKey];
+                expect(
+                  targetTask,
+                  isNotNull,
+                  reason:
+                      'Validated repair target missing for ${world.worldId}:${lesson.lessonId}:${task.taskId}:${option.id} -> $targetKey',
+                );
+                final launchablePhase =
+                    targetTask!.phase == Act0LessonPhaseV1.drill ||
+                    contract.mappingType == 'intentional_exact';
+                expect(
+                  launchablePhase,
+                  isTrue,
+                  reason:
+                      'Validated repair target is not launchable in Review for ${task.taskId}:${option.id} -> $targetKey',
+                );
+                clearableCount += 1;
+              } else {
+                nonLockingHeldCount += 1;
+              }
+            }
+          }
+        }
+      }
+      expect(clearableCount, greaterThan(0));
+      expect(nonLockingHeldCount, 0);
     },
   );
 }
