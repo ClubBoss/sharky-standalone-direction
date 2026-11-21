@@ -16,6 +16,7 @@ _SpacedReviewEntryV1 _day7ExampleV1(
   required List<String> choices,
   required int correct,
   required String reason,
+  Map<int, String> wrongReasons = const {},
   String caption = '',
 }) {
   final answer = choices[correct];
@@ -65,7 +66,7 @@ _SpacedReviewEntryV1 _day7ExampleV1(
                   ? Act0FeedbackQualityV1.correct
                   : Act0FeedbackQualityV1.wrong,
               feedbackTitle: index == correct ? 'Correct.' : 'Look again.',
-              feedbackReason: reason,
+              feedbackReason: wrongReasons[index] ?? reason,
             ),
         ],
         feedbackTitle: '',

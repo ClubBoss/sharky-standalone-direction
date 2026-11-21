@@ -7667,10 +7667,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 8d stack 97.25 B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
   + [correct] One — Correct. You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.
     FEEDBACK TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Three — Look again. You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.
+  - [wrong] Three — Look again. Your king and the flop king are both visible. Counting three ways would leave one of those kings in the deck.
     BETTER ANSWER: One
     FEEDBACK TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Six — Look again. You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.
+  - [wrong] Six — Look again. Six is the count with all four kings available. Two kings are visible on this table, leaving just one possible pair.
     BETTER ANSWER: One
     FEEDBACK TABLE: Flop | You Kh 8d | Board Ks 7c 3h | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
@@ -7681,14 +7681,14 @@ HINT [hidden]: (none)
 TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Facts high card, rainbow, gutshot, completion cards 4
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 8s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] 16 — Look again. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
+  - [wrong] 16 — Look again. Sixteen counts four queens. The queen on the flop cannot appear in BB’s hand.
     BETTER ANSWER: 12
     FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
   + [correct] 12 — Correct. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
     FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
-  - [wrong] 9 — Look again. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
+  - [wrong] 9 — Look again. Nine would count three kings and three queens. The board contains one queen and no kings, so BB can still use any of the four kings.
     BETTER ANSWER: 12
-    FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
+    FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
 
 ===== WORLD 7 · LESSON w7_visible_cards_and_price · Read the table and compare the price =====
 
@@ -7702,29 +7702,28 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 9s stack 97.25 B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
   + [correct] Bet earns 1.2 BB on average — Correct. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
     FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
-  - [wrong] Check earns 1.2 BB more — Look again. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
+  - [wrong] Check earns 1.2 BB more — Look again. Checking returns zero in this model. It gives up a bet whose wins from folds exceed its losses when BB calls.
     BETTER ANSWER: Bet earns 1.2 BB on average
     FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
-  - [wrong] Both average zero — Look again. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
+  - [wrong] Both average zero — Look again. The folds earn 2.4 BB on average from the 6 BB pot. Losing the 2 BB bet on calls costs 1.2 BB on average, so those parts do not cancel.
     BETTER ANSWER: Bet earns 1.2 BB on average
     FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
 
 TASK spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-CAPTION: Assume HJ holds a king and a queen, neither a heart. There will be no river bet. Count winning rivers before you compare the price.
+CAPTION: Assume HJ holds a king and a queen, neither a heart. HJ does not fold to a raise. There will be no river bet. Count winning rivers before you compare the price.
 Q: Does the price justify calling with the flush draw?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
 SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah 8h stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
-  - [wrong] Call — Look again. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
+  - [wrong] Call — Look again. One heart makes HJ a full house on this turn board. Eight winning rivers out of 44 fall short of the 20% needed for the 2 BB call.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
   + [correct] Fold — Correct. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
     FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
-  - [wrong] Raise — Look again. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
+  - [wrong] Raise — Look again. HJ has two pair on the turn and does not fold to a raise in this example. Adding chips increases the cost of drawing to eight winning rivers.
     BETTER ANSWER: Fold
-    FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
 ===== WORLD 7 · LESSON w7_visible_cards_range_checkpoint · Range and price checkpoint =====
 
@@ -7736,8 +7735,8 @@ HINT [hidden]: (none)
 TABLE: River | You Qd Jc | Board Qh 8s 5d 4c 2h | Pot 10 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ stack 93.25 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qd Jc stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 4 BB
-  - [wrong] Fold — Look again. Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
+  - [wrong] Fold — Look again. Folding against ten-nine gives up a winning pair of queens. That hand is one third of this range, enough to justify the quoted call price.
     BETTER ANSWER: Call
   + [correct] Call — Correct. Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
-  - [wrong] The price requires two wins out of three — Look again. Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
+  - [wrong] The price requires two wins out of three — Look again. Two wins in three would be about 67%. The call needs about 29%, so one win in three is already enough.
     BETTER ANSWER: Call

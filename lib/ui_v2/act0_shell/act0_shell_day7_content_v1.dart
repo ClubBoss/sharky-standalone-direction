@@ -1360,6 +1360,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.',
+    wrongReasons: const {
+      1: 'Your king and the flop king are both visible. Counting three ways would leave one of those kings in the deck.',
+      2: 'Six is the count with all four kings available. Two kings are visible on this table, leaving just one possible pair.',
+    },
   ),
   _day7ExampleV1(
     7,
@@ -1372,6 +1376,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.',
+    wrongReasons: const {
+      0: 'Sixteen counts four queens. The queen on the flop cannot appear in BB’s hand.',
+      2: 'Nine would count three kings and three queens. The board contains one queen and no kings, so BB can still use any of the four kings.',
+    },
   ),
   _day7ExampleV1(
     7,
@@ -1389,6 +1397,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.',
+    wrongReasons: const {
+      1: 'Checking returns zero in this model. It gives up a bet whose wins from folds exceed its losses when BB calls.',
+      2: 'The folds earn 2.4 BB on average from the 6 BB pot. Losing the 2 BB bet on calls costs 1.2 BB on average, so those parts do not cancel.',
+    },
   ),
   _day7ExampleV1(
     7,
@@ -1396,12 +1408,16 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     'pot_to_call',
     _day7PostflopV1('bb', 'Ah 8h', 'Qh 7h 2s Kd', betBb: 2, showTurn: true),
     caption:
-        'Assume HJ holds a king and a queen, neither a heart. There will be no river bet. Count winning rivers before you compare the price.',
+        'Assume HJ holds a king and a queen, neither a heart. HJ does not fold to a raise. There will be no river bet. Count winning rivers before you compare the price.',
     question: 'Does the price justify calling with the flush draw?',
     choices: const ['Call', 'Fold', 'Raise'],
     correct: 1,
     reason:
         'Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.',
+    wrongReasons: const {
+      0: 'One heart makes HJ a full house on this turn board. Eight winning rivers out of 44 fall short of the 20% needed for the 2 BB call.',
+      2: 'HJ has two pair on the turn and does not fold to a raise in this example. Adding chips increases the cost of drawing to eight winning rivers.',
+    },
   ),
   _day7ExampleV1(
     7,
@@ -1416,5 +1432,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.',
+    wrongReasons: const {
+      0: 'Folding against ten-nine gives up a winning pair of queens. That hand is one third of this range, enough to justify the quoted call price.',
+      2: 'Two wins in three would be about 67%. The call needs about 29%, so one win in three is already enough.',
+    },
   ),
 ];
