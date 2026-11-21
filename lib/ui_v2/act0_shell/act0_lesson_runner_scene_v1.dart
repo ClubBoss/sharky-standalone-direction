@@ -369,12 +369,24 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
         };
         final framework = choices['framework'];
         final oneAnswer = choices['one_answer'];
+        final omitsCards = choices['seat_blind_only'];
+        final hasValidAlternatives =
+            choices.length == 2 ||
+            (choices.length == 3 &&
+                omitsCards != null &&
+                omitsCards.label == 'The seat and posted blinds' &&
+                !omitsCards.isCorrect &&
+                omitsCards.quality == Act0FeedbackQualityV1.wrong &&
+                omitsCards.preferredLabel == 'Bucket, seat, frame' &&
+                omitsCards.betterAnswerLabel == 'Bucket, seat, frame' &&
+                omitsCards.feedbackReason ==
+                    'The 1.5 BB blinds are the start of the pot. You also need to know your cards and whether anyone raised before your turn.');
         if (runner.lessonId != 'same_hand_different_seat' ||
             taskFamily != Act0TaskFamilyV1.review ||
             runner.phase == Act0LessonPhaseV1.theory ||
             runner.question != 'What prevents one-hand-one-answer thinking?' ||
-            runner.options.length != 2 ||
-            choices.length != 2 ||
+            runner.options.length != choices.length ||
+            !hasValidAlternatives ||
             framework == null ||
             oneAnswer == null ||
             framework.label != 'Bucket, seat, frame' ||
@@ -440,6 +452,7 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
         if (!const {
           'w6_wet_board_repair',
           'w5_turn_texture_shift_transfer',
+          'turn_river_changes',
         }.contains(runner.lessonId)) {
           return null;
         }

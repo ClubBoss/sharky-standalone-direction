@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../support/act0_w2_catalog_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
-    show w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+    show w4MinRaiseTaskIdsV1, w4OpeningSeatsV1, w7AppliedTaskIdsV1;
+import '../support/act0_w2_catalog_contract_v1.dart';
+import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_w6_catalog_contract_v1.dart';
 
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)
@@ -77,6 +79,7 @@ void main() {
 
   test('authored contexts preserve scopes across legacy, ASM05 and Q7 tasks', () {
     const orientationIds = <String>{
+      'position_six_seats_position_order_reason',
       'first_table_guide_shared_cards_repair',
       'what_poker_is_theory',
       'what_poker_is_find_hero',
@@ -278,6 +281,10 @@ void main() {
         for (final l in w.lessons) ...l.taskList,
     ];
     final w2Q9TaskIds = w2Q9ChoiceContractV1.keys.toSet();
+    final w3NewTaskIds = w3NewChoiceContractV1.keys.toSet();
+    expect(tasks.map((task) => task.taskId).toSet(), containsAll(w3NewTaskIds));
+    final w6TaskIds = w6NewChoiceContractV1.keys.toSet();
+    expect(tasks.map((task) => task.taskId).toSet(), containsAll(w6TaskIds));
     expect(
       tasks
           .where((task) => w2Q9TaskIds.contains(task.taskId))
@@ -285,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(385));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(385));
+    expect(tasks, hasLength(397));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -297,7 +304,9 @@ void main() {
             !_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
-            !w2Q9TaskIds.contains(task.taskId),
+            !w2Q9TaskIds.contains(task.taskId) &&
+            !w3NewTaskIds.contains(task.taskId) &&
+            !w6TaskIds.contains(task.taskId),
       ),
       hasLength(368),
     );
@@ -326,7 +335,7 @@ void main() {
       expect(replay.isConsumerSafe, isFalse);
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
-    expect(orientationIds, hasLength(47));
+    expect(orientationIds, hasLength(48));
     expect(explanationIds, hasLength(81));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
@@ -360,7 +369,9 @@ void main() {
         if (!_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
-            !w2Q9TaskIds.contains(task.taskId))
+            !w2Q9TaskIds.contains(task.taskId) &&
+            !w3NewTaskIds.contains(task.taskId) &&
+            !w6TaskIds.contains(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -438,6 +449,20 @@ void main() {
             <String>['SB', 'BB', 'UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB', 'BB'],
             reason: task.taskId,
           );
+          final newSeat = w4OpeningSeatsV1[task.taskId];
+          if (newSeat != null) {
+            expect(table.heroSeatId, newSeat, reason: task.taskId);
+            expect(table.activeSeatId, newSeat, reason: task.taskId);
+            expect(table.decisionSeatId, newSeat, reason: task.taskId);
+            expect(replay?.currentDecisionActor, 'Hero', reason: task.taskId);
+            expect(
+              table.actionTrail.map((item) => item.label),
+              contains('${newSeat.toUpperCase()} raises 2.75 BB'),
+              reason: task.taskId,
+            );
+            expect(table.potLabel, 'Pot 6 BB', reason: task.taskId);
+            expect(table.toCallLabel, isEmpty, reason: task.taskId);
+          }
         }
       } else {
         expect(act0StreetReplayFromTableV1(table), isNull, reason: task.taskId);
@@ -505,8 +530,15 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 264); // Authored contexts, not certified replay histories.
+    expect(played, 275); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'w3_play_from_blinds_intro',
+      'w3_play_from_blinds_small_blind_fold',
+      'w3_play_from_blinds_small_blind_raise',
+      'w3_play_from_blinds_small_blind_medium_raise',
+      'w3_play_from_blinds_small_blind_medium_fold',
+      'w3_play_from_blinds_big_blind_price',
+      'w3_play_from_blinds_big_blind_defend',
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
       ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
@@ -591,15 +623,11 @@ void main() {
           liveAmounts.clear();
         }
         if (match[4] case final amount?) {
-          final player = match[2]!;
-          if (match[5] != null) {
-            expect(match[3], 'calls', reason: task.taskId);
-            liveAmounts[player] =
-                (liveAmounts[player] ?? 0) + double.parse(amount);
-          } else {
-            // A bare amount is the player's total commitment on this street.
-            liveAmounts[player] = double.parse(amount);
-          }
+          final seat = match[2]!;
+          final increment = match[5] != null;
+          if (increment) expect(match[3], 'calls', reason: task.taskId);
+          liveAmounts[seat] =
+              double.parse(amount) + (increment ? liveAmounts[seat] ?? 0 : 0);
         }
       }
       final livePot = liveAmounts.values.fold(0.0, (sum, bb) => sum + bb);
@@ -630,6 +658,51 @@ void main() {
       'w7_clean_outs_lower_price': 'w7_count_winning_rivers',
       'w7_river_two_bluffs_of_six': 'w7_river_one_bluff_of_six',
     });
+  });
+
+  test('W5 board examples use the newly authored opening seats', () {
+    const openings = <String, String>{
+      'board_texture_basics_w5_texture_intro': 'hj',
+      'board_texture_basics_w5_dry_board': 'co',
+      'board_texture_basics_w5_wet_board': 'co',
+      'board_texture_basics_w5_texture_recap': 'hj',
+      'connected_boards_w5_connected_intro': 'co',
+      'connected_boards_w5_disconnected_board': 'co',
+      'connected_boards_w5_connected_board': 'co',
+      'connected_boards_w5_connected_recap': 'co',
+      'flush_draws_w5_flush_intro': 'hj',
+      'flush_draws_w5_flush_draw_find': 'co',
+      'flush_draws_w5_no_flush_draw': 'co',
+      'flush_draws_w5_made_hand_vs_flush_draw_transfer': 'co',
+      'flush_draws_w5_flush_recap': 'co',
+      'straight_draws_w5_straight_intro': 'co',
+      'outs_improvement_w5_outs_intro': 'co',
+      'outs_improvement_w5_flush_out': 'co',
+      'turn_river_changes_w5_street_change_intro': 'hj',
+      'turn_river_changes_w5_turn_hits': 'co',
+    };
+    final rows = _world5To8Tasks().where(
+      (task) => openings.containsKey(task.taskId),
+    );
+    expect(rows.map((task) => task.taskId), unorderedEquals(openings.keys));
+    for (final task in rows) {
+      final table = task.runner.table;
+      final hero = openings[task.taskId]!;
+      final replay = act0StreetReplayFromTableV1(table);
+      expect(table.heroSeatId, hero, reason: task.taskId);
+      expect(table.activeSeatId, hero, reason: task.taskId);
+      expect(table.decisionSeatId, hero, reason: task.taskId);
+      expect(table.heroSeat.seatId, hero, reason: task.taskId);
+      expect(
+        table.seats.where((seat) => seat.isInHand).map((seat) => seat.seatId),
+        [hero, 'bb'],
+        reason: task.taskId,
+      );
+      expect(table.toCallLabel, isEmpty, reason: task.taskId);
+      expect(replay?.heroPosition, hero.toUpperCase(), reason: task.taskId);
+      expect(replay?.currentDecisionActor, 'Hero', reason: task.taskId);
+      expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
+    }
   });
 
   test('folded-to-BTN replay preserves all three prior folds', () {

@@ -42,14 +42,19 @@ class Act0DurableRetentionHistoryV1 {
   ).refreshedAt(nowUtc);
 
   Act0DurableRetentionHistoryV1 applyEvidence(
-    Act0LearningEvidenceRecordV1 record,
-  ) {
+    Act0LearningEvidenceRecordV1 record, {
+    String? dueConceptFamilyId,
+  }) {
     if (record.isAssistedCorrect) return this;
     // A placement answer is assessment, not learning: it must not seed
     // retention state or an elapsed due review.
     if (record.isPlacementAssessment || record.isDiagnosticLearningEntry)
       return this;
-    final conceptFamilyId = act0ConceptFamilyIdForDurableEvidenceV1(record);
+    // A familiar hand can emit different signals for the earlier wrong
+    // choice and the correct choice. The due review settles the scheduled
+    // family while the authored choice signal remains in the evidence record.
+    final conceptFamilyId =
+        dueConceptFamilyId ?? act0ConceptFamilyIdForDurableEvidenceV1(record);
     if (conceptFamilyId.isEmpty || conceptFamilyId == 'none') {
       return this;
     }

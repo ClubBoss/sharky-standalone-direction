@@ -200,12 +200,12 @@ List<TableTruthRow> auditTableTruth() {
             'SB blind 0.5 BB',
             'BB blind 1 BB',
             'UTG folds',
-            'HJ folds',
-            'CO calls 1 BB',
-            'BTN raises to 3 BB',
+            'HJ calls 1 BB',
+            'CO raises to 3 BB',
+            'BTN folds',
             'SB folds',
             'BB calls 2 BB more',
-            'CO folds',
+            'HJ folds',
           ];
           final streetIndex = [
             'Preflop',
@@ -217,7 +217,7 @@ List<TableTruthRow> auditTableTruth() {
             final street = ['Preflop', 'Flop', 'Turn', 'River'][i];
             expectedTrail.add('$street: BB checks');
             if (i < streetIndex || finished) {
-              expectedTrail.add('$street: BTN checks');
+              expectedTrail.add('$street: CO checks');
             }
           }
           final liveSeats =
@@ -252,19 +252,19 @@ List<TableTruthRow> auditTableTruth() {
           );
           declared(
             'D6.first_hand_survivors',
-            liveSeats.join(',') == 'bb,btn',
-            'BB and BTN remain; CO dead 1 BB stays in 7.5 BB pot',
+            liveSeats.join(',') == 'bb,co',
+            'BB and CO remain; HJ dead 1 BB stays in 7.5 BB pot',
           );
           declared(
             'D6.first_hand_history',
             table.actionTrail.map((a) => a.label).join('|') ==
                 expectedTrail.join('|'),
-            'Complete authored BB/BTN history through this snapshot',
+            'Complete authored BB/CO history through this snapshot',
           );
           declared(
             'D1.first_hand_actor',
-            table.activeSeatId == (streetIndex > 0 && !finished ? 'btn' : ''),
-            'BTN acts after the current BB check; finished hand has no actor',
+            table.activeSeatId == (streetIndex > 0 && !finished ? 'co' : ''),
+            'CO acts after the current BB check; finished hand has no actor',
           );
         }
 

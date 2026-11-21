@@ -82,7 +82,7 @@ void main() {
   );
 
   test(
-    'all 189 W1-W4 tasks have explicit curriculum topics and independent evidence',
+    'all 198 W1-W4 tasks have explicit curriculum topics and independent evidence',
     () {
       final foundationWorlds = _worlds
           .where((w) => w.worldNumber <= 4)
@@ -90,7 +90,7 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 189);
+      expect(tasks.length, 198);
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
@@ -184,6 +184,8 @@ void main() {
       'range_board_fit',
       'range_pressure_lines',
       'range_combo_counts',
+      'w6_continuation_bet',
+      'range_reading_review',
       'range_thinking_checkpoint',
     };
     const pricedOuts = {
@@ -211,7 +213,7 @@ void main() {
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
-    expect(tasksByWorld, {5: 34, 6: 35});
+    expect(tasksByWorld, {5: 34, 6: 38});
   });
 
   test('every W7–W8 task projects to its authored topic', () {

@@ -996,28 +996,28 @@ const _readBoardRunner = Act0RunnerStateV1(
   ],
 );
 
-// Owner-approved #333 continuous hand. These overrides are used ONLY by
-// your_first_hand_*; shared board/showdown templates keep their own examples.
+// The continuous first hand keeps the same cards, pot and action skills.
+// Only your_first_hand_* uses this CO hand against the big blind.
 const _firstHandPreflopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
   Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
   Act0ActionTrailItemV1(label: 'UTG folds', displayLabel: 'First player folds'),
-  Act0ActionTrailItemV1(label: 'HJ folds', displayLabel: 'Next player folds'),
   Act0ActionTrailItemV1(
-    label: 'CO calls 1 BB',
+    label: 'HJ calls 1 BB',
     displayLabel: 'Player to your right calls 1 BB',
   ),
   Act0ActionTrailItemV1(
-    label: 'BTN raises to 3 BB',
+    label: 'CO raises to 3 BB',
     displayLabel: 'You raise to 3 BB',
   ),
+  Act0ActionTrailItemV1(label: 'BTN folds'),
   Act0ActionTrailItemV1(label: 'SB folds'),
   Act0ActionTrailItemV1(
     label: 'BB calls 2 BB more',
     displayLabel: 'BB calls 2 more, 3 total',
   ),
   Act0ActionTrailItemV1(
-    label: 'CO folds',
+    label: 'HJ folds',
     displayLabel: 'Player to your right folds',
   ),
 ];
@@ -1030,9 +1030,9 @@ Act0RunnerStateV1 _act0W01NewFirstHandStackContextV1(
 }) {
   const remaining = <String, String>{
     'utg': '100 BB',
-    'hj': '100 BB',
-    'co': '99 BB',
-    'btn': '97 BB',
+    'hj': '99 BB',
+    'co': '97 BB',
+    'btn': '100 BB',
     'sb': '99.5 BB',
     'bb': '97 BB',
   };
@@ -1041,7 +1041,7 @@ Act0RunnerStateV1 _act0W01NewFirstHandStackContextV1(
         ? 'Read the action through the first check on the flop.'
         : 'The big blind checks on this ${source.table.streetLabel.toLowerCase()}.',
     table: source.table.copyWith(
-      decisionSeatId: 'btn',
+      decisionSeatId: 'co',
       seats: [
         for (final seat in source.table.seats)
           _act0CopySeatStateV1(seat, stackLabel: remaining[seat.seatId]),
@@ -1065,18 +1065,19 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     if (i < streetIndex || finished)
       trail.add(
         Act0ActionTrailItemV1(
-          label: '$name: BTN checks',
+          label: '$name: CO checks',
           displayLabel: '$name: You check',
         ),
       );
   }
-  final table = _act0CurrentStreetTableV1(runner.table).copyWith(
+  final sourceTable = _act0W1MoveHeroV1(runner.table, 'co');
+  final table = _act0CurrentStreetTableV1(sourceTable).copyWith(
     heroCards: _heroAkCards,
     boardCards: history ? _flopA72Cards : runner.table.boardCards,
     streetLabel: street,
     highlightedSeatIds: showdown
         ? const <String>['bb']
-        : runner.table.highlightedSeatIds,
+        : sourceTable.highlightedSeatIds,
     highlightedCardIds: history
         ? const ['board_0', 'board_1', 'board_2']
         : runner.lessonId == 'your_first_hand_turn'
@@ -1086,7 +1087,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
         : runner.table.highlightedCardIds,
     potLabel: 'Pot 7.5 BB',
     toCallLabel: '',
-    activeSeatId: streetIndex > 0 && !finished ? 'btn' : '',
+    activeSeatId: streetIndex > 0 && !finished ? 'co' : '',
     centerLabel: showdown
         ? 'Your pair of aces beats the big blind’s pair of jacks'
         : runner.table.centerLabel,
@@ -1096,13 +1097,13 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
         ..._act0LessonBlinds,
         Act0ContributionV1(
           PokerStreet.preflop,
-          'co',
+          'hj',
           Act0ContributionKindV1.wager,
           1,
         ),
         Act0ContributionV1(
           PokerStreet.preflop,
-          'btn',
+          'co',
           Act0ContributionKindV1.wager,
           3,
         ),
@@ -1116,18 +1117,18 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     ),
     actionTrail: trail,
     seats: [
-      for (final seat in runner.table.seats)
+      for (final seat in sourceTable.seats)
         _act0CopySeatStateV1(
           seat,
-          isInHand: ['bb', 'btn'].contains(seat.seatId),
-          isFolded: !['bb', 'btn'].contains(seat.seatId),
-          isActive: false,
+          isInHand: ['bb', 'co'].contains(seat.seatId),
+          isFolded: !['bb', 'co'].contains(seat.seatId),
+          isActive: seat.seatId == 'co' && streetIndex > 0 && !finished,
           holeCards: seat.isHero
               ? _heroAkCards
               : seat.seatId == 'bb' && finished
               ? _opponentKhJhCards
               : _unknownHoleCards,
-          cardsVisibleMode: !['bb', 'btn'].contains(seat.seatId)
+          cardsVisibleMode: !['bb', 'co'].contains(seat.seatId)
               ? Act0CardsVisibleModeV1.none
               : seat.isHero || (seat.seatId == 'bb' && finished)
               ? Act0CardsVisibleModeV1.faceUp
@@ -2449,6 +2450,7 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
 // The stipulated preflop raise is history, not a strategy recommendation.
 Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
   Act0RunnerStateV1 source, {
+  String heroSeatId = 'btn',
   Act0CardStateV1 firstBoardCard = const Act0CardStateV1(
     rank: 'A',
     suit: 'h',
@@ -2459,11 +2461,11 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
     Act0CardStateV1(rank: '9', suit: 'c'),
     Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
   ];
-  const remaining = <String, String>{
+  final remaining = <String, String>{
     'utg': '100 BB',
     'hj': '100 BB',
-    'co': '100 BB',
-    'btn': '98 BB',
+    'co': heroSeatId == 'co' ? '98 BB' : '100 BB',
+    'btn': heroSeatId == 'btn' ? '98 BB' : '100 BB',
     'sb': '99.5 BB',
     'bb': '98 BB',
   };
@@ -2482,21 +2484,21 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
       potLabel: 'Pot 4.5 BB',
       toCallLabel: '',
       centerLabel: 'No bet faces you',
-      decisionSeatId: 'btn',
-      activeSeatId: 'btn',
-      heroSeatId: 'btn',
+      decisionSeatId: heroSeatId,
+      activeSeatId: heroSeatId,
+      heroSeatId: heroSeatId,
       highlightedSeatIds: const [],
       highlightedCardIds: const [],
       selectableSeatIds: const [],
       selectedSeatId: '',
       focusCalloutLabel: '',
-      handContributions: const Act0HandContributionsV1(
+      handContributions: Act0HandContributionsV1(
         throughStreet: PokerStreet.flop,
         entries: [
           ..._act0LessonBlinds,
           Act0ContributionV1(
             PokerStreet.preflop,
-            'btn',
+            heroSeatId,
             Act0ContributionKindV1.wager,
             2,
           ),
@@ -2508,13 +2510,14 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
           ),
         ],
       ),
-      actionTrail: const [
+      actionTrail: [
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
         Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ folds'),
-        Act0ActionTrailItemV1(label: 'CO folds'),
-        Act0ActionTrailItemV1(label: 'BTN raises 2 BB'),
+        if (heroSeatId == 'btn') const Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: '${heroSeatId.toUpperCase()} raises 2 BB'),
+        if (heroSeatId == 'co') const Act0ActionTrailItemV1(label: 'BTN folds'),
         Act0ActionTrailItemV1(label: 'SB folds'),
         Act0ActionTrailItemV1(
           label: 'BB calls 1 BB more',
@@ -2527,19 +2530,21 @@ Act0RunnerStateV1 _act0W01ExplicitFreeCheckContextV1(
           Act0SeatStateV1(
             seatId: seat.seatId,
             seatLabel: seat.seatLabel,
-            displayName: seat.displayName,
-            isHero: seat.seatId == 'btn',
+            displayName: seat.seatId == heroSeatId
+                ? 'Hero'
+                : _act0DefaultSeatDisplayNameV1(seat),
+            isHero: seat.seatId == heroSeatId,
             isDealerButton: seat.seatId == 'btn',
             isSmallBlind: seat.seatId == 'sb',
             isBigBlind: seat.seatId == 'bb',
-            isActive: seat.seatId == 'btn',
-            isInHand: seat.seatId == 'btn' || seat.seatId == 'bb',
-            isFolded: seat.seatId != 'btn' && seat.seatId != 'bb',
-            hasActed: seat.seatId != 'btn',
+            isActive: seat.seatId == heroSeatId,
+            isInHand: seat.seatId == heroSeatId || seat.seatId == 'bb',
+            isFolded: seat.seatId != heroSeatId && seat.seatId != 'bb',
+            hasActed: seat.seatId != heroSeatId,
             isLastAggressor: false,
             stackLabel: remaining[seat.seatId],
-            holeCards: seat.seatId == 'btn' ? heroCards : const [],
-            cardsVisibleMode: seat.seatId == 'btn'
+            holeCards: seat.seatId == heroSeatId ? heroCards : const [],
+            cardsVisibleMode: seat.seatId == heroSeatId
                 ? Act0CardsVisibleModeV1.faceUp
                 : Act0CardsVisibleModeV1.none,
           ),
@@ -2709,7 +2714,12 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
       : matched
       ? 'bb'
       : 'utg';
-  final hero = flop ? 'co' : 'btn';
+  final hero = switch (taskId) {
+    'positions_utg' || 'blinds_first_actor' => 'hj',
+    'blinds_last_actor' || 'blinds_review' => 'co',
+    'positions_early_late' => 'hj',
+    _ => 'co',
+  };
   const cards = <Act0CardStateV1>[
     Act0CardStateV1(rank: '?', suit: ''),
     Act0CardStateV1(rank: '?', suit: ''),
@@ -3317,18 +3327,17 @@ final _w3SixSeatsIntroRunner = _positionsRunner.copyWith(
   lessonId: 'w3_six_seats_intro',
   lessonTitle: 'The 6 positions',
   lessonSubtitle: 'Position Thinking',
-  caption: 'Six-max tables use UTG, HJ, CO, BTN, SB, and BB.',
+  caption: 'Six seats, one order.',
   hint:
       'Use the table labels first. Button and blinds are only part of the map.',
-  question: 'What does this lesson train?',
+  question: 'Read the seat order.',
   options: const <Act0RunnerOptionV1>[],
   feedbackTitle: 'Six-seat map.',
   feedbackReason: 'Recognize every seat label before using position to decide.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'All six seats matter.',
-      body:
-          'UTG, HJ, CO, BTN, SB, and BB each point to a different place in the order.',
+      body: 'Clockwise from UTG: HJ, CO, BTN, SB, BB.',
       focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
     ),
   ],
@@ -3350,7 +3359,7 @@ final _w3SeatIdUtgRunner = _w3SeatRecognitionRunnerV1(
 
 final _w3SeatIdHjRunner = _w3SeatRecognitionRunnerV1(
   lessonId: 'w3_seat_id_hj',
-  caption: 'Two middle seats are highlighted between UTG and BTN.',
+  caption: 'Find the seat after UTG.',
   hint: 'Choose the one directly after UTG.',
   question: 'Tap HJ.',
   correctSeatId: 'hj',
@@ -3425,7 +3434,7 @@ final _w3SeatIdBbRunner = _w3SeatRecognitionRunnerV1(
 final _w3SixSeatsRecapRunner = _w3SixSeatsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w3_six_seats_recap',
-  caption: 'Lesson learned: every 6-max seat has a name.',
+  caption: 'Use all six seats.',
   hint: 'Read all six labels before using position.',
   question: 'Which list names the six seats?',
   options: const <Act0RunnerOptionV1>[

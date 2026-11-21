@@ -11,14 +11,29 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
-    show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+    show
+        q3AppendedChoicesV1,
+        w4AddedOptionQualityV1,
+        w4MinRaiseTaskIdsV1,
+        w5AddedOptionQualityV1,
+        w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
+import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_w6_catalog_contract_v1.dart';
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
 // The legacy mapper falls back once the unsupported table clue is removed.
 // Current typed repairs are verified separately.
 const _legacyFallbacksWithoutSourceClue = <String>{
+  // W3 prompts now ask for the decision or consequence shown in the scene.
+  'button_advantage_button_intro',
+  'button_advantage_button_vs_cutoff',
+  'button_advantage_button_recap',
+  'position_checkpoint_position_checkpoint_intro',
+  // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
+  'positions_theory',
+  'blinds_button_moves',
   // This is a played hand with an unknown caller stack.
   _w9BubbleTableRiskId,
   // The remaining questions use hypothetical setups.
@@ -428,7 +443,7 @@ void main() {
       );
       expect(
         value.task.runner.question,
-        contains('assume BB calls 3 BB with a weaker ace'),
+        contains('BB checks a weaker ace and calls 3 BB but folds to 6 BB'),
       );
       expect(
         value.task.runner.options.singleWhere((option) => option.isCorrect).id,
@@ -852,9 +867,14 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(309));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(309));
-    expect(allChoices, hasLength(511));
+    expect(rows, hasLength(319));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(
+      allChoices,
+      hasLength(
+        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+      ),
+    );
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -922,8 +942,17 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(477));
-    expect(unknown, hasLength(10));
+    expect(
+      foundationDefaults,
+      hasLength(
+        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+      ),
+    );
+    expect(
+      unknown.intersection(w3AppendedRepairChoiceIdsV1),
+      w3AppendedRepairChoiceIdsV1,
+    );
+    expect(unknown.difference(w3AppendedRepairChoiceIdsV1), hasLength(10));
     expect(
       admitted.length +
           foundationDefaults.length +
@@ -958,20 +987,29 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
           if (task.taskId != 'first_table_guide_shared_cards_repair' &&
               (!historical ||
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
+                      !w3NewChoiceContractV1.containsKey(task.taskId) &&
+                      !w6NewChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==
                   1)
             _Row(
               world.worldId,
-              lesson.lessonId,
+              historical && w6MovedToRangeReadingV1.contains(task.taskId)
+                  ? 'range_thinking_checkpoint'
+                  : lesson.lessonId,
               task,
               omittedChoiceId: historical
                   ? q3AppendedChoicesV1[task.taskId] ??
-                        w2AppendedWrongChoicesV1[task.taskId]
+                        w2AppendedWrongChoicesV1[task.taskId] ??
+                        w3AppendedWrongChoicesV1[task.taskId] ??
+                        w4AddedOptionQualityV1[task.taskId]?.$1 ??
+                        w5AddedOptionQualityV1[task.taskId]?.$1
                   : null,
               historicalChoices: historical
-                  ? preW2ReasonChoicesV1[task.taskId]
+                  ? preW2ReasonChoicesV1[task.taskId] ??
+                        preW3ReasonChoicesV1[task.taskId] ??
+                        preW6ChoiceContractV1[task.taskId]
                   : null,
             ),
 ];

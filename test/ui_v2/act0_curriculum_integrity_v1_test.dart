@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_catalog_truth_audit_v1.dart' show w4OpeningSeatsV1;
+
 void main() {
   Act0LessonTaskV1 task(String worldId, String taskId) => Act0ShellStateV1
       .sample
@@ -118,8 +120,16 @@ void main() {
           hasLength(1),
           reason: entry.key,
         );
+        final hero = w4OpeningSeatsV1[entry.key] ?? 'btn';
         final expectedTaskTrail = <String>[
-          ...expectedTrail,
+          'SB blind 0.5 BB',
+          'BB blind 1 BB',
+          for (final seat in ['utg', 'hj', 'co', 'btn', 'sb'])
+            seat == hero
+                ? '${seat.toUpperCase()} raises 2.75 BB'
+                : '${seat.toUpperCase()} folds',
+          'BB calls 2.75 BB',
+          'Flop: BB checks',
           if (entry.key == 'w4_protection_check') 'BTN checks',
         ];
         expect(
@@ -130,15 +140,21 @@ void main() {
         final seats = <String, Act0SeatStateV1>{
           for (final seat in table.seats) seat.seatId: seat,
         };
-        for (final seatId in <String>['utg', 'hj', 'co', 'sb']) {
+        for (final seatId in <String>['utg', 'hj', 'co', 'btn', 'sb']) {
+          if (seatId == hero) continue;
           expect(seats[seatId]?.isFolded, isTrue, reason: entry.key);
           expect(seats[seatId]?.isInHand, isFalse, reason: entry.key);
         }
         expect(seats['bb']?.isFolded, isFalse, reason: entry.key);
         expect(seats['bb']?.hasActed, isTrue, reason: entry.key);
         final closedRound = entry.key == 'w4_protection_check';
-        expect(table.activeSeatId, closedRound ? '' : 'btn', reason: entry.key);
-        expect(seats['btn']?.hasActed, closedRound, reason: entry.key);
+        expect(
+          table.heroSeatId ?? table.heroSeat.seatId,
+          hero,
+          reason: entry.key,
+        );
+        expect(table.activeSeatId, closedRound ? '' : hero, reason: entry.key);
+        expect(seats[hero]?.hasActed, closedRound, reason: entry.key);
         if (closedRound) {
           expect(
             table.seats.where((seat) => seat.isActive),
@@ -177,8 +193,16 @@ void main() {
         expect(runner.teachingSteps, isEmpty, reason: id);
         expect(runner.caption, contains('the pot after you call'), reason: id);
         expect(
-          runner.options.map((option) => option.label),
-          unorderedEquals(['Call', 'Fold']),
+          runner.options.map((option) => option.id),
+          unorderedEquals([
+            'call',
+            'fold',
+            switch (id) {
+              'w4_bad_price_fold' => 'fold_ignore_price',
+              'w4_big_price_marginal_fold' => 'wrong_threshold',
+              _ => 'call_ignore_price',
+            },
+          ]),
           reason: id,
         );
       }

@@ -165,6 +165,13 @@ class CatalogStartingChart {
     }
     return null;
   }
+
+  String? smallBlindVsButton(Act0TableStateV1 table) {
+    final code = startingHandCode(physicalCards(table.heroCards));
+    if (code == null) return null;
+    final row = opening[code];
+    return (row?.seats.contains('HJ') ?? false) ? 'raise' : 'fold';
+  }
 }
 
 List<String> chartRaisers(Act0TableStateV1 table) => [

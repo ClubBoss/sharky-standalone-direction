@@ -448,13 +448,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
     isLocked: true,
     isSelectable: false,
     rewardXp: 40,
-    runner: _w6RangeIntroRunner,
+    runner: _w6FromCutoff(_w6RangeIntroRunner),
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w6_range_intro',
         title: 'Three buckets',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w6RangeIntroRunner,
+        runner: _w6FromCutoff(_w6RangeIntroRunner),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -462,7 +462,45 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_value_dry_board',
         title: 'Value on dry board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6ValueDryBoardRunner,
+        runner: _w6FromCutoff(
+          _w6ValueDryBoardRunner.copyWith(
+            question: 'What can KQ do if weaker kings will call a small bet?',
+            options: const [
+              Act0RunnerOptionV1(
+                id: 'value',
+                label: 'Bet for value',
+                isCorrect: true,
+                preferredLabel: 'Bet for value',
+                quality: Act0FeedbackQualityV1.correct,
+                feedbackTitle: 'Top pair can bet for value.',
+                feedbackReason:
+                    'KQ pairs the highest card on K-7-2. A weaker king can call a small bet.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'bluff',
+                label: 'Bet as a bluff',
+                isCorrect: false,
+                preferredLabel: 'Bet for value',
+                betterAnswerLabel: 'Bet for value',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'Think about calls from weaker hands.',
+                feedbackReason:
+                    'KQ makes top pair on K-7-2. Treating the bet as a bluff misses why you want a weaker king to call.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'missed',
+                label: 'Check because you missed',
+                isCorrect: false,
+                preferredLabel: 'Bet for value',
+                betterAnswerLabel: 'Bet for value',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'The king makes a pair.',
+                feedbackReason:
+                    'KQ shares a king with K-7-2. Treating it as a miss can give up a call from a weaker king.',
+              ),
+            ],
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -492,7 +530,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_buckets_recap',
         title: 'Buckets recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w6BucketsRecapRunner,
+        runner: _w6FromCutoff(_w6BucketsRecapRunner),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -508,13 +546,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
     isLocked: true,
     isSelectable: false,
     rewardXp: 40,
-    runner: _w6BoardFitIntroRunner,
+    runner: _w6FromCutoff(_w6BoardFitIntroRunner),
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w6_board_fit_intro',
         title: 'Board shifts bucket',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w6BoardFitIntroRunner,
+        runner: _w6FromCutoff(_w6BoardFitIntroRunner),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -522,7 +560,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_wrong_board',
         title: 'Missed on wet board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6WrongBoardRunner,
+        runner: _w6FromCutoff(_w6WrongBoardRunner),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -568,13 +606,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
     isLocked: true,
     isSelectable: false,
     rewardXp: 40,
-    runner: _w6PressureLinesIntroRunner,
+    runner: _w6FromCutoff(_w6PressureLinesIntroRunner),
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w6_pressure_lines_intro',
         title: 'Bucket shapes action',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w6PressureLinesIntroRunner,
+        runner: _w6FromCutoff(_w6PressureLinesIntroRunner),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -670,7 +708,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_pressure_lines_recap',
         title: 'Pressure recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w6PressureLinesRecapRunner,
+        runner: _w6FromCutoff(_w6PressureLinesRecapRunner),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -745,16 +783,49 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
     ],
   ),
+  _lessonFromTasksV1(
+    lessonId: 'w6_continuation_bet',
+    title: 'After your preflop raise',
+    subtitle: 'Use the flop texture before choosing whether to bet again.',
+    phaseLabel: 'Flop plan',
+    rewardXp: 24,
+    sourceTasks: [
+      Act0LessonTaskV1(
+        taskId: 'intro',
+        title: 'The next bet after a raise',
+        phase: Act0LessonPhaseV1.theory,
+        runner: _w6ContinuationBetIntro,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.learn,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'dry_size',
+        title: 'Size a bet on a dry flop',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w6ContinuationBetDry,
+        rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'wet_check',
+        title: 'Missed on a wet flop',
+        phase: Act0LessonPhaseV1.review,
+        runner: _w6ContinuationBetWet,
+        rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.review,
+      ),
+    ],
+  ),
   Act0LessonCardV1(
-    lessonId: 'range_thinking_checkpoint',
-    title: 'Range thinking checkpoint',
-    subtitle: 'Bucket, board fit, combo count, then pressure.',
-    phaseLabel: 'Checkpoint',
+    lessonId: 'range_reading_review',
+    title: 'Review range reads and combinations',
+    subtitle: 'Read hand strength on the flop and count the possible hands.',
+    phaseLabel: 'Range review',
     primaryCtaLabel: 'Locked',
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 45,
+    rewardXp: 36,
     runner: _world6RangeCheckpointRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -952,6 +1023,20 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'range_thinking_checkpoint',
+    title: 'Range thinking checkpoint',
+    subtitle: 'Compare value, bluff pressure and hand combinations.',
+    phaseLabel: 'Checkpoint',
+    primaryCtaLabel: 'Locked',
+    state: Act0LessonStateV1.locked,
+    isLocked: true,
+    isSelectable: false,
+    rewardXp: 86,
+    runner: _world6RangeCheckpointRunner,
+    tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w6_suited_offsuit_weight_compare',
         title: 'Suited or offsuit weight',
@@ -1274,6 +1359,8 @@ final _rangeThinkingFoundationLessons = <Act0LessonCardV1>[
   _rangeThinkingLiteLessons[2],
   _rangeThinkingLiteLessons[3],
   _rangeThinkingLiteLessons[4],
+  _rangeThinkingLiteLessons[5],
+  _rangeThinkingLiteLessons[6],
 ];
 
 final _visibleCardRangeContinuationLessons = <Act0LessonCardV1>[
@@ -1294,7 +1381,7 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       title: 'Which cards actually win?',
       question:
           'Suppose BB has K♣ Q♠. How many river cards give you the winning hand?',
-      caption: 'Only one card is left to come.',
+      caption: 'Count the rivers that beat the stated hand. One card is left.',
       table: _w7TurnPriceTableV1(3),
       labels: const ['9', '12', '11'],
       correctAt: 1,
@@ -1302,13 +1389,6 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
         'Nine hearts make a winning flush. Three non-heart aces also win.',
         'Nine hearts make a winning flush. The three unseen aces also win with a pair of aces.',
         'Count the three unseen aces as well as all nine unseen hearts.',
-      ],
-      teaching: const [
-        Act0TeachingStepV1(
-          title: 'An out has to win',
-          body:
-              'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
-        ),
       ],
       family: Act0TaskFamilyV1.counting,
     ),
@@ -1425,7 +1505,18 @@ Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
     table: table,
     labels: const ['Bet 3 BB', 'Check'],
     correctAt: multiway ? 1 : 0,
-    feedback: [explanation, explanation],
+    feedback: multiway
+        ? [
+            'With SB and BB both in, the 3 BB bet loses money on average. '
+                'It wins 9 BB on 16% of hands and costs 3 BB on the rest.',
+            explanation,
+          ]
+        : [
+            explanation,
+            'Checking gets 0 BB in this model. With BB as the only opponent, '
+                'winning 6.5 BB on 40% of hands more than offsets the 3 BB you '
+                'lose when BB continues.',
+          ],
     family: Act0TaskFamilyV1.decision,
   );
 }
@@ -2229,3 +2320,150 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
     ],
   ),
 ];
+
+Act0RunnerStateV1 _w6FromCutoff(Act0RunnerStateV1 runner) {
+  final original = runner.table;
+  final table = _day7PostflopV1(
+    'co',
+    original.heroCards.map((card) => card.label).join(' '),
+    original.boardCards.map((card) => card.label).join(' '),
+    openBb: 2.5,
+    checkedToHero: true,
+    showTurn: true,
+  ).copyWith(centerLabel: original.centerLabel);
+  return runner.copyWith(table: table);
+}
+
+final _w6ContinuationBetIntro = _w6BoardFitIntroRunner.copyWith(
+  lessonId: 'w6_continuation_bet',
+  caption:
+      'CO raised and BB called, then checked the flop. Read the three ranks and suits first. Ask which weaker hands could pay a small bet and which draws BB could continue with.',
+  question: 'How does the flop change your next decision?',
+  hint: '',
+  feedbackTitle: 'Read the flop before betting.',
+  feedbackReason:
+      'CO can bet again after BB checks. A dry flop with a made hand gives weaker hands a reason to call a small bet.',
+  options: const [],
+  table: _day7PostflopV1(
+    'co',
+    'Ac Qd',
+    'Ah 6s 2c',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Continuation bet, or c-bet',
+      body:
+          'A continuation bet is a flop bet by the player who last raised preflop. '
+          'Against one caller who checks, a small bet is a good starting plan when you have a made hand on a dry flop. '
+          'On a wet flop, check back if you missed and have no useful draw. '
+          'The dry and wet textures tell you how many hands can connect, as in World 5. '
+          'On a dry rainbow flop, a one-third-pot bet leaves weaker hands a smaller call. '
+          'Connected two-tone flops give callers more ways to continue.',
+    ),
+  ],
+);
+
+final _w6ContinuationBetDry = _w6ContinuationBetIntro.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  caption: 'CO opened. BB called and checked on Q-7-2 rainbow. You have QJ.',
+  question: 'Which size fits the small-bet plan when weaker queens can call?',
+  feedbackTitle: 'One third of the pot.',
+  feedbackReason:
+      'In a 6 BB pot on Q-7-2 rainbow, top pair can use a 2 BB bet so weaker queens can call.',
+  table: _day7PostflopV1(
+    'co',
+    'Qc Jc',
+    'Qh 7s 2d',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'bet_two',
+      label: '2 BB',
+      isCorrect: true,
+      preferredLabel: '2 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'One third of the pot.',
+      feedbackReason:
+          'In the 6 BB pot on Q-7-2 rainbow, a 2 BB bet with top pair gives weaker queens a manageable price.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_six',
+      label: '6 BB',
+      isCorrect: false,
+      preferredLabel: '2 BB',
+      betterAnswerLabel: '2 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'That is a full-pot bet.',
+      feedbackReason:
+          'On this dry flop, a 6 BB bet with QJ can drive out the weaker queens you want to call.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_nine',
+      label: '9 BB',
+      isCorrect: false,
+      preferredLabel: '2 BB',
+      betterAnswerLabel: '2 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'That is bigger than the pot.',
+      feedbackReason:
+          'With QJ on Q-7-2, putting in 9 BB risks 7 BB more than the small bet and can leave you facing stronger hands.',
+    ),
+  ],
+);
+
+final _w6ContinuationBetWet = _w6ContinuationBetIntro.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  caption:
+      'CO opened. BB called and checked on J-T-9 with two hearts. You hold A4o.',
+  question: 'What is the cleaner line with no pair or direct draw?',
+  feedbackTitle: 'Take the free turn.',
+  feedbackReason:
+      'On J-T-9, A4o has no pair or direct draw. Checking keeps the chips you would risk on a bluff.',
+  table: _day7PostflopV1(
+    'co',
+    'As 4d',
+    'Jh Th 9c',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'bet_small',
+      label: 'Bet 2 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Look at what can continue.',
+      feedbackReason:
+          'With A4o on J-T-9, spending 2 BB can get called by pairs and draws that connected with those three cards.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'check',
+      label: 'Check',
+      isCorrect: true,
+      preferredLabel: 'Check',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Take the free turn.',
+      feedbackReason:
+          'On J-T-9, A4o has no pair or direct draw. Checking behind keeps the 2 BB you would have put in for a small bet.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_large',
+      label: 'Bet 6 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'A bigger bluff costs more.',
+      feedbackReason:
+          'Betting the 6 BB pot on J-T-9 risks another 6 BB while BB can continue with pairs, straights and draws.',
+    ),
+  ],
+);
