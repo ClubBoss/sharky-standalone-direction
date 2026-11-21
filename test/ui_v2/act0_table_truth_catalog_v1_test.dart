@@ -890,7 +890,10 @@ void main() {
         'repairLabels': <String>[],
       });
     }
-    for (final entry in w4AddedOptionQualityV1.entries) {
+    for (final entry in [
+      ...w4AddedOptionQualityV1.entries,
+      ...w5AddedOptionQualityV1.entries,
+    ]) {
       final expected = expectedComparison[entry.key] as Map<String, dynamic>;
       final (id, quality) = entry.value;
       (expected['options'] as List).add({

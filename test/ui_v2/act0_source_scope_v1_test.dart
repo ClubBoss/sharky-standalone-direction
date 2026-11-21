@@ -660,6 +660,51 @@ void main() {
     });
   });
 
+  test('W5 board examples use the newly authored opening seats', () {
+    const openings = <String, String>{
+      'board_texture_basics_w5_texture_intro': 'hj',
+      'board_texture_basics_w5_dry_board': 'co',
+      'board_texture_basics_w5_wet_board': 'co',
+      'board_texture_basics_w5_texture_recap': 'hj',
+      'connected_boards_w5_connected_intro': 'co',
+      'connected_boards_w5_disconnected_board': 'co',
+      'connected_boards_w5_connected_board': 'co',
+      'connected_boards_w5_connected_recap': 'co',
+      'flush_draws_w5_flush_intro': 'hj',
+      'flush_draws_w5_flush_draw_find': 'co',
+      'flush_draws_w5_no_flush_draw': 'co',
+      'flush_draws_w5_made_hand_vs_flush_draw_transfer': 'co',
+      'flush_draws_w5_flush_recap': 'co',
+      'straight_draws_w5_straight_intro': 'co',
+      'outs_improvement_w5_outs_intro': 'co',
+      'outs_improvement_w5_flush_out': 'co',
+      'turn_river_changes_w5_street_change_intro': 'hj',
+      'turn_river_changes_w5_turn_hits': 'co',
+    };
+    final rows = _world5To8Tasks().where(
+      (task) => openings.containsKey(task.taskId),
+    );
+    expect(rows.map((task) => task.taskId), unorderedEquals(openings.keys));
+    for (final task in rows) {
+      final table = task.runner.table;
+      final hero = openings[task.taskId]!;
+      final replay = act0StreetReplayFromTableV1(table);
+      expect(table.heroSeatId, hero, reason: task.taskId);
+      expect(table.activeSeatId, hero, reason: task.taskId);
+      expect(table.decisionSeatId, hero, reason: task.taskId);
+      expect(table.heroSeat.seatId, hero, reason: task.taskId);
+      expect(
+        table.seats.where((seat) => seat.isInHand).map((seat) => seat.seatId),
+        [hero, 'bb'],
+        reason: task.taskId,
+      );
+      expect(table.toCallLabel, isEmpty, reason: task.taskId);
+      expect(replay?.heroPosition, hero.toUpperCase(), reason: task.taskId);
+      expect(replay?.currentDecisionActor, 'Hero', reason: task.taskId);
+      expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
+    }
+  });
+
   test('folded-to-BTN replay preserves all three prior folds', () {
     for (final id in [
       'actions_theory',

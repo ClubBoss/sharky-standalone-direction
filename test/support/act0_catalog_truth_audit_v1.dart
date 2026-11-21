@@ -926,6 +926,28 @@ const w4AddedOptionQualityV1 = <String, (String, String)>{
   'w4_checkpoint_review': ('size_only', 'suboptimal'),
 };
 
+/// The W5 distractors keep the original winning choice IDs.
+const w5AddedOptionQualityV1 = <String, (String, String)>{
+  'board_texture_basics_w5_dry_board': ('semi_wet', 'wrong'),
+  'board_texture_basics_w5_wet_board': ('semi_wet', 'wrong'),
+  'connected_boards_w5_disconnected_board': ('paired', 'wrong'),
+  'connected_boards_w5_connected_board': ('disconnected_ranks', 'wrong'),
+  'flush_draws_w5_no_flush_draw': ('backdoor', 'wrong'),
+  'straight_draws_w5_straight_draw_find': ('one_rank', 'wrong'),
+  'straight_draws_w5_gap_board': ('ace_to_six', 'wrong'),
+  'outs_improvement_w5_table_outs_flush_transfer': (
+    'call_draw_alone',
+    'suboptimal',
+  ),
+  'outs_improvement_w5_table_outs_straight_transfer': (
+    'fold_wrong_out_count',
+    'suboptimal',
+  ),
+  'turn_river_changes_w5_turn_hits': ('one_club_short', 'wrong'),
+  'turn_river_changes_w5_river_misses': ('made_straight', 'wrong'),
+  'turn_river_changes_w5_board_checkpoint': ('call_cheap_only', 'suboptimal'),
+};
+
 /// Q7 extends the historical source census without replacing any legacy IDs.
 const w7AppliedTaskIdsV1 = <String>{
   'w7_flop_bluff_one_player',

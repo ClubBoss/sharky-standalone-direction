@@ -2144,6 +2144,7 @@ Act0TableStateV1 _act0BoardLessonTableV1({
   required List<Act0CardStateV1> heroCards,
   required List<Act0CardStateV1> boardCards,
   required String centerLabel,
+  String openingSeat = 'btn',
   num openBb = 2.5,
   num flopBetBb = 0,
   num turnBetBb = 0,
@@ -2163,14 +2164,15 @@ Act0TableStateV1 _act0BoardLessonTableV1({
   final heroBehind = heroBehindBb ?? 100 - collectedPerPlayer;
   final bigBlindBehind = bbBehindBb ?? 100 - collectedPerPlayer - facingBb;
   const wager = Act0ContributionKindV1.wager;
-  const folds = {'utg', 'hj', 'co', 'sb'};
+  final openingLabel = openingSeat.toUpperCase();
+  const preflopBeforeBb = ['utg', 'hj', 'co', 'btn', 'sb'];
   return Act0TableStateV1(
     scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
-    heroSeatId: 'btn',
-    activeSeatId: 'btn',
-    decisionSeatId: 'btn',
+    heroSeatId: openingSeat,
+    activeSeatId: openingSeat,
+    decisionSeatId: openingSeat,
     heroCards: heroCards,
     boardCards: boardCards,
     streetLabel: street,
@@ -2180,14 +2182,14 @@ Act0TableStateV1 _act0BoardLessonTableV1({
     handContributions: Act0HandContributionsV1(
       throughStreet: bettingStreet,
       startingStackBbBySeat: {
-        'btn': (heroBehind + collectedPerPlayer).toDouble(),
+        openingSeat: (heroBehind + collectedPerPlayer).toDouble(),
         'bb': (bigBlindBehind + collectedPerPlayer + facingBb).toDouble(),
       },
       entries: [
         ..._act0LessonBlinds,
         Act0ContributionV1(
           PokerStreet.preflop,
-          'btn',
+          openingSeat,
           wager,
           openBb.toDouble(),
         ),
@@ -2200,7 +2202,7 @@ Act0TableStateV1 _act0BoardLessonTableV1({
         if (boardCards.length >= 4 && flopBetBb > 0) ...[
           Act0ContributionV1(
             PokerStreet.flop,
-            'btn',
+            openingSeat,
             wager,
             flopBetBb.toDouble(),
           ),
@@ -2214,7 +2216,7 @@ Act0TableStateV1 _act0BoardLessonTableV1({
         if (boardCards.length == 5 && turnBetBb > 0) ...[
           Act0ContributionV1(
             PokerStreet.turn,
-            'btn',
+            openingSeat,
             wager,
             turnBetBb.toDouble(),
           ),
@@ -2235,11 +2237,12 @@ Act0TableStateV1 _act0BoardLessonTableV1({
     actionTrail: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-      const Act0ActionTrailItemV1(label: 'UTG folds'),
-      const Act0ActionTrailItemV1(label: 'HJ folds'),
-      const Act0ActionTrailItemV1(label: 'CO folds'),
-      Act0ActionTrailItemV1(label: 'BTN raises ${_act0BbLabelV1(openBb)}'),
-      const Act0ActionTrailItemV1(label: 'SB folds'),
+      for (final seat in preflopBeforeBb)
+        Act0ActionTrailItemV1(
+          label: seat == openingSeat
+              ? '$openingLabel raises ${_act0BbLabelV1(openBb)}'
+              : '${seat.toUpperCase()} folds',
+        ),
       Act0ActionTrailItemV1(
         label: 'BB calls ${_act0BbLabelV1(openBb)}',
         displayLabel: 'BB calls ${_act0BbLabelV1(openBb - 1)} more',
@@ -2247,18 +2250,22 @@ Act0TableStateV1 _act0BoardLessonTableV1({
       if (boardCards.length >= 4) ...[
         const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
         if (flopBetBb == 0)
-          const Act0ActionTrailItemV1(label: 'BTN checks')
+          Act0ActionTrailItemV1(label: '$openingLabel checks')
         else ...[
-          Act0ActionTrailItemV1(label: 'BTN bets ${_act0BbLabelV1(flopBetBb)}'),
+          Act0ActionTrailItemV1(
+            label: '$openingLabel bets ${_act0BbLabelV1(flopBetBb)}',
+          ),
           Act0ActionTrailItemV1(label: 'BB calls ${_act0BbLabelV1(flopBetBb)}'),
         ],
       ],
       if (boardCards.length == 5) ...[
         const Act0ActionTrailItemV1(label: 'Turn: BB checks'),
         if (turnBetBb == 0)
-          const Act0ActionTrailItemV1(label: 'BTN checks')
+          Act0ActionTrailItemV1(label: '$openingLabel checks')
         else ...[
-          Act0ActionTrailItemV1(label: 'BTN bets ${_act0BbLabelV1(turnBetBb)}'),
+          Act0ActionTrailItemV1(
+            label: '$openingLabel bets ${_act0BbLabelV1(turnBetBb)}',
+          ),
           Act0ActionTrailItemV1(label: 'BB calls ${_act0BbLabelV1(turnBetBb)}'),
         ],
       ],
@@ -2272,14 +2279,20 @@ Act0TableStateV1 _act0BoardLessonTableV1({
       for (final seat in _readBoardRunner.table.seats)
         _act0CopySeatStateV1(
           seat,
-          isInHand: !folds.contains(seat.seatId),
-          isFolded: folds.contains(seat.seatId),
-          isActive: seat.isHero,
-          hasActed: !seat.isHero,
+          displayName: seat.seatId == openingSeat
+              ? 'Hero'
+              : seat.isHero
+              ? seat.seatLabel
+              : seat.displayName,
+          isHero: seat.seatId == openingSeat,
+          isInHand: seat.seatId == openingSeat || seat.seatId == 'bb',
+          isFolded: seat.seatId != openingSeat && seat.seatId != 'bb',
+          isActive: seat.seatId == openingSeat,
+          hasActed: seat.seatId != openingSeat,
           isLastAggressor: seat.seatId == 'bb' && facingBb > 0,
           clearCommitment: true,
           stackLabel: _act0BbLabelV1(switch (seat.seatId) {
-            'btn' => heroBehind,
+            _ when seat.seatId == openingSeat => heroBehind,
             'bb' => bigBlindBehind,
             'sb' => 99.5,
             _ => 100,
@@ -2291,10 +2304,10 @@ Act0TableStateV1 _act0BoardLessonTableV1({
                   amountLabel: _act0BbLabelV1(facingBb),
                 )
               : null,
-          holeCards: seat.isHero ? heroCards : _unknownHoleCards,
-          cardsVisibleMode: folds.contains(seat.seatId)
+          holeCards: seat.seatId == openingSeat ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: seat.seatId != openingSeat && seat.seatId != 'bb'
               ? Act0CardsVisibleModeV1.none
-              : seat.isHero
+              : seat.seatId == openingSeat
               ? Act0CardsVisibleModeV1.faceUp
               : Act0CardsVisibleModeV1.faceDown,
         ),
@@ -2378,6 +2391,7 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   question: 'What does board texture describe?',
   options: const <Act0RunnerOptionV1>[],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'hj',
     heroCards: _act0LessonCardsV1('Ac Jd'),
     boardCards: _act0LessonCardsV1('Ks 8h 3c'),
     centerLabel: 'Read the flop',
@@ -2388,7 +2402,7 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
       title: 'Look at ranks and suits.',
       body:
           'A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. '
-          'A wet board offers more draws through close ranks or matching suits.',
+          'A wet board offers many plausible draws, as on three close ranks with two matching suits. Semi-wet sits between the extremes. Two matching suits with wide rank gaps are one example.',
       focusLabels: <String>['Rank gaps', 'Suits'],
     ),
     Act0TeachingStepV1(
@@ -2431,10 +2445,23 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
-      feedbackReason: 'Wet boards show more connected ranks or suit pressure.',
+      feedbackReason:
+          'K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against draws the flop barely supports.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'semi_wet',
+      label: 'Semi-wet',
+      isCorrect: false,
+      preferredLabel: 'Dry',
+      betterAnswerLabel: 'Dry',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The flop has few short paths.',
+      feedbackReason:
+          'K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to draws that need both remaining cards.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ah Tc'),
     boardCards: _act0LessonCardsV1('Kc 7d 2s'),
     centerLabel: 'Read the flop',
@@ -2469,10 +2496,22 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'This is not dry. Connected ranks plus two hearts mean future cards can change the story fast, so the board already carries wet pressure.',
+          'On T-9-8 with two hearts, a straight can already be made and hearts can complete a flush draw. Treating the flop as dry risks giving a free card on a board with many live draws.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'semi_wet',
+      label: 'Semi-wet',
+      isCorrect: false,
+      preferredLabel: 'Wet',
+      betterAnswerLabel: 'Wet',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Both sources of draws are present.',
+      feedbackReason:
+          'T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Js Td'),
     boardCards: _act0LessonCardsV1('Th 9h 8c'),
     centerLabel: 'Read the flop',
@@ -2499,6 +2538,7 @@ final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'hj',
     heroCards: _act0LessonCardsV1('As Jc'),
     boardCards: _act0LessonCardsV1('9d 9h 3s'),
     centerLabel: 'Read the flop',
@@ -2514,6 +2554,7 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
   question: 'What makes a board connected?',
   options: const <Act0RunnerOptionV1>[],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Qd Jc'),
     boardCards: _act0LessonCardsV1('9h 8s 7d'),
     centerLabel: 'Read the ranks',
@@ -2535,7 +2576,7 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
   caption: 'Look at the flop ranks.',
   lessonId: 'w5_disconnected_board',
   hint: 'The ranks are far apart.',
-  question: 'Is this board connected?',
+  question: 'Which rank pattern fits the flop?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'disconnected',
@@ -2554,10 +2595,23 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
       betterAnswerLabel: 'Disconnected',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
-      feedbackReason: 'Connected boards have close ranks, not big gaps.',
+      feedbackReason:
+          'The ace, eight and two leave a wide gap around the eight. Reading the ranks as closely connected exaggerates the straight danger.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'paired',
+      label: 'Paired',
+      isCorrect: false,
+      preferredLabel: 'Disconnected',
+      betterAnswerLabel: 'Disconnected',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check for a repeated rank.',
+      feedbackReason:
+          'A-8-2 has three different ranks. The spacing leaves few straight paths, and thinking there is a pair distorts the hands you expect to face.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Jh 9c'),
     boardCards: _act0LessonCardsV1('As 8d 2c'),
     centerLabel: 'Read the flop',
@@ -2590,10 +2644,22 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'A paired board repeats a rank. This board connects ranks.',
+          '9-8-7 has three distinct ranks. Looking for a nonexistent pair can distract you from a made straight such as J-T.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'disconnected_ranks',
+      label: 'Disconnected ranks',
+      isCorrect: false,
+      preferredLabel: 'Connected ranks',
+      betterAnswerLabel: 'Connected ranks',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read all three ranks together.',
+      feedbackReason:
+          'The 9, 8 and 7 are consecutive. Missing that connection can make you overlook a made straight such as J-T.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Qh Tc'),
     boardCards: _act0LessonCardsV1('9s 8h 7c'),
     centerLabel: 'Read the flop',
@@ -2611,12 +2677,19 @@ final _world5ConnectedRecapRunner = _world5ConnectedIntroRunner.copyWith(
   feedbackReason: 'Close ranks create more straight paths and more change.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
+      title: 'Check your own five cards too.',
+      body:
+          'The board on this recap is Q-9-8. Your J-T fits between the queen and the nine, so you have five in a row. Board connection is a warning for the whole table. Your two private cards determine whether you hold the straight or still need help.',
+      focusLabels: <String>['Board ranks', 'Your five-card hand'],
+    ),
+    Act0TeachingStepV1(
       title: 'Connected checklist.',
       body: 'If ranks sit close together, slow down and watch straight paths.',
       focusLabels: <String>['Close ranks', 'Straight path'],
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Js Td'),
     boardCards: _act0LessonCardsV1('Qc 9s 8h'),
     centerLabel: 'Read the ranks',
@@ -2632,6 +2705,7 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
   question: 'What does a flush draw need?',
   options: const <Act0RunnerOptionV1>[],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'hj',
     heroCards: _act0LessonCardsV1('Kh Jh'),
     boardCards: _act0LessonCardsV1('Qh 8h 3s'),
     centerLabel: 'Count matching suits',
@@ -2698,6 +2772,7 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ah 7h'),
     boardCards: _act0LessonCardsV1('Th 4h 2c'),
     centerLabel: 'Read the suits',
@@ -2709,29 +2784,43 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_no_flush_draw',
   hint: 'Rainbow means three different suits on the flop.',
-  question: 'Is a flush draw obvious?',
+  question: 'How many more clubs do you need to make a flush by the river?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'no',
-      label: 'No',
+      label: '3 · not enough cards remain',
       isCorrect: true,
-      preferredLabel: 'No',
+      preferredLabel: '3 · not enough cards remain',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
-      feedbackReason: 'Different suits make no obvious flush draw.',
+      feedbackReason:
+          'You need three more clubs, and only two board cards remain. You cannot finish a flush with this hand.',
     ),
     Act0RunnerOptionV1(
       id: 'yes',
-      label: 'Yes',
+      label: '1 · flush draw',
       isCorrect: false,
-      preferredLabel: 'No',
-      betterAnswerLabel: 'No',
+      preferredLabel: '3 · not enough cards remain',
+      betterAnswerLabel: '3 · not enough cards remain',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
-      feedbackReason: 'A rainbow flop does not show flush pressure yet.',
+      feedbackReason:
+          'J of clubs and 4 of clubs bring you to two clubs. A single club would only make three, so treating it as a flush draw can make you pay for a hand that cannot get there.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'backdoor',
+      label: '2 · backdoor flush',
+      isCorrect: false,
+      preferredLabel: '3 · not enough cards remain',
+      betterAnswerLabel: '3 · not enough cards remain',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the clubs you can see.',
+      feedbackReason:
+          'Your J of clubs and the 4 of clubs make two clubs so far. Two more bring the total to four and cannot make a flush.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kd Jc'),
     boardCards: _act0LessonCardsV1('As 9h 4c'),
     centerLabel: 'Read the flop',
@@ -2756,6 +2845,7 @@ final _world5FlushRecapRunner = _world5FlushIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kc 9c'),
     boardCards: _act0LessonCardsV1('Ac 6c 3d'),
     centerLabel: 'Read the suits',
@@ -2809,6 +2899,7 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('As Jc'),
     boardCards: _act0LessonCardsV1('Ah 8h 4c'),
     centerLabel: 'Made hand or draw?',
@@ -2892,6 +2983,7 @@ final _world5StraightIntroRunner = _world5ConnectedIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ts 9d'),
     boardCards: _act0LessonCardsV1('Jh 8c 3s'),
     centerLabel: 'Read the ranks',
@@ -2907,26 +2999,39 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
   lessonId: 'w5_straight_draw',
   caption: 'You have 6-5 and the board shows 8-7-2.',
   hint: 'A 4 or 9 can improve the rank ladder.',
-  question: 'What draw is visible?',
+  question: 'How many different ranks finish your straight on the next card?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'straight_draw',
-      label: 'Straight draw',
+      label: '2 · open-ended straight draw',
       isCorrect: true,
-      preferredLabel: 'Straight draw',
+      preferredLabel: '2 · open-ended straight draw',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
-      feedbackReason: 'Nearby ranks create straight outs.',
+      feedbackReason:
+          'Your 5-6 and the board’s 7-8 form a four-card run. A 4 finishes it at the low end and a 9 at the high end.',
     ),
     Act0RunnerOptionV1(
       id: 'flush_draw',
-      label: 'Flush draw',
+      label: '0 · flush draw instead',
       isCorrect: false,
-      preferredLabel: 'Straight draw',
-      betterAnswerLabel: 'Straight draw',
+      preferredLabel: '2 · open-ended straight draw',
+      betterAnswerLabel: '2 · open-ended straight draw',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
-      feedbackReason: 'The clue is rank connection, not matching suits.',
+      feedbackReason:
+          'There are no four matching suits between your cards and the board. The 5-6-7-8 run can improve immediately on a 4 or a 9. Ignoring those ranks misses part of your chance to win.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'one_rank',
+      label: '1 · inside straight draw',
+      isCorrect: false,
+      preferredLabel: '2 · open-ended straight draw',
+      betterAnswerLabel: '2 · open-ended straight draw',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check both ends of the run.',
+      feedbackReason:
+          'With 6-5 on 8-7-2, either a 4 or a 9 completes a straight. Counting just one end discounts half the completion cards.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -3059,6 +3164,17 @@ final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason: 'Straight pressure needs closer ranks.',
     ),
+    Act0RunnerOptionV1(
+      id: 'ace_to_six',
+      label: 'Yes, because ace connects directly to six',
+      isCorrect: false,
+      preferredLabel: 'No',
+      betterAnswerLabel: 'No',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Place the ace at an end.',
+      feedbackReason:
+          'An ace can be high or low, but A-6-2 still leaves wide gaps. Treating ace and six as neighbors overstates how easily a straight can arrive.',
+    ),
   ],
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Jc 8h'),
@@ -3100,6 +3216,7 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
   question: 'What is an out?',
   options: const <Act0RunnerOptionV1>[],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Js Tc'),
     boardCards: _act0LessonCardsV1('Qd 9h 3c'),
     centerLabel: 'Read the draw',
@@ -3164,6 +3281,7 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kh 8h'),
     boardCards: _act0LessonCardsV1('Jh 3h 7s'),
     centerLabel: 'Read the draw',
@@ -3281,6 +3399,17 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       feedbackReason:
           'Under the stated rule, 9 winning rivers out of 46 beat the 2-in-12 price. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts and beat your flush.',
     ),
+    Act0RunnerOptionV1(
+      id: 'call_draw_alone',
+      label: 'Call because nine outs is a big draw',
+      isCorrect: false,
+      preferredLabel: 'Call 2 BB',
+      betterAnswerLabel: 'Call 2 BB',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Compare it with the cost.',
+      feedbackReason:
+          'On T-4-2-9, A-7 of hearts hits on 9 of 46 rivers under the stated rule. That beats the 2-in-12 price. A bigger bet can make the same nine outs too expensive.',
+    ),
   ],
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Ah 7h'),
@@ -3384,6 +3513,17 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       feedbackReason:
           'Under the stated rule, eight winning rivers fall short of the 3-in-12 price. In a real hand, a 9 can give an opponent holding J-T a higher straight.',
     ),
+    Act0RunnerOptionV1(
+      id: 'fold_wrong_out_count',
+      label: 'Fold because four nines give too little equity',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      betterAnswerLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Count both ends.',
+      feedbackReason:
+          'With 6-5 on 8-7-2-K, a 4 also makes a straight. Four cards of each rank still fall short of the 3-in-12 price. Miscounting can lose a profitable call at a lower price.',
+    ),
   ],
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('6s 5d'),
@@ -3403,6 +3543,7 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
   question: 'What changes after the flop?',
   options: const <Act0RunnerOptionV1>[],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'hj',
     heroCards: _act0LessonCardsV1('Ks 9s'),
     boardCards: _act0LessonCardsV1('As 7s 4c 2s'),
     centerLabel: 'Read the turn',
@@ -3451,8 +3592,20 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       feedbackReason:
           'The turn adds a club to the four clubs you could see on the flop. That changes the hand.',
     ),
+    Act0RunnerOptionV1(
+      id: 'one_club_short',
+      label: 'Still one club short',
+      isCorrect: false,
+      preferredLabel: 'Draw hit',
+      betterAnswerLabel: 'Draw hit',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Count the clubs in both places.',
+      feedbackReason:
+          'Your Q and 9 of clubs plus K, 6 and J of clubs on the board make five. Missing a club in your hand can cost value from a made flush.',
+    ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Qc 9c'),
     boardCards: _act0LessonCardsV1('Kc 6c 2h Jc'),
     centerLabel: 'Read the turn',
@@ -3487,6 +3640,17 @@ final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'No spade arrived on the turn or river. The flop draw never completed.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'made_straight',
+      label: 'Missed the flush but made a straight',
+      isCorrect: false,
+      preferredLabel: 'Draw missed',
+      betterAnswerLabel: 'Draw missed',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Check for five consecutive ranks.',
+      feedbackReason:
+          'On T-7-3-6-Q, A-8 has neither five spades nor five consecutive ranks. Mistaking the gaps for a straight can make you pay with ace-high.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -3757,6 +3921,17 @@ final _world5DrawPriceCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       feedbackTitle: 'Check the price before folding.',
       feedbackReason:
           'The 1 BB call makes a 13 BB pot. Four wins out of 46 beats the 1-in-13 price.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call_cheap_only',
+      label: 'Call because the bet is small',
+      isCorrect: false,
+      preferredLabel: 'Call 1 BB',
+      betterAnswerLabel: 'Call 1 BB',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Count the winners.',
+      feedbackReason:
+          'On 6-5-2-K, a 7 is the winning rank for 9-8 under this rule. Four wins in 46 are enough for the 1-in-13 price. Calling small bets without counting can still lose chips.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
