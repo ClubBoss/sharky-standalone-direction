@@ -4194,7 +4194,7 @@ HINT [theoryOnly]: Middle SPR is neither pure all-in nor huge freedom.
 TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jd 9d stack 20 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 27 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Automatic commitment right now — Too shallow. Shoving your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.
+  - [wrong] Automatic commitment right now — Too shallow. Going all-in for your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.
     BETTER ANSWER: Middle ground: some room, some commitment
     FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
   - [wrong] The same as SPR 8 — Too loose. With 20 BB behind, a pot bet costs one quarter of your stack. Treating it like SPR 8 underestimates how fast two bets can use up those chips.

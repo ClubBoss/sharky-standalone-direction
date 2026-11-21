@@ -728,7 +728,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too shallow.',
       feedbackReason:
-          'Shoving your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.',
+          'Going all-in for your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_eight',
