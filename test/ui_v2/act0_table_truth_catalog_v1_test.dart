@@ -902,7 +902,9 @@ void main() {
         'quality': quality,
         'seat': null,
         'repairSeats': <String>[],
-        'repairCards': <String>[],
+        'repairCards': id == 'semi_wet'
+            ? <String>['board_0', 'board_1', 'board_2']
+            : <String>[],
         'repairLabels': <String>[],
       });
     }

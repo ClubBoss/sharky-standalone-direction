@@ -2454,6 +2454,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Dry',
       betterAnswerLabel: 'Dry',
+      repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The flop has few short paths.',
       feedbackReason:
@@ -2504,6 +2505,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Wet',
       betterAnswerLabel: 'Wet',
+      repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Both sources of draws are present.',
       feedbackReason:
@@ -2784,6 +2786,7 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
   caption: 'Scan your cards and the flop.',
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_no_flush_draw',
+  lessonTitle: 'Flush draws',
   hint: 'Rainbow means three different suits on the flop.',
   question: 'How many more clubs do you need to make a flush by the river?',
   options: const <Act0RunnerOptionV1>[
@@ -2795,7 +2798,7 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
-          'You need three more clubs, and only two board cards remain. You cannot finish a flush with this hand.',
+          'You need three more clubs, and only the turn and river remain. You cannot finish a flush with this hand.',
     ),
     Act0RunnerOptionV1(
       id: 'yes',
@@ -3246,6 +3249,7 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
 final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
   caption: 'Compare the cards by suit.',
   lessonId: 'w5_flush_out',
+  lessonTitle: 'Outs as improvement cards',
   hint: 'Any heart is the improvement card type.',
   feedbackReason:
       'Four hearts are visible. One more heart completes the flush.',
@@ -3278,7 +3282,7 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Check the clue again.',
       feedbackReason:
-          'A spade adds to the board without adding a heart. The flush needs one more heart.',
+          'A spade adds a spade to the turn without adding a heart. The flush needs one more heart.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -3293,6 +3297,7 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
 final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
   caption: 'Compare your ranks with the flop.',
   lessonId: 'w5_straight_out',
+  lessonTitle: 'Outs as improvement cards',
   hint: 'Those cards complete the straight line.',
   feedbackReason: 'The 5-6-7-8 sequence can finish with a 4 or a 9.',
   question: 'Which out improves your hand?',
@@ -3516,7 +3521,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
     ),
     Act0RunnerOptionV1(
       id: 'fold_wrong_out_count',
-      label: 'Fold because four nines give too little equity',
+      label: 'Fold because four nines give too small a chance to win',
       isCorrect: false,
       preferredLabel: 'Fold',
       betterAnswerLabel: 'Fold',
@@ -3567,7 +3572,8 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
 final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_turn_hits',
-  caption: 'Compare the first three board cards with the turn card.',
+  lessonTitle: 'Turn and river changes',
+  caption: 'Compare the first three flop cards with the turn card.',
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Count matching suits before and after the turn.',
   question: 'What happened on the turn?',
@@ -3580,7 +3586,7 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
-          'The turn jack brings the fifth club between your hand and the board. You now have a flush.',
+          'The turn jack brings the fifth club between your hand and the flop and turn. You now have a flush.',
     ),
     Act0RunnerOptionV1(
       id: 'blank',
@@ -3602,7 +3608,7 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Count the clubs in both places.',
       feedbackReason:
-          'Your Q and 9 of clubs plus K, 6 and J of clubs on the board make five. Missing a club in your hand can cost value from a made flush.',
+          'Your Q and 9 of clubs plus K, 6 and J of clubs on the flop and turn make five. Missing a club in your hand can cost value from a made flush.',
     ),
   ],
   table: _act0BoardLessonTableV1(

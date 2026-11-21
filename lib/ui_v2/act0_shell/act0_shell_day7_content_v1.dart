@@ -975,21 +975,6 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     5,
     "board_texture_basics",
-    "hero_cards_board_pot",
-    _day7PostflopV1("co", "Ah Td", "Jh 9h 8s"),
-    question: "Which two clues make J-9-8 a wet flop?",
-    choices: const [
-      "Three matching suits and a pair",
-      "Nearby ranks and two matching suits",
-      "Wide rank gaps and three suits",
-    ],
-    correct: 1,
-    reason:
-        "The jack, nine and eight are close and two hearts share a suit. Ignoring either clue can make you underestimate how much the turn can change.",
-  ),
-  _day7ExampleV1(
-    5,
-    "board_texture_basics",
     "board_cards",
     _day7PostflopV1("co", "Ad Tc", "Kh 9d 2s"),
     question: "What is the texture of K-9-2 with three suits?",

@@ -452,6 +452,7 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
         if (!const {
           'w6_wet_board_repair',
           'w5_turn_texture_shift_transfer',
+          'turn_river_changes',
         }.contains(runner.lessonId)) {
           return null;
         }
