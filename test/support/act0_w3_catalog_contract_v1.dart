@@ -138,3 +138,11 @@ const preW3ReasonChoicesV1 = <String, List<List<Object?>>>{
     ["call", "Call", false, "suboptimal", "Raise"],
   ],
 };
+
+// New distractors on familiar repair tasks have no independent repair target.
+const w3AppendedRepairChoiceIdsV1 = <String>{
+  'world_3/position_six_seats/position_six_seats_position_repair_seat_id_btn/bb',
+  'world_3/position_six_seats/position_six_seats_position_repair_seat_id_utg/sb',
+  'world_3/button_advantage/button_advantage_position_repair_btn_last_postflop/bb',
+  'world_3/early_vs_late/early_vs_late_position_repair_utg_players_behind/only_hj',
+};

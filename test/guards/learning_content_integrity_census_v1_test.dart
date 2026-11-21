@@ -20,6 +20,11 @@ const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 // The legacy mapper falls back once the unsupported table clue is removed.
 // Current typed repairs are verified separately.
 const _legacyFallbacksWithoutSourceClue = <String>{
+  // W3 prompts now ask for the decision or consequence shown in the scene.
+  'button_advantage_button_intro',
+  'button_advantage_button_vs_cutoff',
+  'button_advantage_button_recap',
+  'position_checkpoint_position_checkpoint_intro',
   // This is a played hand with an unknown caller stack.
   _w9BubbleTableRiskId,
   // The remaining questions use hypothetical setups.
@@ -923,8 +928,12 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(524));
-    expect(unknown, hasLength(10));
+    expect(foundationDefaults, hasLength(520));
+    expect(
+      unknown.intersection(w3AppendedRepairChoiceIdsV1),
+      w3AppendedRepairChoiceIdsV1,
+    );
+    expect(unknown.difference(w3AppendedRepairChoiceIdsV1), hasLength(10));
     expect(
       admitted.length +
           foundationDefaults.length +
