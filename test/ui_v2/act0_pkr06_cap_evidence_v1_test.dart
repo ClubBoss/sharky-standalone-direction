@@ -18,7 +18,7 @@ void main() {
     final t = _table(_w9);
     expect(t.scope, Act0TableScopeV1.playedHand);
     expect(t.potLabel, 'Pot 21 BB');
-    expect(t.toCallLabel, 'To call 15.5 BB');
+    expect(t.toCallLabel, isEmpty);
     expect(
       t.seats.singleWhere((s) => s.seatId == 'btn').currentBetLabel,
       '2.5 BB',
@@ -59,7 +59,7 @@ void main() {
     expect(mutated.heroCards, same(source.heroCards));
     expect(mutated.boardCards, same(source.boardCards));
     expect(mutated.potLabel, 'Pot 21 BB');
-    expect(mutated.toCallLabel, 'To call 15.5 BB');
+    expect(mutated.toCallLabel, isEmpty);
     expect(
       mutated.seats.singleWhere((s) => s.seatId == 'bb').currentBetLabel,
       '18 BB',

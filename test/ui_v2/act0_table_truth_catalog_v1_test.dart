@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -70,6 +71,38 @@ void main() {
     expect(findings.map((row) => (row.invariant, row.result)), [
       ('D2.pot_feasibility', 'NEEDS_SOURCE_CONTEXT'),
     ]);
+  });
+
+  test('W9 shows the wager and pot without claiming the exact call', () {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_9')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final table = task.runner.table;
+    final ledger = table.handContributions!;
+    final seats = table.seats.map((seat) => seat.seatId).toSet();
+    expect(table.potLabel, 'Pot 21 BB');
+    expect(table.toCallLabel, isEmpty);
+    expect(task.runner.caption, contains('15.5 BB more than BTN put in'));
+    expect(ledger.amounts(seatIds: seats, actorSeatId: 'btn'), (
+      potBb: 21.0,
+      toCallBb: null,
+    ));
+    for (final (startingStack, price) in [(12.0, 9.5), (18.0, 15.5)]) {
+      final withStack = Act0HandContributionsV1(
+        throughStreet: ledger.throughStreet,
+        entries: ledger.entries,
+        startingStackBbBySeat: {
+          ...ledger.startingStackBbBySeat,
+          'btn': startingStack,
+        },
+      );
+      expect(withStack.amounts(seatIds: seats, actorSeatId: 'btn'), (
+        potBb: 21.0,
+        toCallBb: price,
+      ));
+    }
   });
 
   test('W10 uses the authored BTN open and BB call before the check', () {

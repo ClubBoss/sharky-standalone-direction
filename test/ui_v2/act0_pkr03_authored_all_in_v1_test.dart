@@ -55,7 +55,7 @@ void main() {
         Act0BettingRoundOrderTruthV1.unproved,
       );
       expect(source.potLabel, 'Pot 21 BB');
-      expect(source.toCallLabel, 'To call 15.5 BB');
+      expect(source.toCallLabel, isEmpty);
     },
   );
 
