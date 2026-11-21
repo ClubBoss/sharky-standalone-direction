@@ -1429,7 +1429,7 @@ HINT [theoryOnly]: Broadway cards are T, J, Q, K, and A. One seat earlier from t
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center HJ opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
-  - [wrong] Fold — Not quite. Folding KQo on BTN against HJ's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with a strong broadway hand.
+  - [wrong] Fold — Not quite. HJ opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one HJ raise with KQo on BTN.
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. Against the 2.5 BB HJ open, the BTN call row includes KQo. Reraising instead risks five extra blinds against better hands.
@@ -1545,7 +1545,7 @@ HINT [theoryOnly]: Playable hand in position: call keeps the hand in.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Fold — Not quite. Folding KQo on BTN against CO's 2.5 BB open into a 4 BB pot surrenders a profitable in-position continue with strong high-card value.
+  - [wrong] Fold — Not quite. CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with KQo on BTN.
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. KQo on BTN is a call against CO in this chart. A 7.5 BB reraise risks 5 BB extra without a Premium hand.
@@ -1757,7 +1757,7 @@ TABLE: Preflop | You Qs Js | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with QJs on BTN.
-  - [wrong] Fold — A bit too tight. Folding QJs on BTN against CO's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with suited broadway playability.
+  - [wrong] Fold — A bit too tight. CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding QJs on BTN gives up the call the Sharky starting chart allows against one CO open.
     BETTER ANSWER: Call
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead gives CO the chance to call your larger bet with better hands.
     BETTER ANSWER: Call
