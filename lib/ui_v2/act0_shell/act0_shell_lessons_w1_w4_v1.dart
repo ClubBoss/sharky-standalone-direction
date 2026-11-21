@@ -4501,12 +4501,15 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_purpose',
         title: 'Value reason',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ValuePurposeRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world4ValuePurposeRunner.options,
-            correctOptionId: 'value',
-            correctIndex: 1,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4ValuePurposeRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world4ValuePurposeRunner.options,
+              correctOptionId: 'value',
+              correctIndex: 1,
+            ),
           ),
+          hero: 'co',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -4515,12 +4518,15 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bluff_purpose',
         title: 'Bluff reason',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BluffPurposeRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world4BluffPurposeRunner.options,
-            correctOptionId: 'bluff',
-            correctIndex: 1,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4BluffPurposeRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world4BluffPurposeRunner.options,
+              correctOptionId: 'bluff',
+              correctIndex: 1,
+            ),
           ),
+          hero: 'hj',
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
@@ -4529,7 +4535,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_purpose_recap',
         title: 'Purpose recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world4PurposeRecapRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4PurposeRecapRunner,
+          hero: 'co',
+          hand: 'Jh Jc',
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -4551,7 +4561,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_sizing_intro',
         title: 'Size language',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4SizingIntroRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4SizingIntroRunner,
+          hero: 'hj',
+          hand: 'As Kc',
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -4559,12 +4573,16 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_small_bet',
         title: 'One-third bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4SmallBetRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world4SmallBetRunner.options,
-            correctOptionId: 'two',
-            correctIndex: 1,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4SmallBetRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world4SmallBetRunner.options,
+              correctOptionId: 'two',
+              correctIndex: 1,
+            ),
           ),
+          hero: 'co',
+          hand: '8h 8s',
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
@@ -4574,7 +4592,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_half_pot_bet',
         title: 'Half-pot bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4HalfPotRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4HalfPotRunner,
+          hero: 'hj',
+          hand: 'Ks Kh',
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.sizing,
@@ -4583,7 +4605,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_pot_bet',
         title: 'Pot-size bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4PotBetRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4PotBetRunner,
+          hero: 'co',
+          hand: 'Td Tc',
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.sizing,
@@ -4608,7 +4634,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_sizing_recap',
         title: 'Sizing recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world4SizingRecapRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4SizingRecapRunner,
+          hero: 'hj',
+          hand: '9c 9h',
+        ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -4710,7 +4740,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_intro',
         title: 'Worse calls',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4ValueIntroRunner,
+        runner: _w4CheckedFlopScenarioV1(_world4ValueIntroRunner, hero: 'co'),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -4718,7 +4748,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_bet',
         title: 'Bet top pair',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ValueBetRunner,
+        runner: _w4CheckedFlopScenarioV1(_world4ValueBetRunner, hero: 'co'),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4726,12 +4756,15 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_missed',
         title: 'Do not hide value',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ValueCheckMissRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world4ValueCheckMissRunner.options,
-            correctOptionId: 'bet_half',
-            correctIndex: 1,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4ValueCheckMissRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world4ValueCheckMissRunner.options,
+              correctOptionId: 'bet_half',
+              correctIndex: 1,
+            ),
           ),
+          hero: 'hj',
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
@@ -4740,7 +4773,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_recap',
         title: 'Value recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world4ValueRecapRunner,
+        runner: _w4CheckedFlopScenarioV1(_world4ValueRecapRunner, hero: 'co'),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -4762,7 +4795,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bluff_intro',
         title: 'Fold pressure',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4BluffIntroRunner,
+        runner: _w4CheckedFlopScenarioV1(_world4BluffIntroRunner, hero: 'hj'),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -4770,7 +4803,10 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bluff_pressure',
         title: 'Apply pressure',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BluffPressureRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4BluffPressureRunner,
+          hero: 'co',
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4792,7 +4828,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bluff_recap',
         title: 'Bluff recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world4BluffRecapRunner,
+        runner: _w4CheckedFlopScenarioV1(_world4BluffRecapRunner, hero: 'hj'),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -4814,7 +4850,10 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_protection_intro',
         title: 'Deny free card',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4ProtectionIntroRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4ProtectionIntroRunner,
+          hero: 'co',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -4866,7 +4905,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_checkpoint_intro',
         title: 'Three reads',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world4CheckpointIntroRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4CheckpointIntroRunner,
+          hero: 'hj',
+          hand: 'Ts Tc',
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -4876,7 +4919,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _world4ValuePurposeRunner.copyWith(
           question:
-              'If BB can have A-T or A-Q, which hand could call a 3 BB bet while behind yours?',
+              'If BB can have A-T, A-J or A-Q, which hand could call a 3 BB bet while behind yours?',
           caption: 'BB checks on ace, seven and two.',
           table: _world4ValuePurposeRunner.table.copyWith(
             heroCards: const [
@@ -4904,6 +4947,17 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
               feedbackTitle: 'Your jack beats the ten.',
               feedbackReason:
                   'A-T can call with a weaker pair of aces. Your jack is higher than its ten.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'same_pair',
+              label: 'A-J',
+              isCorrect: false,
+              preferredLabel: 'A-T',
+              betterAnswerLabel: 'A-T',
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: 'Same best five.',
+              feedbackReason:
+                  'A-J ties your A-J on A-7-2. A call from the same hand splits the pot; the value target is the weaker A-T.',
             ),
           ],
           teachingSteps: const <Act0TeachingStepV1>[],
@@ -4944,6 +4998,17 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
               feedbackReason:
                   'You need about a 23% chance at this price. One win in four is enough, so folding gives up a profitable call.',
             ),
+            Act0RunnerOptionV1(
+              id: 'call_ignore_price',
+              label: 'Call because 25% wins often enough',
+              isCorrect: false,
+              preferredLabel: 'Call',
+              betterAnswerLabel: 'Call',
+              quality: Act0FeedbackQualityV1.suboptimal,
+              feedbackTitle: 'The action fits. Compare the price too.',
+              feedbackReason:
+                  'You must pay 3 BB for a 13 BB final pot. At about 23% to break even, 25% just covers it. On a bigger wager that same win rate can lose chips.',
+            ),
           ],
         ),
         rewardXp: 10,
@@ -4977,7 +5042,11 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_checkpoint_review',
         title: 'Price recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world4CheckpointRunner,
+        runner: _w4CheckedFlopScenarioV1(
+          _world4CheckpointRunner,
+          hero: 'co',
+          hand: 'Js Jc',
+        ),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),

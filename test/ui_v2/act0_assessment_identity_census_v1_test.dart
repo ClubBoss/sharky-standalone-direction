@@ -149,6 +149,26 @@ void main() {
       expect(choices.last[3], 'wrong', reason: entry.key);
       choices.removeLast();
     }
+    for (final entry in w4AddedOptionQualityV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      final (id, quality) = entry.value;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last[0], id, reason: entry.key);
+      expect(choices.last[2], isFalse, reason: entry.key);
+      expect(choices.last[3], quality, reason: entry.key);
+      choices.removeLast();
+      if (entry.key == 'w4_big_price_marginal_fold') {
+        expect(choices, [
+          ['call', '46% · Call', false, 'wrong', '32% · Fold'],
+          ['fold', '32% · Fold', true, 'correct', '32% · Fold'],
+        ]);
+        task[5] = <List<Object?>>[
+          ['call', 'Call', false, 'wrong', 'Fold'],
+          ['fold', 'Fold', true, 'correct', 'Fold'],
+        ];
+      }
+    }
     expect(
       entries.where((row) => w7AppliedTaskIdsV1.contains(row[2])),
       hasLength(8),

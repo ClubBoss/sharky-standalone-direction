@@ -885,6 +885,47 @@ const q3AppendedChoicesV1 = <String, String>{
   'outs_improvement_w5_straight_out': 'ten',
 };
 
+const w4OpeningSeatsV1 = <String, String>{
+  'w4_value_purpose': 'co',
+  'w4_bluff_purpose': 'hj',
+  'w4_purpose_recap': 'co',
+  'w4_sizing_intro': 'hj',
+  'w4_small_bet': 'co',
+  'w4_half_pot_bet': 'hj',
+  'w4_pot_bet': 'co',
+  'w4_sizing_recap': 'hj',
+  'w4_value_intro': 'co',
+  'w4_value_bet': 'co',
+  'w4_value_missed': 'hj',
+  'w4_value_recap': 'co',
+  'w4_bluff_intro': 'hj',
+  'w4_bluff_pressure': 'co',
+  'w4_bluff_recap': 'hj',
+  'w4_protection_intro': 'co',
+  'w4_checkpoint_intro': 'hj',
+  'w4_checkpoint_review': 'co',
+};
+
+/// New W4 choices preserve task IDs and the original winning choice IDs.
+const w4AddedOptionQualityV1 = <String, (String, String)>{
+  'w4_value_purpose': ('same_pair', 'wrong'),
+  'w4_bluff_purpose': ('better_calls', 'wrong'),
+  'w4_good_price_call': ('call_ignore_price', 'suboptimal'),
+  'w4_bad_price_fold': ('fold_ignore_price', 'suboptimal'),
+  'w4_cheap_price_marginal_call': ('call_ignore_price', 'suboptimal'),
+  'w4_big_price_marginal_fold': ('wrong_threshold', 'suboptimal'),
+  'w4_value_bet': ('bet_pot', 'wrong'),
+  'w4_value_missed': ('bet_pot', 'wrong'),
+  'w4_bluff_pressure': ('bet_pot', 'wrong'),
+  'w4_bad_bluff': ('bet_small', 'suboptimal'),
+  'w4_protection_bet': ('bet_pot', 'suboptimal'),
+  'w4_protection_check': ('got_fold', 'wrong'),
+  'w4_checkpoint_value': ('same_pair', 'wrong'),
+  'w4_checkpoint_price': ('call_ignore_price', 'suboptimal'),
+  'w4_checkpoint_table_price': ('call_ignore_price', 'suboptimal'),
+  'w4_checkpoint_review': ('size_only', 'suboptimal'),
+};
+
 /// Q7 extends the historical source census without replacing any legacy IDs.
 const w7AppliedTaskIdsV1 = <String>{
   'w7_flop_bluff_one_player',

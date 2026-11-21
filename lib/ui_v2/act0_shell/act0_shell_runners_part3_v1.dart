@@ -213,6 +213,78 @@ Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
   );
 }
 
+// A checked-to-Hero W4 flop against the big blind. The button and
+// blinds stay in their physical seats when a different seat opens.
+Act0RunnerStateV1 _w4CheckedFlopScenarioV1(
+  Act0RunnerStateV1 runner, {
+  required String hero,
+  String? hand,
+}) {
+  final original = runner.table;
+  final position = hero.toUpperCase();
+  final frame = _day7TableV1(
+    hero: hero,
+    hand: hand ?? original.heroCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: hero,
+    board: original.boardCards,
+    folded: _day7SeatsV1.where((seat) => seat != hero && seat != 'bb').toSet(),
+    entries: [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        hero,
+        Act0ContributionKindV1.wager,
+        2.75,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.75,
+      ),
+    ],
+    history: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      for (final seat in _day7SeatsV1.where((seat) => seat != 'bb'))
+        Act0ActionTrailItemV1(
+          label: seat == hero
+              ? '$position raises 2.75 BB'
+              : '${seat.toUpperCase()} folds',
+        ),
+      const Act0ActionTrailItemV1(
+        label: 'BB calls 2.75 BB',
+        displayLabel: 'BB calls 1.75 more, 2.75 total',
+      ),
+      const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    ],
+    bets: const {},
+  );
+  final seats = [
+    for (final seat in frame.seats)
+      if (seat.seatId == 'bb')
+        _act0CopySeatStateV1(seat, hasActed: true)
+      else
+        seat,
+  ];
+  return runner.copyWith(
+    table: original.copyWith(
+      heroSeatId: hero,
+      activeSeatId: hero,
+      decisionSeatId: hero,
+      heroCards: frame.heroCards,
+      seats: seats,
+      potLabel: frame.potLabel,
+      toCallLabel: frame.toCallLabel,
+      actionTrail: frame.actionTrail,
+      handContributions: frame.handContributions,
+      highlightedSeatIds: [hero, 'bb'],
+      highlightedCardIds: original.highlightedCardIds,
+    ),
+  );
+}
+
 final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_purpose_intro',
@@ -247,7 +319,7 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
   caption: 'BB checked on ace, seven and two.',
   hint: 'Compare each hand’s best five on the same board.',
   question:
-      'If BB can have A-J or A-K, which hand could call a 3 BB bet while behind yours?',
+      'If BB can have A-J, A-Q or A-K, which hand could call a 3 BB bet while behind yours?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'value',
@@ -269,6 +341,17 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'A-K makes the same pair and wins with its king. A-J has a lower side card than your queen.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'same_pair',
+      label: 'A-Q',
+      isCorrect: false,
+      preferredLabel: 'A-J',
+      betterAnswerLabel: 'A-J',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Same best five.',
+      feedbackReason:
+          'Both A-Q hands play aces with Q-7-2. A call from the same hand splits the pot and earns no additional value.',
     ),
   ],
   table: _world4PurposeIntroRunner.table.copyWith(
@@ -318,6 +401,17 @@ final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'A pair of sevens beats your unpaired hand now. A call from that pair would not be a call from a weaker hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'better_calls',
+      label: 'BB calls with the better hand',
+      isCorrect: false,
+      preferredLabel: 'BB folds a better hand',
+      betterAnswerLabel: 'BB folds a better hand',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The bluff did not work.',
+      feedbackReason:
+          'If BB calls with 7-6 on A-7-2, the pair of sevens stays in and is ahead of your K-Q. You risk chips without making the better hand fold.',
     ),
   ],
   table: _world4PurposeIntroRunner.table.copyWith(
@@ -380,7 +474,7 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
   caption: 'BB checked the ace-high flop.',
   hint: 'Ask which hands BB can call with and whether they beat yours.',
   question:
-      'In this 6-max micro-stakes example, assume BB calls a 3 BB bet with a weaker ace. Which option gives BB a chance to call with that weaker ace?',
+      'In this 6-max micro-stakes example, BB calls 3 BB and folds to 6 BB with a weaker ace. Which action earns chips from that hand?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -403,6 +497,18 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason: 'Checking can miss value when worse hands can call.',
     ),
+    Act0RunnerOptionV1(
+      id: 'bet_pot',
+      label: 'Bet pot-size',
+      amountLabel: '6 BB',
+      isCorrect: false,
+      preferredLabel: 'Bet half-pot',
+      betterAnswerLabel: 'Bet half-pot',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too large for the stated read.',
+      feedbackReason:
+          'You have A-Q on A-7-2. In this example a weaker ace calls 3 BB and folds to 6 BB. Betting 6 BB gives up the value that 3 BB can earn.',
+    ),
   ],
   table: _act0W4BtnBbSixBbFlopV1(
     _world4ValuePurposeRunner.table.copyWith(centerLabel: 'Value spot'),
@@ -421,7 +527,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
   ),
   hint: 'Compare what happens to the pot after each choice.',
   question:
-      'In this 6-max micro-stakes example, assume BB calls 3 BB with a weaker ace after checking. Which option can get chips from that weaker ace this round?',
+      'In this 6-max micro-stakes example, BB checks a weaker ace and calls 3 BB but folds to 6 BB. Which action gets paid this round?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
@@ -444,6 +550,18 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
       feedbackTitle: 'Value collected.',
       feedbackReason:
           'A half-pot bet lets worse hands call while you hold the stronger hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_pot',
+      label: 'Bet pot-size',
+      amountLabel: '6 BB',
+      isCorrect: false,
+      preferredLabel: 'Bet half-pot',
+      betterAnswerLabel: 'Bet half-pot',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Keep the weaker ace in.',
+      feedbackReason:
+          'A-J can get 3 BB from a weaker ace on A-7-2. Under the stated read a 6 BB bet makes that ace fold, so you miss the chips it would have paid.',
     ),
   ],
 );
@@ -489,7 +607,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
   caption: 'The flop is ace, seven and two. BB checked.',
   hint: 'A small bet can apply pressure without risking too much.',
   question:
-      'In this 6-max micro-stakes example, assume BB folds better hands to a small bet. Your goal is to make one of those hands fold now. Which option can make BB fold now?',
+      'In this 6-max micro-stakes example, BB folds the target hands to either bet size. Which option makes a better hand fold while risking fewer chips?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_small',
@@ -513,6 +631,26 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       feedbackReason:
           'Checking closes this round without asking BB to fold. Betting gives BB a decision.',
     ),
+    Act0RunnerOptionV1(
+      id: 'bet_pot',
+      label: 'Bet pot-size',
+      amountLabel: '6 BB',
+      isCorrect: false,
+      preferredLabel: 'Bet one-third',
+      betterAnswerLabel: 'Bet one-third',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Same fold, more risk.',
+      feedbackReason:
+          'In the 6 BB pot on A-7-2, a 2 BB bet makes the target hands fold. The 6 BB bet gets the same result from them but puts 4 BB more at risk if called.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Match the size to the same target.',
+      body:
+          'Start with a better hand you expect to fold. If a small bet gets that same fold, adding chips gives you no extra reward from that hand. Keep the pot size separate from the chips you risk.',
+      focusLabels: <String>['Target hand', 'Chips at risk'],
+    ),
   ],
   table: _act0W4BtnBbSixBbFlopV1(
     _world4BluffPurposeRunner.table.copyWith(centerLabel: 'Fold pressure'),
@@ -525,7 +663,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Use the response the question gives for better hands.',
   question:
-      'In this 6-max micro-stakes example, assume BB calls a pot-size bet with every better hand and folds every worse hand. Which option avoids paying for a bluff that cannot make a better hand fold?',
+      'In this 6-max micro-stakes example, BB calls both offered bet sizes with better hands and folds worse hands. Which option avoids paying for a bluff that cannot get a better hand to fold?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
@@ -549,6 +687,18 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       feedbackReason:
           'The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.',
     ),
+    Act0RunnerOptionV1(
+      id: 'bet_small',
+      label: 'Bet one-third',
+      amountLabel: '2 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'A smaller losing bet still costs chips.',
+      feedbackReason:
+          'A 2 BB bet risks less than 6 BB, but on A-7-2 the stated better hands still call. Checking lets K-Q see the turn without paying for those folds.',
+    ),
   ],
   table: _act0W4BtnBbSixBbFlopV1(
     _world4BluffPressureRunner.table.copyWith(centerLabel: 'Low fold pressure'),
@@ -567,7 +717,8 @@ final _world4BluffRecapRunner = _world4BluffIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Bluff checklist.',
-      body: 'Ask whether better hands can fold before betting a miss.',
+      body:
+          'Ask whether better hands can fold before betting a miss. With K-Q on A-7-2, a bet needs to do more than chase away weaker hands. If the better hands stay in, save the chips and see the next card when you can.',
       focusLabels: <String>['Better folds', 'Controlled risk'],
     ),
   ],
@@ -610,7 +761,7 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Betting protects value by denying that free card.',
   question:
-      'BB has checked. In this 6-max micro-stakes example, assume BB has ace-king and can pair either card. Which option makes BB pay to see the next card or fold?',
+      'BB has checked. In this 6-max micro-stakes example, BB has ace-king, will call 3 BB and will fold to 6 BB. Which option charges A-K to see the next card and keeps the worse hand in?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -632,6 +783,18 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'Checking lets the other player see the next card for free.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_pot',
+      label: 'Bet pot-size',
+      amountLabel: '6 BB',
+      isCorrect: false,
+      preferredLabel: 'Bet half-pot',
+      betterAnswerLabel: 'Bet half-pot',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'This size gives up the stated call.',
+      feedbackReason:
+          'Betting 6 BB makes A-K fold and protects your Q-J, but 3 BB protects it and gets a call in this example. You miss that extra value with the larger bet.',
     ),
   ],
   table: _world4ProtectionIntroRunner.table.copyWith(
@@ -666,6 +829,17 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'Both players checked, so neither paid to see the next card.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'got_fold',
+      label: 'Won the pot now',
+      isCorrect: false,
+      preferredLabel: 'Free card',
+      betterAnswerLabel: 'Free card',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Both players stayed in.',
+      feedbackReason:
+          'BB checked and BTN checked behind on Q-9-4. Without a bet, neither hand folded and BB could catch up on the turn for free.',
     ),
   ],
   table: _act0W4BtnBbSixBbFlopV1(
@@ -707,6 +881,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     _callActionRunner.table.copyWith(
       streetLabel: 'Turn',
       centerLabel: 'Facing price',
+      heroCards: _act0LessonCardsV1('Jd Js'),
       boardCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'T', suit: 'h'),
         Act0CardStateV1(rank: '8', suit: 'c'),
@@ -879,6 +1054,17 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
       feedbackReason:
           'Folding gives up a profitable call in this model: 25% is higher than the roughly 11.1% you need.',
     ),
+    Act0RunnerOptionV1(
+      id: 'call_ignore_price',
+      label: 'Call just because you have top pair',
+      isCorrect: false,
+      preferredLabel: 'Call',
+      betterAnswerLabel: 'Call',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Check the price too.',
+      feedbackReason:
+          'T-7 has top pair, but the 1 BB price and 25% win chance make this call profitable. Skipping the calculation can cost chips against a bigger bet.',
+    ),
   ],
   table: _act0W4FacingTurnPriceV1(
     _world4PriceIntroRunner.table.copyWith(
@@ -933,6 +1119,17 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       feedbackReason:
           'Calling puts 7 BB at risk. The required chance is about 33.3%, but you win only 25% of the time.',
     ),
+    Act0RunnerOptionV1(
+      id: 'fold_ignore_price',
+      label: 'Fold because middle pair is too weak to call',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      betterAnswerLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Use the price.',
+      feedbackReason:
+          'Your pair of eights can win. The 7 BB call needs about 33% equity in this model, above the stated 25%. Folding every middle pair would also lose profitable calls.',
+    ),
   ],
   table: _act0W4FacingTurnPriceV1(
     _world4GoodPriceCallRunner.table.copyWith(
@@ -983,6 +1180,17 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       feedbackReason:
           'Folding gives up a profitable call in this model: 15% is higher than the roughly 9.1% you need.',
     ),
+    Act0RunnerOptionV1(
+      id: 'call_ignore_price',
+      label: 'Call because the opponent bet small',
+      isCorrect: false,
+      preferredLabel: 'Call',
+      betterAnswerLabel: 'Call',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Check both sides.',
+      feedbackReason:
+          'The 1 BB price needs about 9% equity, and the pair of nines wins 15%. A small bet alone is no reason to call if your chance is even lower than the price.',
+    ),
   ],
   table: _act0W4FacingTurnPriceV1(
     _world4GoodPriceCallRunner.table.copyWith(
@@ -1009,13 +1217,13 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
   caption: 'The turn is a two. HJ bet 6 BB. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
+      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which break-even chance and action are right?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
-      label: 'Fold',
+      label: '32% · Fold',
       isCorrect: true,
-      preferredLabel: 'Fold',
+      preferredLabel: '32% · Fold',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Price and chance compared.',
       feedbackReason:
@@ -1023,14 +1231,25 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'call',
-      label: 'Call',
+      label: '46% · Call',
       amountLabel: '6 BB',
       isCorrect: false,
-      preferredLabel: 'Fold',
+      preferredLabel: '32% · Fold',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Calling puts 6 BB at risk. The required chance is about 31.6%, but you win only 25% of the time.',
+          'The pot is 13 BB before you add your call, so include the 6 BB once more. The break-even chance is about 32%, and Q-7 wins 25%.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'wrong_threshold',
+      label: '32% · Call',
+      isCorrect: false,
+      preferredLabel: '32% · Fold',
+      betterAnswerLabel: '32% · Fold',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The threshold is close. Compare it with your chance.',
+      feedbackReason:
+          'Calling 6 BB into the 13 BB pot makes 19 BB. Break-even is about 32%, and Q-7 wins 25%. Calling loses chips even though you identified the price.',
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
@@ -1590,6 +1809,17 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       feedbackReason:
           'Folding gives up a profitable call in this model: 30% is higher than the roughly 22.2% you need.',
     ),
+    Act0RunnerOptionV1(
+      id: 'call_ignore_price',
+      label: 'Call because BB bet just 2 BB',
+      isCorrect: false,
+      preferredLabel: 'Call',
+      betterAnswerLabel: 'Call',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The action fits. Compare both numbers.',
+      feedbackReason:
+          'A-9 wins 30% in the model. That covers the 2 BB price which needs about 22% equity. A small bet can still be too expensive if your chance of winning is low.',
+    ),
   ],
   table: _act0W4FacingTurnPriceV1(
     _world4GoodPriceCallRunner.table.copyWith(
@@ -1762,6 +1992,17 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       feedbackTitle: 'Not quite.',
       feedbackReason:
           'Random sizes hide the lesson. Good beginner bets have a clear job.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'size_only',
+      label: 'Size and pot, without purpose',
+      isCorrect: false,
+      preferredLabel: 'Purpose and price',
+      betterAnswerLabel: 'Purpose and price',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'One part of the decision.',
+      feedbackReason:
+          'In a 6 BB pot the same 3 BB bet can ask a weaker hand to call or a better hand to fold. Reading size alone can make you pay or bet for the wrong reason.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
