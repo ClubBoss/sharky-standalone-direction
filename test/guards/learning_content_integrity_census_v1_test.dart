@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
     show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_w6_catalog_contract_v1.dart';
@@ -862,9 +863,29 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
-    expect(allChoices, hasLength(566));
+    final addedRows = rows.where(
+      (row) => w12Wave4ChoiceContractV1.containsKey(row.task.taskId),
+    );
+    expect(
+      addedRows.map((row) => row.task.taskId).toSet(),
+      w12Wave4ChoiceContractV1.keys.toSet(),
+    );
+    final addedWrongChoices = {
+      for (final entry in w12Wave4ChoiceContractV1.entries)
+        for (final [choiceId, _, correct, _, _] in entry.value.$2)
+          if (correct == false)
+            'world_12/${entry.value.$1}/${entry.key}/$choiceId',
+    };
+    expect(rows, hasLength(319 + w12Wave4ChoiceContractV1.length));
+    expect(
+      rows.map((r) => r.task.taskId).toSet(),
+      hasLength(319 + w12Wave4ChoiceContractV1.length),
+    );
+    expect(allChoices, hasLength(566 + addedWrongChoices.length));
+    expect(
+      foundationDefaults.where(addedWrongChoices.contains).toSet(),
+      addedWrongChoices,
+    );
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -932,7 +953,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(528));
+    expect(foundationDefaults, hasLength(528 + addedWrongChoices.length));
     expect(
       unknown.intersection(w3AppendedRepairChoiceIdsV1),
       w3AppendedRepairChoiceIdsV1,
@@ -974,6 +995,7 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
                       !w3NewChoiceContractV1.containsKey(task.taskId) &&
                       !w6NewChoiceContractV1.containsKey(task.taskId) &&
+                      !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==

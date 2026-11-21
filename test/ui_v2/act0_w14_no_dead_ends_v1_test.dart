@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
 // Dead-end classes across the whole W1–W12 route. Progress is a pure function
@@ -59,7 +60,7 @@ void main() {
     );
     expect(
       worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
-      hasLength(389),
+      hasLength(389 + w12Wave4ChoiceContractV1.length),
     );
     final seen = <String>{};
     for (final id in allIds) {
