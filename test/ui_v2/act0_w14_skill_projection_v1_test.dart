@@ -249,7 +249,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {7: 13, 8: 26});
+    expect(taskCounts, {7: 13, 8: 28});
   });
 
   test('every W9–W10 task projects to its authored topic', () {
