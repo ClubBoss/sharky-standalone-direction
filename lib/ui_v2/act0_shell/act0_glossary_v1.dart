@@ -59,10 +59,10 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
   Act0GlossaryTermV1(
     'Positions (UTG, HJ, CO)',
     r'\bUTG\b|\bHJ\b|\bCO\b|\bposition',
-    'First to act before the flop: under the gun (UTG), then hijack (HJ), '
-        'cutoff (CO), button (BTN), small blind (SB) and big blind (BB). '
-        'After the flop, the first player still in the hand clockwise from '
-        'the button acts first.',
+    'At a six-player table, the order before the flop starts with under '
+        'the gun (UTG), then hijack (HJ), cutoff (CO), button (BTN), '
+        'small blind (SB) and big blind (BB). After the flop, the first '
+        'player who can still act clockwise from the button goes first.',
   ),
   Act0GlossaryTermV1(
     'Private cards',
@@ -124,9 +124,9 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
   Act0GlossaryTermV1(
     'Side pot',
     r'\bside[- ]pots?\b',
-    'A separate pot made from extra chips that players with more chips '
-        'can still bet. A player who is already all-in can win the pot '
-        'their chips matched, not the extra chips.',
+    'A separate pot made from extra matched chips. Players who stay in '
+        'the hand can win only the pots their chips went into. With '
+        'multiple all-ins, a player may be eligible for more than one pot.',
   ),
   Act0GlossaryTermV1(
     'To call (price)',
