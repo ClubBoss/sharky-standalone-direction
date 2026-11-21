@@ -1214,7 +1214,7 @@ final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
-      label: 'Avoid all risk until paid',
+      label: 'Pass thin edges until the money is reached',
       isCorrect: false,
       preferredLabel: 'Survival pressure matters more',
       betterAnswerLabel: 'Survival pressure matters more',
@@ -1246,7 +1246,7 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'wait_premium',
-      label: 'Wait only for premium pairs',
+      label: 'Wait for AA or KK before entering a pot',
       isCorrect: false,
       preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
       betterAnswerLabel:
@@ -1366,7 +1366,7 @@ final _w9MZoneRedRunner = _w9MRatioIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'wait',
-      label: 'Wait for perfect premium only',
+      label: 'Wait for top pairs like AA or KK',
       isCorrect: false,
       preferredLabel: 'Use controlled urgency',
       betterAnswerLabel: 'Use controlled urgency',
@@ -1463,7 +1463,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'panic_now',
-      label: 'Force any spot immediately',
+      label: 'Shove the next playable hand right away',
       isCorrect: false,
       preferredLabel: 'Prepare action windows before red-zone panic',
       betterAnswerLabel: 'Prepare action windows before red-zone panic',
@@ -1650,7 +1650,7 @@ final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'jam_any_two',
-      label: 'Go all-in with any two cards',
+      label: 'Open-shove wide hands without checking position',
       isCorrect: false,
       preferredLabel: 'Apply selective open pressure',
       betterAnswerLabel: 'Apply selective open pressure',
@@ -1682,7 +1682,7 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_to_money',
-      label: 'Fold almost any hand until payouts begin',
+      label: 'Fold playable shoves to try to ladder into the money',
       isCorrect: false,
       preferredLabel: 'Still take practical all-in spots before blinded out',
       betterAnswerLabel: 'Still take practical all-in spots before blinded out',
@@ -1793,7 +1793,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_anything_close',
-      label: 'Over-fold all close hands',
+      label: 'Fold strong top-range hands to avoid busting',
       isCorrect: false,
       preferredLabel: 'Tighten thin stack-offs versus the covering blind',
       betterAnswerLabel: 'Tighten thin stack-offs versus the covering blind',
@@ -1849,7 +1849,7 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'panic_any_two',
-      label: 'Panic with any two cards now',
+      label: 'Push weak offsuit hands before the blinds hit',
       isCorrect: false,
       preferredLabel: 'Disciplined urgency in reasonable spots',
       betterAnswerLabel: 'Disciplined urgency in reasonable spots',
@@ -1860,7 +1860,7 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'wait_only_aa',
-      label: 'Wait only for aces',
+      label: 'Fold until you pick up pocket aces',
       isCorrect: false,
       preferredLabel: 'Disciplined urgency in reasonable spots',
       betterAnswerLabel: 'Disciplined urgency in reasonable spots',
@@ -1946,7 +1946,7 @@ final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
-      label: 'Fold almost any hand until payout',
+      label: 'Fold strong top-range pairs to avoid busting before payout',
       isCorrect: false,
       preferredLabel: 'Tighten defend and avoid thin all-ins',
       betterAnswerLabel: 'Tighten defend and avoid thin all-ins',
@@ -1986,7 +1986,7 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'player_only',
-      label: 'Adjust only by player type',
+      label: 'Adjust by player type and ignore stack pressure',
       isCorrect: false,
       preferredLabel: 'Map pressure first, then adjust by player',
       betterAnswerLabel: 'Map pressure first, then adjust by player',
@@ -2325,7 +2325,7 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'allin_only',
-      label: 'Only go all-in with strong hands',
+      label: 'Use oversized all-in bets with strong hands',
       isCorrect: false,
       preferredLabel: 'Value-bet heavier, bluff less often',
       betterAnswerLabel: 'Value-bet heavier, bluff less often',
@@ -2707,7 +2707,7 @@ final _w10CheckpointLeverLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'raise_all_sizes',
-      label: 'Change all sizings across positions',
+      label: 'Change open sizings across early and late seats',
       isCorrect: false,
       preferredLabel: 'Widen late steals slightly',
       betterAnswerLabel: 'Widen late steals slightly',
@@ -2718,7 +2718,7 @@ final _w10CheckpointLeverLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'flat_everything',
-      label: 'Flat-call more from all seats',
+      label: 'Flat-call wider from early and middle seats',
       isCorrect: false,
       preferredLabel: 'Widen late steals slightly',
       betterAnswerLabel: 'Widen late steals slightly',
@@ -2740,7 +2740,7 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hard_counter',
-      label: 'Hard-counter all future streets now',
+      label: 'Overhaul your three-street calling plan right away',
       isCorrect: false,
       preferredLabel: 'Make a small adjustment and gather more evidence',
       betterAnswerLabel: 'Make a small adjustment and gather more evidence',
@@ -2761,7 +2761,7 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
     ),
     Act0RunnerOptionV1(
       id: 'no_adjust',
-      label: 'Ignore all reads forever',
+      label: 'Stick to default chart lines and ignore the table cue',
       isCorrect: false,
       preferredLabel: 'Make a small adjustment and gather more evidence',
       betterAnswerLabel: 'Make a small adjustment and gather more evidence',
@@ -2973,7 +2973,7 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'repeat_none',
-      label: 'Avoid setting any goal again',
+      label: 'Play the next session without a focus target',
       isCorrect: false,
       preferredLabel: 'Narrow to one session goal next time',
       betterAnswerLabel: 'Narrow to one session goal next time',
@@ -3144,7 +3144,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'no_change',
-      label: 'Save the adjustment for review only',
+      label: 'Wait to adjust until post-session review',
       isCorrect: false,
       preferredLabel: 'Bet value heavier and trim bluffs',
       betterAnswerLabel: 'Bet value heavier and trim bluffs',
@@ -3467,7 +3467,7 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fix_everything',
-      label: 'Fix all leaks at once tomorrow',
+      label: 'Tackle both leaks together in the next session',
       isCorrect: false,
       preferredLabel: 'Select one repeated leak as priority',
       betterAnswerLabel: 'Select one repeated leak as priority',
@@ -3534,7 +3534,7 @@ final _w11ReviewDefineFixRunner = _w11ReviewLoopIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'no_fix',
-      label: 'Do not set any repair task',
+      label: 'Leave the river leak unwritten and move on',
       isCorrect: false,
       preferredLabel:
           'If an opponent underbluffs, fold marginal bluff-catchers',
@@ -3891,7 +3891,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'ignore_hand',
-      label: 'Move on after a quick note only',
+      label: 'Skip the cue check and move to the next hand',
       isCorrect: false,
       preferredLabel: 'Check the cues before judging the result',
       betterAnswerLabel: 'Check the cues before judging the result',

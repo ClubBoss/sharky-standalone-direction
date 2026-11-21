@@ -49,7 +49,7 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
     ),
     Act0RunnerOptionV1(
       id: 'hero_cards_only',
-      label: 'Only your cards matter',
+      label: 'Check your two cards and skip the board',
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 4 BB in the pot',
@@ -304,7 +304,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'hand_first_only',
-      label: 'Only your hand matters first',
+      label: 'Read your two cards and act right away',
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 6 BB in the pot',
@@ -3345,7 +3345,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_last',
-      label: 'CO already acts last on all streets',
+      label: 'CO acts last before and after the flop',
       isCorrect: false,
       preferredLabel: 'Fewer players still act after CO',
       betterAnswerLabel: 'Fewer players still act after CO',

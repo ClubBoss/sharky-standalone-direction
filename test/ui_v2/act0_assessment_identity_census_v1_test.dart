@@ -183,8 +183,9 @@ void main() {
           'Take a reasonable jam or reshove spot',
       'Still take practical all-in spots before blinded out':
           'Still take practical jam spots before blinded out',
-      'Only go all-in with strong hands': 'Only shove strong hands',
-      'Go all-in with any two cards': 'Jam any two cards every hand',
+      'Use oversized all-in bets with strong hands': 'Only shove strong hands',
+      'Open-shove wide hands without checking position':
+          'Jam any two cards every hand',
       'Go all-in to deny equity': 'Jam to deny equity',
       'You have top pair. An opponent could be drawing to a flush':
           'Hero already has top pair, and the heart draw is still only pressure',
@@ -199,7 +200,7 @@ void main() {
       'Nothing counts until all stacks are equal':
           'Nothing counts until every stack is equal',
       'The button wins right away': 'The button wins automatically',
-      'CO already acts last on all streets':
+      'CO acts last before and after the flop':
           'CO already acts last every street',
       'Late seat makes most hands easy': 'Late seat makes every hand easy',
       'You have a flush draw, not a made flush yet':
@@ -211,10 +212,12 @@ void main() {
       'Keep betting across streets': 'Keep betting on every street',
       'The paired board leaves seven-containing combinations unchanged.':
           'The paired board leaves every seven-containing combination available.',
-      'Fold almost any hand until payouts begin':
+      'Fold playable shoves to try to ladder into the money':
           'Fold every hand until payouts begin',
-      'Over-fold all close hands': 'Over-fold every close hand',
-      'Fold almost any hand until payout': 'Fold every hand until payout',
+      'Fold strong top-range hands to avoid busting':
+          'Over-fold every close hand',
+      'Fold strong top-range pairs to avoid busting before payout':
+          'Fold every hand until payout',
       'Map pressure, then copy broad player reads':
           'Map pressure, then copy every player read',
       'Keep default play until blinds show it again':
@@ -222,10 +225,11 @@ void main() {
       'Push top pair into a huge pot immediately':
           'Make every top pair hand huge immediately',
       'Call normal standard frequency': 'Call normal baseline frequency',
-      'Change all sizings across positions':
+      'Change open sizings across early and late seats':
           'Change every sizing in all positions',
-      'Flat-call more from all seats': 'Flat-call more in every seat',
-      'Hard-counter all future streets now':
+      'Flat-call wider from early and middle seats':
+          'Flat-call more in every seat',
+      'Overhaul your three-street calling plan right away':
           'Hard-counter every future street now',
       'Structured adjustment before live play':
           'Structured exploit before transfer',
@@ -245,6 +249,37 @@ void main() {
           'Stick to process and planned exploit line',
       'Call down anyway with top pair': 'Hero-call top pair',
       'Fold all close spots now': 'Fold every close spot now',
+      'Read your two cards and act right away': 'Only your hand matters first',
+      'Check your two cards and skip the board': 'Only your cards matter',
+      'The rank value': 'Rank only',
+      'The suit symbol': 'Suit only',
+      'The two private cards at your seat': 'Your cards only',
+      'BTN, SB, and BB': 'BTN, SB, BB only',
+      'Focus on bet size before checking the third heart':
+          'Only the bet size matters now',
+      'A board must pair before matching-rank combinations drop.':
+          'Only a paired board can change how many matching-rank combinations remain.',
+      'Pass thin edges until the money is reached': 'Avoid all risk until paid',
+      'Wait for AA or KK before entering a pot': 'Wait only for premium pairs',
+      'Wait for top pairs like AA or KK': 'Wait for perfect premium only',
+      'Shove the next playable hand right away': 'Force any spot immediately',
+      'Push weak offsuit hands before the blinds hit':
+          'Panic with any two cards now',
+      'Fold until you pick up pocket aces': 'Wait only for aces',
+      'Adjust by player type and ignore stack pressure':
+          'Adjust only by player type',
+      'Stick to default chart lines and ignore the table cue':
+          'Ignore all reads forever',
+      'Play the next session without a focus target':
+          'Avoid setting any goal again',
+      'Wait to adjust until post-session review':
+          'Save the adjustment for review only',
+      'Tackle both leaks together in the next session':
+          'Fix all leaks at once tomorrow',
+      'Leave the river leak unwritten and move on':
+          'Do not set any repair task',
+      'Skip the cue check and move to the next hand':
+          'Move on after a quick note only',
       'Call with the same routine': 'Call with the same loop',
       'A repeatable process-reset-discipline cycle':
           'A repeatable process-reset-discipline loop',
@@ -926,7 +961,7 @@ void main() {
           ],
           [
             "size_only_changed",
-            "Only the bet size matters now",
+            "Focus on bet size before checking the third heart",
             false,
             "suboptimal",
             "An opponent can now have a flush",
@@ -949,7 +984,7 @@ void main() {
           ],
           [
             "size_only_changed",
-            "Only the bet size matters now",
+            "Focus on bet size before checking the third heart",
             false,
             "suboptimal",
             "The board got wetter and more connected",
@@ -1223,7 +1258,7 @@ void main() {
         [
           [
             "only_board_low_cards_matter",
-            "Only a paired board can change how many matching-rank combinations remain.",
+            "A board must pair before matching-rank combinations drop.",
             false,
             "wrong",
             "Fewer queen-containing combinations remain; no exact hand is proved.",

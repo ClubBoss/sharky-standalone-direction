@@ -332,7 +332,7 @@ act0W7VisibleAceHiddenTaskSpecsV1 = <Act0W7VisibleAceHiddenTaskSpecV1>[
       'visible_rank_reduces_matching_rank_combos':
           'Fewer queen-containing combinations remain; no exact hand is proved.',
       'only_board_low_cards_matter':
-          'Only a paired board can change how many matching-rank combinations remain.',
+          'A board must pair before matching-rank combinations drop.',
       'visible_cards_show_exact_hand':
           'The visible queens prove the opponent’s exact hand.',
     },

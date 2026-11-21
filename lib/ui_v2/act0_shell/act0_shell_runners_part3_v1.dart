@@ -3066,7 +3066,7 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
     ),
     Act0RunnerOptionV1(
       id: 'size_only_changed',
-      label: 'Only the bet size matters now',
+      label: 'Focus on bet size before checking the third heart',
       isCorrect: false,
       preferredLabel: 'An opponent can now have a flush',
       betterAnswerLabel: 'An opponent can now have a flush',
