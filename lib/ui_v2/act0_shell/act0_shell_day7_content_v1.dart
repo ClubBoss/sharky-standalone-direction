@@ -997,10 +997,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     _day7PostflopV1('bb', 'Qd Jc', 'Qh 8s 5d 4c 2h', betBb: 4, showTurn: true),
     caption:
         'Assume HJ holds one of three equally likely hands: king-queen, ace-queen or ten-nine. Compare calling with folding.',
-    question: 'Do your queens win often enough to pay for this river call?',
+    question:
+        'Does your pair of queens win often enough to pay for this river call?',
     choices: const ['Fold', 'Call', 'The price requires two wins out of three'],
     correct: 1,
     reason:
-        'Your queens with a jack kicker beat ten-nine high and lose to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.',
+        'Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.',
   ),
 ];
