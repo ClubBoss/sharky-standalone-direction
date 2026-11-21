@@ -6821,9 +6821,11 @@ final _visibleCardRangeContinuationLessons = <Act0LessonCardV1>[
 
 final _w7PriceLessonV1 = _w7AppliedLessonV1(
   id: 'w7_visible_cards_and_price',
-  title: 'Count the winners, then compare the price',
-  subtitle: 'The same draw can be worth calling at one price, but not at another.',
+  title: 'Read the table and compare the price',
+  subtitle: 'See what changes when another player enters or the price goes up.',
   tasks: [
+    _w7FlopTaskV1(multiway: false),
+    _w7FlopTaskV1(multiway: true),
     _w7AppliedTaskV1(
       id: 'w7_count_winning_rivers',
       title: 'Which cards actually win?',
@@ -6899,6 +6901,110 @@ Act0LessonCardV1 _w7AppliedLessonV1({
   tasks: tasks,
 );
 
+Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
+  final foldRate = multiway ? '16%' : '40%';
+  final table = _w7FlopTableV1(multiway: multiway);
+  final explanation = multiway
+      ? 'Everyone folds only 16% of the time in this example. The bet wins '
+            '9 BB on those folds but loses 3 BB the other 84% of the time. '
+            'That is a loss of about 1.1 BB on average. Checking risks 0 BB.'
+      : 'With one opponent, the bet wins 6.5 BB on the 40% of hands where '
+            'they fold and loses 3 BB otherwise. That is a gain of 0.8 BB '
+            'on average in this example.';
+  return _w7AppliedTaskV1(
+    id: multiway ? 'w7_flop_bluff_two_players' : 'w7_flop_bluff_one_player',
+    title: 'A flop decision',
+    question:
+        'Everyone folds to a 3 BB bet $foldRate of the time. For this '
+        'exercise, count the full bet as lost if anyone continues. Checking '
+        'has a value of 0 BB. Which action is better in this model?',
+    caption: 'Use the fold rate given in the question, not a general rule.',
+    table: table,
+    labels: const ['Bet 3 BB', 'Check'],
+    correctAt: multiway ? 1 : 0,
+    feedback: [explanation, explanation],
+    family: Act0TaskFamilyV1.decision,
+  );
+}
+
+Act0TableStateV1 _w7FlopTableV1({required bool multiway}) {
+  final heroCards = _act0LessonCardsV1('7h 6h');
+  final table = _act0BoardLessonTableV1(
+    heroCards: heroCards,
+    boardCards: _act0LessonCardsV1('As 9d 3c'),
+    centerLabel: 'Flop decision',
+  );
+  const wager = Act0ContributionKindV1.wager;
+  return table.copyWith(
+    heroSeatId: 'co',
+    activeSeatId: 'co',
+    decisionSeatId: 'co',
+    potLabel: multiway ? 'Pot 9 BB' : 'Pot 6.5 BB',
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      const Act0ActionTrailItemV1(label: 'HJ folds'),
+      const Act0ActionTrailItemV1(label: 'CO raises to 3 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN folds'),
+      if (multiway)
+        const Act0ActionTrailItemV1(
+          label: 'SB calls 3 BB',
+          displayLabel: 'SB calls 2.5 BB more',
+        )
+      else
+        const Act0ActionTrailItemV1(label: 'SB folds'),
+      const Act0ActionTrailItemV1(
+        label: 'BB calls 3 BB',
+        displayLabel: 'BB calls 2 BB more',
+      ),
+      if (multiway) const Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+      Act0ActionTrailItemV1(label: multiway ? 'BB checks' : 'Flop: BB checks'),
+    ],
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      startingStackBbBySeat: const {'co': 100, 'bb': 100, 'sb': 100},
+      entries: [
+        ..._act0LessonBlinds,
+        const Act0ContributionV1(PokerStreet.preflop, 'co', wager, 3),
+        if (multiway)
+          const Act0ContributionV1(PokerStreet.preflop, 'sb', wager, 2.5),
+        const Act0ContributionV1(PokerStreet.preflop, 'bb', wager, 2),
+      ],
+    ),
+    seats: [
+      for (final seat in table.seats)
+        _act0CopySeatStateV1(
+          seat,
+          clearCommitment: true,
+          isHero: seat.seatId == 'co',
+          isActive: seat.seatId == 'co',
+          hasActed: seat.seatId != 'co',
+          isInHand:
+              seat.seatId == 'co' ||
+              seat.seatId == 'bb' ||
+              (multiway && seat.seatId == 'sb'),
+          isFolded:
+              seat.seatId != 'co' &&
+              seat.seatId != 'bb' &&
+              (!multiway || seat.seatId != 'sb'),
+          stackLabel: switch (seat.seatId) {
+            'co' || 'bb' => '97 BB',
+            'sb' => multiway ? '97 BB' : '99.5 BB',
+            _ => '100 BB',
+          },
+          holeCards: seat.seatId == 'co' ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: switch (seat.seatId) {
+            'co' => Act0CardsVisibleModeV1.faceUp,
+            'bb' => Act0CardsVisibleModeV1.faceDown,
+            'sb' when multiway => Act0CardsVisibleModeV1.faceDown,
+            _ => Act0CardsVisibleModeV1.none,
+          },
+        ),
+    ],
+  );
+}
+
 Act0TableStateV1 _w7TurnPriceTableV1(int bet) => _w7AllInTableV1(
   holeCards: 'Ah 8h',
   boardCards: 'Kh 7h 2c 4d',
@@ -6963,6 +7069,7 @@ Act0TableStateV1 _w7AllInTableV1({
   );
   final amount = _act0BbLabelV1(bet);
   return table.copyWith(
+    handContributions: table.handContributions,
     actionTrail: [
       ...table.actionTrail.take(table.actionTrail.length - 1),
       Act0ActionTrailItemV1(label: '$street: BB all-in $amount'),

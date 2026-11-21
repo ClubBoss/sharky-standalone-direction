@@ -15,11 +15,27 @@ void main() {
     );
   });
 
+  test('the flop contrasts one and two opponents from the cutoff', () {
+    final tasks = Act0ShellStateV1.sample
+        .lessonById('w7_visible_cards_and_price')
+        .taskList;
+    final headsUp = tasks[0].runner;
+    final multiway = tasks[1].runner;
+    expect(headsUp.table.heroSeatId, 'co');
+    expect(multiway.table.heroSeatId, 'co');
+    expect(headsUp.table.seats.where((s) => s.isInHand), hasLength(2));
+    expect(multiway.table.seats.where((s) => s.isInHand), hasLength(3));
+    expect(headsUp.table.potLabel, 'Pot 6.5 BB');
+    expect(multiway.table.potLabel, 'Pot 9 BB');
+    expect(headsUp.options.singleWhere((o) => o.isCorrect).label, 'Bet 3 BB');
+    expect(multiway.options.singleWhere((o) => o.isCorrect).label, 'Check');
+  });
+
   test('the turn answer changes with price, not with cards', () {
     final state = Act0ShellStateV1.sample;
     final tasks = state.lessonById('w7_visible_cards_and_price').taskList;
-    final cheaper = tasks[1].runner;
-    final dearer = tasks[2].runner;
+    final cheaper = tasks[3].runner;
+    final dearer = tasks[4].runner;
     expect(
       cheaper.table.heroCards.map((c) => '${c.rank}${c.suit}'),
       dearer.table.heroCards.map((c) => '${c.rank}${c.suit}'),
