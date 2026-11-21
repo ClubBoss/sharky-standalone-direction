@@ -243,6 +243,8 @@ void main() {
               .selectedWorldId,
           'world_2',
         );
+        expect(find.text('You are first in.'), findsOneWidget);
+        expect(find.textContaining('AA–QQ', findRichText: true), findsNothing);
         await tester.pumpWidget(const SizedBox.shrink());
         await _mount(tester);
         expect(
