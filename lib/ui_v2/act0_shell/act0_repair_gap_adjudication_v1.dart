@@ -1026,11 +1026,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "7ec0d17c371b896a3a79e0131cdfdbbbe49fe4d2ea19a0b076d6a66313d25216",
+        "0f7516a5d64d267c13aee3acf46f1c6d676061e5cfb1b423d152bfe555f5889c",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "UTG is earlier than HJ, where the Sharky starting chart begins opening ATo.",
+        "Raising ATo from UTG into the 1.5 BB pot risks chips first to act with five players behind, where stronger aces and pairs can punish you.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
@@ -1086,10 +1086,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "utg",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "301cfd15a1e24a3ee49b6561e60ca6b5d636934e6989e3683d85e56fb1da1bf2",
+        "86017c0b096c0aabbe90b1f51f1659c8c441496f570ed3c05d722d98a71b1adb",
     sourceQuestion: "Tap the seat that acts last after the flop.",
     sourceChoiceReason:
-        "UTG is early, not the seat that acts last after the flop here.",
+        "On this 5 BB flop (Ah 7c 2d), UTG acts before BTN rather than last, so tapping UTG misreads who gets to see everyone else act first.",
     sourceChoiceLabel: "UTG",
     sourceChoiceQuality: "wrong",
     goalId: "last_actor_after_flop",
@@ -1139,10 +1139,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "b34269285a6b25bdc8371ebb3896f96380cc0cd710f075e91c8fb21b639ead62",
+        "fbd51ee83e8b64301d1d51d23c2cf6a943a2a5a0a96670167d595df8ed7ed419",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
-    sourceChoiceReason: "CO is one seat before the Button.",
+    sourceChoiceReason:
+        "Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1286,9 +1287,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
     sourceQuestion: "What action keeps playing for free?",
-    sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
+    sourceChoiceReason:
+        "Folding 9c 8d on BTN into a 4.5 BB pot after BB checks gives up your chance to win for free when checking keeps you in at 0 BB.",
     sourceChoiceLabel: "Fold",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
@@ -1311,9 +1313,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
     sourceQuestion: "What action keeps playing for free?",
-    sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
+    sourceChoiceReason:
+        "Calling requires a live bet to match, and after BB checks into the 4.5 BB pot on Ah 7c 2d there is 0 BB facing your 9c 8d on BTN.",
     sourceChoiceLabel: "Call",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
@@ -1464,7 +1467,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1491,7 +1494,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1573,7 +1576,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        'fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0',
+        '75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',
@@ -1638,9 +1641,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "beabef2953789c0ade3ca1acf04ee59869010366d839257e43fcd7bb4e1cc082",
+        "0877b8a9cd70bcf04f609062ffdc672e8d47cab704d48df3ed512bd657cc46ee",
     sourceQuestion: "Who acts first preflop?",
-    sourceChoiceReason: "The Button acts late, not first preflop.",
+    sourceChoiceReason:
+        "In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.",
     sourceChoiceLabel: "BTN",
     goalId: "six_max_initial_preflop_first_actor",
     misconceptionId: "first_preflop_actor_read_as_button",
@@ -1649,7 +1653,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "beabef2953789c0ade3ca1acf04ee59869010366d839257e43fcd7bb4e1cc082",
+        "0877b8a9cd70bcf04f609062ffdc672e8d47cab704d48df3ed512bd657cc46ee",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

@@ -223,7 +223,7 @@ Q: How many cards make your final hand?
 HINT [theoryOnly]: A rank tells how high a card is. A suit is its symbol. Everyone can use the board.
 TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3 | Center Shared board | Facts one pair, pocket pair
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Seven — Not quite. You may see seven cards, but only five form the hand.
+  - [wrong] Seven — Not quite. With Qh Qs and five board cards on Ah 7c 2d Jc 4s, counting seven cards misreads your hand because only the best five count in your final hand.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Shared board | Facts one pair, pocket pair
   + [correct] Five — Five cards form your hand. Your final poker hand is the best five cards.
@@ -564,7 +564,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BB [seat bb] — Right unit. BB posts the full 1 BB blind, so later prices count from that 1 BB post.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Not the 1 BB unit. SB posts only 0.5 BB. BB is the full 1 BB post players count from.
+  - [wrong] SB [seat sb] — Not the 1 BB unit. SB only posts 0.5 BB into the 1.5 BB pot, so treating SB as the 1 BB unit cuts every bet and pot measurement in half.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus bb | Tap bb, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -620,7 +620,7 @@ HINT [theoryOnly]: That keeps blinds and late position rotating.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] CO [seat co] — Not quite. CO is one seat before the Button.
+  - [wrong] CO [seat co] — Not quite. CO sits one seat before BTN in this 1.5 BB preflop pot, so picking CO misidentifies the dealer marker and who acts last after the flop.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
@@ -636,7 +636,7 @@ SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 1
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] UTG [seat utg] — UTG acts first preflop. UTG acts first before the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — Not quite. The Button acts late, not first preflop.
+  - [wrong] BTN [seat btn] — Not quite. In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Decision utg | Seat focus utg | Tap utg, btn | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -743,10 +743,10 @@ HINT [theoryOnly]: Read the amount required to stay in the hand.
 TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
-  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
+  - [wrong] Fold — Not quite. Folding 9c 8d on BTN into a 4.5 BB pot after BB checks gives up your chance to win for free when checking keeps you in at 0 BB.
     BETTER ANSWER: Check
   + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
-  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
+  - [wrong] Call — Not quite. Calling requires a live bet to match, and after BB checks into the 4.5 BB pot on Ah 7c 2d there is 0 BB facing your 9c 8d on BTN.
     BETTER ANSWER: Check
 
 TASK actions_fold_drill [drill] Fold to exit
@@ -798,11 +798,11 @@ HINT [theoryOnly]: Compare how many chips each action adds to the pot.
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
+  - [wrong] Fold — Not quite. Folding Qs Js on BTN gives up the 1.5 BB pot without putting in chips or forcing SB and BB to pay more than the 1 BB blind.
     BETTER ANSWER: Raise
     REPAIR LABELS: Your turn, Blinds posted, KTs
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] Call [1 BB] — Calling matches the blind. Calling puts in 1 BB and matches the blind. Raising to 3 BB sets a higher price for the next player.
+  - [wrong] Call [1 BB] — Calling matches the blind. Calling 1 BB on BTN with Qs Js only matches the big blind in the 1.5 BB pot instead of raising to 3 BB and making the blinds pay more.
     BETTER ANSWER: Raise
     REPAIR LABELS: Matches 1 BB, Sets a higher price, Button
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
@@ -824,11 +824,11 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   + [correct] Raise [3 BB] — Strong choice. Raising to 3 BB increases the price above the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
+  - [wrong] Fold — Not quite. Folding Ks Ts on BTN surrenders the 1.5 BB pot immediately and leaves the 1 BB blind price unchanged for SB and BB.
     BETTER ANSWER: Raise
     REPAIR LABELS: Your turn, Blinds posted, KTs
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] Call [1 BB] — Calling matches the blind. Calling puts in 1 BB and matches the blind. Raising to 3 BB sets a higher price for the next player.
+  - [wrong] Call [1 BB] — Calling matches the blind. Calling 1 BB on BTN with Ks Ts only matches the blind in the 1.5 BB pot and gives up the chance to raise to 3 BB and pressure the blinds.
     BETTER ANSWER: Raise
     REPAIR LABELS: Matches 1 BB, Sets a higher price, Button
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
@@ -1137,7 +1137,7 @@ Q: What happens when the last other player folds before showing any cards?
 HINT [theoryOnly]: If everyone else folds, the last player wins now.
 TABLE: Flop | You Jh Js | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2 | Center Shared board | Facts one pair, pocket pair, rainbow
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Show cards — Not quite. No showdown is needed when everyone else folds.
+  - [wrong] Show cards — Not quite. With everyone else folded on Ah 7c 2d, you already win the 5 BB pot on BTN with Jh Js without revealing your cards or giving away free information.
     BETTER ANSWER: Win now
     FEEDBACK TABLE: Flop | You Jh Js | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Shared board | Facts one pair, pocket pair, rainbow
   + [correct] Win now — Sharp read. When everyone else folds, the last player wins the pot.
@@ -1330,9 +1330,9 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | 
 SEATS: UTG stack 99 BB | HJ stack 97 BB bet 2 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 1 BB · BB checks · Flop: SB checks · BB checks · UTG checks · HJ bets 2 BB · Your turn
   + [correct] Fold — Fold gives up this hand. Fold gives up the hand and saves the call.
-  - [wrong] Call [2 BB] — Not quite. Calling pays 2 BB to stay in the hand. Your queens still beat some hands.
+  - [wrong] Call [2 BB] — Not quite. Calling the 2 BB bet into the 7 BB pot on Ah 7c 2d keeps your Qh Qs in the hand and commits chips instead of exiting.
     BETTER ANSWER: Fold
-  - [wrong] Raise [6 BB] — Not quite. Raising puts in more chips and keeps you in the hand.
+  - [wrong] Raise [6 BB] — Not quite. Raising to 6 BB against HJ's 2 BB bet in the 7 BB pot risks even more chips with Qh Qs on Ah 7c 2d instead of folding out.
     BETTER ANSWER: Fold
 
 TASK fold_discipline_early_fold [drill] Early weak hand
@@ -1344,7 +1344,7 @@ HINT [theoryOnly]: Early position removes the comfort from weak offsuit hands.
 TABLE: Preflop | You Js 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center J8o early | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG Js 8d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  - [wrong] Raise — Not quite. Position is early and the hand bucket is too weak.
+  - [wrong] Raise — Not quite. Raising J8o from UTG into the 1.5 BB pot risks chips from an early seat with five players still to act behind a weak offsuit hand.
     BETTER ANSWER: Fold
   + [correct] Fold — Excellent spot. Weak offsuit hands from early position can simply fold.
 
@@ -1359,7 +1359,7 @@ TABLE: Preflop | You Js 8d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Js 8d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — J8o still folds versus a CO open. BTN versus a CO open, J8o is still too weak to continue.
-  - [wrong] Call [2.5 BB] — Not quite. Late position helps, but J8o is still too weak versus a CO open.
+  - [wrong] Call [2.5 BB] — Not quite. Calling 2.5 BB into a 4 BB pot on BTN with J8o pays to play a weak offsuit hand that loses big pots to CO's stronger jacks and high cards.
     BETTER ANSWER: Fold
 
 TASK fold_discipline_discipline_stack_protect [drill] Protect stack
@@ -1369,7 +1369,7 @@ HINT [theoryOnly]: Check the Weak row for an earlier raise.
 TABLE: Preflop | You As 7d | Pot 4.5 BB | To call 3 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center Facing the first raise | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97 BB raise 3 BB | BTN dealer As 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 3 BB · BTN acts
-  - [wrong] Call [3 BB] — Tempting, but fold. A7o is in the Weak group. If both players pair an ace, a hand like A-J can win with its higher second card.
+  - [wrong] Call [3 BB] — Tempting, but fold. Calling 3 BB into a 4.5 BB pot on BTN with A7o risks chips with a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
   + [correct] Fold — Disciplined fold. The Sharky starting chart folds A7o on BTN against a CO raise because stronger aces can win when both players pair their ace. Experienced players sometimes continue with more hands.
 
@@ -1382,7 +1382,7 @@ TABLE: Preflop | You As 4d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer As 4d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts ace-four offsuit in the Weak group and folds it on BTN against a CO raise.
-  - [wrong] Call [2.5 BB] — Read the cards before the seat. Acting later helps you see more. This hand still falls outside the calls listed for this spot.
+  - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with A4o pays to play a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
 
 ===== WORLD 2 · LESSON weak_ace_warning · Weak ace warning =====
@@ -1405,7 +1405,7 @@ HINT [theoryOnly]: Read your two cards and find their group in the chart.
 TABLE: Preflop | You As 6d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center Facing the first raise | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer As 6d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Call [2.5 BB] — Read the cards before the seat. Acting later helps you see more. This hand still falls outside the calls listed for this spot.
+  - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with A6o pays to play a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts ace-six offsuit in the Weak group and folds it on BTN against a CO raise.
 
@@ -1419,7 +1419,7 @@ HINT [theoryOnly]: Broadway cards are T, J, Q, K, and A. One seat earlier from t
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center HJ opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
-  - [wrong] Fold — Not quite. Folding is still too tight. KQo keeps enough strength and position against an HJ open.
+  - [wrong] Fold — Not quite. Folding KQo on BTN against HJ's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with a strong broadway hand.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one HJ raise with KQo on BTN.
 
@@ -1431,7 +1431,7 @@ TABLE: Preflop | You Ks 7d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Ks 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts king-seven offsuit in the Weak group and folds it on BTN against a CO raise.
-  - [wrong] Call [2.5 BB] — Read the cards before the seat. Acting later helps you see more. This hand still falls outside the calls listed for this spot.
+  - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with K7o risks chips with a weak offsuit hand that loses big pots to CO's stronger high cards.
     BETTER ANSWER: Fold
 
 TASK weak_ace_warning_weak_ace_kicker_compare [drill] A7 vs KQ spot
@@ -1444,7 +1444,7 @@ HINT [theoryOnly]: Look for a shared rank, then compare the other card.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] KQo shares its queen with AK and has the lower second card — Not quite. AK has no queen. KQo shares its king with AK, and the queen loses to the ace.
+  - [wrong] KQo shares its queen with AK and has the lower second card — Not quite. AK has no queen, so misreading KQo against CO's 2.5 BB open into a 4 BB pot misses why A7o gets dominated when both hands pair an ace.
     BETTER ANSWER: A7o shares an ace with AK and has the lower second card
   + [correct] A7o shares an ace with AK and has the lower second card — Strong contrast read. A7o shares its ace with AK or AQ and has the lower second card. KQo avoids that specific comparison, but it can be dominated by AK or AQ itself.
 
@@ -1457,7 +1457,7 @@ TABLE: Preflop | You As 5d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer As 5d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts ace-five offsuit in the Weak group and folds it on BTN against a CO raise.
-  - [wrong] Call [2.5 BB] — Read the cards before the seat. Acting later helps you see more. This hand still falls outside the calls listed for this spot.
+  - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with A5o pays to play a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
 
 ===== WORLD 2 · LESSON continue_or_let_go · Continue or let go =====
@@ -1492,12 +1492,12 @@ HINT [theoryOnly]: Medium hand in the best seat. Raising is sharper than limping
 TABLE: Preflop | You Kd Qc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Card focus hero_0, hero_1 | Center Medium, good seat | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Kd Qc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — Not quite. KQo on the Button has enough to open. Folding here wastes a strong seat.
+  - [wrong] Fold — Not quite. Folding KQo on BTN into an unopened 1.5 BB pot gives up a profitable late-position open and hands the blinds straight to SB and BB.
     BETTER ANSWER: Raise
     REPAIR LABELS: BTN, KQo, Fold wastes it
   + [correct] Raise [2.5 BB] — Raise is the sharp Button play. KQo on the Button is a clean first-in open.
     REPAIR LABELS: BTN open, KQo
-  - [suboptimal] Call [1 BB] — Passive line, weaker pressure. Limping KQo is legal but starts the hand passively. Raising opens the pot and pressures the blinds.
+  - [suboptimal] Call [1 BB] — Passive line, weaker pressure. Limping 1 BB on BTN with KQo into the 1.5 BB pot instead of raising to 2.5 BB gives up fold pressure and lets the blinds see a cheap flop.
     BETTER ANSWER: Raise
     REPAIR LABELS: Call 1 BB, Chart says raise, BTN
     FEEDBACK TABLE: Preflop | You Kd Qc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Medium, good seat | Empty board No board cards yet | Facts no applicable hand facts
@@ -1510,7 +1510,7 @@ TABLE: Preflop | You Js 7d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Js 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts jack-seven offsuit in the Weak group and folds it on BTN against a CO raise.
-  - [wrong] Call [2.5 BB] — Read the cards before the seat. Acting later helps you see more. This hand still falls outside the calls listed for this spot.
+  - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with J7o risks chips with a weak offsuit hand that loses big pots to CO's stronger high cards.
     BETTER ANSWER: Fold
 
 TASK continue_or_let_go_medium_call_or_fold [drill] Medium facing open
@@ -1523,7 +1523,7 @@ HINT [theoryOnly]: Playable hand in position: call keeps the hand in.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Fold — Not quite. Folding is too tight here. BTN versus a CO open, KQo can continue in position.
+  - [wrong] Fold — Not quite. Folding KQo on BTN against CO's 2.5 BB open into a 4 BB pot surrenders a profitable in-position continue with strong high-card value.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with KQo on BTN.
 
@@ -1537,7 +1537,7 @@ HINT [theoryOnly]: Playable hands can call; weak hands can still fold.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Fold — Not quite. Folding is too tight here. BTN versus a CO open, KQo can continue in position.
+  - [wrong] Fold — Not quite. Folding KQo on BTN for 2.5 BB into a 4 BB pot lets CO take the pot uncontested when you hold strong broadway cards in position.
     BETTER ANSWER: Call
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with KQo on BTN.
 
@@ -1564,7 +1564,7 @@ TABLE: Preflop | You 8s 4d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG 8s 4d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   + [correct] Fold — Excellent spot. Weak offsuit hands from early position can simply fold.
-  - [wrong] Raise — Not quite. Position is early and the hand bucket is too weak.
+  - [wrong] Raise — Not quite. Raising 84o from UTG into the 1.5 BB pot commits chips with a weak offsuit hand while five players still act behind you.
     BETTER ANSWER: Fold
 
 TASK apply_btn_open [drill] BTN, medium hand
@@ -1576,9 +1576,9 @@ HINT [theoryOnly]: Find this medium hand in the chart and check the BTN column.
 TABLE: Preflop | You As Jd | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Card focus hero_0, hero_1 | Center Medium on BTN | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Jd stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. This hand and seat appear in the starting chart, so raise when nobody has raised.
+  - [wrong] Fold — The chart gives this hand an open. Folding AJo on BTN into an unopened 1.5 BB pot throws away a strong late-position open and concedes the blinds without a fight.
     BETTER ANSWER: Raise
-  - [suboptimal] Call [1 BB] — Calling matches the big blind. Calling is allowed, but the starting chart raises this hand from this seat.
+  - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with AJo into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and invites SB and BB in cheaply.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — That hand and seat fit the chart. The Sharky starting chart includes this hand from this seat when nobody has raised.
 
@@ -1591,10 +1591,10 @@ HINT [theoryOnly]: Medium hand, middle seat, unopened pot. Open with a clear rea
 TABLE: Preflop | You Kd Qc | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Seat focus hj | Card focus hero_0, hero_1 | Center HJ, medium hand | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ Kd Qc | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ acts
-  - [wrong] Fold — Too tight for this hand. KQo is not weak. From HJ in an unopened pot, it can open instead of auto-folding.
+  - [wrong] Fold — Too tight for this hand. Folding KQo from HJ into an unopened 1.5 BB pot is too tight and gives up a profitable first-in open from middle position.
     BETTER ANSWER: Raise
     REPAIR LABELS: HJ, KQo, Medium hand
-  - [suboptimal] Call [1 BB] — Limping loses pressure. Calling the blind enters passively. The cleaner first-in action is open-raise or fold, and KQo is strong enough to open here.
+  - [suboptimal] Call [1 BB] — Limping loses pressure. Limping 1 BB from HJ with KQo into the 1.5 BB pot instead of raising to 2.5 BB loses fold pressure and lets CO, BTN, and the blinds enter cheaply.
     BETTER ANSWER: Raise
     REPAIR LABELS: Unopened pot, Open, not limp
     FEEDBACK TABLE: Preflop | You Kd Qc | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Seat focus hj, sb, bb | Card focus hero_0, hero_1 | Center HJ, medium hand | Empty board No board cards yet | Facts no applicable hand facts
@@ -1610,7 +1610,7 @@ TABLE: Preflop | You As 3d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer As 3d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts ace-three offsuit in the Weak group and folds it on BTN against a CO raise.
-  - [wrong] Call [2.5 BB] — Read the cards before the seat. Acting later helps you see more. This hand still falls outside the calls listed for this spot.
+  - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with A3o pays to play a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
 
 ===== WORLD 2 · LESSON discipline_checkpoint · Hand discipline checkpoint =====
@@ -1643,7 +1643,7 @@ HINT [theoryOnly]: Check the Weak row for an earlier raise.
 TABLE: Preflop | You As 7d | Pot 5.5 BB | To call 4 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center Facing the first raise | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 96 BB raise 4 BB | BTN dealer As 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 4 BB · BTN acts
-  - [wrong] Call [4 BB] — Tempting, but fold. A7o is in the Weak group. If both players pair an ace, a hand like A-J can win with its higher second card.
+  - [wrong] Call [4 BB] — Tempting, but fold. Calling 4 BB into a 5.5 BB pot on BTN with A7o risks chips with a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
   + [correct] Fold — Disciplined fold. The Sharky starting chart folds A7o on BTN against a CO raise because stronger aces can win when both players pair their ace. Experienced players sometimes continue with more hands.
 
@@ -1658,7 +1658,7 @@ TABLE: Preflop | You Qs Js | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with QJs on BTN.
-  - [wrong] Fold — A bit too tight. QJs keeps enough playability in position here, so folding gives up a workable continue.
+  - [wrong] Fold — A bit too tight. Folding QJs on BTN against CO's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with suited broadway playability.
     BETTER ANSWER: Call
 
 TASK discipline_checkpoint_checkpoint_table_discipline [drill] Real-table discipline read
@@ -1671,9 +1671,9 @@ TABLE: Preflop | You Jc 4d | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | S
 SEATS: UTG folded | HJ Jc 4d | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ acts
   + [correct] Weak · Fold — Well done. That is the disciplined read. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.
-  - [wrong] Medium · Raise — Not quite. This is exactly the leak hand-discipline is trying to prevent. J4o does not become playable because it looks fun.
+  - [wrong] Medium · Raise — Not quite. Raising J4o from HJ into the 1.5 BB pot risks chips with a weak offsuit hand while CO, BTN, and both blinds still act behind you.
     BETTER ANSWER: Weak · Fold
-  - [suboptimal] Weak · Call — Playable thought. An unopened pot does not rescue a weak bucket. Discipline still says let it go instead of leaking a limp.
+  - [suboptimal] Weak · Call — Playable thought. Limping 1 BB from HJ with J4o into the 1.5 BB pot leaks chips with a weak offsuit hand instead of folding and saving your stack.
     BETTER ANSWER: Weak · Fold
 
 TASK discipline_checkpoint_checkpoint_review [review] Discipline recap
@@ -1840,7 +1840,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Not quite. CO is one seat before the Button.
+  - [wrong] CO [seat co] — Not quite. Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1854,9 +1854,9 @@ HINT [theoryOnly]: First in and late position: opening is the clean action.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. This hand and seat appear in the starting chart, so raise when nobody has raised.
+  - [wrong] Fold — The chart gives this hand an open. Folding KTs on BTN into an unopened 1.5 BB pot gives up a profitable late-position open and lets the blinds win the pot for free.
     BETTER ANSWER: Raise
-  - [suboptimal] Call [1 BB] — Calling matches the big blind. Calling is allowed, but the starting chart raises this hand from this seat.
+  - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with KTs into the 1.5 BB pot instead of raising to 3 BB loses fold pressure and lets SB and BB see a cheap flop.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — That hand and seat fit the chart. The Sharky starting chart includes this hand from this seat when nobody has raised.
 
@@ -1871,7 +1871,7 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Card focus boar
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] BTN [seat btn] — BTN acts last after the flop. Button acts last after the flop in this hand.
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
-  - [wrong] UTG [seat utg] — Not quite. UTG is early, not the seat that acts last after the flop here.
+  - [wrong] UTG [seat utg] — Not quite. On this 5 BB flop (Ah 7c 2d), UTG acts before BTN rather than last, so tapping UTG misreads who gets to see everyone else act first.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg | Center Shared board | Facts one pair, pocket pair, rainbow
 
@@ -1924,7 +1924,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. In this 1.5 BB preflop pot, UTG acts first with five players behind, so picking UTG misses that BTN gathers the most information before acting.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1938,7 +1938,7 @@ HINT [theoryOnly]: Follow how the order moves from the blinds to the dealer mark
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG is the seat acting first in this 1.5 BB pot, so picking UTG misses that BTN is the later seat that can respond after seeing UTG's choice.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
@@ -2033,9 +2033,9 @@ TABLE: Preflop | You Ad Jc | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | S
 SEATS: UTG folded | HJ folded | CO Ad Jc | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
   + [correct] Raise [2.5 BB] — Clean execution. The starting chart raises this hand from CO before BTN and the blinds act.
-  - [suboptimal] Call [1 BB] — Legal, but passive. Calling first in is still a limp. Cutoff is late enough to open the playable hand cleanly.
+  - [suboptimal] Call [1 BB] — Legal, but passive. Limping 1 BB from CO with AJo into the 1.5 BB pot instead of raising to 2.5 BB loses fold pressure and invites BTN and the blinds in cheaply.
     BETTER ANSWER: Raise
-  - [wrong] Fold — Check the clue again. Ace-jack offsuit is Medium. With everyone folded to the cutoff, this chart opens it.
+  - [wrong] Fold — Check the clue again. Folding AJo from CO into an unopened 1.5 BB pot gives up a profitable late-position open with only BTN and the blinds left behind you.
     BETTER ANSWER: Raise
 
 TASK same_hand_different_seat_w3_same_hand_call [drill] Players behind
@@ -2060,7 +2060,7 @@ TABLE: Preflop | You Ad Tc | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG Ad Tc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   + [correct] Fold — Read the UTG row. The Sharky starting chart opens ATo from HJ or later. Fold it from UTG here. Experienced players sometimes open ATo from earlier seats.
-  - [wrong] Raise — Re-check ATo and UTG. UTG is earlier than HJ, where the Sharky starting chart begins opening ATo.
+  - [wrong] Raise — Re-check ATo and UTG. Raising ATo from UTG into the 1.5 BB pot risks chips first to act with five players behind, where stronger aces and pairs can punish you.
     BETTER ANSWER: Fold
 
 TASK same_hand_different_seat_same_hand_late_open [drill] Late seat open
@@ -2073,7 +2073,7 @@ HINT [theoryOnly]: Late position supports a clean open with this playable hand.
 TABLE: Preflop | You Ad Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Unopened pot | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ad Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [suboptimal] Call [1 BB] — Limp is legal, raise is stronger. Limping ATo is legal, but raising takes advantage of late position and puts pressure on the blinds.
+  - [suboptimal] Call [1 BB] — Limp is legal, raise is stronger. Limping 1 BB on BTN with ATo into the 1.5 BB pot instead of raising to 2.5 BB gives up fold pressure and lets SB and BB see a flop cheaply.
     BETTER ANSWER: Raise
   + [correct] Raise [2.5 BB] — Sharp read. ATo in late position can open an unopened pot.
 
@@ -2105,7 +2105,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG has five players left to act behind it in this 1.5 BB preflop pot, so picking UTG overlooks how much more crowded early position is than BTN.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2119,10 +2119,10 @@ HINT [theoryOnly]: Same late seat, different playable hand, same clean open-or-f
 TABLE: Preflop | You Qs Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Qs Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. This hand and seat appear in the starting chart, so raise when nobody has raised.
+  - [wrong] Fold — The chart gives this hand an open. Folding QTs on BTN into an unopened 1.5 BB pot gives up a profitable suited broadway open and hands the blinds straight to SB and BB.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — That hand and seat fit the chart. The Sharky starting chart includes this hand from this seat when nobody has raised.
-  - [suboptimal] Call [1 BB] — Calling matches the big blind. Calling is allowed, but the starting chart raises this hand from this seat.
+  - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with QTs into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and lets the blinds see a cheap flop.
     BETTER ANSWER: Raise
 
 TASK position_apply_late_open [drill] Late: open or limp?
@@ -2132,7 +2132,7 @@ HINT [theoryOnly]: Find your hand and seat in the chart.
 TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center No one has raised | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Kd Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [suboptimal] Call [1 BB] — Calling matches the blind. This hand and the BTN seat are in the opening part of the Sharky starting chart.
+  - [suboptimal] Call [1 BB] — Calling matches the blind. Limping 1 BB on BTN with KTo into the 1.5 BB pot instead of raising to 3 BB loses fold pressure and gives SB and BB a cheap look at the flop.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
 
@@ -2145,7 +2145,7 @@ TABLE: Preflop | You Ad Qc | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG Ad Qc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   + [correct] Fold — UTG is before HJ. The Sharky starting chart opens AQo from HJ or later. Fold it from UTG here. Experienced players sometimes open AQo from earlier seats.
-  - [wrong] Raise — Find the first seat for AQo. AQo can raise from HJ by the Sharky starting chart, but UTG acts before HJ.
+  - [wrong] Raise — Find the first seat for AQo. Raising AQo from UTG into the 1.5 BB pot risks chips with five players still to act behind you, earlier than HJ where this chart starts opening it.
     BETTER ANSWER: Fold
 
 TASK position_apply_hj_fold [drill] HJ: discipline hold
@@ -2157,7 +2157,7 @@ HINT [theoryOnly]: Middle position still needs discipline when the offsuit hand 
 TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Seat focus hj | Card focus hero_0, hero_1 | Center Middle position | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ Kd Tc | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ acts
-  - [wrong] Raise — Re-check KTo and HJ. HJ is before CO. The Sharky starting chart starts opening KTo from CO.
+  - [wrong] Raise — Re-check KTo and HJ. Raising KTo from HJ into the 1.5 BB pot risks chips with CO, BTN, and both blinds still behind you, one seat too early for this chart.
     BETTER ANSWER: Fold
   + [correct] Fold — Read the HJ row. The Sharky starting chart opens KTo from CO or BTN. Fold it from HJ here. Experienced players sometimes open KTo from HJ as well.
 
@@ -2170,7 +2170,7 @@ TABLE: Preflop | You Ad Jc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn |
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ad Jc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
-  - [suboptimal] Call [1 BB] — Calling matches the blind. This hand and the BTN seat are in the opening part of the Sharky starting chart.
+  - [suboptimal] Call [1 BB] — Calling matches the blind. Limping 1 BB on BTN with AJo into the 1.5 BB pot instead of raising to 3 BB wastes late-position fold pressure and lets the blinds enter cheaply.
     BETTER ANSWER: Raise
 
 ===== WORLD 3 · LESSON position_checkpoint · Position checkpoint =====
@@ -2187,7 +2187,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
+  - [wrong] UTG [seat utg] — Not quite. UTG acts before HJ in this 1.5 BB preflop pot, so picking UTG misses that only a later seat like BTN gets to see HJ act first.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2198,7 +2198,7 @@ HINT [theoryOnly]: Find your hand and seat in the chart.
 TABLE: Preflop | You Qd Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center No one has raised | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Qd Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [suboptimal] Call [1 BB] — Calling matches the blind. This hand and the BTN seat are in the opening part of the Sharky starting chart.
+  - [suboptimal] Call [1 BB] — Calling matches the blind. Limping 1 BB on BTN with QTo into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and lets SB and BB see a cheap flop.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
 
@@ -2211,7 +2211,7 @@ HINT [theoryOnly]: A tempting ace still needs an early-seat discipline check.
 TABLE: Preflop | You Ac 9d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center UTG discipline | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG Ac 9d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  - [wrong] Raise — Re-check A9o and UTG. At UTG, the Sharky starting chart puts A9o in the Weak group. Ace-ten is in the next group.
+  - [wrong] Raise — Re-check A9o and UTG. Raising A9o from UTG into the 1.5 BB pot risks chips with a dominated weak ace while five players still act behind you.
     BETTER ANSWER: Fold
   + [correct] Fold — Ace discipline applied. A9o is in the Weak group of the Sharky starting chart. Fold it from UTG here.
 
@@ -2226,7 +2226,7 @@ TABLE: Preflop | You Ks Js | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Ks Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
   + [correct] Call [2.5 BB] — Sharp read. The Sharky starting chart calls one HJ raise with KJs on BTN.
-  - [wrong] Fold — Not quite. KJs keeps enough strength and position here, so folding gives up a workable continue.
+  - [wrong] Fold — Not quite. Folding KJs on BTN against HJ's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with strong suited broadway value.
     BETTER ANSWER: Call
 
 TASK position_checkpoint_position_checkpoint_table_notice [drill] Real-table seat read
@@ -2253,7 +2253,7 @@ TABLE: Preflop | You Ah Th | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn |
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ah Th stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
-  - [suboptimal] Call [1 BB] — Calling matches the blind. This hand and the BTN seat are in the opening part of the Sharky starting chart.
+  - [suboptimal] Call [1 BB] — Calling matches the blind. Limping 1 BB on BTN with ATs into the 1.5 BB pot instead of raising to 3 BB loses fold pressure and gives the blinds a cheap flop.
     BETTER ANSWER: Raise
 
 ===== WORLD 4 · LESSON why_bets_happen · Why bets happen =====

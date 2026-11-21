@@ -983,11 +983,94 @@ void main() {
             '19.lesson_length_corridor|syn_short_lesson|too_short',
             '19.lesson_length_corridor|syn_long_lesson|too_long',
             '20.hero_qq_per_world|world_2|syn_two_opt',
+            '21.duplicate_wrong_reason|syn_streak_0|wrong_stmt',
           ]),
         );
         expect(
           report.findings,
           isNot(contains('12.two_option_w1_w5|syn_allin_two_opt_ok')),
+        );
+      },
+    );
+
+    test(
+      'rejects duplicate wrong-option feedbackReason across non-repair tasks',
+      () {
+        final base = _catalogRow('hand_discipline_buckets_premium');
+        const dupReason =
+            'Calling 2.5 BB into a 4 BB pot with a weak ace loses to stronger aces.';
+        final duplicateOptions = const <Act0RunnerOptionV1>[
+          Act0RunnerOptionV1(
+            id: 'fold',
+            label: 'Fold',
+            isCorrect: true,
+            preferredLabel: 'Fold',
+            quality: Act0FeedbackQualityV1.correct,
+            feedbackTitle: 'Clean fold.',
+            feedbackReason: 'Folding saves 2.5 BB with a dominated hand.',
+          ),
+          Act0RunnerOptionV1(
+            id: 'call',
+            label: 'Call',
+            isCorrect: false,
+            preferredLabel: 'Fold',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Too loose.',
+            feedbackReason: dupReason,
+          ),
+        ];
+        final uniqueOptions = const <Act0RunnerOptionV1>[
+          Act0RunnerOptionV1(
+            id: 'fold',
+            label: 'Fold',
+            isCorrect: true,
+            preferredLabel: 'Fold',
+            quality: Act0FeedbackQualityV1.correct,
+            feedbackTitle: 'Clean fold.',
+            feedbackReason: 'Folding protects your stack from UTG.',
+          ),
+          Act0RunnerOptionV1(
+            id: 'raise',
+            label: 'Raise',
+            isCorrect: false,
+            preferredLabel: 'Fold',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Too early.',
+            feedbackReason:
+                'Raising from UTG into a 1.5 BB pot risks chips with five players behind.',
+          ),
+        ];
+
+        final rows = <CatalogTask>[
+          syntheticRow(
+            base,
+            id: 'syn_dup_wrong_a',
+            runner: base.task.runner.copyWith(options: duplicateOptions),
+          ),
+          syntheticRow(
+            base,
+            id: 'syn_dup_wrong_b',
+            runner: base.task.runner.copyWith(options: duplicateOptions),
+          ),
+          syntheticRow(
+            base,
+            id: 'syn_unique_wrong_c',
+            runner: base.task.runner.copyWith(options: uniqueOptions),
+          ),
+        ];
+
+        final report = runCatalogQualityAudit(rows: rows);
+        expect(
+          report.findings,
+          contains('21.duplicate_wrong_reason|syn_dup_wrong_b|call'),
+        );
+        expect(
+          report.findings,
+          isNot(contains('21.duplicate_wrong_reason|syn_dup_wrong_a|call')),
+        );
+        expect(
+          report.findings,
+          isNot(contains('21.duplicate_wrong_reason|syn_unique_wrong_c|raise')),
         );
       },
     );

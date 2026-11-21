@@ -3917,6 +3917,7 @@ final _world3DominatedFoldRunner = _world3WeakFacingFoldRunner.copyWith(
 Act0RunnerStateV1 _act0WeakAcePriceContrastV1(int openingBb) {
   final base = _world3DominatedFoldRunner;
   final wrong = _weakAceFacingRaiseChoices[1];
+  final potBb = openingBb + 1.5;
   return base.copyWith(
     caption: 'CO raises to $openingBb BB. You are on the Button with A7o.',
     question:
@@ -3937,7 +3938,8 @@ Act0RunnerStateV1 _act0WeakAcePriceContrastV1(int openingBb) {
         betterAnswerLabel: wrong.betterAnswerLabel,
         quality: wrong.quality,
         feedbackTitle: wrong.feedbackTitle,
-        feedbackReason: wrong.feedbackReason,
+        feedbackReason:
+            'Calling $openingBb BB into a $potBb BB pot on BTN with A7o risks chips with a weak ace that loses big pots when CO holds a stronger ace.',
       ),
       _weakAceFacingRaiseChoices.first,
     ],
@@ -3951,6 +3953,10 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
   required List<Act0CardStateV1> cards,
   required int correctIndex,
 }) {
+  final handCode = '${cards[0].rank}${cards[1].rank}o';
+  final wrongCallReason = cards[0].rank == 'A'
+      ? 'Calling 2.5 BB into a 4 BB pot on BTN with $handCode pays to play a weak ace that loses big pots when CO holds a stronger ace.'
+      : 'Calling 2.5 BB into a 4 BB pot on BTN with $handCode risks chips with a weak offsuit hand that loses big pots to CO\'s stronger high cards.';
   return base.copyWith(
     caption: 'CO raised. You are on the Button with $handName.',
     hint: 'Read your two cards and find their group in the chart.',
@@ -3980,8 +3986,7 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
           preferredLabel: 'Fold',
           quality: Act0FeedbackQualityV1.wrong,
           feedbackTitle: 'Read the cards before the seat.',
-          feedbackReason:
-              'Acting later helps you see more. This hand still falls outside the calls listed for this spot.',
+          feedbackReason: wrongCallReason,
         ),
       ],
       correctOptionId: 'fold',

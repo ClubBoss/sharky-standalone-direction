@@ -59,7 +59,8 @@
     "17.single_format_lesson": 45,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 63,
-    "20.hero_qq_per_world": 31
+    "20.hero_qq_per_world": 31,
+    "21.duplicate_wrong_reason": 468
   },
   "findings": [
     "11.btn_share_per_world|world_1",
