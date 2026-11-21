@@ -1891,6 +1891,129 @@ void main() {
     },
   );
 
+  testWidgets(
+    'W1 checkpoint opens after a same-session catalog repair in Review',
+    (tester) async {
+      final world = Act0ShellStateV1.sample.worldById('world_1');
+      final checkpoint = world.lessons.last;
+      final prerequisites = {
+        for (final lesson in world.lessons.take(world.lessons.length - 1))
+          for (final task in lesson.courseTaskList) task.taskId,
+      };
+      expect(prerequisites, contains(_source));
+
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        await tester.runAsync(() async {
+          await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+        });
+      });
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_placement_skip_intro');
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      await _advanceToTask(tester, _source);
+      await _advanceToPrompt(tester);
+      await _choose(tester, 'five_board_now');
+      final miss = _rows(
+        await _saved(tester),
+        'openRepairIntents',
+      ).singleWhere((row) => row['sourceTaskId'] == _source);
+      expect(miss['targetTaskId'], _source);
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+
+      // Complete W1 prerequisites through the ordinary content path, including
+      // the inline retry. The open Review item still gates the checkpoint.
+      for (var step = 0; step < 240; step++) {
+        final summary = find.byType(Act0BlockCompletionShellV1);
+        if (summary.evaluate().isNotEmpty) {
+          final completed = (await _saved(tester))['completedTaskIds'] as List;
+          if (prerequisites.every(completed.contains)) {
+            await _tap(tester, 'act0_shell_block_summary_home_cta');
+            break;
+          }
+          final next = tester
+              .widget<Act0BlockCompletionShellV1>(summary)
+              .nextUsefulHand
+              ?.targetTaskId;
+          await _tap(
+            tester,
+            prerequisites.contains(next) && !completed.contains(next)
+                ? 'act0_shell_block_summary_continue_cta'
+                : 'act0_shell_block_summary_home_cta',
+          );
+        } else if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+          if (find
+              .byKey(const Key('act0_shell_current_mission_cta'))
+              .evaluate()
+              .isEmpty) {
+            await tester.tap(find.text('Learn').last);
+            await tester.pumpAndSettle();
+          }
+          await _tap(tester, 'act0_shell_current_mission_cta');
+        } else {
+          expect(prerequisites, contains(_runner(tester).selectedTaskId));
+          final active = _runner(tester).runner;
+          if (active.phase == Act0LessonPhaseV1.review) {
+            await _tap(tester, 'act0_shell_feedback_continue_cta');
+          } else if (active.activeTeachingStep != null ||
+              active.phase == Act0LessonPhaseV1.theory) {
+            await _continueTeaching(tester);
+          } else {
+            await _foundationAdvanceToPrompt(tester);
+            final correct = _runner(
+              tester,
+            ).runner.options.singleWhere((option) => option.isCorrect);
+            await _choose(tester, correct.id);
+          }
+        }
+      }
+      final locked = await _saved(tester);
+      expect(locked['completedTaskIds'], containsAll(prerequisites));
+      expect(_rows(locked, 'openRepairIntents').single, miss);
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Clear weak spots in Review to unlock'), findsOneWidget);
+
+      await tester.tap(find.text('Review').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_academy_review_leaf_repair_cta');
+      expect(_runner(tester).selectedTaskId, _source);
+      await _foundationAdvanceToPrompt(tester);
+      await _choose(tester, 'two_three_six');
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
+      final repaired = await _saved(tester);
+      expect(_rows(repaired, 'openRepairIntents'), isEmpty);
+      expect(
+        _rows(repaired, 'repairOutcomeProjection'),
+        contains(
+          allOf(
+            containsPair('repairOccurrenceId', miss['repairOccurrenceId']),
+            containsPair('isCorrect', true),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Clear weak spots in Review to unlock'), findsNothing);
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      expect(_runner(tester).selectedLessonId, checkpoint.lessonId);
+      expect(
+        _runner(tester).selectedTaskId,
+        checkpoint.courseTaskList.first.taskId,
+      );
+    },
+  );
+
   testWidgets('SIMULATED Foundation four-world route and saved ordinary boundaries', (
     tester,
   ) async {
