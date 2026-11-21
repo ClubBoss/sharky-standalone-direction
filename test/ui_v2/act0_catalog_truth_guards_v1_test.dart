@@ -700,7 +700,7 @@ void main() {
     _verifyBaseline(audit, 'render', 'render');
   });
 
-  test('G1·11–G1·19 catalog quality baseline admits no regressions', () {
+  test('G1·11–G1·25 catalog quality baseline admits no regressions', () {
     final report = runCatalogQualityAudit();
     final baselineFile = File(_qualityBaselinePath);
     if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
@@ -778,6 +778,119 @@ void main() {
       reason:
           'Remove resolved G1 quality findings from baseline:\n${removed.take(30).join('\n')}',
     );
+  });
+
+  group('G1 decision copy numbers', () {
+    final row = _catalogRow('w11_trigger_bad_price_fold');
+    final runner = row.task.runner;
+
+    Set<String> numericFindings(Act0RunnerStateV1 candidate) =>
+        runCatalogQualityAudit(rows: [_withRunner(row, candidate)]).findings
+            .where((finding) => RegExp(r'^2[2-5]\.').hasMatch(finding))
+            .toSet();
+
+    test('accepts correct copy even if the display strings disagree', () {
+      expect(
+        numericFindings(
+          runner.copyWith(
+            table: runner.table.copyWith(
+              potLabel: 'Pot 99 BB',
+              toCallLabel: 'To call 9 BB',
+            ),
+            hint: 'Need 34% to call. CO bet 12 into 12.',
+          ),
+        ),
+        isEmpty,
+      );
+    });
+
+    test('rejects the after-bet pot in bet-into phrasing', () {
+      expect(
+        numericFindings(runner.copyWith(caption: 'CO bets 12 BB into 24 BB.')),
+        contains(
+          '22.bet_into_pot|world_11|w11_trigger_bad_price_fold|caption|'
+          'bets 12 BB into 24|before bet expected 12.0',
+        ),
+      );
+    });
+
+    test('uses the street ledger with the collected pot carried forward', () {
+      final partial = _catalogRow('w12_revenge_raise_trap');
+      final runner = partial.task.runner.copyWith(
+        caption: 'CO bet 2 into 8.',
+        hint: 'You need about 17% equity.',
+        options: const [],
+        feedbackReason: 'CO’s bet brings the pot to 10 BB.',
+      );
+      final report = runCatalogQualityAudit(
+        rows: [_withRunner(partial, runner)],
+      );
+      expect(
+        report.findings.where(
+          (finding) => RegExp(r'^2[2-5]\.').hasMatch(finding),
+        ),
+        isEmpty,
+      );
+      expect(report.checks['22.bet_into_pot'], 2);
+      expect(report.checks['23.pot_with_bet'], 1);
+      expect(report.checks['24.call_equity'], 1);
+    });
+
+    test('rejects the before-bet pot in pot-now phrasing', () {
+      expect(
+        numericFindings(
+          runner.copyWith(feedbackReason: 'The pot is now 12 BB.'),
+        ),
+        contains(
+          '23.pot_with_bet|world_11|w11_trigger_bad_price_fold|feedbackReason|'
+          'pot is now 12 BB|expected 24.0',
+        ),
+      );
+    });
+
+    test('rejects an equity threshold calculated with the before-bet pot', () {
+      expect(
+        numericFindings(runner.copyWith(hint: 'You need about 50% equity.')),
+        contains(startsWith('24.call_equity|world_11|')),
+      );
+    });
+
+    test(
+      'uses the smaller stack before the facing wager for effective depth',
+      () {
+        expect(
+          numericFindings(
+            runner.copyWith(hint: 'Use the 33 BB effective stack.'),
+          ),
+          isEmpty,
+        );
+        expect(
+          numericFindings(
+            runner.copyWith(hint: 'Use the 21 BB effective stack.'),
+          ),
+          contains(startsWith('25.street_stack|world_11|')),
+        );
+      },
+    );
+
+    test('rejects a previous-street stack in the theory for this decision', () {
+      expect(
+        numericFindings(
+          runner.copyWith(
+            teachingSteps: const [
+              Act0TeachingStepV1(
+                title: 'Read your stack',
+                body: 'You have 35 BB behind.',
+              ),
+            ],
+          ),
+        ),
+        contains(
+          '25.street_stack|world_11|w11_trigger_bad_price_fold|theory[0].body|'
+          '35 BB behind|expected 33.0',
+        ),
+      );
+    });
   });
 
   group('G1 quality guards reject regressions', () {

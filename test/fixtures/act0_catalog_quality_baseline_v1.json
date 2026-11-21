@@ -26,7 +26,7 @@
     },
     "world_4": {
       "btn_count": 33,
-      "table_tasks": 33
+      "table_tasks": 35
     },
     "world_5": {
       "btn_count": 34,
@@ -51,16 +51,20 @@
   },
   "checks": {
     "11.btn_share_per_world": 12,
-    "12.two_option_w1_w5": 185,
+    "12.two_option_w1_w5": 187,
     "13.intro_over_100_words": 83,
-    "14.duplicate_theory_in_lesson": 235,
-    "15.internal_jargon": 378,
-    "16.extreme_wrong_option": 303,
-    "17.single_format_lesson": 45,
+    "14.duplicate_theory_in_lesson": 236,
+    "15.internal_jargon": 380,
+    "16.extreme_wrong_option": 305,
+    "17.single_format_lesson": 46,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 63,
     "20.hero_qq_per_world": 31,
-    "21.duplicate_wrong_reason": 468
+    "21.duplicate_wrong_reason": 472,
+    "22.bet_into_pot": 26,
+    "23.pot_with_bet": 6,
+    "24.call_equity": 16,
+    "25.street_stack": 26
   },
   "findings": [
     "11.btn_share_per_world|world_1",
@@ -265,6 +269,11 @@
     "21.duplicate_wrong_reason|blinds_posts_drill|sb",
     "21.duplicate_wrong_reason|position_apply_recap|call",
     "21.duplicate_wrong_reason|position_checkpoint_position_checkpoint_late_open|call",
-    "21.duplicate_wrong_reason|position_checkpoint_position_checkpoint_review|call"
+    "21.duplicate_wrong_reason|position_checkpoint_position_checkpoint_review|call",
+    "25.street_stack|world_11|w11_checkpoint_mixed_table_line|caption|30 BB effective|no source amount",
+    "25.street_stack|world_12|w12_checkpoint_full_loop_line|caption|25 BB effective|no source amount",
+    "25.street_stack|world_12|w12_pretty_hand_bad_price_fold|caption|100 BB effective|no source amount",
+    "25.street_stack|world_12|w12_revenge_raise_trap|caption|35 BB effective|no source amount",
+    "25.street_stack|world_12|w12_revenge_raise_trap|option[raise_to_take_control].reason|35 BB effective|no source amount"
   ]
 }
