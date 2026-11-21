@@ -119,7 +119,19 @@ void _explicitOrderFrameTests() {
         expect(table.highlightedSeatIds, isEmpty);
         expect(table.streetLabel, flop ? 'Flop' : 'Preflop');
         expect(table.boardCards.length, flop ? 3 : 0);
-        expect(table.heroSeatId, flop ? 'co' : 'btn');
+        final hero = switch (entry.key) {
+          'blinds_first_actor' ||
+          'positions_utg' ||
+          'positions_early_late' => 'hj',
+          _ => 'co',
+        };
+        expect(table.heroSeatId, hero);
+        expect(table.heroSeat.seatId, hero);
+        expect(
+          table.seats.singleWhere((seat) => seat.isDealerButton).seatId,
+          'btn',
+        );
+
         expect(table.potLabel, matched ? 'Pot 6 BB' : 'Pot 1.5 BB');
         expect(table.actionTrail.any((a) => a.label.contains('acts')), isFalse);
         expect(
@@ -1374,11 +1386,17 @@ void _newFreeCheckContextTests() {
           reason: label,
         );
       }
-      for (final raise in ['BTN raises 1.5 BB', 'BTN raises 3 BB']) {
+      final hero = id == 'actions_legal_context' ? 'co' : 'btn';
+      final heroLabel = hero.toUpperCase();
+      expect(table.heroSeatId, hero);
+      for (final raise in [
+        '$heroLabel raises 1.5 BB',
+        '$heroLabel raises 3 BB',
+      ]) {
         final bad = table.copyWith(
           actionTrail: [
             for (final a in table.actionTrail)
-              a.label == 'BTN raises 2 BB'
+              a.label == '$heroLabel raises 2 BB'
                   ? Act0ActionTrailItemV1(label: raise)
                   : a,
           ],
@@ -1404,7 +1422,7 @@ void _newFreeCheckContextTests() {
         final bad = table.copyWith(
           seats: [
             for (final s in table.seats)
-              s.seatId == 'btn' ? _freeCheckSeatMutation(s, stack: stack) : s,
+              s.seatId == hero ? _freeCheckSeatMutation(s, stack: stack) : s,
           ],
         );
         expect(
@@ -1422,7 +1440,7 @@ void _newFreeCheckContextTests() {
         ],
         actionTrail: [
           ...table.actionTrail,
-          const Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
+          Act0ActionTrailItemV1(label: 'Flop: $heroLabel checks'),
         ],
       );
       final closedProof = act0BettingRoundOrderProofForTableV1(closed);
@@ -1433,7 +1451,7 @@ void _newFreeCheckContextTests() {
       expect(closed.boardCards.length, 3);
       expect(
         act0BettingRoundOrderProofForTableV1(
-          closed.copyWith(decisionSeatId: 'btn'),
+          closed.copyWith(decisionSeatId: hero),
         ).truth,
         Act0BettingRoundOrderTruthV1.contradiction,
       );

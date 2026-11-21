@@ -209,7 +209,8 @@ void main() {
       (c) => c.sourceLabel == 'Hero all-in 20 BB',
     );
     expect(row.verdict, PotTruthVerdictV1.unproved);
-    expect(row.reason, 'commitment_missing:btn');
+    expect(hero.seatId, 'hj');
+    expect(row.reason, 'commitment_missing:hj');
     expect(result.verdict, PotTruthVerdictV1.unproved);
     expect(result.findings.map((f) => f.rule), contains('bet_exceeds_stack'));
     expect(
