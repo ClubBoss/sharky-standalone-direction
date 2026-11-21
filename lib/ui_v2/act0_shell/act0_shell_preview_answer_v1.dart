@@ -1427,8 +1427,12 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0LessonCardV1 selectedLesson,
     Act0LessonTaskV1 selectedTask,
   ) {
-    if (_phase != Act0LessonPhaseV1.drill ||
-        !_usesSizingPresetControlsV1(selectedLesson, selectedTask)) {
+    if (_phase != Act0LessonPhaseV1.drill) {
+      return const Act0SizingConfigV1.disabled();
+    }
+    final authored = selectedTask.runner.sizingConfig;
+    if (authored.isEnabled) return authored;
+    if (!_usesSizingPresetControlsV1(selectedLesson, selectedTask)) {
       return const Act0SizingConfigV1.disabled();
     }
     return Act0SizingConfigV1(

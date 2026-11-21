@@ -1918,6 +1918,123 @@ String _w7LearnerTheoryTitleV1(String taskId) => switch (taskId) {
   _ => 'Shown cards change the possible hands',
 };
 
+final _w8EffectiveStackSeatRunner = _w7EffectiveStackIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w8_effective_stack_seat',
+  caption: 'You and one opponent reached the flop.',
+  hint: '',
+  question:
+      'Tap the seat whose stack limits how much the two of you can still bet.',
+  table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
+    heroCards: _act0LessonCardsV1('Th Tc'),
+    boardCards: _act0LessonCardsV1('9d 5c 2h'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 70,
+    bbBehindBb: 18,
+  ).copyWith(selectableSeatIds: const ['co', 'sb', 'bb']),
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'co',
+      label: 'Your seat',
+      seatId: 'co',
+      isCorrect: false,
+      preferredLabel: 'Big blind',
+      betterAnswerLabel: 'Big blind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare both live stacks.',
+      feedbackReason:
+          'You have 70 BB left, but BB can match only 18 BB. Using your own stack overstates how much you can win from BB.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bb',
+      label: 'Big blind',
+      seatId: 'bb',
+      isCorrect: true,
+      preferredLabel: 'Big blind',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The smaller live stack.',
+      feedbackReason:
+          'You have 18 BB effective against BB. Your larger stack can match that amount, so 18 BB is the most either of you can still lose to the other.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'sb',
+      label: 'Small blind',
+      seatId: 'sb',
+      isCorrect: false,
+      preferredLabel: 'Big blind',
+      betterAnswerLabel: 'Big blind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Use the seats still in the hand.',
+      feedbackReason:
+          'SB folded before the flop. Using that stack hides the 18 BB limit on what the remaining opponent can pay.',
+    ),
+  ],
+);
+
+final _w8SprValueSizeRunner = _w7SprIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w8_spr_value_size',
+  caption:
+      'BB checked. In this example, BB calls up to 4 BB with weaker kings and folds to larger bets.',
+  hint: '',
+  question: 'Which bet wins the most chips when a weaker king calls?',
+  table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
+    heroCards: _act0LessonCardsV1('Ks Qc'),
+    boardCards: _act0LessonCardsV1('Kd 8c 4h'),
+    centerLabel: 'Choose a bet',
+    heroBehindBb: 16,
+    bbBehindBb: 18,
+    openBb: 3.75,
+  ),
+  teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(id: 'two', label: '2 BB', potFraction: 0.25),
+      Act0SizingPresetV1(id: 'four', label: '4 BB', potFraction: 0.5),
+      Act0SizingPresetV1(id: 'eight', label: '8 BB', potFraction: 1),
+    ],
+  ),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'two',
+      label: '2 BB',
+      isCorrect: false,
+      preferredLabel: '4 BB',
+      betterAnswerLabel: '4 BB',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'It gets called, but earns less.',
+      feedbackReason:
+          'Weaker kings call 2 BB in this example. Those same hands also call 4 BB, so betting 2 BB gives up 2 BB of value on each call.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'four',
+      label: '4 BB',
+      isCorrect: true,
+      preferredLabel: '4 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The largest bet they call.',
+      feedbackReason:
+          'Your king and queen beat weaker kings here. BB pays up to 4 BB with those hands, so that is the largest bet that earns those calls.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'eight',
+      label: '8 BB',
+      isCorrect: false,
+      preferredLabel: '4 BB',
+      betterAnswerLabel: '4 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'This price loses the weaker calls.',
+      feedbackReason:
+          'The 8 BB bet fits your stack, but BB folds weaker kings above 4 BB. You lose the extra chips those hands would have paid.',
+    ),
+  ],
+);
+
 final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'effective_stack_basics',
@@ -1975,6 +2092,15 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w8_effective_stack_seat',
+        title: 'Find the smaller live stack',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8EffectiveStackSeatRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
       ),
       Act0LessonTaskV1(
         taskId: 'w7_effective_stack_recap',
@@ -2119,6 +2245,15 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w8_spr_value_size',
+        title: 'Choose a size for value',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8SprValueSizeRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.sizing,
       ),
       Act0LessonTaskV1(
         taskId: 'w7_spr4_middle',

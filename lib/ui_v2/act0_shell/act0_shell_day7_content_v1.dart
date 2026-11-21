@@ -1353,6 +1353,29 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     8,
     'effective_stack_basics',
+    'big_blind',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Js Jd'),
+      boardCards: _act0LessonCardsV1('Tc 6h 2d'),
+      centerLabel: 'Compare the stacks',
+      heroBehindBb: 42,
+      bbBehindBb: 14,
+      openBb: 2.75,
+    ),
+    question:
+        'Which seat sets the maximum that either active player can still bet against the other?',
+    choices: const ['CO', 'BTN', 'BB'],
+    correct: 2,
+    reason: 'BB has 14 BB left. The larger CO stack can match that amount.',
+    wrongReasons: const {
+      0: 'CO has 42 BB left. Using the larger stack overstates what BB can pay by 28 BB.',
+      1: 'BTN folded preflop. Counting that stack misses the 14 BB cap set by the live opponent.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
     'board_cards',
     _act0BoardLessonTableV1(
       openingSeat: 'co',
@@ -1368,6 +1391,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'CO has 36 BB behind and BB has 68 BB. CO can match only 36 BB, which caps the amount each can add against the other.',
+    wrongReasons: const {
+      0: 'BB has 68 BB, but CO can match only 36 BB. Using the larger stack overstates the amount the two can bet against each other.',
+      2: 'Adding 36 BB and 68 BB counts two separate stacks. Only the smaller stack caps what either player can match.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1387,6 +1414,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         'BB has 24 BB still behind on T-6-3. Your overpair cannot collect another 82 BB from a player with only 24 BB left.',
+    wrongReasons: const {
+      0: 'The 82 BB belongs to CO. BB has 24 BB left, so planning around 82 BB overstates what the opponent can pay.',
+      1: 'The 5.5 BB already belongs to the pot. It cannot measure what BB can still add from the 24 BB stack.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1407,6 +1438,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'Only the 5 BB bet gets the stated weaker queen calls on this board. Ten BB is all BB can match.',
+    wrongReasons: const {
+      1: 'BB can afford 10 BB on this river, but the stated weaker queens fold to that size. You give up their 5 BB calls.',
+      2: 'You have 19 BB left and BB has 10 BB. Nine of those chips cannot be matched, and a weaker queen folds to the big bet anyway.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1425,6 +1460,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'CO has top pair and 29 BB left on this river. BB can match all 29 BB, but CO cannot put in any more.',
+    wrongReasons: const {
+      0: 'BB has 43 BB, but CO has 29 BB on the river. A larger amount cannot be fully matched.',
+      2: 'Seventy-two BB adds both stacks. It overstates what either player can match against the other.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1432,7 +1471,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     'pot_to_call',
     _day7PreflopV1(
       'co',
-      'Ad Qd',
+      'Ac Kc',
       opener: 'hj',
       openBb: 3,
       heroStartingBb: 24,
@@ -1444,7 +1483,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Match the 3 BB open', 'Reraise to 9 BB', 'Shove 24 BB'],
     correct: 1,
     reason:
-        'With AQs in position, the 9 BB option gets 6 BB more from the weaker ace under this model. Calling or shoving gets no extra chips from ATs.',
+        'With AKs in the Premium group, the 9 BB reraise gets 6 BB more from the weaker ace in this model. Calling or shoving gets no extra chips from ATs.',
+    wrongReasons: const {
+      0: 'Matching the 3 BB open leaves ATs at the amount already committed. Reraising to 9 BB gets 6 BB more from that hand in this model.',
+      2: 'HJ folds ATs when CO moves all-in. The shove gives up the additional chips the smaller reraise would get from ATs.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1469,6 +1512,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'CO has top pair on K-9-3. The effective stack is 12 BB, and dividing by the 6 BB pot gives SPR 2. A couple of moderate bets can use up that stack.',
+    wrongReasons: const {
+      1: 'SPR 3 divides BB’s 18 BB by the pot. Using that number overstates the room because CO has just 12 BB left.',
+      2: 'Dividing the 6 BB pot by 12 BB reverses the ratio. It makes the remaining stack seem much smaller relative to the pot.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1488,6 +1535,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'The smaller stack is 28 BB and the pot is 7 BB. Dividing 28 by 7 gives SPR 4.',
+    wrongReasons: const {
+      1: 'Dividing 40 BB by 7 uses the bigger stack. That overstates the room because CO can put in only 28 BB more.',
+      2: 'Dividing 7 BB by 28 reverses the ratio. The effective stack, which is 28 BB here, goes on top.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1546,6 +1597,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'CO can match only 12 BB from each player. HJ and BB put an extra 18 BB each in the side pot.',
+    wrongReasons: const {
+      0: 'Each deeper player matches your 12 BB. Counting that amount as extra leaves out the 18 BB each put in above your stack.',
+      2: 'Thirty BB is each deeper player’s total. Treating it all as extra would wrongly take away the 12 BB from each that you can win.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1559,6 +1614,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         'Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.',
+    wrongReasons: const {
+      0: 'You have pocket jacks in an unopened six-seat hand. Folding gives up the opening opportunity described by the rule.',
+      1: 'Putting in 1 BB matches the blind. The rule asks for a 2.5 BB first raise with jacks and five players behind.',
+    },
   ),
   _day7ExampleV1(
     8,
@@ -1580,5 +1639,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.',
+    wrongReasons: const {
+      0: 'BB can match only 12 BB of the shove. The weaker pairs fold to that pressure here, so you miss their smaller calls.',
+      2: 'Twelve BB puts BB all-in. Weaker pairs fold to an all-in bet in this model, so the overpair misses their 2 BB calls.',
+    },
   ),
 ];

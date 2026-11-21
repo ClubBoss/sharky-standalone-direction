@@ -32,8 +32,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(397));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(397));
+    expect(tasks, hasLength(399));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(399));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -96,7 +96,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(397));
+    expect(entries, hasLength(399));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -272,6 +272,38 @@ void main() {
           ];
       }
     }
+    const w8Additions = {
+      'w8_effective_stack_seat': [
+        'world_8',
+        'effective_stack_basics',
+        'w8_effective_stack_seat',
+        'drill',
+        'practice',
+        [
+          ['co', 'Your seat', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['sb', 'Small blind', false, 'wrong', 'Big blind'],
+        ],
+      ],
+      'w8_spr_value_size': [
+        'world_8',
+        'spr_and_commitment',
+        'w8_spr_value_size',
+        'drill',
+        'practice',
+        [
+          ['two', '2 BB', false, 'suboptimal', '4 BB'],
+          ['four', '4 BB', true, 'correct', '4 BB'],
+          ['eight', '8 BB', false, 'wrong', '4 BB'],
+        ],
+      ],
+    };
+    for (final addition in w8Additions.entries) {
+      expect(
+        entries.singleWhere((row) => row[2] == addition.key),
+        addition.value,
+      );
+    }
     final legacyEntries = entries
         .where(
           (row) =>
@@ -281,6 +313,7 @@ void main() {
               !w2Q9ChoiceContractV1.containsKey(row[2]) &&
               !w3NewChoiceContractV1.containsKey(row[2]) &&
               !w6NewChoiceContractV1.containsKey(row[2]) &&
+              !w8Additions.containsKey(row[2]) &&
               row[2] != boardRepair,
         )
         .toList(growable: false);
@@ -1954,7 +1987,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(397));
+    expect(taskIndex, hasLength(399));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;
