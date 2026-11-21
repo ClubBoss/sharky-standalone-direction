@@ -661,6 +661,41 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason: "UTG is out. CO, BTN and both blinds have yet to act.",
   ),
   _day7ExampleV1(
+    3,
+    'button_advantage',
+    'hero_cards_board_pot',
+    _day7PostflopV1('btn', 'Ad 8s', 'As 6h 4c', betBb: 0, checkedToHero: true),
+    question: 'What did acting later let you learn about the 6 BB pot?',
+    choices: const [
+      'BB checked before you had to choose',
+      'Your bet size was set by BB',
+      'The flop was dealt after your bet',
+    ],
+    correct: 0,
+    reason:
+        'BB checked on A-6-4 before BTN had to act. You know BB did '
+        'not lead into the 6 BB pot, so you can decide with that information.',
+  ),
+  _day7ExampleV1(
+    3,
+    'w3_play_from_blinds',
+    'pot_to_call',
+    _day7PreflopV1('bb', 'Qh 9h', opener: 'btn', openBb: 3.5, showTurn: true),
+    caption:
+        'BTN raises to 3.5 BB and SB folds. Assume you win 28% and face '
+        'no later bets. Compare calling with folding.',
+    question: 'What does the call price tell you?',
+    choices: const [
+      'Your chance to win covers the price',
+      'The price is too high',
+      'Your posted blind makes the call free',
+    ],
+    correct: 1,
+    reason:
+        'The 2.5 BB call would make a 7.5 BB pot, so you need about 33% '
+        'equity. With 28% in this model, folding saves the extra 2.5 BB.',
+  ),
+  _day7ExampleV1(
     4,
     "why_bets_happen",
     "hero_cards_board_pot",

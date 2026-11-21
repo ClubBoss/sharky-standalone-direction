@@ -3317,18 +3317,17 @@ final _w3SixSeatsIntroRunner = _positionsRunner.copyWith(
   lessonId: 'w3_six_seats_intro',
   lessonTitle: 'The 6 positions',
   lessonSubtitle: 'Position Thinking',
-  caption: 'Six-max tables use UTG, HJ, CO, BTN, SB, and BB.',
+  caption: 'Six seats, one order.',
   hint:
       'Use the table labels first. Button and blinds are only part of the map.',
-  question: 'What does this lesson train?',
+  question: 'Read the seat order.',
   options: const <Act0RunnerOptionV1>[],
   feedbackTitle: 'Six-seat map.',
   feedbackReason: 'Recognize every seat label before using position to decide.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'All six seats matter.',
-      body:
-          'UTG, HJ, CO, BTN, SB, and BB each point to a different place in the order.',
+      body: 'Clockwise from UTG: HJ, CO, BTN, SB, BB.',
       focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
     ),
   ],
@@ -3350,7 +3349,7 @@ final _w3SeatIdUtgRunner = _w3SeatRecognitionRunnerV1(
 
 final _w3SeatIdHjRunner = _w3SeatRecognitionRunnerV1(
   lessonId: 'w3_seat_id_hj',
-  caption: 'Two middle seats are highlighted between UTG and BTN.',
+  caption: 'Find the seat after UTG.',
   hint: 'Choose the one directly after UTG.',
   question: 'Tap HJ.',
   correctSeatId: 'hj',
@@ -3425,7 +3424,7 @@ final _w3SeatIdBbRunner = _w3SeatRecognitionRunnerV1(
 final _w3SixSeatsRecapRunner = _w3SixSeatsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w3_six_seats_recap',
-  caption: 'Lesson learned: every 6-max seat has a name.',
+  caption: 'Use all six seats.',
   hint: 'Read all six labels before using position.',
   question: 'Which list names the six seats?',
   options: const <Act0RunnerOptionV1>[

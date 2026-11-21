@@ -170,6 +170,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_3/early_vs_late',
       'world_3/same_hand_different_seat',
       'world_3/position_apply',
+      'world_3/w3_play_from_blinds',
       'world_3/position_checkpoint',
     },
     legacyAliases: <String>{
