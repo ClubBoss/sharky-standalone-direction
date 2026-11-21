@@ -52,8 +52,8 @@
   "checks": {
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 185,
-    "13.intro_over_100_words": 82,
-    "14.duplicate_theory_in_lesson": 229,
+    "13.intro_over_100_words": 83,
+    "14.duplicate_theory_in_lesson": 235,
     "15.internal_jargon": 378,
     "16.extreme_wrong_option": 303,
     "17.single_format_lesson": 45,

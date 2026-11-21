@@ -4155,7 +4155,14 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
   caption: 'Deep in session, fatigue rises and decisions speed up.',
   hint: 'Discipline means slowing only the critical spots.',
   question: 'What is the best pressure adjustment?',
-  teachingSteps: const <Act0TeachingStepV1>[],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Slow down on large pots.',
+      body:
+          'Fatigue speeds up choices. Take one brief pause before you call, bet, or fold in a large pot.',
+      focusLabels: <String>['Fatigue cue', 'Brief pause', 'Large pot'],
+    ),
+  ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'autopilot',
@@ -4370,7 +4377,14 @@ final _w12ConfidenceDisciplineRecapRunner = _w12ConfidenceDisciplineIntroRunner
       feedbackTitle: 'Discipline takeaway.',
       feedbackReason:
           'Mindset edge comes from repeatable emotional control and disciplined execution, not mood swings.',
-      teachingSteps: const <Act0TeachingStepV1>[],
+      teachingSteps: const <Act0TeachingStepV1>[
+        Act0TeachingStepV1(
+          title: 'Calm lines over ego.',
+          body:
+              'Confident discipline means choosing to bet, call, or fold from table evidence rather than table talk.',
+          focusLabels: <String>['Evidence', 'Calm line', 'No ego'],
+        ),
+      ],
     );
 
 final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
@@ -4424,7 +4438,14 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
   caption: 'You feel tilt signs after two rough spots in a row.',
   hint: 'Reset should be fast and repeatable.',
   question: 'What is the cleaner bridge action?',
-  teachingSteps: const <Act0TeachingStepV1>[],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Reset before the next pot.',
+      body:
+          'Two rough pots in a row are a cue to pause, reset your focus, and return to disciplined call-or-fold choices.',
+      focusLabels: <String>['Pause', 'Reset', 'Re-anchor'],
+    ),
+  ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'run_reset',

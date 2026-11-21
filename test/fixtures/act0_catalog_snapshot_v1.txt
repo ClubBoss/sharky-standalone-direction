@@ -2340,6 +2340,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_half_pot_bet [drill] Half-pot bet
 CAPTION: There are 6 BB in the pot.
+TEACH: Medium bet size. A half-pot bet equals half the current pot before you bet, sitting between one-third pot and pot-size.
+TEACH LABELS: One-third, Half-pot, Pot-size
 Q: Which size is half-pot?
 HINT [theoryOnly]: Half-pot means betting half the pot, not the smallest or biggest size.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Before the bet | Facts one pair, pocket pair, rainbow
@@ -3146,6 +3148,8 @@ REVIEW: A range collects the hands that fit a situation. Read the flop before pl
 
 TASK w6_value_dry_board [drill] Value on dry board
 CAPTION: K-7-2 rainbow. You hold K-Q.
+TEACH: Dry-board range buckets. After the flop, sort your hand into value (weaker hands can call), bluff candidate (better hands can fold), or missed (usually check or fold).
+TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: Which range bucket is K-Q on this board?
 HINT [theoryOnly]: Top pair with a good kicker.
 TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Range bucket? | Facts one pair, top pair, rainbow
@@ -3162,6 +3166,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_missed_dry_board [drill] Missed on dry board
 CAPTION: BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.
+TEACH: Compare the three buckets. Before acting postflop, sort your hand into value, bluff candidate, or missed by asking what calls and what folds.
+TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: Which plan fits A-Q under this rule?
 HINT [theoryOnly]: Compare the high cards if neither hand improves.
 TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Range bucket? | Facts high card, rainbow, backdoor straight
@@ -5152,6 +5158,8 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w12_discipline_under_pressure [drill] Discipline under pressure
 CAPTION: Deep in session, fatigue rises and decisions speed up.
+TEACH: Slow down on large pots. Fatigue speeds up choices. Take one brief pause before you call, bet, or fold in a large pot.
+TEACH LABELS: Fatigue cue, Brief pause, Large pot
 Q: What is the best pressure adjustment?
 HINT [theoryOnly]: Discipline means slowing only the critical spots.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5200,6 +5208,8 @@ TRAIL: CO needled you last orbit · Flop: CO bets 2 BB
 
 TASK w12_confidence_recap [review] Confidence recap
 CAPTION: Lesson learned: calm confidence plus discipline is stable edge.
+TEACH: Calm lines over ego. Confident discipline means choosing to bet, call, or fold from table evidence rather than table talk.
+TEACH LABELS: Evidence, Calm line, No ego
 Q: What is the confidence-discipline takeaway?
 HINT [theoryOnly]: Assertive line, evidence filter, no ego side quests.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -5232,6 +5242,8 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w12_checkpoint_reset_line [drill] Reset line
 CAPTION: You feel tilt signs after two rough spots in a row.
+TEACH: Reset before the next pot. Two rough pots in a row are a cue to pause, reset your focus, and return to disciplined call-or-fold choices.
+TEACH LABELS: Pause, Reset, Re-anchor
 Q: What is the cleaner bridge action?
 HINT [theoryOnly]: Reset should be fast and repeatable.
 TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts

@@ -1144,7 +1144,14 @@ final _world4HalfPotRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_half_pot_bet',
   caption: 'There are 6 BB in the pot.',
-  teachingSteps: const <Act0TeachingStepV1>[],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Medium bet size.',
+      body:
+          'A half-pot bet equals half the current pot before you bet, sitting between one-third pot and pot-size.',
+      focusLabels: <String>['One-third', 'Half-pot', 'Pot-size'],
+    ),
+  ],
   hint:
       'Half-pot means betting half the pot, not the smallest or biggest size.',
   question: 'Which size is half-pot?',
@@ -3410,7 +3417,15 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_value_dry_board',
   caption: 'K-7-2 rainbow. You hold K-Q.',
-  teachingSteps: const <Act0TeachingStepV1>[],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Dry-board range buckets.',
+      body:
+          'After the flop, sort your hand into value (weaker hands can call), '
+          'bluff candidate (better hands can fold), or missed (usually check or fold).',
+      focusLabels: <String>['Hand strength', 'Can it improve?', 'What folds?'],
+    ),
+  ],
   hint: 'Top pair with a good kicker.',
   question: 'Which range bucket is K-Q on this board?',
   options: const <Act0RunnerOptionV1>[
@@ -3458,7 +3473,15 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
 final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_missed_dry_board',
-  teachingSteps: const <Act0TeachingStepV1>[],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Compare the three buckets.',
+      body:
+          'Before acting postflop, sort your hand into value, bluff candidate, '
+          'or missed by asking what calls and what folds.',
+      focusLabels: <String>['Hand strength', 'Can it improve?', 'What folds?'],
+    ),
+  ],
   caption:
       'BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.',
   hint: 'Compare the high cards if neither hand improves.',
