@@ -5,6 +5,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 
+import '../support/act0_w12_wave4_contract_v1.dart';
+
 final _worlds = Act0ShellStateV1.sample.worlds;
 final _tasks = [
   for (final world in _worlds.where(
@@ -301,7 +303,7 @@ void main() {
         reason: id,
       );
     }
-    expect(taskCounts, {11: 21, 12: 22});
+    expect(taskCounts, {11: 21, 12: 22 + w12Wave4ChoiceContractV1.length});
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {
