@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 397 tasks · W1–W12
+SHARKY POKER — EN learning content, 406 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -5386,20 +5386,20 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 ===== WORLD 12 · LESSON decision_over_outcome · Decision quality over outcome =====
 
 TASK w12_decision_quality_intro [theory] Process first
-CAPTION: Short-term outcomes can lie. Process quality must stay the anchor.
-TEACH: Process beats variance. Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.
+CAPTION: A good choice can lose. A poor choice can win.
+TEACH: Judge the choice Check the facts you had when you chose. One win or loss does not prove the choice was sound. Tilt is when a strong feeling starts to steer how you play.
 TEACH LABELS: Process, Variance, Outcome bias
 Q: What should be judged first after a hand?
 HINT [theoryOnly]: Judge choices by logic, not one card on river.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: A strong mindset evaluates whether the decision process was sound before reacting to outcome variance.
+REVIEW: Check how you made the choice. Then look at how the hand ends.
 
 TASK w12_good_fold_bad_result [drill] Good fold, bad result
 CAPTION: You folded a marginal bluff-catcher and an opponent later showed a bluff.
 Q: How should you review this fold?
 HINT [theoryOnly]: Do not auto-label by reveal result only.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Check the cues before judging the result — Process beats reveal. Review the price and the range you could reasonably give the opponent before they showed the bluff. This reveal can inform future decisions.
   - [wrong] Mark the fold suspicious because it lost — Outcome trap. After folding a marginal bluff-catcher when an opponent shows a bluff, judging by the single reveal pushes you into loose, losing calls next time.
@@ -5411,12 +5411,12 @@ TASK w12_bad_call_good_result [drill] Bad call, lucky win
 CAPTION: Suppose a loose call wins after a lucky river.
 Q: Suppose a loose call wins after a lucky river. What is the best mindset response?
 HINT [theoryOnly]: Winning the pot does not guarantee a good decision.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Result was good so process is good — Result bias. A lucky river tells you how this loose call turned out. Calling it good process without checking the price and range can hide a leak.
     BETTER ANSWER: Flag the loose call as a possible leak
   + [correct] Flag the loose call as a possible leak — Win can hide a leak. Good results can mask weak process. Flagging the decision keeps your learning honest.
-  - [suboptimal] Call was lucky so confidence is gone — Too harsh. After a loose call wins on a lucky river, letting confidence collapse turns a calm process audit into emotional tilt on the next hands.
+  - [wrong] Call was lucky so confidence is gone — Too harsh. After a loose call wins on a lucky river, letting confidence collapse turns a calm process audit into emotional tilt on the next hands.
     BETTER ANSWER: Flag the loose call as a possible leak
 
 TASK asm05_new_known_holes_turn_call_10 [drill] Decision and outcome
@@ -5443,31 +5443,74 @@ TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds 
   - [wrong] Call [40 BB] — Fold has the higher expected value. River 5h: You receive 120 BB. Stacks You 160, SB 40. Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk.
     BETTER ANSWER: Fold
 
+TASK w12_river_ev_small_price [drill] A small river price
+CAPTION: CO bets 2 BB. Your model has seven better hands and three bluffs out of ten bets. CO will call a raise with the better hands and fold the bluffs.
+TEACH: What is EV? Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. On the river, no more cards come. Work out which bets you beat now.
+Q: Which action has the best EV in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ac 8c | Board As Td 7h 3c 2d | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 95.5 BB bet 2 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ac 8c stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks · CO bets 2 BB
+  - [wrong] Fold — Look again. Fold gives up a gain. You win 3 times in 10 at a price that needs about 21%.
+    BETTER ANSWER: Call
+  + [correct] Call — Correct. A 2 BB call needs 2 out of 9.5, or about 21%. You win 30% in the model. A call gains 0.85 BB on average.
+  - [wrong] Raise — Look again. Raising puts in extra chips when the better hands call. Against bluffs it earns no more than a call.
+    BETTER ANSWER: Call
+
+TASK w12_river_ev_costly_call [drill] A costly river call
+CAPTION: BB bets 5 BB. Two of ten bets are bluffs you beat. The rest beat your kings. BB folds the bluffs to a raise and calls with the better hands.
+Q: Which action has the best EV in this model?
+HINT [hidden]: (none)
+TABLE: River | You Kd 9c | Board Ks Jh 8d 4s 2h | Pot 10.5 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd 9c stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB bets 5 BB
+  + [correct] Fold — Correct. Five out of 15.5 is about 32%. Your chance to win is 20%. Fold to save the 5 BB.
+  - [wrong] Call — Look again. The bet costs 5 BB to call. With just two wins in ten bets, the cost of the eight losses is too high.
+    BETTER ANSWER: Fold
+  - [wrong] Raise — Look again. A raise asks BB to fold. The model says the better hands stay and make you pay more.
+    BETTER ANSWER: Fold
+
+TASK w12_turn_count_heart_outs [drill] Count before the last card
+CAPTION: At the turn, you hold two hearts and see two more on the board. Recall the outs from W5 before you move on.
+Q: How many unseen heart outs could fill the flush?
+HINT [hidden]: (none)
+TABLE: Turn | You Ah Qh | Board Kh 8h 3c 2s | Pot 5.5 BB | Seat BB | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah Qh stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks
+  - [wrong] 7 — Look again. Four hearts are seen. Taking six out of 13 would remove two hearts you have not seen.
+    BETTER ANSWER: 9
+    FEEDBACK TABLE: Turn | You Ah Qh | Board Kh 8h 3c 2s | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] 9 — Correct. 13 hearts minus the four you see leaves nine. A heart on the river makes your flush.
+    FEEDBACK TABLE: Turn | You Ah Qh | Board Kh 8h 3c 2s | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] 11 — Look again. Eleven skips the two hearts at your seat. Both private and board cards are already known.
+    BETTER ANSWER: 9
+    FEEDBACK TABLE: Turn | You Ah Qh | Board Kh 8h 3c 2s | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+
 TASK w12_decision_quality_recap [review] Process recap
 CAPTION: Lesson learned: process quality is the anchor under variance.
 Q: What is the process-quality takeaway?
 HINT [theoryOnly]: Outcome is data, not verdict.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Stable improvement comes from process audits that survive both wins and losses.
 
 ===== WORLD 12 · LESSON tilt_reset_protocol · Tilt reset protocol =====
 
 TASK w12_tilt_reset_intro [theory] Reset in under 20s
-CAPTION: One short reset can protect decision quality after emotional spikes.
-TEACH: Fast reset routine. Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.
-TEACH LABELS: Emotion label, Breath, Re-anchor
+CAPTION: A loss or a big win can make you rush. A short pause can help.
+TEACH: Fast reset routine. Name what you feel. Take a breath. Look at your cards, the board, and the next bet. Take a break if you still feel the urge to rush.
+TEACH LABELS: Name the feeling, Breathe, Read the new hand
 Q: What is the purpose of a tilt reset?
-HINT [theoryOnly]: Pause, breathe, re-anchor to plan.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+HINT [theoryOnly]: Take one breath and come back to your plan.
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Tilt reset prevents one hand from contaminating the next decisions and keeps session discipline alive.
+REVIEW: A pause gives you time to see the new hand clearly.
 
 TASK w12_after_bad_beat_reset [drill] After bad beat
 CAPTION: You lose a big all-in as favorite and feel immediate anger.
 Q: What is the cleaner immediate action?
 HINT [theoryOnly]: Reset before next hand starts.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Take the next thin edge to regain chips — Tilt pattern. Right after losing a big all-in as favorite, forcing the next thin edge to win chips back compounds variance losses with tilt mistakes.
     BETTER ANSWER: Run short reset protocol before next major spot
@@ -5475,17 +5518,46 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: Run short reset protocol before next major spot
   + [correct] Run short reset protocol before next major spot — Reset before next hand. A fast reset protects your next decisions from emotional carryover.
 
+TASK w12_tilt_after_lucky_win [drill] Pause after a lucky win
+CAPTION: You won a pot after a loose call last hand. In this new hand HJ opens, and you feel like your cards cannot miss. Take one breath and use the course chart.
+Q: What action fits the new hand?
+HINT [hidden]: (none)
+TABLE: Preflop | You Js 5d | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+SEATS: UTG folded stack 40 BB | HJ stack 37.5 BB raise 2.5 BB | CO folded stack 40 BB | BTN folded dealer stack 40 BB | SB folded stack 39.5 BB post 0.5 BB | BB Js 5d stack 39 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds
+  + [correct] Fold — Correct. J-5 off suit is Weak. The good result last hand does not move it to a new row.
+  - [wrong] Call — Look again. HJ made it 2.5 BB. The first blind is already in. Calling pays another 1.5 BB with J-5 off suit.
+    BETTER ANSWER: Fold
+  - [wrong] Raise — Look again. A raise risks more chips with J-5 off suit against an HJ open. The last win does not give this hand a better chance.
+    BETTER ANSWER: Fold
+
 TASK w12_after_mistake_reset [drill] After your own mistake
 CAPTION: You realize you made an avoidable call error.
 Q: What response keeps discipline highest?
 HINT [theoryOnly]: Use reset to prevent second error spiral.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Log leak briefly and reset to current hand — Log it, then reset. Quick logging plus reset preserves learning without carrying emotional noise into next hands.
   - [wrong] Replay the mistake for the next few hands — Harmful spiral. After making an avoidable call error, replaying the mistake across the next few hands distracts from live cues and triggers a second costly error.
     BETTER ANSWER: Log leak briefly and reset to current hand
-  - [suboptimal] Skip the note and rely on memory — Protects emotion short term. After an avoidable call error, skipping the note to rely on memory lets the leak slip away unreviewed after the session.
+  - [wrong] Skip the note and rely on memory — Protects emotion short term. After an avoidable call error, skipping the note to rely on memory lets the leak slip away unreviewed after the session.
     BETTER ANSWER: Log leak briefly and reset to current hand
+
+TASK w12_tilt_after_river_beat [drill] Pause after a bad beat
+CAPTION: Last hand, your kings lost when an ace came on the river. Now CO bets on a new flop. You feel a rush to win the loss back.
+TEACH: What is tilt? Tilt is when a strong feeling starts to steer how you play. After a loss, you may rush. After a big win, you may take risks you would not take before. Pause and read the new hand. If the urge stays, take a break.
+Q: What should you do before you pick an action?
+HINT [hidden]: (none)
+TABLE: Flop | You Qc Td | Board Qh 7d 2c | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 95.5 BB bet 2 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qc Td stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 2 BB
+  - [wrong] Speed up so you do not freeze — Look again. The board is Q-7-2 and CO just put in 2 BB. Acting fast skips the new facts and can cost chips.
+    BETTER ANSWER: Take one breath and read the new hand
+    FEEDBACK TABLE: Flop | You Qc Td | Board Qh 7d 2c | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] Take one breath and read the new hand — Correct. You have a new pair on Q-7-2. Take a breath. Then read the price and the board before you choose.
+    FEEDBACK TABLE: Flop | You Qc Td | Board Qh 7d 2c | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Focus on bets from CO for this orbit — Look again. CO’s 2 BB bet belongs to this hand. Targeting a seat after a loss can make you pay for a grudge.
+    BETTER ANSWER: Take one breath and read the new hand
 
 TASK w12_tilt_reset_recap [review] Reset recap
 CAPTION: Lesson learned: reset protects process under emotional pressure.
@@ -5493,7 +5565,7 @@ TEACH: Reset before the next deal. After a bad beat or a clear error, pause for 
 TEACH LABELS: Pause briefly, Reset focus, Clean next hand
 Q: What is the reset takeaway?
 HINT [theoryOnly]: Fast reset now prevents leak cascade later.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Consistent small resets are a core bridge from knowledge to stable execution.
 
@@ -5505,7 +5577,7 @@ TEACH: Assertive, not reckless. Take clear lines when evidence supports them. Av
 TEACH LABELS: Assertive, Evidence, Discipline
 Q: What balance should confidence hold?
 HINT [theoryOnly]: Assertive decisions still obey plan and evidence.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Best mindset combines calm assertiveness with disciplined filters on risk and evidence.
 
@@ -5513,12 +5585,12 @@ TASK w12_assertive_not_ego [drill] Assertive, not ego
 CAPTION: An opponent needles you after winning a pot.
 Q: What is the stronger mindset line?
 HINT [theoryOnly]: Decision quality should not react to table talk.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Widen the next close spot to answer back — Ego trap. After an opponent needles you for winning a pot, widening your next close spot to answer back risks chips on weak hands just to satisfy ego.
     BETTER ANSWER: Stick to process and your planned line
   + [correct] Stick to process and your planned line — Process ignores table talk. Process-led confidence ignores ego hooks and preserves decision quality.
-  - [suboptimal] Play overly scared to avoid conflict — Safer but capped. After table talk from an opponent, playing overly scared forfeits profitable value and steal spots out of fear of conflict.
+  - [wrong] Play overly scared to avoid conflict — Safer but capped. After table talk from an opponent, playing overly scared forfeits profitable value and steal spots out of fear of conflict.
     BETTER ANSWER: Stick to process and your planned line
 
 TASK w12_discipline_under_pressure [drill] Discipline under pressure
@@ -5527,7 +5599,7 @@ TEACH: Slow down on large pots. Fatigue speeds up choices. Take one brief pause 
 TEACH LABELS: Fatigue cue, Brief pause, Large pot
 Q: What is the best pressure adjustment?
 HINT [theoryOnly]: Discipline means slowing only the critical spots.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Keep normal pace through large pots — Leak risk. Deep in a session when fatigue rises, keeping fast autopilot pace through large pots leads to rushed, expensive mistakes on high-EV decisions.
     BETTER ANSWER: Pause briefly on high-EV decision nodes
@@ -5546,7 +5618,7 @@ SEATS: UTG folded stack 99.75 BB | HJ folded stack 99.75 BB | CO stack 82 BB bet
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB folds · Flop: CO bets 2.5 BB · BTN calls 2.5 BB · Turn: CO bets 3.5 BB · BTN calls 3.5 BB · River: CO bets 18 BB
   + [correct] Fold the river — Calm fold. Calling 18 BB makes a 56 BB pot, so you need about 32% equity if the call closes the action. Folding is reasonable if K-Q falls below that threshold against CO’s betting range. The tight read supports caution, and the exact range is unknown.
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [suboptimal] Call down anyway with top pair — Pretty-hand trap. Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.
+  - [wrong] Call down anyway with top pair — Pretty-hand trap. Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.
     BETTER ANSWER: Fold the river
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 7c 2d 9s 4c | Pot 38 BB | To call 18 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] Raise large to end the decision now — Too dramatic. The river pot is now 38 BB after CO’s 18 BB bet. A large raise adds risk against a tight range when better hands may call and worse hands may fold.
@@ -5567,9 +5639,38 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO needled
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] Call once and keep the pot controlled — Stable line. A 2 BB call makes a 12 BB pot, about 17% immediate pot odds. Calling is a reasonable way to keep the pot small if CO bets enough weaker hands. One earlier bluff gives little evidence about CO’s range here.
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [suboptimal] Fold now to avoid the annoying player — Emotion still steering. CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.
+  - [wrong] Fold now to avoid the annoying player — Emotion still steering. CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.
     BETTER ANSWER: Call once and keep the pot controlled
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
+TASK w12_confidence_spr [drill] Check how much is at risk
+CAPTION: You were quick to call in the last hand. Stop and read this flop. Both live stacks have 16.5 BB left. The pot is 5.5 BB.
+Q: What is the SPR at the start of this flop?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc Js | Board Kd 8c 3h | Pot 5.5 BB | Seat BB | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ stack 16.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Js stack 16.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB
+  + [correct] 3 — Correct. 16.5 divided by 5.5 is 3. The most either player can put in from here is three times the pot.
+    FEEDBACK TABLE: Flop | You Kc Js | Board Kd 8c 3h | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] 6 — Look again. Six would count both stacks. Use just the smaller stack to see what each player can risk.
+    BETTER ANSWER: 3
+    FEEDBACK TABLE: Flop | You Kc Js | Board Kd 8c 3h | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] 9 — Look again. Nine would need a stack of 49.5 BB. The live stacks are 16.5 BB each.
+    BETTER ANSWER: 3
+    FEEDBACK TABLE: Flop | You Kc Js | Board Kd 8c 3h | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
+TASK w12_river_ev_turn_draw_miss [drill] The draw missed
+CAPTION: You had a heart draw on the turn. The river is Jd. You beat one in 10 CO bets. CO bets 3 BB and will call a raise with its value hands.
+Q: Which action has the best EV in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ah Qh | Board Kh 8h 3c 2s Jd | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts high card
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 94.5 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah Qh stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks · CO bets 3 BB
+  + [correct] Fold — Correct. The river is a diamond. The price is 3 out of 11.5, about 26%. One win in ten is too few.
+  - [wrong] Call — Look again. There are no cards to come after Jd. Counting the old heart outs would sell you a chance that has passed.
+    BETTER ANSWER: Fold
+  - [wrong] Raise — Look again. With ace high on this river, the raise spends more against CO’s better hands, which will call.
+    BETTER ANSWER: Fold
 
 TASK w12_confidence_recap [review] Confidence recap
 CAPTION: Lesson learned: calm confidence plus discipline is stable edge.
@@ -5577,31 +5678,31 @@ TEACH: Calm lines over ego. Confident discipline means choosing to bet, call, or
 TEACH LABELS: Evidence, Calm line, No ego
 Q: What is the confidence-discipline takeaway?
 HINT [theoryOnly]: Assertive line, evidence filter, no ego side quests.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 REVIEW: Mindset edge comes from repeatable emotional control and disciplined execution, not mood swings.
 
 ===== WORLD 12 · LESSON mindset_bridge_checkpoint · Mindset bridge checkpoint =====
 
 TASK w12_checkpoint_intro [theory] Mindset routine map
-CAPTION: Short-term outcomes can lie. Process quality must stay the anchor.
-TEACH: Process beats variance. Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.
+CAPTION: A good choice can lose. A poor choice can win.
+TEACH: Judge the choice Check the facts you had when you chose. One win or loss does not prove the choice was sound. Tilt is when a strong feeling starts to steer how you play.
 TEACH LABELS: Process, Variance, Outcome bias
 Q: What should be judged first after a hand?
 HINT [theoryOnly]: Judge choices by logic, not one card on river.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: A strong mindset evaluates whether the decision process was sound before reacting to outcome variance.
+REVIEW: Check how you made the choice. Then look at how the hand ends.
 
 TASK w12_checkpoint_process_line [drill] Process line
 CAPTION: A correct line loses in a high-variance pot.
 Q: Suppose a sound decision loses a high-variance pot. What is the best immediate response?
 HINT [theoryOnly]: Process verdict comes before emotional verdict.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Outcome proves decision quality — Bias warning. When a sound line loses a high-variance pot, treating the outcome as proof of a bad decision causes you to abandon winning plays.
     BETTER ANSWER: Audit process first, then outcome
-  - [suboptimal] Skip review to avoid frustration — Protective instinct. After a sound decision loses a high-variance pot, skipping review to avoid frustration leaves you unsure whether the price and range read were actually solid.
+  - [wrong] Skip review to avoid frustration — Protective instinct. After a sound decision loses a high-variance pot, skipping review to avoid frustration leaves you unsure whether the price and range read were actually solid.
     BETTER ANSWER: Audit process first, then outcome
   + [correct] Audit process first, then outcome — Process held steady. That sequence keeps you grounded through variance and supports long-term growth.
 
@@ -5611,24 +5712,24 @@ TEACH: Reset before the next pot. Two rough pots in a row are a cue to pause, re
 TEACH LABELS: Pause, Reset, Re-anchor
 Q: What is the cleaner bridge action?
 HINT [theoryOnly]: Reset should be fast and repeatable.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Run brief reset and re-anchor to plan — Reset keeps quality steady. Reset and re-anchor protects next decisions without derailing session rhythm.
   - [wrong] Take the next close spot to recover momentum — Tilt escalation. When tilt signs appear after two rough spots in a row, jumping into the next close spot to recover momentum bleeds more chips while emotions are hot.
     BETTER ANSWER: Run brief reset and re-anchor to plan
-  - [suboptimal] Keep playing and check emotions later — Common response. After two rough spots in a row, continuing without an explicit reset lets hidden tilt degrade your next high-stakes decision.
+  - [wrong] Keep playing and check emotions later — Common response. After two rough spots in a row, continuing without an explicit reset lets hidden tilt degrade your next high-stakes decision.
     BETTER ANSWER: Run brief reset and re-anchor to plan
 
 TASK w12_checkpoint_discipline_line [drill] Discipline line
 CAPTION: A player taunts you into marginal high-variance spots.
 Q: Which line is strongest?
 HINT [theoryOnly]: Discipline means evidence over ego.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Take thin line to win respect — Ego leak. When a player taunts you into marginal high-variance spots, taking a thin line to win respect risks big pots without the range or price edge to back it up.
     BETTER ANSWER: Take only evidence-backed lines
   + [correct] Take only evidence-backed lines — Evidence beats respect. Evidence-first discipline is the stable bridge into deeper strategic worlds.
-  - [suboptimal] Fold all close spots now — Defensive but capped. Folding a close spot to avoid a player’s taunts can surrender an edge your read of their range and the price still support.
+  - [wrong] Fold all close spots now — Defensive but capped. Folding a close spot to avoid a player’s taunts can surrender an edge your read of their range and the price still support.
     BETTER ANSWER: Take only evidence-backed lines
 
 TASK w12_checkpoint_full_loop_line [drill] Full routine line
@@ -5643,11 +5744,38 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · Last orbit
   - [wrong] Raise to recover confidence — Confidence chase. CO bets 2 BB into 8 BB on A-8-4. Raising to make up for last orbit’s loose bluff builds a larger pot and may drive out the weaker hands you could keep in by calling.
     BETTER ANSWER: Call with the same routine
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-  - [suboptimal] Fold to play safer now — Too reactive. CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.
+  - [wrong] Fold to play safer now — Too reactive. CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.
     BETTER ANSWER: Call with the same routine
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
   + [correct] Call with the same routine — Strong reset. Start with top pair, position and the 2 BB price. Calling is a reasonable controlled line if CO bets enough weaker hands. The optimal line depends on CO’s range and later action. Review the previous bluff separately.
     FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+
+TASK w12_river_ev_draw_hit [drill] The draw hit
+CAPTION: A heart lands on the river. BB bets 4 BB with a lower flush and will call one raise. Use this fixed hand model.
+Q: Which action has the best EV in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ah Th | Board Kh 6h 2s 8c 3h | Pot 9.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts flush
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Th stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 93.5 BB bet 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB bets 4 BB
+  - [wrong] Fold — Look again. Your ace-high flush wins against BB’s lower flush on this board. A fold gives up the pot.
+    BETTER ANSWER: Raise
+    FEEDBACK TABLE: River | You Ah Th | Board Kh 6h 2s 8c 3h | Pot 9.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+  - [wrong] Call — Look again. Calling wins the pot, but BB would put in more with a lower flush in this model.
+    BETTER ANSWER: Raise
+  + [correct] Raise — Correct. Ah Th makes the best possible flush. BB will call one raise with a lower flush. Get paid for the out that hit.
+
+TASK w12_river_ev_new_sample [drill] Price the last hand
+CAPTION: You lost a close call last hand. In this new hand you beat four of ten CO bets. CO bets 4 BB and keeps just the better hands if raised.
+Q: Which action has the best EV in this model?
+HINT [hidden]: (none)
+TABLE: River | You Jh Tc | Board Js 9h 6d 4c 2s | Pot 9.5 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 93.5 BB bet 4 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jh Tc stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks · CO bets 4 BB
+  - [wrong] Fold — Look again. 4 BB needs about 30% to call. This hand wins 40% in the model. The last result does not take that edge away.
+    BETTER ANSWER: Call
+  + [correct] Call — Correct. 4 divided by 13.5 is about 30%. You win 40%. A call gains 1.4 BB on average in this model.
+  - [wrong] Raise — Look again. The hands that beat your jacks will call a raise. Making the bet larger just adds a cost against those hands.
+    BETTER ANSWER: Call
 
 TASK w12_checkpoint_review [review] Mindset recap
 ENTRY: drill
@@ -5656,7 +5784,7 @@ TEACH: Stability before complexity. Strong strategy growth requires stable minds
 TEACH LABELS: Process quality, Tilt reset, Discipline, Postflop growth
 Q: What does this final mindset checkpoint add?
 HINT [theoryOnly]: Next you carry this mindset into deeper postflop decision trees and pressure spots.
-TABLE: Seat BTN | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] A repeatable process-reset-discipline cycle — Solid understanding. Mindset stability is what lets complex strategic lessons stick instead of collapsing under pressure.
   - [wrong] Optional soft skill with little EV impact — Underestimation. Across preflop and postflop spots, treating mindset as an optional soft skill leaves tilt and ego leaks draining chips from your technical edge.
@@ -7394,3 +7522,241 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   - [wrong] 12 — Look again. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
     BETTER ANSWER: 16
   + [correct] 16 — Correct. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
+
+===== WORLD 12 · LESSON decision_over_outcome · Decision quality over outcome =====
+
+TASK spaced_review_w12_decision_over_outcome_misread_mindset_discipline_v1 [drill] Review decision
+DAY 7 FAMILY: misread_mindset_discipline
+Q: You call and win. What can you judge with the price and the set of bets you beat?
+HINT [hidden]: (none)
+TABLE: River | You Kh 9h | Board Ks 7d 2c Td 3s | Pot 9 BB | Seat BB | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kh 9h stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 3 BB
+  + [correct] The worth of the call in the long run — Correct. The price and the share of bets you beat can tell you if a call pays over time. One win tells you how this hand ends.
+    FEEDBACK TABLE: River | You Kh 9h | Board Ks 7d 2c Td 3s | Pot 9 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] The luck of the next draw — Look again. The price and the share of bets you beat can tell you if a call pays over time. One win tells you how this hand ends.
+    BETTER ANSWER: The worth of the call in the long run
+    FEEDBACK TABLE: River | You Kh 9h | Board Ks 7d 2c Td 3s | Pot 9 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] The size of HJ’s next bet — Look again. The price and the share of bets you beat can tell you if a call pays over time. One win tells you how this hand ends.
+    BETTER ANSWER: The worth of the call in the long run
+    FEEDBACK TABLE: River | You Kh 9h | Board Ks 7d 2c Td 3s | Pot 9 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK spaced_review_w12_decision_over_outcome_process_over_outcome_v1 [drill] Review decision
+DAY 7 FAMILY: process_over_outcome
+Q: When you review this call, what should you check first?
+HINT [hidden]: (none)
+TABLE: River | You Ad 9d | Board Ah Tc 6s 3c 2h | Pot 8 BB | Seat CO | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad 9d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.25 BB bet 2 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB bets 2 BB
+  - [wrong] Which seat won the pot — Look again. Judge your pair and the 2 BB price in the spot you faced. Then look at the result.
+    BETTER ANSWER: What hands you beat at the price you got
+    FEEDBACK TABLE: River | You Ad 9d | Board Ah Tc 6s 3c 2h | Pot 8 BB | Seat CO | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] What hands you beat at the price you got — Correct. Judge your pair and the 2 BB price in the spot you faced. Then look at the result.
+    FEEDBACK TABLE: River | You Ad 9d | Board Ah Tc 6s 3c 2h | Pot 8 BB | Seat CO | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] How the player reacts after a loss — Look again. Judge your pair and the 2 BB price in the spot you faced. Then look at the result.
+    BETTER ANSWER: What hands you beat at the price you got
+    FEEDBACK TABLE: River | You Ad 9d | Board Ah Tc 6s 3c 2h | Pot 8 BB | Seat CO | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK spaced_review_w12_decision_over_outcome_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+Q: Calling would make an 11.5 BB pot. About how often do you need to win?
+HINT [hidden]: (none)
+TABLE: River | You Kd Tc | Board Kh 9s 4c 3d 2s | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kd Tc stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 3 BB
+  - [wrong] 17% — Look again. The cost is 3 BB. Divide 3 by 11.5 to get about 26%.
+    BETTER ANSWER: 26%
+  - [wrong] 22% — Look again. The cost is 3 BB. Divide 3 by 11.5 to get about 26%.
+    BETTER ANSWER: 26%
+  + [correct] 26% — Correct. The cost is 3 BB. Divide 3 by 11.5 to get about 26%.
+
+TASK spaced_review_w12_decision_over_outcome_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Did the last card fill your draw?
+HINT [hidden]: (none)
+TABLE: River | You Qh Th | Board Ah 8h 4d 2c 9h | Pot 6 BB | Seat BB | Facts flush
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qh Th stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks
+  + [correct] Yes, five hearts make a flush — Correct. Three board cards and both your cards are hearts. That gives you a flush.
+    FEEDBACK TABLE: River | You Qh Th | Board Ah 8h 4d 2c 9h | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+  - [wrong] No, the pair missed — Look again. Three board cards and both your cards are hearts. That gives you a flush.
+    BETTER ANSWER: Yes, five hearts make a flush
+    FEEDBACK TABLE: River | You Qh Th | Board Ah 8h 4d 2c 9h | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+  - [wrong] Yes, five cards make a straight — Look again. Three board cards and both your cards are hearts. That gives you a flush.
+    BETTER ANSWER: Yes, five hearts make a flush
+    FEEDBACK TABLE: River | You Qh Th | Board Ah 8h 4d 2c 9h | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+
+===== WORLD 12 · LESSON tilt_reset_protocol · Tilt reset protocol =====
+
+TASK spaced_review_w12_tilt_reset_protocol_misread_mindset_discipline_v1 [drill] Review decision
+DAY 7 FAMILY: misread_mindset_discipline
+Q: You want to win back the last pot fast. What should you do first?
+HINT [hidden]: (none)
+TABLE: Flop | You Jd 9d | Board Jc 7s 2h | Pot 8 BB | Seat BB | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jd 9d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ bets 2 BB
+  - [wrong] Keep your eyes on the seat that won — Look again. This new hand has a jack on the flop and a fresh bet. Pause so the last loss does not set your response.
+    BETTER ANSWER: Take a breath and read this new flop
+    FEEDBACK TABLE: Flop | You Jd 9d | Board Jc 7s 2h | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  + [correct] Take a breath and read this new flop — Correct. This new hand has a jack on the flop and a fresh bet. Pause so the last loss does not set your response.
+    FEEDBACK TABLE: Flop | You Jd 9d | Board Jc 7s 2h | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] Use the plan from the last hand — Look again. This new hand has a jack on the flop and a fresh bet. Pause so the last loss does not set your response.
+    BETTER ANSWER: Take a breath and read this new flop
+    FEEDBACK TABLE: Flop | You Jd 9d | Board Jc 7s 2h | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+
+TASK spaced_review_w12_tilt_reset_protocol_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: You just took a breath. What hand do you have now?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc Ts | Board Kh 9d 4h | Pot 6 BB | Seat CO | Facts one pair, top pair, two-tone, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc Ts stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more
+  - [wrong] A pair of tens — Look again. The king in your hand matches the king on the board. You have one pair.
+    BETTER ANSWER: A pair of kings
+    FEEDBACK TABLE: Flop | You Kc Ts | Board Kh 9d 4h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor straight
+  - [wrong] A flush draw — Look again. The king in your hand matches the king on the board. You have one pair.
+    BETTER ANSWER: A pair of kings
+    FEEDBACK TABLE: Flop | You Kc Ts | Board Kh 9d 4h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor straight
+  + [correct] A pair of kings — Correct. The king in your hand matches the king on the board. You have one pair.
+    FEEDBACK TABLE: Flop | You Kc Ts | Board Kh 9d 4h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor straight
+
+TASK spaced_review_w12_tilt_reset_protocol_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+Q: You want to act fast after a loss. What is the actual cost to call?
+HINT [hidden]: (none)
+TABLE: Flop | You Ah Td | Board Ts 7c 2d | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah Td stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ bets 2 BB
+  + [correct] 2 BB — Correct. The last loss does not change the new bet. You must match 2 BB here.
+  - [wrong] 5.5 BB — Look again. The last loss does not change the new bet. You must match 2 BB here.
+    BETTER ANSWER: 2 BB
+  - [wrong] 7.5 BB — Look again. The last loss does not change the new bet. You must match 2 BB here.
+    BETTER ANSWER: 2 BB
+
+===== WORLD 12 · LESSON confidence_and_discipline · Confidence with discipline =====
+
+TASK spaced_review_w12_confidence_and_discipline_misread_mindset_discipline_v1 [drill] Review decision
+DAY 7 FAMILY: misread_mindset_discipline
+Q: HJ bet the river. What belongs in your choice now?
+HINT [hidden]: (none)
+TABLE: River | You Kc Qd | Board Kh 7c 3d 2s 8c | Pot 12 BB | Seat BB | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 91.25 BB bet 6 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 6 BB
+  - [wrong] How long you have gone without a win — Look again. A good hand name does not pay the bet. Read the price and work out which bets your kings beat.
+    BETTER ANSWER: The price and which bets you beat
+    FEEDBACK TABLE: River | You Kc Qd | Board Kh 7c 3d 2s 8c | Pot 12 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] The price and which bets you beat — Correct. A good hand name does not pay the bet. Read the price and work out which bets your kings beat.
+    FEEDBACK TABLE: River | You Kc Qd | Board Kh 7c 3d 2s 8c | Pot 12 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] The fact that you like your cards — Look again. A good hand name does not pay the bet. Read the price and work out which bets your kings beat.
+    BETTER ANSWER: The price and which bets you beat
+    FEEDBACK TABLE: River | You Kc Qd | Board Kh 7c 3d 2s 8c | Pot 12 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK spaced_review_w12_confidence_and_discipline_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: How much of this board matches your private ranks?
+HINT [hidden]: (none)
+TABLE: Turn | You Qc Jh | Board Qd 7s 3c 8h | Pot 6 BB | Seat CO | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qc Jh stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks
+  - [wrong] The queen and the jack — Look again. Qd pairs with Qc. There is no jack on this board.
+    BETTER ANSWER: The queen
+    FEEDBACK TABLE: Turn | You Qc Jh | Board Qd 7s 3c 8h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  - [wrong] The jack — Look again. Qd pairs with Qc. There is no jack on this board.
+    BETTER ANSWER: The queen
+    FEEDBACK TABLE: Turn | You Qc Jh | Board Qd 7s 3c 8h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  + [correct] The queen — Correct. Qd pairs with Qc. There is no jack on this board.
+    FEEDBACK TABLE: Turn | You Qc Jh | Board Qd 7s 3c 8h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+
+TASK spaced_review_w12_confidence_and_discipline_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+Q: What does the river call cost?
+HINT [hidden]: (none)
+TABLE: River | You Js Tc | Board Jc 7h 4s 3c 2d | Pot 10 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 93.25 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Js Tc stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 4 BB
+  + [correct] 4 BB — Correct. HJ adds 4 BB on the river. A call adds 4 BB from you.
+  - [wrong] 5.5 BB — Look again. HJ adds 4 BB on the river. A call adds 4 BB from you.
+    BETTER ANSWER: 4 BB
+  - [wrong] 9.5 BB — Look again. HJ adds 4 BB on the river. A call adds 4 BB from you.
+    BETTER ANSWER: 4 BB
+
+===== WORLD 12 · LESSON mindset_bridge_checkpoint · Mindset bridge checkpoint =====
+
+TASK spaced_review_w12_mindset_bridge_checkpoint_process_over_outcome_v1 [drill] Review decision
+DAY 7 FAMILY: process_over_outcome
+Q: If you call and win, what would confirm the call was sound?
+HINT [hidden]: (none)
+TABLE: River | You As 9s | Board Ac Td 4c 8h 2c | Pot 10 BB | Seat BB | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 93.25 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB As 9s stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 4 BB
+  + [correct] Your chance to win was high enough for the price — Correct. Work out if your chance to win paid for the 4 BB risk. Check the result after that.
+    FEEDBACK TABLE: River | You As 9s | Board Ac Td 4c 8h 2c | Pot 10 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] The bet made you feel unsure — Look again. Work out if your chance to win paid for the 4 BB risk. Check the result after that.
+    BETTER ANSWER: Your chance to win was high enough for the price
+    FEEDBACK TABLE: River | You As 9s | Board Ac Td 4c 8h 2c | Pot 10 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] It added chips to your stack this time — Look again. Work out if your chance to win paid for the 4 BB risk. Check the result after that.
+    BETTER ANSWER: Your chance to win was high enough for the price
+    FEEDBACK TABLE: River | You As 9s | Board Ac Td 4c 8h 2c | Pot 10 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK spaced_review_w12_mindset_bridge_checkpoint_misread_mindset_discipline_v1 [drill] Review decision
+DAY 7 FAMILY: misread_mindset_discipline
+Q: You lost to HJ last time. What can help keep your next choice sound?
+HINT [hidden]: (none)
+TABLE: Flop | You Ks Td | Board Kc 7h 6d | Pot 8 BB | Seat BB | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ks Td stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ bets 2 BB
+  - [wrong] Use a larger bet to get the lost chips back — Look again. The new 2 BB bet needs its own read. A pause helps keep the old loss out of this choice.
+    BETTER ANSWER: Pause and judge the bet in the new hand
+    FEEDBACK TABLE: Flop | You Ks Td | Board Kc 7h 6d | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  + [correct] Pause and judge the bet in the new hand — Correct. The new 2 BB bet needs its own read. A pause helps keep the old loss out of this choice.
+    FEEDBACK TABLE: Flop | You Ks Td | Board Kc 7h 6d | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] Wait for a win before you check your play — Look again. The new 2 BB bet needs its own read. A pause helps keep the old loss out of this choice.
+    BETTER ANSWER: Pause and judge the bet in the new hand
+    FEEDBACK TABLE: Flop | You Ks Td | Board Kc 7h 6d | Pot 8 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+
+TASK spaced_review_w12_mindset_bridge_checkpoint_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: What did the river change for your two clubs?
+HINT [hidden]: (none)
+TABLE: River | You Ac 5c | Board Kc 8c 3s 2d 9c | Pot 6 BB | Seat CO | Facts flush
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac 5c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks
+  - [wrong] It made a pair — Look again. 9c is the third club on the board. Add your two clubs to make five.
+    BETTER ANSWER: It made an ace-high flush
+    FEEDBACK TABLE: River | You Ac 5c | Board Kc 8c 3s 2d 9c | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+  - [wrong] It made a straight — Look again. 9c is the third club on the board. Add your two clubs to make five.
+    BETTER ANSWER: It made an ace-high flush
+    FEEDBACK TABLE: River | You Ac 5c | Board Kc 8c 3s 2d 9c | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+  + [correct] It made an ace-high flush — Correct. 9c is the third club on the board. Add your two clubs to make five.
+    FEEDBACK TABLE: River | You Ac 5c | Board Kc 8c 3s 2d 9c | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
+
+TASK spaced_review_w12_mindset_bridge_checkpoint_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+Q: A call makes a 9.5 BB pot. About how often must you win to pay for it?
+HINT [hidden]: (none)
+TABLE: River | You Qc 8c | Board Qs 7h 4d 3s 2h | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qc 8c stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 2 BB
+  + [correct] 21% — Correct. Divide the 2 BB call by 9.5 BB after you call. That is about 21%.
+  - [wrong] 30% — Look again. Divide the 2 BB call by 9.5 BB after you call. That is about 21%.
+    BETTER ANSWER: 21%
+  - [wrong] 36% — Look again. Divide the 2 BB call by 9.5 BB after you call. That is about 21%.
+    BETTER ANSWER: 21%
+
+===== WORLD 12 · LESSON confidence_and_discipline · Confidence with discipline =====
+
+TASK spaced_review_w12_confidence_and_discipline_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: You took a breath to read the new card. Which card was the turn?
+HINT [hidden]: (none)
+TABLE: Turn | You Ad 8d | Board Kd 7s 2c Td | Pot 6 BB | Seat BB | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ad 8d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks
+  - [wrong] A king — Look again. Td came after the three flop cards. It gives you four diamonds in view.
+    BETTER ANSWER: A ten
+    FEEDBACK TABLE: Turn | You Ad 8d | Board Kd 7s 2c Td | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] A ten — Correct. Td came after the three flop cards. It gives you four diamonds in view.
+    FEEDBACK TABLE: Turn | You Ad 8d | Board Kd 7s 2c Td | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] A two — Look again. Td came after the three flop cards. It gives you four diamonds in view.
+    BETTER ANSWER: A ten
+    FEEDBACK TABLE: Turn | You Ad 8d | Board Kd 7s 2c Td | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9

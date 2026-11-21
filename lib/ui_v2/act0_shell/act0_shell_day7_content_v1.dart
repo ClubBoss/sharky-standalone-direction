@@ -1203,4 +1203,205 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.',
   ),
+  // W12 fresh hands.
+  _day7ExampleV1(
+    12,
+    'decision_over_outcome',
+    'misread_mindset_discipline',
+    _day7PostflopV1('bb', 'Kh 9h', 'Ks 7d 2c Td 3s', betBb: 3),
+    question:
+        'You call and win. What can you judge with the price and the set of bets you beat?',
+    choices: const [
+      'The worth of the call in the long run',
+      'The luck of the next draw',
+      'The size of HJ’s next bet',
+    ],
+    correct: 0,
+    reason:
+        'The price and the share of bets you beat can tell you if a call pays over time. One win tells you how this hand ends.',
+  ),
+  _day7ExampleV1(
+    12,
+    'decision_over_outcome',
+    'process_over_outcome',
+    _day7PostflopV1('co', 'Ad 9d', 'Ah Tc 6s 3c 2h', betBb: 2),
+    question: 'When you review this call, what should you check first?',
+    choices: const [
+      'Which seat won the pot',
+      'What hands you beat at the price you got',
+      'How the player reacts after a loss',
+    ],
+    correct: 1,
+    reason:
+        'Judge your pair and the 2 BB price in the spot you faced. Then look at the result.',
+  ),
+  _day7ExampleV1(
+    12,
+    'decision_over_outcome',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Kd Tc', 'Kh 9s 4c 3d 2s', betBb: 3, showTurn: true),
+    question:
+        'Calling would make an 11.5 BB pot. About how often do you need to win?',
+    choices: const ['17%', '22%', '26%'],
+    correct: 2,
+    reason: 'The cost is 3 BB. Divide 3 by 11.5 to get about 26%.',
+  ),
+  _day7ExampleV1(
+    12,
+    'decision_over_outcome',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', 'Qh Th', 'Ah 8h 4d 2c 9h'),
+    question: 'Did the last card fill your draw?',
+    choices: const [
+      'Yes, five hearts make a flush',
+      'No, the pair missed',
+      'Yes, five cards make a straight',
+    ],
+    correct: 0,
+    reason:
+        'Three board cards and both your cards are hearts. That gives you a flush.',
+  ),
+  _day7ExampleV1(
+    12,
+    'tilt_reset_protocol',
+    'misread_mindset_discipline',
+    _day7PostflopV1('bb', 'Jd 9d', 'Jc 7s 2h', betBb: 2),
+    question:
+        'You want to win back the last pot fast. What should you do first?',
+    choices: const [
+      'Keep your eyes on the seat that won',
+      'Take a breath and read this new flop',
+      'Use the plan from the last hand',
+    ],
+    correct: 1,
+    reason:
+        'This new hand has a jack on the flop and a fresh bet. Pause so the last loss does not set your response.',
+  ),
+  _day7ExampleV1(
+    12,
+    'tilt_reset_protocol',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Kc Ts', 'Kh 9d 4h'),
+    question: 'You just took a breath. What hand do you have now?',
+    choices: const ['A pair of tens', 'A flush draw', 'A pair of kings'],
+    correct: 2,
+    reason:
+        'The king in your hand matches the king on the board. You have one pair.',
+  ),
+  _day7ExampleV1(
+    12,
+    'tilt_reset_protocol',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Ah Td', 'Ts 7c 2d', betBb: 2, showTurn: true),
+    question:
+        'You want to act fast after a loss. What is the actual cost to call?',
+    choices: const ['2 BB', '5.5 BB', '7.5 BB'],
+    correct: 0,
+    reason:
+        'The last loss does not change the new bet. You must match 2 BB here.',
+  ),
+  _day7ExampleV1(
+    12,
+    'confidence_and_discipline',
+    'misread_mindset_discipline',
+    _day7PostflopV1('bb', 'Kc Qd', 'Kh 7c 3d 2s 8c', betBb: 6),
+    question: 'HJ bet the river. What belongs in your choice now?',
+    choices: const [
+      'How long you have gone without a win',
+      'The price and which bets you beat',
+      'The fact that you like your cards',
+    ],
+    correct: 1,
+    reason:
+        'A good hand name does not pay the bet. Read the price and work out which bets your kings beat.',
+  ),
+  _day7ExampleV1(
+    12,
+    'confidence_and_discipline',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Qc Jh', 'Qd 7s 3c 8h'),
+    question: 'How much of this board matches your private ranks?',
+    choices: const ['The queen and the jack', 'The jack', 'The queen'],
+    correct: 2,
+    reason: 'Qd pairs with Qc. There is no jack on this board.',
+  ),
+  _day7ExampleV1(
+    12,
+    'confidence_and_discipline',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Js Tc', 'Jc 7h 4s 3c 2d', betBb: 4, showTurn: true),
+    question: 'What does the river call cost?',
+    choices: const ['4 BB', '5.5 BB', '9.5 BB'],
+    correct: 0,
+    reason: 'HJ adds 4 BB on the river. A call adds 4 BB from you.',
+  ),
+  _day7ExampleV1(
+    12,
+    'mindset_bridge_checkpoint',
+    'process_over_outcome',
+    _day7PostflopV1('bb', 'As 9s', 'Ac Td 4c 8h 2c', betBb: 4),
+    question: 'If you call and win, what would confirm the call was sound?',
+    choices: const [
+      'Your chance to win was high enough for the price',
+      'The bet made you feel unsure',
+      'It added chips to your stack this time',
+    ],
+    correct: 0,
+    reason:
+        'Work out if your chance to win paid for the 4 BB risk. Check the result after that.',
+  ),
+  _day7ExampleV1(
+    12,
+    'mindset_bridge_checkpoint',
+    'misread_mindset_discipline',
+    _day7PostflopV1('bb', 'Ks Td', 'Kc 7h 6d', betBb: 2),
+    question:
+        'You lost to HJ last time. What can help keep your next choice sound?',
+    choices: const [
+      'Use a larger bet to get the lost chips back',
+      'Pause and judge the bet in the new hand',
+      'Wait for a win before you check your play',
+    ],
+    correct: 1,
+    reason:
+        'The new 2 BB bet needs its own read. A pause helps keep the old loss out of this choice.',
+  ),
+  _day7ExampleV1(
+    12,
+    'mindset_bridge_checkpoint',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Ac 5c', 'Kc 8c 3s 2d 9c'),
+    question: 'What did the river change for your two clubs?',
+    choices: const [
+      'It made a pair',
+      'It made a straight',
+      'It made an ace-high flush',
+    ],
+    correct: 2,
+    reason:
+        '9c is the third club on the board. Add your two clubs to make five.',
+  ),
+  _day7ExampleV1(
+    12,
+    'mindset_bridge_checkpoint',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Qc 8c', 'Qs 7h 4d 3s 2h', betBb: 2, showTurn: true),
+    question:
+        'A call makes a 9.5 BB pot. About how often must you win to pay for it?',
+    choices: const ['21%', '30%', '36%'],
+    correct: 0,
+    reason: 'Divide the 2 BB call by 9.5 BB after you call. That is about 21%.',
+  ),
+  _day7ExampleV1(
+    12,
+    'confidence_and_discipline',
+    'board_cards',
+    _day7PostflopV1('bb', 'Ad 8d', 'Kd 7s 2c Td'),
+    question:
+        'You took a breath to read the new card. Which card was the turn?',
+    choices: const ['A king', 'A ten', 'A two'],
+    correct: 1,
+    reason:
+        'Td came after the three flop cards. It gives you four diamonds in view.',
+  ),
 ];

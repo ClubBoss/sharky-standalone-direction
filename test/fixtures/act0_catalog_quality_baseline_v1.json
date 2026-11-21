@@ -8,10 +8,6 @@
       "btn_count": 21,
       "table_tasks": 21
     },
-    "world_12": {
-      "btn_count": 20,
-      "table_tasks": 22
-    },
     "world_4": {
       "btn_count": 33,
       "table_tasks": 35
@@ -37,23 +33,22 @@
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 200,
     "13.intro_over_100_words": 85,
-    "14.duplicate_theory_in_lesson": 231,
-    "15.internal_jargon": 397,
-    "16.extreme_wrong_option": 320,
-    "17.single_format_lesson": 48,
+    "14.duplicate_theory_in_lesson": 233,
+    "15.internal_jargon": 406,
+    "16.extreme_wrong_option": 329,
+    "17.single_format_lesson": 49,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 67,
     "20.hero_qq_per_world": 29,
-    "21.duplicate_wrong_reason": 552,
+    "21.duplicate_wrong_reason": 570,
     "22.bet_into_pot": 26,
     "23.pot_with_bet": 6,
-    "24.call_equity": 21,
+    "24.call_equity": 23,
     "25.street_stack": 26
   },
   "findings": [
     "11.btn_share_per_world|world_10",
     "11.btn_share_per_world|world_11",
-    "11.btn_share_per_world|world_12",
     "11.btn_share_per_world|world_4",
     "11.btn_share_per_world|world_5",
     "11.btn_share_per_world|world_7",

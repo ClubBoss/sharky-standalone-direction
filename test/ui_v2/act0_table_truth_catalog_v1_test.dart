@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -1206,11 +1207,21 @@ void main() {
         ],
       };
     }
+    expectedComparison.addAll(w12Wave4TableTruthContractV1());
+    for (final entry in w12Wave4GradeCorrectionsV1.entries) {
+      final task = historicalComparison[entry.key] as Map<String, dynamic>;
+      final option = (task['options'] as List<dynamic>)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == entry.value);
+      expect(option['correct'], isFalse, reason: entry.key);
+      expect(option['quality'], 'wrong', reason: entry.key);
+      option['quality'] = 'suboptimal';
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2, 3 and 6 packets may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the Worlds 2, 3, 6 and 12 packets may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
     show w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -292,8 +293,11 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(397));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
+    expect(tasks, hasLength(397 + w12Wave4ChoiceContractV1.length));
+    expect(
+      tasks.map((task) => task.taskId).toSet(),
+      hasLength(397 + w12Wave4ChoiceContractV1.length),
+    );
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -306,7 +310,8 @@ void main() {
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
-            !w6TaskIds.contains(task.taskId),
+            !w6TaskIds.contains(task.taskId) &&
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId),
       ),
       hasLength(368),
     );
@@ -371,7 +376,8 @@ void main() {
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
-            !w6TaskIds.contains(task.taskId))
+            !w6TaskIds.contains(task.taskId) &&
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -516,7 +522,10 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 275); // Authored contexts, not certified replay histories.
+    expect(
+      played,
+      275 + 9,
+    ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
@@ -531,6 +540,7 @@ void main() {
       ...w4MinRaiseTaskIdsV1,
       ...w11ExplicitStreetHistoryIds,
       ...w12ExplicitFlopHistoryIds,
+      ...w12Wave4ReplayTasksV1,
       // Full ledger now records each prior street and its contributions.
       'w12_pretty_hand_bad_price_fold',
       // The newly authored Call frame now supplies its full blind prefix,
