@@ -1952,18 +1952,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  void _recordBetaVisitV1() {
+  void _recordBetaVisitV1() => _recordBetaActivityV1(
+    () => Act0BetaMetricsStoreV1.recordVisit(widget.clock.nowUtc()),
+  );
+
+  void _recordBetaActivityV1(Future<void> Function() record) {
     if (!widget.enableBetaMetrics ||
         !_usesPersistedProgress ||
         !_progressRestoredV1 ||
         _progressLoadFailed) {
       return;
     }
-    unawaited(
-      Act0BetaMetricsStoreV1.recordVisit(
-        widget.clock.nowUtc(),
-      ).then<void>((_) {}, onError: (Object _) {}),
-    );
+    unawaited(record().then<void>((_) {}, onError: (Object _) {}));
   }
 
   Future<void> _bootstrapFirstStartRouteV1() async {
@@ -4866,6 +4866,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             widget.enableBetaMetrics && _usesPersistedProgress
                             ? () => Act0BetaLearningMetricsV1.fromProgress(
                                 firstWorld: baseState.worldById('world_1'),
+                                courseWorlds: baseState.worlds,
+                                currentLessonId:
+                                    _lessonResumeV1?.lessonId ??
+                                    _selectedLessonId,
+                                rulesBestScore: _w1RulesBestScoreV1,
+                                rulesCheckCompleted:
+                                    _w1RulesBestScoreV1 > 0 ||
+                                    _w1RulesFocusTaskIdsV1.isNotEmpty,
                                 history: _learningEvidenceHistoryV1,
                                 completedTaskIds: _completedTaskIds,
                                 correctedMistakes:

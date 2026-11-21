@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'act0_beta_metrics_v1.dart';
-
 import 'act0_practice_reminder_v1.dart';
 
 class Act0BetaMetricsDialogV1 extends StatefulWidget {
@@ -22,6 +22,7 @@ class Act0BetaMetricsDialogV1 extends StatefulWidget {
 class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
   late Future<Act0BetaActivityV1?> _activity = Act0BetaMetricsStoreV1.read();
   bool _saving = false;
+  String? _copyStatus;
 
   Future<void> _answer(int question, Act0BetaSurveyAnswerV1? value) async {
     setState(() => _saving = true);
@@ -54,20 +55,52 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
       ? 'No answers yet'
       : '${attempts.correct}/${attempts.total} correct';
 
+  Future<void> _copySummary(Act0BetaActivityV1 activity) async {
+    final summary = widget.learning.summary(
+      activity,
+      widget.nowUtc(),
+      reminderEnabled: Act0PracticeReminderV1.isSupported
+          ? Act0PracticeReminderV1.enabled.value
+          : null,
+    );
+    String message;
+    try {
+      await Clipboard.setData(ClipboardData(text: summary.clipboard));
+      message = 'Summary copied.';
+    } catch (_) {
+      message = 'Summary could not be copied.';
+    }
+    if (mounted) setState(() => _copyStatus = message);
+  }
+
   @override
   Widget build(BuildContext context) {
     final learning = widget.learning;
-    return AlertDialog(
-      title: const Text('Beta activity'),
-      content: FutureBuilder<Act0BetaActivityV1?>(
-        future: _activity,
-        builder: (context, snapshot) {
-          final activity = snapshot.data;
-          final now = widget.nowUtc();
-          final decisions = activity == null
-              ? null
-              : learning.decisionsSince(activity.firstVisitUtc);
-          return SingleChildScrollView(
+    return FutureBuilder<Act0BetaActivityV1?>(
+      future: _activity,
+      builder: (context, snapshot) {
+        final activity = snapshot.data;
+        final now = widget.nowUtc();
+        final decisions = activity == null
+            ? null
+            : learning.decisionsSince(activity.firstVisitUtc);
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Beta activity'),
+              if (_copyStatus case final status?)
+                Semantics(
+                  liveRegion: true,
+                  child: Text(
+                    status,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+            ],
+          ),
+          content: SingleChildScrollView(
             child: ListBody(
               children: [
                 const Text('Saved on this device.'),
@@ -97,12 +130,25 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
                     Text(
                       'Day 7 new review, on your own: ${_scoreLabel(decisions.day7NewReview)}',
                     ),
-                    if (Act0PracticeReminderV1.isSupported)
-                      ValueListenableBuilder<bool>(
-                        valueListenable: Act0PracticeReminderV1.enabled,
-                        builder: (_, enabled, _) =>
-                            Text('Reminder now: ${enabled ? 'On' : 'Off'}'),
-                      ),
+                    const SizedBox(height: 12),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: Act0PracticeReminderV1.enabled,
+                      builder: (_, enabled, _) {
+                        final summary = learning.summary(
+                          activity!,
+                          now,
+                          reminderEnabled: Act0PracticeReminderV1.isSupported
+                              ? enabled
+                              : null,
+                        );
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final line in summary.progress) Text(line),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ],
                 if (activity != null) ...[
@@ -139,15 +185,20 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
                 ],
               ],
             ),
-          );
-        },
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
-        ),
-      ],
+          ),
+          actions: [
+            if (activity != null)
+              TextButton(
+                onPressed: _saving ? null : () => _copySummary(activity),
+                child: const Text('Copy summary'),
+              ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
