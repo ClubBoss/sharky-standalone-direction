@@ -909,7 +909,7 @@ void main() {
           'seat': null,
           'repairSeats': <String>[],
           'repairCards': <String>[],
-          'repairLabels': <String>[],
+          'repairLabels': <String>['Minimum raise'],
         },
         {
           'id': 'five_bb',
@@ -918,7 +918,7 @@ void main() {
           'seat': null,
           'repairSeats': <String>[],
           'repairCards': <String>[],
-          'repairLabels': <String>[],
+          'repairLabels': <String>['Minimum raise'],
         },
         {
           'id': 'six_bb',
@@ -927,7 +927,7 @@ void main() {
           'seat': null,
           'repairSeats': <String>[],
           'repairCards': <String>[],
-          'repairLabels': <String>[],
+          'repairLabels': <String>['Minimum raise'],
         },
       ],
     };
@@ -942,7 +942,7 @@ void main() {
           'seat': null,
           'repairSeats': <String>[],
           'repairCards': <String>[],
-          'repairLabels': <String>[],
+          'repairLabels': <String>['Minimum raise'],
         },
         {
           'id': 'twelve_bb',
@@ -951,7 +951,7 @@ void main() {
           'seat': null,
           'repairSeats': <String>[],
           'repairCards': <String>[],
-          'repairLabels': <String>[],
+          'repairLabels': <String>['Minimum raise'],
         },
         {
           'id': 'eight_bb',
@@ -960,7 +960,7 @@ void main() {
           'seat': null,
           'repairSeats': <String>[],
           'repairCards': <String>[],
-          'repairLabels': <String>[],
+          'repairLabels': <String>['Minimum raise'],
         },
       ],
     };
