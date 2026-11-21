@@ -462,6 +462,7 @@ void main() {
       await settle();
       expect(clipboard, startsWith('Sharky beta summary v1\nBeta day: 1'));
       expect(clipboard, contains('Survey 1: yes'));
+      expect(find.text('Summary copied.'), findsOneWidget);
 
       final prefs = await tester.runAsync(SharedPreferences.getInstance);
       expect(prefs!.containsKey('act0_shell_progress_v1_head'), isFalse);

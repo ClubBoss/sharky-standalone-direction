@@ -22,6 +22,7 @@ class Act0BetaMetricsDialogV1 extends StatefulWidget {
 class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
   late Future<Act0BetaActivityV1?> _activity = Act0BetaMetricsStoreV1.read();
   bool _saving = false;
+  String? _copyStatus;
 
   Future<void> _answer(int question, Act0BetaSurveyAnswerV1? value) async {
     setState(() => _saving = true);
@@ -69,11 +70,7 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
     } catch (_) {
       message = 'Summary could not be copied.';
     }
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    }
+    if (mounted) setState(() => _copyStatus = message);
   }
 
   @override
@@ -88,7 +85,21 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
             ? null
             : learning.decisionsSince(activity.firstVisitUtc);
         return AlertDialog(
-          title: const Text('Beta activity'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Beta activity'),
+              if (_copyStatus case final status?)
+                Semantics(
+                  liveRegion: true,
+                  child: Text(
+                    status,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+            ],
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
