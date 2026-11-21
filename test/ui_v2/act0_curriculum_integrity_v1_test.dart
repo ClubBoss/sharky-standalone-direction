@@ -159,6 +159,31 @@ void main() {
       );
     });
 
+    test('W4 teaches call price once and keeps the calculation in view', () {
+      expect(
+        task('world_4', 'w4_price_intro').runner.teachingSteps,
+        hasLength(2),
+      );
+      final priceTasks = [
+        'w4_good_price_call',
+        'w4_bad_price_fold',
+        'w4_cheap_price_marginal_call',
+        'w4_big_price_marginal_fold',
+        'w4_checkpoint_price',
+        'w4_checkpoint_table_price',
+      ];
+      for (final id in priceTasks) {
+        final runner = task('world_4', id).runner;
+        expect(runner.teachingSteps, isEmpty, reason: id);
+        expect(runner.caption, contains('the pot after you call'), reason: id);
+        expect(
+          runner.options.map((option) => option.label),
+          unorderedEquals(['Call', 'Fold']),
+          reason: id,
+        );
+      }
+    });
+
     test('W4 price decisions show the opponent source of Hero call price', () {
       final expectedPrices = <String, String>{
         'w4_good_price_call': '1 BB',

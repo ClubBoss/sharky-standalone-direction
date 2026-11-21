@@ -195,6 +195,9 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] Two — Not quite. Two is your private card count, not the full board.
     BETTER ANSWER: Five
     FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts one pair, pocket pair
+  - [wrong] Three — Check the clue again. The first group of shared cards has three. Two more can be dealt later.
+    BETTER ANSWER: Five
+    FEEDBACK TABLE: River | You Qh Qs | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts one pair, pocket pair
 
 TASK cards_ranks_suits_best_five [drill] Best five idea
 CAPTION: A poker hand uses the best five cards available.
@@ -461,18 +464,11 @@ SEATS: UTG | HJ | CO Ad Qd | BTN dealer As Kh | SB | BB
 
 TASK positions_theory [theory] Six seats
 CAPTION: The six seats are UTG, HJ, CO, BTN, SB, and BB.
-TEACH: Before and after the first cards Preflop means no board cards yet. The flop has three board cards.
+TEACH: When cards reach the board Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-TEACH: The next two cards The turn is the fourth board card. The river is the fifth.
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-TEACH: Read the seat labels. BTN is Button. UTG means Under the Gun. HJ is Hijack. CO is Cutoff. Blinds are forced bets before the cards are played.
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-TEACH: Seats have names. UTG means under the gun, the first seat to act. HJ is hijack. CO is cutoff. BTN is button, and SB plus BB are the blinds.
+TEACH: Read the seat labels. UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.
 TEACH LABELS: UTG, HJ, CO, SB, BB
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-TEACH: Position changes information. Late seats see more actions before they decide.
-TEACH LABELS: Early, Late
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn, utg | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which seat is the Button?
 HINT [theoryOnly]: Follow the order from the blinds around the table.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
@@ -1001,6 +997,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Next player fol
   - [wrong] Flop — Not quite. The flop comes before the turn.
     BETTER ANSWER: River
     FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Shared board | Facts one pair, top pair
+  - [wrong] Preflop — Check the clue again. Preflop happens before any board cards are dealt.
+    BETTER ANSWER: River
+    FEEDBACK TABLE: River | You As Kd | Board Ah 7c 2d Jc 4s | Pot 7.5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Shared board | Facts one pair, top pair
 
 ===== WORLD 1 · LESSON what_poker_is_content · Stacks, all-in and the pot =====
 
@@ -1221,8 +1220,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK hand_discipline_buckets_intro [theory] Four buckets
 CAPTION: Preflop starts by sorting the hand into a simple bucket.
-TEACH: Read the two-card code. T means ten. Suited means two cards of the same suit. Offsuit means two cards with different suits. KTs is king-ten suited. J8o is jack-eight offsuit.
-TEACH: Groups and seats, before a raise. Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.
+TEACH: Groups and seats, before a raise. T means ten. Suited means same suit (s, like KTs). Offsuit means different suits (o, like J8o).
+
+Sharky starting chart for 6-max micro-stakes practice. Use the first matching row. Open means the first raise before the flop.
 
 Premium | AA–QQ, AK suited | Open from UTG through BTN.
 
@@ -1252,6 +1252,8 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Ah stack 100 BB | SB p
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   + [correct] Premium — Solid understanding. AA belongs to premium pairs and usually raises to grow the pot with the best hand.
   - [wrong] Medium — Not quite. AA is stronger than a medium hand.
+    BETTER ANSWER: Premium
+  - [wrong] Strong — Check the clue again. The chart puts aces with kings and queens in Premium. Strong starts below that group.
     BETTER ANSWER: Premium
 
 TASK hand_discipline_buckets_strong [drill] Strong hand
@@ -1296,6 +1298,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   - [wrong] Strong — Not quite. Offsuit disconnected hands are not strong starters.
     BETTER ANSWER: Weak
   + [correct] Weak — Well done. J8o from early position belongs in the weak bucket.
+  - [wrong] Medium — Check the clue again. J8o is not in any chart row, so it belongs in Weak. The only jack hands in Medium are KJ, QJs, and AJo.
+    BETTER ANSWER: Weak
 
 TASK hand_discipline_buckets_borderline [drill] Borderline hand
 CAPTION: You hold Qs Js before the flop.
@@ -2045,6 +2049,8 @@ TRAIL: UTG folds · HJ folds · CO acts
   + [correct] Raise [2.5 BB] — Clean execution. The starting chart raises this hand from CO before BTN and the blinds act.
   - [suboptimal] Call [1 BB] — Legal, but passive. Calling first in is still a limp. Cutoff is late enough to open the playable hand cleanly.
     BETTER ANSWER: Raise
+  - [wrong] Fold — Check the clue again. Ace-jack offsuit is Medium. With everyone folded to the cutoff, this chart opens it.
+    BETTER ANSWER: Raise
 
 TASK same_hand_different_seat_w3_same_hand_call [drill] Players behind
 CAPTION: HJ opened. You are CO with KQo.
@@ -2347,6 +2353,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] 6 BB — Not quite. 6 BB into 6 BB is pot-size, not one-third.
     BETTER ANSWER: 2 BB
   + [correct] 2 BB — Excellent spot. 2 BB into 6 BB is one-third pot.
+  - [wrong] 3 BB — Check the clue again. Three is half of six. One-third of six is two.
+    BETTER ANSWER: 2 BB
 
 TASK w4_half_pot_bet [drill] Half-pot bet
 CAPTION: There are 6 BB in the pot.
@@ -2379,6 +2387,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] 6 BB — Clean execution. 6 BB into 6 BB is a pot-size bet.
   - [wrong] 2 BB — Not quite. 2 BB is one-third pot here, not pot-size.
     BETTER ANSWER: 6 BB
+  - [wrong] 3 BB — Check the clue again. Three is half of six. A pot-size bet is equal to all six.
+    BETTER ANSWER: 6 BB
 
 TASK w4_sizing_recap [review] Sizing recap
 CAPTION: Lesson learned: size sets pressure and price.
@@ -2407,11 +2417,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.25 BB · CO 
 REVIEW: One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
 
 TASK w4_good_price_call [drill] Call small price
-CAPTION: HJ bet 1 BB on the turn.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
-TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
-TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
-TEACH LABELS: 1 in 5, 20%
+CAPTION: HJ bet 1 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
 Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You Ts 7d | Board Th 8c 3d 2s | Pot 8 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1 | Center Turn decision | Facts one pair, top pair
@@ -2422,11 +2428,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
     BETTER ANSWER: Call
 
 TASK w4_bad_price_fold [drill] Fold high price
-CAPTION: HJ bet 7 BB on the turn.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
-TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
-TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
-TEACH LABELS: 1 in 5, 20%
+CAPTION: HJ bet 7 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
 Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 8s 7d | Board Kh 8c 4d 2s | Pot 14 BB | To call 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1 | Center Turn decision | Facts one pair, middle pair
@@ -2437,11 +2439,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
   + [correct] Fold — Price and chance compared. 7 ÷ (7 + 14) is about 33.3%. Your 25% chance is below that threshold, so fold.
 
 TASK w4_cheap_price_marginal_call [drill] Cheap call with middle pair
-CAPTION: The turn is a two. HJ bet 1 BB.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
-TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
-TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
-TEACH LABELS: 1 in 5, 20%
+CAPTION: The turn is a two. HJ bet 1 BB. Compare your chance to win with the call divided by the pot after you call.
 Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 9s 7d | Board Kc 9h 4d 2s | Pot 10 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_1 | Center Turn decision | Facts one pair, middle pair
@@ -2452,11 +2450,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 3.75 BB · CO 
   + [correct] Call [1 BB] — Price and chance compared. 1 ÷ (1 + 10) is about 9.1%. Your 15% chance is above that threshold, so call.
 
 TASK w4_big_price_marginal_fold [drill] Big price, thinner hand
-CAPTION: The turn is a two. HJ bet 6 BB.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
-TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
-TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
-TEACH LABELS: 1 in 5, 20%
+CAPTION: The turn is a two. HJ bet 6 BB. Compare your chance to win with the call divided by the pot after you call.
 Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You Qs 7d | Board Qh Jc 3d 2s | Pot 13 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0 | Center Turn decision | Facts one pair, top pair
@@ -2585,18 +2579,18 @@ REVIEW: Bluffing is pressure with a purpose: make better hands fold without risk
 
 TASK w4_protection_intro [theory] Deny free card
 CAPTION: Protection bets make the next card cost something.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An opponent with ace-king can move ahead if the next card is an ace or king.
+TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
 TEACH LABELS: Next card, Cost, Deny
 Q: What does protection deny?
 HINT [theoryOnly]: A pair can be ahead now and fall behind on the next card.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-REVIEW: Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An opponent with ace-king can move ahead if the next card is an ace or king.
+REVIEW: Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
 
 TASK w4_protection_bet [drill] Protect pair
 CAPTION: BB checked on queen, nine and four.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An opponent with ace-king can move ahead if the next card is an ace or king.
+TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
 TEACH LABELS: Next card, Cost, Deny
 Q: BB has checked. In this 6-max micro-stakes example, assume BB has ace-king and can pair either card. Which option makes BB pay to see the next card or fold?
 HINT [theoryOnly]: Betting protects value by denying that free card.
@@ -2611,7 +2605,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_protection_check [drill] Free card risk
 CAPTION: Both players check. BB can beat your pair if the next card pairs an ace or king in their hand.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An opponent with ace-king can move ahead if the next card is an ace or king.
+TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
 TEACH LABELS: Next card, Cost, Deny
 Q: What did checking allow?
 HINT [theoryOnly]: Ask what the opponent receives by not facing a bet.
@@ -2662,11 +2656,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
 
 TASK w4_checkpoint_price [drill] Call or fold
-CAPTION: HJ bet 3 BB on the turn.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
-TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
-TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
-TEACH LABELS: 1 in 5, 20%
+CAPTION: HJ bet 3 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
 Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 8s 7d | Board Kh 8c 4d 2s | Pot 10 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1 | Center Turn decision | Facts one pair, middle pair
@@ -2677,11 +2667,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
     BETTER ANSWER: Call
 
 TASK w4_checkpoint_table_price [drill] Real-table price read
-CAPTION: BB bet 2 BB on the turn.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
-TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
-TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
-TEACH LABELS: 1 in 5, 20%
+CAPTION: BB bet 2 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
 Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You Ac 9d | Board Kh 9s 4c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, bb | Card focus hero_1, board_1 | Center Turn decision | Facts one pair, middle pair
@@ -3004,9 +2990,9 @@ REVIEW: Look for nearby ranks that can form a five-card line.
 
 TASK outs_improvement_w5_outs_intro [theory] Improvement cards
 CAPTION: Outs are cards that can improve your hand.
-TEACH: From outs to a chance. An out is a card that improves your hand. On the turn, you can see six cards and 46 are unseen. On the river, 9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.
+TEACH: Count the cards that help. An out is an unseen card that improves your hand. With one card left and 46 unseen, 9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.
 TEACH LABELS: Outs, One card left
-TEACH: Compare with the price from World 4. Calling 1 BB into a pot of 7 BB makes an 8 BB pot. You need to win 1 out of 8 times. If only your outs win and there is no more betting, 8 outs win about 1 time in 6. That is enough to call.
+TEACH: Compare with the price from World 4. A 1 BB call into a 7 BB pot needs 1 win in 8. If only those 8 outs win and there are no more bets, about 1 win in 6 beats that price.
 TEACH LABELS: Call 1 BB, Pot 7 BB, Chance to win
 Q: What is an out?
 HINT [theoryOnly]: Count the cards that complete the draw. Then compare the chance with the price.
@@ -3027,6 +3013,9 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
   + [correct] Heart — Sharp read. A heart can complete the flush.
     FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
+  - [wrong] Spade — Check the clue again. A spade adds to the board without adding a heart. The flush needs one more heart.
+    BETTER ANSWER: Heart
+    FEEDBACK TABLE: Flop | You Kh 8h | Board Jh 3h 7s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the draw | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
 
 TASK outs_improvement_w5_straight_out [drill] Which rank helps?
 CAPTION: Compare your ranks with the flop.
@@ -3037,6 +3026,8 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] 9 — Strong choice. Private 5-6, shared board cards 7-8: any 9 completes the straight.
   - [wrong] K — Not quite. A king does not connect this rank ladder.
+    BETTER ANSWER: 9
+  - [wrong] T — Check the clue again. A ten skips the nine. You need five consecutive ranks for a straight.
     BETTER ANSWER: 9
 
 TASK outs_improvement_w5_table_outs_flush_transfer [drill] Flush draw and price

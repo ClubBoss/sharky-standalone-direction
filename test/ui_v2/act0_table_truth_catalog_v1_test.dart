@@ -859,6 +859,18 @@ void main() {
       expect(option['quality'], 'suboptimal', reason: entry.key);
       option['quality'] = 'wrong';
     }
+    for (final entry in q3AppendedChoicesV1.entries) {
+      final expected = expectedComparison[entry.key] as Map<String, dynamic>;
+      (expected['options'] as List).add({
+        'id': entry.value,
+        'correct': false,
+        'quality': 'wrong',
+        'seat': null,
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      });
+    }
     for (final (taskId, family, correctChoice, choiceCount) in [
       ('w7_flop_bluff_one_player', 'decision', 1, 2),
       ('w7_flop_bluff_two_players', 'decision', 2, 2),

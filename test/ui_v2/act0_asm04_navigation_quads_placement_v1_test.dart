@@ -144,6 +144,7 @@ void main() {
         expect(source.runner.options.map((o) => o.id).toSet(), {
           'trash',
           'strong',
+          'medium',
         });
         expect(
           source.runner.options.singleWhere((o) => o.isCorrect).id,

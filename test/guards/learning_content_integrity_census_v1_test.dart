@@ -10,7 +10,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-import '../support/act0_catalog_truth_audit_v1.dart' show w7AppliedTaskIdsV1;
+import '../support/act0_catalog_truth_audit_v1.dart'
+    show q3AppendedChoicesV1, w7AppliedTaskIdsV1;
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
@@ -90,9 +91,9 @@ void main() {
   test(
     'canonical W1-W12 census preserves raw IDs and legacy declared mappings',
     () {
-      final allRows = _assessedRows()
-          .where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId))
-          .toList();
+      final allRows = _assessedRows(
+        historical: true,
+      ).where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId)).toList();
       expect(allRows, hasLength(294));
       expect(
         allRows
@@ -464,9 +465,9 @@ void main() {
   });
 
   test('both ASM05 scenarios allow only their own familiar replay', () {
-    final rows = _assessedRows()
-        .where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId))
-        .toList();
+    final rows = _assessedRows(
+      historical: true,
+    ).where((row) => !w7AppliedTaskIdsV1.contains(row.task.taskId)).toList();
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
@@ -844,7 +845,7 @@ void main() {
     }
     expect(rows, hasLength(302));
     expect(rows.map((r) => r.task.taskId).toSet(), hasLength(302));
-    expect(allChoices, hasLength(469));
+    expect(allChoices, hasLength(478));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -912,7 +913,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(435));
+    expect(foundationDefaults, hasLength(444));
     expect(unknown, hasLength(10));
     expect(
       admitted.length +
@@ -938,7 +939,7 @@ void main() {
   });
 }
 
-List<_Row> _assessedRows() => <_Row>[
+List<_Row> _assessedRows({bool historical = false}) => <_Row>[
   for (final world in Act0ShellStateV1.sample.worlds)
     if (RegExp(r'^world_([1-9]|1[0-2])$').hasMatch(world.worldId))
       for (final lesson in world.lessons)
@@ -949,7 +950,14 @@ List<_Row> _assessedRows() => <_Row>[
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==
                   1)
-            _Row(world.worldId, lesson.lessonId, task),
+            _Row(
+              world.worldId,
+              lesson.lessonId,
+              task,
+              omittedChoiceId: historical
+                  ? q3AppendedChoicesV1[task.taskId]
+                  : null,
+            ),
 ];
 
 _RepairRow _repairRow(_Row row, {bool declaredMetadataOnly = false}) {
@@ -1082,13 +1090,18 @@ int _longestRun(List<int> values) {
 }
 
 class _Row {
-  const _Row(this.worldId, this.lessonId, this.task);
+  const _Row(this.worldId, this.lessonId, this.task, {this.omittedChoiceId});
   final String worldId;
   final String lessonId;
   final Act0LessonTaskV1 task;
-  int get optionCount => task.runner.options.length;
-  int get correctIndex =>
-      task.runner.options.indexWhere((option) => option.isCorrect);
+  final String? omittedChoiceId;
+  List<Act0RunnerOptionV1> get options => omittedChoiceId == null
+      ? task.runner.options
+      : task.runner.options
+            .where((option) => option.id != omittedChoiceId)
+            .toList();
+  int get optionCount => options.length;
+  int get correctIndex => options.indexWhere((option) => option.isCorrect);
   int get worldNumber => int.parse(worldId.substring('world_'.length));
   bool get isCheckpoint =>
       lessonId.contains('checkpoint') || task.taskId.contains('checkpoint');
@@ -1103,7 +1116,7 @@ class _Row {
             option.repairFocusLabels.isNotEmpty,
       );
   Iterable<Act0RunnerOptionV1> get incorrectOptions =>
-      task.runner.options.where((option) => !option.isCorrect);
+      options.where((option) => !option.isCorrect);
 }
 
 class _RepairRow {

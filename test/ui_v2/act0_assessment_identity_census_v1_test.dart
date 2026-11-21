@@ -133,6 +133,15 @@ void main() {
         ],
       ],
     ]);
+    for (final entry in q3AppendedChoicesV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last.take(1), [entry.value], reason: entry.key);
+      expect(choices.last[2], isFalse, reason: entry.key);
+      expect(choices.last[3], 'wrong', reason: entry.key);
+      choices.removeLast();
+    }
     expect(
       entries.where((row) => w7AppliedTaskIdsV1.contains(row[2])),
       hasLength(8),
