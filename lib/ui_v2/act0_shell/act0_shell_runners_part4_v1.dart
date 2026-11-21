@@ -2104,7 +2104,7 @@ final _w10PlayerTypeIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which clue is most useful over time?",
-  feedbackTitle: '',
+  feedbackTitle: "How players act",
   feedbackReason:
       "Several hands can show how often a player folds, calls or bets. You can use that read in the next hand.",
   teachingSteps: const [
@@ -2129,8 +2129,9 @@ final _w10NitTagRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Open or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Read both blinds",
+  feedbackReason:
+      "The blinds fold 90% of the time. The steal earns 1.15 BB on average: 0.90 x 1.5 - 0.10 x 2.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Read both blinds",
@@ -2222,8 +2223,9 @@ final _w10LoosePassiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you enter?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Facing a limp",
+  feedbackReason:
+      "AJo is a Medium CO hand. The 4 BB raise puts more chips in against weak aces and pairs that HJ has called before.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Facing a limp",
@@ -2326,8 +2328,8 @@ final _w10FindLimperRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Tap the seat that limped.",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Track the first call",
+  feedbackReason: "HJ put in 1 BB before a raise. That call is a limp.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2426,8 +2428,9 @@ final _w10UnderbluffSecondRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "A large river bet",
+  feedbackReason:
+      "The pot is 23.5 and a call costs 12. You need 33.8% wins, but AT beats 8% of this bet mix.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2550,8 +2553,9 @@ final _w10OveraggressiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What keeps the weak bets in?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Read the flop bet",
+  feedbackReason:
+      "KJ has top pair and the price is 4/13.5 = 29.6%. The earlier weak bets give you a sound reason to keep bluffs in.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Read the flop bet",
@@ -2663,8 +2667,9 @@ final _w10PlayerTypeRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What keeps a player tag useful?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Keep a useful read",
+  feedbackReason:
+      "Fresh hands can confirm or change the tag. This keeps a costly old read from shaping new pots.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2714,7 +2719,7 @@ final _w10OneLeverIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "A foe calls nine of ten bets. What is the risk?",
-  feedbackTitle: '',
+  feedbackTitle: "Pick one change",
   feedbackReason:
       "A pure bluff needs folds. Nine calls in ten bets leave few wins without showdown.",
   teachingSteps: const [
@@ -2739,8 +2744,9 @@ final _w10VsNitOpenWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Open or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Three seats behind",
+  feedbackReason:
+      "The three players fold together 88%. Your small steal earns 1.08 BB on average under this read.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2825,8 +2831,9 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which size earns most from that read?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Pick a flop size",
+  feedbackReason:
+      "A 3 BB bet can get calls from 7x and weaker kings. That earns more than checking when those hands pay often.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2943,8 +2950,9 @@ final _w10VsStickyDefenderTightenStealsRunner = _w7FormatPressureIntroRunner.cop
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Open or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Read who calls",
+  feedbackReason:
+      "72o is Weak in the CO chart. Three sticky players behind you make a weak 2 BB steal lose much of its fold value.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3029,8 +3037,9 @@ final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWi
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which size earns most from that read?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Value on the flop",
+  feedbackReason:
+      "Bet 3 BB. With AJ, you get more from sevens and weak jacks than at 2 BB. If the calls, folds or raises with each hand change, the best size can change too.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3147,8 +3156,9 @@ final _w10IsolateLimperBbRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Check or raise?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Raise from BB",
+  feedbackReason:
+      "ATs is ahead of many weak aces and kings that SB calls with. Raising can win more when SB calls.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Raise from BB",
@@ -3250,8 +3260,9 @@ final _w10StationNoBluffRiverARunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Bluff or check?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Ace-high on the river",
+  feedbackReason:
+      "BB folds just 10%. A 3 BB bluff needs 22.2% folds with no win at showdown. Your ace-high can beat the weak missed cards by checking.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3361,8 +3372,9 @@ final _w10OneLeverRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What should set the bet plan?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Pick a bet plan",
+  feedbackReason:
+      "Those facts show what the bet may gain and what it may cost.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3412,7 +3424,7 @@ final _w10ExploitGuardrailsIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "A river call is 5 into 10. What is its price?",
-  feedbackTitle: '',
+  feedbackTitle: "Check the read",
   feedbackReason: "Call 5 into a 10 BB pot now. Final pot 15 BB: 5/15 = 33.3%.",
   teachingSteps: const [
     Act0TeachingStepV1(
@@ -3435,8 +3447,9 @@ final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Facing a river bet",
+  feedbackReason:
+      "QJ beats the missed draws 55% of the time. A call costs 10 into a final pot of 34.5, so it needs 29.0% wins.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3573,8 +3586,9 @@ final _w10UnderbluffFoldMoreRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "River range",
+  feedbackReason:
+      "KQ beats the missed QJ but loses to the 90% value group. The call needs 31.7% wins, far above 10%.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3697,8 +3711,9 @@ final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What size fits the read?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "One shown bluff",
+  feedbackReason:
+      "AQs is Strong from HJ. The one BB bluff does not call for a new size or a loose stack-off plan.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3732,7 +3747,7 @@ final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "AQs is strong, but shoving 52 BB to win a 1.5 BB pot gives strong hands a big chance to win your stack.",
+          "AQs is strong, but going all-in with 52 BB to win a 1.5 BB pot gives strong hands a big chance to win your stack.",
     ),
   ],
   sizingConfig: const Act0SizingConfigV1(
@@ -3805,8 +3820,9 @@ final _w10TopPairTurnRaiseRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "The turn raise",
+  feedbackReason:
+      "You need 15/50.5 = 29.7% equity to call. AJ is behind the sets and two pair seen in BB turn raises.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "The turn raise",
@@ -3846,7 +3862,7 @@ final _w10TopPairTurnRaiseRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "BB rarely raises worse hands. Shoving the rest of your stack with AJ puts many more chips in against better hands.",
+          "BB rarely raises worse hands. Going all-in with AJ commits the rest of your stack against better hands.",
     ),
   ],
 
@@ -3945,8 +3961,8 @@ final _w10FindTurnRaiserRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Tap the seat that raised the turn.",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Find the turn raise",
+  feedbackReason: "BB raised to 20 BB after the 5 BB turn bet.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4081,8 +4097,9 @@ final _w10StationNoBluffRiverRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Bluff or check?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "River choice",
+  feedbackReason:
+      "An 8 BB bluff into 10.5 needs 43.2% folds. CO folds 20%, so it costs chips.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4190,8 +4207,9 @@ final _w10OutsAndTurnPriceRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which call read fits?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "A draw and a price",
+  feedbackReason:
+      "A heart that pairs the king or deuce gives BTN a full house. Seven hearts win, about 15.9%. You pay 2 BB for a final pot of 14.5 BB, a 13.8% price.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A draw and a price",
@@ -4318,8 +4336,9 @@ final _w10ExploitGuardrailsRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What should stop a rushed call?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Read the price",
+  feedbackReason:
+      "If your hand wins less often than the call price needs, the call loses chips.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4369,7 +4388,7 @@ final _w10CheckpointIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What is the key check on a call?",
-  feedbackTitle: '',
+  feedbackTitle: "Read the whole hand",
   feedbackReason:
       "The pot sets the price. The bet range tells you how much of it your hand can beat.",
   teachingSteps: const [
@@ -4393,8 +4412,8 @@ final _w10RiverPriceCheckRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What share of the final pot is the call?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "River call price",
+  feedbackReason: "6 BB goes in a final pot of 24 BB. That is one in four.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4444,8 +4463,9 @@ final _w10CheckpointTagLineRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you enter?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "The limper in HJ",
+  feedbackReason:
+      "99 is a Medium BTN hand. The raise can isolate HJ, who calls with smaller pairs and weak cards.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4544,8 +4564,9 @@ final _w10CheckpointLeverLineRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Raise or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Read the big blind",
+  feedbackReason:
+      "The BB fold rate makes this steal worth 0.90 x 1.5 - 0.10 x 1.5 = 1.20 BB from this point.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4632,8 +4653,9 @@ final _w10CheckpointGuardrailLineRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Facing a turn raise",
+  feedbackReason:
+      "The call costs 12 into a final pot of 41.5, or 28.9%. KQ is far behind the shown sets and two pair.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4667,7 +4689,7 @@ final _w10CheckpointGuardrailLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "A 40.5 BB turn shove means adding 36.5 after your 4 BB bet. It risks more against HJ turn raises that have shown strong hands.",
+          "A 40.5 BB turn all-in means adding 36.5 after your 4 BB bet. It risks more against HJ turn raises that have shown strong hands.",
     ),
   ],
 
@@ -4766,8 +4788,9 @@ final _w10TableAdjustmentNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "River check and bet",
+  feedbackReason:
+      "QT wins against 50% missed draws. The 9 BB call needs 30.0% wins in the 30 BB final pot.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4891,8 +4914,9 @@ final _world10PlayerAdjustmentCheckpointRunner = _w7FormatPressureIntroRunner.co
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Bet or check?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Last street choice",
+  feedbackReason:
+      "A 8 BB pure bluff needs 8/19.5 = 41.0% folds. BTN folds just 15%. Checking saves the chips.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(

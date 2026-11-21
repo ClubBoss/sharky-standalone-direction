@@ -39,7 +39,7 @@
     "21.duplicate_wrong_reason": 592,
     "22.bet_into_pot": 30,
     "23.pot_with_bet": 6,
-    "24.call_equity": 29,
+    "24.call_equity": 33,
     "25.street_stack": 26
   },
   "findings": [

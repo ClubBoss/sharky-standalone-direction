@@ -267,7 +267,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {9: 23, 10: 22});
+    expect(taskCounts, {9: 23, 10: 31});
   });
 
   test('every W11–W12 task projects to its authored topic', () {

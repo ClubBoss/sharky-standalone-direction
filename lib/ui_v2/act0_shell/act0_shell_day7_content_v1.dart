@@ -2179,7 +2179,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "Shoving 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.",
+                "Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_2_bb",
@@ -2565,7 +2565,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "BB rarely raises a weak hand. A shove risks the rest of your stack into a range that beats top pair.",
+                "BB rarely raises a weak hand. An all-in risks the rest of your stack into a range that beats top pair.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
@@ -2831,7 +2831,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "Shoving 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.",
+                "Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.",
           ),
         ],
         feedbackTitle: '',

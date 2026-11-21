@@ -5146,7 +5146,7 @@ SIZES: 2 BB 1.3333333333333333 | 3 BB 2.0 | 52 BB 34.666666666666664
   + [correct] Raise to 2 BB — Correct. AQs is Strong from HJ. The one BB bluff does not call for a new size or a loose stack-off plan.
   - [suboptimal] Raise to 3 BB — Look again. AQs can open, but the one wild bluff gives no sound reason to spend 1 BB more before the flop.
     BETTER ANSWER: Raise to 2 BB
-  - [wrong] All-in to 52 BB — Look again. AQs is strong, but shoving 52 BB to win a 1.5 BB pot gives strong hands a big chance to win your stack.
+  - [wrong] All-in to 52 BB — Look again. AQs is strong, but going all-in with 52 BB to win a 1.5 BB pot gives strong hands a big chance to win your stack.
     BETTER ANSWER: Raise to 2 BB
 
 TASK w10_top_pair_turn_raise [drill] The turn raise
@@ -5160,7 +5160,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] Call 15 BB — Look again. AJ is top pair, not a set. Calling 15 BB against this strong turn raise risks more chips with few winning river cards.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. You need 15/50.5 = 29.7% equity to call. AJ is behind the sets and two pair seen in BB turn raises.
-  - [wrong] All-in to 55 BB — Look again. BB rarely raises worse hands. Shoving the rest of your stack with AJ puts many more chips in against better hands.
+  - [wrong] All-in to 55 BB — Look again. BB rarely raises worse hands. Going all-in with AJ commits the rest of your stack against better hands.
     BETTER ANSWER: Fold
 
 TASK w10_find_turn_raiser [drill] Find the turn raise
@@ -5277,7 +5277,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · C
   + [correct] Fold — Correct. The call costs 12 into a final pot of 41.5, or 28.9%. KQ is far behind the shown sets and two pair.
   - [wrong] Call 12 BB — Look again. KQ is top pair, not a set. HJ has shown strong hands on turn raises. Calling 12 BB buys little chance to win.
     BETTER ANSWER: Fold
-  - [wrong] All-in to 40.5 BB — Look again. A 40.5 BB turn shove means adding 36.5 after your 4 BB bet. It risks more against HJ turn raises that have shown strong hands.
+  - [wrong] All-in to 40.5 BB — Look again. A 40.5 BB turn all-in means adding 36.5 after your 4 BB bet. It risks more against HJ turn raises that have shown strong hands.
     BETTER ANSWER: Fold
 
 TASK w10_checkpoint_table_notice [drill] River check and bet
@@ -7725,7 +7725,7 @@ SEATS: UTG folded stack 54 BB | HJ folded stack 61 BB | CO Ah Kh stack 60 BB | B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [suboptimal] Raise to 4 BB — Look again. AKs can open for value, but the one BTN bluff gives no sound reason to pay 2 BB more before the flop.
     BETTER ANSWER: Raise to 2 BB
-  - [wrong] All-in to 60 BB — Look again. Shoving 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.
+  - [wrong] All-in to 60 BB — Look again. Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.
     BETTER ANSWER: Raise to 2 BB
   + [correct] Raise to 2 BB — Correct. AKs is Premium in CO. One BTN bluff is not enough to change the 2 BB open or set a new trap.
 
@@ -7771,7 +7771,7 @@ SEATS: UTG folded stack 58 BB | HJ Ad Qd stack 53.5 BB bet 4 BB | CO folded stac
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 2.5 BB · Flop: BB checks · HJ bets 2 BB · BB calls 2 BB · Turn: BB checks · HJ bets 4 BB · Turn: BB raises to 15 BB
   - [wrong] Call 11 BB — Look again. AQ is top pair but not two pair. The strong turn range gives you too few clean river outs for 27.8%.
     BETTER ANSWER: Fold
-  - [wrong] All-in to 57.5 BB — Look again. BB rarely raises a weak hand. A shove risks the rest of your stack into a range that beats top pair.
+  - [wrong] All-in to 57.5 BB — Look again. BB rarely raises a weak hand. An all-in risks the rest of your stack into a range that beats top pair.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. Calling costs 11 into 39.5, or 27.8%. AQ is behind the shown two pair and sets on Q-9-4-3.
 
@@ -7807,5 +7807,5 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [suboptimal] Raise to 4 BB — Look again. AKs can open for value, but the one BTN bluff gives no sound reason to pay 2 BB more before the flop.
     BETTER ANSWER: Raise to 2 BB
   + [correct] Raise to 2 BB — Correct. AKs is Premium in CO. One BTN bluff is not enough to change the 2 BB open or set a new trap.
-  - [wrong] All-in to 60 BB — Look again. Shoving 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.
+  - [wrong] All-in to 60 BB — Look again. Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.
     BETTER ANSWER: Raise to 2 BB

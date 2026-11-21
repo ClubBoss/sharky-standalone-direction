@@ -153,26 +153,13 @@ void main() {
     };
     const w10HypotheticalIds = <String>{
       'w10_player_type_intro',
-      'w10_nit_tag',
-      'w10_loose_passive_tag',
-      'w10_overaggressive_tag',
       'w10_player_type_recap',
       'w10_one_lever_intro',
-      'w10_vs_nit_open_wider',
-      'w10_vs_caller_value_heavier',
-      'w10_vs_sticky_defender_tighten_steals',
       'w10_one_lever_recap',
       'w10_guardrails_intro',
-      'w10_overbluff_punish',
-      'w10_underbluff_fold_more',
-      'w10_guardrail_sample_size',
       'w10_guardrails_recap',
       'w10_checkpoint_intro',
-      'w10_checkpoint_tag_line',
-      'w10_checkpoint_lever_line',
-      'w10_checkpoint_guardrail_line',
-      'w10_checkpoint_table_notice',
-      'w10_checkpoint_review',
+      'w10_river_price_check',
     };
     const w11HypotheticalIds = <String>{
       'w11_session_plan_intro',
@@ -292,8 +279,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(397));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
+    expect(tasks, hasLength(406));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(406));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -308,7 +295,7 @@ void main() {
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId),
       ),
-      hasLength(368),
+      hasLength(377),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -336,7 +323,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(48));
-    expect(explanationIds, hasLength(81));
+    expect(explanationIds, hasLength(68));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -529,8 +516,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 247);
-    expect(played, 275); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 269);
+    expect(played, 297); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
@@ -579,6 +566,30 @@ void main() {
       'your_first_hand_river',
       'your_first_hand_action_trail',
       'w9_bubble_table_risk_transfer',
+      // W10 source histories with recorded contributions and stacks.
+      'w10_nit_tag',
+      'w10_loose_passive_tag',
+      'w10_find_limper',
+      'w10_underbluff_second',
+      'w10_overaggressive_tag',
+      'w10_vs_nit_open_wider',
+      'w10_vs_caller_value_heavier',
+      'w10_vs_sticky_defender_tighten_steals',
+      'w10_table_value_vs_caller_transfer',
+      'w10_isolate_limper_bb',
+      'w10_station_no_bluff_river_a',
+      'w10_overbluff_punish',
+      'w10_underbluff_fold_more',
+      'w10_guardrail_sample_size',
+      'w10_top_pair_turn_raise',
+      'w10_find_turn_raiser',
+      'w10_station_no_bluff_river',
+      'w10_outs_and_turn_price',
+      'w10_checkpoint_tag_line',
+      'w10_checkpoint_lever_line',
+      'w10_checkpoint_guardrail_line',
+      'w10_checkpoint_table_notice',
+      'w10_checkpoint_review',
       for (final task in _world5To8Tasks())
         if (task.runner.table.scope == Act0TableScopeV1.playedHand &&
             (task.runner.table.activeSeatId ?? '').isNotEmpty)
