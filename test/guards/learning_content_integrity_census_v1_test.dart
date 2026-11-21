@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
     show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
+import '../support/act0_w3_catalog_contract_v1.dart';
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
 
@@ -852,9 +853,9 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(309));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(309));
-    expect(allChoices, hasLength(511));
+    expect(rows, hasLength(315));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(315));
+    expect(allChoices, hasLength(558));
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
         .toList();
@@ -922,7 +923,7 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(477));
+    expect(foundationDefaults, hasLength(524));
     expect(unknown, hasLength(10));
     expect(
       admitted.length +
@@ -958,6 +959,7 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
           if (task.taskId != 'first_table_guide_shared_cards_repair' &&
               (!historical ||
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
+                      !w3NewChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==
@@ -968,10 +970,12 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
               task,
               omittedChoiceId: historical
                   ? q3AppendedChoicesV1[task.taskId] ??
-                        w2AppendedWrongChoicesV1[task.taskId]
+                        w2AppendedWrongChoicesV1[task.taskId] ??
+                        w3AppendedWrongChoicesV1[task.taskId]
                   : null,
               historicalChoices: historical
-                  ? preW2ReasonChoicesV1[task.taskId]
+                  ? preW2ReasonChoicesV1[task.taskId] ??
+                        preW3ReasonChoicesV1[task.taskId]
                   : null,
             ),
 ];
