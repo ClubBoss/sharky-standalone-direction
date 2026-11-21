@@ -31,6 +31,19 @@ final rulesCheckCatalogTasks = [
     ),
 ];
 
+final day7CatalogTasks = [
+  for (final entry in act0NewReviewTasksV1)
+    (
+      world: Act0ShellStateV1.sample.worldById(entry.worldId),
+      lesson: Act0ShellStateV1.sample.lessonById(entry.lessonId),
+      task: entry.task,
+      lessonIndex: Act0ShellStateV1.sample
+          .worldById(entry.worldId)
+          .lessons
+          .indexWhere((lesson) => lesson.lessonId == entry.lessonId),
+    ),
+];
+
 String catalogQuestion(Act0LessonTaskV1 task) =>
     (act0IsPrechoiceAssessmentTaskV1(task)
         ? act0PrechoiceNeutralQuestionByTaskIdV1[task.taskId]
@@ -110,12 +123,18 @@ Iterable<String> _section(Iterable<CatalogTask> rows) sync* {
           ' =====';
       yield '';
     }
+    final reviewFamily = act0NewReviewConceptFamilyV1(
+      row.world.worldId,
+      row.lesson.lessonId,
+      task.taskId,
+    );
     yield 'TASK ' +
         task.taskId +
         ' [' +
         task.phase.name +
         '] ' +
         catalogTitle(task);
+    if (reviewFamily != null) yield 'DAY 7 FAMILY: $reviewFamily';
     if (task.entryPhase != task.phase) yield 'ENTRY: ${task.entryPhase.name}';
     if (catalogTitle(task) != task.title) yield 'AUTHORED TITLE: ' + task.title;
     final summary = task.summary;
@@ -213,5 +232,8 @@ String renderCatalogSnapshot() =>
       '===== W1 RULES CHECK =====',
       '',
       ..._section(rulesCheckCatalogTasks),
+      '===== DAY 7 REVIEW-ONLY TASKS · ZERO XP =====',
+      '',
+      ..._section(day7CatalogTasks),
     ].join('\n').trimRight() +
     '\n');

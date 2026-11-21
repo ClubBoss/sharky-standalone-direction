@@ -8,6 +8,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runti
 import 'act0_w1_rules_check_v1.dart';
 
 part 'act0_shell_review_tasks_v1.dart';
+part 'act0_shell_day7_review_v1.dart';
+part 'act0_shell_day7_content_v1.dart';
 
 enum Act0ShellTabV1 { home, learn, play, review, profile }
 

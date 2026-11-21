@@ -359,11 +359,21 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
     option: option,
     taskFamily: task.resolvedTaskFamily,
   );
-  if (receipt == null || receipt.skillAtomId.trim().isEmpty) return null;
+  final reviewConceptFamily = act0NewReviewConceptFamilyV1(
+    worldId,
+    lessonId,
+    task.taskId,
+  );
+  final skillAtomId = receipt?.skillAtomId ?? reviewConceptFamily;
+  final conceptFamilyId = reviewConceptFamily ?? receipt?.sourceSignalId;
+  if (skillAtomId == null ||
+      skillAtomId.trim().isEmpty ||
+      conceptFamilyId == null)
+    return null;
   return Act0CurrentAuthoredSourceProofV1(
     fingerprint: fingerprint,
-    skillAtomId: receipt.skillAtomId,
-    conceptFamilyId: receipt.sourceSignalId,
+    skillAtomId: skillAtomId,
+    conceptFamilyId: conceptFamilyId,
     isCurrentlyCorrect: act0RunnerOptionIsAuthoredCorrectV1(option),
   );
 }
@@ -443,8 +453,14 @@ Act0LearningEvidenceHistoryV1 act0CompleteCurrentAuthoredEvidenceV1(
     // Even a stale/removed choice can invalidate current proof for this task.
     // Resolve its possible current families independently of the stored family.
     final task = _resolveTask(record.worldId, record.lessonId, record.taskId);
+    final reviewConceptFamily = act0NewReviewConceptFamilyV1(
+      record.worldId,
+      record.lessonId,
+      record.taskId,
+    );
     final taskFamilies = <String>{
-      if (task != null)
+      if (reviewConceptFamily != null) reviewConceptFamily,
+      if (task != null && reviewConceptFamily == null)
         for (final option in task.runner.options)
           if (act0FirstValueSkillReceiptForRunnerV1(
                 runner: task.runner,
