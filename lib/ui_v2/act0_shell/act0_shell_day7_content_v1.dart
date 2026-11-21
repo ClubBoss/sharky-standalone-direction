@@ -1203,4 +1203,168 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.',
   ),
+  // W11 fresh hands.
+  _day7ExampleV1(
+    11,
+    'session_plan_basics',
+    'misread_real_play_process',
+    _day7PostflopV1('bb', 'As 8d', 'Ah 6c 2s', betBb: 2),
+    question:
+        'Your goal is to read the price. What should you log about this hand?',
+    choices: const [
+      'The price you faced',
+      'The mean size of each stack',
+      'Where the dealer chip sits',
+    ],
+    correct: 0,
+    reason:
+        'Use HJ’s decision as a chance to log this call price. That matches the goal you set before you sat.',
+  ),
+  _day7ExampleV1(
+    11,
+    'table_trigger_reads',
+    'misread_real_play_process',
+    _day7PostflopV1('bb', '9s 8s', 'Th 7d 3c', betBb: 2),
+    question:
+        'HJ made this small flop bet three times in a row. What should you track next?',
+    choices: const [
+      'A new plan for the whole table',
+      'Which hands HJ shows after this bet',
+      'What HJ did hands ago with a large bet',
+    ],
+    correct: 1,
+    reason:
+        'This repeat gives you a pattern to test. A show of cards after a small flop bet helps you check what it means.',
+  ),
+  _day7ExampleV1(
+    11,
+    'table_trigger_reads',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Kc 8h', 'Ks 7d 4s'),
+    question: 'Which made hand do your cards give you?',
+    choices: const [
+      'Top two pair',
+      'Two pair, kings and eights',
+      'Top pair, kings',
+    ],
+    correct: 2,
+    reason:
+        'Only the king at your seat pairs with the board. The eight is your spare card.',
+  ),
+  _day7ExampleV1(
+    11,
+    'table_trigger_reads',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Ad 4d', 'Ts 8h 3c', betBb: 3, showTurn: true),
+    question: 'How much must BB add to stay in this hand?',
+    choices: const ['3 BB', '5.5 BB', '8.5 BB'],
+    correct: 0,
+    reason: 'HJ bet 3 BB on the flop. That is the part you must match.',
+  ),
+  _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'misread_real_play_process',
+    _day7PostflopV1('bb', 'Jh 9h', 'Jd 7s 3c 2h', betBb: 4),
+    question:
+        'You called too fast. What should you keep for tomorrow’s review?',
+    choices: const [
+      'How long you sat',
+      'The hand and what the turn call cost',
+      'Just the last card',
+    ],
+    correct: 1,
+    reason:
+        'Write down this board and the 4 BB bet. You can use the full spot to check your call next time.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'misread_real_play_process',
+    _day7PostflopV1('co', 'Ac Jd', 'Ah 8c 4d 3s', betBb: 4),
+    question:
+        'This hand comes after two loose calls. What is the best check on your plan?',
+    choices: const [
+      'Recall the size of each loss',
+      'Switch to a new plan mid-hand',
+      'Read this price before you act',
+    ],
+    correct: 2,
+    reason:
+        'The new 4 BB bet needs its own read. Use the plan you set and save the past calls for review.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', 'Qh Td', 'Qs 9s 5c 3d'),
+    question: 'What is your made hand on the turn?',
+    choices: const ['A pair of queens', 'A straight', 'A pair of tens'],
+    correct: 0,
+    reason:
+        'Your queen pairs with the queen on the board. The ten does not pair.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'big_blind',
+    _day7PostflopV1('bb', 'Kc 9s', 'Kh 6h 4d'),
+    question: 'You and HJ are the sole live seats. Who acts first on the flop?',
+    choices: const ['HJ', 'BB', 'BTN'],
+    correct: 1,
+    reason:
+        'BB is the first live seat to the left of the Button. HJ acts after BB.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'board_cards',
+    _day7PostflopV1('co', 'Js Tc', '9c 8s 7d'),
+    question: 'Which board card is at the low end of your best straight?',
+    choices: const ['The nine', 'The eight', 'The seven'],
+    correct: 2,
+    reason: 'Use seven through jack. The seven is the first card in that run.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Ah 9h', 'Kh 7d 4s Qh', betBb: 2, showTurn: true),
+    question: 'What is the cost to see the last card?',
+    choices: const ['2 BB', '5.5 BB', '7.5 BB'],
+    correct: 0,
+    reason: 'The turn bet is 2 BB. Match that bet to see the river.',
+  ),
+  _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'board_cards',
+    _day7PostflopV1('bb', 'Ad 5d', 'Kh 9c 4s 2d'),
+    question: 'You are saving this hand for review. Which card was the turn?',
+    choices: const ['The four', 'The two', 'The king'],
+    correct: 1,
+    reason:
+        'The flop is the first three cards. Save 2d as the fourth card so you can replay the same choice.',
+  ),
+  _day7ExampleV1(
+    11,
+    'session_plan_basics',
+    'pot_to_call',
+    _day7PreflopV1('hj', 'Ah Td', showTurn: true),
+    question: 'UTG folded. How much would a limp cost from HJ in this hand?',
+    choices: const ['0.5 BB', '1 BB', '1.5 BB'],
+    correct: 1,
+    reason: 'You have posted no blind. A limp matches the 1 BB big blind.',
+  ),
+  _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Kc Jd', 'Ks 9c 4s 8d', betBb: 5, showTurn: true),
+    question: 'Which price should you write down to review your turn call?',
+    choices: const ['5.5 BB', '10.5 BB', '5 BB'],
+    correct: 2,
+    reason:
+        'The turn bet costs 5 BB to match. The 10.5 BB in the pot is what you stand to win before calling.',
+  ),
 ];

@@ -4,10 +4,6 @@
       "btn_count": 22,
       "table_tasks": 22
     },
-    "world_11": {
-      "btn_count": 21,
-      "table_tasks": 21
-    },
     "world_12": {
       "btn_count": 20,
       "table_tasks": 22
@@ -37,22 +33,21 @@
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 200,
     "13.intro_over_100_words": 85,
-    "14.duplicate_theory_in_lesson": 231,
-    "15.internal_jargon": 397,
-    "16.extreme_wrong_option": 320,
-    "17.single_format_lesson": 48,
+    "14.duplicate_theory_in_lesson": 232,
+    "15.internal_jargon": 409,
+    "16.extreme_wrong_option": 332,
+    "17.single_format_lesson": 50,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 67,
     "20.hero_qq_per_world": 29,
-    "21.duplicate_wrong_reason": 552,
+    "21.duplicate_wrong_reason": 576,
     "22.bet_into_pot": 26,
     "23.pot_with_bet": 6,
     "24.call_equity": 21,
-    "25.street_stack": 26
+    "25.street_stack": 27
   },
   "findings": [
     "11.btn_share_per_world|world_10",
-    "11.btn_share_per_world|world_11",
     "11.btn_share_per_world|world_12",
     "11.btn_share_per_world|world_4",
     "11.btn_share_per_world|world_5",
@@ -141,7 +136,6 @@
     "17.single_format_lesson|what_poker_is_content|statement",
     "18.same_format_streak|world_10|w10_guardrail_sample_size|statement",
     "18.same_format_streak|world_10|w10_nit_tag|statement",
-    "18.same_format_streak|world_11|w11_trigger_bad_price_fold|statement",
     "18.same_format_streak|world_1|actions_theory|actionDecision",
     "18.same_format_streak|world_1|positions_theory|seatTap",
     "18.same_format_streak|world_1|what_poker_is_pot_stack|statement",

@@ -586,6 +586,7 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+      _w11_plan_hj_open,
       Act0LessonTaskV1(
         taskId: 'w11_plan_avoid_overload',
         title: 'Avoid overload plan',
@@ -603,6 +604,8 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
+      _w11_bankroll_set_limit,
+      _w11_bankroll_move_down,
       Act0LessonTaskV1(
         taskId: 'w11_session_plan_recap',
         title: 'Session-plan recap',
@@ -667,6 +670,9 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
+      _w11_sb_ajo_vs_btn,
+      _w11_sb_kjo_vs_btn,
+      _w11_bb_72o_vs_hj,
       Act0LessonTaskV1(
         taskId: 'w11_trigger_recap',
         title: 'Trigger recap',
@@ -713,6 +719,8 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+      _w11_multiway_turn_fold,
+      _w11_checkpoint_short_spr,
       Act0LessonTaskV1(
         taskId: 'w11_review_loop_recap',
         title: 'Review-habit recap',
@@ -739,7 +747,16 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         taskId: 'w11_checkpoint_intro',
         title: 'Session cycle map',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w11SessionPlanIntroRunner,
+        runner: _w11SessionPlanIntroRunner.copyWith(
+          caption: 'Pick one goal.',
+          question: 'What will you work on?',
+          teachingSteps: const [
+            Act0TeachingStepV1(
+              title: 'Before you play',
+              body: 'Pick one skill. Check it again after play.',
+            ),
+          ],
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -777,6 +794,10 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
+      _w11_multiway_first_seat,
+      _w11_checkpoint_spr,
+      _w11_checkpoint_turn_price,
+      _w11_checkpoint_multiway_value,
       Act0LessonTaskV1(
         taskId: 'w11_checkpoint_review',
         title: 'Real-play recap',
