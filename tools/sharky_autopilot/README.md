@@ -203,3 +203,77 @@ task under exactly the same resource and quota/stop discipline. After M3C,
 a bounded write-capable implementation lane requires independent QA and
 existing product authority. Do not increase PR count for trivial substeps.
 Measure end-to-end acceptance time and owner intervention, not mere launches.
+
+
+## M3C one-shot unattended subscription Codex READ-ONLY (2026-11-02)
+
+M3C combines the admitted M2C/M3A fixed read-only subscription Codex
+probe and the M3B macOS RunAtLoad launch. Its only model task returns the
+fixed `SHARKY_M3C_UNATTENDED_READONLY_QUEUE_OK` marker. It is explicitly
+owner-admitted to a dedicated one-attempt task, exact infra branch/base,
+the same SQLite single-host exclusive resource, and 0 incremental spend.
+No arbitrary prompts, task payloads, coding or product permissions.
+
+`m3c_autostart_probe.py --prepare` creates only a private launchd
+configuration; it does not execute or register it. Only after independent
+review should an operator bootstrap that exact plist into the user's
+`gui/<uid>` launchd domain once, inspect persisted SQLite proof and
+stop-receipt, and boot it out. The job has RunAtLoad=true, KeepAlive=false,
+and no recurring schedule, cron or restart policy. The Codex command
+uses fixed `gpt-5.6-luna`, LOW, `read-only`, `--ephemeral`,
+empty temporary directory, exact marker, bounded timeout, no GitHub
+tokens or paid API fallback. The single failed model attempt is
+consumed. On uncertain stop the ACTIVE lease is retained and no retry
+is allowed. On any completed attempt (including model failure)
+a second call yields NOOP/model_calls=0.
+
+M3C is NOT persistent autonomous source development. Actual code-writing
+and independent QA require a new owner-admitted M4 gate and strict
+one-writer authority. No product DoD/learner retention/SHARKY_100 claims.
+The Mac must remain awake for launchd to run. Subscription remaining quota
+is not guaranteed by an earlier login or one successful call.
+
+### M3C.R1 bounded non-secret failure classification (2026-11-02)
+
+The first real unattended M3C invocation on macOS returned STOP_FAILED after
+the 70-second limit. The persisted task was STOPPED after one attempt and
+its lease CLOSED; the launchd job was unregistered. Interactive and launchd
+Codex login-status diagnostics both passed, but the actual root cause remains
+UNKNOWN. Neither result grants another model attempt or product DoD.
+
+The candidate R1 change retains only exit_code, elapsed_seconds, timed_out and
+a fixed failure_class enum (NONE, TIMEOUT, NONZERO_EXIT, MISSING_OUTPUT,
+OUTPUT_TOO_LARGE, MARKER_MISMATCH, OUTPUT_READ_ERROR) in the private receipt.
+It does not capture stdout, stderr, prompt, user content, credentials or
+model responses. A failure still consumes the once-only task; uncertain OS
+stop still leaves the ACTIVE lease and raises. This patch adds observation
+for a separately admitted future proof, NOT recovery/retry of consumed M3C.
+Do not merge PR #363 as M3C runtime PASS until real independent proof exists.
+
+### M3C.R2 one owner-admitted diagnostic attempt (2026-11-02)
+
+The previous M3C one-shot 70-second STOP_FAILED remains in the SAME
+SQLite database at ~/Sharky_Autopilot_Pilot/m3c_state/codex-readonly-once.sqlite3.
+It is NOT reinitialized/reopened as a new job and cannot be retried.
+R2 is a distinct, fixed source-owned task M3C_R2_TASK with a separate
+owner-admission constant, same repo branch/base and exclusive resource,
+one attempt maximum, zero paid spend and fixed Codex read-only LOW marker.
+R2 admission requires M3C original STOPPED/attempts=1, no active leases.
+
+Only after exact-HEAD independent QA and explicit owner approval,
+--prepare-r2 creates a second one-shot RunAtLoad/KeepAlive=false plist in
+the same private directory. The operator may bootstrap it ONCE to the
+existing macOS GUI domain and must bootout immediately after receipt.
+--run-r2 reuses the same queue, never re-arms or schedules itself.
+R2 Codex receives --json to stdout in a bounded, in-memory pipe and may
+run at most 120s (then SIGKILL to its process group; uncertain stop keeps
+ACTIVE lease). Raw JSONL, stderr and model response are never saved.
+Only known event-kind booleans, a fixed stderr category, a fixed failure
+class, exit code, elapsed seconds and SHA256 stop receipt are retained.
+No prompts/tokens/credentials/user content are recorded. Replaying R2
+after one completed attempt yields NOOP and model_calls=0.
+
+If R2 returns STOP_FAILED, leave M3C and M4 as HOLD and do not create
+another model retry without a newly accepted diagnosis. Even PASS_SCOPED
+proves only the unattended read-only test, not real code-writing or
+learner-product acceptance. Keep protected PR #224/product PR #355 untouched.
