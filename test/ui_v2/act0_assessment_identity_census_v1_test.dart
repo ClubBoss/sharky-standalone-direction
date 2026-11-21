@@ -29,8 +29,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(378));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(378));
+    expect(tasks, hasLength(380));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(380));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -93,7 +93,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(378));
+    expect(entries, hasLength(380));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -146,11 +146,16 @@ void main() {
       entries.where((row) => w7AppliedTaskIdsV1.contains(row[2])),
       hasLength(8),
     );
+    expect(
+      entries.where((row) => w4MinRaiseTaskIdsV1.contains(row[2])),
+      hasLength(2),
+    );
     final legacyEntries = entries
         .where(
           (row) =>
               !_asm05NewTaskIds.contains(row[2]) &&
               !w7AppliedTaskIdsV1.contains(row[2]) &&
+              !w4MinRaiseTaskIdsV1.contains(row[2]) &&
               row[2] != boardRepair,
         )
         .toList(growable: false);
@@ -1785,7 +1790,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(378));
+    expect(taskIndex, hasLength(380));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

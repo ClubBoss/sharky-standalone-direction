@@ -1236,6 +1236,290 @@ final _world4PotBetRunner = _world4SizingIntroRunner.copyWith(
   ),
 );
 
+Act0TableStateV1 _act0W4MinRaisePreflopTableV1() {
+  final heroCards = _act0LessonCardsV1('As Ks');
+  final base = _world4SizingIntroRunner.table;
+  return base.copyWith(
+    streetLabel: 'Preflop',
+    centerLabel: 'Minimum reraise',
+    potLabel: 'Pot 4.5 BB',
+    toCallLabel: 'To call 3 BB',
+    heroSeatId: 'co',
+    activeSeatId: 'co',
+    decisionSeatId: 'co',
+    heroCards: heroCards,
+    boardCards: const <Act0CardStateV1>[],
+    highlightedCardIds: const <String>[],
+    highlightedSeatIds: const <String>['hj', 'co'],
+    autoPlayHistory: false,
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      startingStackBbBySeat: <String, double>{
+        'utg': 100,
+        'hj': 100,
+        'co': 100,
+        'btn': 100,
+        'sb': 100,
+        'bb': 100,
+      },
+      entries: <Act0ContributionV1>[
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+      ],
+    ),
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ raises to 3 BB'),
+    ],
+    seats: <Act0SeatStateV1>[
+      for (final seat in base.seats)
+        _act0CopySeatStateV1(
+          seat,
+          clearCommitment: true,
+          isHero: seat.seatId == 'co',
+          isActive: seat.seatId == 'co',
+          hasActed: seat.seatId == 'utg' || seat.seatId == 'hj',
+          isInHand: seat.seatId != 'utg',
+          isFolded: seat.seatId == 'utg',
+          isLastAggressor: seat.seatId == 'hj',
+          stackLabel: switch (seat.seatId) {
+            'hj' => '97 BB',
+            'sb' => '99.5 BB',
+            'bb' => '99 BB',
+            _ => '100 BB',
+          },
+          bet: switch (seat.seatId) {
+            'sb' => const Act0SeatBetStateV1(
+              kind: Act0SeatBetKindV1.post,
+              label: 'SB',
+              amountLabel: '0.5 BB',
+            ),
+            'bb' => const Act0SeatBetStateV1(
+              kind: Act0SeatBetKindV1.post,
+              label: 'BB',
+              amountLabel: '1 BB',
+            ),
+            'hj' => const Act0SeatBetStateV1(
+              kind: Act0SeatBetKindV1.raise,
+              label: 'HJ',
+              amountLabel: '3 BB',
+            ),
+            _ => null,
+          },
+          holeCards: seat.seatId == 'co' ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: switch (seat.seatId) {
+            'co' => Act0CardsVisibleModeV1.faceUp,
+            'utg' => Act0CardsVisibleModeV1.none,
+            _ => Act0CardsVisibleModeV1.faceDown,
+          },
+        ),
+    ],
+  );
+}
+
+Act0TableStateV1 _act0W4MinRaisePostflopTableV1() {
+  final heroCards = _act0LessonCardsV1('Ah Qd');
+  final boardCards = _act0LessonCardsV1('As 8c 3d');
+  final base = _world4SizingIntroRunner.table;
+  return base.copyWith(
+    streetLabel: 'Flop',
+    centerLabel: 'Minimum raise',
+    potLabel: 'Pot 10.5 BB',
+    toCallLabel: 'To call 4 BB',
+    heroSeatId: 'co',
+    activeSeatId: 'co',
+    decisionSeatId: 'co',
+    heroCards: heroCards,
+    boardCards: boardCards,
+    highlightedCardIds: const <String>[],
+    highlightedSeatIds: const <String>['bb', 'co'],
+    autoPlayHistory: false,
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      startingStackBbBySeat: <String, double>{
+        'utg': 100,
+        'hj': 100,
+        'co': 100,
+        'btn': 100,
+        'sb': 100,
+        'bb': 100,
+      },
+      entries: <Act0ContributionV1>[
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          4,
+        ),
+      ],
+    ),
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 3 BB'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls 3 BB',
+        displayLabel: 'BB calls 2 BB more',
+      ),
+      Act0ActionTrailItemV1(label: 'Flop: BB bets 4 BB'),
+    ],
+    seats: <Act0SeatStateV1>[
+      for (final seat in base.seats)
+        _act0CopySeatStateV1(
+          seat,
+          clearCommitment: true,
+          isHero: seat.seatId == 'co',
+          isActive: seat.seatId == 'co',
+          hasActed: seat.seatId != 'co',
+          isInHand: seat.seatId == 'co' || seat.seatId == 'bb',
+          isFolded: seat.seatId != 'co' && seat.seatId != 'bb',
+          isLastAggressor: seat.seatId == 'bb',
+          stackLabel: switch (seat.seatId) {
+            'co' => '97 BB',
+            'sb' => '99.5 BB',
+            'bb' => '93 BB',
+            _ => '100 BB',
+          },
+          bet: seat.seatId == 'bb'
+              ? const Act0SeatBetStateV1(
+                  kind: Act0SeatBetKindV1.bet,
+                  label: 'BB',
+                  amountLabel: '4 BB',
+                )
+              : null,
+          holeCards: seat.seatId == 'co' ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: switch (seat.seatId) {
+            'co' => Act0CardsVisibleModeV1.faceUp,
+            'bb' => Act0CardsVisibleModeV1.faceDown,
+            _ => Act0CardsVisibleModeV1.none,
+          },
+        ),
+    ],
+  );
+}
+
+final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w4_min_raise_preflop',
+  caption: 'HJ raises to 3 BB over the 1 BB blind. Your turn from CO.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Minimum raise rule.',
+      body:
+          'A legal raise must add at least the size of the last bet or raise. Over a 1 BB blind, a raise to 3 BB adds 2 BB, so the smallest legal reraise is 5 BB total.',
+      focusSeatIds: <String>['bb', 'hj', 'co'],
+      focusLabels: <String>['+2 BB increase', '5 BB minimum'],
+    ),
+  ],
+  hint:
+      'Find how much HJ added above the 1 BB blind, then add at least that much to 3 BB.',
+  question: 'What is the smallest legal reraise total from CO?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'four_bb',
+      label: 'Raise to 4 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise to 5 BB',
+      betterAnswerLabel: 'Raise to 5 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too small to be legal.',
+      feedbackReason:
+          '4 BB adds 1 BB to HJ\'s 3 BB raise, which is below the 2 BB increase from 1 BB to 3 BB, so 4 BB is illegal.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'five_bb',
+      label: 'Raise to 5 BB',
+      isCorrect: true,
+      preferredLabel: 'Raise to 5 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Legal minimum reraise.',
+      feedbackReason:
+          'HJ raised 2 BB over the 1 BB blind (1 BB to 3 BB), so adding 2 BB makes 5 BB the smallest legal reraise.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'six_bb',
+      label: 'Raise to 6 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise to 5 BB',
+      betterAnswerLabel: 'Raise to 5 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Larger than the minimum.',
+      feedbackReason:
+          '6 BB adds 3 BB to HJ\'s 3 BB raise, which is legal but 1 BB larger than the 5 BB minimum reraise.',
+    ),
+  ],
+  table: _act0W4MinRaisePreflopTableV1(),
+);
+
+final _world4MinRaisePostflopRunner = _world4SizingIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w4_min_raise_postflop',
+  caption: 'BB bets 4 BB on the flop into a 6.5 BB pot. Your turn from CO.',
+  teachingSteps: const <Act0TeachingStepV1>[],
+  hint: 'Add at least the size of BB\'s 4 BB bet on top of the 4 BB call.',
+  question:
+      'BB bets 4 BB on the flop. What is the smallest legal raise total from CO?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'six_bb',
+      label: '6 BB',
+      isCorrect: false,
+      preferredLabel: '8 BB',
+      betterAnswerLabel: '8 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too small to be legal.',
+      feedbackReason:
+          '6 BB adds 2 BB to BB\'s 4 BB bet, which is below the 4 BB bet size, so 6 BB is illegal.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'twelve_bb',
+      label: '12 BB',
+      isCorrect: false,
+      preferredLabel: '8 BB',
+      betterAnswerLabel: '8 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Larger than the minimum.',
+      feedbackReason:
+          '12 BB adds 8 BB to BB\'s 4 BB bet, which is legal but 4 BB larger than the 8 BB minimum raise.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'eight_bb',
+      label: '8 BB',
+      isCorrect: true,
+      preferredLabel: '8 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Legal minimum raise.',
+      feedbackReason:
+          'BB bet 4 BB on the flop, so adding 4 BB on top of 4 BB makes 8 BB the smallest legal raise.',
+    ),
+  ],
+  table: _act0W4MinRaisePostflopTableV1(),
+);
+
 final _world4SizingRecapRunner = _world4SizingIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w4_sizing_recap',

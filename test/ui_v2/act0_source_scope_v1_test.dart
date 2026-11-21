@@ -3,7 +3,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
-import '../support/act0_catalog_truth_audit_v1.dart' show w7AppliedTaskIdsV1;
+import '../support/act0_catalog_truth_audit_v1.dart'
+    show w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
 
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)
@@ -275,8 +276,8 @@ void main() {
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
     ];
-    expect(tasks, hasLength(378));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(378));
+    expect(tasks, hasLength(380));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(380));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -285,7 +286,8 @@ void main() {
       tasks.where(
         (task) =>
             !_asm05NewTaskIds.contains(task.taskId) &&
-            !w7AppliedTaskIdsV1.contains(task.taskId),
+            !w7AppliedTaskIdsV1.contains(task.taskId) &&
+            !w4MinRaiseTaskIdsV1.contains(task.taskId),
       ),
       hasLength(368),
     );
@@ -346,7 +348,8 @@ void main() {
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
         if (!_asm05NewTaskIds.contains(task.taskId) &&
-            !w7AppliedTaskIdsV1.contains(task.taskId))
+            !w7AppliedTaskIdsV1.contains(task.taskId) &&
+            !w4MinRaiseTaskIdsV1.contains(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -491,11 +494,12 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 257); // Authored contexts, not certified replay histories.
+    expect(played, 259); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
       ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
+      ...w4MinRaiseTaskIdsV1,
       ...w11ExplicitStreetHistoryIds,
       ...w12ExplicitFlopHistoryIds,
       // The newly authored Call frame now supplies its full blind prefix,

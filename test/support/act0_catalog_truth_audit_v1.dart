@@ -891,3 +891,9 @@ const w7AppliedTaskIdsV1 = <String>{
   'w7_river_two_bluffs_of_six',
   'w7_checkpoint_river_card_excludes_hand',
 };
+
+/// Q11 extends W4 sizing with minimum-raise tasks without replacing legacy IDs.
+const w4MinRaiseTaskIdsV1 = <String>{
+  'w4_min_raise_preflop',
+  'w4_min_raise_postflop',
+};

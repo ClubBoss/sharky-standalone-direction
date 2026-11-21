@@ -677,6 +677,18 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     4,
+    "small_half_pot",
+    "pot_to_call",
+    _day7PostflopV1("co", "Kc Jd", "Kd 7c 2s", betBb: 3),
+    question:
+        "BB bets 3 BB on the flop. What is the smallest legal raise total from CO?",
+    choices: const ["4.5 BB", "6 BB", "9 BB"],
+    correct: 1,
+    reason:
+        "BB bet 3 BB on the flop, so adding 3 BB on top of 3 BB makes 6 BB the smallest legal raise.",
+  ),
+  _day7ExampleV1(
+    4,
     "call_price",
     "pot_to_call",
     _day7PostflopV1("bb", "Jc 9s", "Jd 8h 4s 2c", betBb: 2, showTurn: true),
