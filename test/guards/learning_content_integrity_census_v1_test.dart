@@ -12,9 +12,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart' show w7AppliedTaskIdsV1;
 
-// The legacy signal mapper can no longer read a physical clue from these
-// hypothetical questions. Their current typed repairs are verified separately.
-const _placeholderTableFallbackIds = <String>{
+const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
+
+// The legacy mapper falls back once the unsupported table clue is removed.
+// Current typed repairs are verified separately.
+const _legacyFallbacksWithoutSourceClue = <String>{
+  // This is a played hand with an unknown caller stack.
+  _w9BubbleTableRiskId,
+  // The remaining questions use hypothetical setups.
   'w9_cash_vs_tournament',
   'w9_short_stack_survival',
   'w9_survival_stack_tradeoff',
@@ -256,16 +261,16 @@ void main() {
       );
       expect(
         repairSnapshot['sameSignalMapped'],
-        270 - _placeholderTableFallbackIds.length,
+        270 - _legacyFallbacksWithoutSourceClue.length,
       );
       expect(
         repairSnapshot['fallbackOnly'],
-        22 + _placeholderTableFallbackIds.length,
+        22 + _legacyFallbacksWithoutSourceClue.length,
       );
       expect(repairSnapshot['unresolvedProductGap'], 3);
       expect(
         repairSnapshot['unrecordedFallback'],
-        2 + _placeholderTableFallbackIds.length,
+        2 + _legacyFallbacksWithoutSourceClue.length,
       );
       // The historical comparison restores the old M-ratio price mapping
       // and the intro's old seat mapping. The live rows use their actual goals.
@@ -286,11 +291,11 @@ void main() {
         'sameSignalMapped':
             (repairSnapshot['sameSignalMapped'] as int) +
             priorDeclaredMappings +
-            _placeholderTableFallbackIds.length,
+            _legacyFallbacksWithoutSourceClue.length,
         'fallbackOnly':
             (repairSnapshot['fallbackOnly'] as int) -
             priorDeclaredMappings -
-            _placeholderTableFallbackIds.length,
+            _legacyFallbacksWithoutSourceClue.length,
         'unresolvedProductGap':
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
@@ -303,7 +308,7 @@ void main() {
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
       expect(
         repairSnapshot['unrecordedFallback'],
-        2 + _placeholderTableFallbackIds.length,
+        2 + _legacyFallbacksWithoutSourceClue.length,
       );
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
@@ -438,6 +443,23 @@ void main() {
       expect(intent?.targetLessonId, 'm_ratio_zones_lite');
       expect(intent?.targetTaskId, 'w9_m_ratio_yellow_zone');
       expect(intent?.mappingType, 'repair');
+    }
+  });
+
+  test('W9 bubble repair stays on tournament pressure without a price cue', () {
+    final source = _assessedRows().singleWhere(
+      (row) => row.task.taskId == _w9BubbleTableRiskId,
+    );
+    expect(source.task.runner.table.toCallLabel, isEmpty);
+    final legacy = _declaredRepairRow(source);
+    expect(legacy.fallbackOnly, isTrue);
+    expect(legacy.mappingType, 'exact');
+    for (final choice in source.incorrectOptions) {
+      final intent = _incorrectOptionRow(source, choice).intent;
+      expect(intent?.missedSignalId, 'misread_tournament_pressure');
+      expect(intent?.targetWorldId, 'world_9');
+      expect(intent?.targetTaskId, _w9BubbleTableRiskId);
+      expect(intent?.mappingType, 'intentional_exact');
     }
   });
 
@@ -581,24 +603,24 @@ void main() {
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped),
-      hasLength(272 - _placeholderTableFallbackIds.length),
+      hasLength(272 - _legacyFallbacksWithoutSourceClue.length),
     );
     expect(
       allRepair.where((row) => row.fallbackOnly),
-      hasLength(22 + _placeholderTableFallbackIds.length),
+      hasLength(22 + _legacyFallbacksWithoutSourceClue.length),
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped).length +
           currentGaps.length +
           3 +
-          _placeholderTableFallbackIds.length,
+          _legacyFallbacksWithoutSourceClue.length,
       278,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
           currentGaps.length -
           3 -
-          _placeholderTableFallbackIds.length,
+          _legacyFallbacksWithoutSourceClue.length,
       15 + 1,
     );
     expect(allRepair.where((row) => row.exactReplay), hasLength(17));
@@ -643,7 +665,7 @@ void main() {
       {
         'button_advantage_find_button',
         'w9_m_ratio_table_window_transfer',
-        ..._placeholderTableFallbackIds,
+        ..._legacyFallbacksWithoutSourceClue,
       },
       reason: 'Legacy fallbacks do not stand in for checked typed repairs.',
     );
