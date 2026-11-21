@@ -151,6 +151,7 @@ void main() {
       const frames = <String, (String, double, String)>{
         'w3_play_from_blinds_small_blind_fold': ('sb', 2, 'fold'),
         'w3_play_from_blinds_small_blind_raise': ('sb', 2, 'raise'),
+        'w3_play_from_blinds_small_blind_medium_fold': ('sb', 2, 'fold'),
         'w3_play_from_blinds_big_blind_price': ('bb', 1.5, 'one_five'),
         'w3_play_from_blinds_big_blind_defend': ('bb', 1.5, 'call'),
       };

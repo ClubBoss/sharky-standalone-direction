@@ -3818,7 +3818,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
     title: 'Play from the blinds',
     subtitle: 'Your posted blind changes the price of calling.',
     phaseLabel: 'Blinds',
-    rewardXp: 40,
+    rewardXp: 48,
     sourceTasks: [
       Act0LessonTaskV1(
         taskId: 'intro',
@@ -3892,6 +3892,40 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             ),
           ],
           correct: 0,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'small_blind_medium_fold',
+        title: 'Small blind with a medium hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'Kd Jc',
+          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
+          question: 'What does the small-blind rule say to do with KJo here?',
+          options: const [
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, Medium hands fold.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'KJo is in the Medium group. Against a BTN open from SB, only Premium and Strong hands reraise; folding KJo saves 2 BB out of position with BB still behind.',
+            ),
+            (
+              id: 'raise',
+              label: 'Reraise to 10 BB',
+              reason:
+                  'Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a Medium hand when this rule reserves reraises for Premium and Strong hands.',
+            ),
+          ],
+          correct: 1,
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,

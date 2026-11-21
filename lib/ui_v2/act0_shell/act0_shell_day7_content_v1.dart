@@ -680,7 +680,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     3,
     'w3_play_from_blinds',
     'pot_to_call',
-    _day7PreflopV1('bb', 'Qh 9h', opener: 'btn', openBb: 3.5, showTurn: true),
+    _day7PreflopV1('bb', '8h 3c', opener: 'btn', openBb: 3.5, showTurn: true),
     caption:
         'BTN raises to 3.5 BB and SB folds. Assume you win 28% and face '
         'no later bets. Compare calling with folding.',
@@ -693,7 +693,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'The 2.5 BB call would make a 7.5 BB pot, so you need about 33% '
-        'equity. With 28% in this model, folding saves the extra 2.5 BB.',
+        'equity. With 28% for 83o in this model, folding saves the extra 2.5 BB.',
   ),
   _day7ExampleV1(
     4,

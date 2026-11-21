@@ -4993,13 +4993,14 @@ final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Use the price that is still due.',
       body:
-          'Against one late open, start with a simple small-blind rule: '
-          'fold weak hands and reraise the strongest hands. BB can still '
-          'act behind you. When you are BB and SB folds, your posted 1 BB '
-          'reduces what you owe. If the call ends betting, divide the '
-          'extra call by the final pot after calling. A 1.5 BB call makes '
-          'this pot 5.5 BB, so the price needs about 27% equity, your share '
-          'of the pot from winning or splitting.',
+          'Against one BTN open, use a simple small-blind rule across all '
+          'four starting-chart groups: reraise Premium and Strong hands, '
+          'and fold Medium and Weak hands. BB can still act behind you. '
+          'When you are BB and SB folds, your posted 1 BB reduces what you '
+          'owe. If the call ends betting, divide the extra call by the '
+          'final pot after calling. A 1.5 BB call makes this pot 5.5 BB, '
+          'so the price needs about 27% equity, your share of the pot from '
+          'winning or splitting.',
     ),
   ],
 );

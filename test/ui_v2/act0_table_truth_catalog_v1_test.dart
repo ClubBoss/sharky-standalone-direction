@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 154),
-      ('D3.to_call_completeness', 110),
+      ('D2.pot_feasibility', 155),
+      ('D3.to_call_completeness', 111),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1114,6 +1114,13 @@ void main() {
         'decision',
         ['raise', 'call', 'fold'],
         'raise',
+      ),
+      (
+        'w3_play_from_blinds_small_blind_medium_fold',
+        8,
+        'decision',
+        ['call', 'fold', 'raise'],
+        'fold',
       ),
       (
         'w3_play_from_blinds_big_blind_price',

@@ -149,8 +149,8 @@ void main() {
           case 'sb':
             final group = chart.expected(table, groupOnly: true);
             final expected = switch (group) {
-              'Premium' => 'raise',
-              'Weak' => 'fold',
+              'Premium' || 'Strong' => 'raise',
+              'Medium' || 'Weak' => 'fold',
               _ => null,
             };
             expect(correct.id, expected, reason: task.taskId);
