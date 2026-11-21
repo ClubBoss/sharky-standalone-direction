@@ -12,6 +12,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
       _w1RulesAnswersV1 = <int>[];
       _w1RulesResultV1 = null;
     });
+    _recordBetaActivityV1(Act0BetaMetricsStoreV1.recordRulesCheckStarted);
     _recordW1RulesEventV1('w1_rules_check_started', 1);
   }
 
