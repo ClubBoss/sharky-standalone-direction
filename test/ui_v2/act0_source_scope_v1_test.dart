@@ -305,7 +305,7 @@ void main() {
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
-            !w3NewTaskIds.contains(task.taskId &&
+            !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId),
       ),
       hasLength(368),
@@ -370,7 +370,7 @@ void main() {
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
-            !w3NewTaskIds.contains(task.taskId &&
+            !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
