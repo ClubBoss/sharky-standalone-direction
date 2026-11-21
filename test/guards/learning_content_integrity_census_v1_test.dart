@@ -18,6 +18,7 @@ import '../support/act0_catalog_truth_audit_v1.dart'
         w5AddedOptionQualityV1,
         w7AppliedTaskIdsV1;
 import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_w6_catalog_contract_v1.dart';
@@ -855,32 +856,25 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    final addedRows = rows.where(
-      (row) => w11Wave4ChoiceContractV1.containsKey(row.task.taskId),
-    );
-    expect(
-      addedRows.map((row) => row.task.taskId).toSet(),
-      w11Wave4ChoiceContractV1.keys.toSet(),
-    );
-    final addedWrongChoices = {
-      for (final entry in w11Wave4ChoiceContractV1.entries)
-        for (final [choiceId, _, correct, _, _] in entry.value.$2)
-          if (correct == false)
-            'world_11/${entry.value.$1}/${entry.key}/$choiceId',
+    final addedContracts = {
+      ...w11Wave4ChoiceContractV1,
+      ...w12Wave4ChoiceContractV1,
     };
-    expect(rows, hasLength(341 + w11Wave4ChoiceContractV1.length));
-    expect(
-      rows.map((r) => r.task.taskId).toSet(),
-      hasLength(341 + w11Wave4ChoiceContractV1.length),
-    );
+    final addedRows = rows.where(
+      (row) => addedContracts.containsKey(row.task.taskId),
+    ).toList();
+    expect(addedRows.map((row) => row.task.taskId).toSet(), addedContracts.keys.toSet());
+    final addedWrongChoices = {
+      for (final row in addedRows)
+        for (final [choiceId, _, correct, _, _] in addedContracts[row.task.taskId]!.$2)
+          if (correct == false)
+            'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
+    };
+    expect(rows, hasLength(341 + addedContracts.length));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(341 + addedContracts.length));
     expect(
       allChoices,
-      hasLength(
-        601 +
-            w4AddedOptionQualityV1.length +
-            w5AddedOptionQualityV1.length +
-            addedWrongChoices.length,
-      ),
+      hasLength(601 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length + addedWrongChoices.length),
     );
     expect(
       foundationDefaults.where(addedWrongChoices.contains).toSet(),
@@ -1004,6 +998,7 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
                       !w3NewChoiceContractV1.containsKey(task.taskId) &&
                       !w6NewChoiceContractV1.containsKey(task.taskId) &&
                       !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+                      !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==

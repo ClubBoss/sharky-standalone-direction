@@ -8030,22 +8030,26 @@ final _w11_checkpoint_short_spr = _w11Task(
 );
 
 final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+  table: _act0ReassignHeroSeatV1(
+    _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+    heroSeatId: 'co',
+    activeSeatId: '',
+  ),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_decision_quality_intro',
   lessonTitle: 'Decision quality over outcome',
   lessonSubtitle: 'Mindset Bridge',
-  caption: 'Short-term outcomes can lie. Process quality must stay the anchor.',
+  caption: 'A good choice can lose. A poor choice can win.',
   hint: 'Judge choices by logic, not one card on river.',
   question: 'What should be judged first after a hand?',
   feedbackTitle: 'Mindset foundation.',
   feedbackReason:
-      'A strong mindset evaluates whether the decision process was sound before reacting to outcome variance.',
+      'Check how you made the choice. Then look at how the hand ends.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Process beats variance.',
+      title: 'Judge the choice',
       body:
-          'Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.',
+          'Check the facts you had when you chose. One win or loss does not prove the choice was sound. Tilt is when a strong feeling starts to steer how you play.',
       focusLabels: <String>['Process', 'Variance', 'Outcome bias'],
     ),
   ],
@@ -8132,7 +8136,7 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flag the loose call as a possible leak',
       betterAnswerLabel: 'Flag the loose call as a possible leak',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too harsh.',
       feedbackReason:
           'After a loose call wins on a lucky river, letting confidence collapse turns a calm process audit into emotional tilt on the next hands.',
@@ -8156,19 +8160,17 @@ final _w12TiltResetIntroRunner = _w12DecisionQualityIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_tilt_reset_intro',
   lessonTitle: 'Tilt reset protocol',
-  caption:
-      'One short reset can protect decision quality after emotional spikes.',
-  hint: 'Pause, breathe, re-anchor to plan.',
+  caption: 'A loss or a big win can make you rush. A short pause can help.',
+  hint: 'Take one breath and come back to your plan.',
   question: 'What is the purpose of a tilt reset?',
   feedbackTitle: 'Reset foundation.',
-  feedbackReason:
-      'Tilt reset prevents one hand from contaminating the next decisions and keeps session discipline alive.',
+  feedbackReason: 'A pause gives you time to see the new hand clearly.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Fast reset routine.',
       body:
-          'Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.',
-      focusLabels: <String>['Emotion label', 'Breath', 'Re-anchor'],
+          'Name what you feel. Take a breath. Look at your cards, the board, and the next bet. Take a break if you still feel the urge to rush.',
+      focusLabels: <String>['Name the feeling', 'Breathe', 'Read the new hand'],
     ),
   ],
 );
@@ -8251,7 +8253,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Log leak briefly and reset to current hand',
       betterAnswerLabel: 'Log leak briefly and reset to current hand',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Protects emotion short term.',
       feedbackReason:
           'After an avoidable call error, skipping the note to rely on memory lets the leak slip away unreviewed after the session.',
@@ -8333,7 +8335,7 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Stick to process and your planned line',
       betterAnswerLabel: 'Stick to process and your planned line',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Safer but capped.',
       feedbackReason:
           'After table talk from an opponent, playing overly scared forfeits profitable value and steal spots out of fear of conflict.',
@@ -8395,40 +8397,74 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_pretty_hand_bad_price_fold',
   caption:
-      'Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. You hold K-Q at 100 BB effective.',
+      "CO bets both the flop and the turn. Both start the river with 100 BB behind. CO rarely bluffs and bets 18 BB into 20 BB.",
   hint: 'Do not make a stubborn call only because the hand looks pretty.',
   question: 'What is the cleaner disciplined action?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroKqCards,
-      boardCards: _boardK7294Cards,
-      streetLabel: 'River',
-      potLabel: 'Pot 38 BB',
-      toCallLabel: 'To call 18 BB',
-      centerLabel: 'Top pair, bad river price',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.river,
-        bettor: 'co',
-        betBb: 18,
-        effectiveStackAtHandStartBb: 100,
-        potBeforeBetBb: 20,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroKqCards.map((card) => card.label).join(' '),
+    street: PokerStreet.river,
+    actor: 'btn',
+    board: _boardK7294Cards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 108.75, 'co': 108.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO barrels flop'),
-        Act0ActionTrailItemV1(label: 'CO barrels turn'),
-        Act0ActionTrailItemV1(label: 'CO bets 18 BB'),
-      ],
-    ),
-    bets: {
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        3.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.turn,
+        'btn',
+        Act0ContributionKindV1.wager,
+        3.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.river,
+        'co',
+        Act0ContributionKindV1.wager,
+        18,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: CO bets 3.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 3.5 BB"),
+      Act0ActionTrailItemV1(label: "River: CO bets 18 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '18 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_river',
@@ -8446,7 +8482,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       isCorrect: false,
       preferredLabel: 'Fold the river',
       betterAnswerLabel: 'Fold the river',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Pretty-hand trap.',
       feedbackReason:
           'Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.',
@@ -8482,38 +8518,48 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_revenge_raise_trap',
   caption:
-      'The same opponent bluffed you last orbit and needles you now. New hand: You hold Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.',
+      "CO bluffed you last orbit and taunts you now. Both start the flop with 35 BB behind. CO bets 2 BB into 8 BB.",
   hint:
       'Do not raise just to take control when the table read says stay simple.',
   question: 'What is the clean discipline line?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Top pair, ego trap',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.flop,
-        bettor: 'co',
-        betBb: 2,
-        effectiveStackAtHandStartBb: 35,
-        potBeforeBetBb: 8,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroQJsCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: 'btn',
+    board: _boardJ74FlopCards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 37.75, 'co': 37.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1.note(label: 'CO needled you last orbit'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: {
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1.note(label: "CO needled you last orbit"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '2 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_to_take_control',
@@ -8524,7 +8570,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Revenge leak.',
       feedbackReason:
-          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge bloats the pot and folds out CO\'s bluffs while isolating you against stronger hands.',
+          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge can grow the pot and fold out CO\'s bluffs while isolating you against stronger hands.',
     ),
     Act0RunnerOptionV1(
       id: 'call_once',
@@ -8542,7 +8588,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Call once and keep the pot controlled',
       betterAnswerLabel: 'Call once and keep the pot controlled',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Emotion still steering.',
       feedbackReason:
           'CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.',
@@ -8606,7 +8652,7 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       isCorrect: false,
       preferredLabel: 'Audit process first, then outcome',
       betterAnswerLabel: 'Audit process first, then outcome',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Protective instinct.',
       feedbackReason:
           'After a sound decision loses a high-variance pot, skipping review to avoid frustration leaves you unsure whether the price and range read were actually solid.',
@@ -8666,7 +8712,7 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
       isCorrect: false,
       preferredLabel: 'Run brief reset and re-anchor to plan',
       betterAnswerLabel: 'Run brief reset and re-anchor to plan',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Common response.',
       feedbackReason:
           'After two rough spots in a row, continuing without an explicit reset lets hidden tilt degrade your next high-stakes decision.',
@@ -8709,7 +8755,7 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       isCorrect: false,
       preferredLabel: 'Take only evidence-backed lines',
       betterAnswerLabel: 'Take only evidence-backed lines',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Defensive but capped.',
       feedbackReason:
           'Folding a close spot to avoid a player’s taunts can surrender an edge your read of their range and the price still support.',
@@ -8721,40 +8767,48 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_checkpoint_full_loop_line',
   caption:
-      'You made a loose bluff last orbit. New hand: CO opens, You call BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.',
+      "Your bluff failed last orbit. Both start this flop with 25 BB behind. CO bets 2 BB into 8 BB.",
   hint:
       'Use the same decision routine even after a mistake: seat, hand, board, price, stack and action, then the clean action.',
   question: 'What keeps the next decision stable?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroAJsCards,
-      boardCards: _boardA84TwoToneCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'After mistake, stay clean',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.flop,
-        bettor: 'co',
-        betBb: 2,
-        effectiveStackAtHandStartBb: 25,
-        potBeforeBetBb: 8,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroAJsCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: 'btn',
+    board: _boardA84TwoToneCards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 27.75, 'co': 27.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: {
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1.note(label: "Last orbit: loose bluff"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '2 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_to_recover',
@@ -8773,7 +8827,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       isCorrect: false,
       preferredLabel: 'Call with the same routine',
       betterAnswerLabel: 'Call with the same routine',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too reactive.',
       feedbackReason:
           'CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.',
@@ -8802,6 +8856,459 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       ],
     ),
   ],
+);
+
+Act0LessonTaskV1 _w12Task(
+  String id,
+  String title,
+  String caption,
+  String question, {
+  required int correct,
+  required List<(String, String, String, String?)> choices,
+  Act0TableStateV1? table,
+  Act0TeachingStepV1? teaching,
+}) {
+  final answer = choices[correct].$2;
+  return Act0LessonTaskV1(
+    taskId: id,
+    title: title,
+    phase: Act0LessonPhaseV1.drill,
+    rewardXp: 10,
+    stepKind: Act0LessonStepKindV1.practice,
+    runner: _w12DecisionQualityIntroRunner.copyWith(
+      lessonId: id,
+      phase: Act0LessonPhaseV1.drill,
+      caption: caption,
+      question: question,
+      hint: '',
+      hintPolicy: Act0HintPolicyV1.hidden,
+      feedbackTitle: 'Review your choice.',
+      feedbackReason: choices[correct].$3,
+      teachingSteps: [if (teaching != null) teaching],
+      table: table ?? _w12DecisionQualityIntroRunner.table,
+      options: [
+        for (final (index, (choiceId, label, reason, seat)) in choices.indexed)
+          Act0RunnerOptionV1(
+            id: choiceId,
+            label: label,
+            seatId: seat,
+            isCorrect: index == correct,
+            preferredLabel: answer,
+            quality: index == correct
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            feedbackTitle: index == correct ? 'Correct.' : 'Look again.',
+            feedbackReason: reason,
+          ),
+      ],
+    ),
+  );
+}
+
+final _w12_river_ev_small_price = _w12Task(
+  'w12_river_ev_small_price',
+  'A small river price',
+  'CO bets 2 BB. Your model has seven better hands and three bluffs out of ten bets. CO will call a raise with the better hands and fold the bluffs.',
+  'Which action has the best EV in this model?',
+  correct: 1,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Fold gives up a gain. You win 3 times in 10 at a price that needs about 21%.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'A 2 BB call needs 2 out of 9.5, or about 21%. You win 30% in the model. A call gains 0.85 BB on average.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'Raising puts in extra chips when the better hands call. Against bluffs it earns no more than a call.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Ac 8c',
+    'As Td 7h 3c 2d',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 2,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+  teaching: const Act0TeachingStepV1(
+    title: 'What is EV?',
+    body:
+        'Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. On the river, no more cards come. Work out which bets you beat now.',
+  ),
+);
+
+final _w12_river_ev_costly_call = _w12Task(
+  'w12_river_ev_costly_call',
+  'A costly river call',
+  'BB bets 5 BB. Two of ten bets are bluffs you beat. The rest beat your kings. BB folds the bluffs to a raise and calls with the better hands.',
+  'Which action has the best EV in this model?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Five out of 15.5 is about 32%. Your chance to win is 20%. Fold to save the 5 BB.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'The bet costs 5 BB to call. With just two wins in ten bets, the cost of the eight losses is too high.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'A raise asks BB to fold. The model says the better hands stay and make you pay more.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'co',
+    'Kd 9c',
+    'Ks Jh 8d 4s 2h',
+    openBb: 2.5,
+    betBb: 5,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_confidence_spr = _w12Task(
+  'w12_confidence_spr',
+  'Check how much is at risk',
+  'You were quick to call in the last hand. Stop and read this flop. Both live stacks have 16.5 BB left. The pot is 5.5 BB.',
+  'What is the SPR at the start of this flop?',
+  correct: 0,
+  choices: const [
+    (
+      'choice_1',
+      '3',
+      '16.5 divided by 5.5 is 3. The most either player can put in from here is three times the pot.',
+      null,
+    ),
+    (
+      'choice_2',
+      '6',
+      'Six would count both stacks. Use just the smaller stack to see what each player can risk.',
+      null,
+    ),
+    (
+      'choice_3',
+      '9',
+      'Nine would need a stack of 49.5 BB. The live stacks are 16.5 BB each.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Kc Js',
+    street: PokerStreet.flop,
+    board: _act0LessonCardsV1('Kd 8c 3h'),
+    folded: const {'utg', 'co', 'btn', 'sb'},
+    stacks: const {'hj': 19, 'bb': 19},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(label: 'BB calls 1.5 BB'),
+    ],
+    bets: const {},
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_river_ev_turn_draw_miss = _w12Task(
+  'w12_river_ev_turn_draw_miss',
+  'The draw missed',
+  'You had a heart draw with one card to come. The river is Jd. You beat one in 10 CO bets. CO bets 3 BB and will call a raise with its value hands.',
+  'Which action has the best EV in this model?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'The river is a diamond. The price is 3 out of 11.5, about 26%. One win in ten is too few.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'There are no cards to come after Jd. Counting the old heart outs would sell you a chance that has passed.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'With ace high on this river, the raise spends more against CO’s better hands, which will call.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Ah Qh',
+    'Kh 8h 3c 2s Jd',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 3,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_river_ev_draw_hit = _w12Task(
+  'w12_river_ev_draw_hit',
+  'The draw hit',
+  'A heart lands on the river. BB bets 4 BB with a lower flush and will call one raise. Use this fixed hand model.',
+  'Which action has the best EV in this model?',
+  correct: 2,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Your ace-high flush wins against BB’s lower flush on this board. A fold gives up the pot.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'Calling wins the pot, but BB would put in more with a lower flush in this model.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'Ah Th makes the best possible flush. BB will call one raise with a lower flush. Get paid for the out that hit.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'co',
+    'Ah Th',
+    'Kh 6h 2s 8c 3h',
+    openBb: 2.5,
+    betBb: 4,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_river_ev_new_sample = _w12Task(
+  'w12_river_ev_new_sample',
+  'Price the last hand',
+  'You lost a close call last hand. In this new hand you beat four of ten CO bets. CO bets 4 BB and keeps just the better hands if raised.',
+  'Which action has the best EV in this model?',
+  correct: 1,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      '4 BB needs about 30% to call. This hand wins 40% in the model. The last result does not take that edge away.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      '4 divided by 13.5 is about 30%. You win 40%. A call gains 1.4 BB on average in this model.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'The hands that beat your jacks will call a raise. Making the bet larger just adds a cost against those hands.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Jh Tc',
+    'Js 9h 6d 4c 2s',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 4,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_turn_count_heart_outs = _w12Task(
+  'w12_turn_count_heart_outs',
+  'Count before the last card',
+  'At the turn, you hold two hearts and see two more on the board. Recall the outs from W5 before you move on.',
+  'How many unseen heart outs could fill the flush?',
+  correct: 1,
+  choices: const [
+    (
+      'choice_1',
+      '7',
+      'Four hearts are seen. Taking six out of 13 would remove two hearts you have not seen.',
+      null,
+    ),
+    (
+      'choice_2',
+      '9',
+      '13 hearts minus the four you see leaves nine. A heart on the river makes your flush.',
+      null,
+    ),
+    (
+      'choice_3',
+      '11',
+      'Eleven skips the two hearts at your seat. Both private and board cards are already known.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Ah Qh',
+    'Kh 8h 3c 2s',
+    opponent: 'co',
+    openBb: 2.5,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_tilt_after_river_beat = _w12Task(
+  'w12_tilt_after_river_beat',
+  'Pause after a bad beat',
+  'Last hand, your kings lost when an ace fell as the last card. Now CO bets on a new flop. You feel a rush to win it back.',
+  'What should you do before you pick an action?',
+  correct: 1,
+  choices: const [
+    (
+      'speed',
+      'Speed up so you do not freeze',
+      'The board is Q-7-2 and CO just put in 2 BB. Acting fast skips the new facts and can cost chips.',
+      null,
+    ),
+    (
+      'pause',
+      'Take one breath and read the new hand',
+      'You have a new pair on Q-7-2. Take a breath. Then read the price and the board before you choose.',
+      null,
+    ),
+    (
+      'target',
+      'Focus on bets from CO for this orbit',
+      'CO’s 2 BB bet belongs to this hand. Targeting a seat after a loss can make you pay for a grudge.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Qc Td',
+    'Qh 7d 2c',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 2,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+  teaching: const Act0TeachingStepV1(
+    title: 'What is tilt?',
+    body:
+        'Tilt is when a strong feeling starts to steer how you play. After a loss, you may rush. After a big win, you may take risks you would not take before. Pause and read the new hand. If the urge stays, take a break.',
+  ),
+);
+
+final _w12_tilt_after_lucky_win = _w12Task(
+  'w12_tilt_after_lucky_win',
+  'Pause after a lucky win',
+  'You won a pot after a loose call last hand. In this new hand HJ opens, and you feel like your cards cannot miss. Take one breath and use the course chart.',
+  'What action fits the new hand?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'J-5 off suit is Weak. The good result last hand does not move it to a new row.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'HJ made it 2.5 BB. The first blind is already in. Calling pays another 1.5 BB with J-5 off suit.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'A raise risks more chips with J-5 off suit against an HJ open. The last win does not give this hand a better chance.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Js 5d',
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {'utg', 'co', 'btn', 'sb'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'SB',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'BB',
+        amountLabel: '1 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2.5 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
 );
 
 final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(

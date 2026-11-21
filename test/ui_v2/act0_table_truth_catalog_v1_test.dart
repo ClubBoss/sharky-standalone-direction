@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart'
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -146,29 +147,13 @@ void main() {
     );
   });
 
-  test('remaining partial street ledgers preserve their source bounds', () {
+  test('W11 and W12 full ledgers prove the effective stack at the decision', () {
     const expected = {
-      'w12_pretty_hand_bad_price_fold': 80.0,
-      'w12_revenge_raise_trap': 27.0,
-      'w12_checkpoint_full_loop_line': 17.0,
+      'w11_checkpoint_mixed_table_line': 30.0,
+      'w12_pretty_hand_bad_price_fold': 100.0,
+      'w12_revenge_raise_trap': 35.0,
+      'w12_checkpoint_full_loop_line': 25.0,
     };
-    final tasks = Act0ShellStateV1.sample.worlds
-        .expand((world) => world.lessons)
-        .expand((lesson) => lesson.taskList);
-    expect({
-      for (final task in tasks.where(
-        (task) => expected.containsKey(task.taskId),
-      ))
-        task.taskId: task
-            .runner
-            .table
-            .handContributions!
-            .minimumStartingStackBbBySeat['btn'],
-    }, expected);
-  });
-
-  test('W11 full ledgers prove the effective stack at the decision', () {
-    const expected = {'w11_checkpoint_mixed_table_line': 30.0};
     final tasks = Act0ShellStateV1.sample.worlds
         .expand((world) => world.lessons)
         .expand((lesson) => lesson.taskList);
@@ -286,11 +271,7 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     const lateMissingSource = {
-      'D2.pot_feasibility': {
-        'w12_checkpoint_full_loop_line',
-        'w12_pretty_hand_bad_price_fold',
-        'w12_revenge_raise_trap',
-      },
+      'D2.pot_feasibility': <String>{},
       'D3.to_call_completeness': <String>{},
     };
     for (final MapEntry(key: rule, value: missing)
@@ -312,9 +293,9 @@ void main() {
       'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
       'w11_checkpoint_mixed_table_line': ('PASS', 'PASS'),
-      'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_revenge_raise_trap': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w12_checkpoint_full_loop_line': ('PASS', 'PASS'),
+      'w12_pretty_hand_bad_price_fold': ('PASS', 'PASS'),
+      'w12_revenge_raise_trap': ('PASS', 'PASS'),
       'asm05_new_known_holes_turn_call_10': ('PASS', 'PASS'),
       'asm05_new_known_holes_turn_call_40': ('PASS', 'PASS'),
     };
@@ -1275,7 +1256,8 @@ void main() {
       };
     }
     expectedComparison.addAll(w11Wave4TableTruthContractV1());
-    for (final entry in w11Wave4GradeCorrectionsV1.entries) {
+    expectedComparison.addAll(w12Wave4TableTruthContractV1());
+    for (final entry in [...w11Wave4GradeCorrectionsV1.entries, ...w12Wave4GradeCorrectionsV1.entries]) {
       final task = historicalComparison[entry.key] as Map<String, dynamic>;
       final option = (task['options'] as List<dynamic>)
           .cast<Map<String, dynamic>>()
@@ -1288,7 +1270,7 @@ void main() {
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the Worlds 2, 3, 6 and 11 packets may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the Worlds 2, 3, 6, 11 and 12 packets may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

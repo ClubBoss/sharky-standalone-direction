@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
 import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
     show w4MinRaiseTaskIdsV1, w4OpeningSeatsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -274,8 +275,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(413 + w11Wave4ChoiceContractV1.length));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(413 + w11Wave4ChoiceContractV1.length));
+    expect(tasks, hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -289,7 +290,8 @@ void main() {
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
-            !w11Wave4ChoiceContractV1.containsKey(task.taskId),
+            !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId),
       ),
       hasLength(384),
     );
@@ -355,7 +357,8 @@ void main() {
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
-            !w11Wave4ChoiceContractV1.containsKey(task.taskId))
+            !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -514,7 +517,7 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 283);
-    expect(played, 311 + 10); // Authored contexts, not certified replay histories.
+    expect(played, 311 + 10 + 9); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
@@ -532,6 +535,9 @@ void main() {
       ...w11Wave4ReplayTasksV1,
       // Full ledger now records each prior street and its contributions.
       'w11_checkpoint_mixed_table_line',
+      ...w12Wave4ReplayTasksV1,
+      // Full ledger now records each prior street and its contributions.
+      'w12_pretty_hand_bad_price_fold',
       // The newly authored Call frame now supplies its full blind prefix,
       // folds, street actions and positive remaining stacks.
       'actions_call_drill',

@@ -915,6 +915,9 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         returnTarget: 'learn',
         nextLessonId: 'tilt_reset_protocol',
       ),
+      _w12_river_ev_small_price,
+      _w12_river_ev_costly_call,
+      _w12_turn_count_heart_outs,
       Act0LessonTaskV1(
         taskId: 'w12_decision_quality_recap',
         title: 'Process recap',
@@ -953,6 +956,7 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+      _w12_tilt_after_lucky_win,
       Act0LessonTaskV1(
         taskId: 'w12_after_mistake_reset',
         title: 'After your own mistake',
@@ -962,6 +966,7 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
+      _w12_tilt_after_river_beat,
       Act0LessonTaskV1(
         taskId: 'w12_tilt_reset_recap',
         title: 'Reset recap',
@@ -1027,6 +1032,8 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
+      _w12_confidence_spr,
+      _w12_river_ev_turn_draw_miss,
       Act0LessonTaskV1(
         taskId: 'w12_confidence_recap',
         title: 'Confidence recap',
@@ -1090,6 +1097,8 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
+      _w12_river_ev_draw_hit,
+      _w12_river_ev_new_sample,
       Act0LessonTaskV1(
         taskId: 'w12_checkpoint_review',
         title: 'Mindset recap',
