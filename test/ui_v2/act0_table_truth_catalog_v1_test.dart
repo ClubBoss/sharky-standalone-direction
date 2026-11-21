@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 156),
-      ('D3.to_call_completeness', 112),
+      ('D2.pot_feasibility', 157),
+      ('D3.to_call_completeness', 113),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1200,6 +1200,15 @@ void main() {
         ],
       };
     }
+    expectedComparison['w4_price_find_bettor'] = {
+      'rewardXp': 7,
+      'family': 'decision',
+      'options': [
+        w3Option('bb', seat: 'bb'),
+        w3Option('btn', seat: 'btn'),
+        w3Option('co', seat: 'co', correct: true),
+      ],
+    };
     expect(
       historicalComparison,
       expectedComparison,

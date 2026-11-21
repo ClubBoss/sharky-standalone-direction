@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 397 tasks · W1–W12
+SHARKY POKER — EN learning content, 398 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -2741,6 +2741,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
   + [correct] Fold — Price and chance compared. 7 ÷ (7 + 14) is about 33.3%. Your 25% chance is below that threshold, so fold.
   - [suboptimal] Fold because a pair of eights is too weak to call — The action fits. Use the price. Your pair of eights can win. The 7 BB call needs about 33% win chance in this model, above the stated 25%. Folding every pair of eights would also lose profitable calls.
     BETTER ANSWER: Fold
+
+TASK w4_price_find_bettor [drill] Find the bet you face
+CAPTION: You checked the flop. Now there is a bet to match.
+Q: Tap the seat that made the flop bet you are facing.
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ad Jc | Board As 8s 4d | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Tap bb, co, btn | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 94.25 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ad Jc stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO bets 3 BB
+  - [wrong] Your seat [seat bb] — Checking added no new chips. You checked from BB. Counting the preflop blind as a flop bet would make you read the wrong price.
+    BETTER ANSWER: Cutoff
+    FEEDBACK TABLE: Flop | You Ad Jc | Board As 8s 4d | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Seat focus co | Tap bb, co, btn | Facts one pair, top pair, two-tone
+  - [wrong] Button [seat btn] — The dealer marker does not show a bet. BTN folded before the flop. Looking at the dealer marker instead of the new wager would miss the 3 BB you face.
+    BETTER ANSWER: Cutoff
+    FEEDBACK TABLE: Flop | You Ad Jc | Board As 8s 4d | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Seat focus co | Tap bb, co, btn | Facts one pair, top pair, two-tone
+  + [correct] Cutoff [seat co] — CO set the new price. CO put 3 BB in after your check. That flop bet is now the amount you must match to stay in.
+    FEEDBACK TABLE: Flop | You Ad Jc | Board As 8s 4d | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Seat focus co | Tap bb, co, btn | Facts one pair, top pair, two-tone
 
 TASK w4_cheap_price_marginal_call [drill] Cheap call with middle pair
 CAPTION: The turn is a two. HJ bet 1 BB. Compare your chance to win with the call divided by the pot after you call.
@@ -6929,6 +6945,19 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Flop | You Kc Jd | Board Kd 7c 2s | Pot 9 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 ===== WORLD 4 · LESSON call_price · Call price =====
+
+TASK spaced_review_w4_call_price_co_v1 [drill] Review decision
+DAY 7 FAMILY: co
+Q: Which seat made the bet that set your price on the turn?
+HINT [hidden]: (none)
+TABLE: Turn | You Th 8h | Board Ks 8c 5d 2s | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, middle pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 95.25 BB bet 2 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Th 8h stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO bets 2 BB
+  - [wrong] BTN — Look again. The button folded before the flop. Reading the marker as an action misses the turn wager from CO.
+    BETTER ANSWER: CO
+  + [correct] CO — Correct. CO put 2 BB in on the turn after your check. That is the amount BB must match.
+  - [wrong] BB — Look again. You checked from BB. Counting your blind as a new bet would give the wrong cost to continue on the turn.
+    BETTER ANSWER: CO
 
 TASK spaced_review_w4_call_price_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call

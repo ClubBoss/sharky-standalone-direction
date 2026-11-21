@@ -111,7 +111,8 @@ void main() {
           .where(
             (row) =>
                 !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-                !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+                !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+                row.task.taskId != 'w4_price_find_bettor',
           )
           .toList();
       expect(allRows, hasLength(294));
@@ -489,7 +490,8 @@ void main() {
         .where(
           (row) =>
               !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-              !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+              !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+              row.task.taskId != 'w4_price_find_bettor',
         )
         .toList();
     final additions = rows
@@ -867,12 +869,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(rows, hasLength(320));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(320));
     expect(
       allChoices,
       hasLength(
-        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        568 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -945,7 +947,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        530 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(
