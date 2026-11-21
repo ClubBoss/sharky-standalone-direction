@@ -207,6 +207,9 @@ TIER_A_COMMANDS = [
     },
     {
         "name": "World 1 release gate",
+        # This command runs the fast loop, including Flutter startup, and
+        # can exceed the ordinary two-minute limit on a cold runner.
+        "min_timeout_seconds": 240,
         "cmd": ["./tools/release_gate_world1.sh"],
     },
     {
