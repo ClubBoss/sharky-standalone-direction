@@ -668,6 +668,7 @@ void main() {
         final restartedWorlds = <int>{};
         final enteredWorlds = <int>{};
         var complete = false;
+        const w7Checkpoint = 'w7_checkpoint_river_card_excludes_hand';
         await _mount(t, firstRun: true);
         await _onboard(t, useRulesCheck: useRulesCheck);
 
@@ -728,7 +729,9 @@ void main() {
               await pumpSourceChoreographyToDecisionV1(t, runner.table);
               final wrong = runner.options.where((o) => !o.isCorrect).toList();
               final injectMiss =
-                  !missedWorlds.contains(world) && wrong.isNotEmpty;
+                  !missedWorlds.contains(world) &&
+                  wrong.isNotEmpty &&
+                  (world != 7 || taskId == w7Checkpoint);
               final choice = injectMiss
                   ? wrong.first
                   : runner.options.firstWhere((o) => o.isCorrect);
@@ -770,6 +773,12 @@ void main() {
                   ),
                   isTrue,
                 );
+                if (taskId == w7Checkpoint) {
+                  expect(
+                    find.textContaining('The 2♠ is on the board').last,
+                    findsOneWidget,
+                  );
+                }
                 confirmedMisses.add(world);
               }
               answered.add(taskId);
@@ -780,7 +789,9 @@ void main() {
                   .where((n) => n == world)
                   .length;
               if (!restartedWorlds.contains(world) &&
-                  worldAnswered >= worldTotal ~/ 2) {
+                  (world == 7
+                      ? taskId == w7Checkpoint && injectMiss
+                      : worldAnswered >= worldTotal ~/ 2)) {
                 final before = await _saved(t);
                 await _mount(t);
                 final after = await _saved(t);
@@ -883,7 +894,7 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = fullRoute ? 362 : 248;
+        final expectedCount = fullRoute ? 370 : 256;
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

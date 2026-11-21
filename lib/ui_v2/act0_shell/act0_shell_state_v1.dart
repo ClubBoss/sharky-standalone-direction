@@ -6829,7 +6829,8 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
     _w7AppliedTaskV1(
       id: 'w7_count_winning_rivers',
       title: 'Which cards actually win?',
-      question: 'BB has K♣ Q♠. How many river cards give you the winning hand?',
+      question:
+          'Suppose BB has K♣ Q♠. How many river cards give you the winning hand?',
       caption: 'Only one card is left to come.',
       table: _w7TurnPriceTableV1(3),
       labels: const ['9', '12', '11'],
@@ -6842,7 +6843,8 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       teaching: const [
         Act0TeachingStepV1(
           title: 'An out has to win',
-          body: 'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
+          body:
+              'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
         ),
       ],
       family: Act0TaskFamilyV1.counting,
@@ -6851,13 +6853,15 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       id: 'w7_clean_outs_lower_price',
       bet: 3,
       correctAt: 0,
-      feedback: 'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+      feedback:
+          'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
     ),
     _w7TurnPriceTaskV1(
       id: 'w7_clean_outs_higher_price',
       bet: 6,
       correctAt: 1,
-      feedback: 'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
+      feedback:
+          'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
     ),
   ],
 );
@@ -6865,19 +6869,22 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
 final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
   id: 'w7_visible_cards_range_checkpoint',
   title: 'Range and price checkpoint',
-  subtitle: 'Make two river decisions from the hands that are still possible.',
+  subtitle:
+      'Make three river decisions from the hands that are still possible.',
   tasks: [
     _w7RiverTaskV1(
       id: 'w7_river_one_bluff_of_six',
       range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♣ Q♦',
       correctAt: 1,
-      feedback: 'Only J♥ T♥ loses to your hand. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
+      feedback:
+          'If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
     ),
     _w7RiverTaskV1(
       id: 'w7_river_two_bluffs_of_six',
       range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♠ 8♠',
       correctAt: 0,
-      feedback: 'You beat J♥ T♥ and A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+      feedback:
+          'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
     ),
     _w7UnseenRiverTaskV1(),
   ],
@@ -6887,7 +6894,7 @@ Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
   id: 'w7_checkpoint_river_card_excludes_hand',
   title: 'The river all-in',
   question:
-      'BB is all-in. Before the river, you put BB on T♣ 8♣, T♠ 8♠, '
+      'BB is all-in. Before the river, BB could have T♣ 8♣, T♠ 8♠, '
       'T♦ 8♦, 9♥ 9♦ or 2♠ 2♦. Give all hands that are still possible '
       'equal weight. Call or fold?',
   caption: 'Read the final board.',
@@ -6900,12 +6907,14 @@ Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
   labels: const ['Call', 'Fold'],
   correctAt: 1,
   feedback: const [
-    'Do not count 2♠ 2♦: the 2♠ is on the board. You beat only '
-        '9♥ 9♦ out of the four remaining hands. Your 25% chance '
-        'is below the roughly 28% needed to call 5 BB for a final 18 BB pot.',
-    'The 2♠ on the board rules out 2♠ 2♦. You beat 9♥ 9♦, but '
-        'every T-8 hand makes a straight. You win one in four times '
-        '(25%), below the roughly 28% this call needs.',
+    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
+        'If BB has a pair of nines, you win. The three ten-eight hands '
+        'make a straight. One win in four (25%) is below the roughly '
+        '28% needed to call 5 BB for a final pot of 18 BB.',
+    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
+        'If BB has a pair of nines, you win. The three ten-eight hands '
+        'make a straight. One win in four (25%) is below the roughly '
+        '28% this call needs.',
   ],
   family: Act0TaskFamilyV1.transfer,
   kind: Act0LessonStepKindV1.proveIt,
@@ -6931,6 +6940,7 @@ Act0LessonCardV1 _w7AppliedLessonV1({
 );
 
 Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
+  final opponents = multiway ? 'SB and BB both check.' : 'BB checks.';
   final foldRate = multiway ? '16%' : '40%';
   final table = _w7FlopTableV1(multiway: multiway);
   final explanation = multiway
@@ -6944,10 +6954,11 @@ Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
     id: multiway ? 'w7_flop_bluff_two_players' : 'w7_flop_bluff_one_player',
     title: 'A flop decision',
     question:
-        'Everyone folds to a 3 BB bet $foldRate of the time. For this '
+        '$opponents Everyone folds to a 3 BB bet $foldRate of the time. For this '
         'exercise, count the full bet as lost if anyone continues. Checking '
         'has a value of 0 BB. Which action is better in this model?',
-    caption: 'Use the fold rate given in the question, not a general rule.',
+    caption:
+        'Compare what you win on folds with what you risk when someone continues.',
     table: table,
     labels: const ['Bet 3 BB', 'Check'],
     correctAt: multiway ? 1 : 0,
@@ -7049,7 +7060,7 @@ Act0LessonTaskV1 _w7TurnPriceTaskV1({
 }) => _w7AppliedTaskV1(
   id: id,
   title: 'A turn price',
-  question: 'BB is all-in with K♣ Q♠. Is calling better than folding?',
+  question: 'BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?',
   caption: 'Compare your chance to win with the price.',
   table: _w7TurnPriceTableV1(bet),
   labels: const ['Call', 'Fold'],
@@ -7067,7 +7078,7 @@ Act0LessonTaskV1 _w7RiverTaskV1({
   id: id,
   title: 'A river decision',
   question:
-      'BB is all-in with one of these equally likely hands: $range. Call or fold?',
+      'BB is all-in and could have any of these equally likely hands: $range. Call or fold?',
   caption: 'Use the stated range for this decision.',
   table: _w7AllInTableV1(
     holeCards: 'Qs Jd',

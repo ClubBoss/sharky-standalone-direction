@@ -1,5 +1,34 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_solver/poker_solver.dart';
+
+import '../support/act0_catalog_poker_facts_v1.dart'
+    show physicalCards, pokerRanks;
+
+List<String> _namedCards(String question) => [
+  for (final match in RegExp(r'([2-9TJQKA])([♣♦♥♠])').allMatches(question))
+    match[1]! + const {'♣': 'c', '♦': 'd', '♥': 'h', '♠': 's'}[match[2]]!,
+];
+
+double _share(List<String> hero, List<String> opponent, List<String> board) {
+  final heroHand = Hand.solveHand([...hero, ...board]);
+  final otherHand = Hand.solveHand([...opponent, ...board]);
+  final winners = Hand.winners([heroHand, otherHand]);
+  return winners.contains(heroHand) ? 1 / winners.length : 0;
+}
+
+double _requiredShare(Act0TableStateV1 table) {
+  final actor = table.decisionSeatId;
+  final amounts = table.handContributions!.amounts(
+    seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+    actorSeatId: actor,
+  );
+  final price = amounts.toCallBb!;
+  return price / (amounts.potBb + price);
+}
+
+String _correct(Act0RunnerStateV1 runner) =>
+    runner.options.singleWhere((option) => option.isCorrect).label;
 
 void main() {
   test('W7 keeps its original lesson and adds applied decisions', () {
@@ -86,5 +115,79 @@ void main() {
     expect(task.runner.table.potLabel, 'Pot 13 BB');
     expect(task.runner.table.toCallLabel, 'To call 5 BB');
     expect(task.runner.options.singleWhere((o) => o.isCorrect).label, 'Fold');
+  });
+
+  test('all 44 turn runouts give exactly twelve wins and no splits', () {
+    final tasks = Act0ShellStateV1.sample
+        .lessonById('w7_visible_cards_and_price')
+        .taskList;
+    for (final task in tasks.skip(2)) {
+      final runner = task.runner;
+      final table = runner.table;
+      final hero = physicalCards(table.heroCards);
+      final board = physicalCards(table.boardCards);
+      final opponent = _namedCards(runner.question);
+      expect(opponent, ['Kc', 'Qs']);
+      final known = {...hero, ...board, ...opponent};
+      expect(known, hasLength(8));
+      final runouts = [
+        for (final rank in pokerRanks.split(''))
+          for (final suit in 'cdhs'.split(''))
+            if (!known.contains('$rank$suit'))
+              _share(hero, opponent, [...board, '$rank$suit']),
+      ];
+      expect(runouts, hasLength(44));
+      expect(runouts.where((result) => result == 1), hasLength(12));
+      expect(runouts, isNot(contains(0.5)));
+      final answer = switch (task.taskId) {
+        'w7_count_winning_rivers' => '12',
+        _ => 12 / runouts.length > _requiredShare(table) ? 'Call' : 'Fold',
+      };
+      expect(_correct(runner), answer);
+    }
+  });
+
+  test('river grading uses only compatible combinations and exact price', () {
+    final tasks = Act0ShellStateV1.sample
+        .lessonById('w7_visible_cards_range_checkpoint')
+        .taskList;
+    for (final (index, task) in tasks.indexed) {
+      final runner = task.runner;
+      final table = runner.table;
+      final hero = physicalCards(table.heroCards);
+      final board = physicalCards(table.boardCards);
+      final known = {...hero, ...board};
+      final cards = _namedCards(runner.question);
+      final compatible = <List<String>>[];
+      final blocked = <List<String>>[];
+      expect(cards.length.isEven, isTrue);
+      expect(known, hasLength(7));
+      for (var i = 0; i < cards.length; i += 2) {
+        final hand = cards.sublist(i, i + 2);
+        expect(hand.toSet(), hasLength(2));
+        (hand.any(known.contains) ? blocked : compatible).add(hand);
+      }
+      expect(
+        blocked,
+        index == 2
+            ? [
+                ['2s', '2d'],
+              ]
+            : isEmpty,
+      );
+      expect(compatible, hasLength(index == 2 ? 4 : 6));
+      final canonicalHands = compatible.map(
+        (hand) => (hand.toList()..sort()).join(),
+      );
+      expect(canonicalHands.toSet(), hasLength(compatible.length));
+      final results = compatible.map((hand) => _share(hero, hand, board));
+      final wins = results.where((result) => result == 1).length;
+      expect(wins, [1, 2, 1][index]);
+      expect(results, isNot(contains(0.5)));
+      expect(
+        _correct(runner),
+        wins / compatible.length > _requiredShare(table) ? 'Call' : 'Fold',
+      );
+    }
   });
 }
