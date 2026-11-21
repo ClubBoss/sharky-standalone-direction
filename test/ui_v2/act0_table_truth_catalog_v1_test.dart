@@ -917,6 +917,19 @@ void main() {
         'repairLabels': <String>[],
       });
     }
+    for (final entry in w4AddedOptionQualityV1.entries) {
+      final expected = expectedComparison[entry.key] as Map<String, dynamic>;
+      final (id, quality) = entry.value;
+      (expected['options'] as List).add({
+        'id': id,
+        'correct': false,
+        'quality': quality,
+        'seat': null,
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      });
+    }
     for (final (taskId, family, correctChoice, choiceCount) in [
       ('w7_flop_bluff_one_player', 'decision', 1, 2),
       ('w7_flop_bluff_two_players', 'decision', 2, 2),

@@ -11,7 +11,11 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
-    show q3AppendedChoicesV1, w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+    show
+        q3AppendedChoicesV1,
+        w4AddedOptionQualityV1,
+        w4MinRaiseTaskIdsV1,
+        w7AppliedTaskIdsV1;
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
@@ -439,7 +443,7 @@ void main() {
       );
       expect(
         value.task.runner.question,
-        contains('assume BB calls 3 BB with a weaker ace'),
+        contains('BB checks a weaker ace and calls 3 BB but folds to 6 BB'),
       );
       expect(
         value.task.runner.options.singleWhere((option) => option.isCorrect).id,
@@ -881,7 +885,10 @@ void main() {
       rows.map((r) => r.task.taskId).toSet(),
       hasLength(319 + w11Wave4ChoiceContractV1.length),
     );
-    expect(allChoices, hasLength(566 + addedWrongChoices.length));
+    expect(
+      allChoices,
+      hasLength(566 + w4AddedOptionQualityV1.length + addedWrongChoices.length),
+    );
     expect(
       foundationDefaults.where(addedWrongChoices.contains).toSet(),
       addedWrongChoices,
@@ -953,7 +960,10 @@ void main() {
       'world_6/range_pressure_lines/w6_turn_pressure_shift_transfer/barrel_big',
     });
     expect(knownHeld, isEmpty);
-    expect(foundationDefaults, hasLength(528 + addedWrongChoices.length));
+    expect(
+      foundationDefaults,
+      hasLength(528 + w4AddedOptionQualityV1.length + addedWrongChoices.length),
+    );
     expect(
       unknown.intersection(w3AppendedRepairChoiceIdsV1),
       w3AppendedRepairChoiceIdsV1,
@@ -1009,7 +1019,8 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
               omittedChoiceId: historical
                   ? q3AppendedChoicesV1[task.taskId] ??
                         w2AppendedWrongChoicesV1[task.taskId] ??
-                        w3AppendedWrongChoicesV1[task.taskId]
+                        w3AppendedWrongChoicesV1[task.taskId] ??
+                        w4AddedOptionQualityV1[task.taskId]?.$1
                   : null,
               historicalChoices: historical
                   ? preW2ReasonChoicesV1[task.taskId] ??

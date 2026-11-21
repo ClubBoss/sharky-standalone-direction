@@ -217,23 +217,31 @@ Iterable<String> _section(Iterable<CatalogTask> rows) sync* {
   }
 }
 
-String renderCatalogSnapshot() =>
-    ([
-      'SHARKY POKER — EN learning content, ' +
-          catalogTasks.length.toString() +
-          ' tasks · W1–W12',
-      'Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.',
-      'Teaching and feedback table variants use the Runner projections. Board facts are deterministic.',
-      '',
-      ..._section(catalogTasks.where((row) => !row.task.repairOnly)),
-      '===== REPAIR-ONLY TASKS =====',
-      '',
-      ..._section(catalogTasks.where((row) => row.task.repairOnly)),
-      '===== W1 RULES CHECK =====',
-      '',
-      ..._section(rulesCheckCatalogTasks),
-      '===== DAY 7 REVIEW-ONLY TASKS · ZERO XP =====',
-      '',
-      ..._section(day7CatalogTasks),
-    ].join('\n').trimRight() +
-    '\n');
+String renderCatalogSnapshot({Set<int>? worlds}) {
+  Iterable<CatalogTask> include(Iterable<CatalogTask> rows) => worlds == null
+      ? rows
+      : rows.where((row) => worlds.contains(row.world.worldNumber));
+  final course = include(catalogTasks).toList();
+  final worldNames = worlds == null
+      ? 'W1–W12'
+      : (worlds.toList()..sort()).map((world) => 'W$world').join(', ');
+  return ([
+        'SHARKY POKER — EN learning content, ${course.length} tasks · $worldNames',
+        'Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.',
+        'Teaching and feedback table variants use the Runner projections. Board facts are deterministic.',
+        '',
+        ..._section(course.where((row) => !row.task.repairOnly)),
+        '===== REPAIR-ONLY TASKS =====',
+        '',
+        ..._section(course.where((row) => row.task.repairOnly)),
+        if (worlds == null || worlds.contains(1)) ...[
+          '===== W1 RULES CHECK =====',
+          '',
+          ..._section(include(rulesCheckCatalogTasks)),
+        ],
+        '===== DAY 7 REVIEW-ONLY TASKS · ZERO XP =====',
+        '',
+        ..._section(include(day7CatalogTasks)),
+      ].join('\n').trimRight() +
+      '\n');
+}

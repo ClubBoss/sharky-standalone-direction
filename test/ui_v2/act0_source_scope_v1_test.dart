@@ -5,7 +5,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.d
 
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
-    show w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+    show w4MinRaiseTaskIdsV1, w4OpeningSeatsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_w6_catalog_contract_v1.dart';
@@ -456,6 +456,20 @@ void main() {
             <String>['SB', 'BB', 'UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB', 'BB'],
             reason: task.taskId,
           );
+          final newSeat = w4OpeningSeatsV1[task.taskId];
+          if (newSeat != null) {
+            expect(table.heroSeatId, newSeat, reason: task.taskId);
+            expect(table.activeSeatId, newSeat, reason: task.taskId);
+            expect(table.decisionSeatId, newSeat, reason: task.taskId);
+            expect(replay?.currentDecisionActor, 'Hero', reason: task.taskId);
+            expect(
+              table.actionTrail.map((item) => item.label),
+              contains('${newSeat.toUpperCase()} raises 2.75 BB'),
+              reason: task.taskId,
+            );
+            expect(table.potLabel, 'Pot 6 BB', reason: task.taskId);
+            expect(table.toCallLabel, isEmpty, reason: task.taskId);
+          }
         }
       } else {
         expect(act0StreetReplayFromTableV1(table), isNull, reason: task.taskId);
