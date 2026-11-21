@@ -969,14 +969,21 @@ final _tripsRankRunner = _riverBoardRunner.copyWith(
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0FivePlayerComparisonPot,
-    boardCards: _boardThreeQueens,
+    heroCards: const [
+      Act0CardStateV1(rank: 'T', suit: 'h'),
+      Act0CardStateV1(rank: 'T', suit: 's'),
+    ],
+    boardCards: _boardThreeTens,
     highlightedCardIds: const <String>['hero_0', 'hero_1', 'board_0'],
     seats: _riverBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'btn'
               ? _act0CopySeatStateV1(
                   seat,
-                  holeCards: _heroQqCards,
+                  holeCards: const [
+                    Act0CardStateV1(rank: 'T', suit: 'h'),
+                    Act0CardStateV1(rank: 'T', suit: 's'),
+                  ],
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
               : seat.seatId == 'co'

@@ -160,7 +160,11 @@ void main() {
     expect(table.activeSeatId, 'co');
     final bb = table.seats.singleWhere((s) => s.seatId == 'bb');
     expect(bb.isInHand && !bb.isFolded, isTrue);
-    expect(task.runner.options.map((o) => o.id), ['sb_post', 'bb_check']);
+    expect(task.runner.options.map((o) => o.id), [
+      'sb_post',
+      'bb_check',
+      'hj_limp',
+    ]);
     for (final option in task.runner.options) {
       expect(option.preferredLabel, 'Flop: BB checks');
     }

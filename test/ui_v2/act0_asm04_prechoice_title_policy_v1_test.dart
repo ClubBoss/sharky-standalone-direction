@@ -50,7 +50,7 @@ void main() {
     expect(pair.title, 'Find the pair');
     expect(
       pair.runner.options.map((option) => option.label),
-      containsAll(<String>['Pair', 'High card']),
+      equals(<String>['0 pairs', '1 pair', '2 pairs']),
     );
     expect(
       act0PrechoiceTaskTitleV1(

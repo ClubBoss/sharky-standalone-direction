@@ -104,6 +104,7 @@ Future<int> _openSavedCourseTask(
   WidgetTester t, {
   required String worldId,
   required String taskId,
+  String? legacyLessonId,
 }) async {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(worldId);
@@ -141,7 +142,7 @@ Future<int> _openSavedCourseTask(
       'skippedTaskIds': <String>[],
       'earnedXp': xp,
       'selectedWorldId': worldId,
-      'selectedLessonId': lesson.lessonId,
+      'selectedLessonId': legacyLessonId ?? lesson.lessonId,
       'selectedTaskId': taskId,
     }),
   });
@@ -187,6 +188,29 @@ Future<int> _openSavedCourseTask(
 }
 
 void main() {
+  testWidgets('W1 save resumes a drill from before the lesson split', (
+    t,
+  ) async {
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_1',
+      taskId: 'hand_rankings_full_house_vs_flush_drill',
+      legacyLessonId: 'hand_rankings_upper',
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'hand_rankings_comparisons');
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_co_flush'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
+    expect(saved['selectedLessonId'], 'hand_rankings_comparisons');
+    expect(saved['selectedTaskId'], 'hand_rankings_full_house_vs_flush_drill');
+    expect(saved['earnedXp'], xp);
+  });
+
   testWidgets('pre-L1 saved progress resumes at the first new prerequisite', (
     t,
   ) async {
@@ -406,7 +430,9 @@ void main() {
     final world = Act0ShellStateV1.sample.worldById('world_1');
     final completed = [
       for (final lesson in world.lessons)
-        if (earlierLessons.contains(lesson.lessonId)) ...lesson.courseTaskList,
+        if (earlierLessons.contains(lesson.lessonId) ||
+            lesson.lessonId == 'hand_rankings_comparisons')
+          ...lesson.courseTaskList,
     ];
     final completedIds = completed.map((task) => task.taskId).toList();
     final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);

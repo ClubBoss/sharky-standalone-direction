@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -96,6 +97,25 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
+    final w1Changes =
+        jsonDecode(
+              File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    expect(w1Changes, hasLength(48));
+    for (final change in w1Changes.entries) {
+      final index = entries.indexWhere((row) => row[2] == change.key);
+      expect(index, isNonNegative, reason: change.key);
+      expect(entries[index][0], 'world_1', reason: change.key);
+      expect(entries[index], change.value['current'], reason: change.key);
+      final prior = (change.value['prior'] as List).cast<Object?>();
+      entries[index] = [
+        ...prior.take(5),
+        (prior[5] as List)
+            .map((option) => (option as List).cast<Object?>())
+            .toList(),
+      ];
+    }
     expect(entries, hasLength(397));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [

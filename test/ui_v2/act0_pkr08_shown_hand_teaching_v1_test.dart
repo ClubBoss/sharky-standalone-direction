@@ -12,7 +12,7 @@ import '../support/act0_pot_showdown_truth_v1.dart';
 const _bestHandTaskXp = <String, int>{'what_poker_is_showdown_win': 4};
 const _tieTaskXp = <String, int>{'showdown_tie_drill': 7};
 const _bestHandBody =
-    'Your best five are Q-Q-A-J-7. CO uses J-J-A-K-7. Your queens beat CO’s jacks.';
+    'You use K-K-A-J-7. CO uses J-J-A-K-7. Your kings beat CO’s jacks.';
 const _tieBody =
     'You and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. Only these two hands are shown here.';
 
@@ -35,7 +35,7 @@ void main() {
       expect(teaching.body, expectedBody);
       expect(
         teaching.focusLabels,
-        isTie ? ['Shown hands tie'] : ['Q-Q-A-J-7', 'You beat CO'],
+        isTie ? ['Shown hands tie'] : ['Best five', 'Kings beat jacks'],
       );
       expect(task.rewardXp, entry.value);
       expect(

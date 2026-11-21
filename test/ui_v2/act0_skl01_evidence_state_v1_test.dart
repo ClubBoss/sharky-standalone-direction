@@ -58,7 +58,7 @@ Act0LearningEvidenceRecordV1 _response(
   bool timestamped = true,
 }) {
   final task = Act0ShellStateV1.sample
-      .lessonById('blinds_action_order')
+      .lessonById('blinds_order_practice')
       .taskList
       .singleWhere(
         (t) =>
@@ -74,7 +74,7 @@ Act0LearningEvidenceRecordV1 _response(
     recordId: 'skl-response-$order',
     createdOrder: order,
     worldId: 'world_1',
-    lessonId: 'blinds_action_order',
+    lessonId: 'blinds_order_practice',
     taskId: task.taskId,
     sourceTaskId: task.taskId,
     choiceId: option.id,
@@ -91,7 +91,7 @@ Act0LearningEvidenceRecordV1 _response(
         fingerprint ??
         act0AuthoredSourceFingerprintV1(
           worldId: 'world_1',
-          lessonId: 'blinds_action_order',
+          lessonId: 'blinds_order_practice',
           task: task,
         )!,
     sessionId: session ?? 'session-$order',

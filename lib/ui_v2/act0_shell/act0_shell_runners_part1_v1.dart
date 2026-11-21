@@ -243,17 +243,17 @@ const _boardFullHouseVsFlush = <Act0CardStateV1>[
   Act0CardStateV1(rank: '2', suit: 'c'),
 ];
 
-const _boardQuadsQueens = <Act0CardStateV1>[
-  Act0CardStateV1(rank: 'Q', suit: 'c'),
-  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+const _boardQuadsNines = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '9', suit: 'c'),
+  Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '7', suit: 'c'),
   Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: 'J', suit: 'c'),
 ];
 
 const _boardQuadsVsFullHouse = <Act0CardStateV1>[
-  Act0CardStateV1(rank: 'Q', suit: 'c'),
-  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '9', suit: 'c'),
+  Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '7', suit: 'c'),
   Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '2', suit: 's'),
@@ -267,8 +267,8 @@ const _boardRoyalFlushHearts = <Act0CardStateV1>[
   Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
 ];
 
-const _boardThreeQueens = <Act0CardStateV1>[
-  Act0CardStateV1(rank: 'Q', suit: 'c'),
+const _boardThreeTens = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'T', suit: 'c'),
   Act0CardStateV1(rank: '7', suit: 'c'),
   Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: 'J', suit: 'c'),
@@ -2564,10 +2564,11 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
     'sb': '99 BB',
     'bb': '99 BB',
   };
+  final table = _w1WithPocketPairV1(source.table, '9');
   return source.copyWith(
     caption:
         'HJ bets 1 BB on the flop. It is your turn. Raising makes the price 4 BB total.',
-    table: source.table.copyWith(
+    table: table.copyWith(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
@@ -2623,7 +2624,7 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
         Act0ActionTrailItemV1(label: 'Flop: HJ bets 1 BB'),
       ],
       seats: [
-        for (final seat in source.table.seats)
+        for (final seat in table.seats)
           Act0SeatStateV1(
             seatId: seat.seatId,
             seatLabel: seat.seatLabel,
@@ -3748,7 +3749,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
   lessonId: 'quads_rank',
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Four of a kind means all four cards of one rank.',
-  hint: 'Look for all four queens.',
+  hint: 'Look for all four nines.',
   question: 'What hand do you have here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3757,9 +3758,9 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Four of a kind',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Four queens.',
+      feedbackTitle: 'Four nines.',
       feedbackReason:
-          'You use all four queens. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
+          'You use all four nines. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
     ),
     Act0RunnerOptionV1(
       id: 'full_house',
@@ -3769,13 +3770,16 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'A full house needs three of one rank and two of another. Here you have all four queens, so the hand is four of a kind.',
+          'A full house needs three of one rank and two of another. Here you have all four nines, so the hand is four of a kind.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
-    heroCards: _heroQqCards,
-    boardCards: _boardQuadsQueens,
+    heroCards: const [
+      Act0CardStateV1(rank: '9', suit: 'h'),
+      Act0CardStateV1(rank: '9', suit: 's'),
+    ],
+    boardCards: _boardQuadsNines,
     highlightedCardIds: const <String>[
       'hero_0',
       'hero_1',
@@ -3788,7 +3792,10 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
           (seat) => seat.seatId == 'btn'
               ? _act0CopySeatStateV1(
                   seat,
-                  holeCards: _heroQqCards,
+                  holeCards: const [
+                    Act0CardStateV1(rank: '9', suit: 'h'),
+                    Act0CardStateV1(rank: '9', suit: 's'),
+                  ],
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
               : seat,
@@ -3799,9 +3806,9 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Four of a kind uses all four of one rank.',
       body:
-          'You use Q-Q from hand and Q-Q from the board. All four queens count, so this hand outranks a full house.',
+          'You use 9-9 from hand and 9-9 from the board. All four nines count, so this hand outranks a full house.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
-      focusLabels: <String>['Q-Q-Q-Q'],
+      focusLabels: <String>['9-9-9-9'],
     ),
   ],
 );
@@ -3958,7 +3965,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
   lessonId: 'quads_vs_full_house',
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Four of a kind beats a full house.',
-  hint: 'One player has all four queens. The other only has a full house.',
+  hint: 'One player has all four nines. The other only has a full house.',
   question: 'Who wins when both hands are shown?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3969,7 +3976,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Top hand found.',
       feedbackReason:
-          'You use all four queens. The other player makes a full house with three sevens and two queens, but four of a kind ranks above a full house.',
+          'You use all four nines. The other player makes a full house with three sevens and two nines, but four of a kind ranks above a full house.',
     ),
     Act0RunnerOptionV1(
       id: 'co_full_house',
@@ -3979,12 +3986,15 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house when the cards are shown.',
+          'The other player does make a full house, but you hold all four nines. Four of a kind outranks a full house when the cards are shown.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0FivePlayerComparisonPot,
-    heroCards: _heroQqCards,
+    heroCards: const [
+      Act0CardStateV1(rank: '9', suit: 'h'),
+      Act0CardStateV1(rank: '9', suit: 's'),
+    ],
     boardCards: _boardQuadsVsFullHouse,
     highlightedCardIds: const <String>[
       'hero_0',
@@ -3999,7 +4009,10 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
           (seat) => seat.seatId == 'btn'
               ? _act0CopySeatStateV1(
                   seat,
-                  holeCards: _heroQqCards,
+                  holeCards: const [
+                    Act0CardStateV1(rank: '9', suit: 'h'),
+                    Act0CardStateV1(rank: '9', suit: 's'),
+                  ],
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
               : seat.seatId == 'co'
@@ -4017,9 +4030,9 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Four of a kind outranks a full house.',
       body:
-          'You use Q-Q-Q-Q with a seven as the fifth card. The other player uses 7-7-7 with Q-Q for a full house, but four of a kind still wins.',
+          'You use 9-9-9-9 with a seven as the fifth card. The other player uses 7-7-7 with 9-9 for a full house, but four of a kind still wins.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
-      focusLabels: <String>['Q-Q-Q-Q'],
+      focusLabels: <String>['9-9-9-9'],
     ),
   ],
 );

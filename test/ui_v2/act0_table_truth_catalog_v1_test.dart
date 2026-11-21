@@ -1200,6 +1200,24 @@ void main() {
         ],
       };
     }
+    final w1Revision =
+        jsonDecode(
+              File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final metadataChanges = w1Revision.entries.where(
+      (entry) => entry.value['tableMetadata'] != null,
+    );
+    expect(metadataChanges, hasLength(40));
+    for (final revision in metadataChanges) {
+      final change = revision.value['tableMetadata'];
+      expect(
+        historicalComparison[revision.key],
+        change['current'],
+        reason: revision.key,
+      );
+      historicalComparison[revision.key] = change['prior'];
+    }
     expect(
       historicalComparison,
       expectedComparison,

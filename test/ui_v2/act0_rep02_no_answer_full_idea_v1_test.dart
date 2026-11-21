@@ -7,7 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 void main() {
   const probes = <({String world, String task, String answer})>[
     (world: 'world_1', task: 'actions_legal_context', answer: 'Check'),
-    (world: 'world_1', task: 'cards_ranks_suits_suit_drill', answer: 'Hearts'),
+    (world: 'world_1', task: 'cards_ranks_suits_suit_drill', answer: '1 heart'),
     (world: 'world_1', task: 'cards_ranks_suits_best_five', answer: 'Five'),
     (world: 'world_1', task: 'hand_rankings_flush_drill', answer: 'Flush'),
     (world: 'world_1', task: 'your_first_hand_recap', answer: 'River'),
@@ -16,7 +16,7 @@ void main() {
       task: 'cards_ranks_suits_private_board',
       answer: 'Board cards',
     ),
-    (world: 'world_1', task: 'showdown_tie_drill', answer: 'Split'),
+    (world: 'world_1', task: 'showdown_tie_drill', answer: '50% each'),
     (world: 'world_3', task: 'position_apply_early_fold', answer: 'Fold'),
     (world: 'world_1', task: 'blinds_posts_drill', answer: 'BB'),
     (world: 'world_6', task: 'w6_ak_combos', answer: '16 combos'),
