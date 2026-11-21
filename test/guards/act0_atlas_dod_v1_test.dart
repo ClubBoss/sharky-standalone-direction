@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_atlas_concepts_v1.dart';
+import '../support/act0_atlas_practice_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
@@ -717,6 +718,30 @@ void main() {
         details.add('B1 · $name/${key.$2}/${key.$3}');
       }
 
+      for (final review in act0NewReviewTasksV1.where(
+        (entry) => entry.worldId == world.worldId,
+      )) {
+        final mismatch = atlasDay7SkillMismatchV1(
+          review.conceptFamilyId,
+          review.task,
+        );
+        if (mismatch != null) {
+          details.add(
+            'B1 · $name/${review.lessonId}/${review.task.taskId} · $mismatch',
+          );
+        }
+      }
+
+      final practice = auditAtlasPracticeWorldV1(world);
+      add(
+        'S4',
+        name,
+        '${practice.steps} шагов, ${practice.gaps.length} пропусков',
+        'Каждые 2–3 урока и перед чекпоинтом',
+        practice.gaps.length,
+      );
+      details.addAll(practice.gaps.map((gap) => 'S4 · $name · $gap'));
+
       final xp = tasks.fold<int>(0, (sum, r) => sum + r.task.rewardXp);
       details.add(
         'P3 · $name · ${tasks.length} обязательных, $xp XP по каталогу',
@@ -827,6 +852,8 @@ void main() {
         '- C1–C4 и D1 опираются на словарь и совпадения в TEACH, заданиях и разборах. Смысл заданий, честность двух вариантов и оправданность «почти» проверяются чтением.',
         '- M9 — Flesch Reading Ease по английским подписям, вопросам и теории. Слоги оценены по группам гласных. T1–T3 — оценка темпа без ошибок и повторов.',
         '- A1–A2 используют допуск 10 п.п. как рабочее определение «на уровне случая». A3 измеряет маркеры лексики.',
+        '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
+        '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
         '- P3 показывает объём по каталогу. Исполнение подтверждается отдельным FULL_ROUTE прогоном на том же коммите.',
         '',
         '## Места для проверки',
