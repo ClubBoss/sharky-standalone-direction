@@ -1956,7 +1956,7 @@ final _w8EffectiveStackSeatRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare both live stacks.',
       feedbackReason:
-          'You have 70 BB left, but BB can match only 18 BB. Using your own stack overstates how much you can win from BB.',
+          'From CO you have 70 BB left, but BB can match only 18 BB. Using your own stack overstates how much you can win from BB.',
     ),
     Act0RunnerOptionV1(
       id: 'bb',

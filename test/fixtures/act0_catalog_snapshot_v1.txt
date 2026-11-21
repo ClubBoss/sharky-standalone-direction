@@ -4492,7 +4492,7 @@ HINT [theoryOnly]: (none)
 TABLE: Flop | You Th Tc | Board 9d 5c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Tap co, sb, bb | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Th Tc stack 70 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 18 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Your seat [seat co] — Compare both live stacks. You have 70 BB left, but BB can match only 18 BB. Using your own stack overstates how much you can win from BB.
+  - [wrong] Your seat [seat co] — Compare both live stacks. From CO you have 70 BB left, but BB can match only 18 BB. Using your own stack overstates how much you can win from BB.
     BETTER ANSWER: Big blind
     FEEDBACK TABLE: Flop | You Th Tc | Board 9d 5c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap co, sb, bb | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow
   + [correct] Big blind [seat bb] — The smaller live stack. You have 18 BB effective against BB. Your larger stack can match that amount, so 18 BB is the most either of you can still lose to the other.
