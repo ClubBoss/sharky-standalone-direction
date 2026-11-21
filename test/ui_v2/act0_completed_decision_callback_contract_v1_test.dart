@@ -57,6 +57,10 @@ void main() {
   testWidgets(
     'seat choice resolves its option before emitting a completed-decision contract',
     (tester) async {
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
       final task = _task(
         'world_1',
         'blinds_action_order',
@@ -79,12 +83,13 @@ void main() {
         onCompletedDecision: (value) => completed = value,
       );
 
-      final selected = runner.options.firstWhere(
-        (option) => option.seatId != null,
-      );
-      await tester.tap(
-        find.byKey(Key('act0_shell_seat_tap_${selected.seatId}')),
-      );
+      final selected = runner.options.singleWhere((option) => option.isCorrect);
+      expect(selected.seatId, 'utg');
+      final target = find.byKey(Key('act0_shell_seat_tap_${selected.seatId}'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(target);
+      expect(target.hitTestable(), findsOneWidget);
+      await tester.tap(target);
       await tester.pump();
 
       expect(completed, isNotNull);

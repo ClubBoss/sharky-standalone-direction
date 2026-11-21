@@ -737,8 +737,8 @@ void main() {
     'W1 nameplates reveal seat abbreviations on the definition page',
     (tester) async {
       await _mount(tester, _theoryTaskId);
-      final hero = find.byKey(const Key('act0_shell_hero_identity_btn'));
-      final name = find.descendant(of: hero, matching: find.text('BTN'));
+      final hero = find.byKey(const Key('act0_shell_hero_identity_co'));
+      final name = find.descendant(of: hero, matching: find.text('CO'));
       final stack = find.descendant(of: hero, matching: find.text('100 BB'));
       final opponent = find.byKey(const Key('act0_shell_seat_identity_utg'));
       expect(_runner(tester).runner.teachingStepIndex, 0);

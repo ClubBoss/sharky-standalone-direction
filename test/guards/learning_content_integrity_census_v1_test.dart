@@ -26,6 +26,9 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   'button_advantage_button_vs_cutoff',
   'button_advantage_button_recap',
   'position_checkpoint_position_checkpoint_intro',
+  // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
+  'positions_theory',
+  'blinds_button_moves',
   // This is a played hand with an unknown caller stack.
   _w9BubbleTableRiskId,
   // The remaining questions use hypothetical setups.
