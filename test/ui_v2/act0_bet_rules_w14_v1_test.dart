@@ -66,10 +66,10 @@ void main() {
           final pot = _bb(table.potLabel);
           // W1's fully authored decision frames start with 100 BB per seat.
           // Their teaching captions no longer repeat the starting stacks.
-          final hasUniformStartingStacks =
+          final shouldCheckConservation =
               (w.worldNumber == 1 && table.decisionSeatId != null) ||
               t.runner.caption.contains('100 BB');
-          if (hasUniformStartingStacks &&
+          if (shouldCheckConservation &&
               stacks.length == 6 &&
               !stacks.contains(null) &&
               pot != null) {

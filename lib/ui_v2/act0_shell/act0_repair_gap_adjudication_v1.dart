@@ -1419,7 +1419,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "two",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "1cb07814c58ecb00f54b39c359df686e721d976392f6d1b8d0703ee4bcf7d35d",
+        "99a3ff4a7e25090083ffb8dade0b38cfbb92b8a458963111bb2d62513969e1f2",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_one_third",
     relationId: "selected_w4_16_two_v1",
@@ -1435,7 +1435,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "six",
     sourceCorrectChoiceId: "three",
     sourceFingerprint:
-        "1cb07814c58ecb00f54b39c359df686e721d976392f6d1b8d0703ee4bcf7d35d",
+        "99a3ff4a7e25090083ffb8dade0b38cfbb92b8a458963111bb2d62513969e1f2",
     goalId: "half_pot_fraction",
     misconceptionId: "half_as_whole",
     relationId: "selected_w4_17_six_v1",
