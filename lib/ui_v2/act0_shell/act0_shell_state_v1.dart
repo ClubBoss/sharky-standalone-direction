@@ -7112,7 +7112,10 @@ Act0TableStateV1 _w7AllInTableV1({
     handContributions: table.handContributions,
     actionTrail: [
       ...table.actionTrail.take(table.actionTrail.length - 1),
-      Act0ActionTrailItemV1(label: '$street: BB all-in $amount'),
+      Act0ActionTrailItemV1(
+        label: '$street: BB shoves $amount',
+        displayLabel: '$street: BB goes all-in for $amount',
+      ),
     ],
     seats: [
       for (final seat in table.seats)

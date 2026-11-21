@@ -16,6 +16,7 @@ import '../support/act0_source_choreography_test_wait_v1.dart';
 // goes through Worlds 1–7 by default, or 1–12 with
 // --dart-define=ACT0_LONG_SESSION_FULL_ROUTE=true. The app is
 // restarted in every world, and progress must carry on from where it stopped.
+// ACT0_LONG_SESSION_W7_TO_W8 resumes a save at W7 for focused Q7 checks.
 // Any exception thrown by the app fails the test.
 const _continueKeys = [
   'act0_shell_feedback_continue_cta',
@@ -627,14 +628,15 @@ void main() {
   }
 
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
-  const lastWorld = fullRoute ? 12 : 7;
-  for (final firstWorld in fullRoute ? [1, 2] : [1]) {
+  const w7ToW8 = bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
+  const lastWorld = w7ToW8 ? 8 : (fullRoute ? 12 : 7);
+  for (final firstWorld in w7ToW8 ? [7] : (fullRoute ? [1, 2] : [1])) {
     final expectedWorlds = {
       for (var world = firstWorld; world <= lastWorld; world++) world,
     };
     final useRulesCheck = firstWorld == 2;
     testWidgets(
-      'a fresh learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
+      'a ${w7ToW8 ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
       (t) async {
         SharedPreferences.setMockInitialValues(<String, Object>{});
         t.view.physicalSize = const Size(393, 852);
@@ -669,8 +671,17 @@ void main() {
         final enteredWorlds = <int>{};
         var complete = false;
         const w7Checkpoint = 'w7_checkpoint_river_card_excludes_hand';
-        await _mount(t, firstRun: true);
-        await _onboard(t, useRulesCheck: useRulesCheck);
+        var priorXp = 0;
+        if (w7ToW8) {
+          priorXp = await _openSavedCourseTask(
+            t,
+            worldId: 'world_7',
+            taskId: worlds.first.lessons.first.courseTaskList.first.taskId,
+          );
+        } else {
+          await _mount(t, firstRun: true);
+          await _onboard(t, useRulesCheck: useRulesCheck);
+        }
 
         for (
           var step = 0;
@@ -689,7 +700,7 @@ void main() {
               expect(confirmedMisses, contains(world), reason: taskId);
             }
             if (enteredWorlds.add(world)) {
-              if (taskId == 'visible_ace_combo_reduction_intro') {
+              if (!w7ToW8 && taskId == 'visible_ace_combo_reduction_intro') {
                 expect(runner.phase, Act0LessonPhaseV1.theory);
                 expect(runner.options, hasLength(4));
                 expect(
@@ -894,13 +905,13 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = fullRoute ? 370 : 256;
+        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 370 : 256);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
         );
         if (useRulesCheck) expect(completed.intersection(w1Ids), isEmpty);
-        if (fullRoute) {
+        if (fullRoute && !w7ToW8) {
           expect(completed, contains('w12_checkpoint_full_loop_line'));
           expect(completed, contains('w12_checkpoint_review'));
         }
@@ -913,7 +924,7 @@ void main() {
             useRulesCheck
                 ? act0W1RulesQuestionsV1.length *
                       Act0W1RulesResultV1.xpPerCorrectAnswer
-                : 0,
+                : priorXp,
             (sum, id) => sum + (rewards[id] ?? 0),
           ),
         );

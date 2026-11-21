@@ -70,6 +70,8 @@ void main() {
       expect(world7.unlockLabel, 'Finish Range Thinking to open this world.');
       expect(world7.lessons.map((lesson) => lesson.lessonId), <String>[
         'range_thinking_lite_combo_density',
+        'w7_visible_cards_and_price',
+        'w7_visible_cards_range_checkpoint',
       ]);
 
       expect(
@@ -112,7 +114,9 @@ void main() {
       final tasks = Act0ShellStateV1.sample
           .worldById('world_7')
           .lessons
-          .single
+          .singleWhere(
+            (lesson) => lesson.lessonId == 'range_thinking_lite_combo_density',
+          )
           .taskList;
       final queenChecks = tasks.where(
         (task) => task.runner.question.startsWith('Three queens are visible'),

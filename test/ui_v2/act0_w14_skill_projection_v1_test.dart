@@ -221,21 +221,33 @@ void main() {
       final world = source.world.worldNumber;
       if (world < 7 || world > 8) continue;
       taskCounts.update(world, (count) => count + 1, ifAbsent: () => 1);
-      final expectedSkill = switch (source.lesson.lessonId) {
-        'range_thinking_lite_combo_density' => 'Range reading',
+      final expectedSkills = switch (source.lesson.lessonId) {
+        'range_thinking_lite_combo_density' => {'Range reading'},
+        'w7_visible_cards_range_checkpoint' => {
+          'Range reading',
+          'Betting decisions',
+        },
+        'w7_visible_cards_and_price' => {
+          if (source.task.taskId == 'w7_count_winning_rivers' ||
+              source.task.taskId.startsWith('w7_clean_outs_'))
+            'Board reading',
+          if (source.task.taskId != 'w7_count_winning_rivers')
+            'Betting decisions',
+        },
         'format_pressure' when !formatStackTasks.contains(source.task.taskId) =>
-          'Position play',
-        _ => 'Stack decisions',
+          {'Position play'},
+        _ => {'Stack decisions'},
       };
       expect(
         _states([_answer(i, i + 1)])
             .where((state) => state.independentTasks > 0)
-            .map((state) => state.label),
-        [expectedSkill],
+            .map((state) => state.label)
+            .toSet(),
+        expectedSkills,
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {7: 5, 8: 26});
+    expect(taskCounts, {7: 13, 8: 26});
   });
 
   test('every W9–W10 task projects to its authored topic', () {
