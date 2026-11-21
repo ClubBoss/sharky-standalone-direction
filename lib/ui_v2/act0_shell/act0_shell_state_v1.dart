@@ -6815,7 +6815,381 @@ final _rangeThinkingFoundationLessons = <Act0LessonCardV1>[
 
 final _visibleCardRangeContinuationLessons = <Act0LessonCardV1>[
   _w7VisibleCardComboDensityLesson,
+  _w7PriceLessonV1,
+  _w7RangeCheckpointV1,
 ];
+
+final _w7PriceLessonV1 = _w7AppliedLessonV1(
+  id: 'w7_visible_cards_and_price',
+  title: 'Read the table and compare the price',
+  subtitle: 'See what changes when another player enters or the price goes up.',
+  tasks: [
+    _w7FlopTaskV1(multiway: false),
+    _w7FlopTaskV1(multiway: true),
+    _w7AppliedTaskV1(
+      id: 'w7_count_winning_rivers',
+      title: 'Which cards actually win?',
+      question:
+          'Suppose BB has K♣ Q♠. How many river cards give you the winning hand?',
+      caption: 'Only one card is left to come.',
+      table: _w7TurnPriceTableV1(3),
+      labels: const ['9', '12', '11'],
+      correctAt: 1,
+      feedback: const [
+        'Nine hearts make a winning flush. Three non-heart aces also win.',
+        'Nine hearts make a winning flush. The three unseen aces also win with a pair of aces.',
+        'Count the three unseen aces as well as all nine unseen hearts.',
+      ],
+      teaching: const [
+        Act0TeachingStepV1(
+          title: 'An out has to win',
+          body:
+              'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
+        ),
+      ],
+      family: Act0TaskFamilyV1.counting,
+    ),
+    _w7TurnPriceTaskV1(
+      id: 'w7_clean_outs_lower_price',
+      bet: 3,
+      correctAt: 0,
+      feedback:
+          'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+    ),
+    _w7TurnPriceTaskV1(
+      id: 'w7_clean_outs_higher_price',
+      bet: 6,
+      correctAt: 1,
+      feedback:
+          'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
+    ),
+  ],
+);
+
+final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
+  id: 'w7_visible_cards_range_checkpoint',
+  title: 'Range and price checkpoint',
+  subtitle:
+      'Make three river decisions from the hands that are still possible.',
+  tasks: [
+    _w7RiverTaskV1(
+      id: 'w7_river_one_bluff_of_six',
+      range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♣ Q♦',
+      correctAt: 1,
+      feedback:
+          'If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
+    ),
+    _w7RiverTaskV1(
+      id: 'w7_river_two_bluffs_of_six',
+      range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♠ 8♠',
+      correctAt: 0,
+      feedback:
+          'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+    ),
+    _w7UnseenRiverTaskV1(),
+  ],
+);
+
+Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
+  id: 'w7_checkpoint_river_card_excludes_hand',
+  title: 'The river all-in',
+  question:
+      'BB is all-in. Before the river, BB could have T♣ 8♣, T♠ 8♠, '
+      'T♦ 8♦, 9♥ 9♦ or 2♠ 2♦. Give all hands that are still possible '
+      'equal weight. Call or fold?',
+  caption: 'Read the final board.',
+  table: _w7AllInTableV1(
+    holeCards: 'Jh Jd',
+    boardCards: 'Js 9c 7c 4h 2s',
+    street: 'River',
+    bet: 5,
+  ),
+  labels: const ['Call', 'Fold'],
+  correctAt: 1,
+  feedback: const [
+    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
+        'If BB has a pair of nines, you win. The three ten-eight hands '
+        'make a straight. One win in four (25%) is below the roughly '
+        '28% needed to call 5 BB for a final pot of 18 BB.',
+    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
+        'If BB has a pair of nines, you win. The three ten-eight hands '
+        'make a straight. One win in four (25%) is below the roughly '
+        '28% this call needs.',
+  ],
+  family: Act0TaskFamilyV1.transfer,
+  kind: Act0LessonStepKindV1.proveIt,
+);
+
+Act0LessonCardV1 _w7AppliedLessonV1({
+  required String id,
+  required String title,
+  required String subtitle,
+  required List<Act0LessonTaskV1> tasks,
+}) => Act0LessonCardV1(
+  lessonId: id,
+  title: title,
+  subtitle: subtitle,
+  state: Act0LessonStateV1.locked,
+  phaseLabel: 'Visible Cards Change Ranges',
+  primaryCtaLabel: 'Locked',
+  isSelectable: false,
+  isLocked: true,
+  rewardXp: tasks.fold<int>(0, (total, task) => total + task.rewardXp),
+  runner: tasks.first.runner,
+  tasks: tasks,
+);
+
+Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
+  final opponents = multiway ? 'SB and BB both check.' : 'BB checks.';
+  final foldRate = multiway ? '16%' : '40%';
+  final table = _w7FlopTableV1(multiway: multiway);
+  final explanation = multiway
+      ? 'Everyone folds only 16% of the time in this example. The bet wins '
+            '9 BB on those folds but loses 3 BB the other 84% of the time. '
+            'That is a loss of about 1.1 BB on average. Checking risks 0 BB.'
+      : 'With one opponent, the bet wins 6.5 BB on the 40% of hands where '
+            'they fold and loses 3 BB otherwise. That is a gain of 0.8 BB '
+            'on average in this example.';
+  return _w7AppliedTaskV1(
+    id: multiway ? 'w7_flop_bluff_two_players' : 'w7_flop_bluff_one_player',
+    title: 'A flop decision',
+    question:
+        '$opponents Everyone folds to a 3 BB bet $foldRate of the time. For this '
+        'exercise, count the full bet as lost if anyone continues. Checking '
+        'has a value of 0 BB. Which action is better in this model?',
+    caption:
+        'Compare what you win on folds with what you risk when someone continues.',
+    table: table,
+    labels: const ['Bet 3 BB', 'Check'],
+    correctAt: multiway ? 1 : 0,
+    feedback: [explanation, explanation],
+    family: Act0TaskFamilyV1.decision,
+  );
+}
+
+Act0TableStateV1 _w7FlopTableV1({required bool multiway}) {
+  final heroCards = _act0LessonCardsV1('7h 6h');
+  final table = _act0BoardLessonTableV1(
+    heroCards: heroCards,
+    boardCards: _act0LessonCardsV1('As 9d 3c'),
+    centerLabel: 'Flop decision',
+  );
+  const wager = Act0ContributionKindV1.wager;
+  return table.copyWith(
+    heroSeatId: 'co',
+    activeSeatId: 'co',
+    decisionSeatId: 'co',
+    potLabel: multiway ? 'Pot 9 BB' : 'Pot 6.5 BB',
+    actionTrail: [
+      const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      const Act0ActionTrailItemV1(label: 'UTG folds'),
+      const Act0ActionTrailItemV1(label: 'HJ folds'),
+      const Act0ActionTrailItemV1(label: 'CO raises to 3 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN folds'),
+      if (multiway)
+        const Act0ActionTrailItemV1(
+          label: 'SB calls 3 BB',
+          displayLabel: 'SB calls 2.5 BB more',
+        )
+      else
+        const Act0ActionTrailItemV1(label: 'SB folds'),
+      const Act0ActionTrailItemV1(
+        label: 'BB calls 3 BB',
+        displayLabel: 'BB calls 2 BB more',
+      ),
+      if (multiway) const Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+      Act0ActionTrailItemV1(label: multiway ? 'BB checks' : 'Flop: BB checks'),
+    ],
+    handContributions: Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      startingStackBbBySeat: const {'co': 100, 'bb': 100, 'sb': 100},
+      entries: [
+        ..._act0LessonBlinds,
+        const Act0ContributionV1(PokerStreet.preflop, 'co', wager, 3),
+        if (multiway)
+          const Act0ContributionV1(PokerStreet.preflop, 'sb', wager, 2.5),
+        const Act0ContributionV1(PokerStreet.preflop, 'bb', wager, 2),
+      ],
+    ),
+    seats: [
+      for (final seat in table.seats)
+        _act0CopySeatStateV1(
+          seat,
+          clearCommitment: true,
+          isHero: seat.seatId == 'co',
+          isActive: seat.seatId == 'co',
+          hasActed: seat.seatId != 'co',
+          isInHand:
+              seat.seatId == 'co' ||
+              seat.seatId == 'bb' ||
+              (multiway && seat.seatId == 'sb'),
+          isFolded:
+              seat.seatId != 'co' &&
+              seat.seatId != 'bb' &&
+              (!multiway || seat.seatId != 'sb'),
+          stackLabel: switch (seat.seatId) {
+            'co' || 'bb' => '97 BB',
+            'sb' => multiway ? '97 BB' : '99.5 BB',
+            _ => '100 BB',
+          },
+          holeCards: seat.seatId == 'co' ? heroCards : _unknownHoleCards,
+          cardsVisibleMode: switch (seat.seatId) {
+            'co' => Act0CardsVisibleModeV1.faceUp,
+            'bb' => Act0CardsVisibleModeV1.faceDown,
+            'sb' when multiway => Act0CardsVisibleModeV1.faceDown,
+            _ => Act0CardsVisibleModeV1.none,
+          },
+        ),
+    ],
+  );
+}
+
+Act0TableStateV1 _w7TurnPriceTableV1(int bet) => _w7AllInTableV1(
+  holeCards: 'Ah 8h',
+  boardCards: 'Kh 7h 2c 4d',
+  street: 'Turn',
+  bet: bet,
+);
+
+Act0LessonTaskV1 _w7TurnPriceTaskV1({
+  required String id,
+  required int bet,
+  required int correctAt,
+  required String feedback,
+}) => _w7AppliedTaskV1(
+  id: id,
+  title: 'A turn price',
+  question: 'BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?',
+  caption: 'Compare your chance to win with the price.',
+  table: _w7TurnPriceTableV1(bet),
+  labels: const ['Call', 'Fold'],
+  correctAt: correctAt,
+  feedback: [feedback, feedback],
+  family: Act0TaskFamilyV1.decision,
+);
+
+Act0LessonTaskV1 _w7RiverTaskV1({
+  required String id,
+  required String range,
+  required int correctAt,
+  required String feedback,
+}) => _w7AppliedTaskV1(
+  id: id,
+  title: 'A river decision',
+  question:
+      'BB is all-in and could have any of these equally likely hands: $range. Call or fold?',
+  caption: 'Use the stated range for this decision.',
+  table: _w7AllInTableV1(
+    holeCards: 'Qs Jd',
+    boardCards: 'Qh 9c 5s 4d 2c',
+    street: 'River',
+    bet: 4,
+  ),
+  labels: const ['Call', 'Fold'],
+  correctAt: correctAt,
+  feedback: [feedback, feedback],
+  family: Act0TaskFamilyV1.transfer,
+  kind: Act0LessonStepKindV1.proveIt,
+);
+
+Act0TableStateV1 _w7AllInTableV1({
+  required String holeCards,
+  required String boardCards,
+  required String street,
+  required int bet,
+}) {
+  final table = _act0BoardLessonTableV1(
+    heroCards: _act0LessonCardsV1(holeCards),
+    boardCards: _act0LessonCardsV1(boardCards),
+    centerLabel: '$street decision',
+    flopBetBb: 1.25,
+    facingBb: bet,
+    bbBehindBb: 0,
+  );
+  final amount = _act0BbLabelV1(bet);
+  return table.copyWith(
+    handContributions: table.handContributions,
+    actionTrail: [
+      ...table.actionTrail.take(table.actionTrail.length - 1),
+      Act0ActionTrailItemV1(
+        label: '$street: BB all-in $amount',
+        displayLabel: '$street: BB goes all-in for $amount',
+      ),
+    ],
+    seats: [
+      for (final seat in table.seats)
+        if (seat.seatId == 'bb')
+          _act0CopySeatStateV1(
+            seat,
+            clearCommitment: true,
+            bet: Act0SeatBetStateV1(
+              kind: Act0SeatBetKindV1.allIn,
+              label: 'BB',
+              amountLabel: amount,
+            ),
+          )
+        else
+          seat,
+    ],
+  );
+}
+
+Act0LessonTaskV1 _w7AppliedTaskV1({
+  required String id,
+  required String title,
+  required String question,
+  required String caption,
+  required Act0TableStateV1 table,
+  required List<String> labels,
+  required int correctAt,
+  required List<String> feedback,
+  required Act0TaskFamilyV1 family,
+  List<Act0TeachingStepV1> teaching = const [],
+  Act0LessonStepKindV1 kind = Act0LessonStepKindV1.practice,
+}) {
+  final phase = teaching.isEmpty
+      ? Act0LessonPhaseV1.drill
+      : Act0LessonPhaseV1.theory;
+  return Act0LessonTaskV1(
+    taskId: id,
+    title: title,
+    phase: phase,
+    rewardXp: 10,
+    taskFamily: family,
+    stepKind: teaching.isEmpty ? kind : Act0LessonStepKindV1.learn,
+    runner: _w6ComboCountsIntroRunner.copyWith(
+      lessonId: id,
+      lessonTitle: title,
+      lessonSubtitle: 'Visible Cards Change Ranges',
+      phase: phase,
+      caption: caption,
+      question: question,
+      hint: '',
+      table: table,
+      teachingSteps: teaching,
+      feedbackTitle: 'Compare the numbers.',
+      feedbackReason: feedback[correctAt],
+      options: [
+        for (var index = 0; index < labels.length; index++)
+          Act0RunnerOptionV1(
+            id: 'choice_${index + 1}',
+            label: labels[index],
+            isCorrect: index == correctAt,
+            preferredLabel: labels[correctAt],
+            betterAnswerLabel: index == correctAt ? null : labels[correctAt],
+            quality: index == correctAt
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            feedbackTitle: index == correctAt
+                ? 'That fits the table.'
+                : 'Check what can still win.',
+            feedbackReason: feedback[index],
+          ),
+      ],
+    ),
+  );
+}
 
 List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
   final tasks = <Act0LessonTaskV1>[];
