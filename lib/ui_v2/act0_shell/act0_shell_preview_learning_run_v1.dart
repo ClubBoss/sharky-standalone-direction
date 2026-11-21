@@ -762,6 +762,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _retentionSequence = 0;
       _spacedReviewReturnV1 = null;
       _activeSpacedReviewTaskV1 = null;
+      _activeDueReviewItemV1 = null;
       _newSpacedReviewSavePendingV1 = false;
       _openedSpacedReviewTaskIdsV1.clear();
       _retentionMemoryByTaskId.clear();
