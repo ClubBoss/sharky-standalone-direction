@@ -121,8 +121,8 @@ void main() {
             mode: Act0ControlledDemoCaptureModeV1.directState,
             surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
             worldId: 'world_9',
-            lessonId: 'bubble_risk_premium',
-            taskId: 'w9_bubble_table_risk_transfer',
+            lessonId: 'm_ratio_zones_lite',
+            taskId: 'w9_m_ratio_table_window_transfer',
           ),
         ),
       ),
@@ -145,9 +145,11 @@ void main() {
     final task = Act0ShellStateV1.sample
         .worldById('world_9')
         .lessons
-        .singleWhere((lesson) => lesson.lessonId == 'bubble_risk_premium')
+        .singleWhere((lesson) => lesson.lessonId == 'm_ratio_zones_lite')
         .courseTaskList
-        .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+        .singleWhere(
+          (task) => task.taskId == 'w9_m_ratio_table_window_transfer',
+        );
     final answer = task.runner.options.singleWhere(
       (option) => option.isCorrect,
     );

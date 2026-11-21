@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -32,8 +33,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(397));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(397));
+    expect(tasks, hasLength(404));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(404));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -96,7 +97,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(397));
+    expect(entries, hasLength(404));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -272,7 +273,30 @@ void main() {
           ];
       }
     }
-    final legacyEntries = entries
+    // Compare the new W9 identities separately. Reconstruct the old view for
+    // the earlier frozen hashes so those hashes still witness their own source.
+    expect(
+      sha256
+          .convert(
+            utf8.encode(
+              jsonEncode(entries.where((row) => row[0] == 'world_9').toList()),
+            ),
+          )
+          .toString(),
+      '45bbd95d0a3e80dc5a8a2c6374444eb84f04c97f4c1eb9bb9c3287e34ae4478e',
+    );
+    final preAtlasW9 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w9_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final comparisonEntries = [
+      ...entries.where((row) => row[0] != 'world_9'),
+      ...(preAtlasW9['identity'] as List).cast<List<Object?>>(),
+    ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
+    final legacyEntries = comparisonEntries
         .where(
           (row) =>
               !_asm05NewTaskIds.contains(row[2]) &&
@@ -1954,7 +1978,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(397));
+    expect(taskIndex, hasLength(404));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

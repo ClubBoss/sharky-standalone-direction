@@ -206,10 +206,11 @@ void main() {
       ...catalogTasks,
       ...rulesCheckCatalogTasks,
     ].map((row) => row.task.taskId).toSet();
-    final courseHands = [
-      ...catalogTasks,
-      ...rulesCheckCatalogTasks,
-    ].map((row) => day7HandKeyV1(row.task.runner.table)).toSet();
+    final courseHands = [...catalogTasks, ...rulesCheckCatalogTasks]
+        .map((row) => row.task.runner.table)
+        .where((table) => table.seats.isNotEmpty)
+        .map(day7HandKeyV1)
+        .toSet();
     for (final row in day7CatalogTasks) {
       final task = row.task;
       final runner = task.runner;

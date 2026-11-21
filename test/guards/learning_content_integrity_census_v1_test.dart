@@ -34,23 +34,17 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
   'positions_theory',
   'blinds_button_moves',
-  // This is a played hand with an unknown caller stack.
-  _w9BubbleTableRiskId,
-  // The remaining questions use hypothetical setups.
-  'w9_cash_vs_tournament',
-  'w9_short_stack_survival',
+  // W9 concept questions receive the familiar-replay disposition.
+  'w9_ev_two_results',
   'w9_survival_stack_tradeoff',
-  'w9_m_ratio_red_zone',
-  'w9_m_ratio_green_zone',
-  'w9_m_ratio_yellow_zone',
-  'w9_medium_stack_tighten',
-  'w9_big_stack_leverage',
-  'w9_bubble_short_stack',
-  'w9_checkpoint_survival_line',
-  'w9_checkpoint_zone_line',
-  'w9_checkpoint_bubble_line',
-  'w9_checkpoint_table_notice',
-  'w9_checkpoint_review',
+  'w9_survival_recap',
+  'w9_m_ratio_lap_count',
+  'w9_m_ratio_ante_cost',
+  'w9_m_ratio_recap',
+  'w9_bubble_premium_gap',
+  'w9_bubble_cover_seat',
+  'w9_bubble_recap',
+  'w9_prize_model_inputs',
   'w10_nit_tag',
   'w10_loose_passive_tag',
   'w10_overaggressive_tag',
@@ -114,7 +108,7 @@ void main() {
                 !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
           )
           .toList();
-      expect(allRows, hasLength(294));
+      expect(allRows, hasLength(304));
       expect(
         allRows
             .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
@@ -128,7 +122,7 @@ void main() {
       final rows = allRows
           .where((row) => !_asm05NewTaskIds.contains(row.task.taskId))
           .toList(growable: false);
-      expect(rows, hasLength(292));
+      expect(rows, hasLength(302));
 
       final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
       final repair = repairRows.map(_declaredRepairRow).toList(growable: false);
@@ -246,21 +240,21 @@ void main() {
       print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
       expect(snapshot['optionCounts'], <String, int>{
-        '2': 127,
-        '3': 164,
+        '2': 136,
+        '3': 165,
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
-        '0': 112,
-        '1': 122,
-        '2': 58,
+        '0': 118,
+        '1': 125,
+        '2': 59,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
-        'TABLE_ACTION_DECISION': 34,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 24,
+        'TABLE_ACTION_DECISION': 41,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 27,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -282,7 +276,7 @@ void main() {
       );
       expect(
         repairSnapshot['sameSignalMapped'],
-        270 - _legacyFallbacksWithoutSourceClue.length,
+        280 - _legacyFallbacksWithoutSourceClue.length,
       );
       expect(
         repairSnapshot['fallbackOnly'],
@@ -321,9 +315,9 @@ void main() {
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
       };
-      expect(repairSnapshot['incorrectOptions'], 458);
+      expect(repairSnapshot['incorrectOptions'], 469);
       expect(repairSnapshot['exactReplayCovered'], 17);
-      expect(historicalRepairComparison['sameSignalMapped'], 276);
+      expect(historicalRepairComparison['sameSignalMapped'], 286);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
@@ -352,7 +346,7 @@ void main() {
         'misread_stack_depth_risk': 34,
         'misread_starting_hand_discipline': 37,
         'misread_table_position': 18,
-        'misread_tournament_pressure': 32,
+        'misread_tournament_pressure': 43,
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
       expect(act0RepairGapAdjudicationsV1.take(37), hasLength(37));
@@ -467,17 +461,17 @@ void main() {
     }
   });
 
-  test('W9 bubble repair stays on tournament pressure without a price cue', () {
+  test('W9 bubble repair keeps the exact decision with a proved price', () {
     final source = _assessedRows().singleWhere(
       (row) => row.task.taskId == _w9BubbleTableRiskId,
     );
-    expect(source.task.runner.table.toCallLabel, isEmpty);
+    expect(source.task.runner.table.toCallLabel, 'To call 15.5 BB');
     final legacy = _declaredRepairRow(source);
-    expect(legacy.fallbackOnly, isTrue);
-    expect(legacy.mappingType, 'exact');
+    expect(legacy.fallbackOnly, isFalse);
+    expect(legacy.mappingType, 'repair');
     for (final choice in source.incorrectOptions) {
       final intent = _incorrectOptionRow(source, choice).intent;
-      expect(intent?.missedSignalId, 'misread_tournament_pressure');
+      expect(intent?.missedSignalId, 'pot_to_call');
       expect(intent?.targetWorldId, 'world_9');
       expect(intent?.targetTaskId, _w9BubbleTableRiskId);
       expect(intent?.mappingType, 'intentional_exact');
@@ -495,24 +489,24 @@ void main() {
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
-    expect(rows, hasLength(294));
+    expect(rows, hasLength(304));
     expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
-    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(294));
+    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(304));
     expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
-      '2': 129,
-      '3': 164,
+      '2': 138,
+      '3': 165,
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
-      '0': 113,
-      '1': 123,
-      '2': 58,
+      '0': 119,
+      '1': 126,
+      '2': 59,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
-      'TABLE_ACTION_DECISION': 36,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 24,
+      'TABLE_ACTION_DECISION': 43,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 27,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -618,7 +612,7 @@ void main() {
         for (final option in row.incorrectOptions)
           _incorrectOptionRow(row, option),
     ];
-    expect(incorrect, hasLength(460));
+    expect(incorrect, hasLength(471));
     final currentGaps = allRepair
         .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
         .toList();
@@ -628,7 +622,7 @@ void main() {
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped),
-      hasLength(272 - _legacyFallbacksWithoutSourceClue.length),
+      hasLength(282 - _legacyFallbacksWithoutSourceClue.length),
     );
     expect(
       allRepair.where((row) => row.fallbackOnly),
@@ -639,7 +633,7 @@ void main() {
           currentGaps.length +
           3 +
           _legacyFallbacksWithoutSourceClue.length,
-      278,
+      288,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
@@ -659,7 +653,7 @@ void main() {
     // assertion. A raw 'exact' fallback is not an accepted repair disposition.
     print(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_294',
+        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_304',
         'semanticAdmission': 'UNKNOWN_NOT_REVIEWED_NO_CREDIT',
         'sameSignalMapped': allRepair
             .where((row) => row.sameSignalMapped)
@@ -867,12 +861,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(rows, hasLength(329));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(329));
     expect(
       allChoices,
       hasLength(
-        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        577 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -945,7 +939,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        539 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(

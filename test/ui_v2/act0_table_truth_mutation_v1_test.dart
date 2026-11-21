@@ -98,8 +98,9 @@ void main() {
       expect(table.potLabel, 'Pot $pot BB'.replaceFirst('21.0', '21'));
       final unmatchedBb = sums['BB']! - sums['BTN']!;
       expect(unmatchedBb, 15.5);
-      expect(task.runner.caption, contains('$unmatchedBb BB more'));
-      expect(table.toCallLabel, isEmpty);
+      expect(table.toCallLabel, 'To call $unmatchedBb BB');
+      expect(table.handContributions!.startingStackBbBySeat['btn'], 18);
+      expect(table.handContributions!.startingStackBbBySeat['bb'], 50);
       expect(table.activeSeatId, table.heroSeat.seatId);
       expect(
         table.seats
@@ -112,10 +113,10 @@ void main() {
         table.seats.singleWhere((s) => s.seatId == 'bb').bet!.amountLabel,
         '18 BB',
       );
-      // This question tests tournament risk premium, not a numerical call threshold.
+      // The correct action evaluates the stipulated range and prize context.
       final correct = task.runner.options.singleWhere((o) => o.isCorrect);
-      expect(correct.id, 'tighten_stackoff');
-      expect(correct.feedbackReason, contains('risk premium'));
+      expect(correct.id, 'fold');
+      expect(correct.feedbackReason, contains('set of prizes'));
     },
   );
 }
