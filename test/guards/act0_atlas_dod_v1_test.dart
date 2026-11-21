@@ -91,6 +91,73 @@ Map<String, String> _priorChecklist(File report) {
   };
 }
 
+// Optional machine receipt for P3. From a clean checkout, capture:
+//   flutter test test/ui_v2/act0_w1_long_session_v1_test.dart \
+//     --dart-define=ACT0_LONG_SESSION_FULL_ROUTE=true --reporter=json \
+//     > "/tmp/act0-full-route-$(git rev-parse HEAD).jsonl"
+// Pass that file as ACT0_ATLAS_ROUTE_EVENTS when generating the atlas.
+bool _fullRoutePassed() {
+  final path = Platform.environment['ACT0_ATLAS_ROUTE_EVENTS'];
+  if (path == null || path.isEmpty) return false;
+  final sha = Process.runSync('git', ['rev-parse', 'HEAD']);
+  final tree = Process.runSync('git', [
+    'status',
+    '--porcelain',
+    '--untracked-files=no',
+  ]);
+  if (sha.exitCode != 0 ||
+      tree.exitCode != 0 ||
+      tree.stdout.toString().trim().isNotEmpty) {
+    return false;
+  }
+  final file = File(path);
+  if (file.uri.pathSegments.last !=
+          'act0-full-route-${sha.stdout.toString().trim()}.jsonl' ||
+      !file.existsSync()) {
+    return false;
+  }
+  int? routeSuite;
+  final names = <int, String>{};
+  final passed = <String>{};
+  var done = false;
+  for (final line in file.readAsLinesSync()) {
+    if (!line.startsWith('{')) continue;
+    final event = jsonDecode(line) as Map<String, dynamic>;
+    switch (event['type']) {
+      case 'suite':
+        final suite = event['suite'] as Map<String, dynamic>;
+        if ((suite['path'] as String).endsWith(
+          '/test/ui_v2/act0_w1_long_session_v1_test.dart',
+        )) {
+          routeSuite = suite['id'] as int;
+        }
+      case 'testStart':
+        final test = event['test'] as Map<String, dynamic>;
+        if (test['suiteID'] == routeSuite) {
+          names[test['id'] as int] = test['name'] as String;
+        }
+      case 'testDone':
+        final name = names[event['testID']];
+        if (event['result'] == 'success' &&
+            event['skipped'] != true &&
+            name != null) {
+          passed.add(name);
+        }
+      case 'done':
+        done = event['success'] == true;
+    }
+  }
+  return done &&
+      const {
+        'a fresh learner finishes W1–W12 with mistakes, retries and restarts',
+        'a fresh learner finishes W2–W12 with mistakes, retries and restarts',
+        'W1 save resumes a drill from before the lesson split',
+        'pre-Q8 save keeps Position Thinking credit',
+        'pre-Q9 save keeps World 2 credit and opens the new lesson',
+        'pre-Q10 save keeps World 6 credit and opens the new lesson',
+      }.every(passed.contains);
+}
+
 double _flesch(Iterable<String> texts) {
   var words = 0;
   var syllables = 0;
@@ -783,7 +850,7 @@ void main() {
       '${route.length} обязательных, $routeXp XP',
       'FULL_ROUTE, точный XP и старые сохранения',
       0,
-      manual: true,
+      manual: !_fullRoutePassed(),
     );
 
     final output = Platform.environment['ACT0_ATLAS_REPORT'];
@@ -854,7 +921,7 @@ void main() {
         '- A1–A2 используют допуск 10 п.п. как рабочее определение «на уровне случая». A3 измеряет маркеры лексики.',
         '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
         '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
-        '- P3 показывает объём по каталогу. Исполнение подтверждается отдельным FULL_ROUTE прогоном на том же коммите.',
+        '- P3 показывает объём по каталогу и проверяет приложенный JSONL FULL_ROUTE на том же коммите.',
         '',
         '## Места для проверки',
         '',
