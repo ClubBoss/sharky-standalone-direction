@@ -189,8 +189,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 107),
-      ('D3.to_call_completeness', 107),
+      ('D2.pot_feasibility', 110),
+      ('D3.to_call_completeness', 110),
     ]) {
       final proof = rows
           .where(
@@ -201,6 +201,15 @@ void main() {
       expect(
         proof.map((row) => row.taskId).toSet(),
         hasLength(count),
+        reason: rule,
+      );
+      expect(
+        proof.map((row) => row.taskId).toSet(),
+        containsAll([
+          'w6_continuation_bet_intro',
+          'w6_continuation_bet_dry_size',
+          'w6_continuation_bet_wet_check',
+        ]),
         reason: rule,
       );
       expect(

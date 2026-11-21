@@ -7,6 +7,7 @@ import '../support/act0_catalog_truth_audit_v1.dart'
     show w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_w6_catalog_contract_v1.dart';
 
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)
