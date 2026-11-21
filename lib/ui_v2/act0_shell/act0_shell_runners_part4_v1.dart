@@ -1210,7 +1210,7 @@ final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Cash and tournament contexts are not the same. Tournament life creates extra downside for busting.',
+          'With 20 BB facing a thin all-in edge, using cash-game standards overlooks the cost of elimination in a tournament.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
@@ -1254,7 +1254,7 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too tight here.',
       feedbackReason:
-          'Waiting only for monsters often costs too many blinds. In short-stack spots you need practical urgency, not perfect cards.',
+          'At 9 BB with blinds about to hit, waiting for AA or KK can cost you a chance to go all-in while your stack can still make opponents fold.',
     ),
     Act0RunnerOptionV1(
       id: 'open_fold',
@@ -1266,7 +1266,7 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Open-fold lines with very short stacks burn too many chips. Tournament pressure rewards cleaner commit-or-fold plans.',
+          'At 9 BB with blinds about to hit, automatically folding after a small open costs chips and leaves you with less leverage on your next all-in.',
     ),
   ],
 );
@@ -1298,7 +1298,7 @@ final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Cash chips still matter, but reload makes busting less final. Tournament pressure creates the bigger penalty for thin stack-offs.',
+          'Passing thin edges at a reloadable cash table gives up profitable chip-EV spots where busting does not end your tournament life.',
     ),
     Act0RunnerOptionV1(
       id: 'same_both',
@@ -1309,7 +1309,7 @@ final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Elimination changes the downside.',
       feedbackReason:
-          'Hand strength matters in both formats, but tournament life changes the downside. The risk tradeoff is not equal.',
+          'On a tournament table, treating both formats equally ignores elimination cost and risks tournament survival on thin stack-offs.',
     ),
   ],
 );
@@ -1384,7 +1384,7 @@ final _w9MZoneRedRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Short tournament stacks often play poorly as passive flats. Clearer commit-or-fold lines are usually stronger.',
+          'In the red zone, frequent flat-calls quickly commit a large share of your stack. Calling gives the raiser no chance to fold preflop.',
     ),
   ],
 );
@@ -1416,7 +1416,7 @@ final _w9MZoneGreenRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not needed.',
       feedbackReason:
-          'Green zone does not require panic. You have time to use stronger setup and seat selection.',
+          'With your M-ratio in the green zone, forcing early all-ins risks a healthy stack unnecessarily when you still have room to pick better spots.',
     ),
     Act0RunnerOptionV1(
       id: 'never_risk',
@@ -1427,7 +1427,7 @@ final _w9MZoneGreenRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too passive.',
       feedbackReason:
-          'Patience is good, but full passivity leaks value. Green zone is for selective pressure, not fear-based folding.',
+          'In the green zone M-ratio spot, avoiding pressure spots entirely gives up profitable steals and lets your stack drift downward.',
     ),
   ],
 );
@@ -1459,7 +1459,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Waiting until the stack is critical often removes good options. Yellow zone is where you prepare instead of drift.',
+          'When your M-ratio is in the yellow zone, ignoring urgency until the red zone loses fold pressure and forces desperate decisions later.',
     ),
     Act0RunnerOptionV1(
       id: 'panic_now',
@@ -1470,7 +1470,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too rushed.',
       feedbackReason:
-          'Yellow zone needs sharper planning, not panic. You still want selective aggression with room for better spots.',
+          'With an M-ratio in the yellow zone, going all-in with your next playable hand can risk your tournament life before position and the action give you a good opening.',
     ),
   ],
 );
@@ -1514,7 +1514,7 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too late.',
       feedbackReason:
-          'Yellow zone is where urgency starts to matter. If you wait for red zone, you lose cleaner timing and let the stack drift into panic decisions.',
+          'With 12 BB in the stated yellow zone, waiting for the red zone gives the blinds more time to shrink your stack. Plan ahead while an all-in can still put opponents under pressure.',
     ),
     Act0RunnerOptionV1(
       id: 'panic_now',
@@ -1525,7 +1525,7 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Right idea, wrong speed.',
       feedbackReason:
-          'Urgency is real, but yellow zone still leaves some room. The cleaner read is plan practical action windows before red-zone panic, not force every spot immediately.',
+          'The spot gives you 12 BB and time to plan. Going all-in before the action gives you a suitable opening can put your tournament life at risk too early.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -1603,7 +1603,7 @@ final _w9MediumStackTightenRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Pure chip-EV calls can be too loose near bubble pressure. Tournament survival increases the cost of busting.',
+          'With a medium stack two spots from the money, calling off as wide as chip EV risks tournament elimination right before payouts begin.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_all',
@@ -1614,7 +1614,7 @@ final _w9MediumStackTightenRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable caution.',
       feedbackReason:
-          'Over-folding gives away too much. The sharper line is selective discipline, not total shutdown.',
+          'Two spots from the money, folding until payouts begin can cost a medium stack profitable steals and lets the blinds erode its stack.',
     ),
   ],
 );
@@ -1646,7 +1646,7 @@ final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too passive.',
       feedbackReason:
-          'Protection matters, but freezing misses one of the strongest bubble advantages of covering stacks.',
+          'Near the bubble you cover both blinds. Passing up steals gives up the chance to win pots uncontested when those players tighten to protect their tournament lives.',
     ),
     Act0RunnerOptionV1(
       id: 'jam_any_two',
@@ -1657,7 +1657,7 @@ final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not that extreme.',
       feedbackReason:
-          'Leverage is selective, not reckless. You still need position, blockers, and player tendencies.',
+          'With a big stack near the bubble, going all-in with a wider range without checking position risks running into strong hands from players who still have to act.',
     ),
   ],
 );
@@ -1689,7 +1689,7 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too passive.',
       feedbackReason:
-          'Short stacks lose too much by freezing completely. Bubble caution is real, but waiting forever often removes all fold equity.',
+          'As the short stack near the bubble, passing up playable all-in spots lets the blinds shrink your stack and makes later all-ins easier to call.',
     ),
     Act0RunnerOptionV1(
       id: 'call_off_light',
@@ -1700,7 +1700,7 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.',
+          'For a short stack near the bubble, calling light risks elimination against a stronger range. Acting first in a suitable spot also gives opponents a chance to fold.',
     ),
   ],
 );
@@ -1789,7 +1789,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose for bubble pressure.',
       feedbackReason:
-          'Chip-only odds tell you the price of a call. If the call puts your tournament life at risk, payouts and the other stacks also matter.',
+          'With A-J offsuit facing BB’s 18 BB all-in, chip odds price the call. If losing would eliminate you near the bubble, you may need extra equity because missing the payouts has a cost.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_anything_close',
@@ -1869,7 +1869,7 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too tight.',
       feedbackReason:
-          'Waiting for perfect hands often runs out the clock. Tournament pressure rewards practical urgency.',
+          'With a short stack and one orbit left, waiting for pocket aces gives up playable spots before the blinds come around and reduce your fold equity.',
     ),
   ],
 );
@@ -1901,7 +1901,7 @@ final _w9CheckpointZoneLineRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Green-zone players usually have room to wait for cleaner spots.',
+          'With similar hands, the red-zone player has fewer orbits before the blinds erode their ability to make opponents fold. The green-zone player has more time to choose a spot.',
     ),
     Act0RunnerOptionV1(
       id: 'same_zone',
@@ -1912,7 +1912,7 @@ final _w9CheckpointZoneLineRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The red-zone player has fewer orbits.',
       feedbackReason:
-          'Hand class matters, but pressure context differs by zone. Urgency is not equal across stacks.',
+          'Across M-ratio zones, acting the same way in both zones either bleeds a red zone short stack through passivity or risks a green zone stack too loosely.',
     ),
   ],
 );
@@ -1944,7 +1944,7 @@ final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.',
+          'Near the bubble when a medium stack faces a big stack open, defending as wide as chip EV risks tournament elimination without accounting for the payout risk premium.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything',
@@ -1996,7 +1996,7 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable start.',
       feedbackReason:
-          'Player reads matter, but tournament pressure changes incentives first. Good adjustments combine both layers.',
+          'Across M-ratio zones and medium stack bubble spots, adjusting by player type while ignoring stack pressure can lead to thin stack-offs that put your tournament life at risk near the bubble.',
     ),
     Act0RunnerOptionV1(
       id: 'pressure_then_adjust',
@@ -2017,7 +2017,7 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Order is right, adjustment is too broad.',
       feedbackReason:
-          'Pressure comes first, but player reads still need a specific tendency. Do not copy every adjustment before checking who is overfolding, overcalling, or avoiding risk.',
+          'After mapping M-ratio and medium stack bubble pressure, copying broad player reads without a specific tendency wastes chips against opponents who do not share that leak.',
     ),
   ],
 );
@@ -2054,7 +2054,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'That answer is tempting because the hand may still look playable in chip-EV terms. But the dominant cue is bubble pressure: the medium stack pays a much bigger bust-out cost than in cash, so call freedom tightens.',
+          'Near the bubble when a covering big stack opens into your medium stack, treating the spot like cash ignores the payout risk premium and risks elimination on thin calls.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_everything_bubble',
@@ -2065,7 +2065,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable caution.',
       feedbackReason:
-          'This looks disciplined because bubble fear is real. But full shutdown folds too much. The cleaner read is selective pressure awareness: tighten versus leverage, not panic-fold every spot.',
+          'When a covering big stack opens into your medium stack near the bubble, folding without looking at your hand or the opener’s range passes up profitable spots that still justify continuing under bubble pressure.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -2117,7 +2117,7 @@ final _w10NitTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Opposite profile.',
       feedbackReason:
-          'A maniac over-aggresses. Here the evidence is repeated folds and low contest frequency; if the same player were raising and barreling often, the aggressive tag would become stronger.',
+          'When an opponent repeatedly folds to steals and rarely puts in a 3-bet, tagging a maniac misreads a tight profile and forfeits easy blind-steal profit.',
     ),
     Act0RunnerOptionV1(
       id: 'nit',
@@ -2138,7 +2138,7 @@ final _w10NitTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable caution.',
       feedbackReason:
-          'Avoid overfitting tiny samples, but repeated folds are enough to begin a light targeted adjustment. If this were only one folded orbit, waiting would be stronger.',
+          'After seeing repeated folds to steals and a low 3-bet rate, waiting another orbit leaves uncontested blind pots on the table.',
     ),
   ],
 );
@@ -2160,7 +2160,7 @@ final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not this one.',
       feedbackReason:
-          'Tight-aggressive profiles fold more and raise more. This pattern is call-heavy and passive; if raises appeared with tight selection, the aggressive tag would fit better.',
+          'When an opponent calls often preflop and postflop without raising, tagging a tight-aggressive profile misses thin value bets against a passive caller.',
     ),
     Act0RunnerOptionV1(
       id: 'random',
@@ -2171,7 +2171,7 @@ final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Could happen short term.',
       feedbackReason:
-          'Short samples can mislead, but repeated call-heavy behavior is actionable enough for mild value-heavy adjustment. If calls were isolated, keeping the tag light would be better.',
+          'After repeated preflop and postflop calls without raises, dismissing the pattern as noise forfeits extra value against a loose-passive opponent.',
     ),
     Act0RunnerOptionV1(
       id: 'loose_passive',
@@ -2214,7 +2214,7 @@ final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong direction.',
       feedbackReason:
-          'Nits fold and avoid pressure. This player is doing the opposite by pushing action too often.',
+          'Frequent raises and weak hands shown after two bets point toward aggression. Treating this player as tight can lead you to fold hands that beat their bluffs.',
     ),
     Act0RunnerOptionV1(
       id: 'unknown',
@@ -2225,7 +2225,7 @@ final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Careful instinct.',
       feedbackReason:
-          'Tiny samples can be noisy, but repeated pressure plus weak showdowns is enough for a light over-aggressive tag.',
+          'After seeing repeated raises and two-street pressure with weak showdowns, claiming no read yet leaves you open to being bluffed off medium hands.',
     ),
   ],
 );
@@ -2281,7 +2281,7 @@ final _w10VsNitOpenWiderRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too much change.',
       feedbackReason:
-          'That is a broad multi-piece shift. Start with a simpler preflop widen adjustment first; extra barrels become better only after postflop folds also show up.',
+          'When the blinds overfold to late-position steals, adding turn barrels risks extra chips postflop when a wider preflop open already wins the blinds.',
     ),
     Act0RunnerOptionV1(
       id: 'open_wider',
@@ -2302,7 +2302,7 @@ final _w10VsNitOpenWiderRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe but misses value.',
       feedbackReason:
-          'Default play is okay when uncertain, but repeated overfolding supports a measured widen adjustment. If the blinds defend again, default play becomes stronger.',
+          'When the blinds fold too much to late-position steals, keeping default play forfeits low-risk preflop blind steals.',
     ),
   ],
 );
@@ -2324,7 +2324,7 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Opposite adjustment.',
       feedbackReason:
-          'If opponents call too much, bluffs lose EV. Heavier value is the direct response.',
+          'This opponent calls down with weak pairs, so an extra bluff gets fewer folds and loses chips more often.',
     ),
     Act0RunnerOptionV1(
       id: 'allin_only',
@@ -2377,7 +2377,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w10OneLeverIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'Sticky defenders reduce fold equity. The cleaner change is to drop the weakest steals and rely on stronger value-heavy opens.',
+          'When the blinds defend wide and call postflop too often, stealing even wider bleeds chips out of weak hands with little fold equity.',
     ),
     Act0RunnerOptionV1(
       id: 'no_change',
@@ -2388,7 +2388,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w10OneLeverIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe default.',
       feedbackReason:
-          'Massive samples are not required for a light one-piece adjustment. Repeated sticky defense is enough to trim the weakest steals.',
+          'Against sticky blinds who defend wide and overcall postflop, waiting for a huge sample keeps funding losing auto-steals with weak hands.',
     ),
   ],
 );
@@ -2426,7 +2426,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong mix shift.',
       feedbackReason:
-          'The weak-pair calls you saw are a reason to try value first. Whether extra bluffs pay depends on how often BB folds to your size.',
+          'On the K-7-2 flop from BTN after BB calls your 2.5 BB open and checks, bluffing more burns chips against a BB who already called flop bets with weak pairs.',
     ),
     Act0RunnerOptionV1(
       id: 'lean_value',
@@ -2447,7 +2447,7 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too coarse.',
       feedbackReason:
-          'The adjustment is not to inflate every pot blindly. Keep the shift controlled: extract more value from callers without turning one read into a reckless line.',
+          'On the K-7-2 flop from BTN after BB calls 2.5 BB and checks, forcing a huge pot immediately risks too many chips when controlled value betting gets paid by worse hands.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -2523,7 +2523,7 @@ final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too passive.',
       feedbackReason:
-          'Versus overbluffers, over-folding gives away too much EV. You need selective bluff-catch defense; tighter folding becomes better against value-heavy lines.',
+          'The opponent has repeatedly bet this river line and shown a missed draw at showdown. Folding more can give up profitable calls when there are enough bluffs for the price.',
     ),
     Act0RunnerOptionV1(
       id: 'hero_call_any',
@@ -2534,7 +2534,7 @@ final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too extreme.',
       feedbackReason:
-          'You should widen selectively, not call blindly. Guardrails keep adjustments from becoming a punt; broader calls need blockers and a cleaner bluff-heavy read.',
+          'On the river against an overbluffer, calling more rivers without checking blockers can pay off value hands. Your cards can make the missed draws you want to catch less likely.',
     ),
     Act0RunnerOptionV1(
       id: 'bluffcatch_more',
@@ -2576,7 +2576,7 @@ final _w10UnderbluffFoldMoreRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Reasonable default.',
       feedbackReason:
-          'Standard play is okay with uncertainty, but clear underbluff evidence supports tighter bluff-catch calls.',
+          'Against a river range with strong value and few bluffs, some usual calls lose chips because they beat too little of the betting range.',
     ),
     Act0RunnerOptionV1(
       id: 'raise_bluff',
@@ -2587,7 +2587,7 @@ final _w10UnderbluffFoldMoreRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong direction.',
       feedbackReason:
-          'Against underbluffers, aggressive bluff-raise lines usually burn chips. Tighten instead.',
+          'On the river against an underbluffing opponent, bluff-raising burns extra chips against a range weighted toward strong value hands.',
     ),
   ],
 );
@@ -2609,7 +2609,7 @@ final _w10GuardrailSampleSizeRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too reactive.',
       feedbackReason:
-          'Guardrails exist to stop overreaction on thin samples. Extreme counters create noise faster than value.',
+          'After seeing only two odd hands, committing to a full counter-strategy overreacts to noise and exposes you to costly counter-leaks.',
     ),
     Act0RunnerOptionV1(
       id: 'small_probe',
@@ -2630,7 +2630,7 @@ final _w10GuardrailSampleSizeRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too rigid.',
       feedbackReason:
-          'You should not overreact, but ignoring useful early evidence also wastes edge. Watch and adjust lightly.',
+          'With a two-hand sample, ignoring the hands completely misses an early table cue when a small, low-risk probe could test the read safely.',
     ),
   ],
 );
@@ -2664,7 +2664,7 @@ final _w10CheckpointTagLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too chaotic.',
       feedbackReason:
-          'Pairing two changes hides whether your adjustment is working. Start with one controllable focus; the second adjustment is stronger after the first read holds.',
+          'When an opponent folds blinds often and calls rivers too wide, changing both preflop steals and river sizing at once muddies your feedback and risks mis-sizing both spots.',
     ),
     Act0RunnerOptionV1(
       id: 'ignore_read',
@@ -2675,7 +2675,7 @@ final _w10CheckpointTagLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe default.',
       feedbackReason:
-          'Waiting can be reasonable with a thin sample, but reliable repeated reads deserve small targeted adjustment now.',
+          'When an opponent repeatedly folds blinds and overcalls rivers, waiting another round forfeits immediate profit from a clear one-piece adjustment.',
     ),
     Act0RunnerOptionV1(
       id: 'primary_tag',
@@ -2717,7 +2717,7 @@ final _w10CheckpointLeverLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Over-adjustment.',
       feedbackReason:
-          'This creates too much noise. One measured change gives better feedback and lower risk.',
+          'When a tight blind-fold profile appears, changing open sizes from early and late seats reaches beyond the evidence. The pattern supports stealing a little wider when those blinds are left to act.',
     ),
     Act0RunnerOptionV1(
       id: 'flat_everything',
@@ -2728,7 +2728,7 @@ final _w10CheckpointLeverLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not targeted.',
       feedbackReason:
-          'Calling wider everywhere does not directly attack blind overfolding. Keep the adjustment specific.',
+          'Against a tight blind-fold profile, flat-calling wider from early and middle seats adds hands to pots before the blinds act. It misses the chance to win the blinds uncontested with a late open.',
     ),
   ],
 );
@@ -2750,7 +2750,7 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too reactive.',
       feedbackReason:
-          'One hand is rarely enough for a full counter-strategy. Overreaction creates new leaks.',
+          'One wild bluff this orbit gives little evidence about the full betting range. Changing your calls across three streets can put extra chips in against stronger hands.',
     ),
     Act0RunnerOptionV1(
       id: 'small_adjust',
@@ -2771,7 +2771,7 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too rigid.',
       feedbackReason:
-          'You should avoid overreaction, but never adjusting also misses value. Default play is best only if the table cue stops repeating.',
+          'One wild bluff this orbit is worth remembering while you keep your usual line. If the same betting pattern produces more bluffs, you have better evidence for adjusting.',
     ),
   ],
 );
@@ -2819,7 +2819,7 @@ final _world10PlayerAdjustmentCheckpointRunner = _w10ExploitGuardrailsIntroRunne
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'Intuition helps, but without structure your adjustments become inconsistent and hard to trust. Table feel becomes useful after it is tied to one repeatable cue.',
+          'Across preflop and postflop spots, relying on raw table feel without a structured tendency tag leads to erratic swings and costly misreads.',
     ),
     Act0RunnerOptionV1(
       id: 'baseline_only',
@@ -2830,7 +2830,7 @@ final _world10PlayerAdjustmentCheckpointRunner = _w10ExploitGuardrailsIntroRunne
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe but capped.',
       feedbackReason:
-          'Standard play protects you, but learning to adjust safely is the point of this world before real-play habits. Staying standard is stronger when no tendency is reliable.',
+          'When opponents show repeated blind folds or loose calls, staying strictly standard leaves profitable adjustments uncollected before real play.',
     ),
   ],
 );
@@ -2856,7 +2856,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too broad.',
       feedbackReason:
-          'That answer is tempting because the pattern feels obvious and profitable. But the dominant cue is sample quality: one repeated blind-fold pattern supports one small tracked change, not a whole strategy rewrite.',
+          'When both blinds keep folding to late steals, adding multi-street barrels on top of wider steals risks big postflop pots on a purely preflop read.',
     ),
     Act0RunnerOptionV1(
       id: 'never_adjust',
@@ -2867,7 +2867,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe fallback.',
       feedbackReason:
-          'Standard play feels safe because it avoids overreaction. But repeated overfolding is enough evidence for one small shift. The cleaner read is measured adjustment, not permanent passivity.',
+          'When both blinds repeatedly fold to your late steals, ignoring the pattern leaves free blind money uncollected every orbit.',
     ),
     Act0RunnerOptionV1(
       id: 'widen_late_steals_small',
@@ -2929,7 +2929,7 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too much load.',
       feedbackReason:
-          'Too many goals blur feedback and weaken carryover. One target gives cleaner repetition.',
+          'In a 45-minute session on noisy tables, tracking six improvements at once overloads your attention and causes missed live cues.',
     ),
     Act0RunnerOptionV1(
       id: 'one_focus',
@@ -2950,7 +2950,7 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable fallback.',
       feedbackReason:
-          'Reactive play can still work, but session quality rises when one focus is defined before action starts.',
+          'Across a 45-minute session, playing with no plan leaves you drifting into reactive mistakes instead of building one repeatable skill.',
     ),
   ],
 );
@@ -2972,7 +2972,7 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong direction.',
       feedbackReason:
-          'More categories usually increase noise. Start simpler to get stable table behavior first.',
+          'After a prior session with scattered notes, adding more tracking categories increases mental noise and hides your main table leak.',
     ),
     Act0RunnerOptionV1(
       id: 'repeat_none',
@@ -2983,7 +2983,7 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too passive.',
       feedbackReason:
-          'Removing goals avoids overload but also weakens deliberate practice. Keep one simple target.',
+          'With scattered notes from the last session, playing without a focus target gives you no consistent decision to track this time.',
     ),
     Act0RunnerOptionV1(
       id: 'narrow_goal',
@@ -3026,7 +3026,7 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too noisy.',
       feedbackReason:
-          'A crowded plan weakens carryover. If the session starts with too many goals, the live trigger is harder to see and the review becomes blur instead of one actionable output.',
+          'When you are tired and the first orbit moves fast, tracking several leaks can distract you from the cues you need for blind defense.',
     ),
     Act0RunnerOptionV1(
       id: 'no_focus_until_review',
@@ -3037,7 +3037,7 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too loose a cycle.',
       feedbackReason:
-          'Review still matters, but the cycle is weaker without a one-focus plan. Real-table carryover is stronger when the session starts with one focus, checks one trigger, and closes with one review note.',
+          'If you play first and decide later, you start a fast first orbit tired and without a specific blind-defense cue to look for.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -3099,7 +3099,7 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too broad.',
       feedbackReason:
-          'The trigger is preflop overfolding. Use a matching preflop adjustment first, not a full postflop rewrite.',
+          'After both blinds folded to 5 of your last 6 preflop steals, adding turn barrels risks extra postflop chips on a purely preflop overfold read.',
     ),
     Act0RunnerOptionV1(
       id: 'widen_late_steal',
@@ -3120,7 +3120,7 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe but misses edge.',
       feedbackReason:
-          'Static play is stable, but repeated triggers support small targeted adjustments.',
+          'When both blinds have folded to 5 of your last 6 preflop steals, waiting another orbit forfeits high-frequency preflop blind profit.',
     ),
   ],
 );
@@ -3143,7 +3143,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong adjustment.',
       feedbackReason:
-          'Frequent callers reduce bluff EV. Value density is the cleaner real-play adjustment.',
+          'This opponent has repeatedly called flop and turn bets and shown a weak pair at showdown. Extra bluffs are less likely to get folds.',
     ),
     Act0RunnerOptionV1(
       id: 'no_change',
@@ -3154,7 +3154,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too rigid.',
       feedbackReason:
-          'Rigid default lines avoid errors but give up clear edges from repeated triggers.',
+          'The earlier weak-pair showdowns give you a cue for thinner value bets now. Waiting for post-session review gives up that opportunity.',
     ),
     Act0RunnerOptionV1(
       id: 'value_heavier',
@@ -3303,7 +3303,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A fold ends this hand.',
       feedbackReason:
-          'A call keeps CO’s weaker bets in and gives you a turn decision. If CO’s betting range is very strong, folding can still be reasonable.',
+          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, folding immediately surrenders your equity against CO\'s weaker flop bets at a cheap 2 BB price.',
     ),
     Act0RunnerOptionV1(
       id: 'raise_now',
@@ -3314,7 +3314,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable but noisy.',
       feedbackReason:
-          'Raising can feel proactive, but it bloats the pot too early. The sharper table line is use position and the cheap price first.',
+          'CO bets 2 BB on J-7-4 and the pot is now 10 BB. Raising can drive out weaker bets that a call in position would keep in.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -3388,7 +3388,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting hand-label trap.',
       feedbackReason:
-          'Top pair makes calling tempting, but this tight CO rarely bluffs a full-pot second barrel. Calling 12 BB adds to the 24 BB already in the pot. You need about 33% equity at this price before accounting for the river.',
+          'Tight CO bets 12 BB into a 12 BB pot. Calling makes the pot 36 BB, so top pair needs about 33% equity. The read that CO rarely bluffs big on the turn makes that harder to find.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_turn',
@@ -3409,7 +3409,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too much pressure back.',
       feedbackReason:
-          'Going all-in with a single pair into a tight CO\'s value-heavy barrel magnifies risk without a credible reason to expect enough folds.',
+          'The pot is now 24 BB and you have 33 BB behind. Going all-in with one pair risks your stack when a tight CO rarely bluffs big on this turn and may continue with better hands.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -3477,7 +3477,7 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Overload risk.',
       feedbackReason:
-          'Trying to repair everything usually weakens execution. Prioritize one leak for stronger carryover.',
+          'After a session where you missed thin value and overcalled one river, trying to repair both leaks next session divides your attention between thin value and river calls, making it harder to tell which decision improved.',
     ),
     Act0RunnerOptionV1(
       id: 'skip_review',
@@ -3488,7 +3488,7 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Volume helps.',
       feedbackReason:
-          'Volume without structured review slows improvement. One focused repair keeps the habit productive.',
+          'After missing thin value and overcalling a river today, skipping review to grind more volume repeats the same chip-losing habits next session.',
     ),
     Act0RunnerOptionV1(
       id: 'pick_priority',
@@ -3533,7 +3533,7 @@ final _w11ReviewDefineFixRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too vague.',
       feedbackReason:
-          'Vague goals are hard to execute. Use behavior-specific repair rules instead.',
+          'When your priority leak is overcalling on the river against tight players, a vague goal gives you no clear river fold rule and keeps costing chips.',
     ),
     Act0RunnerOptionV1(
       id: 'no_fix',
@@ -3546,7 +3546,7 @@ final _w11ReviewDefineFixRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Missed chance.',
       feedbackReason:
-          'Skipping repair leaves the leak unchanged. A simple explicit fix improves next-session execution.',
+          'After identifying river overcalls against tight players, leaving the river leak unwritten gives you no specific cue to check the next time a tight player bets.',
     ),
   ],
 );
@@ -3587,7 +3587,7 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too heavy.',
       feedbackReason:
-          'Complex plans collapse under fatigue. Real play needs practical execution, not idealized complexity.',
+          'When starting a session with low energy after a long workday, a complex multi-phase plan collapses under fatigue and causes sloppy table decisions.',
     ),
     Act0RunnerOptionV1(
       id: 'simple_focus',
@@ -3608,7 +3608,7 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Simpler, but blind.',
       feedbackReason:
-          'No objective removes overload but also removes learning direction. One simple target is better.',
+          'In a low-energy session, playing with no objective lets tired autopilot take over and wastes the session\'s learning value.',
     ),
   ],
 );
@@ -3630,7 +3630,7 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too broad.',
       feedbackReason:
-          'Multiple changes create noise and execution errors. Start with one live cue.',
+          'When you notice both blind overfolding and river underbluffing, applying multiple changes at once causes execution mix-ups across preflop and river spots.',
     ),
     Act0RunnerOptionV1(
       id: 'ignore_triggers',
@@ -3641,7 +3641,7 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Review matters.',
       feedbackReason:
-          'Review is important, but the prepared cue has to guide the live decision.',
+          'After spotting repeated blind overfold and river underbluff patterns, logging the patterns for review delays an adjustment already supported by repeated observations, such as stealing a little wider against the overfolding blinds.',
     ),
     Act0RunnerOptionV1(
       id: 'one_trigger_action',
@@ -3683,7 +3683,7 @@ final _w11CheckpointReviewLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Incomplete review.',
       feedbackReason:
-          'Long notes feel productive because they capture a lot. But the dominant cue here is actionability. Without one chosen repair, the next session still starts fuzzy.',
+          'After a session with two recurring mistakes, writing long notes without picking one priority repair leaves tomorrow\'s session plan unfocused and repeats the leaks.',
     ),
     Act0RunnerOptionV1(
       id: 'skip_closeout',
@@ -3694,7 +3694,7 @@ final _w11CheckpointReviewLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Common habit.',
       feedbackReason:
-          'Skipping closeout is tempting because the session is over and the key hands still feel fresh. But memory fades fast. The cleaner read is protect tomorrow with one explicit leak-and-fix note.',
+          'When a session ends with two recurring mistakes, skipping closeout lets the details fade and carries the same unfixed leaks into tomorrow.',
     ),
   ],
 );
@@ -3746,7 +3746,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting pressure line.',
       feedbackReason:
-          'Protection is the tempting idea, but the full table read is more mixed: position helps, stack depth still leaves risk, and the board is not dry enough to force a bigger pot now.',
+          'HJ bets 5 BB into an 8 BB pot on A-8-4. Raising may fold the weaker bets you want to keep in and build a bigger pot against the range that continues.',
     ),
     Act0RunnerOptionV1(
       id: 'call_in_position',
@@ -3767,7 +3767,7 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A fold ends this hand.',
       feedbackReason:
-          'A call keeps HJ’s weaker bets and draws in and lets you act last on the turn. A very strong HJ betting range could still make folding reasonable.',
+          'On A-8-4, HJ has bet 5 BB and the pot is now 13 BB. Folding gives up your in-position equity against HJ\'s weaker flop bets and draws.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -3814,7 +3814,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too brittle.',
       feedbackReason:
-          'Real-play skill compounds over time. One massive session is less reliable than steady daily habits.',
+          'One large review block can identify a leak. A small plan, trigger, and review cycle makes it easier to practise the fix on the next session.',
     ),
     Act0RunnerOptionV1(
       id: 'content_only',
@@ -3825,7 +3825,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Partial progress.',
       feedbackReason:
-          'Content helps, but real change happens only when lessons are converted into repeated session behavior and review.',
+          'Before live play, studying another concept without applying a plan-trigger-review habit leaves your existing table leaks costing chips.',
     ),
     Act0RunnerOptionV1(
       id: 'repeatable_loop',
@@ -3890,7 +3890,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Outcome trap.',
       feedbackReason:
-          'Single-hand reveal can mislead. Decision quality should be judged by range logic and context.',
+          'After folding a marginal bluff-catcher when an opponent shows a bluff, judging by the single reveal pushes you into loose, losing calls next time.',
     ),
     Act0RunnerOptionV1(
       id: 'ignore_hand',
@@ -3901,7 +3901,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Avoids tilt.',
       feedbackReason:
-          'Ignoring helps emotions, but quick process review is better for long-term learning.',
+          'After folding a marginal bluff-catcher against a shown bluff, moving on without checking the price and range cues misses valuable information about that opponent.',
     ),
   ],
 );
@@ -3925,7 +3925,7 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Result bias.',
       feedbackReason:
-          'Outcome can be lucky. Process discipline means auditing suspicious calls even after wins.',
+          'A lucky river tells you how this loose call turned out. Calling it good process without checking the price and range can hide a leak.',
     ),
     Act0RunnerOptionV1(
       id: 'flag_leak',
@@ -3946,7 +3946,7 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too harsh.',
       feedbackReason:
-          'Leak review should be calm and specific, not confidence collapse. Keep a constructive audit tone.',
+          'After a loose call wins on a lucky river, letting confidence collapse turns a calm process audit into emotional tilt on the next hands.',
     ),
   ],
 );
@@ -4001,7 +4001,7 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tilt pattern.',
       feedbackReason:
-          'Revenge actions usually worsen variance damage. Reset first, then return to plan.',
+          'Right after losing a big all-in as favorite, forcing the next thin edge to win chips back compounds variance losses with tilt mistakes.',
     ),
     Act0RunnerOptionV1(
       id: 'quit_immediately',
@@ -4012,7 +4012,7 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Sometimes valid.',
       feedbackReason:
-          'Ending session can help if control is gone, but the first step is a brief reset and re-check.',
+          'After losing an all-in as the favorite, a short pause gives you a chance to settle before deciding whether you are ready to play the next hand.',
     ),
     Act0RunnerOptionV1(
       id: 'reset_protocol',
@@ -4054,7 +4054,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Harmful spiral.',
       feedbackReason:
-          'Self-attack increases future mistake risk. Keep review structured and calm.',
+          'After making an avoidable call error, replaying the mistake across the next few hands distracts from live cues and triggers a second costly error.',
     ),
     Act0RunnerOptionV1(
       id: 'deny_mistake',
@@ -4065,7 +4065,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Protects emotion short term.',
       feedbackReason:
-          'Ignoring may reduce pain now, but short structured logging improves long-term habits.',
+          'After an avoidable call error, skipping the note to rely on memory lets the leak slip away unreviewed after the session.',
     ),
   ],
 );
@@ -4126,7 +4126,7 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Ego trap.',
       feedbackReason:
-          'Point-proving lines usually detach from EV and increase variance mistakes.',
+          'After an opponent needles you for winning a pot, widening your next close spot to answer back risks chips on weak hands just to satisfy ego.',
     ),
     Act0RunnerOptionV1(
       id: 'stick_process',
@@ -4147,7 +4147,7 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safer but capped.',
       feedbackReason:
-          'Fear-based tightening can avoid blowups but also leaks EV. Keep calm assertive discipline instead.',
+          'After table talk from an opponent, playing overly scared forfeits profitable value and steal spots out of fear of conflict.',
     ),
   ],
 );
@@ -4176,7 +4176,7 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Leak risk.',
       feedbackReason:
-          'Normal pace is fine in routine spots, but fatigue often degrades decision quality in the largest pots.',
+          'Deep in a session when fatigue rises, keeping fast autopilot pace through large pots leads to rushed, expensive mistakes on high-EV decisions.',
     ),
     Act0RunnerOptionV1(
       id: 'tank_every_spot',
@@ -4187,7 +4187,7 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Overcorrection.',
       feedbackReason:
-          'Over-slowing routine spots burns energy. Discipline should be targeted to meaningful nodes.',
+          'Late-session fatigue makes attention scarce. Spending the same extra time on medium pots can leave less attention for the decisions with the most at stake.',
     ),
     Act0RunnerOptionV1(
       id: 'critical_pause',
@@ -4260,7 +4260,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Pretty-hand trap.',
       feedbackReason:
-          'The hand label makes this tempting, but real play rewards the full read: action trail, price, and opponent profile matter more than wanting to be right.',
+          'Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.',
     ),
     Act0RunnerOptionV1(
       id: 'jam_back',
@@ -4271,7 +4271,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too dramatic.',
       feedbackReason:
-          'A raise risks more chips. It needs a reason to expect worse hands to call or better hands to fold. The bet size and the tight read give no evidence of either.',
+          'The river pot is now 38 BB after CO’s 18 BB bet. A large raise adds risk against a tight range when better hands may call and worse hands may fold.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -4335,7 +4335,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Revenge leak.',
       feedbackReason:
-          'Taking control sounds assertive, but here it is emotional, not evidence-based. The clean action comes from hand, board, price, and position, not from wanting the last word.',
+          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge bloats the pot and folds out CO\'s bluffs while isolating you against stronger hands.',
     ),
     Act0RunnerOptionV1(
       id: 'call_once',
@@ -4356,7 +4356,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Emotion still steering.',
       feedbackReason:
-          'Folding out of irritation is still letting emotion drive. A calm continue is cleaner than either revenge or avoidance here.',
+          'CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -4409,7 +4409,7 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Bias warning.',
       feedbackReason:
-          'Outcome-first judgment is tempting because the result feels vivid and final. But the dominant cue is decision quality. One result cannot grade the process by itself.',
+          'When a sound line loses a high-variance pot, treating the outcome as proof of a bad decision causes you to abandon winning plays.',
     ),
     Act0RunnerOptionV1(
       id: 'avoid_review',
@@ -4420,7 +4420,7 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Protective instinct.',
       feedbackReason:
-          'Avoiding review feels protective because it lowers frustration in the moment. But the cleaner bridge is short cue review first, so emotion does not hide the actual lesson.',
+          'After a sound decision loses a high-variance pot, skipping review to avoid frustration leaves you unsure whether the price and range read were actually solid.',
     ),
     Act0RunnerOptionV1(
       id: 'process_first',
@@ -4469,7 +4469,7 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tilt escalation.',
       feedbackReason:
-          'Recovering momentum sounds useful, but tilt turns that into loose action. Controlled reset is the bridge habit; taking a close edge is better after the reset.',
+          'When tilt signs appear after two rough spots in a row, jumping into the next close spot to recover momentum bleeds more chips while emotions are hot.',
     ),
     Act0RunnerOptionV1(
       id: 'deny_tilt',
@@ -4480,7 +4480,7 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Common response.',
       feedbackReason:
-          'Continuing can work briefly, but explicit reset better preserves quality under pressure. Delaying the emotion check is safer only when decisions are low stakes.',
+          'After two rough spots in a row, continuing without an explicit reset lets hidden tilt degrade your next high-stakes decision.',
     ),
   ],
 );
@@ -4502,7 +4502,7 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Ego leak.',
       feedbackReason:
-          'Respect-seeking lines detach from quality logic and create avoidable variance.',
+          'When a player taunts you into marginal high-variance spots, taking a thin line to win respect risks big pots without the range or price edge to back it up.',
     ),
     Act0RunnerOptionV1(
       id: 'evidence_line',
@@ -4523,7 +4523,7 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Defensive but capped.',
       feedbackReason:
-          'Overfolding avoids ego spots but also misses edges. Evidence-based selectivity is stronger.',
+          'Folding a close spot to avoid a player’s taunts can surrender an edge your read of their range and the price still support.',
     ),
   ],
 );
@@ -4576,7 +4576,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Confidence chase.',
       feedbackReason:
-          'This is exactly the wrong bridge habit. Confidence should come from following the routine, not from forcing a louder action after a mistake.',
+          'CO bets 2 BB into 8 BB on A-8-4. Raising to make up for last orbit’s loose bluff builds a larger pot and may drive out the weaker hands you could keep in by calling.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_scared',
@@ -4587,7 +4587,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too reactive.',
       feedbackReason:
-          'Fear after a mistake is still emotion steering the next hand. The cleaner bridge is keep the same seat-hand-board-price-stack routine and follow what this spot says.',
+          'CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.',
     ),
     Act0RunnerOptionV1(
       id: 'call_clean',
@@ -4659,7 +4659,7 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Underestimation.',
       feedbackReason:
-          'Mindset errors are EV errors. Stability directly affects execution of every strategic concept.',
+          'Across preflop and postflop spots, treating mindset as an optional soft skill leaves tilt and ego leaks draining chips from your technical edge.',
     ),
     Act0RunnerOptionV1(
       id: 'done_forever',
@@ -4670,7 +4670,7 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Partly true start.',
       feedbackReason:
-          'Initial tools help, but mindset edge stays strong only through repeated daily use.',
+          'Across daily sessions, treating mindset as a one-time fix lets emotional drift and result bias creep back into large pots.',
     ),
   ],
 );
