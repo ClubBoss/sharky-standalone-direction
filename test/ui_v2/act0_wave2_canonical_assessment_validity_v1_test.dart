@@ -352,17 +352,25 @@ void main() {
       );
 
       expect(contrastTask.taskId, 'position_six_seats_hj_co_contrast');
-      expect(contrastTask.runner.table.selectableSeatIds, <String>['hj', 'co']);
+      expect(contrastTask.runner.table.selectableSeatIds, <String>[
+        'hj',
+        'co',
+        'utg',
+      ]);
+      expect(contrastTask.runner.question, 'Tap HJ.');
+      expect(contrastTask.runner.options.map((o) => o.seatId), [
+        'co',
+        'hj',
+        'utg',
+      ]);
       expect(contrastTask.runner.table.highlightedSeatIds, isEmpty);
       expect(contrastTask.runner.table.activeSeatId, isEmpty);
-      final teaching = contrastTask.runner.teachingSteps.single;
-      expect(teaching.focusSeatIds, <String>['hj', 'co']);
-      final teachingTable = act0TeachingTableForRunnerV1(
-        contrastTask.runner.table,
-        teaching,
+      expect(contrastTask.runner.teachingSteps, isEmpty);
+      expect(contrastTask.runner.hintPolicy, Act0HintPolicyV1.theoryOnly);
+      expect(
+        correctOption(contrastTask).feedbackReason,
+        contains('after UTG and before CO'),
       );
-      expect(teachingTable.highlightedSeatIds, contains('hj'));
-      expect(teachingTable.highlightedSeatIds, contains('co'));
     });
 
     test('W2 strong and borderline bucket tasks use distinct examples', () {
@@ -453,7 +461,7 @@ void main() {
           expect(task.runner.table.heroSeatId, seat.toLowerCase());
           expect(
             task.runner.options.map((option) => option.id).toSet(),
-            <String>{'fold', 'raise'},
+            <String>{'fold', 'raise', 'call'},
           );
           expect(
             task.runner.options.indexWhere((option) => option.isCorrect),
@@ -463,7 +471,11 @@ void main() {
           for (final option in task.runner.options) {
             expect(option.feedbackReason, contains(hand), reason: task.taskId);
             expect(option.feedbackReason, contains(seat), reason: task.taskId);
-            expect(option.feedbackReason, contains('Sharky starting chart'));
+            if (option.id == 'call') {
+              expect(option.feedbackReason, contains('1 BB'));
+            } else {
+              expect(option.feedbackReason, contains('Sharky starting chart'));
+            }
             expect(option.feedbackReason, isNot(contains('J8o')));
             expect(
               option.feedbackReason,
@@ -642,6 +654,7 @@ void main() {
         lesson: 'position_apply',
         task: 'position_apply_recap',
         cards: ['Ad', 'Jc'],
+        prompt: 'Why does the chart prefer an open here?',
         oldFingerprint:
             '1983e106773b0dd388792a2cf146d426159a80e67d65aa5bf26d1ef676e5d618',
       ),
@@ -649,32 +662,24 @@ void main() {
         lesson: 'position_checkpoint',
         task: 'position_checkpoint_position_checkpoint_review',
         cards: ['Ah', 'Th'],
+        prompt: 'By the Sharky starting chart, what is the simple action?',
         oldFingerprint:
             '05c0c6c3ecab78869602c1ea6a689aafb25f5f85abb4021d3fea4eef293a4244',
       ),
     ]) {
       test(
-        '${control.task} aligns its action question and retires only old proof',
+        '${control.task} pins the current question and retires only old proof',
         () {
           final task = taskFor(
             worldId: 'world_3',
             lessonId: control.lesson,
             taskId: control.task,
           );
-          final parent = taskFor(
-            worldId: 'world_3',
-            lessonId: 'position_apply',
-            taskId: 'position_apply_late_open',
-          );
           expect(task.phase, Act0LessonPhaseV1.review);
           expect(task.entryPhase, Act0LessonPhaseV1.drill);
           expect(task.stepKind, Act0LessonStepKindV1.proveIt);
           expect(task.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
-          expect(task.runner.question, parent.runner.question);
-          expect(
-            task.runner.question,
-            'By the Sharky starting chart, what is the simple action?',
-          );
+          expect(task.runner.question, control.prompt);
           expect(task.runner.teachingSteps, isEmpty);
           expect(
             task.runner.table.heroCards.map((card) => card.label),
@@ -741,7 +746,7 @@ void main() {
       );
 
       for (final choiceId in const ['raise', 'call']) {
-        testWidgets('${control.task} asks for an action and grades $choiceId', (
+        testWidgets('${control.task} shows its prompt and grades $choiceId', (
           tester,
         ) async {
           final task = taskFor(
@@ -791,10 +796,7 @@ void main() {
           );
           await tester.pumpAndSettle();
           final prompt = find.byKey(const Key('act0_integrated_scene_prompt'));
-          expect(
-            tester.widget<Text>(prompt).data,
-            'By the Sharky starting chart, what is the simple action?',
-          );
+          expect(tester.widget<Text>(prompt).data, control.prompt);
           final choice = find.byKey(Key('act0_shell_option_$choiceId'));
           expect(choice, findsOneWidget);
           await tester.ensureVisible(choice);
@@ -866,6 +868,22 @@ void main() {
           languageCode: 'ru',
         ),
         'Банк не открыт. Ты в HJ с KTo.',
+      );
+      expect(
+        act0LocalizedRunnerPromptAtomByTaskIdV1(
+          'position_apply_recap',
+          fallback: '',
+          languageCode: 'ru',
+        ),
+        'До BTN все сбросили. У тебя AJo.',
+      );
+      expect(
+        act0LocalizedRunnerQuestionAtomByTaskIdV1(
+          'position_apply_recap',
+          fallback: '',
+          languageCode: 'ru',
+        ),
+        'Почему таблица рекомендует открыть рейзом?',
       );
     });
   });

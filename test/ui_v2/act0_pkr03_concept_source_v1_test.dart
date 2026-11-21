@@ -15,7 +15,7 @@ void main() {
     'button_advantage_button_intro':
         'Which seat gets to see CO act on the first pass after the flop?',
     'early_vs_late_w2_position_intro':
-        'Which seat usually has more information before acting?',
+        'Which of UTG, HJ and BTN usually gets the most information before acting?',
     'position_apply_intro':
         'Which of these seats has fewer players still to act behind it before the flop?',
     'position_checkpoint_position_checkpoint_intro':
@@ -24,7 +24,16 @@ void main() {
     test('${entry.key} asks a seat question its seat answers can answer', () {
       final runner = _task(entry.key).runner;
       expect(runner.question, entry.value);
-      expect(runner.options.map((o) => o.label).toSet(), {'BTN', 'UTG'});
+      final third = switch (entry.key) {
+        'button_advantage_button_intro' || 'position_apply_intro' => 'CO',
+        _ => 'HJ',
+      };
+      expect(runner.options.map((o) => o.label).toSet(), {'BTN', 'UTG', third});
+      expect(runner.table.selectableSeatIds.toSet(), {
+        'btn',
+        'utg',
+        third.toLowerCase(),
+      });
       expect(runner.options.singleWhere((o) => o.isCorrect).label, 'BTN');
     });
   }
