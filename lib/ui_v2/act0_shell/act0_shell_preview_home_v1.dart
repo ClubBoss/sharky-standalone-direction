@@ -44,6 +44,11 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
       _progressWorlds(state);
 
+  int _dailyCompletedLessonsInWorldCountV1(Act0WorldCardV1 world) => world
+      .lessons
+      .where((lesson) => _dailyCompletedLessonIds.contains(lesson.lessonId))
+      .length;
+
   List<Act0PracticeGroupV1> _practiceGroups({
     required Act0ShellStateV1 state,
     required Act0WorldCardV1 world,
@@ -59,6 +64,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final recommendation = _learningRecommendation(
       selectedWorld: world,
       selectedLesson: selectedLesson,
+      preferPracticeAfterThreeLessons: true,
     );
     final dailyDeckEntry = _nextDailyDeckEntry(state: state);
     return <Act0PracticeGroupV1>[
@@ -257,6 +263,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
   _Act0LearningRecommendationV1 _learningRecommendation({
     required Act0WorldCardV1 selectedWorld,
     required Act0LessonCardV1 selectedLesson,
+    bool preferPracticeAfterThreeLessons = false,
   }) {
     final topMistake = _topOpenMistake();
     if (topMistake != null) {
@@ -380,7 +387,8 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final dailyDeckEntry = _nextDailyDeckEntry(
       state: widget.state ?? Act0ShellStateV1.sample,
     );
-    if (_dailyCompletedLessonIds.length >= 3 &&
+    if (preferPracticeAfterThreeLessons &&
+        _dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
         _dailyCompletedRepCount < 3 &&
         dailyDeckEntry != null &&
         (_dailyPracticeQueue.taskIds.isEmpty ||
@@ -698,9 +706,10 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final repairRecommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: selectedLesson,
+      preferPracticeAfterThreeLessons: true,
     );
     if (repairRecommendation.mistake != null ||
-        (_dailyCompletedLessonIds.length >= 3 &&
+        (_dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
             repairRecommendation.kind ==
                 _Act0LearningNextActionKindV1.dailyDrill)) {
       return repairRecommendation;

@@ -3119,11 +3119,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             onPressed: () =>
                 setState(() => _resumeHomeLessonV1(resumableLesson!)),
           )
-        : _dailyCompletedLessonIds.length >= 3 &&
+        : _dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
               dailyGroup.isEnabled &&
               _learningRecommendation(
                     selectedWorld: selectedWorld,
                     selectedLesson: dailyLesson,
+                    preferPracticeAfterThreeLessons: true,
                   ).kind ==
                   _Act0LearningNextActionKindV1.dailyDrill
         ? Act0AcademyHomeNextActionV1(
