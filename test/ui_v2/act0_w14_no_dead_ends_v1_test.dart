@@ -127,11 +127,7 @@ void main() {
                 onSelectSizingPreset: (preset) => setState(() {
                   sizingPresetId = preset.id;
                 }),
-                onConfirmSizingPreset: () => chosen.add(
-                  task.runner.options.singleWhere(
-                    (o) => o.id == sizingPresetId,
-                  ),
-                ),
+                onConfirmSizingPreset: () {},
               ),
             ),
           ),
