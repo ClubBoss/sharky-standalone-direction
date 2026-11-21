@@ -31,6 +31,7 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'early_vs_late': ['Position play'],
   'same_hand_different_seat': ['Position play'],
   'position_apply': ['Position play'],
+  'w3_play_from_blinds': ['Position play', 'Betting decisions'],
   'position_checkpoint': ['Position play'],
   'why_bets_happen': ['Betting decisions'],
   'value_bets': ['Betting decisions'],

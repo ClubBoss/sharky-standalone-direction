@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 148),
-      ('D3.to_call_completeness', 105),
+      ('D2.pot_feasibility', 156),
+      ('D3.to_call_completeness', 112),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -502,6 +502,15 @@ void main() {
         'id': 'framework',
         'correct': true,
         'quality': 'correct',
+        'seat': null,
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      },
+      {
+        'id': 'seat_blind_only',
+        'correct': false,
+        'quality': 'wrong',
         'seat': null,
         'repairSeats': <String>[],
         'repairCards': <String>[],
@@ -1011,11 +1020,144 @@ void main() {
         ],
       };
     }
+    Map<String, Object?> w3Option(
+      String id, {
+      String? seat,
+      bool correct = false,
+    }) => {
+      'id': id,
+      'correct': correct,
+      'quality': correct ? 'correct' : 'wrong',
+      'seat': seat,
+      'repairSeats': <String>[],
+      'repairCards': <String>[],
+      'repairLabels': <String>[],
+    };
+    final applyRecap = expectedComparison['position_apply_recap'] as Map;
+    final limpExplanation = (applyRecap['options'] as List)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((option) => option['id'] == 'call');
+    expect(limpExplanation['quality'], 'suboptimal');
+    limpExplanation['quality'] = 'wrong';
+    const w3AddedSeatChoices = {
+      'position_six_seats_positions_utg': 'bb',
+      'position_six_seats_hj_co_contrast': 'utg',
+      'position_six_seats_positions_cutoff': 'btn',
+      'position_six_seats_positions_button': 'sb',
+      'position_six_seats_sb_recognition': 'btn',
+      'position_six_seats_bb_recognition': 'utg',
+      'position_six_seats_position_repair_seat_id_btn': 'bb',
+      'position_six_seats_position_repair_seat_id_utg': 'sb',
+      'button_advantage_button_intro': 'co',
+      'button_advantage_find_button': 'sb',
+      'button_advantage_button_last': 'bb',
+      'button_advantage_button_vs_cutoff': 'hj',
+      'button_advantage_position_repair_btn_last_postflop': 'bb',
+      'early_vs_late_w2_position_intro': 'hj',
+      'early_vs_late_w2_late_position': 'co',
+      'early_vs_late_w2_early_position': 'co',
+      'position_apply_intro': 'co',
+      'position_checkpoint_position_checkpoint_intro': 'hj',
+    };
+    const w3AddedAnswerChoices = {
+      'position_six_seats_positions_review': 'blinds_and_button_only',
+      'early_vs_late_early_pressure_choice': 'position_returns_chips',
+      'early_vs_late_position_repair_utg_players_behind': 'only_hj',
+      'early_vs_late_late_info_choice': 'smaller_blinds',
+      'same_hand_different_seat_w3_same_hand_intro': 'seat_and_action',
+      'same_hand_different_seat_w3_same_hand_call': 'opener_and_button',
+      'same_hand_different_seat_same_hand_early_fold': 'call',
+      'same_hand_different_seat_same_hand_late_open': 'fold',
+      'position_apply_late_open': 'fold',
+      'position_apply_early_fold': 'call',
+      'position_apply_hj_fold': 'call',
+      'position_apply_recap': 'off_chart',
+      'position_checkpoint_position_checkpoint_late_open': 'fold',
+      'position_checkpoint_position_checkpoint_early_fold': 'call',
+      'position_checkpoint_position_checkpoint_btn_call': 'raise',
+      'position_checkpoint_position_checkpoint_review': 'fold',
+    };
+    for (final entry in w3AddedSeatChoices.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      (task['options'] as List).add(w3Option(entry.value, seat: entry.value));
+    }
+    for (final entry in w3AddedAnswerChoices.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      (task['options'] as List).add(w3Option(entry.value));
+    }
+    for (final (id, xp, family, choices, correct) in [
+      (
+        'position_six_seats_position_order_reason',
+        6,
+        'decision',
+        ['cutoff_first', 'seat_order', 'button_before_cutoff'],
+        'seat_order',
+      ),
+      (
+        'button_advantage_button_order_reason',
+        6,
+        'decision',
+        ['sees_first_action', 'smaller_price', 'owns_first_turn'],
+        'sees_first_action',
+      ),
+      ('w3_play_from_blinds_intro', 6, 'learn', <String>[], ''),
+      (
+        'w3_play_from_blinds_small_blind_fold',
+        8,
+        'decision',
+        ['call', 'fold', 'raise'],
+        'fold',
+      ),
+      (
+        'w3_play_from_blinds_small_blind_raise',
+        8,
+        'decision',
+        ['raise', 'call', 'fold'],
+        'raise',
+      ),
+      (
+        'w3_play_from_blinds_small_blind_medium_raise',
+        8,
+        'decision',
+        ['raise', 'call', 'fold'],
+        'raise',
+      ),
+      (
+        'w3_play_from_blinds_small_blind_medium_fold',
+        8,
+        'decision',
+        ['call', 'fold', 'raise'],
+        'fold',
+      ),
+      (
+        'w3_play_from_blinds_big_blind_price',
+        8,
+        'decision',
+        ['two_five', 'one', 'one_five'],
+        'one_five',
+      ),
+      (
+        'w3_play_from_blinds_big_blind_defend',
+        10,
+        'review',
+        ['fold', 'call', 'posted_free'],
+        'call',
+      ),
+    ]) {
+      expectedComparison[id] = {
+        'rewardXp': xp,
+        'family': family,
+        'options': [
+          for (final option in choices)
+            w3Option(option, correct: option == correct),
+        ],
+      };
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2 packet may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2 and World 3 packets may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

@@ -1710,12 +1710,18 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         taskId: 'w2_position_intro',
         title: 'Info changes',
         phase: Act0LessonPhaseV1.theory,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _world2PositionIntroRunner,
-          const {
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(_world2PositionIntroRunner, const {
             'utg':
                 'In this 1.5 BB preflop pot, UTG acts first with five players behind, so picking UTG misses that BTN gathers the most information before acting.',
-          },
+          }),
+          question:
+              'Which of UTG, HJ and BTN usually gets the most information before acting?',
+          id: 'hj',
+          label: 'HJ',
+          reason:
+              'HJ acts after UTG but before CO and BTN. Reading HJ as the latest seat misses decisions BTN can observe.',
+          seat: 'hj',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
@@ -1724,22 +1730,31 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         taskId: 'w2_late_position',
         title: 'Late seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _latePositionRunner.copyWith(
-            question:
-                'When UTG checks, which seat can respond after seeing that choice?',
-            hint:
-                'Follow how the order moves from the blinds to the dealer marker.',
-            options: _act0AuthoredCorrectOptionAtV1(
-              _latePositionRunner.options,
-              correctOptionId: 'btn',
-              correctIndex: 1,
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(
+            _latePositionRunner.copyWith(
+              question:
+                  'When UTG checks, which seat can respond after seeing that choice?',
+              hint:
+                  'Follow how the order moves from the blinds to the dealer marker.',
+              options: _act0AuthoredCorrectOptionAtV1(
+                _latePositionRunner.options,
+                correctOptionId: 'btn',
+                correctIndex: 1,
+              ),
             ),
+            const {
+              'utg':
+                  'UTG is the seat acting first in this 1.5 BB pot, so picking UTG misses that BTN is the later seat that can respond after seeing UTG\'s choice.',
+            },
           ),
-          const {
-            'utg':
-                'UTG is the seat acting first in this 1.5 BB pot, so picking UTG misses that BTN is the later seat that can respond after seeing UTG\'s choice.',
-          },
+          question:
+              'Which of these seats sees the most actions before its first turn preflop?',
+          id: 'co',
+          label: 'CO',
+          reason:
+              'CO sees UTG and HJ act, but BTN can also see CO act before taking its first turn.',
+          seat: 'co',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -1748,8 +1763,16 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         taskId: 'w2_early_position',
         title: 'Early seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
-          _earlyLatePositionRunner,
+        runner: _w3AddAlternative(
+          _act0NeutralSeatAssessmentPreservingTeachingV1(
+            _earlyLatePositionRunner,
+          ),
+          question: 'Which seat acts first on this preflop pass?',
+          id: 'co',
+          label: 'CO',
+          reason:
+              'CO acts after UTG and HJ. Picking CO misses the first seat to act after the blinds.',
+          seat: 'co',
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2059,7 +2082,13 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_intro',
         title: 'Context first',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world3SameHandIntroRunner,
+        runner: _w3AddAlternative(
+          _world3SameHandIntroRunner,
+          id: 'seat_and_action',
+          label: 'Your seat and earlier bets',
+          reason:
+              'The 1.5 BB pot shows only posted blinds. Your two cards still determine whether you can open from your seat.',
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -2080,12 +2109,18 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_call',
         title: 'Players behind',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3CutoffCallRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world3CutoffCallRunner.options,
-            correctOptionId: 'players_behind',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _world3CutoffCallRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world3CutoffCallRunner.options,
+              correctOptionId: 'players_behind',
+              correctIndex: 1,
+            ),
           ),
+          id: 'opener_and_button',
+          label: 'HJ and BTN',
+          reason:
+              'HJ has already raised. Picking it leaves SB and BB out of the three players still to act after CO.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2094,12 +2129,18 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_recap',
         title: 'Frame recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world3SameHandRecapRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world3SameHandRecapRunner.options,
-            correctOptionId: 'framework',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _world3SameHandRecapRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world3SameHandRecapRunner.options,
+              correctOptionId: 'framework',
+              correctIndex: 1,
+            ),
           ),
+          id: 'seat_blind_only',
+          label: 'The seat and posted blinds',
+          reason:
+              'The 1.5 BB blinds are the start of the pot. You also need to know your cards and whether anyone raised before your turn.',
         ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
@@ -3096,14 +3137,14 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
     primaryCtaLabel: 'Locked',
     isSelectable: false,
     isLocked: true,
-    rewardXp: 30,
-    runner: _w3SixSeatsIntroRunner,
+    rewardXp: 36,
+    runner: _w3OrientationFromSeat(_w3SixSeatsIntroRunner, 'hj'),
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'position_six_seats_positions_theory',
         title: 'Six seat labels',
         phase: Act0LessonPhaseV1.theory,
-        runner: _w3SixSeatsIntroRunner,
+        runner: _w3OrientationFromSeat(_w3SixSeatsIntroRunner, 'hj'),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -3111,13 +3152,20 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_positions_utg',
         title: 'Find UTG',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdUtgRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3SeatIdUtgRunner.options,
-            correctOptionId: 'utg',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3SeatIdUtgRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w3SeatIdUtgRunner.options,
+              correctOptionId: 'utg',
+              correctIndex: 1,
+            ),
           ),
-        ),
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB posted 1 BB. When you pick BB, you miss the next seat clockwise that opens the first round.',
+          seat: 'bb',
+        ).copyWith(teachingSteps: const []),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3125,13 +3173,23 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_hj_co_contrast',
         title: 'HJ or CO',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdHjRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3SeatIdHjRunner.options,
-            correctOptionId: 'hj',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _w3SeatIdHjRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _w3SeatIdHjRunner.options,
+                correctOptionId: 'hj',
+                correctIndex: 1,
+              ),
+            ),
+            'utg',
           ),
-        ),
+          id: 'utg',
+          label: 'UTG',
+          reason:
+              'UTG acts first. Picking it skips the next seat clockwise, which is HJ.',
+          seat: 'utg',
+        ).copyWith(teachingSteps: const []),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3139,15 +3197,37 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_positions_cutoff',
         title: 'Find CO',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdCoRunner,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(_w3SeatIdCoRunner, 'hj'),
+          id: 'btn',
+          label: 'BTN',
+          reason:
+              'BTN has the dealer marker. The 1.5 BB pot is unopened, and CO acts one seat before BTN.',
+          seat: 'btn',
+        ).copyWith(teachingSteps: const []),
         rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_position_order_reason',
+        title: 'Read three seats in order',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatOrderReasonRunner,
+        rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'position_six_seats_positions_button',
         title: 'Find BTN',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdBtnRunner,
+        runner: _w3AddAlternative(
+          _w3SeatIdBtnRunner,
+          id: 'sb',
+          label: 'SB',
+          reason:
+              'SB posted 0.5 BB and sits after the marker. Picking SB misses the seat that holds the marker.',
+          seat: 'sb',
+        ).copyWith(teachingSteps: const []),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3155,13 +3235,23 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_sb_recognition',
         title: 'Find SB',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdSbRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3SeatIdSbRunner.options,
-            correctOptionId: 'sb',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _w3SeatIdSbRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _w3SeatIdSbRunner.options,
+                correctOptionId: 'sb',
+                correctIndex: 1,
+              ),
+            ),
+            'utg',
           ),
-        ),
+          id: 'btn',
+          label: 'BTN',
+          reason:
+              'The dealer marker is on BTN. The 0.5 BB post is one seat clockwise from it.',
+          seat: 'btn',
+        ).copyWith(teachingSteps: const []),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3169,13 +3259,23 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_bb_recognition',
         title: 'Find BB',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdBbRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3SeatIdBbRunner.options,
-            correctOptionId: 'bb',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _w3SeatIdBbRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _w3SeatIdBbRunner.options,
+                correctOptionId: 'bb',
+                correctIndex: 1,
+              ),
+            ),
+            'hj',
           ),
-        ),
+          id: 'utg',
+          label: 'UTG',
+          reason:
+              'UTG starts the first betting round. Picking it skips the seat that already posted the full 1 BB.',
+          seat: 'utg',
+        ).copyWith(teachingSteps: const []),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3184,7 +3284,14 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         repairOnly: true,
         title: 'Repair BTN seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdBtnRepairRunner,
+        runner: _w3AddAlternative(
+          _w3SeatIdBtnRepairRunner,
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB posted the full blind. The dealer marker sits two seats before BB on this six-player table.',
+          seat: 'bb',
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
@@ -3193,12 +3300,19 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         repairOnly: true,
         title: 'Repair UTG seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdUtgRepairRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3SeatIdUtgRepairRunner.options,
-            correctOptionId: 'utg',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3SeatIdUtgRepairRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w3SeatIdUtgRepairRunner.options,
+              correctOptionId: 'utg',
+              correctIndex: 1,
+            ),
           ),
+          id: 'sb',
+          label: 'SB',
+          reason:
+              'SB sits before BB. Picking SB goes back a seat when the question asks who comes after BB.',
+          seat: 'sb',
         ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -3207,13 +3321,22 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_positions_review',
         title: 'Six-seat recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w3SixSeatsRecapRunner.copyWith(
-          teachingSteps: const <Act0TeachingStepV1>[],
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3SixSeatsRecapRunner.options,
-            correctOptionId: 'six_seats',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _w3SixSeatsRecapRunner.copyWith(
+              teachingSteps: const <Act0TeachingStepV1>[],
+              options: _act0AuthoredCorrectOptionAtV1(
+                _w3SixSeatsRecapRunner.options,
+                correctOptionId: 'six_seats',
+                correctIndex: 1,
+              ),
+            ),
+            'co',
           ),
+          id: 'blinds_and_button_only',
+          label: 'UTG, MP, CO, BTN, SB, BB',
+          reason:
+              'This table uses HJ between UTG and CO. Looking for MP can make you misread the seat before CO.',
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
@@ -3225,16 +3348,26 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
     title: 'Button advantage',
     subtitle: 'The Button often acts last and sees more.',
     phaseLabel: 'Button',
-    rewardXp: 35,
+    rewardXp: 41,
     sourceTasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'button_intro',
         title: 'Best seat',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world2PositionIntroRunner.copyWith(
-          question:
-              'Which seat gets to see CO act on the first pass after the flop?',
-          options: _laterSeatChoices,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _world2PositionIntroRunner.copyWith(
+              question:
+                  'Which seat gets to see CO act on the first pass after the flop?',
+              options: _laterSeatChoices,
+            ),
+            'hj',
+          ),
+          id: 'co',
+          label: 'CO',
+          reason:
+              'CO has to act before BTN after the flop. Choosing CO misses the seat that gets to observe it.',
+          seat: 'co',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
@@ -3243,22 +3376,29 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'find_button',
         title: 'Tap BTN',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _buttonSeatRunner.copyWith(
-            caption: 'You are at CO in this hand.',
-            table: _act0ReassignHeroSeatV1(
-              _buttonSeatRunner.table,
-              heroSeatId: 'co',
-              activeSeatId: '',
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(
+            _buttonSeatRunner.copyWith(
+              caption: 'You are at CO in this hand.',
+              table: _act0ReassignHeroSeatV1(
+                _buttonSeatRunner.table,
+                heroSeatId: 'co',
+                activeSeatId: '',
+              ),
+              question:
+                  'Which seat has the dealer marker when you sit one seat earlier?',
+              options: _dealerMarkerChoices,
             ),
-            question:
-                'Which seat has the dealer marker when you sit one seat earlier?',
-            options: _dealerMarkerChoices,
+            const {
+              'co':
+                  'Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.',
+            },
           ),
-          const {
-            'co':
-                'Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.',
-          },
+          id: 'sb',
+          label: 'SB',
+          reason:
+              'SB posted 0.5 BB next to the marker. Reading the small blind as the Button puts you one seat too late.',
+          seat: 'sb',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3280,12 +3420,16 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'button_last',
         title: 'Acts last',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _postflopButtonActorRunner,
-          const {
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(_postflopButtonActorRunner, const {
             'utg':
                 'On this 5 BB flop (Ah 7c 2d), UTG acts before BTN rather than last, so tapping UTG misreads who gets to see everyone else act first.',
-          },
+          }),
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB acts earlier on this A-7-2 flop. If you stop at BB, you miss the Button decision that ends the first pass.',
+          seat: 'bb',
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3294,40 +3438,61 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'button_vs_cutoff',
         title: 'BTN vs CO',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3LateSeatContrastRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3LateSeatContrastRunner.options,
-            correctOptionId: 'btn',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _w3LateSeatContrastRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _w3LateSeatContrastRunner.options,
+                correctOptionId: 'btn',
+                correctIndex: 1,
+              ),
+            ),
+            'hj',
           ),
+          id: 'hj',
+          label: 'HJ',
+          reason:
+              'HJ sits before CO, so choosing it misses the actions HJ still has to wait to see.',
+          seat: 'hj',
         ),
         rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'button_order_reason',
+        title: 'Why acting last helps',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3ButtonOrderReasonRunner,
+        rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'button_recap',
         title: 'Button recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world2PositionRecapRunner.copyWith(
-          caption:
-              'All six players put in 1 BB before the flop. The first betting round on the flop is about to start.',
-          hint: 'Compare the live-seat order after the flop.',
-          question:
-              'Which of these seats acts last on the flop when the dealer is still in the hand?',
-          options: _positionsRecapRunner.options,
-          table: _world2PositionRecapRunner.table.copyWith(
-            streetLabel: 'Flop',
-            boardCards: _flopA72Cards,
-            potLabel: 'Pot 6 BB',
-            centerLabel: 'First pass on the flop',
-            seats: [
-              for (final seat in _world2PositionRecapRunner.table.seats)
-                _act0CopySeatStateV1(seat, clearCommitment: true),
-            ],
-            actionTrail: const [],
-            activeSeatId: '',
-            selectableSeatIds: const ['utg', 'btn', 'bb'],
+        runner: _w3OrientationFromSeat(
+          _world2PositionRecapRunner.copyWith(
+            caption:
+                'All six players put in 1 BB before the flop. The first betting round on the flop is about to start.',
+            hint: 'Compare the live-seat order after the flop.',
+            question:
+                'Which of these seats acts last on the flop when the dealer is still in the hand?',
+            options: _positionsRecapRunner.options,
+            table: _world2PositionRecapRunner.table.copyWith(
+              streetLabel: 'Flop',
+              boardCards: _flopA72Cards,
+              potLabel: 'Pot 6 BB',
+              centerLabel: 'First pass on the flop',
+              seats: [
+                for (final seat in _world2PositionRecapRunner.table.seats)
+                  _act0CopySeatStateV1(seat, clearCommitment: true),
+              ],
+              actionTrail: const [],
+              activeSeatId: '',
+              selectableSeatIds: const ['utg', 'btn', 'bb'],
+            ),
           ),
+          'co',
         ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
@@ -3339,7 +3504,19 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         repairOnly: true,
         title: 'Who acts last on the flop?',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3BtnLastPostflopRepairRunner,
+        runner: _w3AddAlternative(
+          _w3BtnLastPostflopRepairRunner.copyWith(
+            table: _w3ButtonOrderTable(
+              _w3BtnLastPostflopRepairRunner.table,
+              'Jd Js',
+            ),
+          ),
+          id: 'bb',
+          label: 'BB',
+          reason:
+              'BB acts before BTN on A-7-2. Picking BB misses the player who can see the other first-round flop actions.',
+          seat: 'bb',
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
@@ -3357,12 +3534,18 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'early_pressure_choice',
         title: 'Early pressure',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3EarlySeatPressureRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3EarlySeatPressureRunner.options,
-            correctOptionId: 'more_players_behind',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3EarlySeatPressureRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w3EarlySeatPressureRunner.options,
+              correctOptionId: 'more_players_behind',
+              correctIndex: 1,
+            ),
           ),
+          id: 'position_returns_chips',
+          label: 'The blinds return UTG’s raise if they call',
+          reason:
+              'UTG opens before five players. A call from either blind keeps UTG’s chips in the pot and can lead to more bets.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3372,12 +3555,18 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         repairOnly: true,
         title: 'Repair UTG pressure',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3UtgPlayersBehindRepairRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w3UtgPlayersBehindRepairRunner.options,
-            correctOptionId: 'five_players_behind',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _w3UtgPlayersBehindRepairRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w3UtgPlayersBehindRepairRunner.options,
+              correctOptionId: 'five_players_behind',
+              correctIndex: 1,
+            ),
           ),
+          id: 'only_hj',
+          label: 'The next turn belongs to HJ, then the round ends',
+          reason:
+              'HJ is next, but CO, BTN and both blinds also have a turn. Counting one player can make a weak UTG raise look safer.',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -3386,7 +3575,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'late_info_choice',
         title: 'Late info edge',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3LateInfoEdgeRunner,
+        runner: _w3AddAlternative(
+          _w3LateInfoEdgeRunner,
+          id: 'smaller_blinds',
+          label: 'CO posts a smaller blind than UTG',
+          reason:
+              'The 0.5 BB and 1 BB posts belong to SB and BB. The earlier two folds give CO information, not a discount.',
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3404,7 +3599,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'same_hand_early_fold',
         title: 'Early seat fold',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3PositionDisciplineRunner,
+        runner: _w3AddAlternative(
+          _world3PositionDisciplineRunner,
+          id: 'call',
+          label: 'Call',
+          reason:
+              'ATo must pay 1 BB to limp from UTG. Five players can still raise and make the hand more expensive.',
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3412,12 +3613,18 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'same_hand_late_open',
         title: 'Late seat open',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3LateOpenRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world3LateOpenRunner.options,
-            correctOptionId: 'raise',
-            correctIndex: 1,
+        runner: _w3AddAlternative(
+          _world3LateOpenRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world3LateOpenRunner.options,
+              correctOptionId: 'raise',
+              correctIndex: 1,
+            ),
           ),
+          id: 'fold',
+          label: 'Fold',
+          reason:
+              'ATo on BTN is in the HJ–BTN opening row. Folding gives up a chance to contest the 1.5 BB in blinds.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3450,12 +3657,16 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_intro',
         title: 'Position shapes action',
         phase: Act0LessonPhaseV1.theory,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _w3PositionApplyIntroRunner,
-          const {
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(_w3PositionApplyIntroRunner, const {
             'utg':
                 'UTG has five players left to act behind it in this 1.5 BB preflop pot, so picking UTG overlooks how much more crowded early position is than BTN.',
-          },
+          }),
+          id: 'co',
+          label: 'CO',
+          reason:
+              'CO has BTN and both blinds behind. Choosing CO instead of BTN misses one player who can raise after CO acts.',
+          seat: 'co',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
@@ -3486,18 +3697,24 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_late_open',
         title: 'Late: open or limp?',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3LateOpenRunner.copyWith(
-          caption: 'Folded to BTN with KTo.',
-          hint: 'Find your hand and seat in the chart.',
-          table: _world3LateOpenRunner.table.copyWith(
-            heroCards: const <Act0CardStateV1>[
-              Act0CardStateV1(rank: 'K', suit: 'd'),
-              Act0CardStateV1(rank: 'T', suit: 'c'),
-            ],
-            centerLabel: 'No one has raised',
+        runner: _w3AddAlternative(
+          _world3LateOpenRunner.copyWith(
+            caption: 'Folded to BTN with KTo.',
+            hint: 'Find your hand and seat in the chart.',
+            table: _world3LateOpenRunner.table.copyWith(
+              heroCards: const <Act0CardStateV1>[
+                Act0CardStateV1(rank: 'K', suit: 'd'),
+                Act0CardStateV1(rank: 'T', suit: 'c'),
+              ],
+              centerLabel: 'No one has raised',
+            ),
+            options: _additionalLateOpenChoices,
+            teachingSteps: const <Act0TeachingStepV1>[],
           ),
-          options: _additionalLateOpenChoices,
-          teachingSteps: const <Act0TeachingStepV1>[],
+          id: 'fold',
+          label: 'Fold',
+          reason:
+              'KTo on BTN belongs to the CO–BTN opening row. Folding gives up a chance to contest the 1.5 BB in blinds.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3506,47 +3723,53 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_early_fold',
         title: 'Early: AQo first in',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3PositionDisciplineRunner.copyWith(
-          caption: 'You are first to act with AQo.',
-          question:
-              'With AQo under the gun, what does the Sharky starting chart say to do?',
-          hint: 'Find the first seat that opens this hand in the chart.',
-          table: _world3PositionDisciplineRunner.table.copyWith(
-            centerLabel: 'Before the first raise',
-            heroCards: const [
-              Act0CardStateV1(rank: 'A', suit: 'd', tone: Act0CardToneV1.red),
-              Act0CardStateV1(rank: 'Q', suit: 'c'),
+        runner: _w3AddAlternative(
+          _world3PositionDisciplineRunner.copyWith(
+            caption: 'You are first to act with AQo.',
+            question:
+                'With AQo under the gun, what does the Sharky starting chart say to do?',
+            hint: 'Find the first seat that opens this hand in the chart.',
+            table: _world3PositionDisciplineRunner.table.copyWith(
+              centerLabel: 'Before the first raise',
+              heroCards: const [
+                Act0CardStateV1(rank: 'A', suit: 'd', tone: Act0CardToneV1.red),
+                Act0CardStateV1(rank: 'Q', suit: 'c'),
+              ],
+            ),
+            options: const [
+              Act0RunnerOptionV1(
+                id: 'fold',
+                label: 'Fold',
+                isCorrect: true,
+                preferredLabel: 'Fold',
+                quality: Act0FeedbackQualityV1.correct,
+                feedbackTitle: 'UTG is before HJ.',
+                feedbackReason:
+                    'The Sharky starting chart opens AQo from HJ or later. Fold it from UTG here. Experienced players sometimes open AQo from earlier seats.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'raise',
+                label: 'Raise',
+                isCorrect: false,
+                preferredLabel: 'Fold',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'Find the first seat for AQo.',
+                feedbackReason:
+                    'Raising AQo from UTG into the 1.5 BB pot risks chips with five players still to act behind you, before HJ, where the Sharky starting chart first opens AQo.',
+              ),
+            ],
+            teachingSteps: const <Act0TeachingStepV1>[
+              Act0TeachingStepV1(
+                title: 'Check the seat and the hand.',
+                body:
+                    'Find where you sit, then read across the chart for your hand.',
+              ),
             ],
           ),
-          options: const [
-            Act0RunnerOptionV1(
-              id: 'fold',
-              label: 'Fold',
-              isCorrect: true,
-              preferredLabel: 'Fold',
-              quality: Act0FeedbackQualityV1.correct,
-              feedbackTitle: 'UTG is before HJ.',
-              feedbackReason:
-                  'The Sharky starting chart opens AQo from HJ or later. Fold it from UTG here. Experienced players sometimes open AQo from earlier seats.',
-            ),
-            Act0RunnerOptionV1(
-              id: 'raise',
-              label: 'Raise',
-              isCorrect: false,
-              preferredLabel: 'Fold',
-              quality: Act0FeedbackQualityV1.wrong,
-              feedbackTitle: 'Find the first seat for AQo.',
-              feedbackReason:
-                  'Raising AQo from UTG into the 1.5 BB pot risks chips with five players still to act behind you, before HJ, where the Sharky starting chart first opens AQo.',
-            ),
-          ],
-          teachingSteps: const <Act0TeachingStepV1>[
-            Act0TeachingStepV1(
-              title: 'Check the seat and the hand.',
-              body:
-                  'Find where you sit, then read across the chart for your hand.',
-            ),
-          ],
+          id: 'call',
+          label: 'Call',
+          reason:
+              'Calling AQo costs 1 BB from UTG, with five players behind who can raise and make you pay more.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -3555,21 +3778,27 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_hj_fold',
         title: 'HJ: discipline hold',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _world3HijDisciplineRunner.copyWith(
-            table: _world3HijDisciplineRunner.table.copyWith(
-              highlightedSeatIds: const ['hj'],
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(
+            _world3HijDisciplineRunner.copyWith(
+              table: _world3HijDisciplineRunner.table.copyWith(
+                highlightedSeatIds: const ['hj'],
+              ),
+              options: _act0AuthoredCorrectOptionAtV1(
+                _world3HijDisciplineRunner.options,
+                correctOptionId: 'fold',
+                correctIndex: 1,
+              ),
             ),
-            options: _act0AuthoredCorrectOptionAtV1(
-              _world3HijDisciplineRunner.options,
-              correctOptionId: 'fold',
-              correctIndex: 1,
-            ),
+            const {
+              'raise':
+                  'Raising KTo from HJ into the 1.5 BB pot risks chips with CO, BTN, and both blinds still behind you, one seat too early for KTo in the Sharky starting chart.',
+            },
           ),
-          const {
-            'raise':
-                'Raising KTo from HJ into the 1.5 BB pot risks chips with CO, BTN, and both blinds still behind you, one seat too early for KTo in the Sharky starting chart.',
-          },
+          id: 'call',
+          label: 'Call',
+          reason:
+              'From HJ, KTo would put in 1 BB while CO, BTN and the blinds can still increase the price.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -3578,25 +3807,232 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_recap',
         title: 'Position apply recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world3LateOpenRunner.copyWith(
-          caption: 'Folded to BTN with AJo.',
-          hint: 'Find your hand and seat in the chart.',
-          table: _world3LateOpenRunner.table.copyWith(
-            heroCards: const <Act0CardStateV1>[
-              Act0CardStateV1(rank: 'A', suit: 'd'),
-              Act0CardStateV1(rank: 'J', suit: 'c'),
-            ],
-            centerLabel: 'No one has raised',
-          ),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _additionalLateOpenChoices,
-            correctOptionId: 'raise',
-            correctIndex: 0,
-          ),
-          teachingSteps: const <Act0TeachingStepV1>[],
-        ),
+        runner: _w3PositionApplyRecapRunner,
         rewardXp: 16,
         stepKind: Act0LessonStepKindV1.proveIt,
+      ),
+    ],
+  ),
+  _lessonFromTasksV1(
+    lessonId: 'w3_play_from_blinds',
+    title: 'Play from the blinds',
+    subtitle: 'Your posted blind changes the price of calling.',
+    phaseLabel: 'Blinds',
+    rewardXp: 56,
+    sourceTasks: [
+      Act0LessonTaskV1(
+        taskId: 'intro',
+        title: 'Two blinds, different choices',
+        phase: Act0LessonPhaseV1.theory,
+        runner: _w3BlindDefenseIntroRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.learn,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'small_blind_fold',
+        title: 'Small blind with a weak hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'Qc 5d',
+          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
+          question: 'What does the small-blind rule say to do with Q5o here?',
+          options: const [
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Calling costs 2 BB with Q5o from SB, and BB still has a turn. A better queen can cost you more after the flop.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'Q5o is weak and you act before BTN after the flop. Folding costs nothing more than the 0.5 BB already posted.',
+            ),
+            (
+              id: 'raise',
+              label: 'Reraise to 10 BB',
+              reason:
+                  'Putting in 9.5 BB more from SB with Q5o risks a larger pot with a weak hand while BB can still respond.',
+            ),
+          ],
+          correct: 1,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'small_blind_raise',
+        title: 'Small blind with a premium hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'As Ad',
+          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
+          question: 'What does the small-blind rule say to do with AA here?',
+          options: const [
+            (
+              id: 'raise',
+              label: 'Reraise to 10 BB',
+              reason:
+                  'AA in SB can reraise to build the pot against weaker hands. A 10 BB total costs another 9.5 BB after your posted blind.',
+            ),
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Matching 2 BB with AA keeps the pot smaller and offers BB a cheaper chance to enter behind you.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'Folding AA from SB hands the 0.5 BB already posted to the pot and gives up a chance to build value against BTN.',
+            ),
+          ],
+          correct: 0,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'small_blind_medium_raise',
+        title: 'Small blind with an HJ medium hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'Ah Qd',
+          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
+          question: 'What does the small-blind rule say to do with AQo here?',
+          options: const [
+            (
+              id: 'raise',
+              label: 'Reraise to 10 BB',
+              reason:
+                  'AQo is in the HJ Medium row. Against a wide BTN open from SB, reraising to 10 BB (9.5 BB more) takes the lead and stops BB from entering cheaply.',
+            ),
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Calling 2 BB from SB with AQo leaves you out of position against BTN and invites BB in behind you for a cheap price.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'Folding AQo from SB against one BTN open gives up the 0.5 BB already posted and folds a hand strong enough to reraise in the HJ Medium row.',
+            ),
+          ],
+          correct: 0,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'small_blind_medium_fold',
+        title: 'Small blind with a CO medium hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'Kd Jc',
+          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
+          question: 'What does the small-blind rule say to do with KJo here?',
+          options: const [
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, the CO Medium row folds.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'KJo is in the CO Medium row. Against a BTN open from SB, only Premium, Strong, and the HJ Medium row reraise; folding KJo saves 2 BB out of position with BB still behind.',
+            ),
+            (
+              id: 'raise',
+              label: 'Reraise to 10 BB',
+              reason:
+                  'Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a CO Medium hand when this rule reserves reraises for Premium, Strong, and the HJ Medium row.',
+            ),
+          ],
+          correct: 1,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'big_blind_price',
+        title: 'Read the remaining price',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BlindDefenseRunner(
+          hero: 'bb',
+          cards: 'Kd 8d',
+          caption:
+              'BTN opens to 2.5 BB and SB folds. You have already posted 1 BB.',
+          question: 'How much more must you add to match BTN?',
+          options: const [
+            (
+              id: 'two_five',
+              label: '2.5 BB',
+              reason:
+                  'BTN put in 2.5 BB total. Paying that much again from BB would count your posted 1 BB twice.',
+            ),
+            (
+              id: 'one',
+              label: '1 BB',
+              reason:
+                  '1 BB is the amount already in from your seat, leaving 1.5 BB still due against BTN.',
+            ),
+            (
+              id: 'one_five',
+              label: '1.5 BB',
+              reason:
+                  'Your 1 BB post counts toward BTN’s 2.5 BB. Calling puts another 1.5 BB into the 4 BB pot.',
+            ),
+          ],
+          correct: 2,
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'big_blind_defend',
+        title: 'Defend when the price fits',
+        phase: Act0LessonPhaseV1.review,
+        runner: _w3BlindDefenseRunner(
+          hero: 'bb',
+          cards: 'Jh Th',
+          caption:
+              'BTN opens to 2.5 BB and SB folds. For this example, assume you win 32% of the time and face no later bets. Compare calling with folding.',
+          question: 'What does this price tell you?',
+          options: const [
+            (
+              id: 'fold',
+              label: 'The price is too high',
+              reason:
+                  'Calling costs 1.5 BB and makes a 5.5 BB pot. Folding gives up this call with a 32% chance, above the roughly 27% threshold.',
+            ),
+            (
+              id: 'call',
+              label: 'The chance to win clears the price',
+              reason:
+                  'You need about 27% equity. In this model JTs wins 32%, so you can pay the 1.5 BB call.',
+            ),
+            (
+              id: 'posted_free',
+              label: 'The flop is free after posting BB',
+              reason:
+                  'Your 1 BB post counts, but matching BTN still costs 1.5 BB. Treating it as free can lead to paying with hands below the threshold.',
+            ),
+          ],
+          correct: 1,
+        ),
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.review,
       ),
     ],
   ),
@@ -3611,16 +4047,26 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_intro',
         title: 'Seat before action',
         phase: Act0LessonPhaseV1.theory,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _world2PositionIntroRunner.copyWith(
-            question:
-                'Which of these seats sees HJ act before making its own first decision before the flop?',
-            options: _laterSeatChoices,
+        runner: _w3AddAlternative(
+          _w3OrientationFromSeat(
+            _act0WithWrongFeedbackReasonsV1(
+              _world2PositionIntroRunner.copyWith(
+                question:
+                    'Which of these seats sees HJ act before making its own first decision before the flop?',
+                options: _laterSeatChoices,
+              ),
+              const {
+                'utg':
+                    'UTG acts before HJ in this 1.5 BB preflop pot, so picking UTG misses that only a later seat like BTN gets to see HJ act first.',
+              },
+            ),
+            'co',
           ),
-          const {
-            'utg':
-                'UTG acts before HJ in this 1.5 BB preflop pot, so picking UTG misses that only a later seat like BTN gets to see HJ act first.',
-          },
+          id: 'hj',
+          label: 'HJ',
+          reason:
+              'HJ makes its own decision before BTN. Picking HJ misses the later seat that observes HJ’s action.',
+          seat: 'hj',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
@@ -3629,18 +4075,30 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_late_open',
         title: 'Late: open or limp?',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3LateOpenRunner.copyWith(
-          caption: 'Folded to BTN with QTo.',
-          hint: 'Find your hand and seat in the chart.',
-          table: _world3LateOpenRunner.table.copyWith(
-            heroCards: const <Act0CardStateV1>[
-              Act0CardStateV1(rank: 'Q', suit: 'd'),
-              Act0CardStateV1(rank: 'T', suit: 'c'),
-            ],
-            centerLabel: 'No one has raised',
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w3AddAlternative(
+            _world3LateOpenRunner.copyWith(
+              caption: 'Folded to BTN with QTo.',
+              hint: 'Find your hand and seat in the chart.',
+              table: _world3LateOpenRunner.table.copyWith(
+                heroCards: const <Act0CardStateV1>[
+                  Act0CardStateV1(rank: 'Q', suit: 'd'),
+                  Act0CardStateV1(rank: 'T', suit: 'c'),
+                ],
+                centerLabel: 'No one has raised',
+              ),
+              options: _additionalLateOpenChoices,
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            id: 'fold',
+            label: 'Fold',
+            reason:
+                'The chart opens QTo in BTN. Folding from this seat passes up an open into the 1.5 BB blinds.',
           ),
-          options: _additionalLateOpenChoices,
-          teachingSteps: const <Act0TeachingStepV1>[],
+          const {
+            'call':
+                'Limping QTo from BTN stakes 1 BB and offers BB a free check. A 3 BB open gives the blinds a fold decision.',
+          },
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3649,18 +4107,24 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_early_fold',
         title: 'Early: A9o first in',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _world3CheckpointEarlyFoldRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _world3CheckpointEarlyFoldRunner.options,
-              correctOptionId: 'fold',
-              correctIndex: 1,
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(
+            _world3CheckpointEarlyFoldRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _world3CheckpointEarlyFoldRunner.options,
+                correctOptionId: 'fold',
+                correctIndex: 1,
+              ),
             ),
+            const {
+              'raise':
+                  'Raising A9o from UTG into the 1.5 BB pot risks chips with five players still to act. The Sharky starting chart folds A9o here because stronger aces can dominate it.',
+            },
           ),
-          const {
-            'raise':
-                'Raising A9o from UTG into the 1.5 BB pot risks chips with five players still to act. The Sharky starting chart folds A9o here because stronger aces can dominate it.',
-          },
+          id: 'call',
+          label: 'Call',
+          reason:
+              'Calling 1 BB with A9o from UTG invites players behind to raise. Folding keeps that blind.',
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3669,12 +4133,18 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_btn_call',
         title: 'BTN: callable spot',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0WithWrongFeedbackReasonsV1(
-          _world3PositionCheckpointCallRunner,
-          const {
-            'fold':
-                'Folding KJs on BTN against HJ\'s 2.5 BB open into a 4 BB pot gives up a profitable in-position call with strong suited broadway value.',
-          },
+        runner: _w3AddAlternative(
+          _act0WithWrongFeedbackReasonsV1(
+            _world3PositionCheckpointCallRunner,
+            const {
+              'fold':
+                  'HJ opened to 2.5 BB, making the pot 4 BB before you act. Folding KJs on BTN gives up the in-position call in the Sharky starting chart.',
+            },
+          ),
+          id: 'raise',
+          label: 'Reraise to 7.5 BB',
+          reason:
+              'The chart calls HJ for 2.5 BB with KJs on BTN. Reraising risks 5 BB extra against better hands.',
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3698,22 +4168,34 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_review',
         title: 'Position recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world3LateOpenRunner.copyWith(
-          caption: 'Folded to BTN with ATs.',
-          hint: 'Find your hand and seat in the chart.',
-          table: _world3LateOpenRunner.table.copyWith(
-            heroCards: const <Act0CardStateV1>[
-              Act0CardStateV1(rank: 'A', suit: 'h'),
-              Act0CardStateV1(rank: 'T', suit: 'h'),
-            ],
-            centerLabel: 'No one has raised',
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w3AddAlternative(
+            _world3LateOpenRunner.copyWith(
+              caption: 'Folded to BTN with ATs.',
+              hint: 'Find your hand and seat in the chart.',
+              table: _world3LateOpenRunner.table.copyWith(
+                heroCards: const <Act0CardStateV1>[
+                  Act0CardStateV1(rank: 'A', suit: 'h'),
+                  Act0CardStateV1(rank: 'T', suit: 'h'),
+                ],
+                centerLabel: 'No one has raised',
+              ),
+              options: _act0AuthoredCorrectOptionAtV1(
+                _additionalLateOpenChoices,
+                correctOptionId: 'raise',
+                correctIndex: 0,
+              ),
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            id: 'fold',
+            label: 'Fold',
+            reason:
+                'ATs on BTN is in the HJ–BTN opening row. Folding gives up a chance to raise for the 1.5 BB already posted.',
           ),
-          options: _act0AuthoredCorrectOptionAtV1(
-            _additionalLateOpenChoices,
-            correctOptionId: 'raise',
-            correctIndex: 0,
-          ),
-          teachingSteps: const <Act0TeachingStepV1>[],
+          const {
+            'call':
+                'A 1 BB limp with ATs from BTN keeps SB and BB in cheaply. A 3 BB raise can win the 1.5 BB already posted.',
+          },
         ),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.proveIt,

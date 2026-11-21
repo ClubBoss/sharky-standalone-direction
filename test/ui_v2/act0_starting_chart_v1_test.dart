@@ -142,6 +142,42 @@ void main() {
       final correct = runner.options.singleWhere(
         act0RunnerOptionIsAuthoredCorrectV1,
       );
+      if (runner.lessonId == 'w3_play_from_blinds') {
+        final table = runner.table;
+        expect(chartRaisers(table), ['BTN'], reason: task.taskId);
+        switch (table.heroSeat.seatId) {
+          case 'sb':
+            expect(
+              correct.id,
+              chart.smallBlindVsButton(table),
+              reason: task.taskId,
+            );
+          case 'bb':
+            final amounts = table.handContributions!.amounts(
+              actorSeatId: table.heroSeatId,
+              seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+            );
+            final call = amounts.toCallBb!;
+            if (task.taskId.endsWith('_price')) {
+              expect(correct.label, '$call BB', reason: task.taskId);
+            } else {
+              final statedChance = double.parse(
+                RegExp(r'you win (\d+)%').firstMatch(runner.caption)![1]!,
+              );
+              expect(
+                correct.id,
+                statedChance >= 100 * call / (amounts.potBb + call)
+                    ? 'call'
+                    : 'fold',
+                reason: task.taskId,
+              );
+            }
+          default:
+            fail('Unexpected hero seat in ${task.taskId}');
+        }
+        checked++;
+        continue;
+      }
       final group = startingChartGroups.contains(correct.id);
       final preflop = runner.table.streetLabel == 'Preflop';
       if (!referencesStartingChart(runner) &&

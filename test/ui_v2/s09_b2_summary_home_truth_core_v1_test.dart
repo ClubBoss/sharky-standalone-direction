@@ -560,6 +560,7 @@ void main() {
         expect(current.runner.options.map((option) => option.id), [
           'one_answer',
           'framework',
+          'seat_blind_only',
         ]);
         expect(
           current.runner.options.singleWhere((option) => option.isCorrect).id,

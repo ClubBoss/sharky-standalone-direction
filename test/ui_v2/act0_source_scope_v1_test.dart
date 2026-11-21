@@ -1,11 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../support/act0_w2_catalog_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
 import '../support/act0_catalog_truth_audit_v1.dart'
     show w4MinRaiseTaskIdsV1, w7AppliedTaskIdsV1;
+import '../support/act0_w2_catalog_contract_v1.dart';
+import '../support/act0_w3_catalog_contract_v1.dart';
 
 Act0LessonTaskV1 _task(String id) => [
   for (final world in Act0ShellStateV1.sample.worlds)
@@ -77,6 +78,7 @@ void main() {
 
   test('authored contexts preserve scopes across legacy, ASM05 and Q7 tasks', () {
     const orientationIds = <String>{
+      'position_six_seats_position_order_reason',
       'first_table_guide_shared_cards_repair',
       'what_poker_is_theory',
       'what_poker_is_find_hero',
@@ -278,6 +280,8 @@ void main() {
         for (final l in w.lessons) ...l.taskList,
     ];
     final w2Q9TaskIds = w2Q9ChoiceContractV1.keys.toSet();
+    final w3NewTaskIds = w3NewChoiceContractV1.keys.toSet();
+    expect(tasks.map((task) => task.taskId).toSet(), containsAll(w3NewTaskIds));
     expect(
       tasks
           .where((task) => w2Q9TaskIds.contains(task.taskId))
@@ -285,8 +289,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(385));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(385));
+    expect(tasks, hasLength(394));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(394));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -297,7 +301,8 @@ void main() {
             !_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
-            !w2Q9TaskIds.contains(task.taskId),
+            !w2Q9TaskIds.contains(task.taskId) &&
+            !w3NewTaskIds.contains(task.taskId),
       ),
       hasLength(368),
     );
@@ -326,7 +331,7 @@ void main() {
       expect(replay.isConsumerSafe, isFalse);
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
-    expect(orientationIds, hasLength(47));
+    expect(orientationIds, hasLength(48));
     expect(explanationIds, hasLength(81));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
@@ -360,7 +365,8 @@ void main() {
         if (!_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
-            !w2Q9TaskIds.contains(task.taskId))
+            !w2Q9TaskIds.contains(task.taskId) &&
+            !w3NewTaskIds.contains(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -505,8 +511,15 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 264); // Authored contexts, not certified replay histories.
+    expect(played, 272); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'w3_play_from_blinds_intro',
+      'w3_play_from_blinds_small_blind_fold',
+      'w3_play_from_blinds_small_blind_raise',
+      'w3_play_from_blinds_small_blind_medium_raise',
+      'w3_play_from_blinds_small_blind_medium_fold',
+      'w3_play_from_blinds_big_blind_price',
+      'w3_play_from_blinds_big_blind_defend',
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
       ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
