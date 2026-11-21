@@ -160,7 +160,7 @@ void main() {
                   'world': key.$1,
                   'lesson': key.$2,
                   'family': key.$3,
-                  'target': 'после беты',
+                  'target': 'до беты · Q1',
                 },
             ]) +
             '\n',

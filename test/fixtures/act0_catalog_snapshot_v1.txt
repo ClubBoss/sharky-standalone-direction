@@ -6115,16 +6115,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB
 
 TASK spaced_review_w2_continue_or_let_go_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-Q: By the Sharky starting chart, what do you do with this weak offsuit hand facing HJ's raise?
+Q: Which fact makes this a decision about continuing rather than opening?
 HINT [hidden]: (none)
 TABLE: Preflop | You Jc 4h | Pot 5 BB | To call 3.5 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 96.5 BB raise 3.5 BB | CO Jc 4h stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3.5 BB
-  - [wrong] Raise — Look again. J4o is Weak and faces an earlier raise. The starting chart folds it.
-    BETTER ANSWER: Fold
-  + [correct] Fold — Correct. J4o is Weak and faces an earlier raise. The starting chart folds it.
-  - [wrong] Call — Look again. J4o is Weak and faces an earlier raise. The starting chart folds it.
-    BETTER ANSWER: Fold
+  - [wrong] You sit in CO — Look again. HJ put in the first raise, to 3.5 BB. A first-in decision only happens before anyone enters.
+    BETTER ANSWER: HJ already raised
+  + [correct] HJ already raised — Correct. HJ put in the first raise, to 3.5 BB. A first-in decision only happens before anyone enters.
+  - [wrong] Your cards are offsuit — Look again. HJ put in the first raise, to 3.5 BB. A first-in decision only happens before anyone enters.
+    BETTER ANSWER: HJ already raised
 
 TASK spaced_review_w2_continue_or_let_go_hero_button_v1 [drill] Review decision
 DAY 7 FAMILY: hero_button
@@ -6133,11 +6133,11 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Kh Jh | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Jh stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [wrong] Fold — Look again. KJs is suited and connected. The chart includes KJs for a first-in raise from CO.
+  - [wrong] Fold — Look again. KJs has two high cards of one suit. The chart includes KJs for a first-in raise from CO.
     BETTER ANSWER: Raise
-  - [wrong] Call — Look again. KJs is suited and connected. The chart includes KJs for a first-in raise from CO.
+  - [wrong] Call — Look again. KJs has two high cards of one suit. The chart includes KJs for a first-in raise from CO.
     BETTER ANSWER: Raise
-  + [correct] Raise — Correct. KJs is suited and connected. The chart includes KJs for a first-in raise from CO.
+  + [correct] Raise — Correct. KJs has two high cards of one suit. The chart includes KJs for a first-in raise from CO.
 
 ===== WORLD 2 · LESSON hand_discipline_apply · Discipline at the table =====
 
@@ -6171,16 +6171,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
 
 TASK spaced_review_w2_discipline_checkpoint_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-Q: You face UTG's open with A5o. What does the Sharky starting chart say to do?
+Q: Which description matches your hand and the action before you?
 HINT [hidden]: (none)
 TABLE: Preflop | You As 5d | Pot 5.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 SEATS: UTG stack 96 BB raise 4 BB | HJ folded stack 100 BB | CO As 5d stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 4 BB · HJ folds
-  - [wrong] Raise — Look again. The chart folds Weak offsuit aces facing an open. Your five gives little protection against a stronger ace.
-    BETTER ANSWER: Fold
-  - [wrong] Call — Look again. The chart folds Weak offsuit aces facing an open. Your five gives little protection against a stronger ace.
-    BETTER ANSWER: Fold
-  + [correct] Fold — Correct. The chart folds Weak offsuit aces facing an open. Your five gives little protection against a stronger ace.
+  - [wrong] Unopened with a premium hand — Look again. UTG raised to 4 BB. A5o is a weak offsuit ace, so both the hand group and the earlier raise matter.
+    BETTER ANSWER: Facing a raise with a weak offsuit ace
+  - [wrong] Checked to you with a suited ace — Look again. UTG raised to 4 BB. A5o is a weak offsuit ace, so both the hand group and the earlier raise matter.
+    BETTER ANSWER: Facing a raise with a weak offsuit ace
+  + [correct] Facing a raise with a weak offsuit ace — Correct. UTG raised to 4 BB. A5o is a weak offsuit ace, so both the hand group and the earlier raise matter.
 
 ===== WORLD 3 · LESSON position_six_seats · The 6 positions =====
 
@@ -6515,12 +6515,12 @@ HINT [hidden]: (none)
 TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 8h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
-  - [wrong] Check — Look again. A pair of sevens beats your jack-high. Betting 3 BB makes that better hand fold in this model.
+  - [wrong] Check — Look again. A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  + [correct] Bet 3 BB — Correct. A pair of sevens beats your jack-high. Betting 3 BB makes that better hand fold in this model.
+  + [correct] Bet 3 BB — Correct. A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Fold — Look again. A pair of sevens beats your jack-high. Betting 3 BB makes that better hand fold in this model.
+  - [wrong] Fold — Look again. A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
@@ -6565,7 +6565,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 TASK spaced_review_w4_price_checkpoint_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
 CAPTION: 6-max micro-stakes. Two players, no ties or further betting. Assume one win in five against this opponent's range.
-Q: You win 1 in 5 if you call. Which has the higher expected return under that model?
+Q: With that chance and price, which choice earns more over many hands?
 HINT [hidden]: (none)
 TABLE: River | You Qd Ts | Board Qh 8c 4d 3h 2s | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qd Ts stack 97.25 BB

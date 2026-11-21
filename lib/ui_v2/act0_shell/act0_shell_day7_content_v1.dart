@@ -368,11 +368,15 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     "pot_to_call",
     _day7PreflopV1("co", "Jc 4h", opener: "hj", openBb: 3.5, showTurn: true),
     question:
-        "By the Sharky starting chart, what do you do with this weak offsuit hand facing HJ's raise?",
-    choices: const ["Raise", "Fold", "Call"],
+        "Which fact makes this a decision about continuing rather than opening?",
+    choices: const [
+      "You sit in CO",
+      "HJ already raised",
+      "Your cards are offsuit",
+    ],
     correct: 1,
     reason:
-        "J4o is Weak and faces an earlier raise. The starting chart folds it.",
+        "HJ put in the first raise, to 3.5 BB. A first-in decision only happens before anyone enters.",
   ),
   _day7ExampleV1(
     2,
@@ -384,7 +388,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Call", "Raise"],
     correct: 2,
     reason:
-        "KJs is suited and connected. The chart includes KJs for a first-in raise from CO.",
+        "KJs has two high cards of one suit. The chart includes KJs for a first-in raise from CO.",
   ),
   _day7ExampleV1(
     2,
@@ -415,12 +419,15 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     "discipline_checkpoint",
     "pot_to_call",
     _day7PreflopV1("co", "As 5d", opener: "utg", openBb: 4, showTurn: true),
-    question:
-        "You face UTG's open with A5o. What does the Sharky starting chart say to do?",
-    choices: const ["Raise", "Call", "Fold"],
+    question: "Which description matches your hand and the action before you?",
+    choices: const [
+      "Unopened with a premium hand",
+      "Checked to you with a suited ace",
+      "Facing a raise with a weak offsuit ace",
+    ],
     correct: 2,
     reason:
-        "The chart folds Weak offsuit aces facing an open. Your five gives little protection against a stronger ace.",
+        "UTG raised to 4 BB. A5o is a weak offsuit ace, so both the hand group and the earlier raise matter.",
   ),
   _day7ExampleV1(
     3,
@@ -717,7 +724,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Bet 3 BB", "Fold"],
     correct: 1,
     reason:
-        "A pair of sevens beats your jack-high. Betting 3 BB makes that better hand fold in this model.",
+        "A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.",
     caption:
         "6-max micro-stakes. BB has a pair of sevens and folds it to a 3 BB bet.",
   ),
@@ -765,7 +772,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     "pot_to_call",
     _day7PostflopV1("bb", "Qd Ts", "Qh 8c 4d 3h 2s", betBb: 3, showTurn: true),
     question:
-        "You win 1 in 5 if you call. Which has the higher expected return under that model?",
+        "With that chance and price, which choice earns more over many hands?",
     choices: const ["Call", "Fold", "Both earn the same"],
     correct: 1,
     reason:
