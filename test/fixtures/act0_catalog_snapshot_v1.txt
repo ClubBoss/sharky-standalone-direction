@@ -2477,7 +2477,7 @@ TABLE: Preflop | You Ks Js | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn |
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Ks Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
   + [correct] Call [2.5 BB] — Sharp read. The Sharky starting chart calls one HJ raise with KJs on BTN.
-  - [wrong] Fold — Not quite. Folding KJs on BTN against HJ's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with strong suited broadway value.
+  - [wrong] Fold — Not quite. HJ opened to 2.5 BB, making the pot 4 BB before you act. Folding KJs on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
   - [wrong] Reraise to 7.5 BB — Read the earlier actions and seat order. The chart calls HJ for 2.5 BB with KJs on BTN. Reraising risks 5 BB extra against better hands.
     BETTER ANSWER: Call

@@ -4070,7 +4070,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             _world3PositionCheckpointCallRunner,
             const {
               'fold':
-                  'Folding KJs on BTN against HJ\'s 2.5 BB open into a 4 BB pot gives up a profitable in-position call with strong suited broadway value.',
+                  'HJ opened to 2.5 BB, making the pot 4 BB before you act. Folding KJs on BTN gives up the in-position call in the Sharky starting chart.',
             },
           ),
           id: 'raise',
