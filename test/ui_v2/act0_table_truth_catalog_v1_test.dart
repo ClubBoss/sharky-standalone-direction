@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 156),
-      ('D3.to_call_completeness', 112),
+      ('D2.pot_feasibility', 158),
+      ('D3.to_call_completeness', 113),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1200,6 +1200,24 @@ void main() {
         ],
       };
     }
+    expectedComparison['first_table_guide_first_decision'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        w3Option('fold'),
+        {...w3Option('call'), 'quality': 'suboptimal'},
+        w3Option('raise', correct: true),
+      ],
+    };
+    expectedComparison['hand_rankings_compare_ace_straights'] = {
+      'rewardXp': 7,
+      'family': 'compare',
+      'options': [
+        w3Option('broadway', correct: true),
+        w3Option('wheel'),
+        w3Option('tie'),
+      ],
+    };
     final w1Revision =
         jsonDecode(
               File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),

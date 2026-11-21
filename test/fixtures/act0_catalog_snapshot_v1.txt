@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 397 tasks · W1–W12
+SHARKY POKER — EN learning content, 399 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -7,7 +7,7 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand is on the table.
-TEACH: Find your cards. The two cards by the You badge are yours. Everyone still in the hand can use the board. The pot is the chips in the middle. Blinds are forced bets. SB and BB post them before anyone acts.
+TEACH: Find your cards. The two cards by You are yours. Players share the board. The pot holds the chips in the middle.
 TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Where are the two cards you can use on your own?
@@ -41,14 +41,24 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     BETTER ANSWER: The two cards at your seat
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
+TASK first_table_guide_first_decision [drill] Make your first choice
+CAPTION: You have two aces. A player raised to 2.5 BB.
+TEACH: Three choices. Fold to give up the hand. Call to match the bet. Raise to set a higher price.
+Q: What is the best choice with your aces?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As Ac stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+  - [wrong] Fold — Your aces can play. Folding two aces against one raise gives up the strongest starting hand and your chance to win the chips in the middle.
+    BETTER ANSWER: Raise
+  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Matching HJ’s 2.5 BB keeps your aces in the hand at the current price. Raising gives HJ a chance to put more chips in while your hand is strongest.
+    BETTER ANSWER: Raise
+  + [correct] Raise — Raise with aces. Two aces are in the Premium group. Against one raise, raise again to build the pot with your strongest starting hand.
+
 TASK what_poker_is_table_read_transfer [drill] Read the table
 SUMMARY: Read one real table spot: your cards, the board, and the pot.
 CAPTION: Shared cards and the pot are visible in the middle.
-TEACH: Carry the first table scan. Real tables use the same simple scan.
-
-Find your two cards and the shared board.
-
-Then check how many chips are already in the pot.
+TEACH: Carry the first table scan. Find your cards, the shared board, and the chips in the pot.
 TEACH LABELS: 2 private, 3 board, Pot
 Q: What is the clean first table read?
 HINT [theoryOnly]: Read your cards, the shared board, and the pot before any action.
@@ -63,7 +73,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 TASK what_poker_is_table_read_recheck [drill] Table read recheck
 SUMMARY: Repeat the same table scan on a second spot: Hero cards, board, and pot.
 CAPTION: Read the cards and pot shown in this hand.
-TEACH: Repeat the same scan. Read your two cards, then the shared board, then the pot. Same scan, different spot.
+TEACH: Repeat the same scan. Read your cards, the board, and the pot.
 TEACH LABELS: 2 private, 3 board, Pot 4 BB
 Q: What is the clean table read here?
 HINT [theoryOnly]: Read your cards, the shared board, and the pot before any action.
@@ -81,7 +91,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 TASK first_table_guide_one_clear_choice [drill] Read the preflop setup
 SUMMARY: Carry the same scan into a preflop setup read before strategy choices start.
 CAPTION: Find the cards at your seat and check the middle.
-TEACH: Your cards and the board. Look at your two cards, then check how many cards everyone can use in the middle.
+TEACH: Your cards and the board. Count your cards and the shared cards separately.
 TEACH LABELS: Your cards, Shared cards
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which description matches the cards on this table?
@@ -481,6 +491,24 @@ SEATS: UTG | HJ | CO | BTN dealer As 7d | SB | BB
   - [wrong] Seven — Read the deciding detail. The sevens form one of your two pairs. The jack plays as a side card, leaving the four outside the best five.
     BETTER ANSWER: Four
     FEEDBACK TABLE: River | You As 7d | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Read the cards | Facts two pair
+
+TASK hand_rankings_compare_ace_straights [drill] Hand ranking question
+AUTHORED TITLE: Two straights, one winner
+CAPTION: Both players show their cards.
+TEACH: Compare the highest rank. Broadway is T-J-Q-K-A, the ace-high straight. A-2-3-4-5 is the wheel, the five-high straight. A higher straight wins.
+Q: Which straight wins, Broadway or A-2-3-4-5?
+HINT [theoryOnly]: (none)
+TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Facts straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 4s 5h stack 97.25 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB checks · BTN checks
+  + [correct] Broadway wins — The ace-high straight wins. Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.
+    FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
+  - [wrong] A-2-3-4-5 wins — Read the top of the sequence. The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.
+    BETTER ANSWER: Broadway wins
+    FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts straight
+  - [wrong] Both straights tie — The ace plays at opposite ends. The board ace starts the other player’s straight and tops yours. Splitting the pot gives away half of a pot that your higher straight wins.
+    BETTER ANSWER: Broadway wins
+    FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts straight
 
 TASK hand_rankings_review [review] Hand ranking question
 ENTRY: drill
@@ -6183,16 +6211,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK spaced_review_w1_what_poker_is_hero_button_v1 [drill] Review decision
 DAY 7 FAMILY: hero_button
-Q: Which two cards are private to you in this hand?
+Q: Which seat shows the dealer marker?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kh 6d | Pot 1.5 BB | Seat CO | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 6d stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  + [correct] Kh and 6d — Correct. Kh and 6d sit by your seat. Your two private cards cannot be used by another player.
-  - [wrong] Every card you can see — Look again. Kh and 6d sit by your seat. Your two private cards cannot be used by another player.
-    BETTER ANSWER: Kh and 6d
-  - [wrong] Only the king — Look again. Kh and 6d sit by your seat. Your two private cards cannot be used by another player.
-    BETTER ANSWER: Kh and 6d
+  - [wrong] CO — Look again. The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.
+    BETTER ANSWER: BTN
+  + [correct] BTN — Correct. The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.
+  - [wrong] SB — Look again. The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.
+    BETTER ANSWER: BTN
 
 TASK spaced_review_w1_what_poker_is_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
@@ -6212,19 +6240,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3.25 BB · 
 
 TASK spaced_review_w1_what_poker_is_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-Q: You missed the decision in this hand and left the lesson. Where can you work on that error?
+Q: How much does it cost to call on the turn?
 HINT [hidden]: (none)
-TABLE: Turn | You Jh 8c | Board Qd 7h 4s 2d | Pot 8 BB | Seat CO | Facts high card
+TABLE: Turn | You Jh 8c | Board Qd 7h 4s 2d | Pot 8 BB | To call 2 BB | Seat CO | Active co | Decision co | Facts high card
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 8c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.25 BB bet 2 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB bets 2 BB
-  - [wrong] You — Look again. Review brings back mistakes for another attempt. Learn is the course path and You holds your progress.
-    BETTER ANSWER: Review
-    FEEDBACK TABLE: Turn | You Jh 8c | Board Qd 7h 4s 2d | Pot 8 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card
-  - [wrong] Learn — Look again. Review brings back mistakes for another attempt. Learn is the course path and You holds your progress.
-    BETTER ANSWER: Review
-    FEEDBACK TABLE: Turn | You Jh 8c | Board Qd 7h 4s 2d | Pot 8 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card
-  + [correct] Review — Correct. Review brings back mistakes for another attempt. Learn is the course path and You holds your progress.
-    FEEDBACK TABLE: Turn | You Jh 8c | Board Qd 7h 4s 2d | Pot 8 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card
+  - [wrong] 6 BB — Look again. BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.
+    BETTER ANSWER: 2 BB
+  - [wrong] 8 BB — Look again. BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.
+    BETTER ANSWER: 2 BB
+  + [correct] 2 BB — Correct. BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.
 
 TASK spaced_review_w1_what_poker_is_board_cards_v1 [drill] Review decision
 DAY 7 FAMILY: board_cards

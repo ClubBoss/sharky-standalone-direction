@@ -6,11 +6,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     "what_poker_is",
     "hero_button",
     _day7PreflopV1("co", "Kh 6d"),
-    question: "Which two cards are private to you in this hand?",
-    choices: const ["Kh and 6d", "Every card you can see", "Only the king"],
-    correct: 0,
+    question: "Which seat shows the dealer marker?",
+    choices: const ["CO", "BTN", "SB"],
+    correct: 1,
     reason:
-        "Kh and 6d sit by your seat. Your two private cards cannot be used by another player.",
+        "The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.",
   ),
   _day7ExampleV1(
     1,
@@ -31,13 +31,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     1,
     "what_poker_is",
     "pot_to_call",
-    _day7PostflopV1("co", "Jh 8c", "Qd 7h 4s 2d", betBb: 2),
-    question:
-        "You missed the decision in this hand and left the lesson. Where can you work on that error?",
-    choices: const ["You", "Learn", "Review"],
+    _day7PostflopV1("co", "Jh 8c", "Qd 7h 4s 2d", betBb: 2, showTurn: true),
+    question: "How much does it cost to call on the turn?",
+    choices: const ["6 BB", "8 BB", "2 BB"],
     correct: 2,
     reason:
-        "Review brings back mistakes for another attempt. Learn is the course path and You holds your progress.",
+        "BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.",
   ),
   _day7ExampleV1(
     1,

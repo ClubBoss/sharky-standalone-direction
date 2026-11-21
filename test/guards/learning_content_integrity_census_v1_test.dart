@@ -111,7 +111,9 @@ void main() {
           .where(
             (row) =>
                 !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-                !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+                !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+                row.task.taskId != 'first_table_guide_first_decision' &&
+                row.task.taskId != 'hand_rankings_compare_ace_straights',
           )
           .toList();
       expect(allRows, hasLength(294));
@@ -489,7 +491,9 @@ void main() {
         .where(
           (row) =>
               !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-              !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+              !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+              row.task.taskId != 'first_table_guide_first_decision' &&
+              row.task.taskId != 'hand_rankings_compare_ace_straights',
         )
         .toList();
     final additions = rows
@@ -869,12 +873,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(rows, hasLength(321));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(321));
     expect(
       allChoices,
       hasLength(
-        602 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        606 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -947,7 +951,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        564 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        568 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(

@@ -266,6 +266,131 @@ Act0RunnerStateV1 _w1WithNumericLabelsV1(
   );
 }
 
+final _w1FirstDecisionRunner = Act0RunnerStateV1(
+  lessonId: 'first_table_guide_first_decision',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: '',
+  beatIndex: 1,
+  beatCount: 1,
+  phase: Act0LessonPhaseV1.drill,
+  caption: 'You have two aces. A player raised to 2.5 BB.',
+  hint: '',
+  question: 'What is the best choice with your aces?',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      betterAnswerLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Your aces can play.',
+      feedbackReason:
+          'Folding two aces against one raise gives up the strongest starting hand and your chance to win the chips in the middle.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      amountLabel: '2.5 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      betterAnswerLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Calling keeps you in.',
+      feedbackReason:
+          'Matching HJ’s 2.5 BB keeps your aces in the hand at the current price. Raising gives HJ a chance to put more chips in while your hand is strongest.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: true,
+      preferredLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Raise with aces.',
+      feedbackReason:
+          'Two aces are in the Premium group. Against one raise, raise again to build the pot with your strongest starting hand.',
+    ),
+  ],
+  feedbackTitle: '',
+  feedbackReason: '',
+  primaryCtaLabel: '',
+  nextLessonId: null,
+  returnTarget: '',
+  table: _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Three choices.',
+      body:
+          'Fold to give up the hand. Call to match the bet. Raise to set a higher price.',
+    ),
+  ],
+);
+
+final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
+  lessonId: 'hand_rankings_compare_ace_straights',
+  lessonTitle: 'Compare made hands',
+  lessonSubtitle: '',
+  beatIndex: 1,
+  beatCount: 1,
+  phase: Act0LessonPhaseV1.drill,
+  caption: 'Both players show their cards.',
+  hint: '',
+  question: 'Which straight wins, Broadway or A-2-3-4-5?',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'broadway',
+      label: 'Broadway wins',
+      isCorrect: true,
+      preferredLabel: 'Broadway wins',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The ace-high straight wins.',
+      feedbackReason:
+          'Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'wheel',
+      label: 'A-2-3-4-5 wins',
+      isCorrect: false,
+      preferredLabel: 'Broadway wins',
+      betterAnswerLabel: 'Broadway wins',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read the top of the sequence.',
+      feedbackReason:
+          'The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'tie',
+      label: 'Both straights tie',
+      isCorrect: false,
+      preferredLabel: 'Broadway wins',
+      betterAnswerLabel: 'Broadway wins',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The ace plays at opposite ends.',
+      feedbackReason:
+          'The board ace starts the other player’s straight and tops yours. Splitting the pot gives away half of a pot that your higher straight wins.',
+    ),
+  ],
+  feedbackTitle: '',
+  feedbackReason: '',
+  primaryCtaLabel: '',
+  nextLessonId: null,
+  returnTarget: '',
+  table: _day7PostflopV1(
+    'bb',
+    'Kc Qd',
+    'Ah 2c 3d Ts Jc',
+    opponent: 'btn',
+    shownHand: '4s 5h',
+  ),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Compare the highest rank.',
+      body:
+          'Broadway is T-J-Q-K-A, the ace-high straight. A-2-3-4-5 is the wheel, the five-high straight. A higher straight wins.',
+    ),
+  ],
+);
+
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
@@ -305,6 +430,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         summary: 'Spot where Hero sits before anything else starts moving.',
       ),
       Act0LessonTaskV1(
+        taskId: 'first_table_guide_first_decision',
+        title: 'Make your first choice',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1FirstDecisionRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'what_poker_is_table_read_transfer',
         title: 'Read the table',
         phase: Act0LessonPhaseV1.drill,
@@ -339,7 +472,8 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           ),
           const {
             '5 board cards are out': '5 board cards are out',
-            'Check your two cards and skip the board': '2 private cards, no board',
+            'Check your two cards and skip the board':
+                '2 private cards, no board',
             '2 private cards, 3 board cards, 4 BB in the pot':
                 '2 private cards, 3 board cards, 4 BB in the pot',
           },
@@ -873,6 +1007,15 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_compare_ace_straights',
+        title: 'Two straights, one winner',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1CompareAceStraightsRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
       ),
       Act0LessonTaskV1(
         taskId: 'hand_rankings_review',
