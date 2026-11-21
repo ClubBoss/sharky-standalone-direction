@@ -2087,7 +2087,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
           id: 'seat_and_action',
           label: 'Your seat and earlier bets',
           reason:
-              'The 1.5 BB pot shows only posted blinds. Your own two cards still determine whether the starting chart opens from your seat.',
+              'The 1.5 BB pot shows only posted blinds. Your two cards still determine whether you can open from your seat.',
         ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
