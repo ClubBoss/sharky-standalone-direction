@@ -494,13 +494,13 @@ SEATS: UTG | HJ | CO | BTN dealer As 7d | SB | BB
 
 TASK hand_rankings_compare_ace_straights [drill] Hand ranking question
 AUTHORED TITLE: Two straights, one winner
-CAPTION: Both players show their cards.
+CAPTION: Suppose the other player has 4♠ 5♥.
 TEACH: Compare the highest rank. Broadway is T-J-Q-K-A, the ace-high straight. A-2-3-4-5 is the wheel, the five-high straight. A higher straight wins.
 Q: Which straight wins, Broadway or A-2-3-4-5?
 HINT [theoryOnly]: (none)
 TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Facts straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 4s 5h stack 97.25 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB checks · BTN checks
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks
   + [correct] Broadway wins — The ace-high straight wins. Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.
     FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
   - [wrong] A-2-3-4-5 wins — Read the top of the sequence. The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.

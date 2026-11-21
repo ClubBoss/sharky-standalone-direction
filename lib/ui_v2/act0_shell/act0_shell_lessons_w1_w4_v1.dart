@@ -311,8 +311,9 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
           'Two aces are in the Premium group. Against one raise, raise again to build the pot with your strongest starting hand.',
     ),
   ],
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: 'Raise with aces.',
+  feedbackReason:
+      'Aces are the strongest starting hand. Raise to build the pot.',
   primaryCtaLabel: '',
   nextLessonId: null,
   returnTarget: '',
@@ -333,7 +334,7 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
   beatIndex: 1,
   beatCount: 1,
   phase: Act0LessonPhaseV1.drill,
-  caption: 'Both players show their cards.',
+  caption: 'Suppose the other player has 4♠ 5♥.',
   hint: '',
   question: 'Which straight wins, Broadway or A-2-3-4-5?',
   options: const [
@@ -370,18 +371,12 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
           'The board ace starts the other player’s straight and tops yours. Splitting the pot gives away half of a pot that your higher straight wins.',
     ),
   ],
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: 'Compare the highest ranks.',
+  feedbackReason: 'An ace-high straight beats a five-high straight.',
   primaryCtaLabel: '',
   nextLessonId: null,
   returnTarget: '',
-  table: _day7PostflopV1(
-    'bb',
-    'Kc Qd',
-    'Ah 2c 3d Ts Jc',
-    opponent: 'btn',
-    shownHand: '4s 5h',
-  ),
+  table: _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
   teachingSteps: const [
     Act0TeachingStepV1(
       title: 'Compare the highest rank.',
