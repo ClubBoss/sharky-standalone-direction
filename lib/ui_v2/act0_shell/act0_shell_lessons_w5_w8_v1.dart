@@ -1381,7 +1381,7 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       title: 'Which cards actually win?',
       question:
           'Suppose BB has K♣ Q♠. How many river cards give you the winning hand?',
-      caption: 'Only one card is left to come.',
+      caption: 'Count the rivers that beat the stated hand. One card is left.',
       table: _w7TurnPriceTableV1(3),
       labels: const ['9', '12', '11'],
       correctAt: 1,
@@ -1389,13 +1389,6 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
         'Nine hearts make a winning flush. Three non-heart aces also win.',
         'Nine hearts make a winning flush. The three unseen aces also win with a pair of aces.',
         'Count the three unseen aces as well as all nine unseen hearts.',
-      ],
-      teaching: const [
-        Act0TeachingStepV1(
-          title: 'An out has to win',
-          body:
-              'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
-        ),
       ],
       family: Act0TaskFamilyV1.counting,
     ),
@@ -1512,7 +1505,18 @@ Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
     table: table,
     labels: const ['Bet 3 BB', 'Check'],
     correctAt: multiway ? 1 : 0,
-    feedback: [explanation, explanation],
+    feedback: multiway
+        ? [
+            'With SB and BB both in, the 3 BB bet loses money on average. '
+                'It wins 9 BB on 16% of hands and costs 3 BB on the rest.',
+            explanation,
+          ]
+        : [
+            explanation,
+            'Checking gets 0 BB in this model. With BB as the only opponent, '
+                'winning 6.5 BB on 40% of hands more than offsets the 3 BB you '
+                'lose when BB continues.',
+          ],
     family: Act0TaskFamilyV1.decision,
   );
 }
@@ -1778,11 +1782,14 @@ List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
         caption: 'Use the cards you can see at this table.',
         question: 'How many A-Q combinations could BB still hold?',
         hint: 'Count the aces and queens that are still available.',
-        table: _act0BoardLessonTableV1(
-          heroCards: _act0LessonCardsV1('Td 8d'),
-          boardCards: _act0LessonCardsV1('Qc 6h 2s'),
-          centerLabel: 'Count available cards',
-        ),
+        table: _day7PostflopV1(
+          'co',
+          'Td 8d',
+          'Qc 6h 2s',
+          openBb: 2.5,
+          checkedToHero: true,
+          showTurn: true,
+        ).copyWith(centerLabel: 'Count available cards'),
         teachingSteps: const [],
         feedbackTitle: 'Four choices times three.',
         feedbackReason:
@@ -1841,6 +1848,9 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     _ when phase == Act0LessonPhaseV1.review => _act0LessonCardsV1('Qh Qs'),
     _ => _heroQdQsCards,
   };
+  final boardCards = phase == Act0LessonPhaseV1.review
+      ? _act0LessonCardsV1('Qc Jd 5s')
+      : _w7VisibleBoardCardsForSpecV1(spec);
   return _w6ComboCountsIntroRunner.copyWith(
     lessonId: spec.taskId,
     lessonTitle: 'Visible Cards Change Ranges',
@@ -1871,13 +1881,14 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     ],
     feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
     feedbackReason: spec.feedbackReason,
-    table: _act0BoardLessonTableV1(
-      centerLabel: spec.boardContext,
-      heroCards: heroCards,
-      boardCards: phase == Act0LessonPhaseV1.review
-          ? _act0LessonCardsV1('Qc Jd 5s')
-          : _w7VisibleBoardCardsForSpecV1(spec),
-    ),
+    table: _day7PostflopV1(
+      'co',
+      heroCards.map((card) => card.label).join(' '),
+      boardCards.map((card) => card.label).join(' '),
+      openBb: 2.5,
+      checkedToHero: true,
+      showTurn: true,
+    ).copyWith(centerLabel: spec.boardContext),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
         title: _w7LearnerTheoryTitleV1(spec.taskId),

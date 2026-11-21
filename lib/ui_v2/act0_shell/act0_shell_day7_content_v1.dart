@@ -1472,4 +1472,91 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.',
   ),
+  _day7ExampleV1(
+    7,
+    'range_thinking_lite_combo_density',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Kh 8d', 'Ks 7c 3h', checkedToHero: true),
+    question: 'How many pocket-king combinations could BB still hold?',
+    choices: const ['One', 'Three', 'Six'],
+    correct: 0,
+    reason:
+        'You see one king in your own hand and one on the flop. BB can hold pocket kings in only one way, using the last two kings.',
+    wrongReasons: const {
+      1: 'Your king and the flop king are both visible. Counting three ways would leave one of those kings in the deck.',
+      2: 'Six is the count with all four kings available. Two kings are visible on this table, leaving just one possible pair.',
+    },
+  ),
+  _day7ExampleV1(
+    7,
+    'range_thinking_lite_combo_density',
+    'board_cards',
+    _day7PostflopV1('co', 'Ts 8s', 'Qh 9c 3d', checkedToHero: true),
+    question:
+        'How many K-Q combinations could BB hold if both suited and offsuit hands count?',
+    choices: const ['16', '12', '9'],
+    correct: 1,
+    reason:
+        'The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.',
+    wrongReasons: const {
+      0: 'Sixteen counts four queens. The queen on the flop cannot appear in BB’s hand.',
+      2: 'Nine would count three kings and three queens. The board contains one queen and no kings, so BB can still use any of the four kings.',
+    },
+  ),
+  _day7ExampleV1(
+    7,
+    'w7_visible_cards_and_price',
+    'board_cards',
+    _day7PostflopV1('co', 'Jh 9s', 'As 6c 2s', checkedToHero: true),
+    caption:
+        'BB folds 40% to a 2 BB bet. In this model, the full bet is lost if BB calls, and checking has a value of zero.',
+    question: 'How does the 2 BB bluff compare with checking in this model?',
+    choices: const [
+      'Bet earns 1.2 BB on average',
+      'Check earns 1.2 BB more',
+      'Both average zero',
+    ],
+    correct: 0,
+    reason:
+        'A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.',
+    wrongReasons: const {
+      1: 'Checking returns zero in this model. It gives up a bet whose wins from folds exceed its losses when BB calls.',
+      2: 'The folds earn 2.4 BB on average from the 6 BB pot. Losing the 2 BB bet on calls costs 1.2 BB on average, so those parts do not cancel.',
+    },
+  ),
+  _day7ExampleV1(
+    7,
+    'w7_visible_cards_and_price',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Ah 8h', 'Qh 7h 2s Kd', betBb: 2, showTurn: true),
+    caption:
+        'Assume HJ holds a king and a queen, neither a heart. HJ does not fold to a raise. There will be no river bet. Count winning rivers before you compare the price.',
+    question: 'Does the price justify calling with the flush draw?',
+    choices: const ['Call', 'Fold', 'Raise'],
+    correct: 1,
+    reason:
+        'Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.',
+    wrongReasons: const {
+      0: 'One heart makes HJ a full house on this turn board. Eight winning rivers out of 44 fall short of the 20% needed for the 2 BB call.',
+      2: 'HJ has two pair on the turn and does not fold to a raise in this example. Adding chips increases the cost of drawing to eight winning rivers.',
+    },
+  ),
+  _day7ExampleV1(
+    7,
+    'w7_visible_cards_range_checkpoint',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', 'Qd Jc', 'Qh 8s 5d 4c 2h', betBb: 4, showTurn: true),
+    caption:
+        'Assume HJ holds one of three equally likely hands: king-queen, ace-queen or ten-nine. Compare calling with folding.',
+    question:
+        'Does your pair of queens win often enough to pay for this river call?',
+    choices: const ['Fold', 'Call', 'The price requires two wins out of three'],
+    correct: 1,
+    reason:
+        'Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.',
+    wrongReasons: const {
+      0: 'Folding against ten-nine gives up a winning pair of queens. That hand is one third of this range, enough to justify the quoted call price.',
+      2: 'Two wins in three would be about 67%. The call needs about 29%, so one win in three is already enough.',
+    },
+  ),
 ];
