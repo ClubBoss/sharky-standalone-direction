@@ -6879,7 +6879,36 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       correctAt: 0,
       feedback: 'You beat J♥ T♥ and A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
     ),
+    _w7UnseenRiverTaskV1(),
   ],
+);
+
+Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
+  id: 'w7_checkpoint_river_card_excludes_hand',
+  title: 'The river all-in',
+  question:
+      'BB is all-in. Before the river, you put BB on T♣ 8♣, T♠ 8♠, '
+      'T♦ 8♦, 9♥ 9♦ or 2♠ 2♦. Give all hands that are still possible '
+      'equal weight. Call or fold?',
+  caption: 'Read the final board.',
+  table: _w7AllInTableV1(
+    holeCards: 'Jh Jd',
+    boardCards: 'Js 9c 7c 4h 2s',
+    street: 'River',
+    bet: 5,
+  ),
+  labels: const ['Call', 'Fold'],
+  correctAt: 1,
+  feedback: const [
+    'Do not count 2♠ 2♦: the 2♠ is on the board. You beat only '
+        '9♥ 9♦ out of the four remaining hands. Your 25% chance '
+        'is below the roughly 28% needed to call 5 BB for a final 18 BB pot.',
+    'The 2♠ on the board rules out 2♠ 2♦. You beat 9♥ 9♦, but '
+        'every T-8 hand makes a straight. You win one in four times '
+        '(25%), below the roughly 28% this call needs.',
+  ],
+  family: Act0TaskFamilyV1.transfer,
+  kind: Act0LessonStepKindV1.proveIt,
 );
 
 Act0LessonCardV1 _w7AppliedLessonV1({

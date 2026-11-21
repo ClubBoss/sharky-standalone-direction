@@ -73,4 +73,18 @@ void main() {
     expect(narrow.options.singleWhere((o) => o.isCorrect).label, 'Fold');
     expect(wide.options.singleWhere((o) => o.isCorrect).label, 'Call');
   });
+
+  test('the last W7 task uses the new river card without a hint', () {
+    final task = Act0ShellStateV1.sample
+        .lessonById('w7_visible_cards_range_checkpoint')
+        .taskList
+        .last;
+    expect(task.taskId, 'w7_checkpoint_river_card_excludes_hand');
+    expect(task.runner.hint, isEmpty);
+    expect(task.runner.table.boardCards.last.rank, '2');
+    expect(task.runner.table.boardCards.last.suit, 's');
+    expect(task.runner.table.potLabel, 'Pot 13 BB');
+    expect(task.runner.table.toCallLabel, 'To call 5 BB');
+    expect(task.runner.options.singleWhere((o) => o.isCorrect).label, 'Fold');
+  });
 }
