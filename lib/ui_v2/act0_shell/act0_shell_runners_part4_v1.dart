@@ -1187,7 +1187,7 @@ final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What does EV describe?",
-  feedbackTitle: '',
+  feedbackTitle: "Chips and prizes",
   feedbackReason:
       "EV includes winning and losing outcomes, weighted by their chances; one lost hand can come from a profitable decision.",
   teachingSteps: const [
@@ -1211,8 +1211,9 @@ final _w9CashVsTournamentRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "A close river call",
+  feedbackReason:
+      "Keep 16 BB. Your 40% wins barely beat the chip price but fall below the 62.4% payout threshold while UTG has 2 BB.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A close river call",
@@ -1321,8 +1322,8 @@ final _w9EvTwoResultsRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What is your chip EV?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Average chip gain",
+  feedbackReason: "Half of 3 BB minus half of 1 BB leaves a gain of 1 BB.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1367,17 +1368,18 @@ final _w9ShortStackSurvivalRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Small blind choice",
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      "You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls a shove with 77+, A9s+, ATo+ or KQs. BB folds the rest.",
+      "You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls an all-in with 77+, A9s+, ATo+ or KQs. BB folds the rest.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Shove or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  question: "Go all-in or fold?",
+  feedbackTitle: "Small blind choice",
+  feedbackReason:
+      "Add your remaining 8.5 BB. BB frequently folds under the stated calling-range model, letting K9s win the 1.5 BB pot before your stack shrinks.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Small blind choice",
       body:
-          "A shove puts your whole stack in. When just one player is left to act, a shove can win the blinds. Check how often that player will call. This short-stack drill asks you to choose between a shove and a fold.",
+          "An all-in puts your whole stack in. When just one player is left to act, an all-in can win the blinds. Check how often that player will call. This short-stack drill asks you to choose between an all-in and a fold.",
     ),
   ],
   options: const [
@@ -1445,8 +1447,9 @@ final _w9SurvivalTradeoffRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What shapes the cost of busting?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Price of busting",
+  feedbackReason:
+      "These describe what you can gain by advancing and how much prize value you risk by busting.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1491,12 +1494,13 @@ final _w9SurvivalRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonId: 'w9_survival_recap',
   lessonTitle: "Chips and prizes recap",
   lessonSubtitle: 'Tournament Pressure',
-  caption: "Think back to the 20 BB call and the 9 BB shove.",
+  caption: "Think back to the 20 BB call and the 9 BB all-in.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which plan balances growth and survival?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Chips and prizes recap",
+  feedbackReason:
+      "That includes folding a costly bubble call and taking a sound first-in short-stack all-in.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1519,7 +1523,7 @@ final _w9SurvivalRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "The 9 BB K9s example already offered a sound first-in shove; waiting for AA lets forced bets consume opportunities.",
+          "The 9 BB K9s example already offered a sound first-in all-in; waiting for AA lets forced bets consume opportunities.",
     ),
     Act0RunnerOptionV1(
       id: "take_risks_that_improve_prize_ev",
@@ -1530,7 +1534,7 @@ final _w9SurvivalRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "That includes folding a costly bubble call and taking a sound first-in short-stack shove.",
+          "That includes folding a costly bubble call and taking a sound first-in short-stack all-in.",
     ),
   ],
   table: _w9TextStudyTableV1,
@@ -1545,7 +1549,7 @@ final _w9MRatioIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What does M estimate?",
-  feedbackTitle: '',
+  feedbackTitle: "How long will your stack last?",
   feedbackReason:
       "Divide the starting stack by the blinds and orbit's antes; future blind rises and pots won or lost can change that estimate.",
   teachingSteps: const [
@@ -1568,8 +1572,8 @@ final _w9MRatioLapCountRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How many laps does M give you?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Laps left",
+  feedbackReason: "Each lap costs 1.5 BB. Divide 24 by 1.5 to get 16.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1618,8 +1622,9 @@ final _w9MZoneRedRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What should you do?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Facing two ranges",
+  feedbackReason:
+      "You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1653,7 +1658,7 @@ final _w9MZoneRedRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "UTG and CO have put in 3 BB each. A shove with Q8o has little chance to win by folds.",
+          "UTG and CO have put in 3 BB each. An all-in with Q8o has little chance to win by folds.",
     ),
   ],
   table: _day7TableV1(
@@ -1730,8 +1735,9 @@ final _w9MRatioAnteCostRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What does a full lap cost?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Add the antes",
+  feedbackReason:
+      "Six antes cost 0.6 BB. Add both blinds for a total of 2.1 BB.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1780,8 +1786,9 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which opening size fits?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "First raise from HJ",
+  feedbackReason:
+      "AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "First raise from HJ",
@@ -1820,7 +1827,7 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "At M = 20, a 30 BB shove risks far more than the 1.5 BB pot.",
+          "At M = 20, a 30 BB all-in risks far more than the 1.5 BB pot.",
     ),
   ],
   table: _day7TableV1(
@@ -1868,8 +1875,9 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What should you do?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "First seat choice",
+  feedbackReason:
+      "KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "First seat choice",
@@ -1909,7 +1917,7 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "At M = 12, shoving 18 BB risks a full stack with KQo from first seat.",
+          "At M = 12, going all-in with 18 BB risks a full stack with KQo from first seat.",
     ),
   ],
   table: _day7TableV1(
@@ -1956,8 +1964,9 @@ final _w9MTableWindowTransferRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which zone and plan fit?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Stack and seat",
+  feedbackReason:
+      "18 BB pays for 12 laps. You already put in the big blind and can see a flop for free.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2047,12 +2056,13 @@ final _w9MRatioRedZoneShoveRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "A short stack on BTN",
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      "Stack: 12 BB. No antes. Each blind calls a shove with 77+, ATs+, AJo+ or KQs.",
+      "Stack: 12 BB. No antes. Each blind calls an all-in with 77+, ATs+, AJo+ or KQs.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Shove or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  question: "Go all-in or fold?",
+  feedbackTitle: "A short stack on BTN",
+  feedbackReason:
+      "AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A short stack on BTN",
@@ -2081,7 +2091,7 @@ final _w9MRatioRedZoneShoveRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "With AJo first-in on BTN, folding passes a sound 12 BB shove against the specified tight blind ranges; red-zone urgency is useful in this opening.",
+          "With AJo first-in on BTN, folding passes a sound 12 BB all-in against the specified tight blind ranges; red-zone urgency is useful in this opening.",
     ),
   ],
   table: _day7TableV1(
@@ -2131,8 +2141,9 @@ final _w9MRatioRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you use the zone?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "When M helps",
+  feedbackReason:
+      "The red-zone examples differed in position, cards and action, so their correct decisions differed too.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2159,7 +2170,7 @@ final _w9MRatioRecapRunner = _w7FormatPressureIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: "shove_because_the_zone_is_red",
-      label: "Shove because the zone is red",
+      label: "Go all-in because the zone is red",
       isCorrect: false,
       preferredLabel: "Combine M with the hand and tournament context",
       betterAnswerLabel: "Combine M with the hand and tournament context",
@@ -2181,7 +2192,7 @@ final _w9BubblePressureIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What is this example's risk premium?",
-  feedbackTitle: '',
+  feedbackTitle: "What does a call cost?",
   feedbackReason:
       "Subtract the chip threshold from the payout threshold: 55%-40%=15 percentage points.",
   teachingSteps: const [
@@ -2205,8 +2216,8 @@ final _w9BubblePremiumGapRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How much extra equity does the call need?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "The extra cost of a call",
+  feedbackReason: "The gap from 36% to 51% is 15 points.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2255,8 +2266,9 @@ final _w9MediumStackTightenRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "A raise behind you",
+  feedbackReason:
+      "Keep 16 BB instead of committing AQo against JJ+/AK while a 2 BB player remains below you.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A raise behind you",
@@ -2356,8 +2368,9 @@ final _w9BigStackLeverageRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you open?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Three players left to act",
+  feedbackReason:
+      "KJo applies pressure from CO for 2 BB; the stated folds win 1.5 BB without risking an opponent's full stack.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Three players left to act",
@@ -2440,8 +2453,9 @@ final _w9BubbleCoverSeatRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How many of those stacks can bust you?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Read the stacks",
+  feedbackReason:
+      "You have more than each stack. One of those players can take chips but cannot bust you heads-up.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2490,14 +2504,15 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
       "Six left, five paid. You start with 6 BB, the shortest stack. It folds to you in HJ.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Shove or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  question: "Go all-in or fold?",
+  feedbackTitle: "Shortest stack",
+  feedbackReason:
+      "Use AKo first-in while your 6 BB can still win the 1.5 BB blinds without a showdown.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Shortest stack",
       body:
-          "When you act first, a shove can win the blinds. Compare the short stack and the hand with the cost of waiting.",
+          "When you act first, an all-in can win the blinds. Compare the short stack and the hand with the cost of waiting.",
     ),
   ],
   options: const [
@@ -2563,8 +2578,9 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "A raise from BB",
+  feedbackReason:
+      "Fold AJo here. You would need to add 15.5 BB and risk your last chips against JJ or better, or AK. A different raise range, set of stacks or set of prizes can change the call.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2652,8 +2668,9 @@ final _w9BubbleRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What guides the bubble adjustment?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Three stacks recap",
+  feedbackReason:
+      "These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2676,7 +2693,7 @@ final _w9BubbleRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo shove can coexist.",
+          "These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.",
     ),
     Act0RunnerOptionV1(
       id: "being_short_justifies_a_loose_call_off",
@@ -2687,7 +2704,7 @@ final _w9BubbleRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "The 7.5 BB Q8o deal still faced strong ranges; calling or shoving weak cards can remove the stack before a suitable opportunity.",
+          "The 7.5 BB Q8o deal still faced strong ranges; calling or going all-in with weak cards can remove the stack before a suitable opportunity.",
     ),
   ],
   table: _w9TextStudyTableV1,
@@ -2702,7 +2719,7 @@ final _w9CheckpointIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "What belongs in the pressure read?",
-  feedbackTitle: '',
+  feedbackTitle: "Read stack pressure",
   feedbackReason:
       "Together these describe both the poker decision and the cost of tournament elimination.",
   teachingSteps: const [
@@ -2726,8 +2743,9 @@ final _w9PrizeModelInputsRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which input belongs to the prize model?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "What a prize model needs",
+  feedbackReason:
+      "A prize model needs the payouts and stacks. A bigger jump in prizes can change what a fold is worth.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2776,9 +2794,10 @@ final _w9CheckpointSurvivalLineRunner = _w7FormatPressureIntroRunner.copyWith(
       "You start with 7.5 BB. The money is far off. It folds to you in CO.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Shove or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  question: "Go all-in or fold?",
+  feedbackTitle: "First in from CO",
+  feedbackReason:
+      "AQs is Strong. First-in from CO, your 7.5 BB can win the 1.5 BB blinds and has strength when called.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2846,12 +2865,13 @@ final _w9CheckpointZoneLineRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonId: 'w9_checkpoint_zone_line',
   lessonTitle: "First to act",
   lessonSubtitle: 'Tournament Pressure',
-  caption: "You start with 33 BB in first seat. No antes.",
+  caption: "Starting stack: 33 BB in first seat. No antes.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which zone and opening fit?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "First to act",
+  feedbackReason:
+      "33/1.5=22 is green. TT is Strong and opens UTG while 31 BB remain for later decisions.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2933,8 +2953,9 @@ final _w9CheckpointBubbleLineRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "River bet from BB",
+  feedbackReason:
+      "Keep 12 BB. KQ's 40% wins beat the 36.9% chip price, but fall below this deal's supplied payout threshold with a 3 BB rival still present.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3037,8 +3058,9 @@ final _w9TablePressureNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you open?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "Four seats behind",
+  feedbackReason:
+      "KQs is a permitted HJ opener. The 55 BB stack can pressure four covered opponents for 2 BB and collect 1.5 BB when they fold.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3114,8 +3136,9 @@ final _world9TournamentCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",
-  feedbackTitle: '',
-  feedbackReason: '',
+  feedbackTitle: "The last call",
+  feedbackReason:
+      "AA is far ahead of this QQ+/AK range. Its advantage is large enough to justify the 19 BB commitment under these payouts and stacks.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(

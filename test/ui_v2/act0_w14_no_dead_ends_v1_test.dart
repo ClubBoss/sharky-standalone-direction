@@ -59,7 +59,7 @@ void main() {
     );
     expect(
       worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
-      hasLength(389),
+      hasLength(396),
     );
     final seen = <String>{};
     for (final id in allIds) {

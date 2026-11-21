@@ -4649,9 +4649,9 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: 1 BB
 
 TASK w9_short_stack_survival [drill] Small blind choice
-CAPTION: You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls a shove with 77+, A9s+, ATo+ or KQs. BB folds the rest.
-TEACH: Small blind choice A shove puts your whole stack in. When just one player is left to act, a shove can win the blinds. Check how often that player will call. This short-stack drill asks you to choose between a shove and a fold.
-Q: Shove or fold?
+CAPTION: You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls an all-in with 77+, A9s+, ATo+ or KQs. BB folds the rest.
+TEACH: Small blind choice An all-in puts your whole stack in. When just one player is left to act, an all-in can win the blinds. Check how often that player will call. This short-stack drill asks you to choose between an all-in and a fold.
+Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd 9d | Pot 1.5 BB | To call 0.5 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
 SEATS: UTG folded stack 28 BB | HJ folded stack 24 BB | CO folded stack 35 BB | BTN folded dealer stack 22 BB | SB Kd 9d stack 8.5 BB post 0.5 BB | BB stack 29 BB post 1 BB
@@ -4673,15 +4673,15 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_survival_recap [review] Chips and prizes recap
 ENTRY: drill
-CAPTION: Think back to the 20 BB call and the 9 BB shove.
+CAPTION: Think back to the 20 BB call and the 9 BB all-in.
 Q: Which plan balances growth and survival?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
   - [suboptimal] Avoid thin calls but skip sound steals — Look again. Avoiding thin calls protects the stack, but passing the 9 BB SB opportunity also gives up chips available through folds.
     BETTER ANSWER: Take risks that improve prize EV
-  - [wrong] Wait for AA before entering — Look again. The 9 BB K9s example already offered a sound first-in shove; waiting for AA lets forced bets consume opportunities.
+  - [wrong] Wait for AA before entering — Look again. The 9 BB K9s example already offered a sound first-in all-in; waiting for AA lets forced bets consume opportunities.
     BETTER ANSWER: Take risks that improve prize EV
-  + [correct] Take risks that improve prize EV — Correct. That includes folding a costly bubble call and taking a sound first-in short-stack shove.
+  + [correct] Take risks that improve prize EV — Correct. That includes folding a costly bubble call and taking a sound first-in short-stack all-in.
 
 ===== WORLD 9 · LESSON m_ratio_zones_lite · M-ratio zones =====
 
@@ -4714,7 +4714,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB · HJ folds · CO 
   - [wrong] Call to 3 BB — Look again. Paying 2 BB commits chips with Q8o against two strong ranges.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.
-  - [wrong] All-in to 7.5 BB — Look again. UTG and CO have put in 3 BB each. A shove with Q8o has little chance to win by folds.
+  - [wrong] All-in to 7.5 BB — Look again. UTG and CO have put in 3 BB each. An all-in with Q8o has little chance to win by folds.
     BETTER ANSWER: Fold
 
 TASK w9_m_ratio_ante_cost [drill] Add the antes
@@ -4739,7 +4739,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   + [correct] Raise to 2 BB — Correct. AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.
   - [suboptimal] Raise to 3 BB — Look again. From HJ with 30 BB, a 3 BB open loses one more chip if you fold to a raise. There is no read to pay for it.
     BETTER ANSWER: Raise to 2 BB
-  - [wrong] All-in to 30 BB — Look again. At M = 20, a 30 BB shove risks far more than the 1.5 BB pot.
+  - [wrong] All-in to 30 BB — Look again. At M = 20, a 30 BB all-in risks far more than the 1.5 BB pot.
     BETTER ANSWER: Raise to 2 BB
 
 TASK w9_m_ratio_yellow_zone [drill] First seat choice
@@ -4753,7 +4753,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] Raise to 2 BB — Look again. UTG has five players left to act. Opening KQo can face a call or raise from a stronger hand.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.
-  - [wrong] All-in to 18 BB — Look again. At M = 12, shoving 18 BB risks a full stack with KQo from first seat.
+  - [wrong] All-in to 18 BB — Look again. At M = 12, going all-in with 18 BB risks a full stack with KQo from first seat.
     BETTER ANSWER: Fold
 
 TASK w9_m_ratio_table_window_transfer [drill] Stack and seat
@@ -4770,15 +4770,15 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Yellow. Check. — Correct. 18 BB pays for 12 laps. You already put in the big blind and can see a flop for free.
 
 TASK w9_m_ratio_red_zone_shove [drill] A short stack on BTN
-CAPTION: Stack: 12 BB. No antes. Each blind calls a shove with 77+, ATs+, AJo+ or KQs.
+CAPTION: Stack: 12 BB. No antes. Each blind calls an all-in with 77+, ATs+, AJo+ or KQs.
 TEACH: A short stack on BTN For push or fold, check your hand and seat. Think about what the blinds call with.
-Q: Shove or fold?
+Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Jd | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 SEATS: UTG folded stack 25 BB | HJ folded stack 30 BB | CO folded stack 24 BB | BTN dealer As Jd stack 12 BB | SB stack 19.5 BB post 0.5 BB | BB stack 21 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   + [correct] All-in to 12 BB — Correct. AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.
-  - [wrong] Fold — Look again. With AJo first-in on BTN, folding passes a sound 12 BB shove against the specified tight blind ranges; red-zone urgency is useful in this opening.
+  - [wrong] Fold — Look again. With AJo first-in on BTN, folding passes a sound 12 BB all-in against the specified tight blind ranges; red-zone urgency is useful in this opening.
     BETTER ANSWER: All-in to 12 BB
 
 TASK w9_m_ratio_recap [review] When M helps
@@ -4790,7 +4790,7 @@ TABLE: Facts no applicable hand facts
   + [correct] Combine M with the hand and tournament context — Correct. The red-zone examples differed in position, cards and action, so their correct decisions differed too.
   - [suboptimal] Use M and cards but skip the payout context — Look again. You account for urgency and hand strength, but the 2 BB rival in the bubble example changed the cost of losing the stack.
     BETTER ANSWER: Combine M with the hand and tournament context
-  - [wrong] Shove because the zone is red — Look again. Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.
+  - [wrong] Go all-in because the zone is red — Look again. Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.
     BETTER ANSWER: Combine M with the hand and tournament context
 
 ===== WORLD 9 · LESSON bubble_risk_premium · Bubble risk premium =====
@@ -4853,8 +4853,8 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_bubble_short_stack [drill] Shortest stack
 CAPTION: Six left, five paid. You start with 6 BB, the shortest stack. It folds to you in HJ.
-TEACH: Shortest stack When you act first, a shove can win the blinds. Compare the short stack and the hand with the cost of waiting.
-Q: Shove or fold?
+TEACH: Shortest stack When you act first, an all-in can win the blinds. Compare the short stack and the hand with the cost of waiting.
+Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Kh | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 SEATS: UTG folded stack 18 BB | HJ Ac Kh stack 6 BB | CO stack 20 BB | BTN dealer stack 24 BB | SB stack 11.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
@@ -4882,8 +4882,8 @@ HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
   - [suboptimal] Stack size and cards without the payouts — Look again. You identify hand strength and depth, but omit the prize cost illustrated by the 20 BB river example with a 2 BB rival.
     BETTER ANSWER: Coverage, payouts, ranges and the remaining stacks
-  + [correct] Coverage, payouts, ranges and the remaining stacks — Correct. These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo shove can coexist.
-  - [wrong] Being short justifies a loose call-off — Look again. The 7.5 BB Q8o deal still faced strong ranges; calling or shoving weak cards can remove the stack before a suitable opportunity.
+  + [correct] Coverage, payouts, ranges and the remaining stacks — Correct. These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.
+  - [wrong] Being short justifies a loose call-off — Look again. The 7.5 BB Q8o deal still faced strong ranges; calling or going all-in with weak cards can remove the stack before a suitable opportunity.
     BETTER ANSWER: Coverage, payouts, ranges and the remaining stacks
 
 ===== WORLD 9 · LESSON tournament_pressure_checkpoint · Tournament pressure checkpoint =====
@@ -4909,7 +4909,7 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_checkpoint_survival_line [drill] First in from CO
 CAPTION: You start with 7.5 BB. The money is far off. It folds to you in CO.
-Q: Shove or fold?
+Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Qc | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 SEATS: UTG folded stack 24 BB | HJ folded stack 28 BB | CO Ac Qc stack 7.5 BB | BTN dealer stack 20 BB | SB stack 17.5 BB post 0.5 BB | BB stack 24 BB post 1 BB
@@ -4919,7 +4919,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
     BETTER ANSWER: All-in to 7.5 BB
 
 TASK w9_checkpoint_zone_line [drill] First to act
-CAPTION: You start with 33 BB in first seat. No antes.
+CAPTION: Starting stack: 33 BB in first seat. No antes.
 Q: Which zone and opening fit?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ts Th | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts pocket pair
@@ -7516,12 +7516,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
 TASK spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1 [drill] Review decision
 DAY 7 FAMILY: misread_tournament_pressure
 CAPTION: You start with 8 BB. The money is far off. You act first.
-Q: Shove or fold?
+Q: Go all-in or fold?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ah Kh | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
 SEATS: UTG Ah Kh stack 8 BB | HJ stack 26 BB | CO stack 18 BB | BTN dealer stack 31 BB | SB stack 22.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  + [correct] All-in to 8 BB — Correct. AKs is Premium even from UTG. At 8 BB, the first-in shove can collect the 1.5 BB pot and has strength when called.
+  + [correct] All-in to 8 BB — Correct. AKs is Premium even from UTG. At 8 BB, the first-in all-in can collect the 1.5 BB pot and has strength when called.
   - [wrong] Fold — Look again. UTG requires stronger hands, but AKs meets that requirement; folding at 8 BB gives up a sound short-stack opportunity.
     BETTER ANSWER: All-in to 8 BB
 

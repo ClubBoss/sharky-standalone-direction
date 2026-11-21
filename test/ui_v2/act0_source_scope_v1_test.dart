@@ -130,26 +130,19 @@ void main() {
     };
     const w9HypotheticalIds = <String>{
       'w9_survival_intro',
-      'w9_cash_vs_tournament',
-      'w9_short_stack_survival',
+      'w9_ev_two_results',
       'w9_survival_stack_tradeoff',
       'w9_survival_recap',
       'w9_m_ratio_intro',
-      'w9_m_ratio_red_zone',
-      'w9_m_ratio_green_zone',
-      'w9_m_ratio_yellow_zone',
+      'w9_m_ratio_lap_count',
+      'w9_m_ratio_ante_cost',
       'w9_m_ratio_recap',
       'w9_bubble_intro',
-      'w9_medium_stack_tighten',
-      'w9_big_stack_leverage',
-      'w9_bubble_short_stack',
+      'w9_bubble_premium_gap',
+      'w9_bubble_cover_seat',
       'w9_bubble_recap',
       'w9_checkpoint_intro',
-      'w9_checkpoint_survival_line',
-      'w9_checkpoint_zone_line',
-      'w9_checkpoint_bubble_line',
-      'w9_checkpoint_table_notice',
-      'w9_checkpoint_review',
+      'w9_prize_model_inputs',
     };
     const w10HypotheticalIds = <String>{
       'w10_player_type_intro',
@@ -292,8 +285,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(397));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
+    expect(tasks, hasLength(404));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(404));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -308,7 +301,7 @@ void main() {
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId),
       ),
-      hasLength(368),
+      hasLength(375),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -336,7 +329,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(48));
-    expect(explanationIds, hasLength(81));
+    expect(explanationIds, hasLength(74));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -529,8 +522,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 247);
-    expect(played, 275); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 261);
+    expect(played, 289); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
@@ -578,7 +571,23 @@ void main() {
       'your_first_hand_turn',
       'your_first_hand_river',
       'your_first_hand_action_trail',
+      // W9 source histories with recorded contributions and stacks.
+      'w9_cash_vs_tournament',
+      'w9_short_stack_survival',
+      'w9_m_ratio_red_zone',
+      'w9_m_ratio_green_zone',
+      'w9_m_ratio_yellow_zone',
+      'w9_m_ratio_table_window_transfer',
+      'w9_m_ratio_red_zone_shove',
+      'w9_medium_stack_tighten',
+      'w9_big_stack_leverage',
+      'w9_bubble_short_stack',
       'w9_bubble_table_risk_transfer',
+      'w9_checkpoint_survival_line',
+      'w9_checkpoint_zone_line',
+      'w9_checkpoint_bubble_line',
+      'w9_checkpoint_table_notice',
+      'w9_checkpoint_review',
       for (final task in _world5To8Tasks())
         if (task.runner.table.scope == Act0TableScopeV1.playedHand &&
             (task.runner.table.activeSeatId ?? '').isNotEmpty)

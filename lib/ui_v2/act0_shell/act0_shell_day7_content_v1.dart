@@ -1223,7 +1223,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         caption: "You start with 8 BB. The money is far off. You act first.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
-        question: "Shove or fold?",
+        question: "Go all-in or fold?",
         options: const [
           Act0RunnerOptionV1(
             id: "all_in_to_8_bb",
@@ -1234,7 +1234,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "AKs is Premium even from UTG. At 8 BB, the first-in shove can collect the 1.5 BB pot and has strength when called.",
+                "AKs is Premium even from UTG. At 8 BB, the first-in all-in can collect the 1.5 BB pot and has strength when called.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
