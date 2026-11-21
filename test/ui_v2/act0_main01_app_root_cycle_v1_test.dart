@@ -2448,7 +2448,13 @@ void main() {
     );
     final studyObservations = (completed['studyObservations'] as List)
         .cast<Map<String, dynamic>>();
-    expect(studyObservations, hasLength(28));
+    expect(studyObservations, hasLength(29));
+    expect(
+      studyObservations
+          .where((row) => row['lessonId'] == 'w2_narrow_three_bet')
+          .map((row) => row['taskId']),
+      ['w2_narrow_three_bet_intro'],
+    );
     expect(
       studyObservations
           .where((row) => row['lessonId'] == 'blinds_action_order')
