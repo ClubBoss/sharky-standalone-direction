@@ -5880,17 +5880,17 @@ TASK spaced_review_w1_blinds_action_order_button_v1 [drill] Review decision
 DAY 7 FAMILY: button
 Q: Two players remain. Which one can wait for the other player's first decision on this turn?
 HINT [hidden]: (none)
-TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BTN | Facts high card
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js 9h stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Facts high card
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Js 9h stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN checks
   - [wrong] BB — Look again. BB acts first after the flop. BTN gets to see that decision before acting.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3 | Facts high card
+    FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card
   + [correct] BTN — Correct. BB acts first after the flop. BTN gets to see that decision before acting.
-    FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3 | Facts high card
+    FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card
   - [wrong] Whoever opened preflop — Look again. BB acts first after the flop. BTN gets to see that decision before acting.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3 | Facts high card
+    FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card
 
 ===== WORLD 1 · LESSON positions · Why position matters =====
 
@@ -5898,17 +5898,17 @@ TASK spaced_review_w1_positions_button_v1 [drill] Review decision
 DAY 7 FAMILY: button
 Q: On this flop, who gets to react after the other player acts?
 HINT [hidden]: (none)
-TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BTN | Facts one pair, top pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad 7c stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BB | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Ad 7c stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more
   - [wrong] Whoever has the bigger stack — Look again. BB acts before BTN after the flop, regardless of stack size.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] BB — Look again. BB acts before BTN after the flop, regardless of stack size.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] BTN — Correct. BB acts before BTN after the flop, regardless of stack size.
-    FEEDBACK TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Ad 7c | Board As Th 5d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w1_positions_utg_v1 [drill] Review decision
 DAY 7 FAMILY: utg
@@ -6294,17 +6294,17 @@ TASK spaced_review_w3_button_advantage_hero_button_v1 [drill] Review decision
 DAY 7 FAMILY: hero_button
 Q: Who gets to see the other's first river action before acting?
 HINT [hidden]: (none)
-TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BTN | Facts high card
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh Js stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BB | Facts high card
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Kh Js stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks
   - [wrong] BB — Look again. BB acts first on the river. BTN can use BB's action when making a decision.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+    FEEDBACK TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
   - [wrong] The preflop caller regardless of seat — Look again. BB acts first on the river. BTN can use BB's action when making a decision.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+    FEEDBACK TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
   + [correct] BTN — Correct. BB acts first on the river. BTN can use BB's action when making a decision.
-    FEEDBACK TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+    FEEDBACK TABLE: River | You Kh Js | Board Qs 8d 3s 2c 6h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
 ===== WORLD 3 · LESSON early_vs_late · Early vs late =====
 
@@ -6312,17 +6312,17 @@ TASK spaced_review_w3_early_vs_late_hero_button_v1 [drill] Review decision
 DAY 7 FAMILY: hero_button
 Q: If BB checks this flop, which seat is next to decide?
 HINT [hidden]: (none)
-TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BTN | Facts one pair, top pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac 9c stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BB | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Ac 9c stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more
   + [correct] BTN — Correct. Only BB and BTN are still in. BB's check passes action to BTN.
-    FEEDBACK TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] UTG — Look again. Only BB and BTN are still in. BB's check passes action to BTN.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] SB — Look again. Only BB and BTN are still in. BB's check passes action to BTN.
     BETTER ANSWER: BTN
-    FEEDBACK TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BTN | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Ac 9c | Board Ah 4s 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w3_early_vs_late_seat_v1 [drill] Review decision
 DAY 7 FAMILY: seat
