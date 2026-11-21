@@ -1398,6 +1398,8 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       correctAt: 0,
       feedback:
           'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+      wrongFeedback:
+          'Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.',
     ),
     _w7TurnPriceTaskV1(
       id: 'w7_clean_outs_higher_price',
@@ -1405,6 +1407,8 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       correctAt: 1,
       feedback:
           'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
+      wrongFeedback:
+          'The draw wins on the same 12 of 44 rivers. Paying 6 BB now requires 30%, so the call risks more than this chance is worth.',
     ),
   ],
 );
@@ -1421,6 +1425,8 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       correctAt: 1,
       feedback:
           'If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
+      wrongFeedback:
+          'Your queen-jack beats just the jack-ten bluff. Paying 4 BB with one win in six fails the 25% threshold and loses chips on average.',
     ),
     _w7RiverTaskV1(
       id: 'w7_river_two_bluffs_of_six',
@@ -1428,6 +1434,8 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       correctAt: 0,
       feedback:
           'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+      wrongFeedback:
+          'Folding gives up wins against jack-ten and ace-eight. Those two of the six hands are enough to clear the 25% call price.',
     ),
     _w7UnseenRiverTaskV1(),
   ],
@@ -1611,6 +1619,7 @@ Act0LessonTaskV1 _w7TurnPriceTaskV1({
   required int bet,
   required int correctAt,
   required String feedback,
+  required String wrongFeedback,
 }) => _w7AppliedTaskV1(
   id: id,
   title: 'A turn price',
@@ -1619,7 +1628,10 @@ Act0LessonTaskV1 _w7TurnPriceTaskV1({
   table: _w7TurnPriceTableV1(bet),
   labels: const ['Call', 'Fold'],
   correctAt: correctAt,
-  feedback: [feedback, feedback],
+  feedback: [
+    for (var index = 0; index < 2; index++)
+      index == correctAt ? feedback : wrongFeedback,
+  ],
   family: Act0TaskFamilyV1.decision,
 );
 
@@ -1628,6 +1640,7 @@ Act0LessonTaskV1 _w7RiverTaskV1({
   required String range,
   required int correctAt,
   required String feedback,
+  required String wrongFeedback,
 }) => _w7AppliedTaskV1(
   id: id,
   title: 'A river decision',
@@ -1642,7 +1655,10 @@ Act0LessonTaskV1 _w7RiverTaskV1({
   ),
   labels: const ['Call', 'Fold'],
   correctAt: correctAt,
-  feedback: [feedback, feedback],
+  feedback: [
+    for (var index = 0; index < 2; index++)
+      index == correctAt ? feedback : wrongFeedback,
+  ],
   family: Act0TaskFamilyV1.transfer,
   kind: Act0LessonStepKindV1.proveIt,
 );
