@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(399));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(399));
+    expect(tasks, hasLength(400));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(400));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -308,7 +308,8 @@ void main() {
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'first_table_guide_first_decision' &&
-            task.taskId != 'hand_rankings_compare_ace_straights',
+            task.taskId != 'hand_rankings_compare_ace_straights' &&
+            task.taskId != 'w4_price_find_bettor',
       ),
       hasLength(368),
     );
@@ -375,7 +376,8 @@ void main() {
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'first_table_guide_first_decision' &&
-            task.taskId != 'hand_rankings_compare_ace_straights')
+            task.taskId != 'hand_rankings_compare_ace_straights' &&
+            task.taskId != 'w4_price_find_bettor')
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -534,9 +536,10 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 277); // Authored contexts, not certified replay histories.
+    expect(played, 278); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'first_table_guide_first_decision',
+      'w4_price_find_bettor',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
       'w3_play_from_blinds_small_blind_raise',

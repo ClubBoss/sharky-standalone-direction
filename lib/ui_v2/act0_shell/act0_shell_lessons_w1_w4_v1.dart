@@ -5181,6 +5181,62 @@ final _preflopFrameworkLessons = <Act0LessonCardV1>[
   ),
 ];
 
+final _w4IdentifyBettorRunner = _world4PriceIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w4_price_find_bettor',
+  caption: 'You checked the flop. Now there is a bet to match.',
+  hint: '',
+  question: 'Tap the seat that made the flop bet you are facing.',
+  table: _day7PostflopV1(
+    'bb',
+    'Ad Jc',
+    'As 8s 4d',
+    opponent: 'co',
+    betBb: 3,
+    showTurn: true,
+  ).copyWith(selectableSeatIds: const ['bb', 'co', 'btn']),
+  feedbackTitle: 'CO set the new price.',
+  feedbackReason: 'CO put 3 BB in on the flop after you checked.',
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'bb',
+      seatId: 'bb',
+      label: 'Your seat',
+      isCorrect: false,
+      preferredLabel: 'Cutoff',
+      betterAnswerLabel: 'Cutoff',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Checking added no new chips.',
+      feedbackReason:
+          'You checked from BB. Counting the preflop blind as a flop bet would make you read the wrong price.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'btn',
+      seatId: 'btn',
+      label: 'Button',
+      isCorrect: false,
+      preferredLabel: 'Cutoff',
+      betterAnswerLabel: 'Cutoff',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The dealer marker does not show a bet.',
+      feedbackReason:
+          'BTN folded before the flop. Looking at the dealer marker instead of the new wager would miss the 3 BB you face.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'co',
+      seatId: 'co',
+      label: 'Cutoff',
+      isCorrect: true,
+      preferredLabel: 'Cutoff',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'CO set the new price.',
+      feedbackReason:
+          'CO put 3 BB in after your check. That flop bet is now the amount you must match to stay in.',
+    ),
+  ],
+);
+
 final _betPurposePriceLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'why_bets_happen',
@@ -5389,6 +5445,14 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_price_find_bettor',
+        title: 'Find the bet you face',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4IdentifyBettorRunner,
+        rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(

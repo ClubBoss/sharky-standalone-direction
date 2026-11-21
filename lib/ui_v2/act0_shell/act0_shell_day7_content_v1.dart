@@ -743,6 +743,28 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     4,
+    'call_price',
+    'co',
+    _day7PostflopV1(
+      'bb',
+      'Th 8h',
+      'Ks 8c 5d 2s',
+      opponent: 'co',
+      betBb: 2,
+      showTurn: true,
+    ),
+    question: 'Which seat made the bet that set your price on the turn?',
+    choices: const ['BTN', 'CO', 'BB'],
+    correct: 1,
+    reason:
+        'CO put 2 BB in on the turn after your check. That is the amount BB must match.',
+    wrongReasons: const {
+      0: 'The button folded before the flop. Reading the marker as an action misses the turn wager from CO.',
+      2: 'You checked from BB. Counting your blind as a new bet would give the wrong cost to continue on the turn.',
+    },
+  ),
+  _day7ExampleV1(
+    4,
     "call_price",
     "pot_to_call",
     _day7PostflopV1("bb", "Jc 9s", "Jd 8h 4s 2c", betBb: 2, showTurn: true),

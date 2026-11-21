@@ -165,7 +165,7 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 158),
+      ('D2.pot_feasibility', 159),
       ('D3.to_call_completeness', 113),
     ]) {
       final proof = rows.where(
@@ -1236,6 +1236,15 @@ void main() {
       );
       historicalComparison[revision.key] = change['prior'];
     }
+    expectedComparison['w4_price_find_bettor'] = {
+      'rewardXp': 7,
+      'family': 'decision',
+      'options': [
+        w3Option('bb', seat: 'bb'),
+        w3Option('btn', seat: 'btn'),
+        w3Option('co', seat: 'co', correct: true),
+      ],
+    };
     expect(
       historicalComparison,
       expectedComparison,
