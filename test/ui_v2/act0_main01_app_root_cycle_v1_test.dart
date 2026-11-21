@@ -2048,7 +2048,7 @@ void main() {
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(156),
+      hasLength(157),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();
