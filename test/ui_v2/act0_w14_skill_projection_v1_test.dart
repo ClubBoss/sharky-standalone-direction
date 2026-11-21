@@ -85,7 +85,7 @@ void main() {
   );
 
   test(
-    'all 198 W1-W4 tasks have explicit curriculum topics and independent evidence',
+    'all 201 W1-W4 tasks have explicit curriculum topics and independent evidence',
     () {
       final foundationWorlds = _worlds
           .where((w) => w.worldNumber <= 4)
@@ -93,7 +93,7 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 198);
+      expect(tasks.length, 201);
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
@@ -252,7 +252,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {7: 13, 8: 26});
+    expect(taskCounts, {7: 13, 8: 28});
   });
 
   test('every W9–W10 task projects to its authored topic', () {
@@ -392,10 +392,15 @@ void main() {
                   : Act0DecisionAssistanceV1.none,
             ),
       ];
-      final original = Act0LearningEvidenceHistoryV1(
-        records: records,
-        sourceAnchors: records.take(20).toList(),
+      final original = records.fold(
+        const Act0LearningEvidenceHistoryV1(),
+        (history, record) => history.append(record),
       );
+      expect(
+        original.records,
+        hasLength(Act0LearningEvidenceHistoryV1.maxRecords),
+      );
+      expect(original.provenanceRecords, hasLength(records.length));
       final restored = Act0LearningEvidenceHistoryV1.tryParseStorageString(
         original.toStorageString(),
       )!;
