@@ -286,7 +286,7 @@ void main() {
     final runner = t.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
     );
-    expect(runner.selectedTaskId, 'hand_rankings_theory');
+    expect(runner.selectedTaskId, 'first_table_guide_first_decision');
     final saved = await _saved(t);
     expect((saved['completedTaskIds'] as List).toSet(), oldCompleted.toSet());
     expect(saved['earnedXp'], oldXp);
