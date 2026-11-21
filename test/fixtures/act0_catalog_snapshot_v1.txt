@@ -3976,58 +3976,58 @@ TEACH: Smaller stack rules. If you have 200 BB and the other player has 30 BB, t
 TEACH LABELS: 200 BB, 30 BB, Effective stack
 Q: What is the effective stack?
 HINT [theoryOnly]: Compare the two players who can put chips in against each other.
-TABLE: Flop | You Ac Qd | Board Qs 8c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, top pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Qd stack 200 BB | SB folded stack 99.5 BB | BB stack 30 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+TABLE: Flop | You Ac Qd | Board Qs 8c 3h | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Compare the stacks | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac Qd stack 200 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 30 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: Between two players, the smaller stack caps what the two can still match.
 
 TASK w7_effective_stack_30bb [drill] 200 vs 30
 CAPTION: You have 200 BB. The other player has 30 BB.
 Q: What is the effective stack?
 HINT [theoryOnly]: Look for the smaller stack.
-TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, pocket pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 7s 7c stack 200 BB | SB folded stack 99.5 BB | BB stack 30 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks
-  - [wrong] 200 BB — Not quite. Your own stack can be deeper, but the hand risk is capped by the smaller stack across from you.
+TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Center Compare the stacks | Facts one pair, pocket pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7s 7c stack 200 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 30 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks
+  - [wrong] 200 BB — Not quite. CO has 200 BB and BB has 30 BB. Planning a 200 BB wager overlooks that BB can match only 30 BB.
     BETTER ANSWER: 30 BB
-    FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
-  - [wrong] 115 BB — Use the smaller stack. The average is 115 BB, but these players can only match 30 BB each.
+    FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
+  - [wrong] 115 BB — Use the smaller stack. Averaging 200 BB and 30 BB gives 115 BB. That counts 85 BB that BB could never match.
     BETTER ANSWER: 30 BB
-    FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
   + [correct] 30 BB — Clean execution. Against this opponent, each player can put in up to 30 BB from these stacks.
-    FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
+    FEEDBACK TABLE: Flop | You 7s 7c | Board Ad 9h 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, pocket pair, rainbow
 
 TASK w7_effective_stack_100bb [drill] 100 vs 100
 CAPTION: Both players have the same stack behind on this flop.
 Q: What is the effective stack?
 HINT [theoryOnly]: Equal stacks keep the full depth in play.
-TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Td stack 100 BB | SB folded stack 99.5 BB | BB stack 100 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] 50 BB — Not quite. Nothing cuts the stack in half here. With equal 100 BB stacks, the full 100 BB remains in play.
+TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat CO | Active co | Decision co | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Td stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 100 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] 50 BB — Not quite. Both players have 100 BB remaining on T-8-3. Calling the limit 50 BB loses sight of half the amount each can match.
     BETTER ANSWER: 100 BB
-    FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
-  - [wrong] 200 BB — Not quite. Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.
+    FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
+  - [wrong] 200 BB — Not quite. These 100 BB stacks sum to 200 BB, but a bet has to be covered by the other player. Each can match only 100 BB.
     BETTER ANSWER: 100 BB
-    FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
-  + [correct] 100 BB — The matching stacks set the limit. When both stacks are equal, that shared stack is the effective stack.
-    FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
+    FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
+  + [correct] 100 BB — The matching stacks set the limit. CO and BB each have 100 BB behind. Either player can match the other up to 100 BB.
+    FEEDBACK TABLE: Flop | You Kd Td | Board Th 8d 3c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor flush
 
 TASK w7_table_effective_notice [drill] Find the real risk
-CAPTION: You cover a player 120 BB to 18 BB on a real table.
+CAPTION: Compare your 120 BB behind with BB’s 18 BB behind.
 Q: What should you notice first before planning?
 HINT [theoryOnly]: Notice the number that caps the real risk.
-TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Jc stack 120 BB | SB folded stack 99.5 BB | BB stack 18 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] 18 BB effective stack — Sharp read. That is the real live-table risk. The smaller stack sets the hand depth.
-    FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
-  - [wrong] Your own 120 BB stack — Not quite. That answer is tempting because your stack looks bigger and feels more powerful. The cleaner read is the smaller 18 BB stack, because that is the number that actually caps what can go in.
+TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Jc stack 120 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 18 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  + [correct] 18 BB effective stack — Sharp read. On T-7-3, BB’s 18 BB behind caps how much more your jacks can earn from that player.
+    FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
+  - [wrong] Your own 120 BB stack — Not quite. Your 120 BB is visible, but BB can match only 18 BB. Starting from 120 BB exaggerates how much this opponent can pay.
     BETTER ANSWER: 18 BB effective stack
-    FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
-  - [suboptimal] 138 BB total in play — Not quite. Total chips are a real table detail, so this looks useful at first. But total chips do not drive the plan here. The dominant cue is the effective stack that caps the real risk.
+    FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
+  - [suboptimal] 138 BB total in play — Not quite. You added the two displayed stacks correctly. For a bet, compare them instead: BB can match just 18 BB, so 138 BB overstates the risk.
     BETTER ANSWER: 18 BB effective stack
-    FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Js Jc | Board Td 7c 3h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
 
 TASK w7_effective_stack_recap [review] Effective stack recap
 CAPTION: Lesson learned: the smaller stack sets the hand risk.
@@ -4035,9 +4035,9 @@ TEACH: Risk starts here. Find the smaller stack first. That tells you how deep t
 TEACH LABELS: Smaller stack, Real risk, Hand depth
 Q: Why does effective stack matter?
 HINT [theoryOnly]: Effective stack tells you how much room the hand really has.
-TABLE: Flop | You Kh Qh | Board Qc 9s 2d | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh Qh stack 43 BB | SB folded stack 99.5 BB | BB stack 75 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks
+TABLE: Flop | You Kh Qh | Board Qc 9s 2d | Pot 6.5 BB | Seat CO | Active co | Decision co | Center Compare the stacks | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qh stack 43 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 75 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks
 REVIEW: Effective stack tells you the real risk in the hand. Deep stacks leave room. Short stacks simplify decisions.
 
 ===== WORLD 8 · LESSON same_hand_different_depth · Same hand, different depth =====
@@ -4150,58 +4150,58 @@ TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effec
 TEACH LABELS: Low SPR, Commitment, High SPR, Room
 Q: What does low SPR usually mean?
 HINT [theoryOnly]: Low SPR means less money is left relative to the pot. Check your hand and the price before going all-in.
-TABLE: Flop | You Ah Tc | Board Ac 8s 3d | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Tc stack 20 BB | SB folded stack 99.5 BB | BB stack 35 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
+TABLE: Flop | You Ah Tc | Board Ac 8s 3d | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Tc stack 20 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 35 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
 REVIEW: Compare the smaller remaining stack with the pot to see how much could still go in.
 
 TASK w7_low_spr_commit [drill] SPR 2
 CAPTION: SPR is 2 on the flop and you hold top pair.
 Q: What does low SPR usually tell you?
 HINT [theoryOnly]: Little room is left.
-TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 10 BB | SB folded stack 99.5 BB | BB stack 12 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Plenty of chips left for later bets — Not quite. That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.
+TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Qc stack 10 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 12 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
+  - [wrong] Plenty of chips left for later bets — Not quite. The 10 BB left is only two times the 5 BB pot. Planning several large bets would use up those chips earlier than expected.
     BETTER ANSWER: One bet can commit the hand
-    FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  + [correct] One bet can commit the hand — Excellent spot. At SPR 2 there are two pots left in the effective stack. A large bet can put much of it at risk, but whether to commit depends on your hand and the price.
-    FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  - [wrong] It plays the same as SPR 8 — Not quite. SPR changes the hand structure. SPR 2 is a much more commit-heavy situation than SPR 8.
+    FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
+  + [correct] One bet can commit the hand — Excellent spot. With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Use your KQ top pair and the price before committing.
+    FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
+  - [wrong] It plays the same as SPR 8 — Not quite. A pot-sized 5 BB bet would put half of your 10 BB at risk. At SPR 8, it would risk only one eighth of the effective stack.
     BETTER ANSWER: One bet can commit the hand
-    FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
 
 TASK w7_high_spr_room [drill] SPR 8
 CAPTION: SPR is 8 on the flop.
 Q: What does high SPR usually give you?
 HINT [theoryOnly]: A lot of stack is still behind.
-TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As 9c stack 40 BB | SB folded stack 99.5 BB | BB stack 42 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Immediate commitment — Not quite. Immediate commitment is a low-SPR feature. High SPR creates more room, not less.
+TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 9c stack 40 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 42 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
+  - [wrong] Immediate commitment — Not quite. Putting in 40 BB right away would risk eight times the 5 BB pot with one pair. You can keep chips for later decisions.
     BETTER ANSWER: More options for later bets
-    FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  + [correct] More options for later bets — Spot on. High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.
-    FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  - [wrong] No difference from preflop — Not quite. SPR changes how postflop decisions feel. High SPR leaves more chips for later bets on the same streets.
+    FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
+  + [correct] More options for later bets — Spot on. The 5 BB pot is small next to your 40 BB stack. You can choose a smaller bet or check and keep room for later streets.
+    FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
+  - [wrong] No difference from preflop — Not quite. You have 40 BB behind after the preflop action, with 5 BB in the pot. Ignoring that ratio leaves you without a plan for the turn and river.
     BETTER ANSWER: More options for later bets
-    FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
+    FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
 
 TASK w7_spr4_middle [drill] SPR 4
 CAPTION: SPR is 4 with one pair and some stack still behind.
 Q: What does SPR 4 usually feel like?
 HINT [theoryOnly]: Middle SPR is neither pure all-in nor huge freedom.
-TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd 9d stack 20 BB | SB folded stack 99.5 BB | BB stack 27 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Automatic commitment right now — Too shallow. That is more like very low SPR. SPR 4 is tighter than SPR 8, but not auto-commit by default.
+TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jd 9d stack 20 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 27 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
+  - [wrong] Automatic commitment right now — Too shallow. Shoving your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.
     BETTER ANSWER: Middle ground: some room, some commitment
-    FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
-  - [wrong] The same as SPR 8 — Too loose. At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.
+    FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] The same as SPR 8 — Too loose. With 20 BB behind, a pot bet costs one quarter of your stack. Treating it like SPR 8 underestimates how fast two bets can use up those chips.
     BETTER ANSWER: Middle ground: some room, some commitment
-    FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
-  + [correct] Middle ground: some room, some commitment — Clean execution. SPR 4 often means you still have choices, but commitment pressure is already starting to matter.
-    FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
+    FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
+  + [correct] Middle ground: some room, some commitment — Clean execution. On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves room for later streets, while large bets can commit you quickly.
+    FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
 
 TASK what_poker_is_side_pot_intro [drill] Read the short stack limit
 SUMMARY: Find the short stack limit when deeper opponents keep betting.
@@ -6851,3 +6851,167 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ all-in 18 BB
   - [wrong] 18 BB — Look again. HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.
     BETTER ANSWER: 7 BB
   + [correct] 7 BB — Correct. HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.
+
+===== WORLD 8 · LESSON effective_stack_basics · Effective stack =====
+
+TASK spaced_review_w8_effective_stack_basics_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: How many more BB can these two players match against each other?
+HINT [hidden]: (none)
+TABLE: Flop | You Kh Jc | Board Kd 8s 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Jc stack 36 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 68 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  - [wrong] 68 BB — Look again. CO has 36 BB behind and BB has 68 BB. CO can match only 36 BB, which caps the amount each can add against the other.
+    BETTER ANSWER: 36 BB
+    FEEDBACK TABLE: Flop | You Kh Jc | Board Kd 8s 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  + [correct] 36 BB — Correct. CO has 36 BB behind and BB has 68 BB. CO can match only 36 BB, which caps the amount each can add against the other.
+    FEEDBACK TABLE: Flop | You Kh Jc | Board Kd 8s 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  - [wrong] 104 BB — Look again. CO has 36 BB behind and BB has 68 BB. CO can match only 36 BB, which caps the amount each can add against the other.
+    BETTER ANSWER: 36 BB
+    FEEDBACK TABLE: Flop | You Kh Jc | Board Kd 8s 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+
+TASK spaced_review_w8_effective_stack_basics_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Which row tells you the maximum BB you can win from this opponent in later bets?
+HINT [hidden]: (none)
+TABLE: Flop | You Js Jd | Board Ts 6h 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, overpair, pocket pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Jd stack 82 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 24 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  - [wrong] Your 82 BB — Look again. BB has 24 BB still behind on T-6-3. Your overpair cannot collect another 82 BB from a player with only 24 BB left.
+    BETTER ANSWER: BB’s 24 BB
+    FEEDBACK TABLE: Flop | You Js Jd | Board Ts 6h 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+  - [wrong] The 5.5 BB pot — Look again. BB has 24 BB still behind on T-6-3. Your overpair cannot collect another 82 BB from a player with only 24 BB left.
+    BETTER ANSWER: BB’s 24 BB
+    FEEDBACK TABLE: Flop | You Js Jd | Board Ts 6h 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+  + [correct] BB’s 24 BB — Correct. BB has 24 BB still behind on T-6-3. Your overpair cannot collect another 82 BB from a player with only 24 BB left.
+    FEEDBACK TABLE: Flop | You Js Jd | Board Ts 6h 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+
+===== WORLD 8 · LESSON same_hand_different_depth · Same hand, different depth =====
+
+TASK spaced_review_w8_same_hand_different_depth_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+CAPTION: BB checks the river. Assume weaker queens call 5 BB, and fold to 10 BB.
+Q: Which bet size gets paid by the modeled weaker queens?
+HINT [hidden]: (none)
+TABLE: River | You Qs Jd | Board Qh 7d 2s 4h 5c | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Jd stack 19 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 10 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
+  + [correct] 5 BB — Correct. Only the 5 BB bet gets the stated weaker queen calls on this board. Ten BB is all BB can match.
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 7d 2s 4h 5c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] 10 BB — Look again. Only the 5 BB bet gets the stated weaker queen calls on this board. Ten BB is all BB can match.
+    BETTER ANSWER: 5 BB
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 7d 2s 4h 5c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] 19 BB — Look again. Only the 5 BB bet gets the stated weaker queen calls on this board. Ten BB is all BB can match.
+    BETTER ANSWER: 5 BB
+    FEEDBACK TABLE: River | You Qs Jd | Board Qh 7d 2s 4h 5c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK spaced_review_w8_same_hand_different_depth_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: What is the largest river bet that both players can match?
+HINT [hidden]: (none)
+TABLE: River | You Ac Qd | Board As 8h 4d 2s 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac Qd stack 29 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 43 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
+  - [wrong] 43 BB — Look again. CO has top pair and 29 BB left on this river. BB can match all 29 BB, but CO cannot put in any more.
+    BETTER ANSWER: 29 BB
+    FEEDBACK TABLE: River | You Ac Qd | Board As 8h 4d 2s 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] 29 BB — Correct. CO has top pair and 29 BB left on this river. BB can match all 29 BB, but CO cannot put in any more.
+    FEEDBACK TABLE: River | You Ac Qd | Board As 8h 4d 2s 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] 72 BB — Look again. CO has top pair and 29 BB left on this river. BB can match all 29 BB, but CO cannot put in any more.
+    BETTER ANSWER: 29 BB
+    FEEDBACK TABLE: River | You Ac Qd | Board As 8h 4d 2s 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK spaced_review_w8_same_hand_different_depth_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Assume players behind fold. HJ calls a reraise to 9 BB with ATs, but folds it to a shove.
+Q: Of these actions, which puts more chips from ATs into the pot?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad Qd | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 97 BB raise 3 BB | CO Ad Qd stack 24 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB
+  - [wrong] Match the 3 BB open — Look again. With AQs in position, the 9 BB option gets 6 BB more from the weaker ace under this model. Calling or shoving gets no extra chips from ATs.
+    BETTER ANSWER: Reraise to 9 BB
+  + [correct] Reraise to 9 BB — Correct. With AQs in position, the 9 BB option gets 6 BB more from the weaker ace under this model. Calling or shoving gets no extra chips from ATs.
+  - [wrong] Shove 24 BB — Look again. With AQs in position, the 9 BB option gets 6 BB more from the weaker ace under this model. Calling or shoving gets no extra chips from ATs.
+    BETTER ANSWER: Reraise to 9 BB
+
+===== WORLD 8 · LESSON spr_and_commitment · Room or commitment =====
+
+TASK spaced_review_w8_spr_and_commitment_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: With the smaller stack at 12 BB and a 6 BB flop pot, how much room is left?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc Td | Board Ks 9h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc Td stack 12 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 18 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  + [correct] SPR 2, relatively little room — Correct. CO has top pair on K-9-3. The effective stack is 12 BB, and dividing by the 6 BB pot gives SPR 2. A couple of moderate bets can use up that stack.
+    FEEDBACK TABLE: Flop | You Kc Td | Board Ks 9h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] SPR 3, use the larger stack — Look again. CO has top pair on K-9-3. The effective stack is 12 BB, and dividing by the 6 BB pot gives SPR 2. A couple of moderate bets can use up that stack.
+    BETTER ANSWER: SPR 2, relatively little room
+    FEEDBACK TABLE: Flop | You Kc Td | Board Ks 9h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] SPR 0.5, swap pot and stack — Look again. CO has top pair on K-9-3. The effective stack is 12 BB, and dividing by the 6 BB pot gives SPR 2. A couple of moderate bets can use up that stack.
+    BETTER ANSWER: SPR 2, relatively little room
+    FEEDBACK TABLE: Flop | You Kc Td | Board Ks 9h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+
+TASK spaced_review_w8_spr_and_commitment_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: What is the stack-to-pot ratio before any flop bet?
+HINT [hidden]: (none)
+TABLE: Flop | You Ah Jd | Board Js 7c 3s | Pot 7 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Jd stack 28 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 40 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 3.25 BB · BTN folds · SB folds · BB calls 2.25 BB more · Flop: BB checks
+  + [correct] 4 — Correct. The smaller stack is 28 BB and the pot is 7 BB. Dividing 28 by 7 gives SPR 4.
+    FEEDBACK TABLE: Flop | You Ah Jd | Board Js 7c 3s | Pot 7 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  - [wrong] 5.7 — Look again. The smaller stack is 28 BB and the pot is 7 BB. Dividing 28 by 7 gives SPR 4.
+    BETTER ANSWER: 4
+    FEEDBACK TABLE: Flop | You Ah Jd | Board Js 7c 3s | Pot 7 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  - [wrong] 0.25 — Look again. The smaller stack is 28 BB and the pot is 7 BB. Dividing 28 by 7 gives SPR 4.
+    BETTER ANSWER: 4
+    FEEDBACK TABLE: Flop | You Ah Jd | Board Js 7c 3s | Pot 7 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+
+TASK spaced_review_w8_spr_and_commitment_confused_chip_commitment_eligibility_v1 [drill] Review decision
+DAY 7 FAMILY: confused_chip_commitment_eligibility
+CAPTION: You are all-in. HJ and BB each put in 30 BB total.
+Q: How much did each deeper player put in above the amount you can win from them?
+HINT [hidden]: (none)
+TABLE: Preflop | You Qc Qh | Pot 72.5 BB | Seat CO | Facts pocket pair
+SEATS: UTG folded stack 100 BB | HJ stack 30 BB | CO Qc Qh stack 0 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 30 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB · CO all-in 12 BB · BTN folds · SB folds · BB raises to 30 BB · HJ calls 30 BB
+  - [wrong] 12 BB — Look again. CO can match only 12 BB from each player. HJ and BB put an extra 18 BB each in the side pot.
+    BETTER ANSWER: 18 BB
+  + [correct] 18 BB — Correct. CO can match only 12 BB from each player. HJ and BB put an extra 18 BB each in the side pot.
+  - [wrong] 30 BB — Look again. CO can match only 12 BB from each player. HJ and BB put an extra 18 BB each in the side pot.
+    BETTER ANSWER: 18 BB
+
+===== WORLD 8 · LESSON format_pressure · 6-max vs full ring =====
+
+TASK spaced_review_w8_format_pressure_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Practice rule: raise JJ to 2.5 BB in an unopened pot if five or fewer players remain behind.
+Q: Which action fits the rule from the first seat at this table?
+HINT [hidden]: (none)
+TABLE: Preflop | You Jc Jd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts pocket pair
+SEATS: UTG Jc Jd stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB
+  - [wrong] Fold — Look again. Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.
+    BETTER ANSWER: Raise to 2.5 BB
+  - [wrong] Limp for 1 BB — Look again. Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.
+    BETTER ANSWER: Raise to 2.5 BB
+  + [correct] Raise to 2.5 BB — Correct. Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.
+
+TASK spaced_review_w8_format_pressure_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+CAPTION: BB checks. Under the stated plan, aim to get called by weaker pairs, which will call 2 BB and fold to a shove.
+Q: Which bet fits the stated plan?
+HINT [hidden]: (none)
+TABLE: Flop | You Jc Js | Board 9d 6h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, overpair, pocket pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jc Js stack 18 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 12 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Shove 18 BB — Look again. JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Jc Js | Board 9d 6h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+  + [correct] Bet 2 BB — Correct. JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.
+    FEEDBACK TABLE: Flop | You Jc Js | Board 9d 6h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+  - [wrong] Bet 12 BB — Look again. JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Jc Js | Board 9d 6h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow

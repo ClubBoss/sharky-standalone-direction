@@ -1903,6 +1903,7 @@ Act0TableStateV1 _act0BoardLessonTableV1({
   required List<Act0CardStateV1> heroCards,
   required List<Act0CardStateV1> boardCards,
   required String centerLabel,
+  String heroSeatId = 'btn',
   num openBb = 2.5,
   num flopBetBb = 0,
   num turnBetBb = 0,
@@ -1922,14 +1923,16 @@ Act0TableStateV1 _act0BoardLessonTableV1({
   final heroBehind = heroBehindBb ?? 100 - collectedPerPlayer;
   final bigBlindBehind = bbBehindBb ?? 100 - collectedPerPlayer - facingBb;
   const wager = Act0ContributionKindV1.wager;
-  const folds = {'utg', 'hj', 'co', 'sb'};
+  assert(heroSeatId == 'co' || heroSeatId == 'btn');
+  final heroLabel = heroSeatId.toUpperCase();
+  final folds = {'utg', 'hj', if (heroSeatId == 'btn') 'co' else 'btn', 'sb'};
   return Act0TableStateV1(
     scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
-    heroSeatId: 'btn',
-    activeSeatId: 'btn',
-    decisionSeatId: 'btn',
+    heroSeatId: heroSeatId,
+    activeSeatId: heroSeatId,
+    decisionSeatId: heroSeatId,
     heroCards: heroCards,
     boardCards: boardCards,
     streetLabel: street,
@@ -1939,14 +1942,14 @@ Act0TableStateV1 _act0BoardLessonTableV1({
     handContributions: Act0HandContributionsV1(
       throughStreet: bettingStreet,
       startingStackBbBySeat: {
-        'btn': (heroBehind + collectedPerPlayer).toDouble(),
+        heroSeatId: (heroBehind + collectedPerPlayer).toDouble(),
         'bb': (bigBlindBehind + collectedPerPlayer + facingBb).toDouble(),
       },
       entries: [
         ..._act0LessonBlinds,
         Act0ContributionV1(
           PokerStreet.preflop,
-          'btn',
+          heroSeatId,
           wager,
           openBb.toDouble(),
         ),
@@ -1959,7 +1962,7 @@ Act0TableStateV1 _act0BoardLessonTableV1({
         if (boardCards.length >= 4 && flopBetBb > 0) ...[
           Act0ContributionV1(
             PokerStreet.flop,
-            'btn',
+            heroSeatId,
             wager,
             flopBetBb.toDouble(),
           ),
@@ -1973,7 +1976,7 @@ Act0TableStateV1 _act0BoardLessonTableV1({
         if (boardCards.length == 5 && turnBetBb > 0) ...[
           Act0ContributionV1(
             PokerStreet.turn,
-            'btn',
+            heroSeatId,
             wager,
             turnBetBb.toDouble(),
           ),
@@ -1996,8 +1999,11 @@ Act0TableStateV1 _act0BoardLessonTableV1({
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
       const Act0ActionTrailItemV1(label: 'UTG folds'),
       const Act0ActionTrailItemV1(label: 'HJ folds'),
-      const Act0ActionTrailItemV1(label: 'CO folds'),
-      Act0ActionTrailItemV1(label: 'BTN raises ${_act0BbLabelV1(openBb)}'),
+      if (heroSeatId == 'btn') const Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(
+        label: '$heroLabel raises ${_act0BbLabelV1(openBb)}',
+      ),
+      if (heroSeatId == 'co') const Act0ActionTrailItemV1(label: 'BTN folds'),
       const Act0ActionTrailItemV1(label: 'SB folds'),
       Act0ActionTrailItemV1(
         label: 'BB calls ${_act0BbLabelV1(openBb)}',
@@ -2006,18 +2012,22 @@ Act0TableStateV1 _act0BoardLessonTableV1({
       if (boardCards.length >= 4) ...[
         const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
         if (flopBetBb == 0)
-          const Act0ActionTrailItemV1(label: 'BTN checks')
+          Act0ActionTrailItemV1(label: '$heroLabel checks')
         else ...[
-          Act0ActionTrailItemV1(label: 'BTN bets ${_act0BbLabelV1(flopBetBb)}'),
+          Act0ActionTrailItemV1(
+            label: '$heroLabel bets ${_act0BbLabelV1(flopBetBb)}',
+          ),
           Act0ActionTrailItemV1(label: 'BB calls ${_act0BbLabelV1(flopBetBb)}'),
         ],
       ],
       if (boardCards.length == 5) ...[
         const Act0ActionTrailItemV1(label: 'Turn: BB checks'),
         if (turnBetBb == 0)
-          const Act0ActionTrailItemV1(label: 'BTN checks')
+          Act0ActionTrailItemV1(label: '$heroLabel checks')
         else ...[
-          Act0ActionTrailItemV1(label: 'BTN bets ${_act0BbLabelV1(turnBetBb)}'),
+          Act0ActionTrailItemV1(
+            label: '$heroLabel bets ${_act0BbLabelV1(turnBetBb)}',
+          ),
           Act0ActionTrailItemV1(label: 'BB calls ${_act0BbLabelV1(turnBetBb)}'),
         ],
       ],
@@ -2033,12 +2043,18 @@ Act0TableStateV1 _act0BoardLessonTableV1({
           seat,
           isInHand: !folds.contains(seat.seatId),
           isFolded: folds.contains(seat.seatId),
-          isActive: seat.isHero,
-          hasActed: !seat.isHero,
+          displayName: heroSeatId == 'btn'
+              ? null
+              : seat.seatId == heroSeatId
+              ? 'Hero'
+              : seat.seatLabel,
+          isHero: seat.seatId == heroSeatId,
+          isActive: seat.seatId == heroSeatId,
+          hasActed: seat.seatId != heroSeatId,
           isLastAggressor: seat.seatId == 'bb' && facingBb > 0,
           clearCommitment: true,
           stackLabel: _act0BbLabelV1(switch (seat.seatId) {
-            'btn' => heroBehind,
+            final id when id == heroSeatId => heroBehind,
             'bb' => bigBlindBehind,
             'sb' => 99.5,
             _ => 100,
@@ -2050,10 +2066,10 @@ Act0TableStateV1 _act0BoardLessonTableV1({
                   amountLabel: _act0BbLabelV1(facingBb),
                 )
               : null,
-          holeCards: seat.isHero ? heroCards : _unknownHoleCards,
+          holeCards: seat.seatId == heroSeatId ? heroCards : _unknownHoleCards,
           cardsVisibleMode: folds.contains(seat.seatId)
               ? Act0CardsVisibleModeV1.none
-              : seat.isHero
+              : seat.seatId == heroSeatId
               ? Act0CardsVisibleModeV1.faceUp
               : Act0CardsVisibleModeV1.faceDown,
         ),
@@ -4848,6 +4864,7 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
   hint: 'Compare the two players who can put chips in against each other.',
   question: 'What is the effective stack?',
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Ac Qd'),
     boardCards: _act0LessonCardsV1('Qs 8c 3h'),
     centerLabel: 'Compare the stacks',

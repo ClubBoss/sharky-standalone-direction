@@ -937,4 +937,235 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
   ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
+    'board_cards',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Kh Jc'),
+      boardCards: _act0LessonCardsV1('Kd 8s 4d'),
+      centerLabel: '',
+      heroBehindBb: 36,
+      bbBehindBb: 68,
+    ),
+    question:
+        'How many more BB can these two players match against each other?',
+    choices: const ['68 BB', '36 BB', '104 BB'],
+    correct: 1,
+    reason:
+        'CO has 36 BB behind and BB has 68 BB. CO can match only 36 BB, which caps the amount each can add against the other.',
+  ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Js Jd'),
+      boardCards: _act0LessonCardsV1('Ts 6h 3c'),
+      centerLabel: '',
+      heroBehindBb: 82,
+      bbBehindBb: 24,
+    ),
+    question:
+        'Which row tells you the maximum BB you can win from this opponent in later bets?',
+    choices: const ['Your 82 BB', 'The 5.5 BB pot', 'BB’s 24 BB'],
+    correct: 2,
+    reason:
+        'BB has 24 BB still behind on T-6-3. Your overpair cannot collect another 82 BB from a player with only 24 BB left.',
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'board_cards',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Qs Jd'),
+      boardCards: _act0LessonCardsV1('Qh 7d 2s 4h 5c'),
+      centerLabel: '',
+      heroBehindBb: 19,
+      bbBehindBb: 10,
+    ),
+    caption:
+        'BB checks the river. Assume weaker queens call 5 BB, and fold to 10 BB.',
+    question: 'Which bet size gets paid by the modeled weaker queens?',
+    choices: const ['5 BB', '10 BB', '19 BB'],
+    correct: 0,
+    reason:
+        'Only the 5 BB bet gets the stated weaker queen calls on this board. Ten BB is all BB can match.',
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Ac Qd'),
+      boardCards: _act0LessonCardsV1('As 8h 4d 2s 7c'),
+      centerLabel: '',
+      heroBehindBb: 29,
+      bbBehindBb: 43,
+    ),
+    question: 'What is the largest river bet that both players can match?',
+    choices: const ['43 BB', '29 BB', '72 BB'],
+    correct: 1,
+    reason:
+        'CO has top pair and 29 BB left on this river. BB can match all 29 BB, but CO cannot put in any more.',
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'pot_to_call',
+    _day7PreflopV1(
+      'co',
+      'Ad Qd',
+      opener: 'hj',
+      openBb: 3,
+      heroStartingBb: 24,
+      showTurn: true,
+    ),
+    caption:
+        'Assume players behind fold. HJ calls a reraise to 9 BB with ATs, but folds it to a shove.',
+    question: 'Of these actions, which puts more chips from ATs into the pot?',
+    choices: const ['Match the 3 BB open', 'Reraise to 9 BB', 'Shove 24 BB'],
+    correct: 1,
+    reason:
+        'With AQs in position, the 9 BB option gets 6 BB more from the weaker ace under this model. Calling or shoving gets no extra chips from ATs.',
+  ),
+  _day7ExampleV1(
+    8,
+    'spr_and_commitment',
+    'board_cards',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Kc Td'),
+      boardCards: _act0LessonCardsV1('Ks 9h 3d'),
+      centerLabel: '',
+      openBb: 2.75,
+      heroBehindBb: 12,
+      bbBehindBb: 18,
+    ),
+    question:
+        'With the smaller stack at 12 BB and a 6 BB flop pot, how much room is left?',
+    choices: const [
+      'SPR 2, relatively little room',
+      'SPR 3, use the larger stack',
+      'SPR 0.5, swap pot and stack',
+    ],
+    correct: 0,
+    reason:
+        'CO has top pair on K-9-3. The effective stack is 12 BB, and dividing by the 6 BB pot gives SPR 2. A couple of moderate bets can use up that stack.',
+  ),
+  _day7ExampleV1(
+    8,
+    'spr_and_commitment',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Ah Jd'),
+      boardCards: _act0LessonCardsV1('Js 7c 3s'),
+      centerLabel: '',
+      openBb: 3.25,
+      heroBehindBb: 28,
+      bbBehindBb: 40,
+    ),
+    question: 'What is the stack-to-pot ratio before any flop bet?',
+    choices: const ['4', '5.7', '0.25'],
+    correct: 0,
+    reason:
+        'The smaller stack is 28 BB and the pot is 7 BB. Dividing 28 by 7 gives SPR 4.',
+  ),
+  _day7ExampleV1(
+    8,
+    'spr_and_commitment',
+    'confused_chip_commitment_eligibility',
+    _day7TableV1(
+      hero: 'co',
+      hand: 'Qc Qh',
+      street: PokerStreet.preflop,
+      folded: const {'utg', 'btn', 'sb'},
+      stacks: const {'co': 12, 'hj': 60, 'bb': 60},
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          12,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          29,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          27,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ raises to 3 BB'),
+        Act0ActionTrailItemV1(label: 'CO all-in 12 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB raises to 30 BB'),
+        Act0ActionTrailItemV1(label: 'HJ calls 30 BB'),
+      ],
+      bets: const {},
+    ),
+    caption: 'You are all-in. HJ and BB each put in 30 BB total.',
+    question:
+        'How much did each deeper player put in above the amount you can win from them?',
+    choices: const ['12 BB', '18 BB', '30 BB'],
+    correct: 1,
+    reason:
+        'CO can match only 12 BB from each player. HJ and BB put an extra 18 BB each in the side pot.',
+  ),
+  _day7ExampleV1(
+    8,
+    'format_pressure',
+    'pot_to_call',
+    _day7PreflopV1('utg', 'Jc Jd', showTurn: true),
+    caption:
+        'Practice rule: raise JJ to 2.5 BB in an unopened pot if five or fewer players remain behind.',
+    question: 'Which action fits the rule from the first seat at this table?',
+    choices: const ['Fold', 'Limp for 1 BB', 'Raise to 2.5 BB'],
+    correct: 2,
+    reason:
+        'Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.',
+  ),
+  _day7ExampleV1(
+    8,
+    'format_pressure',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      heroSeatId: 'co',
+      heroCards: _act0LessonCardsV1('Jc Js'),
+      boardCards: _act0LessonCardsV1('9d 6h 3s'),
+      centerLabel: '',
+      openBb: 2.75,
+      heroBehindBb: 18,
+      bbBehindBb: 12,
+    ),
+    caption:
+        'BB checks. Under the stated plan, aim to get called by weaker pairs, which will call 2 BB and fold to a shove.',
+    question: 'Which bet fits the stated plan?',
+    choices: const ['Shove 18 BB', 'Bet 2 BB', 'Bet 12 BB'],
+    correct: 1,
+    reason:
+        'JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.',
+  ),
 ];

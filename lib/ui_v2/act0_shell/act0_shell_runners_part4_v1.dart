@@ -27,7 +27,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Your own stack can be deeper, but the hand risk is capped by the smaller stack across from you.',
+          'CO has 200 BB and BB has 30 BB. Planning a 200 BB wager overlooks that BB can match only 30 BB.',
     ),
     Act0RunnerOptionV1(
       id: '115',
@@ -38,10 +38,11 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Use the smaller stack.',
       feedbackReason:
-          'The average is 115 BB, but these players can only match 30 BB each.',
+          'Averaging 200 BB and 30 BB gives 115 BB. That counts 85 BB that BB could never match.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('7s 7c'),
     boardCards: _act0LessonCardsV1('Ad 9h 3c'),
     centerLabel: 'Compare the stacks',
@@ -67,7 +68,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'The matching stacks set the limit.',
       feedbackReason:
-          'When both stacks are equal, that shared stack is the effective stack.',
+          'CO and BB each have 100 BB behind. Either player can match the other up to 100 BB.',
     ),
     Act0RunnerOptionV1(
       id: '50',
@@ -78,7 +79,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Nothing cuts the stack in half here. With equal 100 BB stacks, the full 100 BB remains in play.',
+          'Both players have 100 BB remaining on T-8-3. Calling the limit 50 BB loses sight of half the amount each can match.',
     ),
     Act0RunnerOptionV1(
       id: '200',
@@ -89,10 +90,11 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.',
+          'These 100 BB stacks sum to 200 BB, but a bet has to be covered by the other player. Each can match only 100 BB.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Kd Td'),
     boardCards: _act0LessonCardsV1('Th 8d 3c'),
     centerLabel: 'Compare the stacks',
@@ -105,7 +107,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_table_effective_notice',
-  caption: 'You cover a player 120 BB to 18 BB on a real table.',
+  caption: 'Compare your 120 BB behind with BB’s 18 BB behind.',
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Notice the number that caps the real risk.',
   question: 'What should you notice first before planning?',
@@ -118,7 +120,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          'That is the real live-table risk. The smaller stack sets the hand depth.',
+          'On T-7-3, BB’s 18 BB behind caps how much more your jacks can earn from that player.',
     ),
     Act0RunnerOptionV1(
       id: 'your_120',
@@ -129,7 +131,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'That answer is tempting because your stack looks bigger and feels more powerful. The cleaner read is the smaller 18 BB stack, because that is the number that actually caps what can go in.',
+          'Your 120 BB is visible, but BB can match only 18 BB. Starting from 120 BB exaggerates how much this opponent can pay.',
     ),
     Act0RunnerOptionV1(
       id: 'total_138',
@@ -140,10 +142,11 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Total chips are a real table detail, so this looks useful at first. But total chips do not drive the plan here. The dominant cue is the effective stack that caps the real risk.',
+          'You added the two displayed stacks correctly. For a bet, compare them instead: BB can match just 18 BB, so 138 BB overstates the risk.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Js Jc'),
     boardCards: _act0LessonCardsV1('Td 7c 3h'),
     centerLabel: 'Compare the stacks',
@@ -171,6 +174,7 @@ final _w7EffectiveStackRecapRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Kh Qh'),
     boardCards: _act0LessonCardsV1('Qc 9s 2d'),
     centerLabel: 'Compare the stacks',
@@ -580,6 +584,7 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Ah Tc'),
     boardCards: _act0LessonCardsV1('Ac 8s 3d'),
     centerLabel: 'Stack and pot',
@@ -608,7 +613,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'At SPR 2 there are two pots left in the effective stack. A large bet can put much of it at risk, but whether to commit depends on your hand and the price.',
+          'With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Use your KQ top pair and the price before committing.',
     ),
     Act0RunnerOptionV1(
       id: 'float',
@@ -619,7 +624,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.',
+          'The 10 BB left is only two times the 5 BB pot. Planning several large bets would use up those chips earlier than expected.',
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -630,10 +635,11 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'SPR changes the hand structure. SPR 2 is a much more commit-heavy situation than SPR 8.',
+          'A pot-sized 5 BB bet would put half of your 10 BB at risk. At SPR 8, it would risk only one eighth of the effective stack.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Kd Qc'),
     boardCards: _act0LessonCardsV1('Kh 7d 3s'),
     centerLabel: 'Stack and pot',
@@ -659,7 +665,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
-          'High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.',
+          'The 5 BB pot is small next to your 40 BB stack. You can choose a smaller bet or check and keep room for later streets.',
     ),
     Act0RunnerOptionV1(
       id: 'force',
@@ -670,7 +676,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Immediate commitment is a low-SPR feature. High SPR creates more room, not less.',
+          'Putting in 40 BB right away would risk eight times the 5 BB pot with one pair. You can keep chips for later decisions.',
     ),
     Act0RunnerOptionV1(
       id: 'none',
@@ -681,10 +687,11 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'SPR changes how postflop decisions feel. High SPR leaves more chips for later bets on the same streets.',
+          'You have 40 BB behind after the preflop action, with 5 BB in the pot. Ignoring that ratio leaves you without a plan for the turn and river.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('As 9c'),
     boardCards: _act0LessonCardsV1('Ad 7h 2s'),
     centerLabel: 'Stack and pot',
@@ -710,7 +717,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'SPR 4 often means you still have choices, but commitment pressure is already starting to matter.',
+          'On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves room for later streets, while large bets can commit you quickly.',
     ),
     Act0RunnerOptionV1(
       id: 'auto_commit',
@@ -721,7 +728,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too shallow.',
       feedbackReason:
-          'That is more like very low SPR. SPR 4 is tighter than SPR 8, but not auto-commit by default.',
+          'Shoving your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_eight',
@@ -732,10 +739,11 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.',
+          'With 20 BB behind, a pot bet costs one quarter of your stack. Treating it like SPR 8 underestimates how fast two bets can use up those chips.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    heroSeatId: 'co',
     heroCards: _act0LessonCardsV1('Jd 9d'),
     boardCards: _act0LessonCardsV1('Js 8c 3h'),
     centerLabel: 'Stack and pot',
