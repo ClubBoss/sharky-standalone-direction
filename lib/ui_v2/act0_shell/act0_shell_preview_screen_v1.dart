@@ -5750,7 +5750,7 @@ const _topicPackSpecsV1 = <_Act0TopicPackSpecV1>[
   ),
   _Act0TopicPackSpecV1(
     groupId: 'blinds',
-    lessonId: 'blinds_action_order',
+    lessonId: 'blinds_order_practice',
     taskId: 'blinds_first_actor',
     title: 'Blinds',
     subtitle: 'Track the blinds and who acts first preflop.',

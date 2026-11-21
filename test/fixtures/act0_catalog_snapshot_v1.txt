@@ -6786,10 +6786,10 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Kh 6d | Pot 1.5 BB | Seat CO | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 6d stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [wrong] CO — Look again. The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.
+  - [wrong] CO — Look again. Your cards are at CO. The marker is one seat later, so choosing your seat confuses two different clues.
     BETTER ANSWER: BTN
   + [correct] BTN — Correct. The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.
-  - [wrong] SB — Look again. The dealer marker sits by BTN. Your king and six are at CO, the seat just before BTN.
+  - [wrong] SB — Look again. SB posted the small blind next to BTN. The blind post does not identify the dealer seat.
     BETTER ANSWER: BTN
 
 TASK spaced_review_w1_what_poker_is_hero_cards_board_pot_v1 [drill] Review decision
@@ -6815,9 +6815,9 @@ HINT [hidden]: (none)
 TABLE: Turn | You Jh 8c | Board Qd 7h 4s 2d | Pot 8 BB | To call 2 BB | Seat CO | Active co | Decision co | Facts high card
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 8c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.25 BB bet 2 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB bets 2 BB
-  - [wrong] 6 BB — Look again. BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.
+  - [wrong] 6 BB — Look again. The 6 BB was in the pot before the turn bet. Calling that amount would pay for chips already in the middle.
     BETTER ANSWER: 2 BB
-  - [wrong] 8 BB — Look again. BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.
+  - [wrong] 8 BB — Look again. The 8 BB includes the new bet and the earlier pot. You match only the 2 BB added on the turn.
     BETTER ANSWER: 2 BB
   + [correct] 2 BB — Correct. BB bet 2 BB on the turn. The amount to call matches that bet. Chips from earlier streets stay in the pot.
 
@@ -6983,12 +6983,12 @@ HINT [hidden]: (none)
 TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Facts high card
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Js 9h stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN checks
-  - [wrong] BB — Look again. BB acts first after the flop. BTN gets to see that decision before acting.
+  - [wrong] BB — Look again. BB acts first on this turn and has no decision to watch before acting. Choosing BB reverses the order.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card
   + [correct] BTN — Correct. BB acts first after the flop. BTN gets to see that decision before acting.
     FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card
-  - [wrong] Whoever opened preflop — Look again. BB acts first after the flop. BTN gets to see that decision before acting.
+  - [wrong] Whoever opened preflop — Look again. The preflop opener does not set turn order. With BB and BTN left, BB acts first on this street.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Turn | You Js 9h | Board 8s 6c 2h 4s | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card
 
@@ -7001,12 +7001,12 @@ HINT [hidden]: (none)
 TABLE: Flop | You Ts 9s | Board Jc 6h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 9s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] 0 players — Look again. Only you and BB remain on J-6-3. BB checks first, so you see one decision before your turn.
+  - [wrong] 0 players — Look again. BB already checked on J-6-3. Counting zero misses the action you saw before deciding.
     BETTER ANSWER: 1 player
     FEEDBACK TABLE: Flop | You Ts 9s | Board Jc 6h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
   + [correct] 1 player — Correct. Only you and BB remain on J-6-3. BB checks first, so you see one decision before your turn.
     FEEDBACK TABLE: Flop | You Ts 9s | Board Jc 6h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
-  - [wrong] 2 players — Look again. Only you and BB remain on J-6-3. BB checks first, so you see one decision before your turn.
+  - [wrong] 2 players — Look again. Just one opponent reached this flop. Counting two includes a player who folded.
     BETTER ANSWER: 1 player
     FEEDBACK TABLE: Flop | You Ts 9s | Board Jc 6h 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
 
@@ -7342,10 +7342,10 @@ HINT [hidden]: (none)
 TABLE: River | You As Ac | Board 7c 7d 7h 8h 3s | Pot 6 BB | Seat BB | Facts full house, pocket pair, paired board
 SEATS: UTG folded stack 100 BB | HJ Kc 7s stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB As Ac stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ checks
-  - [wrong] Your sevens full of aces — Look again. The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.
+  - [wrong] Your sevens full of aces — Look again. Your aces make a full house with the three sevens. The other player adds a fourth seven and wins, so the full house cannot take this pot.
     BETTER ANSWER: The other player’s four sevens
     FEEDBACK TABLE: River | You As Ac | Board 7c 7d 7h 8h 3s | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
-  - [wrong] The two hands tie — Look again. The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.
+  - [wrong] The two hands tie — Look again. The three board sevens are shared, but one player adds a fourth. A split would ignore the stronger four of a kind.
     BETTER ANSWER: The other player’s four sevens
     FEEDBACK TABLE: River | You As Ac | Board 7c 7d 7h 8h 3s | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
   + [correct] The other player’s four sevens — Correct. The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.
@@ -7360,12 +7360,12 @@ SEATS: UTG folded stack 100 BB | HJ 5h Ad stack 97.25 BB | CO folded stack 100 B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ checks
   + [correct] Your eights full of fives — Correct. Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.
     FEEDBACK TABLE: River | You 8c 8s | Board 8h 5c 5d 2s Qh | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
-  - [wrong] The other player’s three fives — Look again. Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.
+  - [wrong] The other player’s three fives — Look again. The other player adds a five to two board fives. That leaves three fives, which lose to your three eights plus a pair of fives.
     BETTER ANSWER: Your eights full of fives
-    FEEDBACK TABLE: River | You 8c 8s | Board 8h 5c 5d 2s Qh | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
-  - [wrong] The board ties — Look again. Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.
+    FEEDBACK TABLE: River | You 8c 8s | Board 8h 5c 5d 2s Qh | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
+  - [wrong] The board ties — Look again. The board supplies a pair of fives and one eight. Your two eights are private and improve your hand, so the board cannot make a tie.
     BETTER ANSWER: Your eights full of fives
-    FEEDBACK TABLE: River | You 8c 8s | Board 8h 5c 5d 2s Qh | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
+    FEEDBACK TABLE: River | You 8c 8s | Board 8h 5c 5d 2s Qh | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts full house, pocket pair, paired board
 
 ===== WORLD 1 · LESSON blinds_order_practice · First and last to act =====
 
@@ -7376,10 +7376,10 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Kh 9c | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
 SEATS: UTG Kh 9c stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] SB — Look again. The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.
+  - [wrong] SB — Look again. SB’s 0.5 BB went in before decisions began. Treating that post as a voluntary action puts SB in the wrong place.
     BETTER ANSWER: UTG
   + [correct] UTG — Correct. The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.
-  - [wrong] BTN — Look again. The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.
+  - [wrong] BTN — Look again. BTN has the dealer marker but acts after the early seats preflop. Starting there skips UTG.
     BETTER ANSWER: UTG
 
 TASK spaced_review_w1_blinds_order_practice_big_blind_v1 [drill] Review decision
@@ -7389,9 +7389,9 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Js 7h | Pot 3 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB Js 7h stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN calls 1 BB · SB calls 0.5 BB more
-  - [wrong] BTN — Look again. BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.
+  - [wrong] BTN — Look again. BTN already called the 1 BB blind. Acting again from BTN would skip BB’s first voluntary choice.
     BETTER ANSWER: BB
-  - [wrong] SB — Look again. BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.
+  - [wrong] SB — Look again. SB added 0.5 BB to match the blind. That call is complete, and BB still has a chance to act.
     BETTER ANSWER: BB
   + [correct] BB — Correct. BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.
 
@@ -7402,10 +7402,10 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Kh 5d | Pot 1.5 BB | Seat HJ | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ Kh 5d stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] CO — Look again. The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.
+  - [wrong] CO — Look again. CO is one seat before the current marker. Moving it there would go against the direction of play.
     BETTER ANSWER: SB
   + [correct] SB — Correct. The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.
-  - [wrong] BB — Look again. The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.
+  - [wrong] BB — Look again. BB is two seats past the current marker. Moving straight there skips the occupied SB seat.
     BETTER ANSWER: SB
 
 ===== WORLD 2 · LESSON hand_discipline_buckets · Hand buckets =====
