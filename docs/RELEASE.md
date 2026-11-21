@@ -140,6 +140,8 @@ Please tell us:
 - any table spot that looks wrong (cards, pot, bets, whose turn it is);
 - anything slow, frozen or broken.
 
+On Day 2 and Day 7, open You → Settings → Beta activity → Copy summary and paste it into your beta feedback.
+
 To send feedback, take a screenshot in the app and tap Share Beta Feedback, or open TestFlight and tap Send Beta Feedback. Please do not include private information.
 
 Known: the visual design is still in progress. The test scope is Worlds 1–4.
@@ -153,6 +155,16 @@ Known: the visual design is still in progress. The test scope is Worlds 1–4.
 Отметки возврата считаются от первого открытия бета-сборки: Day 2 — [24, 48) ч,
 Day 7 — [144, 168) ч. Засчитываются запуск или возврат приложения из фона в окне.
 Данные остаются на устройстве и удаляются через Delete local data.
+
+**Copy summary** помещает текст версии 1 в буфер обмена. В нём номер дня беты
+(0–7), состояние первого урока и W1, возвраты, результаты самостоятельных ответов
+и ответов с помощью, текущий и самый дальний открытый урок, счётчик уроков,
+результат проверки правил W1, повторы после ошибки, состояние напоминания и
+ответы анкеты. Строки по дням содержат число уроков и шагов Daily Practice,
+зафиксированных этой версией. По каждому уроку с ответом есть число первых
+ответов, ошибок в них и ответов с помощью по сохранённым учебным записям.
+В тексте нет имён, идентификатора устройства, точного времени и свободного
+текста. Тестер сам решает, прикладывать ли сводку к отзыву.
 
 На наборе тестовых установок доля завершения — число завершивших из установок с
 доступными данными. Доля возврата — число вернувшихся из установок, у которых

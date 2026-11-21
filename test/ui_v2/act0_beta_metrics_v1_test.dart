@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -259,6 +260,133 @@ void main() {
     },
   );
 
+  test(
+    'summary exports only allowed values and counts recorded beta days',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      await Act0BetaMetricsStoreV1.recordVisit(_first);
+      final worlds = Act0ShellStateV1.sample.worlds;
+      final world = worlds.first;
+      final lesson = world.lessons.first;
+      final now = _first.add(const Duration(hours: 27));
+      await Future.wait([
+        Act0BetaMetricsStoreV1.recordLesson(_first, lesson.lessonId),
+        Act0BetaMetricsStoreV1.recordLesson(now, lesson.lessonId),
+        Act0BetaMetricsStoreV1.recordPracticeStep(now),
+        Act0BetaMetricsStoreV1.recordPracticeStep(now),
+        Act0BetaMetricsStoreV1.recordPracticeStep(
+          _first.subtract(const Duration(hours: 1)),
+        ),
+        Act0BetaMetricsStoreV1.recordPracticeStep(
+          _first.add(const Duration(days: 8)),
+        ),
+        Act0BetaMetricsStoreV1.recordRulesCheckStarted(),
+        Act0BetaMetricsStoreV1.setAnswer(1, Act0BetaSurveyAnswerV1.yes),
+      ]);
+      final taskId = lesson.courseTaskList.first.taskId;
+      Act0LearningEvidenceRecordV1 answer(
+        int order, {
+        required bool correct,
+        bool withHelp = false,
+        String runKind = 'lesson',
+        String? id,
+      }) => Act0LearningEvidenceRecordV1(
+        recordId: 'private-record-id-$order',
+        createdOrder: order,
+        worldId: world.worldId,
+        lessonId: lesson.lessonId,
+        taskId: id ?? taskId,
+        choiceId: 'private-choice',
+        expectedChoiceId: 'private-answer',
+        isCorrect: correct,
+        errorType: '',
+        repairFocusId: '',
+        skillAtomId: '',
+        decisionTimeBucket: '',
+        resultKind: correct ? 'correct' : 'incorrect',
+        runKind: runKind,
+        runId: 'private-run',
+        sessionId: 'private-session',
+        assistanceKind: withHelp
+            ? Act0DecisionAssistanceV1.quickHint
+            : Act0DecisionAssistanceV1.none,
+        recordedAtUtc: _first.add(Duration(minutes: order)),
+      );
+      final learning = Act0BetaLearningMetricsV1.fromProgress(
+        firstWorld: world,
+        courseWorlds: worlds,
+        completedTaskIds: lesson.courseTaskList
+            .map((task) => task.taskId)
+            .toSet(),
+        currentLessonId: world.lessons[1].lessonId,
+        rulesCheckCompleted: true,
+        rulesBestScore: 0,
+        correctedMistakes: 1,
+        history: Act0LearningEvidenceHistoryV1(
+          records: [
+            answer(1, correct: false, withHelp: true),
+            answer(2, correct: true),
+            answer(3, correct: false, runKind: 'repair'),
+            answer(4, correct: true, id: 'not-in-catalog'),
+          ],
+        ),
+      );
+      final activity = (await Act0BetaMetricsStoreV1.read())!;
+      final summary = learning
+          .summary(activity, now, reminderEnabled: false)
+          .clipboard;
+      expect(
+        summary,
+        [
+          'Sharky beta summary v1',
+          'Beta day: 1',
+          'First lesson: Complete',
+          'World 1: Incomplete',
+          'Corrected mistakes: 1',
+          'Day 2: pending',
+          'Day 7: pending',
+          'First lesson on your own: 0/0',
+          'First lesson with help: 0/1',
+          'Day 7 new review: 0/0',
+          'Current lesson: W1 / ${world.lessons[1].lessonId}',
+          'Farthest lesson reached: W1 / ${world.lessons[1].lessonId}',
+          'Completed lessons: 1',
+          'W1 rules check: Best 0/10',
+          'After a mistake: 1/2 correct on follow-up attempts',
+          'Reminder now: Off',
+          'Beta day 0: 1 lessons, 0 practice steps',
+          'Beta day 1: 0 lessons, 2 practice steps',
+          '${lesson.lessonId}: 1 first answers, 1 wrong, 1 with help',
+          'Survey 1: unanswered',
+          'Survey 2: yes',
+          'Survey 3: unanswered',
+          'Survey 4: unanswered',
+          'Survey 5: unanswered',
+        ].join('\n'),
+      );
+    },
+  );
+
+  testWidgets('Settings hides Beta activity with the feature off', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          initialTab: Act0ShellTabV1.profile,
+          showPlacementOnStart: false,
+          enableBetaMetrics: false,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('act0_settings_beta_activity')), findsNothing);
+    expect(find.text('Copy summary'), findsNothing);
+  });
+
   testWidgets(
     'beta foreground records a return and Settings shows local feedback',
     (tester) async {
@@ -317,6 +445,23 @@ void main() {
       expect(tester.widget<ChoiceChip>(yes).selected, isTrue);
       final activity = await tester.runAsync(Act0BetaMetricsStoreV1.read);
       expect(activity!.answers.first, Act0BetaSurveyAnswerV1.yes);
+
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      String? clipboard;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          clipboard = (call.arguments as Map)['text'] as String;
+        }
+        return null;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      await tester.tap(find.text('Copy summary'));
+      await settle();
+      expect(clipboard, startsWith('Sharky beta summary v1\nBeta day: 1'));
+      expect(clipboard, contains('Survey 1: yes'));
 
       final prefs = await tester.runAsync(SharedPreferences.getInstance);
       expect(prefs!.containsKey('act0_shell_progress_v1_head'), isFalse);

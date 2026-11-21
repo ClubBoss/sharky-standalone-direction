@@ -103,6 +103,9 @@ void main() {
       final first = DateTime.utc(2026, 11, 19, 12);
       await Act0BetaMetricsStoreV1.recordVisit(first);
       await Act0BetaMetricsStoreV1.setAnswer(0, Act0BetaSurveyAnswerV1.yes);
+      await Act0BetaMetricsStoreV1.recordLesson(first, 'what_poker_is');
+      await Act0BetaMetricsStoreV1.recordPracticeStep(first);
+      await Act0BetaMetricsStoreV1.recordRulesCheckStarted();
       final write = Act0BetaMetricsStoreV1.recordVisit(
         first.add(const Duration(days: 6)),
       );
@@ -115,6 +118,9 @@ void main() {
       final afterErase = first.add(const Duration(days: 8));
       await Act0BetaMetricsStoreV1.recordVisit(afterErase);
       final fresh = (await Act0BetaMetricsStoreV1.read())!;
+      expect(fresh.lessonDays, isEmpty);
+      expect(fresh.practiceSteps, everyElement(0));
+      expect(fresh.rulesCheckStarted, isFalse);
       expect(fresh.firstVisitUtc, afterErase);
       expect(fresh.returnedDay2, isFalse);
       expect(fresh.returnedDay7, isFalse);
