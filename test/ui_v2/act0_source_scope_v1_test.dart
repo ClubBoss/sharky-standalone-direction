@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import '../support/act0_w2_catalog_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
@@ -276,8 +277,16 @@ void main() {
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
     ];
-    expect(tasks, hasLength(380));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(380));
+    final w2Q9TaskIds = w2Q9ChoiceContractV1.keys.toSet();
+    expect(
+      tasks
+          .where((task) => w2Q9TaskIds.contains(task.taskId))
+          .map((task) => task.taskId)
+          .toSet(),
+      w2Q9TaskIds,
+    );
+    expect(tasks, hasLength(384));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(384));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -287,7 +296,8 @@ void main() {
         (task) =>
             !_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
-            !w4MinRaiseTaskIdsV1.contains(task.taskId),
+            !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
+            !w2Q9TaskIds.contains(task.taskId),
       ),
       hasLength(368),
     );
@@ -349,7 +359,8 @@ void main() {
         played++;
         if (!_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
-            !w4MinRaiseTaskIdsV1.contains(task.taskId))
+            !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
+            !w2Q9TaskIds.contains(task.taskId))
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -494,7 +505,7 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 259); // Authored contexts, not certified replay histories.
+    expect(played, 263); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
@@ -516,6 +527,20 @@ void main() {
       'actions_fold_drill',
       'fold_discipline_discipline_intro',
       'apply_hj_decision',
+      // W2 now records its relocated seat and the folds before that seat.
+      'hand_discipline_buckets_intro',
+      'hand_discipline_buckets_premium',
+      'hand_discipline_buckets_strong',
+      'hand_discipline_buckets_medium',
+      'hand_discipline_buckets_borderline',
+      'hand_discipline_buckets_recap',
+      'continue_or_let_go_continue_intro',
+      'continue_or_let_go_premium_continue',
+      'apply_intro',
+      'discipline_checkpoint_checkpoint_intro',
+      'discipline_checkpoint_checkpoint_premium',
+      'w2_narrow_three_bet_intro',
+      'w2_narrow_three_bet_medium',
       // Existing approved first-hand and no-ante bubble source histories.
       'your_first_hand_flop',
       'your_first_hand_turn',

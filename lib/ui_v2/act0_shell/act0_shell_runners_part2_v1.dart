@@ -4671,6 +4671,7 @@ Act0RunnerStateV1 _w2WithDistractor(
 Act0RunnerStateV1 _w2ReasonDecision(
   Act0RunnerStateV1 runner, {
   required String question,
+  required String correctTitle,
   required List<({String id, String label, String reason})> choices,
   required int correct,
 }) => runner.copyWith(
@@ -4683,7 +4684,7 @@ Act0RunnerStateV1 _w2ReasonDecision(
         isCorrect: index == correct,
         preferredLabel: choices[correct].label,
         betterAnswerLabel: index == correct ? '' : choices[correct].label,
-        feedbackTitle: index == correct ? 'Correct.' : 'Use the table facts.',
+        feedbackTitle: index == correct ? correctTitle : 'Use the table facts.',
         feedbackReason: choice.reason,
         quality: index == correct
             ? Act0FeedbackQualityV1.correct

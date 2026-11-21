@@ -1314,7 +1314,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ks Ts stack 100 BB 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [wrong] The suits and your chip color — Use the table facts. KTs shares a suit, but knowing that alone can put 1 BB in with a hand your seat should fold.
     BETTER ANSWER: Your hand group and your seat
-  + [correct] Your hand group and your seat — Correct. KTs is Medium and CO is in the CO–BTN opening row. The same hand from HJ falls outside that row.
+  + [correct] Your hand group and your seat — Use the hand group and seat. KTs is Medium and CO is in the CO–BTN opening row. The same hand from HJ falls outside that row.
   - [wrong] The blind amounts and dealer puck — Use the table facts. The 1.5 BB in blinds cannot tell you whether KTs can open. Using the bank alone can cost a raise from the wrong seat.
     BETTER ANSWER: Your hand group and your seat
 
@@ -1362,8 +1362,8 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   - [wrong] Position makes this jack strong enough to call — Use the table facts. Position does not fix J8o. Calling costs 2.5 BB and can cost more when CO has the better jack.
     BETTER ANSWER: CO already raised and J8o is weak
-  + [correct] CO already raised and J8o is weak — Correct. J8o is Weak in the chart. Folding from BTN against CO keeps the 2.5 BB call in your stack.
-  - [wrong] The existing pot makes a reraise safe — Use the table facts. The 4 BB pot does not protect J8o. A reraise risks extra chips against a range that can continue with stronger hands.
+  + [correct] CO already raised and J8o is weak — J8o still folds versus a CO open. J8o is Weak in the chart. Folding from BTN against CO keeps the 2.5 BB call in your stack.
+  - [wrong] The existing pot makes a reraise safe — Use the table facts. The 4 BB pot does not protect J8o. A reraise risks extra chips against CO, who can continue with stronger hands.
     BETTER ANSWER: CO already raised and J8o is weak
 
 TASK fold_discipline_discipline_stack_protect [drill] Protect stack
@@ -1554,16 +1554,18 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
 TASK continue_or_let_go_continue_recap [review] Continue recap
 ENTRY: drill
 CAPTION: Lesson learned: facing an open creates a price.
-Q: Which detail makes this a call decision rather than a first-in open?
+TEACH: Facing-open checklist. Read the hand bucket, your position, and the price.
+TEACH LABELS: Bucket, Position, Price
+Q: By the Sharky starting chart, what is your decision facing the raise?
 HINT [theoryOnly]: Playable hands can call; weak hands can still fold.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] The pot is still unopened — Use the table facts. The pot is 4 BB, including the CO raise. Opening here would mean risking more chips in a reraise.
-    BETTER ANSWER: CO has already put in the first raise
-  + [correct] CO has already put in the first raise — Correct. CO opened 2.5 BB. KQo on BTN can call this open in the chart and keep later bets smaller.
-  - [wrong] KQo is outside the chart from BTN — Use the table facts. KQo is in the BTN call row against CO. Folding gives up that in-position continue.
-    BETTER ANSWER: CO has already put in the first raise
+  - [wrong] Fold — Not quite. Folding KQo on BTN for 2.5 BB gives up the chart’s in-position call against CO.
+    BETTER ANSWER: Call
+  + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with KQo on BTN.
+  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. The 4 BB pot includes CO’s 2.5 BB open. Reraising KQo from BTN puts 5 BB more at risk than the chart call.
+    BETTER ANSWER: Call
 
 ===== WORLD 2 · LESSON w2_narrow_three_bet · The narrow 3-bet =====
 
@@ -1599,7 +1601,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB
   - [wrong] QJs is in the top group — Use the table facts. QJs is Medium. Treating it as Premium on BTN can put 5 BB more than a call at risk against CO.
     BETTER ANSWER: QJs is Medium and you act after CO
-  + [correct] QJs is Medium and you act after CO — Correct. QJs is in the CO–BTN row. Calling 2.5 BB keeps the pot smaller while you have position against CO.
+  + [correct] QJs is Medium and you act after CO — QJs can call in position. QJs is in the CO–BTN row. Calling 2.5 BB keeps the pot smaller while you have position against CO.
   - [wrong] Nobody has raised yet — Use the table facts. CO already raised to 2.5 BB. Treating this as an unopened pot can turn a call into a more expensive reraise.
     BETTER ANSWER: QJs is Medium and you act after CO
 
@@ -1687,10 +1689,10 @@ HINT [theoryOnly]: Read your two cards and find their group in the chart.
 TABLE: Preflop | You As 3d | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Card focus hero_0, hero_1 | Center Facing the first raise | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As 3d stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO acts
-  + [correct] A3o can lose to a higher ace when both pair — Correct. A3o from CO can be dominated by HJ. Folding saves the 2.5 BB call and avoids paying more with a worse pair.
+  + [correct] A3o can lose to a higher ace when both pair — A better ace can outkick A3o. A3o from CO can be dominated by HJ. Folding saves the 2.5 BB call and avoids paying more with a worse pair.
   - [wrong] The ace makes your kicker unimportant — Use the table facts. If both players pair an ace, HJ can win with a higher kicker. A call puts 2.5 BB at risk with A3o.
     BETTER ANSWER: A3o can lose to a higher ace when both pair
-  - [wrong] CO gives you the same protection as a better kicker — Use the table facts. Position can give information, but cannot change A3o. A 2.5 BB call still pays in with a weak kicker.
+  - [wrong] Sitting in CO makes your kicker play higher — Use the table facts. Position can give information, but cannot change A3o. A 2.5 BB call still pays in with a weak kicker.
     BETTER ANSWER: A3o can lose to a higher ace when both pair
 
 ===== WORLD 2 · LESSON discipline_checkpoint · Hand discipline checkpoint =====
@@ -1715,7 +1717,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   + [correct] Premium — Use the highest pairs row. A pair of kings is in the Premium group of the chart.
   - [wrong] Medium — Check the top of the chart. The Medium group has lower pairs. The Premium group includes kings.
     BETTER ANSWER: Premium
-  - [wrong] Strong — Read the hand and earlier action. KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise for value against one open in position.
+  - [wrong] Strong — Read the hand and earlier action. KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise with a stronger hand against one open in position.
     BETTER ANSWER: Premium
 
 TASK discipline_checkpoint_checkpoint_fold [drill] Disciplined fold
@@ -1744,7 +1746,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
   + [correct] Call [2.5 BB] — Clean execution. The Sharky starting chart calls one CO raise with QJs on BTN.
   - [wrong] Fold — A bit too tight. Folding QJs on BTN against CO's 2.5 BB open into a 4 BB pot gives up a profitable in-position call with suited broadway playability.
     BETTER ANSWER: Call
-  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead risks more against a range that can continue with better hands.
+  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead gives CO the chance to call your larger bet with better hands.
     BETTER ANSWER: Call
 
 TASK discipline_checkpoint_checkpoint_table_discipline [drill] Real-table discipline read

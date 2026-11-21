@@ -1403,7 +1403,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "c91512639b27f565949516fcc222f6ce8524fea3c49852e77abc68665ba26c8a",
+        "b80479d11f7daf7b1578a775df7b5e398e562aad9199cd14407b64907d7c0452",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",

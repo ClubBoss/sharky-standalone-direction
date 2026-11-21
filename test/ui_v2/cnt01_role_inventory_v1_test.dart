@@ -199,7 +199,7 @@ void main() {
               ),
             )
             .toList();
-        expect(rows, hasLength(184));
+        expect(rows, hasLength(188));
         final counts = <String, int>{};
         for (final row in rows) {
           final purpose = row['declaredPurpose']! as String;
@@ -218,12 +218,12 @@ void main() {
           expect(row['authoredRevision'], cnt01UnknownV1);
         }
         expect(counts, <String, int>{
-          'TEACHING': 28,
+          'TEACHING': 29,
           'REPAIR': 12,
           'CORRECTION_CANDIDATE': 1,
-          'PRACTICE': 106,
+          'PRACTICE': 108,
           'TRANSFER_CANDIDATE': 22,
-          'REVIEW_CANDIDATE': 15,
+          'REVIEW_CANDIDATE': 16,
         });
       },
     );

@@ -2322,6 +2322,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           _w2UnopenedSeat(_world3BucketsRecapRunner, 'co', 'Ks Ts'),
           question:
               'Which pair of facts should you check together before a first-in raise?',
+          correctTitle: 'Use the hand group and seat.',
           choices: const [
             (
               id: 'suit_only',
@@ -2422,6 +2423,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         runner: _w2ReasonDecision(
           _world3WeakFacingFoldRunner,
           question: 'Why does folding save chips here?',
+          correctTitle: 'J8o still folds versus a CO open.',
           choices: const [
             (
               id: 'call',
@@ -2439,7 +2441,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
               id: 'raise_for_pot',
               label: 'The existing pot makes a reraise safe',
               reason:
-                  'The 4 BB pot does not protect J8o. A reraise risks extra chips against a range that can continue with stronger hands.',
+                  'The 4 BB pot does not protect J8o. A reraise risks extra chips against CO, who can continue with stronger hands.',
             ),
           ],
           correct: 1,
@@ -2676,31 +2678,24 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'continue_recap',
         title: 'Continue recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w2ReasonDecision(
-          _world3FacingOpenRecapRunner,
-          question:
-              'Which detail makes this a call decision rather than a first-in open?',
-          choices: const [
-            (
-              id: 'open',
-              label: 'The pot is still unopened',
-              reason:
-                  'The pot is 4 BB, including the CO raise. Opening here would mean risking more chips in a reraise.',
+        runner: _w2WithDistractor(
+          _act0WithWrongFeedbackReasonsV1(
+            _world3FacingOpenRecapRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _world3FacingOpenRecapRunner.options,
+                correctOptionId: 'call',
+                correctIndex: 1,
+              ),
             ),
-            (
-              id: 'call',
-              label: 'CO has already put in the first raise',
-              reason:
-                  'CO opened 2.5 BB. KQo on BTN can call this open in the chart and keep later bets smaller.',
-            ),
-            (
-              id: 'fold',
-              label: 'KQo is outside the chart from BTN',
-              reason:
-                  'KQo is in the BTN call row against CO. Folding gives up that in-position continue.',
-            ),
-          ],
-          correct: 1,
+            const {
+              'fold':
+                  'Folding KQo on BTN for 2.5 BB gives up the chart’s in-position call against CO.',
+            },
+          ),
+          id: 'raise',
+          label: 'Reraise to 7.5 BB',
+          reason:
+              'The 4 BB pot includes CO’s 2.5 BB open. Reraising KQo from BTN puts 5 BB more at risk than the chart call.',
         ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
@@ -2755,6 +2750,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             table: _day7PreflopV1('btn', 'Qc Jc', opener: 'co', showTurn: true),
           ),
           question: 'Which table fact supports matching the 2.5 BB open?',
+          correctTitle: 'QJs can call in position.',
           choices: const [
             (
               id: 'premium',
@@ -2897,6 +2893,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             cutoffFacingHijack: true,
           ),
           question: 'Which fact makes matching this raise risky?',
+          correctTitle: 'A better ace can outkick A3o.',
           choices: const [
             (
               id: 'fold',
@@ -2912,7 +2909,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             ),
             (
               id: 'seat_guarantee',
-              label: 'CO gives you the same protection as a better kicker',
+              label: 'Sitting in CO makes your kicker play higher',
               reason:
                   'Position can give information, but cannot change A3o. A 2.5 BB call still pays in with a weak kicker.',
             ),
@@ -2990,7 +2987,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           id: 'strong',
           label: 'Strong',
           reason:
-              'KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise for value against one open in position.',
+              'KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise with a stronger hand against one open in position.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3021,7 +3018,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           id: 'raise',
           label: 'Reraise to 7.5 BB',
           reason:
-              'QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead risks more against a range that can continue with better hands.',
+              'QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead gives CO the chance to call your larger bet with better hands.',
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,

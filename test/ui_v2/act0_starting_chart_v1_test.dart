@@ -58,7 +58,11 @@ void main() {
         continue;
       }
       checked++;
-      final expected = chart.expected(runner.table, groupOnly: group);
+      final expected = chart.expected(
+        runner.table,
+        groupOnly: group,
+        narrowThreeBet: runner.lessonId == 'w2_narrow_three_bet',
+      );
       expect(
         startingChartActual(correct, expected),
         expected,

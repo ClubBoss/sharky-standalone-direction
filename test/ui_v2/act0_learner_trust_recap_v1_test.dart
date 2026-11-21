@@ -16,10 +16,7 @@ void main() {
       'By the Sharky starting chart, what is the disciplined action with this weak ace facing an open?',
       'fold',
     ),
-    'apply_recap': (
-      'By the Sharky starting chart, what is the disciplined action with this weak ace facing an open?',
-      'fold',
-    ),
+    'apply_recap': ('Which fact makes matching this raise risky?', 'fold'),
     'continue_or_let_go_continue_recap': (
       'By the Sharky starting chart, what is your decision facing the raise?',
       'call',

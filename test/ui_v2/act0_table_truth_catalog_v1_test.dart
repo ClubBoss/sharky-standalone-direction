@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
+import '../support/act0_w2_catalog_contract_v1.dart';
 
 void main() {
   test('contribution checks reject a changed pot or a missing price label', () {
@@ -973,30 +974,12 @@ void main() {
       'repairCards': <String>[],
       'repairLabels': <String>[],
     };
-    const w2AddedWrongChoices = {
-      'fold_discipline_early_fold': 'call',
-      'fold_discipline_discipline_stack_protect': 'raise',
-      'fold_discipline_fold_recap': 'raise',
-      'weak_ace_warning_w3_dominated_fold': 'raise',
-      'weak_ace_warning_w3_strong_continue': 'raise',
-      'weak_ace_warning_weak_ace_pressure_fold': 'raise',
-      'weak_ace_warning_weak_ace_kicker_compare': 'ace_and_king_equal',
-      'weak_ace_warning_w3_dominated_recap': 'raise',
-      'continue_or_let_go_premium_continue': 'strong',
-      'continue_or_let_go_weak_let_go': 'raise',
-      'continue_or_let_go_medium_call_or_fold': 'raise',
-      'apply_utg_fold': 'call',
-      'apply_recap': 'seat_guarantee',
-      'discipline_checkpoint_checkpoint_premium': 'strong',
-      'discipline_checkpoint_checkpoint_fold': 'raise',
-      'discipline_checkpoint_checkpoint_borderline_continue': 'raise',
-      'discipline_checkpoint_checkpoint_review': 'fix_size',
-    };
-    for (final entry in w2AddedWrongChoices.entries) {
+    for (final entry in w2AppendedWrongChoicesV1.entries) {
       final task = expectedComparison[entry.key] as Map<String, dynamic>;
       (task['options'] as List).add(w2Choice(entry.value));
     }
     const w2ReasonChoices = {
+      'apply_recap': (['fold', 'call', 'seat_guarantee'], 'fold'),
       'hand_discipline_buckets_recap': (
         ['suit_only', 'bucket_and_seat', 'blinds_only'],
         'bucket_and_seat',
@@ -1005,7 +988,6 @@ void main() {
         ['call', 'fold', 'raise_for_pot'],
         'fold',
       ),
-      'continue_or_let_go_continue_recap': (['open', 'call', 'fold'], 'call'),
     };
     for (final MapEntry(key: id, value: (choices, correct))
         in w2ReasonChoices.entries) {
