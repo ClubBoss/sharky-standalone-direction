@@ -4015,4 +4015,241 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       ),
     ),
   ),
+  // W11 fresh hands.
+  _day7ExampleV1(
+    11,
+    'session_plan_basics',
+    'misread_real_play_process',
+    _day7PostflopV1('bb', 'As 8d', 'Ah 6c 2s', openBb: 2.5, betBb: 2),
+    question:
+        'Your goal is to read the price. What should you log about this hand?',
+    choices: const [
+      'The price you faced',
+      'The mean size of each stack',
+      'Where the dealer chip sits',
+    ],
+    correct: 0,
+    wrongReasons: const {
+      1: 'Stack size is a different note. HJ\'s 2 BB flop bet is the price you wanted to save.',
+      2: 'The button tells you order. It will not tell you what the 2 BB call cost.',
+    },
+    reason:
+        'Use HJ’s decision as a chance to log this call price. That matches the goal you set before you sat.',
+  ),
+  _day7ExampleV1(
+    11,
+    'table_trigger_reads',
+    'misread_real_play_process',
+    _day7PostflopV1('bb', '9s 8s', 'Th 7d 3c', openBb: 2.5, betBb: 2),
+    question:
+        'HJ made this small flop bet three times in a row. What should you track next?',
+    choices: const [
+      'A new plan for the whole table',
+      'Which hands HJ shows after this bet',
+      'What HJ did hands ago with a large bet',
+    ],
+    correct: 1,
+    wrongReasons: const {
+      0: 'The repeated 2 BB bet is HJ\'s cue. A whole-table plan loses that specific read.',
+      2: 'A large bet from HJ is a different cue. It gives weak evidence for these 2 BB bets.',
+    },
+    reason:
+        'This repeat gives you a pattern to test. A show of cards after a small flop bet helps you check what it means.',
+  ),
+  _day7ExampleV1(
+    11,
+    'table_trigger_reads',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Kc 8h', 'Ks 7d 4s', openBb: 2.5),
+    question: 'Which made hand do your cards give you?',
+    choices: const [
+      'Top two pair',
+      'Two pair, kings and eights',
+      'Top pair, kings',
+    ],
+    correct: 2,
+    wrongReasons: const {
+      0: 'The king on the flop matches your king. The eight does not match, so there is no second pair.',
+      1: 'The board has no eight. Treating your spare card as a second pair makes the hand look too strong.',
+    },
+    reason:
+        'Only the king at your seat pairs with the board. The eight is your spare card.',
+  ),
+  _day7ExampleV1(
+    11,
+    'table_trigger_reads',
+    'pot_to_call',
+    _day7PostflopV1(
+      'bb',
+      'Ad 4d',
+      'Ts 8h 3c',
+      openBb: 2.5,
+      betBb: 3,
+      showTurn: true,
+    ),
+    question: 'How much must BB add to stay in this hand?',
+    choices: const ['3 BB', '5.5 BB', '8.5 BB'],
+    correct: 0,
+    wrongReasons: const {
+      1: 'The 5.5 BB was already in the middle before HJ bet. Calling that much would overstate the cost.',
+      2: '8.5 BB is in the middle after the bet. Counting it as your cost mixes the pot and the price.',
+    },
+    reason: 'HJ bet 3 BB on the flop. That is the part you must match.',
+  ),
+  _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'misread_real_play_process',
+    _day7PostflopV1('bb', 'Jh 9h', 'Jd 7s 3c 2h', openBb: 2.5, betBb: 4),
+    question:
+        'You called too fast. What should you keep for tomorrow’s review?',
+    choices: const [
+      'How long you sat',
+      'The hand and what the turn call cost',
+      'Just the last card',
+    ],
+    correct: 1,
+    wrongReasons: const {
+      0: 'Minutes played cannot show if the call was good. Save HJ\'s 4 BB bet and your jack pair.',
+      2: 'The fourth card alone leaves out HJ\'s bet. You need both to review the turn price.',
+    },
+    reason:
+        'Write down this board and the 4 BB bet. You can use the full spot to check your call next time.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'misread_real_play_process',
+    _day7PostflopV1('co', 'Ac Jd', 'Ah 8c 4d 3s', openBb: 2.5, betBb: 4),
+    question:
+        'This hand comes after two loose calls. What is the best check on your plan?',
+    choices: const [
+      'Recall the size of each loss',
+      'Switch to a new plan mid-hand',
+      'Read this price before you act',
+    ],
+    correct: 2,
+    wrongReasons: const {
+      0: 'The earlier losses cannot price this new 4 BB bet. You would miss the point of the drill.',
+      1: 'A fresh plan mid-hand drops the check you chose. Read the 4 BB cost first.',
+    },
+    reason:
+        'The new 4 BB bet needs its own read. Use the plan you set and save the past calls for review.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', 'Qh Td', 'Qs 9s 5c 3d', openBb: 2.5),
+    question: 'What is your made hand on the turn?',
+    choices: const ['A pair of queens', 'A straight', 'A pair of tens'],
+    correct: 0,
+    wrongReasons: const {
+      1: 'Your queen and the board queen match. The turn does not give you five cards in a row.',
+      2: 'No ten is on the board. Counting a pair of tens would make you miss your actual queen pair.',
+    },
+    reason:
+        'Your queen pairs with the queen on the board. The ten does not pair.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'big_blind',
+    _day7PostflopV1('bb', 'Kc 9s', 'Kh 6h 4d', openBb: 2.5),
+    question: 'You and HJ are the sole live seats. Who acts first on the flop?',
+    choices: const ['HJ', 'BB', 'BTN'],
+    correct: 1,
+    wrongReasons: const {
+      0: 'HJ opened preflop, but that does not set the flop order. Acting there would skip BB.',
+      2: 'BTN is out. Giving that seat an action would put a folded player back in.',
+    },
+    reason:
+        'BB is the first live seat to the left of the Button. HJ acts after BB.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'board_cards',
+    _day7PostflopV1('co', 'Js Tc', '9c 8s 7d', openBb: 2.5),
+    question: 'Which board card is at the low end of your best straight?',
+    choices: const ['The nine', 'The eight', 'The seven'],
+    correct: 2,
+    wrongReasons: const {
+      0: 'Nine is in the middle of your seven-to-jack straight. It does not mark the low end.',
+      1: 'Eight is next after seven. Starting at eight leaves a card out of the five-card run.',
+    },
+    reason: 'Use seven through jack. The seven is the first card in that run.',
+  ),
+  _day7ExampleV1(
+    11,
+    'real_play_transfer_checkpoint',
+    'pot_to_call',
+    _day7PostflopV1(
+      'bb',
+      'Ah 9h',
+      'Kh 7d 4s Qh',
+      openBb: 2.5,
+      betBb: 2,
+      showTurn: true,
+    ),
+    question: 'What is the cost to see the last card?',
+    choices: const ['2 BB', '5.5 BB', '7.5 BB'],
+    correct: 0,
+    wrongReasons: const {
+      1: '5.5 BB was the pot before the bet. Using it as the call makes this draw look too costly.',
+      2: '7.5 BB is the pot with the bet. Match the 2 BB bet rather than the whole pot.',
+    },
+    reason: 'The turn bet is 2 BB. Match that bet to see the river.',
+  ),
+  _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'board_cards',
+    _day7PostflopV1('bb', 'Ad 5d', 'Kh 9c 4s 2d', openBb: 2.5),
+    question: 'You are saving this hand for review. Which card was the turn?',
+    choices: const ['The four', 'The two', 'The king'],
+    correct: 1,
+    wrongReasons: const {
+      0: '4s was on the flop. Saving it as the turn changes the order the cards came out.',
+      2: 'Kh was on the flop, not the fourth card. That note would send you back to the wrong street.',
+    },
+    reason:
+        'The flop is the first three cards. Save 2d as the fourth card so you can replay the same choice.',
+  ),
+  _day7ExampleV1(
+    11,
+    'session_plan_basics',
+    'pot_to_call',
+    _day7PreflopV1('hj', 'Ah Td', showTurn: true),
+    question: 'UTG folded. How much would a limp cost from HJ in this hand?',
+    choices: const ['0.5 BB', '1 BB', '1.5 BB'],
+    correct: 1,
+    wrongReasons: const {
+      0: '0.5 BB is what SB posted. A limp from HJ must match the full big blind.',
+      2: '1.5 BB is the sum of the two blinds, not the largest live wager. It overstates the cost by half a blind.',
+    },
+    reason: 'You have posted no blind. A limp matches the 1 BB big blind.',
+  ),
+  _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'pot_to_call',
+    _day7PostflopV1(
+      'bb',
+      'Kc Jd',
+      'Ks 9c 4s 8d',
+      openBb: 2.5,
+      betBb: 5,
+      showTurn: true,
+    ),
+    question: 'Which price should you write down to review your turn call?',
+    choices: const ['5.5 BB', '10.5 BB', '5 BB'],
+    correct: 2,
+    wrongReasons: const {
+      0: '5.5 BB is what was in the pot before the turn bet. It is not the cost you are reviewing.',
+      1: '10.5 BB is the pot after the bet. Using it as the price would make your call look too large.',
+    },
+    reason:
+        'The turn bet costs 5 BB to match. The 10.5 BB in the pot is what you stand to win before calling.',
+  ),
 ];

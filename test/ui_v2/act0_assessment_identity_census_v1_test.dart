@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
@@ -33,8 +34,11 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(413));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(413));
+    expect(tasks, hasLength(413 + w11Wave4ChoiceContractV1.length));
+    expect(
+      tasks.map((t) => t.taskId).toSet(),
+      hasLength(413 + w11Wave4ChoiceContractV1.length),
+    );
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -97,7 +101,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(413));
+    expect(entries, hasLength(413 + w11Wave4ChoiceContractV1.length));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -273,6 +277,17 @@ void main() {
           ];
       }
     }
+    for (final entry in w11Wave4ChoiceContractV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      expect(task, [
+        'world_11',
+        entry.value.$1,
+        entry.key,
+        'drill',
+        'practice',
+        entry.value.$2,
+      ], reason: entry.key);
+    }
     // Compare the new W9 identities separately. Reconstruct the old view for
     // the earlier frozen hashes so those hashes still witness their own source.
     expect(
@@ -312,7 +327,6 @@ void main() {
             )
             as Map<String, dynamic>;
     final comparisonEntries = [
-
       ...entries.where((row) => !{'world_9', 'world_10'}.contains(row[0])),
       ...(preAtlasW9['identity'] as List).cast<List<Object?>>(),
       ...(preAtlasW10['identity'] as List).cast<List<Object?>>(),
@@ -321,6 +335,7 @@ void main() {
         .where(
           (row) =>
               !_asm05NewTaskIds.contains(row[2]) &&
+              !w11Wave4ChoiceContractV1.containsKey(row[2]) &&
               !w7AppliedTaskIdsV1.contains(row[2]) &&
               !w4MinRaiseTaskIdsV1.contains(row[2]) &&
               !w2Q9ChoiceContractV1.containsKey(row[2]) &&
@@ -950,6 +965,14 @@ void main() {
       for (final row in beforeL1.cast<List<dynamic>>())
         row[2] as String: (row[5] as List).cast<List<dynamic>>(),
     };
+    for (final entry in w11Wave4GradeCorrectionsV1.entries) {
+      final option = beforeP8[entry.key]!.singleWhere(
+        (row) => row[0] == entry.value,
+      );
+      expect(option[2], isFalse, reason: entry.key);
+      expect(option[3], 'wrong', reason: entry.key);
+      option[3] = 'suboptimal';
+    }
     const w1FactualGrades = {
       'what_poker_is_table_read_transfer': 'hand_first_only',
       'what_poker_is_table_read_recheck': 'hero_cards_only',
@@ -1999,7 +2022,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(413));
+    expect(taskIndex, hasLength(413 + w11Wave4ChoiceContractV1.length));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

@@ -12,6 +12,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_path_progress_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_w11_wave4_contract_v1.dart';
+
 void main() {
   for (final pair in [
     (
@@ -188,7 +190,7 @@ void main() {
           count++;
         }
       }
-      expect(count, 284);
+      expect(count, 284 + w11Wave4ChoiceContractV1.length);
     },
   );
 
