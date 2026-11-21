@@ -282,9 +282,11 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     lessonKeys: <String>{
       'world_6/range_bucket_basics',
       'world_6/range_board_fit',
+      'world_6/w6_continuation_bet',
       'world_6/range_combo_counts',
       'world_6/range_pressure_lines',
       'world_6/range_thinking_checkpoint',
+      'world_6/range_reading_review',
       'world_7/range_thinking_lite_combo_density',
       'world_7/w7_visible_cards_range_checkpoint',
     },

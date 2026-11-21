@@ -49,8 +49,13 @@ Map<Day7CoverageKeyV1, Day7MissSourceV1> _day7MissSourcesV1() {
   return sources;
 }
 
-bool day7MustBeCoveredV1(Day7CoverageKeyV1 key) =>
-    const {'world_1', 'world_2', 'world_3', 'world_4'}.contains(key.$1);
+bool day7MustBeCoveredV1(Day7CoverageKeyV1 key) => const {
+  'world_1',
+  'world_2',
+  'world_3',
+  'world_4',
+  'world_6',
+}.contains(key.$1);
 
 final act0Day7CoverageV1 = {
   for (final entry in act0NewReviewTasksV1)

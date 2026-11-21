@@ -67,7 +67,10 @@ void main() {
       final task = _task(entry.key);
       final runner = task.runner;
       if (entry.key == 'w6_turn_shift_bucket') {
-        expect(runner.caption, contains('Assume BB is less likely to fold'));
+        expect(
+          runner.caption,
+          contains('BB calls with every hand that beats J9'),
+        );
         expect(
           runner.options
               .singleWhere((o) => o.id == 'always_value')

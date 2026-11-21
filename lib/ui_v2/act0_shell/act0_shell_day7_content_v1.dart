@@ -972,4 +972,235 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
   ),
+  _day7ExampleV1(
+    6,
+    'range_bucket_basics',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Kh Jh', 'Kd 4s 2c', checkedToHero: true),
+    question: 'BB can call a small bet with worse kings. Which bucket fits KJ?',
+    choices: const ['Missed', 'Value', 'Bluff candidate'],
+    correct: 1,
+    reason:
+        'KJ pairs the highest card. If weaker kings call, it can earn chips as a value hand.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_bucket_basics',
+    'board_cards',
+    _day7PostflopV1('co', 'Ac Jd', 'Ks 6c 4s', checkedToHero: true),
+    question: 'What do you check before choosing a bet size with AJ?',
+    choices: const [
+      'Only the size of the pot',
+      'Which bucket fits AJ on this flop',
+      'Whether AJ can open preflop',
+    ],
+    correct: 1,
+    reason:
+        'AJ has no pair on K-6-4. Read the cards together before deciding whether a bet could work.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_board_fit',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Qh Jd', '7s 6h 4h', checkedToHero: true),
+    question: 'How well does QJ fit this flop before you know what BB folds?',
+    choices: const [
+      'Top pair for value',
+      'Missed the flop',
+      'An immediate flush draw',
+    ],
+    correct: 1,
+    reason:
+        'QJ pairs none of the three board cards and has only three hearts between hand and board.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_board_fit',
+    'range_bucket_shift',
+    _day7PostflopV1('co', 'As 5d', 'Kd 8c 4s 8s', checkedToHero: true),
+    caption:
+        'BB checked again and now calls small bets with every better hand in the modeled range.',
+    question: 'What happened to the flop bluff candidate?',
+    choices: const [
+      'It can move to missed',
+      'It became a value hand',
+      'Its old bluff still works the same way',
+    ],
+    correct: 0,
+    reason:
+        'A5 has no private-card pair on this board. With better hands no longer folding, the stated reason to bluff has gone.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_pressure_lines',
+    'no_bet_yet',
+    _day7PostflopV1('co', 'Ks Qh', 'Kd 9s 3c', checkedToHero: true),
+    caption: 'BB checks and will call a small bet with KJ and KT.',
+    question: 'What can a small bet accomplish with KQ?',
+    choices: const [
+      'Get weaker kings to call',
+      'Make KJ fold',
+      'Call the existing bet',
+    ],
+    correct: 0,
+    reason:
+        'BB has checked. KQ can bet for value because KJ and KT make the same pair with a lower kicker.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_pressure_lines',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Ts 8d', 'Qh 7c 3s', checkedToHero: true),
+    caption: 'In the modeled range BB folds ace-high to a small bet.',
+    question: 'Which purpose can a small bet serve with T8?',
+    choices: const [
+      'Get called by weaker pairs',
+      'Fold out a better unpaired hand',
+      'Protect top pair',
+    ],
+    correct: 1,
+    reason:
+        'T8 misses Q-7-3. Ace-high beats it when neither improves, so a fold from ace-high gives the bet a bluff purpose.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_pressure_lines',
+    'board_cards',
+    _day7PostflopV1('co', 'Jc 9d', 'Kh 6s 2c', checkedToHero: true),
+    caption: 'BB folds QJ to a small bet and calls with every pair.',
+    question: 'Which fold would help your J9 bluff on this flop?',
+    choices: const ['QJ folding', 'A king calling', 'A six calling'],
+    correct: 0,
+    reason:
+        'Neither J9 nor QJ pairs K-6-2. QJ has the higher high card, so its fold gives up a hand that is ahead.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_pressure_lines',
+    'range_bucket_shift',
+    _day7PostflopV1('co', 'Jd 9s', 'Kh 6c 2s 6d', checkedToHero: true),
+    caption: 'BB no longer folds any better hand to a bet after the six pairs.',
+    question: 'Which plan fits J9 after BB checks this turn?',
+    choices: const [
+      'Check behind',
+      'Repeat the flop bluff plan',
+      'Make a large value bet',
+    ],
+    correct: 0,
+    reason:
+        'J9 still has no private-card pair. Checking saves the price of a bluff that can no longer fold out a better hand.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_pressure_lines',
+    'board_texture_change',
+    _day7PostflopV1('co', 'Kh Td', 'Ks 8c 4c 6c', checkedToHero: true),
+    caption:
+        'On this turn BB calls bets only with a flush or two pair or better.',
+    question: 'What is the cleaner choice for your top pair after BB checks?',
+    choices: const [
+      'Bet big for value',
+      'Check behind',
+      'Use the same value bet as the flop',
+    ],
+    correct: 1,
+    reason:
+        'The third club completes possible flushes. Under the stated rule only hands that beat KT call, so checking saves the cost of a turn bet.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_combo_counts',
+    'pot_to_call',
+    _day7PreflopV1('co', '8c 4d'),
+    question: 'Before blockers, how many distinct K-Q hands are suited?',
+    choices: const ['Six', 'Four', 'Sixteen'],
+    correct: 1,
+    reason:
+        'There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.',
+  ),
+  _day7ExampleV1(
+    6,
+    'w6_continuation_bet',
+    'board_cards',
+    _day7PostflopV1('co', 'Jh Tc', 'Js 6h 2d', checkedToHero: true),
+    caption:
+        'CO raised preflop. BB called and checked the dry flop. Weaker jacks will call a small bet.',
+    question: 'Which continuation size fits the small-bet plan?',
+    choices: const ['6 BB', '2 BB', '9 BB'],
+    correct: 1,
+    reason:
+        'JT has top pair on J-6-2 rainbow. Two BB is one third of this 6 BB pot and offers weaker jacks a smaller price.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_thinking_checkpoint',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Qh Qd', '9s 5d 2c', checkedToHero: true),
+    caption: 'BB will call a small bet with a nine.',
+    question: 'What can your overpair gain by betting small?',
+    choices: const [
+      'A call from a weaker hand',
+      'A call only from a set',
+      'A fold from every nine',
+    ],
+    correct: 0,
+    reason:
+        'QQ beats a nine on this board. A small bet can get paid by that weaker pair.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_thinking_checkpoint',
+    'pot_to_call',
+    _day7PreflopV1('hj', '4s 3d'),
+    question:
+        'How many two-card combinations make pocket tens before blockers?',
+    choices: const ['Twelve', 'Four', 'Six'],
+    correct: 2,
+    reason:
+        'Choose two distinct tens from four suits. Counting each pair once leaves six combinations.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_thinking_checkpoint',
+    'board_cards',
+    _day7PostflopV1('co', '7h 6c', 'Qd 9c 2s', checkedToHero: true),
+    caption: 'BB folds KJ to a small bet and calls with a pair.',
+    question: 'What could a small bet with 76 aim to do?',
+    choices: const [
+      'Get a weaker hand to call',
+      'Get a better high-card hand to fold',
+      'Protect a pocket pair',
+    ],
+    correct: 1,
+    reason:
+        '76 misses Q-9-2 and trails KJ when both stay unpaired. A fold from KJ is a reason to bluff.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_reading_review',
+    'hero_cards_board_pot',
+    _day7PostflopV1('co', 'Kc Jd', 'Kh 5s 2d', checkedToHero: true),
+    caption: 'BB will call a small flop bet with KT.',
+    question: 'Why can KJ make a small value bet on this flop?',
+    choices: const [
+      'It can get paid by a weaker king',
+      'KT beats KJ and will fold',
+      'KJ has a straight draw',
+    ],
+    correct: 0,
+    reason:
+        'Both hands make top pair on K-5-2. KJ wins by kicker, so a call from KT pays the stronger hand.',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_reading_review',
+    'pot_to_call',
+    _day7PreflopV1('hj', '7s 4s'),
+    question:
+        'With no blockers, how many distinct K-J combinations are possible?',
+    choices: const ['4', '12', '16'],
+    correct: 2,
+    reason:
+        'Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.',
+  ),
 ];

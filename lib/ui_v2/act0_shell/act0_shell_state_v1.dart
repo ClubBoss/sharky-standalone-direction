@@ -1828,7 +1828,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     unlockLabel: act0LockedWorldUnlockLabelV1('Board Awareness'),
     isSelectable: false,
     isLocked: true,
-    rewardXp: 240,
+    rewardXp: 264,
     lessons: _rangeThinkingFoundationLessons,
   ),
   Act0WorldCardV1(
