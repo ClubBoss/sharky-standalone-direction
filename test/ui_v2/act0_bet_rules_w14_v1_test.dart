@@ -73,11 +73,26 @@ void main() {
               stacks.length == 6 &&
               !stacks.contains(null) &&
               pot != null) {
+            final ledger = table.handContributions;
+            // A caption may give the stack at a later street. When source
+            // records all six starting stacks, use their actual sum.
+            final starting = ledger?.startingStackBbBySeat;
+            final expected =
+                starting != null &&
+                    table.seats.every(
+                      (seat) => starting.containsKey(seat.seatId),
+                    )
+                ? table.seats.fold<double>(
+                    0,
+                    (sum, seat) => sum + starting[seat.seatId]!,
+                  )
+                : 600.0;
             final onTable = stacks.fold<double>(0, (a, b) => a + b!) + pot;
             final withBets = onTable + bets.fold<double>(0, (a, b) => a + b);
-            if ((onTable - 600).abs() > 1e-6 && (withBets - 600).abs() > 1e-6) {
+            if ((onTable - expected).abs() > 1e-6 &&
+                (withBets - expected).abs() > 1e-6) {
               problems.add(
-                '${t.taskId}: chips add up to $onTable/$withBets, not 600 BB',
+                '${t.taskId}: chips add up to $onTable/$withBets, expected $expected BB',
               );
             } else {
               conserved++;

@@ -4859,7 +4859,7 @@ final _w12_confidence_spr = _w12Task(
 final _w12_river_ev_turn_draw_miss = _w12Task(
   'w12_river_ev_turn_draw_miss',
   'The draw missed',
-  'You had a heart draw on the turn. The river is Jd. You beat one in 10 CO bets. CO bets 3 BB and will call a raise with its value hands.',
+  'You had a heart draw with one card to come. The river is Jd. You beat one in 10 CO bets. CO bets 3 BB and will call a raise with its value hands.',
   'Which action has the best EV in this model?',
   correct: 0,
   choices: const [
@@ -5004,7 +5004,7 @@ final _w12_turn_count_heart_outs = _w12Task(
 final _w12_tilt_after_river_beat = _w12Task(
   'w12_tilt_after_river_beat',
   'Pause after a bad beat',
-  'Last hand, your kings lost when an ace came on the river. Now CO bets on a new flop. You feel a rush to win the loss back.',
+  'Last hand, your kings lost when an ace fell as the last card. Now CO bets on a new flop. You feel a rush to win it back.',
   'What should you do before you pick an action?',
   correct: 1,
   choices: const [
