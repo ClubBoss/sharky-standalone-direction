@@ -782,7 +782,17 @@ CatalogAudit runCatalogAudit({Iterable<CatalogTask>? rows}) {
       );
     }
 
-    if (task.repairOnly) continue;
+    // Day 7 misses return through the spaced scheduler under the same
+    // family. The due-review route test verifies that path independently.
+    if (task.repairOnly ||
+        act0NewReviewConceptFamilyV1(
+              row.world.worldId,
+              row.lesson.lessonId,
+              task.taskId,
+            ) !=
+            null) {
+      continue;
+    }
     for (final o in r.options.where((o) => !o.isCorrect)) {
       final intent = buildAct0RepairIntentV1(
         sourceWorldId: row.world.worldId,

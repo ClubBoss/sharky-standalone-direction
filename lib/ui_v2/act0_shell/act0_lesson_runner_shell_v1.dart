@@ -2480,6 +2480,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             sourceWorldId: normalizedWorldId ?? '',
             sourceLessonId: _stableLessonTelemetryId,
           );
+    final reviewConceptFamily = act0NewReviewConceptFamilyV1(
+      normalizedWorldId ?? '',
+      _stableLessonTelemetryId,
+      _stableTaskTelemetryId,
+    );
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
         attemptKey: _canonicalCompletedAttemptIdV1(
@@ -2501,7 +2506,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         assistanceKind: _decisionAssistanceKindV1,
         resultKind: resultKind,
         errorType: errorType,
-        skillAtomId: receipt?.skillAtomId ?? concept?.eligibleRepairFamily,
+        conceptFamilyId: reviewConceptFamily,
+        skillAtomId:
+            receipt?.skillAtomId ??
+            concept?.eligibleRepairFamily ??
+            reviewConceptFamily,
         repairFocusId: receipt?.sourceSignalId ?? concept?.id,
         missedSignalId: receipt?.sourceSignalId ?? concept?.id,
       ),

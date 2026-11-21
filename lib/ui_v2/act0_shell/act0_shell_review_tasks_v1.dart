@@ -1,63 +1,56 @@
 part of 'act0_shell_state_v1.dart';
 
 /// Review-only situations. They do not participate in course order or XP.
-final act0NewReviewTasksV1 =
-    <
-      ({
-        String worldId,
-        String lessonId,
-        String conceptFamilyId,
-        Act0LessonTaskV1 task,
-      })
-    >[
-      (
-        worldId: 'world_1',
-        lessonId: 'fold_check_call_raise',
-        conceptFamilyId: 'no_bet_yet',
-        task: _noBetReviewTaskV1(
-          id: 'spaced_review_check_turn_v1',
-          street: 'Turn',
-          caption:
-              'BB and BTN both checked the flop. On the turn, BB checks again. BTN acts next.',
-          question: 'How can BTN see the river without putting in chips?',
-          board: const [
-            Act0CardStateV1(rank: 'Q', suit: 'c'),
-            Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
-            Act0CardStateV1(rank: '3', suit: 's'),
-            Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
-          ],
-          laterActions: const [
-            Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
-            Act0ActionTrailItemV1(label: 'Turn: BB checks'),
-          ],
-        ),
-      ),
-      (
-        worldId: 'world_1',
-        lessonId: 'fold_check_call_raise',
-        conceptFamilyId: 'no_bet_yet',
-        task: _noBetReviewTaskV1(
-          id: 'spaced_review_check_river_v1',
-          street: 'River',
-          caption:
-              'BB and BTN checked the flop and turn. On the river, BB checks. BTN acts next.',
-          question: 'Which action gets BTN to showdown without adding chips?',
-          board: const [
-            Act0CardStateV1(rank: 'J', suit: 'c'),
-            Act0CardStateV1(rank: '6', suit: 's'),
-            Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
-            Act0CardStateV1(rank: 'T', suit: 'c'),
-            Act0CardStateV1(rank: '3', suit: 'h', tone: Act0CardToneV1.red),
-          ],
-          laterActions: const [
-            Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
-            Act0ActionTrailItemV1(label: 'Turn: BB checks'),
-            Act0ActionTrailItemV1(label: 'Turn: BTN checks'),
-            Act0ActionTrailItemV1(label: 'River: BB checks'),
-          ],
-        ),
-      ),
-    ];
+final act0NewReviewTasksV1 = <_SpacedReviewEntryV1>[
+  (
+    worldId: 'world_1',
+    lessonId: 'fold_check_call_raise',
+    conceptFamilyId: 'no_bet_yet',
+    task: _noBetReviewTaskV1(
+      id: 'spaced_review_check_turn_v1',
+      street: 'Turn',
+      caption:
+          'BB and BTN both checked the flop. On the turn, BB checks again. BTN acts next.',
+      question: 'How can BTN see the river without putting in chips?',
+      board: const [
+        Act0CardStateV1(rank: 'Q', suit: 'c'),
+        Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '3', suit: 's'),
+        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+      ],
+      laterActions: const [
+        Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+      ],
+    ),
+  ),
+  (
+    worldId: 'world_1',
+    lessonId: 'fold_check_call_raise',
+    conceptFamilyId: 'no_bet_yet',
+    task: _noBetReviewTaskV1(
+      id: 'spaced_review_check_river_v1',
+      street: 'River',
+      caption:
+          'BB and BTN checked the flop and turn. On the river, BB checks. BTN acts next.',
+      question: 'Which action gets BTN to showdown without adding chips?',
+      board: const [
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+        Act0CardStateV1(rank: '6', suit: 's'),
+        Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: 'T', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'h', tone: Act0CardToneV1.red),
+      ],
+      laterActions: const [
+        Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'Turn: BTN checks'),
+        Act0ActionTrailItemV1(label: 'River: BB checks'),
+      ],
+    ),
+  ),
+  ..._act0Day7ReviewTasksV1,
+];
 
 // Misses from the W1 rules check replay by their own source identity.
 final act0W1RulesReviewTasksV1 = [
@@ -75,6 +68,20 @@ final act0W1RulesReviewTasksV1 = [
       ),
     ),
 ];
+
+String? act0NewReviewConceptFamilyV1(
+  String worldId,
+  String lessonId,
+  String taskId,
+) => act0NewReviewTasksV1
+    .where(
+      (entry) =>
+          entry.worldId == worldId &&
+          entry.lessonId == lessonId &&
+          entry.task.taskId == taskId,
+    )
+    .firstOrNull
+    ?.conceptFamilyId;
 
 Act0LessonTaskV1? act0ReviewOnlyTaskV1(
   String worldId,
@@ -111,6 +118,9 @@ Act0LessonTaskV1 _noBetReviewTaskV1({
       caption: caption,
       question: question,
       hint: '',
+      feedbackReason: street == 'Turn'
+          ? 'BB checked the turn, so you can check to see one more card.'
+          : 'BB checked the river, so checking takes both hands to showdown.',
       teachingSteps: const [],
       options: _act0AuthoredCorrectOptionAtV1(
         source.options,
@@ -119,8 +129,17 @@ Act0LessonTaskV1 _noBetReviewTaskV1({
       ),
       table: source.table.copyWith(
         streetLabel: street,
+        emptyBoardLabel: '',
         boardCards: board,
         actionTrail: [...source.table.actionTrail, ...laterActions],
+        handContributions: Act0HandContributionsV1(
+          throughStreet: street == 'Turn'
+              ? PokerStreet.turn
+              : PokerStreet.river,
+          entries: source.table.handContributions!.entries,
+          startingStackBbBySeat:
+              source.table.handContributions!.startingStackBbBySeat,
+        ),
       ),
     ),
   );

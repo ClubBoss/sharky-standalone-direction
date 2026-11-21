@@ -26,8 +26,8 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
         task.phase != Act0LessonPhaseV1.theory &&
         task.runner.options.isNotEmpty &&
         _hasValidatedRepairTargetV1(repairLaunchIntent);
-    if (task.repairOnly && !repairBypass) return false;
     final spacedReview = _spacedReviewReturnV1 != null;
+    if (task.repairOnly && !repairBypass && !spacedReview) return false;
     final lessonAvailable =
         lesson.isSelectable || drillBypass || repairBypass || spacedReview;
     final taskAvailable =

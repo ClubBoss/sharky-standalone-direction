@@ -12,6 +12,8 @@ import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
+import '../support/act0_day7_coverage_v1.dart';
+import '../support/act0_table_truth_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
 // Regenerate only the reviewer-visible snapshot:
@@ -105,6 +107,10 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
   );
 }
 
+String _day7HandKey(Act0TableStateV1 t) =>
+    '${t.heroSeatId ?? t.heroSeat.seatId}|${(t.heroCards.map(cardIdentity).toList()..sort()).join(',')}|'
+    '${t.boardCards.map(cardIdentity).join(',')}';
+
 void main() {
   test('W1–W12 catalog snapshot', () {
     final fixture = File(_snapshotPath);
@@ -133,6 +139,96 @@ void main() {
           (changed == null ? '?' : (changed.$1 + 1).toString()),
     );
     expect(lines.length, expected.length);
+  });
+
+  test('G1 Day 7 covers every pre-beta review family and lesson', () {
+    final missing = act0Day7MissSourcesV1.keys.toSet().difference(
+      act0Day7CoverageV1,
+    );
+    expect(missing.where(day7MustBeCoveredV1), isEmpty);
+    expect(
+      act0Day7CoverageV1.difference(act0Day7MissSourcesV1.keys.toSet()),
+      isEmpty,
+    );
+    final log = Platform.environment['G1_REPORT_DIR'];
+    if (log != null) {
+      Directory(log).createSync(recursive: true);
+      File('$log/day7.json').writeAsStringSync(
+        _json.convert([
+              for (final key in missing)
+                {
+                  'world': key.$1,
+                  'lesson': key.$2,
+                  'family': key.$3,
+                  'target': 'после беты',
+                },
+            ]) +
+            '\n',
+      );
+    }
+  });
+
+  test('G1 Day 7 uses new scenes with valid tables and one scored answer', () {
+    final seen = <String>{};
+    final courseIds = [
+      ...catalogTasks,
+      ...rulesCheckCatalogTasks,
+    ].map((row) => row.task.taskId).toSet();
+    final courseHands = [
+      ...catalogTasks,
+      ...rulesCheckCatalogTasks,
+    ].map((row) => _day7HandKey(row.task.runner.table)).toSet();
+    for (final row in day7CatalogTasks) {
+      final task = row.task;
+      final runner = task.runner;
+      final table = runner.table;
+      final id = task.taskId;
+      expect(seen.add(id), isTrue, reason: id);
+      expect(courseIds.contains(id), isFalse, reason: id);
+      expect(courseHands.contains(_day7HandKey(table)), isFalse, reason: id);
+      expect(task.rewardXp, 0, reason: id);
+      expect(runner.hint, isEmpty, reason: id);
+      expect(runner.teachingSteps, isEmpty, reason: id);
+      expect(table.highlightedSeatIds, isEmpty, reason: id);
+      expect(table.highlightedCardIds, isEmpty, reason: id);
+      expect(
+        runner.options.where(act0RunnerOptionIsAuthoredCorrectV1),
+        hasLength(1),
+        reason: id,
+      );
+      expect(
+        runner.options.every((option) => option.feedbackReason.isNotEmpty),
+        isTrue,
+        reason: id,
+      );
+      final cards = [
+        ...table.heroCards,
+        ...table.boardCards,
+        for (final seat in table.seats)
+          if (!seat.isHero &&
+              seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceUp)
+            ...seat.holeCards,
+      ].map(cardIdentity);
+      expect(cards.toSet(), hasLength(cards.length), reason: id);
+      final contributions = auditTableContributionsV1(id, 'day7', table);
+      expect(
+        contributions
+            .where((row) => row.result != 'PASS')
+            .map((row) => row.key),
+        isEmpty,
+        reason: id,
+      );
+      expect(
+        contributions.any((row) => row.invariant == 'D2.pot_feasibility'),
+        isTrue,
+        reason: id,
+      );
+    }
+    final audit = runCatalogAudit(rows: [...catalogTasks, ...day7CatalogTasks]);
+    final day7Findings = audit.findings.keys.where(
+      (key) => seen.contains(key.split('|')[1]),
+    );
+    expect(day7Findings, isEmpty, reason: day7Findings.join('\n'));
   });
 
   test('wrong catalog feedback starts without praise', () {
