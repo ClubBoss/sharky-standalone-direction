@@ -330,6 +330,232 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "Both play A-K-Q-J-T. Neither player's other private card is used in the best five.",
   ),
   _day7ExampleV1(
+    1,
+    "hand_rankings_upper",
+    "w1_rules_check_made_hand",
+    _day7PostflopV1("bb", "Th Td", "Tc 6d 6s 3h 2c", shownHand: "As 6h"),
+    question: "Whose best five rank higher?",
+    choices: const [
+      "HJ's three sixes",
+      "Both players tie",
+      "Your tens full of sixes",
+    ],
+    correct: 2,
+    reason:
+        "Your two tens and Tc plus both board sixes make a full house. HJ has three sixes only.",
+  ),
+  _day7ExampleV1(
+    1,
+    "showdown_winning",
+    "w1_rules_check_ace_kicker",
+    _day7PostflopV1("bb", "Ad 3h", "7c 7d 6s 4h 2c", shownHand: "Kc 8s"),
+    question: "Both hands use the pair of sevens. Who wins the comparison?",
+    choices: const ["You", "HJ", "Split the pot"],
+    correct: 0,
+    reason:
+        "The shared pair ties. Your ace is higher than HJ's king, the next card in each best five.",
+  ),
+  _day7ExampleV1(
+    1,
+    "showdown_winning",
+    "w1_rules_check_board_tie",
+    _day7PostflopV1("co", "2d 6c", "Kh Qd Jc Ts 9h", shownHand: "3s 8d"),
+    question: "Who takes the pot on this river?",
+    choices: const ["BB", "Both split it", "You"],
+    correct: 1,
+    reason:
+        "The best five for both are the king-high straight on the board. Neither player can make a higher one.",
+  ),
+  _day7ExampleV1(
+    1,
+    "cards_ranks_suits",
+    "w1_rules_check_best_straight",
+    _day7PostflopV1("bb", "9d Kh", "4s 5h 6d 7c 8s"),
+    question: "Which card is highest in your best straight?",
+    choices: const ["8", "King", "9"],
+    correct: 2,
+    reason:
+        "You can replace 4 with 9 and use 5-6-7-8-9. Your king does not extend that run.",
+  ),
+  _day7ExampleV1(
+    1,
+    "blinds_action_order",
+    "w1_rules_check_preflop_after_hj",
+    _day7PreflopV1("co", "Js 5d"),
+    question:
+        "UTG and HJ both folded. Whose decision is next on the first pass?",
+    choices: const ["CO", "BB", "BTN"],
+    correct: 0,
+    reason:
+        "CO follows HJ in the first preflop pass, before the Button and the blinds.",
+  ),
+  _day7ExampleV1(
+    1,
+    "positions",
+    "w1_rules_check_postflop_two_left",
+    _day7PostflopV1("bb", "9h 5h", "As Jc 4d"),
+    question:
+        "HJ and BB are the only seats still in. Who must act first on this flop?",
+    choices: const ["HJ", "BB", "Whoever opened"],
+    correct: 1,
+    reason:
+        "After the flop the first live seat clockwise after the Button acts first. That is BB.",
+  ),
+  _day7ExampleV1(
+    1,
+    "blinds_action_order",
+    "w1_rules_check_forced_bets",
+    _day7PreflopV1("hj", "Ad 8c"),
+    question: "Who put chips into this hand before any voluntary action?",
+    choices: const ["UTG and HJ", "Everyone at the table", "SB and BB"],
+    correct: 2,
+    reason: "The two forced posts are 0.5 BB from SB and 1 BB from BB.",
+  ),
+  _day7ExampleV1(
+    1,
+    "fold_check_call_raise",
+    "w1_rules_check_check_behind",
+    _day7PostflopV1(
+      "co",
+      "9s 7c",
+      "Ah Td 4h 3s",
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    question:
+        "BB has checked this turn. How can you see the last card without putting in any chips?",
+    choices: const ["Check", "Call", "Fold"],
+    correct: 0,
+    reason:
+        "There is nothing to match. A check keeps your hand live without adding chips.",
+  ),
+  _day7ExampleV1(
+    1,
+    "fold_check_call_raise",
+    "w1_rules_check_raise_call_price",
+    _day7PostflopV1("co", "Kh Qs", "Kd 8s 4d", heroLeadBb: 3, betBb: 9),
+    question:
+        "You already put in 3 BB on this flop. BB made it 9 BB. How much more matches the raise?",
+    choices: const ["9 BB", "6 BB", "12 BB"],
+    correct: 1,
+    reason:
+        "The 3 BB already in front of you count. Add 6 BB to reach the new total of 9 BB.",
+  ),
+  _day7ExampleV1(
+    1,
+    "what_poker_is_content",
+    "w1_rules_check_uncalled_all_in",
+    _day7PreflopV1(
+      "co",
+      "Ks Kd",
+      opener: "hj",
+      openBb: 18,
+      heroStartingBb: 11,
+      allIn: true,
+      showTurn: true,
+    ),
+    question:
+        "If you call and everyone else folds, how many of HJ's chips are returned?",
+    choices: const ["11 BB", "18 BB", "7 BB"],
+    correct: 2,
+    reason:
+        "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_comparisons',
+    'board_cards',
+    _day7PostflopV1('bb', 'As Ac', '7c 7d 7h 8h 3s', shownHand: 'Kc 7s'),
+    question: 'Which hand ranks higher on this board?',
+    choices: const [
+      'Your sevens full of aces',
+      'The two hands tie',
+      'The other player’s four sevens',
+    ],
+    correct: 2,
+    reason:
+        'The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.',
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_comparisons',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', '8c 8s', '8h 5c 5d 2s Qh', shownHand: '5h Ad'),
+    question: 'Which hand wins this comparison?',
+    choices: const [
+      'Your eights full of fives',
+      'The other player’s three fives',
+      'The board ties',
+    ],
+    correct: 0,
+    reason:
+        'Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.',
+  ),
+  _day7ExampleV1(
+    1,
+    'blinds_order_practice',
+    'utg',
+    _day7PreflopV1('utg', 'Kh 9c', showTurn: true),
+    question: 'The blinds have posted. Which occupied seat acts first?',
+    choices: const ['SB', 'UTG', 'BTN'],
+    correct: 1,
+    reason:
+        'The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.',
+  ),
+  _day7ExampleV1(
+    1,
+    'blinds_order_practice',
+    'big_blind',
+    _day7TableV1(
+      hero: 'bb',
+      hand: 'Js 7h',
+      street: PokerStreet.preflop,
+      actor: 'bb',
+      folded: const {'utg', 'hj', 'co'},
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          0.5,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+      ],
+      bets: const {},
+    ),
+    question: 'Who still has the preflop option in this hand?',
+    choices: const ['BTN', 'SB', 'BB'],
+    correct: 2,
+    reason:
+        'BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.',
+  ),
+  _day7ExampleV1(
+    1,
+    'blinds_order_practice',
+    'misread_position_action_order',
+    _day7PreflopV1('hj', 'Kh 5d'),
+    question: 'Which occupied seat gets the new dealer marker after this hand?',
+    choices: const ['CO', 'SB', 'BB'],
+    correct: 1,
+    reason:
+        'The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.',
+  ),
+  _day7ExampleV1(
     2,
     "hand_discipline_buckets",
     "pot_to_call",
@@ -869,232 +1095,6 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "6-max micro-stakes. Two players, no ties or further betting. Assume one win in five against this opponent's range.",
   ),
   _day7ExampleV1(
-    1,
-    "hand_rankings_upper",
-    "w1_rules_check_made_hand",
-    _day7PostflopV1("bb", "Th Td", "Tc 6d 6s 3h 2c", shownHand: "As 6h"),
-    question: "Whose best five rank higher?",
-    choices: const [
-      "HJ's three sixes",
-      "Both players tie",
-      "Your tens full of sixes",
-    ],
-    correct: 2,
-    reason:
-        "Your two tens and Tc plus both board sixes make a full house. HJ has three sixes only.",
-  ),
-  _day7ExampleV1(
-    1,
-    "showdown_winning",
-    "w1_rules_check_ace_kicker",
-    _day7PostflopV1("bb", "Ad 3h", "7c 7d 6s 4h 2c", shownHand: "Kc 8s"),
-    question: "Both hands use the pair of sevens. Who wins the comparison?",
-    choices: const ["You", "HJ", "Split the pot"],
-    correct: 0,
-    reason:
-        "The shared pair ties. Your ace is higher than HJ's king, the next card in each best five.",
-  ),
-  _day7ExampleV1(
-    1,
-    "showdown_winning",
-    "w1_rules_check_board_tie",
-    _day7PostflopV1("co", "2d 6c", "Kh Qd Jc Ts 9h", shownHand: "3s 8d"),
-    question: "Who takes the pot on this river?",
-    choices: const ["BB", "Both split it", "You"],
-    correct: 1,
-    reason:
-        "The best five for both are the king-high straight on the board. Neither player can make a higher one.",
-  ),
-  _day7ExampleV1(
-    1,
-    "cards_ranks_suits",
-    "w1_rules_check_best_straight",
-    _day7PostflopV1("bb", "9d Kh", "4s 5h 6d 7c 8s"),
-    question: "Which card is highest in your best straight?",
-    choices: const ["8", "King", "9"],
-    correct: 2,
-    reason:
-        "You can replace 4 with 9 and use 5-6-7-8-9. Your king does not extend that run.",
-  ),
-  _day7ExampleV1(
-    1,
-    "blinds_action_order",
-    "w1_rules_check_preflop_after_hj",
-    _day7PreflopV1("co", "Js 5d"),
-    question:
-        "UTG and HJ both folded. Whose decision is next on the first pass?",
-    choices: const ["CO", "BB", "BTN"],
-    correct: 0,
-    reason:
-        "CO follows HJ in the first preflop pass, before the Button and the blinds.",
-  ),
-  _day7ExampleV1(
-    1,
-    "positions",
-    "w1_rules_check_postflop_two_left",
-    _day7PostflopV1("bb", "9h 5h", "As Jc 4d"),
-    question:
-        "HJ and BB are the only seats still in. Who must act first on this flop?",
-    choices: const ["HJ", "BB", "Whoever opened"],
-    correct: 1,
-    reason:
-        "After the flop the first live seat clockwise after the Button acts first. That is BB.",
-  ),
-  _day7ExampleV1(
-    1,
-    "blinds_action_order",
-    "w1_rules_check_forced_bets",
-    _day7PreflopV1("hj", "Ad 8c"),
-    question: "Who put chips into this hand before any voluntary action?",
-    choices: const ["UTG and HJ", "Everyone at the table", "SB and BB"],
-    correct: 2,
-    reason: "The two forced posts are 0.5 BB from SB and 1 BB from BB.",
-  ),
-  _day7ExampleV1(
-    1,
-    "fold_check_call_raise",
-    "w1_rules_check_check_behind",
-    _day7PostflopV1(
-      "co",
-      "9s 7c",
-      "Ah Td 4h 3s",
-      checkedToHero: true,
-      showTurn: true,
-    ),
-    question:
-        "BB has checked this turn. How can you see the last card without putting in any chips?",
-    choices: const ["Check", "Call", "Fold"],
-    correct: 0,
-    reason:
-        "There is nothing to match. A check keeps your hand live without adding chips.",
-  ),
-  _day7ExampleV1(
-    1,
-    "fold_check_call_raise",
-    "w1_rules_check_raise_call_price",
-    _day7PostflopV1("co", "Kh Qs", "Kd 8s 4d", heroLeadBb: 3, betBb: 9),
-    question:
-        "You already put in 3 BB on this flop. BB made it 9 BB. How much more matches the raise?",
-    choices: const ["9 BB", "6 BB", "12 BB"],
-    correct: 1,
-    reason:
-        "The 3 BB already in front of you count. Add 6 BB to reach the new total of 9 BB.",
-  ),
-  _day7ExampleV1(
-    1,
-    "what_poker_is_content",
-    "w1_rules_check_uncalled_all_in",
-    _day7PreflopV1(
-      "co",
-      "Ks Kd",
-      opener: "hj",
-      openBb: 18,
-      heroStartingBb: 11,
-      allIn: true,
-      showTurn: true,
-    ),
-    question:
-        "If you call and everyone else folds, how many of HJ's chips are returned?",
-    choices: const ["11 BB", "18 BB", "7 BB"],
-    correct: 2,
-    reason:
-        "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
-  ),
-  _day7ExampleV1(
-    1,
-    'hand_rankings_comparisons',
-    'board_cards',
-    _day7PostflopV1('bb', 'As Ac', '7c 7d 7h 8h 3s', shownHand: 'Kc 7s'),
-    question: 'Which hand ranks higher on this board?',
-    choices: const [
-      'Your sevens full of aces',
-      'The two hands tie',
-      'The other player’s four sevens',
-    ],
-    correct: 2,
-    reason:
-        'The three board sevens combine with the other player’s 7s for four of a kind. Your aces make a full house, which ranks lower.',
-  ),
-  _day7ExampleV1(
-    1,
-    'hand_rankings_comparisons',
-    'hero_cards_board_pot',
-    _day7PostflopV1('bb', '8c 8s', '8h 5c 5d 2s Qh', shownHand: '5h Ad'),
-    question: 'Which hand wins this comparison?',
-    choices: const [
-      'Your eights full of fives',
-      'The other player’s three fives',
-      'The board ties',
-    ],
-    correct: 0,
-    reason:
-        'Your two eights complete 8-8-8-5-5. The other player shows 5h for three fives, which ranks below your full house.',
-  ),
-  _day7ExampleV1(
-    1,
-    'blinds_order_practice',
-    'utg',
-    _day7PreflopV1('utg', 'Kh 9c', showTurn: true),
-    question: 'The blinds have posted. Which occupied seat acts first?',
-    choices: const ['SB', 'UTG', 'BTN'],
-    correct: 1,
-    reason:
-        'The first voluntary decision is in UTG immediately after BB. The 1.5 BB in the middle is made up of the forced posts.',
-  ),
-  _day7ExampleV1(
-    1,
-    'blinds_order_practice',
-    'big_blind',
-    _day7TableV1(
-      hero: 'bb',
-      hand: 'Js 7h',
-      street: PokerStreet.preflop,
-      actor: 'bb',
-      folded: const {'utg', 'hj', 'co'},
-      entries: const [
-        ..._act0LessonBlinds,
-        Act0ContributionV1(
-          PokerStreet.preflop,
-          'btn',
-          Act0ContributionKindV1.wager,
-          1,
-        ),
-        Act0ContributionV1(
-          PokerStreet.preflop,
-          'sb',
-          Act0ContributionKindV1.wager,
-          0.5,
-        ),
-      ],
-      history: const [
-        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-        Act0ActionTrailItemV1(label: 'UTG folds'),
-        Act0ActionTrailItemV1(label: 'HJ folds'),
-        Act0ActionTrailItemV1(label: 'CO folds'),
-        Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
-        Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
-      ],
-      bets: const {},
-    ),
-    question: 'Who still has the preflop option in this hand?',
-    choices: const ['BTN', 'SB', 'BB'],
-    correct: 2,
-    reason:
-        'BTN and SB matched the blind. BB posted but has yet to make a voluntary decision, so BB can check or raise.',
-  ),
-  _day7ExampleV1(
-    1,
-    'blinds_order_practice',
-    'misread_position_action_order',
-    _day7PreflopV1('hj', 'Kh 5d'),
-    question: 'Which occupied seat gets the new dealer marker after this hand?',
-    choices: const ['CO', 'SB', 'BB'],
-    correct: 1,
-    reason:
-        'The marker is at BTN. It moves one seat clockwise to the seat currently marked SB, so the blinds move too.',
-  ),
-  _day7ExampleV1(
     5,
     "board_texture_basics",
     "board_cards",
@@ -1557,6 +1557,300 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     wrongReasons: const {
       0: 'Folding against ten-nine gives up a winning pair of queens. That hand is one third of this range, enough to justify the quoted call price.',
       2: 'Two wins in three would be about 67%. The call needs about 29%, so one win in three is already enough.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
+    'big_blind',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Js Jd'),
+      boardCards: _act0LessonCardsV1('Tc 6h 2d'),
+      centerLabel: 'Compare the stacks',
+      heroBehindBb: 42,
+      bbBehindBb: 14,
+      openBb: 2.75,
+    ),
+    question:
+        'Which seat sets the maximum that either active player can still bet against the other?',
+    choices: const ['CO', 'BTN', 'BB'],
+    correct: 2,
+    reason: 'BB has 14 BB left. The larger CO stack can match that amount.',
+    wrongReasons: const {
+      0: 'CO has 42 BB left. Using the larger stack overstates what BB can pay by 28 BB.',
+      1: 'BTN folded preflop. Counting that stack misses the 14 BB cap set by the live opponent.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
+    'board_cards',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Kh Jc'),
+      boardCards: _act0LessonCardsV1('Kd 8s 4d'),
+      centerLabel: '',
+      heroBehindBb: 36,
+      bbBehindBb: 68,
+    ),
+    question:
+        'How many more BB can these two players match against each other?',
+    choices: const ['68 BB', '36 BB', '104 BB'],
+    correct: 1,
+    reason:
+        'CO has 36 BB behind and BB has 68 BB. CO can match only 36 BB, which caps the amount each can add against the other.',
+    wrongReasons: const {
+      0: 'BB has 68 BB, but CO can match only 36 BB. Using the larger stack overstates the amount the two can bet against each other.',
+      2: 'Adding 36 BB and 68 BB counts two separate stacks. Only the smaller stack caps what either player can match.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Js Jd'),
+      boardCards: _act0LessonCardsV1('Ts 6h 3c'),
+      centerLabel: '',
+      heroBehindBb: 82,
+      bbBehindBb: 24,
+    ),
+    question:
+        'Which row tells you the maximum BB you can win from this opponent in later bets?',
+    choices: const ['Your 82 BB', 'The 5.5 BB pot', 'BB’s 24 BB'],
+    correct: 2,
+    reason:
+        'BB has 24 BB still behind on T-6-3. Your overpair cannot collect another 82 BB from a player with only 24 BB left.',
+    wrongReasons: const {
+      0: 'The 82 BB belongs to CO. BB has 24 BB left, so planning around 82 BB overstates what the opponent can pay.',
+      1: 'The 5.5 BB already belongs to the pot. It cannot measure what BB can still add from the 24 BB stack.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'board_cards',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Qs Jd'),
+      boardCards: _act0LessonCardsV1('Qh 7d 2s 4h 5c'),
+      centerLabel: '',
+      heroBehindBb: 19,
+      bbBehindBb: 10,
+    ),
+    caption:
+        'BB checks the river. Assume weaker queens call 5 BB, and fold to 10 BB.',
+    question: 'Which bet size gets paid by the modeled weaker queens?',
+    choices: const ['5 BB', '10 BB', '19 BB'],
+    correct: 0,
+    reason:
+        'Only the 5 BB bet gets the stated weaker queen calls on this board. Ten BB is all BB can match.',
+    wrongReasons: const {
+      1: 'BB can afford 10 BB on this river, but the stated weaker queens fold to that size. You give up their 5 BB calls.',
+      2: 'You have 19 BB left and BB has 10 BB. Nine of those chips cannot be matched, and a weaker queen folds to the big bet anyway.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Ac Qd'),
+      boardCards: _act0LessonCardsV1('As 8h 4d 2s 7c'),
+      centerLabel: '',
+      heroBehindBb: 29,
+      bbBehindBb: 43,
+    ),
+    question: 'What is the largest river bet that both players can match?',
+    choices: const ['43 BB', '29 BB', '72 BB'],
+    correct: 1,
+    reason:
+        'CO has top pair and 29 BB left on this river. BB can match all 29 BB, but CO cannot put in any more.',
+    wrongReasons: const {
+      0: 'BB has 43 BB, but CO has 29 BB on the river. A larger amount cannot be fully matched.',
+      2: 'Seventy-two BB adds both stacks. It overstates what either player can match against the other.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'pot_to_call',
+    _day7PreflopV1(
+      'co',
+      'Ac Kc',
+      opener: 'hj',
+      openBb: 3,
+      heroStartingBb: 24,
+      showTurn: true,
+    ),
+    caption:
+        'Assume players behind fold. HJ calls a reraise to 9 BB with ATs, but folds it to a shove.',
+    question: 'Of these actions, which puts more chips from ATs into the pot?',
+    choices: const ['Match the 3 BB open', 'Reraise to 9 BB', 'Shove 24 BB'],
+    correct: 1,
+    reason:
+        'With AKs in the Premium group, the 9 BB reraise gets 6 BB more from the weaker ace in this model. Calling or shoving gets no extra chips from ATs.',
+    wrongReasons: const {
+      0: 'Matching the 3 BB open leaves ATs at the amount already committed. Reraising to 9 BB gets 6 BB more from that hand in this model.',
+      2: 'HJ folds ATs when CO moves all-in. The shove gives up the additional chips the smaller reraise would get from ATs.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'spr_and_commitment',
+    'board_cards',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Kc Td'),
+      boardCards: _act0LessonCardsV1('Ks 9h 3d'),
+      centerLabel: '',
+      openBb: 2.75,
+      heroBehindBb: 12,
+      bbBehindBb: 18,
+    ),
+    question:
+        'With the smaller stack at 12 BB and a 6 BB flop pot, how much room is left?',
+    choices: const [
+      'SPR 2, relatively little room',
+      'SPR 3, use the larger stack',
+      'SPR 0.5, swap pot and stack',
+    ],
+    correct: 0,
+    reason:
+        'CO has top pair on K-9-3. The effective stack is 12 BB, and dividing by the 6 BB pot gives SPR 2. A couple of moderate bets can use up that stack.',
+    wrongReasons: const {
+      1: 'SPR 3 divides BB’s 18 BB by the pot. Using that number overstates the room because CO has just 12 BB left.',
+      2: 'Dividing the 6 BB pot by 12 BB reverses the ratio. It makes the remaining stack seem much smaller relative to the pot.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'spr_and_commitment',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Ah Jd'),
+      boardCards: _act0LessonCardsV1('Js 7c 3s'),
+      centerLabel: '',
+      openBb: 3.25,
+      heroBehindBb: 28,
+      bbBehindBb: 40,
+    ),
+    question: 'What is the stack-to-pot ratio before any flop bet?',
+    choices: const ['4', '5.7', '0.25'],
+    correct: 0,
+    reason:
+        'The smaller stack is 28 BB and the pot is 7 BB. Dividing 28 by 7 gives SPR 4.',
+    wrongReasons: const {
+      1: 'Dividing 40 BB by 7 uses the bigger stack. That overstates the room because CO can put in only 28 BB more.',
+      2: 'Dividing 7 BB by 28 reverses the ratio. The effective stack, which is 28 BB here, goes on top.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'spr_and_commitment',
+    'confused_chip_commitment_eligibility',
+    _day7TableV1(
+      hero: 'co',
+      hand: 'Qc Qh',
+      street: PokerStreet.preflop,
+      folded: const {'utg', 'btn', 'sb'},
+      stacks: const {'co': 12, 'hj': 60, 'bb': 60},
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          12,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          29,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          27,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ raises to 3 BB'),
+        Act0ActionTrailItemV1(label: 'CO all-in 12 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB raises to 30 BB'),
+        Act0ActionTrailItemV1(label: 'HJ calls 30 BB'),
+      ],
+      bets: const {},
+    ),
+    caption: 'You are all-in. HJ and BB each put in 30 BB total.',
+    question:
+        'How much did each deeper player put in above the amount you can win from them?',
+    choices: const ['12 BB', '18 BB', '30 BB'],
+    correct: 1,
+    reason:
+        'CO can match only 12 BB from each player. HJ and BB put an extra 18 BB each in the side pot.',
+    wrongReasons: const {
+      0: 'Each deeper player matches your 12 BB. Counting that amount as extra leaves out the 18 BB each put in above your stack.',
+      2: 'Thirty BB is each deeper player’s total. Treating it all as extra would wrongly take away the 12 BB from each that you can win.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'format_pressure',
+    'pot_to_call',
+    _day7PreflopV1('utg', 'Jc Jd', showTurn: true),
+    caption:
+        'Practice rule: raise JJ to 2.5 BB in an unopened pot if five or fewer players remain behind.',
+    question: 'Which action fits the rule from the first seat at this table?',
+    choices: const ['Fold', 'Limp for 1 BB', 'Raise to 2.5 BB'],
+    correct: 2,
+    reason:
+        'Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.',
+    wrongReasons: const {
+      0: 'You have pocket jacks in an unopened six-seat hand. Folding gives up the opening opportunity described by the rule.',
+      1: 'Putting in 1 BB matches the blind. The rule asks for a 2.5 BB first raise with jacks and five players behind.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'format_pressure',
+    'hero_cards_board_pot',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Jc Js'),
+      boardCards: _act0LessonCardsV1('9d 6h 3s'),
+      centerLabel: '',
+      openBb: 2.75,
+      heroBehindBb: 18,
+      bbBehindBb: 12,
+    ),
+    caption:
+        'BB checks. Under the stated plan, aim to get called by weaker pairs, which will call 2 BB and fold to a shove.',
+    question: 'Which bet fits the stated plan?',
+    choices: const ['Shove 18 BB', 'Bet 2 BB', 'Bet 12 BB'],
+    correct: 1,
+    reason:
+        'JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.',
+    wrongReasons: const {
+      0: 'BB can match only 12 BB of the shove. The weaker pairs fold to that pressure here, so you miss their smaller calls.',
+      2: 'Twelve BB puts BB all-in. Weaker pairs fold to an all-in bet in this model, so the overpair misses their 2 BB calls.',
     },
   ),
 ];

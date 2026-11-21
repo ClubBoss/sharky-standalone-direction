@@ -189,8 +189,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 110),
-      ('D3.to_call_completeness', 110),
+      ('D2.pot_feasibility', 112),
+      ('D3.to_call_completeness', 112),
     ]) {
       final proof = rows
           .where(
@@ -1243,6 +1243,24 @@ void main() {
         w3Option('bb', seat: 'bb'),
         w3Option('btn', seat: 'btn'),
         w3Option('co', seat: 'co', correct: true),
+      ],
+    };
+    expectedComparison['w8_effective_stack_seat'] = {
+      'rewardXp': 8,
+      'family': 'compare',
+      'options': [
+        w3Option('co', seat: 'co'),
+        w3Option('bb', seat: 'bb', correct: true),
+        w3Option('sb', seat: 'sb'),
+      ],
+    };
+    expectedComparison['w8_spr_value_size'] = {
+      'rewardXp': 8,
+      'family': 'sizing',
+      'options': [
+        {...w3Option('two'), 'quality': 'suboptimal'},
+        w3Option('four', correct: true),
+        w3Option('eight'),
       ],
     };
     expect(

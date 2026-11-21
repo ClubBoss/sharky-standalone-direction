@@ -5270,6 +5270,7 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
   hint: 'Compare the two players who can put chips in against each other.',
   question: 'What is the effective stack?',
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ac Qd'),
     boardCards: _act0LessonCardsV1('Qs 8c 3h'),
     centerLabel: 'Compare the stacks',

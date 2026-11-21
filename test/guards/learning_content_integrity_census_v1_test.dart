@@ -114,7 +114,9 @@ void main() {
                 !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
                 row.task.taskId != 'first_table_guide_first_decision' &&
                 row.task.taskId != 'hand_rankings_compare_ace_straights' &&
-                row.task.taskId != 'w4_price_find_bettor',
+                row.task.taskId != 'w4_price_find_bettor' &&
+                row.task.taskId != 'w8_effective_stack_seat' &&
+                row.task.taskId != 'w8_spr_value_size',
           )
           .toList();
       expect(allRows, hasLength(294));
@@ -495,7 +497,9 @@ void main() {
               !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
               row.task.taskId != 'first_table_guide_first_decision' &&
               row.task.taskId != 'hand_rankings_compare_ace_straights' &&
-              row.task.taskId != 'w4_price_find_bettor',
+              row.task.taskId != 'w4_price_find_bettor' &&
+              row.task.taskId != 'w8_effective_stack_seat' &&
+              row.task.taskId != 'w8_spr_value_size',
         )
         .toList();
     final additions = rows
@@ -875,12 +879,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(322));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(322));
+    expect(rows, hasLength(324));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(324));
     expect(
       allChoices,
       hasLength(
-        608 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        612 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -953,7 +957,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        570 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        574 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(

@@ -33,8 +33,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(400));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(400));
+    expect(tasks, hasLength(402));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(402));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -116,7 +116,7 @@ void main() {
             .toList(),
       ];
     }
-    expect(entries, hasLength(400));
+    expect(entries, hasLength(402));
     const w1Additions = {
       'first_table_guide_first_decision': [
         'world_1',
@@ -337,6 +337,38 @@ void main() {
         ['co', 'Cutoff', true, 'correct', 'Cutoff'],
       ],
     ]);
+    const w8Additions = {
+      'w8_effective_stack_seat': [
+        'world_8',
+        'effective_stack_basics',
+        'w8_effective_stack_seat',
+        'drill',
+        'practice',
+        [
+          ['co', 'Your seat', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['sb', 'Small blind', false, 'wrong', 'Big blind'],
+        ],
+      ],
+      'w8_spr_value_size': [
+        'world_8',
+        'spr_and_commitment',
+        'w8_spr_value_size',
+        'drill',
+        'practice',
+        [
+          ['two', '2 BB', false, 'suboptimal', '4 BB'],
+          ['four', '4 BB', true, 'correct', '4 BB'],
+          ['eight', '8 BB', false, 'wrong', '4 BB'],
+        ],
+      ],
+    };
+    for (final addition in w8Additions.entries) {
+      expect(
+        entries.singleWhere((row) => row[2] == addition.key),
+        addition.value,
+      );
+    }
     final legacyEntries = entries
         .where(
           (row) =>
@@ -348,6 +380,7 @@ void main() {
               !w6NewChoiceContractV1.containsKey(row[2]) &&
               !w1Additions.containsKey(row[2]) &&
               row[2] != w4BettorTask &&
+              !w8Additions.containsKey(row[2]) &&
               row[2] != boardRepair,
         )
         .toList(growable: false);
@@ -2021,7 +2054,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(400));
+    expect(taskIndex, hasLength(402));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;
