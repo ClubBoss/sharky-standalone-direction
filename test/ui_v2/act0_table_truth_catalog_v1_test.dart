@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -39,10 +41,20 @@ void main() {
         .lessons
         .expand((lesson) => lesson.taskList)
         .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final table = source.runner.table;
+    final ledger = table.handContributions!;
+    final stacks = {...ledger.startingStackBbBySeat}..remove('btn');
     final findings = auditTableContributionsV1(
       source.taskId,
       'mutation',
-      source.runner.table.copyWith(toCallLabel: ''),
+      table.copyWith(
+        toCallLabel: '',
+        handContributions: Act0HandContributionsV1(
+          throughStreet: ledger.throughStreet,
+          entries: ledger.entries,
+          startingStackBbBySeat: stacks,
+        ),
+      ),
     );
 
     expect(
@@ -65,8 +77,8 @@ void main() {
 
     final findings = auditTableContributionsV1(
       source.taskId,
-      'authored/preflop',
-      source.runner.table,
+      'mutation/preflop',
+      source.runner.table.copyWith(actionTrail: const []),
     );
 
     expect(findings.map((row) => (row.invariant, row.result)), [
@@ -74,7 +86,7 @@ void main() {
     ]);
   });
 
-  test('W9 shows the wager and pot without claiming the exact call', () {
+  test('W9 shows the wager, pot and exact call from the stack ledger', () {
     final task = Act0ShellStateV1.sample
         .worldById('world_9')
         .lessons
@@ -84,11 +96,12 @@ void main() {
     final ledger = table.handContributions!;
     final seats = table.seats.map((seat) => seat.seatId).toSet();
     expect(table.potLabel, 'Pot 21 BB');
-    expect(table.toCallLabel, isEmpty);
-    expect(task.runner.caption, contains('15.5 BB more than BTN put in'));
+    expect(table.toCallLabel, 'To call 15.5 BB');
+    expect(ledger.startingStackBbBySeat['btn'], 18);
+    expect(ledger.startingStackBbBySeat['bb'], 50);
     expect(ledger.amounts(seatIds: seats, actorSeatId: 'btn'), (
       potBb: 21.0,
-      toCallBb: null,
+      toCallBb: 15.5,
     ));
     for (final (startingStack, price) in [(12.0, 9.5), (18.0, 15.5)]) {
       final withStack = Act0HandContributionsV1(
@@ -106,7 +119,7 @@ void main() {
     }
   });
 
-  test('W10 uses the authored BTN open and BB call before the check', () {
+  test('W10 uses the authored CO open and BB call before the check', () {
     final table = Act0ShellStateV1.sample
         .worldById('world_10')
         .lessons
@@ -123,38 +136,56 @@ void main() {
       table.handContributions!.entries.map(
         (entry) => (entry.seatId, entry.amountBb),
       ),
-      containsAll([('sb', 0.5), ('bb', 1.0), ('btn', 2.5), ('bb', 1.5)]),
+      containsAll([('sb', 0.5), ('bb', 1.0), ('co', 2.5), ('bb', 1.5)]),
     );
     expect(
       table.handContributions!.amounts(
         seatIds: table.seats.map((seat) => seat.seatId).toSet(),
-        actorSeatId: 'btn',
+        actorSeatId: 'co',
       ),
       (potBb: 5.5, toCallBb: 0.0),
     );
   });
 
-  test('a partial street ledger caps its source bound by prior investment', () {
-    const expected = {
-      'w11_checkpoint_mixed_table_line': 22.0,
-      'w12_pretty_hand_bad_price_fold': 80.0,
-      'w12_revenge_raise_trap': 27.0,
-      'w12_checkpoint_full_loop_line': 17.0,
-    };
-    final tasks = Act0ShellStateV1.sample.worlds
-        .expand((world) => world.lessons)
-        .expand((lesson) => lesson.taskList);
-    expect({
+  test(
+    'W11 and W12 full ledgers prove the effective stack at the decision',
+    () {
+      const expected = {
+        'w11_checkpoint_mixed_table_line': 30.0,
+        'w12_pretty_hand_bad_price_fold': 100.0,
+        'w12_revenge_raise_trap': 35.0,
+        'w12_checkpoint_full_loop_line': 25.0,
+      };
+      final tasks = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.taskList);
       for (final task in tasks.where(
         (task) => expected.containsKey(task.taskId),
-      ))
-        task.taskId: task
-            .runner
-            .table
-            .handContributions!
-            .minimumStartingStackBbBySeat['btn'],
-    }, expected);
-  });
+      )) {
+        final table = task.runner.table;
+        final ledger = table.handContributions!;
+        final hero = table.heroSeatId!;
+        final bettor = ledger.entries.last.seatId;
+        expect(ledger.fromStreet.name, 'preflop', reason: task.taskId);
+        expect(
+          ledger.minimumStartingStackBbBySeat,
+          isEmpty,
+          reason: task.taskId,
+        );
+        for (final seat in [hero, bettor]) {
+          final invested = ledger.entries
+              .take(ledger.entries.length - 1)
+              .where((entry) => entry.seatId == seat)
+              .fold<double>(0, (sum, entry) => sum + entry.amountBb);
+          expect(
+            ledger.startingStackBbBySeat[seat]! - invested,
+            expected[task.taskId],
+            reason: task.taskId,
+          );
+        }
+      }
+    },
+  );
 
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
@@ -247,14 +278,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     const lateMissingSource = {
-      'D2.pot_feasibility': {
-        'w9_m_ratio_table_window_transfer',
-        'w11_checkpoint_mixed_table_line',
-        'w12_checkpoint_full_loop_line',
-        'w12_pretty_hand_bad_price_fold',
-        'w12_revenge_raise_trap',
-      },
-      'D3.to_call_completeness': {'w9_bubble_table_risk_transfer'},
+      'D2.pot_feasibility': <String>{},
+      'D3.to_call_completeness': <String>{},
     };
     for (final MapEntry(key: rule, value: missing)
         in lateMissingSource.entries) {
@@ -272,12 +297,12 @@ void main() {
       );
     }
     const lateDecisionProof = {
-      'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
+      'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
-      'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_revenge_raise_trap': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('PASS', 'PASS'),
+      'w12_checkpoint_full_loop_line': ('PASS', 'PASS'),
+      'w12_pretty_hand_bad_price_fold': ('PASS', 'PASS'),
+      'w12_revenge_raise_trap': ('PASS', 'PASS'),
       'asm05_new_known_holes_turn_call_10': ('PASS', 'PASS'),
       'asm05_new_known_holes_turn_call_40': ('PASS', 'PASS'),
     };
@@ -351,8 +376,45 @@ void main() {
     final presentAdditions = contract.keys.toSet().intersection(
       admittedAdditions,
     );
+    final w9Learning = {
+      for (final entry in contract.entries)
+        if (entry.key.startsWith('w9_')) entry.key: entry.value,
+    };
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(w9Learning))).toString(),
+      'ac9ae86c5283e58913c0a71cdf2cb83cbf8db1869dce1af14e927f1aff5cb0a3',
+    );
+    final preAtlasW9 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w9_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final w10Learning = {
+      for (final entry in contract.entries)
+        if (entry.key.startsWith('w10_')) entry.key: entry.value,
+    };
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(w10Learning))).toString(),
+      '30f317099467fc22ced9f7004fa009851f73348ad6ead65245d9d48449de11a5',
+    );
+    final preAtlasW10 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w10_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final historicalContract = Map<String, Object?>.from(contract)
-      ..removeWhere((id, _) => admittedAdditions.contains(id));
+      ..removeWhere(
+        (id, _) =>
+            admittedAdditions.contains(id) ||
+            id.startsWith('w9_') ||
+            id.startsWith('w10_'),
+      )
+      ..addAll((preAtlasW9['learning'] as Map).cast<String, Object?>())
+      ..addAll((preAtlasW10['learning'] as Map).cast<String, Object?>());
     // Keep the historical fixture immutable. PR460 quality cells and the
     // exact owner-admitted W01 theory option contracts are checked separately;
     // persisted records are never rewritten by this comparison.
@@ -1263,11 +1325,25 @@ void main() {
         w3Option('eight'),
       ],
     };
+    expectedComparison.addAll(w11Wave4TableTruthContractV1());
+    expectedComparison.addAll(w12Wave4TableTruthContractV1());
+    for (final entry in [
+      ...w11Wave4GradeCorrectionsV1.entries,
+      ...w12Wave4GradeCorrectionsV1.entries,
+    ]) {
+      final task = historicalComparison[entry.key] as Map<String, dynamic>;
+      final option = (task['options'] as List<dynamic>)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == entry.value);
+      expect(option['correct'], isFalse, reason: entry.key);
+      expect(option['quality'], 'wrong', reason: entry.key);
+      option['quality'] = 'suboptimal';
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2, 3 and 6 packets may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the Worlds 2, 3, 6, 11 and 12 packets may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

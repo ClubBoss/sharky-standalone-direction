@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import '../../tools/cnt01_role_inventory_v1.dart';
 
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
+
 Map<String, Object?> _row({
   String id = 'task_a',
   String role = 'UNKNOWN',
@@ -313,7 +316,21 @@ void main() {
             ),
           )
           .toList();
-      expect(rows, hasLength(199));
+      expect(
+        rows,
+        hasLength(
+          220 +
+              w11Wave4ChoiceContractV1.length +
+              w12Wave4ChoiceContractV1.length,
+        ),
+      );
+      expect(
+        rows.map((row) => row['taskId']).toSet(),
+        containsAll([
+          ...w11Wave4ChoiceContractV1.keys,
+          ...w12Wave4ChoiceContractV1.keys,
+        ]),
+      );
       for (final row in rows) {
         expect(row['curationScope'], cnt01OutsideScopeV1);
         expect(row['declaredPurpose'], cnt01UnknownV1);

@@ -1194,25 +1194,6 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   );
 }
 
-Act0HandContributionsV1 _act0SingleStreetBetContributionsV1({
-  required PokerStreet street,
-  required String bettor,
-  required double betBb,
-  required double effectiveStackAtHandStartBb,
-  required double potBeforeBetBb,
-}) => Act0HandContributionsV1(
-  fromStreet: street,
-  throughStreet: street,
-  // The amount BTN could have paid on earlier streets cannot exceed the
-  // entire pot before the current bet.
-  minimumStartingStackBbBySeat: {
-    'btn': effectiveStackAtHandStartBb - potBeforeBetBb,
-  },
-  entries: [
-    Act0ContributionV1(street, bettor, Act0ContributionKindV1.wager, betBb),
-  ],
-);
-
 // Explicit authored current-street commitments; old street chips are collected.
 // This helper does not infer actors, amounts, folds or a pot from partial trails.
 Act0TableStateV1 _act0CurrentStreetTableV1(
@@ -1860,7 +1841,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     worldId: 'world_9',
     worldNumber: 9,
     title: 'Tournament Pressure',
-    subtitle: 'Learn survival pressure and risk without equations.',
+    subtitle: 'Read your stack, chip price and payout risk.',
     status: Act0WorldStateV1.locked,
     progressLabel: act0LockedWorldProgressLabelV1(isImmediateNext: false),
     primaryCtaLabel: act0LockedWorldPrimaryCtaLabelV1(isImmediateNext: false),
@@ -1874,7 +1855,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     worldId: 'world_10',
     worldNumber: 10,
     title: 'Player Adjustment',
-    subtitle: 'Adjust one lever at a time against real player types.',
+    subtitle: 'Change how you play when the table gives you a clear read.',
     status: Act0WorldStateV1.locked,
     progressLabel: act0LockedWorldProgressLabelV1(isImmediateNext: false),
     primaryCtaLabel: act0LockedWorldPrimaryCtaLabelV1(isImmediateNext: false),

@@ -83,23 +83,19 @@ void main() {
         await t.pumpAndSettle();
       }
 
+      const blockerDefinition =
+          'A blocker is a card you hold that rules out some hands.';
       if (id == 'w10_overbluff_punish') {
-        await mount(true);
-        expect(
-          find.text('A blocker removes possible opponent hands.'),
-          findsWidgets,
+        expect(task.runner.teachingSteps, isEmpty);
+        await mount(
+          true,
+          teachingTask: lesson.taskList.singleWhere(
+            (exercise) => exercise.taskId == 'w10_guardrails_intro',
+          ),
         );
+        expect(find.textContaining(blockerDefinition), findsWidgets);
         expect(
-          find.byKey(const Key('act0_shell_option_bluffcatch_more')),
-          findsNothing,
-        );
-        await mount(true, teachingIndex: 1);
-        expect(
-          find.text('One repeated read, one measured adjustment.'),
-          findsWidgets,
-        );
-        expect(
-          find.byKey(const Key('act0_shell_option_bluffcatch_more')),
+          find.byKey(const Key('act0_shell_option_call_10_bb')),
           findsNothing,
         );
       }
@@ -121,10 +117,7 @@ void main() {
       expect(find.text(task.runner.question), findsWidgets);
       if (id.startsWith('w10')) {
         expect(find.text(task.runner.caption), findsWidgets);
-        expect(
-          find.text('A blocker removes possible opponent hands.'),
-          findsNothing,
-        );
+        expect(find.textContaining(blockerDefinition), findsNothing);
         expect(find.text(task.runner.hint), findsNothing);
       } else {
         expect(find.textContaining('A gutshot has one gap'), findsNothing);

@@ -17,6 +17,8 @@ import '../support/act0_catalog_truth_audit_v1.dart'
         w4MinRaiseTaskIdsV1,
         w5AddedOptionQualityV1,
         w7AppliedTaskIdsV1;
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_w6_catalog_contract_v1.dart';
@@ -34,37 +36,24 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
   'positions_theory',
   'blinds_button_moves',
-  // This is a played hand with an unknown caller stack.
-  _w9BubbleTableRiskId,
-  // The remaining questions use hypothetical setups.
-  'w9_cash_vs_tournament',
-  'w9_short_stack_survival',
+  // W9 concept questions receive the familiar-replay disposition.
+  'w9_ev_two_results',
   'w9_survival_stack_tradeoff',
-  'w9_m_ratio_red_zone',
-  'w9_m_ratio_green_zone',
-  'w9_m_ratio_yellow_zone',
-  'w9_medium_stack_tighten',
-  'w9_big_stack_leverage',
-  'w9_bubble_short_stack',
-  'w9_checkpoint_survival_line',
-  'w9_checkpoint_zone_line',
-  'w9_checkpoint_bubble_line',
-  'w9_checkpoint_table_notice',
-  'w9_checkpoint_review',
-  'w10_nit_tag',
-  'w10_loose_passive_tag',
-  'w10_overaggressive_tag',
-  'w10_vs_nit_open_wider',
-  'w10_vs_caller_value_heavier',
-  'w10_vs_sticky_defender_tighten_steals',
-  'w10_overbluff_punish',
-  'w10_underbluff_fold_more',
-  'w10_guardrail_sample_size',
-  'w10_checkpoint_tag_line',
-  'w10_checkpoint_lever_line',
-  'w10_checkpoint_guardrail_line',
-  'w10_checkpoint_table_notice',
-  'w10_checkpoint_review',
+  'w9_survival_recap',
+  'w9_m_ratio_lap_count',
+  'w9_m_ratio_ante_cost',
+  'w9_m_ratio_recap',
+  'w9_bubble_premium_gap',
+  'w9_bubble_cover_seat',
+  'w9_bubble_recap',
+  'w9_prize_model_inputs',
+  'w10_find_limper',
+  'w10_player_type_recap',
+  'w10_isolate_limper_bb',
+  'w10_one_lever_recap',
+  'w10_find_turn_raiser',
+  'w10_guardrails_recap',
+  'w10_river_price_check',
   'w11_plan_focus_choice',
   'w11_plan_avoid_overload',
   'w11_plan_table_focus_transfer',
@@ -119,7 +108,7 @@ void main() {
                 row.task.taskId != 'w8_spr_value_size',
           )
           .toList();
-      expect(allRows, hasLength(294));
+      expect(allRows, hasLength(316));
       expect(
         allRows
             .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
@@ -133,7 +122,7 @@ void main() {
       final rows = allRows
           .where((row) => !_asm05NewTaskIds.contains(row.task.taskId))
           .toList(growable: false);
-      expect(rows, hasLength(292));
+      expect(rows, hasLength(314));
 
       final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
       final repair = repairRows.map(_declaredRepairRow).toList(growable: false);
@@ -251,21 +240,21 @@ void main() {
       print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
       expect(snapshot['optionCounts'], <String, int>{
-        '2': 91,
-        '3': 200,
+        '2': 100,
+        '3': 213,
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
-        '0': 112,
-        '1': 122,
-        '2': 58,
+        '0': 122,
+        '1': 129,
+        '2': 63,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
-        'TABLE_ACTION_DECISION': 34,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 24,
+        'TABLE_ACTION_DECISION': 60,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 20,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -287,7 +276,7 @@ void main() {
       );
       expect(
         repairSnapshot['sameSignalMapped'],
-        270 - _legacyFallbacksWithoutSourceClue.length,
+        292 - _legacyFallbacksWithoutSourceClue.length,
       );
       expect(
         repairSnapshot['fallbackOnly'],
@@ -326,9 +315,9 @@ void main() {
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
       };
-      expect(repairSnapshot['incorrectOptions'], 494);
+      expect(repairSnapshot['incorrectOptions'], 529);
       expect(repairSnapshot['exactReplayCovered'], 17);
-      expect(historicalRepairComparison['sameSignalMapped'], 276);
+      expect(historicalRepairComparison['sameSignalMapped'], 298);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
@@ -348,7 +337,7 @@ void main() {
         'misread_board_texture': 13,
         'misread_draw_outs': 19,
         'misread_mindset_discipline': 26,
-        'misread_player_adjustment': 30,
+        'misread_player_adjustment': 54,
         'misread_poker_win_condition': 8,
         'misread_position_action_order': 53,
         'misread_range_card_removal': 65,
@@ -357,7 +346,7 @@ void main() {
         'misread_stack_depth_risk': 34,
         'misread_starting_hand_discipline': 37,
         'misread_table_position': 23,
-        'misread_tournament_pressure': 32,
+        'misread_tournament_pressure': 43,
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
       expect(act0RepairGapAdjudicationsV1.take(37), hasLength(37));
@@ -472,17 +461,17 @@ void main() {
     }
   });
 
-  test('W9 bubble repair stays on tournament pressure without a price cue', () {
+  test('W9 bubble repair keeps the exact decision with a proved price', () {
     final source = _assessedRows().singleWhere(
       (row) => row.task.taskId == _w9BubbleTableRiskId,
     );
-    expect(source.task.runner.table.toCallLabel, isEmpty);
+    expect(source.task.runner.table.toCallLabel, 'To call 15.5 BB');
     final legacy = _declaredRepairRow(source);
-    expect(legacy.fallbackOnly, isTrue);
-    expect(legacy.mappingType, 'exact');
+    expect(legacy.fallbackOnly, isFalse);
+    expect(legacy.mappingType, 'repair');
     for (final choice in source.incorrectOptions) {
       final intent = _incorrectOptionRow(source, choice).intent;
-      expect(intent?.missedSignalId, 'misread_tournament_pressure');
+      expect(intent?.missedSignalId, 'pot_to_call');
       expect(intent?.targetWorldId, 'world_9');
       expect(intent?.targetTaskId, _w9BubbleTableRiskId);
       expect(intent?.mappingType, 'intentional_exact');
@@ -505,24 +494,24 @@ void main() {
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
-    expect(rows, hasLength(294));
+    expect(rows, hasLength(316));
     expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
-    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(294));
+    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(316));
     expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
-      '2': 93,
-      '3': 200,
+      '2': 102,
+      '3': 213,
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
-      '0': 113,
-      '1': 123,
-      '2': 58,
+      '0': 123,
+      '1': 130,
+      '2': 63,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
-      'TABLE_ACTION_DECISION': 36,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 24,
+      'TABLE_ACTION_DECISION': 62,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 20,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -628,7 +617,7 @@ void main() {
         for (final option in row.incorrectOptions)
           _incorrectOptionRow(row, option),
     ];
-    expect(incorrect, hasLength(496));
+    expect(incorrect, hasLength(531));
     final currentGaps = allRepair
         .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
         .toList();
@@ -638,7 +627,7 @@ void main() {
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped),
-      hasLength(272 - _legacyFallbacksWithoutSourceClue.length),
+      hasLength(294 - _legacyFallbacksWithoutSourceClue.length),
     );
     expect(
       allRepair.where((row) => row.fallbackOnly),
@@ -649,7 +638,7 @@ void main() {
           currentGaps.length +
           3 +
           _legacyFallbacksWithoutSourceClue.length,
-      278,
+      300,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
@@ -669,7 +658,7 @@ void main() {
     // assertion. A raw 'exact' fallback is not an accepted repair disposition.
     print(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_294',
+        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_316',
         'semanticAdmission': 'UNKNOWN_NOT_REVIEWED_NO_CREDIT',
         'sameSignalMapped': allRepair
             .where((row) => row.sameSignalMapped)
@@ -879,13 +868,41 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(324));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(324));
+    final addedContracts = {
+      ...w11Wave4ChoiceContractV1,
+      ...w12Wave4ChoiceContractV1,
+    };
+    final addedRows = rows
+        .where((row) => addedContracts.containsKey(row.task.taskId))
+        .toList();
+    expect(
+      addedRows.map((row) => row.task.taskId).toSet(),
+      addedContracts.keys.toSet(),
+    );
+    final addedWrongChoices = {
+      for (final row in addedRows)
+        for (final [choiceId, _, correct, _, _]
+            in addedContracts[row.task.taskId]!.$2)
+          if (correct == false)
+            'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
+    };
+    expect(rows, hasLength(346 + addedContracts.length));
+    expect(
+      rows.map((r) => r.task.taskId).toSet(),
+      hasLength(346 + addedContracts.length),
+    );
     expect(
       allChoices,
       hasLength(
-        612 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        647 +
+            w4AddedOptionQualityV1.length +
+            w5AddedOptionQualityV1.length +
+            addedWrongChoices.length,
       ),
+    );
+    expect(
+      foundationDefaults.where(addedWrongChoices.contains).toSet(),
+      addedWrongChoices,
     );
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
@@ -957,7 +974,10 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        574 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        609 +
+            w4AddedOptionQualityV1.length +
+            w5AddedOptionQualityV1.length +
+            addedWrongChoices.length,
       ),
     );
     expect(
@@ -1001,6 +1021,8 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
                       !w3NewChoiceContractV1.containsKey(task.taskId) &&
                       !w6NewChoiceContractV1.containsKey(task.taskId) &&
+                      !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+                      !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==

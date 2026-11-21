@@ -1,0 +1,1105 @@
+{
+  "identity": [
+    [
+      "world_9",
+      "bubble_risk_premium",
+      "w9_big_stack_leverage",
+      "drill",
+      "practice",
+      [
+        [
+          "apply_pressure",
+          "Apply selective open pressure",
+          true,
+          "correct",
+          "Apply selective open pressure"
+        ],
+        [
+          "freeze",
+          "Avoid stealing to protect stack",
+          false,
+          "suboptimal",
+          "Apply selective open pressure"
+        ],
+        [
+          "jam_any_two",
+          "Go all-in with wide hands without checking position",
+          false,
+          "wrong",
+          "Apply selective open pressure"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "bubble_risk_premium",
+      "w9_bubble_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_9",
+      "bubble_risk_premium",
+      "w9_bubble_recap",
+      "review",
+      "review",
+      []
+    ],
+    [
+      "world_9",
+      "bubble_risk_premium",
+      "w9_bubble_short_stack",
+      "drill",
+      "practice",
+      [
+        [
+          "still_take_spots",
+          "Still take practical all-in spots before blinded out",
+          true,
+          "correct",
+          "Still take practical all-in spots before blinded out"
+        ],
+        [
+          "fold_to_money",
+          "Fold playable all-in hands to try to ladder into the money",
+          false,
+          "suboptimal",
+          "Still take practical all-in spots before blinded out"
+        ],
+        [
+          "call_off_light",
+          "Call off too light",
+          false,
+          "wrong",
+          "Still take practical all-in spots before blinded out"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "bubble_risk_premium",
+      "w9_bubble_table_risk_transfer",
+      "drill",
+      "proveIt",
+      [
+        [
+          "call_chip_ev",
+          "Call as wide as normal chip EV allows",
+          false,
+          "wrong",
+          "Tighten thin stack-offs versus the covering blind"
+        ],
+        [
+          "tighten_stackoff",
+          "Tighten thin stack-offs versus the covering blind",
+          true,
+          "correct",
+          "Tighten thin stack-offs versus the covering blind"
+        ],
+        [
+          "fold_anything_close",
+          "Plan to fold borderline hands like A-J against the covering blind",
+          false,
+          "suboptimal",
+          "Tighten thin stack-offs versus the covering blind"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "survival_pressure_basics",
+      "w9_cash_vs_tournament",
+      "drill",
+      "practice",
+      [
+        [
+          "same_cash",
+          "Play it exactly like cash",
+          false,
+          "wrong",
+          "Survival pressure matters more"
+        ],
+        [
+          "fold_everything",
+          "Fold even premium hands until payouts begin",
+          false,
+          "suboptimal",
+          "Survival pressure matters more"
+        ],
+        [
+          "survival",
+          "Survival pressure matters more",
+          true,
+          "correct",
+          "Survival pressure matters more"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "tournament_pressure_checkpoint",
+      "w9_checkpoint_bubble_line",
+      "drill",
+      "practice",
+      [
+        [
+          "chip_ev_only",
+          "Defend as wide as normal chip EV spot",
+          false,
+          "wrong",
+          "Tighten defend and avoid thin all-ins"
+        ],
+        [
+          "tighten_defense",
+          "Tighten defend and avoid thin all-ins",
+          true,
+          "correct",
+          "Tighten defend and avoid thin all-ins"
+        ],
+        [
+          "fold_everything",
+          "Fold borderline hands like A-J by default against a big-stack open",
+          false,
+          "suboptimal",
+          "Tighten defend and avoid thin all-ins"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "tournament_pressure_checkpoint",
+      "w9_checkpoint_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_9",
+      "tournament_pressure_checkpoint",
+      "w9_checkpoint_review",
+      "review",
+      "proveIt",
+      [
+        [
+          "player_only",
+          "Adjust by player type and ignore stack pressure",
+          false,
+          "suboptimal",
+          "Map pressure first, then adjust by player"
+        ],
+        [
+          "cards_only",
+          "Map pressure, then copy broad player reads",
+          false,
+          "wrong",
+          "Map pressure first, then adjust by player"
+        ],
+        [
+          "pressure_then_adjust",
+          "Map pressure first, then adjust by player",
+          true,
+          "correct",
+          "Map pressure first, then adjust by player"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "tournament_pressure_checkpoint",
+      "w9_checkpoint_survival_line",
+      "drill",
+      "practice",
+      [
+        [
+          "disciplined_urgency",
+          "Disciplined urgency in reasonable spots",
+          true,
+          "correct",
+          "Disciplined urgency in reasonable spots"
+        ],
+        [
+          "panic_any_two",
+          "Go all-in with 7-2 offsuit over a tight early-position raise and a call",
+          false,
+          "wrong",
+          "Disciplined urgency in reasonable spots"
+        ],
+        [
+          "wait_only_aa",
+          "Fold until you pick up pocket aces",
+          false,
+          "suboptimal",
+          "Disciplined urgency in reasonable spots"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "tournament_pressure_checkpoint",
+      "w9_checkpoint_table_notice",
+      "drill",
+      "practice",
+      [
+        [
+          "same_cash_logic",
+          "Treat it like cash",
+          false,
+          "wrong",
+          "Respect bubble pressure"
+        ],
+        [
+          "fold_everything_bubble",
+          "Fold everything",
+          false,
+          "suboptimal",
+          "Respect bubble pressure"
+        ],
+        [
+          "medium_stack_pressure",
+          "Respect bubble pressure",
+          true,
+          "correct",
+          "Respect bubble pressure"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "tournament_pressure_checkpoint",
+      "w9_checkpoint_zone_line",
+      "drill",
+      "practice",
+      [
+        [
+          "green_zone",
+          "Green-zone player",
+          false,
+          "wrong",
+          "Red-zone player"
+        ],
+        [
+          "red_zone",
+          "Red-zone player",
+          true,
+          "correct",
+          "Red-zone player"
+        ],
+        [
+          "same_zone",
+          "Both should act the same way",
+          false,
+          "wrong",
+          "Red-zone player"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "m_ratio_zones_lite",
+      "w9_m_ratio_green_zone",
+      "drill",
+      "practice",
+      [
+        [
+          "panic",
+          "Force all-ins quickly",
+          false,
+          "wrong",
+          "Patience and table selection"
+        ],
+        [
+          "patience",
+          "Patience and table selection",
+          true,
+          "correct",
+          "Patience and table selection"
+        ],
+        [
+          "never_risk",
+          "Avoid pressure spots entirely",
+          false,
+          "suboptimal",
+          "Patience and table selection"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "m_ratio_zones_lite",
+      "w9_m_ratio_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_9",
+      "m_ratio_zones_lite",
+      "w9_m_ratio_recap",
+      "review",
+      "review",
+      []
+    ],
+    [
+      "world_9",
+      "m_ratio_zones_lite",
+      "w9_m_ratio_red_zone",
+      "drill",
+      "practice",
+      [
+        [
+          "urgent",
+          "Use controlled urgency",
+          true,
+          "correct",
+          "Use controlled urgency"
+        ],
+        [
+          "wait",
+          "Wait for a big pocket pair like AA or KK",
+          false,
+          "suboptimal",
+          "Use controlled urgency"
+        ],
+        [
+          "flat_call",
+          "Flat-call wide and see flops",
+          false,
+          "wrong",
+          "Use controlled urgency"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "m_ratio_zones_lite",
+      "w9_m_ratio_table_window_transfer",
+      "drill",
+      "proveIt",
+      [
+        [
+          "wait_for_red",
+          "Wait until red zone before changing anything",
+          false,
+          "wrong",
+          "Plan a practical action window now"
+        ],
+        [
+          "panic_now",
+          "Treat yellow zone like instant all-in panic",
+          false,
+          "suboptimal",
+          "Plan a practical action window now"
+        ],
+        [
+          "prepare_now",
+          "Plan a practical action window now",
+          true,
+          "correct",
+          "Plan a practical action window now"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "m_ratio_zones_lite",
+      "w9_m_ratio_yellow_zone",
+      "drill",
+      "practice",
+      [
+        [
+          "prepare_windows",
+          "Prepare action windows before red-zone panic",
+          true,
+          "correct",
+          "Prepare action windows before red-zone panic"
+        ],
+        [
+          "ignore",
+          "Ignore urgency until the red zone",
+          false,
+          "wrong",
+          "Prepare action windows before red-zone panic"
+        ],
+        [
+          "panic_now",
+          "Go all-in with the next playable hand right away",
+          false,
+          "suboptimal",
+          "Prepare action windows before red-zone panic"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "bubble_risk_premium",
+      "w9_medium_stack_tighten",
+      "drill",
+      "practice",
+      [
+        [
+          "call_wide",
+          "Call off as wide as chip EV says",
+          false,
+          "wrong",
+          "Tighten marginal calls"
+        ],
+        [
+          "tighten_calls",
+          "Tighten marginal calls",
+          true,
+          "correct",
+          "Tighten marginal calls"
+        ],
+        [
+          "fold_all",
+          "Fold everything until paid",
+          false,
+          "suboptimal",
+          "Tighten marginal calls"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "survival_pressure_basics",
+      "w9_short_stack_survival",
+      "drill",
+      "practice",
+      [
+        [
+          "wait_premium",
+          "Wait for AA or KK before entering a pot",
+          false,
+          "suboptimal",
+          "Take a reasonable all-in spot, first in or over a raise"
+        ],
+        [
+          "take_spot",
+          "Take a reasonable all-in spot, first in or over a raise",
+          true,
+          "correct",
+          "Take a reasonable all-in spot, first in or over a raise"
+        ],
+        [
+          "open_fold",
+          "Open small and fold to pressure",
+          false,
+          "wrong",
+          "Take a reasonable all-in spot, first in or over a raise"
+        ]
+      ]
+    ],
+    [
+      "world_9",
+      "survival_pressure_basics",
+      "w9_survival_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_9",
+      "survival_pressure_basics",
+      "w9_survival_recap",
+      "review",
+      "review",
+      []
+    ],
+    [
+      "world_9",
+      "survival_pressure_basics",
+      "w9_survival_stack_tradeoff",
+      "drill",
+      "practice",
+      [
+        [
+          "cash_table",
+          "Cash table",
+          false,
+          "wrong",
+          "Tournament table"
+        ],
+        [
+          "tournament_table",
+          "Tournament table",
+          true,
+          "correct",
+          "Tournament table"
+        ],
+        [
+          "same_both",
+          "Both should pass equally",
+          false,
+          "wrong",
+          "Tournament table"
+        ]
+      ]
+    ]
+  ],
+  "learning": {
+    "w9_survival_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w9_cash_vs_tournament": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "same_cash",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_everything",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "survival",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_short_stack_survival": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "wait_premium",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "take_spot",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "open_fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_survival_stack_tradeoff": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "cash_table",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "tournament_table",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "same_both",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_survival_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w9_m_ratio_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w9_m_ratio_red_zone": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "urgent",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "wait",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "flat_call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_m_ratio_green_zone": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "panic",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "patience",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "never_risk",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_m_ratio_yellow_zone": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "prepare_windows",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "ignore",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "panic_now",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_m_ratio_table_window_transfer": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "wait_for_red",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "panic_now",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "prepare_now",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_m_ratio_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w9_bubble_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w9_medium_stack_tighten": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "call_wide",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "tighten_calls",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_all",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_big_stack_leverage": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "apply_pressure",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "freeze",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "jam_any_two",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_bubble_short_stack": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "still_take_spots",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_to_money",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_off_light",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_bubble_table_risk_transfer": {
+      "rewardXp": 12,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "call_chip_ev",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "tighten_stackoff",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_anything_close",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_bubble_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w9_checkpoint_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w9_checkpoint_survival_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "disciplined_urgency",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "panic_any_two",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "wait_only_aa",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_checkpoint_zone_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "green_zone",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "red_zone",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "same_zone",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_checkpoint_bubble_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "chip_ev_only",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "tighten_defense",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_everything",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_checkpoint_table_notice": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "same_cash_logic",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_everything_bubble",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "medium_stack_pressure",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w9_checkpoint_review": {
+      "rewardXp": 17,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "player_only",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "cards_only",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "pressure_then_adjust",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    }
+  }
+}
