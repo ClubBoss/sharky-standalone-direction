@@ -1,17 +1,5 @@
 {
   "btn_share_by_world": {
-    "world_10": {
-      "btn_count": 22,
-      "table_tasks": 22
-    },
-    "world_11": {
-      "btn_count": 21,
-      "table_tasks": 21
-    },
-    "world_12": {
-      "btn_count": 20,
-      "table_tasks": 22
-    },
     "world_7": {
       "btn_count": 11,
       "table_tasks": 13
@@ -19,36 +7,28 @@
     "world_8": {
       "btn_count": 22,
       "table_tasks": 26
-    },
-    "world_9": {
-      "btn_count": 23,
-      "table_tasks": 23
     }
   },
   "checks": {
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 200,
     "13.intro_over_100_words": 85,
-    "14.duplicate_theory_in_lesson": 231,
-    "15.internal_jargon": 397,
-    "16.extreme_wrong_option": 320,
-    "17.single_format_lesson": 48,
+    "14.duplicate_theory_in_lesson": 238,
+    "15.internal_jargon": 434,
+    "16.extreme_wrong_option": 363,
+    "17.single_format_lesson": 54,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 67,
     "20.hero_qq_per_world": 19,
-    "21.duplicate_wrong_reason": 784,
-    "22.bet_into_pot": 26,
+    "21.duplicate_wrong_reason": 959,
+    "22.bet_into_pot": 36,
     "23.pot_with_bet": 6,
-    "24.call_equity": 27,
-    "25.street_stack": 26
+    "24.call_equity": 38,
+    "25.street_stack": 28
   },
   "findings": [
-    "11.btn_share_per_world|world_10",
-    "11.btn_share_per_world|world_11",
-    "11.btn_share_per_world|world_12",
     "11.btn_share_per_world|world_7",
     "11.btn_share_per_world|world_8",
-    "11.btn_share_per_world|world_9",
     "12.two_option_w1_w5|blinds_button_moves",
     "12.two_option_w1_w5|blinds_first_actor",
     "12.two_option_w1_w5|blinds_last_actor",
@@ -86,27 +66,18 @@
     "12.two_option_w1_w5|showdown_tie_drill",
     "12.two_option_w1_w5|what_poker_is_pot_stack",
     "12.two_option_w1_w5|your_first_hand_action_trail",
-    "17.single_format_lesson|adjust_one_lever|statement",
     "17.single_format_lesson|blinds_action_order|seatTap",
-    "17.single_format_lesson|bubble_risk_premium|statement",
     "17.single_format_lesson|cards_ranks_suits|statement",
     "17.single_format_lesson|fold_check_call_raise|actionDecision",
     "17.single_format_lesson|hand_rankings_table|statement",
     "17.single_format_lesson|hand_rankings_upper|statement",
-    "17.single_format_lesson|m_ratio_zones_lite|statement",
-    "17.single_format_lesson|player_adjustment_checkpoint|statement",
     "17.single_format_lesson|showdown_winning|statement",
-    "17.single_format_lesson|tournament_pressure_checkpoint|statement",
     "17.single_format_lesson|what_poker_is_content|statement",
-    "18.same_format_streak|world_10|w10_guardrail_sample_size|statement",
-    "18.same_format_streak|world_10|w10_nit_tag|statement",
-    "18.same_format_streak|world_11|w11_trigger_bad_price_fold|statement",
     "18.same_format_streak|world_1|actions_theory|actionDecision",
     "18.same_format_streak|world_1|positions_theory|seatTap",
     "18.same_format_streak|world_1|what_poker_is_pot_stack|statement",
     "18.same_format_streak|world_1|what_poker_is_table_read_transfer|statement",
     "18.same_format_streak|world_1|your_first_hand_preflop|statement",
-    "18.same_format_streak|world_9|w9_cash_vs_tournament|statement",
     "19.lesson_length_corridor|blinds_action_order|too_long",
     "19.lesson_length_corridor|hand_rankings_upper|too_long",
     "20.hero_qq_per_world|world_1|actions_call_drill",
@@ -329,11 +300,6 @@
     "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_pot_to_call_v1|choice_0",
     "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_pot_to_call_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w6_w6_continuation_bet_board_cards_v1|choice_0",
-    "21.duplicate_wrong_reason|spaced_review_w6_w6_continuation_bet_board_cards_v1|choice_2",
-    "25.street_stack|world_11|w11_checkpoint_mixed_table_line|caption|30 BB effective|no source amount",
-    "25.street_stack|world_12|w12_checkpoint_full_loop_line|caption|25 BB effective|no source amount",
-    "25.street_stack|world_12|w12_pretty_hand_bad_price_fold|caption|100 BB effective|no source amount",
-    "25.street_stack|world_12|w12_revenge_raise_trap|caption|35 BB effective|no source amount",
-    "25.street_stack|world_12|w12_revenge_raise_trap|option[raise_to_take_control].reason|35 BB effective|no source amount"
+    "21.duplicate_wrong_reason|spaced_review_w6_w6_continuation_bet_board_cards_v1|choice_2"
   ]
 }

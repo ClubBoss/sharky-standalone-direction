@@ -1197,25 +1197,6 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   );
 }
 
-Act0HandContributionsV1 _act0SingleStreetBetContributionsV1({
-  required PokerStreet street,
-  required String bettor,
-  required double betBb,
-  required double effectiveStackAtHandStartBb,
-  required double potBeforeBetBb,
-}) => Act0HandContributionsV1(
-  fromStreet: street,
-  throughStreet: street,
-  // The amount BTN could have paid on earlier streets cannot exceed the
-  // entire pot before the current bet.
-  minimumStartingStackBbBySeat: {
-    'btn': effectiveStackAtHandStartBb - potBeforeBetBb,
-  },
-  entries: [
-    Act0ContributionV1(street, bettor, Act0ContributionKindV1.wager, betBb),
-  ],
-);
-
 // Explicit authored current-street commitments; old street chips are collected.
 // This helper does not infer actors, amounts, folds or a pot from partial trails.
 Act0TableStateV1 _act0CurrentStreetTableV1(

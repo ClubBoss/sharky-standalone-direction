@@ -860,21 +860,33 @@ void main() {
       ...w11Wave4ChoiceContractV1,
       ...w12Wave4ChoiceContractV1,
     };
-    final addedRows = rows.where(
-      (row) => addedContracts.containsKey(row.task.taskId),
-    ).toList();
-    expect(addedRows.map((row) => row.task.taskId).toSet(), addedContracts.keys.toSet());
+    final addedRows = rows
+        .where((row) => addedContracts.containsKey(row.task.taskId))
+        .toList();
+    expect(
+      addedRows.map((row) => row.task.taskId).toSet(),
+      addedContracts.keys.toSet(),
+    );
     final addedWrongChoices = {
       for (final row in addedRows)
-        for (final [choiceId, _, correct, _, _] in addedContracts[row.task.taskId]!.$2)
+        for (final [choiceId, _, correct, _, _]
+            in addedContracts[row.task.taskId]!.$2)
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
     expect(rows, hasLength(341 + addedContracts.length));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(341 + addedContracts.length));
+    expect(
+      rows.map((r) => r.task.taskId).toSet(),
+      hasLength(341 + addedContracts.length),
+    );
     expect(
       allChoices,
-      hasLength(601 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length + addedWrongChoices.length),
+      hasLength(
+        601 +
+            w4AddedOptionQualityV1.length +
+            w5AddedOptionQualityV1.length +
+            addedWrongChoices.length,
+      ),
     );
     expect(
       foundationDefaults.where(addedWrongChoices.contains).toSet(),

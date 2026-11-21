@@ -316,10 +316,20 @@ void main() {
             ),
           )
           .toList();
-      expect(rows, hasLength(215 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
+      expect(
+        rows,
+        hasLength(
+          215 +
+              w11Wave4ChoiceContractV1.length +
+              w12Wave4ChoiceContractV1.length,
+        ),
+      );
       expect(
         rows.map((row) => row['taskId']).toSet(),
-        containsAll([...w11Wave4ChoiceContractV1.keys, ...w12Wave4ChoiceContractV1.keys]),
+        containsAll([
+          ...w11Wave4ChoiceContractV1.keys,
+          ...w12Wave4ChoiceContractV1.keys,
+        ]),
       );
       for (final row in rows) {
         expect(row['curationScope'], cnt01OutsideScopeV1);

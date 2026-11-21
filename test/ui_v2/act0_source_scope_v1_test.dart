@@ -275,8 +275,18 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
+    expect(
+      tasks,
+      hasLength(
+        413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
+    expect(
+      tasks.map((task) => task.taskId).toSet(),
+      hasLength(
+        413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -517,7 +527,10 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 283);
-    expect(played, 311 + 10 + 9); // Authored contexts, not certified replay histories.
+    expect(
+      played,
+      311 + 10 + 9,
+    ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',

@@ -304,7 +304,10 @@ void main() {
         reason: id,
       );
     }
-    expect(taskCounts, {11: 21 + w11Wave4ChoiceContractV1.length, 12: 22 + w12Wave4ChoiceContractV1.length});
+    expect(taskCounts, {
+      11: 21 + w11Wave4ChoiceContractV1.length,
+      12: 22 + w12Wave4ChoiceContractV1.length,
+    });
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {

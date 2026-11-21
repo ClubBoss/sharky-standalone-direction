@@ -35,10 +35,17 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
+    expect(
+      tasks,
+      hasLength(
+        413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     expect(
       tasks.map((t) => t.taskId).toSet(),
-      hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length),
+      hasLength(
+        413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
     );
     final problems = <String>[];
     for (final t in tasks) {
@@ -102,7 +109,12 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
+    expect(
+      entries,
+      hasLength(
+        413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -978,7 +990,10 @@ void main() {
       for (final row in beforeL1.cast<List<dynamic>>())
         row[2] as String: (row[5] as List).cast<List<dynamic>>(),
     };
-    for (final entry in [...w11Wave4GradeCorrectionsV1.entries, ...w12Wave4GradeCorrectionsV1.entries]) {
+    for (final entry in [
+      ...w11Wave4GradeCorrectionsV1.entries,
+      ...w12Wave4GradeCorrectionsV1.entries,
+    ]) {
       final option = beforeP8[entry.key]!.singleWhere(
         (row) => row[0] == entry.value,
       );
@@ -2035,7 +2050,12 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length));
+    expect(
+      taskIndex,
+      hasLength(
+        413 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

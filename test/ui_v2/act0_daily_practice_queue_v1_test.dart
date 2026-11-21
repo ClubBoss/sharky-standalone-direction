@@ -191,7 +191,10 @@ void main() {
           count++;
         }
       }
-      expect(count, 284 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length);
+      expect(
+        count,
+        284 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      );
     },
   );
 

@@ -147,38 +147,45 @@ void main() {
     );
   });
 
-  test('W11 and W12 full ledgers prove the effective stack at the decision', () {
-    const expected = {
-      'w11_checkpoint_mixed_table_line': 30.0,
-      'w12_pretty_hand_bad_price_fold': 100.0,
-      'w12_revenge_raise_trap': 35.0,
-      'w12_checkpoint_full_loop_line': 25.0,
-    };
-    final tasks = Act0ShellStateV1.sample.worlds
-        .expand((world) => world.lessons)
-        .expand((lesson) => lesson.taskList);
-    for (final task in tasks.where(
-      (task) => expected.containsKey(task.taskId),
-    )) {
-      final table = task.runner.table;
-      final ledger = table.handContributions!;
-      final hero = table.heroSeatId!;
-      final bettor = ledger.entries.last.seatId;
-      expect(ledger.fromStreet.name, 'preflop', reason: task.taskId);
-      expect(ledger.minimumStartingStackBbBySeat, isEmpty, reason: task.taskId);
-      for (final seat in [hero, bettor]) {
-        final invested = ledger.entries
-            .take(ledger.entries.length - 1)
-            .where((entry) => entry.seatId == seat)
-            .fold<double>(0, (sum, entry) => sum + entry.amountBb);
+  test(
+    'W11 and W12 full ledgers prove the effective stack at the decision',
+    () {
+      const expected = {
+        'w11_checkpoint_mixed_table_line': 30.0,
+        'w12_pretty_hand_bad_price_fold': 100.0,
+        'w12_revenge_raise_trap': 35.0,
+        'w12_checkpoint_full_loop_line': 25.0,
+      };
+      final tasks = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.taskList);
+      for (final task in tasks.where(
+        (task) => expected.containsKey(task.taskId),
+      )) {
+        final table = task.runner.table;
+        final ledger = table.handContributions!;
+        final hero = table.heroSeatId!;
+        final bettor = ledger.entries.last.seatId;
+        expect(ledger.fromStreet.name, 'preflop', reason: task.taskId);
         expect(
-          ledger.startingStackBbBySeat[seat]! - invested,
-          expected[task.taskId],
+          ledger.minimumStartingStackBbBySeat,
+          isEmpty,
           reason: task.taskId,
         );
+        for (final seat in [hero, bettor]) {
+          final invested = ledger.entries
+              .take(ledger.entries.length - 1)
+              .where((entry) => entry.seatId == seat)
+              .fold<double>(0, (sum, entry) => sum + entry.amountBb);
+          expect(
+            ledger.startingStackBbBySeat[seat]! - invested,
+            expected[task.taskId],
+            reason: task.taskId,
+          );
+        }
       }
-    }
-  });
+    },
+  );
 
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
@@ -1257,7 +1264,10 @@ void main() {
     }
     expectedComparison.addAll(w11Wave4TableTruthContractV1());
     expectedComparison.addAll(w12Wave4TableTruthContractV1());
-    for (final entry in [...w11Wave4GradeCorrectionsV1.entries, ...w12Wave4GradeCorrectionsV1.entries]) {
+    for (final entry in [
+      ...w11Wave4GradeCorrectionsV1.entries,
+      ...w12Wave4GradeCorrectionsV1.entries,
+    ]) {
       final task = historicalComparison[entry.key] as Map<String, dynamic>;
       final option = (task['options'] as List<dynamic>)
           .cast<Map<String, dynamic>>()
