@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_starting_chart_v1.dart';
@@ -88,6 +89,47 @@ void main() {
         action,
         reason:
             '${table.heroSeatId} ${cards.map((card) => card.label).join(" ")}',
+      );
+    }
+  });
+
+  test('W2 facing-open feedback separates the blind pot and the open', () {
+    for (final (id, opener) in const [
+      ('weak_ace_warning_w3_strong_continue', 'hj'),
+      ('continue_or_let_go_medium_call_or_fold', 'co'),
+      ('discipline_checkpoint_checkpoint_borderline_continue', 'co'),
+    ]) {
+      final runner = _tasks.singleWhere((task) => task.taskId == id).runner;
+      final table = runner.table;
+      final ledger = table.handContributions!;
+      final open = ledger.entries.singleWhere(
+        (entry) => entry.kind == Act0ContributionKindV1.wager,
+      );
+      expect(open.seatId, opener, reason: id);
+      expect(open.amountBb, 2.5, reason: id);
+      final beforeOpen = ledger.entries
+          .takeWhile((entry) => entry != open)
+          .fold<double>(0, (pot, entry) => pot + entry.amountBb);
+      final decision = ledger.amounts(
+        seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: 'btn',
+      );
+      expect(beforeOpen, 1.5, reason: id);
+      expect(decision, (potBb: 4.0, toCallBb: 2.5), reason: id);
+      expect(
+        runner.options.singleWhere(act0RunnerOptionIsAuthoredCorrectV1).id,
+        'call',
+        reason: id,
+      );
+      expect(
+        runner.options
+            .singleWhere((option) => option.id == 'fold')
+            .feedbackReason,
+        startsWith(
+          '${opener.toUpperCase()} opened to 2.5 BB with 1.5 BB in the pot. '
+          'The pot is 4 BB after the open.',
+        ),
+        reason: id,
       );
     }
   });
