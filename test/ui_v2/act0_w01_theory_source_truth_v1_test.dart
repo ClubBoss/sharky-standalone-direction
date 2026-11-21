@@ -442,22 +442,22 @@ void _newFirstHandStackTests() {
         expect(task.runner.options.singleWhere((o) => o.isCorrect).id, correct);
         expect(task.rewardXp, 6);
         expect(t.streetLabel, street);
-        expect(t.decisionSeatId, 'btn');
-        expect(t.activeSeatId, 'btn');
+        expect(t.decisionSeatId, 'co');
+        expect(t.activeSeatId, 'co');
         expect(t.heroCards.map((c) => c.label), ['As', 'Kd']);
         expect(t.potLabel, 'Pot 7.5 BB');
         expect(t.actionTrail.last.label, '$street: BB checks');
         expect(t.seats.where((s) => s.isInHand).map((s) => s.seatId).toSet(), {
           'bb',
-          'btn',
+          'co',
         });
         expect(
           {for (final a in t.seats) a.seatId: a.stackLabel},
           {
             'utg': '100 BB',
-            'hj': '100 BB',
-            'co': '99 BB',
-            'btn': '97 BB',
+            'hj': '99 BB',
+            'co': '97 BB',
+            'btn': '100 BB',
             'sb': '99.5 BB',
             'bb': '97 BB',
           },
@@ -1216,6 +1216,8 @@ void _newFreeCheckContextTests() {
       'new mechanical Check $id retains goal and complete declared facts',
       () {
         final task = _task('fold_check_call_raise', id);
+        final hero = id == 'actions_legal_context' ? 'co' : 'btn';
+        final foldedLateSeat = hero == 'co' ? 'btn' : 'co';
         final table = task.runner.table;
         expect(task.runner.question, entry.value.$1);
         expect(task.rewardXp, 5);
@@ -1254,16 +1256,16 @@ void _newFreeCheckContextTests() {
         expect(table.streetLabel, 'Flop');
         expect(table.potLabel, 'Pot 4.5 BB');
         expect(table.toCallLabel, isEmpty);
-        expect(table.heroSeatId, 'btn');
-        expect(table.decisionSeatId, 'btn');
-        expect(table.activeSeatId, 'btn');
+        expect(table.heroSeatId, hero);
+        expect(table.decisionSeatId, hero);
+        expect(table.activeSeatId, hero);
         expect(
           table.seats.where((s) => s.isInHand).map((s) => s.seatId).toSet(),
-          {'btn', 'bb'},
+          {hero, 'bb'},
         );
         expect(
           table.seats.where((s) => s.isFolded).map((s) => s.seatId).toSet(),
-          {'utg', 'hj', 'co', 'sb'},
+          {'utg', 'hj', foldedLateSeat, 'sb'},
         );
         expect(table.seats.singleWhere((s) => s.isSmallBlind).seatId, 'sb');
         expect(table.seats.singleWhere((s) => s.isBigBlind).seatId, 'bb');
@@ -1273,8 +1275,8 @@ void _newFreeCheckContextTests() {
           {
             'utg': '100 BB',
             'hj': '100 BB',
-            'co': '100 BB',
-            'btn': '98 BB',
+            hero: '98 BB',
+            foldedLateSeat: '100 BB',
             'sb': '99.5 BB',
             'bb': '98 BB',
           },
@@ -1297,8 +1299,9 @@ void _newFreeCheckContextTests() {
           'BB blind 1 BB',
           'UTG folds',
           'HJ folds',
-          'CO folds',
-          'BTN raises 2 BB',
+          if (hero == 'btn') 'CO folds',
+          '${hero.toUpperCase()} raises 2 BB',
+          if (hero == 'co') 'BTN folds',
           'SB folds',
           'BB calls 1 BB more',
           'Flop: BB checks',

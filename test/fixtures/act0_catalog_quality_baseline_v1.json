@@ -1,9 +1,5 @@
 {
   "btn_share_by_world": {
-    "world_1": {
-      "btn_count": 68,
-      "table_tasks": 71
-    },
     "world_10": {
       "btn_count": 22,
       "table_tasks": 22
@@ -55,7 +51,6 @@
     "25.street_stack": 26
   },
   "findings": [
-    "11.btn_share_per_world|world_1",
     "11.btn_share_per_world|world_10",
     "11.btn_share_per_world|world_11",
     "11.btn_share_per_world|world_12",

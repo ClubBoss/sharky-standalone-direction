@@ -4,6 +4,34 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 
 void main() {
+  test('W1 seats stay within the novice and whole-world BTN limits', () {
+    final lessons = Act0ShellStateV1.sample.worldById('world_1').lessons;
+    final tasks = lessons
+        .expand((lesson) => lesson.taskList)
+        .where((task) => task.runner.table.seats.isNotEmpty);
+    final beginnerTasks = lessons
+        .takeWhile((lesson) => lesson.lessonId != 'blinds_action_order')
+        .expand((lesson) => lesson.taskList);
+    expect(tasks, hasLength(71));
+    expect(
+      tasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
+      hasLength(35),
+    );
+    expect(
+      beginnerTasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
+      hasLength(28),
+    );
+    final repair = beginnerTasks.singleWhere(
+      (task) => task.taskId == 'first_table_guide_shared_cards_repair',
+    );
+    expect(repair.runner.table.heroSeat.seatId, 'co');
+    expect(repair.rewardXp, 0);
+    expect(
+      repair.runner.question,
+      isNot(matches(r'\b(UTG|HJ|CO|BTN|SB|BB)\b')),
+    );
+  });
+
   test(
     'declared first hand: eight tasks, one deck, legal approved action order and cash pot',
     () {
@@ -32,19 +60,19 @@ void main() {
           'SB blind 0.5 BB',
           'BB blind 1 BB',
           'UTG folds',
-          'HJ folds',
-          'CO calls 1 BB',
-          'BTN raises to 3 BB',
+          'HJ calls 1 BB',
+          'CO raises to 3 BB',
+          'BTN folds',
           'SB folds',
           'BB calls 2 BB more',
-          'CO folds',
+          'HJ folds',
         ]);
-        // Complete, explicitly owner-authored commitments: raise-to replaces BTN's
-        // total; BB's call adds two. CO's dead call and SB's blind stay in the pot.
+        // Complete, explicitly owner-authored commitments: raise-to replaces CO's
+        // total; BB's call adds two. HJ's dead call and SB's blind stay in the pot.
         final contributions = <String, double>{};
         for (final label in preflop) {
           final m = RegExp(
-            r'^(SB|BB|CO|BTN) (blind|calls|raises to) ([\d.]+) BB',
+            r'^(SB|BB|HJ|CO) (blind|calls|raises to) ([\d.]+) BB',
           ).firstMatch(label);
           if (m == null) continue;
           final value = double.parse(m[3]!);
@@ -52,14 +80,14 @@ void main() {
               ? value
               : (contributions[m[1]!] ?? 0) + value;
         }
-        expect(contributions, {'SB': 0.5, 'BB': 3.0, 'CO': 1.0, 'BTN': 3.0});
+        expect(contributions, {'SB': 0.5, 'BB': 3.0, 'HJ': 1.0, 'CO': 3.0});
         expect(contributions.values.fold<double>(0, (a, b) => a + b), 7.5);
         expect(
           t.seats
               .where((s) => s.isInHand && !s.isFolded)
               .map((s) => s.seatId)
               .toSet(),
-          {'bb', 'btn'},
+          {'bb', 'co'},
         );
         final history = task.taskId.endsWith('action_trail');
         if (history) {
@@ -79,12 +107,13 @@ void main() {
         final isShowdown =
             task.taskId.endsWith('showdown') || task.taskId.endsWith('recap');
         final bb = t.seats.singleWhere((s) => s.seatId == 'bb');
-        final co = t.seats.singleWhere((s) => s.seatId == 'co');
-        expect(co.isFolded, isTrue);
-        expect(co.cardsVisibleMode, Act0CardsVisibleModeV1.none);
+        final hj = t.seats.singleWhere((s) => s.seatId == 'hj');
+        expect(t.heroSeat.seatId, 'co');
+        expect(hj.isFolded, isTrue);
+        expect(hj.cardsVisibleMode, Act0CardsVisibleModeV1.none);
         expect(
           t.activeSeatId,
-          t.streetLabel != 'Preflop' && !isShowdown ? 'btn' : '',
+          t.streetLabel != 'Preflop' && !isShowdown ? 'co' : '',
         );
         expect(
           bb.cardsVisibleMode,
@@ -109,13 +138,13 @@ void main() {
             final lines = t.actionTrail
                 .where((a) => a.label.startsWith('$street:'))
                 .map((a) => a.label);
-            expect(lines, ['$street: BB checks', '$street: BTN checks']);
+            expect(lines, ['$street: BB checks', '$street: CO checks']);
           }
         }
       }
     },
   );
-  test('historical BB choice is the last live action before BTN acts', () {
+  test('historical BB choice is the last live action before CO acts', () {
     final task = Act0ShellStateV1.sample
         .lessonById('your_first_hand')
         .taskList
@@ -128,7 +157,7 @@ void main() {
           .map((a) => a.label),
       ['Flop: BB checks'],
     );
-    expect(table.activeSeatId, 'btn');
+    expect(table.activeSeatId, 'co');
     final bb = table.seats.singleWhere((s) => s.seatId == 'bb');
     expect(bb.isInHand && !bb.isFolded, isTrue);
     expect(task.runner.options.map((o) => o.id), ['sb_post', 'bb_check']);

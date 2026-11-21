@@ -77,9 +77,9 @@ const _pkr06AuthoredResidual = <String>{};
 /// winning seats. A pot is shared equally between tied winners.
 const _pkr08OutcomeClaims = <String, Set<String>>{
   'hand_rankings_quads_vs_full_house_drill': {'btn'},
-  'your_first_hand_showdown': {'btn'},
-  'showdown_best_hand_drill': {'btn'},
-  'showdown_review': {'btn', 'co'},
+  'your_first_hand_showdown': {'co'},
+  'showdown_best_hand_drill': {'co'},
+  'showdown_review': {'hj', 'co'},
 };
 
 /// Outcome claims whose winner is not yet determined by source cards (live

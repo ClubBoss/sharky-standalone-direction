@@ -1281,12 +1281,15 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
   num turnBetBb = 0,
   List<String> highlightedCardIds = const [],
 }) {
+  const opponent = 'hj';
+  const hero = 'co';
   final contributedBb = 2.25 + flopBetBb + turnBetBb;
   return _showdownKickerRunner.table.copyWith(
     centerLabel: 'Showdown',
     streetLabel: 'River',
     potLabel: 'Pot ${_act0BbLabelV1(2 * contributedBb + 1.5)}',
     toCallLabel: '',
+    heroSeatId: hero,
     activeSeatId: '',
     clearDecisionSeatId: true,
     selectableSeatIds: const [],
@@ -1299,13 +1302,13 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
         ..._act0LessonBlinds,
         const Act0ContributionV1(
           PokerStreet.preflop,
-          'co',
+          opponent,
           Act0ContributionKindV1.wager,
           2.25,
         ),
         const Act0ContributionV1(
           PokerStreet.preflop,
-          'btn',
+          hero,
           Act0ContributionKindV1.wager,
           2.25,
         ),
@@ -1314,7 +1317,7 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
           (PokerStreet.turn, turnBetBb),
         ])
           if (bet > 0)
-            for (final seat in ['co', 'btn'])
+            for (final seat in [opponent, hero])
               Act0ContributionV1(
                 street,
                 seat,
@@ -1327,23 +1330,23 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
       const Act0ActionTrailItemV1(label: 'UTG folds'),
-      const Act0ActionTrailItemV1(label: 'HJ folds'),
-      const Act0ActionTrailItemV1(label: 'CO raises 2.25 BB'),
-      const Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'HJ raises 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'CO calls 2.25 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN folds'),
       const Act0ActionTrailItemV1(label: 'SB folds'),
       const Act0ActionTrailItemV1(label: 'BB folds'),
       for (final (street, bet) in [('Flop', flopBetBb), ('Turn', turnBetBb)])
         if (bet > 0) ...[
           Act0ActionTrailItemV1(
-            label: '$street: CO bets ${_act0BbLabelV1(bet)}',
+            label: '$street: HJ bets ${_act0BbLabelV1(bet)}',
           ),
-          Act0ActionTrailItemV1(label: 'BTN calls ${_act0BbLabelV1(bet)}'),
+          Act0ActionTrailItemV1(label: 'CO calls ${_act0BbLabelV1(bet)}'),
         ] else ...[
-          Act0ActionTrailItemV1(label: '$street: CO checks'),
-          const Act0ActionTrailItemV1(label: 'BTN checks'),
+          Act0ActionTrailItemV1(label: '$street: HJ checks'),
+          const Act0ActionTrailItemV1(label: 'CO checks'),
         ],
-      const Act0ActionTrailItemV1(label: 'River: CO checks'),
-      const Act0ActionTrailItemV1(label: 'BTN checks'),
+      const Act0ActionTrailItemV1(label: 'River: HJ checks'),
+      const Act0ActionTrailItemV1(label: 'CO checks'),
     ],
     autoPlayHistory: false,
     seats: [
@@ -1351,24 +1354,28 @@ Act0TableStateV1 _act0CheckpointShowdownTableV1({
         _act0CopySeatStateV1(
           seat,
           isOccupied: true,
-          isInHand: seat.seatId == 'btn' || seat.seatId == 'co',
-          isFolded: seat.seatId != 'btn' && seat.seatId != 'co',
+          isHero: seat.seatId == hero,
+          displayName: seat.seatId == hero
+              ? 'Hero'
+              : _act0DefaultSeatDisplayNameV1(seat),
+          isInHand: seat.seatId == hero || seat.seatId == opponent,
+          isFolded: seat.seatId != hero && seat.seatId != opponent,
           isActive: false,
           hasActed: true,
           isLastAggressor: false,
           clearCommitment: true,
           stackLabel: switch (seat.seatId) {
-            'btn' || 'co' => _act0BbLabelV1(100 - contributedBb),
+            hero || opponent => _act0BbLabelV1(100 - contributedBb),
             'sb' => '99.5 BB',
             'bb' => '99 BB',
             _ => '100 BB',
           },
           holeCards: switch (seat.seatId) {
-            'co' => otherCards,
-            'btn' => heroCards,
+            opponent => otherCards,
+            hero => heroCards,
             _ => seat.holeCards,
           },
-          cardsVisibleMode: seat.seatId == 'btn' || seat.seatId == 'co'
+          cardsVisibleMode: seat.seatId == hero || seat.seatId == opponent
               ? Act0CardsVisibleModeV1.faceUp
               : Act0CardsVisibleModeV1.none,
         ),
