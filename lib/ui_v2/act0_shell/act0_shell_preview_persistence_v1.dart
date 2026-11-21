@@ -1255,6 +1255,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         );
         _dailyCompletedTaskIds.add(latestRecord.taskId);
         _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
+        _recordBetaActivityV1(
+          () => Act0BetaMetricsStoreV1.recordPracticeStep(recordedAtUtc),
+        );
       }
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendLearningEvidence(latestRecord);

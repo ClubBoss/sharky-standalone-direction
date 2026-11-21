@@ -9,6 +9,7 @@ import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_local_data_deletion_v1.dart';
 import 'act0_path_progress_v1.dart';
 import 'act0_shell_state_v1.dart';
+import 'act0_w1_rules_check_v1.dart';
 
 const act0BetaMetricsEnabledV1 = bool.fromEnvironment('SHARKY_BETA_METRICS');
 
@@ -26,8 +27,7 @@ enum Act0BetaSurveyAnswerV1 { yes, no, unsure }
 
 enum Act0BetaReturnV1 { pending, returned, missed }
 
-/// Only the two return windows and fixed-choice feedback are stored here.
-/// Course completion and repairs already have their own local sources.
+/// Beta return windows, fixed-choice feedback and first-week activity counts.
 class Act0BetaActivityV1 {
   Act0BetaActivityV1._({
     required this.firstVisitUtc,
@@ -35,7 +35,12 @@ class Act0BetaActivityV1 {
     required this.returnedDay2,
     required this.returnedDay7,
     required List<Act0BetaSurveyAnswerV1?> answers,
-  }) : answers = List.unmodifiable(answers);
+    Map<String, int> lessonDays = const {},
+    List<int> practiceSteps = const [0, 0, 0, 0, 0, 0, 0, 0],
+    this.rulesCheckStarted = false,
+  }) : answers = List.unmodifiable(answers),
+       lessonDays = Map.unmodifiable(lessonDays),
+       practiceSteps = List.unmodifiable(practiceSteps);
 
   factory Act0BetaActivityV1.firstVisit(DateTime now) => Act0BetaActivityV1._(
     firstVisitUtc: now.toUtc(),
@@ -49,6 +54,47 @@ class Act0BetaActivityV1 {
   final int observedDay;
   final bool returnedDay2, returnedDay7;
   final List<Act0BetaSurveyAnswerV1?> answers;
+  final Map<String, int> lessonDays;
+  final List<int> practiceSteps;
+  final bool rulesCheckStarted;
+
+  int? dayOf(DateTime time) {
+    final elapsed = time.difference(firstVisitUtc);
+    return elapsed.isNegative || elapsed.inDays > 7 ? null : elapsed.inDays;
+  }
+
+  Act0BetaActivityV1 _copy({
+    int? day,
+    bool? day2,
+    bool? day7,
+    List<Act0BetaSurveyAnswerV1?>? answers,
+    Map<String, int>? lessonDays,
+    List<int>? practiceSteps,
+    bool? rulesCheckStarted,
+  }) => Act0BetaActivityV1._(
+    firstVisitUtc: firstVisitUtc,
+    observedDay: day ?? observedDay,
+    returnedDay2: day2 ?? returnedDay2,
+    returnedDay7: day7 ?? returnedDay7,
+    answers: answers ?? this.answers,
+    lessonDays: lessonDays ?? this.lessonDays,
+    practiceSteps: practiceSteps ?? this.practiceSteps,
+    rulesCheckStarted: rulesCheckStarted ?? this.rulesCheckStarted,
+  );
+
+  Act0BetaActivityV1 _completeLesson(DateTime now, String lessonId) {
+    final day = dayOf(now);
+    if (day == null || lessonDays.containsKey(lessonId)) return this;
+    return _copy(lessonDays: {...lessonDays, lessonId: day});
+  }
+
+  Act0BetaActivityV1 _completePracticeStep(DateTime now) {
+    final day = dayOf(now);
+    if (day == null) return this;
+    return _copy(
+      practiceSteps: [...practiceSteps]..[day] = practiceSteps[day] + 1,
+    );
+  }
 
   Act0BetaActivityV1 visitAt(DateTime now) {
     final elapsed = now.difference(firstVisitUtc);
@@ -56,12 +102,10 @@ class Act0BetaActivityV1 {
     final day = elapsed.inDays.clamp(0, 7);
     // A foreground after a clock rollback cannot fill an earlier missed day.
     if (day <= observedDay) return this;
-    return Act0BetaActivityV1._(
-      firstVisitUtc: firstVisitUtc,
-      observedDay: day,
-      returnedDay2: returnedDay2 || day == 1,
-      returnedDay7: returnedDay7 || day == 6,
-      answers: answers,
+    return _copy(
+      day: day,
+      day2: returnedDay2 || day == 1,
+      day7: returnedDay7 || day == 6,
     );
   }
 
@@ -79,13 +123,7 @@ class Act0BetaActivityV1 {
   Act0BetaActivityV1 withAnswer(int question, Act0BetaSurveyAnswerV1? answer) {
     if (answers[question] == answer) return this;
     final updated = [...answers]..[question] = answer;
-    return Act0BetaActivityV1._(
-      firstVisitUtc: firstVisitUtc,
-      observedDay: observedDay,
-      returnedDay2: returnedDay2,
-      returnedDay7: returnedDay7,
-      answers: updated,
-    );
+    return _copy(answers: updated);
   }
 
   Map<String, Object?> toJson() => {
@@ -95,6 +133,9 @@ class Act0BetaActivityV1 {
     'returnedDay2': returnedDay2,
     'returnedDay7': returnedDay7,
     'answers': [for (final answer in answers) answer?.name],
+    if (lessonDays.isNotEmpty) 'lessonDays': lessonDays,
+    if (practiceSteps.any((count) => count > 0)) 'practiceSteps': practiceSteps,
+    if (rulesCheckStarted) 'rulesCheckStarted': true,
   };
 
   static Act0BetaActivityV1? _parse(Object? raw) {
@@ -125,11 +166,27 @@ class Act0BetaActivityV1 {
         if (answer != null && known == null) return null;
         decoded.add(known);
       }
+      final map = raw as Map;
+      final lessonDays = map['lessonDays'] ?? const <String, int>{};
+      final practiceSteps =
+          map['practiceSteps'] ?? const [0, 0, 0, 0, 0, 0, 0, 0];
+      final rulesCheckStarted = map['rulesCheckStarted'] ?? false;
+      if (lessonDays is! Map<String, Object?> ||
+          lessonDays.values.any((day) => day is! int || day < 0 || day > 7) ||
+          practiceSteps is! List ||
+          practiceSteps.length != 8 ||
+          practiceSteps.any((count) => count is! int || count < 0) ||
+          rulesCheckStarted is! bool) {
+        return null;
+      }
       return Act0BetaActivityV1._(
         firstVisitUtc: first,
         observedDay: day,
         returnedDay2: day2,
         returnedDay7: day7,
+        lessonDays: lessonDays.cast<String, int>(),
+        practiceSteps: practiceSteps.cast<int>(),
+        rulesCheckStarted: rulesCheckStarted,
         answers: [
           ...decoded,
           for (
@@ -164,6 +221,18 @@ class Act0BetaMetricsStoreV1 {
 
   static Future<void> recordVisit(DateTime now) => _update(
     (data) => data?.visitAt(now) ?? Act0BetaActivityV1.firstVisit(now),
+  );
+
+  static Future<void> recordLesson(DateTime now, String lessonId) =>
+      _update((data) => data?._completeLesson(now, lessonId));
+
+  static Future<void> recordPracticeStep(DateTime now) =>
+      _update((data) => data?._completePracticeStep(now));
+
+  static Future<void> recordRulesCheckStarted() => _update(
+    (data) => data == null || data.rulesCheckStarted
+        ? data
+        : data._copy(rulesCheckStarted: true),
   );
 
   static Future<void> setAnswer(int question, Act0BetaSurveyAnswerV1? answer) =>
@@ -217,6 +286,11 @@ class Act0BetaLearningMetricsV1 {
     required this.correctedMistakes,
     this.firstLessonId = '',
     this.firstLessonTaskIds = const {},
+    this.courseWorlds = const [],
+    this.completedTaskIds = const {},
+    this.currentLessonId = '',
+    this.rulesBestScore = 0,
+    this.rulesCheckCompleted = false,
     this.history = const Act0LearningEvidenceHistoryV1(),
   });
 
@@ -224,6 +298,10 @@ class Act0BetaLearningMetricsV1 {
     required Act0WorldCardV1 firstWorld,
     required Set<String> completedTaskIds,
     required int correctedMistakes,
+    List<Act0WorldCardV1> courseWorlds = const [],
+    String currentLessonId = '',
+    int rulesBestScore = 0,
+    bool rulesCheckCompleted = false,
     Act0LearningEvidenceHistoryV1 history =
         const Act0LearningEvidenceHistoryV1(),
   }) {
@@ -242,6 +320,11 @@ class Act0BetaLearningMetricsV1 {
           for (final task in firstLesson.courseTaskList) task.taskId,
       },
       history: history,
+      courseWorlds: courseWorlds,
+      completedTaskIds: Set.unmodifiable(completedTaskIds),
+      currentLessonId: currentLessonId,
+      rulesBestScore: rulesBestScore,
+      rulesCheckCompleted: rulesCheckCompleted,
     );
   }
 
@@ -250,6 +333,133 @@ class Act0BetaLearningMetricsV1 {
   final String firstLessonId;
   final Set<String> firstLessonTaskIds;
   final Act0LearningEvidenceHistoryV1 history;
+  final List<Act0WorldCardV1> courseWorlds;
+  final Set<String> completedTaskIds;
+  final String currentLessonId;
+  final int rulesBestScore;
+  final bool rulesCheckCompleted;
+
+  ({List<String> progress, String clipboard}) summary(
+    Act0BetaActivityV1 activity,
+    DateTime now, {
+    required bool? reminderEnabled,
+  }) {
+    final course = [
+      for (final world in courseWorlds)
+        for (final lesson in world.lessons) (world: world, lesson: lesson),
+    ];
+    final byTask = {
+      for (final row in course)
+        for (final task in row.lesson.courseTaskList)
+          (row.world.worldId, row.lesson.lessonId, task.taskId):
+              row.lesson.lessonId,
+    };
+    final finished = course
+        .where(
+          (row) =>
+              act0LessonCompleteWithTaskIdsV1(row.lesson, completedTaskIds),
+        )
+        .toList();
+    final current = course
+        .where((row) => row.lesson.lessonId == currentLessonId)
+        .firstOrNull;
+    final counts = <String, ({int first, int wrong, int helped})>{};
+    final firstAnswers = <(String, String, String)>{};
+    final missedInRun = <(String, String)>{};
+    var retryCorrect = 0;
+    var retryTotal = 0;
+    for (final record in history.provenanceRecords) {
+      final time = record.recordedAtUtc;
+      if (time == null || activity.dayOf(time) == null || time.isAfter(now))
+        continue;
+      final runTask = (record.runId, record.taskId);
+      final retryInLesson =
+          record.runKind == 'lesson' &&
+          record.runId.isNotEmpty &&
+          missedInRun.contains(runTask);
+      if (retryInLesson ||
+          record.runKind == 'repair' ||
+          record.runKind == 'recheck') {
+        retryTotal++;
+        if (record.isCorrect) retryCorrect++;
+      }
+      if (record.runKind != 'lesson') continue;
+      if (record.isCorrect) {
+        missedInRun.remove(runTask);
+      } else {
+        missedInRun.add(runTask);
+      }
+      final key = (record.worldId, record.lessonId, record.taskId);
+      final lessonId = byTask[key];
+      if (lessonId == null || !firstAnswers.add(key)) continue;
+      final previous = counts[lessonId] ?? (first: 0, wrong: 0, helped: 0);
+      counts[lessonId] = (
+        first: previous.first + 1,
+        wrong: previous.wrong + (record.isCorrect ? 0 : 1),
+        helped: previous.helped + (record.hasKnownAssistance ? 1 : 0),
+      );
+    }
+    final tookCheck = activity.rulesCheckStarted || rulesCheckCompleted;
+    final scores = decisionsSince(activity.firstVisitUtc);
+    final day = now.difference(activity.firstVisitUtc).inDays.clamp(0, 7);
+    final farthest = course
+        .where(
+          (row) =>
+              row == current ||
+              counts.containsKey(row.lesson.lessonId) ||
+              row.lesson.courseTaskList.any(
+                (task) => completedTaskIds.contains(task.taskId),
+              ),
+        )
+        .lastOrNull;
+    String describeLesson(
+      ({Act0WorldCardV1 world, Act0LessonCardV1 lesson})? row, {
+      required bool forCopy,
+    }) {
+      if (row == null) return 'None';
+      final lesson = forCopy ? row.lesson.lessonId : row.lesson.title;
+      return 'W${row.world.worldNumber} / $lesson';
+    }
+
+    List<String> progress({required bool forCopy}) => [
+      'Current lesson: ${describeLesson(current, forCopy: forCopy)}',
+      'Farthest lesson reached: ${describeLesson(farthest, forCopy: forCopy)}',
+      'Completed lessons: ${finished.length}',
+      'W1 rules check: ${!tookCheck
+          ? 'Not started'
+          : rulesCheckCompleted
+          ? 'Best $rulesBestScore/${act0W1RulesQuestionsV1.length}'
+          : 'Started'}',
+      'After a mistake: $retryCorrect/$retryTotal correct on follow-up attempts',
+      'Reminder now: ${switch (reminderEnabled) {
+        true => 'On',
+        false => 'Off',
+        null => 'Unavailable',
+      }}',
+    ];
+    final lines = [
+      'Sharky beta summary v1',
+      'Beta day: $day',
+      'First lesson: ${firstLessonCompleted ? 'Complete' : 'Incomplete'}',
+      'World 1: ${worldOneCompleted ? 'Complete' : 'Incomplete'}',
+      'Corrected mistakes: $correctedMistakes',
+      'Day 2: ${activity.day2At(now).name}',
+      'Day 7: ${activity.day7At(now).name}',
+      'First lesson on your own: ${scores.onYourOwn.correct}/${scores.onYourOwn.total}',
+      'First lesson with help: ${scores.withHelp.correct}/${scores.withHelp.total}',
+      'Day 7 new review: ${scores.day7NewReview.correct}/${scores.day7NewReview.total}',
+      ...progress(forCopy: true),
+      for (var index = 0; index <= day; index++)
+        'Beta day $index: ${activity.lessonDays.values.where((value) => value == index).length} lessons, '
+            '${activity.practiceSteps[index]} practice steps',
+      for (final row in course)
+        if (counts[row.lesson.lessonId] case final count?)
+          '${row.lesson.lessonId}: ${count.first} first answers, ${count.wrong} wrong, ${count.helped} with help',
+      for (final (index, answer) in activity.answers.indexed)
+        'Survey ${index + 1}: ${answer?.name ?? 'unanswered'}',
+    ];
+    return (progress: progress(forCopy: false), clipboard: lines.join('\n'));
+  }
 
   ({
     ({int correct, int total}) onYourOwn,
