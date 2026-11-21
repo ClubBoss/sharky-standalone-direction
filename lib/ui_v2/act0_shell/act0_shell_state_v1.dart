@@ -7113,7 +7113,7 @@ Act0TableStateV1 _w7AllInTableV1({
     actionTrail: [
       ...table.actionTrail.take(table.actionTrail.length - 1),
       Act0ActionTrailItemV1(
-        label: '$street: BB shoves $amount',
+        label: '$street: BB all-in $amount',
         displayLabel: '$street: BB goes all-in for $amount',
       ),
     ],

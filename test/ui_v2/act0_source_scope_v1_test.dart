@@ -541,7 +541,7 @@ void main() {
     final contrasts = <String, String>{};
     final action = RegExp(
       r'^(?:(Flop|Turn|River): )?([A-Z0-9+]+) '
-      r'(blind|raises(?: to)?|opens|calls|bets|shoves|checks|folds)(?: ([0-9.]+) BB)?$',
+      r'(blind|raises(?: to)?|opens|calls|bets|all-in|checks|folds)(?: ([0-9.]+) BB)?$',
     );
     for (final task in _world5To8Tasks()) {
       final table = task.runner.table;
