@@ -24017,7 +24017,7 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
         activeSeatId: 'btn',
         highlightedCardIds: const ['hero_0', 'hero_1'],
         potLabel: 'Pot 21 BB',
-        toCallLabel: 'To call 15.5 BB',
+        toCallLabel: '',
         centerLabel: 'BTN, medium stack, bubble pressure',
         handContributions: const Act0HandContributionsV1(
           throughStreet: PokerStreet.preflop,
