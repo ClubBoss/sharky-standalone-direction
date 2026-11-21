@@ -1026,11 +1026,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "0f7516a5d64d267c13aee3acf46f1c6d676061e5cfb1b423d152bfe555f5889c",
+        "7ec0d17c371b896a3a79e0131cdfdbbbe49fe4d2ea19a0b076d6a66313d25216",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "Raising ATo from UTG into the 1.5 BB pot risks chips first to act with five players behind, where stronger aces and pairs can punish you.",
+        "UTG is earlier than HJ, where the Sharky starting chart begins opening ATo.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
@@ -1287,10 +1287,9 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     sourceQuestion: "What action keeps playing for free?",
-    sourceChoiceReason:
-        "Folding 9c 8d on BTN into a 4.5 BB pot after BB checks gives up your chance to win for free when checking keeps you in at 0 BB.",
+    sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
     sourceChoiceLabel: "Fold",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
@@ -1313,10 +1312,9 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     sourceQuestion: "What action keeps playing for free?",
-    sourceChoiceReason:
-        "Calling requires a live bet to match, and after BB checks into the 4.5 BB pot on Ah 7c 2d there is 0 BB facing your 9c 8d on BTN.",
+    sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
     sourceChoiceLabel: "Call",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
@@ -1467,7 +1465,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1494,7 +1492,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9",
+        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1576,7 +1574,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        '75776c681de00e454aed9553a32e040bd0b31562c40831ccbe17965b691ac8c9',
+        'fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',
