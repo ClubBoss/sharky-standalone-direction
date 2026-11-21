@@ -698,6 +698,73 @@ void main() {
     });
   }
 
+  testWidgets('pre-Q8 save keeps Position Thinking credit', (t) async {
+    const insertedTasks = {
+      'position_six_seats_position_order_reason',
+      'button_advantage_button_order_reason',
+    };
+    final state = Act0ShellStateV1.sample;
+    final priorLessons = [
+      for (final world in state.worlds.take(3))
+        for (final lesson in world.lessons)
+          if (lesson.lessonId != 'w3_play_from_blinds') lesson,
+    ];
+    final priorTasks = [
+      for (final lesson in priorLessons)
+        for (final task in lesson.courseTaskList)
+          if (!insertedTasks.contains(task.taskId)) task,
+    ];
+    final priorXp = priorTasks.fold(0, (sum, task) => sum + task.rewardXp);
+    final w4 = state.worldById('world_4').lessons.first;
+    SharedPreferences.setMockInitialValues({
+      'act0_welcome_completed_v1': true,
+      'intake_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 20,
+        'pendingDecisionAssistance': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+        'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+            .lineagePayload(),
+        'durableRetentionHistory': <Object>[],
+        'completedTaskIds': priorTasks.map((task) => task.taskId).toList(),
+        'completedLessonIds': priorLessons
+            .map((lesson) => lesson.lessonId)
+            .toList(),
+        'skippedTaskIds': <String>[],
+        'earnedXp': priorXp,
+        'selectedWorldId': 'world_4',
+        'selectedLessonId': w4.lessonId,
+        'selectedTaskId': w4.courseTaskList.first.taskId,
+      }),
+    });
+    t.view.physicalSize = const Size(393, 852);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.reset);
+    await _mount(t);
+    await t.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    });
+    await t.pumpAndSettle();
+    expect(
+      await _tapFirst(
+        t,
+        _continueKeys.map((key) => find.byKey(Key(key))).toList(),
+      ),
+      isTrue,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'position_six_seats_position_order_reason');
+    final saved = await _saved(t);
+    expect(
+      saved['completedTaskIds'],
+      unorderedEquals(priorTasks.map((task) => task.taskId)),
+    );
+    expect(saved['earnedXp'], priorXp);
+    expect(saved['skippedTaskIds'], isEmpty);
+  });
+
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const w7ToW8 = bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
   const lastWorld = w7ToW8 ? 8 : (fullRoute ? 12 : 7);
