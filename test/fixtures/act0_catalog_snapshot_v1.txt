@@ -2023,7 +2023,7 @@ TRAIL: UTG folds · HJ acts
 TASK discipline_checkpoint_checkpoint_review [review] Discipline recap
 ENTRY: drill
 CAPTION: Lesson learned: discipline comes before action.
-TEACH: W1 to W2 bridge. Bucket first. Position second. Then choose the action frame.
+TEACH: Bridge to hand groups. Bucket first. Position second. Then choose the action frame.
 TEACH LABELS: Bucket, Position, Action frame
 Q: What comes right after naming the bucket?
 HINT [theoryOnly]: Next world adds position: the same bucket can change action by seat.
@@ -6368,7 +6368,7 @@ TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds 
 
 TASK w12_river_price_call [drill] River price
 CAPTION: CO bets 10 into 20 on K-8-4-2-9. This river range is 35% missed QJ/JT and 65% AK, K9 or 88. Your KQ beats the misses and loses to the value hands. No ties.
-TEACH: Read the river price W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.
+TEACH: Read the river price Clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use the call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.
 Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Kc Qd | Board Ks 8c 4d 2h 9s | Pot 30 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
@@ -6394,7 +6394,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     BETTER ANSWER: Fold
 
 TASK w12_turn_count_heart_outs [drill] Count before the last card
-CAPTION: At the turn, you hold two hearts and see two more on the board. Recall the outs from W5 before you move on.
+CAPTION: At the turn, you hold two hearts and see two more on the board. Recall how to count outs.
 Q: How many unseen heart outs could fill the flush?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah Qh | Board Kh 8h 3c 2s | Pot 5.5 BB | Seat BB | Facts high card, flush draw, completion cards 9

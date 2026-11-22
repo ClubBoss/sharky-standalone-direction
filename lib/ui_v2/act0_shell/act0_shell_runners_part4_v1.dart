@@ -9035,7 +9035,7 @@ final _w12_river_price_call = _w12Task(
   teaching: const Act0TeachingStepV1(
     title: 'Read the river price',
     body:
-        'W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.',
+        'Clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use the call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.',
   ),
 );
 
@@ -9253,7 +9253,7 @@ final _w12_river_ev_new_sample = _w12Task(
 final _w12_turn_count_heart_outs = _w12Task(
   'w12_turn_count_heart_outs',
   'Count before the last card',
-  'At the turn, you hold two hearts and see two more on the board. Recall the outs from W5 before you move on.',
+  'At the turn, you hold two hearts and see two more on the board. Recall how to count outs.',
   'How many unseen heart outs could fill the flush?',
   correct: 1,
   choices: const [

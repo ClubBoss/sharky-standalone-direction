@@ -4090,7 +4090,7 @@ final _w1DisciplineCheckpointRunner = _world3DominatedRecapRunner.copyWith(
       'You now protect your stack with buckets. Next, add position so the same hand can play differently by seat, without chart memorization.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'W1 to W2 bridge.',
+      title: 'Bridge to hand groups.',
       body: 'Bucket first. Position second. Then choose the action frame.',
       focusLabels: <String>['Bucket', 'Position', 'Action frame'],
     ),
