@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
@@ -300,7 +301,8 @@ void main() {
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
-            y5cNewChoicesV1.length,
+            y5cNewChoicesV1.length +
+            y5dNewChoicesV1.length,
       ),
     );
     expect(
@@ -312,7 +314,8 @@ void main() {
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
-            y5cNewChoicesV1.length,
+            y5cNewChoicesV1.length +
+            y5dNewChoicesV1.length,
       ),
     );
     final newTasks = tasks
@@ -336,6 +339,7 @@ void main() {
             task.taskId != 'w4_price_find_bettor' &&
             task.taskId != 'w8_effective_stack_seat' &&
             task.taskId != 'w8_spr_value_size' &&
+            !y5dNewChoicesV1.containsKey(task.taskId) &&
             !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
             !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
             task.taskId != 'blinds_missing_post_amount' &&
@@ -394,7 +398,8 @@ void main() {
           ? Act0TableScopeV1.playedHand
           : orientationIds.contains(task.taskId)
           ? Act0TableScopeV1.orientation
-          : explanationIds.contains(task.taskId)
+          : explanationIds.contains(task.taskId) ||
+                y5dHypotheticalTaskIdsV1.contains(task.taskId)
           ? Act0TableScopeV1.explanation
           : Act0TableScopeV1.playedHand;
       expect(table.scope, expected, reason: task.taskId);
@@ -425,6 +430,7 @@ void main() {
             task.taskId != 'w4_price_find_bettor' &&
             task.taskId != 'w8_effective_stack_seat' &&
             task.taskId != 'w8_spr_value_size' &&
+            !y5dNewChoicesV1.containsKey(task.taskId) &&
             !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
             !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
             task.taskId != 'blinds_missing_post_amount' &&
@@ -604,6 +610,8 @@ void main() {
     expect(
       played,
       328 +
+          y5dNewChoicesV1.length -
+          y5dHypotheticalTaskIdsV1.length +
           w3BlindVsBlindChoicesV1.length +
           y5bNewChoicesV1.length +
           y5cNewChoicesV1.length +
@@ -647,6 +655,9 @@ void main() {
       ...w11ExplicitStreetHistoryIds,
       ...w12ExplicitFlopHistoryIds,
       ...w11Wave4ReplayTasksV1,
+      ...y5dNewChoicesV1.keys.where(
+        (id) => !y5dHypotheticalTaskIdsV1.contains(id),
+      ),
       // Full ledger now records each prior street and its contributions.
       'w11_checkpoint_mixed_table_line',
       ...w12Wave4ReplayTasksV1,

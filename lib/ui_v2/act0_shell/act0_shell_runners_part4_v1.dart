@@ -3270,7 +3270,7 @@ final _w10PlayerTypeIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonId: 'w10_player_type_intro',
   lessonTitle: "How players act",
   lessonSubtitle: 'Player Adjustment',
-  caption: "Read how the table plays.",
+  caption: "Watch how often players call, bet or fold.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which clue is most useful over time?",
@@ -3281,7 +3281,7 @@ final _w10PlayerTypeIntroRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "How players act",
       body:
-          "A nit plays few hands and folds a lot. A loose-passive player calls a lot and rarely raises. A calling station calls bets too much. An aggressive player bets and raises a lot. One who does so with too many weak hands is over-aggressive. An underbluffer bets strong hands and seldom bluffs. A 3-bet is a raise over an open raise. A c-bet is a flop bet by the player who raised preflop. These hands have no rake or antes.",
+          "A nit folds often. A loose-passive player calls and rarely raises. A calling station calls too often. An aggressive player bets and raises often. LAG means loose-aggressive, a player who enters many hands and raises often. A maniac is an extreme case who frequently raises even weak hands. A steal means raising first to win the blinds. An underbluffer seldom bluffs. A 3-bet is a raise over an open. A c-bet is a flop bet from the preflop raiser.",
     ),
   ],
   options: const [],
@@ -3301,7 +3301,7 @@ final _w10NitTagRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Open or fold?",
   feedbackTitle: "Read both blinds",
   feedbackReason:
-      "The blinds fold 90% of the time. The steal earns 1.15 BB on average: 0.90 x 1.5 - 0.10 x 2.",
+      "SB and BB fold 90% at either size, so raising to 2 BB earns 1.15 BB. Raising to 4 BB costs 2 BB more when one raises again.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Read both blinds",
@@ -3319,7 +3319,7 @@ final _w10NitTagRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "The blinds fold 90% of the time. The steal earns 1.15 BB on average: 0.90 x 1.5 - 0.10 x 2.",
+          "SB and BB fold 90% at either size, so raising to 2 BB earns 1.15 BB. Raising to 4 BB costs 2 BB more when one raises again.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -3395,7 +3395,7 @@ final _w10LoosePassiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "How should you enter?",
   feedbackTitle: "Facing a limp",
   feedbackReason:
-      "AJo is a Medium CO hand. The 4 BB raise puts more chips in against weak aces and pairs that HJ has called before.",
+      "Raise to 4 BB because HJ calls with weaker aces and small pairs from the read. Matching the limp costs less but invites BTN and the blinds to join cheaply.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Facing a limp",
@@ -3424,7 +3424,7 @@ final _w10LoosePassiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "AJo is a Medium CO hand. The 4 BB raise puts more chips in against weak aces and pairs that HJ has called before.",
+          "Raise to 4 BB because HJ calls with weaker aces and small pairs from the read. Matching the limp costs less but invites BTN and the blinds to join cheaply.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -3600,7 +3600,7 @@ final _w10UnderbluffSecondRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "A large river bet",
   feedbackReason:
-      "The pot is 23.5 and a call costs 12. You need 33.8% wins, but AT beats 8% of this bet mix.",
+      "BB bets mostly stronger aces, two pair or sets. Fold because AT beats only 8% of the bets and calling 12 BB into 23.5 BB needs 33.8%.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3612,7 +3612,7 @@ final _w10UnderbluffSecondRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "The pot is 23.5 and a call costs 12. You need 33.8% wins, but AT beats 8% of this bet mix.",
+          "BB bets mostly stronger aces, two pair or sets. Fold because AT beats only 8% of the bets and calling 12 BB into 23.5 BB needs 33.8%.",
     ),
     Act0RunnerOptionV1(
       id: "call_12_bb",
@@ -3634,7 +3634,7 @@ final _w10UnderbluffSecondRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "The 92% value range can call a large raise. Betting more with AT builds a pot against hands that beat it.",
+          "Raising risks more chips against the 92% value range that can call. Folding keeps those chips.",
     ),
   ],
 
@@ -3725,7 +3725,7 @@ final _w10OveraggressiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What keeps the weak bets in?",
   feedbackTitle: "Read the flop bet",
   feedbackReason:
-      "KJ has top pair and the price is 4/13.5 = 29.6%. The earlier weak bets give you a sound reason to keep bluffs in.",
+      "BTN bets weak hands on this flop and folds them to a raise. Call 4 BB with top pair because it needs 29.6% wins and keeps those bets in.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Read the flop bet",
@@ -3754,7 +3754,7 @@ final _w10OveraggressiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "KJ has top pair and the price is 4/13.5 = 29.6%. The earlier weak bets give you a sound reason to keep bluffs in.",
+          "BTN bets weak hands on this flop and folds them to a raise. Call 4 BB with top pair because it needs 29.6% wins and keeps those bets in.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_12_bb",
@@ -3765,7 +3765,7 @@ final _w10OveraggressiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "KJ can beat bluffs, but a raise to 12 may push those weak hands out. It builds a bigger pot when BTN has a better king or a set.",
+          "Raising to 12 BB loses the weak bets that would stay in if you call 4 BB. Better kings and sets can continue.",
     ),
   ],
 
@@ -3896,7 +3896,7 @@ final _w10OneLeverIntroRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "Pick one change",
       body:
-          "A value bet aims to get a call from a worse hand. A bluff aims to make a better hand fold. Tie the size to your goal and what the player does. An overpair is a pair in your own cards that ranks above the top card on the board.",
+          "Size a value bet for weaker calls. Size a bluff for better folds. An overpair is a pocket pair higher than the top board card.",
     ),
   ],
   options: const [],
@@ -3910,13 +3910,13 @@ final _w10VsNitOpenWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Three seats behind",
   lessonSubtitle: 'Player Adjustment',
   caption:
-      "BTN, SB and BB often fold to late opens. They fold as a group 88% of the time to 2 BB or 5 BB. When one 3-bets, you fold.",
+      "BTN, SB and BB fold together 88% of the time to 2 BB or 5 BB. You fold to a raise.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Open or fold?",
   feedbackTitle: "Three seats behind",
   feedbackReason:
-      "The three players fold together 88%. Your small steal earns 1.08 BB on average under this read.",
+      "BTN and both blinds fold together 88% at either size, so raising to 2 BB earns 1.08 BB. Raising to 5 BB increases the cost when someone reraises.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3928,7 +3928,7 @@ final _w10VsNitOpenWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "The three players fold together 88%. Your small steal earns 1.08 BB on average under this read.",
+          "BTN and both blinds fold together 88% at either size, so raising to 2 BB earns 1.08 BB. Raising to 5 BB increases the cost when someone reraises.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -3939,7 +3939,7 @@ final _w10VsNitOpenWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "J9s is Weak in the base CO chart. Still, folding here passes the 88% chance to take the 1.5 BB pot.",
+          "Folding misses an 88% chance to win 1.5 BB. That pays for the 2 BB raise in this model.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_5_bb",
@@ -4003,7 +4003,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which size earns most from that read?",
   feedbackTitle: "Pick a flop size",
   feedbackReason:
-      "A 3 BB bet can get calls from 7x and weaker kings. That earns more than checking when those hands pay often.",
+      "Bet 3 BB because BB pays that size with weaker kings and sevens. Bet the larger size because 2 BB earns a blind less per call.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4015,7 +4015,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "BB calls 2 BB with weak kings and sevens. Your KQ can earn 1 BB more from the same hands.",
+          "Betting 2 BB misses one blind from every weaker king or seven that would also pay 3 BB.",
     ),
     Act0RunnerOptionV1(
       id: "bet_3_bb",
@@ -4026,7 +4026,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "A 3 BB bet can get calls from 7x and weaker kings. That earns more than checking when those hands pay often.",
+          "Bet 3 BB because BB pays that size with weaker kings and sevens. Bet the larger size because 2 BB earns a blind less per call.",
     ),
     Act0RunnerOptionV1(
       id: "bet_15_bb",
@@ -4037,7 +4037,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "If you bet 15 BB, sevens may fold. The stronger hands stay in a large pot.",
+          "Betting 15 BB risks more chips against strong hands and misses the weaker calls a 3 BB bet gets.",
     ),
   ],
   sizingConfig: const Act0SizingConfigV1(
@@ -4122,7 +4122,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w7FormatPressureIntroRunner.cop
   question: "Open or fold?",
   feedbackTitle: "Read who calls",
   feedbackReason:
-      "72o is Weak in the CO chart. Three sticky players behind you make a weak 2 BB steal lose much of its fold value.",
+      "Fold 72o because BTN and the blinds call often. Raising to 2 BB risks chips and rarely wins the blinds immediately.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4134,7 +4134,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w7FormatPressureIntroRunner.cop
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "72o has poor ways to win when called. BTN and both blinds defend a lot, so the raise buys fewer blind pots.",
+          "Raising risks 2 BB for few immediate folds. 72o plays poorly when BTN or a blind calls.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_4_bb",
@@ -4145,7 +4145,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w7FormatPressureIntroRunner.cop
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "A 4 BB open risks twice as much as 2 BB with 72o. The sticky players may still call and leave you with a weak hand.",
+          "A 4 BB raise risks twice as much while the same players can call with better hands. Folding saves those chips.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -4156,7 +4156,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w7FormatPressureIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "72o is Weak in the CO chart. Three sticky players behind you make a weak 2 BB steal lose much of its fold value.",
+          "Fold 72o because BTN and the blinds call often. Raising to 2 BB risks chips and rarely wins the blinds immediately.",
     ),
   ],
 
@@ -4209,7 +4209,7 @@ final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWi
   question: "Which size earns most from that read?",
   feedbackTitle: "Value on the flop",
   feedbackReason:
-      "Bet 3 BB. With AJ, you get more from sevens and weak jacks than at 2 BB. If the calls, folds or raises with each hand change, the best size can change too.",
+      "Bet 3 BB because BB calls with worse jacks and sevens. Betting 2 BB earns less per call. If BB calls, folds or raises with each hand differently, the best size can change.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4221,7 +4221,7 @@ final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWi
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Bet 3 BB. With AJ, you get more from sevens and weak jacks than at 2 BB. If the calls, folds or raises with each hand change, the best size can change too.",
+          "Bet 3 BB because BB calls with worse jacks and sevens. Betting 2 BB earns less per call. If BB calls, folds or raises with each hand differently, the best size can change.",
     ),
     Act0RunnerOptionV1(
       id: "bet_2_bb",
@@ -4232,7 +4232,7 @@ final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWi
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "BB still calls with weak jacks and 88–TT. With AJ, 3 BB earns one more chip per call than 2 BB.",
+          "A 2 BB bet misses one blind per call. Betting 3 BB still gets paid by the same weaker pairs.",
     ),
     Act0RunnerOptionV1(
       id: "bet_18_bb",
@@ -4243,7 +4243,7 @@ final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWi
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "If you bet 18 BB, sevens and small pairs fold in this read. That builds a large pot with the hands that can beat AJ.",
+          "Betting 18 BB misses the weaker calls and risks more chips when a better hand continues.",
     ),
   ],
   sizingConfig: const Act0SizingConfigV1(
@@ -4328,7 +4328,7 @@ final _w10IsolateLimperBbRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Check or raise?",
   feedbackTitle: "Raise from BB",
   feedbackReason:
-      "ATs is ahead of many weak aces and kings that SB calls with. Raising can win more when SB calls.",
+      "Raise to 4 BB because SB calls with weaker aces and kings that ATs leads. Checking misses the chance to earn more from those hands.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Raise from BB",
@@ -4357,7 +4357,7 @@ final _w10IsolateLimperBbRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "ATs is ahead of many weak aces and kings that SB calls with. Raising can win more when SB calls.",
+          "Raise to 4 BB because SB calls with weaker aces and kings that ATs leads. Checking misses the chance to earn more from those hands.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_15_bb",
@@ -4432,7 +4432,7 @@ final _w10StationNoBluffRiverARunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Bluff or check?",
   feedbackTitle: "Ace-high on the river",
   feedbackReason:
-      "BB folds just 10%. A 3 BB bluff needs 22.2% folds with no win at showdown. Your ace-high can beat the weak missed cards by checking.",
+      "Check because BB folds only 10% and your ace already beats those misses. Betting 3 BB makes weaker hands fold and gets called by pairs.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4466,7 +4466,7 @@ final _w10StationNoBluffRiverARunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "BB folds just 10%. A 3 BB bluff needs 22.2% folds with no win at showdown. Your ace-high can beat the weak missed cards by checking.",
+          "Check because BB folds only 10% and your ace already beats those misses. Betting 3 BB makes weaker hands fold and gets called by pairs.",
     ),
   ],
 
@@ -4620,7 +4620,7 @@ final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "Facing a river bet",
   feedbackReason:
-      "QJ beats the missed draws 55% of the time. A call costs 10 into a final pot of 34.5, so it needs 29.0% wins.",
+      "BB bets missed draws 55% of the time and QJ beats them. Call 10 BB because that clears the 29.0% price, worth 8.98 BB over folding.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4632,7 +4632,7 @@ final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Your QJ beats 55% missed draws in the set range. Folding gives up a call worth 8.98 BB on average at this price.",
+          "Your QJ beats the 55% of bets that come from missed draws. Folding gives up a call worth 8.98 BB on average at this price.",
     ),
     Act0RunnerOptionV1(
       id: "call_10_bb",
@@ -4643,7 +4643,7 @@ final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "QJ beats the missed draws 55% of the time. A call costs 10 into a final pot of 34.5, so it needs 29.0% wins.",
+          "BB bets missed draws 55% of the time and QJ beats them. Call 10 BB because that clears the 29.0% price, worth 8.98 BB over folding.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_25_bb",
@@ -4759,7 +4759,7 @@ final _w10UnderbluffFoldMoreRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "River range",
   feedbackReason:
-      "KQ beats the missed QJ but loses to the 90% value group. The call needs 31.7% wins, far above 10%.",
+      "BTN bets mostly stronger kings, two pair or sets. Fold because 10% of the bets are bluffs you beat and calling 10 BB needs 31.7%.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4793,7 +4793,7 @@ final _w10UnderbluffFoldMoreRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "KQ beats the missed QJ but loses to the 90% value group. The call needs 31.7% wins, far above 10%.",
+          "BTN bets mostly stronger kings, two pair or sets. Fold because 10% of the bets are bluffs you beat and calling 10 BB needs 31.7%.",
     ),
   ],
 
@@ -4884,7 +4884,7 @@ final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What size fits the read?",
   feedbackTitle: "One shown bluff",
   feedbackReason:
-      "AQs is Strong from HJ. The one BB bluff does not call for a new size or a loose stack-off plan.",
+      "Raise AQs to 2 BB from HJ because one bluff from BB gives little reason to change sizes. Raising to 3 BB costs more if the remaining players give the same response.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4896,7 +4896,7 @@ final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "AQs is Strong from HJ. The one BB bluff does not call for a new size or a loose stack-off plan.",
+          "Raise AQs to 2 BB from HJ because one bluff from BB gives little reason to change sizes. Raising to 3 BB costs more if the remaining players give the same response.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_3_bb",
@@ -4907,7 +4907,7 @@ final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "AQs can open, but the one wild bluff gives no sound reason to spend 1 BB more before the flop.",
+          "Raising to 3 BB risks chips without knowing if the response changes. Use the usual 2 BB size.",
     ),
     Act0RunnerOptionV1(
       id: "all_in_to_52_bb",
@@ -4918,7 +4918,7 @@ final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "AQs is strong, but going all-in with 52 BB to win a 1.5 BB pot gives strong hands a big chance to win your stack.",
+          "Going all-in risks 52 BB against strong hands that can call. A 2 BB raise puts far less at risk.",
     ),
   ],
   sizingConfig: const Act0SizingConfigV1(
@@ -4993,7 +4993,7 @@ final _w10TopPairTurnRaiseRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "The turn raise",
   feedbackReason:
-      "You need 15/50.5 = 29.7% equity to call. AJ is behind the sets and two pair seen in BB turn raises.",
+      "BB raises with sets and two pair under this read. Fold AJ because calling 15 BB needs 29.7%, a high bar against hands that already beat top pair.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "The turn raise",
@@ -5022,7 +5022,7 @@ final _w10TopPairTurnRaiseRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "You need 15/50.5 = 29.7% equity to call. AJ is behind the sets and two pair seen in BB turn raises.",
+          "BB raises with sets and two pair under this read. Fold AJ because calling 15 BB needs 29.7%, a high bar against hands that already beat top pair.",
     ),
     Act0RunnerOptionV1(
       id: "all_in_to_55_bb",
@@ -5033,7 +5033,7 @@ final _w10TopPairTurnRaiseRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "BB rarely raises worse hands. Going all-in with AJ commits the rest of your stack against better hands.",
+          "Going all-in risks your stack against two pair or sets. Folding saves the rest.",
     ),
   ],
 
@@ -5270,7 +5270,7 @@ final _w10StationNoBluffRiverRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Bluff or check?",
   feedbackTitle: "River choice",
   feedbackReason:
-      "An 8 BB bluff into 10.5 needs 43.2% folds. CO folds 20%, so it costs chips.",
+      "Check because CO calls with pairs and folds only missed hands you already beat. Betting 8 BB needs 43.2% folds, above the stated 20%.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -5282,7 +5282,7 @@ final _w10StationNoBluffRiverRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "An 8 BB bluff into 10.5 needs 43.2% folds. CO folds 20%, so it costs chips.",
+          "Check because CO calls with pairs and folds only missed hands you already beat. Betting 8 BB needs 43.2% folds, above the stated 20%.",
     ),
     Act0RunnerOptionV1(
       id: "bet_8_bb",
@@ -5304,7 +5304,7 @@ final _w10StationNoBluffRiverRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "The smaller bet risks less, but it still has just 20% folds. Its pure bluff EV is -1.10 BB.",
+          "The 4 BB bluff still loses about 1.10 BB because CO folds just 20%. Checking risks no new chips.",
     ),
   ],
 
@@ -5380,7 +5380,7 @@ final _w10OutsAndTurnPriceRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which call read fits?",
   feedbackTitle: "A draw and a price",
   feedbackReason:
-      "A heart that pairs the king or deuce gives BTN a full house. Seven hearts win, about 15.9%. You pay 2 BB for a final pot of 14.5 BB, a 13.8% price.",
+      "BTN bets with a set, so call 2 BB with seven outs: 15.9% beats 13.8%. Two hearts give BTN a full house. Folding gives up the gain from calling.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A draw and a price",
@@ -5409,7 +5409,7 @@ final _w10OutsAndTurnPriceRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "A heart that pairs the king or deuce gives BTN a full house. Seven hearts win, about 15.9%. You pay 2 BB for a final pot of 14.5 BB, a 13.8% price.",
+          "BTN bets with a set, so call 2 BB with seven outs: 15.9% beats 13.8%. Two hearts give BTN a full house. Folding gives up the gain from calling.",
     ),
     Act0RunnerOptionV1(
       id: "call_nine_outs",
@@ -5420,7 +5420,7 @@ final _w10OutsAndTurnPriceRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "The call works, but two hearts make a full house for BTN. Count seven wins, not nine.",
+          "Calling is right, but counting nine misses that two hearts give BTN a full house. Call with seven outs.",
     ),
   ],
 
@@ -5636,7 +5636,7 @@ final _w10CheckpointTagLineRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "How should you enter?",
   feedbackTitle: "The limper in HJ",
   feedbackReason:
-      "99 is a Medium BTN hand. The raise can isolate HJ, who calls with smaller pairs and weak cards.",
+      "Raise to 4 BB from BTN because HJ calls with worse pairs and weak aces. A limp leaves both blinds a cheap way into the pot.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -5659,7 +5659,7 @@ final _w10CheckpointTagLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "99 is a Medium BTN hand. The raise can isolate HJ, who calls with smaller pairs and weak cards.",
+          "Raise to 4 BB from BTN because HJ calls with worse pairs and weak aces. A limp leaves both blinds a cheap way into the pot.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -5737,7 +5737,7 @@ final _w10CheckpointLeverLineRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Raise or fold?",
   feedbackTitle: "Read the big blind",
   feedbackReason:
-      "The BB fold rate makes this steal worth 0.90 x 1.5 - 0.10 x 1.5 = 1.20 BB from this point.",
+      "Raise to 2 BB because BB folds 90% either way, worth 1.20 BB more than folding. Raising to 6 BB risks another 4 BB when BB reraises.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -5771,7 +5771,7 @@ final _w10CheckpointLeverLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "The BB fold rate makes this steal worth 0.90 x 1.5 - 0.10 x 1.5 = 1.20 BB from this point.",
+          "Raise to 2 BB because BB folds 90% either way, worth 1.20 BB more than folding. Raising to 6 BB risks another 4 BB when BB reraises.",
     ),
   ],
 
@@ -5826,7 +5826,7 @@ final _w10CheckpointGuardrailLineRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "Facing a turn raise",
   feedbackReason:
-      "The call costs 12 into a final pot of 41.5, or 28.9%. KQ is far behind the shown sets and two pair.",
+      "HJ raises with sets and two pair in the stated range. Fold KQ because a 12 BB call needs 28.9% wins and one pair is behind those hands.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -5838,7 +5838,7 @@ final _w10CheckpointGuardrailLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "The call costs 12 into a final pot of 41.5, or 28.9%. KQ is far behind the shown sets and two pair.",
+          "HJ raises with sets and two pair in the stated range. Fold KQ because a 12 BB call needs 28.9% wins and one pair is behind those hands.",
     ),
     Act0RunnerOptionV1(
       id: "call_12_bb",
@@ -5849,7 +5849,7 @@ final _w10CheckpointGuardrailLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "KQ is top pair, not a set. HJ has shown strong hands on turn raises. Calling 12 BB buys little chance to win.",
+          "Calling costs 12 BB against a range of sets and two pair. Folding avoids paying for too few wins.",
     ),
     Act0RunnerOptionV1(
       id: "all_in_to_40_5_bb",
@@ -5961,7 +5961,7 @@ final _w10TableAdjustmentNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "River check and bet",
   feedbackReason:
-      "QT wins against 50% missed draws. The 9 BB call needs 30.0% wins in the 30 BB final pot.",
+      "CO bets missed draws half the time, and QT beats them. Call 9 BB because 50% beats the 30% price, so folding misses 6 BB in average gain.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -5984,7 +5984,7 @@ final _w10TableAdjustmentNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "QT wins against 50% missed draws. The 9 BB call needs 30.0% wins in the 30 BB final pot.",
+          "CO bets missed draws half the time, and QT beats them. Call 9 BB because 50% beats the 30% price, so folding misses 6 BB in average gain.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_24_bb",
@@ -6087,7 +6087,7 @@ final _world10PlayerAdjustmentCheckpointRunner = _w7FormatPressureIntroRunner.co
   question: "Bet or check?",
   feedbackTitle: "Last street choice",
   feedbackReason:
-      "A 8 BB pure bluff needs 8/19.5 = 41.0% folds. BTN folds just 15%. Checking saves the chips.",
+      "Check because BTN calls either bet with pairs. An 8 BB bluff needs 41% folds, so betting loses chips against the stated 15% fold rate.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -6121,7 +6121,7 @@ final _world10PlayerAdjustmentCheckpointRunner = _w7FormatPressureIntroRunner.co
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "A 8 BB pure bluff needs 8/19.5 = 41.0% folds. BTN folds just 15%. Checking saves the chips.",
+          "Check because BTN calls either bet with pairs. An 8 BB bluff needs 41% folds, so betting loses chips against the stated 15% fold rate.",
     ),
   ],
 
@@ -6539,7 +6539,7 @@ final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
     caption: 'You have 45 minutes and missed three blind calls last week.',
     question: 'What should you track this session?',
     teach:
-        'A focus should fit the next session. Name one cue that links to a past error. Make the cue easy to spot and save a hand for a later check.',
+        'A focus should fit the next session. Name one cue that links to a past error and save a hand to review. A stop-loss is a planned loss limit. Topping up means adding chips between hands to restore your target stack.',
     choices: const [
       (
         'profit_from_the_next_45_minutes',
@@ -6551,7 +6551,7 @@ final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
         'bb_call_price_before_each_defense',
         'BB call price before each defense',
         Act0FeedbackQualityV1.correct,
-        'You can note the pot, call amount and hand each time you face a raise in BB.',
+        'Three blind calls went wrong last week. Track the pot and call amount when someone raises your BB, so you can review the repeated leak instead of dividing attention across four skills.',
       ),
       (
         'blinds_bluffs_calls_and_bet_sizes',
@@ -6663,7 +6663,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'raise_to_2_bb',
         'Raise to 2 BB',
         Act0FeedbackQualityV1.correct,
-        'BB folds 88%. From this decision, the 2 BB open gains 1.14 BB on average: 0.88 x 1.5 - 0.12 x 1.5. SB has already put in 0.5 BB. The base chart is a guide for first-in hands. A tested player read can change a close choice. Check risk and the fold rate.',
+        'BB folds 88% to either size. Raising to 2 BB gains 1.14 BB on average. Raising to 4 BB risks another 2 BB each time BB reraises.',
       ),
     ],
     table: _day7TableV1(
@@ -6721,7 +6721,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'bet_4_bb',
         'Bet 4 BB',
         Act0FeedbackQualityV1.correct,
-        'Your AK has top pair with the best kicker. The two loose callers can pay 4 BB with weaker aces or 7x. In a multiway pot, two players can pay the same bet. A bet seeks calls from worse hands. A check may save chips or give a free card. Check each range.',
+        'BTN and BB can call 4 BB with weaker aces and sevens, so bet AK for value. Checking misses those payments and gives both players a free card.',
       ),
       (
         'check',
@@ -6733,7 +6733,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'bet_20_bb',
         'Bet 20 BB',
         Act0FeedbackQualityV1.wrong,
-        'An overbet of 20 into 8 may lose the 7x calls you want. You risk a large bet when either foe has two pair or a set.',
+        'Betting 20 BB into 8 can lose the weaker sevens you want to call. You risk a large bet when either foe has two pair or a set.',
       ),
     ],
     table: _day7TableV1(
@@ -6805,7 +6805,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'raise_to_10_bb',
         'Raise to 10 BB',
         Act0FeedbackQualityV1.suboptimal,
-        'Raising 10 can drive out the overcards and 7x you beat. It makes a larger pot with CO strong Jx still in.',
+        'Raising to 10 BB can drive out the overcards and sevens you beat. Calling 2 BB keeps those hands in at a lower price.',
       ),
       (
         'fold',
@@ -6817,7 +6817,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'The pot is 12 BB now. Your 2 BB call needs 14.3% of a 14 BB final pot. QJ can beat CO overcards and BTN weak pairs. In a multiway pot, think about both players. A call closes the action here. If you raise, CO and BTN can act again.',
+        'CO bets some of its overcards, and QJ beats both CO overcards and BTN weak pairs. Call 2 BB at 14.3% because raising to 10 BB can drive them away.',
       ),
     ],
     table: _day7TableV1(
@@ -6914,7 +6914,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'The 8 BB call needs 30.8% wins. Your top pair KQ has 15% by this read. Folding saves 8 BB. A new street can change the cost of a call. A big turn bet is not the same as a small flop bet. Read the price and past hands, not the hand name.',
+        'CO bets mostly sets, K8 or AK. KQ wins 15% by this read, so fold because calling 8 BB needs 30.8%.',
       ),
       (
         'call_8_bb',
@@ -6926,7 +6926,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_32_5_bb',
         'All-in to 32.5 BB',
         Act0FeedbackQualityV1.wrong,
-        'You have 32.5 BB left before this choice. Going all-in into a strong turn range risks the rest of the stack with top pair.',
+        'Going all-in risks the full 32.5 BB against a strong turn range. Folding keeps those chips.',
       ),
     ],
     table: _day7TableV1(
@@ -7026,7 +7026,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'call_1_bb',
         'Call 1 BB',
         Act0FeedbackQualityV1.correct,
-        'Your call is 1 into a final 4.5 BB pot, a 22.2% price. KJs has play value against a wide BTN open. A BB has put in 1 BB before the hand starts. A small raise may cost little to call. The first-in chart is not a BB defense chart.',
+        'BTN opens wide but calls 3-bets with stronger aces and pairs. Call 1 BB with KJs at 22.2%, since raising to 8 BB risks more against that tighter group.',
       ),
       (
         'fold',
@@ -7116,7 +7116,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         '3_bet_to_8_bb',
         '3-bet to 8 BB',
         Act0FeedbackQualityV1.correct,
-        'AA is ahead of BTN weak calls. An 8 BB 3-bet builds a pot for value while BB is likely to fold. A 3-bet is a raise after an open raise. In SB, a call leaves BB free to act. A raise may make the pot larger against a wide opening range.',
+        'Raise AA to 8 BB because BTN can call with 99–JJ, ATs and KQs. Calling 2 BB leaves BB a cheap way in.',
       ),
     ],
     table: _day7TableV1(
@@ -7331,7 +7331,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         '3_bet_to_9_bb',
         '3-bet to 9 BB',
         Act0FeedbackQualityV1.correct,
-        'AJs can get calls from weaker aces and KQ. A 9 BB 3-bet earns value and may keep BB out.',
+        'BTN calls 3-bets with weaker aces and KQ, while BB often folds. Raise AJs to 9 BB for value. Calling 2 BB gives BB a cheaper flop.',
       ),
       (
         'call_2_bb',
@@ -7426,7 +7426,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_4_bb',
         'Call 4 BB',
         Act0FeedbackQualityV1.correct,
-        'KT beats the shown bluffs and some weaker kings. A 4 BB call needs 29.6% wins in a 13.5 BB final pot.',
+        'BTN bets 4 BB and has shown weak hands on this line. Call KT because your 29.6% price keeps those bets in; raising to 12 BB can lose them.',
       ),
     ],
     table: _day7TableV1(
@@ -7511,7 +7511,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_4_bb',
         'Call 4 BB',
         Act0FeedbackQualityV1.correct,
-        'Your set wins from many worse hands. A call keeps the weak UTG bets and HJ small pairs in the 22.5 BB pot.',
+        'UTG bets overpairs and AK, and HJ can pay with a small pair. Call 4 BB with your set because raising to 14 BB tends to lose both of those groups.',
       ),
       (
         'fold',
@@ -7626,13 +7626,13 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_26_bb',
         'All-in to 26 BB',
         Act0FeedbackQualityV1.wrong,
-        'Going all-in can fold the worse aces and pairs that call 7 BB. It risks 26 BB when BTN has a strong hand.',
+        'Going all-in risks 26 BB against sets and AK. Betting 7 BB keeps calls from worse aces and pairs.',
       ),
       (
         'bet_7_bb',
         'Bet 7 BB',
         Act0FeedbackQualityV1.correct,
-        'AQ beats AJ, AT and 88-JJ. Those hands often call 7 BB, so this size gets paid at the low SPR.',
+        'BTN calls 7 BB with AJ, AT and 88-JJ, so bet AQ for value at SPR 1.4. Checking gives those hands a free turn.',
       ),
     ],
     table: _day7TableV1(
@@ -7704,7 +7704,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_10_bb',
         'Call 10 BB',
         Act0FeedbackQualityV1.correct,
-        'Your overpair wins 60% of the time in this model. The 10 BB call needs 37.7%, so calling has a strong edge.',
+        'CO bets 10 BB all-in with more 8x and 99 than sets. Call TT because the stated 60% wins beats the 37.7% price, worth 5.90 BB over folding.',
       ),
       (
         'fold',
@@ -7898,7 +7898,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'raise_to_4_bb',
         'Raise to 4 BB',
         Act0FeedbackQualityV1.correct,
-        'AJs can get calls from A8, A5 and QJ. Raising to 4 BB can play a value pot with the loose BTN. A limp is a preflop call of the big blind. An isolation raise tries to play with that limper. Think about both the limper and the BB behind.',
+        'BTN calls raises with weaker aces and QJ, and BB usually folds. Raise AJs to 4 BB for value. Calling 0.5 BB lets BB stay in cheaply.',
       ),
       (
         'call_0_5_bb',
@@ -7980,7 +7980,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'raise_to_4_bb',
         'Raise to 4 BB',
         Act0FeedbackQualityV1.correct,
-        'KQs is ahead of the weak kings and queens SB calls with. A 4 BB raise can earn value from those hands. The BB can check for free after an SB limp. A raise costs more but can get calls from weaker hands. Judge the size by the limper read.',
+        'SB calls small raises with weaker kings and queens, so raise KQs to 4 BB for value. Checking gives those hands a free flop.',
       ),
       (
         'check',
@@ -8060,7 +8060,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'KQ is top pair, but CO raises with sets and two pair. Calling 18 needs at least 36% wins and UTG can act again. Three players can see the flop, but more than one foe can hold a strong hand. A raise after a bet may leave the first bettor able to act again. A small call price is not the full story.',
+        'CO raises to 18 BB with sets and two pair on this read, and UTG can still respond. Fold KQ because calling needs 36% wins at the current price, and UTG could still raise.',
       ),
       (
         'call_18_bb',
@@ -8072,7 +8072,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_52_5_bb',
         'All-in to 52.5 BB',
         Act0FeedbackQualityV1.wrong,
-        'Your top pair is behind CO value raises. Going all-in can get calls from better hands.',
+        'Going all-in can get calls from the sets and two pair that beat KQ. Folding keeps the rest of your stack.',
       ),
     ],
     table: _day7TableV1(
@@ -8180,7 +8180,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'call_2_5_bb',
         'Call 2.5 BB',
         Act0FeedbackQualityV1.correct,
-        'You have 7 clean hearts. If the river is 2h or 4h, CO makes a full house. You win on 7/44 = 15.9% of rivers; the call needs 14.3%. An out is a river card that can make you win. A flush draw has up to nine hearts. Some hearts may pair the board and give a set a full house. Count clean outs before you check the price. Three players saw the flop. CO has a set, and you have a heart draw.',
+        'CO bets with a set. If the river is 2h or 4h, CO makes a full house. Call 2.5 BB because the other seven hearts give 7/44, above 14.3%; folding gives up a gain.',
       ),
     ],
     table: _day7TableV1(
@@ -8287,7 +8287,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'call_11_5_bb',
         'Call 11.5 BB',
         Act0FeedbackQualityV1.correct,
-        'An overpair is above the top board card. Your 65% wins beat the 40.4% call price, so calling earns 7.03 BB on average. At a low SPR, a bet can put most of the stack at risk. Compare what the hand may beat with the final pot and call cost. SPR by itself is not a call signal. Both started with 14 BB. With 11.5 behind and 5.5 in the middle, SPR was about 2.1.',
+        'BB bets all-in with more 8x and 99 than sets. Call 11.5 BB because the stated 65% wins beats the 40.4% price, gaining 7.03 BB over folding at SPR 2.1.',
       ),
       (
         'fold',
@@ -8370,19 +8370,19 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'AQ is top pair, but the seven raised hands were sets or two pair. Saving 9 BB avoids a deep pot against better hands. A high SPR means more chips remain next to the pot. One pair may face large bets on later streets. Read what hands a flop raise may mean before you grow the pot. Both started with 100 BB. With 97.5 behind and 5.5 in the middle, the flop SPR was about 17.7.',
+        'BB raises to 12 BB with sets or two pair on this read. Fold AQ because calling costs 9 BB before later bets can add to the loss.',
       ),
       (
         'call_9_bb',
         'Call 9 BB',
         Act0FeedbackQualityV1.wrong,
-        'A call needs 30.5% wins before later bets. AQ has too few clean ways to beat this strong raise range on A-9-6.',
+        'Calling needs 30.5% wins before later bets. Fold because one pair rarely beats this strong raise range.',
       ),
       (
         'raise_to_35_bb',
         'Raise to 35 BB',
         Act0FeedbackQualityV1.wrong,
-        'A large re-raise drives the pot up at SPR 17.7. BB strong flop-raise range is likely to call with better hands.',
+        'Raising to 35 BB risks more at SPR 17.7 against a range full of sets and two pair. Folding keeps your stack for another hand.',
       ),
     ],
     table: _day7TableV1(
@@ -8543,7 +8543,7 @@ final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Judge the choice',
       body:
-          'Check the facts you had when you chose. One win or loss does not prove the choice was sound. Tilt is when a strong feeling starts to steer how you play.',
+          'Variance means short-term results can swing even when your decisions stay sound. A downswing is a stretch of losses. Check the facts you had when you chose. Tilt is when a strong feeling starts to steer your play.',
       focusLabels: <String>['Process', 'Variance', 'Outcome bias'],
     ),
   ],
@@ -8671,7 +8671,7 @@ final _w12_river_ev_costly_call = _w12Task(
     (
       'fold',
       'Fold',
-      'Five out of 15.5 is about 32%. Your chance to win is 20%. Fold to save the 5 BB.',
+      'BB bets 5 BB and bluffs only 20% of the time. Fold your kings because calling needs about 32% wins and the bettor keeps only better hands against a raise.',
       null,
     ),
     (
@@ -8840,7 +8840,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'JJ needs 30% wins for a 12 BB call. It wins 15% of this bet range. One old bluff does not pay the price.',
+        'BB bets mostly aces or sets. Fold JJ because it beats only 15% of those river bets and calling 12 BB needs 30%. One earlier bluff changes neither number.',
       ),
     ],
     table: _day7TableV1(
@@ -8956,7 +8956,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'Seven hearts win, out of 44 unseen cards. That is 15.9%, below the 35.3% call price. The last lucky win changes nothing.',
+        'BB bets 12 BB with a set. Fold because seven winning hearts give 15.9% on 44 rivers, and calling needs 35.3% despite the last draw getting there.',
       ),
       (
         'all_in_to_75_25_bb',
@@ -9055,7 +9055,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
         'call',
         'Call 10 BB',
         Act0FeedbackQualityV1.correct,
-        'Nine hearts win out of 44 unknown cards. That is 20.5%, above the 16.7% price. The call gains 2.27 BB on average.',
+        'SB bets 10 BB with aces. Nine hearts win out of 44 unknown cards, so calling at 16.7% gains 2.27 BB over folding.',
       ),
       (
         'fold',
@@ -9086,7 +9086,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'Nine hearts win out of 44 unknown cards. That is 20.5%, below the 33.3% price. The fold saves 15.45 BB of expected loss. On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.',
+        'SB bets 40 BB with aces. Nine hearts win out of 44 unknown cards, so the 33.3% price makes calling lose 15.45 BB.',
       ),
       (
         'call',
@@ -9159,13 +9159,13 @@ final _w12TiltResetProtocolTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_53_5_bb_to_win_back_chips',
         'All-in to 53.5 BB to win back chips',
         Act0FeedbackQualityV1.wrong,
-        'You have top pair, not the nuts. A 53.5 BB all-in into 5.5 BB may fold weak calls and risk a lot against sets or two pair.',
+        'Betting all 53.5 BB into 5.5 BB risks far more than a 3 BB bet and can fold the worse aces and sevens that would pay it.',
       ),
       (
         'bet_3_bb_after_a_brief_reset',
         'Bet 3 BB after a brief reset',
         Act0FeedbackQualityV1.correct,
-        'Your AQ has top pair with a queen kicker. BB may call 3 BB with worse aces and 7x; the last loss is not part of this pot.',
+        'BB calls 3 BB with weaker aces and sevens. After a reset, bet AQ for value. Checking misses those calls because of a hand that already ended.',
       ),
     ],
     table: _day7TableV1(
@@ -9232,13 +9232,13 @@ final _w12TiltResetProtocolTasksV1 = <Act0LessonTaskV1>[
         'raise_to_2_bb',
         'Raise to 2 BB',
         Act0FeedbackQualityV1.correct,
-        'TT is Strong from HJ. A small open leaves 33 BB for the new pot; the last call has no say here.',
+        'TT in HJ can open for 2 BB with a 35 BB starting stack. With no new read, raising to 3 BB risks an extra blind without a reason to expect better calls or more folds.',
       ),
       (
         'raise_to_3_bb',
         'Raise to 3 BB',
         Act0FeedbackQualityV1.suboptimal,
-        'TT is a sound HJ open, but 3 BB spends one more than the course size with no read to gain more folds or calls.',
+        'Raising to 3 BB adds 1 BB of risk. Opening to 2 BB takes the same first-in spot while keeping an extra blind.',
       ),
       (
         'fold_to_avoid_another_error',
@@ -9371,13 +9371,13 @@ final _w12ConfidenceAndDisciplineTasksV1 = <Act0LessonTaskV1>[
         'raise_to_2_bb',
         'Raise to 2 BB',
         Act0FeedbackQualityV1.correct,
-        '99 is a Medium CO opener. The 2 BB size takes a normal spot without reacting to BB\'s talk.',
+        '99 can open from CO for 2 BB. Raising to 3 BB adds a blind of risk with no reason to expect better calls or more folds after BB’s remark.',
       ),
       (
         'raise_to_3_bb',
         'Raise to 3 BB',
         Act0FeedbackQualityV1.suboptimal,
-        '99 is worth opening from CO, but a 3 BB size adds 1 BB of risk with no read that calls for it.',
+        'A 3 BB raise adds 1 BB of risk with no new read to justify it. Open to 2 BB and keep the extra chip.',
       ),
       (
         'all_in_to_35_bb',
@@ -9453,7 +9453,7 @@ final _w12ConfidenceAndDisciplineTasksV1 = <Act0LessonTaskV1>[
         'call_9_bb',
         'Call 9 BB',
         Act0FeedbackQualityV1.correct,
-        'The price is 9/30=30%. AJ wins 45% of these river bets, so calling earns 4.5 BB on average.',
+        'BTN bets 9 BB with missed draws 45% of the time. Call AJ because that beats 30%, gaining 4.5 BB over folding just to end the session.',
       ),
     ],
     table: _day7TableV1(
@@ -9610,7 +9610,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_7_bb',
         'Call 7 BB',
         Act0FeedbackQualityV1.correct,
-        'Your 77 wins 40% of the river bets. The price is 7/28=25%, so calling gains 4.2 BB on average.',
+        'BB bets 7 BB with missed AJ or KT 40% of the time. Call with 77 because the 25% price means you gain 4.2 BB over folding.',
       ),
     ],
     table: _day7TableV1(
@@ -9717,13 +9717,13 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'QJo is far behind UTG\'s QQ+/AK. A reset keeps your 28 BB for a better spot.',
+        'UTG raises with QQ or better and AK. Fold QJo because calling 3 BB puts QJ in a pot with stronger hands and three seats still to act.',
       ),
       (
         'call_3_bb_to_win_chips_back',
         'Call 3 BB to win chips back',
         Act0FeedbackQualityV1.wrong,
-        'QJo faces QQ+/AK with players behind. Paying 3 BB to chase the past loss risks a dominated flop hand.',
+        'Calling 3 BB risks facing stronger hands with QJ against QQ or better and AK. Folding avoids spending chips to chase a past loss.',
       ),
       (
         'all_in_to_28_bb',
@@ -9804,13 +9804,13 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'KQ wins 12% of the range. The price for 16 BB is 36.4%, so a tired call would lose about 10.72 BB.',
+        'BTN bets 16 BB, mostly with hands that beat KQ. Fold because the 12% wins you have are below 36.4%, so calling loses 10.72 BB on average.',
       ),
       (
         'raise_to_40_bb',
         'Raise to 40 BB',
         Act0FeedbackQualityV1.wrong,
-        'KQ has top pair, but this BTN range is 88% value. Raising to 40 BB risks extra chips into hands that beat you.',
+        'Raising to 40 BB risks extra chips into an 88% value range. Folding avoids adding chips against hands that beat KQ.',
       ),
     ],
     table: _day7TableV1(
@@ -9931,7 +9931,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'AJs has top pair with a jack kicker. The 16.7% price is low; calling keeps weak aces and draws in.',
+        'CO bets 2 BB with weak aces, draws and strong hands. Call AJ at 16.7% because calling keeps weak aces and draws in. Raising to 8 BB can lose them.',
       ),
     ],
     table: _day7TableV1(
@@ -10009,19 +10009,19 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'bet_6_bb',
         'Bet 6 BB',
         Act0FeedbackQualityV1.correct,
-        'AT beats A4, A5, A7, A8 and 9x. The station can pay a 6 BB value bet with worse hands.',
+        'BB calls 6 BB with weaker aces and nines, so bet AT for value. Checking misses payments from those hands.',
       ),
       (
         'check',
         'Check',
         Act0FeedbackQualityV1.suboptimal,
-        'Checking keeps the 14 BB pot, but this BB is set to call 6 BB with weaker aces and 9x.',
+        'Checking misses the 6 BB payments that weaker aces and nines would make.',
       ),
       (
         'all_in_to_53_25_bb',
         'All-in to 53.25 BB',
         Act0FeedbackQualityV1.wrong,
-        'Going all-in can drive off the weak aces and 9x that pay 6 BB. It risks 53.25 BB against a range with sets and two pair.',
+        'Going all-in risks 53.25 BB against stronger hands and can lose calls from weaker aces and nines. Betting 6 BB targets those weaker hands.',
       ),
     ],
     table: _day7TableV1(
@@ -10132,7 +10132,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'Nine hearts are unseen, but if 9h or 3h comes on the river, SB makes quads or a full house, respectively. Seven clean hearts beat the 12.5% call price.',
+        'SB bets 2 BB with a set. If 9h or 3h comes on the river, SB makes quads or a full house. Call because seven winning hearts clear 12.5%, so folding gives up a small gain.',
       ),
     ],
     table: _day7TableV1(
@@ -10230,7 +10230,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'call_10_bb',
         'Call 10 BB',
         Act0FeedbackQualityV1.correct,
-        'KQ wins 35% of this river range. A 10 BB call needs 25%. Its average gain is 4 BB.',
+        'CO bets 10 BB with missed draws 35% of the time. Call KQ because that beats the 25% price and earns 4 BB more than folding.',
       ),
       (
         'raise_to_35_bb',
@@ -10358,7 +10358,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'bet_6_bb',
         'Bet 6 BB',
         Act0FeedbackQualityV1.correct,
-        'AJ beats A3, A5, A6 and A8, 7x and 9x. A 6 BB value bet can get calls from worse while the bet stays small.',
+        'BB calls 6 BB with weaker aces, sevens and nines, so bet AJ for value. Checking misses those payments.',
       ),
     ],
     table: _day7TableV1(
@@ -10454,7 +10454,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'check',
         'Check',
         Act0FeedbackQualityV1.correct,
-        'There is no card left to make your flush. Checking can win versus weak missed draws and avoids a poor bluff into the 80% call rate.',
+        'BTN calls river bets with a pair 80% of the time. Check after missing your draw because betting 6 BB folds only low draws your queen already beats.',
       ),
       (
         'bet_6_bb',
@@ -10466,7 +10466,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'bet_12_bb',
         'Bet 12 BB',
         Act0FeedbackQualityV1.wrong,
-        'The same 20% folds cannot pay for a 12 BB bluff into 14. The bet needs 46.2% folds before other effects.',
+        'A 12 BB bluff into 14 needs 46.2% folds before other effects. BTN folds only 20%, and those misses already lose if you check.',
       ),
     ],
     table: _day7TableV1(
@@ -10605,7 +10605,7 @@ final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'KQ wins 5% of this river bet range. A call needs 32.1%. You save 15.2 BB of expected loss.',
+        'CO bets 18 BB with mainly AK, K9 and sets. KQ wins 5% of this river bet range, so fold because the 32.1% call price makes calling lose 15.2 BB.',
       ),
       (
         'raise_to_45_bb',
@@ -10718,19 +10718,19 @@ final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
         'raise_to_7_bb',
         'Raise to 7 BB',
         Act0FeedbackQualityV1.suboptimal,
-        'The small CO bet contains missed hands. Raising to 7 BB may fold those hands and grow the pot against AJ, QQ and sets.',
+        'Raising to 7 BB can fold CO’s missed overcards and grow the pot against better hands. Calling 2 BB keeps the small bet in.',
       ),
       (
         'all_in_to_36_75_bb',
         'All-in to 36.75 BB',
         Act0FeedbackQualityV1.wrong,
-        'Going all-in for 36.75 BB with top pair QJ can fold bluffs but get action from better pairs or sets.',
+        'Going all-in for 36.75 BB risks your stack against better pairs or sets. A 2 BB call keeps the weak bets in without that risk.',
       ),
       (
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'QJ is top pair with a queen kicker. Calling costs 16.7% of the final 12 BB pot and keeps CO\'s weak bets in.',
+        'CO bets 2 BB with missed overcards and better pairs. Call QJ at 16.7% because calling keeps CO\'s weak bets in. Raising to 7 BB can make them fold.',
       ),
     ],
     table: _day7TableV1(

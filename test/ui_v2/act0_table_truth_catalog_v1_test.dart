@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
@@ -15,6 +17,39 @@ import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 
 void main() {
+  test('W11 call closes the main and side pots with different eligibility', () {
+    final table = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((task) => task.taskId == 'w11_y5d_two_pot_call')
+        .runner
+        .table;
+    final ledger = table.handContributions!;
+    const active = {'bb', 'hj', 'btn'};
+    expect(
+      act0EffectiveStacksV1(ledger, heroSeatId: 'btn', activeSeatIds: active),
+      {'bb': 3, 'hj': 27},
+    );
+    final closedLedger = Act0HandContributionsV1(
+      throughStreet: ledger.throughStreet,
+      startingStackBbBySeat: ledger.startingStackBbBySeat,
+      entries: [
+        ...ledger.entries,
+        Act0ContributionV1(
+          ledger.throughStreet,
+          'btn',
+          Act0ContributionKindV1.wager,
+          9,
+        ),
+      ],
+    );
+    final pots = act0PotEligibilityV1(closedLedger, activeSeatIds: active)!;
+    expect(pots.map((pot) => pot.amountBb), [18.5, 12.0]);
+    expect(pots.first.eligibleSeatIds, {'bb', 'hj', 'btn'});
+    expect(pots.last.eligibleSeatIds, {'hj', 'btn'});
+  });
+
   test('contribution checks reject a changed pot or a missing price label', () {
     final source = Act0ShellStateV1.sample
         .worldById('world_11')
@@ -417,9 +452,24 @@ void main() {
               ).readAsStringSync(),
             )
             as Map<String, dynamic>;
+    for (final entry in y5dNewChoicesV1.entries) {
+      final row = (contract[entry.key] as Map).cast<String, dynamic>();
+      expect(row['rewardXp'], 8, reason: entry.key);
+      expect(row['family'], 'decision', reason: entry.key);
+      expect(
+        (row['options'] as List).map((raw) {
+          final option = raw as Map;
+          return [option['id'], option['correct'], option['quality']];
+        }).toList(),
+        entry.value.map((choice) => [choice[0], choice[2], choice[3]]).toList(),
+        reason: entry.key,
+      );
+    }
     final w10Learning = {
       for (final entry in contract.entries)
-        if (entry.key.startsWith('w10_')) entry.key: entry.value,
+        if (entry.key.startsWith('w10_') &&
+            !y5dNewChoicesV1.containsKey(entry.key))
+          entry.key: entry.value,
     };
     expect(
       sha256.convert(utf8.encode(jsonEncode(w10Learning))).toString(),
@@ -435,6 +485,7 @@ void main() {
     final historicalContract = Map<String, Object?>.from(contract)
       ..removeWhere(
         (id, _) =>
+            y5dNewChoicesV1.containsKey(id) ||
             admittedAdditions.contains(id) ||
             (id.startsWith('w9_') && !y5cNewChoicesV1.containsKey(id)) ||
             id.startsWith('w10_'),

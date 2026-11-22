@@ -23,6 +23,7 @@ part 'act0_shell_runners_part1_v1.dart';
 part 'act0_shell_runners_part2_v1.dart';
 part 'act0_shell_runners_part3_v1.dart';
 part 'act0_shell_runners_part4_v1.dart';
+part 'act0_y5d_lesson_tasks_v1.dart';
 
 enum Act0ShellTabV1 { home, learn, play, review, profile }
 

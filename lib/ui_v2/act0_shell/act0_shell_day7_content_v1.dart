@@ -2,6 +2,57 @@ part of 'act0_shell_state_v1.dart';
 
 final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'pot_to_call',
+    _y5dRiverAllInV1('co', 'Jd Th', 'Js 8h 6h 4c 2d', openBb: 3.25, betBb: 5),
+    caption:
+        'BB bets the last 5 BB. Missed heart draws make up 45% of the bets and sets make up 55%. Your pair wins only against the missed draws.',
+    question: 'Call or fold?',
+    choices: const ['Call', 'Fold'],
+    correct: 0,
+    reason:
+        'BB bets missed draws 45% of the time. Call because 5 BB for a 17 BB pot needs about 29%, so folding gives up 2.65 BB on average.',
+    wrongReasons: const {
+      1: 'Folding gives up 2.65 BB on average because BB bets enough missed draws to make the call profitable.',
+    },
+    savedTaskId: 'spaced_review_w11_post_session_review_loop_pot_to_call_v1',
+  ),
+  _day7ExampleV1(
+    12,
+    'confidence_river_discipline',
+    'pot_to_call',
+    _y5dRiverAllInV1('co', 'Ah 9d', 'Ac 7s 6s 3h 2c', openBb: 3, betBb: 5),
+    caption:
+        'BB bets the last 5 BB. Missed spade draws make up 20% of the bets and sets make up 80%. Your pair wins only against the missed draws.',
+    question: 'Call or fold?',
+    choices: const ['Call', 'Fold'],
+    correct: 1,
+    reason:
+        'BB bets primarily sets. Fold because calling 5 BB for a 16.5 BB pot needs about 30% wins and your pair wins only 20%.',
+    wrongReasons: const {
+      0: 'The call loses 1.7 BB on average because BB bets too few missed draws to justify paying 5 BB.',
+    },
+    savedTaskId: 'spaced_review_w12_confidence_river_discipline_pot_to_call_v1',
+  ),
+  _day7ExampleV1(
+    10,
+    "exploit_guardrails",
+    "pot_to_call",
+    _y5dRiverAllInV1('co', 'Qd Th', 'Qc 9s 7s 6d 3c', openBb: 3.75, betBb: 7),
+    caption:
+        "BB bets the last 7 BB. Missed spade draws account for 20% of the bets and sets for 80%. Your queen beats only the bluffs.",
+    question: "Call or fold?",
+    choices: const ["Call", "Fold"],
+    correct: 1,
+    reason:
+        "BB bets mostly sets. Fold because calling 7 BB for a 22 BB pot needs about 32%, above the 20% of bets you beat.",
+    wrongReasons: const {
+      0: "The 7 BB call needs about 32% wins. At 20%, paying that price costs 2.60 BB on average.",
+    },
+    savedTaskId: "spaced_review_w10_river_player_mix_v1",
+  ),
+  _day7ExampleV1(
     9,
     "bubble_risk_premium",
     "misread_tournament_pressure",
@@ -3464,7 +3515,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "QJo is outside the HJ first-in row, but a 95% group fold rate makes the 2 BB steal earn 1.325 BB.",
+                "CO, BTN and both blinds fold 95% at either size, so raise to 2 BB and gain 1.325 BB. Raising to 5 BB pays three more blinds when they resist.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
@@ -3486,7 +3537,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.suboptimal,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "The read gives the same folds to either size. A 5 BB raise risks 3 BB more when a player 3-bets.",
+                "The same players fold at either size. Raising to 5 BB costs another 3 BB when one raises again.",
           ),
         ],
         feedbackTitle: '',
@@ -3573,7 +3624,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "A9 beats 55% missed hands. The call price is 8/25.5 = 31.4%, so a call has room.",
+                "BTN bets missed high cards 55% of the time, and A9 beats them. Call because the 31.4% price is lower than your win rate, so folding gives up 6.03 BB.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_22_bb",
@@ -3584,7 +3635,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "A9 can catch bluffs, but a raise may make missed KQ/QJ fold and get action from AK, AQ and sets.",
+                "Raising loses missed draws that a call keeps in. Stronger aces and sets can pay the raise.",
           ),
         ],
         feedbackTitle: '',
@@ -3934,7 +3985,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.suboptimal,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "You have AK. CO will pay 4 BB with weak kings and pairs, so 3 BB leaves part of that value behind.",
+                "Betting 3 BB misses a blind per call from weaker kings and smaller pairs that both sizes get.",
           ),
           Act0RunnerOptionV1(
             id: "bet_4_bb",
@@ -3945,7 +3996,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "AK beats KJ, KT and the smaller pairs. Those past calls can pay a 4 BB turn value bet.",
+                "Bet 4 BB because CO pays that amount with weaker kings and smaller pairs. Bet the larger size because 3 BB earns a blind less from the same callers.",
           ),
           Act0RunnerOptionV1(
             id: "bet_18_bb",
@@ -3956,7 +4007,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "If you bet 18 BB, the smaller pairs you want to call can fold. Better hands get a much larger pot.",
+                "Betting 18 BB loses the weaker pair calls and risks more against better hands.",
           ),
         ],
         feedbackTitle: '',
@@ -4136,7 +4187,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "KQs is a Medium HJ hand. Raising can play a larger pot against the weaker kings and queens UTG calls with.",
+                "Raise KQs to 4 BB because UTG calls with weaker kings, queens and small pairs. Matching the limp gives the remaining players a cheap chance to enter.",
           ),
         ],
         feedbackTitle: '',
@@ -4225,7 +4276,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "A 2 BB pure bluff into 2 needs 50% folds. SB gives 10%, so checking saves chips.",
+                "Check because SB calls with pairs and folds only 10%. A 2 BB bluff needs 50% folds, so betting loses chips.",
           ),
           Act0RunnerOptionV1(
             id: "bet_2_bb",
@@ -4342,7 +4393,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "A heart that pairs the ace or deuce gives BTN a full house. Seven hearts win about 15.9%. An 8 BB call costs 30.2% of the final pot.",
+                "BTN bets with a set, and seven hearts give you about 15.9% wins. Fold because the 8 BB call needs 30.2%; a heart that pairs the ace or deuce gives BTN a full house.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_18_bb",
@@ -4479,7 +4530,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "Going all-in for 60 BB with AKs to win 1.5 BB is a large risk based on one BTN bluff, not a sound read.",
+                "Going all-in risks 60 BB on a single observed bluff. The 2 BB raise leaves room to respond.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_2_bb",
@@ -4490,7 +4541,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "AKs is Premium in CO. One BTN bluff is not enough to change the 2 BB open or set a new trap.",
+                "Raise AKs from CO to 2 BB because one observed BTN bluff is too little to change the plan. Raising to 4 BB risks two more blinds without evidence of a better response.",
           ),
         ],
         feedbackTitle: '',
@@ -4727,7 +4778,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "KJ wins 15% by this mix. Calling 9 into 29.5 needs 30.5%, so folding saves 9 BB.",
+                "BB bets stronger hands 85% of the time. Fold KJ because calling 9 BB needs 30.5% wins, well above the 15% of bets you beat.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_25_bb",
@@ -4738,7 +4789,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "Better kings, sets and two pair make up 85% of BB bets. A raise risks still more when those hands call.",
+                "Raising risks more chips when the strong 85% of BB’s range calls. Fold to avoid that extra risk.",
           ),
         ],
         feedbackTitle: '',
@@ -4854,7 +4905,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "AQ is top pair but not two pair. The strong turn range gives you too few clean river outs for 27.8%.",
+                "Calling costs 11 BB with too few winning rivers against sets and two pair.",
           ),
           Act0RunnerOptionV1(
             id: "all_in_to_57_5_bb",
@@ -4865,7 +4916,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "BB rarely raises a weak hand. An all-in risks the rest of your stack into a range that beats top pair.",
+                "Going all-in risks the whole stack against stronger hands. Folding keeps your remaining chips.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
@@ -4876,7 +4927,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "Calling costs 11 into 39.5, or 27.8%. AQ is behind the shown two pair and sets on Q-9-4-3.",
+                "BB raises with two pair and sets in this model. Fold AQ because calling 11 BB needs 27.8% wins and one pair trails that range.",
           ),
         ],
         feedbackTitle: '',
@@ -5002,7 +5053,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "A 2 BB pure bluff into 2 needs 50% folds. SB gives 10%, so checking saves chips.",
+                "Check because SB calls with pairs and folds only 10%. A 2 BB bluff needs 50% folds, so betting loses chips.",
           ),
           Act0RunnerOptionV1(
             id: "bet_2_bb",
@@ -5120,7 +5171,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "AKs is Premium in CO. One BTN bluff is not enough to change the 2 BB open or set a new trap.",
+                "Raise AKs from CO to 2 BB because one observed BTN bluff is too little to change the plan. Raising to 4 BB risks two more blinds without evidence of a better response.",
           ),
           Act0RunnerOptionV1(
             id: "all_in_to_60_bb",
@@ -5131,7 +5182,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "CO has 60 BB and BTN covers with 63 BB. One bluff tells you too little to risk your stack before the flop.",
+                "Going all-in risks 60 BB without a pattern of bluffs to support it. Raise to 2 BB instead.",
           ),
         ],
         feedbackTitle: '',
@@ -5199,7 +5250,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           '3_bet_to_9_bb',
           '3-bet to 9 BB',
           Act0FeedbackQualityV1.correct,
-          'AKs is Premium and ahead of CO AQ, AJ and KQ. A 9 BB 3-bet can earn value while BB is still to act.',
+          'CO calls 3-bets with dominated aces and KQ. Raise AKs to 9 BB for value while BB tends to fold. Calling 2 BB keeps BB in at a lower price.',
         ),
         (
           'call_2_bb',
@@ -5287,7 +5338,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'call_2_bb',
           'Call 2 BB',
           Act0FeedbackQualityV1.correct,
-          'A 2 BB call makes the pot 6.5 BB. Your 88 gets a 30.8% price against a wide BTN opening range.',
+          'BTN opens wide but calls 3-bets with higher pairs and big aces. Call 2 BB with 88 at 30.8%. Raising to 10 BB risks more against the stronger part of the range.',
         ),
         (
           'raise_to_10_bb',
@@ -5376,7 +5427,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'fold',
           'Fold',
           Act0FeedbackQualityV1.correct,
-          'If the river is Ah or 8h, BTN makes a full house. You have 7 clean hearts, or 15.9% of 44 rivers. The 7 BB call needs 26.9%.',
+          'BTN bets with two pair. If the river is Ah or 8h, BTN makes a full house. Fold because the other seven hearts give 15.9%, and calling 7 BB needs 26.9%.',
         ),
         (
           'call_7_bb',
@@ -5494,19 +5545,19 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'fold',
           'Fold',
           Act0FeedbackQualityV1.correct,
-          'KQ is one pair in a high-SPR pot. BTN value bets sets and K9 here. The 5 BB call needs 30.3% wins.',
+          'BTN bets 5 BB and has shown sets and K9 in this line. Fold KQ because calling needs 30.3% wins before later bets, and one pair trails those hands.',
         ),
         (
           'call_5_bb',
           'Call 5 BB',
           Act0FeedbackQualityV1.wrong,
-          'KQ is behind the shown sets and K9. Calling 5 BB now may lead to more deep-stack bets while you chase few clean outs.',
+          'Calling 5 BB can lead to deeper bets against sets and K9. Folding saves the call with few ways to win.',
         ),
         (
           'raise_to_18_bb',
           'Raise to 18 BB',
           Act0FeedbackQualityV1.wrong,
-          'A raise grows the pot with one pair at SPR 15.0. The shown sets and K9 can call with better hands.',
+          'Raising builds a deep pot at SPR 15 against sets and K9 that can call. Folding avoids that risk.',
         ),
       ],
       table: _day7TableV1(
@@ -5628,7 +5679,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'bet_2_bb',
           'Bet 2 BB',
           Act0FeedbackQualityV1.correct,
-          'The 85% folds make a 2 BB bluff earn 5.23 BB on average. The same folds need less risk at the small size.',
+          'BTN folds 85% to either size, so betting 2 BB earns 5.23 BB on average. Betting 6 BB gets the same folds and risks another 4 BB when BTN continues.',
         ),
         (
           'bet_6_bb',
@@ -5710,7 +5761,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'fold',
           'Fold',
           Act0FeedbackQualityV1.correct,
-          'Your 8 BB call needs 31.4% wins. The stated QJ win rate is 12%. This matches the price leak in your review note.',
+          'CO bets 8 BB on a line that has shown sets, AA and AQ. Fold QJ because its stated 12% wins falls short of the 31.4% call price.',
         ),
         (
           'call_8_bb',
@@ -5722,7 +5773,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'all_in_to_40_5_bb',
           'All-in to 40.5 BB',
           Act0FeedbackQualityV1.wrong,
-          'You have 40.5 BB left before acting. A shove risks it into a tight turn range that beats top pair often.',
+          'A shove risks all 40.5 BB against a tight range that beats QJ. Folding avoids the costly call and the extra risk.',
         ),
       ],
       table: _day7TableV1(
@@ -5980,7 +6031,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'call_5_bb',
           'Call 5 BB',
           Act0FeedbackQualityV1.correct,
-          'AJ wins 38% versus this range. The 5 BB call costs 25% of the final 20 BB pot, so it gains 2.6 BB.',
+          'BTN bets 5 BB with missed draws 38% of the time. Call AJ because that clears the 25% price and gains 2.6 BB over folding.',
         ),
         (
           'fold_due_to_the_last_loss',
@@ -6092,19 +6143,19 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'fold',
           'Fold',
           Act0FeedbackQualityV1.correct,
-          'If the river is Qh or 4h, BB makes a full house. Seven clean hearts win 15.9% of the time, below the 28.6% price.',
+          'BB bets 8 BB with two pair. If the river is Qh or 4h, BB makes a full house. Fold because seven winning hearts give 15.9%, below the 28.6% needed to call.',
         ),
         (
           'call_8_bb',
           'Call 8 BB',
           Act0FeedbackQualityV1.wrong,
-          'Nine hearts make your flush, but two make BB a full house. Seven clean outs cannot pay for an 8 BB call into 20.',
+          'Calling 8 BB into 20 needs 28.6%. The seven hearts that beat two pair give 15.9%, so folding saves that losing call.',
         ),
         (
           'raise_to_20_bb',
           'Raise to 20 BB',
           Act0FeedbackQualityV1.wrong,
-          'BB has two pair and will call a raise in this model. Raising spends more with seven winning hearts and poor odds.',
+          'Raising risks extra chips against two pair. The seven winning hearts cannot pay for the cheaper call, so fold.',
         ),
       ],
       table: _day7TableV1(
@@ -6200,7 +6251,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'fold',
           'Fold',
           Act0FeedbackQualityV1.correct,
-          'A 14 BB call needs 33.3%. Your 99 wins 15% of the range, so a fold avoids 7.7 BB in expected loss.',
+          'BTN bets 14 BB with missed draws only 15% of the time. Fold 99 because calling needs 33.3% and loses 7.7 BB on average.',
         ),
         (
           'call_14_bb',
@@ -6323,13 +6374,13 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'call_2_bb',
           'Call 2 BB',
           Act0FeedbackQualityV1.correct,
-          'KQ is top pair with a queen kicker. Calling needs 21.1% and keeps the small bets from weaker hands in the pot.',
+          'BTN bets 2 BB with misses and weak pairs as well as better kings. Call KQ because the price is 21.1%. Raising to 7 BB can turn away weaker hands.',
         ),
         (
           'raise_to_7_bb',
           'Raise to 7 BB',
           Act0FeedbackQualityV1.suboptimal,
-          'A raise to 7 BB may fold the missed hands from BTN\'s 2 BB bet and grow the pot when better kings continue.',
+          'Raising to 7 BB can fold the misses and keep only better kings. Calling 2 BB lets you play against the weaker part of the bet range.',
         ),
         (
           'all_in_to_47_5_bb',
@@ -6410,7 +6461,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       step: Act0LessonStepKindV1.practice,
       xp: 0,
       caption:
-          'Last hand you made a poor turn call. BTN now opens wide to 2.5. You have TT in SB with 45 BB. BTN calls a 3-bet to 8 with 88-99, AQ and KQs, then 4-bets QQ+/AK.',
+          'Last hand you made a poor turn call. BTN now opens wide to 2.5. You have TT in SB with 45 BB. BTN calls a 3-bet to 8 with 88-99, AQ and KQs, then raises again with QQ+/AK.',
       question: 'What is your preflop action?',
       teach: '',
       choices: const [
@@ -6418,7 +6469,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           '3_bet_to_8_bb',
           '3-bet to 8 BB',
           Act0FeedbackQualityV1.correct,
-          'TT is ahead of BTN\'s 88-99 and fares well against AQ/KQs. An 8 BB 3-bet gains value without risking 45 BB to chase the last pot.',
+          'BTN calls 3-bets with 88–99, AQ and KQs. Raise TT to 8 BB for value. Calling 2 BB lets BB in cheaply, and we can fold if BTN raises again with QQ or better and AK.',
         ),
         (
           'call_2_bb',
@@ -6506,7 +6557,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'bet_6_bb',
           'Bet 6 BB',
           Act0FeedbackQualityV1.correct,
-          'AQ beats the weak aces and 8x in the BB call range. A 6 BB value bet gets paid by worse.',
+          'BB calls 6 BB with weak aces and eights, so bet AQ for value. Checking misses payments from those weaker hands.',
         ),
         (
           'check_to_avoid_bb',
@@ -6518,7 +6569,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'all_in_to_56_25_bb',
           'All-in to 56.25 BB',
           Act0FeedbackQualityV1.wrong,
-          'BB has not shown calls this large with weak aces. A 56.25 BB shove may fold worse hands and meet strong raises or calls.',
+          'Going all-in risks 56.25 BB and can lose the weak aces and eights that would pay 6 BB. Keep the bet at 6 BB to reach those hands.',
         ),
       ],
       table: _day7TableV1(
@@ -6618,7 +6669,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'check',
           'Check',
           Act0FeedbackQualityV1.correct,
-          'There is no river card left to help Qc Jc. A check keeps showdown value against missed low draws and saves a poor bluff.',
+          'BB calls river bets with pairs 85% of the time. Check the missed flush draw because betting 5 BB folds only the low draws your queen already beats.',
         ),
         (
           'bet_5_bb',

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import '../../tools/cnt01_role_inventory_v1.dart';
 
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
@@ -333,6 +334,7 @@ void main() {
               y5bNewChoicesV1.length -
               y5bFoundationTaskCountV1 +
               y5cNewChoicesV1.length +
+              y5dNewChoicesV1.length +
               w11Wave4ChoiceContractV1.length +
               w12Wave4ChoiceContractV1.length +
               wave6TaskDeltaV1,
@@ -349,6 +351,7 @@ void main() {
             (id) => !wave6PreviousRowsV1.containsKey(id),
           ),
           ...wave6CurrentRowsV1.keys,
+          ...y5dNewChoicesV1.keys,
         ]),
       );
       for (final row in rows) {
