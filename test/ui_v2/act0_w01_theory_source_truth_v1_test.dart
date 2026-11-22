@@ -1265,7 +1265,7 @@ void _newFreeCheckContextTests() {
         ]);
         expect(task.runner.options.map((o) => o.feedbackReason), [
           'Folding gives up the hand. Checking is free here.',
-          'BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.',
+          'BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.',
           'BB has put in no bet on this street. Trying to call misses the free check that keeps you in.',
         ]);
         expect(table.scope, Act0TableScopeV1.playedHand);

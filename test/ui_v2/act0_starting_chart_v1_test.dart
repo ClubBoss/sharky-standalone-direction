@@ -185,7 +185,9 @@ void main() {
               expect(correct.label, '$call BB', reason: task.taskId);
             } else {
               final statedChance = double.parse(
-                RegExp(r'you win (\d+)%').firstMatch(runner.caption)![1]!,
+                RegExp(
+                  r'(?:you win |Assume )(\d+)%',
+                ).firstMatch(runner.caption)![1]!,
               );
               expect(
                 correct.id,

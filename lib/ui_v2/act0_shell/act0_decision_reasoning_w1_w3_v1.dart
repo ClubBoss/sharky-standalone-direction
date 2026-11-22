@@ -591,8 +591,7 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     opponentRead:
         "SB can open a broad range against one blind. The stated win rate supplies the decision premise.",
     stackMatters: false,
-    preChoiceAssumption:
-        "Assume you win 38% of the time, never tie, and face no later bets.",
+    preChoiceAssumption: "Assume 38% wins, no ties or later bets.",
   ),
   'w3_play_from_blinds_bvb_bb_repeat': Act0DecisionReasoningV1(
     taskId: 'w3_play_from_blinds_bvb_bb_repeat',
@@ -603,7 +602,6 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     opponentRead:
         "SB’s open sets the same price. The stated lower win rate supplies the decision premise.",
     stackMatters: false,
-    preChoiceAssumption:
-        "Assume you win 25% of the time, never tie, and face no later bets.",
+    preChoiceAssumption: "Assume 25% wins, no ties or later bets.",
   ),
 };

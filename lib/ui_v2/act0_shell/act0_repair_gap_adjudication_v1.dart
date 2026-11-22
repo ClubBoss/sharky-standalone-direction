@@ -1288,7 +1288,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "506f445873ee0ea384ca9c31688ee7c5e6b01b36678e60da402dd9b7e61ab2d7",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
     sourceChoiceLabel: "Fold",
@@ -1300,7 +1300,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "1fd103fe7409e39b33762b0664423c682e19f300e20afd989b943e6ce882d634",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1313,7 +1313,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "506f445873ee0ea384ca9c31688ee7c5e6b01b36678e60da402dd9b7e61ab2d7",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason:
         "BB has put in no bet on this street. Trying to call misses the free check that keeps you in.",
@@ -1326,7 +1326,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "1fd103fe7409e39b33762b0664423c682e19f300e20afd989b943e6ce882d634",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1453,7 +1453,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "1fd103fe7409e39b33762b0664423c682e19f300e20afd989b943e6ce882d634",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
     relationId: "selected_w1_042_fold_v1",
@@ -1467,7 +1467,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "506f445873ee0ea384ca9c31688ee7c5e6b01b36678e60da402dd9b7e61ab2d7",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1480,7 +1480,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "1fd103fe7409e39b33762b0664423c682e19f300e20afd989b943e6ce882d634",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
     relationId: "selected_w1_043_call_v1",
@@ -1495,7 +1495,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "506f445873ee0ea384ca9c31688ee7c5e6b01b36678e60da402dd9b7e61ab2d7",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1577,7 +1577,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        '506f445873ee0ea384ca9c31688ee7c5e6b01b36678e60da402dd9b7e61ab2d7',
+        '3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',

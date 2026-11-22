@@ -2101,7 +2101,7 @@ const _sharkyOpenChartChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'That hand and seat fit the chart.',
     feedbackReason:
-        "With BTN first in, a raise lets you win the blinds when they fold. A limp gives BB a cheap flop and leaves SB a cheaper call.",
+        "With BTN first in, a raise lets you win the blinds when they fold. Calling leaves BB a free check and SB a cheaper entry.",
   ),
 ];
 
@@ -2175,7 +2175,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Raise AJo from CO because only BTN and the blinds can respond, and weaker aces can call. A limp lets the blinds see the flop more cheaply.",
+          "Raise AJo from CO because only BTN and the blinds can respond, and weaker aces can call. Calling lets the blinds see the flop more cheaply.",
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -2311,7 +2311,7 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          "At UTG with a weak offsuit hand, five players can raise after you, so folding saves the chips a limp puts at risk.",
+          "At UTG with a weak offsuit hand, five players can raise after you, so folding saves the chips a call would risk.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -2565,7 +2565,7 @@ const _kqoButtonFacingRaiseChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Clean execution.',
     feedbackReason:
-        "With KQo on BTN, call because CO can raise weaker high cards and acts first after the flop. A reraise puts more at risk against stronger hands.",
+        "With KQo on BTN, call because CO can raise weaker unpaired hands and you see CO’s decisions before yours. A reraise puts more at risk against stronger hands.",
   ),
   Act0RunnerOptionV1(
     id: 'fold',
@@ -2624,7 +2624,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Call with KQo on BTN because HJ acts first after the flop and can raise weaker high cards preflop. A reraise risks more against the stronger aces and pairs that can continue.",
+          "Call with KQo on BTN because HJ can raise weaker unpaired hands and you see HJ’s decisions before yours. A reraise risks more against the stronger aces and pairs that can continue.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -2712,7 +2712,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Call QJs on BTN because CO can raise weaker suited hands and acts first after the flop. Reraising risks more when CO continues with stronger hands.",
+          "Call QJs on BTN because CO can raise weaker suited hands and you see CO’s decisions before yours. Reraising risks more when CO continues with stronger hands.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -2832,7 +2832,7 @@ final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          "Call KJs on BTN because HJ can raise weaker suited hands and acts first after the flop. Reraising risks extra chips when better hands continue.",
+          "Call KJs on BTN because HJ can raise weaker suited hands and you see HJ’s decisions before yours. Reraising risks extra chips when better hands continue.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -3108,7 +3108,7 @@ const _additionalLateOpenChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Read the hand with the seat.',
     feedbackReason:
-        "Raise from BTN because only SB and BB can respond, and they can fold weak hands. A limp lets BB see a cheap flop.",
+        "Raise from BTN because only SB and BB can respond, and they can fold weak hands. Calling lets BB see a cheap flop.",
   ),
 ];
 
@@ -3128,7 +3128,7 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          "With ATo on BTN, raise because only the blinds can call and may fold the pot to you. A limp lets BB see a cheap flop.",
+          "With ATo on BTN, raise because only the blinds can call and may fold the pot to you. Calling lets BB see a cheap flop.",
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -3291,7 +3291,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace discipline applied.',
       feedbackReason:
-          "The Sharky starting chart folds A9o at UTG because five players can still raise or call with stronger aces. A limp risks chips before they act.",
+          "The Sharky starting chart folds A9o at UTG because five players can still raise or call with stronger aces. Calling risks chips before they act.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -4008,7 +4008,7 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
   };
   final foldReason =
       'Fold $handCode because $opener can raise $strongerHands. '
-      'Calling costs 2.5 BB and can leave you behind even when you pair your high card.';
+      'Calling costs 2.5 BB and can leave you behind even if you both pair that rank.';
   final wrongCallReason = cards[0].rank == 'A'
       ? 'Calling 2.5 BB into a 4 BB pot $seatName with $handCode pays to play a weak ace that loses big pots when $opener holds a stronger ace.'
       : 'Calling 2.5 BB into a 4 BB pot $seatName with $handCode risks chips with a weak offsuit hand that loses big pots to $opener\'s stronger high cards.';
@@ -4451,7 +4451,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise is the sharp Button play.',
       feedbackReason:
-          "With KQo on BTN, raise because the blinds can fold or pay with weaker kings and queens. A limp lets BB see a cheap flop.",
+          "With KQo on BTN, raise because the blinds can fold or pay with weaker kings and queens. Calling lets BB see a cheap flop.",
       repairFocusSeatIds: <String>['btn'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['BTN open', 'KQo'],
@@ -5044,13 +5044,13 @@ final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
       title: 'Facing BTN.',
       body:
           'SB reraises Premium, Strong and HJ Medium. Fold CO Medium and Weak. '
-          'From BB, subtract your 1 BB post. A 1.5 BB call for 5.5 BB needs about 27% equity.',
+          'From BB subtract your 1 BB post. Equity means pot share from wins and ties. A 1.5 BB call for 5.5 BB needs about 27%.',
     ),
     Act0TeachingStepV1(
-      title: 'Blind against blind.',
+      title: 'Only the blinds remain.',
       body:
-          'SB opens strong hands and acts first after the flop. Limping lets BB see it cheaply. '
-          'A BB call closes the action: the flop comes next.',
+          'Blind versus blind means everyone folded to SB. SB acts before BB after the flop. '
+          'A limp means completing the blind. A raise to 3 BB makes BB pay 2 BB more. A call closes the action.',
     ),
   ],
 );

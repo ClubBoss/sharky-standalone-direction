@@ -547,7 +547,7 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Correct.',
     feedbackReason:
-        'Raise to 3 BB so the blinds have to match a higher price to stay in. A call only matches the 1 BB blind.',
+        'Raising to 3 BB makes the blinds pay more to stay in. A call only matches the 1 BB blind.',
     repairFocusSeatIds: <String>['btn'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
     repairFocusLabels: <String>['Button raise', 'Your turn'],
@@ -2122,7 +2122,7 @@ const _noPriceActionChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Check is legal with no bet to call.',
     feedbackReason:
-        'BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.',
+        'BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.',
   ),
   Act0RunnerOptionV1(
     id: 'call',
@@ -2287,7 +2287,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Folding gives up your chance to win the pot. A call pays HJ’s 1 BB bet and keeps your hand live.',
+          'Folding ends the hand for you. A call pays HJ’s 1 BB bet and keeps you in.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
