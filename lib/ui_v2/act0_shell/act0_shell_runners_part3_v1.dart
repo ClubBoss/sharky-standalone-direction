@@ -2398,12 +2398,24 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
     centerLabel: 'Read the flop',
     highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
+  teachingSteps: <Act0TeachingStepV1>[
+    const Act0TeachingStepV1(
       title: 'What can change?',
       body:
-          'A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.',
+          "A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.",
       focusLabels: <String>['Rank gaps', 'Suits'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Three of one suit.',
+      body:
+          'These three spades are called a monotone flop. A player with two more spades already has a flush.',
+      table: _act0BoardLessonTableV1(
+        openingSeat: 'hj',
+        heroCards: _act0LessonCardsV1('Ac Jd'),
+        boardCards: _act0LessonCardsV1('Ks 8s 3s'),
+        centerLabel: 'Read the flop',
+        highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
     ),
   ],
   feedbackTitle: 'Texture first.',
@@ -2723,7 +2735,8 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
       title: 'Four cards of the same suit.',
       body:
           'A flush draw has four cards of one suit between your hand and the board. '
-          'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.',
+          'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.'
+          ' “The nuts” means the best possible hand on the current board.',
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
     Act0TeachingStepV1(
@@ -3240,7 +3253,7 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Count the cards that help.',
       body:
-          'An out is an unseen card that improves your hand. With one card left and 46 unseen, '
+          'Outs are the unseen cards that can improve your hand. With one card left and 46 unseen, '
           '9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.',
       focusLabels: <String>['Outs', 'One card left'],
     ),
@@ -3403,7 +3416,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nine outs are enough at this price.',
       feedbackReason:
-          'Call under the stated rule. Nine hearts out of 46 hit about 1 time in 5, above the 1-in-6 price. In a real hand, what the opponent could hold determines which rivers win.',
+          "BB bets 2 BB, so calling needs 2 wins per 12. Your flush wins on 9 of 46 rivers in this model. Folding gives up the gain.",
     ),
     Act0RunnerOptionV1(
       id: 'price_only',
@@ -3414,7 +3427,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the chance with the price.',
       feedbackReason:
-          'Under the stated rule, 9 winning rivers out of 46 beat the 2-in-12 price. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts and beat your flush.',
+          "Folding misses a call that needs only 2 in 12 when 9 of 46 rivers win. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts.",
     ),
     Act0RunnerOptionV1(
       id: 'call_draw_alone',
@@ -3425,7 +3438,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Compare it with the cost.',
       feedbackReason:
-          'On T-4-2-9, A-7 of hearts hits on 9 of 46 rivers under the stated rule. That beats the 2-in-12 price. A bigger bet can make the same nine outs too expensive.',
+          "Calling just because you have nine outs can cost chips when the price is high. Here 9 out of 46 beat the 2-in-12 price.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -3517,7 +3530,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Eight outs are too few at this price.',
       feedbackReason:
-          'Fold under the stated rule. A 4 or 9 makes your straight on 8 of 46 rivers, below the 1-in-4 price. In a real hand, what the opponent could hold determines which rivers win.',
+          "BB bets 3 BB, so calling needs 3 wins per 12. A four or nine wins on 8 of 46 rivers in this model. Fold because those outs fall short.",
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
@@ -3528,7 +3541,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A live draw can still cost too much.',
       feedbackReason:
-          'Under the stated rule, eight winning rivers fall short of the 3-in-12 price. In a real hand, a 9 can give an opponent holding J-T a higher straight.',
+          "A call needs 25% because it costs 3 BB for a final 12 BB pot. Eight of 46 is about 17%, so fold. In a real hand, a 9 can give an opponent holding J-T a higher straight.",
     ),
     Act0RunnerOptionV1(
       id: 'fold_wrong_out_count',
@@ -3927,7 +3940,7 @@ final _world5DrawPriceCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'The low price makes a call worthwhile.',
       feedbackReason:
-          'Only a 7 completes your straight. Four of 46 cards win, about 1 in 12. You only need 1 in 13 at this price.',
+          "BB bets 1 BB, so calling needs 1 win per 13. Four sevens out of 46 clear that price in this model. Folding gives up that gain.",
     ),
     Act0RunnerOptionV1(
       id: 'just_outs',
@@ -3938,7 +3951,7 @@ final _world5DrawPriceCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Check the price before folding.',
       feedbackReason:
-          'The 1 BB call makes a 13 BB pot. Four wins out of 46 beats the 1-in-13 price.',
+          "Folding misses a small gain: four winning rivers out of 46 beat the 1-in-13 call price.",
     ),
     Act0RunnerOptionV1(
       id: 'call_cheap_only',

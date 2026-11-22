@@ -2,18 +2,18 @@
   "btn_share_by_world": {},
   "checks": {
     "11.btn_share_per_world": 12,
-    "12.two_option_w1_w5": 226,
-    "13.intro_over_100_words": 78,
-    "14.duplicate_theory_in_lesson": 243,
-    "15.internal_jargon": 463,
-    "16.extreme_wrong_option": 406,
-    "17.single_format_lesson": 63,
+    "12.two_option_w1_w5": 231,
+    "13.intro_over_100_words": 79,
+    "14.duplicate_theory_in_lesson": 244,
+    "15.internal_jargon": 469,
+    "16.extreme_wrong_option": 411,
+    "17.single_format_lesson": 64,
     "18.same_format_streak": 12,
-    "19.lesson_length_corridor": 76,
+    "19.lesson_length_corridor": 77,
     "20.hero_qq_per_world": 5,
-    "21.duplicate_wrong_reason": 1163,
+    "21.duplicate_wrong_reason": 1175,
     "22.bet_into_pot": 52,
-    "24.call_equity": 73,
+    "24.call_equity": 75,
     "25.street_stack": 30
   },
   "findings": [
@@ -180,63 +180,7 @@
       "world_2": {},
       "world_3": {},
       "world_4": {},
-      "world_5": {
-        "26": [
-          "board_texture_basics_w5_texture_dry_value",
-          "board_texture_basics_w5_texture_wet_showdown",
-          "connected_boards_w5_connected_read_bet",
-          "outs_improvement_w5_table_outs_flush_transfer",
-          "outs_improvement_w5_table_outs_straight_transfer",
-          "spaced_review_w5_outs_improvement_hero_cards_board_pot_v1",
-          "turn_river_changes_w5_board_checkpoint"
-        ],
-        "27": [
-          "board_texture_basics_w5_texture_dry_value",
-          "board_texture_basics_w5_texture_wet_showdown",
-          "connected_boards_w5_connected_read_bet",
-          "outs_improvement_w5_table_outs_flush_transfer",
-          "outs_improvement_w5_table_outs_straight_transfer",
-          "spaced_review_w5_outs_improvement_hero_cards_board_pot_v1",
-          "turn_river_changes_w5_board_checkpoint"
-        ],
-        "28": [
-          "board_texture_basics_w5_texture_dry_value|two",
-          "board_texture_basics_w5_texture_wet_showdown|check",
-          "outs_improvement_w5_table_outs_flush_transfer|heart_outs",
-          "outs_improvement_w5_table_outs_straight_transfer|four_or_nine",
-          "turn_river_changes_w5_board_checkpoint|texture_draw_outs"
-        ],
-        "29": [
-          "board_texture_basics_w5_texture_dry_value|two",
-          "board_texture_basics_w5_texture_wet_showdown|check",
-          "connected_boards_w5_connected_read_bet|fold",
-          "outs_improvement_w5_table_outs_flush_transfer|heart_outs",
-          "outs_improvement_w5_table_outs_straight_transfer|four_or_nine",
-          "spaced_review_w5_outs_improvement_hero_cards_board_pot_v1|choice_0",
-          "turn_river_changes_w5_board_checkpoint|texture_draw_outs"
-        ],
-        "30": [
-          "connected_boards_w5_connected_read_bet|fold",
-          "outs_improvement_w5_table_outs_flush_transfer|heart_outs",
-          "outs_improvement_w5_table_outs_straight_transfer|four_or_nine",
-          "spaced_review_w5_outs_improvement_hero_cards_board_pot_v1|choice_0",
-          "turn_river_changes_w5_board_checkpoint|texture_draw_outs"
-        ],
-        "31": [
-          "board_texture_basics_w5_texture_dry_value|check",
-          "board_texture_basics_w5_texture_wet_showdown|large",
-          "board_texture_basics_w5_texture_wet_showdown|small",
-          "connected_boards_w5_connected_read_bet|call",
-          "outs_improvement_w5_table_outs_flush_transfer|call_draw_alone",
-          "outs_improvement_w5_table_outs_flush_transfer|price_only",
-          "outs_improvement_w5_table_outs_straight_transfer|blank_turn_killed"
-        ],
-        "36": [
-          "outs_improvement_w5_table_outs_flush_transfer|call_draw_alone",
-          "outs_improvement_w5_table_outs_straight_transfer|fold_wrong_out_count",
-          "turn_river_changes_w5_board_checkpoint|call_cheap_only"
-        ]
-      },
+      "world_5": {},
       "world_6": {
         "26": [
           "range_checkpoint_pressure",
@@ -1036,6 +980,9 @@
         "spaced_review_w4_protection_and_denial_pot_to_call_v1",
         "w4_protection_short_shove_price"
       ],
+      "world_5": [
+        "w5_semi_bluff_short_draw"
+      ],
       "world_7": [
         "w7_checkpoint_river_card_excludes_hand",
         "w7_clean_outs_higher_price",
@@ -1127,6 +1074,9 @@
     "stack_matters_by_world": {
       "world_4": [
         "w4_protection_short_shove_price"
+      ],
+      "world_5": [
+        "w5_semi_bluff_short_draw"
       ]
     }
   },
@@ -1211,7 +1161,6 @@
     "W12|asm05_new_known_holes_turn_call_40|26",
     "W12|asm05_new_known_holes_turn_call_40|check",
     "W12|asm05_new_known_holes_turn_call_40|rake",
-    "W12|w12_after_bad_beat_reset|nuts",
     "W12|w12_after_mistake_reset|139",
     "W12|w12_after_mistake_reset|starting_chart",
     "W12|w12_assertive_not_ego|starting_chart",
@@ -1740,12 +1689,7 @@
     "W5|flush_draws_w5_no_flush_draw|121",
     "W5|flush_draws_w5_no_flush_draw|backdoor",
     "W5|flush_draws_w5_no_flush_draw|flush_draw",
-    "W5|outs_improvement_w5_flush_out|outs",
     "W5|outs_improvement_w5_outs_intro|one_in_n",
-    "W5|outs_improvement_w5_outs_intro|outs",
-    "W5|outs_improvement_w5_outs_recap|outs",
-    "W5|outs_improvement_w5_table_outs_flush_transfer|one_in_n",
-    "W5|outs_improvement_w5_table_outs_flush_transfer|outs",
     "W5|straight_draws_w5_gutshot_contrast_transfer|118",
     "W5|straight_draws_w5_gutshot_contrast_transfer|119",
     "W5|straight_draws_w5_gutshot_contrast_transfer|gutshot",
@@ -1764,7 +1708,6 @@
     "W5|straight_draws_w5_straight_intro|gutshot",
     "W5|straight_draws_w5_straight_intro|oesd",
     "W5|straight_draws_w5_straight_intro|outs",
-    "W5|turn_river_changes_w5_board_checkpoint|one_in_n",
     "W5|turn_river_changes_w5_river_misses|121",
     "W5|turn_river_changes_w5_river_misses|flush_draw",
     "W6|range_checkpoint_combos|combos",

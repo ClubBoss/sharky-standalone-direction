@@ -227,8 +227,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 118),
-      ('D3.to_call_completeness', 117),
+      ('D2.pot_feasibility', 124),
+      ('D3.to_call_completeness', 123),
     ]) {
       final proof = rows
           .where(
@@ -1492,8 +1492,8 @@ void main() {
     };
     for (final entry in y5bNewChoicesV1.entries) {
       expectedComparison[entry.key] = {
-        'rewardXp': 8,
-        'family': 'decision',
+        'rewardXp': entry.value.isEmpty ? 6 : 8,
+        'family': entry.value.isEmpty ? 'learn' : 'decision',
         'options': [
           for (final choice in entry.value)
             w3Option(choice[0] as String, correct: choice[2] as bool),

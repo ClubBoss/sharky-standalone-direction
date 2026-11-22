@@ -453,8 +453,22 @@ void main() {
     }
     for (final entry in y5bNewChoicesV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
-      expect(task[0], 'world_4', reason: entry.key);
-      expect(task[1], 'protection_and_denial', reason: entry.key);
+      final (worldId, lessonId) = switch (entry.key) {
+        final id when id.startsWith('w4_protection_') => (
+          'world_4',
+          'protection_and_denial',
+        ),
+        final id when id.startsWith('w5_semi_bluff_') => (
+          'world_5',
+          'w5_semi_bluff',
+        ),
+        final id when id.startsWith('connected_boards_w5_') => (
+          'world_5',
+          'connected_boards',
+        ),
+        _ => throw StateError('Unexpected Y5b task ${entry.key}'),
+      };
+      expect(task.take(2), [worldId, lessonId], reason: entry.key);
       expect(task.last, entry.value, reason: entry.key);
     }
     for (final entry in w3CurrentReasonChoicesV1.entries) {

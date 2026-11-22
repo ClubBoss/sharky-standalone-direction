@@ -1509,7 +1509,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 0,
     reason:
-        "The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.",
+        "BB bets 3 BB, so a call needs 25% to win a portion of the 12 BB final pot. Fold because 8 of 46 rivers is only about 17%.",
   ),
   _day7ExampleV1(
     5,
@@ -1555,6 +1555,29 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.",
+  ),
+  _day7ExampleV1(
+    5,
+    'w5_semi_bluff',
+    'board_cards',
+    _day7PostflopV1(
+      'co',
+      'Ac 6c',
+      'Qc 7d 4c 2h',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    caption:
+        'BB calls 1 BB and folds half the time to 3 BB. Nine clubs win. Other rivers lose. No more bets.',
+    question: 'What earns most with this club draw?',
+    choices: const ['Bet 1 BB', 'Check', 'Bet 3 BB'],
+    correct: 2,
+    reason:
+        'Bet 3 BB because BB folds half the time and nine clubs can win after a call. Checking misses the folds and earns 1.5 BB less on average.',
+    wrongReasons: const {
+      0: 'A bet of 1 BB gets no folds in this model and costs an extra chip when you miss.',
+      1: 'Checking relies on the nine winning rivers. A bet of 3 BB can also win without seeing a river.',
+    },
   ),
   _day7ExampleV1(
     6,
