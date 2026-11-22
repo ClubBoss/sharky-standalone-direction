@@ -293,7 +293,106 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         hasAny = true;
       }
     }
-    return deck;
+    final generated = _generatedDailyDeckEntriesV1(practiceWorlds);
+    if (generated.isEmpty) return deck;
+    final firstTwo = deck
+        .where((entry) => !_dailyCompletedTaskIds.contains(entry.taskId))
+        .take(2)
+        .toSet();
+    return [
+      ...firstTwo,
+      ...generated,
+      ...deck.where((entry) => !firstTwo.contains(entry)),
+    ];
+  }
+
+  List<_Act0DailyDeckEntryV1> _generatedDailyDeckEntriesV1(
+    List<Act0WorldCardV1> worlds,
+  ) {
+    final day = act0DailyDealDayV1(widget.clock.nowUtc().toLocal());
+    final byTemplate = <Act0DailyDealTemplateV1, List<_Act0DailyDeckEntryV1>>{};
+    for (final world in worlds) {
+      for (final lesson in world.lessons.where(
+        (lesson) => lesson.isSelectable,
+      )) {
+        for (final task in lesson.courseTaskList) {
+          final template = act0DailyDealSourceTasksV1[task.taskId];
+          if (template == null ||
+              task.entryPhase != Act0LessonPhaseV1.drill ||
+              !_completedTaskIds.contains(task.taskId))
+            continue;
+          final id = act0DailyDealIdV1((
+            day: day,
+            template: template,
+            lessonId: lesson.lessonId,
+            sourceTaskId: task.taskId,
+          ));
+          (byTemplate[template] ??= []).add(
+            _Act0DailyDeckEntryV1(
+              worldId: world.worldId,
+              lessonId: lesson.lessonId,
+              taskId: id,
+              isSpaced: true,
+            ),
+          );
+        }
+      }
+    }
+    // Rotate templates across days and preserve a started set if another
+    // lesson becomes eligible on the same day.
+    final templates = Act0DailyDealTemplateV1.values;
+    return [
+      for (var offset = 0; offset < templates.length; offset++)
+        if (byTemplate[templates[(day + offset) % templates.length]]
+            case final entries?)
+          for (final entry in [
+            entries[day % entries.length],
+            ...entries.where(
+              (entry) =>
+                  entry.taskId != entries[day % entries.length].taskId &&
+                  _dailyPracticeQueue.taskIds.contains(entry.taskId),
+            ),
+          ])
+            if (_generatedDailyTaskV1(
+                  _lessonById(
+                    _worldById(worlds, entry.worldId).lessons,
+                    entry.lessonId,
+                  ),
+                  entry.taskId,
+                ) !=
+                null)
+              entry,
+    ];
+  }
+
+  Act0LessonTaskV1? _generatedDailyTaskV1(
+    Act0LessonCardV1 lesson,
+    String taskId,
+  ) {
+    final recipe = act0DailyDealRecipeV1(taskId);
+    if (recipe == null || recipe.lessonId != lesson.lessonId) return null;
+    final day = act0DailyDealDayV1(widget.clock.nowUtc().toLocal());
+    if (recipe.day != day ||
+        !_completedTaskIds.contains(recipe.sourceTaskId) ||
+        !lesson.courseTaskList.any(
+          (task) =>
+              task.taskId == recipe.sourceTaskId &&
+              task.entryPhase == Act0LessonPhaseV1.drill,
+        ))
+      return null;
+    if (_dailyDealCacheDayV1 != day) {
+      _dailyDealCacheDayV1 = day;
+      _dailyDealCacheV1.clear();
+    }
+    return _dailyDealCacheV1.putIfAbsent(
+      taskId,
+      () => act0GenerateDailyDealV1(
+        taskId: taskId,
+        lessonId: lesson.lessonId,
+        template: recipe.template,
+        seed: day * 31 + recipe.template.index,
+      ),
+    );
   }
 
   _Act0LearningRecommendationV1 _learningRecommendation({

@@ -45,7 +45,9 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     Act0LessonTaskV1 selectedTask, {
     bool awardXp = true,
   }) {
-    if (_diagnosticLearningEntryV1 != null) return;
+    if (_diagnosticLearningEntryV1 != null ||
+        act0DailyDealRecipeV1(selectedTask.taskId) != null)
+      return;
     final taskId = _selectedTaskId;
     final alreadyCompleted = !_completedTaskIds.add(taskId);
     _skippedTaskIds.remove(taskId);
@@ -634,7 +636,12 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       (task) => task.taskId == _selectedTaskId,
     );
     final normalizedTask =
-        taskExists || _activeSpacedReviewTaskV1?.taskId == _selectedTaskId
+        taskExists ||
+            _activeSpacedReviewTaskV1?.taskId == _selectedTaskId ||
+            (_activePracticeGroupId == 'daily' &&
+                _dailyPracticeQueue.taskIds.contains(_selectedTaskId) &&
+                _generatedDailyTaskV1(normalizedLesson, _selectedTaskId) !=
+                    null)
         ? _taskById(normalizedLesson, _selectedTaskId)
         : _firstIncompleteTask(normalizedLesson);
     if (_selectedTaskId != normalizedTask.taskId) {
@@ -714,6 +721,10 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Act0LessonTaskV1 _taskById(Act0LessonCardV1 lesson, String taskId) {
+    if (_generatedDailyTaskV1(lesson, taskId) case final generated?
+        when _dailyPracticeQueue.taskIds.contains(taskId)) {
+      return generated;
+    }
     final reviewTask = _activeSpacedReviewTaskV1;
     if (reviewTask != null &&
         taskId == reviewTask.taskId &&

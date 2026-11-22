@@ -508,7 +508,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..addAll(
           isNewDay
               ? const <String>[]
-              : parsed.dailyCompletedTaskIds.where(validTaskIds.contains),
+              : parsed.dailyCompletedTaskIds.where((id) {
+                  final recipe = act0DailyDealRecipeV1(id);
+                  return validTaskIds.contains(id) ||
+                      (recipe != null &&
+                          validTaskIds.contains(recipe.sourceTaskId) &&
+                          recipe.day ==
+                              act0DailyDealDayV1(
+                                widget.clock.nowUtc().toLocal(),
+                              ));
+                }),
         );
       _dailyCompletedLessonIds
         ..clear()
@@ -1323,6 +1332,34 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
+  void _appendGeneratedDailyEvidenceV1(
+    Act0CompletedDecisionV1 decision,
+    Act0DailyDealRecipeV1 recipe,
+  ) {
+    if (_dailyPracticeQueue.nextTaskId != decision.taskId ||
+        recipe.lessonId != decision.lessonId)
+      return;
+    _appendLearningEvidenceV1(
+      Act0CompletedDecisionV1(
+        attemptKey: decision.attemptKey,
+        worldId: decision.worldId,
+        lessonId: decision.lessonId,
+        taskId: decision.taskId,
+        sourceTaskId: decision.taskId,
+        decisionKind: decision.decisionKind,
+        selectedId: decision.selectedId,
+        expectedId: decision.expectedId,
+        isCorrect: decision.isCorrect,
+        decisionTimeBucket: decision.decisionTimeBucket,
+        taskFamily: decision.taskFamily,
+        resultKind: decision.resultKind,
+        errorType: decision.isCorrect ? 'none' : 'generated_practice',
+        skillAtomId: 'generated_practice_${recipe.template.name}',
+        assistanceKind: decision.assistanceKind,
+      ),
+    );
+  }
+
   void _appendLearningEvidenceV1(
     Act0CompletedDecisionV1 decision, {
     String repairOccurrenceId = '',
@@ -1368,13 +1405,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       _pendingReviewKindV1 = null;
       return;
     }
-    _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
-      decision,
-      repairOccurrenceId: repairOccurrenceId,
-      runId: _activeLearningEvidenceRunKeyV1?.runId ?? '',
-      runKind: _activeLearningEvidenceRunKeyV1?.runKind ?? '',
-      runOrdinal: _activeLearningEvidenceRunKeyV1?.runOrdinal,
-    );
+    final generatedDaily = act0DailyDealRecipeV1(decision.taskId) != null;
+    if (!generatedDaily) {
+      _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
+        decision,
+        repairOccurrenceId: repairOccurrenceId,
+        runId: _activeLearningEvidenceRunKeyV1?.runId ?? '',
+        runKind: _activeLearningEvidenceRunKeyV1?.runKind ?? '',
+        runOrdinal: _activeLearningEvidenceRunKeyV1?.runOrdinal,
+      );
+    }
     final latestRecord = _learningEvidenceHistoryV1.records
         .cast<Act0LearningEvidenceRecordV1?>()
         .lastWhere(
@@ -1403,6 +1443,10 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         _recordBetaActivityV1(
           () => Act0BetaMetricsStoreV1.recordPracticeStep(recordedAtUtc),
         );
+      }
+      if (generatedDaily) {
+        _pendingReviewKindV1 = null;
+        return;
       }
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendLearningEvidence(latestRecord);

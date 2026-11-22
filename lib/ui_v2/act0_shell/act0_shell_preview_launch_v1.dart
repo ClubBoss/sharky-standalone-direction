@@ -604,6 +604,13 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (entries.isEmpty) return false;
     final target = entries.first;
     final world = _worldById(_progressedWorlds(state), target.worldId);
+    if (act0DailyDealRecipeV1(taskId) != null &&
+        _generatedDailyTaskV1(
+              _lessonById(world.lessons, target.lessonId),
+              taskId,
+            ) ==
+            null)
+      return false;
     if (!_startTaskByIds(
       world,
       target.lessonId,

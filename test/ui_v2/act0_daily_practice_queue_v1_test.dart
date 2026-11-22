@@ -161,6 +161,90 @@ void main() {
     );
   }
 
+  testWidgets(
+    'generated Daily Practice advances and restores without course XP',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(393, 852));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      const progressKey = 'act0_shell_progress_v1';
+      const date = '2026-11-21';
+      final worlds = Act0ShellStateV1.sample.worlds;
+      final completed = [
+        for (final world in worlds.take(5))
+          for (final lesson in world.lessons) ...lesson.courseTaskList,
+      ];
+      final completedIds = completed.map((task) => task.taskId).toList();
+      final xp = completed.fold(0, (total, task) => total + task.rewardXp);
+      SharedPreferences.setMockInitialValues({
+        progressKey: jsonEncode({
+          'schemaVersion': 17,
+          'completedTaskIds': completedIds,
+          'selectedWorldId': worlds[4].worldId,
+          'selectedLessonId': worlds[4].lessons.last.lessonId,
+          'selectedTaskId': worlds[4].lessons.last.courseTaskList.last.taskId,
+          'earnedXp': xp,
+          'lastActiveDay': date,
+          'dailyCompletedTaskIds': completedIds,
+        }),
+      });
+
+      Future<Act0LessonRunnerShellV1> openDaily() async {
+        await tester.pumpWidget(
+          MaterialApp(
+            key: UniqueKey(),
+            home: Act0ShellPreviewScreenV1(
+              initialTab: Act0ShellTabV1.home,
+              showPlacementOnStart: false,
+              clock: Act0FixedUtcClockV1(DateTime.utc(2026, 11, 21, 12)),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(
+            of: find.byKey(const Key('act0_shell_bottom_nav')),
+            matching: find.text('Practice'),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final start = find.byKey(const Key('act0_academy_practice_leaf_start'));
+        await tester.ensureVisible(start);
+        await tester.tap(start);
+        await tester.pumpAndSettle();
+        return tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+      }
+
+      final first = await openDaily();
+      final firstId = first.selectedTaskId!;
+      final recipe = act0DailyDealRecipeV1(firstId)!;
+      expect(completedIds, contains(recipe.sourceTaskId));
+      final choice = first.runner.options.singleWhere(
+        (option) => option.isCorrect,
+      );
+      final button = find.byKey(Key('act0_shell_option_${choice.id}'));
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 700));
+      await tester.pumpAndSettle();
+      final prefs = await SharedPreferences.getInstance();
+      final saved = jsonDecode(prefs.getString(progressKey)!) as Map;
+      final queue = Act0DailyPracticeQueueV1.tryParse(
+        saved['dailyPracticeQueue'],
+      )!;
+      expect(queue.answeredTaskIds, contains(firstId));
+      expect(queue.nextTaskId, isNotNull);
+      expect(saved['completedTaskIds'], unorderedEquals(completedIds));
+      expect(saved['earnedXp'], xp);
+      final next = await openDaily();
+      expect(next.selectedTaskId, queue.nextTaskId);
+      expect(next.selectedTaskId, isNot(firstId));
+      expect(act0DailyDealRecipeV1(next.selectedTaskId!), isNotNull);
+    },
+  );
+
   test(
     'every W1–W12 drill can enter a finite distinct set and survive restart',
     () {

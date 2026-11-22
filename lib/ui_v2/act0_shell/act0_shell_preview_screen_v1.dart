@@ -1477,6 +1477,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _routePracticePresetV1;
   Act0DailyPracticeQueueV1 _dailyPracticeQueue =
       const Act0DailyPracticeQueueV1();
+  final _dailyDealCacheV1 = <String, Act0LessonTaskV1?>{};
+  int? _dailyDealCacheDayV1;
   int _dailyCompletedRepCount = 0;
   bool _rapidPracticeLoop = false;
   int _persistedStreakDays = 0;
@@ -4479,6 +4481,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   setState(() {
                                     if (_activeSpacedReviewTaskV1 != null) {
                                       _appendLearningEvidenceV1(decision);
+                                      return;
+                                    }
+                                    if (act0DailyDealRecipeV1(decision.taskId)
+                                        case final recipe?
+                                        when _activePracticeGroupId ==
+                                            'daily') {
+                                      _appendGeneratedDailyEvidenceV1(
+                                        decision,
+                                        recipe,
+                                      );
                                       return;
                                     }
                                     if (_diagnosticLearningEntryV1 != null) {

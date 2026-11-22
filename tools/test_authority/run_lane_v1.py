@@ -103,6 +103,7 @@ TIER_A_COMMANDS = [
             "flutter", "test",
             "test/ui_v2/act0_w14_skill_projection_v1_test.dart",
             "test/ui_v2/act0_daily_practice_queue_v1_test.dart",
+            "test/ui_v2/act0_daily_deal_generator_v1_test.dart",
             "test/ui_v2/act0_w14_skill_state_v1_test.dart",
             "-r", "compact",
         ],
