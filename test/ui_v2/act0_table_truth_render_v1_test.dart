@@ -186,16 +186,26 @@ void main() {
     });
     expect(geometryTasks.where((item) => item.route == 'day7'), isNotEmpty);
   });
+  const shelfRegressions = {
+    'board_texture_basics_w5_dry_board',
+    'board_texture_basics_w5_wet_board',
+    'w6_checkpoint_table_combo_weight',
+    'w7_ajs_btn_100bb_transfer',
+    'w7_ajs_btn_25bb_transfer',
+    'w9_bubble_table_risk_transfer',
+  };
   for (final (route: route, row: (:world, :lesson, :task, lessonIndex: _))
       in geometryTasks) {
+    final id = task.taskId;
+    final checkLateShelf = !sweep && shelfRegressions.contains(id);
     if (!sweep &&
+        !checkLateShelf &&
         (route != 'course' ||
             world.worldNumber > 4 ||
             task.entryPhase == Act0LessonPhaseV1.theory ||
             !task.runner.options.any((option) => option.isCorrect) ||
             !task.runner.options.any((option) => !option.isCorrect)))
       continue;
-    final id = task.taskId;
     testWidgets('V3 table geometry and readable cards · $id', (tester) async {
       tester.view.physicalSize = const Size(393, 852);
       tester.view.devicePixelRatio = 1;
@@ -457,7 +467,7 @@ void main() {
             'act0_shell_card_',
           );
           if (isCard) checkedCardFrames++;
-          if (!sweep && !isCard) continue;
+          if (!sweep && !checkLateShelf && !isCard) continue;
           final visible = _visibleBounds(tester, subject).intersect(viewport);
           if (sweep &&
               (visible.width + 0.5 < bounds.width ||
@@ -467,7 +477,12 @@ void main() {
             );
           }
           for (final overlay in overlays) {
-            if (overlay.key == key) continue;
+            if (overlay.key == key ||
+                (checkLateShelf &&
+                    overlay.key !=
+                        const Key('act0_shell_shared_runner_lower_surface'))) {
+              continue;
+            }
             final intersection = overlay.bounds.intersect(bounds);
             if (intersection.width > (sweep ? 0.5 : 0) &&
                 intersection.height > (sweep ? 0.5 : 0)) {
