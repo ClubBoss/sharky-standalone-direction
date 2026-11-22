@@ -128,6 +128,7 @@ Act0ChartPrefixV1 chartPrefixV1(CatalogTask row) {
 List<String> _copy(Act0RunnerStateV1 runner) => [
   runner.question,
   runner.caption,
+  runner.feedbackReason,
   for (final step in runner.teachingSteps) step.body,
   for (final option in runner.options) option.feedbackReason,
 ];
@@ -332,6 +333,30 @@ List<ChartFindingV1> chartCopyFindingsV1(String id, String copy) {
             match[0]!,
           );
         }
+      }
+    }
+    final explicitFold = RegExp(
+      '(?:^|; )\\s*[Ff]old ($_handText) (?:first in )?from ($_seatText)'
+      '(?: (?:against|after) (?:one |an? )?($_seatText) (?:open|raise))?'
+      r'(?=[.;,]|$)',
+    ).firstMatch(line);
+    if (explicitFold != null) {
+      final prefix = switch (explicitFold[3]) {
+        'UTG' => Act0ChartPrefixV1.utgOpen,
+        'HJ' => Act0ChartPrefixV1.hjOpen,
+        'CO' => Act0ChartPrefixV1.coOpen,
+        'BTN' => Act0ChartPrefixV1.btnOpen,
+        'SB' => Act0ChartPrefixV1.sbOpen,
+        _ => Act0ChartPrefixV1.unopened,
+      };
+      for (final hand in _hands(explicitFold[1]!)) {
+        check(
+          hand,
+          explicitFold[2]!,
+          prefix,
+          Act0ChartActionV1.fold,
+          explicitFold[0]!,
+        );
       }
     }
     final callList = RegExp(

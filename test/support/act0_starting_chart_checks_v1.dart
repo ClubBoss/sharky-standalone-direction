@@ -163,6 +163,17 @@ void registerAct0StartingChartChecksV1() {
       ),
       isFalse,
     );
+    expect(
+      chartCopyFindingsV1('wrong_fold', 'Fold QJo first in from CO.'),
+      hasLength(1),
+    );
+    expect(
+      chartCopyFindingsV1(
+        'context_fold',
+        'Fold QJo from CO against one HJ open.',
+      ),
+      isEmpty,
+    );
     const raise = Act0ChartActionV1.raise;
     const call = Act0ChartActionV1.call;
     const fold = Act0ChartActionV1.fold;
