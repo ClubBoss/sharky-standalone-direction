@@ -45,6 +45,25 @@ const catalogDuplicateOptionLabelRuleV1 = '45.duplicate_option_label';
 const catalogActionQuestionRuleV1 = '46.action_question_options';
 const catalogCorrectFeedbackLengthRuleV1 = '47.correct_feedback_length';
 const catalogBankrollThresholdRuleV1 = '48.bankroll_threshold';
+const catalogSharedFeedbackBodyRuleV1 = '49.shared_feedback_body';
+
+// The standalone rules check repeats one neutral rule reminder after every
+// response. Its Day 7 counterparts teach the selected misconception instead.
+const _sharedRuleRemindersV1 = {
+  'w1_rules_check_made_hand': 'Same ranking rule reference after scoring.',
+  'w1_rules_check_ace_kicker':
+      'Same best-five kicker comparison after scoring.',
+  'w1_rules_check_board_tie': 'Same rule for ties when the board plays.',
+  'w1_rules_check_best_straight': 'Same assembled best five after scoring.',
+  'w1_rules_check_preflop_after_hj':
+      'Same preflop seat sequence after scoring.',
+  'w1_rules_check_postflop_two_left':
+      'Same postflop seat sequence after scoring.',
+  'w1_rules_check_forced_bets': 'Same definitions of both forced posts.',
+  'w1_rules_check_check_behind': 'Same legal-action reminder after scoring.',
+  'w1_rules_check_raise_call_price': 'Same worked subtraction after scoring.',
+  'w1_rules_check_uncalled_all_in': 'Same worked uncalled-return calculation.',
+};
 const catalogCorrectFeedbackWordLimitV1 = 45;
 final _actionPairQuestion = RegExp(
   r'\b(bet|check|call|fold|raise)(?:\s+(?:to\s+)?\d+(?:\.\d+)?\s*BB)?'
@@ -366,6 +385,14 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
       }
     }
     if (options.length < 2) continue;
+    count(catalogSharedFeedbackBodyRuleV1);
+    final bodies = options
+        .map((option) => _normalizedCopy(option.feedbackReason))
+        .toSet();
+    if (bodies.length == 1 &&
+        !_sharedRuleRemindersV1.containsKey(task.taskId)) {
+      findings.add('$catalogSharedFeedbackBodyRuleV1|${task.taskId}');
+    }
     const rule = catalogDuplicateOptionLabelRuleV1;
     count(rule);
     final labels = <String>{};

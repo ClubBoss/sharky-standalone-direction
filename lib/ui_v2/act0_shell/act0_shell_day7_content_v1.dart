@@ -319,6 +319,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "You have Ac and 8d. The board has three cards and the middle shows a 7 BB pot.",
+    wrongReasons: const {
+      0: "The board has three shared cards. The fourth community card has yet to be dealt.",
+      2: "You have two cards beside your seat. The three cards on the board are shared.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -349,6 +353,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Kc is in the middle with the board. Both players still in the hand can use it.",
+    wrongReasons: const {
+      1: "The king is on the board, so every player still in the hand can use it.",
+      2: "A player can use that board king while you are both still in the hand.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -378,6 +386,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 1,
     reason: "The ranks are jack and nine. The d on both cards means diamonds.",
+    wrongReasons: const {
+      0: "A jack and nine have different ranks. The diamond on both cards is the match.",
+      2: "Both cards are diamonds. Only the suit matches because jack and nine differ.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -390,6 +402,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "Tc and 8s are beside your seat. The other listed cards are shared in the middle.",
+    wrongReasons: const {
+      0: "The jack and nine are shared board cards. Look beside your seat for the ten and eight.",
+      1: "The deuce and three are shared. BB may use them just as you can.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -436,6 +452,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Both private cards are sevens, and 7c on the board makes three of a kind.",
+    wrongReasons: const {
+      1: "The two sevens in your hand combine with the board seven for trips.",
+      2: "You can see one seven on the board and two in your hand. A fourth seven would be needed for quads.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -451,6 +471,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "6h through Th are five consecutive hearts. They make a straight and a flush with the same cards.",
+    wrongReasons: const {
+      0: "The hearts also run in order from six to ten. That upgrades the flush to a straight flush.",
+      2: "The consecutive cards are all hearts, which makes this a straight flush.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -462,6 +486,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "As, Js, 9s, 8s and 5s are all spades. They do not form five consecutive ranks.",
+    wrongReasons: const {
+      0: "The spades have gaps in rank, so they do not form a straight. Their shared suit makes a flush.",
+      1: "There are five spades available, which ranks higher than any high-card hand.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -508,6 +536,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The small blind sits immediately clockwise from the Button. It posts half a big blind before action.",
+    wrongReasons: const {
+      1: "CO is before the Button in the clockwise order. SB follows the Button.",
+      2: "HJ sits before CO and the Button. The next seat clockwise after the Button is SB.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -520,6 +552,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "Preflop action starts immediately after BB on this six-player table. UTG is next after BB.",
+    wrongReasons: const {
+      0: "BB posts the big blind and usually acts after the other seats on the first pass. UTG starts this pass.",
+      2: "SB posts a blind and waits while UTG starts the preflop action after BB.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -531,6 +567,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["HJ", "SB", "CO"],
     correct: 2,
     reason: "The order around this part of the table is HJ, CO, BTN, then SB.",
+    wrongReasons: const {
+      0: "HJ comes before CO. CO is the seat immediately before the dealer.",
+      1: "SB sits immediately after the dealer, clockwise. CO is on the other side.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -543,6 +583,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "BB posted 1 BB. SB posted the smaller forced bet of 0.5 BB, and BTN did not post.",
+    wrongReasons: const {
+      1: "SB posted half a big blind. The full forced bet came from BB.",
+      2: "The Button holds the dealer marker. The full blind here belongs to BB.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -591,6 +635,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Five players follow UTG on the first pass. Only the two blinds follow BTN.",
+    wrongReasons: const {
+      1: "Only SB and BB are behind BTN. UTG faces every other seat on the first pass.",
+      2: "UTG has five decisions behind it. BTN has only two.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -635,6 +683,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Ad and Td are your private cards. Kc, 8h and 4s belong to the board.",
+    wrongReasons: const {
+      1: "The king and eight are on the board. Your ace and ten sit beside you.",
+      2: "Your ten is private. The four is on the shared board.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -650,6 +702,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "The first three shared cards are the flop. The fourth shared card, 7s, is the turn.",
+    wrongReasons: const {
+      0: "The fourth community card is the turn. The river would be the fifth.",
+      2: "Your private cards stay the same. The new seven is a shared turn card.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -661,6 +717,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "Your jack is the highest side card after the paired aces. HJ uses the shared ten next.",
+    wrongReasons: const {
+      0: "The pairs tie. Your jack beats the highest side card in HJ’s best five.",
+      1: "A shared pair can still have different kickers. Your jack makes your best five higher.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -681,6 +741,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "You can match only the 9 BB in your stack. The unmatched 8 BB from HJ is returned.",
+    wrongReasons: const {
+      1: "The full wager stays out only until the call is matched. HJ keeps 9 BB in the pot and gets 8 BB back.",
+      2: "Nine BB is the amount you can match. HJ gets back the remaining 8 BB.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -696,6 +760,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "A fold from the last opponent ends the hand. The remaining player takes the pot without comparing cards.",
+    wrongReasons: const {
+      0: "BB’s fold leaves you as the only live player. You take the pot without revealing your hand.",
+      2: "No more cards are dealt once the last opponent folds. The remaining player gets the pot.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -711,6 +779,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "You have three sixes using 6c and both private cards. HJ has kings and nines.",
+    wrongReasons: const {
+      0: "Position sets action order. At showdown your three sixes beat HJ’s two pair.",
+      1: "Acting later gave HJ information. It cannot change which best five wins at showdown.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -727,6 +799,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Both play A-K-Q-J-T. Neither player's other private card is used in the best five.",
+    wrongReasons: const {
+      1: "Position does not break a tie. Both players use the same ace-high straight.",
+      2: "The lower private card is outside BB’s best five. Both players use the same straight.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -742,6 +818,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "Your two tens and Tc plus both board sixes make a full house. HJ has three sixes only.",
+    wrongReasons: const {
+      0: "Three sixes lose to a full house. Combine your pocket tens with the board ten and both board sixes.",
+      1: "Your tens complete tens full of sixes. HJ can use the board sixes for trips but has no pair to add.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -753,6 +833,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The shared pair ties. Your ace is higher than HJ's king, the next card in each best five.",
+    wrongReasons: const {
+      1: "HJ’s king loses to your ace when the common pair of sevens ties.",
+      2: "The seven pair ties, then your ace breaks the tie as the higher side card.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -764,6 +848,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "The best five for both are the king-high straight on the board. Neither player can make a higher one.",
+    wrongReasons: const {
+      0: "BB cannot improve the board’s king-high straight. Both players can play those five cards.",
+      2: "You can use the board’s straight, and BB can use the identical five cards. The pot is shared.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -775,6 +863,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "You can replace 4 with 9 and use 5-6-7-8-9. Your king does not extend that run.",
+    wrongReasons: const {
+      0: "The eight is part of your straight, but the nine can extend the run to 5-6-7-8-9.",
+      1: "The ranks between nine and king are missing. Your highest completed straight ends at nine.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -787,6 +879,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "CO follows HJ in the first preflop pass, before the Button and the blinds.",
+    wrongReasons: const {
+      1: "BB still waits for CO, BTN and SB on this first pass.",
+      2: "BTN follows CO, so CO gets the decision after HJ folds.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -799,6 +895,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "After the flop the first live seat clockwise after the Button acts first. That is BB.",
+    wrongReasons: const {
+      0: "BB is the first live seat clockwise after the Button. HJ acts after BB on the flop.",
+      2: "The preflop raise does not set postflop order. Start at the first live seat after the dealer.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -848,6 +948,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "The 3 BB already in front of you count. Add 6 BB to reach the new total of 9 BB.",
+    wrongReasons: const {
+      0: "Nine BB is the new total. Subtract your 3 BB already in to find the extra 6 BB.",
+      2: "Adding twelve BB would put you above the opponent’s 9 BB. Matching takes only six more.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -868,6 +972,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "HJ put in 18 BB. Your 11 BB call matches 11, so HJ's other 7 BB are returned.",
+    wrongReasons: const {
+      0: "Eleven BB is matched by the call, so that part stays in the pot. Seven BB comes back.",
+      1: "HJ keeps the matched 11 BB in the pot. Only the unmatched 7 BB is returned.",
+    },
   ),
   _day7ExampleV1(
     1,
@@ -993,6 +1101,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "KK is in the Premium group. A pair of kings stays in that group regardless of position.",
+    wrongReasons: const {
+      0: "Medium is a different starting-hand group. Pocket kings belong to Premium before any position adjustment.",
+      2: "Pocket kings are among the Premium pairs. The price does not change their starting-hand group.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -1025,6 +1137,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "When both players pair the ace and no stronger combination appears, HJ's queen can beat your four.",
+    wrongReasons: const {
+      1: "Both aces have the same rank. The next card can decide, and HJ can use a queen against your four.",
+      2: "An ace on board can give both players the same pair without tying the best five. The queen can still play as a higher side card.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -1041,6 +1157,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "HJ put in the first raise, to 3.5 BB. A first-in decision only happens before anyone enters.",
+    wrongReasons: const {
+      0: "CO can make either type of decision. HJ’s earlier raise makes this a response.",
+      2: "Suit affects the hand group. HJ’s raise is what changes the opening decision into a response.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -1119,6 +1239,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "UTG raised to 4 BB. A5o is a weak offsuit ace, so both the hand group and the earlier raise matter.",
+    wrongReasons: const {
+      0: "UTG has already raised, and A-5 offsuit belongs to the weak group here.",
+      1: "The cards have different suits and UTG raised instead of checking.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1208,6 +1332,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "HJ and CO follow UTG before the Button. The blinds follow BTN, with SB before BB.",
+    wrongReasons: const {
+      0: "HJ comes before CO on this table. SB also precedes BB after the Button.",
+      1: "UTG is followed by HJ and CO before the first pass reaches BTN.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1220,6 +1348,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "SB follows the Button clockwise. The dealer marker belongs to BTN.",
+    wrongReasons: const {
+      1: "CO is immediately before the Button. The marker belongs to the Button itself.",
+      2: "BB is clockwise after SB. The marker is before SB, on the Button.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1247,6 +1379,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "BB acts first on the river. BTN can use BB's action when making a decision.",
+    wrongReasons: const {
+      0: "BB acts before BTN on the river, so BB cannot see BTN’s first action yet.",
+      1: "The order follows the seats. BTN acts after BB regardless of who called preflop.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1257,6 +1393,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["BTN", "UTG", "SB"],
     correct: 0,
     reason: "Only BB and BTN are still in. BB's check passes action to BTN.",
+    wrongReasons: const {
+      1: "UTG is already out. BTN is the only other live seat after BB checks.",
+      2: "SB folded earlier. BB’s check passes action to BTN.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1268,6 +1408,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["BB", "CO", "UTG"],
     correct: 1,
     reason: "The preflop order reaches CO just after HJ and just before BTN.",
+    wrongReasons: const {
+      0: "BB is after BTN on the first pass, so it sees even more earlier decisions.",
+      2: "UTG goes first. CO is the seat that follows HJ and precedes BTN.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1279,6 +1423,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Two", "Five", "Four"],
     correct: 2,
     reason: "CO, BTN, SB and BB remain behind HJ. UTG has already folded.",
+    wrongReasons: const {
+      0: "HJ still has CO and BTN behind it in addition to the two blinds.",
+      1: "UTG already acted. Only CO, BTN, SB and BB remain behind HJ.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1310,6 +1458,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "Your cards and blinds are the same. UTG has five seats behind, whereas CO has three.",
+    wrongReasons: const {
+      0: "The king and ten remain offsuit. The difference is the earlier seat.",
+      2: "The same big blind is posted. What changes is how many opponents act after your seat.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1377,6 +1529,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 2,
     reason: "UTG is out. CO, BTN and both blinds have yet to act.",
+    wrongReasons: const {
+      0: "UTG has already folded. CO and the three seats after it still have decisions.",
+      1: "That list misses CO, the first player behind HJ.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1393,6 +1549,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'BB checked on A-6-4 before BTN had to act. You know BB did '
         'not lead into the 6 BB pot, so you can decide with that information.',
+    wrongReasons: const {
+      1: "BB’s check gives you information. You still decide whether to bet and what size to use.",
+      2: "The flop was already visible before BB checked. Position lets you see that check before choosing.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -1412,6 +1572,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'The 2.5 BB call would make a 7.5 BB pot, so you need about 33% '
         'equity. With 28% for 83o in this model, folding saves the extra 2.5 BB.',
+    wrongReasons: const {
+      0: "The model gives 28% against a 33% price. That equity does not cover the call.",
+      2: "Your posted blind is already in the pot. Calling costs another 2.5 BB.",
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1452,6 +1616,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "All three hands have a pair of aces. Your queen beats the ten but loses to the king.",
+    wrongReasons: const {
+      1: "A-K makes the same pair with a better kicker than your A-Q. A call from A-K costs you value.",
+      2: "A-T makes the same pair with a ten kicker. Your queen beats it, so its call adds value.",
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1462,6 +1630,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["2 BB", "4 BB", "8 BB"],
     correct: 1,
     reason: "The pot is 8 BB. Half of 8 BB is 4 BB.",
+    wrongReasons: const {
+      0: "Two BB is one quarter of an eight-BB pot. A half-pot bet is four BB.",
+      2: "Eight BB matches the entire pot. Half is four BB.",
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1474,6 +1646,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "BB bet 3 BB on the flop, so adding 3 BB on top of 3 BB makes 6 BB the smallest legal raise.",
+    wrongReasons: const {
+      0: "Raising to 4.5 BB adds only 1.5 BB over the bet. The full increment is 3 BB.",
+      2: "A raise to 9 BB is legal here, but 6 BB is the minimum that matches the required increment.",
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1509,6 +1685,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "HJ bets 2 BB, so calling makes a 10 BB pot and needs 20%. Call because the stated 25% is higher. Folding gives up the gain.",
     caption: "With one decision left, assume you win 1 time in 4 if you call.",
+    wrongReasons: const {
+      0: "Folding earns zero from this decision. A quarter of the 10 BB final pot is worth 2.5 BB, more than the 2 BB call.",
+      1: "The 25% winning share clears the 20% price. Calling earns half a BB in the model.",
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1619,6 +1799,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "Your jack beats A-9's nine side card. A-Q has the higher side card and beats your pair of aces.",
     caption: "Assume BB calls 3 BB with either A-9 or A-Q.",
+    wrongReasons: const {
+      1: "A-Q beats your A-J by kicker, so its call does not pay you for value.",
+      2: "Only A-9 loses to your jack. A-Q has the stronger kicker and beats you.",
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1633,6 +1817,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "HJ bets 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because the stated 20% is below the price. A call loses chips here.",
     caption:
         "Two players, no ties or further betting. Assume one win in five against this opponent's range.",
+    wrongReasons: const {
+      0: "The call needs a 25% winning share. At 20%, it loses 0.6 BB in this model.",
+      2: "Folding is zero from here. A fifth of the 12 BB final pot is 2.4 BB, short of the 3 BB call.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1659,6 +1847,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The ranks have wide gaps and there is no pair of matching suits. Treating this as wet overstates how many draws the flop supports.",
+    wrongReasons: const {
+      1: "Semi-wet would need more connection between the ranks or suits. The king, nine and deuce leave wide gaps.",
+      2: "Wet boards support many immediate draws. This flop has three different suits and widely spaced ranks.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1674,6 +1866,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The jack, ten and nine are consecutive. If you ignore the ranks because the flop is rainbow, you can miss a made straight such as K-Q.",
+    wrongReasons: const {
+      1: "There is no pair on the board. Read the jack, ten and nine as a connected run.",
+      2: "The suits are all different. K-Q can still make a straight with the jack, ten and nine.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1685,6 +1881,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "Your two hearts and the two on the flop make four. Counting the two places together keeps you from undervaluing the draw.",
+    wrongReasons: const {
+      0: "Count the two hearts in your hand as well as the two on the flop. You need only one more.",
+      2: "You already have four hearts between your hand and the flop. A flush takes five.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1700,6 +1900,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.",
+    wrongReasons: const {
+      0: "The nine joins the three board diamonds for four. A made flush needs five.",
+      1: "Hold’em lets you use one hole card and four board cards. One more board diamond can complete your flush.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1711,6 +1915,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The 7-8-9-T run can finish at either end. Counting only the six overlooks the jack and halves the number of completion cards.",
+    wrongReasons: const {
+      1: "A jack extends the run to J-T-9-8-7. An ace leaves a gap, while a six completes the low end.",
+      2: "A six completes the low end. A jack also completes the straight at the other end.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1722,6 +1930,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "The eight, nine, jack and queen leave a gap at ten. A king cannot finish these five ranks and would mislead your draw count.",
+    wrongReasons: const {
+      0: "Another eight repeats a rank you already have. The missing rank between nine and jack is ten.",
+      2: "A king still leaves the gap between nine and jack open. A ten fills it.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1734,6 +1946,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "You see four spades already, so nine of the thirteen remain. Counting too few can make you pass a price you could afford.",
+    wrongReasons: const {
+      0: "Four spades are visible and already unavailable. The question asks how many of the other spades are left.",
+      1: "Thirteen spades minus the four you can see leaves nine. The model treats each of those nine as a winner.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1750,6 +1966,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "BB bets 3 BB, so a call needs 25% to win a portion of the 12 BB final pot. Fold because 8 of 46 rivers is only about 17%.",
+    wrongReasons: const {
+      1: "Eight out of 46 is about 17%. Calling loses chips because the 3 BB call needs 25%.",
+      2: "Only fives and tens win here. Pairing a six or seven adds no winners, so calling still loses chips.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1765,6 +1985,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "The turn is a spade and the river is a diamond. You still have four hearts. Calling as though you had a flush can cost chips.",
+    wrongReasons: const {
+      0: "The river is a diamond. It leaves your heart count at four.",
+      2: "The turn is a spade. It contributes nothing to the heart draw.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1780,6 +2004,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "The 2 of diamonds joins K and 8 of diamonds on the board and your two diamonds. Missing the fifth card can cost a value bet.",
+    wrongReasons: const {
+      0: "The board deuce pairs neither hole card. Its diamond suit completes a flush.",
+      1: "Count three board diamonds and both diamonds in your hand. The turn already gives you the fifth.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1795,6 +2023,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.",
+    wrongReasons: const {
+      1: "The turn adds a third diamond. That creates a made-flush possibility.",
+      2: "Your queen stays the same rank. The turn changes both the flush possibilities and the connected straight ranks.",
+    },
   ),
   _day7ExampleV1(
     5,
@@ -1829,6 +2061,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'KJ pairs the highest card. If weaker kings call, it can earn chips as a value hand.',
+    wrongReasons: const {
+      0: "Your king pairs the highest flop card. This hand connected with the flop.",
+      2: "The listed weaker kings can call and lose. That gives the small bet a value purpose.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1844,6 +2080,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'AJ has no pair on K-6-4. Read the cards together before deciding whether a bet could work.',
+    wrongReasons: const {
+      0: "The pot helps set the price. You still need to decide what the unpaired A-J can accomplish on K-6-4.",
+      2: "An openable starting hand can miss the flop. Classify A-J on these three cards before sizing a bet.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1859,6 +2099,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'QJ pairs none of the three board cards and has only three hearts between hand and board.',
+    wrongReasons: const {
+      0: "The top board rank matches neither hole card. Q-J has no top pair to value-bet.",
+      2: "Three hearts give you only a backdoor possibility. A direct flush draw needs four.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1876,6 +2120,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'A5 has no private-card pair on this board. With better hands no longer folding, the stated reason to bluff has gone.',
+    wrongReasons: const {
+      1: "A-5 has no private-card pair on this turn and the model gives no reason to expect worse hands to pay.",
+      2: "The old plan relied on folding a better hand. The updated response keeps those hands in.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1892,6 +2140,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'BB has checked. KQ can bet for value because KJ and KT make the same pair with a lower kicker.',
+    wrongReasons: const {
+      1: "K-J loses to K-Q by kicker. A call from K-J is the outcome you want from a value bet.",
+      2: "BB has checked. You can bet or check behind because there is no wager to match.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1908,6 +2160,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'T8 misses Q-7-3. Ace-high beats it when neither improves, so a fold from ace-high gives the bet a bluff purpose.',
+    wrongReasons: const {
+      0: "T-8 is unpaired here. A call from a pair would keep a better made hand in the pot.",
+      2: "Neither hole card pairs the queen. A small bet would need better holdings such as ace-high to fold.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1920,6 +2176,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'Neither J9 nor QJ pairs K-6-2. QJ has the higher high card, so its fold gives up a hand that is ahead.',
+    wrongReasons: const {
+      1: "A king makes top pair and beats J-9. Its call costs the bluff instead of winning the pot.",
+      2: "A six makes a pair here. Its call leaves your unpaired J-9 behind.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1936,6 +2196,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'J9 still has no private-card pair. Checking saves the price of a bluff that can no longer fold out a better hand.',
+    wrongReasons: const {
+      1: "The turn response no longer gives the bluff better-hand folds. Checking keeps you from paying for an unsupported bluff.",
+      2: "J-9 is still unpaired. The model supplies no worse calls that would justify a large value bet.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1953,6 +2217,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "Check KT because BB calls only with stronger hands on this three-club turn. A big bet for value risks chips without getting paid by a weaker hand.",
+    wrongReasons: const {
+      0: "The third club changes the paying range. Betting big loses extra chips to the stronger hands that call.",
+      2: "The weaker hands that paid on the flop no longer call here. Checking behind saves chips against a stronger range.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1982,6 +2250,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         'JT has top pair on J-6-2 rainbow. Two BB is one third of this 6 BB pot and offers weaker jacks a smaller price.',
+    wrongReasons: const {
+      0: "Six BB matches the pot. The plan calls for a smaller price to keep weaker jacks in.",
+      2: "Nine BB exceeds the six-BB pot. That overbet is much larger than the chosen one-third sizing.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1998,6 +2270,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'QQ beats a nine on this board. A small bet can get paid by that weaker pair.',
+    wrongReasons: const {
+      1: "A set beats pocket queens. A pair made with the board nine is the weaker calling hand you want.",
+      2: "You already beat one pair of nines on this board. A small value bet benefits when that pair calls.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -2031,6 +2307,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         '76 misses Q-9-2 and trails KJ when both stay unpaired. A fold from KJ is a reason to bluff.',
+    wrongReasons: const {
+      0: "Seven-six is unpaired and the stated example looks for folds from higher cards. A worse call is not the modeled goal.",
+      2: "Your seven and six are different ranks and neither pairs this flop. There is no pocket pair to protect.",
+    },
   ),
   _day7ExampleV1(
     6,
@@ -2047,6 +2327,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         'Both hands make top pair on K-5-2. KJ wins by kicker, so a call from KT pays the stronger hand.',
+    wrongReasons: const {
+      1: "Both hands pair the king. The jack kicker beats the ten, so a K-T call pays you.",
+      2: "K-J already makes top pair, and K-5-2 does not give it a one-card straight draw. Weaker kings can pay.",
+    },
   ),
   _day7ExampleV1(
     6,
