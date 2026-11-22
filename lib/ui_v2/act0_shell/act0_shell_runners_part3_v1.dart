@@ -340,7 +340,7 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'A-K makes the same pair and wins with its king. A-J has a lower side card than your queen.',
+          'A-K is ahead on this flop because its king beats your queen. A-J makes the same pair with a lower side card.',
     ),
     Act0RunnerOptionV1(
       id: 'same_pair',
@@ -351,7 +351,7 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Same best five.',
       feedbackReason:
-          'Both A-Q hands play aces with Q-7-2. A call from the same hand splits the pot and earns no additional value.',
+          'Both A-Q hands play aces with Q-7-2 on this flop. The value target is a hand with a weaker current best five, such as A-J.',
     ),
   ],
   table: _world4PurposeIntroRunner.table.copyWith(
@@ -1650,7 +1650,7 @@ final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Minimum raise rule.',
       body:
-          'A legal raise must add at least the size of the last bet or raise. Over a 1 BB blind, a raise to 3 BB adds 2 BB, so the smallest legal reraise is 5 BB total.',
+          'A full raise must add at least the size of the last bet or full raise. A short all-in can be smaller. Over a 1 BB blind, a raise to 3 BB adds 2 BB, so the smallest full reraise is 5 BB total.',
       focusSeatIds: <String>['bb', 'hj', 'co'],
       focusLabels: <String>['+2 BB increase', '5 BB minimum'],
     ),
@@ -1776,7 +1776,8 @@ final _world4CheckpointIntroRunner = _world4PurposeIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Three reads.',
-      body: 'Purpose explains why. Size creates pressure. Price decides calls.',
+      body:
+          'Purpose explains why. Size creates pressure. Compare the price with your chance to win before calling.',
       focusLabels: <String>['Purpose', 'Size', 'Price'],
     ),
   ],
@@ -1860,7 +1861,7 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'Top pair wants calls from worse hands, and the 2 BB size keeps the continue price cheap instead of forcing a huge decision.',
+          'BTN targets weaker aces, so this is a value bet. BB has put in nothing on this street and must add 2 BB to call.',
     ),
     Act0RunnerOptionV1(
       id: 'pot_bluff',
@@ -2735,7 +2736,7 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
       title: 'Four cards of the same suit.',
       body:
           'A flush draw has four cards of one suit between your hand and the board. '
-          'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.'
+          'There are 13 cards in a suit. If four are visible and the others are unknown, nine cards can complete your flush.'
           ' “The nuts” means the best possible hand on the current board.',
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
@@ -2938,7 +2939,7 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
     Act0TeachingStepV1(
       title: 'Made hand first, draw pressure second.',
       body:
-          'You have top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.',
+          'You have top pair and no hearts. An opponent holding two hearts can complete a flush with one more heart on the board.',
       focusLabels: <String>['Top pair', 'Two hearts', 'Not made yet'],
     ),
   ],
@@ -3712,7 +3713,7 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice repair.',
       feedbackReason:
-          'That is the fix. The new card changed the board story, so action should respect the new pressure instead of replaying the old one.',
+          'You still have top pair. The eight connects the six and seven and adds a second club. Check which weaker hands still call on the new board.',
     ),
     Act0RunnerOptionV1(
       id: 'same_story',
@@ -4134,8 +4135,7 @@ final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Three buckets.',
       body:
-          'After the flop, sort your hand into value (can bet for profit), '
-          'bluff candidate (can make better hands fold), or missed (check or fold).',
+          'For this exercise, choose a plan after the flop. Value bets target weaker calls. Bluff candidates can make better hands fold. With a miss and no good target to bluff, start by checking or folding.',
       focusLabels: <String>['Hand strength', 'Can it improve?', 'What folds?'],
     ),
   ],
@@ -4317,7 +4317,7 @@ final _w6BucketsRecapRunner = _w6RangeIntroRunner.copyWith(
   lessonId: 'w6_buckets_recap',
   caption: 'Lesson learned: range buckets start with board fit.',
   hint: 'Ask which bucket before choosing an action.',
-  question: 'Which range bucket reads the board first?',
+  question: 'What do you read before putting your hand in a bucket?',
   feedbackTitle: 'Buckets takeaway.',
   feedbackReason:
       'Value, bluff candidate, and missed. Board fit decides which bucket your hand lands in.',
@@ -4361,7 +4361,7 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare both ranges.',
       body:
-          'Range advantage is about which player has more strong hands on this board. '
+          'Range advantage asks which player’s range makes strong hands more often on this board. '
           'In this lesson, use only the hands listed for each player and count hand types that make two pair or better.',
       focusLabels: <String>['Preflop raiser', 'Caller', 'Two pair or better'],
     ),
@@ -4709,7 +4709,7 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
   caption:
       'BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.',
   hint: 'Would you beat either unpaired hand if no one improves?',
-  question: 'What do you do with jack-ten after BB checks?',
+  question: 'With jack-ten, which action can make a better unpaired hand fold?',
   options: _w6BluffCandidateOptionsV1('J-T'),
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Js Tc'),
@@ -4750,7 +4750,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket.',
       feedbackReason:
-          'Value betting belongs to made hands, not pure missed hands.',
+          'Your jack-ten missed the flop. The exercise gives you no weaker hand that could pay this bet.',
     ),
     Act0RunnerOptionV1(
       id: 'always_barrel',
@@ -4828,7 +4828,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
   lessonId: 'w6_turn_pressure_shift_transfer',
   feedbackSignalId: 'range_bucket_shift',
   caption:
-      'You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.',
+      'You bluffed the K-7-2 flop with J-T and BB called. The turn pairs the 2. BB checks and calls either bet with every better hand in this example.',
   hint:
       'When the board pairs and the first bluff gets called, some pressure lines cool off.',
   question: 'Fold pressure dropped on this turn. What do you do now?',
@@ -4841,7 +4841,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good pressure reset.',
       feedbackReason:
-          "BB already called the flop, and the model gives you fewer folds on the paired turn. Check because a big bet risks more chips without the earlier fold pressure.",
+          "Check for a free river. The paired turn leaves J-T behind the hands BB calls with, and neither bet makes those hands fold.",
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
@@ -4852,7 +4852,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
-          "A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.",
+          "A bigger second bet risks more chips. In this model every hand ahead of you still calls, so check for a free next card.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_value',

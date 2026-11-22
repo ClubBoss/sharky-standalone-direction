@@ -1834,7 +1834,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "Your jack and eight fill the sequence seven through jack. You already have a jack-high straight.",
     wrongReasons: const {
       0: "Calling this one pair misses the five consecutive ranks and undervalues the hand.",
-      2: "Waiting to make a straight would give up a made hand. Seven through jack are already visible.",
+      2: "You already have all five straight ranks, seven through jack. Your jack and eight complete the run on the flop.",
     },
   ),
   _day7ExampleV1(
@@ -1899,10 +1899,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 2,
     reason:
-        "Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.",
+        "Your 9 of diamonds and the three board diamonds make four. One more diamond would give you a flush, and a player holding two diamonds could already have one.",
     wrongReasons: const {
       0: "The nine joins the three board diamonds for four. A made flush needs five.",
-      1: "Hold’em lets you use one hole card and four board cards. One more board diamond can complete your flush.",
+      1: "Hold’em lets you use one private card and four board cards. One more board diamond can complete your flush.",
     },
   ),
   _day7ExampleV1(
@@ -2005,7 +2005,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "The 2 of diamonds joins K and 8 of diamonds on the board and your two diamonds. Missing the fifth card can cost a value bet.",
     wrongReasons: const {
-      0: "The board deuce pairs neither hole card. Its diamond suit completes a flush.",
+      0: "The board deuce pairs neither private card. Its diamond suit completes a flush.",
       1: "Count three board diamonds and both diamonds in your hand. The turn already gives you the fifth.",
     },
   ),
@@ -2100,7 +2100,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'QJ pairs none of the three board cards and has only three hearts between hand and board.',
     wrongReasons: const {
-      0: "The top board rank matches neither hole card. Q-J has no top pair to value-bet.",
+      0: "The top board rank matches neither private card. Q-J has no top pair to value-bet.",
       2: "Three hearts give you only a backdoor possibility. A direct flush draw needs four.",
     },
   ),
@@ -2162,7 +2162,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         'T8 misses Q-7-3. Ace-high beats it when neither improves, so a fold from ace-high gives the bet a bluff purpose.',
     wrongReasons: const {
       0: "T-8 is unpaired here. A call from a pair would keep a better made hand in the pot.",
-      2: "Neither hole card pairs the queen. A small bet would need better holdings such as ace-high to fold.",
+      2: "Neither private card pairs the queen. A small bet would need better holdings such as ace-high to fold.",
     },
   ),
   _day7ExampleV1(
@@ -2231,7 +2231,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Six', 'Four', 'Sixteen'],
     correct: 1,
     reason:
-        'There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.',
+        'There are four suits, each providing one same-suit king and queen. Sixteen counts all combinations, including twelve offsuit hands.',
     wrongReasons: const {
       0: 'Six is the count for two cards of one rank. K-Q has two different ranks; six overcounts the four same-suit hands.',
       2: 'Sixteen includes the twelve offsuit K-Q hands. Counting them inflates the suited part of the range.',

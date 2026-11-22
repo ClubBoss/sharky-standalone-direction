@@ -7039,7 +7039,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: 'Same best five.',
               feedbackReason:
-                  'A-J ties your A-J on A-7-2. A call from the same hand splits the pot; the value target is the weaker A-T.',
+                  'The two A-J hands tie on this flop. You are looking for a hand behind yours right now, such as the weaker A-T.',
             ),
           ],
           teachingSteps: const <Act0TeachingStepV1>[],

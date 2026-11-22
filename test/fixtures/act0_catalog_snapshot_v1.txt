@@ -3005,10 +3005,10 @@ HINT [theoryOnly]: Compare each hand’s best five on the same board.
 TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, hero_1, board_0 | Center Flop | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Qd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] A-K — Not quite. A-K makes the same pair and wins with its king. A-J has a lower side card than your queen.
+  - [wrong] A-K — Not quite. A-K is ahead on this flop because its king beats your queen. A-J makes the same pair with a lower side card.
     BETTER ANSWER: A-J
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
-  - [wrong] A-Q — Same best five. Both A-Q hands play aces with Q-7-2. A call from the same hand splits the pot and earns no additional value.
+  - [wrong] A-Q — Same best five. Both A-Q hands play aces with Q-7-2 on this flop. The value target is a hand with a weaker current best five, such as A-J.
     BETTER ANSWER: A-J
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
   + [correct] A-J — Your queen beats the jack. A-Q and A-J both make a pair of aces. Your queen beats the jack, so a call from A-J can pay your value bet.
@@ -3119,7 +3119,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK w4_min_raise_preflop [drill] Preflop minimum raise
 CAPTION: HJ raises to 3 BB over the 1 BB blind. Your turn from CO.
-TEACH: Minimum raise rule. A legal raise must add at least the size of the last bet or raise. Over a 1 BB blind, a raise to 3 BB adds 2 BB, so the smallest legal reraise is 5 BB total.
+TEACH: Minimum raise rule. A full raise must add at least the size of the last bet or full raise. A short all-in can be smaller. Over a 1 BB blind, a raise to 3 BB adds 2 BB, so the smallest full reraise is 5 BB total.
 TEACH LABELS: +2 BB increase, 5 BB minimum
 TEACH TABLE: Preflop | You As Ks | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Seat focus bb, hj, co | Center Minimum reraise | Facts no applicable hand facts
 Q: What is the smallest legal reraise total from CO?
@@ -3525,14 +3525,14 @@ REVIEW: Protection means the next card is not free for the player trying to cont
 
 TASK w4_checkpoint_intro [theory] Three reads
 CAPTION: Checkpoint: purpose, size, and price work together.
-TEACH: Three reads. Purpose explains why. Size creates pressure. Price decides calls.
+TEACH: Three reads. Purpose explains why. Size creates pressure. Compare the price with your chance to win before calling.
 TEACH LABELS: Purpose, Size, Price
 Q: What are the three World 4 reads?
 HINT [theoryOnly]: The bettor sets pressure. The caller reads the price.
 TABLE: Flop | You Ts Tc | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus board_0, board_1, board_2 | Center Name purpose | Facts one pair, pocket pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ Ts Tc stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-REVIEW: Purpose explains why. Size creates pressure. Price decides calls.
+REVIEW: Purpose explains why. Size creates pressure. Compare the price with your chance to win before calling.
 
 TASK w4_checkpoint_value [drill] Value or bluff
 CAPTION: BB checks on ace, seven and two.
@@ -3546,7 +3546,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
   + [correct] A-T — Your jack beats the ten. A-T can call with a weaker pair of aces. Your jack is higher than its ten.
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
-  - [wrong] A-J — Same best five. A-J ties your A-J on A-7-2. A call from the same hand splits the pot; the value target is the weaker A-T.
+  - [wrong] A-J — Same best five. The two A-J hands tie on this flop. You are looking for a hand behind yours right now, such as the weaker A-T.
     BETTER ANSWER: A-T
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Flop | Facts one pair, top pair, rainbow
 
@@ -3592,7 +3592,7 @@ HINT [theoryOnly]: Compare the reason for the bet and the amount BB must add.
 TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 8 BB | To call 2 BB | Seat BTN | Active bb | Decision bb | Seat focus btn, bb | Card focus hero_0, board_0 | Center After the flop bet | Facts one pair, top pair, rainbow
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer bet 2 BB | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks · BTN bets 2 BB · BB acts
-  + [correct] Value · 2 BB to call — Exactly. Top pair wants calls from worse hands, and the 2 BB size keeps the continue price cheap instead of forcing a huge decision.
+  + [correct] Value · 2 BB to call — Exactly. BTN targets weaker aces, so this is a value bet. BB has put in nothing on this street and must add 2 BB to call.
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 8 BB | To call 2 BB | Seat BTN | Active bb | Decision bb | Seat focus btn, bb | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After the flop bet | Facts one pair, top pair, rainbow
   - [wrong] Bluff · 2 BB to call — Not this frame. The price is 2 BB. The stated weaker aces can call, so the purpose is value.
     BETTER ANSWER: Value · 2 BB to call
@@ -3827,7 +3827,7 @@ REVIEW: Close ranks create more straight paths and more change.
 
 TASK flush_draws_w5_flush_intro [theory] Same suit pressure
 CAPTION: A flush draw appears when one more suit card can help.
-TEACH: Four cards of the same suit. A flush draw has four cards of one suit between your hand and the board. There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush. “The nuts” means the best possible hand on the current board.
+TEACH: Four cards of the same suit. A flush draw has four cards of one suit between your hand and the board. There are 13 cards in a suit. If four are visible and the others are unknown, nine cards can complete your flush. “The nuts” means the best possible hand on the current board.
 TEACH LABELS: Suit, Heart, Flush draw
 TEACH: Allow for both remaining cards. Rainbow means the three flop cards have different suits. A backdoor draw needs both the turn and the river to help.
 Q: What does a flush draw need?
@@ -3873,7 +3873,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK flush_draws_w5_made_hand_vs_flush_draw_transfer [drill] Made hand or future pressure
 CAPTION: Real table. You hold A-spade and J-club on A-heart, 8-heart, 4-club.
-TEACH: Made hand first, draw pressure second. You have top pair and no hearts. The two hearts on the flop give an opponent a flush draw only if they hold two more.
+TEACH: Made hand first, draw pressure second. You have top pair and no hearts. An opponent holding two hearts can complete a flush with one more heart on the board.
 TEACH LABELS: Top pair, Two hearts, Not made yet
 Q: What is the clean read first?
 HINT [theoryOnly]: Name your made hand, then read what the board could give an opponent.
@@ -4117,7 +4117,7 @@ REVIEW: An out is a card that can improve the hand on a later street.
 
 TASK w5_semi_bluff_intro [theory] Two ways to win
 CAPTION: You have a draw on the turn.
-TEACH: Two ways to win. A semi-bluff is a bet with a draw. It can win when a better hand folds, or later when your draw hits. Checking gets the next card free. Compare what each choice wins and loses on average. Checking can earn the pot if the draw hits. When you bet, a fold wins the chips already in the middle. A call gives you a chance to win a bigger pot and costs you the bet when you miss. Count each good river once, even if it completes two draws.
+TEACH: Two ways to win. A semi-bluff is a bet with a draw. It can win when a better hand folds, or later when your draw hits. After BB checks to you here, checking behind gives you a free river. Compare what each choice wins and loses on average. Checking can earn the pot if the draw hits. When you bet, a fold wins the chips already in the middle. A call gives you a chance to win a bigger pot and costs you the bet when you miss. Count each good river once, even if it completes two draws.
 Q: When can a bet earn more than a check?
 HINT [theoryOnly]: Count the cards that complete the draw. Then compare the chance with the price.
 TABLE: Turn | You As 8s | Board Qs 6s 2d Tc | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
@@ -4278,7 +4278,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_range_intro [theory] Three buckets
 CAPTION: A range is the group of hands that fit a situation.
-TEACH: Three buckets. After the flop, sort your hand into value (can bet for profit), bluff candidate (can make better hands fold), or missed (check or fold).
+TEACH: Three buckets. For this exercise, choose a plan after the flop. Value bets target weaker calls. Bluff candidates can make better hands fold. With a miss and no good target to bluff, start by checking or folding.
 TEACH LABELS: Hand strength, Can it improve?, What folds?
 Q: What are range buckets?
 HINT [theoryOnly]: Value, bluff candidate, and missed are the three range buckets.
@@ -4348,7 +4348,7 @@ TASK w6_buckets_recap [review] Buckets recap
 CAPTION: Lesson learned: range buckets start with board fit.
 TEACH: Bucket before action. Assign your hand to a range bucket before choosing to bet, check, or fold.
 TEACH LABELS: Value, Bluff candidate, Missed, Board fit
-Q: Which range bucket reads the board first?
+Q: What do you read before putting your hand in a bucket?
 HINT [theoryOnly]: Ask which bucket before choosing an action.
 TABLE: Flop | You Ts Tc | Board Td 5h 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the flop | Facts set, pocket pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
@@ -4361,7 +4361,7 @@ TASK w6_board_fit_intro [theory] Board shifts bucket
 CAPTION: Board texture can shift a hand from value to missed.
 TEACH: Board changes the bucket. A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop. An underpair is a pocket pair lower than every rank on the flop.
 TEACH LABELS: Board fit, Value, Missed, Texture
-TEACH: Compare both ranges. Range advantage is about which player has more strong hands on this board. In this lesson, use only the hands listed for each player and count hand types that make two pair or better.
+TEACH: Compare both ranges. Range advantage asks which player’s range makes strong hands more often on this board. In this lesson, use only the hands listed for each player and count hand types that make two pair or better.
 TEACH LABELS: Preflop raiser, Caller, Two pair or better
 Q: What changes a hand's range bucket?
 HINT [theoryOnly]: The same hand can be value on one board and missed on another.
@@ -4466,7 +4466,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_bluff_candidate [drill] When better hands fold
 CAPTION: BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.
-Q: What do you do with jack-ten after BB checks?
+Q: With jack-ten, which action can make a better unpaired hand fold?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB 97.5
@@ -4490,7 +4490,7 @@ TABLE: Flop | You Jd Th | Board Ks 7h 2c | Pot 5.5 BB | Seat BTN | Active btn | 
 REASONING: principle range_vs_board · alt always_barrel · edge keepsWorseIn · stack_matters unknown · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Th stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Bet for value — Wrong bucket. Value betting belongs to made hands, not pure missed hands.
+  - [wrong] Bet for value — Wrong bucket. Your jack-ten missed the flop. The exercise gives you no weaker hand that could pay this bet.
     BETTER ANSWER: Usually check or fold
   - [suboptimal] Keep betting across streets — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
     BETTER ANSWER: Usually check or fold
@@ -4517,7 +4517,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Ks Jc | Board Kh 8d 4c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After BB checks | Facts one pair, top pair, rainbow
 
 TASK w6_turn_pressure_shift_transfer [drill] Turn pressure shift
-CAPTION: You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.
+CAPTION: You bluffed the K-7-2 flop with J-T and BB called. The turn pairs the 2. BB checks and calls either bet with every better hand in this example.
 Q: Fold pressure dropped on this turn. What do you do now?
 HINT [theoryOnly]: When the board pairs and the first bluff gets called, some pressure lines cool off.
 TABLE: Turn | You Jd Ts | Board Kc 7h 2s 2d | Pot 11 BB | Seat BTN | Active btn | Decision btn | Card focus board_2, board_3 | Center After BB checks | Facts one pair, paired board
@@ -4525,9 +4525,9 @@ EFFECTIVE: BB 94.75
 REASONING: principle range_vs_board · alt barrel_big · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Ts stack 94.75 BB | SB folded stack 99.5 BB | BB stack 94.75 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN bets 2.5 BB · BB calls 2.5 BB · Turn: BB checks
-  - [suboptimal] Bet big again — Tempting, but noisy. A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.
+  - [suboptimal] Bet big again — Tempting, but noisy. A bigger second bet risks more chips. In this model every hand ahead of you still calls, so check for a free next card.
     BETTER ANSWER: Check
-  + [correct] Check — Good pressure reset. BB already called the flop, and the model gives you fewer folds on the paired turn. Check because a big bet risks more chips without the earlier fold pressure.
+  + [correct] Check — Good pressure reset. Check for a free river. The paired turn leaves J-T behind the hands BB calls with, and neither bet makes those hands fold.
   - [wrong] Bet for value — Wrong bucket now. J-T has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.
     BETTER ANSWER: Check
 
@@ -4611,7 +4611,7 @@ REVIEW: Combo counts tell you how many ways a hand can be dealt. The range also 
 
 TASK w6_continuation_bet_intro [theory] The next bet after a raise
 CAPTION: CO raised and BB called, then checked the flop. Read the three ranks and suits first. Ask which weaker hands could pay a small bet and which draws BB could continue with.
-TEACH: Continuation bet, or c-bet A continuation bet is a flop bet by the player who last raised preflop. Against one caller who checks, a small bet is a good starting plan when you have a made hand on a dry flop. On a wet flop, check back if you missed and have no useful draw. The dry and wet textures tell you how many hands can connect, as in World 5. On a dry rainbow flop, a one-third-pot bet leaves weaker hands a smaller call. Connected two-tone flops give callers more ways to continue.
+TEACH: Continuation bet, or c-bet A flop continuation bet is a bet by the last preflop raiser. Against one caller who checks on a dry flop, a one-third-pot bet can get paid by worse hands. Connected two-tone flops give callers more ways to continue. On those flops, often check behind when you miss and have neither a good draw nor a reason to expect folds. Compare weaker calls with better folds before you bet.
 Q: How does the flop change your next decision?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Ac Qd | Board Ah 6s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
@@ -4857,7 +4857,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK range_checkpoint_pressure [drill] Pressure after a check
 CAPTION: On K-8-3, BB checks. Any pair calls half pot. Q-J and A-9 fold. Check if your hand already beats either unpaired hand.
-Q: What do you do with nine-six after BB checks?
+Q: With nine-six, which action can make a better unpaired hand fold?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB 97.5
@@ -7926,7 +7926,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Bet smaller but keep the same old story — Read the new board first. Changing the size without repairing the board story still leaves the core read behind.
     BETTER ANSWER: The board got more dangerous, so the old easy-value story needs caution
     FEEDBACK TABLE: Turn | You Ad Qs | Board Ah 7c 6d 8c | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Read the turn | Facts one pair, top pair
-  + [correct] The board got more dangerous, so the old easy-value story needs caution — Nice repair. That is the fix. The new card changed the board story, so action should respect the new pressure instead of replaying the old one.
+  + [correct] The board got more dangerous, so the old easy-value story needs caution — Nice repair. You still have top pair. The eight connects the six and seven and adds a second club. Check which weaker hands still call on the new board.
     FEEDBACK TABLE: Turn | You Ad Qs | Board Ah 7c 6d 8c | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3, hero_0, hero_1, board_0, board_1, board_2 | Center Read the turn | Facts one pair, top pair
 
 ===== WORLD 6 · LESSON range_pressure_lines · Value, bluff, missed =====
@@ -9744,7 +9744,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
     FEEDBACK TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, two-tone
   + [correct] Jack-high straight — Correct. Your jack and eight fill the sequence seven through jack. You already have a jack-high straight.
     FEEDBACK TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, two-tone
-  - [wrong] Only a draw — Look again. Waiting to make a straight would give up a made hand. Seven through jack are already visible.
+  - [wrong] Only a draw — Look again. You already have all five straight ranks, seven through jack. Your jack and eight complete the run on the flop.
     BETTER ANSWER: Jack-high straight
     FEEDBACK TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, two-tone
 
@@ -9812,10 +9812,10 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] You have a made flush — Look again. The nine joins the three board diamonds for four. A made flush needs five.
     BETTER ANSWER: You have a flush draw
     FEEDBACK TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, monotone, flush draw, completion cards 9
-  - [wrong] You cannot make a flush with one diamond — Look again. Hold’em lets you use one hole card and four board cards. One more board diamond can complete your flush.
+  - [wrong] You cannot make a flush with one diamond — Look again. Hold’em lets you use one private card and four board cards. One more board diamond can complete your flush.
     BETTER ANSWER: You have a flush draw
     FEEDBACK TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, monotone, flush draw, completion cards 9
-  + [correct] You have a flush draw — Correct. Your 9 of diamonds plus three on the board make four diamonds. You need one more and could pay off a made flush if you stop counting at four.
+  + [correct] You have a flush draw — Correct. Your 9 of diamonds and the three board diamonds make four. One more diamond would give you a flush, and a player holding two diamonds could already have one.
     FEEDBACK TABLE: Flop | You Qc 9d | Board Ad 6d 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, monotone, flush draw, completion cards 9
 
 ===== WORLD 5 · LESSON straight_draws · Straight draws =====
@@ -9910,7 +9910,7 @@ HINT [hidden]: (none)
 TABLE: Turn | You Ad 6d | Board Kd 8d 3c 2d | Pot 6 BB | Seat CO | Facts flush
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad 6d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks
-  - [wrong] It gave you a pair — Look again. The board deuce pairs neither hole card. Its diamond suit completes a flush.
+  - [wrong] It gave you a pair — Look again. The board deuce pairs neither private card. Its diamond suit completes a flush.
     BETTER ANSWER: It gave you a made flush
     FEEDBACK TABLE: Turn | You Ad 6d | Board Kd 8d 3c 2d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts flush
   - [wrong] It left your flush draw unfinished — Look again. Count three board diamonds and both diamonds in your hand. The turn already gives you the fifth.
@@ -9999,7 +9999,7 @@ HINT [hidden]: (none)
 TABLE: Flop | You Qh Jd | Board 7s 6h 4h | Pot 6 BB | Seat CO | Facts high card, two-tone, backdoor flush
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qh Jd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Top pair for value — Look again. The top board rank matches neither hole card. Q-J has no top pair to value-bet.
+  - [wrong] Top pair for value — Look again. The top board rank matches neither private card. Q-J has no top pair to value-bet.
     BETTER ANSWER: Missed the flop
     FEEDBACK TABLE: Flop | You Qh Jd | Board 7s 6h 4h | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
   + [correct] Missed the flop — Correct. QJ pairs none of the three board cards and has only three hearts between hand and board.
@@ -10057,7 +10057,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Flop | You Ts 8d | Board Qh 7c 3s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
   + [correct] Fold out a better unpaired hand — Correct. T8 misses Q-7-3. Ace-high beats it when neither improves, so a fold from ace-high gives the bet a bluff purpose.
     FEEDBACK TABLE: Flop | You Ts 8d | Board Qh 7c 3s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
-  - [wrong] Protect top pair — Look again. Neither hole card pairs the queen. A small bet would need better holdings such as ace-high to fold.
+  - [wrong] Protect top pair — Look again. Neither private card pairs the queen. A small bet would need better holdings such as ace-high to fold.
     BETTER ANSWER: Fold out a better unpaired hand
     FEEDBACK TABLE: Flop | You Ts 8d | Board Qh 7c 3s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
 
@@ -10125,7 +10125,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 8c 4d stack 100 BB 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [wrong] Six — Look again. Six is the count for two cards of one rank. K-Q has two different ranks; six overcounts the four same-suit hands.
     BETTER ANSWER: Four
-  + [correct] Four — Correct. There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.
+  + [correct] Four — Correct. There are four suits, each providing one same-suit king and queen. Sixteen counts all combinations, including twelve offsuit hands.
   - [wrong] Sixteen — Look again. Sixteen includes the twelve offsuit K-Q hands. Counting them inflates the suited part of the range.
     BETTER ANSWER: Four
 
