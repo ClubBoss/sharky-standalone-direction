@@ -54,9 +54,11 @@ void main() {
     expect(task.rewardXp, 9);
     expect(task.phase, Act0LessonPhaseV1.drill);
     expect(table.scope, Act0TableScopeV1.playedHand);
-    expect(table.heroSeatId, 'btn');
-    expect(table.heroSeat.seatId, 'btn');
+    expect(table.heroSeatId, 'co');
+    expect(table.heroSeat.seatId, 'co');
     expect(table.activeSeatId, 'co');
+    expect(table.decisionSeatId, 'co');
+    expect(table.heroSeat.cardsVisibleMode, Act0CardsVisibleModeV1.faceDown);
     expect(table.heroCards, isEmpty);
     expect(table.heroSeat.holeCards, isEmpty);
     expect(table.boardCards, isEmpty);

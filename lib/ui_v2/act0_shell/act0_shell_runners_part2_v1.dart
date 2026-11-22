@@ -3416,6 +3416,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
       ),
       heroSeatId: 'co',
       activeSeatId: 'co',
+      heroCardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
     ),
     const {'utg', 'hj'},
   ),
