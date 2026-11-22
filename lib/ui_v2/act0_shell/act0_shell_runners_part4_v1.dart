@@ -7643,6 +7643,38 @@ final _w11_multiway_turn_fold = _w11Task(
   ).copyWith(showDecisionPremise: true),
 );
 
+final _w11_first_in_seat = _w11Task(
+  'w11_first_in_seat',
+  'Find the opener',
+  'Read the voluntary action after the two blinds were posted.',
+  'Tap the seat that opened the pot.',
+  correct: 1,
+  choices: const [
+    (
+      'utg',
+      'UTG',
+      'UTG folded. Counting that seat as the opener ignores HJ’s 2.5 BB raise.',
+      'utg',
+    ),
+    (
+      'hj',
+      'HJ',
+      'HJ put in the first raise. The blinds posted before that action.',
+      'hj',
+    ),
+    (
+      'bb',
+      'BB',
+      'BB posted a 1 BB blind. Counting that post as a raise gives the lead to the wrong seat.',
+      'bb',
+    ),
+  ],
+  table: _day7PreflopV1('co', '6s 5s', opener: 'hj', showTurn: true).copyWith(
+    showDecisionPremise: true,
+    selectableSeatIds: const ['utg', 'hj', 'bb'],
+  ),
+);
+
 final _w11_multiway_first_seat = _w11Task(
   'w11_multiway_first_seat',
   'Find the first seat on the flop',
@@ -7721,79 +7753,6 @@ final _w11_multiway_first_seat = _w11Task(
         showDecisionPremise: true,
         selectableSeatIds: const ['co', 'bb', 'btn'],
       ),
-);
-
-final _w11_checkpoint_spr = _w11Task(
-  'w11_checkpoint_spr',
-  'Read the stack-to-pot ratio',
-  'Both have 33 BB left. The pot is 5.5 BB.',
-  'What is the stack-to-pot ratio (SPR)?',
-  correct: 1,
-  choices: const [
-    (
-      'choice_1',
-      '3',
-      'Three would use an 11 BB pot. The middle has 5.5 BB.',
-      null,
-    ),
-    (
-      'choice_2',
-      '6',
-      '33 divided by 5.5 is 6. Use the smaller stack that can still go in.',
-      null,
-    ),
-    (
-      'choice_3',
-      '12',
-      '12 would count both stacks. Each player can put in at most 33 BB more.',
-      null,
-    ),
-  ],
-  table: _day7TableV1(
-    hero: 'bb',
-    hand: '8s 7s',
-    street: PokerStreet.flop,
-    board: _act0LessonCardsV1('As Td 3c'),
-    folded: const {'utg', 'co', 'btn', 'sb'},
-    stacks: const {
-      'utg': 35.5,
-      'hj': 35.5,
-      'co': 35.5,
-      'btn': 35.5,
-      'sb': 35.5,
-      'bb': 35.5,
-    },
-    entries: const [
-      ..._act0LessonBlinds,
-      Act0ContributionV1(
-        PokerStreet.preflop,
-        'hj',
-        Act0ContributionKindV1.wager,
-        2.5,
-      ),
-      Act0ContributionV1(
-        PokerStreet.preflop,
-        'bb',
-        Act0ContributionKindV1.wager,
-        1.5,
-      ),
-    ],
-    history: const [
-      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'CO folds'),
-      Act0ActionTrailItemV1(label: 'BTN folds'),
-      Act0ActionTrailItemV1(label: 'SB folds'),
-      Act0ActionTrailItemV1(label: 'BB calls 1.5 BB'),
-    ],
-    bets: const {},
-  ).copyWith(showDecisionPremise: true),
-  teaching: const Act0TeachingStepV1(
-    title: 'Recall SPR',
-    body: 'Divide the smaller live stack by the pot.',
-  ),
 );
 
 final _w11_checkpoint_turn_price = _w11Task(
