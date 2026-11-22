@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        418 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        418 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,7 +131,7 @@ void main() {
     expect(
       entries,
       hasLength(
-        418 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
@@ -2152,7 +2152,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        418 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;

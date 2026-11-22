@@ -807,6 +807,14 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'value_size',
+        title: 'Bet a size that gets called',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w6ContinuationBetValue,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'wet_check',
         title: 'Missed on a wet flop',
         phase: Act0LessonPhaseV1.review,
@@ -2572,6 +2580,71 @@ final _w6ContinuationBetDry = _w6ContinuationBetIntro.copyWith(
       feedbackTitle: 'That is bigger than the pot.',
       feedbackReason:
           'With QJ on Q-7-2, putting in 9 BB risks 7 BB more than the small bet and can leave you facing stronger hands.',
+    ),
+  ],
+);
+
+final _w6ContinuationBetValue = _w6ContinuationBetIntro.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  caption:
+      'BB checked. In this example, weaker kings call bets of 3 BB or less.',
+  hint: '',
+  question: 'How much can you bet to get the most chips from those calls?',
+  feedbackTitle: 'Use the highest price they pay.',
+  feedbackReason: 'A weaker king calls 3 BB in this example and folds to 6 BB.',
+  table: _day7PostflopV1(
+    'co',
+    'Kh Qh',
+    'Kc 8d 3s',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: 'bet_one_five',
+        label: '1.5 BB',
+        potFraction: 0.25,
+      ),
+      Act0SizingPresetV1(id: 'bet_six', label: '6 BB', potFraction: 1),
+      Act0SizingPresetV1(id: 'bet_three', label: '3 BB', potFraction: 0.5),
+    ],
+  ),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'bet_one_five',
+      label: '1.5 BB',
+      isCorrect: false,
+      preferredLabel: '3 BB',
+      betterAnswerLabel: '3 BB',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The bet leaves value behind.',
+      feedbackReason:
+          'A weaker king calls 1.5 BB on K-8-3 in this example. If you pick that amount, you miss the extra 1.5 BB the same hand would pay.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_six',
+      label: '6 BB',
+      isCorrect: false,
+      preferredLabel: '3 BB',
+      betterAnswerLabel: '3 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The weaker hands fold.',
+      feedbackReason:
+          'The 6 BB bet is the size of the pot. BB folds weaker kings at that price in this example, costing you their 3 BB calls.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_three',
+      label: '3 BB',
+      isCorrect: true,
+      preferredLabel: '3 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Three is the largest bet they call.',
+      feedbackReason:
+          'KQ beats a weaker king on K-8-3. The half-pot size gets the full 3 BB those hands are willing to call.',
     ),
   ],
 );

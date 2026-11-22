@@ -886,15 +886,15 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(346 + addedContracts.length));
+    expect(rows, hasLength(347 + addedContracts.length));
     expect(
       rows.map((r) => r.task.taskId).toSet(),
-      hasLength(346 + addedContracts.length),
+      hasLength(347 + addedContracts.length),
     );
     expect(
       allChoices,
       hasLength(
-        647 +
+        649 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
@@ -974,7 +974,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        609 +
+        611 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,

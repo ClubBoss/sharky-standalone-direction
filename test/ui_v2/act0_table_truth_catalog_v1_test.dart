@@ -220,8 +220,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 112),
-      ('D3.to_call_completeness', 112),
+      ('D2.pot_feasibility', 113),
+      ('D3.to_call_completeness', 113),
     ]) {
       final proof = rows
           .where(
@@ -240,6 +240,7 @@ void main() {
           'w6_continuation_bet_intro',
           'w6_continuation_bet_dry_size',
           'w6_continuation_bet_wet_check',
+          'w6_continuation_bet_value_size',
         ]),
         reason: rule,
       );
@@ -1339,6 +1340,15 @@ void main() {
       expect(option['quality'], 'wrong', reason: entry.key);
       option['quality'] = 'suboptimal';
     }
+    expectedComparison['w6_continuation_bet_value_size'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        {...w3Option('bet_one_five'), 'quality': 'suboptimal'},
+        w3Option('bet_six'),
+        w3Option('bet_three', correct: true),
+      ],
+    };
     expect(
       historicalComparison,
       expectedComparison,

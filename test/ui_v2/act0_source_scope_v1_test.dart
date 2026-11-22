@@ -278,13 +278,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        418 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        418 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final newTasks = tasks
@@ -539,11 +539,12 @@ void main() {
     expect(legacyPlayed, 283);
     expect(
       played,
-      316 + 10 + 9,
+      317 + 10 + 9,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'first_table_guide_first_decision',
       'w4_price_find_bettor',
+      'w6_continuation_bet_value_size',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
       'w3_play_from_blinds_small_blind_raise',

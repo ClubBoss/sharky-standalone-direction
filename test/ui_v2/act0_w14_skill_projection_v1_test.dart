@@ -216,7 +216,7 @@ void main() {
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
-    expect(tasksByWorld, {5: 34, 6: 38});
+    expect(tasksByWorld, {5: 34, 6: 39});
   });
 
   test('every W7–W8 task projects to its authored topic', () {

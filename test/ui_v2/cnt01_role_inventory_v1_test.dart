@@ -319,7 +319,7 @@ void main() {
       expect(
         rows,
         hasLength(
-          217 +
+          218 +
               w11Wave4ChoiceContractV1.length +
               w12Wave4ChoiceContractV1.length,
         ),

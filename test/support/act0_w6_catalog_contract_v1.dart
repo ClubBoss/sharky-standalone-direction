@@ -6,6 +6,11 @@ const w6NewChoiceContractV1 = <String, List<List<Object?>>>{
     ["bet_six", "6 BB", false, "wrong", "2 BB"],
     ["bet_nine", "9 BB", false, "wrong", "2 BB"],
   ],
+  "w6_continuation_bet_value_size": [
+    ["bet_one_five", "1.5 BB", false, "suboptimal", "3 BB"],
+    ["bet_six", "6 BB", false, "wrong", "3 BB"],
+    ["bet_three", "3 BB", true, "correct", "3 BB"],
+  ],
   "w6_continuation_bet_wet_check": [
     ["bet_small", "Bet 2 BB", false, "wrong", "Check"],
     ["check", "Check", true, "correct", "Check"],
