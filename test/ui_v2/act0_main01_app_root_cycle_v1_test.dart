@@ -2043,7 +2043,7 @@ void main() {
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
-    expect(lessons, hasLength(33));
+    expect(lessons, hasLength(34));
     expect(tasks, hasLength(204));
     expect(tasks.map((task) => task.taskId).toSet(), hasLength(204));
     final sizingLesson = worlds.last.lessons.singleWhere(
