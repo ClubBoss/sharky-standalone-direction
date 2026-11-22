@@ -109,6 +109,10 @@ def collect(root, env):
         ("diff", "--no-renames", "--name-only", "-z", "--"),
         ("ls-files", "--others", "--exclude-standard", "-z"),
     ]
+    # The old token-allowlist hook globbed a malformed filename into Git.
+    # Dropping its historical deletion lets normal PR/push validation run.
+    # Keep rejecting malformed live paths and deletions outside this tooling directory.
+    token_allowlists = "tooling/allowlists/target_tokens_allowlist_"
     paths = set()
     for args in queries:
         data = git(*args)
@@ -119,6 +123,15 @@ def collect(root, env):
                 continue
             path = raw.decode("utf-8")
             if "\n" in path or "\r" in path:
+                if (
+                    args[0] == "diff"
+                    and path.startswith(token_allowlists)
+                    and path.endswith(".txt")
+                    and raw in git(*args[:1], "--diff-filter=D", *args[1:]).split(b"\0")
+                    and raw not in git("ls-files", "--cached", "-z").split(b"\0")
+                    and raw not in git("ls-files", "--others", "-z").split(b"\0")
+                ):
+                    continue
                 raise Unknown("unrepresentable path")
             paths.add(path)
     if git("rev-parse", "HEAD").strip().decode() != candidate:
