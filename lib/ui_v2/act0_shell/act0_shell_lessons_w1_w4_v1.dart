@@ -469,6 +469,50 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
   ],
 );
 
+Act0RunnerStateV1 _w1ExtraReadV1({
+  required Act0RunnerStateV1 source,
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required List<(String, String, String)> choices,
+  required int correct,
+  List<String> repairLabels = const [],
+  List<String> repairCards = const [],
+}) {
+  final answer = choices[correct];
+  return source.copyWith(
+    lessonId: id,
+    phase: Act0LessonPhaseV1.drill,
+    caption: caption,
+    hint: '',
+    question: question,
+    table: table,
+    teachingSteps: const [],
+    feedbackTitle: 'Read the visible facts.',
+    feedbackReason: answer.$3,
+    options: [
+      for (final (index, choice) in choices.indexed)
+        Act0RunnerOptionV1(
+          id: choice.$1,
+          label: choice.$2,
+          preferredLabel: answer.$2,
+          betterAnswerLabel: index == correct ? '' : answer.$2,
+          isCorrect: index == correct,
+          quality: index == correct
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          feedbackTitle: index == correct
+              ? 'Correct.'
+              : 'Read the table again.',
+          feedbackReason: choice.$3,
+          repairFocusLabels: repairLabels,
+          repairFocusCardIds: repairCards,
+        ),
+    ],
+  );
+}
+
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
@@ -897,6 +941,43 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
               'With two matching private cards and a third of the same rank on the board, counting one pair leaves out the third card that wins the comparison.',
         ),
         rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_find_the_match',
+        title: 'Match a private card',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _twoPairRunner,
+          id: 'hand_rankings_find_the_match',
+          caption:
+              'Compare each of your two cards with the three shared cards.',
+          question: 'Which rank forms your pair here?',
+          table: _w1EarlySeatCopyV1(
+            _day7PostflopV1('bb', 'Kd 8d', 'Qh 8c 2h', opponent: 'btn'),
+            opener: 'BTN',
+          ),
+          choices: const [
+            (
+              'kings',
+              'Kings',
+              'Your king has no match among Q-8-2. Counting kings gives your hand a pair it cannot make.',
+            ),
+            (
+              'queens',
+              'Queens',
+              'There is one queen in the middle and none at your seat. Counting queens misses the two eights.',
+            ),
+            (
+              'eights',
+              'Eights',
+              'Your eight matches the shared eight, making one pair.',
+            ),
+          ],
+          correct: 2,
+          repairCards: const ['board_0', 'board_1', 'board_2'],
+        ),
+        rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
     ],
@@ -1516,6 +1597,40 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'blinds_pot_after_posts',
+        title: 'Count the two posts',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _firstPreflopActorRunner,
+          id: 'blinds_pot_after_posts',
+          caption:
+              'Both blinds have posted. You are first to act and nobody else has added chips.',
+          question: 'What total have the two players put in the middle?',
+          table: _day7PreflopV1('utg', 'Jc 6h', showTurn: true),
+          choices: const [
+            (
+              'both',
+              '1.5 BB',
+              'The small blind added 0.5 BB and the big blind added 1 BB. Together that is 1.5 BB.',
+            ),
+            (
+              'bb_only',
+              '1 BB',
+              'The big blind paid 1 BB. That leaves out the 0.5 BB small blind already in the middle.',
+            ),
+            (
+              'equal_posts',
+              '2 BB',
+              'The small blind paid 0.5 BB, so counting two full blinds adds half a BB that nobody paid.',
+            ),
+          ],
+          correct: 0,
+          repairLabels: const ['Big blind'],
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'blinds_review',
         title: 'Order recap',
         phase: Act0LessonPhaseV1.review,
@@ -1626,6 +1741,46 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           reason:
               'HJ follows UTG, so one fewer seat remains behind HJ on this first pass.',
           seatId: 'hj',
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'positions_read_first_check',
+        title: 'Use the earlier action',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _postflopButtonActorRunner,
+          id: 'positions_read_first_check',
+          caption:
+              'Only you and the big blind saw the flop. The action list starts with the forced posts and includes actions from both rounds. You still have a decision to make.',
+          question: 'Who has already acted since the shared cards arrived?',
+          table: _day7PostflopV1(
+            'btn',
+            'Tc 8d',
+            'As 8h 3c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          choices: const [
+            (
+              'hj',
+              'HJ',
+              'HJ folded before the shared cards. Counting that seat misses the check from the remaining opponent.',
+            ),
+            (
+              'bb',
+              'BB',
+              'BB checked first. You can use that information before choosing what to do on the Button.',
+            ),
+            (
+              'btn',
+              'BTN',
+              'Your seat is still waiting to act. Treating the Button as done throws away the decision you now have.',
+            ),
+          ],
+          correct: 1,
+          repairLabels: const ['Hero on the Button'],
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,

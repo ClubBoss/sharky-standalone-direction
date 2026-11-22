@@ -62,7 +62,7 @@ void main() {
     expect(
       worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
       hasLength(
-        424 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final seen = <String>{};

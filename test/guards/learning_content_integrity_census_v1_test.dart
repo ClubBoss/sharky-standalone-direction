@@ -99,6 +99,9 @@ const _wave5CurrentChoiceTaskIds = <String>{
   'connected_boards_w5_connected_read_bet',
   'w8_hero_stack_cap_seat',
   'w8_pot_bet_committed_seat',
+  'hand_rankings_find_the_match',
+  'blinds_pot_after_posts',
+  'positions_read_first_check',
   'w4_purpose_collect_value',
   'w4_protection_small_denial',
 };
@@ -906,15 +909,15 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(360 + addedContracts.length));
+    expect(rows, hasLength(363 + addedContracts.length));
     expect(
       rows.map((r) => r.task.taskId).toSet(),
-      hasLength(360 + addedContracts.length),
+      hasLength(363 + addedContracts.length),
     );
     expect(
       allChoices,
       hasLength(
-        675 +
+        681 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
@@ -994,7 +997,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        637 +
+        643 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,

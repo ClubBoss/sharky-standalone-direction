@@ -278,13 +278,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        432 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        432 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final newTasks = tasks
@@ -311,7 +311,7 @@ void main() {
             task.taskId != 'actions_call_chip_cost' &&
             task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(394),
+      hasLength(397),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -542,12 +542,14 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 293);
+    expect(legacyPlayed, 296);
     expect(
       played,
-      328 + 10 + 9 + 2,
+      328 + 10 + 9 + 2 + 3,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'blinds_pot_after_posts',
+      'positions_read_first_check',
       'w4_purpose_collect_value',
       'w4_protection_small_denial',
       'cards_ranks_suits_premium_decision',

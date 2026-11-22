@@ -196,8 +196,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 167),
-      ('D3.to_call_completeness', 120),
+      ('D2.pot_feasibility', 170),
+      ('D3.to_call_completeness', 122),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1415,6 +1415,39 @@ void main() {
         {...w3Option('two'), 'quality': 'suboptimal'},
         w3Option('four', correct: true),
         w3Option('eight'),
+      ],
+    };
+    expectedComparison['hand_rankings_find_the_match'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['kings', 'queens', 'eights'])
+          {
+            ...w3Option(choice, correct: choice == 'eights'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['blinds_pot_after_posts'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['both', 'bb_only', 'equal_posts'])
+          {
+            ...w3Option(choice, correct: choice == 'both'),
+            'repairLabels': ['Big blind'],
+          },
+      ],
+    };
+    expectedComparison['positions_read_first_check'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['hj', 'bb', 'btn'])
+          {
+            ...w3Option(choice, correct: choice == 'bb'),
+            'repairLabels': ['Hero on the Button'],
+          },
       ],
     };
     expectedComparison['w4_purpose_collect_value'] = {
