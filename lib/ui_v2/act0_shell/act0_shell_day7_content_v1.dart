@@ -3990,7 +3990,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             "CO calls 3 BB and 4 BB with weak kings and lower pairs. At 18 BB, those hands fold.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
-        question: "Bet or check?",
+        question: "Which bet size earns the most?",
         options: const [
           Act0RunnerOptionV1(
             id: "bet_3_bb",
@@ -5648,7 +5648,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       step: Act0LessonStepKindV1.practice,
       xp: 0,
       caption:
-          r'Your poker bankroll is $475. A full buy-in costs $5 at NL5, $10 at NL10 and $25 at NL25. Use the cash-game buffer of 40 full buy-ins.',
+          'Your poker bankroll is \$475. A full buy-in costs \$5 at NL5, \$10 at NL10 and \$25 at NL25. Use the cash-game buffer of $act0CashBankrollBuyInsV1 full buy-ins.',
       question: 'What is the highest stake your bankroll covers?',
       teach: '',
       choices: const [
@@ -5662,7 +5662,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'nl10',
           'NL10',
           Act0FeedbackQualityV1.correct,
-          r'$475 covers 47.5 NL10 buy-ins. NL25 would leave just 19 buy-ins, below the 40-buy-in buffer.',
+          '\$475 covers 47.5 NL10 buy-ins. NL25 would leave just 19 buy-ins, below the $act0CashBankrollBuyInsV1-buy-in buffer.',
         ),
         (
           'nl25',

@@ -15,7 +15,18 @@
     "22.bet_into_pot": 54,
     "24.call_equity": 92,
     "25.street_stack": 27,
-    "45.duplicate_option_label": 656
+    "45.duplicate_option_label": 656,
+    "46.action_question_options": 71,
+    "47.correct_feedback_length": 656,
+    "48.bankroll_threshold": 17
+  },
+  "correct_feedback_word_limits_v1": {
+    "w3_play_from_blinds_small_blind_medium_raise|raise": 48,
+    "w7_flop_bluff_two_players|choice_2": 46,
+    "w7_clean_outs_higher_price|choice_2": 47,
+    "w7_river_one_bluff_of_six|choice_2": 50,
+    "w11_trigger_recap|price_and_the_player_read": 54,
+    "w11_review_loop_intro|bb_called_8_into_18_versus_a_tight_turn_range": 54
   },
   "findings": [
     "21.duplicate_wrong_reason|actions_check_drill|call",

@@ -109,15 +109,22 @@ final _w11Y5dSessionPlanV1 = [
       _w11SessionPlanBasicsTasksV1.first.runner.table,
     ),
     caption:
-        r'Your bankroll is $475. A buy-in costs $10 at NL10 and $25 at NL25. Move up at 30 buy-ins for the next stake. Move down below 20 at the current stake.',
+        'Your bankroll is \$475. A full buy-in costs \$10 at NL10 and \$25 at NL25. '
+        'Move up when you have $act0CashBankrollBuyInsV1 buy-ins for the next stake. '
+        'Move down below $act0CashBankrollBuyInsV1 buy-ins at the current stake.',
     question: 'Which stake fits your bankroll rule?',
     choices: const ['Stay at NL10', 'Move up to NL25', 'Move down to NL5'],
     correct: 0,
     reason:
-        r'At NL10 you have 47.5 buy-ins, above the 20-buy-in floor. NL25 requires $750 for 30 buy-ins, so stay at NL10.',
+        'Stay at NL10. Your \$475 buys 47.5 full buy-ins, above the '
+        '$act0CashBankrollBuyInsV1-buy-in floor. Moving up to NL25 requires \$${act0CashBankrollBuyInsV1 * 25}.',
     wrongReasons: const {
-      1: r'NL25 gives you 19 buy-ins at $475. Wait for $750 before moving up.',
-      2: r'You move below NL10 when your bankroll falls under $200. With $475 you can stay.',
+      1:
+          'At NL25, \$475 buys 19 full buy-ins. Wait until you have '
+          '\$${act0CashBankrollBuyInsV1 * 25} before moving up.',
+      2:
+          'Move down from NL10 only below \$${act0CashBankrollBuyInsV1 * 10}. '
+          'Your \$475 still covers the $act0CashBankrollBuyInsV1-buy-in floor.',
     },
   ),
   _y5dPracticeV1(

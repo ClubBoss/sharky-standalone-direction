@@ -6458,6 +6458,8 @@ const _w11QJsPreflopContributions = [
   ),
 ];
 
+const act0CashBankrollBuyInsV1 = 40;
+
 final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
   _wave6AuthoredTaskV1(
     id: 'w11_session_plan_intro',
@@ -6502,10 +6504,10 @@ final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'Sharky cash-game plan: keep 40 full buy-ins for your stake. NL25 is \$0.10/\$0.25.',
+        'Sharky cash-game plan: keep $act0CashBankrollBuyInsV1 full buy-ins for your stake. NL25 is \$0.10/\$0.25.',
     question: 'What bankroll does NL25 need?',
     teach:
-        'A full buy-in is 100 BB. Our course uses a buffer of 40 full buy-ins for cash games. At NL10, a full buy-in is \$10. At NL5, it is \$5. This is a risk guide, not a promise of profit.',
+        'A full buy-in is 100 BB. Our course uses a buffer of $act0CashBankrollBuyInsV1 full buy-ins for cash games. At NL10, a full buy-in is \$10. At NL5, it is \$5. This is a risk guide, not a promise of profit.',
     choices: const [
       (
         '250',
@@ -6574,13 +6576,13 @@ final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
         'Your bankroll is \$340. NL5 is \$0.02/\$0.05 with a \$5 full buy-in. NL10 is \$0.05/\$0.10 with a \$10 full buy-in.',
     question: 'Which stake fits the plan?',
     teach:
-        'Use the 40-buy-in rule. A full buy-in is 100 BB. Keep rent and other needs out of your poker funds.',
+        'Use the $act0CashBankrollBuyInsV1-buy-in rule. A full buy-in is 100 BB. Keep rent and other needs out of your poker funds.',
     choices: const [
       (
         'nl5',
         'NL5',
         Act0FeedbackQualityV1.correct,
-        '\$340 covers 68 NL5 buy-ins. That clears the 40-buy-in course rule.',
+        '\$340 covers 68 NL5 buy-ins. That clears the $act0CashBankrollBuyInsV1-buy-in course rule.',
       ),
       (
         'nl10',
@@ -6592,7 +6594,7 @@ final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
         'nl10_with_a_short_buy_in',
         'NL10 with a short buy-in',
         Act0FeedbackQualityV1.wrong,
-        'Buying in short does not change the 40 full-buy-in rule. It hides the gap rather than fixing it.',
+        'Buying in short does not change the $act0CashBankrollBuyInsV1 full-buy-in rule. It hides the gap rather than fixing it.',
       ),
     ],
     table: _wave6StudyTableV1,
@@ -7785,13 +7787,13 @@ final _w11SessionPlanBankrollFollowupTasksV1 = <Act0LessonTaskV1>[
     caption: 'Your NL10 bankroll fell from \$420 to \$350.',
     question: 'What stake now meets the bankroll rule?',
     teach:
-        'At NL10, \$10 is one full buy-in. At NL5, \$5 is one full buy-in. Use the same 40-buy-in rule after a losing week. Use the new balance, not the old one.',
+        'At NL10, \$10 is one full buy-in. At NL5, \$5 is one full buy-in. Use the same $act0CashBankrollBuyInsV1-buy-in rule after a losing week. Use the new balance, not the old one.',
     choices: const [
       (
         'stay_at_nl10_to_win_it_back',
         'Stay at NL10 to win it back',
         Act0FeedbackQualityV1.wrong,
-        '35 NL10 buy-ins are short of the 40-buy-in floor. Chasing the loss adds risk.',
+        '35 NL10 buy-ins are short of the $act0CashBankrollBuyInsV1-buy-in floor. Chasing the loss adds risk.',
       ),
       (
         'move_to_nl25_for_a_faster_win',
@@ -8700,11 +8702,12 @@ final _w12_river_ev_costly_call = _w12Task(
 Act0LessonTaskV1 _wave6Asm05CopyV1(
   Act0LessonTaskV1 source, {
   required String caption,
-  required String question,
-  required List<(String, String, Act0FeedbackQualityV1, String)> choices,
-  required String teach,
+  required String wrongReason,
 }) {
-  final authored = _wave6AuthoredChoicesV1(choices);
+  final call = source.runner.options.singleWhere(
+    (option) => option.id == 'call',
+  );
+  final callLabel = '${call.label} ${call.amountLabel}';
   return Act0LessonTaskV1(
     taskId: source.taskId,
     title: source.title,
@@ -8716,25 +8719,22 @@ Act0LessonTaskV1 _wave6Asm05CopyV1(
     summary: source.summary,
     runner: source.runner.copyWith(
       caption: caption,
-      question: question,
+      question: 'Call or fold?',
       options: [
         for (final outcome in source.runner.options)
-          for (final option in authored.where(
-            (choice) => choice.id == outcome.id,
-          ))
-            Act0RunnerOptionV1(
-              id: option.id,
-              label: option.label,
-              isCorrect: outcome.isCorrect,
-              preferredLabel: option.preferredLabel,
-              quality: outcome.quality,
-              feedbackTitle: outcome.feedbackTitle,
-              feedbackReason: [
-                outcome.feedbackReason,
-                option.feedbackReason,
-                if (outcome.isCorrect && teach.isNotEmpty) teach,
-              ].join(' '),
-            ),
+          Act0RunnerOptionV1(
+            id: outcome.id,
+            label: outcome.id == call.id ? callLabel : outcome.label,
+            isCorrect: outcome.isCorrect,
+            preferredLabel: outcome.preferredLabel == call.label
+                ? callLabel
+                : outcome.preferredLabel,
+            quality: outcome.quality,
+            feedbackTitle: outcome.feedbackTitle,
+            feedbackReason: outcome.isCorrect
+                ? outcome.feedbackReason
+                : '${outcome.feedbackReason} $wrongReason',
+          ),
       ],
     ),
   );
@@ -9049,23 +9049,8 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
     ),
     caption:
         'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. Raises are excluded. No ante or rake.',
-    question: 'Call or fold?',
-    choices: const [
-      (
-        'call',
-        'Call 10 BB',
-        Act0FeedbackQualityV1.correct,
-        'SB bets 10 BB with aces. Nine hearts win out of 44 unknown cards, so calling at 16.7% gains 2.27 BB over folding.',
-      ),
-      (
-        'fold',
-        'Fold',
-        Act0FeedbackQualityV1.wrong,
+    wrongReason:
         'The 10 BB price needs 16.7%. With 9 clean hearts, your 20.5% chance earns about 2.27 BB more than a fold.',
-      ),
-    ],
-    teach:
-        'On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.',
   ),
   _wave6Asm05CopyV1(
     act0Asm05AuthoredDecisionTaskV1(
@@ -9080,22 +9065,8 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
     ),
     caption:
         'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. Raises are excluded. No ante or rake.',
-    question: 'Call or fold?',
-    choices: const [
-      (
-        'fold',
-        'Fold',
-        Act0FeedbackQualityV1.correct,
-        'SB bets 40 BB with aces. Nine hearts win out of 44 unknown cards, so the 33.3% price makes calling lose 15.45 BB.',
-      ),
-      (
-        'call',
-        'Call 40 BB',
-        Act0FeedbackQualityV1.wrong,
+    wrongReason:
         'The river heart came in once, but 35 of 44 cards still lose. This 40 BB call loses 15.45 BB on average.',
-      ),
-    ],
-    teach: '',
   ),
   _w12_turn_count_heart_outs,
 ];

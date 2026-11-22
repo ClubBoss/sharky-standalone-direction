@@ -1,5 +1,7 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import 'act0_catalog_decision_v1.dart';
+import 'act0_catalog_learner_copy_v1.dart';
 import 'act0_catalog_numeric_copy_v1.dart';
 import 'act0_catalog_poker_facts_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
@@ -12,11 +14,13 @@ class CatalogQualityReportV1 {
     required this.btnShareByWorld,
     required this.checks,
     required this.findings,
+    required this.correctFeedbackOverLimit,
   });
 
   final Map<String, WorldBtnShareV1> btnShareByWorld;
   final Map<String, int> checks;
   final Set<String> findings;
+  final Map<String, int> correctFeedbackOverLimit;
 
   Map<String, Object?> toBaselineJson() {
     final sortedWorlds = btnShareByWorld.keys.toList()..sort();
@@ -38,6 +42,15 @@ class CatalogQualityReportV1 {
 
 final _whitespacePattern = RegExp(r'\s+');
 const catalogDuplicateOptionLabelRuleV1 = '45.duplicate_option_label';
+const catalogActionQuestionRuleV1 = '46.action_question_options';
+const catalogCorrectFeedbackLengthRuleV1 = '47.correct_feedback_length';
+const catalogBankrollThresholdRuleV1 = '48.bankroll_threshold';
+const catalogCorrectFeedbackWordLimitV1 = 45;
+final _actionPairQuestion = RegExp(
+  r'\b(bet|check|call|fold|raise)(?:\s+(?:to\s+)?\d+(?:\.\d+)?\s*BB)?'
+  r'\s+or\s+(bet|check|call|fold|raise)(?:\s+(?:to\s+)?\d+(?:\.\d+)?\s*BB)?\s*\?',
+  caseSensitive: false,
+);
 final _jargonPattern = RegExp(
   r'\b(?:exploit(?:s|ed|ing|ative)?|loop|lever|transfer|baseline|villain|hero|heuristic|framework|calibration)\b',
   caseSensitive: false,
@@ -79,6 +92,9 @@ int _wordCount(String text) {
   if (trimmed.isEmpty) return 0;
   return trimmed.split(_whitespacePattern).where((w) => w.isNotEmpty).length;
 }
+
+int catalogCorrectFeedbackWordCountV1(Act0RunnerOptionV1 option) =>
+    _wordCount('${option.feedbackTitle} ${option.feedbackReason}');
 
 String _normalizedCopy(String text) =>
     text.trim().toLowerCase().replaceAll(_whitespacePattern, ' ');
@@ -152,6 +168,7 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
   final targetRows = rows ?? catalogTasks;
   final checks = <String, int>{};
   final findings = <String>{};
+  final correctFeedbackOverLimit = <String, int>{};
   void count(String rule) =>
       checks.update(rule, (n) => n + 1, ifAbsent: () => 1);
 
@@ -311,11 +328,46 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
           [...catalogTasks, ...rulesCheckCatalogTasks, ...day7CatalogTasks]) {
     auditCatalogNumericCopy(row, count: count, findings: findings);
     final task = row.task;
-    if (task.runner.options.length < 2) continue;
+    for (final (:surface, :buyIns) in catalogBankrollThresholdsV1(task)) {
+      const rule = catalogBankrollThresholdRuleV1;
+      count(rule);
+      if (buyIns != act0CashBankrollBuyInsV1) {
+        findings.add('$rule|${task.taskId}|$surface|$buyIns');
+      }
+    }
+    final options = task.runner.options;
+    final correct = options.where((option) => option.isCorrect);
+    for (final option in correct) {
+      count(catalogCorrectFeedbackLengthRuleV1);
+      final words = catalogCorrectFeedbackWordCountV1(option);
+      if (words > catalogCorrectFeedbackWordLimitV1) {
+        correctFeedbackOverLimit['${task.taskId}|${option.id}'] = words;
+      }
+    }
+    for (final match in _actionPairQuestion.allMatches(catalogQuestion(task))) {
+      final asked = {match[1]!.toLowerCase(), match[2]!.toLowerCase()};
+      count(catalogActionQuestionRuleV1);
+      final available = options.map((o) => catalogActionV1(o.label)).toSet();
+      for (final action in asked.where(
+        (action) => !available.contains(action),
+      )) {
+        findings.add(
+          '$catalogActionQuestionRuleV1|${task.taskId}|missing $action',
+        );
+      }
+      for (final option in correct) {
+        if (!asked.contains(catalogActionV1(option.label))) {
+          findings.add(
+            '$catalogActionQuestionRuleV1|${task.taskId}|unasked answer ${option.id}',
+          );
+        }
+      }
+    }
+    if (options.length < 2) continue;
     const rule = catalogDuplicateOptionLabelRuleV1;
     count(rule);
     final labels = <String>{};
-    for (final option in task.runner.options) {
+    for (final option in options) {
       final label = _normalizedCopy(option.label);
       if (!labels.add(label)) {
         findings.add('$rule|${task.taskId}|$label');
@@ -386,6 +438,7 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
     btnShareByWorld: btnShareByWorld,
     checks: checks,
     findings: findings,
+    correctFeedbackOverLimit: correctFeedbackOverLimit,
   );
 }
 

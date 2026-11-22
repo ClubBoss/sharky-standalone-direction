@@ -36,6 +36,95 @@ List<String> catalogWorldCodeFindingsV1(Act0LessonTaskV1 task) => [
     if (_worldCode.hasMatch(copy)) '${task.taskId}: $surface: $copy',
 ];
 
+const _bankrollAmount = r'(\d+(?:\.\d+)?|one hundred|[a-z]+(?:-[a-z]+)?)';
+const _buyInUnit = r'[-\s]+(?:full[-\s]+)?buy[-\s]?ins?\b';
+final _bankrollThresholdPatterns = [
+  RegExp(
+    r'\b(?:keep|maintain|set aside|at least|requires?|needs?|'
+            r'(?:buffer|floor|minimum|threshold|requirement|rule) (?:of|is|at))\s+' +
+        _bankrollAmount +
+        _buyInUnit +
+        r'(?!\s+(?:more|less|short|above|below)\b)',
+    caseSensitive: false,
+  ),
+  RegExp(
+    r'\b' +
+        _bankrollAmount +
+        _buyInUnit +
+        r'\s+(?:(?:course|cash-game|bankroll)\s+)?(?:rule|plan|floor|minimum|'
+            r'buffer|threshold|requirement|needs?|(?:is|are) (?:required|needed))\b',
+    caseSensitive: false,
+  ),
+  RegExp(
+    r'\bmove (?:up|down)\s+(?:at|below|under|with|when you (?:have|fall below))\s+' +
+        _bankrollAmount +
+        '(?:$_buyInUnit' +
+        r'|(?=\s+(?:at|for)\s+(?:the |your )?(?:current|next) stake\b))',
+    caseSensitive: false,
+  ),
+];
+
+const _bankrollNumberWords = {
+  'one': 1,
+  'two': 2,
+  'three': 3,
+  'four': 4,
+  'five': 5,
+  'six': 6,
+  'seven': 7,
+  'eight': 8,
+  'nine': 9,
+  'ten': 10,
+  'eleven': 11,
+  'twelve': 12,
+  'thirteen': 13,
+  'fourteen': 14,
+  'fifteen': 15,
+  'sixteen': 16,
+  'seventeen': 17,
+  'eighteen': 18,
+  'nineteen': 19,
+  'twenty': 20,
+  'thirty': 30,
+  'forty': 40,
+  'fifty': 50,
+  'sixty': 60,
+  'seventy': 70,
+  'eighty': 80,
+  'ninety': 90,
+  'one hundred': 100,
+};
+
+num? _readBankrollAmount(String amount) {
+  final numeric = num.tryParse(amount);
+  if (numeric != null) return numeric;
+  final parts = amount.toLowerCase().split('-');
+  if (!parts.every(_bankrollNumberWords.containsKey)) return null;
+  return parts.fold<int>(0, (sum, word) => sum + _bankrollNumberWords[word]!);
+}
+
+/// Checks policy thresholds rather than actual bankroll, losses or shortfalls.
+Iterable<({String surface, num buyIns})> catalogBankrollThresholdsV1(
+  Act0LessonTaskV1 task,
+) sync* {
+  for (final (surface, text) in [
+    ('title', task.title),
+    ('summary', task.summary ?? ''),
+    ('lesson title', task.runner.lessonTitle),
+    ('lesson subtitle', task.runner.lessonSubtitle),
+    ('hint', task.runner.hint),
+    ..._learnerCopy(task),
+  ]) {
+    for (final pattern in _bankrollThresholdPatterns) {
+      for (final match in pattern.allMatches(text)) {
+        if (_readBankrollAmount(match[1]!) case final buyIns?) {
+          yield (surface: surface, buyIns: buyIns);
+        }
+      }
+    }
+  }
+}
+
 typedef _Action = ({int index, String seat, String verb});
 
 List<String> _relativeTrailFindings(

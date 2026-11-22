@@ -6777,16 +6777,16 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: End the session
 
 TASK w11_y5d_stay_at_nl10 [drill] Choose a stake for the session
-CAPTION: Your bankroll is $475. A buy-in costs $10 at NL10 and $25 at NL25. Move up at 30 buy-ins for the next stake. Move down below 20 at the current stake.
+CAPTION: Your bankroll is $475. A full buy-in costs $10 at NL10 and $25 at NL25. Move up when you have 40 buy-ins for the next stake. Move down below 40 buy-ins at the current stake.
 Q: Which stake fits your bankroll rule?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 REASONING: principle bankroll_rule · alt choice_1 · edge processRule · stack_matters unknown · assumption none
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Stay at NL10 — Correct. At NL10 you have 47.5 buy-ins, above the 20-buy-in floor. NL25 requires $750 for 30 buy-ins, so stay at NL10.
-  - [wrong] Move up to NL25 — Look again. NL25 gives you 19 buy-ins at $475. Wait for $750 before moving up.
+  + [correct] Stay at NL10 — Correct. Stay at NL10. Your $475 buys 47.5 full buy-ins, above the 40-buy-in floor. Moving up to NL25 requires $1000.
+  - [wrong] Move up to NL25 — Look again. At NL25, $475 buys 19 full buy-ins. Wait until you have $1000 before moving up.
     BETTER ANSWER: Stay at NL10
-  - [wrong] Move down to NL5 — Look again. You move below NL10 when your bankroll falls under $200. With $475 you can stay.
+  - [wrong] Move down to NL5 — Look again. Move down from NL10 only below $400. Your $475 still covers the 40-buy-in floor.
     BETTER ANSWER: Stay at NL10
 
 TASK w11_y5d_top_up_to_100 [drill] Top up between hands
@@ -7350,7 +7350,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds · Preflop: HJ folds · Preflop: CO folds · Preflop: BTN folds · Preflop: SB raises to 20 BB · Preflop: BB calls 20 BB · Flop: SB checks · Flop: BB checks · Turn: SB bets 10 BB
   - [wrong] Fold — Call 10 BB has the higher expected value. Fold: SB gets 10 BB back and takes 40 BB. No river is played. Stacks You 80, SB 120. Call EV 2.27 BB; Fold 0. The earlier 20 BB is sunk. The 10 BB price needs 16.7%. With 9 clean hearts, your 20.5% chance earns about 2.27 BB more than a fold.
     BETTER ANSWER: Call 10 BB
-  + [correct] Call 10 BB — Correct decision. Judge the choice, not the result. River Td: SB receives 60 BB. Stacks You 70, SB 130. Call EV 2.27 BB; Fold 0. The earlier 20 BB is sunk. SB bets 10 BB with aces. Nine hearts win out of 44 unknown cards, so calling at 16.7% gains 2.27 BB over folding. On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.
+  + [correct] Call 10 BB — Correct. River Td: SB receives 60 BB. Stacks You 70, SB 130. SB bets 10 BB, so 9/44 beats 16.7% and calling gains 2.27 BB over folding. The earlier 20 BB is sunk.
 
 TASK asm05_new_known_holes_turn_call_40 [drill] Decision and outcome
 SUMMARY: New authored exercise. Six players started with 100 BB each, no ante or rake. Hero BB has Kh Qh; SB is known to hold As Ad. The deck is uniformly shuffled. The other four players were instructed to fold independently of their cards; their cards and burns are unknown and give no information. All prior actions and this bet are prescribed and give no additional card information. Compare call with fold only; raises are outside this exercise. After a call both players must check the river, with no more betting. Compare incremental expected value at this decision; the previous 20 BB is already spent in either case.
@@ -7362,7 +7362,7 @@ EFFECTIVE: SB 80
 REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 15.45454545 BB · stack_matters false · assumption SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. Raises are excluded. No ante or rake.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB As Ad stack 40 BB bet 40 BB | BB Kh Qh stack 80 BB
 TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds · Preflop: HJ folds · Preflop: CO folds · Preflop: BTN folds · Preflop: SB raises to 20 BB · Preflop: BB calls 20 BB · Flop: SB checks · Flop: BB checks · Turn: SB bets 40 BB
-  + [correct] Fold — Correct decision. Judge the choice, not the result. Fold: SB gets 40 BB back and takes 40 BB. No river is played. Stacks You 80, SB 120. Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk. SB bets 40 BB with aces. Nine hearts win out of 44 unknown cards, so the 33.3% price makes calling lose 15.45 BB.
+  + [correct] Fold — Correct. Fold: SB gets 40 BB back and takes 40 BB. No river is played. Stacks You 80, SB 120. SB bets 40 BB, so 9/44 misses 33.3% and calling loses 15.45 BB. The earlier 20 BB is sunk.
   - [wrong] Call 40 BB — Fold has the higher expected value. River 5h: You receive 120 BB. Stacks You 160, SB 40. Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk. The river heart came in once, but 35 of 44 cards still lose. This 40 BB call loses 15.45 BB on average.
     BETTER ANSWER: Fold
 
@@ -10750,7 +10750,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ calls 1 BB
 TASK spaced_review_w10_adjust_one_lever_board_cards_v1 [drill] Review decision
 DAY 7 FAMILY: board_cards
 CAPTION: CO calls 3 BB and 4 BB with weak kings and lower pairs. At 18 BB, those hands fold.
-Q: Bet or check?
+Q: Which bet size earns the most?
 HINT [hidden]: (none)
 TABLE: Turn | You As Ks | Board Kc 6h 3d 9s | Pot 6.5 BB | Seat UTG | Active utg | Decision utg | Facts one pair, top pair
 EFFECTIVE: CO 54.5
