@@ -252,16 +252,32 @@ typedef _DailyDefenseSpotV1 = ({String hand, double open, double equity});
 
 final _dailyDefenseSpotsV1 = {
   for (final seat in act0DefendOpeningSeatsV1)
-    seat: [
-      for (final hand in act0ChartHandsV1)
-        if (act0PreflopEquityTenthsV1(hand, seat) case final equity?)
-          // The folded SB leaves 0.5 BB and Hero's 1 BB is already posted.
-          for (var quarters = 8; quarters <= 24; quarters++)
-            if ((equity / 1000 - (quarters - 4) / (2 * quarters + 2)).abs()
-                case final edge when edge >= 0.002 && edge <= 0.05)
-              (hand: hand, open: quarters / 4, equity: equity / 1000),
-    ],
+    seat: _dailyDefenseSpotsForSeatV1(seat),
 };
+
+List<_DailyDefenseSpotV1> _dailyDefenseSpotsForSeatV1(Act0ChartSeatV1 opener) {
+  final seats = _day7SeatsV1.toSet();
+  final pricesByOpen = <double, double>{};
+  for (var quarters = 8; quarters <= 24; quarters++) {
+    final open = quarters / 4;
+    final amounts = Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      entries: _day7OpeningContributionsV1(opener.name, open),
+      startingStackBbBySeat: const {'bb': _day7DefaultStackBbV1},
+    ).amounts(seatIds: seats, actorSeatId: 'bb');
+    final due = amounts.toCallBb!;
+    pricesByOpen[open] = due / (amounts.potBb + due);
+  }
+
+  return [
+    for (final hand in act0ChartHandsV1)
+      if (act0PreflopEquityTenthsV1(hand, opener) case final equity?)
+        for (final price in pricesByOpen.entries)
+          if ((equity / 1000 - price.value).abs() case final edge
+              when edge >= 0.002 && edge <= 0.05)
+            (hand: hand, open: price.key, equity: equity / 1000),
+  ];
+}
 
 _DailyDealContentV1? _dailyDefendV1(math.Random rng) {
   final opener =
@@ -558,17 +574,17 @@ _DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
   final hero = ['hj', 'co', 'btn'][rng.nextInt(3)];
   final hand = cards(scenario.hand);
   final open = 2.5 + rng.nextInt(5) * .25;
-  // Each player put in the open size. The folded small blind adds 0.5 BB.
-  final flopPotQuarters = (4 * (2 * open + .5)).round();
-  final bet = (flopPotQuarters + rng.nextInt(flopPotQuarters + 1)) / 4;
   final base = _day7PostflopV1(
     hero,
     hand,
     cards(scenario.flop),
     openBb: open,
-    betBb: bet,
     showTurn: true,
   );
+  final flopPot = _dailyDealAmountsV1(base).potBb;
+  final flopPotQuarters = (4 * flopPot).round();
+  if (flopPotQuarters <= 0) return null;
+  final bet = (flopPotQuarters + rng.nextInt(flopPotQuarters + 1)) / 4;
   final table = _day7TableV1(
     hero: hero,
     hand: hand,
@@ -576,9 +592,17 @@ _DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
     actor: hero,
     board: base.boardCards,
     folded: _day7SeatsV1.where((seat) => seat != hero && seat != 'bb').toSet(),
-    entries: base.handContributions!.entries,
+    entries: [
+      ...base.handContributions!.entries,
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        bet,
+      ),
+    ],
     history: [
-      ...base.actionTrail.take(base.actionTrail.length - 1),
+      ...base.actionTrail,
       Act0ActionTrailItemV1(label: 'Flop: BB all-in ${_act0BbLabelV1(bet)}'),
     ],
     bets: {
@@ -591,13 +615,13 @@ _DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
     stacks: {'bb': open + bet},
   );
   final (potBb: pot, toCallBb: due) = _dailyDealAmountsV1(table);
-  if (due == null || due <= 0 || pot <= due) return null;
+  if (due == null || due <= 0) return null;
   final depth = act0EffectiveStacksV1(
     table.handContributions!,
     heroSeatId: hero,
     activeSeatIds: {hero, 'bb'},
   )['bb']!;
-  final spr = depth / (pot - due);
+  final spr = depth / flopPot;
   if (spr > 2) return null;
 
   final equity = _lowSprEquitiesV1[scenarioIndex];
@@ -612,7 +636,7 @@ _DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
     table: table,
     question: 'Call or fold to the flop all-in?',
     premise:
-        'At the start of the flop, the effective stack was ${_act0BbLabelV1(depth)} and the pot was ${_act0BbLabelV1(pot - due)} (SPR ${spr.toStringAsFixed(2)}). '
+        'At the start of the flop, the effective stack was ${_act0BbLabelV1(depth)} and the pot was ${_act0BbLabelV1(flopPot)} (SPR ${spr.toStringAsFixed(2)}). '
         'BB could shove with any of these equally likely hands: ${scenario.range.map(cards).join(' / ')}. '
         'Your equity against that range is $equityText.',
     preferred: calls ? 'Call' : 'Fold',

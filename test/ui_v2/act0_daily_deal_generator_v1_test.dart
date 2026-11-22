@@ -74,6 +74,19 @@ void main() {
           );
           expect(auditDecisionCopyV1(row), isEmpty, reason: id);
           expect(actorFlagsConsistent(table), isTrue, reason: id);
+          final netContributions = table.handContributions!.entries
+              .fold<double>(
+                0,
+                (sum, entry) =>
+                    entry.kind == Act0ContributionKindV1.uncalledReturn
+                    ? sum - entry.amountBb
+                    : sum + entry.amountBb,
+              );
+          expect(
+            double.parse(table.potLabel.split(' ')[1]),
+            netContributions,
+            reason: '$id pot must equal net contributions',
+          );
           final d = auditTableContributionsV1(id, 'generated', table);
           expect(
             d.where((result) => result.result != 'PASS'),
