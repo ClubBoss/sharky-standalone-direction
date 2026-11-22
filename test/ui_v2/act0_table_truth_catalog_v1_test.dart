@@ -88,14 +88,11 @@ void main() {
 
     expect(
       {for (final row in findings) row.invariant: row.result},
-      {
-        'D2.pot_feasibility': 'PASS',
-        'D3.to_call_completeness': 'NEEDS_SOURCE_CONTEXT',
-      },
+      {'D2.pot_feasibility': 'PASS', 'D3.to_call_completeness': 'FAIL'},
     );
   });
 
-  test('a played preflop pot without contributions keeps its source gap', () {
+  test('a played preflop pot without contributions fails', () {
     final source = Act0ShellStateV1.sample
         .worldById('world_9')
         .lessons
@@ -111,7 +108,7 @@ void main() {
     );
 
     expect(findings.map((row) => (row.invariant, row.result)), [
-      ('D2.pot_feasibility', 'NEEDS_SOURCE_CONTEXT'),
+      ('D2.pot_feasibility', 'FAIL'),
     ]);
   });
 
@@ -320,31 +317,18 @@ void main() {
             '$id: ${proof.where((row) => row.result != 'PASS').map((row) => row.key).join('\n')}',
       );
     }
-    final lateWorldTasks = Act0ShellStateV1.sample.worlds
-        .where((world) => world.worldNumber >= 9 && world.worldNumber <= 12)
-        .expand((world) => world.lessons)
-        .expand((lesson) => lesson.taskList)
-        .map((task) => task.taskId)
-        .toSet();
-    const lateMissingSource = {
-      'D2.pot_feasibility': <String>{},
-      'D3.to_call_completeness': <String>{},
-    };
-    for (final MapEntry(key: rule, value: missing)
-        in lateMissingSource.entries) {
-      final proof = rows.where(
-        (row) => lateWorldTasks.contains(row.taskId) && row.invariant == rule,
-      );
-      expect(proof.where((row) => row.result == 'FAIL'), isEmpty, reason: rule);
-      expect(
-        proof
-            .where((row) => row.result == 'NEEDS_SOURCE_CONTEXT')
-            .map((row) => row.taskId)
-            .toSet(),
-        missing,
-        reason: rule,
-      );
-    }
+    const contributionRules = {'D2.pot_feasibility', 'D3.to_call_completeness'};
+    expect(
+      rows
+          .where(
+            (row) =>
+                contributionRules.contains(row.invariant) &&
+                row.result != 'PASS',
+          )
+          .map((row) => row.key),
+      isEmpty,
+      reason: 'Every applicable pot and call price needs contribution proof.',
+    );
     const lateDecisionProof = {
       'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),

@@ -77,14 +77,10 @@ List<TableTruthRow> auditTableContributionsV1(
           'shown=${t.potLabel} from contributions=${amounts.potBb} BB',
         );
       } else {
-        rows.add(
-          TableTruthRow(
-            taskId,
-            variant,
-            'D2.pot_feasibility',
-            'NEEDS_SOURCE_CONTEXT',
-            'Contributions before ${ledger.fromStreet.name} are missing.',
-          ),
+        check(
+          'D2.pot_feasibility',
+          false,
+          'Contributions before ${ledger.fromStreet.name} are missing.',
         );
       }
       final due = amounts.toCallBb;
@@ -114,16 +110,12 @@ List<TableTruthRow> auditTableContributionsV1(
           unresolvedActorPrice ||
           checkUnpricedStreet) {
         if (sameStreet && due == null) {
-          rows.add(
-            TableTruthRow(
-              taskId,
-              variant,
-              'D3.to_call_completeness',
-              'NEEDS_SOURCE_CONTEXT',
-              actorSeatId == null
-                  ? 'The decision actor is missing.'
-                  : 'The remaining stack or a sufficient lower bound for $actorSeatId is missing.',
-            ),
+          check(
+            'D3.to_call_completeness',
+            false,
+            actorSeatId == null
+                ? 'The decision actor is missing.'
+                : 'The remaining stack or a sufficient lower bound for $actorSeatId is missing.',
           );
         } else {
           check(
@@ -143,29 +135,25 @@ List<TableTruthRow> auditTableContributionsV1(
       }
     }
   } else {
+    final shownPot = potTruthBbV1(t.potLabel.replaceFirst('Pot ', ''));
     final playedPreflopPot =
         t.scope == Act0TableScopeV1.playedHand &&
-        (potTruthBbV1(t.potLabel.replaceFirst('Pot ', '')) ?? 0) > 0;
-    if (t.streetLabel != 'Preflop' || playedPreflopPot)
-      rows.add(
-        TableTruthRow(
-          taskId,
-          variant,
-          'D2.pot_feasibility',
-          'NEEDS_SOURCE_CONTEXT',
-          'No complete contribution/ante ledger; visible current-street bets are not whole-pot inputs.',
-        ),
+        t.potLabel.isNotEmpty &&
+        shownPot != 0;
+    if (t.streetLabel != 'Preflop' || playedPreflopPot) {
+      check(
+        'D2.pot_feasibility',
+        false,
+        'No complete contribution/ante ledger; visible current-street bets are not whole-pot inputs.',
       );
-    if (t.toCallLabel.isNotEmpty)
-      rows.add(
-        TableTruthRow(
-          taskId,
-          variant,
-          'D3.to_call_completeness',
-          'NEEDS_SOURCE_CONTEXT',
-          'Need complete current-street commitments; missing chips do not identify an actor.',
-        ),
+    }
+    if (t.toCallLabel.isNotEmpty) {
+      check(
+        'D3.to_call_completeness',
+        false,
+        'Need complete current-street commitments; missing chips do not identify an actor.',
       );
+    }
   }
   return rows;
 }
