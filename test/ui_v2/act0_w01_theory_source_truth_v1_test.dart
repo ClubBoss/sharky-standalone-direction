@@ -1264,9 +1264,15 @@ void _newFreeCheckContextTests() {
           'wrong',
         ]);
         expect(task.runner.options.map((o) => o.feedbackReason), [
-          'Folding gives up the hand. Checking is free here.',
+          if (id == 'actions_check_drill')
+            'With no bet facing you, a check keeps you in for free. A fold takes you out of the hand.'
+          else
+            'Folding gives up the hand. Checking is free here.',
           'BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.',
-          'BB has put in no bet on this street. Trying to call misses the free check that keeps you in.',
+          if (id == 'actions_check_drill')
+            'BB checked, leaving no bet to match. Checking lets you stay in without adding chips.'
+          else
+            'BB has put in no bet on this street. Trying to call misses the free check that keeps you in.',
         ]);
         expect(table.scope, Act0TableScopeV1.playedHand);
         expect(table.playerCount, 6);
