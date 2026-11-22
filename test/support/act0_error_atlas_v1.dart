@@ -132,7 +132,19 @@ void registerAct0ErrorAtlasV1() {
     };
     const name = 'act0_catalog_quality_baseline_v1';
     final baseline = _fixture(name);
-    if (Platform.environment['G1_UPDATE_Y7_BASELINE'] == '1') {
+    const reasonsKey = 'c5_w1_w4_reasons_v1';
+    final earlyWorld = RegExp(r'^W[1-4]\|');
+    final earlyWorldConcepts = concepts.keys.where(earlyWorld.hasMatch).toSet();
+    final reasons = baseline[reasonsKey] as Map<String, dynamic>;
+    final regenerate = Platform.environment['G1_UPDATE_Y7_BASELINE'] == '1';
+    if (regenerate) {
+      reasons.removeWhere((key, _) => !earlyWorldConcepts.contains(key));
+    }
+    expect(reasons.keys.toSet(), earlyWorldConcepts, reason: reasonsKey);
+    for (final reason in reasons.entries) {
+      expect((reason.value as String).trim(), isNotEmpty, reason: reason.key);
+    }
+    if (regenerate) {
       baseline.addAll(current);
       const json = JsonEncoder.withIndent('  ');
       File(
