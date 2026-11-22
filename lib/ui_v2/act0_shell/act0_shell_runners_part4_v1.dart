@@ -946,7 +946,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   feedbackReason:
       "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
   table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ac Jc'),
+    heroCards: _act0LessonCardsV1('Ad Jd'),
     centerLabel: 'Read the seats',
   ),
   teachingSteps: const [],

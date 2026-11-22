@@ -4619,8 +4619,8 @@ TASK w7_6max_wider [drill] Checkpoint: act from first position
 CAPTION: Practice rule for A-J suited: raise to 2.5 BB with at most five players still to act. Otherwise fold.
 Q: You are first to act. What fits this table?
 HINT [theoryOnly]: Check the given limits before choosing.
-TABLE: Preflop | You Ac Jc | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
-SEATS: UTG Ac Jc stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TABLE: Preflop | You Ad Jd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
+SEATS: UTG Ad Jd stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] Fold — The rule allows a raise here. Five players remain in 6-max. Folding A-J suited passes up the chance to open a Strong hand and win the 1.5 BB in blinds.
     BETTER ANSWER: Raise to 2.5 BB
