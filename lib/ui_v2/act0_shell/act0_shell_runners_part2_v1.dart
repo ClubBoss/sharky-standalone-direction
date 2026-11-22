@@ -3850,10 +3850,17 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
     _world3PositionDisciplineRunner.table.copyWith(
       scope: Act0TableScopeV1.explanation,
       centerLabel: 'Same hand, seat changes',
-      handContributions: const Act0HandContributionsV1(
+      // The exercise moves the same Hero from UTG to CO. Keep the
+      // original Hero's starting stack when comparing the two positions.
+      handContributions: Act0HandContributionsV1(
         throughStreet: PokerStreet.preflop,
         entries: _act0LessonBlinds,
-        minimumStartingStackBbBySeat: {'co': 1},
+        startingStackBbBySeat: {
+          'co': _world3PositionDisciplineRunner
+              .table
+              .handContributions!
+              .startingStackBbBySeat['utg']!,
+        },
       ),
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
