@@ -203,6 +203,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
       'Your cards stay next to you. The shared cards go in the middle.',
   table: _meetTableRunner.table.copyWith(
     heroCards: _heroKtCards,
+    handContributions: _meetTableRunner.table.handContributions,
     actionTrail: [
       for (final item in _meetTableRunner.table.actionTrail)
         if (item.isNote)
@@ -279,6 +280,7 @@ final _firstTableGuideFindHeroRunner = _meetTableRunner.copyWith(
   feedbackReason: 'Look near the bottom for your two private cards.',
   table: _meetTableRunner.table.copyWith(
     heroCards: _heroKtCards,
+    handContributions: _meetTableRunner.table.handContributions,
     actionTrail: [
       for (final item in _meetTableRunner.table.actionTrail)
         if (item.isNote)
@@ -3848,6 +3850,18 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
     _world3PositionDisciplineRunner.table.copyWith(
       scope: Act0TableScopeV1.explanation,
       centerLabel: 'Same hand, seat changes',
+      // The exercise moves the same Hero from UTG to CO. Keep the
+      // original Hero's starting stack when comparing the two positions.
+      handContributions: Act0HandContributionsV1(
+        throughStreet: PokerStreet.preflop,
+        entries: _act0LessonBlinds,
+        startingStackBbBySeat: {
+          'co': _world3PositionDisciplineRunner
+              .table
+              .handContributions!
+              .startingStackBbBySeat['utg']!,
+        },
+      ),
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
         Act0CardStateV1(rank: 'T', suit: 'c'),

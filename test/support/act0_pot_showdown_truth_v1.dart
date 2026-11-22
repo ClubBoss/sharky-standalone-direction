@@ -44,6 +44,21 @@ double? potTruthBbV1(String? label) {
   return m == null ? null : double.parse(m.group(1)!);
 }
 
+final _splitPot = RegExp(
+  r'^Main\s+(\d+(?:\.\d+)?)\s*BB;\s*side\s+(\d+(?:\.\d+)?)\s*BB$',
+  caseSensitive: false,
+);
+
+({double main, double side})? potTruthSplitBbV1(String label) {
+  final match = _splitPot.firstMatch(label.trim());
+  return match == null
+      ? null
+      : (
+          main: double.parse(match.group(1)!),
+          side: double.parse(match.group(2)!),
+        );
+}
+
 class PotTruthActionV1 {
   const PotTruthActionV1(
     this.actor,
@@ -262,10 +277,7 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
   }
 
   // Declared main/side split: recompute from contributions and eligibility.
-  final split = RegExp(
-    r'^Main\s+(\d+(?:\.\d+)?)\s*BB;\s*side\s+(\d+(?:\.\d+)?)\s*BB$',
-    caseSensitive: false,
-  ).firstMatch(t.potLabel.trim());
+  final split = potTruthSplitBbV1(t.potLabel);
   if (split != null) {
     final shortIns = [
       for (final a in allIns)
@@ -282,8 +294,8 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
         main += c < level ? c : level;
         side += c > level ? c - level : 0;
       }
-      if ((main - double.parse(split.group(1)!)).abs() > 1e-9 ||
-          (side - double.parse(split.group(2)!)).abs() > 1e-9) {
+      if ((main - split.main).abs() > 1e-9 ||
+          (side - split.side).abs() > 1e-9) {
         bad('side_pot_amounts', 'computed main=$main side=$side');
       }
       final hero = t.seats.where((s) => s.isHero).firstOrNull;

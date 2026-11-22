@@ -92,6 +92,44 @@ void main() {
     );
   });
 
+  test(
+    'graded teaching frames fail when displayed amounts lose their ledger',
+    () {
+      for (final (id, rule) in [
+        ('button_advantage_button_recap', 'D2.pot_feasibility'),
+        ('what_poker_is_side_pot_intro', 'D2.pot_feasibility'),
+        (
+          'same_hand_different_seat_position_repair_same_hand_different_seat',
+          'D3.to_call_completeness',
+        ),
+      ]) {
+        final table = catalogTasks
+            .singleWhere((row) => row.task.taskId == id)
+            .task
+            .runner
+            .table;
+        final withoutLedger = table.copyWith(actionTrail: table.actionTrail);
+        expect(withoutLedger.handContributions, isNull);
+        expect(
+          auditTableContributionsV1(
+            id,
+            'decision',
+            table,
+          ).singleWhere((row) => row.invariant == rule).result,
+          'PASS',
+        );
+        expect(
+          auditTableContributionsV1(
+            id,
+            'decision',
+            withoutLedger,
+          ).singleWhere((row) => row.invariant == rule).result,
+          'FAIL',
+        );
+      }
+    },
+  );
+
   test('a played preflop pot without contributions fails', () {
     final source = Act0ShellStateV1.sample
         .worldById('world_9')
@@ -227,8 +265,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 178),
-      ('D3.to_call_completeness', 128),
+      ('D2.pot_feasibility', 218),
+      ('D3.to_call_completeness', 129),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -253,7 +291,7 @@ void main() {
     for (final (rule, count) in [
       (
         'D2.pot_feasibility',
-        118 +
+        119 +
             y5bNewChoicesV1.length -
             y5bFoundationTaskCountV1 +
             y5cTasksInWorldV1(7) +

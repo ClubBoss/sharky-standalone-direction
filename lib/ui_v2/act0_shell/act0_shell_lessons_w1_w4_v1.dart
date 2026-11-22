@@ -5175,6 +5175,42 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               streetLabel: 'Flop',
               boardCards: _flopA72Cards,
               potLabel: 'Pot 6 BB',
+              handContributions: const Act0HandContributionsV1(
+                throughStreet: PokerStreet.flop,
+                entries: [
+                  ..._act0LessonBlinds,
+                  Act0ContributionV1(
+                    PokerStreet.preflop,
+                    'utg',
+                    Act0ContributionKindV1.wager,
+                    1,
+                  ),
+                  Act0ContributionV1(
+                    PokerStreet.preflop,
+                    'hj',
+                    Act0ContributionKindV1.wager,
+                    1,
+                  ),
+                  Act0ContributionV1(
+                    PokerStreet.preflop,
+                    'co',
+                    Act0ContributionKindV1.wager,
+                    1,
+                  ),
+                  Act0ContributionV1(
+                    PokerStreet.preflop,
+                    'btn',
+                    Act0ContributionKindV1.wager,
+                    1,
+                  ),
+                  Act0ContributionV1(
+                    PokerStreet.preflop,
+                    'sb',
+                    Act0ContributionKindV1.wager,
+                    .5,
+                  ),
+                ],
+              ),
               centerLabel: 'First pass on the flop',
               seats: [
                 for (final seat in _world2PositionRecapRunner.table.seats)

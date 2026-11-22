@@ -6,7 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart'
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 
-import 'act0_pot_showdown_truth_v1.dart' show potTruthBbV1;
+import 'act0_pot_showdown_truth_v1.dart' show potTruthBbV1, potTruthSplitBbV1;
 
 class TableTruthRow {
   TableTruthRow(
@@ -54,7 +54,10 @@ List<TableTruthRow> auditTableContributionsV1(
   final ledger = t.handContributions;
   if (ledger != null) {
     try {
-      final actorSeatId = t.decisionSeatId ?? t.activeSeatId;
+      final actorSeatId =
+          t.scope == Act0TableScopeV1.playedHand || t.toCallLabel.isNotEmpty
+          ? t.decisionSeatId ?? t.activeSeatId
+          : null;
       final amounts = ledger.amounts(
         seatIds: t.seats
             .where((seat) => seat.isOccupied)
@@ -64,7 +67,10 @@ List<TableTruthRow> auditTableContributionsV1(
       );
       final sameStreet =
           t.streetLabel == pokerStreetToString(ledger.throughStreet);
-      final shownPot = potTruthBbV1(t.potLabel.replaceFirst('Pot ', ''));
+      final split = potTruthSplitBbV1(t.potLabel);
+      final shownPot = split == null
+          ? potTruthBbV1(t.potLabel.replaceFirst('Pot ', ''))
+          : split.main + split.side;
       final shownCall = potTruthBbV1(
         t.toCallLabel.replaceFirst('To call ', ''),
       );
@@ -136,11 +142,8 @@ List<TableTruthRow> auditTableContributionsV1(
     }
   } else {
     final shownPot = potTruthBbV1(t.potLabel.replaceFirst('Pot ', ''));
-    final playedPreflopPot =
-        t.scope == Act0TableScopeV1.playedHand &&
-        t.potLabel.isNotEmpty &&
-        shownPot != 0;
-    if (t.streetLabel != 'Preflop' || playedPreflopPot) {
+    final visiblePot = t.potLabel.isNotEmpty && shownPot != 0;
+    if (t.streetLabel != 'Preflop' || visiblePot) {
       check(
         'D2.pot_feasibility',
         false,
@@ -306,8 +309,16 @@ List<TableTruthRow> auditTableTruth() {
           final t = e.value;
           final v = e.key;
           if (t.scope != Act0TableScopeV1.playedHand) {
-            if (t.scope == Act0TableScopeV1.explanation &&
-                t.handContributions != null) {
+            final gradedAmount =
+                v == 'decision' &&
+                r.options.length >= 2 &&
+                (t.toCallLabel.isNotEmpty ||
+                    (t.potLabel.isNotEmpty &&
+                        potTruthBbV1(t.potLabel.replaceFirst('Pot ', '')) !=
+                            0));
+            if (gradedAmount ||
+                (t.scope == Act0TableScopeV1.explanation &&
+                    t.handContributions != null)) {
               rows.addAll(auditTableContributionsV1(task.taskId, v, t));
             }
             rows.add(
