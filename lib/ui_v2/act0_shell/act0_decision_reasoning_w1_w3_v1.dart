@@ -528,7 +528,7 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: 'raise',
     edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
     opponentRead:
-        "HJ can open suited broadways, weaker suited kings and pairs, and continue with a stronger subset to a reraise.",
+        "HJ can open KQ, stronger aces and pairs. Reraising risks more against the portion that continues.",
     stackMatters: false,
   ),
   'position_checkpoint_position_checkpoint_review': Act0DecisionReasoningV1(

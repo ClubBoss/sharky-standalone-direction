@@ -2832,7 +2832,7 @@ final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          "Call KJs on BTN because HJ can raise weaker suited hands and you see HJ’s decisions before yours. Reraising risks extra chips when better hands continue.",
+          "Call 2.5 BB with KJs because BTN acts after HJ on every later round. A reraise risks more when HJ continues with better hands such as KQ or strong aces.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',

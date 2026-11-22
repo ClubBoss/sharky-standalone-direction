@@ -410,7 +410,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with kings.',
       feedbackReason:
-          'With KK, raise to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling matches the first raise at 2.5 BB.',
+          "Raise KK to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling keeps the pot smaller against hands that would pay the raise.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
