@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_claims_v1.dart';
+import '../support/act0_catalog_learner_copy_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
@@ -115,6 +116,104 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 }
 
 void main() {
+  test('G1 relative seat copy and world codes across learner surfaces', () {
+    final rows = [
+      ...catalogTasks,
+      ...rulesCheckCatalogTasks,
+      ...day7CatalogTasks,
+    ];
+    expect(
+      rows.expand((row) => catalogRelativeSeatFindingsV1(row.task)),
+      isEmpty,
+    );
+    expect(rows.expand((row) => catalogWorldCodeFindingsV1(row.task)), isEmpty);
+  });
+
+  test('G1 rejects non-adjacent raise and out-of-order check claims', () {
+    for (final (id, source, display) in [
+      (
+        'hand_rankings_find_the_match',
+        'BTN raises to 2.75 BB',
+        'The player before you raises to 2.75 BB',
+      ),
+      (
+        'hand_rankings_compare_ace_straights',
+        'CO raises to 2.75 BB',
+        'The player before you raises to 2.75 BB',
+      ),
+      (
+        'hand_rankings_compare_ace_straights',
+        'CO checks',
+        'The player before you checks',
+      ),
+    ]) {
+      final row = _catalogRow(id);
+      final runner = row.task.runner;
+      expect(
+        runner.table.actionTrail.any((item) => item.label == source),
+        isTrue,
+      );
+      final task = _withRunner(
+        row,
+        runner.copyWith(
+          table: runner.table.copyWith(
+            handContributions: runner.table.handContributions,
+            actionTrail: [
+              for (final item in runner.table.actionTrail)
+                if (item.label == source)
+                  Act0ActionTrailItemV1(label: source, displayLabel: display)
+                else
+                  item,
+            ],
+          ),
+        ),
+      ).task;
+      expect(
+        catalogRelativeSeatFindingsV1(task),
+        isNotEmpty,
+        reason: '$id: $source',
+      );
+    }
+  });
+
+  test('G1 checks intervening action even when the seats are adjacent', () {
+    final row = _catalogRow('first_table_guide_first_decision');
+    final runner = row.task.runner;
+    expect(catalogRelativeSeatFindingsV1(row.task), isEmpty);
+    final task = _withRunner(
+      row,
+      runner.copyWith(
+        table: runner.table.copyWith(
+          handContributions: runner.table.handContributions,
+          actionTrail: [
+            ...runner.table.actionTrail,
+            const Act0ActionTrailItemV1(label: 'BTN folds'),
+          ],
+        ),
+      ),
+    ).task;
+    expect(catalogRelativeSeatFindingsV1(task), isNotEmpty);
+  });
+
+  test('G1 rejects internal world codes in learner copy', () {
+    final row = _catalogRow('w12_river_price_call');
+    final mutated = _withRunner(
+      row,
+      row.task.runner.copyWith(
+        caption: 'Recall the outs from W5.',
+        teachingSteps: const [
+          Act0TeachingStepV1(
+            title: 'River price',
+            body: 'Use W4’s call price.',
+          ),
+        ],
+        question: 'What did W12 ask?',
+        feedbackReason: 'We covered the call in W4.',
+      ),
+    ).task;
+    expect(catalogWorldCodeFindingsV1(mutated), hasLength(5));
+  });
+
   test('W1–W12 catalog snapshot', () {
     final fixture = File(_snapshotPath);
     final current = renderCatalogSnapshot();

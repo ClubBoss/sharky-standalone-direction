@@ -86,8 +86,12 @@ final _riverPriceLesson = RegExp(
   r'|\b(?:price|break.even|to call)\b[^.!?]{0,110}\briver\b',
 );
 
-final _namedW5Outs = RegExp(r"\bw5(?:['’]s)? (?:clean )?outs?\b");
-final _namedW4Price = RegExp(r"\bw4(?:['’]s)? (?:call )?price\b");
+final _outsWithAnotherCard = RegExp(
+  r'\b(?:clean )?outs?\b[^.!?]{0,80}\banother card\b',
+);
+final _callPriceFormula = RegExp(
+  r'\bcall price\b[^.!?]{0,120}\bdivide the call by the pot\b',
+);
 
 bool _linksTurnOutsAndRiverPrice(CatalogTask row) {
   final runner = row.task.runner;
@@ -102,15 +106,14 @@ bool _linksTurnOutsAndRiverPrice(CatalogTask row) {
     return true;
   }
 
-  // The approved river lesson names both previous lessons in one visible
-  // explanation. Its river board supplies the street for the W4 formula.
+  // The river board anchors the comparison with earlier streets. Require both
+  // the outs condition and the actual calculation in the same explanation.
   return visibleCopy
       .map(_norm)
       .any(
         (copy) =>
-            _namedW5Outs.hasMatch(copy) &&
-            _namedW4Price.hasMatch(copy) &&
-            copy.contains('another card') &&
+            _outsWithAnotherCard.hasMatch(copy) &&
+            _callPriceFormula.hasMatch(copy) &&
             copy.contains('river'),
       );
 }

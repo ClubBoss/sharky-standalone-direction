@@ -266,20 +266,33 @@ Act0RunnerStateV1 _w1WithNumericLabelsV1(
   );
 }
 
-// Use the names the opening lessons have explained in the visible history.
+// Keep the canonical trail for source consumers and anonymize only learner copy.
 Act0TableStateV1 _w1EarlySeatCopyV1(
   Act0TableStateV1 table, {
   required String opener,
+  bool adjacentOpener = false,
 }) => table.copyWith(
   handContributions: table.handContributions,
   actionTrail: [
     for (final action in table.actionTrail)
-      Act0ActionTrailItemV1(
-        label: action.label,
-        displayLabel: action.learnerLabel
-            .replaceAll(opener, 'The player before you')
-            .replaceAll(RegExp(r'\b(?:UTG|HJ|CO)\b'), 'An earlier player'),
-      ),
+      if (action.isNote)
+        action
+      else
+        Act0ActionTrailItemV1(
+          label: action.label,
+          displayLabel: action.learnerLabel
+              .replaceAllMapped(
+                RegExp('\\b$opener (raises|checks)\\b'),
+                (match) => switch (match[1]) {
+                  'raises' =>
+                    adjacentOpener
+                        ? 'The player before you raises'
+                        : 'Another player raises',
+                  _ => 'The raiser checks',
+                },
+              )
+              .replaceAll(RegExp(r'\b(?:UTG|HJ|CO)\b'), 'An earlier player'),
+        ),
   ],
 );
 
@@ -336,6 +349,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   table: _w1EarlySeatCopyV1(
     _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
     opener: 'HJ',
+    adjacentOpener: true,
   ),
   teachingSteps: const [
     Act0TeachingStepV1(
@@ -354,6 +368,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
   table: _w1EarlySeatCopyV1(
     _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
     opener: 'CO',
+    adjacentOpener: true,
   ),
   hintPolicy: Act0HintPolicyV1.hidden,
   teachingSteps: const [
