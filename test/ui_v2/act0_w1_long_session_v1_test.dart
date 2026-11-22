@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
@@ -1304,7 +1305,9 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 43 : (fullRoute ? 448 : 293);
+        final expectedCount = w7ToW8
+            ? 43
+            : (fullRoute ? 448 + wave6TaskDeltaV1 : 293);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

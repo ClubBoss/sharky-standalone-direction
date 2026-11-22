@@ -1,0 +1,5655 @@
+{
+  "previous": {
+    "w11_session_plan_intro": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_session_plan_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_plan_focus_choice": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_plan_focus_choice",
+        "drill",
+        "practice",
+        [
+          [
+            "many_focuses",
+            "Track six improvements at once",
+            false,
+            "wrong",
+            "One measurable focus for the whole session"
+          ],
+          [
+            "one_focus",
+            "One measurable focus for the whole session",
+            true,
+            "correct",
+            "One measurable focus for the whole session"
+          ],
+          [
+            "no_plan",
+            "No plan, just react",
+            false,
+            "suboptimal",
+            "One measurable focus for the whole session"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_plan_hj_open": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_plan_hj_open",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Raise to 2.5 BB"
+          ],
+          [
+            "raise",
+            "Raise to 2.5 BB",
+            true,
+            "correct",
+            "Raise to 2.5 BB"
+          ],
+          [
+            "limp",
+            "Limp for 1 BB",
+            false,
+            "wrong",
+            "Raise to 2.5 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_plan_avoid_overload": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_plan_avoid_overload",
+        "drill",
+        "practice",
+        [
+          [
+            "more_complexity",
+            "Add more tracking categories",
+            false,
+            "wrong",
+            "Narrow to one session goal next time"
+          ],
+          [
+            "repeat_none",
+            "Play the next session without a focus target",
+            false,
+            "wrong",
+            "Narrow to one session goal next time"
+          ],
+          [
+            "narrow_goal",
+            "Narrow to one session goal next time",
+            true,
+            "correct",
+            "Narrow to one session goal next time"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_plan_table_focus_transfer": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_plan_table_focus_transfer",
+        "drill",
+        "proveIt",
+        [
+          [
+            "one_focus_loop",
+            "Track only the blind-defense leak today",
+            true,
+            "correct",
+            "Track only the blind-defense leak today"
+          ],
+          [
+            "many_focuses_now",
+            "Track all leaks from the start",
+            false,
+            "wrong",
+            "Track only the blind-defense leak today"
+          ],
+          [
+            "no_focus_until_review",
+            "Play first and decide later",
+            false,
+            "wrong",
+            "Track only the blind-defense leak today"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 12,
+      "family": "transfer"
+    },
+    "w11_bankroll_set_limit": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_bankroll_set_limit",
+        "drill",
+        "practice",
+        [
+          [
+            "choice_1",
+            "5 chips",
+            false,
+            "wrong",
+            "10 chips"
+          ],
+          [
+            "choice_2",
+            "10 chips",
+            true,
+            "correct",
+            "10 chips"
+          ],
+          [
+            "choice_3",
+            "20 chips",
+            false,
+            "wrong",
+            "10 chips"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_bankroll_move_down": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_bankroll_move_down",
+        "drill",
+        "practice",
+        [
+          [
+            "choice_1",
+            "12 chips",
+            true,
+            "correct",
+            "12 chips"
+          ],
+          [
+            "choice_2",
+            "15 chips",
+            false,
+            "wrong",
+            "12 chips"
+          ],
+          [
+            "choice_3",
+            "24 chips",
+            false,
+            "wrong",
+            "12 chips"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_session_plan_recap": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_session_plan_recap",
+        "review",
+        "review",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w11_trigger_intro": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_trigger_overfold_blinds": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_overfold_blinds",
+        "drill",
+        "practice",
+        [
+          [
+            "threebarrel_all",
+            "Add turn barrels against the blinds too",
+            false,
+            "wrong",
+            "Widen late steals slightly"
+          ],
+          [
+            "widen_late_steal",
+            "Widen late steals slightly",
+            true,
+            "correct",
+            "Widen late steals slightly"
+          ],
+          [
+            "ignore_trigger",
+            "Wait one more orbit before using the trigger",
+            false,
+            "suboptimal",
+            "Widen late steals slightly"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_trigger_overcall_flop": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_overcall_flop",
+        "drill",
+        "practice",
+        [
+          [
+            "bluff_more",
+            "Probe with more bluffs first",
+            false,
+            "wrong",
+            "Bet value heavier and trim bluffs"
+          ],
+          [
+            "no_change",
+            "Wait to adjust until post-session review",
+            false,
+            "wrong",
+            "Bet value heavier and trim bluffs"
+          ],
+          [
+            "value_heavier",
+            "Bet value heavier and trim bluffs",
+            true,
+            "correct",
+            "Bet value heavier and trim bluffs"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_trigger_small_price_continue": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_small_price_continue",
+        "drill",
+        "practice",
+        [
+          [
+            "call_once",
+            "Call once in position",
+            true,
+            "correct",
+            "Call once in position"
+          ],
+          [
+            "fold_now",
+            "Fold now",
+            false,
+            "wrong",
+            "Call once in position"
+          ],
+          [
+            "raise_now",
+            "Raise for protection now",
+            false,
+            "suboptimal",
+            "Call once in position"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_trigger_bad_price_fold": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_bad_price_fold",
+        "drill",
+        "practice",
+        [
+          [
+            "call_top_pair",
+            "Call the top pair",
+            false,
+            "wrong",
+            "Fold the turn"
+          ],
+          [
+            "fold_turn",
+            "Fold the turn",
+            true,
+            "correct",
+            "Fold the turn"
+          ],
+          [
+            "jam_turn",
+            "Go all-in to deny equity",
+            false,
+            "wrong",
+            "Fold the turn"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_sb_ajo_vs_btn": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_sb_ajo_vs_btn",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Raise to 9 BB"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Raise to 9 BB"
+          ],
+          [
+            "raise",
+            "Raise to 9 BB",
+            true,
+            "correct",
+            "Raise to 9 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_sb_kjo_vs_btn": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_sb_kjo_vs_btn",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise to 9 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_bb_72o_vs_hj": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_bb_72o_vs_hj",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_trigger_recap": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_recap",
+        "review",
+        "review",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w11_review_loop_intro": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_loop_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_review_pick_leak": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_pick_leak",
+        "drill",
+        "practice",
+        [
+          [
+            "fix_everything",
+            "Tackle both leaks together in the next session",
+            false,
+            "wrong",
+            "Select one repeated leak as priority"
+          ],
+          [
+            "skip_review",
+            "Skip review and just play more volume",
+            false,
+            "wrong",
+            "Select one repeated leak as priority"
+          ],
+          [
+            "pick_priority",
+            "Select one repeated leak as priority",
+            true,
+            "correct",
+            "Select one repeated leak as priority"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_review_define_fix": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_define_fix",
+        "drill",
+        "practice",
+        [
+          [
+            "if_then_fix",
+            "If an opponent underbluffs, fold marginal bluff-catchers",
+            true,
+            "correct",
+            "If an opponent underbluffs, fold marginal bluff-catchers"
+          ],
+          [
+            "generic_fix",
+            "Play better rivers somehow",
+            false,
+            "wrong",
+            "If an opponent underbluffs, fold marginal bluff-catchers"
+          ],
+          [
+            "no_fix",
+            "Leave the river leak unwritten and move on",
+            false,
+            "wrong",
+            "If an opponent underbluffs, fold marginal bluff-catchers"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_multiway_turn_fold": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_multiway_turn_fold",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_first_in_seat": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_first_in_seat",
+        "drill",
+        "practice",
+        [
+          [
+            "utg",
+            "UTG",
+            false,
+            "wrong",
+            "HJ"
+          ],
+          [
+            "hj",
+            "HJ",
+            true,
+            "correct",
+            "HJ"
+          ],
+          [
+            "bb",
+            "BB",
+            false,
+            "wrong",
+            "HJ"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_short_spr": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_checkpoint_short_spr",
+        "drill",
+        "practice",
+        [
+          [
+            "pot",
+            "The pot",
+            false,
+            "wrong",
+            "Your stack"
+          ],
+          [
+            "short",
+            "Your stack",
+            true,
+            "correct",
+            "Your stack"
+          ],
+          [
+            "deep",
+            "CO’s stack",
+            false,
+            "wrong",
+            "Your stack"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_review_loop_recap": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_loop_recap",
+        "review",
+        "review",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w11_checkpoint_intro": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_checkpoint_plan_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_plan_line",
+        "drill",
+        "practice",
+        [
+          [
+            "complex_plan",
+            "Set a complex multi-phase improvement plan",
+            false,
+            "wrong",
+            "Set one low-friction focus target"
+          ],
+          [
+            "simple_focus",
+            "Set one low-friction focus target",
+            true,
+            "correct",
+            "Set one low-friction focus target"
+          ],
+          [
+            "no_objective",
+            "Play with no objective",
+            false,
+            "wrong",
+            "Set one low-friction focus target"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_trigger_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_trigger_line",
+        "drill",
+        "practice",
+        [
+          [
+            "all_trigger_actions",
+            "Use both trigger and review changes now",
+            false,
+            "wrong",
+            "Use one prepared live cue now"
+          ],
+          [
+            "ignore_triggers",
+            "Log the trigger and wait for review",
+            false,
+            "suboptimal",
+            "Use one prepared live cue now"
+          ],
+          [
+            "one_trigger_action",
+            "Use one prepared live cue now",
+            true,
+            "correct",
+            "Use one prepared live cue now"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_review_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_review_line",
+        "drill",
+        "practice",
+        [
+          [
+            "one_repair_output",
+            "Review one leak",
+            true,
+            "correct",
+            "Review one leak"
+          ],
+          [
+            "long_notes",
+            "Write long notes",
+            false,
+            "wrong",
+            "Review one leak"
+          ],
+          [
+            "skip_closeout",
+            "Skip closeout",
+            false,
+            "wrong",
+            "Review one leak"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_checkpoint_mixed_table_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_mixed_table_line",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_for_protection",
+            "Raise now for protection",
+            false,
+            "suboptimal",
+            "Call in position and keep the range wide"
+          ],
+          [
+            "call_in_position",
+            "Call in position and keep the range wide",
+            true,
+            "correct",
+            "Call in position and keep the range wide"
+          ],
+          [
+            "fold_to_pressure",
+            "Fold to the c-bet",
+            false,
+            "wrong",
+            "Call in position and keep the range wide"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_multiway_first_seat": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_multiway_first_seat",
+        "drill",
+        "practice",
+        [
+          [
+            "co",
+            "CO",
+            false,
+            "wrong",
+            "BB"
+          ],
+          [
+            "bb",
+            "BB",
+            true,
+            "correct",
+            "BB"
+          ],
+          [
+            "btn",
+            "BTN",
+            false,
+            "wrong",
+            "BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_turn_price": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_turn_price",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call"
+          ],
+          [
+            "call",
+            "Call",
+            true,
+            "correct",
+            "Call"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Call"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_multiway_value": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_multiway_value",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Raise"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Raise"
+          ],
+          [
+            "raise",
+            "Raise",
+            true,
+            "correct",
+            "Raise"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_review": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_review",
+        "review",
+        "proveIt",
+        [
+          [
+            "one_time_mastery",
+            "One large review block after the session",
+            false,
+            "wrong",
+            "A repeatable daily practice cycle"
+          ],
+          [
+            "content_only",
+            "Study another concept before applying it",
+            false,
+            "wrong",
+            "A repeatable daily practice cycle"
+          ],
+          [
+            "repeatable_loop",
+            "A repeatable daily practice cycle",
+            true,
+            "correct",
+            "A repeatable daily practice cycle"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 17,
+      "family": "transfer"
+    }
+  },
+  "current": {
+    "w11_session_plan_intro": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_session_plan_intro",
+        "theory",
+        "learn",
+        [
+          [
+            "one_clear_skill_to_watch",
+            "One clear skill to watch",
+            true,
+            "correct",
+            "One clear skill to watch"
+          ],
+          [
+            "six_skills_to_track_at_once",
+            "Six skills to track at once",
+            false,
+            "wrong",
+            "One clear skill to watch"
+          ],
+          [
+            "a_win_goal_for_the_day",
+            "A win goal for the day",
+            false,
+            "wrong",
+            "One clear skill to watch"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_bankroll_rule": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_bankroll_rule",
+        "drill",
+        "practice",
+        [
+          [
+            "250",
+            "$250",
+            false,
+            "wrong",
+            "$1,000"
+          ],
+          [
+            "100",
+            "$100",
+            false,
+            "wrong",
+            "$1,000"
+          ],
+          [
+            "1_000",
+            "$1,000",
+            true,
+            "correct",
+            "$1,000"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_plan_focus_choice": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_plan_focus_choice",
+        "drill",
+        "practice",
+        [
+          [
+            "profit_from_the_next_45_minutes",
+            "Profit from the next 45 minutes",
+            false,
+            "wrong",
+            "BB call price before each defense"
+          ],
+          [
+            "bb_call_price_before_each_defense",
+            "BB call price before each defense",
+            true,
+            "correct",
+            "BB call price before each defense"
+          ],
+          [
+            "blinds_bluffs_calls_and_bet_sizes",
+            "Blinds, bluffs, calls and bet sizes",
+            false,
+            "suboptimal",
+            "BB call price before each defense"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_bankroll_stake_choice": {
+      "identity": [
+        "world_11",
+        "session_plan_basics",
+        "w11_bankroll_stake_choice",
+        "drill",
+        "practice",
+        [
+          [
+            "nl5",
+            "NL5",
+            true,
+            "correct",
+            "NL5"
+          ],
+          [
+            "nl10",
+            "NL10",
+            false,
+            "wrong",
+            "NL5"
+          ],
+          [
+            "nl10_with_a_short_buy_in",
+            "NL10 with a short buy-in",
+            false,
+            "wrong",
+            "NL5"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_plan_avoid_overload": {
+      "identity": [
+        "world_11",
+        "session_plan_bankroll_followup",
+        "w11_plan_avoid_overload",
+        "drill",
+        "practice",
+        [
+          [
+            "four_rushed_bb_calls",
+            "Four rushed BB calls",
+            true,
+            "correct",
+            "Four rushed BB calls"
+          ],
+          [
+            "two_bad_river_calls",
+            "Two bad river calls",
+            false,
+            "suboptimal",
+            "Four rushed BB calls"
+          ],
+          [
+            "nine_errors_in_one_session",
+            "Nine errors in one session",
+            false,
+            "wrong",
+            "Four rushed BB calls"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_bankroll_move_down": {
+      "identity": [
+        "world_11",
+        "session_plan_bankroll_followup",
+        "w11_bankroll_move_down",
+        "drill",
+        "practice",
+        [
+          [
+            "stay_at_nl10_to_win_it_back",
+            "Stay at NL10 to win it back",
+            false,
+            "wrong",
+            "Move to NL5"
+          ],
+          [
+            "move_to_nl25_for_a_faster_win",
+            "Move to NL25 for a faster win",
+            false,
+            "wrong",
+            "Move to NL5"
+          ],
+          [
+            "move_to_nl5",
+            "Move to NL5",
+            true,
+            "correct",
+            "Move to NL5"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_plan_table_focus_transfer": {
+      "identity": [
+        "world_11",
+        "session_plan_bankroll_followup",
+        "w11_plan_table_focus_transfer",
+        "drill",
+        "proveIt",
+        [
+          [
+            "watch_six_leaks_and_play_a_full_session",
+            "Watch six leaks and play a full session",
+            false,
+            "wrong",
+            "Check BB call price, then review one hand"
+          ],
+          [
+            "play_with_no_cue_and_sort_it_out_later",
+            "Play with no cue and sort it out later",
+            false,
+            "suboptimal",
+            "Check BB call price, then review one hand"
+          ],
+          [
+            "check_bb_call_price_then_review_one_hand",
+            "Check BB call price, then review one hand",
+            true,
+            "correct",
+            "Check BB call price, then review one hand"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 12,
+      "family": "transfer"
+    },
+    "w11_session_plan_recap": {
+      "identity": [
+        "world_11",
+        "session_plan_bankroll_followup",
+        "w11_session_plan_recap",
+        "review",
+        "review",
+        [
+          [
+            "a_noted_choice_to_check_and_one_next_step",
+            "A noted choice to check and one next step",
+            true,
+            "correct",
+            "A noted choice to check and one next step"
+          ],
+          [
+            "a_profit_target_met",
+            "A profit target met",
+            false,
+            "wrong",
+            "A noted choice to check and one next step"
+          ],
+          [
+            "a_long_list_of_new_plans",
+            "A long list of new plans",
+            false,
+            "suboptimal",
+            "A noted choice to check and one next step"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w11_trigger_intro": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_intro",
+        "theory",
+        "learn",
+        [
+          [
+            "2",
+            "2",
+            true,
+            "correct",
+            "2"
+          ],
+          [
+            "6",
+            "6",
+            false,
+            "wrong",
+            "2"
+          ],
+          [
+            "12",
+            "12",
+            false,
+            "wrong",
+            "2"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_trigger_overfold_blinds": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_overfold_blinds",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_4_bb",
+            "Raise to 4 BB",
+            false,
+            "suboptimal",
+            "Raise to 2 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Raise to 2 BB"
+          ],
+          [
+            "raise_to_2_bb",
+            "Raise to 2 BB",
+            true,
+            "correct",
+            "Raise to 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_trigger_overcall_flop": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_overcall_flop",
+        "drill",
+        "practice",
+        [
+          [
+            "bet_4_bb",
+            "Bet 4 BB",
+            true,
+            "correct",
+            "Bet 4 BB"
+          ],
+          [
+            "check",
+            "Check",
+            false,
+            "suboptimal",
+            "Bet 4 BB"
+          ],
+          [
+            "bet_20_bb",
+            "Bet 20 BB",
+            false,
+            "wrong",
+            "Bet 4 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_trigger_small_price_continue": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_small_price_continue",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_10_bb",
+            "Raise to 10 BB",
+            false,
+            "suboptimal",
+            "Call 2 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 2 BB"
+          ],
+          [
+            "call_2_bb",
+            "Call 2 BB",
+            true,
+            "correct",
+            "Call 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_trigger_bad_price_fold": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_trigger_bad_price_fold",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call_8_bb",
+            "Call 8 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "all_in_to_32_5_bb",
+            "All-in to 32.5 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_multiway_first_seat": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_multiway_first_seat",
+        "drill",
+        "practice",
+        [
+          [
+            "co",
+            "CO",
+            false,
+            "wrong",
+            "BB"
+          ],
+          [
+            "bb",
+            "BB",
+            true,
+            "correct",
+            "BB"
+          ],
+          [
+            "btn",
+            "BTN",
+            false,
+            "wrong",
+            "BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_bb_defend_price": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_bb_defend_price",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_8_bb",
+            "Raise to 8 BB",
+            false,
+            "suboptimal",
+            "Call 1 BB"
+          ],
+          [
+            "call_1_bb",
+            "Call 1 BB",
+            true,
+            "correct",
+            "Call 1 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 1 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_sb_3bet_value": {
+      "identity": [
+        "world_11",
+        "table_trigger_reads",
+        "w11_sb_3bet_value",
+        "drill",
+        "practice",
+        [
+          [
+            "call_2_bb",
+            "Call 2 BB",
+            false,
+            "suboptimal",
+            "3-bet to 8 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "3-bet to 8 BB"
+          ],
+          [
+            "3_bet_to_8_bb",
+            "3-bet to 8 BB",
+            true,
+            "correct",
+            "3-bet to 8 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_sb_isolate_limp": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_sb_isolate_limp",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_4_bb",
+            "Raise to 4 BB",
+            true,
+            "correct",
+            "Raise to 4 BB"
+          ],
+          [
+            "call_0_5_bb",
+            "Call 0.5 BB",
+            false,
+            "suboptimal",
+            "Raise to 4 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Raise to 4 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_bb_isolate_limp": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_bb_isolate_limp",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_4_bb",
+            "Raise to 4 BB",
+            true,
+            "correct",
+            "Raise to 4 BB"
+          ],
+          [
+            "check",
+            "Check",
+            false,
+            "suboptimal",
+            "Raise to 4 BB"
+          ],
+          [
+            "all_in_to_48_bb",
+            "All-in to 48 BB",
+            false,
+            "wrong",
+            "Raise to 4 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_first_in_seat": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_first_in_seat",
+        "drill",
+        "practice",
+        [
+          [
+            "utg",
+            "UTG",
+            false,
+            "wrong",
+            "HJ"
+          ],
+          [
+            "hj",
+            "HJ",
+            true,
+            "correct",
+            "HJ"
+          ],
+          [
+            "bb",
+            "BB",
+            false,
+            "wrong",
+            "HJ"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_multiway_top_pair_fold": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_multiway_top_pair_fold",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call_18_bb",
+            "Call 18 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "all_in_to_52_5_bb",
+            "All-in to 52.5 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_multiway_dirty_outs": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_multiway_dirty_outs",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "suboptimal",
+            "Call 2.5 BB"
+          ],
+          [
+            "raise_to_10_bb",
+            "Raise to 10 BB",
+            false,
+            "wrong",
+            "Call 2.5 BB"
+          ],
+          [
+            "call_2_5_bb",
+            "Call 2.5 BB",
+            true,
+            "correct",
+            "Call 2.5 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_spr_low_overpair": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_spr_low_overpair",
+        "drill",
+        "practice",
+        [
+          [
+            "call_11_5_bb",
+            "Call 11.5 BB",
+            true,
+            "correct",
+            "Call 11.5 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 11.5 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_spr_high_top_pair": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_spr_high_top_pair",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call_9_bb",
+            "Call 9 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise_to_35_bb",
+            "Raise to 35 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_trigger_recap": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_trigger_recap",
+        "review",
+        "review",
+        [
+          [
+            "the_name_of_your_hand",
+            "The name of your hand",
+            false,
+            "wrong",
+            "Price and the player read"
+          ],
+          [
+            "price_and_the_player_read",
+            "Price and the player read",
+            true,
+            "correct",
+            "Price and the player read"
+          ],
+          [
+            "the_last_pot_you_won",
+            "The last pot you won",
+            false,
+            "wrong",
+            "Price and the player read"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w11_review_loop_intro": {
+      "identity": [
+        "world_11",
+        "table_trigger_multiway_and_spr",
+        "w11_review_loop_intro",
+        "theory",
+        "learn",
+        [
+          [
+            "bb_called_8_into_18_versus_a_tight_turn_range",
+            "BB called 8 into 18 versus a tight turn range",
+            true,
+            "correct",
+            "BB called 8 into 18 versus a tight turn range"
+          ],
+          [
+            "lost_a_big_pot_and_felt_bad",
+            "Lost a big pot and felt bad",
+            false,
+            "wrong",
+            "BB called 8 into 18 versus a tight turn range"
+          ],
+          [
+            "need_more_wins_next_time",
+            "Need more wins next time",
+            false,
+            "wrong",
+            "BB called 8 into 18 versus a tight turn range"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w11_review_pick_leak": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_pick_leak",
+        "drill",
+        "practice",
+        [
+          [
+            "the_single_missed_value_bet",
+            "The single missed value bet",
+            false,
+            "suboptimal",
+            "BB call price against strong bets"
+          ],
+          [
+            "the_largest_pot_you_won",
+            "The largest pot you won",
+            false,
+            "wrong",
+            "BB call price against strong bets"
+          ],
+          [
+            "bb_call_price_against_strong_bets",
+            "BB call price against strong bets",
+            true,
+            "correct",
+            "BB call price against strong bets"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_review_define_fix": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_define_fix",
+        "drill",
+        "practice",
+        [
+          [
+            "on_a_turn_raise_check_range_and_call_price",
+            "On a turn raise, check range and call price",
+            true,
+            "correct",
+            "On a turn raise, check range and call price"
+          ],
+          [
+            "play_tighter_after_a_loss",
+            "Play tighter after a loss",
+            false,
+            "wrong",
+            "On a turn raise, check range and call price"
+          ],
+          [
+            "win_back_the_cost_of_the_error",
+            "Win back the cost of the error",
+            false,
+            "wrong",
+            "On a turn raise, check range and call price"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_review_loop_recap": {
+      "identity": [
+        "world_11",
+        "post_session_review_loop",
+        "w11_review_loop_recap",
+        "review",
+        "review",
+        [
+          [
+            "an_unassisted_choice_in_a_new_hand",
+            "An unassisted choice in a new hand",
+            true,
+            "correct",
+            "An unassisted choice in a new hand"
+          ],
+          [
+            "a_replay_solved_with_a_hint",
+            "A replay solved with a hint",
+            false,
+            "wrong",
+            "An unassisted choice in a new hand"
+          ],
+          [
+            "a_win_after_the_old_mistake",
+            "A win after the old mistake",
+            false,
+            "wrong",
+            "An unassisted choice in a new hand"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w11_checkpoint_intro": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_intro",
+        "drill",
+        "learn",
+        [
+          [
+            "25",
+            "25%",
+            true,
+            "correct",
+            "25%"
+          ],
+          [
+            "33_3",
+            "33.3%",
+            false,
+            "wrong",
+            "25%"
+          ],
+          [
+            "50",
+            "50%",
+            false,
+            "wrong",
+            "25%"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "decision"
+    },
+    "w11_checkpoint_plan_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_plan_line",
+        "drill",
+        "practice",
+        [
+          [
+            "3_bet_to_9_bb",
+            "3-bet to 9 BB",
+            true,
+            "correct",
+            "3-bet to 9 BB"
+          ],
+          [
+            "call_2_bb",
+            "Call 2 BB",
+            false,
+            "suboptimal",
+            "3-bet to 9 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "3-bet to 9 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_trigger_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_trigger_line",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_12_bb",
+            "Raise to 12 BB",
+            false,
+            "suboptimal",
+            "Call 4 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 4 BB"
+          ],
+          [
+            "call_4_bb",
+            "Call 4 BB",
+            true,
+            "correct",
+            "Call 4 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w11_checkpoint_review_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_review_line",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_14_bb",
+            "Raise to 14 BB",
+            false,
+            "suboptimal",
+            "Call 4 BB"
+          ],
+          [
+            "call_4_bb",
+            "Call 4 BB",
+            true,
+            "correct",
+            "Call 4 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 4 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_checkpoint_mixed_table_line": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_mixed_table_line",
+        "drill",
+        "practice",
+        [
+          [
+            "check",
+            "Check",
+            false,
+            "suboptimal",
+            "Bet 7 BB"
+          ],
+          [
+            "all_in_to_26_bb",
+            "All-in to 26 BB",
+            false,
+            "wrong",
+            "Bet 7 BB"
+          ],
+          [
+            "bet_7_bb",
+            "Bet 7 BB",
+            true,
+            "correct",
+            "Bet 7 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w11_checkpoint_review": {
+      "identity": [
+        "world_11",
+        "real_play_transfer_checkpoint",
+        "w11_checkpoint_review",
+        "review",
+        "proveIt",
+        [
+          [
+            "call_10_bb",
+            "Call 10 BB",
+            true,
+            "correct",
+            "Call 10 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 10 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 17,
+      "family": "transfer"
+    }
+  },
+  "previousLearning": {
+    "w11_session_plan_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w11_plan_focus_choice": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "many_focuses",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "one_focus",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_plan",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_plan_hj_open": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "limp",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_plan_avoid_overload": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "more_complexity",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "repeat_none",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "narrow_goal",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_plan_table_focus_transfer": {
+      "rewardXp": 12,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "one_focus_loop",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "many_focuses_now",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_focus_until_review",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bankroll_set_limit": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "choice_1",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_2",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bankroll_move_down": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "choice_1",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_2",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_session_plan_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w11_trigger_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w11_trigger_overfold_blinds": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "threebarrel_all",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "widen_late_steal",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "ignore_trigger",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_overcall_flop": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "bluff_more",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_change",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "value_heavier",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_small_price_continue": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "call_once",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_now",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_now",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_bad_price_fold": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "call_top_pair",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_turn",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "jam_turn",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_sb_ajo_vs_btn": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_sb_kjo_vs_btn": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bb_72o_vs_hj": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w11_review_loop_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w11_review_pick_leak": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fix_everything",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "skip_review",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "pick_priority",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_review_define_fix": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "if_then_fix",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "generic_fix",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_fix",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_multiway_turn_fold": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_first_in_seat": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "utg",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "utg",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "hj",
+          "correct": true,
+          "quality": "correct",
+          "seat": "hj",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "bb",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_short_spr": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "pot",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "short",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "deep",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_review_loop_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w11_checkpoint_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w11_checkpoint_plan_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "complex_plan",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "simple_focus",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_objective",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_trigger_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "all_trigger_actions",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "ignore_triggers",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "one_trigger_action",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_review_line": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "one_repair_output",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "long_notes",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "skip_closeout",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_mixed_table_line": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_for_protection",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_in_position",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_to_pressure",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_multiway_first_seat": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "co",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "co",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": "bb",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "btn",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "btn",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_turn_price": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_multiway_value": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_review": {
+      "rewardXp": 17,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "one_time_mastery",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "content_only",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "repeatable_loop",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    }
+  },
+  "currentLearning": {
+    "w11_session_plan_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": [
+        {
+          "id": "one_clear_skill_to_watch",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "six_skills_to_track_at_once",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "a_win_goal_for_the_day",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bankroll_rule": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "250",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "100",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "1_000",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_plan_focus_choice": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "profit_from_the_next_45_minutes",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bb_call_price_before_each_defense",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "blinds_bluffs_calls_and_bet_sizes",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bankroll_stake_choice": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "nl5",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "nl10",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "nl10_with_a_short_buy_in",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_plan_avoid_overload": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "four_rushed_bb_calls",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "two_bad_river_calls",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "nine_errors_in_one_session",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bankroll_move_down": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "stay_at_nl10_to_win_it_back",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "move_to_nl25_for_a_faster_win",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "move_to_nl5",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_plan_table_focus_transfer": {
+      "rewardXp": 12,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "watch_six_leaks_and_play_a_full_session",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "play_with_no_cue_and_sort_it_out_later",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "check_bb_call_price_then_review_one_hand",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_session_plan_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": [
+        {
+          "id": "a_noted_choice_to_check_and_one_next_step",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "a_profit_target_met",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "a_long_list_of_new_plans",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": [
+        {
+          "id": "2",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "6",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "12",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_overfold_blinds": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "raise_to_4_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_overcall_flop": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "bet_4_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "check",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bet_20_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_small_price_continue": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_10_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_bad_price_fold": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_8_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_32_5_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_multiway_first_seat": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "co",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "co",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": "bb",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "btn",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "btn",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bb_defend_price": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "raise_to_8_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_1_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_sb_3bet_value": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "call_2_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "3_bet_to_8_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_sb_isolate_limp": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "raise_to_4_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_0_5_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_bb_isolate_limp": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "raise_to_4_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "check",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_48_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_first_in_seat": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "utg",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "utg",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "hj",
+          "correct": true,
+          "quality": "correct",
+          "seat": "hj",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": "bb",
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_multiway_top_pair_fold": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_18_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_52_5_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_multiway_dirty_outs": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_10_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_2_5_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_spr_low_overpair": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "call_11_5_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_spr_high_top_pair": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_9_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_35_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_trigger_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": [
+        {
+          "id": "the_name_of_your_hand",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "price_and_the_player_read",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_last_pot_you_won",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_review_loop_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": [
+        {
+          "id": "bb_called_8_into_18_versus_a_tight_turn_range",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "lost_a_big_pot_and_felt_bad",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "need_more_wins_next_time",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_review_pick_leak": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "the_single_missed_value_bet",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_largest_pot_you_won",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bb_call_price_against_strong_bets",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_review_define_fix": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "on_a_turn_raise_check_range_and_call_price",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "play_tighter_after_a_loss",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "win_back_the_cost_of_the_error",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_review_loop_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": [
+        {
+          "id": "an_unassisted_choice_in_a_new_hand",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "a_replay_solved_with_a_hint",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "a_win_after_the_old_mistake",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_intro": {
+      "rewardXp": 7,
+      "family": "decision",
+      "options": [
+        {
+          "id": "25",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "33_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "50",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_plan_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "3_bet_to_9_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_2_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_trigger_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "raise_to_12_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_4_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_review_line": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_14_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_4_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_mixed_table_line": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "check",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_26_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bet_7_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w11_checkpoint_review": {
+      "rewardXp": 17,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "call_10_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    }
+  },
+  "historicalCensus": [
+    {
+      "id": "w11_plan_focus_choice",
+      "world": "world_11",
+      "lesson": "session_plan_basics",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "many_focuses": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_focus_choice",
+          "choiceId": "many_focuses",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_plan": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_focus_choice",
+          "choiceId": "no_plan",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "many_focuses": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_measurable_session_focus",
+          "relationId": "foundation_replay/w11_plan_focus_choice/many_focuses",
+          "relationRevision": 1,
+          "sourceFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "targetFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_focus_choice",
+          "choiceId": "many_focuses",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_plan": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_measurable_session_focus",
+          "relationId": "foundation_replay/w11_plan_focus_choice/no_plan",
+          "relationRevision": 1,
+          "sourceFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "targetFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_focus_choice",
+          "choiceId": "no_plan",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_plan_avoid_overload",
+      "world": "world_11",
+      "lesson": "session_plan_basics",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "more_complexity": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_avoid_overload",
+          "choiceId": "more_complexity",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_avoid_overload",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "repeat_none": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_avoid_overload",
+          "choiceId": "repeat_none",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_avoid_overload",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "more_complexity": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_plan_avoid_overload",
+          "relationId": "foundation_replay/w11_plan_avoid_overload/more_complexity",
+          "relationRevision": 1,
+          "sourceFingerprint": "5952fcf3d559043e2ca1ab920c22e1ba3f9fbe986a81865628bff472070561da",
+          "targetFingerprint": "5952fcf3d559043e2ca1ab920c22e1ba3f9fbe986a81865628bff472070561da",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_avoid_overload",
+          "choiceId": "more_complexity",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_avoid_overload",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "repeat_none": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_plan_avoid_overload",
+          "relationId": "foundation_replay/w11_plan_avoid_overload/repeat_none",
+          "relationRevision": 1,
+          "sourceFingerprint": "5952fcf3d559043e2ca1ab920c22e1ba3f9fbe986a81865628bff472070561da",
+          "targetFingerprint": "5952fcf3d559043e2ca1ab920c22e1ba3f9fbe986a81865628bff472070561da",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_avoid_overload",
+          "choiceId": "repeat_none",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_avoid_overload",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_plan_table_focus_transfer",
+      "world": "world_11",
+      "lesson": "session_plan_basics",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "many_focuses_now": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_table_focus_transfer",
+          "choiceId": "many_focuses_now",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_table_focus_transfer",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_focus_until_review": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_table_focus_transfer",
+          "choiceId": "no_focus_until_review",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_table_focus_transfer",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "many_focuses_now": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_measurable_session_focus",
+          "relationId": "foundation_replay/w11_plan_table_focus_transfer/many_focuses_now",
+          "relationRevision": 1,
+          "sourceFingerprint": "e4cbead6b342503cb2fa1747d6615f316a702f768d637d5e74e83c283dc540a9",
+          "targetFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_table_focus_transfer",
+          "choiceId": "many_focuses_now",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_focus_until_review": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_measurable_session_focus",
+          "relationId": "foundation_replay/w11_plan_table_focus_transfer/no_focus_until_review",
+          "relationRevision": 1,
+          "sourceFingerprint": "e4cbead6b342503cb2fa1747d6615f316a702f768d637d5e74e83c283dc540a9",
+          "targetFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "session_plan_basics",
+          "sourceTaskId": "w11_plan_table_focus_transfer",
+          "choiceId": "no_focus_until_review",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_trigger_overfold_blinds",
+      "world": "world_11",
+      "lesson": "table_trigger_reads",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "threebarrel_all": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overfold_blinds",
+          "choiceId": "threebarrel_all",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overfold_blinds",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "ignore_trigger": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overfold_blinds",
+          "choiceId": "ignore_trigger",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overfold_blinds",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "threebarrel_all": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_overfold_blinds",
+          "relationId": "foundation_replay/w11_trigger_overfold_blinds/threebarrel_all",
+          "relationRevision": 1,
+          "sourceFingerprint": "f5dce80c3b5884c81b6ab097fd7ac42db1d1d372ad63dfc8491b2e0d4739bee9",
+          "targetFingerprint": "f5dce80c3b5884c81b6ab097fd7ac42db1d1d372ad63dfc8491b2e0d4739bee9",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overfold_blinds",
+          "choiceId": "threebarrel_all",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overfold_blinds",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "ignore_trigger": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_overfold_blinds",
+          "relationId": "foundation_replay/w11_trigger_overfold_blinds/ignore_trigger",
+          "relationRevision": 1,
+          "sourceFingerprint": "f5dce80c3b5884c81b6ab097fd7ac42db1d1d372ad63dfc8491b2e0d4739bee9",
+          "targetFingerprint": "f5dce80c3b5884c81b6ab097fd7ac42db1d1d372ad63dfc8491b2e0d4739bee9",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overfold_blinds",
+          "choiceId": "ignore_trigger",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overfold_blinds",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_trigger_overcall_flop",
+      "world": "world_11",
+      "lesson": "table_trigger_reads",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "bluff_more": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overcall_flop",
+          "choiceId": "bluff_more",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overcall_flop",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_change": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overcall_flop",
+          "choiceId": "no_change",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overcall_flop",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "bluff_more": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_overcall_flop",
+          "relationId": "foundation_replay/w11_trigger_overcall_flop/bluff_more",
+          "relationRevision": 1,
+          "sourceFingerprint": "b73c1d50a7e164fa77e17d4e1c677d7e6c20b8757ddafb733db0ee0bcab8df7c",
+          "targetFingerprint": "b73c1d50a7e164fa77e17d4e1c677d7e6c20b8757ddafb733db0ee0bcab8df7c",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overcall_flop",
+          "choiceId": "bluff_more",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overcall_flop",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_change": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_overcall_flop",
+          "relationId": "foundation_replay/w11_trigger_overcall_flop/no_change",
+          "relationRevision": 1,
+          "sourceFingerprint": "b73c1d50a7e164fa77e17d4e1c677d7e6c20b8757ddafb733db0ee0bcab8df7c",
+          "targetFingerprint": "b73c1d50a7e164fa77e17d4e1c677d7e6c20b8757ddafb733db0ee0bcab8df7c",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_overcall_flop",
+          "choiceId": "no_change",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_overcall_flop",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_trigger_small_price_continue",
+      "world": "world_11",
+      "lesson": "table_trigger_reads",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "fold_now": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_small_price_continue",
+          "choiceId": "fold_now",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "fold_check_call_raise",
+          "targetTaskId": "actions_call_drill",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        },
+        "raise_now": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_small_price_continue",
+          "choiceId": "raise_now",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "fold_check_call_raise",
+          "targetTaskId": "actions_call_drill",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        }
+      },
+      "current": {
+        "fold_now": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_small_price_continue",
+          "relationId": "foundation_replay/w11_trigger_small_price_continue/fold_now",
+          "relationRevision": 1,
+          "sourceFingerprint": "9feabe843e2372eaa5d89329fd94655d718db5ebbca1af6b2c9d74bb6ed16ffc",
+          "targetFingerprint": "9feabe843e2372eaa5d89329fd94655d718db5ebbca1af6b2c9d74bb6ed16ffc",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_small_price_continue",
+          "choiceId": "fold_now",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_small_price_continue",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        },
+        "raise_now": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_small_price_continue",
+          "relationId": "foundation_replay/w11_trigger_small_price_continue/raise_now",
+          "relationRevision": 1,
+          "sourceFingerprint": "9feabe843e2372eaa5d89329fd94655d718db5ebbca1af6b2c9d74bb6ed16ffc",
+          "targetFingerprint": "9feabe843e2372eaa5d89329fd94655d718db5ebbca1af6b2c9d74bb6ed16ffc",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_small_price_continue",
+          "choiceId": "raise_now",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_small_price_continue",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        }
+      }
+    },
+    {
+      "id": "w11_trigger_bad_price_fold",
+      "world": "world_11",
+      "lesson": "table_trigger_reads",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "call_top_pair": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_bad_price_fold",
+          "choiceId": "call_top_pair",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "fold_check_call_raise",
+          "targetTaskId": "actions_call_drill",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        },
+        "jam_turn": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_bad_price_fold",
+          "choiceId": "jam_turn",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "fold_check_call_raise",
+          "targetTaskId": "actions_call_drill",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        }
+      },
+      "current": {
+        "call_top_pair": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_bad_price_fold",
+          "relationId": "foundation_replay/w11_trigger_bad_price_fold/call_top_pair",
+          "relationRevision": 1,
+          "sourceFingerprint": "593c3b9ab396c758e7ac5ec110ac2209b2d29508d4751eeebc2b8616ee5cd4e1",
+          "targetFingerprint": "593c3b9ab396c758e7ac5ec110ac2209b2d29508d4751eeebc2b8616ee5cd4e1",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_bad_price_fold",
+          "choiceId": "call_top_pair",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_bad_price_fold",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        },
+        "jam_turn": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_trigger_bad_price_fold",
+          "relationId": "foundation_replay/w11_trigger_bad_price_fold/jam_turn",
+          "relationRevision": 1,
+          "sourceFingerprint": "593c3b9ab396c758e7ac5ec110ac2209b2d29508d4751eeebc2b8616ee5cd4e1",
+          "targetFingerprint": "593c3b9ab396c758e7ac5ec110ac2209b2d29508d4751eeebc2b8616ee5cd4e1",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "table_trigger_reads",
+          "sourceTaskId": "w11_trigger_bad_price_fold",
+          "choiceId": "jam_turn",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_11",
+          "targetLessonId": "table_trigger_reads",
+          "targetTaskId": "w11_trigger_bad_price_fold",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        }
+      }
+    },
+    {
+      "id": "w11_review_pick_leak",
+      "world": "world_11",
+      "lesson": "post_session_review_loop",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "fix_everything": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_pick_leak",
+          "choiceId": "fix_everything",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_pick_leak",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "skip_review": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_pick_leak",
+          "choiceId": "skip_review",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_pick_leak",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "fix_everything": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_review_leak",
+          "relationId": "foundation_replay/w11_review_pick_leak/fix_everything",
+          "relationRevision": 1,
+          "sourceFingerprint": "dab73fa0b475de2c387d4642e527d95bd0941dcb8f96cfd67e4c41b642bdf0e9",
+          "targetFingerprint": "dab73fa0b475de2c387d4642e527d95bd0941dcb8f96cfd67e4c41b642bdf0e9",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_pick_leak",
+          "choiceId": "fix_everything",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_pick_leak",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "skip_review": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_review_leak",
+          "relationId": "foundation_replay/w11_review_pick_leak/skip_review",
+          "relationRevision": 1,
+          "sourceFingerprint": "dab73fa0b475de2c387d4642e527d95bd0941dcb8f96cfd67e4c41b642bdf0e9",
+          "targetFingerprint": "dab73fa0b475de2c387d4642e527d95bd0941dcb8f96cfd67e4c41b642bdf0e9",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_pick_leak",
+          "choiceId": "skip_review",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_pick_leak",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_review_define_fix",
+      "world": "world_11",
+      "lesson": "post_session_review_loop",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "generic_fix": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_define_fix",
+          "choiceId": "generic_fix",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_define_fix",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_fix": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_define_fix",
+          "choiceId": "no_fix",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_define_fix",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "generic_fix": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_review_define_fix",
+          "relationId": "foundation_replay/w11_review_define_fix/generic_fix",
+          "relationRevision": 1,
+          "sourceFingerprint": "f98fec9c6ff07cdcd5e370ae3ef1cade60c954d9abec8c2351d184df05eefb82",
+          "targetFingerprint": "f98fec9c6ff07cdcd5e370ae3ef1cade60c954d9abec8c2351d184df05eefb82",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_define_fix",
+          "choiceId": "generic_fix",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_define_fix",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_fix": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_review_define_fix",
+          "relationId": "foundation_replay/w11_review_define_fix/no_fix",
+          "relationRevision": 1,
+          "sourceFingerprint": "f98fec9c6ff07cdcd5e370ae3ef1cade60c954d9abec8c2351d184df05eefb82",
+          "targetFingerprint": "f98fec9c6ff07cdcd5e370ae3ef1cade60c954d9abec8c2351d184df05eefb82",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "post_session_review_loop",
+          "sourceTaskId": "w11_review_define_fix",
+          "choiceId": "no_fix",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_define_fix",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_checkpoint_plan_line",
+      "world": "world_11",
+      "lesson": "real_play_transfer_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "complex_plan": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_plan_line",
+          "choiceId": "complex_plan",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_plan_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_objective": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_plan_line",
+          "choiceId": "no_objective",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_plan_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "complex_plan": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_measurable_session_focus",
+          "relationId": "foundation_replay/w11_checkpoint_plan_line/complex_plan",
+          "relationRevision": 1,
+          "sourceFingerprint": "d0f1e9e2925fa5a4371854a713826af50192b2b38952b9e6bf3aa1d943c3f6f9",
+          "targetFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_plan_line",
+          "choiceId": "complex_plan",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        },
+        "no_objective": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_measurable_session_focus",
+          "relationId": "foundation_replay/w11_checkpoint_plan_line/no_objective",
+          "relationRevision": 1,
+          "sourceFingerprint": "d0f1e9e2925fa5a4371854a713826af50192b2b38952b9e6bf3aa1d943c3f6f9",
+          "targetFingerprint": "faff4ab2ea122055c5f1ae8e96f29c8cc795012c087312ed62a7a0424b7a26a8",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_plan_line",
+          "choiceId": "no_objective",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "session_plan_basics",
+          "targetTaskId": "w11_plan_focus_choice",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_checkpoint_trigger_line",
+      "world": "world_11",
+      "lesson": "real_play_transfer_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "all_trigger_actions": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_trigger_line",
+          "choiceId": "all_trigger_actions",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_trigger_line",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "ignore_triggers": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_trigger_line",
+          "choiceId": "ignore_triggers",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_trigger_line",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "all_trigger_actions": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_checkpoint_trigger_line",
+          "relationId": "foundation_replay/w11_checkpoint_trigger_line/all_trigger_actions",
+          "relationRevision": 1,
+          "sourceFingerprint": "eeb30dce419ef8ef5e0cd2af62e19f9134d2b8d573f9a4dfabaf0e7c12d78700",
+          "targetFingerprint": "eeb30dce419ef8ef5e0cd2af62e19f9134d2b8d573f9a4dfabaf0e7c12d78700",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_trigger_line",
+          "choiceId": "all_trigger_actions",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_trigger_line",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "ignore_triggers": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_checkpoint_trigger_line",
+          "relationId": "foundation_replay/w11_checkpoint_trigger_line/ignore_triggers",
+          "relationRevision": 1,
+          "sourceFingerprint": "eeb30dce419ef8ef5e0cd2af62e19f9134d2b8d573f9a4dfabaf0e7c12d78700",
+          "targetFingerprint": "eeb30dce419ef8ef5e0cd2af62e19f9134d2b8d573f9a4dfabaf0e7c12d78700",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_trigger_line",
+          "choiceId": "ignore_triggers",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_trigger_line",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_checkpoint_review_line",
+      "world": "world_11",
+      "lesson": "real_play_transfer_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "long_notes": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review_line",
+          "choiceId": "long_notes",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_review_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        },
+        "skip_closeout": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review_line",
+          "choiceId": "skip_closeout",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_review_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "long_notes": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_review_leak",
+          "relationId": "foundation_replay/w11_checkpoint_review_line/long_notes",
+          "relationRevision": 1,
+          "sourceFingerprint": "f25c172d66159118db1beeb034a3004037f968ecf2dbd6f2622aecb583a961f1",
+          "targetFingerprint": "dab73fa0b475de2c387d4642e527d95bd0941dcb8f96cfd67e4c41b642bdf0e9",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review_line",
+          "choiceId": "long_notes",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_pick_leak",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        },
+        "skip_closeout": {
+          "schemaVersion": 1,
+          "goalId": "choose_one_review_leak",
+          "relationId": "foundation_replay/w11_checkpoint_review_line/skip_closeout",
+          "relationRevision": 1,
+          "sourceFingerprint": "f25c172d66159118db1beeb034a3004037f968ecf2dbd6f2622aecb583a961f1",
+          "targetFingerprint": "dab73fa0b475de2c387d4642e527d95bd0941dcb8f96cfd67e4c41b642bdf0e9",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review_line",
+          "choiceId": "skip_closeout",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "post_session_review_loop",
+          "targetTaskId": "w11_review_pick_leak",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    },
+    {
+      "id": "w11_checkpoint_mixed_table_line",
+      "world": "world_11",
+      "lesson": "real_play_transfer_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "raise_for_protection": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_mixed_table_line",
+          "choiceId": "raise_for_protection",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "what_poker_is",
+          "targetTaskId": "what_poker_is_table_read_recheck",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        },
+        "fold_to_pressure": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_mixed_table_line",
+          "choiceId": "fold_to_pressure",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "what_poker_is",
+          "targetTaskId": "what_poker_is_table_read_recheck",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        }
+      },
+      "current": {
+        "raise_for_protection": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_checkpoint_mixed_table_line",
+          "relationId": "foundation_replay/w11_checkpoint_mixed_table_line/raise_for_protection",
+          "relationRevision": 1,
+          "sourceFingerprint": "0749231a32b97dfd7b1cff9648261559d0b1df6b9c9b38c71563f40663b98346",
+          "targetFingerprint": "0749231a32b97dfd7b1cff9648261559d0b1df6b9c9b38c71563f40663b98346",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_mixed_table_line",
+          "choiceId": "raise_for_protection",
+          "result": "suboptimal",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_mixed_table_line",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        },
+        "fold_to_pressure": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_checkpoint_mixed_table_line",
+          "relationId": "foundation_replay/w11_checkpoint_mixed_table_line/fold_to_pressure",
+          "relationRevision": 1,
+          "sourceFingerprint": "0749231a32b97dfd7b1cff9648261559d0b1df6b9c9b38c71563f40663b98346",
+          "targetFingerprint": "0749231a32b97dfd7b1cff9648261559d0b1df6b9c9b38c71563f40663b98346",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_mixed_table_line",
+          "choiceId": "fold_to_pressure",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_mixed_table_line",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        }
+      }
+    },
+    {
+      "id": "w11_checkpoint_review",
+      "world": "world_11",
+      "lesson": "real_play_transfer_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "one_time_mastery": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review",
+          "choiceId": "one_time_mastery",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_review",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "content_only": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review",
+          "choiceId": "content_only",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_review",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      },
+      "current": {
+        "one_time_mastery": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_checkpoint_review",
+          "relationId": "foundation_replay/w11_checkpoint_review/one_time_mastery",
+          "relationRevision": 1,
+          "sourceFingerprint": "c5ff6f8a317ef9bb590e950074ad6b82a743fb19b7e49c1ea9a054edb43a2b17",
+          "targetFingerprint": "c5ff6f8a317ef9bb590e950074ad6b82a743fb19b7e49c1ea9a054edb43a2b17",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review",
+          "choiceId": "one_time_mastery",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_review",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        },
+        "content_only": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w11_checkpoint_review",
+          "relationId": "foundation_replay/w11_checkpoint_review/content_only",
+          "relationRevision": 1,
+          "sourceFingerprint": "c5ff6f8a317ef9bb590e950074ad6b82a743fb19b7e49c1ea9a054edb43a2b17",
+          "targetFingerprint": "c5ff6f8a317ef9bb590e950074ad6b82a743fb19b7e49c1ea9a054edb43a2b17",
+          "sourceWorldId": "world_11",
+          "sourceLessonId": "real_play_transfer_checkpoint",
+          "sourceTaskId": "w11_checkpoint_review",
+          "choiceId": "content_only",
+          "result": "incorrect",
+          "errorType": "misread_real_play_process",
+          "missedSignalId": "misread_real_play_process",
+          "missedSignalLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "skillAtomId": "real_play_process_transfer",
+          "skillLabel": "Misread session focus, table trigger, post-session review, or transfer process.",
+          "targetWorldId": "world_11",
+          "targetLessonId": "real_play_transfer_checkpoint",
+          "targetTaskId": "w11_checkpoint_review",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_real_play_process_transfer_misread_real_play_process"
+        }
+      }
+    }
+  ],
+  "previousAssessed": 26,
+  "previousWrong": 52
+}
