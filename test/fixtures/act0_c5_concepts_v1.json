@@ -1,0 +1,2489 @@
+{
+  "sources": [
+    "l0-audit/tools/concept_coverage.py: C",
+    "Concepts.md: owner tier M produced by l0-audit/tools/owner_concepts_tier.py"
+  ],
+  "coverage_patterns": {
+    "rules_hand_flow": "\\b(preflop|flop|turn|river)\\b",
+    "blinds": "\\bblinds?\\b",
+    "ante": "\\bantes?\\b",
+    "straddle": "\\bstraddl",
+    "button": "\\b(button|dealer)\\b",
+    "action_order": "\\b(acts? (first|last)|order of action|clockwise|action order|seat order)\\b",
+    "check": "\\b(you|player|BB|SB|BTN|CO|HJ|UTG|they|both|hero) checks?\\b|\\bcheck(s|ing)? (back|behind|through)|\\bcheck is\\b|\\bto check\\b",
+    "limp": "\\blimp",
+    "min_raise": "\\b(minimum raise|min-raise|smallest legal (re)?raise)\\b",
+    "all_in": "\\ball-in\\b",
+    "side_pot": "\\bside pots?\\b",
+    "split_pot": "\\b(split|chop)(s|ped)? (the )?pot|\\bsplit pot|\\btie\\b|\\bties\\b",
+    "showdown": "\\bshowdown",
+    "muck": "\\bmuck",
+    "rake": "\\brake\\b",
+    "hand_rankings": "\\b(hand rankings?|full house|four of a kind|straight flush|royal flush)\\b",
+    "kicker": "\\bkicker",
+    "broadway": "\\bbroadway",
+    "wheel": "\\bwheel\\b|A-2-3-4-5",
+    "pocket_pair": "\\bpocket pairs?\\b",
+    "suited_connectors": "\\bsuited connectors?\\b|\\bconnectors?\\b",
+    "top_pair": "\\btop pair",
+    "middle_pair": "\\b(middle|second) pair",
+    "bottom_pair": "\\bbottom pair",
+    "overpair": "\\boverpair",
+    "overcards": "\\bovercards?\\b",
+    "set_trips": "\\b(a set|the set|sets? of|flopped set|trips)\\b",
+    "two_pair": "\\btwo pair",
+    "nuts": "\\b(the nuts|nut flush|nut straight|nuts)\\b",
+    "made_vs_draw": "\\bmade hand",
+    "starting_hand_groups": "\\b(premium|strong|medium|weak) (hand|group|bucket)|\\bbuckets?\\b",
+    "starting_chart": "\\b(starting chart|opening row|first-in chart|hand chart)\\b",
+    "domination": "\\bdominat",
+    "suited_vs_offsuit": "\\b(suited|offsuit)\\b",
+    "open_raise": "\\b(open|opens|opening|first in|raise first)\\b",
+    "three_bet": "\\b3-bet|\\bthree-bet|\\breraise",
+    "four_bet": "\\b4-bet|\\bfour-bet",
+    "five_bet": "\\b5-bet",
+    "cold_call": "\\bcold[- ]call",
+    "squeeze": "\\bsqueez",
+    "isolation": "\\bisolat|\\biso-raise",
+    "steal": "\\bsteal",
+    "blind_defense": "\\bdefend",
+    "blind_vs_blind": "\\bblind (vs|versus|against) blind|\\bSB vs BB",
+    "position": "\\bposition\\b",
+    "ip_oop": "\\b(in position|out of position|IP|OOP)\\b",
+    "seats": "\\b(UTG|hijack|HJ|cutoff|CO)\\b",
+    "full_ring_6max": "\\b(6-max|full ring|nine-handed|9-max)\\b",
+    "pot_odds": "\\b(pot odds|call price|price)\\b",
+    "equity": "\\bequity|win chance|chance to win",
+    "outs": "\\bouts\\b|\\bclean out",
+    "rule_2_4": "\\brule of (2|4|two|four)|2 and 4",
+    "one_in_n": "\\b1 (time )?in \\d|\\bone (time )?in (two|three|four|five|six|seven|eight)",
+    "ev": "\\bEV\\b|expected value",
+    "implied_odds": "\\bimplied odds|\\bimplied\\b",
+    "reverse_implied": "\\breverse implied",
+    "fold_equity": "\\bfold equity",
+    "combos": "\\bcombos?\\b|\\bcombinations?\\b",
+    "mdf": "\\bMDF\\b|minimum defen[cs]e",
+    "alpha_breakeven_bluff": "\\balpha\\b|break-?even (bluff|frequency)",
+    "equity_realization": "\\brealiz(e|ation)",
+    "board_texture": "\\btexture|\\b(dry|wet) board",
+    "paired_board": "\\bpaired board",
+    "monotone": "\\bmonotone",
+    "two_tone": "\\btwo-tone",
+    "rainbow": "\\brainbow",
+    "connected_board": "\\bconnected board",
+    "flush_draw": "\\bflush draw",
+    "oesd": "\\bopen-ended|\\bOESD|two-way straight",
+    "gutshot": "\\bgutshot|\\binside straight",
+    "backdoor": "\\bbackdoor",
+    "combo_draw": "\\bcombo draw",
+    "value_bet": "\\bvalue[- ]bet|\\bfor value|\\b(get|earn|gain|miss|misses|extract) (more )?value|\\bvalue from",
+    "thin_value": "\\bthin value",
+    "bluff": "\\bbluff",
+    "semi_bluff": "\\bsemi-?bluff",
+    "protection": "\\bprotect|\\bfree card",
+    "bet_sizing": "\\b(half-pot|half pot|pot-size|third pot|one-third|bet size|sizing)",
+    "overbet": "\\boverbet",
+    "block_bet": "\\bblock(ing)? bet",
+    "cbet": "\\bc-?bet|continuation bet",
+    "delayed_cbet": "\\bdelayed c-?bet",
+    "barrel": "\\bbarrel",
+    "probe": "\\bprobe",
+    "donk": "\\bdonk|\\blead(s|ing)? (into|out)",
+    "check_raise": "\\bcheck-?raise",
+    "check_call": "\\bcheck-?call",
+    "float": "\\bfloat",
+    "slowplay": "\\bslow-?play|\\btrap",
+    "pot_control": "\\bpot control|\\bcontrol the pot",
+    "bluff_catcher": "\\bbluff-?catch",
+    "min_bet_raise_sizes": "\\braise to \\d|\\b3-bet to",
+    "range": "\\branges?\\b",
+    "range_advantage": "\\brange advantage",
+    "nut_advantage": "\\bnut advantage",
+    "capped_range": "\\bcapped",
+    "polarized": "\\bpolari[sz]|\\bmerged\\b|\\blinear",
+    "blockers": "\\bblockers?\\b|\\bremoves? combos|visible cards (change|remove)",
+    "hand_reading": "\\bmore likely|\\bless likely|\\brepresents?",
+    "initiative": "\\binitiative|\\bpreflop raiser|\\baggressor",
+    "effective_stack": "\\beffective stack",
+    "spr": "\\bSPR\\b|stack-to-pot",
+    "commitment": "\\bcommit",
+    "short_stack": "\\bshort[- ]stack|\\bshort stack",
+    "deep_stack": "\\bdeep stack|\\b200 ?BB",
+    "top_up": "\\btop up|\\brebuy|\\bre-buy",
+    "multiway": "\\bmultiway|\\bthree-way|\\bthree players see",
+    "heads_up": "\\bheads-?up",
+    "three_bet_pot": "\\b3-bet pot",
+    "mtt": "\\btournament",
+    "icm": "\\bICM\\b|\\brisk premium",
+    "bubble": "\\bbubble",
+    "m_ratio": "\\bM-ratio|\\bM zone|\\bM of\\b",
+    "push_fold": "\\bpush|\\bshove",
+    "final_table": "\\bfinal table",
+    "bounty": "\\bbount|\\bPKO|\\bknockout",
+    "satellite": "\\bsatellite",
+    "player_types": "\\b(nit|TAG|LAG|maniac|calling station|loose-passive|tight-aggressive|loose-aggressive|fish)\\b",
+    "exploit": "\\bexploit|\\badjust",
+    "gto": "\\bGTO\\b|\\bbalanc",
+    "hud_stats": "\\bHUD\\b|\\bVPIP|\\bPFR\\b",
+    "notes": "\\bnotes? on|\\bplayer notes|\\btake notes",
+    "tells": "\\b(a tell|physical tells?|timing tells?|live tells?|betting tells?|sizing tells?)\\b",
+    "table_talk": "\\btable talk",
+    "bankroll": "\\bbankroll",
+    "variance": "\\bvariance|\\bdownswing|\\bswing",
+    "tilt": "\\btilt",
+    "decision_quality": "\\bdecision quality|\\boutcome|\\bresults-?orient",
+    "session_plan": "\\bsession plan|\\bstop-?loss|\\bstop rule",
+    "table_selection": "\\btable selection|\\bgame selection",
+    "hand_review": "\\breview (your|a) hand|\\bpost-session|\\bhand history",
+    "winrate": "\\bbb/100|\\bwin ?rate",
+    "solver": "\\bsolver",
+    "mixed_strategy": "\\bmixed strateg|\\bfrequenc",
+    "zoom_fastfold": "\\bfast-?fold|\\bzoom",
+    "other_games": "\\bPLO\\b|\\bOmaha|\\bshort deck",
+    "live_poker": "\\blive poker|\\bcasino",
+    "etiquette": "\\bstring bet|\\bangle[- ]shoot|\\bact out of turn|\\betiquette",
+    "position_information": "\\b(more information|see .* act first)\\b"
+  },
+  "owner_concepts": [
+    {
+      "n": 1,
+      "name": "Что такое покер",
+      "aliases": [
+        "poker"
+      ]
+    },
+    {
+      "n": 2,
+      "name": "Цель игры: выиграть банк",
+      "aliases": [
+        "win the pot"
+      ]
+    },
+    {
+      "n": 3,
+      "name": "Что такое раздача",
+      "aliases": [
+        "hand"
+      ]
+    },
+    {
+      "n": 4,
+      "name": "Что такое банк / pot",
+      "aliases": [
+        "pot"
+      ]
+    },
+    {
+      "n": 5,
+      "name": "Что такое ставка / bet",
+      "aliases": [
+        "bet"
+      ]
+    },
+    {
+      "n": 6,
+      "name": "Что такое колл / call",
+      "aliases": [
+        "call"
+      ]
+    },
+    {
+      "n": 7,
+      "name": "Что такое рейз / raise",
+      "aliases": [
+        "raise"
+      ]
+    },
+    {
+      "n": 8,
+      "name": "Что такое фолд / fold",
+      "aliases": [
+        "fold"
+      ]
+    },
+    {
+      "n": 9,
+      "name": "Что такое чек / check",
+      "aliases": [
+        "check"
+      ]
+    },
+    {
+      "n": 10,
+      "name": "Что такое all-in",
+      "aliases": [
+        "all-in"
+      ]
+    },
+    {
+      "n": 11,
+      "name": "Что такое шоудаун",
+      "aliases": [
+        "showdown"
+      ]
+    },
+    {
+      "n": 12,
+      "name": "Что такое muck",
+      "aliases": [
+        "muck"
+      ]
+    },
+    {
+      "n": 13,
+      "name": "Что такое dealer button",
+      "aliases": [
+        "dealer button"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Что такое small blind",
+      "aliases": [
+        "small blind"
+      ]
+    },
+    {
+      "n": 15,
+      "name": "Что такое big blind",
+      "aliases": [
+        "big blind"
+      ]
+    },
+    {
+      "n": 16,
+      "name": "Почему блайнды двигаются",
+      "aliases": [
+        "blinds move"
+      ]
+    },
+    {
+      "n": 17,
+      "name": "Что такое анте",
+      "aliases": [
+        "ante"
+      ]
+    },
+    {
+      "n": 21,
+      "name": "Что такое side pot",
+      "aliases": [
+        "side pot"
+      ]
+    },
+    {
+      "n": 22,
+      "name": "Что происходит, если несколько игроков all-in",
+      "aliases": [
+        "multiple players all-in"
+      ]
+    },
+    {
+      "n": 23,
+      "name": "Как делится банк",
+      "aliases": [
+        "split the pot"
+      ]
+    },
+    {
+      "n": 24,
+      "name": "Что такое split pot",
+      "aliases": [
+        "split pot"
+      ]
+    },
+    {
+      "n": 25,
+      "name": "Что такое chopped pot",
+      "aliases": [
+        "chopped pot"
+      ]
+    },
+    {
+      "n": 26,
+      "name": "Что такое rake",
+      "aliases": [
+        "rake"
+      ]
+    },
+    {
+      "n": 27,
+      "name": "Чем cash game отличается от tournament",
+      "aliases": [
+        "cash game versus tournament"
+      ]
+    },
+    {
+      "n": 30,
+      "name": "Preflop",
+      "aliases": [
+        "preflop"
+      ]
+    },
+    {
+      "n": 31,
+      "name": "Flop",
+      "aliases": [
+        "flop"
+      ]
+    },
+    {
+      "n": 32,
+      "name": "Turn",
+      "aliases": [
+        "turn"
+      ]
+    },
+    {
+      "n": 33,
+      "name": "River",
+      "aliases": [
+        "river"
+      ]
+    },
+    {
+      "n": 34,
+      "name": "Showdown",
+      "aliases": [
+        "showdown"
+      ]
+    },
+    {
+      "n": 35,
+      "name": "Порядок действий preflop",
+      "aliases": [
+        "preflop action order"
+      ]
+    },
+    {
+      "n": 36,
+      "name": "Порядок действий postflop",
+      "aliases": [
+        "postflop action order"
+      ]
+    },
+    {
+      "n": 37,
+      "name": "Почему BB действует последним preflop, но раньше postflop",
+      "aliases": [
+        "bb acts last preflop"
+      ]
+    },
+    {
+      "n": 38,
+      "name": "Кто ходит первым на флопе",
+      "aliases": [
+        "acts first on the flop"
+      ]
+    },
+    {
+      "n": 39,
+      "name": "Кто ходит последним на флопе",
+      "aliases": [
+        "acts last on the flop"
+      ]
+    },
+    {
+      "n": 40,
+      "name": "Почему позиция важна",
+      "aliases": [
+        "position matters"
+      ]
+    },
+    {
+      "n": 41,
+      "name": "High card",
+      "aliases": [
+        "high card"
+      ]
+    },
+    {
+      "n": 42,
+      "name": "Pair",
+      "aliases": [
+        "pair"
+      ]
+    },
+    {
+      "n": 43,
+      "name": "Two pair",
+      "aliases": [
+        "two pair"
+      ]
+    },
+    {
+      "n": 44,
+      "name": "Three of a kind",
+      "aliases": [
+        "three of a kind"
+      ]
+    },
+    {
+      "n": 45,
+      "name": "Straight",
+      "aliases": [
+        "straight"
+      ]
+    },
+    {
+      "n": 46,
+      "name": "Flush",
+      "aliases": [
+        "flush"
+      ]
+    },
+    {
+      "n": 47,
+      "name": "Full house",
+      "aliases": [
+        "full house"
+      ]
+    },
+    {
+      "n": 48,
+      "name": "Four of a kind",
+      "aliases": [
+        "four of a kind"
+      ]
+    },
+    {
+      "n": 49,
+      "name": "Straight flush",
+      "aliases": [
+        "straight flush"
+      ]
+    },
+    {
+      "n": 50,
+      "name": "Royal flush",
+      "aliases": [
+        "royal flush"
+      ]
+    },
+    {
+      "n": 51,
+      "name": "Как сравниваются пары",
+      "aliases": [
+        "compare pairs"
+      ]
+    },
+    {
+      "n": 52,
+      "name": "Как сравниваются две пары",
+      "aliases": [
+        "compare two pair"
+      ]
+    },
+    {
+      "n": 53,
+      "name": "Как сравниваются кикеры",
+      "aliases": [
+        "compare kickers"
+      ]
+    },
+    {
+      "n": 54,
+      "name": "Как сравниваются фулл-хаусы",
+      "aliases": [
+        "compare full houses"
+      ]
+    },
+    {
+      "n": 55,
+      "name": "Как сравниваются флеши",
+      "aliases": [
+        "compare flushes"
+      ]
+    },
+    {
+      "n": 56,
+      "name": "Как сравниваются стриты",
+      "aliases": [
+        "compare straights"
+      ]
+    },
+    {
+      "n": 57,
+      "name": "Wheel straight: A-2-3-4-5",
+      "aliases": [
+        "wheel straight",
+        "a-2-3-4-5"
+      ]
+    },
+    {
+      "n": 58,
+      "name": "Broadway straight: T-J-Q-K-A",
+      "aliases": [
+        "broadway straight",
+        "t-j-q-k-a"
+      ]
+    },
+    {
+      "n": 59,
+      "name": "Что значит “board plays”",
+      "aliases": [
+        "board plays"
+      ]
+    },
+    {
+      "n": 60,
+      "name": "Когда рука делится",
+      "aliases": [
+        "split the hand"
+      ]
+    },
+    {
+      "n": 61,
+      "name": "Когда туз старший",
+      "aliases": [
+        "ace high"
+      ]
+    },
+    {
+      "n": 62,
+      "name": "Когда туз младший",
+      "aliases": [
+        "ace low"
+      ]
+    },
+    {
+      "n": 63,
+      "name": "Ошибки новичков при чтении доски",
+      "aliases": [
+        "misread the board"
+      ]
+    },
+    {
+      "n": 64,
+      "name": "Hole cards",
+      "aliases": [
+        "hole cards"
+      ]
+    },
+    {
+      "n": 65,
+      "name": "Community cards",
+      "aliases": [
+        "community cards"
+      ]
+    },
+    {
+      "n": 66,
+      "name": "Made hand",
+      "aliases": [
+        "made hand"
+      ]
+    },
+    {
+      "n": 67,
+      "name": "Draw",
+      "aliases": [
+        "draw"
+      ]
+    },
+    {
+      "n": 68,
+      "name": "Overcards",
+      "aliases": [
+        "overcards"
+      ]
+    },
+    {
+      "n": 69,
+      "name": "Underpair",
+      "aliases": [
+        "underpair"
+      ]
+    },
+    {
+      "n": 70,
+      "name": "Pocket pair",
+      "aliases": [
+        "pocket pair"
+      ]
+    },
+    {
+      "n": 71,
+      "name": "Top pair",
+      "aliases": [
+        "top pair"
+      ]
+    },
+    {
+      "n": 72,
+      "name": "Second pair",
+      "aliases": [
+        "second pair"
+      ]
+    },
+    {
+      "n": 73,
+      "name": "Middle pair",
+      "aliases": [
+        "middle pair"
+      ]
+    },
+    {
+      "n": 74,
+      "name": "Bottom pair",
+      "aliases": [
+        "bottom pair"
+      ]
+    },
+    {
+      "n": 75,
+      "name": "Overpair",
+      "aliases": [
+        "overpair"
+      ]
+    },
+    {
+      "n": 76,
+      "name": "Top kicker",
+      "aliases": [
+        "top kicker"
+      ]
+    },
+    {
+      "n": 77,
+      "name": "Weak kicker",
+      "aliases": [
+        "weak kicker"
+      ]
+    },
+    {
+      "n": 78,
+      "name": "Nut hand",
+      "aliases": [
+        "nut hand"
+      ]
+    },
+    {
+      "n": 80,
+      "name": "Relative hand strength",
+      "aliases": [
+        "relative hand strength"
+      ]
+    },
+    {
+      "n": 82,
+      "name": "Showdown value",
+      "aliases": [
+        "showdown value"
+      ]
+    },
+    {
+      "n": 83,
+      "name": "Bluff catcher",
+      "aliases": [
+        "bluff catcher"
+      ]
+    },
+    {
+      "n": 84,
+      "name": "Air",
+      "aliases": [
+        "air"
+      ]
+    },
+    {
+      "n": 85,
+      "name": "Trash hand",
+      "aliases": [
+        "trash hand"
+      ]
+    },
+    {
+      "n": 86,
+      "name": "Marginal made hand",
+      "aliases": [
+        "marginal made hand"
+      ]
+    },
+    {
+      "n": 87,
+      "name": "Vulnerable made hand",
+      "aliases": [
+        "vulnerable made hand"
+      ]
+    },
+    {
+      "n": 88,
+      "name": "Dominated hand",
+      "aliases": [
+        "dominated hand"
+      ]
+    },
+    {
+      "n": 90,
+      "name": "Rainbow board",
+      "aliases": [
+        "rainbow board"
+      ]
+    },
+    {
+      "n": 91,
+      "name": "Two-tone board",
+      "aliases": [
+        "two-tone board"
+      ]
+    },
+    {
+      "n": 92,
+      "name": "Monotone board",
+      "aliases": [
+        "monotone board"
+      ]
+    },
+    {
+      "n": 93,
+      "name": "Paired board",
+      "aliases": [
+        "paired board"
+      ]
+    },
+    {
+      "n": 94,
+      "name": "Double-paired board",
+      "aliases": [
+        "double-paired board"
+      ]
+    },
+    {
+      "n": 95,
+      "name": "Connected board",
+      "aliases": [
+        "connected board"
+      ]
+    },
+    {
+      "n": 96,
+      "name": "Disconnected board",
+      "aliases": [
+        "disconnected board"
+      ]
+    },
+    {
+      "n": 97,
+      "name": "Dry board",
+      "aliases": [
+        "dry board"
+      ]
+    },
+    {
+      "n": 98,
+      "name": "Wet board",
+      "aliases": [
+        "wet board"
+      ]
+    },
+    {
+      "n": 99,
+      "name": "Static board",
+      "aliases": [
+        "static board"
+      ]
+    },
+    {
+      "n": 100,
+      "name": "Dynamic board",
+      "aliases": [
+        "dynamic board"
+      ]
+    },
+    {
+      "n": 108,
+      "name": "Coordinated board",
+      "aliases": [
+        "coordinated board"
+      ]
+    },
+    {
+      "n": 118,
+      "name": "Gutshot",
+      "aliases": [
+        "gutshot"
+      ]
+    },
+    {
+      "n": 119,
+      "name": "Open-ended straight draw",
+      "aliases": [
+        "open-ended straight draw"
+      ]
+    },
+    {
+      "n": 121,
+      "name": "Flush draw",
+      "aliases": [
+        "flush draw"
+      ]
+    },
+    {
+      "n": 122,
+      "name": "Backdoor flush draw",
+      "aliases": [
+        "backdoor flush draw"
+      ]
+    },
+    {
+      "n": 123,
+      "name": "Backdoor straight draw",
+      "aliases": [
+        "backdoor straight draw"
+      ]
+    },
+    {
+      "n": 124,
+      "name": "Combo draw",
+      "aliases": [
+        "combo draw"
+      ]
+    },
+    {
+      "n": 127,
+      "name": "Nut flush draw",
+      "aliases": [
+        "nut flush draw"
+      ]
+    },
+    {
+      "n": 130,
+      "name": "Dirty outs",
+      "aliases": [
+        "dirty outs"
+      ]
+    },
+    {
+      "n": 131,
+      "name": "Clean outs",
+      "aliases": [
+        "clean outs"
+      ]
+    },
+    {
+      "n": 136,
+      "name": "UTG",
+      "aliases": [
+        "utg"
+      ]
+    },
+    {
+      "n": 137,
+      "name": "UTG+1",
+      "aliases": [
+        "utg+1"
+      ]
+    },
+    {
+      "n": 138,
+      "name": "LJ",
+      "aliases": [
+        "lj"
+      ]
+    },
+    {
+      "n": 139,
+      "name": "HJ",
+      "aliases": [
+        "hj"
+      ]
+    },
+    {
+      "n": 140,
+      "name": "CO",
+      "aliases": [
+        "co"
+      ]
+    },
+    {
+      "n": 141,
+      "name": "BTN",
+      "aliases": [
+        "btn"
+      ]
+    },
+    {
+      "n": 142,
+      "name": "SB",
+      "aliases": [
+        "sb"
+      ]
+    },
+    {
+      "n": 143,
+      "name": "BB",
+      "aliases": [
+        "bb"
+      ]
+    },
+    {
+      "n": 144,
+      "name": "EP / early position",
+      "aliases": [
+        "ep",
+        "early position"
+      ]
+    },
+    {
+      "n": 145,
+      "name": "MP / middle position",
+      "aliases": [
+        "mp",
+        "middle position"
+      ]
+    },
+    {
+      "n": 146,
+      "name": "LP / late position",
+      "aliases": [
+        "lp",
+        "late position"
+      ]
+    },
+    {
+      "n": 147,
+      "name": "In position",
+      "aliases": [
+        "in position"
+      ]
+    },
+    {
+      "n": 148,
+      "name": "Out of position",
+      "aliases": [
+        "out of position"
+      ]
+    },
+    {
+      "n": 152,
+      "name": "First to act",
+      "aliases": [
+        "first to act"
+      ]
+    },
+    {
+      "n": 153,
+      "name": "Closing the action",
+      "aliases": [
+        "closing the action"
+      ]
+    },
+    {
+      "n": 155,
+      "name": "Acting behind",
+      "aliases": [
+        "acting behind"
+      ]
+    },
+    {
+      "n": 156,
+      "name": "Players left to act",
+      "aliases": [
+        "players left to act"
+      ]
+    },
+    {
+      "n": 157,
+      "name": "Positional advantage",
+      "aliases": [
+        "positional advantage"
+      ]
+    },
+    {
+      "n": 158,
+      "name": "Positional disadvantage",
+      "aliases": [
+        "positional disadvantage"
+      ]
+    },
+    {
+      "n": 169,
+      "name": "Pocket pairs",
+      "aliases": [
+        "pocket pairs"
+      ]
+    },
+    {
+      "n": 170,
+      "name": "Suited connectors",
+      "aliases": [
+        "suited connectors"
+      ]
+    },
+    {
+      "n": 172,
+      "name": "Broadway hands",
+      "aliases": [
+        "broadway hands"
+      ]
+    },
+    {
+      "n": 173,
+      "name": "Offsuit broadways",
+      "aliases": [
+        "offsuit broadways"
+      ]
+    },
+    {
+      "n": 174,
+      "name": "Suited aces",
+      "aliases": [
+        "suited aces"
+      ]
+    },
+    {
+      "n": 175,
+      "name": "Offsuit aces",
+      "aliases": [
+        "offsuit aces"
+      ]
+    },
+    {
+      "n": 178,
+      "name": "Dominated broadways",
+      "aliases": [
+        "dominated broadways"
+      ]
+    },
+    {
+      "n": 179,
+      "name": "Trash offsuit hands",
+      "aliases": [
+        "trash offsuit hands"
+      ]
+    },
+    {
+      "n": 180,
+      "name": "Hand classes",
+      "aliases": [
+        "hand classes"
+      ]
+    },
+    {
+      "n": 185,
+      "name": "Suitedness",
+      "aliases": [
+        "suitedness"
+      ]
+    },
+    {
+      "n": 186,
+      "name": "Pair value",
+      "aliases": [
+        "pair value"
+      ]
+    },
+    {
+      "n": 189,
+      "name": "Open raise",
+      "aliases": [
+        "open raise"
+      ]
+    },
+    {
+      "n": 190,
+      "name": "Limp",
+      "aliases": [
+        "limp"
+      ]
+    },
+    {
+      "n": 192,
+      "name": "Isolation raise",
+      "aliases": [
+        "isolation raise"
+      ]
+    },
+    {
+      "n": 193,
+      "name": "Open size",
+      "aliases": [
+        "open size"
+      ]
+    },
+    {
+      "n": 194,
+      "name": "Position-based opening ranges",
+      "aliases": [
+        "position-based opening ranges"
+      ]
+    },
+    {
+      "n": 200,
+      "name": "RFI: raise first in",
+      "aliases": [
+        "rfi",
+        "raise first in"
+      ]
+    },
+    {
+      "n": 201,
+      "name": "Open-fold discipline",
+      "aliases": [
+        "open-fold discipline"
+      ]
+    },
+    {
+      "n": 202,
+      "name": "Why limping is usually weak",
+      "aliases": [
+        "why limping is usually weak"
+      ]
+    },
+    {
+      "n": 210,
+      "name": "Flat call",
+      "aliases": [
+        "flat call"
+      ]
+    },
+    {
+      "n": 213,
+      "name": "Defending BB",
+      "aliases": [
+        "defending bb"
+      ]
+    },
+    {
+      "n": 214,
+      "name": "Defending SB",
+      "aliases": [
+        "defending sb"
+      ]
+    },
+    {
+      "n": 215,
+      "name": "Calling on BTN",
+      "aliases": [
+        "calling on btn"
+      ]
+    },
+    {
+      "n": 216,
+      "name": "Calling in position",
+      "aliases": [
+        "calling in position"
+      ]
+    },
+    {
+      "n": 217,
+      "name": "Calling out of position",
+      "aliases": [
+        "calling out of position"
+      ]
+    },
+    {
+      "n": 218,
+      "name": "Set mining",
+      "aliases": [
+        "set mining"
+      ]
+    },
+    {
+      "n": 220,
+      "name": "Dominated hand trap",
+      "aliases": [
+        "dominated hand trap"
+      ]
+    },
+    {
+      "n": 227,
+      "name": "3-bet",
+      "aliases": [
+        "3-bet"
+      ]
+    },
+    {
+      "n": 228,
+      "name": "Value 3-bet",
+      "aliases": [
+        "value 3-bet"
+      ]
+    },
+    {
+      "n": 241,
+      "name": "3-bet or call decision",
+      "aliases": [
+        "3-bet or call decision"
+      ]
+    },
+    {
+      "n": 248,
+      "name": "4-bet",
+      "aliases": [
+        "4-bet"
+      ]
+    },
+    {
+      "n": 278,
+      "name": "SB completion",
+      "aliases": [
+        "sb completion"
+      ]
+    },
+    {
+      "n": 281,
+      "name": "SB raise-or-fold strategy",
+      "aliases": [
+        "sb raise-or-fold strategy"
+      ]
+    },
+    {
+      "n": 282,
+      "name": "BB defend frequency",
+      "aliases": [
+        "bb defend frequency"
+      ]
+    },
+    {
+      "n": 286,
+      "name": "BB defend vs small blind",
+      "aliases": [
+        "bb defend vs small blind"
+      ]
+    },
+    {
+      "n": 287,
+      "name": "Blind-versus-blind ranges",
+      "aliases": [
+        "blind-versus-blind ranges"
+      ]
+    },
+    {
+      "n": 288,
+      "name": "SB disadvantage postflop",
+      "aliases": [
+        "sb disadvantage postflop"
+      ]
+    },
+    {
+      "n": 289,
+      "name": "BB closing action advantage",
+      "aliases": [
+        "bb closing action advantage"
+      ]
+    },
+    {
+      "n": 291,
+      "name": "Steal",
+      "aliases": [
+        "steal"
+      ]
+    },
+    {
+      "n": 293,
+      "name": "Blind defense leaks",
+      "aliases": [
+        "blind defense leaks"
+      ]
+    },
+    {
+      "n": 294,
+      "name": "Overfolding blinds",
+      "aliases": [
+        "overfolding blinds"
+      ]
+    },
+    {
+      "n": 295,
+      "name": "Overcalling blinds",
+      "aliases": [
+        "overcalling blinds"
+      ]
+    },
+    {
+      "n": 296,
+      "name": "Stack size",
+      "aliases": [
+        "stack size"
+      ]
+    },
+    {
+      "n": 297,
+      "name": "Effective stack",
+      "aliases": [
+        "effective stack"
+      ]
+    },
+    {
+      "n": 298,
+      "name": "Deep stack",
+      "aliases": [
+        "deep stack"
+      ]
+    },
+    {
+      "n": 299,
+      "name": "Mid stack",
+      "aliases": [
+        "mid stack"
+      ]
+    },
+    {
+      "n": 300,
+      "name": "Short stack",
+      "aliases": [
+        "short stack"
+      ]
+    },
+    {
+      "n": 301,
+      "name": "Big blind measurement",
+      "aliases": [
+        "big blind measurement"
+      ]
+    },
+    {
+      "n": 302,
+      "name": "100bb play",
+      "aliases": [
+        "100bb play"
+      ]
+    },
+    {
+      "n": 309,
+      "name": "Stack-to-pot ratio",
+      "aliases": [
+        "stack-to-pot ratio"
+      ]
+    },
+    {
+      "n": 310,
+      "name": "SPR planning",
+      "aliases": [
+        "spr planning"
+      ]
+    },
+    {
+      "n": 311,
+      "name": "Low SPR",
+      "aliases": [
+        "low spr"
+      ]
+    },
+    {
+      "n": 312,
+      "name": "High SPR",
+      "aliases": [
+        "high spr"
+      ]
+    },
+    {
+      "n": 313,
+      "name": "Commitment threshold",
+      "aliases": [
+        "commitment threshold"
+      ]
+    },
+    {
+      "n": 314,
+      "name": "Pot commitment",
+      "aliases": [
+        "pot commitment"
+      ]
+    },
+    {
+      "n": 316,
+      "name": "Deep-stack implied odds",
+      "aliases": [
+        "deep-stack implied odds"
+      ]
+    },
+    {
+      "n": 317,
+      "name": "Deep-stack reverse implied odds",
+      "aliases": [
+        "deep-stack reverse implied odds"
+      ]
+    },
+    {
+      "n": 319,
+      "name": "Short-stack push/fold",
+      "aliases": [
+        "short-stack push/fold",
+        "short stack push/fold"
+      ]
+    },
+    {
+      "n": 323,
+      "name": "Overpair in low SPR",
+      "aliases": [
+        "overpair in low spr"
+      ]
+    },
+    {
+      "n": 324,
+      "name": "Top pair in low SPR",
+      "aliases": [
+        "top pair in low spr"
+      ]
+    },
+    {
+      "n": 325,
+      "name": "Set in high SPR",
+      "aliases": [
+        "set in high spr"
+      ]
+    },
+    {
+      "n": 334,
+      "name": "Pot odds",
+      "aliases": [
+        "pot odds"
+      ]
+    },
+    {
+      "n": 335,
+      "name": "Price to call",
+      "aliases": [
+        "price to call"
+      ]
+    },
+    {
+      "n": 336,
+      "name": "Break-even equity",
+      "aliases": [
+        "break-even equity"
+      ]
+    },
+    {
+      "n": 337,
+      "name": "Required equity",
+      "aliases": [
+        "required equity"
+      ]
+    },
+    {
+      "n": 338,
+      "name": "Risk/reward",
+      "aliases": [
+        "risk/reward",
+        "risk-reward"
+      ]
+    },
+    {
+      "n": 339,
+      "name": "Call profitability",
+      "aliases": [
+        "call profitability"
+      ]
+    },
+    {
+      "n": 340,
+      "name": "Fold profitability",
+      "aliases": [
+        "fold profitability"
+      ]
+    },
+    {
+      "n": 346,
+      "name": "Pot-size bet math",
+      "aliases": [
+        "pot-size bet math"
+      ]
+    },
+    {
+      "n": 347,
+      "name": "Half-pot bet math",
+      "aliases": [
+        "half-pot bet math"
+      ]
+    },
+    {
+      "n": 348,
+      "name": "Third-pot bet math",
+      "aliases": [
+        "third-pot bet math"
+      ]
+    },
+    {
+      "n": 350,
+      "name": "All-in call math",
+      "aliases": [
+        "all-in call math"
+      ]
+    },
+    {
+      "n": 351,
+      "name": "Counting outs",
+      "aliases": [
+        "counting outs"
+      ]
+    },
+    {
+      "n": 354,
+      "name": "Equity on flop",
+      "aliases": [
+        "equity on flop"
+      ]
+    },
+    {
+      "n": 355,
+      "name": "Equity on turn",
+      "aliases": [
+        "equity on turn"
+      ]
+    },
+    {
+      "n": 359,
+      "name": "Fold equity",
+      "aliases": [
+        "fold equity"
+      ]
+    },
+    {
+      "n": 360,
+      "name": "Implied odds",
+      "aliases": [
+        "implied odds"
+      ]
+    },
+    {
+      "n": 361,
+      "name": "Reverse implied odds",
+      "aliases": [
+        "reverse implied odds"
+      ]
+    },
+    {
+      "n": 362,
+      "name": "Direct odds",
+      "aliases": [
+        "direct odds"
+      ]
+    },
+    {
+      "n": 364,
+      "name": "Equity denial",
+      "aliases": [
+        "equity denial"
+      ]
+    },
+    {
+      "n": 368,
+      "name": "Equity vs range",
+      "aliases": [
+        "equity vs range"
+      ]
+    },
+    {
+      "n": 372,
+      "name": "Expected value",
+      "aliases": [
+        "expected value"
+      ]
+    },
+    {
+      "n": 373,
+      "name": "EV of call",
+      "aliases": [
+        "ev of call"
+      ]
+    },
+    {
+      "n": 374,
+      "name": "EV of bet",
+      "aliases": [
+        "ev of bet"
+      ]
+    },
+    {
+      "n": 377,
+      "name": "EV of fold",
+      "aliases": [
+        "ev of fold"
+      ]
+    },
+    {
+      "n": 385,
+      "name": "Chip EV",
+      "aliases": [
+        "chip ev"
+      ]
+    },
+    {
+      "n": 388,
+      "name": "Risk premium",
+      "aliases": [
+        "risk premium"
+      ]
+    },
+    {
+      "n": 393,
+      "name": "Betting for value",
+      "aliases": [
+        "betting for value"
+      ]
+    },
+    {
+      "n": 394,
+      "name": "Betting as bluff",
+      "aliases": [
+        "betting as bluff"
+      ]
+    },
+    {
+      "n": 395,
+      "name": "Betting for protection",
+      "aliases": [
+        "betting for protection"
+      ]
+    },
+    {
+      "n": 396,
+      "name": "Betting for equity denial",
+      "aliases": [
+        "betting for equity denial"
+      ]
+    },
+    {
+      "n": 408,
+      "name": "Checking with showdown value",
+      "aliases": [
+        "checking with showdown value"
+      ]
+    },
+    {
+      "n": 411,
+      "name": "Check-call",
+      "aliases": [
+        "check-call"
+      ]
+    },
+    {
+      "n": 412,
+      "name": "Check-raise",
+      "aliases": [
+        "check-raise"
+      ]
+    },
+    {
+      "n": 413,
+      "name": "Check-fold",
+      "aliases": [
+        "check-fold"
+      ]
+    },
+    {
+      "n": 414,
+      "name": "Check-back",
+      "aliases": [
+        "check-back"
+      ]
+    },
+    {
+      "n": 423,
+      "name": "Protection bet",
+      "aliases": [
+        "protection bet"
+      ]
+    },
+    {
+      "n": 427,
+      "name": "C-bet",
+      "aliases": [
+        "c-bet"
+      ]
+    },
+    {
+      "n": 429,
+      "name": "Small c-bet",
+      "aliases": [
+        "small c-bet"
+      ]
+    },
+    {
+      "n": 430,
+      "name": "Large c-bet",
+      "aliases": [
+        "large c-bet"
+      ]
+    },
+    {
+      "n": 435,
+      "name": "Flop c-bet",
+      "aliases": [
+        "flop c-bet"
+      ]
+    },
+    {
+      "n": 440,
+      "name": "Give up",
+      "aliases": [
+        "give up"
+      ]
+    },
+    {
+      "n": 441,
+      "name": "Board texture and c-bet",
+      "aliases": [
+        "board texture and c-bet"
+      ]
+    },
+    {
+      "n": 453,
+      "name": "Turn scare card",
+      "aliases": [
+        "turn scare card"
+      ]
+    },
+    {
+      "n": 454,
+      "name": "Turn blank",
+      "aliases": [
+        "turn blank"
+      ]
+    },
+    {
+      "n": 456,
+      "name": "Turn flush completing card",
+      "aliases": [
+        "turn flush completing card"
+      ]
+    },
+    {
+      "n": 457,
+      "name": "Turn straight completing card",
+      "aliases": [
+        "turn straight completing card"
+      ]
+    },
+    {
+      "n": 458,
+      "name": "Turn paired card",
+      "aliases": [
+        "turn paired card"
+      ]
+    },
+    {
+      "n": 470,
+      "name": "River value betting",
+      "aliases": [
+        "river value betting"
+      ]
+    },
+    {
+      "n": 473,
+      "name": "River bluff catching",
+      "aliases": [
+        "river bluff catching"
+      ]
+    },
+    {
+      "n": 477,
+      "name": "River check-call",
+      "aliases": [
+        "river check-call"
+      ]
+    },
+    {
+      "n": 478,
+      "name": "River check-fold",
+      "aliases": [
+        "river check-fold"
+      ]
+    },
+    {
+      "n": 483,
+      "name": "River showdown value",
+      "aliases": [
+        "river showdown value"
+      ]
+    },
+    {
+      "n": 495,
+      "name": "Range",
+      "aliases": [
+        "range"
+      ]
+    },
+    {
+      "n": 497,
+      "name": "Combo",
+      "aliases": [
+        "combo"
+      ]
+    },
+    {
+      "n": 498,
+      "name": "Hand class",
+      "aliases": [
+        "hand class"
+      ]
+    },
+    {
+      "n": 503,
+      "name": "Capped range",
+      "aliases": [
+        "capped range"
+      ]
+    },
+    {
+      "n": 514,
+      "name": "Continuing range",
+      "aliases": [
+        "continuing range"
+      ]
+    },
+    {
+      "n": 515,
+      "name": "Folding range",
+      "aliases": [
+        "folding range"
+      ]
+    },
+    {
+      "n": 520,
+      "name": "Range advantage",
+      "aliases": [
+        "range advantage"
+      ]
+    },
+    {
+      "n": 524,
+      "name": "16 combos of offsuit hand",
+      "aliases": [
+        "16 combos of offsuit hand"
+      ]
+    },
+    {
+      "n": 525,
+      "name": "4 combos of suited hand",
+      "aliases": [
+        "4 combos of suited hand"
+      ]
+    },
+    {
+      "n": 526,
+      "name": "6 combos of pocket pair",
+      "aliases": [
+        "6 combos of pocket pair"
+      ]
+    },
+    {
+      "n": 527,
+      "name": "Card removal",
+      "aliases": [
+        "card removal"
+      ]
+    },
+    {
+      "n": 528,
+      "name": "Blockers",
+      "aliases": [
+        "blockers"
+      ]
+    },
+    {
+      "n": 567,
+      "name": "Small bet",
+      "aliases": [
+        "small bet"
+      ]
+    },
+    {
+      "n": 568,
+      "name": "Medium bet",
+      "aliases": [
+        "medium bet"
+      ]
+    },
+    {
+      "n": 569,
+      "name": "Large bet",
+      "aliases": [
+        "large bet"
+      ]
+    },
+    {
+      "n": 570,
+      "name": "Pot-size bet",
+      "aliases": [
+        "pot-size bet"
+      ]
+    },
+    {
+      "n": 578,
+      "name": "Value sizing",
+      "aliases": [
+        "value sizing"
+      ]
+    },
+    {
+      "n": 579,
+      "name": "Bluff sizing",
+      "aliases": [
+        "bluff sizing"
+      ]
+    },
+    {
+      "n": 590,
+      "name": "Sizing by SPR",
+      "aliases": [
+        "sizing by spr"
+      ]
+    },
+    {
+      "n": 591,
+      "name": "Sizing by board texture",
+      "aliases": [
+        "sizing by board texture"
+      ]
+    },
+    {
+      "n": 686,
+      "name": "Tight-passive",
+      "aliases": [
+        "tight-passive"
+      ]
+    },
+    {
+      "n": 687,
+      "name": "Loose-passive",
+      "aliases": [
+        "loose-passive"
+      ]
+    },
+    {
+      "n": 688,
+      "name": "Tight-aggressive",
+      "aliases": [
+        "tight-aggressive"
+      ]
+    },
+    {
+      "n": 689,
+      "name": "Loose-aggressive",
+      "aliases": [
+        "loose-aggressive"
+      ]
+    },
+    {
+      "n": 690,
+      "name": "Maniac",
+      "aliases": [
+        "maniac"
+      ]
+    },
+    {
+      "n": 691,
+      "name": "Calling station",
+      "aliases": [
+        "calling station"
+      ]
+    },
+    {
+      "n": 692,
+      "name": "Nit",
+      "aliases": [
+        "nit"
+      ]
+    },
+    {
+      "n": 708,
+      "name": "Value bet thinner vs calling station",
+      "aliases": [
+        "value bet thinner vs calling station"
+      ]
+    },
+    {
+      "n": 709,
+      "name": "Bluff less vs calling station",
+      "aliases": [
+        "bluff less vs calling station"
+      ]
+    },
+    {
+      "n": 710,
+      "name": "Bluff more vs overfolder",
+      "aliases": [
+        "bluff more vs overfolder"
+      ]
+    },
+    {
+      "n": 711,
+      "name": "Call down wider vs overbluffer",
+      "aliases": [
+        "call down wider vs overbluffer"
+      ]
+    },
+    {
+      "n": 712,
+      "name": "Fold more vs underbluffer",
+      "aliases": [
+        "fold more vs underbluffer"
+      ]
+    },
+    {
+      "n": 715,
+      "name": "Isolate limpers wider",
+      "aliases": [
+        "isolate limpers wider"
+      ]
+    },
+    {
+      "n": 800,
+      "name": "Multiway pot basics",
+      "aliases": [
+        "multiway pot basics"
+      ]
+    },
+    {
+      "n": 802,
+      "name": "Bluffing less multiway",
+      "aliases": [
+        "bluffing less multiway"
+      ]
+    },
+    {
+      "n": 803,
+      "name": "Value thresholds multiway",
+      "aliases": [
+        "value thresholds multiway"
+      ]
+    },
+    {
+      "n": 815,
+      "name": "Limped pot",
+      "aliases": [
+        "limped pot"
+      ]
+    },
+    {
+      "n": 819,
+      "name": "Weak top pair multiway",
+      "aliases": [
+        "weak top pair multiway"
+      ]
+    },
+    {
+      "n": 841,
+      "name": "Blind levels",
+      "aliases": [
+        "blind levels"
+      ]
+    },
+    {
+      "n": 842,
+      "name": "Antes",
+      "aliases": [
+        "antes"
+      ]
+    },
+    {
+      "n": 843,
+      "name": "Stack measured in big blinds",
+      "aliases": [
+        "stack measured in big blinds"
+      ]
+    },
+    {
+      "n": 845,
+      "name": "Chip EV",
+      "aliases": [
+        "chip ev"
+      ]
+    },
+    {
+      "n": 847,
+      "name": "ICM",
+      "aliases": [
+        "icm"
+      ]
+    },
+    {
+      "n": 848,
+      "name": "Risk premium",
+      "aliases": [
+        "risk premium"
+      ]
+    },
+    {
+      "n": 866,
+      "name": "Push/fold",
+      "aliases": [
+        "push/fold",
+        "push-fold"
+      ]
+    },
+    {
+      "n": 872,
+      "name": "Open shove",
+      "aliases": [
+        "open shove"
+      ]
+    },
+    {
+      "n": 881,
+      "name": "Calling all-ins",
+      "aliases": [
+        "calling all-ins"
+      ]
+    },
+    {
+      "n": 889,
+      "name": "Bubble",
+      "aliases": [
+        "bubble"
+      ]
+    },
+    {
+      "n": 890,
+      "name": "In the money",
+      "aliases": [
+        "in the money"
+      ]
+    },
+    {
+      "n": 927,
+      "name": "100bb cash baseline",
+      "aliases": [
+        "100bb cash baseline"
+      ]
+    },
+    {
+      "n": 929,
+      "name": "Rake impact",
+      "aliases": [
+        "rake impact"
+      ]
+    },
+    {
+      "n": 945,
+      "name": "Stop-loss",
+      "aliases": [
+        "stop-loss"
+      ]
+    },
+    {
+      "n": 948,
+      "name": "Auto top-up",
+      "aliases": [
+        "auto top-up"
+      ]
+    },
+    {
+      "n": 1025,
+      "name": "Tilt",
+      "aliases": [
+        "tilt"
+      ]
+    },
+    {
+      "n": 1034,
+      "name": "Loss chasing",
+      "aliases": [
+        "loss chasing"
+      ]
+    },
+    {
+      "n": 1035,
+      "name": "Stop-loss discipline",
+      "aliases": [
+        "stop-loss discipline"
+      ]
+    },
+    {
+      "n": 1036,
+      "name": "Session quit rules",
+      "aliases": [
+        "session quit rules"
+      ]
+    },
+    {
+      "n": 1041,
+      "name": "Post-session review",
+      "aliases": [
+        "post-session review"
+      ]
+    },
+    {
+      "n": 1042,
+      "name": "Tilt triggers",
+      "aliases": [
+        "tilt triggers"
+      ]
+    },
+    {
+      "n": 1053,
+      "name": "Decision quality over result",
+      "aliases": [
+        "decision quality over result"
+      ]
+    },
+    {
+      "n": 1054,
+      "name": "Process orientation",
+      "aliases": [
+        "process orientation"
+      ]
+    },
+    {
+      "n": 1055,
+      "name": "Variance acceptance",
+      "aliases": [
+        "variance acceptance"
+      ]
+    },
+    {
+      "n": 1056,
+      "name": "Downswings",
+      "aliases": [
+        "downswings"
+      ]
+    },
+    {
+      "n": 1081,
+      "name": "Bankroll management",
+      "aliases": [
+        "bankroll management"
+      ]
+    },
+    {
+      "n": 1083,
+      "name": "Buy-in requirements",
+      "aliases": [
+        "buy-in requirements"
+      ]
+    },
+    {
+      "n": 1088,
+      "name": "Move-up rules",
+      "aliases": [
+        "move-up rules"
+      ]
+    },
+    {
+      "n": 1089,
+      "name": "Move-down rules",
+      "aliases": [
+        "move-down rules"
+      ]
+    },
+    {
+      "n": 1144,
+      "name": "Separating result from decision",
+      "aliases": [
+        "separating result from decision"
+      ]
+    },
+    {
+      "n": 1182,
+      "name": "Semi-bluff",
+      "aliases": [
+        "semi-bluff"
+      ]
+    },
+    {
+      "n": 1187,
+      "name": "Missed draw bluff",
+      "aliases": [
+        "missed draw bluff"
+      ]
+    },
+    {
+      "n": 1191,
+      "name": "Bluffing with equity",
+      "aliases": [
+        "bluffing with equity"
+      ]
+    },
+    {
+      "n": 1192,
+      "name": "Bluffing without equity",
+      "aliases": [
+        "bluffing without equity"
+      ]
+    },
+    {
+      "n": 1201,
+      "name": "Strong value",
+      "aliases": [
+        "strong value"
+      ]
+    },
+    {
+      "n": 1210,
+      "name": "Worse-hand calls",
+      "aliases": [
+        "worse-hand calls"
+      ]
+    },
+    {
+      "n": 1215,
+      "name": "Slowplay",
+      "aliases": [
+        "slowplay"
+      ]
+    },
+    {
+      "n": 1216,
+      "name": "Fast-play",
+      "aliases": [
+        "fast-play"
+      ]
+    },
+    {
+      "n": 1223,
+      "name": "Bluff catcher",
+      "aliases": [
+        "bluff catcher"
+      ]
+    },
+    {
+      "n": 1229,
+      "name": "Pot odds call",
+      "aliases": [
+        "pot odds call"
+      ]
+    },
+    {
+      "n": 1291,
+      "name": "Initiative",
+      "aliases": [
+        "initiative"
+      ]
+    },
+    {
+      "n": 1401,
+      "name": "Playing too many hands",
+      "aliases": [
+        "playing too many hands"
+      ]
+    },
+    {
+      "n": 1402,
+      "name": "Limping too much",
+      "aliases": [
+        "limping too much"
+      ]
+    },
+    {
+      "n": 1403,
+      "name": "Calling too much preflop",
+      "aliases": [
+        "calling too much preflop"
+      ]
+    },
+    {
+      "n": 1404,
+      "name": "Ignoring position",
+      "aliases": [
+        "ignoring position"
+      ]
+    },
+    {
+      "n": 1405,
+      "name": "Overvaluing top pair",
+      "aliases": [
+        "overvaluing top pair"
+      ]
+    },
+    {
+      "n": 1406,
+      "name": "Chasing bad draws",
+      "aliases": [
+        "chasing bad draws"
+      ]
+    },
+    {
+      "n": 1407,
+      "name": "Not counting outs",
+      "aliases": [
+        "not counting outs"
+      ]
+    },
+    {
+      "n": 1408,
+      "name": "Calling without pot odds",
+      "aliases": [
+        "calling without pot odds"
+      ]
+    },
+    {
+      "n": 1409,
+      "name": "Bluffing calling stations",
+      "aliases": [
+        "bluffing calling stations"
+      ]
+    },
+    {
+      "n": 1410,
+      "name": "Not value betting enough",
+      "aliases": [
+        "not value betting enough"
+      ]
+    },
+    {
+      "n": 1411,
+      "name": "Slowplaying too much",
+      "aliases": [
+        "slowplaying too much"
+      ]
+    },
+    {
+      "n": 1412,
+      "name": "Betting random sizes",
+      "aliases": [
+        "betting random sizes"
+      ]
+    },
+    {
+      "n": 1413,
+      "name": "Ignoring stack depth",
+      "aliases": [
+        "ignoring stack depth"
+      ]
+    },
+    {
+      "n": 1414,
+      "name": "Ignoring board texture",
+      "aliases": [
+        "ignoring board texture"
+      ]
+    },
+    {
+      "n": 1415,
+      "name": "Not folding dominated hands",
+      "aliases": [
+        "not folding dominated hands"
+      ]
+    },
+    {
+      "n": 1416,
+      "name": "Results-oriented thinking",
+      "aliases": [
+        "results-oriented thinking"
+      ]
+    },
+    {
+      "n": 1417,
+      "name": "Tilt calling",
+      "aliases": [
+        "tilt calling"
+      ]
+    },
+    {
+      "n": 1418,
+      "name": "Fear of raising",
+      "aliases": [
+        "fear of raising"
+      ]
+    },
+    {
+      "n": 1419,
+      "name": "Fear of folding big hands",
+      "aliases": [
+        "fear of folding big hands"
+      ]
+    },
+    {
+      "n": 1420,
+      "name": "Playing emotionally",
+      "aliases": [
+        "playing emotionally"
+      ]
+    }
+  ]
+}

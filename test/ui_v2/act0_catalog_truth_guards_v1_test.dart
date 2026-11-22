@@ -23,6 +23,7 @@ import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_chip_labels_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
+import '../support/act0_error_atlas_v1.dart';
 import '../support/act0_practice_generator_v1.dart';
 import '../support/act0_shell_source_files_v1.dart';
 import '../support/act0_table_truth_v1.dart';
@@ -153,6 +154,7 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 
 void main() {
   registerAct0StartingChartChecksV1();
+  registerAct0ErrorAtlasV1();
   test('G1 relative seat copy and world codes across learner surfaces', () {
     final rows = [
       ...catalogTasks,
