@@ -18,6 +18,7 @@ import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_reasoning_audit_v1.dart';
+import '../support/act0_starting_chart_checks_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_chip_labels_v1.dart';
@@ -151,6 +152,7 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 }
 
 void main() {
+  registerAct0StartingChartChecksV1();
   test('G1 relative seat copy and world codes across learner surfaces', () {
     final rows = [
       ...catalogTasks,

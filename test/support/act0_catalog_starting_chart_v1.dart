@@ -1,8 +1,9 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
+
 import 'act0_catalog_poker_facts_v1.dart';
 
-const _ranks = pokerRanks;
 const _openingSeats = ['UTG', 'HJ', 'CO', 'BTN'];
 const startingChartGroups = {'premium', 'strong', 'medium', 'trash'};
 const startingChartActions = {'raise', 'fold', 'call', 'trash_fold'};
@@ -54,34 +55,6 @@ String renderStartingChartFacingRaise() =>
 
 typedef StartingChartRow = ({String group, List<String> seats});
 
-Set<String> _handCodes(String entry) {
-  final pairs = RegExp(r'^([AKQJT2-9])\1–([AKQJT2-9])\2$').firstMatch(entry);
-  if (pairs != null) {
-    return {
-      for (final rank
-          in _ranks
-              .substring(
-                _ranks.indexOf(pairs[1]!),
-                _ranks.indexOf(pairs[2]!) + 1,
-              )
-              .split(''))
-        '$rank$rank',
-    };
-  }
-
-  final hand = RegExp(
-    r'^([AKQJT2-9]{2})(?: (suited|offsuit))?$',
-  ).firstMatch(entry);
-  if (hand == null) throw FormatException('Unknown chart hand: $entry');
-  final ranks = hand[1]!;
-  if (ranks[0] == ranks[1]) return {ranks};
-  return switch (hand[2]) {
-    'suited' => {'${ranks}s'},
-    'offsuit' => {'${ranks}o'},
-    _ => {'${ranks}s', '${ranks}o'},
-  };
-}
-
 class CatalogStartingChart {
   const CatalogStartingChart(
     this.opening,
@@ -98,24 +71,27 @@ class CatalogStartingChart {
   final String weakGroup;
 
   factory CatalogStartingChart.foundation() {
-    final opening = <String, StartingChartRow>{};
-    for (final rule in _openingRules) {
-      final seats = _openingSeats
-          .skip(_openingSeats.indexOf(rule.firstSeat))
-          .toList();
-      for (final entry in rule.entries) {
-        for (final hand in _handCodes(entry)) {
-          if (opening.containsKey(hand)) {
-            throw FormatException('Overlapping rows for $hand');
-          }
-          opening[hand] = (group: _groupName(rule.group), seats: seats);
-        }
-      }
-    }
+    final opening = <String, StartingChartRow>{
+      for (final group in act0ChartGroupsV1.entries)
+        for (final hand in group.value)
+          hand: (
+            group: switch (group.key) {
+              Act0ChartGroupV1.premium => 'Premium',
+              Act0ChartGroupV1.strong => 'Strong',
+              _ => 'Medium',
+            },
+            seats: [
+              for (final seat in Act0ChartSeatV1.values)
+                if (act0ChartActionV1(hand, seat, Act0ChartPrefixV1.unopened) ==
+                    Act0ChartActionV1.raise)
+                  seat.name.toUpperCase(),
+            ],
+          ),
+    };
     return CatalogStartingChart(
       opening,
       _openerSeats.toSet(),
-      _callHands.toSet(),
+      act0ChartButtonCallsV1,
       _callerSeat,
       _weakGroup,
     );
@@ -141,12 +117,13 @@ class CatalogStartingChart {
               _openingSeats.indexOf(raisers.single)) {
         return null;
       }
-      if (group == 'Premium' || code == 'AKo') return 'raise';
-      if (group == 'Strong') return 'call';
-      if (group == 'Medium' && seat == caller && callHands.contains(code)) {
-        return 'call';
-      }
-      return 'fold';
+      return act0ChartActionV1(
+        code,
+        Act0ChartSeatV1.values.byName(seat.toLowerCase()),
+        raisers.single == 'HJ'
+            ? Act0ChartPrefixV1.hjOpen
+            : Act0ChartPrefixV1.coOpen,
+      ).name;
     }
     if (raisers.isEmpty && _openingSeats.contains(seat)) {
       return (row?.seats.contains(seat) ?? false) ? 'raise' : 'fold';
@@ -169,8 +146,11 @@ class CatalogStartingChart {
   String? smallBlindVsButton(Act0TableStateV1 table) {
     final code = startingHandCode(physicalCards(table.heroCards));
     if (code == null) return null;
-    final row = opening[code];
-    return (row?.seats.contains('HJ') ?? false) ? 'raise' : 'fold';
+    return act0ChartActionV1(
+      code,
+      Act0ChartSeatV1.sb,
+      Act0ChartPrefixV1.btnOpen,
+    ).name;
   }
 }
 
