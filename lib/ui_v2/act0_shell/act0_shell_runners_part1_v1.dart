@@ -456,6 +456,7 @@ const _meetTableRunner = Act0RunnerStateV1(
     boardCards: <Act0CardStateV1>[],
     streetLabel: 'Preflop',
     potLabel: 'Pot 1.5 BB',
+    handContributions: _act0BlindsOnlyContributions,
     toCallLabel: '',
     centerLabel: 'Blinds posted',
     emptyBoardLabel: 'No board cards yet',
@@ -786,6 +787,7 @@ const _firstHandRunner = Act0RunnerStateV1(
     boardCards: <Act0CardStateV1>[],
     streetLabel: 'Preflop',
     potLabel: 'Pot 1.5 BB',
+    handContributions: _act0BlindsOnlyContributions,
     toCallLabel: '',
     centerLabel: 'Private cards',
     emptyBoardLabel: 'No board cards yet',
@@ -1591,6 +1593,32 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
     clearDecisionSeatId: true,
     centerLabel: 'Hero cannot win side pot',
     potLabel: 'Main 60.5 BB; side 60 BB',
+    // These are the authored preflop totals, in a frame that explains the split.
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.preflop,
+      entries: [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          20,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          50,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          49,
+        ),
+      ],
+      startingStackBbBySeat: {'btn': 20},
+    ),
     // Added authored hand history (PKR-06 content decision, 2026-11-08); not in
     // the earlier source. UTG and HJ put no chips in and are out of both pots.
     actionTrail: const <Act0ActionTrailItemV1>[
