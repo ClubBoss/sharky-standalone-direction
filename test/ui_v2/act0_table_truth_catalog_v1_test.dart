@@ -44,10 +44,10 @@ void main() {
         ),
       ],
     );
-    expect(act0PotEligibilityV1(closedLedger, activeSeatIds: active), [
-      (amountBb: 18.5, eligibleSeatIds: {'bb', 'hj', 'btn'}),
-      (amountBb: 12.0, eligibleSeatIds: {'hj', 'btn'}),
-    ]);
+    final pots = act0PotEligibilityV1(closedLedger, activeSeatIds: active)!;
+    expect(pots.map((pot) => pot.amountBb), [18.5, 12.0]);
+    expect(pots.first.eligibleSeatIds, {'bb', 'hj', 'btn'});
+    expect(pots.last.eligibleSeatIds, {'hj', 'btn'});
   });
 
   test('contribution checks reject a changed pot or a missing price label', () {

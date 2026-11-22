@@ -1102,7 +1102,10 @@ void main() {
     expect(runner.selectedTaskId, 'w10_player_type_intro');
     expect(
       runner.runner.activeTeachingStep?.body,
-      contains('A nit plays few hands and folds a lot.'),
+      allOf(
+        contains('A nit folds often.'),
+        contains('LAG means loose-aggressive'),
+      ),
     );
     expect(
       find.textContaining('A nit', findRichText: true),
