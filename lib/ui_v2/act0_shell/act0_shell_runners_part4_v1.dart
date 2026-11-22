@@ -1716,6 +1716,13 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   table: _act0CurrentStreetTableV1(
     _act0ExplicitFoldsV1(
       _w9ExampleTableBase.copyWith(
+        seats: [
+          for (final seat in _w9ExampleTableBase.seats)
+            if (seat.seatId == 'bb')
+              _act0CopySeatStateV1(seat, stackLabel: '0 BB')
+            else
+              seat,
+        ],
         heroCards: _heroAjCards,
         boardCards: const [],
         streetLabel: 'Preflop',
