@@ -66,6 +66,79 @@ Rect _visibleBounds(WidgetTester tester, Finder finder) {
   return bounds;
 }
 
+bool _hasOverlap(Rect left, Rect right, {double tolerance = .5}) {
+  final intersection = left.intersect(right);
+  return intersection.width > tolerance && intersection.height > tolerance;
+}
+
+Iterable<Rect> _visibleTextBounds(WidgetTester tester, Finder root) sync* {
+  final text = find.descendant(
+    of: root,
+    matching: find.byType(RichText),
+    matchRoot: true,
+  );
+  for (var i = 0; i < text.evaluate().length; i++) {
+    final finder = text.at(i);
+    final paragraph = tester.renderObject<RenderParagraph>(finder);
+    final transform = paragraph.getTransformTo(null);
+    final clip = _visibleBounds(tester, finder);
+    final selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: paragraph.text.toPlainText().length,
+    );
+    for (final line in paragraph.getBoxesForSelection(selection)) {
+      yield MatrixUtils.transformRect(transform, line.toRect()).intersect(clip);
+    }
+  }
+}
+
+Finder _paintedTableLabel(Finder root, Key? key) {
+  if (key != const Key('act0_f7_clue')) return root;
+  final pill = find.descendant(
+    of: root,
+    matching: find.byWidgetPredicate(
+      (widget) =>
+          widget.key == const Key('act0_shell_late_route_table_signal') ||
+          widget.key == const Key('act0_shell_wave1b_table_signal_chip'),
+    ),
+  );
+  return pill.evaluate().length == 1 ? pill : root;
+}
+
+bool _paintedCommitmentCovers(
+  WidgetTester tester,
+  Finder commitment,
+  Rect target,
+) {
+  final box = find
+      .descendant(
+        of: commitment,
+        matching: find.byWidgetPredicate(
+          (widget) => widget is Container && widget.decoration is BoxDecoration,
+        ),
+      )
+      .first;
+  final carrier = tester.widget<Container>(box);
+  final decoration = carrier.decoration! as BoxDecoration;
+  final render = tester.renderObject<RenderBox>(box);
+  final localBounds = Offset.zero & render.size;
+  final radii = decoration.borderRadius?.resolve(TextDirection.ltr);
+  if (radii == null) {
+    return _hasOverlap(_visibleBounds(tester, box), target);
+  }
+  final clip = target.intersect(_visibleBounds(tester, box));
+  if (clip.width <= .5 || clip.height <= .5) return false;
+  final outline = radii.toRRect(localBounds).scaleRadii();
+  final center = render.localToGlobal(localBounds.center);
+  // Rounded rectangles are convex and their corners curve toward the center.
+  // The closest point to the center witnesses whether the overlap reaches ink.
+  final nearest = Offset(
+    center.dx.clamp(clip.left + .01, clip.right - .01),
+    center.dy.clamp(clip.top + .01, clip.bottom - .01),
+  );
+  return outline.contains(render.globalToLocal(nearest));
+}
+
 void _expectStationaryTable(
   Rect reference,
   Rect actual, {
@@ -156,6 +229,9 @@ void main() {
   });
 
   final capture = Platform.environment['ACT0_V3_CAPTURE_DIR'];
+  final captureScale = Platform.environment['ACT0_V3_CAPTURE_LARGE_TEXT'] == '1'
+      ? 1.3
+      : 1.0;
   final sweep = Platform.environment['ACT0_V3_SWEEP'] == '1' || capture != null;
   final fontDirectory = Platform.environment['ACT0_V3_FONT_DIR'];
   final symbolFont = Platform.environment['ACT0_V3_SYMBOL_FONT'];
@@ -196,6 +272,12 @@ void main() {
     });
     expect(geometryTasks.where((item) => item.route == 'day7'), isNotEmpty);
   });
+  const exposedCardRegressions = {
+    'asm05_new_known_holes_turn_call_10',
+    'asm05_new_known_holes_turn_call_40',
+    'spaced_review_w1_showdown_winning_hero_cards_board_pot_v1',
+    'spaced_review_w1_showdown_winning_w1_rules_check_board_tie_v1',
+  };
   const shelfRegressions = {
     'board_texture_basics_w5_dry_board',
     'board_texture_basics_w5_wet_board',
@@ -208,8 +290,10 @@ void main() {
       in geometryTasks) {
     final id = task.taskId;
     final checkLateShelf = !sweep && shelfRegressions.contains(id);
+    final checkExposedCards = exposedCardRegressions.contains(id);
     if (!sweep &&
         !checkLateShelf &&
+        !checkExposedCards &&
         (route != 'course' ||
             world.worldNumber > 4 ||
             task.entryPhase == Act0LessonPhaseV1.theory ||
@@ -239,6 +323,8 @@ void main() {
       final captureKey = GlobalKey();
       final widgetErrors = <String>[];
       final geometryErrors = <String>{};
+      final boundsOnly = <String>{};
+      final cosmetic = <String>{};
       final files = <String, String>{};
 
       Future<void> snapshot(String frame) async {
@@ -390,6 +476,7 @@ void main() {
       ];
       Rect? reference;
       var checkedCardFrames = 0;
+      var checkedExposedCards = 0;
       var checkedTableFrames = 0;
       final viewport = const Rect.fromLTWH(0, 59, 393, 759);
       for (final state in states) {
@@ -399,7 +486,7 @@ void main() {
           textScale: state.scale,
           teachingStepIndex: state.step,
         );
-        if (state.scale == 1 &&
+        if (state.scale == captureScale &&
             (state.label == 'decision' ||
                 state.label == 'feedback' ||
                 state.label == 'teach-0')) {
@@ -470,6 +557,7 @@ void main() {
                 ]
                 .map(
                   (finder) => (
+                    finder: finder,
                     key: finder.evaluate().single.widget.key,
                     bounds: _visibleBounds(tester, finder),
                   ),
@@ -491,6 +579,12 @@ void main() {
             'act0_shell_card_',
           );
           if (isCard) checkedCardFrames++;
+          final isExposedOpponentCard =
+              isCard &&
+              !key.value.startsWith('act0_shell_card_hero_') &&
+              !key.value.startsWith('act0_shell_card_board_');
+          if (isExposedOpponentCard) checkedExposedCards++;
+          if (!sweep && checkExposedCards && !isExposedOpponentCard) continue;
           if (!sweep && !checkLateShelf && !isCard) continue;
           final visible = _visibleBounds(tester, subject).intersect(viewport);
           if (sweep &&
@@ -507,13 +601,50 @@ void main() {
                         const Key('act0_shell_shared_runner_lower_surface'))) {
               continue;
             }
-            final intersection = overlay.bounds.intersect(bounds);
-            if (intersection.width > (sweep ? 0.5 : 0) &&
-                intersection.height > (sweep ? 0.5 : 0)) {
-              geometryErrors.add(
-                '${state.label} @${state.scale}: ${overlay.key} overlaps $key',
-              );
+            if (!_hasOverlap(
+              overlay.bounds,
+              bounds,
+              tolerance: sweep ? .5 : 0,
+            )) {
+              continue;
             }
+            final signal =
+                '${state.label} @${state.scale}: ${overlay.key} overlaps $key';
+            final overlayKey = overlay.key;
+            if (sweep &&
+                key.value.startsWith('act0_shell_bet_chip_owner_') &&
+                overlayKey is ValueKey<String> &&
+                (overlayKey.value.startsWith('act0_shell_seat_identity_') ||
+                    overlayKey == const Key('act0_f7_clue'))) {
+              final label = _paintedTableLabel(overlay.finder, overlayKey);
+              final paintedLabel = _visibleBounds(tester, label);
+              if (!_hasOverlap(paintedLabel, visible)) {
+                boundsOnly.add(signal);
+                continue;
+              }
+              final chipText = _visibleTextBounds(tester, subject).toList();
+              final labelText = _visibleTextBounds(tester, label).toList();
+              final commitmentSeat = key.value.substring(
+                'act0_shell_bet_chip_owner_'.length,
+              );
+              final ownLabel =
+                  overlayKey == Key('act0_shell_seat_identity_$commitmentSeat');
+              final hidesText = ownLabel
+                  // The registered table paints an owner's chips above its
+                  // own plate. The plate cannot hide the chip amount.
+                  ? labelText.any(
+                      (line) => _paintedCommitmentCovers(tester, subject, line),
+                    )
+                  : chipText.any(
+                      (line) =>
+                          labelText.any((label) => _hasOverlap(line, label)),
+                    );
+              if (chipText.isNotEmpty && labelText.isNotEmpty && !hidesText) {
+                cosmetic.add(signal);
+                continue;
+              }
+            }
+            geometryErrors.add(signal);
           }
         }
       }
@@ -553,6 +684,7 @@ void main() {
             'task': id,
             'title': task.title,
             'files': files,
+            'captureScale': captureScale,
             'street': source.table.streetLabel,
             'boardCards': source.table.boardCards.length,
             'bets': source.table.seats.where((seat) => seat.bet != null).length,
@@ -569,8 +701,13 @@ void main() {
             'checkedTableFrames': checkedTableFrames,
             'checkedCardFrames': checkedCardFrames,
             'issues': [...widgetErrors, ...geometryErrors],
+            'boundsOnly': boundsOnly.toList(),
+            'cosmetic': cosmetic.toList(),
           }),
         );
+      }
+      if (checkExposedCards) {
+        expect(checkedExposedCards, greaterThan(0), reason: id);
       }
       expect(widgetErrors, isEmpty, reason: id);
       expect(geometryErrors, isEmpty, reason: id);
