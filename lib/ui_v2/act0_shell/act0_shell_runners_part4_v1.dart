@@ -8068,809 +8068,6 @@ final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
   ],
 );
 
-final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_good_fold_bad_result',
-  caption:
-      'You folded a marginal bluff-catcher and an opponent later showed a bluff.',
-  hint: 'Do not auto-label by reveal result only.',
-  question: 'How should you review this fold?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'process_review',
-      label: 'Check the cues before judging the result',
-      isCorrect: true,
-      preferredLabel: 'Check the cues before judging the result',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Process beats reveal.',
-      feedbackReason:
-          'Review the price and the range you could reasonably give the opponent before they showed the bluff. This reveal can inform future decisions.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'instant_regret',
-      label: 'Mark the fold suspicious because it lost',
-      isCorrect: false,
-      preferredLabel: 'Check the cues before judging the result',
-      betterAnswerLabel: 'Check the cues before judging the result',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Outcome trap.',
-      feedbackReason:
-          'After folding a marginal bluff-catcher when an opponent shows a bluff, judging by the single reveal pushes you into loose, losing calls next time.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'ignore_hand',
-      label: 'Skip the cue check and move to the next hand',
-      isCorrect: false,
-      preferredLabel: 'Check the cues before judging the result',
-      betterAnswerLabel: 'Check the cues before judging the result',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Avoids tilt.',
-      feedbackReason:
-          'After folding a marginal bluff-catcher against a shown bluff, moving on without checking the price and range cues misses valuable information about that opponent.',
-    ),
-  ],
-);
-
-final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_bad_call_good_result',
-  feedbackSignalId: 'process_over_outcome',
-  caption: 'Suppose a loose call wins after a lucky river.',
-  hint: 'Winning the pot does not guarantee a good decision.',
-  question:
-      'Suppose a loose call wins after a lucky river. What is the best mindset response?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'celebrate_only',
-      label: 'Result was good so process is good',
-      isCorrect: false,
-      preferredLabel: 'Flag the loose call as a possible leak',
-      betterAnswerLabel: 'Flag the loose call as a possible leak',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Result bias.',
-      feedbackReason:
-          'A lucky river tells you how this loose call turned out. Calling it good process without checking the price and range can hide a leak.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'flag_leak',
-      label: 'Flag the loose call as a possible leak',
-      isCorrect: true,
-      preferredLabel: 'Flag the loose call as a possible leak',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Win can hide a leak.',
-      feedbackReason:
-          'Good results can mask weak process. Flagging the decision keeps your learning honest.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'self_blame',
-      label: 'Call was lucky so confidence is gone',
-      isCorrect: false,
-      preferredLabel: 'Flag the loose call as a possible leak',
-      betterAnswerLabel: 'Flag the loose call as a possible leak',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too harsh.',
-      feedbackReason:
-          'After a loose call wins on a lucky river, letting confidence collapse turns a calm process audit into emotional tilt on the next hands.',
-    ),
-  ],
-);
-
-final _w12DecisionQualityRecapRunner = _w12DecisionQualityIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w12_decision_quality_recap',
-  caption: 'Lesson learned: process quality is the anchor under variance.',
-  hint: 'Outcome is data, not verdict.',
-  question: 'What is the process-quality takeaway?',
-  feedbackTitle: 'Process takeaway.',
-  feedbackReason:
-      'Stable improvement comes from process audits that survive both wins and losses.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-);
-
-final _w12TiltResetIntroRunner = _w12DecisionQualityIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.theory,
-  lessonId: 'w12_tilt_reset_intro',
-  lessonTitle: 'Tilt reset protocol',
-  caption: 'A loss or a big win can make you rush. A short pause can help.',
-  hint: 'Take one breath and come back to your plan.',
-  question: 'What is the purpose of a tilt reset?',
-  feedbackTitle: 'Reset foundation.',
-  feedbackReason: 'A pause gives you time to see the new hand clearly.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Fast reset routine.',
-      body:
-          'Name what you feel. Take a breath. Look at your cards, the board, and the next bet. Take a break if you still feel the urge to rush.',
-      focusLabels: <String>['Name the feeling', 'Breathe', 'Read the new hand'],
-    ),
-  ],
-);
-
-final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_after_bad_beat_reset',
-  caption: 'You lose a big all-in as favorite and feel immediate anger.',
-  hint: 'Reset before next hand starts.',
-  question: 'What is the cleaner immediate action?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'revenge_hand',
-      label: 'Take the next thin edge to regain chips',
-      isCorrect: false,
-      preferredLabel: 'Run short reset protocol before next major spot',
-      betterAnswerLabel: 'Run short reset protocol before next major spot',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Tilt pattern.',
-      feedbackReason:
-          'Right after losing a big all-in as favorite, forcing the next thin edge to win chips back compounds variance losses with tilt mistakes.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'quit_immediately',
-      label: 'End the orbit before deciding to continue',
-      isCorrect: false,
-      preferredLabel: 'Run short reset protocol before next major spot',
-      betterAnswerLabel: 'Run short reset protocol before next major spot',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Sometimes valid.',
-      feedbackReason:
-          'After losing an all-in as the favorite, a short pause gives you a chance to settle before deciding whether you are ready to play the next hand.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'reset_protocol',
-      label: 'Run short reset protocol before next major spot',
-      isCorrect: true,
-      preferredLabel: 'Run short reset protocol before next major spot',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Reset before next hand.',
-      feedbackReason:
-          'A fast reset protects your next decisions from emotional carryover.',
-    ),
-  ],
-);
-
-final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_after_mistake_reset',
-  caption: 'You realize you made an avoidable call error.',
-  hint: 'Use reset to prevent second error spiral.',
-  question: 'What response keeps discipline highest?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'note_and_reset',
-      label: 'Log leak briefly and reset to current hand',
-      isCorrect: true,
-      preferredLabel: 'Log leak briefly and reset to current hand',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Log it, then reset.',
-      feedbackReason:
-          'Quick logging plus reset preserves learning without carrying emotional noise into next hands.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'self_attack',
-      label: 'Replay the mistake for the next few hands',
-      isCorrect: false,
-      preferredLabel: 'Log leak briefly and reset to current hand',
-      betterAnswerLabel: 'Log leak briefly and reset to current hand',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Harmful spiral.',
-      feedbackReason:
-          'After making an avoidable call error, replaying the mistake across the next few hands distracts from live cues and triggers a second costly error.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'deny_mistake',
-      label: 'Skip the note and rely on memory',
-      isCorrect: false,
-      preferredLabel: 'Log leak briefly and reset to current hand',
-      betterAnswerLabel: 'Log leak briefly and reset to current hand',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Protects emotion short term.',
-      feedbackReason:
-          'After an avoidable call error, skipping the note to rely on memory lets the leak slip away unreviewed after the session.',
-    ),
-  ],
-);
-
-final _w12TiltResetRecapRunner = _w12TiltResetIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w12_tilt_reset_recap',
-  caption: 'Lesson learned: reset protects process under emotional pressure.',
-  hint: 'Fast reset now prevents leak cascade later.',
-  question: 'What is the reset takeaway?',
-  feedbackTitle: 'Reset takeaway.',
-  feedbackReason:
-      'Consistent small resets are a core bridge from knowledge to stable execution.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Reset before the next deal.',
-      body:
-          'After a bad beat or a clear error, pause for one breath and label the reaction without judging yourself. Restate your single session focus and shrink the next few hands to simple, clean choices. A short deliberate reset keeps one rough pot from spreading across the rest of your session.',
-      focusLabels: <String>['Pause briefly', 'Reset focus', 'Clean next hand'],
-    ),
-  ],
-);
-
-final _w12ConfidenceDisciplineIntroRunner = _w12TiltResetIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.theory,
-  lessonId: 'w12_confidence_intro',
-  lessonTitle: 'Confidence with discipline',
-  caption: 'Confident play means clear actions, not ego battles.',
-  hint: 'Assertive decisions still obey plan and evidence.',
-  question: 'What balance should confidence hold?',
-  feedbackTitle: 'Confidence foundation.',
-  feedbackReason:
-      'Best mindset combines calm assertiveness with disciplined filters on risk and evidence.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Assertive, not reckless.',
-      body:
-          'Take clear lines when evidence supports them. Avoid ego calls, revenge bluffs, or proving points.',
-      focusLabels: <String>['Assertive', 'Evidence', 'Discipline'],
-    ),
-  ],
-);
-
-final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_assertive_not_ego',
-  caption: 'An opponent needles you after winning a pot.',
-  hint: 'Decision quality should not react to table talk.',
-  question: 'What is the stronger mindset line?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'prove_point',
-      label: 'Widen the next close spot to answer back',
-      isCorrect: false,
-      preferredLabel: 'Stick to process and your planned line',
-      betterAnswerLabel: 'Stick to process and your planned line',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Ego trap.',
-      feedbackReason:
-          'After an opponent needles you for winning a pot, widening your next close spot to answer back risks chips on weak hands just to satisfy ego.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'stick_process',
-      label: 'Stick to process and your planned line',
-      isCorrect: true,
-      preferredLabel: 'Stick to process and your planned line',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Process ignores table talk.',
-      feedbackReason:
-          'Process-led confidence ignores ego hooks and preserves decision quality.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'play_scared',
-      label: 'Play overly scared to avoid conflict',
-      isCorrect: false,
-      preferredLabel: 'Stick to process and your planned line',
-      betterAnswerLabel: 'Stick to process and your planned line',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Safer but capped.',
-      feedbackReason:
-          'After table talk from an opponent, playing overly scared forfeits profitable value and steal spots out of fear of conflict.',
-    ),
-  ],
-);
-
-final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_discipline_under_pressure',
-  caption: 'Deep in session, fatigue rises and decisions speed up.',
-  hint: 'Discipline means slowing only the critical spots.',
-  question: 'What is the best pressure adjustment?',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Slow down on large pots.',
-      body:
-          'Fatigue speeds up choices. Take one brief pause before you call, bet, or fold in a large pot.',
-      focusLabels: <String>['Fatigue cue', 'Brief pause', 'Large pot'],
-    ),
-  ],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'autopilot',
-      label: 'Keep normal pace through large pots',
-      isCorrect: false,
-      preferredLabel: 'Pause briefly on high-EV decision nodes',
-      betterAnswerLabel: 'Pause briefly on high-EV decision nodes',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Leak risk.',
-      feedbackReason:
-          'Deep in a session when fatigue rises, keeping fast autopilot pace through large pots leads to rushed, expensive mistakes on high-EV decisions.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'tank_every_spot',
-      label: 'Slow medium pots as much as major ones',
-      isCorrect: false,
-      preferredLabel: 'Pause briefly on high-EV decision nodes',
-      betterAnswerLabel: 'Pause briefly on high-EV decision nodes',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Overcorrection.',
-      feedbackReason:
-          'Late-session fatigue makes attention scarce. Spending the same extra time on medium pots can leave less attention for the decisions with the most at stake.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'critical_pause',
-      label: 'Pause briefly on high-EV decision nodes',
-      isCorrect: true,
-      preferredLabel: 'Pause briefly on high-EV decision nodes',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Pause on big nodes.',
-      feedbackReason:
-          'Small targeted pauses preserve discipline where it matters most without killing flow.',
-    ),
-  ],
-);
-
-final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_pretty_hand_bad_price_fold',
-  caption:
-      "CO bets both the flop and the turn. Both start the river with 100 BB behind. CO rarely bluffs and bets 18 BB into 20 BB.",
-  hint: 'Do not make a stubborn call only because the hand looks pretty.',
-  question: 'What is the cleaner disciplined action?',
-  table: _day7TableV1(
-    hero: 'btn',
-    hand: _heroKqCards.map((card) => card.label).join(' '),
-    street: PokerStreet.river,
-    actor: 'btn',
-    board: _boardK7294Cards,
-    folded: const {"utg", "hj", "sb", "bb"},
-    stacks: const {'btn': 108.75, 'co': 108.75},
-    entries: [
-      ..._w11QJsPreflopContributions,
-      const Act0ContributionV1(
-        PokerStreet.flop,
-        'co',
-        Act0ContributionKindV1.wager,
-        2.5,
-      ),
-      const Act0ContributionV1(
-        PokerStreet.flop,
-        'btn',
-        Act0ContributionKindV1.wager,
-        2.5,
-      ),
-      const Act0ContributionV1(
-        PokerStreet.turn,
-        'co',
-        Act0ContributionKindV1.wager,
-        3.5,
-      ),
-      const Act0ContributionV1(
-        PokerStreet.turn,
-        'btn',
-        Act0ContributionKindV1.wager,
-        3.5,
-      ),
-      const Act0ContributionV1(
-        PokerStreet.river,
-        'co',
-        Act0ContributionKindV1.wager,
-        18,
-      ),
-    ],
-    history: const [
-      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
-      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
-      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
-      Act0ActionTrailItemV1(label: "UTG folds"),
-      Act0ActionTrailItemV1(label: "HJ folds"),
-      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
-      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
-      Act0ActionTrailItemV1(label: "SB folds"),
-      Act0ActionTrailItemV1(label: "BB folds"),
-      Act0ActionTrailItemV1(label: "Flop: CO bets 2.5 BB"),
-      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
-      Act0ActionTrailItemV1(label: "Turn: CO bets 3.5 BB"),
-      Act0ActionTrailItemV1(label: "BTN calls 3.5 BB"),
-      Act0ActionTrailItemV1(label: "River: CO bets 18 BB"),
-    ],
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'Bet',
-        amountLabel: '18 BB',
-      ),
-    },
-  ).copyWith(showDecisionPremise: true),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'fold_river',
-      label: 'Fold the river',
-      isCorrect: true,
-      preferredLabel: 'Fold the river',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Calm fold.',
-      feedbackReason:
-          'Calling 18 BB makes a 56 BB pot, so you need about 32% equity if the call closes the action. Folding is reasonable if K-Q falls below that threshold against CO’s betting range. The tight read supports caution, and the exact range is unknown.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'hero_call',
-      label: 'Call down anyway with top pair',
-      isCorrect: false,
-      preferredLabel: 'Fold the river',
-      betterAnswerLabel: 'Fold the river',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Pretty-hand trap.',
-      feedbackReason:
-          'Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'jam_back',
-      label: 'Raise large to end the decision now',
-      isCorrect: false,
-      preferredLabel: 'Fold the river',
-      betterAnswerLabel: 'Fold the river',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too dramatic.',
-      feedbackReason:
-          'The river pot is now 38 BB after CO’s 18 BB bet. A large raise adds risk against a tight range when better hands may call and worse hands may fold.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Pretty hands still obey price.',
-      body:
-          'Use the same routine even when the hand looks attractive: seat, hand, board, price, stack and action, then the clean action.',
-      focusLabels: <String>[
-        'Top pair',
-        'Bad price',
-        'Tight action',
-        'Fold clean',
-      ],
-    ),
-  ],
-);
-
-final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_revenge_raise_trap',
-  caption:
-      "CO bluffed you last orbit and taunts you now. Both start the flop with 35 BB behind. CO bets 2 BB into 8 BB.",
-  hint:
-      'Do not raise just to take control when the table read says stay simple.',
-  question: 'What is the clean discipline line?',
-  table: _day7TableV1(
-    hero: 'btn',
-    hand: _heroQJsCards.map((card) => card.label).join(' '),
-    street: PokerStreet.flop,
-    actor: 'btn',
-    board: _boardJ74FlopCards,
-    folded: const {"utg", "hj", "sb", "bb"},
-    stacks: const {'btn': 37.75, 'co': 37.75},
-    entries: [
-      ..._w11QJsPreflopContributions,
-      const Act0ContributionV1(
-        PokerStreet.flop,
-        'co',
-        Act0ContributionKindV1.wager,
-        2,
-      ),
-    ],
-    history: const [
-      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
-      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
-      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
-      Act0ActionTrailItemV1.note(label: "CO needled you last orbit"),
-      Act0ActionTrailItemV1(label: "UTG folds"),
-      Act0ActionTrailItemV1(label: "HJ folds"),
-      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
-      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
-      Act0ActionTrailItemV1(label: "SB folds"),
-      Act0ActionTrailItemV1(label: "BB folds"),
-      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
-    ],
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'Bet',
-        amountLabel: '2 BB',
-      ),
-    },
-  ).copyWith(showDecisionPremise: true),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'raise_to_take_control',
-      label: 'Raise now to take control back',
-      isCorrect: false,
-      preferredLabel: 'Call once and keep the pot controlled',
-      betterAnswerLabel: 'Call once and keep the pot controlled',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Revenge leak.',
-      feedbackReason:
-          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge can grow the pot and fold out CO\'s bluffs while isolating you against stronger hands.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call_once',
-      label: 'Call once and keep the pot controlled',
-      isCorrect: true,
-      preferredLabel: 'Call once and keep the pot controlled',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Stable line.',
-      feedbackReason:
-          'A 2 BB call makes a 12 BB pot, about 17% immediate pot odds. Calling is a reasonable way to keep the pot small if CO bets enough weaker hands. One earlier bluff gives little evidence about CO’s range here.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'snap_fold_noise',
-      label: 'Fold now to avoid the annoying player',
-      isCorrect: false,
-      preferredLabel: 'Call once and keep the pot controlled',
-      betterAnswerLabel: 'Call once and keep the pot controlled',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Emotion still steering.',
-      feedbackReason:
-          'CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Noise is not a cue.',
-      body:
-          'Real play rewards stable decisions more than dramatic decisions. Ignore ego hooks and return to the table read.',
-      focusLabels: <String>['Position', 'Small price', 'Top pair', 'No ego'],
-    ),
-  ],
-);
-
-final _w12ConfidenceDisciplineRecapRunner = _w12ConfidenceDisciplineIntroRunner
-    .copyWith(
-      phase: Act0LessonPhaseV1.review,
-      lessonId: 'w12_confidence_recap',
-      caption:
-          'Lesson learned: calm confidence plus discipline is stable edge.',
-      hint: 'Assertive line, evidence filter, no ego side quests.',
-      question: 'What is the confidence-discipline takeaway?',
-      feedbackTitle: 'Discipline takeaway.',
-      feedbackReason:
-          'Mindset edge comes from repeatable emotional control and disciplined execution, not mood swings.',
-      teachingSteps: const <Act0TeachingStepV1>[
-        Act0TeachingStepV1(
-          title: 'Calm lines over ego.',
-          body:
-              'Confident discipline means choosing to bet, call, or fold from table evidence rather than table talk.',
-          focusLabels: <String>['Evidence', 'Calm line', 'No ego'],
-        ),
-      ],
-    );
-
-final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_checkpoint_process_line',
-  feedbackSignalId: 'process_over_outcome',
-  caption: 'A correct line loses in a high-variance pot.',
-  hint: 'Process verdict comes before emotional verdict.',
-  question:
-      'Suppose a sound decision loses a high-variance pot. What is the best immediate response?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'outcome_only',
-      label: 'Outcome proves decision quality',
-      isCorrect: false,
-      preferredLabel: 'Audit process first, then outcome',
-      betterAnswerLabel: 'Audit process first, then outcome',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Bias warning.',
-      feedbackReason:
-          'When a sound line loses a high-variance pot, treating the outcome as proof of a bad decision causes you to abandon winning plays.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'avoid_review',
-      label: 'Skip review to avoid frustration',
-      isCorrect: false,
-      preferredLabel: 'Audit process first, then outcome',
-      betterAnswerLabel: 'Audit process first, then outcome',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Protective instinct.',
-      feedbackReason:
-          'After a sound decision loses a high-variance pot, skipping review to avoid frustration leaves you unsure whether the price and range read were actually solid.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'process_first',
-      label: 'Audit process first, then outcome',
-      isCorrect: true,
-      preferredLabel: 'Audit process first, then outcome',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Process held steady.',
-      feedbackReason:
-          'That sequence keeps you grounded through variance and supports long-term growth.',
-    ),
-  ],
-);
-
-final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_checkpoint_reset_line',
-  caption: 'You feel tilt signs after two rough spots in a row.',
-  hint: 'Reset should be fast and repeatable.',
-  question: 'What is the cleaner bridge action?',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Reset before the next pot.',
-      body:
-          'Two rough pots in a row are a cue to pause, reset your focus, and return to disciplined call-or-fold choices.',
-      focusLabels: <String>['Pause', 'Reset', 'Re-anchor'],
-    ),
-  ],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'run_reset',
-      label: 'Run brief reset and re-anchor to plan',
-      isCorrect: true,
-      preferredLabel: 'Run brief reset and re-anchor to plan',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Reset keeps quality steady.',
-      feedbackReason:
-          'Reset and re-anchor protects next decisions without derailing session rhythm.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'revenge_mode',
-      label: 'Take the next close spot to recover momentum',
-      isCorrect: false,
-      preferredLabel: 'Run brief reset and re-anchor to plan',
-      betterAnswerLabel: 'Run brief reset and re-anchor to plan',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Tilt escalation.',
-      feedbackReason:
-          'When tilt signs appear after two rough spots in a row, jumping into the next close spot to recover momentum bleeds more chips while emotions are hot.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'deny_tilt',
-      label: 'Keep playing and check emotions later',
-      isCorrect: false,
-      preferredLabel: 'Run brief reset and re-anchor to plan',
-      betterAnswerLabel: 'Run brief reset and re-anchor to plan',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Common response.',
-      feedbackReason:
-          'After two rough spots in a row, continuing without an explicit reset lets hidden tilt degrade your next high-stakes decision.',
-    ),
-  ],
-);
-
-final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_checkpoint_discipline_line',
-  caption: 'A player taunts you into marginal high-variance spots.',
-  hint: 'Discipline means evidence over ego.',
-  question: 'Which line is strongest?',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'ego_line',
-      label: 'Take thin line to win respect',
-      isCorrect: false,
-      preferredLabel: 'Take only evidence-backed lines',
-      betterAnswerLabel: 'Take only evidence-backed lines',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Ego leak.',
-      feedbackReason:
-          'When a player taunts you into marginal high-variance spots, taking a thin line to win respect risks big pots without the range or price edge to back it up.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'evidence_line',
-      label: 'Take only evidence-backed lines',
-      isCorrect: true,
-      preferredLabel: 'Take only evidence-backed lines',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Evidence beats respect.',
-      feedbackReason:
-          'Evidence-first discipline is the stable bridge into deeper strategic worlds.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fear_line',
-      label: 'Fold all close spots now',
-      isCorrect: false,
-      preferredLabel: 'Take only evidence-backed lines',
-      betterAnswerLabel: 'Take only evidence-backed lines',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Defensive but capped.',
-      feedbackReason:
-          'Folding a close spot to avoid a player’s taunts can surrender an edge your read of their range and the price still support.',
-    ),
-  ],
-);
-
-final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w12_checkpoint_full_loop_line',
-  caption:
-      "Your bluff failed last orbit. Both start this flop with 25 BB behind. CO bets 2 BB into 8 BB.",
-  hint:
-      'Use the same decision routine even after a mistake: seat, hand, board, price, stack and action, then the clean action.',
-  question: 'What keeps the next decision stable?',
-  table: _day7TableV1(
-    hero: 'btn',
-    hand: _heroAJsCards.map((card) => card.label).join(' '),
-    street: PokerStreet.flop,
-    actor: 'btn',
-    board: _boardA84TwoToneCards,
-    folded: const {"utg", "hj", "sb", "bb"},
-    stacks: const {'btn': 27.75, 'co': 27.75},
-    entries: [
-      ..._w11QJsPreflopContributions,
-      const Act0ContributionV1(
-        PokerStreet.flop,
-        'co',
-        Act0ContributionKindV1.wager,
-        2,
-      ),
-    ],
-    history: const [
-      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
-      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
-      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
-      Act0ActionTrailItemV1.note(label: "Last orbit: loose bluff"),
-      Act0ActionTrailItemV1(label: "UTG folds"),
-      Act0ActionTrailItemV1(label: "HJ folds"),
-      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
-      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
-      Act0ActionTrailItemV1(label: "SB folds"),
-      Act0ActionTrailItemV1(label: "BB folds"),
-      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
-    ],
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'Bet',
-        amountLabel: '2 BB',
-      ),
-    },
-  ).copyWith(showDecisionPremise: true),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'raise_to_recover',
-      label: 'Raise to recover confidence',
-      isCorrect: false,
-      preferredLabel: 'Call with the same routine',
-      betterAnswerLabel: 'Call with the same routine',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Confidence chase.',
-      feedbackReason:
-          'CO bets 2 BB into 8 BB on A-8-4. Raising to make up for last orbit’s loose bluff builds a larger pot and may drive out the weaker hands you could keep in by calling.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_scared',
-      label: 'Fold to play safer now',
-      isCorrect: false,
-      preferredLabel: 'Call with the same routine',
-      betterAnswerLabel: 'Call with the same routine',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too reactive.',
-      feedbackReason:
-          'CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call_clean',
-      label: 'Call with the same routine',
-      isCorrect: true,
-      preferredLabel: 'Call with the same routine',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong reset.',
-      feedbackReason:
-          'Start with top pair, position and the 2 BB price. Calling is a reasonable controlled line if CO bets enough weaker hands. The optimal line depends on CO’s range and later action. Review the previous bluff separately.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Stable routine beats emotional correction.',
-      body:
-          'A prior mistake should not rewrite the next decision. Real play gets stronger when the same clean routine survives noise, temptation, and regret.',
-      focusLabels: <String>[
-        'After mistake',
-        'Seat-hand-board-price',
-        '25 BB',
-        'Stay stable',
-      ],
-    ),
-  ],
-);
-
 Act0LessonTaskV1 _w12Task(
   String id,
   String title,
@@ -8917,163 +8114,6 @@ Act0LessonTaskV1 _w12Task(
     ),
   );
 }
-
-final _w12_river_price_call = _w12Task(
-  'w12_river_price_call',
-  'River price',
-  'CO bets 10 into 20 on K-8-4-2-9. This river range is 35% missed QJ/JT and 65% AK, K9 or 88. Your KQ beats the misses and loses to the value hands. No ties.',
-  'Call or fold?',
-  correct: 0,
-  choices: const [
-    (
-      'call_10_bb',
-      'Call 10 BB',
-      'KQ wins 35% of this river range. A 10 BB call needs 25%. Its average gain is 4 BB.',
-      null,
-    ),
-    (
-      'fold',
-      'Fold',
-      'The bet makes the pot 30 BB. KQ beats the 35% missed hands, so folding gives up 4 BB of expected call value.',
-      null,
-    ),
-    (
-      'raise_to_35_bb',
-      'Raise to 35 BB',
-      'KQ can catch missed QJ/JT for 10 BB. A raise to 35 may fold those bluffs and face calls from AK, K9 and 88.',
-      null,
-    ),
-  ],
-  table: _day7TableV1(
-    hero: 'bb',
-    hand: 'Kc Qd',
-    street: PokerStreet.river,
-    actor: 'bb',
-    board: _act0LessonCardsV1('Ks 8c 4d 2h 9s'),
-
-    folded: const {'utg', 'hj', 'btn', 'sb'},
-    stacks: const {
-      'utg': 70,
-      'hj': 69,
-      'co': 70,
-      'btn': 65,
-      'sb': 62,
-      'bb': 70,
-    },
-    entries: const [
-      ..._act0LessonBlinds,
-      Act0ContributionV1(
-        PokerStreet.preflop,
-        'co',
-        Act0ContributionKindV1.wager,
-        2,
-      ),
-      Act0ContributionV1(
-        PokerStreet.preflop,
-        'bb',
-        Act0ContributionKindV1.wager,
-        1,
-      ),
-      Act0ContributionV1(
-        PokerStreet.flop,
-        'co',
-        Act0ContributionKindV1.wager,
-        3.75,
-      ),
-      Act0ContributionV1(
-        PokerStreet.flop,
-        'bb',
-        Act0ContributionKindV1.wager,
-        3.75,
-      ),
-      Act0ContributionV1(
-        PokerStreet.turn,
-        'co',
-        Act0ContributionKindV1.wager,
-        4,
-      ),
-      Act0ContributionV1(
-        PokerStreet.turn,
-        'bb',
-        Act0ContributionKindV1.wager,
-        4,
-      ),
-      Act0ContributionV1(
-        PokerStreet.river,
-        'co',
-        Act0ContributionKindV1.wager,
-        10,
-      ),
-    ],
-    history: const [
-      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ folds'),
-      Act0ActionTrailItemV1(label: 'CO raises to 2 BB'),
-      Act0ActionTrailItemV1(label: 'BTN folds'),
-      Act0ActionTrailItemV1(label: 'SB folds'),
-      Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
-      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
-      Act0ActionTrailItemV1(label: 'CO bets 3.75 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3.75 BB'),
-      Act0ActionTrailItemV1(label: 'Turn: BB checks'),
-      Act0ActionTrailItemV1(label: 'CO bets 4 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 4 BB'),
-      Act0ActionTrailItemV1(label: 'River: BB checks'),
-      Act0ActionTrailItemV1(label: 'CO bets 10 BB'),
-    ],
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'bet',
-        amountLabel: '10 BB',
-      ),
-    },
-  ).copyWith(showDecisionPremise: true),
-
-  teaching: const Act0TeachingStepV1(
-    title: 'Read the river price',
-    body:
-        'W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.',
-  ),
-);
-
-final _w12_river_ev_costly_call = _w12Task(
-  'w12_river_ev_costly_call',
-  'A costly river call',
-  'BB bets 5 BB. Two of ten bets are bluffs you beat. The rest beat your kings. BB folds the bluffs to a raise and calls with the better hands.',
-  'Which action has the best EV in this model?',
-  correct: 0,
-  choices: const [
-    (
-      'fold',
-      'Fold',
-      'Five out of 15.5 is about 32%. Your chance to win is 20%. Fold to save the 5 BB.',
-      null,
-    ),
-    (
-      'call',
-      'Call',
-      'The bet costs 5 BB to call. With just two wins in ten bets, the cost of the eight losses is too high.',
-      null,
-    ),
-    (
-      'raise',
-      'Raise',
-      'A raise asks BB to fold. The model says the better hands stay and make you pay more.',
-      null,
-    ),
-  ],
-  table: _day7PostflopV1(
-    'co',
-    'Kd 9c',
-    'Ks Jh 8d 4s 2h',
-    openBb: 2.5,
-    betBb: 5,
-    showTurn: true,
-  ).copyWith(showDecisionPremise: true),
-);
 
 final _w12_confidence_spr = _w12Task(
   'w12_confidence_spr',
@@ -9140,115 +8180,84 @@ final _w12_confidence_spr = _w12Task(
   ).copyWith(showDecisionPremise: true),
 );
 
-final _w12_river_ev_turn_draw_miss = _w12Task(
-  'w12_river_ev_turn_draw_miss',
-  'The draw missed',
-  'You had a heart draw with one card to come. The river is Jd. You beat one in 10 CO bets. CO bets 3 BB and will call a raise with its value hands.',
+final _w12_river_ev_costly_call = _w12Task(
+  'w12_river_ev_costly_call',
+  'A costly river call',
+  'BB bets 5 BB. 1 in 5 bets is a bluff you beat. The rest beat your kings. BB folds the bluffs to a raise and calls with the better hands.',
   'Which action has the best EV in this model?',
   correct: 0,
   choices: const [
     (
       'fold',
       'Fold',
-      'The river is a diamond. The price is 3 out of 11.5, about 26%. One win in ten is too few.',
+      'Five out of 15.5 is about 32%. Your chance to win is 20%. Fold to save the 5 BB.',
       null,
     ),
     (
       'call',
       'Call',
-      'There are no cards to come after Jd. Counting the old heart outs would sell you a chance that has passed.',
+      'The bet costs 5 BB to call. With just two wins in ten bets, the cost of the eight losses is too high.',
       null,
     ),
     (
       'raise',
       'Raise',
-      'With ace high on this river, the raise spends more against CO’s better hands, which will call.',
-      null,
-    ),
-  ],
-  table: _day7PostflopV1(
-    'bb',
-    'Ah Qh',
-    'Kh 8h 3c 2s Jd',
-    opponent: 'co',
-    openBb: 2.5,
-    betBb: 3,
-    showTurn: true,
-  ).copyWith(showDecisionPremise: true),
-);
-
-final _w12_river_ev_draw_hit = _w12Task(
-  'w12_river_ev_draw_hit',
-  'The draw hit',
-  'A heart lands on the river. BB bets 4 BB with a lower flush and will call one raise. Use this fixed hand model.',
-  'Which action has the best EV in this model?',
-  correct: 2,
-  choices: const [
-    (
-      'fold',
-      'Fold',
-      'Your ace-high flush wins against BB’s lower flush on this board. A fold gives up the pot.',
-      null,
-    ),
-    (
-      'call',
-      'Call',
-      'Calling wins the pot, but BB would put in more with a lower flush in this model.',
-      null,
-    ),
-    (
-      'raise',
-      'Raise',
-      'Ah Th makes the best possible flush. BB will call one raise with a lower flush. Get paid for the out that hit.',
+      'A raise asks BB to fold. The model says the better hands stay and make you pay more.',
       null,
     ),
   ],
   table: _day7PostflopV1(
     'co',
-    'Ah Th',
-    'Kh 6h 2s 8c 3h',
+    'Kd 9c',
+    'Ks Jh 8d 4s 2h',
     openBb: 2.5,
-    betBb: 4,
+    betBb: 5,
     showTurn: true,
   ).copyWith(showDecisionPremise: true),
 );
 
-final _w12_river_ev_new_sample = _w12Task(
-  'w12_river_ev_new_sample',
-  'Price the last hand',
-  'You lost a close call last hand. In this new hand you beat four of ten CO bets. CO bets 4 BB and keeps just the better hands if raised.',
-  'Which action has the best EV in this model?',
-  correct: 1,
-  choices: const [
-    (
-      'fold',
-      'Fold',
-      '4 BB needs about 30% to call. This hand wins 40% in the model. The last result does not take that edge away.',
-      null,
+Act0LessonTaskV1 _wave6Asm05CopyV1(
+  Act0LessonTaskV1 source, {
+  required String caption,
+  required String question,
+  required List<(String, String, Act0FeedbackQualityV1, String)> choices,
+  required String teach,
+}) {
+  final authored = _wave6AuthoredChoicesV1(choices);
+  return Act0LessonTaskV1(
+    taskId: source.taskId,
+    title: source.title,
+    phase: source.phase,
+    rewardXp: source.rewardXp,
+    stepKind: source.stepKind,
+    taskFamily: source.taskFamily,
+    tablePresentation: source.tablePresentation,
+    summary: source.summary,
+    runner: source.runner.copyWith(
+      caption: caption,
+      question: question,
+      options: [
+        for (final outcome in source.runner.options)
+          for (final option in authored.where(
+            (choice) => choice.id == outcome.id,
+          ))
+            Act0RunnerOptionV1(
+              id: option.id,
+              label: option.label,
+              isCorrect: outcome.isCorrect,
+              preferredLabel: option.preferredLabel,
+              quality: outcome.quality,
+              feedbackTitle: outcome.feedbackTitle,
+              feedbackReason: [
+                outcome.feedbackReason,
+                option.feedbackReason,
+                if (outcome.isCorrect && teach.isNotEmpty) teach,
+              ].join(' '),
+            ),
+      ],
     ),
-    (
-      'call',
-      'Call',
-      '4 divided by 13.5 is about 30%. You win 40%. A call gains 1.4 BB on average in this model.',
-      null,
-    ),
-    (
-      'raise',
-      'Raise',
-      'The hands that beat your jacks will call a raise. Making the bet larger just adds a cost against those hands.',
-      null,
-    ),
-  ],
-  table: _day7PostflopV1(
-    'bb',
-    'Jh Tc',
-    'Js 9h 6d 4c 2s',
-    opponent: 'co',
-    openBb: 2.5,
-    betBb: 4,
-    showTurn: true,
-  ).copyWith(showDecisionPremise: true),
-);
+  );
+}
 
 final _w12_turn_count_heart_outs = _w12Task(
   'w12_turn_count_heart_outs',
@@ -9285,183 +8294,2053 @@ final _w12_turn_count_heart_outs = _w12Task(
   ).copyWith(showDecisionPremise: true),
 );
 
-final _w12_tilt_after_river_beat = _w12Task(
-  'w12_tilt_after_river_beat',
-  'Pause after a bad beat',
-  'Last hand, your kings lost when an ace fell as the last card. Now CO bets on a new flop. You feel a rush to win it back.',
-  'What should you do before you pick an action?',
-  correct: 1,
-  choices: const [
-    (
-      'speed',
-      'Speed up so you do not freeze',
-      'The board is Q-7-2 and CO just put in 2 BB. Acting fast skips the new facts and can cost chips.',
-      null,
-    ),
-    (
-      'pause',
-      'Take one breath and read the new hand',
-      'You have a new pair on Q-7-2. Take a breath. Then read the price and the board before you choose.',
-      null,
-    ),
-    (
-      'target',
-      'Focus on bets from CO for this orbit',
-      'CO’s 2 BB bet belongs to this hand. Targeting a seat after a loss can make you pay for a grudge.',
-      null,
-    ),
-  ],
-  table: _day7PostflopV1(
-    'bb',
-    'Qc Td',
-    'Qh 7d 2c',
-    opponent: 'co',
-    openBb: 2.5,
-    betBb: 2,
-    showTurn: true,
-  ).copyWith(showDecisionPremise: true),
-  teaching: const Act0TeachingStepV1(
-    title: 'What is tilt?',
-    body:
-        'Tilt is when a strong feeling starts to steer how you play. After a loss, you may rush. After a big win, you may take risks you would not take before. Pause and read the new hand. If the urge stays, take a break.',
+final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
+  _wave6AuthoredTaskV1(
+    id: 'w12_decision_quality_intro',
+    lesson: 'decision_over_outcome',
+    lessonTitle: 'Decision quality over outcome',
+    title: 'Process first',
+    phase: Act0LessonPhaseV1.theory,
+    step: Act0LessonStepKindV1.learn,
+    xp: 7,
+    caption: 'A good choice can lose. A poor choice can win.',
+    question: 'What should you test after a lucky win?',
+    teach:
+        'EV means expected value: the average gain or loss over many repeats. An out is a card that makes a losing hand win. On the turn, count clean outs, not cards that help the other player more. A river call needs a win rate high enough for its price. A c-bet is a flop bet from the preflop raiser.',
+    choices: const [
+      (
+        'the_price_and_range_you_faced',
+        'The price and range you faced',
+        Act0FeedbackQualityV1.correct,
+        'A lucky river can hide a bad call. The old price and the likely hands decide if it had value.',
+      ),
+      (
+        'the_size_of_the_pot_you_won',
+        'The size of the pot you won',
+        Act0FeedbackQualityV1.wrong,
+        'A large pot can come from a weak call. Pot size alone does not show if the price was good.',
+      ),
+      (
+        'how_happy_the_win_made_you',
+        'How happy the win made you',
+        Act0FeedbackQualityV1.wrong,
+        'A good feeling is real, but it does not show if your hand had enough wins for the bet.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
   ),
-);
-
-final _w12_tilt_after_lucky_win = _w12Task(
-  'w12_tilt_after_lucky_win',
-  'Pause after a lucky win',
-  'You won a pot after a loose call last hand. In this new hand HJ opens, and you feel like your cards cannot miss. Take one breath and use the course chart.',
-  'What action fits the new hand?',
-  correct: 0,
-  choices: const [
-    (
-      'fold',
-      'Fold',
-      'J-5 off suit is Weak. The good result last hand does not move it to a new row.',
-      null,
-    ),
-    (
-      'call',
-      'Call',
-      'HJ made it 2.5 BB. The first blind is already in. Calling pays another 1.5 BB with J-5 off suit.',
-      null,
-    ),
-    (
-      'raise',
-      'Raise',
-      'A raise risks more chips with J-5 off suit against an HJ open. The last win does not give this hand a better chance.',
-      null,
-    ),
-  ],
-  table: _day7TableV1(
-    hero: 'bb',
-    hand: 'Js 5d',
-    street: PokerStreet.preflop,
-    actor: 'bb',
-
-    folded: const {'utg', 'co', 'btn', 'sb'},
-    stacks: const {
-      'utg': 40,
-      'hj': 40,
-      'co': 40,
-      'btn': 40,
-      'sb': 40,
-      'bb': 40,
-    },
-    entries: const [
-      ..._act0LessonBlinds,
-      Act0ContributionV1(
-        PokerStreet.preflop,
-        'hj',
-        Act0ContributionKindV1.wager,
-        2.5,
+  _wave6AuthoredTaskV1(
+    id: 'w12_good_fold_bad_result',
+    lesson: 'decision_over_outcome',
+    lessonTitle: 'Decision quality over outcome',
+    title: 'A new river decision',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'Last orbit, BB showed a bluff after you folded. On this river BB bets 12 into 16. In 20 similar spots, BB had 3 missed KQ/QT and 17 Ax or sets. JJ beats the misses; it loses to the value hands.',
+    question: 'Call or fold?',
+    teach:
+        'One shown card can help you learn. It does not replace a larger group of showdowns. On the river, there is no next card to save a weak call.',
+    choices: const [
+      (
+        'call_12_bb',
+        'Call 12 BB',
+        Act0FeedbackQualityV1.wrong,
+        'JJ loses to Ax and sets in 17 of 20 bets. The call loses 6 BB on average, even after last orbit\'s bluff.',
+      ),
+      (
+        'raise_to_32_bb',
+        'Raise to 32 BB',
+        Act0FeedbackQualityV1.wrong,
+        'JJ is a pair below the ace on board. A raise of 32 BB risks more chips against a range full of Ax and sets.',
+      ),
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.correct,
+        'JJ needs 30% wins for a 12 BB call. It wins 15% of this bet range. One old bluff does not pay the price.',
       ),
     ],
-    history: const [
-      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'CO folds'),
-      Act0ActionTrailItemV1(label: 'BTN folds'),
-      Act0ActionTrailItemV1(label: 'SB folds'),
-    ],
-    bets: const {
-      'sb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.post,
-        label: 'SB',
-        amountLabel: '0.5 BB',
-      ),
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.post,
-        label: 'BB',
-        amountLabel: '1 BB',
-      ),
-      'hj': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.raise,
-        label: 'Raise',
-        amountLabel: '2.5 BB',
-      ),
-    },
-  ).copyWith(showDecisionPremise: true),
-);
+    table: _day7TableV1(
+      hero: 'hj',
+      hand: 'Jc Jd',
+      street: PokerStreet.river,
+      actor: 'hj',
+      board: _act0LessonCardsV1('As 8h 4d 2c 9s'),
 
-final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w12_mindset_checkpoint',
-  caption:
-      'Lesson learned: process, reset, and discipline stabilize your game.',
-  hint:
-      'Next you carry this mindset into deeper postflop decision trees and pressure spots.',
-  question: 'What does this final mindset checkpoint add?',
-  feedbackTitle: 'Mindset checkpoint.',
-  feedbackReason:
-      'You now have emotional, process, and discipline guardrails that keep strategic learning stable under variance and pressure.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Stability before complexity.',
-      body:
-          'Strong strategy growth requires stable mindset habits. Process audits, resets, and discipline make advanced learning stick.',
-      focusLabels: <String>[
-        'Process quality',
-        'Tilt reset',
-        'Discipline',
-        'Postflop growth',
+      folded: const {'utg', 'co', 'btn', 'sb'},
+      stacks: const {
+        'utg': 75,
+        'hj': 75,
+        'co': 72,
+        'btn': 78,
+        'sb': 64,
+        'bb': 80,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'hj',
+          Act0ContributionKindV1.wager,
+          2.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.river,
+          'bb',
+          Act0ContributionKindV1.wager,
+          12,
+        ),
       ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ raises to 2 BB'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'HJ bets 3 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'HJ bets 2.75 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2.75 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB bets 12 BB'),
+      ],
+      bets: const {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '12 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_bad_call_good_result',
+    lesson: 'decision_over_outcome',
+    lessonTitle: 'Decision quality over outcome',
+    title: 'The next draw',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    family: Act0TaskFamilyV1.transfer,
+    signal: 'process_over_outcome',
+    caption:
+        'Last hand you called a costly draw bet and hit. This time BB shows Kc Kd: a set of kings. You have a heart draw on K-7-2-4. BB bets 12 into 10. If you call, both players check the river. No rake.',
+    question: 'Call or fold?',
+    teach:
+        'A set is three cards of the same rank. If the board pairs, a set may make a full house. A past win does not make a future draw more likely.',
+    choices: const [
+      (
+        'call_12_bb',
+        'Call 12 BB',
+        Act0FeedbackQualityV1.wrong,
+        'Ah Th has 7 clean hearts. If the river is 2h or 4h, the set makes a full house. The 12 BB call loses about 6.59 BB.',
+      ),
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.correct,
+        'Seven hearts win, out of 44 unseen cards. That is 15.9%, below the 35.3% call price. The last lucky win changes nothing.',
+      ),
+      (
+        'all_in_to_75_25_bb',
+        'All-in to 75.25 BB',
+        Act0FeedbackQualityV1.wrong,
+        'BB has a set of kings and will not fold in this model. Pushing your 75.25 BB adds far more risk to a draw with 7 clean outs.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'co',
+      hand: 'Ah Th',
+      street: PokerStreet.turn,
+      actor: 'co',
+      board: _act0LessonCardsV1('Kh 7h 2c 4d'),
+      shown: {'bb': _act0LessonCardsV1('Kc Kd')},
+      folded: const {'utg', 'hj', 'btn', 'sb'},
+      stacks: const {
+        'utg': 73,
+        'hj': 64,
+        'co': 80,
+        'btn': 77,
+        'sb': 70,
+        'bb': 80,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          1.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          12,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 3 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB bets 1.75 BB'),
+        Act0ActionTrailItemV1(label: 'CO calls 1.75 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB bets 12 BB'),
+      ],
+      bets: const {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '12 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6Asm05CopyV1(
+    act0Asm05AuthoredDecisionTaskV1(
+      exercise: Act0Asm05AuthoredExerciseV1.goodCallLoses(),
+      lessonId: 'decision_over_outcome',
+      lessonTitle: 'Decision quality over outcome',
+      beatIndex: 4,
+      beatCount: 6,
+      rewardXp: 0,
+      returnTarget: 'learn',
+      nextLessonId: 'tilt_reset_protocol',
     ),
-  ],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'stable_bridge',
-      label: 'A repeatable process-reset-discipline cycle',
-      isCorrect: true,
-      preferredLabel: 'A repeatable process-reset-discipline cycle',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
-      feedbackReason:
-          'Mindset stability is what lets complex strategic lessons stick instead of collapsing under pressure.',
+    caption:
+        'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. No rake. Compare call with fold; prior 20 BB is spent.',
+    question: 'Call or fold?',
+    choices: const [
+      (
+        'call',
+        'Call 10 BB',
+        Act0FeedbackQualityV1.correct,
+        'Nine hearts win out of 44 unknown cards. That is 20.5%, above the 16.7% price. The call gains 2.27 BB on average.',
+      ),
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.wrong,
+        'The 10 BB price needs 16.7%. With 9 clean hearts, your 20.5% chance earns about 2.27 BB more than a fold.',
+      ),
+    ],
+    teach:
+        'On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.',
+  ),
+  _wave6Asm05CopyV1(
+    act0Asm05AuthoredDecisionTaskV1(
+      exercise: Act0Asm05AuthoredExerciseV1.badCallWins(),
+      lessonId: 'decision_over_outcome',
+      lessonTitle: 'Decision quality over outcome',
+      beatIndex: 5,
+      beatCount: 6,
+      rewardXp: 0,
+      returnTarget: 'learn',
+      nextLessonId: 'tilt_reset_protocol',
     ),
-    Act0RunnerOptionV1(
-      id: 'optional_soft',
-      label: 'Optional soft skill with little EV impact',
-      isCorrect: false,
-      preferredLabel: 'A repeatable process-reset-discipline cycle',
-      betterAnswerLabel: 'A repeatable process-reset-discipline cycle',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Underestimation.',
-      feedbackReason:
-          'Across preflop and postflop spots, treating mindset as an optional soft skill leaves tilt and ego leaks draining chips from your technical edge.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'done_forever',
-      label: 'One-time fix, no daily upkeep needed',
-      isCorrect: false,
-      preferredLabel: 'A repeatable process-reset-discipline cycle',
-      betterAnswerLabel: 'A repeatable process-reset-discipline cycle',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Partly true start.',
-      feedbackReason:
-          'Across daily sessions, treating mindset as a one-time fix lets emotional drift and result bias creep back into large pots.',
-    ),
-  ],
-);
+    caption:
+        'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. No rake. Compare call with fold; prior 20 BB is spent.',
+    question: 'Call or fold?',
+    choices: const [
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.correct,
+        'Nine hearts win out of 44 unknown cards. That is 20.5%, below the 33.3% price. The fold saves 15.45 BB of expected loss. On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.',
+      ),
+      (
+        'call',
+        'Call 40 BB',
+        Act0FeedbackQualityV1.wrong,
+        'The river heart came in once, but 35 of 44 cards still lose. This 40 BB call loses 15.45 BB on average.',
+      ),
+    ],
+    teach: '',
+  ),
+  _w12_turn_count_heart_outs,
+];
+
+final _w12TiltResetProtocolTasksV1 = <Act0LessonTaskV1>[
+  _wave6AuthoredTaskV1(
+    id: 'w12_tilt_reset_intro',
+    lesson: 'tilt_reset_protocol',
+    lessonTitle: 'Tilt reset protocol',
+    title: 'Reset in under 20s',
+    phase: Act0LessonPhaseV1.theory,
+    step: Act0LessonStepKindV1.learn,
+    xp: 7,
+    caption: 'What happened in the last hand can affect your next choice.',
+    question: 'What can a reset protect?',
+    teach:
+        'Tilt is when anger, fear or stress starts to steer your play. A quick reset can protect the next hand. You can note the feeling, slow your next choice and check the table facts. If focus does not return, you can leave the session. A pause does not change pot odds.',
+    choices: const [
+      (
+        'the_next_choice_from_the_last_hand_s_mood',
+        'The next choice from the last hand\'s mood',
+        Act0FeedbackQualityV1.correct,
+        'The prior loss is over. A reset helps you read new cards and stakes without trying to get even.',
+      ),
+      (
+        'the_stack_from_a_normal_bad_beat',
+        'The stack from a normal bad beat',
+        Act0FeedbackQualityV1.wrong,
+        'A short pause cannot bring back lost chips. It helps stop a rushed next bet from losing more.',
+      ),
+      (
+        'the_odds_on_the_next_board',
+        'The odds on the next board',
+        Act0FeedbackQualityV1.wrong,
+        'The next cards do not change due to your mood. Only the care you take with the choice can change.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_after_bad_beat_reset',
+    lesson: 'tilt_reset_protocol',
+    lessonTitle: 'Tilt reset protocol',
+    title: 'After bad beat',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'Last hand, your AA lost to KK after a preflop all-in. You feel angry. New hand: AQs on A-7-2. BB calls flop bets with weaker aces and 7x. Pot 5.5.',
+    question: 'What is your flop action?',
+    teach:
+        'A lost all-in can make the next bet feel urgent. The new pot has its own hand, board and player read. A short pause is an option before a large choice.',
+    choices: const [
+      (
+        'check_from_fear_of_another_loss',
+        'Check from fear of another loss',
+        Act0FeedbackQualityV1.suboptimal,
+        'Checking keeps your 53.5 BB behind, but BB has weak aces and 7x that may pay a value bet now.',
+      ),
+      (
+        'all_in_to_53_5_bb_to_win_back_chips',
+        'All-in to 53.5 BB to win back chips',
+        Act0FeedbackQualityV1.wrong,
+        'You have top pair, not the nuts. A 53.5 BB shove into 5.5 BB may fold weak calls and risk a lot against sets or two pair.',
+      ),
+      (
+        'bet_3_bb_after_a_brief_reset',
+        'Bet 3 BB after a brief reset',
+        Act0FeedbackQualityV1.correct,
+        'Your AQ has top pair with a queen kicker. BB may call 3 BB with worse aces and 7x; the last loss is not part of this pot.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'co',
+      hand: 'Ah Qh',
+      street: PokerStreet.flop,
+      actor: 'co',
+      board: _act0LessonCardsV1('As 7d 2c'),
+
+      folded: const {'utg', 'hj', 'btn', 'sb'},
+      stacks: const {
+        'utg': 65,
+        'hj': 60,
+        'co': 56,
+        'btn': 62,
+        'sb': 53,
+        'bb': 70,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.5,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1.5 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      ],
+      bets: const {},
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_after_mistake_reset',
+    lesson: 'tilt_reset_protocol',
+    lessonTitle: 'Tilt reset protocol',
+    title: 'After your own mistake',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    family: Act0TaskFamilyV1.transfer,
+    caption:
+        'Last hand you made a bad 12 BB river call. You wrote it down. New hand: TT in HJ with 35 BB. It is folded to you. No special player read.',
+    question: 'What should you do preflop?',
+    teach:
+        'Log one past leak, then read the new deal. Use your normal hand chart and bet size unless this new spot gives a reason to change.',
+    choices: const [
+      (
+        'raise_to_2_bb',
+        'Raise to 2 BB',
+        Act0FeedbackQualityV1.correct,
+        'TT is Strong from HJ. A small open leaves 33 BB for the new pot; the last call has no say here.',
+      ),
+      (
+        'raise_to_3_bb',
+        'Raise to 3 BB',
+        Act0FeedbackQualityV1.suboptimal,
+        'TT is a sound HJ open, but 3 BB spends one more than the course size with no read to gain more folds or calls.',
+      ),
+      (
+        'fold_to_avoid_another_error',
+        'Fold to avoid another error',
+        Act0FeedbackQualityV1.wrong,
+        'TT is in the Strong HJ range. Folding because of a prior river loss gives up a sound open and lets fear set your next line.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'hj',
+      hand: 'Ts Th',
+      street: PokerStreet.preflop,
+      actor: 'hj',
+
+      folded: const {'utg'},
+      stacks: const {
+        'utg': 32,
+        'hj': 35,
+        'co': 38,
+        'btn': 40,
+        'sb': 35,
+        'bb': 37,
+      },
+      entries: const [..._act0LessonBlinds],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+      ],
+      bets: const {
+        'sb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.post,
+          label: 'post',
+          amountLabel: '0.5 BB',
+        ),
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.post,
+          label: 'post',
+          amountLabel: '1 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_tilt_reset_recap',
+    lesson: 'tilt_reset_protocol',
+    lessonTitle: 'Tilt reset protocol',
+    title: 'Reset recap',
+    phase: Act0LessonPhaseV1.review,
+    step: Act0LessonStepKindV1.review,
+    xp: 16,
+    caption: 'A reset is a tool, not a rule to keep playing.',
+    question: 'What if the next pot still feels rushed?',
+    teach: '',
+    choices: const [
+      (
+        'keep_playing_to_recover_a_lost_stack',
+        'Keep playing to recover a lost stack',
+        Act0FeedbackQualityV1.wrong,
+        'A loss is not a debt due from the table. A rushed 12 BB call can add a second error.',
+      ),
+      (
+        'sit_out_and_review_when_ready',
+        'Sit out and review when ready',
+        Act0FeedbackQualityV1.correct,
+        'Stopping is better than making a forced large call while you cannot check the cards or price.',
+      ),
+      (
+        'raise_the_next_hand_to_gain_control',
+        'Raise the next hand to gain control',
+        Act0FeedbackQualityV1.wrong,
+        'An extra raise does not fix the past hand. It risks chips before you read the new seat and hand.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
+  ),
+];
+
+final _w12ConfidenceAndDisciplineTasksV1 = <Act0LessonTaskV1>[
+  _wave6AuthoredTaskV1(
+    id: 'w12_confidence_intro',
+    lesson: 'confidence_and_discipline',
+    lessonTitle: 'Confidence with discipline',
+    title: 'Calm assertive posture',
+    phase: Act0LessonPhaseV1.theory,
+    step: Act0LessonStepKindV1.learn,
+    xp: 7,
+    caption:
+        'A river example starts with 16 BB in the middle. A rival adds 8 BB, making the pot 24 BB.',
+    question: 'What is the call price?',
+    teach:
+        'Confidence does not mean a larger bet. Start by reading the chips already in the pot. Your own chips enter only if you call. An overpair is a pocket pair above the top board card. A bluff-catcher beats bluffs but loses to value hands. Call price equals the call divided by the pot after your call.',
+    choices: const [
+      (
+        '25',
+        '25%',
+        Act0FeedbackQualityV1.correct,
+        'The pot now has 24 BB. Calling 8 makes 32 BB. Your price is 8/32 = 25%.',
+      ),
+      (
+        '33_3',
+        '33.3%',
+        Act0FeedbackQualityV1.wrong,
+        'A call would make the 24 BB pot grow to 32 BB. Dividing by 24 leaves out your own call.',
+      ),
+      (
+        '50',
+        '50%',
+        Act0FeedbackQualityV1.wrong,
+        'Calling 8 BB can win more than 8. The final pot is 32 BB, so 50% is far too high.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_assertive_not_ego',
+    lesson: 'confidence_and_discipline',
+    lessonTitle: 'Confidence with discipline',
+    title: 'Assertive, not ego',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'BB made fun of your last fold. New hand: 99 from CO with 35 BB. No strong read changes the course opening plan.',
+    question: 'What is your preflop action?',
+    teach:
+        'Read your position and the hand chart before you act. A comment from a rival gives no new card or pot fact.',
+    choices: const [
+      (
+        'raise_to_2_bb',
+        'Raise to 2 BB',
+        Act0FeedbackQualityV1.correct,
+        '99 is a Medium CO opener. The 2 BB size takes a normal spot without reacting to BB\'s talk.',
+      ),
+      (
+        'raise_to_3_bb',
+        'Raise to 3 BB',
+        Act0FeedbackQualityV1.suboptimal,
+        '99 is worth opening from CO, but a 3 BB size adds 1 BB of risk with no read that calls for it.',
+      ),
+      (
+        'all_in_to_35_bb',
+        'All-in to 35 BB',
+        Act0FeedbackQualityV1.wrong,
+        '99 can open small in CO. A 35 BB shove to prove a point risks the stack for a 1.5 BB pot.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'co',
+      hand: '9s 9d',
+      street: PokerStreet.preflop,
+      actor: 'co',
+
+      folded: const {'utg', 'hj'},
+      stacks: const {
+        'utg': 52,
+        'hj': 46,
+        'co': 35,
+        'btn': 49,
+        'sb': 43,
+        'bb': 44,
+      },
+      entries: const [..._act0LessonBlinds],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+      ],
+      bets: const {
+        'sb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.post,
+          label: 'post',
+          amountLabel: '0.5 BB',
+        ),
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.post,
+          label: 'post',
+          amountLabel: '1 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_discipline_under_pressure',
+    lesson: 'confidence_and_discipline',
+    lessonTitle: 'Confidence with discipline',
+    title: 'Discipline under pressure',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    family: Act0TaskFamilyV1.transfer,
+    caption:
+        'Late in your session, BTN bets 9 into 12 on A-8-4-2-9. Its range is 45% missed KQ/QJ and 55% AK/AQ/sets. Your AJ beats the misses and loses to value. No ties.',
+    question: 'Call or fold?',
+    teach:
+        'Fatigue can speed up a large choice. A brief pause can help you read the bet size and the set of hands that bet. Stop if you cannot do that.',
+    choices: const [
+      (
+        'fold_to_end_the_session',
+        'Fold to end the session',
+        Act0FeedbackQualityV1.wrong,
+        'Your AJ beats 45% of the bets, well above the 30% price. A tired fold gives up 4.5 BB of call value.',
+      ),
+      (
+        'raise_to_25_bb',
+        'Raise to 25 BB',
+        Act0FeedbackQualityV1.wrong,
+        'AJ can catch missed hands for 9 BB. A raise may fold the misses and meet calls from AK, AQ or sets.',
+      ),
+      (
+        'call_9_bb',
+        'Call 9 BB',
+        Act0FeedbackQualityV1.correct,
+        'The price is 9/30=30%. AJ wins 45% of these river bets, so calling earns 4.5 BB on average.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'bb',
+      hand: 'Ac Jd',
+      street: PokerStreet.river,
+      actor: 'bb',
+      board: _act0LessonCardsV1('Ah 8c 4s 2d 9h'),
+
+      folded: const {'utg', 'hj', 'co', 'sb'},
+      stacks: const {
+        'utg': 70,
+        'hj': 66,
+        'co': 62,
+        'btn': 75,
+        'sb': 65,
+        'bb': 65,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'btn',
+          Act0ContributionKindV1.wager,
+          1.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.river,
+          'btn',
+          Act0ContributionKindV1.wager,
+          9,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN raises to 2 BB'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 1.75 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 1.75 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 9 BB'),
+      ],
+      bets: const {
+        'btn': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '9 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+];
+
+final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
+  _wave6AuthoredTaskV1(
+    id: 'w12_checkpoint_intro',
+    lesson: 'mindset_bridge_checkpoint',
+    lessonTitle: 'Mindset bridge checkpoint',
+    title: 'Mindset routine map',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.learn,
+    xp: 7,
+    caption: 'Five new hands check process, mood and price.',
+    question: 'Which fact belongs to the new hand?',
+    teach: '',
+    choices: const [
+      (
+        'the_current_pot_and_amount_to_call',
+        'The current pot and amount to call',
+        Act0FeedbackQualityV1.correct,
+        'Those numbers set the price. Last hand\'s chips are not part of this new bet.',
+      ),
+      (
+        'the_win_or_loss_in_the_prior_orbit',
+        'The win or loss in the prior orbit',
+        Act0FeedbackQualityV1.wrong,
+        'A prior result may affect your mood, but it does not change the current pot price.',
+      ),
+      (
+        'how_much_you_want_to_win_this_hour',
+        'How much you want to win this hour',
+        Act0FeedbackQualityV1.wrong,
+        'A cash goal does not change the hand range or how often a river call wins.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_checkpoint_process_line',
+    lesson: 'mindset_bridge_checkpoint',
+    lessonTitle: 'Mindset bridge checkpoint',
+    title: 'Process line',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    signal: 'process_over_outcome',
+    caption:
+        'Last orbit, a similar call lost. New hand: BB bets 7 into 14 on Q-9-4-2-3. BB has value Qx/sets 60% and missed AJ/KT 40%. Your 77 beats the missed hands and loses to value. No ties.',
+    question: 'Call or fold?',
+    teach: '',
+    choices: const [
+      (
+        'fold_after_last_orbit_s_loss',
+        'Fold after last orbit\'s loss',
+        Act0FeedbackQualityV1.wrong,
+        'The old loss is done. Here 40% wins beat a 25% price, so folding misses 4.2 BB of expected call value.',
+      ),
+      (
+        'raise_to_25_bb',
+        'Raise to 25 BB',
+        Act0FeedbackQualityV1.wrong,
+        'A 7 BB call beats the missed AJ and KT. Raising may drive off those hands and face calls from Qx or sets.',
+      ),
+      (
+        'call_7_bb',
+        'Call 7 BB',
+        Act0FeedbackQualityV1.correct,
+        'Your 77 wins 40% of the river bets. The price is 7/28=25%, so calling gains 4.2 BB on average.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'co',
+      hand: '7c 7d',
+      street: PokerStreet.river,
+      actor: 'co',
+      board: _act0LessonCardsV1('Qh 9c 4d 2s 3h'),
+
+      folded: const {'utg', 'hj', 'btn', 'sb'},
+      stacks: const {
+        'utg': 75,
+        'hj': 75,
+        'co': 70,
+        'btn': 68,
+        'sb': 65,
+        'bb': 75,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'co',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.river,
+          'bb',
+          Act0ContributionKindV1.wager,
+          7,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 2 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 2.75 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2.75 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB bets 7 BB'),
+      ],
+      bets: const {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '7 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_checkpoint_reset_line',
+    lesson: 'mindset_bridge_checkpoint',
+    lessonTitle: 'Mindset bridge checkpoint',
+    title: 'Reset line',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'You lost two large pots and want to get even. New hand: UTG raises to 3 with QQ+/AK. You have QJo in CO and 28 BB; BTN and both blinds act after you, and UTG can still respond to a raise.',
+    question: 'What should you do?',
+    teach: '',
+    choices: const [
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.correct,
+        'QJo is Weak in the opening chart and is behind UTG\'s QQ+/AK. A reset keeps your 28 BB for a better spot.',
+      ),
+      (
+        'call_3_bb_to_win_chips_back',
+        'Call 3 BB to win chips back',
+        Act0FeedbackQualityV1.wrong,
+        'QJo faces QQ+/AK with players behind. Paying 3 BB to chase the past loss risks a dominated flop hand.',
+      ),
+      (
+        'all_in_to_28_bb',
+        'All-in to 28 BB',
+        Act0FeedbackQualityV1.wrong,
+        'The UTG range is strong and can call. Shoving QJo risks 28 BB into a 4.5 BB pot with little fold pressure.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'co',
+      hand: 'Qs Jd',
+      street: PokerStreet.preflop,
+      actor: 'co',
+
+      folded: const {'hj'},
+      stacks: const {
+        'utg': 40,
+        'hj': 45,
+        'co': 28,
+        'btn': 36,
+        'sb': 32,
+        'bb': 38,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'utg',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG raises to 3 BB'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+      ],
+      bets: const {
+        'sb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.post,
+          label: 'post',
+          amountLabel: '0.5 BB',
+        ),
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.post,
+          label: 'post',
+          amountLabel: '1 BB',
+        ),
+        'utg': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.raise,
+          label: 'raise',
+          amountLabel: '3 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_checkpoint_discipline_line',
+    lesson: 'mindset_bridge_checkpoint',
+    lessonTitle: 'Mindset bridge checkpoint',
+    title: 'Discipline line',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'You feel tired. BTN bets 16 into 12 on K-7-2-9-4. In this line, BTN has 12% missed JT and 88% AK, K9 or sets. Your KQ beats the misses and loses to value.',
+    question: 'Call or fold?',
+    teach: '',
+    choices: const [
+      (
+        'call_16_bb',
+        'Call 16 BB',
+        Act0FeedbackQualityV1.wrong,
+        'The pot is 28 BB after the bet. KQ beats the 12% bluffs but not AK, K9 or sets. A 16 BB call loses 10.72 BB.',
+      ),
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.correct,
+        'KQ wins 12% of the range. The price for 16 BB is 36.4%, so a tired call would lose about 10.72 BB.',
+      ),
+      (
+        'raise_to_40_bb',
+        'Raise to 40 BB',
+        Act0FeedbackQualityV1.wrong,
+        'KQ has top pair, but this BTN range is 88% value. Raising to 40 BB risks extra chips into hands that beat you.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'bb',
+      hand: 'Kd Qs',
+      street: PokerStreet.river,
+      actor: 'bb',
+      board: _act0LessonCardsV1('Kh 7c 2d 9s 4c'),
+
+      folded: const {'utg', 'hj', 'co', 'sb'},
+      stacks: const {
+        'utg': 78,
+        'hj': 72,
+        'co': 73,
+        'btn': 77,
+        'sb': 69,
+        'bb': 70,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'btn',
+          Act0ContributionKindV1.wager,
+          1.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.river,
+          'btn',
+          Act0ContributionKindV1.wager,
+          16,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN raises to 2 BB'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 2.25 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2.25 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 1.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 1.5 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 16 BB'),
+      ],
+      bets: const {
+        'btn': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '16 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_checkpoint_full_loop_line',
+    lesson: 'mindset_bridge_checkpoint',
+    lessonTitle: 'Mindset bridge checkpoint',
+    title: 'Full routine line',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    family: Act0TaskFamilyV1.transfer,
+    caption:
+        'Last orbit you made a loose bluff. Now you have AJs on A-8-4. CO bets 2 into 8. CO bets this size with weaker aces, draws and strong hands.',
+    question: 'What is your flop action?',
+    teach: '',
+    choices: const [
+      (
+        'raise_to_8_bb_to_feel_in_control',
+        'Raise to 8 BB to feel in control',
+        Act0FeedbackQualityV1.suboptimal,
+        'A raise with AJ may fold weak draws in this 10 BB pot. Calling for 2 BB keeps more of the mixed range in.',
+      ),
+      (
+        'fold_to_avoid_a_new_error',
+        'Fold to avoid a new error',
+        Act0FeedbackQualityV1.wrong,
+        'Your AJ has top pair and a low 2 BB price. Folding from regret gives up value against weak aces and draws.',
+      ),
+      (
+        'call_2_bb',
+        'Call 2 BB',
+        Act0FeedbackQualityV1.correct,
+        'AJs has top pair with a jack kicker. The 16.7% price is low; calling keeps weak aces and draws in.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'btn',
+      hand: 'As Js',
+      street: PokerStreet.flop,
+      actor: 'btn',
+      board: _act0LessonCardsV1('Ah 8h 4c'),
+
+      folded: const {'utg', 'hj', 'sb', 'bb'},
+      stacks: const {
+        'utg': 80,
+        'hj': 78,
+        'co': 60,
+        'btn': 35,
+        'sb': 72,
+        'bb': 70,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          3.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 3.25 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 3.25 BB'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB folds'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+      ],
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '2 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_checkpoint_review',
+    lesson: 'mindset_bridge_checkpoint',
+    lessonTitle: 'Mindset bridge checkpoint',
+    title: 'Mindset recap',
+    phase: Act0LessonPhaseV1.review,
+    step: Act0LessonStepKindV1.proveIt,
+    xp: 17,
+    family: Act0TaskFamilyV1.transfer,
+    caption:
+        'You have AT on A-9-6-3-2. The pot is 14. BB calls a 6 BB bet with A4, A5, A7, A8 and 9x. BB raises two pair or sets. You have not seen BB call a river shove with weak hands.',
+    question: 'What river action fits?',
+    teach: '',
+    choices: const [
+      (
+        'bet_6_bb',
+        'Bet 6 BB',
+        Act0FeedbackQualityV1.correct,
+        'AT beats A4, A5, A7, A8 and 9x. The station can pay a 6 BB value bet with worse hands.',
+      ),
+      (
+        'check',
+        'Check',
+        Act0FeedbackQualityV1.suboptimal,
+        'Checking keeps the 14 BB pot, but this BB is set to call 6 BB with weaker aces and 9x.',
+      ),
+      (
+        'all_in_to_53_25_bb',
+        'All-in to 53.25 BB',
+        Act0FeedbackQualityV1.wrong,
+        'A shove can drive off the weak aces and 9x that pay 6 BB. It risks 53.25 BB against a range with sets and two pair.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'co',
+      hand: 'Ac Tc',
+      street: PokerStreet.river,
+      actor: 'co',
+      board: _act0LessonCardsV1('As 9d 6c 3h 2s'),
+
+      folded: const {'utg', 'hj', 'btn', 'sb'},
+      stacks: const {
+        'utg': 80,
+        'hj': 74,
+        'co': 60,
+        'btn': 70,
+        'sb': 65,
+        'bb': 66,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'co',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1.5 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 2.25 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2.25 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB checks'),
+      ],
+      bets: const {},
+    ).copyWith(showDecisionPremise: true),
+  ),
+];
+
+final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
+  _wave6AuthoredTaskV1(
+    id: 'w12_clean_outs_vs_set',
+    lesson: 'decision_price_and_clean_outs',
+    lessonTitle: 'Price and clean outs',
+    title: 'Read a turn draw',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'SB shows 9d 9c: a set of nines. You have Ah Jh on 2h 7h 9s 3c. SB bets 2 into 12. If you call, both check the river. No rake.',
+    question: 'Call or fold?',
+    teach:
+        'A flush is five cards of one suit. Nine hearts may finish a flush, yet some can make a set into a full house or quads. Count cards that win, then compare the bet.',
+    choices: const [
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.wrong,
+        'With 7 clean hearts from 44, the draw wins 15.9%. Folding gives up about 0.55 BB of call value at this 2 BB price.',
+      ),
+      (
+        'raise_to_10_bb',
+        'Raise to 10 BB',
+        Act0FeedbackQualityV1.wrong,
+        'Your seven clean hearts give a fair 2 BB call. SB has a set and will not fold; raising to 10 spends 8 BB more with no added folds.',
+      ),
+      (
+        'call_2_bb',
+        'Call 2 BB',
+        Act0FeedbackQualityV1.correct,
+        'Nine hearts are unseen, but if 9h or 3h comes on the river, SB makes quads or a full house, respectively. Seven clean hearts beat the 12.5% call price.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'bb',
+      hand: 'Ah Jh',
+      street: PokerStreet.turn,
+      actor: 'bb',
+      board: _act0LessonCardsV1('2h 7h 9s 3c'),
+      shown: {'sb': _act0LessonCardsV1('9d 9c')},
+      folded: const {'utg', 'hj', 'co', 'btn'},
+      stacks: const {
+        'utg': 72,
+        'hj': 70,
+        'co': 67,
+        'btn': 65,
+        'sb': 68,
+        'bb': 70,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'sb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB raises to 3 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: SB bets 3 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: SB bets 2 BB'),
+      ],
+      bets: const {
+        'sb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '2 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_river_price_call',
+    lesson: 'decision_price_and_clean_outs',
+    lessonTitle: 'Price and clean outs',
+    title: 'River price',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'CO bets 10 into 20 on K-8-4-2-9. This river range is 35% missed QJ/JT and 65% AK, K9 or 88. Your KQ beats the misses and loses to the value hands. No ties.',
+    question: 'Call or fold?',
+    teach:
+        'W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.',
+    choices: const [
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.wrong,
+        'The bet makes the pot 30 BB. KQ beats the 35% missed hands, so folding gives up 4 BB of expected call value.',
+      ),
+      (
+        'call_10_bb',
+        'Call 10 BB',
+        Act0FeedbackQualityV1.correct,
+        'KQ wins 35% of this river range. A 10 BB call needs 25%. Its average gain is 4 BB.',
+      ),
+      (
+        'raise_to_35_bb',
+        'Raise to 35 BB',
+        Act0FeedbackQualityV1.wrong,
+        'KQ can catch missed QJ/JT for 10 BB. A raise to 35 may fold those bluffs and face calls from AK, K9 and 88.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'bb',
+      hand: 'Kc Qd',
+      street: PokerStreet.river,
+      actor: 'bb',
+      board: _act0LessonCardsV1('Ks 8c 4d 2h 9s'),
+
+      folded: const {'utg', 'hj', 'btn', 'sb'},
+      stacks: const {
+        'utg': 70,
+        'hj': 69,
+        'co': 70,
+        'btn': 65,
+        'sb': 62,
+        'bb': 70,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          3.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          3.75,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'co',
+          Act0ContributionKindV1.wager,
+          4,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          4,
+        ),
+        Act0ContributionV1(
+          PokerStreet.river,
+          'co',
+          Act0ContributionKindV1.wager,
+          10,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 2 BB'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 3.75 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 3.75 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 4 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 4 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB checks'),
+        Act0ActionTrailItemV1(label: 'CO bets 10 BB'),
+      ],
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '10 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _w12_river_ev_costly_call,
+  _wave6AuthoredTaskV1(
+    id: 'w12_river_value_vs_caller',
+    lesson: 'decision_price_and_clean_outs',
+    lessonTitle: 'Price and clean outs',
+    title: 'River value vs caller',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'BB is a loose caller. BB calls a 6 BB river bet with A3, A5, A6, A8, 7x and 9x, but raises two pair or sets. You have AJ on A-7-2-4-9, with 14 BB in the pot.',
+    question: 'What river action fits?',
+    teach:
+        'A value bet aims to get paid by a worse hand. A loose caller may pay with weak pairs. A large size can change which hands call. Plan the size before you bet.',
+    choices: const [
+      (
+        'check',
+        'Check',
+        Act0FeedbackQualityV1.suboptimal,
+        'A check keeps the 14 BB pot. It also misses a 6 BB call from weaker aces and pairs in BB\'s known range.',
+      ),
+      (
+        'all_in_to_68_25_bb',
+        'All-in to 68.25 BB',
+        Act0FeedbackQualityV1.wrong,
+        'BB calls small with weak pairs and raises with strong hands. Shoving 68.25 BB may drive off weaker hands and risk too much against sets or two pair.',
+      ),
+      (
+        'bet_6_bb',
+        'Bet 6 BB',
+        Act0FeedbackQualityV1.correct,
+        'AJ beats A3, A5, A6 and A8, 7x and 9x. A 6 BB value bet can get calls from worse while the bet stays small.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'hj',
+      hand: 'Ac Jc',
+      street: PokerStreet.river,
+      actor: 'hj',
+      board: _act0LessonCardsV1('As 7d 2c 4s 9h'),
+
+      folded: const {'utg', 'co', 'btn', 'sb'},
+      stacks: const {
+        'utg': 75,
+        'hj': 75,
+        'co': 68,
+        'btn': 62,
+        'sb': 65,
+        'bb': 80,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          1.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'hj',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'hj',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'bb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN folds'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB calls 1.5 BB more'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'HJ bets 2.25 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2.25 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+        Act0ActionTrailItemV1(label: 'HJ bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'BB calls 2 BB'),
+        Act0ActionTrailItemV1(label: 'River: BB checks'),
+      ],
+      bets: const {},
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_river_draw_missed',
+    lesson: 'decision_price_and_clean_outs',
+    lessonTitle: 'Price and clean outs',
+    title: 'River draw missed',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    caption:
+        'Your Qh Jh missed a flush on A-8-4-2-9. The pot is 14. BTN calls river bets 80% with a pair and folds 20% missed low draws. Your queen-high beats the low draws if you check.',
+    question: 'What is your river action?',
+    teach:
+        'A draw can miss. On the river there are no outs left. A bluff wins when the other player folds. Check the fold rate and the amount at risk.',
+    choices: const [
+      (
+        'check',
+        'Check',
+        Act0FeedbackQualityV1.correct,
+        'There is no card left to make your flush. Checking can win versus weak missed draws and avoids a poor bluff into the 80% call rate.',
+      ),
+      (
+        'bet_6_bb',
+        'Bet 6 BB',
+        Act0FeedbackQualityV1.wrong,
+        'With 14 BB in the pot, a 6 BB pure bluff needs 30% folds. BTN folds 20%, so it loses about 2 BB as a bluff.',
+      ),
+      (
+        'bet_12_bb',
+        'Bet 12 BB',
+        Act0FeedbackQualityV1.wrong,
+        'The same 20% folds cannot pay for a 12 BB bluff into 14. The bet needs 46.2% folds before other effects.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'sb',
+      hand: 'Qh Jh',
+      street: PokerStreet.river,
+      actor: 'sb',
+      board: _act0LessonCardsV1('Ah 8h 4c 2s 9d'),
+
+      folded: const {'utg', 'hj', 'co', 'bb'},
+      stacks: const {
+        'utg': 65,
+        'hj': 63,
+        'co': 60,
+        'btn': 70,
+        'sb': 70,
+        'bb': 66,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          1.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'sb',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN raises to 2 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 1.5 BB more'),
+        Act0ActionTrailItemV1(label: 'BB folds'),
+        Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: SB checks'),
+        Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 2 BB'),
+        Act0ActionTrailItemV1(label: 'River is dealt'),
+      ],
+      bets: const {},
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_decision_quality_recap',
+    lesson: 'decision_price_and_clean_outs',
+    lessonTitle: 'Price and clean outs',
+    title: 'Process recap',
+    phase: Act0LessonPhaseV1.review,
+    step: Act0LessonStepKindV1.review,
+    xp: 16,
+    caption: 'One lucky river does not rewrite the call price.',
+    question: 'Which review uses the right evidence?',
+    teach: '',
+    choices: const [
+      (
+        'mark_the_40_bb_draw_call_right_after_a_heart',
+        'Mark the 40 BB draw call right after a heart',
+        Act0FeedbackQualityV1.wrong,
+        'The nine winning hearts did not change. The 40 BB bet still cost too much for those odds.',
+      ),
+      (
+        'compare_the_call_price_with_wins_in_the_range',
+        'Compare the call price with wins in the range',
+        Act0FeedbackQualityV1.correct,
+        'The 10 BB draw call gained value and the 40 BB draw call lost value with the same nine outs.',
+      ),
+      (
+        'judge_a_fold_by_the_next_shown_card',
+        'Judge a fold by the next shown card',
+        Act0FeedbackQualityV1.wrong,
+        'A shown bluff from BB cannot erase the other 17 value bets in the record. The decision still needs a range read.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
+  ),
+];
+
+final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
+  _wave6AuthoredTaskV1(
+    id: 'w12_pretty_hand_bad_price_fold',
+    lesson: 'confidence_river_discipline',
+    lessonTitle: 'River discipline',
+    title: 'Top pair under pressure',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    family: Act0TaskFamilyV1.transfer,
+    caption:
+        'Tight CO bets 18 into 20 on K-7-2-9-4. Of 20 such river bets, one was missed JT and 19 were AK, K9 or sets. Your KQ beats JT and loses to the value hands.',
+    question: 'Call or fold?',
+    teach:
+        'Top pair is one pair made with the highest board rank. It is not a set or an overpair. A pretty hand still needs enough wins to pay for a river bet.',
+    choices: const [
+      (
+        'call_18_bb',
+        'Call 18 BB',
+        Act0FeedbackQualityV1.wrong,
+        'KQ is top pair but loses to 19 of 20 betting hands. At 18 BB to call, the average loss is 15.2 BB.',
+      ),
+      (
+        'fold',
+        'Fold',
+        Act0FeedbackQualityV1.correct,
+        'KQ wins 5% of this river bet range. A call needs 32.1%. You save 15.2 BB of expected loss.',
+      ),
+      (
+        'raise_to_45_bb',
+        'Raise to 45 BB',
+        Act0FeedbackQualityV1.wrong,
+        'CO bets 18 with strong hands 95% of the time. Raising KQ risks more than calling and may fold the rare missed JT.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'btn',
+      hand: 'Kd Qc',
+      street: PokerStreet.river,
+      actor: 'btn',
+      board: _act0LessonCardsV1('Kh 7c 2d 9s 4c'),
+
+      folded: const {'utg', 'hj', 'sb', 'bb'},
+      stacks: const {
+        'utg': 85,
+        'hj': 86,
+        'co': 90,
+        'btn': 100,
+        'sb': 95,
+        'bb': 80,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          2.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          3.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'co',
+          Act0ContributionKindV1.wager,
+          3.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.turn,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.river,
+          'co',
+          Act0ContributionKindV1.wager,
+          18,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB folds'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 3.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 3.5 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: CO bets 3.25 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 3.25 BB'),
+        Act0ActionTrailItemV1(label: 'River: CO bets 18 BB'),
+      ],
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '18 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _wave6AuthoredTaskV1(
+    id: 'w12_revenge_raise_trap',
+    lesson: 'confidence_river_discipline',
+    lessonTitle: 'River discipline',
+    title: 'Do not raise to take control',
+    phase: Act0LessonPhaseV1.drill,
+    step: Act0LessonStepKindV1.practice,
+    xp: 10,
+    family: Act0TaskFamilyV1.transfer,
+    caption:
+        'CO bluffed you last orbit and made a joke about it. New hand: your QJs has top pair on J-7-4. CO bets 2 into 8 with some missed overcards and better pairs.',
+    question: 'What is your flop action?',
+    teach:
+        'A 3-bet means a preflop raise over an open raise. Here CO made a normal open, not a 3-bet. A past bluff does not prove that a new flop bet is weak.',
+    choices: const [
+      (
+        'raise_to_7_bb',
+        'Raise to 7 BB',
+        Act0FeedbackQualityV1.suboptimal,
+        'The small CO bet contains missed hands. Raising to 7 BB may fold those hands and grow the pot against AJ, QQ and sets.',
+      ),
+      (
+        'all_in_to_36_75_bb',
+        'All-in to 36.75 BB',
+        Act0FeedbackQualityV1.wrong,
+        'Top pair QJ is not a reason to shove 36.75 BB. The shove can fold bluffs but get action from better pairs or sets.',
+      ),
+      (
+        'call_2_bb',
+        'Call 2 BB',
+        Act0FeedbackQualityV1.correct,
+        'QJ is top pair with a queen kicker. Calling costs 16.7% of the final 12 BB pot and keeps CO\'s weak bets in.',
+      ),
+    ],
+    table: _day7TableV1(
+      hero: 'btn',
+      hand: 'Qs Js',
+      street: PokerStreet.flop,
+      actor: 'btn',
+      board: _act0LessonCardsV1('Jh 7c 4d'),
+
+      folded: const {'utg', 'hj', 'sb', 'bb'},
+      stacks: const {
+        'utg': 65,
+        'hj': 61,
+        'co': 55,
+        'btn': 40,
+        'sb': 63,
+        'bb': 60,
+      },
+      entries: const [
+        ..._act0LessonBlinds,
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'co',
+          Act0ContributionKindV1.wager,
+          3.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3.25,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          'co',
+          Act0ContributionKindV1.wager,
+          2,
+        ),
+      ],
+      history: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO raises to 3.25 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 3.25 BB'),
+        Act0ActionTrailItemV1(label: 'SB folds'),
+        Act0ActionTrailItemV1(label: 'BB folds'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+      ],
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'bet',
+          amountLabel: '2 BB',
+        ),
+      },
+    ).copyWith(showDecisionPremise: true),
+  ),
+  _w12_confidence_spr,
+  _wave6AuthoredTaskV1(
+    id: 'w12_confidence_recap',
+    lesson: 'confidence_river_discipline',
+    lessonTitle: 'River discipline',
+    title: 'Confidence recap',
+    phase: Act0LessonPhaseV1.review,
+    step: Act0LessonStepKindV1.review,
+    xp: 16,
+    caption: 'Calm play still takes good chances.',
+    question: 'What should stay the same after a taunt?',
+    teach: '',
+    choices: const [
+      (
+        'your_table_based_choice_process',
+        'Your table-based choice process',
+        Act0FeedbackQualityV1.correct,
+        '99 from CO still has a normal open; QJ on J-7-4 still needs a read before a large raise.',
+      ),
+      (
+        'the_bet_size_used_by_your_rival',
+        'The bet size used by your rival',
+        Act0FeedbackQualityV1.wrong,
+        'A rival\'s taunt does not make a big bet a good response. Shoving 35 BB with 99 adds needless risk.',
+      ),
+      (
+        'the_choice_to_avoid_that_player',
+        'The choice to avoid that player',
+        Act0FeedbackQualityV1.suboptimal,
+        'A calmer seat plan can help, but folding good CO opens gives up value from a fear of table talk.',
+      ),
+    ],
+    table: _wave6StudyTableV1,
+  ),
+];

@@ -820,7 +820,7 @@ void main() {
       'a W12 outcome-bias miss reopens reviewing the decision',
       'world_12',
       'w12_checkpoint_process_line',
-      'outcome_only',
+      'fold_after_last_orbit_s_loss',
       'w12_good_fold_bad_result',
     ),
   ]) {
