@@ -15,6 +15,7 @@ import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
+import '../support/act0_y5d_catalog_contract_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
 const _m7PoliciesKey = 'm7MaxShareExceptions';
@@ -845,12 +846,25 @@ void main() {
             )
             .length;
         final decisionShare = _share(decisions, worldGraded.length);
+        // Y5d adds six named W11 tasks while retaining every prior task.
+        final y5dW11Addition = number == 11
+            ? tasks
+                  .where(
+                    (row) =>
+                        y5dLessonByTaskV1[row.task.taskId]?.$1 == 'world_11',
+                  )
+                  .length
+            : 0;
+        final boundedTaskCount = tasks.length - y5dW11Addition;
+        final taskTarget = number == 11
+            ? '27–33 задания + 6 по Y5d; ≥ 1/3 решений'
+            : '27–33 задания; ≥ 1/3 решений';
         add(
           'S2',
           name,
           '${tasks.length} заданий; $decisions/${worldGraded.length} решений',
-          '27–33 задания; ≥ 1/3 решений',
-          math.max(0, (tasks.length - 30).abs() - 3) +
+          taskTarget,
+          math.max(0, (boundedTaskCount - 30).abs() - 3) +
               math.max(0, 1 / 3 - decisionShare),
         );
       }

@@ -6817,7 +6817,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'CO bets some overcards and BTN calls with weaker pairs. Call 2 BB because the price is 14.3% and QJ beats those hands. Raising to 10 BB can drive them out.',
+        'CO bets some of its overcards, and QJ beats both CO overcards and BTN weak pairs. Call 2 BB at 14.3% because raising to 10 BB can drive them away.',
       ),
     ],
     table: _day7TableV1(
@@ -6914,7 +6914,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'CO bets mostly strong hands on this turn. Fold KQ because its stated 15% win chance falls short of the 30.8% a call of 8 BB needs.',
+        'CO bets mostly sets, K8 or AK. KQ wins 15% by this read, so fold because calling 8 BB needs 30.8%.',
       ),
       (
         'call_8_bb',
@@ -7626,13 +7626,13 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_26_bb',
         'All-in to 26 BB',
         Act0FeedbackQualityV1.wrong,
-        'Shoving risks 26 BB against sets and AK. Betting 7 BB keeps calls from worse aces and pairs.',
+        'Going all-in risks 26 BB against sets and AK. Betting 7 BB keeps calls from worse aces and pairs.',
       ),
       (
         'bet_7_bb',
         'Bet 7 BB',
         Act0FeedbackQualityV1.correct,
-        'BTN calls 7 BB with weaker aces and 88–JJ, so bet AQ for value at SPR 1.4. Checking gives those hands a free turn.',
+        'BTN calls 7 BB with AJ, AT and 88-JJ, so bet AQ for value at SPR 1.4. Checking gives those hands a free turn.',
       ),
     ],
     table: _day7TableV1(
@@ -9931,7 +9931,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'CO bets 2 BB with weaker aces and draws as well as strong hands. Call with AJ at 16.7% because raising to 8 BB can lose those weaker bets.',
+        'CO bets 2 BB with weak aces, draws and strong hands. Call AJ at 16.7% because calling keeps weak aces and draws in. Raising to 8 BB can lose them.',
       ),
     ],
     table: _day7TableV1(
@@ -10021,7 +10021,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_53_25_bb',
         'All-in to 53.25 BB',
         Act0FeedbackQualityV1.wrong,
-        'Shoving risks 53.25 BB against stronger hands and can lose calls from weaker aces and nines. Betting 6 BB targets those weaker hands.',
+        'Going all-in risks 53.25 BB against stronger hands and can lose calls from weaker aces and nines. Betting 6 BB targets those weaker hands.',
       ),
     ],
     table: _day7TableV1(
@@ -10605,7 +10605,7 @@ final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'CO bets 18 BB with missed JT only 5% of the time. Fold KQ because the 32.1% call price makes calling lose 15.2 BB on average.',
+        'CO bets 18 BB with mainly AK, K9 and sets. KQ wins 5% of this river bet range, so fold because the 32.1% call price makes calling lose 15.2 BB.',
       ),
       (
         'raise_to_45_bb',
@@ -10730,7 +10730,7 @@ final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
         'call_2_bb',
         'Call 2 BB',
         Act0FeedbackQualityV1.correct,
-        'CO bets 2 BB with missed overcards and better pairs. Call QJ at 16.7% to keep the weaker hands in. Raising to 7 BB can chase off those hands.',
+        'CO bets 2 BB with missed overcards and better pairs. Call QJ at 16.7% because calling keeps CO\'s weak bets in. Raising to 7 BB can make them fold.',
       ),
     ],
     table: _day7TableV1(
