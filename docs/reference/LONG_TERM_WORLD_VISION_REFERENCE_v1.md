@@ -19,6 +19,8 @@ Start with `docs/plan/MASTER_PLAN_v3.0.md` instead.
 
 ## Long-Term World Vision (W13–W36)
 
+[Дополнение плана W13–W36 понятиями владельца](../plan/OWNER_CONCEPTS_ADDENDUM_v1.md)
+
 This section is a planning anchor, not a current build commitment.
 
 The launch-critical first volume is W1–W12. This
