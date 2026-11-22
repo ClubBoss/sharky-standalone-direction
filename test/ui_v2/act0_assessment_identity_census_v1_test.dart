@@ -149,6 +149,23 @@ void main() {
       expect(choices.last[3], 'wrong', reason: entry.key);
       choices.removeLast();
     }
+    // Verify the authored positions, then restore the historical order for
+    // the earlier application identity fingerprints.
+    const reorderedW4CorrectChoices = <String, String>{
+      'w4_value_purpose': 'value',
+      'w4_bad_price_fold': 'fold',
+      'w4_value_missed': 'bet_half',
+      'w4_protection_check': 'free_card',
+      'w4_checkpoint_table_price': 'call',
+    };
+    for (final entry in reorderedW4CorrectChoices.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last[0], entry.value, reason: entry.key);
+      expect(choices.last[2], isTrue, reason: entry.key);
+      choices.insert(1, choices.removeLast());
+    }
     for (final entry in w4AddedOptionQualityV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
       final choices = task.last as List<List<Object?>>;
