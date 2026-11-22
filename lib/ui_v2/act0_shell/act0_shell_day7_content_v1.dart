@@ -104,6 +104,41 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     1,
+    'hand_rankings_table',
+    'board_cards',
+    _day7PostflopV1('bb', 'Jh 6d', 'Js 8d 3h', opponent: 'btn'),
+    question: 'Which rank makes a pair with one of your own cards?',
+    choices: const ['Sixes', 'Jacks', 'Eights'],
+    correct: 1,
+    reason:
+        'Your jack matches the jack in the middle, so you have a pair of jacks.',
+    wrongReasons: const {
+      0: 'Your six has no match on J-8-3. Calling it a pair misses the jack you can match.',
+      2: 'The eight is shared, but neither of your private cards is an eight. That choice gives your hand a pair it cannot use.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'positions',
+    'hero_button',
+    _day7PostflopV1(
+      'btn',
+      'Qc 9s',
+      'Qd 7d 3s',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    question: 'Who still has a decision after the first action on this flop?',
+    choices: const ['SB', 'BB', 'BTN'],
+    correct: 2,
+    reason: 'BB already checked. BTN can use that fact before deciding.',
+    wrongReasons: const {
+      0: 'SB folded before the flop and has no more decisions in this hand. Picking SB passes over your own decision on the Button.',
+      1: 'BB has made the first flop decision by checking. Waiting for a second BB action would miss your own turn.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
     "hand_rankings_table",
     "hero_cards_board_pot",
     _day7PostflopV1("bb", "7s 7d", "Qh 7c 2s"),
