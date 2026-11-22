@@ -1094,12 +1094,59 @@ List<_Row> _assessedRows({bool historical = false}) {
           _Row(
             record['world'] as String,
             record['lesson'] as String,
-            byId[record['id']]!,
+            byId[record['id']] ?? _archivedCensusTask(record['id'] as String),
             archived: record.cast<String, dynamic>(),
           )
       else
         ...live.where((row) => row.worldNumber == world),
   ];
+}
+
+// Historical rows keep their frozen identity and choices after a live task is
+// retired. Table and repair evidence come from the archived census record.
+Act0LessonTaskV1 _archivedCensusTask(String taskId) {
+  final previous = wave6PreviousRowsV1[taskId] as Map<String, dynamic>;
+  final identity = previous['identity'] as List;
+  final phase = Act0LessonPhaseV1.values.byName(identity[3] as String);
+  return Act0LessonTaskV1(
+    taskId: taskId,
+    title: taskId,
+    phase: phase,
+    stepKind: Act0LessonStepKindV1.values.byName(identity[4] as String),
+    rewardXp: previous['xp'] as int,
+    taskFamily: Act0TaskFamilyV1.values.byName(previous['family'] as String),
+    runner: Act0RunnerStateV1(
+      lessonId: identity[1] as String,
+      lessonTitle: '',
+      lessonSubtitle: '',
+      beatIndex: 0,
+      beatCount: 0,
+      phase: phase,
+      caption: '',
+      hint: '',
+      question: '',
+      options: const [],
+      feedbackTitle: '',
+      feedbackReason: '',
+      primaryCtaLabel: '',
+      nextLessonId: null,
+      returnTarget: '',
+      table: Act0TableStateV1(
+        scope: Act0TableScopeV1.values.byName(previous['scope'] as String),
+        tableFormat: Act0TableFormatV1.sixMax,
+        playerCount: 0,
+        seats: const [],
+        heroCards: const [],
+        boardCards: const [],
+        streetLabel: '',
+        potLabel: '',
+        toCallLabel: '',
+        centerLabel: '',
+        highlightedSeatIds: const [],
+        highlightedCardIds: const [],
+      ),
+    ),
+  );
 }
 
 List<_Row> _assessedSourceRows({bool historical = false}) => <_Row>[

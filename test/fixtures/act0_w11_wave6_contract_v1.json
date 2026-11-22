@@ -1180,42 +1180,6 @@
       "xp": 10,
       "family": "decision"
     },
-    "w11_plan_avoid_overload": {
-      "identity": [
-        "world_11",
-        "session_plan_bankroll_followup",
-        "w11_plan_avoid_overload",
-        "drill",
-        "practice",
-        [
-          [
-            "four_rushed_bb_calls",
-            "Four rushed BB calls",
-            true,
-            "correct",
-            "Four rushed BB calls"
-          ],
-          [
-            "two_bad_river_calls",
-            "Two bad river calls",
-            false,
-            "suboptimal",
-            "Four rushed BB calls"
-          ],
-          [
-            "nine_errors_in_one_session",
-            "Nine errors in one session",
-            false,
-            "wrong",
-            "Four rushed BB calls"
-          ]
-        ]
-      ],
-      "scope": "explanation",
-      "replay": false,
-      "xp": 10,
-      "family": "decision"
-    },
     "w11_bankroll_move_down": {
       "identity": [
         "world_11",
@@ -3266,39 +3230,6 @@
         },
         {
           "id": "nl10_with_a_short_buy_in",
-          "correct": false,
-          "quality": "wrong",
-          "seat": null,
-          "repairSeats": [],
-          "repairCards": [],
-          "repairLabels": []
-        }
-      ]
-    },
-    "w11_plan_avoid_overload": {
-      "rewardXp": 10,
-      "family": "decision",
-      "options": [
-        {
-          "id": "four_rushed_bb_calls",
-          "correct": true,
-          "quality": "correct",
-          "seat": null,
-          "repairSeats": [],
-          "repairCards": [],
-          "repairLabels": []
-        },
-        {
-          "id": "two_bad_river_calls",
-          "correct": false,
-          "quality": "suboptimal",
-          "seat": null,
-          "repairSeats": [],
-          "repairCards": [],
-          "repairLabels": []
-        },
-        {
-          "id": "nine_errors_in_one_session",
           "correct": false,
           "quality": "wrong",
           "seat": null,

@@ -7775,41 +7775,6 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
 
 final _w11SessionPlanBankrollFollowupTasksV1 = <Act0LessonTaskV1>[
   _wave6AuthoredTaskV1(
-    id: 'w11_plan_avoid_overload',
-    lesson: 'session_plan_bankroll_followup',
-    lessonTitle: 'Keep the session plan',
-    title: 'Avoid overload plan',
-    phase: Act0LessonPhaseV1.drill,
-    step: Act0LessonStepKindV1.practice,
-    xp: 10,
-    caption:
-        'Your notes show four rushed BB calls, two bad river calls and three weak bets.',
-    question: 'What should you review first?',
-    teach:
-        'Do not use one result as proof. Check which error came up most often. Pick a short fix for the next session. Save the other notes for later.',
-    choices: const [
-      (
-        'four_rushed_bb_calls',
-        'Four rushed BB calls',
-        Act0FeedbackQualityV1.correct,
-        'Four errors are the largest group. Work on the BB call routine before adding more cues.',
-      ),
-      (
-        'two_bad_river_calls',
-        'Two bad river calls',
-        Act0FeedbackQualityV1.suboptimal,
-        'River calls matter, but there are four rushed BB calls. The bigger repeat leak is still open.',
-      ),
-      (
-        'nine_errors_in_one_session',
-        'Nine errors in one session',
-        Act0FeedbackQualityV1.wrong,
-        'Nine live goals split your focus. You may miss the next BB call and have no clear repair signal.',
-      ),
-    ],
-    table: _wave6StudyTableV1,
-  ),
-  _wave6AuthoredTaskV1(
     id: 'w11_bankroll_move_down',
     lesson: 'session_plan_bankroll_followup',
     lessonTitle: 'Keep the session plan',

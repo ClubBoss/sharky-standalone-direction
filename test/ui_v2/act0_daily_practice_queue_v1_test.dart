@@ -137,7 +137,7 @@ void main() {
         }
 
         final secondFirst =
-            pair.throughWorld == 12 && wave6WorldTaskDeltaV1(11) != 0;
+            pair.throughWorld == 12 && wave6ContractsV1.containsKey('world_11');
         await openDaily();
         await answer(secondFirst ? pair.secondTask : pair.firstTask);
         await openDaily();

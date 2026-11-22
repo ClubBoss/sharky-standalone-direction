@@ -17,6 +17,7 @@ import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
+const _m7PoliciesKey = 'm7MaxShareExceptions';
 const _s3BridgeScope = 'W12 · Связь навыков в TEACH или разборе';
 
 typedef _Metric = ({
@@ -35,6 +36,18 @@ final _vowels = RegExp(r'[aeiouy]+');
 
 String _pct(num n) => '${(n * 100).toStringAsFixed(1)}%';
 double _share(int count, int total) => total == 0 ? 0 : count / total;
+
+Map<String, dynamic> _readBaseline(File file) =>
+    jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+
+double _m7Limit(Map<String, dynamic> baseline, String world) {
+  final policies = baseline[_m7PoliciesKey] as Map<String, dynamic>?;
+  final policy = policies?[world] as Map<String, dynamic>?;
+  return (policy?['maxShare'] as num?)?.toDouble() ?? 0.40;
+}
+
+double _m7Debt(int almost, int total, double limit) =>
+    math.max(0, _share(almost, total) - limit);
 String _norm(String text) => text.trim().toLowerCase().replaceAll(_ws, ' ');
 
 String _location(CatalogTask row) =>
@@ -283,6 +296,23 @@ double _minutes(List<CatalogTask> lesson) {
 }
 
 void main() {
+  test('M7 preserves the sole W11 exception and rejects higher shares', () {
+    final baseline = _readBaseline(File(_baseline));
+    final policies = baseline[_m7PoliciesKey] as Map<String, dynamic>;
+    expect(policies.keys, unorderedEquals(['W11']));
+    expect((policies['W11'] as Map)['reason'], isNotEmpty);
+    final w11Limit = _m7Limit(baseline, 'W11');
+    expect(w11Limit, 0.55);
+    expect(_m7Debt(55, 100, w11Limit), 0);
+    expect(_m7Debt(56, 100, w11Limit), greaterThan(0));
+    for (final world in ['W9', 'W10', 'W12']) {
+      final limit = _m7Limit(baseline, world);
+      expect(limit, 0.40);
+      expect(_m7Debt(40, 100, limit), 0);
+      expect(_m7Debt(41, 100, limit), greaterThan(0));
+    }
+  });
+
   test('R1 distinguishes a concrete loss from a chart or amount alone', () {
     for (final feedback in [
       'The 4 BB pot includes the earlier raise. Use the chart.',
@@ -682,7 +712,11 @@ void main() {
     final short = lessonMinutes.entries.where((e) => e.value < 2);
     maximum('T1', 'Курс', long.length, 0);
     maximum('T2', 'Курс', short.length, 3);
-    final ratchetActive = File(_baseline).existsSync();
+    final baselineFile = File(_baseline);
+    final ratchetActive = baselineFile.existsSync();
+    final priorBaseline = ratchetActive
+        ? _readBaseline(baselineFile)
+        : <String, dynamic>{};
     add(
       'T3',
       'Новые уроки',
@@ -780,12 +814,13 @@ void main() {
             )
             .length;
         final almostShare = _share(almost, worldGraded.length);
+        final limit = _m7Limit(priorBaseline, name);
         add(
           'M7',
           name,
           '$almost/${worldGraded.length} (${_pct(almostShare)})',
-          '≤ 40%',
-          math.max(0, almostShare - 0.40),
+          '≤ ${(limit * 100).round()}%',
+          _m7Debt(almost, worldGraded.length, limit),
         );
         maximum(
           'M8',
@@ -1017,7 +1052,6 @@ void main() {
     final output = Platform.environment['ACT0_ATLAS_REPORT'];
     final writeBaseline =
         Platform.environment['ACT0_ATLAS_UPDATE_BASELINE'] == '1';
-    final file = File(_baseline);
     // Keep separate ceilings by criterion and scope. Closed and new measures
     // have no allowed debt unless the tracked baseline records it explicitly.
     final debt = {for (final m in metrics) '${m.id}|${m.scope}': m.debt};
@@ -1030,7 +1064,12 @@ void main() {
     }
     if (writeBaseline) {
       const indent = JsonEncoder.withIndent('  ');
-      file.writeAsStringSync('${indent.convert(debt)}\n');
+      final refreshed = {
+        if (priorBaseline.containsKey(_m7PoliciesKey))
+          _m7PoliciesKey: priorBaseline[_m7PoliciesKey],
+        ...debt,
+      };
+      baselineFile.writeAsStringSync('${indent.convert(refreshed)}\n');
     }
     if (output != null && output.isNotEmpty) {
       final byId = <String, List<_Metric>>{};
@@ -1125,12 +1164,10 @@ void main() {
     }
 
     if (!writeBaseline) {
-      final prior =
-          (jsonDecode(file.readAsStringSync()) as Map<String, dynamic>);
       final regressions = [
         for (final entry in debt.entries)
-          if (entry.value > (prior[entry.key] as num? ?? 0) + 1e-9)
-            '${entry.key}: ${prior[entry.key] ?? 0} → ${entry.value}',
+          if (entry.value > (priorBaseline[entry.key] as num? ?? 0) + 1e-9)
+            '${entry.key}: ${priorBaseline[entry.key] ?? 0} → ${entry.value}',
       ];
       expect(regressions, isEmpty, reason: regressions.join('\n'));
     }

@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 457 tasks · W1–W12
+SHARKY POKER — EN learning content, 456 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -5934,19 +5934,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: NL5
 
 ===== WORLD 11 · LESSON session_plan_bankroll_followup · Keep the session plan =====
-
-TASK w11_plan_avoid_overload [drill] Avoid overload plan
-CAPTION: Your notes show four rushed BB calls, two bad river calls and three weak bets.
-TEACH: Avoid overload plan Do not use one result as proof. Check which error came up most often. Pick a short fix for the next session. Save the other notes for later.
-Q: What should you review first?
-HINT [hidden]: (none)
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Four rushed BB calls — Correct. Four errors are the largest group. Work on the BB call routine before adding more cues.
-  - [suboptimal] Two bad river calls — Look again. River calls matter, but there are four rushed BB calls. The bigger repeat leak is still open.
-    BETTER ANSWER: Four rushed BB calls
-  - [wrong] Nine errors in one session — Look again. Nine live goals split your focus. You may miss the next BB call and have no clear repair signal.
-    BETTER ANSWER: Four rushed BB calls
 
 TASK w11_bankroll_move_down [drill] Check the limit after a loss
 CAPTION: Your NL10 bankroll fell from $420 to $350.
