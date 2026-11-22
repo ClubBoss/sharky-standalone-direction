@@ -6256,7 +6256,9 @@ class _Act0PersistedProgressV1 {
           receipt.toJson(),
       ],
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
-      'attemptArchive': attemptArchive.toPayload(),
+      'attemptArchive': attemptArchive.toPayload(
+        snapshotRecords: learningEvidenceHistory.records,
+      ),
       'studyObservations': [
         for (final observation in studyObservations) observation.toPayload(),
       ],
@@ -6547,7 +6549,10 @@ class _Act0PersistedProgressV1 {
       attemptArchive: !restoreAttemptArchive
           ? const Act0AttemptArchiveV1.empty()
           : map.containsKey('attemptArchive')
-          ? Act0AttemptArchiveV1.restore(map['attemptArchive'])
+          ? Act0AttemptArchiveV1.restore(
+              map['attemptArchive'],
+              snapshotRecords: learningEvidenceHistory.records,
+            )
           : Act0AttemptArchiveV1.fromOlderSave(learningEvidenceHistory),
       studyObservations: studyObservations,
       practiceDayKeys: switch (map['practiceDayKeys']) {

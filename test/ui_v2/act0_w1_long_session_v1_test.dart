@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter/material.dart';
@@ -874,9 +875,21 @@ void main() {
         isTrue,
       );
       final before = await _saved(t);
-      final entry =
-          ((before['attemptArchive'] as Map)['entries'] as List).single as Map;
+      final history = Act0LearningEvidenceHistoryV1.restore(
+        before['learningEvidenceHistory'],
+        before['learningEvidenceLineage'],
+      );
+      expect(history, isNotNull);
+      final snapshot = before['attemptArchive'] as Map;
+      final archive = Act0AttemptArchiveV1.restore(
+        snapshot,
+        snapshotRecords: history!.records,
+      );
+      final entry = archive.attempts.single.toPayload();
       final evidence = entry['evidence'] as Map;
+      final savedEntry = (snapshot['entries'] as List).single as Map;
+      expect(savedEntry['recordId'], evidence['recordId']);
+      expect(savedEntry.containsKey('evidence'), isFalse);
       expect(evidence['taskId'], taskId);
       expect(evidence['choiceId'], 'king_combos_unchanged');
       expect(evidence['isCorrect'], isFalse);
