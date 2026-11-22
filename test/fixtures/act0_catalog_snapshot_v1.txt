@@ -351,7 +351,7 @@ Q: Which rank forms your pair here?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Facts one pair, middle pair, two-tone
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Kd 8d stack 97.25 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · An earlier player folds · The player before you raises to 2.75 BB · SB folds · BB calls 1.75 BB more
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · An earlier player folds · Another player raises to 2.75 BB · SB folds · BB calls 1.75 BB more
   - [wrong] Kings — Read the table again. Your king has no match among Q-8-2. Counting kings gives your hand a pair it cannot make.
     BETTER ANSWER: Eights
     FEEDBACK TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, middle pair, two-tone
@@ -539,7 +539,7 @@ Q: Which straight wins, Broadway or A-2-3-4-5?
 HINT [theoryOnly]: (none)
 TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Facts straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · The player before you raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · The player before you checks · Turn: BB checks · The player before you checks
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · Another player raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · The raiser checks · Turn: BB checks · The raiser checks
   + [correct] Broadway wins — The ace-high straight wins. Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.
     FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
   - [wrong] A-2-3-4-5 wins — Read the top of the sequence. The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.
