@@ -1026,11 +1026,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "5273d9d5bd4aa397f6bc64e5cf75769ffcdb3b3806667c0c39092bdf2b203ae6",
+        "5d1a5f341952779ba5a4318f36487516433384ff1a5117f8460e795bebe00ffa",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "UTG is earlier than HJ, where the Sharky starting chart begins opening ATo.",
+        "Raising to 2.5 BB from UTG puts those chips at risk while five players can still call or raise.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
@@ -1059,10 +1059,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "same_as_btn",
     sourceCorrectChoiceId: "more_players_behind",
     sourceFingerprint:
-        "d5f59d55504b3b4b983a90c4db462b325687a131b190e303573cc18ca6ae7f3a",
+        "0db2471f7340df5ad327a718b3441a7e12f51959e27fcd4a457bcf5a5da32f4d",
     sourceQuestion: "Why does UTG need more discipline here?",
     sourceChoiceReason:
-        "BTN is later and sees much more first. UTG is pressured because almost everyone still acts after it.",
+        "Opening from UTG with five players behind risks an open into more possible calls and raises than opening from BTN.",
     sourceChoiceLabel: "UTG gets the same information as BTN",
     sourceChoiceQuality: "wrong",
     goalId: "early_seat_players_behind",
@@ -1113,9 +1113,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "1340f77e34d243a0e649ebdb42b79ac2565ff80d1ea58418f3b440c61b10ce16",
+        "aaccd2c5d5a67f93e6c37125358d65995e697e8296386bc640a7332640cb43e6",
     sourceQuestion: "Tap UTG.",
-    sourceChoiceReason: "HJ is close, but this drill is asking for UTG.",
+    sourceChoiceReason:
+        "HJ has four players behind. Picking HJ for UTG gives up the information that five players can still act on the first seat.",
     sourceChoiceLabel: "HJ",
     sourceChoiceQuality: "wrong",
     goalId: "utg_seat_identity",
@@ -1139,11 +1140,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "e04ab98c73793dc93a6dccc3adb90a41450c21d1afffec02eefda54d91a1ade2",
+        "c383244189a89edbabf127477aad87c4e042b1981ffb04977d39cec5913ca090",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
     sourceChoiceReason:
-        "Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.",
+        "The Cutoff acts before BTN, so choosing CO gives up the chance to see the Cutoff act first.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1167,9 +1168,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "e9ee749da20cfb134a19f03cf6567729ec3ae2f78117b5569eb7bc43398abe8c",
+        "b7ff4922b8c707215724a79ee7a454222be2ba036a27d52c8288fffd6b9c756d",
     sourceQuestion: "Tap BTN.",
-    sourceChoiceReason: "CO is close, but this drill is asking for BTN.",
+    sourceChoiceReason:
+        "CO acts before the Button. Choosing CO misses the seat that can see CO's action first.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
