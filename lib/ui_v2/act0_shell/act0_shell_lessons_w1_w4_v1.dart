@@ -5342,9 +5342,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "call":
-                "A 1 BB limp from CO gives BTN and the blinds a cheaper way to enter and gives up the pressure of a raise.",
+                "A 1 BB limp from BTN lets both blinds see a cheap flop and gives up the fold pressure of a 2.5 BB raise.",
             "fold":
-                "Folding from CO gives up a chance to win the blinds with only BTN, SB and BB left to act.",
+                "Folding from BTN gives up a chance to win the 1.5 BB in blinds with only SB and BB left to act.",
           },
         ),
         rewardXp: 9,
@@ -5440,9 +5440,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "call":
-                "Calling 1 BB from CO lets the blinds see a cheap flop and gives up the pressure of a 2.5 BB open.",
+                "Calling 1 BB from BTN lets the blinds see a cheap flop and gives up the pressure of a 3 BB open.",
             "fold":
-                "Folding this hand first in from CO gives up the chart open with just three players left to act.",
+                "Folding this hand first in from BTN gives up the chart open with just two players left to act.",
           },
         ),
         rewardXp: 9,
