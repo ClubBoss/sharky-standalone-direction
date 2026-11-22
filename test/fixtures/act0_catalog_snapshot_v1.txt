@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 397 tasks · W1–W12
+SHARKY POKER — EN learning content, 398 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -3873,6 +3873,23 @@ SIZES: 2 BB 0.3333333333333333 | 6 BB 1.0 | 9 BB 1.5
   - [wrong] 9 BB — That is bigger than the pot. With QJ on Q-7-2, putting in 9 BB risks 7 BB more than the small bet and can leave you facing stronger hands.
     BETTER ANSWER: 2 BB
     FEEDBACK TABLE: Flop | You Qc Jc | Board Qh 7s 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
+TASK w6_continuation_bet_value_size [drill] Bet a size that gets called
+CAPTION: BB checked. In this example, weaker kings call bets of 3 BB or less.
+Q: How much can you bet to get the most chips from those calls?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qh stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+SIZES: 1.5 BB 0.25 | 6 BB 1.0 | 3 BB 0.5
+  - [suboptimal] 1.5 BB — The bet leaves value behind. A weaker king calls 1.5 BB on K-8-3 in this example. If you pick that amount, you miss the extra 1.5 BB the same hand would pay.
+    BETTER ANSWER: 3 BB
+    FEEDBACK TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] 6 BB — The weaker hands fold. The 6 BB bet is the size of the pot. BB folds weaker kings at that price in this example, costing you their 3 BB calls.
+    BETTER ANSWER: 3 BB
+    FEEDBACK TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] 3 BB — Three is the largest bet they call. KQ beats a weaker king on K-8-3. The half-pot size gets the full 3 BB those hands are willing to call.
+    FEEDBACK TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w6_continuation_bet_wet_check [review] Missed on a wet flop
 ENTRY: drill

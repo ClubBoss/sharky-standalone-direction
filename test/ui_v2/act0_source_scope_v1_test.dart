@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(397));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
+    expect(tasks, hasLength(398));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(398));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -530,8 +530,9 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 275); // Authored contexts, not certified replay histories.
+    expect(played, 276); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'w6_continuation_bet_value_size',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
       'w3_play_from_blinds_small_blind_raise',

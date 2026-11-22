@@ -867,12 +867,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    expect(rows, hasLength(320));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(320));
     expect(
       allChoices,
       hasLength(
-        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        568 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -945,7 +945,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        530 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(
