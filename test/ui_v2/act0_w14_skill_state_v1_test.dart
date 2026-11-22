@@ -38,6 +38,6 @@ void main() {
       tester.getTopLeft(find.text('Table sense')).dx,
       tester.getTopLeft(find.text('Hand reading')).dx,
     );
-    expect(find.text('2 lessons · 8 tasks'), findsOneWidget);
+    expect(find.text('2 lessons · 9 tasks'), findsOneWidget);
   });
 }
