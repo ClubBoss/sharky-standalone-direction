@@ -93,13 +93,28 @@ _SpacedReviewEntryV1 _day7ExampleV1(
 }
 
 const _day7SeatsV1 = ['utg', 'hj', 'co', 'btn', 'sb', 'bb'];
+const _day7DefaultStackBbV1 = 100.0;
+
+List<Act0ContributionV1> _day7OpeningContributionsV1(
+  String? opener,
+  double openBb,
+) => [
+  ..._act0LessonBlinds,
+  if (opener != null)
+    Act0ContributionV1(
+      PokerStreet.preflop,
+      opener,
+      Act0ContributionKindV1.wager,
+      openBb,
+    ),
+];
 
 Act0TableStateV1 _day7PreflopV1(
   String hero,
   String hand, {
   String? opener,
   double openBb = 2.5,
-  double heroStartingBb = 100,
+  double heroStartingBb = _day7DefaultStackBbV1,
   double? openerStartingBb,
   bool allIn = false,
   bool showTurn = false,
@@ -121,16 +136,7 @@ Act0TableStateV1 _day7PreflopV1(
       else if (openerStartingBb != null)
         opener!: openerStartingBb,
     },
-    entries: [
-      ..._act0LessonBlinds,
-      if (opener != null)
-        Act0ContributionV1(
-          street,
-          opener,
-          Act0ContributionKindV1.wager,
-          opening,
-        ),
-    ],
+    entries: _day7OpeningContributionsV1(opener, opening),
     history: [
       const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -219,13 +225,7 @@ Act0TableStateV1 _day7PostflopV1(
     folded: folded,
     stacks: {if (opponentStartingBb != null) other: opponentStartingBb},
     entries: [
-      ..._act0LessonBlinds,
-      Act0ContributionV1(
-        PokerStreet.preflop,
-        opener,
-        Act0ContributionKindV1.wager,
-        openBb,
-      ),
+      ..._day7OpeningContributionsV1(opener, openBb),
       Act0ContributionV1(
         PokerStreet.preflop,
         caller,
@@ -322,7 +322,8 @@ Act0TableStateV1 _day7TableV1({
 }) {
   final heroCards = _act0LessonCardsV1(hand);
   final startingStacks = {
-    for (final seat in _day7SeatsV1) seat: stacks[seat] ?? 100.0,
+    for (final seat in _day7SeatsV1)
+      seat: stacks[seat] ?? _day7DefaultStackBbV1,
   };
   final ledger = Act0HandContributionsV1(
     throughStreet: street,
