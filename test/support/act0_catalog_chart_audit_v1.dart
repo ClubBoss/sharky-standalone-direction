@@ -18,8 +18,8 @@ final _adaptation = RegExp(
   r'\b(?:short.stack|tournament|bubble|ICM)\b',
   caseSensitive: false,
 );
-final _rank = '[${act0ChartRanksV1}]';
-final _handText = '$_rank${_rank}[so]?';
+final _rank = '[$act0ChartRanksV1]';
+final _handText = '$_rank$_rank[so]?';
 final _handPattern = RegExp('\\b($_handText)(?:[–-]($_handText))?\\b');
 const _seatText = '(?:UTG|HJ|CO|BTN|SB|BB)';
 final _seatPattern = RegExp('\\b$_seatText\\b');
