@@ -17,7 +17,11 @@ import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
-const _r1DebtKey = 'R1|$atlasPreflopFeedbackScopeV1';
+const _s3BridgeScope = 'W12 · Связь навыков в TEACH или разборе';
+const _wave5NewDebtKeys = {
+  'R1|$atlasPreflopFeedbackScopeV1',
+  'S3|$_s3BridgeScope',
+};
 
 typedef _Metric = ({
   String id,
@@ -63,6 +67,28 @@ final _enteredPreflop = RegExp(
   r'^([a-z0-9]+) (?:calls|raises|opens|all-in|limps)',
   caseSensitive: false,
 );
+
+final _turnOutsLesson = RegExp(
+  r'\b(?:turn|one card to come)\b[^.!?]{0,90}\b(?:outs?|cards left)\b'
+  r'|\b(?:outs?|cards left)\b[^.!?]{0,90}\b(?:turn|one card to come)\b',
+);
+final _riverPriceLesson = RegExp(
+  r'\briver\b[^.!?]{0,110}\b(?:price|break.even|to call)\b'
+  r'|\b(?:price|break.even|to call)\b[^.!?]{0,110}\briver\b',
+);
+
+bool _linksTurnOutsAndRiverPrice(CatalogTask row) {
+  final runner = row.task.runner;
+  final learnerCopy = _norm(
+    [
+      for (final step in runner.teachingSteps) step.body,
+      for (final option in runner.options) option.feedbackReason,
+      runner.feedbackReason,
+    ].join(' '),
+  );
+  return _turnOutsLesson.hasMatch(learnerCopy) &&
+      _riverPriceLesson.hasMatch(learnerCopy);
+}
 
 int _confirmedPostflopSeats(Act0TableStateV1 table) {
   final active = table.seats
@@ -795,18 +821,32 @@ void main() {
             .where(atlasIsGradedV1)
             .where(_hand)
             .toList();
-        final distinct = hands
-            .map((row) => day7HandKeyV1(row.task.runner.table))
-            .toSet();
+        final checkpointIndex = hands.firstOrNull?.lessonIndex ?? 0;
+        final earlierHands = {
+          for (final row in played)
+            if (row.world.worldNumber < number ||
+                (row.world.worldNumber == number &&
+                    row.lessonIndex < checkpointIndex))
+              day7HandKeyV1(row.task.runner.table),
+        };
+        final distinct = {
+          for (final row in hands) day7HandKeyV1(row.task.runner.table),
+        };
+        final fresh = distinct.difference(earlierHands);
         add(
           'S3',
           name,
-          '${distinct.length} отдельных раздач',
+          '${fresh.length} новых из ${distinct.length} разных раздач',
           '4–5 новых раздач в чекпоинте',
-          distinct.length < 4
-              ? 4 - distinct.length
-              : math.max(0, distinct.length - 5),
-          manual: distinct.length >= 4 && distinct.length <= 5,
+          math.max(0, 4 - fresh.length) + math.max(0, distinct.length - 5),
+        );
+        details.addAll(
+          hands
+              .where(
+                (row) =>
+                    earlierHands.contains(day7HandKeyV1(row.task.runner.table)),
+              )
+              .map((row) => 'S3 · Повтор раздачи · ${_location(row)}'),
         );
       }
       if (number == 12) {
@@ -825,14 +865,15 @@ void main() {
           1,
           '${expectedValue.length} задач EV на ривере',
         );
-        add(
+        final bridge = tasks.where(_linksTurnOutsAndRiverPrice).toList();
+        minimum(
           'S3',
-          'W12 · Связь навыков',
-          'Нужно чтение разбора',
-          'Цена W4 и ауты W5',
-          0,
-          manual: true,
+          _s3BridgeScope,
+          bridge.length,
+          1,
+          '${bridge.length} задач с ценой на ривере и аутами на тёрне',
         );
+        details.addAll(bridge.map((row) => 'S3 · Связь · ${_location(row)}'));
       }
       final formats = worldGraded.map(kind).toSet();
       if (number >= 2) {
@@ -1015,6 +1056,9 @@ void main() {
         if (prior.rows[(metric.id, metric.scope)] case final exact?) {
           return exact;
         }
+        if (metric.id == 'S3' && metric.scope == _s3BridgeScope) {
+          return prior.rows[('S3', 'W12 · Связь навыков')] ?? '—';
+        }
         if (metric.id == 'V5' && RegExp(r'^W[0-9]+$').hasMatch(metric.scope)) {
           final oldTotal = prior.rows[('V5', 'Целевые миры')] ?? '';
           final match = RegExp(
@@ -1053,6 +1097,7 @@ void main() {
         '- M9 — Flesch Reading Ease по английским подписям, вопросам и теории. Слоги оценены по группам гласных. T1–T3 — оценка темпа без ошибок и повторов.',
         '- A1–A2 используют допуск 10 п.п. как рабочее определение «на уровне случая». A3 измеряет маркеры лексики.',
         '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
+        '- S3 проверяет новизну рук W11 относительно пройденных миров и доступную игроку связку цены ривера и аутов тёрна в W12. Ссылки на конкретные задачи даны ниже.',
         '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
         '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий основного маршрута W2–W3. Нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
         '- P3 показывает объём по каталогу и проверяет приложенный JSONL FULL_ROUTE на том же коммите.',
@@ -1069,9 +1114,10 @@ void main() {
           (jsonDecode(file.readAsStringSync()) as Map<String, dynamic>);
       final regressions = [
         for (final entry in debt.entries)
-          // R1 joins the wave 5 ratchet when the final successful
-          // candidate records its threshold.
-          if ((entry.key != _r1DebtKey || prior.containsKey(_r1DebtKey)) &&
+          // New measurements join the ratchet after the candidate records
+          // their thresholds. Existing checks retain the prior debt ceiling.
+          if ((!_wave5NewDebtKeys.contains(entry.key) ||
+                  prior.containsKey(entry.key)) &&
               entry.value > (prior[entry.key] as num? ?? 0) + 1e-9)
             '${entry.key}: ${prior[entry.key] ?? 0} → ${entry.value}',
       ];
