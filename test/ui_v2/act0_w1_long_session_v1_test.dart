@@ -891,6 +891,17 @@ void main() {
       final key = Key('act0_attempt_archive_entry_${evidence['recordId']}');
       await _mount(t);
       await openArchive(t);
+      final search = find.byKey(const Key('act0_attempt_archive_search'));
+      await t.enterText(search, 'no matching attempt');
+      await t.pumpAndSettle();
+      expect(find.text('No matching attempts.'), findsOneWidget);
+      expect(find.byKey(key), findsNothing);
+      await t.enterText(search, '  VISIBLE_KING  ');
+      await t.pumpAndSettle();
+      expect(find.byKey(key), findsOneWidget);
+      await t.enterText(search, '');
+      await t.testTextInput.receiveAction(TextInputAction.done);
+      await t.pumpAndSettle();
       expect(await _tapFirst(t, [find.byKey(key)]), isTrue);
       expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
       expect(find.text('Help: none'), findsOneWidget);

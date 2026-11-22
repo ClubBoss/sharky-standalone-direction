@@ -21,6 +21,7 @@ Act0LearningEvidenceRecordV1 _evidence(
   String revision =
       'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   Act0DecisionAssistanceV1 assistance = Act0DecisionAssistanceV1.quickHint,
+  bool callIsCorrect = false,
 }) => Act0LearningEvidenceRecordV1(
   recordId: 'attempt-$n',
   createdOrder: n,
@@ -28,13 +29,13 @@ Act0LearningEvidenceRecordV1 _evidence(
   lessonId: 'call_price',
   taskId: _task,
   choiceId: 'call',
-  expectedChoiceId: 'fold',
-  isCorrect: false,
-  errorType: 'price',
+  expectedChoiceId: callIsCorrect ? 'call' : 'fold',
+  isCorrect: callIsCorrect,
+  errorType: callIsCorrect ? 'none' : 'price',
   repairFocusId: 'pot',
   skillAtomId: 'call_price',
   decisionTimeBucket: 'under_3s',
-  resultKind: 'suboptimal',
+  resultKind: callIsCorrect ? 'correct' : 'suboptimal',
   authoredSourceFingerprint: revision,
   recordedAtUtc: _recorded,
   assistanceKind: assistance,
@@ -184,6 +185,43 @@ void main() {
       expect(
         clue.openedClue?.text,
         'Compare the chips you still owe with the pot after your call.',
+      );
+    },
+  );
+
+  test(
+    'swapping the correct choice leaves the optional reflection independent',
+    () {
+      const reflection = Act0AttemptReflectionV1(
+        confidence: Act0DecisionConfidenceV1.verySure,
+        openedClue: Act0CausalClueV1.callPrice,
+      );
+      final attempts = [
+        for (final callIsCorrect in [false, true])
+          Act0ArchivedAttemptV1.fromRecordedDecision(
+            _evidence(1, callIsCorrect: callIsCorrect),
+            reflection: reflection,
+          )!,
+      ].map((attempt) => Act0ArchivedAttemptV1.tryParse(attempt.toPayload())!);
+      expect(attempts.map((attempt) => attempt.evidence.expectedChoiceId), [
+        'fold',
+        'call',
+      ]);
+      expect(attempts.map((attempt) => attempt.evidence.isCorrect), [
+        false,
+        true,
+      ]);
+      expect(
+        attempts.map((attempt) => attempt.evidence.assistanceKind),
+        everyElement(Act0DecisionAssistanceV1.quickHint),
+      );
+      expect(
+        attempts.map((attempt) => attempt.reflection.confidence),
+        everyElement(Act0DecisionConfidenceV1.verySure),
+      );
+      expect(
+        attempts.map((attempt) => attempt.reflection.openedClue!.text),
+        everyElement(Act0CausalClueV1.callPrice.text),
       );
     },
   );

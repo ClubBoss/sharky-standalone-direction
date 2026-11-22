@@ -27,10 +27,26 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
 class _Act0AttemptArchiveScreenV1State
     extends State<Act0AttemptArchiveScreenV1> {
   String? _confirmRemovalId;
+  String _query = '';
 
   @override
   Widget build(BuildContext context) {
     final archive = widget.archive;
+    final query = _query.trim().toLowerCase();
+    final attempts = query.isEmpty
+        ? archive.attempts
+        : archive.attempts
+              .where((attempt) {
+                return [
+                  attempt.taskLabel,
+                  attempt.choiceLabel,
+                  attempt.evidence.taskId,
+                  attempt.evidence.choiceId,
+                ].whereType<String>().any(
+                  (label) => label.toLowerCase().contains(query),
+                );
+              })
+              .toList(growable: false);
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     return PopScope<void>(
       canPop: false,
@@ -45,7 +61,7 @@ class _Act0AttemptArchiveScreenV1State
           pagePadding,
           Act0ShellTokensV1.gapXl,
         ),
-        itemCount: archive.attempts.isEmpty ? 2 : archive.attempts.length + 1,
+        itemCount: attempts.isEmpty ? 2 : attempts.length + 1,
         itemBuilder: (context, index) {
           final Widget child;
           if (index == 0) {
@@ -62,15 +78,33 @@ class _Act0AttemptArchiveScreenV1State
                   style: Act0AcademyReadingStyleV1.sectionTitle,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
+                if (archive.attempts.isNotEmpty) ...[
+                  TextFormField(
+                    key: const Key('act0_attempt_archive_search'),
+                    initialValue: _query,
+                    style: Act0AcademyReadingStyleV1.body,
+                    decoration: const InputDecoration(
+                      labelText: 'Search saved attempts',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: (value) => setState(() {
+                      _query = value;
+                      _confirmRemovalId = null;
+                    }),
+                  ),
+                  const SizedBox(height: Act0ShellTokensV1.gapMd),
+                ],
               ],
             );
-          } else if (archive.attempts.isEmpty) {
-            child = const Text(
-              'No saved attempts yet.',
+          } else if (attempts.isEmpty) {
+            child = Text(
+              archive.attempts.isEmpty
+                  ? 'No saved attempts yet.'
+                  : 'No matching attempts.',
               style: Act0AcademyReadingStyleV1.muted,
             );
           } else {
-            child = _attemptRow(context, archive.attempts[index - 1]);
+            child = _attemptRow(context, attempts[index - 1]);
           }
           return Act0ShellTokensV1.centeredContent(
             context,
