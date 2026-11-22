@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_path_progress_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import 'act0_catalog_snapshot_v1.dart';
@@ -47,44 +48,58 @@ class AtlasPracticeWorldV1 {
   var checkpoints = 0;
 }
 
-/// Check the actual ordered course path. Daily Practice and the optional Home
-/// prompt do not produce a mandatory between-lesson step in the path projection.
-/// Checkpoint identity is the same predicate used by Act0 progress.
+/// Audit the same schedule and Day 7 deck consumed by the Learn route.
 AtlasPracticeWorldV1 auditAtlasPracticeWorldV1(Act0WorldCardV1 world) {
   final report = AtlasPracticeWorldV1(world.worldId);
-  var lessonsSincePractice = 0;
-  var practicedSinceLesson = false;
-  for (final (index, lesson) in world.lessons.indexed) {
-    if (act0LessonIsWorldCheckpointV1(world, lesson)) {
-      report.checkpoints++;
-      if (!practicedSinceLesson) {
-        report.gaps.add('нет обязательной практики перед ${lesson.lessonId}');
-      }
-      continue;
+  final steps = act0RoutePracticeStepsV1(world);
+  final checkpoint = world.lessons.lastOrNull;
+  if (checkpoint == null || !act0LessonIsWorldCheckpointV1(world, checkpoint)) {
+    report.gaps.add('нет чекпоинта в маршруте');
+    return report;
+  }
+  report.checkpoints++;
+  if (steps.lastOrNull?.beforeLessonIndex != world.lessons.length - 1) {
+    report.gaps.add('нет обязательной практики перед ${checkpoint.lessonId}');
+  }
+  var previousBoundary = 0;
+  final earlierLessons = {
+    for (final earlier in Act0ShellStateV1.sample.worlds)
+      if (earlier.worldNumber < world.worldNumber)
+        for (final lesson in earlier.lessons) lesson.lessonId,
+  };
+  for (final step in steps) {
+    report.steps++;
+    final boundary = step.beforeLessonIndex;
+    final gap = boundary - previousBoundary;
+    if (gap < 2 || gap > 3) {
+      report.gaps.add('${step.id}: $gap уроков между шагами');
     }
-    // A lesson whose phase label is Practice is a path step only if it owns
-    // mandatory tasks. Ordinary lesson-level drills have the same task-level
-    // practice enum, so that enum alone cannot count.
-    if (lesson.phaseLabel.trim().toLowerCase() == 'practice' &&
-        lesson.courseTaskList.isNotEmpty) {
-      report.steps++;
-      final next = world.lessons.skip(index + 1).firstOrNull;
-      final beforeCheckpoint =
-          next != null && act0LessonIsWorldCheckpointV1(world, next);
-      if (lessonsSincePractice < 2 && !beforeCheckpoint) {
-        report.gaps.add('практика раньше двух уроков: ${lesson.lessonId}');
-      }
-      practicedSinceLesson = true;
-      lessonsSincePractice = 0;
-      continue;
+    previousBoundary = boundary;
+    final finished = world.lessons.take(boundary);
+    final closedTasks = {
+      for (final lesson in finished)
+        for (final task in lesson.courseTaskList) task.taskId,
+    };
+    if (act0RequiredRoutePracticeV1(world, closedTasks, {})?.id != step.id ||
+        act0RequiredRoutePracticeV1(world, closedTasks, {step.id}) != null) {
+      report.gaps.add('${step.id}: граница не закрывается после практики');
     }
-    practicedSinceLesson = false;
-    lessonsSincePractice++;
-    if (lessonsSincePractice == 4) {
-      report.gaps.add('больше трёх уроков без практики до ${lesson.lessonId}');
-      lessonsSincePractice = 1;
+    final deck = act0RoutePracticeDeckV1(
+      eligibleLessonIds: {
+        ...earlierLessons,
+        for (final lesson in finished) lesson.lessonId,
+      },
+      preferredWorldId: world.worldId,
+      openMistakeLessonIds: {},
+      weakLessonIds: {},
+      seenTaskIds: {},
+    );
+    if (deck.length < 4 ||
+        deck.length > 6 ||
+        deck.map((rep) => rep.task.taskId).toSet().length != deck.length ||
+        deck.any((rep) => closedTasks.contains(rep.task.taskId))) {
+      report.gaps.add('${step.id}: нет 4–6 разных заданий');
     }
   }
-  if (report.checkpoints == 0) report.gaps.add('нет чекпоинта в маршруте');
   return report;
 }

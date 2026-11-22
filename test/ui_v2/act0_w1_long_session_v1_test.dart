@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
 import '../support/act0_source_choreography_test_wait_v1.dart';
+import '../support/act0_route_practice_runner_test_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
 
 // Long session through the real app shell on iPhone 14 Pro: a fresh learner
 // goes through Worlds 1–7 by default, or 1–12 with
@@ -1036,6 +1038,25 @@ void main() {
           step++
         ) {
           Map<String, dynamic>? routeSnapshot;
+          if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+            final runner = t
+                .widget<Act0LessonRunnerShellV1>(
+                  find.descendant(
+                    of: act0RoutePracticeFinder,
+                    matching: find.byType(Act0LessonRunnerShellV1),
+                  ),
+                )
+                .runner;
+            if (runner.phase == Act0LessonPhaseV1.drill) {
+              await answerAct0RoutePracticeV1(t, correct: false);
+            } else {
+              await tapAct0RoutePracticeKeyV1(
+                t,
+                'act0_shell_feedback_continue_cta',
+              );
+            }
+            continue;
+          }
           final runnerFinder = find.byType(Act0LessonRunnerShellV1);
           if (runnerFinder.evaluate().isNotEmpty) {
             final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
@@ -1246,6 +1267,17 @@ void main() {
             .cast<String>()
             .toSet();
         expect(taskWorld.keys.toSet().difference(completed), isEmpty);
+        final practiced =
+            (snapshot['routePractice'] as Map)['finished'] as List;
+        expect(
+          practiced.toSet(),
+          {
+            for (final world in worlds)
+              for (final step in act0RoutePracticeStepsV1(world)) step.id,
+          },
+          reason:
+              'Every scheduled practice boundary was completed on the route',
+        );
         final w1Ids = Act0ShellStateV1.sample
             .worldById('world_1')
             .lessons

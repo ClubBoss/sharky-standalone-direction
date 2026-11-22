@@ -104,6 +104,45 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     }.where(validTaskIds.contains).toSet();
     skippedTaskIds.addAll(compatSkipTaskIds.difference(completedTaskIds));
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
+    _routePracticeV1 =
+        parsed.routePractice ??
+        Act0RoutePracticeProgressV1.fromLegacy(
+          state.worlds,
+          closedTaskIds,
+          resumedLessonId:
+              parsed.lessonResume?.lessonId ??
+              (parsed.resumeInRunner ? parsed.selectedLessonId : null),
+        );
+    final restoredPractice = _routePracticeV1.run;
+    if (restoredPractice != null) {
+      final owner = state.worlds
+          .where(
+            (world) =>
+                _requiredRoutePracticeV1(
+                  world,
+                  closedTaskIds,
+                  w1RulesBestScore: parsed.w1RulesBestScore,
+                )?.id ==
+                restoredPractice.stepId,
+          )
+          .firstOrNull;
+      final eligibleLessons = owner == null
+          ? const <String>{}
+          : act0RoutePracticeEligibleLessonIdsV1(
+              state.worlds,
+              closedTaskIds,
+              throughWorld: owner.worldNumber,
+              passedW1RulesCheck:
+                  parsed.w1RulesBestScore >= Act0W1RulesResultV1.passingScore,
+            );
+      if (restoredPractice.taskIds.any(
+        (id) => !eligibleLessons.contains(
+          act0RoutePracticeRepsByIdV1[id]?.lessonId,
+        ),
+      )) {
+        _routePracticeV1 = _routePracticeV1.update(null, inRunner: false);
+      }
+    }
     final worldsAfterProgress = _progressWorldsWithTaskIds(
       state,
       closedTaskIds,
@@ -997,6 +1036,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       lastEarnedDailyDay: _lastDailyDate,
       dailyCompletedRepCount: _dailyCompletedRepCount,
       dailyPracticeQueue: _dailyPracticeQueue,
+      routePractice: _routePracticeV1,
       dailyCompletedTaskIds: _dailyCompletedTaskIds,
       dailyCompletedLessonIds: _dailyCompletedLessonIds,
       persistedStreakDays: currentStreak,

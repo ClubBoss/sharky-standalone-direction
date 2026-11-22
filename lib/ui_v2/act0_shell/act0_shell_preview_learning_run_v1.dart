@@ -744,6 +744,8 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _dailyCompletedTaskIds.clear();
       _dailyCompletedLessonIds.clear();
       _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
+      _routePracticeV1 = const Act0RoutePracticeProgressV1();
+      _routePracticePresetV1 = null;
       _dailyCompletedRepCount = 0;
       _rapidPracticeLoop = false;
       _activeLearningEvidenceRunKeyV1 = null;

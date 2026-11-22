@@ -18,6 +18,7 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
   required Set<String> earnedTaskIds,
   bool passedW1RulesCheck = false,
   Set<String> worldsWithOpenMistakes = const <String>{},
+  Set<String> practiceBlockedLessonIds = const {},
 }) {
   var previousWorldComplete = true;
   var lockedWorldSeen = false;
@@ -31,6 +32,7 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
       earnedTaskIds: earnedTaskIds,
       passedByRulesCheck: passedW1RulesCheck && world.worldId == 'world_1',
       worldsWithOpenMistakes: worldsWithOpenMistakes,
+      practiceBlockedLessonIds: practiceBlockedLessonIds,
     );
     worlds.add(progressed);
     if (progressed.status == Act0WorldStateV1.locked) {
@@ -49,7 +51,9 @@ bool act0LessonIsWorldCheckpointV1(
 ) =>
     world.lessons.length > 1 &&
     lesson.lessonId == world.lessons.last.lessonId &&
-    (lesson.lessonId.contains('checkpoint') ||
+    (lesson.lessonId == 'turn_river_changes' ||
+        lesson.lessonId == 'format_pressure' ||
+        lesson.lessonId.contains('checkpoint') ||
         lesson.phaseLabel.toLowerCase().contains('checkpoint') ||
         lesson.title.toLowerCase().contains('checkpoint'));
 
@@ -70,6 +74,7 @@ Act0WorldCardV1 _progressWorldV1(
   required Set<String> earnedTaskIds,
   required bool passedByRulesCheck,
   required Set<String> worldsWithOpenMistakes,
+  required Set<String> practiceBlockedLessonIds,
 }) {
   final progressTaskIds = completedTaskIds;
   if (world.lessons.isEmpty) {
@@ -107,6 +112,7 @@ Act0WorldCardV1 _progressWorldV1(
         availableByRulesCheck: passedByRulesCheck,
         completedTaskIds: progressTaskIds,
         hasOpenMistakes: hasOpenMistakes,
+        practiceBlocked: practiceBlockedLessonIds.contains(lesson.lessonId),
       ),
   ];
   final completedCount = lessons
@@ -165,6 +171,7 @@ Act0LessonCardV1 _progressLessonV1(
   required bool availableByRulesCheck,
   required Set<String> completedTaskIds,
   required bool hasOpenMistakes,
+  required bool practiceBlocked,
 }) {
   final completed = act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds);
   final checkpointBlocked =
@@ -172,10 +179,13 @@ Act0LessonCardV1 _progressLessonV1(
       !completed &&
       hasOpenMistakes &&
       act0LessonIsWorldCheckpointV1(world, lesson);
-  final current = !checkpointBlocked && lesson.lessonId == currentLessonId;
+  final current =
+      !checkpointBlocked &&
+      !practiceBlocked &&
+      lesson.lessonId == currentLessonId;
   final state = completed
       ? Act0LessonStateV1.completed
-      : checkpointBlocked
+      : checkpointBlocked || practiceBlocked
       ? Act0LessonStateV1.locked
       : current
       ? Act0LessonStateV1.current
@@ -186,6 +196,8 @@ Act0LessonCardV1 _progressLessonV1(
     state: state,
     primaryCtaLabel: completed
         ? 'Replay'
+        : practiceBlocked
+        ? 'Complete practice'
         : checkpointBlocked
         ? 'Clear weak spots'
         : current || availableByRulesCheck
@@ -194,6 +206,7 @@ Act0LessonCardV1 _progressLessonV1(
     isSelectable:
         worldAvailable &&
         !checkpointBlocked &&
+        !practiceBlocked &&
         (completed || current || availableByRulesCheck),
     isLocked: !worldAvailable || state == Act0LessonStateV1.locked,
   );

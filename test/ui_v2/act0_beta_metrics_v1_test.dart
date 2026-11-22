@@ -351,6 +351,7 @@ void main() {
           'Current lesson: W1 / ${world.lessons[1].lessonId}',
           'Farthest lesson reached: W1 / ${world.lessons[1].lessonId}',
           'Completed lessons: 1',
+          'Completed route practice steps: 0',
           'W1 rules check: Best 0/10',
           'After a mistake: 1/2 correct on follow-up attempts',
           'Reminder now: Off',
