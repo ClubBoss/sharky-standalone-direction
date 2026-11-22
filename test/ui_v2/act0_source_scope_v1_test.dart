@@ -278,13 +278,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final newTasks = tasks
@@ -308,7 +308,7 @@ void main() {
             !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
             !w12Wave4ChoiceContractV1.containsKey(task.taskId),
       ),
-      hasLength(384),
+      hasLength(387),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -536,10 +536,10 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 283);
+    expect(legacyPlayed, 286);
     expect(
       played,
-      317 + 10 + 9,
+      320 + 10 + 9,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'first_table_guide_first_decision',

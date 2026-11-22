@@ -2399,18 +2399,10 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Look at ranks and suits.',
+      title: 'What can change?',
       body:
-          'A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. '
-          'A wet board offers many plausible draws, as on three close ranks with two matching suits. Semi-wet sits between the extremes. Two matching suits with wide rank gaps are one example.',
+          'A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.',
       focusLabels: <String>['Rank gaps', 'Suits'],
-    ),
-    Act0TeachingStepV1(
-      title: 'Name the flop shape.',
-      body:
-          'Rainbow means three different suits. Two-tone means two cards share a suit. '
-          'A paired board repeats a rank, such as 8-8-3.',
-      focusLabels: <String>['Number of suits', 'Repeated ranks'],
     ),
   ],
   feedbackTitle: 'Texture first.',
@@ -2535,7 +2527,7 @@ final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Texture checklist.',
       body:
-          'Look at rank connection and suits before choosing an action. Spread ranks with mixed suits stay calmer across streets because fewer draws can form. Close ranks or matching suits add draw pressure, while a paired flop cuts down matching combinations. Check both shapes first so your plan fits how fast the board can shift.',
+          'Read the gaps between ranks and count matching suits. Those two facts tell you how much the next card may change.',
       focusLabels: <String>['Ranks', 'Suits', 'Change'],
     ),
   ],
@@ -2562,12 +2554,18 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
     centerLabel: 'Read the ranks',
     highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
+  teachingSteps: <Act0TeachingStepV1>[
+    const Act0TeachingStepV1(
       title: 'Ranks can connect.',
       body:
           'Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.',
       focusLabels: <String>['9', '8', '7', 'Connected'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Ranks and suits describe different things.',
+      table: _day7PostflopV1('co', 'Qd Jc', '9c 9h 4c', checkedToHero: true),
+      body:
+          'A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.',
     ),
   ],
   feedbackTitle: 'Read the rank gaps.',
@@ -2721,6 +2719,11 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
           'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.',
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
+    Act0TeachingStepV1(
+      title: 'Allow for both remaining cards.',
+      body:
+          'Rainbow means the three flop cards have different suits. A backdoor draw needs both the turn and the river to help.',
+    ),
   ],
   feedbackTitle: 'Count matching suits.',
   feedbackReason: 'Four cards of one suit leave you one card short of a flush.',
@@ -2788,7 +2791,8 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
   lessonId: 'w5_no_flush_draw',
   lessonTitle: 'Flush draws',
   hint: 'Rainbow means three different suits on the flop.',
-  question: 'How many more clubs do you need to make a flush by the river?',
+  question:
+      'Do you have a backdoor draw to a club flush? How many clubs do you need?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'no',

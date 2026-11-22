@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,7 +131,7 @@ void main() {
     expect(
       entries,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
@@ -363,6 +363,42 @@ void main() {
         ['co', 'Cutoff', true, 'correct', 'Cutoff'],
       ],
     ]);
+    const w5Additions = {
+      'board_texture_basics_w5_texture_dry_value': (
+        'board_texture_basics',
+        [
+          ['check', 'Check', false, 'wrong', 'Bet 2 BB'],
+          ['two', 'Bet 2 BB', true, 'correct', 'Bet 2 BB'],
+          ['six', 'Bet 6 BB', false, 'wrong', 'Bet 2 BB'],
+        ],
+      ),
+      'board_texture_basics_w5_texture_wet_showdown': (
+        'board_texture_basics',
+        [
+          ['small', 'Bet 2 BB', false, 'wrong', 'Check'],
+          ['large', 'Bet 6 BB', false, 'wrong', 'Check'],
+          ['check', 'Check', true, 'correct', 'Check'],
+        ],
+      ),
+      'connected_boards_w5_connected_read_bet': (
+        'connected_boards',
+        [
+          ['fold', 'Fold', true, 'correct', 'Fold'],
+          ['call', 'Call', false, 'wrong', 'Fold'],
+          ['raise', 'Raise', false, 'wrong', 'Fold'],
+        ],
+      ),
+    };
+    for (final entry in w5Additions.entries) {
+      expect(entries.singleWhere((row) => row[2] == entry.key), [
+        'world_5',
+        entry.value.$1,
+        entry.key,
+        'drill',
+        'practice',
+        entry.value.$2,
+      ], reason: entry.key);
+    }
     const w8Additions = {
       'w8_effective_stack_seat': [
         'world_8',
@@ -473,6 +509,7 @@ void main() {
               !w6NewChoiceContractV1.containsKey(row[2]) &&
               !w1Additions.containsKey(row[2]) &&
               row[2] != w4BettorTask &&
+              !w5Additions.containsKey(row[2]) &&
               !w8Additions.containsKey(row[2]) &&
               row[2] != boardRepair,
         )
@@ -2161,7 +2198,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;

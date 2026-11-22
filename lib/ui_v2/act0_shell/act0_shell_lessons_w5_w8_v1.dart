@@ -1,5 +1,161 @@
 part of 'act0_shell_state_v1.dart';
 
+final _w5TextureDryValueRunner = _world5DryBoardRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_texture_dry_value',
+  caption:
+      'BB checks. You want one more bet from a worse pair. A seven can call 2 BB, but folds to a larger bet.',
+  hint: '',
+  question: 'Which action gets a call from the weaker pair?',
+  table: _day7PostflopV1(
+    'co',
+    'Jh Jd',
+    'Qs 7c 2h',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  feedbackReason:
+      'Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'check',
+      label: 'Check',
+      isCorrect: false,
+      preferredLabel: 'Bet 2 BB',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'Checking behind on Q-7-2 gives a seven a free turn and collects no chips from that pair.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'two',
+      label: 'Bet 2 BB',
+      isCorrect: true,
+      preferredLabel: 'Bet 2 BB',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the board and response.',
+      feedbackReason:
+          'Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'six',
+      label: 'Bet 6 BB',
+      isCorrect: false,
+      preferredLabel: 'Bet 2 BB',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'A seven folds to a pot-size bet on this board, so betting 6 BB gives up the call you wanted.',
+    ),
+  ],
+);
+
+final _w5TextureWetShowdownRunner = _world5WetBoardRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_texture_wet_showdown',
+  caption:
+      'BB checks and will call a bet only with a straight or two pair or better.',
+  hint: '',
+  question: 'Which action fits a plan to bet only when a worse hand calls?',
+  table: _day7PostflopV1(
+    'co',
+    'Ac Ad',
+    'Jh Th 9c',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  feedbackReason:
+      'The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'small',
+      label: 'Bet 2 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'On J-T-9 your aces are one pair. Even a 2 BB bet gets called only by hands ahead under the stated rule.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'large',
+      label: 'Bet 6 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'A full-pot bet risks 6 BB. Hands such as J-T and Q-8 already beat one pair and can call here.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'check',
+      label: 'Check',
+      isCorrect: true,
+      preferredLabel: 'Check',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the board and response.',
+      feedbackReason:
+          'The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.',
+    ),
+  ],
+);
+
+final _w5ConnectedReadBetRunner = _world5ConnectedBoardRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_connected_read_bet',
+  caption:
+      'BB bets 4 BB with a made straight. Continue only if your current hand is at least as strong.',
+  hint: '',
+  question: 'What will you do with ace-king?',
+  table: _day7PostflopV1('co', 'As Kd', '9s 8c 7d', betBb: 4, showTurn: true),
+  teachingSteps: const [],
+  feedbackReason:
+      'A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: true,
+      preferredLabel: 'Fold',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the board and response.',
+      feedbackReason:
+          'A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'Calling puts 4 BB in with ace-high. The nearby ranks on the flop do not turn your A-K into a straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'A raise risks more than 4 BB with a hand below the stated continuation threshold. Ace-high still trails the straight.',
+    ),
+  ],
+);
+
 final _boardDrawsLessons = <Act0LessonCardV1>[
   _lessonFromTasksV1(
     lessonId: 'board_texture_basics',
@@ -36,6 +192,22 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_texture_dry_value',
+        title: 'Dry flop bet size',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w5TextureDryValueRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_texture_wet_showdown',
+        title: 'Wet flop, protect your stack',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w5TextureWetShowdownRunner,
+        rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -77,6 +249,14 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _world5ConnectedBoardRunner,
         rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_connected_read_bet',
+        title: 'Connected flop against a straight',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w5ConnectedReadBetRunner,
+        rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(

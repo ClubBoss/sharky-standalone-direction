@@ -220,8 +220,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 113),
-      ('D3.to_call_completeness', 113),
+      ('D2.pot_feasibility', 116),
+      ('D3.to_call_completeness', 116),
     ]) {
       final proof = rows
           .where(
@@ -1316,6 +1316,35 @@ void main() {
         w3Option('co', seat: 'co', correct: true),
       ],
     };
+    for (final (id, choices, correct) in [
+      (
+        'board_texture_basics_w5_texture_dry_value',
+        ['check', 'two', 'six'],
+        'two',
+      ),
+      (
+        'board_texture_basics_w5_texture_wet_showdown',
+        ['small', 'large', 'check'],
+        'check',
+      ),
+      (
+        'connected_boards_w5_connected_read_bet',
+        ['fold', 'call', 'raise'],
+        'fold',
+      ),
+    ]) {
+      expectedComparison[id] = {
+        'rewardXp': 8,
+        'family': 'decision',
+        'options': [
+          for (final choice in choices)
+            {
+              ...w3Option(choice, correct: choice == correct),
+              'repairCards': ['board_0', 'board_1', 'board_2'],
+            },
+        ],
+      };
+    }
     expectedComparison['w8_effective_stack_seat'] = {
       'rewardXp': 8,
       'family': 'compare',

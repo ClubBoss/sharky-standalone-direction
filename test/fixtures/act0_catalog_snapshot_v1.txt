@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 440 tasks · W1–W12
+SHARKY POKER — EN learning content, 443 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -3197,10 +3197,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK board_texture_basics_w5_texture_intro [theory] Board texture
 CAPTION: Board texture asks how much the next cards can change.
-TEACH: Look at ranks and suits. A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. A wet board offers many plausible draws, as on three close ranks with two matching suits. Semi-wet sits between the extremes. Two matching suits with wide rank gaps are one example.
+TEACH: What can change? A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.
 TEACH LABELS: Rank gaps, Suits
-TEACH: Name the flop shape. Rainbow means three different suits. Two-tone means two cards share a suit. A paired board repeats a rank, such as 8-8-3.
-TEACH LABELS: Number of suits, Repeated ranks
 Q: What does board texture describe?
 HINT [theoryOnly]: Dry boards change less. Wet boards create more threats.
 TABLE: Flop | You Ac Jd | Board Ks 8h 3c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3234,9 +3232,41 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
   - [wrong] Semi-wet — Both sources of draws are present. T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.
     BETTER ANSWER: Wet
 
+TASK board_texture_basics_w5_texture_dry_value [drill] Dry flop bet size
+CAPTION: BB checks. You want one more bet from a worse pair. A seven can call 2 BB, but folds to a larger bet.
+Q: Which action gets a call from the weaker pair?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, pocket pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh Jd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Check — Compare the board and price. Checking behind on Q-7-2 gives a seven a free turn and collects no chips from that pair.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
+  + [correct] Bet 2 BB — Read the board and response. Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.
+    FEEDBACK TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
+  - [wrong] Bet 6 BB — Compare the board and price. A seven folds to a pot-size bet on this board, so betting 6 BB gives up the call you wanted.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
+
+TASK board_texture_basics_w5_texture_wet_showdown [drill] Wet flop, protect your stack
+CAPTION: BB checks and will call a bet only with a straight or two pair or better.
+Q: Which action fits a plan to bet only when a worse hand calls?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac Ad stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Bet 2 BB — Compare the board and price. On J-T-9 your aces are one pair. Even a 2 BB bet gets called only by hands ahead under the stated rule.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
+  - [wrong] Bet 6 BB — Compare the board and price. A full-pot bet risks 6 BB. Hands such as J-T and Q-8 already beat one pair and can call here.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
+  + [correct] Check — Read the board and response. The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.
+    FEEDBACK TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
+
 TASK board_texture_basics_w5_texture_recap [review] Texture recap
 CAPTION: Lesson learned: texture says how fast a board can change.
-TEACH: Texture checklist. Look at rank connection and suits before choosing an action. Spread ranks with mixed suits stay calmer across streets because fewer draws can form. Close ranks or matching suits add draw pressure, while a paired flop cuts down matching combinations. Check both shapes first so your plan fits how fast the board can shift.
+TEACH: Texture checklist. Read the gaps between ranks and count matching suits. Those two facts tell you how much the next card may change.
 TEACH LABELS: Ranks, Suits, Change
 Q: What is the first board read?
 HINT [theoryOnly]: Dry is calmer. Wet has more obvious improvement paths.
@@ -3251,6 +3281,9 @@ TASK connected_boards_w5_connected_intro [theory] Connected ranks
 CAPTION: Connected ranks sit close together, like 9-8-7.
 TEACH: Ranks can connect. Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.
 TEACH LABELS: 9, 8, 7, Connected
+TEACH: Ranks and suits describe different things. A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.
+TEACH TABLE: Flop | You Qd Jc | Board 9c 9h 4c | Pot 6 BB | Seat CO | Active co | Facts one pair, two-tone, paired board, backdoor flush, backdoor straight
+TEACH TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
 Q: What makes a board connected?
 HINT [theoryOnly]: Close ranks create more straight paths.
 TABLE: Flop | You Qd Jc | Board 9h 8s 7d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, consecutive board, gutshot, completion cards 4
@@ -3290,6 +3323,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
     BETTER ANSWER: Connected ranks
     FEEDBACK TABLE: Flop | You Qh Tc | Board 9s 8h 7c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, consecutive board, open-ended, gutshot, completion cards 8
 
+TASK connected_boards_w5_connected_read_bet [drill] Connected flop against a straight
+CAPTION: BB bets 4 BB with a made straight. Continue only if your current hand is at least as strong.
+Q: What will you do with ace-king?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts high card, rainbow, consecutive board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Kd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 93.25 BB bet 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB bets 4 BB
+  + [correct] Fold — Read the board and response. A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.
+    FEEDBACK TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, consecutive board
+  - [wrong] Call — Compare the board and price. Calling puts 4 BB in with ace-high. The nearby ranks on the flop do not turn your A-K into a straight.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, consecutive board
+  - [wrong] Raise — Compare the board and price. A raise risks more than 4 BB with a hand below the stated continuation threshold. Ace-high still trails the straight.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, consecutive board
+
 TASK connected_boards_w5_connected_recap [review] Connected recap
 CAPTION: Lesson learned: connected boards create straight pressure.
 TEACH: Check your own five cards too. The board on this recap is Q-9-8. Your J-T fits between the queen and the nine, so you have five in a row. Board connection is a warning for the whole table. Your two private cards determine whether you hold the straight or still need help.
@@ -3309,6 +3358,7 @@ TASK flush_draws_w5_flush_intro [theory] Same suit pressure
 CAPTION: A flush draw appears when one more suit card can help.
 TEACH: Four cards of the same suit. A flush draw has four cards of one suit between your hand and the board. There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.
 TEACH LABELS: Suit, Heart, Flush draw
+TEACH: Allow for both remaining cards. Rainbow means the three flop cards have different suits. A backdoor draw needs both the turn and the river to help.
 Q: What does a flush draw need?
 HINT [theoryOnly]: Count suits on the board and in hand.
 TABLE: Flop | You Kh Jh | Board Qh 8h 3s | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Center Count matching suits | Facts high card, two-tone, flush draw, backdoor straight, completion cards 9
@@ -3336,7 +3386,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK flush_draws_w5_no_flush_draw [drill] Read the suits
 CAPTION: Scan your cards and the flop.
-Q: How many more clubs do you need to make a flush by the river?
+Q: Do you have a backdoor draw to a club flush? How many clubs do you need?
 HINT [theoryOnly]: Rainbow means three different suits on the flop.
 TABLE: Flop | You Kd Jc | Board As 9h 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Read the flop | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Jc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
@@ -8015,6 +8065,24 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
   + [correct] Fold — Correct. Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.
   - [wrong] Both earn the same — Look again. Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.
     BETTER ANSWER: Fold
+
+===== WORLD 5 · LESSON connected_boards · Connected boards =====
+
+TASK spaced_review_w5_connected_boards_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Which made hand can continue against this flop bet?
+HINT [hidden]: (none)
+TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Facts straight, two-tone
+SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jd 8d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ bets 3 BB
+  - [wrong] One pair — Look again. Calling this one pair misses the five consecutive ranks and undervalues the hand.
+    BETTER ANSWER: Jack-high straight
+    FEEDBACK TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, two-tone
+  + [correct] Jack-high straight — Correct. Your jack and eight fill the sequence seven through jack. You already have a jack-high straight.
+    FEEDBACK TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, two-tone
+  - [wrong] Only a draw — Look again. Waiting to make a straight would give up a made hand. Seven through jack are already visible.
+    BETTER ANSWER: Jack-high straight
+    FEEDBACK TABLE: Flop | You Jd 8d | Board Ts 9h 7s | Pot 9 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, two-tone
 
 ===== WORLD 5 · LESSON board_texture_basics · Dry or wet board =====
 
