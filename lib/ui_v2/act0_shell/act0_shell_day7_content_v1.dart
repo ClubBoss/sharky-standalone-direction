@@ -6033,7 +6033,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       1: '9.5 BB is the pot after HJ bets. Leaving your call out would make the price look higher.',
       2: '5.5 BB is the old pot. This calculation ignores both the 4 BB bet and the 4 BB needed to call.',
     },
-  ),  _day7ExampleV1(
+  ),
+  _day7ExampleV1(
     12,
     'mindset_bridge_checkpoint',
     'misread_mindset_discipline',
@@ -6053,5 +6054,4 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'The new 2 BB bet needs its own read. A pause helps keep the old loss out of this choice.',
   ),
-
 ];
