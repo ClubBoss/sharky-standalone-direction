@@ -99,6 +99,8 @@ void _writeReport(
     '| E27 | Доступность скриптов ревью | Проверка рабочего окружения |',
     '| E28 | Младшие руки в диапазоне открытия | G1·44: ${rows.expand(auditOpeningRangeClaimsV1).length} находок в ${rows.expand(openingRangeClaimsV1).length} утверждениях в области стартового чарта |',
     '| E29 | Одинаковые метки вариантов одного задания | G1·45: ${quality.findings.where((key) => key.startsWith('$catalogDuplicateOptionLabelRuleV1|')).length} находок в ${quality.checks[catalogDuplicateOptionLabelRuleV1] ?? 0} заданиях |',
+    '| E30 | Действия из вопроса среди вариантов | G1·46: ${quality.findings.where((key) => key.startsWith('$catalogActionQuestionRuleV1|')).length} находок на ${quality.checks[catalogActionQuestionRuleV1] ?? 0} проверках |',
+    '| — | Длина верного разбора | G1·47: ${quality.correctFeedbackOverLimit.length} ответов длиннее $catalogCorrectFeedbackWordLimitV1 слов из ${quality.checks[catalogCorrectFeedbackLengthRuleV1] ?? 0} проверенных, исключения ограничены fixture |',
     '',
     '## E13 — расхождения',
     '',

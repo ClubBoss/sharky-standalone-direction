@@ -1069,6 +1069,14 @@ void main() {
       (key) => key.startsWith('$catalogDuplicateOptionLabelRuleV1|'),
     );
     expect(duplicateLabels, isEmpty, reason: 'G1·45 duplicate option labels');
+    expect(
+      report.findings.where(
+        (key) => key.startsWith('$catalogActionQuestionRuleV1|'),
+      ),
+      isEmpty,
+      reason:
+          'G1·46 the named actions must be available and include the answer',
+    );
     final baselineFile = File(_qualityBaselinePath);
     if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
       final existing = baselineFile.existsSync()
@@ -1147,6 +1155,24 @@ void main() {
       isEmpty,
       reason:
           'Remove resolved G1 quality findings from baseline:\n${removed.take(30).join('\n')}',
+    );
+  });
+
+  test('G1·47 correct feedback stays within the word limit', () {
+    final report = runCatalogQualityAudit();
+    final baseline =
+        jsonDecode(File(_qualityBaselinePath).readAsStringSync())
+            as Map<String, dynamic>;
+    final limits =
+        (baseline['correct_feedback_word_limits_v1'] as Map<String, dynamic>? ??
+                const {})
+            .cast<String, int>();
+    expect(
+      report.correctFeedbackOverLimit,
+      limits,
+      reason:
+          'Only the individual word counts locked in the fixture may exceed '
+          '$catalogCorrectFeedbackWordLimitV1 words. Ratchet down any shorter copy.',
     );
   });
 
@@ -2247,6 +2273,76 @@ void main() {
         ['21.duplicate_wrong_reason|${base.task.taskId}|choice_1'],
       );
     });
+
+    test('G1·46 rejects Bet or check when Day 7 only offers bets', () {
+      final row = day7CatalogTasks.firstWhere(
+        (row) =>
+            row.task.taskId ==
+            'spaced_review_w10_adjust_one_lever_board_cards_v1',
+      );
+      Iterable<String> findingsFor(CatalogTask task) =>
+          runCatalogQualityAudit(rows: [task]).findings.where(
+            (key) => key.startsWith('$catalogActionQuestionRuleV1|'),
+          );
+      expect(findingsFor(row), isEmpty);
+      expect(
+        findingsFor(
+          _withRunner(row, row.task.runner.copyWith(question: 'Bet or check?')),
+        ),
+        ['$catalogActionQuestionRuleV1|${row.task.taskId}|missing check'],
+      );
+    });
+
+    for (final (price, oldText, oldCount) in [
+      (
+        10,
+        'River Td: SB receives 60 BB. Stacks You 70, SB 130. Call EV 2.27 BB; Fold 0. The earlier 20 BB is sunk. '
+            'SB bets 10 BB with aces. Nine hearts win out of 44 unknown cards, so calling at 16.7% gains 2.27 BB over folding. '
+            'On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.',
+        81,
+      ),
+      (
+        40,
+        'Fold: SB gets 40 BB back and takes 40 BB. No river is played. Stacks You 80, SB 120. '
+            'Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk. '
+            'SB bets 40 BB with aces. Nine hearts win out of 44 unknown cards, so the 33.3% price makes calling lose 15.45 BB.',
+        62,
+      ),
+    ]) {
+      test('G1·47 rejects the old $price BB correct feedback', () {
+        final row = _catalogRow('asm05_new_known_holes_turn_call_$price');
+        final correct = row.task.runner.options.singleWhere((o) => o.isCorrect);
+        expect(
+          catalogCorrectFeedbackWordCountV1(correct),
+          lessThanOrEqualTo(40),
+        );
+        final old = Act0RunnerOptionV1(
+          id: correct.id,
+          label: correct.label,
+          isCorrect: true,
+          preferredLabel: correct.preferredLabel,
+          quality: correct.quality,
+          feedbackTitle: 'Correct decision. Judge the choice, not the result.',
+          feedbackReason: oldText,
+        );
+        final report = runCatalogQualityAudit(
+          rows: [
+            _withRunner(
+              row,
+              row.task.runner.copyWith(
+                options: [
+                  for (final option in row.task.runner.options)
+                    if (option.isCorrect) old else option,
+                ],
+              ),
+            ),
+          ],
+        );
+        expect(report.correctFeedbackOverLimit, {
+          '${row.task.taskId}|${correct.id}': oldCount,
+        });
+      });
+    }
   });
 
   test(
