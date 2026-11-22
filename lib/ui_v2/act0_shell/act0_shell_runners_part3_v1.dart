@@ -462,7 +462,7 @@ final _world4ValueIntroRunner = _world4ValuePurposeRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Top pair.',
       body:
-          'Top pair means a private card matches the highest rank on the board. On A-7-2, your ace makes top pair. A weaker ace, such as A-J, can call a value bet.',
+          'Top pair means a private card matches the highest rank on the board. On A-7-2, your ace makes top pair. A weaker ace, such as A-J, can call a value bet. Name the weaker hand before choosing your bet.',
       focusCardIds: <String>['hero_0', 'board_0'],
     ),
   ],
@@ -474,7 +474,7 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
   caption: 'BB checked the ace-high flop.',
   hint: 'Ask which hands BB can call with and whether they beat yours.',
   question:
-      'In this 6-max micro-stakes example, BB calls 3 BB and folds to 6 BB with a weaker ace. Which action earns chips from that hand?',
+      'In this example, BB calls 3 BB and folds to 6 BB with a weaker ace. Which action earns chips from that hand?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -485,7 +485,7 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'Half-pot asks weaker hands to pay without using a huge size.',
+          "Bet 3 BB because BB calls with a weaker ace on A-7-2. A bet of 6 BB loses that call.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -527,7 +527,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
   ),
   hint: 'Compare what happens to the pot after each choice.',
   question:
-      'In this 6-max micro-stakes example, BB checks a weaker ace and calls 3 BB but folds to 6 BB. Which action gets paid this round?',
+      'In this example, BB checks a weaker ace and calls 3 BB but folds to 6 BB. Which action gets paid this round?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
@@ -538,7 +538,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Keep the value chance.',
       feedbackReason:
-          'Checking leaves value on the table when worse hands can call.',
+          "A check misses the 3 BB a weaker ace will pay for the flop bet.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -549,7 +549,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Value collected.',
       feedbackReason:
-          'A half-pot bet lets worse hands call while you hold the stronger hand.',
+          "A-J leads the weaker ace that BB calls with for 3 BB. A bet of 6 BB makes that ace fold and loses the payment.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_pot',
@@ -607,7 +607,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
   caption: 'The flop is ace, seven and two. BB checked.',
   hint: 'A small bet can apply pressure without risking too much.',
   question:
-      'In this 6-max micro-stakes example, BB folds the target hands to either bet size. Which option makes a better hand fold while risking fewer chips?',
+      'In this example, BB folds the target hands to either bet size. Which option makes a better hand fold while risking fewer chips?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_small',
@@ -618,7 +618,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'A one-third bet creates fold pressure at a controlled price.',
+          "Bet 2 BB because BB folds the target hands to either size. A bet of 6 BB risks 4 BB more for the same folds.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -663,7 +663,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Use the response the question gives for better hands.',
   question:
-      'In this 6-max micro-stakes example, BB calls both offered bet sizes with better hands and folds worse hands. Which option avoids paying for a bluff that cannot get a better hand to fold?',
+      'In this example, BB calls both offered bet sizes with better hands and folds worse hands. Which option avoids paying for a bluff that cannot get a better hand to fold?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
@@ -673,7 +673,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Check is the cleaner line.',
       feedbackReason:
-          'Checking lets you see the next card for free. The model gives the bluff no chance to fold a better hand.',
+          "Check KQ on A-7-2 because BB calls either size with better hands. Betting one-third risks 2 BB and gains none of the folds you want.",
     ),
     Act0RunnerOptionV1(
       id: 'pot_bet',
@@ -685,7 +685,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.',
+          "Betting 6 BB costs chips because the model has all better hands calling. A check gets you to the turn for free.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_small',
@@ -748,7 +748,7 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Deny free cards.',
       body:
-          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.',
+          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. Overcards are the cards above the board’s highest rank. An ace or king can beat your queens if it pairs. A set means three of a kind made with a pair in your hand and one card on the board.',
       focusLabels: <String>['Next card', 'Cost', 'Deny'],
     ),
   ],
@@ -761,7 +761,7 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Betting protects value by denying that free card.',
   question:
-      'BB has checked. In this 6-max micro-stakes example, BB has ace-king, will call 3 BB and will fold to 6 BB. Which option charges A-K to see the next card and keeps the worse hand in?',
+      'BB has checked. In this example, BB has ace-king, will call 3 BB and will fold to 6 BB. Which option charges A-K to see the next card and keeps the worse hand in?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bet_half',
@@ -771,7 +771,8 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
       preferredLabel: 'Bet half-pot',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
-      feedbackReason: 'The bet makes the next card cost something.',
+      feedbackReason:
+          "Bet 3 BB because BB calls with ace-king and pays for its chance to improve. A bet of 6 BB makes ace-king fold instead.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -782,7 +783,7 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Checking lets the other player see the next card for free.',
+          "Checking gives BB a free card. Betting 3 BB charges ace-king for that chance.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_pot',
@@ -896,7 +897,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Call 2 BB into a pot of 8 BB.',
       body:
-          'You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call. Middle pair means your private card matches the second-highest rank on the flop.',
+          'Five calls cost 10 BB. One win returns 10 BB, so you break even at one in five. Middle pair means your private card matches the second-highest rank on the flop. Bottom pair means matching the lowest.',
       focusLabels: <String>['8 BB in the pot', '2 BB to call', '1 in 5'],
     ),
     Act0TeachingStepV1(
@@ -1031,7 +1032,7 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
   caption: 'HJ bet 1 BB on the turn. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
+      'Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
@@ -1042,7 +1043,7 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          '1 ÷ (1 + 8) is about 11.1%. Your 25% chance is above that threshold, so call.',
+          "HJ bets 1 BB, so a call makes a 9 BB pot and needs 11.1%. Call because the stated 25% is higher. Folding gives up this gain.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -1096,7 +1097,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
   caption: 'HJ bet 7 BB on the turn. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
+      'Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
@@ -1106,7 +1107,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          '7 ÷ (7 + 14) is about 33.3%. Your 25% chance is below that threshold, so fold.',
+          "HJ bets 7 BB, so a call makes a 21 BB pot and needs 33.3%. Fold at the stated 25% because a call loses chips here.",
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -1117,7 +1118,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare with the break-even chance.',
       feedbackReason:
-          'Calling puts 7 BB at risk. The required chance is about 33.3%, but you win only 25% of the time.',
+          'Calling costs 7 BB with only 25% wins against a 33.3% price. Folding keeps those chips.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_ignore_price',
@@ -1157,7 +1158,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       'Middle pair means a private card matches the second-highest rank on the flop.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
+      'Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
@@ -1168,7 +1169,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          '1 ÷ (1 + 10) is about 9.1%. Your 15% chance is above that threshold, so call.',
+          "HJ bets 1 BB, so calling makes an 11 BB pot and needs about 9.1%. The stated 15% clears that price. Folding gives up the gain.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -1189,7 +1190,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Check both sides.',
       feedbackReason:
-          'The 1 BB price needs about 9% win chance, and the pair of nines wins 15%. A small bet alone is no reason to call if your chance is even lower than the price.',
+          "Calling just because a bet looks small can cost chips. Here you need about 9% and the stated 15% covers it.",
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
@@ -1217,7 +1218,7 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
   caption: 'The turn is a two. HJ bet 6 BB. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which break-even chance and action are right?',
+      'Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which break-even chance and action are right?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
@@ -1668,7 +1669,7 @@ final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
       feedbackTitle: 'Too small to be legal.',
       repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
-          '4 BB adds 1 BB to HJ\'s 3 BB raise, which is below the 2 BB increase from 1 BB to 3 BB, so 4 BB is illegal.',
+          "A raise to 4 BB adds only 1 BB, below HJ’s 2 BB raise increment. Raise to at least 5 BB to make a legal reraise.",
     ),
     Act0RunnerOptionV1(
       id: 'five_bb',
@@ -1679,7 +1680,7 @@ final _world4MinRaisePreflopRunner = _world4SizingIntroRunner.copyWith(
       feedbackTitle: 'Legal minimum reraise.',
       repairFocusLabels: <String>['Minimum raise'],
       feedbackReason:
-          'HJ raised 2 BB over the 1 BB blind (1 BB to 3 BB), so adding 2 BB makes 5 BB the smallest legal reraise. The rule sets the minimum, and with A-K suited you would usually choose a larger 3-bet here.',
+          "HJ raises from 1 BB to 3 BB, so your minimum adds 2 BB and totals 5 BB. A raise to 6 BB is legal but uses 1 BB more.",
     ),
     Act0RunnerOptionV1(
       id: 'six_bb',
@@ -1786,7 +1787,7 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
   caption: 'BB bet 2 BB on the turn. $_world4PriceReminder',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?',
+      'Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
@@ -1797,7 +1798,7 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Price and chance compared.',
       feedbackReason:
-          '2 ÷ (2 + 7) is about 22.2%. Your 30% chance is above that threshold, so call.',
+          "BB bets 2 BB, so calling makes a 9 BB pot and needs about 22.2%. The stated 30% clears the price. Folding gives up the gain.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -1818,7 +1819,7 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Compare both numbers.',
       feedbackReason:
-          'A-9 wins 30% in the model. That covers the 2 BB price which needs about 22% win chance. A small bet can still be too expensive if your chance of winning is low.',
+          "Calling just because the bet is small can cost chips. Here it works because the stated 30% is above the roughly 22% price.",
     ),
   ],
   table: _act0W4FacingTurnPriceV1(
@@ -1849,7 +1850,7 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
   caption: 'BTN bet 2 BB. It is BB’s turn.',
   hint: 'Compare the reason for the bet and the amount BB must add.',
   question:
-      'In this 6-max micro-stakes example, BTN bets 2 BB into 6 BB to get called by weaker aces. What is the clean read?',
+      'In this example, BTN bets 2 BB into 6 BB to get called by weaker aces. What is the clean read?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'small_value_price',
@@ -1980,7 +1981,7 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Purpose and price connected.',
       feedbackReason:
-          'A bet tells a purpose, creates a size, and gives the caller a price. Next, the board cards tell you which bet purpose fits.',
+          "A bet can ask a weaker hand to call or a better hand to fold. Looking at size alone misses which job the bet is doing.",
     ),
     Act0RunnerOptionV1(
       id: 'random_size',
@@ -2397,12 +2398,24 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
     centerLabel: 'Read the flop',
     highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
+  teachingSteps: <Act0TeachingStepV1>[
+    const Act0TeachingStepV1(
       title: 'What can change?',
       body:
-          'A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.',
+          "A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.",
       focusLabels: <String>['Rank gaps', 'Suits'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Three of one suit.',
+      body:
+          'These three spades are called a monotone flop. A player with two more spades already has a flush.',
+      table: _act0BoardLessonTableV1(
+        openingSeat: 'hj',
+        heroCards: _act0LessonCardsV1('Ac Jd'),
+        boardCards: _act0LessonCardsV1('Ks 8s 3s'),
+        centerLabel: 'Read the flop',
+        highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
     ),
   ],
   feedbackTitle: 'Texture first.',
@@ -2722,7 +2735,8 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
       title: 'Four cards of the same suit.',
       body:
           'A flush draw has four cards of one suit between your hand and the board. '
-          'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.',
+          'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.'
+          ' “The nuts” means the best possible hand on the current board.',
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
     Act0TeachingStepV1(
@@ -3239,7 +3253,7 @@ final _world5OutsIntroRunner = _world5TextureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Count the cards that help.',
       body:
-          'An out is an unseen card that improves your hand. With one card left and 46 unseen, '
+          'Outs are the unseen cards that can improve your hand. With one card left and 46 unseen, '
           '9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.',
       focusLabels: <String>['Outs', 'One card left'],
     ),
@@ -3402,7 +3416,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nine outs are enough at this price.',
       feedbackReason:
-          'Call under the stated rule. Nine hearts out of 46 hit about 1 time in 5, above the 1-in-6 price. In a real hand, what the opponent could hold determines which rivers win.',
+          "BB bets 2 BB, so calling needs two wins per 12. Under the stated rule your flush wins on nine of 46 rivers, so folding gives up the gain.",
     ),
     Act0RunnerOptionV1(
       id: 'price_only',
@@ -3413,7 +3427,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the chance with the price.',
       feedbackReason:
-          'Under the stated rule, 9 winning rivers out of 46 beat the 2-in-12 price. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts and beat your flush.',
+          "Folding misses a call that needs only 2 in 12 when 9 of 46 rivers win. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts.",
     ),
     Act0RunnerOptionV1(
       id: 'call_draw_alone',
@@ -3424,7 +3438,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The action fits. Compare it with the cost.',
       feedbackReason:
-          'On T-4-2-9, A-7 of hearts hits on 9 of 46 rivers under the stated rule. That beats the 2-in-12 price. A bigger bet can make the same nine outs too expensive.',
+          "Calling just because you have nine outs can cost chips when the price is high. Here 9 out of 46 beat the 2-in-12 price.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -3516,7 +3530,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Eight outs are too few at this price.',
       feedbackReason:
-          'Fold under the stated rule. A 4 or 9 makes your straight on 8 of 46 rivers, below the 1-in-4 price. In a real hand, what the opponent could hold determines which rivers win.',
+          "BB bets 3 BB, so calling needs three wins per 12. Under the stated rule a four or nine wins eight of 46 rivers, so fold.",
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
@@ -3527,7 +3541,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A live draw can still cost too much.',
       feedbackReason:
-          'Under the stated rule, eight winning rivers fall short of the 3-in-12 price. In a real hand, a 9 can give an opponent holding J-T a higher straight.',
+          "A call needs 25% because it costs 3 BB for a final 12 BB pot. Eight of 46 is about 17%, so fold. In a real hand, a 9 can give an opponent holding J-T a higher straight.",
     ),
     Act0RunnerOptionV1(
       id: 'fold_wrong_out_count',
@@ -3926,7 +3940,7 @@ final _world5DrawPriceCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'The low price makes a call worthwhile.',
       feedbackReason:
-          'Only a 7 completes your straight. Four of 46 cards win, about 1 in 12. You only need 1 in 13 at this price.',
+          "BB bets 1 BB, so calling needs 1 win per 13. Four sevens out of 46 clear that price in this model. Folding gives up that gain.",
     ),
     Act0RunnerOptionV1(
       id: 'just_outs',
@@ -3937,7 +3951,7 @@ final _world5DrawPriceCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Check the price before folding.',
       feedbackReason:
-          'The 1 BB call makes a 13 BB pot. Four wins out of 46 beats the 1-in-13 price.',
+          "Folding misses a small gain: four winning rivers out of 46 beat the 1-in-13 call price.",
     ),
     Act0RunnerOptionV1(
       id: 'call_cheap_only',
@@ -4076,7 +4090,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice repair.',
       feedbackReason:
-          'The turn adds draws, and the model says BB now calls with the better hands. Checking avoids betting just to repeat the flop plan.',
+          "Check because BB calls again with better hands. If you make the same bluff again, it pays those hands and gets no folds.",
     ),
     Act0RunnerOptionV1(
       id: 'nothing_changed',
@@ -4087,7 +4101,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          "The turn adds new draws. Under the model, the better hands now call, so the earlier bluff no longer has the same purpose.",
+          "Repeating the bluff costs chips when the better hands call again. Check because the turn changed which hands can continue.",
     ),
     Act0RunnerOptionV1(
       id: 'smaller_same_story',
@@ -4098,7 +4112,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Read the new board first.',
       feedbackReason:
-          'Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.',
+          "A smaller bet still costs chips against better hands that call again. A check fits the wetter board and the stated reaction.",
     ),
   ],
   teachingSteps: const [],
@@ -4218,7 +4232,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace-high can win.',
       feedbackReason:
-          'A-Q missed the flop, but if nobody improves, it beats both Q-J and A-9. The rule says to check when your hand can already win.',
+          "Check A-Q because you already lead BB’s Q-J and A-9, and the rule says only pairs call a bet. Bluffing forces out the hands you already beat.",
     ),
     Act0RunnerOptionV1(
       id: 'bluff',
@@ -4229,7 +4243,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Ace-high has a reason to check.',
       feedbackReason:
-          'A bet makes Q-J and A-9 fold. A-Q is already ahead of both, so that is not the goal in this example.',
+          "A bluff folds the two hands you beat and risks chips against the pairs that call. A check keeps the weaker hands in.",
     ),
     Act0RunnerOptionV1(
       id: 'value',
@@ -4240,7 +4254,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The weaker hands would fold.',
       feedbackReason:
-          'A-Q has no pair here. Both weaker high-card hands fold under the rule, so they cannot pay off a value bet.',
+          "A value bet costs chips against pairs. The two weaker hands fold and cannot pay you in this model.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -4271,7 +4285,7 @@ final _w6TableBucketNoticeRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice start.',
       feedbackReason:
-          'That is the clean live-table read. Bucket first, then action.',
+          "Read A-Q against the K-7-2 board first, because the best bet depends on what you can get to call or fold now. The preflop label misses that change.",
     ),
     Act0RunnerOptionV1(
       id: 'size_first',
@@ -4492,7 +4506,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
-          'On A-7-4-4, J9 has no pair of its own, and better hands now call. Checking saves the chips a second bluff would risk.',
+          "Check J9 on A-7-4-4 because BB calls with every better hand in this model. An extra bet pays those hands without getting the folds a bluff needs.",
     ),
     Act0RunnerOptionV1(
       id: 'always_value',
@@ -4618,7 +4632,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Weaker pairs can pay.',
       feedbackReason:
-          'BB can call this half-pot bet with weaker pairs such as K-J or 7-6. That gives the bet a value purpose. Comparing bet with check requires knowing how often BB calls or raises with each hand.',
+          "Bet for value because BB calls with K-J or 7-6. Checking misses those calls. Against a broader range, profit depends on how often BB calls or raises.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -4640,7 +4654,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The bet earns a call.',
       feedbackReason:
-          'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
+          "Calling it a bluff misses the source of profit. The bet earns chips when weaker pairs call.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -4662,7 +4676,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'A bet can fold out a better hand.',
     feedbackReason:
-        'If no one improves, both Q-J and A-9 beat $hand. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.',
+        'Bluff because BB folds Q-J and A-9, both ahead of $hand if you check. Profit depends on how often BB has those hands.',
   ),
   Act0RunnerOptionV1(
     id: 'missed',
@@ -4684,7 +4698,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Worse calls are missing.',
     feedbackReason:
-        'Q-J and A-9 are both ahead of $hand if no one improves. Getting those hands to fold is a bluff.',
+        'A value bet misses which hands would pay. This bluff asks better hands like Q-J and A-9 to fold because they already lead $hand.',
   ),
 ];
 
@@ -4725,7 +4739,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
-          'Pure missed hands conserve chips more often than they force action.',
+          "On K-7-2, your J-T missed and has no draw, so checking keeps the next card free. Keep betting and you risk chips when BB continues with a made hand.",
     ),
     Act0RunnerOptionV1(
       id: 'value_bet',
@@ -4768,7 +4782,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A worse hand can call.',
       feedbackReason:
-          'Under this rule, weaker kings and hands such as 8-7 can pay you. That is a reason to bet for value. The best size and frequency depend on BB’s full response range.',
+          "Bet for value because BB calls with weaker kings and 8-7. Checking misses those calls. Profit across hands depends on the full response range.",
     ),
     Act0RunnerOptionV1(
       id: 'check_back',
@@ -4790,7 +4804,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Look for the weaker calls.',
       feedbackReason:
-          'The point of the bet is to collect chips from worse hands that call. BB does not have to fold a better hand.',
+          "Calling it a bluff misses who pays. Bet for value when weaker kings and smaller pairs are the intended callers.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -4827,7 +4841,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good pressure reset.',
       feedbackReason:
-          'Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.',
+          "BB already called the flop, and the model gives you fewer folds on the paired turn. Check because a big bet risks more chips without the earlier fold pressure.",
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
@@ -4838,7 +4852,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
-          'BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.',
+          "A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_value',

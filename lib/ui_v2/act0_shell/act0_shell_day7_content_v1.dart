@@ -1201,9 +1201,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Check', 'Bet 4 BB', 'Bet 2 BB'],
     correct: 2,
     reason:
-        'Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.',
+        "Bet 2 BB because BB calls with A-7, behind your better kicker. A bet of 4 BB makes BB fold and loses the payment.",
     wrongReasons: const {
-      0: 'Checking on A-6-2 skips the 2 BB that BB would pay with A-7.',
+      0: "Checking on A-6-2 misses the 2 BB call from BB’s weaker ace.",
       1: 'BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.',
     },
   ),
@@ -1279,9 +1279,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Both choices earn zero", "Call"],
     correct: 2,
     reason:
-        "Pay 2 BB to play for a final 10 BB pot. You need 20% and have 25%, so calling is ahead.",
-    caption:
-        "6-max micro-stakes. With one decision left, assume you win 1 time in 4 if you call.",
+        "HJ bets 2 BB, so calling makes a 10 BB pot and needs 20%. Call because the stated 25% is higher. Folding gives up the gain.",
+    caption: "With one decision left, assume you win 1 time in 4 if you call.",
   ),
   _day7ExampleV1(
     4,
@@ -1298,9 +1297,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Bet 3 BB", "Check to showdown", "Fold"],
     correct: 0,
     reason:
-        "A 3 BB bet gets a call from the weaker kings in this model. A check ends the hand without that payment.",
-    caption:
-        "6-max micro-stakes. In this example BB calls 3 BB with K-J and K-T.",
+        "BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.",
+    caption: "In this example BB calls 3 BB with K-J and K-T.",
   ),
   _day7ExampleV1(
     4,
@@ -1318,9 +1316,32 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Bet 3 BB", "Fold"],
     correct: 1,
     reason:
-        "A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.",
-    caption:
-        "6-max micro-stakes. BB has a pair of sevens and folds it to a 3 BB bet.",
+        "Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.",
+    caption: "BB has a pair of sevens and folds it to a 3 BB bet.",
+  ),
+  _day7ExampleV1(
+    4,
+    'protection_and_denial',
+    'pot_to_call',
+    _day7PostflopV1(
+      'hj',
+      '9c 8c',
+      '9h 6s 2d Ks',
+      betBb: 3,
+      opponentStartingBb: 5.75,
+      opponentAllIn: true,
+      showTurn: true,
+    ),
+    caption: 'Assume 20% wins and no ties against this all-in range.',
+    question: 'Does the chance to win beat the price of a call?',
+    choices: const ['Call', 'Fold', 'Both earn the same'],
+    correct: 1,
+    reason:
+        'BB is all-in for 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because 20% falls short and a call loses chips.',
+    wrongReasons: const {
+      0: 'Calling costs 3 BB with a 20% chance, below the 25% the price requires.',
+      2: 'One win in five earns 9 BB, but four losses cost 12 BB in total. Folding saves an average 0.6 BB.',
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1338,9 +1359,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Fold", "Bet 3 BB"],
     correct: 2,
     reason:
-        "Your check lets the round end without a price. A bet sets a price BB must pay to see the next card.",
-    caption:
-        "6-max micro-stakes. Assume BB has A-K and can pair either card on the turn.",
+        "A bet makes BB pay or fold with ace-king. Checking gives BB a free chance to pair one of those cards and beat your nines.",
+    caption: "Assume BB has A-K and can pair either card on the turn.",
   ),
   _day7ExampleV1(
     4,
@@ -1358,7 +1378,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Your jack beats A-9's nine side card. A-Q has the higher side card and beats your pair of aces.",
-    caption: "6-max micro-stakes. Assume BB calls 3 BB with either A-9 or A-Q.",
+    caption: "Assume BB calls 3 BB with either A-9 or A-Q.",
   ),
   _day7ExampleV1(
     4,
@@ -1370,9 +1390,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Fold", "Both earn the same"],
     correct: 1,
     reason:
-        "Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.",
+        "HJ bets 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because the stated 20% is below the price. A call loses chips here.",
     caption:
-        "6-max micro-stakes. Two players, no ties or further betting. Assume one win in five against this opponent's range.",
+        "Two players, no ties or further betting. Assume one win in five against this opponent's range.",
   ),
   _day7ExampleV1(
     5,
@@ -1489,7 +1509,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 0,
     reason:
-        "The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.",
+        "BB bets 3 BB, so a call needs 25% to win a portion of the 12 BB final pot. Fold because 8 of 46 rivers is only about 17%.",
   ),
   _day7ExampleV1(
     5,
@@ -1535,6 +1555,29 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.",
+  ),
+  _day7ExampleV1(
+    5,
+    'w5_semi_bluff',
+    'board_cards',
+    _day7PostflopV1(
+      'co',
+      'Ac 6c',
+      'Qc 7d 4c 2h',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    caption:
+        'BB calls 1 BB and folds half the time to 3 BB. Nine clubs win. Other rivers lose. No more bets.',
+    question: 'What earns most with this club draw?',
+    choices: const ['Bet 1 BB', 'Check', 'Bet 3 BB'],
+    correct: 2,
+    reason:
+        'Bet 3 BB because BB folds half the time and nine clubs can win after a call. Checking misses the folds and earns 1.5 BB less on average.',
+    wrongReasons: const {
+      0: 'A bet of 1 BB gets no folds in this model and costs an extra chip when you miss.',
+      1: 'Checking relies on the nine winning rivers. A bet of 3 BB can also win without seeing a river.',
+    },
   ),
   _day7ExampleV1(
     6,
@@ -1669,7 +1712,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 1,
     reason:
-        'The third club completes possible flushes. Under the stated rule only hands that beat KT call, so checking saves the cost of a turn bet.',
+        "Check KT because BB calls only with stronger hands on this three-club turn. A big bet for value risks chips without getting paid by a weaker hand.",
   ),
   _day7ExampleV1(
     6,
@@ -1781,6 +1824,23 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       1: 'Twelve counts only different-suit K-J. Leaving out one K-J hand per suit misses four legal combinations.',
     },
     savedTaskId: 'spaced_review_w6_range_reading_review_pot_to_call_v1',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_reading_review',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Qs 9d', 'Qh 8c 5d 3s', betBb: 3, showTurn: true),
+    caption: 'Assume you win 30% and face no ties or further bets.',
+    question: 'What does the price of the call allow after you checked?',
+    choices: const ['Fold', 'Call', 'Both earn the same'],
+    correct: 1,
+    reason:
+        'HJ bets 3 BB, so the call makes a 12 BB pot and needs 25%. Call because 30% clears the price. Folding misses that gain.',
+    savedTaskId: 'spaced_review_w6_range_reading_review_check_call_price_v1',
+    wrongReasons: const {
+      0: 'Folding gives up a call that earns 0.6 BB on average in this example.',
+      2: 'At 30%, you average 3.6 BB from the final pot and pay 3 BB. Calling earns more than folding.',
+    },
   ),
   _day7ExampleV1(
     7,

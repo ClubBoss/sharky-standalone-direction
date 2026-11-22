@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart'
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
+import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -202,8 +203,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 176),
-      ('D3.to_call_completeness', 126),
+      ('D2.pot_feasibility', 178),
+      ('D3.to_call_completeness', 128),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -226,8 +227,14 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 118),
-      ('D3.to_call_completeness', 117),
+      (
+        'D2.pot_feasibility',
+        118 + y5bNewChoicesV1.length - y5bFoundationTaskCountV1,
+      ),
+      (
+        'D3.to_call_completeness',
+        117 + y5bNewChoicesV1.length - y5bFoundationTaskCountV1,
+      ),
     ]) {
       final proof = rows
           .where(
@@ -1489,6 +1496,16 @@ void main() {
           },
       ],
     };
+    for (final entry in y5bNewChoicesV1.entries) {
+      expectedComparison[entry.key] = {
+        'rewardXp': entry.value.isEmpty ? 6 : 8,
+        'family': entry.value.isEmpty ? 'learn' : 'decision',
+        'options': [
+          for (final choice in entry.value)
+            w3Option(choice[0] as String, correct: choice[2] as bool),
+        ],
+      };
+    }
     expectedComparison['w4_protection_small_denial'] = {
       'rewardXp': 7,
       'family': 'decision',
@@ -1496,6 +1513,7 @@ void main() {
         for (final choice in ['check', 'bet_four', 'bet_two'])
           {
             ...w3Option(choice, correct: choice == 'bet_two'),
+            if (choice == 'bet_four') 'quality': 'suboptimal',
             'repairCards': ['board_0', 'board_1', 'board_2'],
           },
       ],

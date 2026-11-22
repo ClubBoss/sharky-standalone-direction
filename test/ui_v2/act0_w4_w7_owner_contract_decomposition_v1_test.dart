@@ -45,6 +45,7 @@ void main() {
         'flush_draws',
         'straight_draws',
         'outs_improvement',
+        'w5_semi_bluff',
         'turn_river_changes',
       ]);
 

@@ -5,6 +5,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_y5b_catalog_contract_v1.dart';
 
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
@@ -95,7 +96,10 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 216 + w3BlindVsBlindChoicesV1.length);
+      expect(
+        tasks.length,
+        216 + w3BlindVsBlindChoicesV1.length + y5bFoundationTaskCountV1,
+      );
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
@@ -182,6 +186,7 @@ void main() {
       'flush_draws',
       'straight_draws',
       'outs_improvement',
+      'w5_semi_bluff',
       'turn_river_changes',
     };
     const rangeLessons = {
@@ -212,13 +217,15 @@ void main() {
         {
           if (boardLessons.contains(source.lesson.lessonId)) 'Board reading',
           if (rangeLessons.contains(source.lesson.lessonId)) 'Range reading',
-          if (pricedOuts.contains(source.task.taskId)) 'Betting decisions',
+          if (pricedOuts.contains(source.task.taskId) ||
+              source.lesson.lessonId == 'w5_semi_bluff')
+            'Betting decisions',
         },
         reason: source.task.taskId,
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
-    expect(tasksByWorld, {5: 37, 6: 39});
+    expect(tasksByWorld, {5: 43, 6: 44});
   });
 
   test('every W7–W8 task projects to its authored topic', () {

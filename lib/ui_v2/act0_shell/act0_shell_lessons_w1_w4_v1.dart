@@ -410,7 +410,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with kings.',
       feedbackReason:
-          'With KK, raise to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling matches the first raise at 2.5 BB.',
+          "Raise KK to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling keeps the pot smaller against hands that would pay the raise.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -6264,6 +6264,7 @@ Act0RunnerStateV1 _w4ChooseSmallBetV1({
   required String checkReason,
   required String largerBetReason,
   required int correctIndex,
+  Act0FeedbackQualityV1 largerBetQuality = Act0FeedbackQualityV1.wrong,
 }) => source.copyWith(
   lessonId: id,
   phase: Act0LessonPhaseV1.drill,
@@ -6303,7 +6304,7 @@ Act0RunnerStateV1 _w4ChooseSmallBetV1({
         isCorrect: false,
         preferredLabel: 'Bet 2 BB',
         betterAnswerLabel: 'Bet 2 BB',
-        quality: Act0FeedbackQualityV1.wrong,
+        quality: largerBetQuality,
         feedbackTitle: 'Compare both bets.',
         feedbackReason: largerBetReason,
         repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
@@ -6387,9 +6388,9 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
             showTurn: true,
           ),
           correctReason:
-              'Your jack beats BB’s eight beside the pair of queens. A 2 BB bet gets that weaker hand to pay.',
+              "Bet 2 BB because BB’s Q-8 calls and has the worse kicker. A bet of 4 BB loses that call.",
           checkReason:
-              'Checking with Q-J against Q-8 skips the 2 BB that the weaker queen would pay.',
+              "Checking misses a 2 BB call from Q-8. Betting 2 BB earns that payment.",
           largerBetReason:
               'BB folds Q-8 to 4 BB under this rule, so the bigger bet loses the call you wanted.',
         ),
@@ -6784,7 +6785,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
     primaryCtaLabel: 'Locked',
     isSelectable: false,
     isLocked: true,
-    rewardXp: 30,
+    rewardXp: 46,
     runner: _world4ProtectionIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -6826,9 +6827,9 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           id: 'w4_protection_small_denial',
           correctIndex: 2,
           caption:
-              'BB checks with A-K. In this example BB folds to either bet.',
+              'BB checks. BB’s overcards (A-K, A-Q, K-Q) fold to either bet. If BB has a set, it calls and wins.',
           question:
-              'Which play makes BB give up the chance to catch up while risking the fewest chips?',
+              'Which bet makes the overcards fold and risks the fewest chips?',
           table: _day7PostflopV1(
             'co',
             'Ts 9c',
@@ -6837,14 +6838,85 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
             showTurn: true,
           ),
           correctReason:
-              'BB folds A-K to 2 BB. Your pair of tens wins the 6 BB pot without letting BB see another card.',
+              'Bet 2 BB because overcards fold to either bet and you win the same 6 BB pot. When BB calls with a set, you lose 2 BB less than betting 4 BB.',
           checkReason:
-              'Checking lets BB see a card for free. An ace or a king could put A-K ahead of your tens.',
+              'Checking gives BB’s overcards a free chance to beat your tens. A 2 BB bet makes those hands fold.',
+          largerBetQuality: Act0FeedbackQualityV1.suboptimal,
           largerBetReason:
-              'BB folds A-K to either bet. The 4 BB bet puts another 2 BB at risk for the same result in this example.',
+              'Betting 4 BB costs 2 BB more when a set calls and wins. Betting 2 BB already gets the overcards to fold.',
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_protection_guided_raise_read',
+        title: 'Read a raise with help',
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner:
+            _day7ExampleV1(
+              4,
+              'protection_and_denial',
+              'guided_raise_read',
+              _day7PostflopV1(
+                'co',
+                'Kh Qh',
+                'Kc 8d 4s',
+                heroLeadBb: 3,
+                betBb: 9,
+                showTurn: true,
+              ),
+              caption:
+                  'Hand reading means using the action to see which hands are more likely. This BB usually calls with one pair and seldom raises a weak hand.',
+              question: 'What became more likely after BB raised?',
+              choices: const [
+                'Weaker kings',
+                'Sets',
+                'Weak hands with no pair',
+              ],
+              correct: 1,
+              reason:
+                  'BB’s raise points toward sets because one pair usually calls in this model. Weaker kings remain possible.',
+              wrongReasons: const {
+                0: 'A weaker king tends to call in the stated model. A raise makes a set more likely.',
+                2: 'BB rarely raises a weak hand in this model. Treating the raise like a weak hand risks paying off a set.',
+              },
+            ).task.runner.copyWith(
+              hint: 'Compare the model’s calls with its raises.',
+              hintPolicy: Act0HintPolicyV1.always,
+            ),
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_protection_short_shove_price',
+        title: 'A short all-in',
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          4,
+          'protection_and_denial',
+          'short_shove_price',
+          _day7PostflopV1(
+            'co',
+            'Qd Jd',
+            'Qs 9c 5h 2d',
+            betBb: 6,
+            opponentStartingBb: 8.75,
+            opponentAllIn: true,
+            showTurn: true,
+          ),
+          caption: 'BB goes all-in for 6 BB. Assume you win 40% and never tie.',
+          question: 'Which choice earns more?',
+          choices: const ['Fold', 'Both earn the same', 'Call'],
+          correct: 2,
+          reason:
+              'BB goes all-in for its last 6 BB, so calling makes an 18 BB pot and needs 33%. Call because 40% beats that price. Folding misses the gain.',
+          wrongReasons: const {
+            0: 'Folding gives up a call with positive value. You need one win in three and the stated chance is 40%.',
+            1: 'Calling wins 12 BB four times in ten and loses 6 BB six times in ten. That averages +1.2 BB, above folding.',
+          },
+        ).task.runner,
       ),
       Act0LessonTaskV1(
         taskId: 'w4_protection_recap',
@@ -6956,7 +7028,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
               quality: Act0FeedbackQualityV1.correct,
               feedbackTitle: 'Compare the two chances.',
               feedbackReason:
-                  '3 ÷ (3 + 10) is about 23%. You win 1 time in 4, or 25%, so the call earns more.',
+                  "HJ bets 3 BB, so a call makes a 13 BB pot and needs about 23%. The stated 25% clears that price. Folding gives up the gain.",
             ),
             Act0RunnerOptionV1(
               id: 'fold',

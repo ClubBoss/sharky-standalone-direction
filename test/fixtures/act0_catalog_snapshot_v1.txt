@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 461 tasks · W1–W12
+SHARKY POKER — EN learning content, 474 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -247,7 +247,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier
   - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
-  + [correct] Raise to 7.5 BB — Raise with kings. With KK, raise to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling matches the first raise at 2.5 BB.
+  + [correct] Raise to 7.5 BB — Raise with kings. Raise KK to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling keeps the pot smaller against hands that would pay the raise.
     REPAIR LABELS: Top starting pairs
   - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.
     BETTER ANSWER: Raise to 7.5 BB
@@ -2946,7 +2946,7 @@ EFFECTIVE: HJ unknown · SB unknown · BB unknown
 REASONING: principle position_realizes · alt raise · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Ks Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
-  + [correct] Call [2.5 BB] — Sharp read. Call KJs on BTN because HJ can raise weaker suited hands and you see HJ’s decisions before yours. Reraising risks extra chips when better hands continue.
+  + [correct] Call [2.5 BB] — Sharp read. Call 2.5 BB with KJs because BTN acts after HJ on every later round. A reraise risks more when HJ continues with better hands such as KQ or strong aces.
   - [wrong] Fold — Not quite. HJ opened to 2.5 BB, making the pot 4 BB before you act. Folding KJs on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
   - [wrong] Reraise to 7.5 BB — Read the earlier actions and seat order. The chart calls HJ for 2.5 BB with KJs on BTN. Reraising risks 5 BB extra against better hands.
@@ -3038,11 +3038,12 @@ Q: What do you do to get paid by the weaker queen?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt bet_four · edge moreValueFromWorse · stack_matters false · assumption BB checks with Q-8 and will call 2 BB or fold to 4 BB.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Jc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  + [correct] Bet 2 BB — The smaller bet fits. Your jack beats BB’s eight beside the pair of queens. A 2 BB bet gets that weaker hand to pay.
+  + [correct] Bet 2 BB — The smaller bet fits. Bet 2 BB because BB’s Q-8 calls and has the worse kicker. A bet of 4 BB loses that call.
     FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Check — Look at the response. Checking with Q-J against Q-8 skips the 2 BB that the weaker queen would pay.
+  - [wrong] Check — Look at the response. Checking misses a 2 BB call from Q-8. Betting 2 BB earns that payment.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] Bet 4 BB — Compare both bets. BB folds Q-8 to 4 BB under this rule, so the bigger bet loses the call you wanted.
@@ -3125,12 +3126,13 @@ Q: What is the smallest legal reraise total from CO?
 HINT [theoryOnly]: Find how much HJ added above the 1 BB blind, then add at least that much to 3 BB.
 TABLE: Preflop | You As Ks | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Seat focus hj, co | Center Minimum reraise | Facts no applicable hand facts
 EFFECTIVE: HJ 100 · BTN 100 · SB 100 · BB 100
+REASONING: principle value_vs_worse · alt six_bb · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 97 BB raise 3 BB | CO As Ks stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB
-  - [wrong] Raise to 4 BB — Too small to be legal. 4 BB adds 1 BB to HJ's 3 BB raise, which is below the 2 BB increase from 1 BB to 3 BB, so 4 BB is illegal.
+  - [wrong] Raise to 4 BB — Too small to be legal. A raise to 4 BB adds only 1 BB, below HJ’s 2 BB raise increment. Raise to at least 5 BB to make a legal reraise.
     BETTER ANSWER: Raise to 5 BB
     REPAIR LABELS: Minimum raise
-  + [correct] Raise to 5 BB — Legal minimum reraise. HJ raised 2 BB over the 1 BB blind (1 BB to 3 BB), so adding 2 BB makes 5 BB the smallest legal reraise. The rule sets the minimum, and with A-K suited you would usually choose a larger 3-bet here.
+  + [correct] Raise to 5 BB — Legal minimum reraise. HJ raises from 1 BB to 3 BB, so your minimum adds 2 BB and totals 5 BB. A raise to 6 BB is legal but uses 1 BB more.
     REPAIR LABELS: Minimum raise
   - [wrong] Raise to 6 BB — Larger than the minimum. 6 BB adds 3 BB to HJ's 3 BB raise, which is legal but 1 BB larger than the 5 BB minimum reraise.
     BETTER ANSWER: Raise to 5 BB
@@ -3167,7 +3169,7 @@ REVIEW: Size is not decoration. It creates the price your opponent must face.
 
 TASK w4_price_intro [theory] Facing a price
 CAPTION: When someone bets, they set your price to continue.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call. Middle pair means your private card matches the second-highest rank on the flop.
+TEACH: Call 2 BB into a pot of 8 BB. Five calls cost 10 BB. One win returns 10 BB, so you break even at one in five. Middle pair means your private card matches the second-highest rank on the flop. Bottom pair means matching the lowest.
 TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
 TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
 TEACH LABELS: 1 in 5, 20%
@@ -3180,13 +3182,14 @@ REVIEW: One win in five is 20%. To call X into a pot of Y after the bet, you nee
 
 TASK w4_good_price_call [drill] Call small price
 CAPTION: HJ bet 1 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
+Q: Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You Ts 7d | Board Th 8c 3d 2s | Pot 8 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1 | Center Turn decision | Facts one pair, top pair
 EFFECTIVE: HJ unknown
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity · stack_matters false · assumption Two players, no ties or more bets. If you call, you win 1 time in 4 (25%).
 SEATS: UTG folded stack 100 BB | HJ stack 96.25 BB bet 1 BB | CO folded stack 100 BB | BTN dealer Ts 7d stack 97.25 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO folds · BTN calls 2.75 BB · SB folds · BB folds · Flop: HJ checks · BTN checks · Turn: HJ bets 1 BB
-  + [correct] Call [1 BB] — Price and chance compared. 1 ÷ (1 + 8) is about 11.1%. Your 25% chance is above that threshold, so call.
+  + [correct] Call [1 BB] — Price and chance compared. HJ bets 1 BB, so a call makes a 9 BB pot and needs 11.1%. Call because the stated 25% is higher. Folding gives up this gain.
   - [wrong] Fold — Compare with the break-even chance. Folding gives up a profitable call in this model: 25% is higher than the roughly 11.1% you need.
     BETTER ANSWER: Call
   - [suboptimal] Call just because you paired the ten — The action fits. Check the price too. T-7 makes a pair of tens, but the 1 BB price and 25% win chance make this call profitable. Skipping the calculation can cost chips against a bigger bet.
@@ -3194,17 +3197,18 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
 
 TASK w4_bad_price_fold [drill] Fold high price
 CAPTION: HJ bet 7 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
+Q: Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 8s 7d | Board Kh 8c 4d 2s | Pot 14 BB | To call 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1 | Center Turn decision | Facts one pair, middle pair
 EFFECTIVE: HJ unknown
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice · stack_matters false · assumption Two players, no ties or more bets. If you call, you win 1 time in 4 (25%).
 SEATS: UTG folded stack 100 BB | HJ stack 90.25 BB bet 7 BB | CO folded stack 100 BB | BTN dealer 8s 7d stack 97.25 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO folds · BTN calls 2.75 BB · SB folds · BB folds · Flop: HJ checks · BTN checks · Turn: HJ bets 7 BB
-  - [wrong] Call [7 BB] — Compare with the break-even chance. Calling puts 7 BB at risk. The required chance is about 33.3%, but you win only 25% of the time.
+  - [wrong] Call [7 BB] — Compare with the break-even chance. Calling costs 7 BB with only 25% wins against a 33.3% price. Folding keeps those chips.
     BETTER ANSWER: Fold
   - [suboptimal] Fold because a pair of eights is too weak to call — The action fits. Use the price. Your pair of eights can win. The 7 BB call needs about 33% win chance in this model, above the stated 25%. Folding every pair of eights would also lose profitable calls.
     BETTER ANSWER: Fold
-  + [correct] Fold — Price and chance compared. 7 ÷ (7 + 14) is about 33.3%. Your 25% chance is below that threshold, so fold.
+  + [correct] Fold — Price and chance compared. HJ bets 7 BB, so a call makes a 21 BB pot and needs 33.3%. Fold at the stated 25% because a call loses chips here.
 
 TASK w4_price_find_bettor [drill] Find the bet you face
 CAPTION: You checked the flop. Now there is a bet to match.
@@ -3224,21 +3228,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK w4_cheap_price_marginal_call [drill] Cheap call with middle pair
 CAPTION: The turn is a two. HJ bet 1 BB. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?
+Q: Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 9s 7d | Board Kc 9h 4d 2s | Pot 10 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_1 | Center Turn decision | Facts one pair, middle pair
 EFFECTIVE: HJ unknown
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity · stack_matters false · assumption If you call, you win 3 times in 20, about 1 in 7 (15%).
 SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 1 BB | CO folded stack 100 BB | BTN dealer 9s 7d stack 96.25 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 3.75 BB · CO folds · BTN calls 3.75 BB · SB folds · BB folds · Flop: HJ checks · BTN checks · Turn: HJ bets 1 BB
   - [wrong] Fold — Compare with the break-even chance. Folding gives up a profitable call in this model: 15% is higher than the roughly 9.1% you need.
     BETTER ANSWER: Call
-  + [correct] Call [1 BB] — Price and chance compared. 1 ÷ (1 + 10) is about 9.1%. Your 15% chance is above that threshold, so call.
-  - [suboptimal] Call because the opponent bet small — The action fits. Check both sides. The 1 BB price needs about 9% win chance, and the pair of nines wins 15%. A small bet alone is no reason to call if your chance is even lower than the price.
+  + [correct] Call [1 BB] — Price and chance compared. HJ bets 1 BB, so calling makes an 11 BB pot and needs about 9.1%. The stated 15% clears that price. Folding gives up the gain.
+  - [suboptimal] Call because the opponent bet small — The action fits. Check both sides. Calling just because a bet looks small can cost chips. Here you need about 9% and the stated 15% covers it.
     BETTER ANSWER: Call
 
 TASK w4_big_price_marginal_fold [drill] Big price, thinner hand
 CAPTION: The turn is a two. HJ bet 6 BB. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which break-even chance and action are right?
+Q: Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which break-even chance and action are right?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You Qs 7d | Board Qh Jc 3d 2s | Pot 13 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0 | Center Turn decision | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ stack 91.25 BB bet 6 BB | CO folded stack 100 BB | BTN dealer Qs 7d stack 97.25 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
@@ -3264,26 +3269,27 @@ REVIEW: The price gives the required winning chance. Compare it with how often y
 
 TASK w4_value_intro [theory] Worse calls
 CAPTION: A value bet targets weaker hands that can call.
-TEACH: Top pair. Top pair means a private card matches the highest rank on the board. On A-7-2, your ace makes top pair. A weaker ace, such as A-J, can call a value bet.
+TEACH: Top pair. Top pair means a private card matches the highest rank on the board. On A-7-2, your ace makes top pair. A weaker ace, such as A-J, can call a value bet. Name the weaker hand before choosing your bet.
 TEACH TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, board_0 | Center Flop | Facts one pair, top pair, rainbow
 Q: Who should a value bet get called by?
 HINT [theoryOnly]: If no weaker hand can call, value is thin or missing.
 TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, hero_1, board_0 | Center Flop | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Qd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-REVIEW: Top pair means a private card matches the highest rank on the board. On A-7-2, your ace makes top pair. A weaker ace, such as A-J, can call a value bet.
+REVIEW: Top pair means a private card matches the highest rank on the board. On A-7-2, your ace makes top pair. A weaker ace, such as A-J, can call a value bet. Name the weaker hand before choosing your bet.
 
 TASK w4_value_bet [drill] Bet top pair
 CAPTION: BB checked the ace-high flop.
 TEACH: Compare the two private cards with the board. If both players pair the same rank, compare the remaining cards in their best five.
 TEACH LABELS: Board, Private cards
-Q: In this 6-max micro-stakes example, BB calls 3 BB and folds to 6 BB with a weaker ace. Which action earns chips from that hand?
+Q: In this example, BB calls 3 BB and folds to 6 BB with a weaker ace. Which action earns chips from that hand?
 HINT [theoryOnly]: Ask which hands BB can call with and whether they beat yours.
 TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, hero_1, board_0 | Center Value spot | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt bet_pot · edge moreValueFromWorse · stack_matters false · assumption BB calls 3 BB and folds to 6 BB with a weaker ace.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Qd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  + [correct] Bet half-pot [3 BB] — Excellent spot. Half-pot asks weaker hands to pay without using a huge size.
+  + [correct] Bet half-pot [3 BB] — Excellent spot. Bet 3 BB because BB calls with a weaker ace on A-7-2. A bet of 6 BB loses that call.
     FEEDBACK TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
   - [wrong] Check — Not quite. Checking can miss value when worse hands can call.
     BETTER ANSWER: Bet half-pot
@@ -3294,19 +3300,20 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK w4_value_missed [drill] Do not hide value
 CAPTION: BB checked. Your cards are an ace and a jack.
-Q: In this 6-max micro-stakes example, BB checks a weaker ace and calls 3 BB but folds to 6 BB. Which action gets paid this round?
+Q: In this example, BB checks a weaker ace and calls 3 BB but folds to 6 BB. Which action gets paid this round?
 HINT [theoryOnly]: Compare what happens to the pot after each choice.
 TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus hero_0, hero_1, board_0 | Center Value spot | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt bet_pot · edge moreValueFromWorse · stack_matters false · assumption BB checks a weaker ace and calls 3 BB but folds to 6 BB.
 SEATS: UTG folded stack 100 BB | HJ As Jd stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] Check — Keep the value chance. Checking leaves value on the table when worse hands can call.
+  - [wrong] Check — Keep the value chance. A check misses the 3 BB a weaker ace will pay for the flop bet.
     BETTER ANSWER: Bet half-pot
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
   - [wrong] Bet pot-size [6 BB] — Keep the weaker ace in. A-J can get 3 BB from a weaker ace on A-7-2. Under the stated read a 6 BB bet makes that ace fold, so you miss the chips it would have paid.
     BETTER ANSWER: Bet half-pot
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
-  + [correct] Bet half-pot [3 BB] — Value collected. A half-pot bet lets worse hands call while you hold the stronger hand.
+  + [correct] Bet half-pot [3 BB] — Value collected. A-J leads the weaker ace that BB calls with for 3 BB. A bet of 6 BB makes that ace fold and loses the payment.
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
 
 TASK w4_value_worse_call_seat [drill] Find the worse caller
@@ -3353,13 +3360,14 @@ TASK w4_bluff_pressure [drill] Apply pressure
 CAPTION: The flop is ace, seven and two. BB checked.
 TEACH: Match the size to the same target. Start with a better hand you expect to fold. If a small bet gets that same fold, adding chips gives you no extra reward from that hand. Keep the pot size separate from the chips you risk.
 TEACH LABELS: Target hand, Chips at risk
-Q: In this 6-max micro-stakes example, BB folds the target hands to either bet size. Which option makes a better hand fold while risking fewer chips?
+Q: In this example, BB folds the target hands to either bet size. Which option makes a better hand fold while risking fewer chips?
 HINT [theoryOnly]: A small bet can apply pressure without risking too much.
 TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus board_0, board_1, board_2 | Center Fold pressure | Facts high card, rainbow, backdoor flush, backdoor straight
 EFFECTIVE: BB 97.25
+REASONING: principle smallest_size_same_job · alt bet_pot · edge cheaperSameResult · stack_matters false · assumption BB folds the target hands to either bet size.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc Qc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  + [correct] Bet one-third [2 BB] — Clean execution. A one-third bet creates fold pressure at a controlled price.
+  + [correct] Bet one-third [2 BB] — Clean execution. Bet 2 BB because BB folds the target hands to either size. A bet of 6 BB risks 4 BB more for the same folds.
   - [wrong] Check — Checking leaves both players in. Checking closes this round without asking BB to fold. Betting gives BB a decision.
     BETTER ANSWER: Bet one-third
   - [wrong] Bet pot-size [6 BB] — Same fold, more risk. In the 6 BB pot on A-7-2, a 2 BB bet makes the target hands fold. The 6 BB bet gets the same result from them but puts 4 BB more at risk if called.
@@ -3367,15 +3375,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK w4_bad_bluff [drill] Bad pressure
 CAPTION: You hold a king and a queen on ace, seven and two.
-Q: In this 6-max micro-stakes example, BB calls both offered bet sizes with better hands and folds worse hands. Which option avoids paying for a bluff that cannot get a better hand to fold?
+Q: In this example, BB calls both offered bet sizes with better hands and folds worse hands. Which option avoids paying for a bluff that cannot get a better hand to fold?
 HINT [theoryOnly]: Use the response the question gives for better hands.
 TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Low fold pressure | Facts high card, rainbow, backdoor flush, backdoor straight
 EFFECTIVE: BB unknown
+REASONING: principle folds_better · alt bet_small · edge keepsWorseIn · stack_matters false · assumption BB calls both offered bet sizes with better hands and folds worse hands.
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  - [wrong] Bet pot-size [6 BB] — Not quite. The model says every better hand calls. Betting 6 BB cannot achieve the stated bluff goal.
+  - [wrong] Bet pot-size [6 BB] — Not quite. Betting 6 BB costs chips because the model has all better hands calling. A check gets you to the turn for free.
     BETTER ANSWER: Check
-  + [correct] Check — Check is the cleaner line. Checking lets you see the next card for free. The model gives the bluff no chance to fold a better hand.
+  + [correct] Check — Check is the cleaner line. Check KQ on A-7-2 because BB calls either size with better hands. Betting one-third risks 2 BB and gains none of the folds you want.
   - [wrong] Bet one-third [2 BB] — A smaller losing bet still costs chips. A 2 BB bet risks less than 6 BB, but on A-7-2 the stated better hands still call. Checking lets K-Q see the turn without paying for those folds.
     BETTER ANSWER: Check
 
@@ -3410,26 +3419,27 @@ REVIEW: Bluffing is pressure with a purpose: make better hands fold without risk
 
 TASK w4_protection_intro [theory] Deny free card
 CAPTION: Protection bets make the next card cost something.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.
+TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. Overcards are the cards above the board’s highest rank. An ace or king can beat your queens if it pairs. A set means three of a kind made with a pair in your hand and one card on the board.
 TEACH LABELS: Next card, Cost, Deny
 Q: What does protection deny?
 HINT [theoryOnly]: A pair can be ahead now and fall behind on the next card.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-REVIEW: Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.
+REVIEW: Protection makes the next card cost chips. You have a pair of queens on Q-9-4. Overcards are the cards above the board’s highest rank. An ace or king can beat your queens if it pairs. A set means three of a kind made with a pair in your hand and one card on the board.
 
 TASK w4_protection_bet [drill] Protect pair
 CAPTION: BB checked on queen, nine and four.
-Q: BB has checked. In this 6-max micro-stakes example, BB has ace-king, will call 3 BB and will fold to 6 BB. Which option charges A-K to see the next card and keeps the worse hand in?
+Q: BB has checked. In this example, BB has ace-king, will call 3 BB and will fold to 6 BB. Which option charges A-K to see the next card and keeps the worse hand in?
 HINT [theoryOnly]: Betting protects value by denying that free card.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, board_0, board_1 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 EFFECTIVE: BB unknown
+REASONING: principle deny_equity · alt bet_pot · edge moreValueFromWorse · stack_matters false · assumption BB has ace-king, will call 3 BB and will fold to 6 BB.
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  + [correct] Bet half-pot [3 BB] — Sharp read. The bet makes the next card cost something.
+  + [correct] Bet half-pot [3 BB] — Sharp read. Bet 3 BB because BB calls with ace-king and pays for its chance to improve. A bet of 6 BB makes ace-king fold instead.
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
-  - [wrong] Check — Not quite. Checking lets the other player see the next card for free.
+  - [wrong] Check — Not quite. Checking gives BB a free card. Betting 3 BB charges ace-king for that chance.
     BETTER ANSWER: Bet half-pot
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
   - [suboptimal] Bet pot-size [6 BB] — This size gives up the stated call. Betting 6 BB makes A-K fold and protects your Q-J, but 3 BB protects it and gets a call in this example. You miss that extra value with the larger bet.
@@ -3453,21 +3463,52 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 
 TASK w4_protection_small_denial [drill] Charge for the next card
-CAPTION: BB checks with A-K. In this example BB folds to either bet.
-Q: Which play makes BB give up the chance to catch up while risking the fewest chips?
+CAPTION: BB checks. BB’s overcards (A-K, A-Q, K-Q) fold to either bet. If BB has a set, it calls and wins.
+Q: Which bet makes the overcards fold and risks the fewest chips?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow, backdoor straight
 EFFECTIVE: BB 97.25
+REASONING: principle smallest_size_same_job · alt bet_four · edge cheaperSameResult · stack_matters false · assumption BB’s overcards (A-K, A-Q, K-Q) fold to either bet. If BB has a set, it calls and wins.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Check — Look at the response. Checking lets BB see a card for free. An ace or a king could put A-K ahead of your tens.
+  - [wrong] Check — Look at the response. Checking gives BB’s overcards a free chance to beat your tens. A 2 BB bet makes those hands fold.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
-  - [wrong] Bet 4 BB — Compare both bets. BB folds A-K to either bet. The 4 BB bet puts another 2 BB at risk for the same result in this example.
+  - [suboptimal] Bet 4 BB — Compare both bets. Betting 4 BB costs 2 BB more when a set calls and wins. Betting 2 BB already gets the overcards to fold.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
-  + [correct] Bet 2 BB — The smaller bet fits. BB folds A-K to 2 BB. Your pair of tens wins the 6 BB pot without letting BB see another card.
+  + [correct] Bet 2 BB — The smaller bet fits. Bet 2 BB because overcards fold to either bet and you win the same 6 BB pot. When BB calls with a set, you lose 2 BB less than betting 4 BB.
     FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+
+TASK w4_protection_guided_raise_read [drill] Read a raise with help
+CAPTION: Hand reading means using the action to see which hands are more likely. This BB usually calls with one pair and seldom raises a weak hand.
+Q: What became more likely after BB raised?
+HINT [always]: Compare the model’s calls with its raises.
+TABLE: Flop | You Kh Qh | Board Kc 8d 4s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+REASONING: principle deny_equity · alt choice_0 · edge avoidsDomination · stack_matters false · assumption Hand reading means using the action to see which hands are more likely. This BB usually calls with one pair and seldom raises a weak hand.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qh stack 94.25 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 88.25 BB raise 9 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO bets 3 BB · BB raises to 9 BB
+  - [wrong] Weaker kings — Look again. A weaker king tends to call in the stated model. A raise makes a set more likely.
+    BETTER ANSWER: Sets
+  + [correct] Sets — Correct. BB’s raise points toward sets because one pair usually calls in this model. Weaker kings remain possible.
+  - [wrong] Weak hands with no pair — Look again. BB rarely raises a weak hand in this model. Treating the raise like a weak hand risks paying off a set.
+    BETTER ANSWER: Sets
+
+TASK w4_protection_short_shove_price [drill] A short all-in
+CAPTION: BB goes all-in for 6 BB. Assume you win 40% and never tie.
+Q: Which choice earns more?
+HINT [hidden]: (none)
+TABLE: Turn | You Qd Jd | Board Qs 9c 5h 2d | Pot 12 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
+EFFECTIVE: BB 6
+POTS: main 6 (BB, CO)
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity 1.2 BB · stack_matters true · assumption Assume you win 40% and never tie.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Jd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB all-in 6 BB
+  - [wrong] Fold — Look again. Folding gives up a call with positive value. You need one win in three and the stated chance is 40%.
+    BETTER ANSWER: Call
+  - [wrong] Both earn the same — Look again. Calling wins 12 BB four times in ten and loses 6 BB six times in ten. That averages +1.2 BB, above folding.
+    BETTER ANSWER: Call
+  + [correct] Call — Correct. BB goes all-in for its last 6 BB, so calling makes an 18 BB pot and needs 33%. Call because 40% beats that price. Folding misses the gain.
 
 TASK w4_protection_recap [review] Protection recap
 CAPTION: Lesson learned: protection denies a free next card.
@@ -3511,13 +3552,14 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_checkpoint_price [drill] Call or fold
 CAPTION: HJ bet 3 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
+Q: Two players, no ties or more bets. If you call, you win 1 time in 4 (25%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 8s 7d | Board Kh 8c 4d 2s | Pot 10 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1 | Center Turn decision | Facts one pair, middle pair
 EFFECTIVE: HJ unknown
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity · stack_matters false · assumption Two players, no ties or more bets. If you call, you win 1 time in 4 (25%).
 SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN dealer 8s 7d stack 97.25 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO folds · BTN calls 2.75 BB · SB folds · BB folds · Flop: HJ checks · BTN checks · Turn: HJ bets 3 BB
-  + [correct] Call [3 BB] — Compare the two chances. 3 ÷ (3 + 10) is about 23%. You win 1 time in 4, or 25%, so the call earns more.
+  + [correct] Call [3 BB] — Compare the two chances. HJ bets 3 BB, so a call makes a 13 BB pot and needs about 23%. The stated 25% clears that price. Folding gives up the gain.
   - [wrong] Fold — Find the threshold from the displayed price. You need about a 23% chance at this price. One win in four is enough, so folding gives up a profitable call.
     BETTER ANSWER: Call
   - [suboptimal] Call because 25% wins often enough — The action fits. Compare the price too. You must pay 3 BB for a 13 BB final pot. At about 23% to break even, 25% just covers it. On a bigger wager that same win rate can lose chips.
@@ -3525,26 +3567,27 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
 
 TASK w4_checkpoint_table_price [drill] Real-table price read
 CAPTION: BB bet 2 BB on the turn. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?
+Q: Two players, no ties or more bets. If you call, you win 3 times in 10, about 1 in 3 (30%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You Ac 9d | Board Kh 9s 4c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, bb | Card focus hero_1, board_1 | Center Turn decision | Facts one pair, middle pair
 EFFECTIVE: BB unknown
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity · stack_matters false · assumption If you call, you win 3 times in 10, about 1 in 3 (30%).
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac 9d stack 97.75 BB | SB folded stack 99.5 BB | BB stack 95.75 BB bet 2 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.25 BB · SB folds · BB calls 1.25 more, 2.25 total · Flop: BB checks · BTN checks · Turn: BB bets 2 BB
   - [wrong] Fold — Compare with the break-even chance. Folding gives up a profitable call in this model: 30% is higher than the roughly 22.2% you need.
     BETTER ANSWER: Call
     FEEDBACK TABLE: Turn | You Ac 9d | Board Kh 9s 4c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, bb | Card focus hero_1, board_1, hero_0, board_0, board_2, board_3 | Center Turn decision | Facts one pair, middle pair
-  - [suboptimal] Call because BB bet just 2 BB — The action fits. Compare both numbers. A-9 wins 30% in the model. That covers the 2 BB price which needs about 22% win chance. A small bet can still be too expensive if your chance of winning is low.
+  - [suboptimal] Call because BB bet just 2 BB — The action fits. Compare both numbers. Calling just because the bet is small can cost chips. Here it works because the stated 30% is above the roughly 22% price.
     BETTER ANSWER: Call
     FEEDBACK TABLE: Turn | You Ac 9d | Board Kh 9s 4c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, bb | Card focus hero_1, board_1, hero_0, board_0, board_2, board_3 | Center Turn decision | Facts one pair, middle pair
-  + [correct] Call [2 BB] — Price and chance compared. 2 ÷ (2 + 7) is about 22.2%. Your 30% chance is above that threshold, so call.
+  + [correct] Call [2 BB] — Price and chance compared. BB bets 2 BB, so calling makes a 9 BB pot and needs about 22.2%. The stated 30% clears the price. Folding gives up the gain.
     FEEDBACK TABLE: Turn | You Ac 9d | Board Kh 9s 4c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, bb | Card focus hero_1, board_1, hero_0, board_0, board_2, board_3 | Center Turn decision | Facts one pair, middle pair
 
 TASK w4_checkpoint_table_purpose_price [drill] Live purpose and price
 CAPTION: BTN bet 2 BB. It is BB’s turn.
 TEACH: Purpose and price travel together. Read what the bettor expects from the other hand. Then find what the other player must add.
 TEACH LABELS: Purpose, Amount to add
-Q: In this 6-max micro-stakes example, BTN bets 2 BB into 6 BB to get called by weaker aces. What is the clean read?
+Q: In this example, BTN bets 2 BB into 6 BB to get called by weaker aces. What is the clean read?
 HINT [theoryOnly]: Compare the reason for the bet and the amount BB must add.
 TABLE: Flop | You As Qd | Board Ah 7c 2d | Pot 8 BB | To call 2 BB | Seat BTN | Active bb | Decision bb | Seat focus btn, bb | Card focus hero_0, board_0 | Center After the flop bet | Facts one pair, top pair, rainbow
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer bet 2 BB | SB folded | BB
@@ -3566,9 +3609,10 @@ TEACH LABELS: Value, Bluff, Protection, Price
 Q: What makes a bet easier to understand?
 HINT [theoryOnly]: Value, bluff, protection, and call price are now one system.
 TABLE: Flop | You Js Jc | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus board_0, board_1, board_2 | Center Name purpose | Facts one pair, pocket pair, rainbow
+REASONING: principle value_vs_worse · alt size_only · edge processRule · stack_matters unknown · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Jc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-  + [correct] Purpose and price — Purpose and price connected. A bet tells a purpose, creates a size, and gives the caller a price. Next, the board cards tell you which bet purpose fits.
+  + [correct] Purpose and price — Purpose and price connected. A bet can ask a weaker hand to call or a better hand to fold. Looking at size alone misses which job the bet is doing.
     FEEDBACK TABLE: Flop | You Js Jc | Board Ah 7c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus co, bb | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Name purpose | Facts one pair, pocket pair, rainbow
   - [wrong] Random size — Not quite. Random sizes hide the lesson. Good beginner bets have a clear job.
     BETTER ANSWER: Purpose and price
@@ -3583,6 +3627,8 @@ TASK board_texture_basics_w5_texture_intro [theory] Board texture
 CAPTION: Board texture asks how much the next cards can change.
 TEACH: What can change? A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.
 TEACH LABELS: Rank gaps, Suits
+TEACH: Three of one suit. These three spades are called a monotone flop. A player with two more spades already has a flush.
+TEACH TABLE: Flop | You Ac Jd | Board Ks 8s 3s | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, monotone, backdoor straight
 Q: What does board texture describe?
 HINT [theoryOnly]: Dry boards change less. Wet boards create more threats.
 TABLE: Flop | You Ac Jd | Board Ks 8h 3c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
@@ -3622,12 +3668,13 @@ Q: Which action gets a call from the weaker pair?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, pocket pair, rainbow
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt six · edge moreValueFromWorse · stack_matters false · assumption A seven can call 2 BB, but folds to a larger bet.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh Jd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Check — Compare the board and price. Checking behind on Q-7-2 gives a seven a free turn and collects no chips from that pair.
+  - [wrong] Check — Compare the board and price. Checking misses the 2 BB that a worse pair pays on Q-7-2. Bet that size to collect it.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
-  + [correct] Bet 2 BB — Read the board and response. Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.
+  + [correct] Bet 2 BB — Read the board and response. Bet 2 BB because BB calls with a pair of sevens, which your jacks beat. A bet of 6 BB makes that pair fold.
     FEEDBACK TABLE: Flop | You Jh Jd | Board Qs 7c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, pocket pair, rainbow
   - [wrong] Bet 6 BB — Compare the board and price. A seven folds to a pot-size bet on this board, so betting 6 BB gives up the call you wanted.
     BETTER ANSWER: Bet 2 BB
@@ -3639,15 +3686,16 @@ Q: Which action fits a plan to bet only when a worse hand calls?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
 EFFECTIVE: BB 97.25
+REASONING: principle board_changes_strength · alt small · edge keepsWorseIn · stack_matters false · assumption BB checks and will call a bet only with a straight or two pair or better.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac Ad stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Bet 2 BB — Compare the board and price. On J-T-9 your aces are one pair. Even a 2 BB bet gets called only by hands ahead under the stated rule.
+  - [wrong] Bet 2 BB — Compare the board and price. The bet of 2 BB risks chips against straights or two pair, which already beat your aces. Check to keep your chips.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
-  - [wrong] Bet 6 BB — Compare the board and price. A full-pot bet risks 6 BB. Hands such as J-T and Q-8 already beat one pair and can call here.
+  - [wrong] Bet 6 BB — Compare the board and price. Betting 6 BB costs more while the only callers already beat your aces. Checking avoids putting those chips at risk.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
-  + [correct] Check — Read the board and response. The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.
+  + [correct] Check — Read the board and response. Check on J-T-9 because BB only calls with hands ahead of your aces. A bet of 2 BB pays to face straights or two pair.
     FEEDBACK TABLE: Flop | You Ac Ad | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, two-tone, consecutive board, backdoor straight
 
 TASK board_texture_basics_w5_texture_recap [review] Texture recap
@@ -3715,16 +3763,52 @@ Q: What will you do with ace-king?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts high card, rainbow, consecutive board
 EFFECTIVE: BB 97.25
+REASONING: principle board_changes_strength · alt call · edge equityBelowPrice · stack_matters false · assumption BB bets 4 BB with a made straight.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Kd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 93.25 BB bet 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB bets 4 BB
-  + [correct] Fold — Read the board and response. A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.
+  + [correct] Fold — Read the board and response. BB bets 4 BB with a straight on 9-8-7, so your ace-high falls short of the stated rule. Fold because a call pays with a weaker hand.
     FEEDBACK TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, consecutive board
-  - [wrong] Call — Compare the board and price. Calling puts 4 BB in with ace-high. The nearby ranks on the flop do not turn your A-K into a straight.
+  - [wrong] Call — Compare the board and price. Calling costs 4 BB with ace-high against the stated straight. Fold to keep those chips.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, consecutive board
   - [wrong] Raise — Compare the board and price. A raise risks more than 4 BB with a hand below the stated continuation threshold. Ace-high still trails the straight.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Flop | You As Kd | Board 9s 8c 7d | Pot 10 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, consecutive board
+
+TASK connected_boards_w5_raise_read_guided [drill] Read the raise on three spades
+CAPTION: On a monotone flop this BB usually calls with one pair and raises strong made hands.
+Q: After the raise, which group becomes more likely?
+HINT [always]: First ask what two spades would make.
+TABLE: Flop | You 9d 9h | Board Ks 7s 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, pocket pair, monotone
+REASONING: principle board_changes_strength · alt choice_0 · edge avoidsDomination · stack_matters false · assumption On a monotone flop this BB usually calls with one pair and raises strong made hands.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 9d 9h stack 94.25 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 88.25 BB raise 9 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO bets 3 BB · BB raises to 9 BB
+  - [wrong] One small pair — Look again. Small pairs tend to call here. With three spades showing, a raise makes a made flush more likely.
+    BETTER ANSWER: A made flush
+    FEEDBACK TABLE: Flop | You 9d 9h | Board Ks 7s 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, pocket pair, monotone
+  + [correct] A made flush — Correct. BB raises strong made hands on the three-spade flop, so a flush becomes more likely. One pair more often calls.
+    FEEDBACK TABLE: Flop | You 9d 9h | Board Ks 7s 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, pocket pair, monotone
+  - [wrong] Unpaired cards without a spade — Look again. BB seldom raises hands that missed in this model. Assuming a weak hand risks paying a flush.
+    BETTER ANSWER: A made flush
+    FEEDBACK TABLE: Flop | You 9d 9h | Board Ks 7s 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, pocket pair, monotone
+
+TASK connected_boards_w5_raise_read_repeat [drill] Price after a turn raise
+CAPTION: Assume BB calls a reraise. Nine hearts win and every other river loses. No more bets after this round.
+Q: What earns most now?
+HINT [hidden]: (none)
+TABLE: Turn | You Ah Qh | Board Kh 8h 5c 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
+EFFECTIVE: BB 97.25
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 1.3043 BB · stack_matters false · assumption Assume BB calls a reraise. Nine hearts win and every other river loses. No more bets after this round.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Qh stack 94.25 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 88.25 BB raise 9 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO bets 3 BB · BB raises to 9 BB
+  - [wrong] Call — Look again. Calling costs 6 BB for 24 BB in the middle. Nine wins out of 46 falls short of the price, so fold.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Turn | You Ah Qh | Board Kh 8h 5c 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] Fold — Correct. BB raised, so calling 6 BB makes a 24 BB pot and needs 25%. Fold because nine wins out of 46 are only about 20%.
+    FEEDBACK TABLE: Turn | You Ah Qh | Board Kh 8h 5c 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Raise to 18 BB — Look again. A raise to 18 BB costs another 15 BB and BB calls in the model. Folding keeps the chips you would risk on a draw.
+    BETTER ANSWER: Fold
+    FEEDBACK TABLE: Turn | You Ah Qh | Board Kh 8h 5c 2s | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
 TASK connected_boards_w5_connected_recap [review] Connected recap
 CAPTION: Lesson learned: connected boards create straight pressure.
@@ -3743,7 +3827,7 @@ REVIEW: Close ranks create more straight paths and more change.
 
 TASK flush_draws_w5_flush_intro [theory] Same suit pressure
 CAPTION: A flush draw appears when one more suit card can help.
-TEACH: Four cards of the same suit. A flush draw has four cards of one suit between your hand and the board. There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.
+TEACH: Four cards of the same suit. A flush draw has four cards of one suit between your hand and the board. There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush. “The nuts” means the best possible hand on the current board.
 TEACH LABELS: Suit, Heart, Flush draw
 TEACH: Allow for both remaining cards. Rainbow means the three flop cards have different suits. A backdoor draw needs both the turn and the river to help.
 Q: What does a flush draw need?
@@ -3924,7 +4008,7 @@ REVIEW: Look for nearby ranks that can form a five-card line.
 
 TASK outs_improvement_w5_outs_intro [theory] Improvement cards
 CAPTION: Outs are cards that can improve your hand.
-TEACH: Count the cards that help. An out is an unseen card that improves your hand. With one card left and 46 unseen, 9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.
+TEACH: Count the cards that help. Outs are the unseen cards that can improve your hand. With one card left and 46 unseen, 9 outs hit about 1 time in 5, 8 about 1 in 6, and 4 about 1 in 12.
 TEACH LABELS: Outs, One card left
 TEACH: Compare with the price from World 4. A 1 BB call into a 7 BB pot needs 1 win in 8. If only those 8 outs win and there are no more bets, about 1 win in 6 beats that price.
 TEACH LABELS: Call 1 BB, Pot 7 BB, Chance to win
@@ -3970,14 +4054,15 @@ Q: Call 2 BB into the 10 BB pot, or fold?
 HINT [theoryOnly]: Count the hearts you cannot see, then compare your chance with 2 out of 12.
 TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Center Draw and price | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 96.25
+REASONING: principle price_vs_equity · alt price_only · edge priceBeatsEquity · stack_matters false · assumption Assume every flush wins and all other rivers lose. No more betting.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 7h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 94.25 BB bet 2 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3.75 BB · SB folds · BB calls 2.75 BB more · Flop: BB checks · BTN checks · Turn: BB bets 2 BB
-  - [wrong] Fold — Compare the chance with the price. Under the stated rule, 9 winning rivers out of 46 beat the 2-in-12 price. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts and beat your flush.
+  - [wrong] Fold — Compare the chance with the price. Folding misses a call that needs only 2 in 12 when 9 of 46 rivers win. In a real hand, an opponent holding two tens would make a full house on the 2 of hearts.
     BETTER ANSWER: Call 2 BB
     FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
-  + [correct] Call 2 BB — Nine outs are enough at this price. Call under the stated rule. Nine hearts out of 46 hit about 1 time in 5, above the 1-in-6 price. In a real hand, what the opponent could hold determines which rivers win.
+  + [correct] Call 2 BB — Nine outs are enough at this price. BB bets 2 BB, so calling needs two wins per 12. Under the stated rule your flush wins on nine of 46 rivers, so folding gives up the gain.
     FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
-  - [suboptimal] Call because nine outs is a big draw — The action fits. Compare it with the cost. On T-4-2-9, A-7 of hearts hits on 9 of 46 rivers under the stated rule. That beats the 2-in-12 price. A bigger bet can make the same nine outs too expensive.
+  - [suboptimal] Call because nine outs is a big draw — The action fits. Compare it with the cost. Calling just because you have nine outs can cost chips when the price is high. Here 9 out of 46 beat the 2-in-12 price.
     BETTER ANSWER: Call 2 BB
     FEEDBACK TABLE: Turn | You Ah 7h | Board Th 4h 2c 9s | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, flush draw, completion cards 9
 
@@ -4005,11 +4090,12 @@ Q: Call 3 BB into the 9 BB pot, or fold?
 HINT [theoryOnly]: Count the ranks that finish your straight and the cards of each rank.
 TABLE: Turn | You 6s 5d | Board 8c 7h 2s Kd | Pot 9 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Center Draw and price | Facts high card, open-ended, completion cards 8
 EFFECTIVE: BB 97.25
+REASONING: principle price_vs_equity · alt blank_turn_killed · edge equityBelowPrice · stack_matters false · assumption Assume every straight wins and all other rivers lose. No more betting.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 6s 5d stack 97.25 BB | SB folded stack 99.5 BB | BB stack 94.25 BB bet 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN checks · Turn: BB bets 3 BB
-  + [correct] Fold — Eight outs are too few at this price. Fold under the stated rule. A 4 or 9 makes your straight on 8 of 46 rivers, below the 1-in-4 price. In a real hand, what the opponent could hold determines which rivers win.
+  + [correct] Fold — Eight outs are too few at this price. BB bets 3 BB, so calling needs three wins per 12. Under the stated rule a four or nine wins eight of 46 rivers, so fold.
     FEEDBACK TABLE: Turn | You 6s 5d | Board 8c 7h 2s Kd | Pot 9 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, open-ended, completion cards 8
-  - [wrong] Call 3 BB — A live draw can still cost too much. Under the stated rule, eight winning rivers fall short of the 3-in-12 price. In a real hand, a 9 can give an opponent holding J-T a higher straight.
+  - [wrong] Call 3 BB — A live draw can still cost too much. A call needs 25% because it costs 3 BB for a final 12 BB pot. Eight of 46 is about 17%, so fold. In a real hand, a 9 can give an opponent holding J-T a higher straight.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You 6s 5d | Board 8c 7h 2s Kd | Pot 9 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, open-ended, completion cards 8
   - [suboptimal] Fold because four nines give too small a chance to win — The action fits. Count both ends. With 6-5 on 8-7-2-K, a 4 also makes a straight. Four cards of each rank still fall short of the 3-in-12 price. Miscounting can lose a profitable call at a lower price.
@@ -4026,6 +4112,72 @@ TABLE: Flop | You 9s 8h | Board Td 7c 4h | Pot 5.5 BB | Seat BTN | Active btn | 
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9s 8h stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
 REVIEW: An out is a card that can improve the hand on a later street.
+
+===== WORLD 5 · LESSON w5_semi_bluff · Bet with a draw =====
+
+TASK w5_semi_bluff_intro [theory] Two ways to win
+CAPTION: You have a draw on the turn.
+TEACH: Two ways to win. A semi-bluff is a bet with a draw. It can win when a better hand folds, or later when your draw hits. Checking gets the next card free. Compare what each choice wins and loses on average. Checking can earn the pot if the draw hits. When you bet, a fold wins the chips already in the middle. A call gives you a chance to win a bigger pot and costs you the bet when you miss. Count each good river once, even if it completes two draws.
+Q: When can a bet earn more than a check?
+HINT [theoryOnly]: Count the cards that complete the draw. Then compare the chance with the price.
+TABLE: Turn | You As 8s | Board Qs 6s 2d Tc | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 8s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
+REVIEW: A bet with a draw can win on a fold or when the draw completes.
+
+TASK w5_semi_bluff_flush_draw [drill] Bet the flush draw
+CAPTION: BB always calls 1 BB and folds to 3 BB on a third of hands. Nine rivers win either way. No more bets or ties.
+Q: Which play earns most?
+HINT [hidden]: (none)
+TABLE: Turn | You Ah 7h | Board Kh 9h 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
+EFFECTIVE: BB 97.25
+REASONING: principle folds_better · alt check · edge foldsBetter 0.3913 BB · stack_matters false · assumption BB always calls 1 BB and folds to 3 BB on a third of hands. Nine rivers win either way. No more bets or ties.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah 7h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
+  - [wrong] Check — Look again. Checking leaves only nine winning rivers, worth about 1.17 BB on average. A bet of 3 BB can win immediately too.
+    BETTER ANSWER: Bet 3 BB
+    FEEDBACK TABLE: Turn | You Ah 7h | Board Kh 9h 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] Bet 3 BB — Correct. Bet 3 BB. BB’s folds and nine winning rivers make the bet worth about 1.57 BB on average. Checking earns about 1.17 BB.
+    FEEDBACK TABLE: Turn | You Ah 7h | Board Kh 9h 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Bet 1 BB — Look again. BB always calls 1 BB, so that bet costs an extra chip on the rivers you miss. The 3 BB bet can win by getting a fold.
+    BETTER ANSWER: Bet 3 BB
+    FEEDBACK TABLE: Turn | You Ah 7h | Board Kh 9h 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+
+TASK w5_semi_bluff_combo_draw [drill] Two draws, fewer folds
+CAPTION: BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets.
+Q: Which play earns most?
+HINT [hidden]: (none)
+TABLE: Turn | You Jh 8h | Board Th 7s 4h 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, gutshot, completion cards 12
+EFFECTIVE: BB 97.25
+REASONING: principle folds_better · alt choice_2 · edge keepsWorseIn 0.2609 BB · stack_matters false · assumption BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 8h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
+  - [wrong] Bet 1 BB — Look again. A bet of 1 BB never gets a fold here, so it costs a chip on most rivers. Checking sees the same river for free.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Turn | You Jh 8h | Board Th 7s 4h 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, gutshot, completion cards 12
+  + [correct] Check — Correct. Nine hearts and four nines share one card, so you have 12 outs. Check for about 1.57 BB on average. BB folds too rarely for a bet of 3 BB to beat it.
+    FEEDBACK TABLE: Turn | You Jh 8h | Board Th 7s 4h 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, gutshot, completion cards 12
+  - [wrong] Bet 3 BB — Look again. BB folds too rarely for a bet of 3 BB to pay more than a check. The bet earns about 1.30 BB on average against about 1.57 BB for checking.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Turn | You Jh 8h | Board Th 7s 4h 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, gutshot, completion cards 12
+
+TASK w5_semi_bluff_short_draw [drill] A draw against a short stack
+CAPTION: BB has 2 BB left and calls either bet. With 100 BB it would fold to 3 BB on a third of hands. Nine spades win. Other rivers lose. No more bets.
+Q: Which play earns most?
+HINT [hidden]: (none)
+TABLE: Turn | You As 7s | Board Kd 9s 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
+EFFECTIVE: BB 2
+REASONING: principle folds_better · alt choice_2 · edge stackLimitsPayoff 0.6087 BB · stack_matters true · assumption BB has 2 BB left and calls either bet. With 100 BB it would fold to 3 BB on a third of hands. Nine spades win. Other rivers lose. No more bets.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 7s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 2 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
+  + [correct] Check — Correct. Check because BB always calls with its last 2 BB or less and you miss 37 of 46 rivers. A bet of 1 BB pays more for the same draw.
+    FEEDBACK TABLE: Turn | You As 7s | Board Kd 9s 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Bet 2 BB — Look again. A bet of 2 BB gets called and costs the most on the 37 misses. Checking keeps the same chance of taking the chips in the middle.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Turn | You As 7s | Board Kd 9s 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Bet 1 BB — Look again. Even a bet of 1 BB costs more on misses when BB always calls. Checking earns about 0.61 BB more on average.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: Turn | You As 7s | Board Kd 9s 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
 ===== WORLD 5 · LESSON turn_river_changes · Turn and river changes =====
 
@@ -4110,12 +4262,13 @@ Q: Call 1 BB into the 12 BB pot, or fold?
 HINT [theoryOnly]: Find the gap in your four ranks. Compare your chance to the price.
 TABLE: Turn | You 9c 8d | Board 6d 5h 2c Ks | Pot 12 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Center Draw and price | Facts high card, gutshot, completion cards 4
 EFFECTIVE: BB 94.75
+REASONING: principle price_vs_equity · alt just_outs · edge priceBeatsEquity · stack_matters false · assumption Assume every straight wins and all other rivers lose. No more betting.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 94.75 BB | SB folded stack 99.5 BB | BB stack 93.75 BB bet 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN bets 2.5 BB · BB calls 2.5 BB · Turn: BB bets 1 BB
-  - [wrong] Fold — Check the price before folding. The 1 BB call makes a 13 BB pot. Four wins out of 46 beats the 1-in-13 price.
+  - [wrong] Fold — Check the price before folding. Folding misses a small gain: four winning rivers out of 46 beat the 1-in-13 call price.
     BETTER ANSWER: Call 1 BB
     FEEDBACK TABLE: Turn | You 9c 8d | Board 6d 5h 2c Ks | Pot 12 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, gutshot, completion cards 4
-  + [correct] Call 1 BB — The low price makes a call worthwhile. Only a 7 completes your straight. Four of 46 cards win, about 1 in 12. You only need 1 in 13 at this price.
+  + [correct] Call 1 BB — The low price makes a call worthwhile. BB bets 1 BB, so calling needs 1 win per 13. Four sevens out of 46 clear that price in this model. Folding gives up that gain.
     FEEDBACK TABLE: Turn | You 9c 8d | Board 6d 5h 2c Ks | Pot 12 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center Draw and price | Facts high card, gutshot, completion cards 4
   - [suboptimal] Call because the bet is small — The action fits. Count the winners. On 6-5-2-K, a 7 is the winning rank for 9-8 under this rule. Four wins in 46 are enough for the 1-in-13 price. Calling small bets without counting can still lose chips.
     BETTER ANSWER: Call 1 BB
@@ -4142,9 +4295,10 @@ Q: What can KQ do if weaker kings will call a small bet?
 HINT [theoryOnly]: Top pair with a good kicker.
 TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Range bucket? | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.5
+REASONING: principle value_vs_worse · alt missed · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Qc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] Bet for value — Top pair can bet for value. KQ pairs the highest card on K-7-2. A weaker king can call a small bet.
+  + [correct] Bet for value — Top pair can bet for value. Bet KQ for value because BB can call with weaker kings on K-7-2. Checking misses the payment you can collect now.
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts one pair, top pair, rainbow
   - [wrong] Bet as a bluff — Think about calls from weaker hands. KQ makes top pair on K-7-2. Treating the bet as a bluff misses why you want a weaker king to call.
     BETTER ANSWER: Bet for value
@@ -4161,14 +4315,15 @@ Q: What do you do with ace-queen after BB checks?
 HINT [theoryOnly]: Compare the high cards if neither hand improves.
 TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Range bucket? | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB 97.5
+REASONING: principle range_vs_board · alt bluff · edge keepsWorseIn · stack_matters false · assumption BB calls a half-pot bet with any pair and folds Q-J and A-9.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] Check — Ace-high can win. A-Q missed the flop, but if nobody improves, it beats both Q-J and A-9. The rule says to check when your hand can already win.
+  + [correct] Check — Ace-high can win. Check A-Q because you already lead BB’s Q-J and A-9, and the rule says only pairs call a bet. Bluffing forces out the hands you already beat.
     FEEDBACK TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts high card, rainbow, backdoor straight
-  - [suboptimal] Bet half pot as a bluff — Ace-high has a reason to check. A bet makes Q-J and A-9 fold. A-Q is already ahead of both, so that is not the goal in this example.
+  - [suboptimal] Bet half pot as a bluff — Ace-high has a reason to check. A bluff folds the two hands you beat and risks chips against the pairs that call. A check keeps the weaker hands in.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts high card, rainbow, backdoor straight
-  - [wrong] Bet half pot for value — The weaker hands would fold. A-Q has no pair here. Both weaker high-card hands fold under the rule, so they cannot pay off a value bet.
+  - [wrong] Bet half pot for value — The weaker hands would fold. A value bet costs chips against pairs. The two weaker hands fold and cannot pay you in this model.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts high card, rainbow, backdoor straight
 
@@ -4177,6 +4332,7 @@ CAPTION: Real table. K-7-2 rainbow lands and you hold A-Q.
 Q: What should you ask first?
 HINT [theoryOnly]: Before picking a size, make the first useful read.
 TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
+REASONING: principle range_vs_board · alt preflop_only · edge processRule · stack_matters unknown · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Qc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] What size should I bet right now? — Too fast. Size comes after the bucket. First decide if the hand is value, bluff candidate, or missed.
@@ -4185,7 +4341,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [suboptimal] Was this hand strong preflop? — Useful start. Preflop strength matters, but the flop bucket is the first sharp live-table read now.
     BETTER ANSWER: Which bucket is my hand in?
     FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Which bucket is my hand in? — Nice start. That is the clean live-table read. Bucket first, then action.
+  + [correct] Which bucket is my hand in? — Nice start. Read A-Q against the K-7-2 board first, because the best bet depends on what you can get to call or fold now. The preflop label misses that change.
     FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_buckets_recap [review] Buckets recap
@@ -4254,13 +4410,14 @@ Q: With J9 on this turn, how should you adjust your former bluff plan?
 HINT [theoryOnly]: When pressure drops, the bucket can slide.
 TABLE: Turn | You Jh 9d | Board Ad 7s 4c 4h | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Center Read the turn | Facts one pair, paired board
 EFFECTIVE: BB 95.5
+REASONING: principle range_vs_board · alt never_changes · edge keepsWorseIn · stack_matters false · assumption BB calls with every hand that beats J9.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh 9d stack 95.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
   - [wrong] Bet for value — Not quite. J9 did not improve when the fours paired. Because weaker hands are not the stated callers, betting for value risks chips against better hands.
     BETTER ANSWER: Check behind
   - [wrong] Bet as another bluff — Too static. The paired turn changes which hands BB continues with. Another bet risks chips without folding out a better hand.
     BETTER ANSWER: Check behind
-  + [correct] Check behind — Solid understanding. On A-7-4-4, J9 has no pair of its own, and better hands now call. Checking saves the chips a second bluff would risk.
+  + [correct] Check behind — Solid understanding. Check J9 on A-7-4-4 because BB calls with every better hand in this model. An extra bet pays those hands without getting the folds a bluff needs.
 
 TASK w6_board_fit_recap [review] Compare ranges on a high flop
 ENTRY: drill
@@ -4298,13 +4455,14 @@ Q: What is the purpose of a half-pot bet here?
 HINT [theoryOnly]: Think about which hands would pay to see the turn.
 TABLE: Flop | You Kh Qs | Board Kd 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center After BB checks | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.5
+REASONING: principle value_vs_worse · alt check · edge moreValueFromWorse · stack_matters false · assumption BB checks, then calls half-pot bets with weaker pairs such as K-J and 7-6.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh Qs stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Check — A check gives a free card. Checking is legal. The question asks what a half-pot bet does under the stated rule. It can get a call from a weaker pair.
     BETTER ANSWER: Bet for value
-  - [wrong] Bet as a bluff — The bet earns a call. BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.
+  - [wrong] Bet as a bluff — The bet earns a call. Calling it a bluff misses the source of profit. The bet earns chips when weaker pairs call.
     BETTER ANSWER: Bet for value
-  + [correct] Bet for value — Weaker pairs can pay. BB can call this half-pot bet with weaker pairs such as K-J or 7-6. That gives the bet a value purpose. Comparing bet with check requires knowing how often BB calls or raises with each hand.
+  + [correct] Bet for value — Weaker pairs can pay. Bet for value because BB calls with K-J or 7-6. Checking misses those calls. Against a broader range, profit depends on how often BB calls or raises.
 
 TASK w6_bluff_candidate [drill] When better hands fold
 CAPTION: BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.
@@ -4312,14 +4470,15 @@ Q: What do you do with jack-ten after BB checks?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB 97.5
+REASONING: principle folds_better · alt missed · edge foldsBetter · stack_matters false · assumption BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [suboptimal] Check — Both high-card hands beat yours. J-T missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
     BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Bet half pot as a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat J-T. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
+  + [correct] Bet half pot as a bluff — A bet can fold out a better hand. Bluff because BB folds Q-J and A-9, both ahead of J-T if you check. Profit depends on how often BB has those hands.
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  - [wrong] Bet half pot for value — Worse calls are missing. Q-J and A-9 are both ahead of J-T if no one improves. Getting those hands to fold is a bluff.
+  - [wrong] Bet half pot for value — Worse calls are missing. A value bet misses which hands would pay. This bluff asks better hands like Q-J and A-9 to fold because they already lead J-T.
     BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
@@ -4328,13 +4487,14 @@ CAPTION: K-7-2 rainbow. You hold J-T with no draw.
 Q: What is the clean action direction?
 HINT [theoryOnly]: Pure missed hands usually do not want a big pot.
 TABLE: Flop | You Jd Th | Board Ks 7h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center After BB checks | Facts high card, rainbow, backdoor straight
+REASONING: principle range_vs_board · alt always_barrel · edge keepsWorseIn · stack_matters unknown · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Th stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Bet for value — Wrong bucket. Value betting belongs to made hands, not pure missed hands.
     BETTER ANSWER: Usually check or fold
   - [suboptimal] Keep betting across streets — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
     BETTER ANSWER: Usually check or fold
-  + [correct] Usually check or fold — Spot on. Pure missed hands conserve chips more often than they force action.
+  + [correct] Usually check or fold — Spot on. On K-7-2, your J-T missed and has no draw, so checking keeps the next card free. Keep betting and you risk chips when BB continues with a made hand.
 
 TASK w6_table_value_line_transfer [drill] Live-table value line
 CAPTION: BB checks. In this example, BB calls a half-pot bet with weaker kings and hands such as 8-7.
@@ -4344,15 +4504,16 @@ Q: What should you do to earn chips from the weaker hands BB will call with?
 HINT [theoryOnly]: Compare your hand with the hands BB will call with.
 TABLE: Flop | You Ks Jc | Board Kh 8d 4c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0 | Center After BB checks | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt check_back · edge moreValueFromWorse · stack_matters false · assumption BB calls a half-pot bet with weaker kings and hands such as 8-7.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Jc stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks
   - [wrong] Check — A check gives up the weaker calls. You can check after BB checks. The stated calling rule gives you a reason to bet instead.
     BETTER ANSWER: Bet for value
     FEEDBACK TABLE: Flop | You Ks Jc | Board Kh 8d 4c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After BB checks | Facts one pair, top pair, rainbow
-  - [wrong] Bet as a bluff — Look for the weaker calls. The point of the bet is to collect chips from worse hands that call. BB does not have to fold a better hand.
+  - [wrong] Bet as a bluff — Look for the weaker calls. Calling it a bluff misses who pays. Bet for value when weaker kings and smaller pairs are the intended callers.
     BETTER ANSWER: Bet for value
     FEEDBACK TABLE: Flop | You Ks Jc | Board Kh 8d 4c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After BB checks | Facts one pair, top pair, rainbow
-  + [correct] Bet for value — A worse hand can call. Under this rule, weaker kings and hands such as 8-7 can pay you. That is a reason to bet for value. The best size and frequency depend on BB’s full response range.
+  + [correct] Bet for value — A worse hand can call. Bet for value because BB calls with weaker kings and 8-7. Checking misses those calls. Profit across hands depends on the full response range.
     FEEDBACK TABLE: Flop | You Ks Jc | Board Kh 8d 4c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_0, hero_1, board_1, board_2 | Center After BB checks | Facts one pair, top pair, rainbow
 
 TASK w6_turn_pressure_shift_transfer [drill] Turn pressure shift
@@ -4361,11 +4522,12 @@ Q: Fold pressure dropped on this turn. What do you do now?
 HINT [theoryOnly]: When the board pairs and the first bluff gets called, some pressure lines cool off.
 TABLE: Turn | You Jd Ts | Board Kc 7h 2s 2d | Pot 11 BB | Seat BTN | Active btn | Decision btn | Card focus board_2, board_3 | Center After BB checks | Facts one pair, paired board
 EFFECTIVE: BB 94.75
+REASONING: principle range_vs_board · alt barrel_big · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Ts stack 94.75 BB | SB folded stack 99.5 BB | BB stack 94.75 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN bets 2.5 BB · BB calls 2.5 BB · Turn: BB checks
-  - [suboptimal] Bet big again — Tempting, but noisy. BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.
+  - [suboptimal] Bet big again — Tempting, but noisy. A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.
     BETTER ANSWER: Check
-  + [correct] Check — Good pressure reset. Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.
+  + [correct] Check — Good pressure reset. BB already called the flop, and the model gives you fewer folds on the paired turn. Check because a big bet risks more chips without the earlier fold pressure.
   - [wrong] Bet for value — Wrong bucket now. J-T has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.
     BETTER ANSWER: Check
 
@@ -4479,6 +4641,7 @@ CAPTION: BB checked. In this example, weaker kings call bets of 3 BB or less.
 Q: How much can you bet to get the most chips from those calls?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+REASONING: principle value_vs_worse · alt bet_one_five · edge moreValueFromWorse · stack_matters unknown · assumption weaker kings call bets of 3 BB or less.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qh stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
 SIZES: 1.5 BB 0.25 | 6 BB 1.0 | 3 BB 0.5
@@ -4488,7 +4651,7 @@ SIZES: 1.5 BB 0.25 | 6 BB 1.0 | 3 BB 0.5
   - [wrong] 6 BB — The weaker hands fold. The 6 BB bet is the size of the pot. BB folds weaker kings at that price in this example, costing you their 3 BB calls.
     BETTER ANSWER: 3 BB
     FEEDBACK TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  + [correct] 3 BB — Three is the largest bet they call. KQ beats a weaker king on K-8-3. The half-pot size gets the full 3 BB those hands are willing to call.
+  + [correct] 3 BB — Three is the largest bet they call. Bet 3 BB because weaker kings call that much and your KQ beats them. Betting 1.5 BB collects half as much from the same hands.
     FEEDBACK TABLE: Flop | You Kh Qh | Board Kc 8d 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w6_continuation_bet_wet_check [review] Missed on a wet flop
@@ -4498,14 +4661,15 @@ Q: What is the cleaner line with no pair or direct draw?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You As 4d | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, two-tone, consecutive board, backdoor straight
 EFFECTIVE: BB 97.25
+REASONING: principle range_vs_board · alt bet_small · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 4d stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Bet 2 BB — Look at what can continue. With A4o on J-T-9, spending 2 BB can get called by pairs and draws that connected with those three cards.
+  - [wrong] Bet 2 BB — Look at what can continue. A small bet costs 2 BB when BB can call with pairs and draws. Check A4o to keep that wager.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You As 4d | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, two-tone, consecutive board, backdoor straight
-  + [correct] Check — Take the free turn. On J-T-9, A4o has no pair or direct draw. Checking behind keeps the 2 BB you would have put in for a small bet.
+  + [correct] Check — Take the free turn. Check A4o on J-T-9 because BB can continue with pairs, straights and draws. A bet of 2 BB risks chips against that range without a strong reason to expect folds.
     FEEDBACK TABLE: Flop | You As 4d | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, two-tone, consecutive board, backdoor straight
-  - [wrong] Bet 6 BB — A bigger bluff costs more. Betting the 6 BB pot on J-T-9 risks another 6 BB while BB can continue with pairs, straights and draws.
+  - [wrong] Bet 6 BB — A bigger bluff costs more. A big bet costs 6 BB when BB can continue with pairs, straights and draws. Checking saves that wager.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You As 4d | Board Jh Th 9c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, two-tone, consecutive board, backdoor straight
 
@@ -4515,6 +4679,7 @@ TASK range_checkpoint_intro [theory] Read both sides of the flop
 CAPTION: Start with your own pair, then consider the hands BB can call with.
 TEACH: Connect the hand to the range. You pair the queen. If BB calls with a seven, a bet can earn chips. If only a stronger queen calls, the same bet has a different result.
 TEACH LABELS: Your pair, Hands that call
+TEACH: When they bet after your check. A check-call means calling the bet after you check. A check-fold means folding to that bet. A check-raise means raising it. In the examples ahead, the raising player often has two pair or a stronger hand.
 Q: Where can value come from here?
 HINT [theoryOnly]: Value, bluff candidate, and missed are the three range buckets.
 TABLE: Flop | You Qc Jd | Board Qh 7h 3c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the range | Facts one pair, top pair, two-tone
@@ -4528,14 +4693,15 @@ Q: What do you do to earn a call from a weaker hand?
 HINT [theoryOnly]: Read the cards and the stated range.
 TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the range | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.5
+REASONING: principle value_vs_worse · alt missed · edge moreValueFromWorse · stack_matters false · assumption BB calls half pot with Q-9 and 5-4; other unpaired hands fold.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qd Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] Bet half pot for value — A bet can earn weaker calls. Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.
+  + [correct] Bet half pot for value — A bet can earn weaker calls. Bet half pot because BB calls with Q-9 and 5-4, which trail your queens. Checking leaves the payment from those weaker pairs uncollected.
     FEEDBACK TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts one pair, top pair, rainbow
-  - [wrong] Bet half pot as a bluff — Read the hands that call. The hands named as calls are behind your pair of queens. That makes this a value bet.
+  - [wrong] Bet half pot as a bluff — Read the hands that call. Treating the bet as a bluff misses the point. The goal is to collect calls from the smaller pairs and weaker queen.
     BETTER ANSWER: Bet half pot for value
     FEEDBACK TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts one pair, top pair, rainbow
-  - [wrong] Check — You paired the queen. You have a pair of queens. Both of the named calls make weaker hands.
+  - [wrong] Check — You paired the queen. Checking misses a chance to collect from the two weaker pairs. Betting half pot gets their calls in this example.
     BETTER ANSWER: Bet half pot for value
     FEEDBACK TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts one pair, top pair, rainbow
 
@@ -4567,6 +4733,80 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] 6 — A-Q has two different ranks. Six is the count for a pocket pair. For A-Q, any of four aces can go with any of four queens.
     BETTER ANSWER: 16
   + [correct] 16 — Four times four is sixteen. There are four aces and four queens available, giving 16 exact two-card hands.
+
+TASK w6_check_line_call [drill] Check, then call
+CAPTION: Assume you win 30% with no ties or further bets. The bettor calls your raise.
+Q: There is a bet after your check. What earns most now?
+HINT [hidden]: (none)
+TABLE: Turn | You Jh 8h | Board Jd 7s 4c 2s | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity 1 BB · stack_matters false · assumption Assume you win 30% with no ties or further bets. The bettor calls your raise.
+SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jh 8h stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
+  - [wrong] Raise to 6 BB — Look again. A raise of 6 BB gets called in the model and creates an 18 BB pot. At 30%, it loses 0.6 BB on average.
+    BETTER ANSWER: Call
+  - [wrong] Fold — Look again. Folding gives up a call worth 1 BB. Your chance of winning exceeds the 20% threshold.
+    BETTER ANSWER: Call
+  + [correct] Call — Correct. The bettor puts in 2 BB, so a call makes a 10 BB pot and needs 20%. Check-call because 30% beats that price. Folding misses a gain.
+
+TASK w6_check_line_fold [drill] Check, then fold
+CAPTION: Assume 20% wins, no ties and no further bets. The bettor calls your raise.
+Q: Was checking a reason to keep playing?
+HINT [hidden]: (none)
+TABLE: Turn | You 8h 7d | Board Kd 8s 4c 2s | Pot 10 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, middle pair
+EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 1.2 BB · stack_matters false · assumption Assume 20% wins, no ties and no further bets. The bettor calls your raise.
+SEATS: UTG folded stack 100 BB | HJ stack 93.25 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 8h 7d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 4 BB
+  + [correct] Fold — Correct. The bettor puts in 4 BB, so calling makes a 14 BB pot and needs about 29%. Check-fold because 20% falls short of the price.
+  - [wrong] Call — Look again. A call costs 4 BB and loses 1.2 BB on average at the stated 20%. Folding keeps the rest of your stack.
+    BETTER ANSWER: Fold
+  - [wrong] Raise to 12 BB — Look again. A raise of 12 BB gets called and costs you more when you lose. At 20% it loses 6 BB on average.
+    BETTER ANSWER: Fold
+
+TASK w6_check_line_raise_short [drill] Check, then raise for value
+CAPTION: The bettor can call only 1 BB more and does so with a pair of queens. Assume your set wins. At full depth, that pair would pay up to 6 BB.
+Q: What earns most against this stack?
+HINT [hidden]: (none)
+TABLE: Turn | You 9c 9d | Board 9h 6s 2d Qs | Pot 7 BB | To call 1 BB | Seat BB | Active bb | Decision bb | Facts set, pocket pair
+EFFECTIVE: HJ 2
+REASONING: principle value_vs_worse · alt call · edge stackLimitsPayoff 1 BB · stack_matters true · assumption The bettor can call only 1 BB more and does so with a pair of queens. Assume your set wins. At full depth, that pair would pay up to 6 BB.
+SEATS: UTG folded stack 100 BB | HJ stack 1 BB bet 1 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 9c 9d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 1 BB
+  - [wrong] Call — Look again. Calling the bet gets no more chips. Raising to 2 BB collects the last 1 BB from the weaker pair.
+    BETTER ANSWER: Raise to 2 BB
+  + [correct] Raise to 2 BB — Correct. Check-raise to 2 BB because the bettor calls with a weaker pair and has just 1 BB left. Calling leaves that extra chip behind.
+  - [wrong] Fold — Look again. Folding gives up the pot with the winning set in this example. Raise to collect the last chip.
+    BETTER ANSWER: Raise to 2 BB
+
+TASK w6_check_raise_read [drill] Read a check-raise
+CAPTION: This BB calls with most one-pair hands and seldom raises a weak hand.
+Q: What became more likely when BB checked and raised?
+HINT [always]: Start with the hands BB usually calls.
+TABLE: Flop | You As Jc | Board Ad 9d 5c | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, two-tone
+REASONING: principle range_vs_board · alt choice_0 · edge avoidsDomination · stack_matters false · assumption This BB calls with most one-pair hands and seldom raises a weak hand.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As Jc stack 94.25 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 88.25 BB raise 9 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO bets 3 BB · BB raises to 9 BB
+  - [wrong] A weaker top pair — Look again. The model says weaker aces usually call. Treating this raise as a weaker ace can make you pay off a stronger hand.
+    BETTER ANSWER: Two pair or a set
+  - [wrong] Unpaired cards with no draw — Look again. A weak hand rarely raises in this example, so assuming a bluff risks paying against value.
+    BETTER ANSWER: Two pair or a set
+  + [correct] Two pair or a set — Correct. BB checked and raised, so two pair or a set becomes more likely under this model. A weaker ace usually just calls.
+
+TASK w6_check_raise_repeat [drill] Answer the turn raise
+CAPTION: Assume 20% wins, with no ties or further bets. BB will call a reraise.
+Q: What earns most after BB raises?
+HINT [hidden]: (none)
+TABLE: Turn | You Kh Qd | Board Kd 8s 4s 2c | Pot 18 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
+EFFECTIVE: BB 97.25
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 1.2 BB · stack_matters false · assumption Assume 20% wins, with no ties or further bets. BB will call a reraise.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qd stack 94.25 BB bet 3 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 88.25 BB raise 9 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO bets 3 BB · BB raises to 9 BB
+  - [wrong] Call — Look again. A call costs 6 BB and needs 25% wins. With 20%, you lose 1.2 BB per call on average.
+    BETTER ANSWER: Fold
+  + [correct] Fold — Correct. BB raises, so calling 6 BB makes a 24 BB pot and needs 25%. Fold because the stated 20% falls short.
+  - [wrong] Raise to 18 BB — Look again. A raise of 18 BB costs another 15 BB and BB calls. Folding avoids adding chips against hands that usually win.
+    BETTER ANSWER: Fold
 
 ===== WORLD 6 · LESSON range_thinking_checkpoint · Range thinking checkpoint =====
 
@@ -4621,15 +4861,16 @@ Q: What do you do with nine-six after BB checks?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB 97.5
+REASONING: principle folds_better · alt missed · edge foldsBetter · stack_matters false · assumption Any pair calls half pot. Q-J and A-9 fold.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9h 6d stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [suboptimal] Check — Both high-card hands beat yours. 9-6 missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
     BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  - [wrong] Bet half pot for value — Worse calls are missing. Q-J and A-9 are both ahead of 9-6 if no one improves. Getting those hands to fold is a bluff.
+  - [wrong] Bet half pot for value — Worse calls are missing. A value bet misses which hands would pay. This bluff asks better hands like Q-J and A-9 to fold because they already lead 9-6.
     BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Bet half pot as a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat 9-6. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
+  + [correct] Bet half pot as a bluff — A bet can fold out a better hand. Bluff because BB folds Q-J and A-9, both ahead of 9-6 if you check. Profit depends on how often BB has those hands.
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_kicker_showdown_compare [drill] Find weaker calls
@@ -4683,9 +4924,10 @@ CAPTION: The flop shows an ace. Think about a range that allowed any pocket aces
 Q: Which fact can narrow that range now?
 HINT [theoryOnly]: Read the cards and the stated range.
 TABLE: Flop | You Tc 7d | Board Ac 9h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the range | Facts high card, rainbow, backdoor straight
+REASONING: principle combos_and_blockers · alt range_plus_pot_size · edge processRule · stack_matters unknown · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Tc 7d stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] One ace is already on the board — A visible card cannot be in a private hand. The ace on the flop removes any combination containing that exact card. World 7 shows you how to count what remains.
+  + [correct] One ace is already on the board — A visible card cannot be in a private hand. The flop ace cannot be in BB’s hand, so fewer ace pairs are possible. Pot size alone does not remove a card.
     FEEDBACK TABLE: Flop | You Tc 7d | Board Ac 9h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts high card, rainbow, backdoor straight
   - [suboptimal] The pot is 5.5 BB — Pot size does not remove a card. Look for information about which private cards are still physically available.
     BETTER ANSWER: One ace is already on the board
@@ -7246,12 +7488,13 @@ Q: Which plan fits the stated turn behavior?
 HINT [theoryOnly]: Use the stated behavior of the other player.
 TABLE: Turn | You 5c 4d | Board Kc 9s 2d Ts | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_3 | Center Read the turn | Facts high card
 EFFECTIVE: BB 95.5
+REASONING: principle board_changes_strength · alt nothing_changed · edge keepsWorseIn · stack_matters false · assumption BB will call again with the better hands in its range.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 5c 4d stack 95.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks
-  - [wrong] Make the same bluff again — Not quite. The turn adds new draws. Under the model, the better hands now call, so the earlier bluff no longer has the same purpose.
+  - [wrong] Make the same bluff again — Not quite. Repeating the bluff costs chips when the better hands call again. Check because the turn changed which hands can continue.
     BETTER ANSWER: Check instead of betting again
-  + [correct] Check instead of betting again — Nice repair. The turn adds draws, and the model says BB now calls with the better hands. Checking avoids betting just to repeat the flop plan.
-  - [wrong] Bet smaller but keep the same dry-board story — Read the new board first. Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.
+  + [correct] Check instead of betting again — Nice repair. Check because BB calls again with better hands. If you make the same bluff again, it pays those hands and gets no folds.
+  - [wrong] Bet smaller but keep the same dry-board story — Read the new board first. A smaller bet still costs chips against better hands that call again. A check fits the wetter board and the stated reaction.
     BETTER ANSWER: Check instead of betting again
 
 ===== W1 RULES CHECK =====
@@ -8666,15 +8909,16 @@ Q: Which action gets paid by the weaker ace?
 HINT [hidden]: (none)
 TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt choice_1 · edge moreValueFromWorse · stack_matters false · assumption BB checks with A-7, calls 2 BB and folds to 4 BB.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Check — Look again. Checking on A-6-2 skips the 2 BB that BB would pay with A-7.
+  - [wrong] Check — Look again. Checking on A-6-2 misses the 2 BB call from BB’s weaker ace.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] Bet 4 BB — Look again. BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.
     BETTER ANSWER: Bet 2 BB
     FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  + [correct] Bet 2 BB — Correct. Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.
+  + [correct] Bet 2 BB — Correct. Bet 2 BB because BB calls with A-7, behind your better kicker. A bet of 4 BB makes BB fold and loses the payment.
     FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w4_why_bets_happen_hero_cards_board_pot_v1 [drill] Review decision
@@ -8744,36 +8988,38 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK spaced_review_w4_call_price_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-CAPTION: 6-max micro-stakes. With one decision left, assume you win 1 time in 4 if you call.
+CAPTION: With one decision left, assume you win 1 time in 4 if you call.
 Q: If you win 1 in 4 with no ties or more betting, which earns more in the stated model?
 HINT [hidden]: (none)
 TABLE: Turn | You Jc 9s | Board Jd 8h 4s 2c | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity · stack_matters false · assumption assume you win 1 time in 4 if you call.
 SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jc 9s stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
-  - [wrong] Fold — Look again. Pay 2 BB to play for a final 10 BB pot. You need 20% and have 25%, so calling is ahead.
+  - [wrong] Fold — Look again. HJ bets 2 BB, so calling makes a 10 BB pot and needs 20%. Call because the stated 25% is higher. Folding gives up the gain.
     BETTER ANSWER: Call
-  - [wrong] Both choices earn zero — Look again. Pay 2 BB to play for a final 10 BB pot. You need 20% and have 25%, so calling is ahead.
+  - [wrong] Both choices earn zero — Look again. HJ bets 2 BB, so calling makes a 10 BB pot and needs 20%. Call because the stated 25% is higher. Folding gives up the gain.
     BETTER ANSWER: Call
-  + [correct] Call — Correct. Pay 2 BB to play for a final 10 BB pot. You need 20% and have 25%, so calling is ahead.
+  + [correct] Call — Correct. HJ bets 2 BB, so calling makes a 10 BB pot and needs 20%. Call because the stated 25% is higher. Folding gives up the gain.
 
 ===== WORLD 4 · LESSON value_bets · Value bets =====
 
 TASK spaced_review_w4_value_bets_board_cards_v1 [drill] Review decision
 DAY 7 FAMILY: board_cards
-CAPTION: 6-max micro-stakes. In this example BB calls 3 BB with K-J and K-T.
+CAPTION: In this example BB calls 3 BB with K-J and K-T.
 Q: Which play lets BB pay you with a weaker king?
 HINT [hidden]: (none)
 TABLE: River | You Kd Qc | Board Kh 8h 5s 3c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt choice_1 · edge moreValueFromWorse · stack_matters false · assumption BB calls 3 BB with K-J and K-T.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Qc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
-  + [correct] Bet 3 BB — Correct. A 3 BB bet gets a call from the weaker kings in this model. A check ends the hand without that payment.
+  + [correct] Bet 3 BB — Correct. BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 8h 5s 3c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Check to showdown — Look again. A 3 BB bet gets a call from the weaker kings in this model. A check ends the hand without that payment.
+  - [wrong] Check to showdown — Look again. BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 8h 5s 3c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Fold — Look again. A 3 BB bet gets a call from the weaker kings in this model. A check ends the hand without that payment.
+  - [wrong] Fold — Look again. BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 8h 5s 3c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
@@ -8781,47 +9027,66 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK spaced_review_w4_bluff_pressure_board_cards_v1 [drill] Review decision
 DAY 7 FAMILY: board_cards
-CAPTION: 6-max micro-stakes. BB has a pair of sevens and folds it to a 3 BB bet.
+CAPTION: BB has a pair of sevens and folds it to a 3 BB bet.
 Q: Which choice can make BB give up a better hand in the stated example?
 HINT [hidden]: (none)
 TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card
 EFFECTIVE: BB 97.25
+REASONING: principle folds_better · alt check · edge foldsBetter · stack_matters false · assumption BB has a pair of sevens and folds it to a 3 BB bet.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 8h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
-  - [wrong] Check — Look again. A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.
+  - [wrong] Check — Look again. Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  + [correct] Bet 3 BB — Correct. A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.
+  + [correct] Bet 3 BB — Correct. Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Fold — Look again. A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.
+  - [wrong] Fold — Look again. Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
 ===== WORLD 4 · LESSON protection_and_denial · Protection and denial =====
 
+TASK spaced_review_w4_protection_and_denial_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Assume 20% wins and no ties against this all-in range.
+Q: Does the chance to win beat the price of a call?
+HINT [hidden]: (none)
+TABLE: Turn | You 9c 8c | Board 9h 6s 2d Ks | Pot 9 BB | To call 3 BB | Seat HJ | Active hj | Decision hj | Facts one pair, middle pair
+EFFECTIVE: BB 3
+POTS: main 6 (BB, HJ)
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 0.6 BB · stack_matters false · assumption Assume 20% wins and no ties against this all-in range.
+SEATS: UTG folded stack 100 BB | HJ 9c 8c stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB all-in 3 BB
+  - [wrong] Call — Look again. Calling costs 3 BB with a 20% chance, below the 25% the price requires.
+    BETTER ANSWER: Fold
+  + [correct] Fold — Correct. BB is all-in for 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because 20% falls short and a call loses chips.
+  - [wrong] Both earn the same — Look again. One win in five earns 9 BB, but four losses cost 12 BB in total. Folding saves an average 0.6 BB.
+    BETTER ANSWER: Fold
+
 TASK spaced_review_w4_protection_and_denial_board_cards_v1 [drill] Review decision
 DAY 7 FAMILY: board_cards
-CAPTION: 6-max micro-stakes. Assume BB has A-K and can pair either card on the turn.
+CAPTION: Assume BB has A-K and can pair either card on the turn.
 Q: Which choice makes BB pay or fold instead of seeing the next card free?
 HINT [hidden]: (none)
 TABLE: Flop | You 9s 9h | Board 8c 5d 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
 EFFECTIVE: BB 97.25
+REASONING: principle deny_equity · alt check · edge deniesEquity · stack_matters false · assumption Assume BB has A-K and can pair either card on the turn.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 9s 9h stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  - [wrong] Check — Look again. Your check lets the round end without a price. A bet sets a price BB must pay to see the next card.
+  - [wrong] Check — Look again. A bet makes BB pay or fold with ace-king. Checking gives BB a free chance to pair one of those cards and beat your nines.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: Flop | You 9s 9h | Board 8c 5d 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
-  - [wrong] Fold — Look again. Your check lets the round end without a price. A bet sets a price BB must pay to see the next card.
+  - [wrong] Fold — Look again. A bet makes BB pay or fold with ace-king. Checking gives BB a free chance to pair one of those cards and beat your nines.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: Flop | You 9s 9h | Board 8c 5d 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
-  + [correct] Bet 3 BB — Correct. Your check lets the round end without a price. A bet sets a price BB must pay to see the next card.
+  + [correct] Bet 3 BB — Correct. A bet makes BB pay or fold with ace-king. Checking gives BB a free chance to pair one of those cards and beat your nines.
     FEEDBACK TABLE: Flop | You 9s 9h | Board 8c 5d 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
 
 ===== WORLD 4 · LESSON price_checkpoint · Price checkpoint =====
 
 TASK spaced_review_w4_price_checkpoint_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
-CAPTION: 6-max micro-stakes. Assume BB calls 3 BB with either A-9 or A-Q.
+CAPTION: Assume BB calls 3 BB with either A-9 or A-Q.
 Q: Which calling hand would give your bet value?
 HINT [hidden]: (none)
 TABLE: River | You Ad Jd | Board Ah 7d 5s 2h Kc | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
@@ -8838,17 +9103,18 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK spaced_review_w4_price_checkpoint_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-CAPTION: 6-max micro-stakes. Two players, no ties or further betting. Assume one win in five against this opponent's range.
+CAPTION: Two players, no ties or further betting. Assume one win in five against this opponent's range.
 Q: With that chance and price, which choice earns more over many hands?
 HINT [hidden]: (none)
 TABLE: River | You Qd Ts | Board Qh 8c 4d 3h 2s | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice · stack_matters false · assumption Assume one win in five against this opponent's range.
 SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qd Ts stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 3 BB
-  - [wrong] Call — Look again. Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.
+  - [wrong] Call — Look again. HJ bets 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because the stated 20% is below the price. A call loses chips here.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.
-  - [wrong] Both earn the same — Look again. Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.
+  + [correct] Fold — Correct. HJ bets 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because the stated 20% is below the price. A call loses chips here.
+  - [wrong] Both earn the same — Look again. HJ bets 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because the stated 20% is below the price. A call loses chips here.
     BETTER ANSWER: Fold
 
 ===== WORLD 5 · LESSON connected_boards · Connected boards =====
@@ -8997,12 +9263,13 @@ Q: Assume the five and ten always win for your straight, and no other river wins
 HINT [hidden]: (none)
 TABLE: Turn | You 7d 6c | Board 9h 8s 2c Qd | Pot 9 BB | To call 3 BB | Seat CO | Active co | Decision co | Facts high card, open-ended, completion cards 8
 EFFECTIVE: BB 97.25
+REASONING: principle price_vs_equity · alt choice_1 · edge equityBelowPrice · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7d 6c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 94.25 BB bet 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB bets 3 BB
-  + [correct] Fold. Eight out of 46 is below the price — Correct. The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.
-  - [wrong] Call. Eight out of 46 is above the price — Look again. The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.
+  + [correct] Fold. Eight out of 46 is below the price — Correct. BB bets 3 BB, so a call needs 25% to win a portion of the 12 BB final pot. Fold because 8 of 46 rivers is only about 17%.
+  - [wrong] Call. Eight out of 46 is above the price — Look again. BB bets 3 BB, so a call needs 25% to win a portion of the 12 BB final pot. Fold because 8 of 46 rivers is only about 17%.
     BETTER ANSWER: Fold. Eight out of 46 is below the price
-  - [wrong] Call. Any pair on the river would win too — Look again. The 3 BB call makes a 12 BB pot and needs about 25% equity. Eight of 46 is about 17%, so a call loses chips under the stated rule.
+  - [wrong] Call. Any pair on the river would win too — Look again. BB bets 3 BB, so a call needs 25% to win a portion of the 12 BB final pot. Fold because 8 of 46 rivers is only about 17%.
     BETTER ANSWER: Fold. Eight out of 46 is below the price
 
 ===== WORLD 5 · LESSON turn_river_changes · Turn and river changes =====
@@ -9054,6 +9321,27 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] Only the rank of your high card — Look again. The ten is a third diamond and sits next to the jack. A made flush is now possible and the close ranks help straight draws. Reusing the flop read can miss those threats.
     BETTER ANSWER: Both the flush and straight possibilities
     FEEDBACK TABLE: Turn | You Qc 9h | Board Js 7d 3d Td | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts high card, open-ended, gutshot, completion cards 8
+
+===== WORLD 5 · LESSON w5_semi_bluff · Bet with a draw =====
+
+TASK spaced_review_w5_w5_semi_bluff_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+CAPTION: BB calls 1 BB and folds half the time to 3 BB. Nine clubs win. Other rivers lose. No more bets.
+Q: What earns most with this club draw?
+HINT [hidden]: (none)
+TABLE: Turn | You Ac 6c | Board Qc 7d 4c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
+EFFECTIVE: BB 97.25
+REASONING: principle folds_better · alt check · edge foldsBetter 1.5 BB · stack_matters false · assumption BB calls 1 BB and folds half the time to 3 BB. Nine clubs win. Other rivers lose. No more bets.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac 6c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
+  - [wrong] Bet 1 BB — Look again. A bet of 1 BB gets no folds in this model and costs an extra chip when you miss.
+    BETTER ANSWER: Bet 3 BB
+    FEEDBACK TABLE: Turn | You Ac 6c | Board Qc 7d 4c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  - [wrong] Check — Look again. Checking relies on the nine winning rivers. A bet of 3 BB can also win without seeing a river.
+    BETTER ANSWER: Bet 3 BB
+    FEEDBACK TABLE: Turn | You Ac 6c | Board Qc 7d 4c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] Bet 3 BB — Correct. Bet 3 BB because BB folds half the time and nine clubs can win after a call. Checking misses the folds and earns 1.5 BB less on average.
+    FEEDBACK TABLE: Turn | You Ac 6c | Board Qc 7d 4c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
 ===== WORLD 6 · LESSON range_bucket_basics · Range buckets =====
 
@@ -9201,14 +9489,15 @@ Q: What is the cleaner choice for your top pair after BB checks?
 HINT [hidden]: (none)
 TABLE: Turn | You Kh Td | Board Ks 8c 4c 6c | Pot 6 BB | Seat CO | Facts one pair, top pair
 EFFECTIVE: BB 97.25
+REASONING: principle range_vs_board · alt choice_0 · edge keepsWorseIn · stack_matters false · assumption BB calls bets only with a flush or two pair or better.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Td stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
-  - [wrong] Bet big for value — Look again. The third club completes possible flushes. Under the stated rule only hands that beat KT call, so checking saves the cost of a turn bet.
+  - [wrong] Bet big for value — Look again. Check KT because BB calls only with stronger hands on this three-club turn. A big bet for value risks chips without getting paid by a weaker hand.
     BETTER ANSWER: Check behind
     FEEDBACK TABLE: Turn | You Kh Td | Board Ks 8c 4c 6c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  + [correct] Check behind — Correct. The third club completes possible flushes. Under the stated rule only hands that beat KT call, so checking saves the cost of a turn bet.
+  + [correct] Check behind — Correct. Check KT because BB calls only with stronger hands on this three-club turn. A big bet for value risks chips without getting paid by a weaker hand.
     FEEDBACK TABLE: Turn | You Kh Td | Board Ks 8c 4c 6c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] Use the same value bet as the flop — Look again. The third club completes possible flushes. Under the stated rule only hands that beat KT call, so checking saves the cost of a turn bet.
+  - [wrong] Use the same value bet as the flop — Look again. Check KT because BB calls only with stronger hands on this three-club turn. A big bet for value risks chips without getting paid by a weaker hand.
     BETTER ANSWER: Check behind
     FEEDBACK TABLE: Turn | You Kh Td | Board Ks 8c 4c 6c | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
 
@@ -9326,6 +9615,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   - [wrong] 12 — Look again. Twelve counts only different-suit K-J. Leaving out one K-J hand per suit misses four legal combinations.
     BETTER ANSWER: 16
   + [correct] 16 — Correct. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
+
+TASK spaced_review_w6_range_reading_review_check_call_price_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Assume you win 30% and face no ties or further bets.
+Q: What does the price of the call allow after you checked?
+HINT [hidden]: (none)
+TABLE: Turn | You Qs 9d | Board Qh 8c 5d 3s | Pot 9 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity 0.6 BB · stack_matters false · assumption Assume you win 30% and face no ties or further bets.
+SEATS: UTG folded stack 100 BB | HJ stack 94.25 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qs 9d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 3 BB
+  - [wrong] Fold — Look again. Folding gives up a call that earns 0.6 BB on average in this example.
+    BETTER ANSWER: Call
+  + [correct] Call — Correct. HJ bets 3 BB, so the call makes a 12 BB pot and needs 25%. Call because 30% clears the price. Folding misses that gain.
+  - [wrong] Both earn the same — Look again. At 30%, you average 3.6 BB from the final pot and pay 3 BB. Calling earns more than folding.
+    BETTER ANSWER: Call
 
 ===== WORLD 7 · LESSON range_thinking_lite_combo_density · Visible Cards Change Ranges =====
 

@@ -16,7 +16,7 @@ final _w5TextureDryValueRunner = _world5DryBoardRunner.copyWith(
   ),
   teachingSteps: const [],
   feedbackReason:
-      'Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.',
+      "Bet 2 BB because BB calls with a pair of sevens, which your jacks beat. A bet of 6 BB makes that pair fold.",
   options: const [
     Act0RunnerOptionV1(
       id: 'check',
@@ -27,7 +27,7 @@ final _w5TextureDryValueRunner = _world5DryBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the board and price.',
       feedbackReason:
-          'Checking behind on Q-7-2 gives a seven a free turn and collects no chips from that pair.',
+          "Checking misses the 2 BB that a worse pair pays on Q-7-2. Bet that size to collect it.",
     ),
     Act0RunnerOptionV1(
       id: 'two',
@@ -38,7 +38,7 @@ final _w5TextureDryValueRunner = _world5DryBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the board and response.',
       feedbackReason:
-          'Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.',
+          "Bet 2 BB because BB calls with a pair of sevens, which your jacks beat. A bet of 6 BB makes that pair fold.",
     ),
     Act0RunnerOptionV1(
       id: 'six',
@@ -70,7 +70,7 @@ final _w5TextureWetShowdownRunner = _world5WetBoardRunner.copyWith(
   ),
   teachingSteps: const [],
   feedbackReason:
-      'The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.',
+      "Check on J-T-9 because BB only calls with hands ahead of your aces. A bet of 2 BB pays to face straights or two pair.",
   options: const [
     Act0RunnerOptionV1(
       id: 'small',
@@ -81,7 +81,7 @@ final _w5TextureWetShowdownRunner = _world5WetBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the board and price.',
       feedbackReason:
-          'On J-T-9 your aces are one pair. Even a 2 BB bet gets called only by hands ahead under the stated rule.',
+          "The bet of 2 BB risks chips against straights or two pair, which already beat your aces. Check to keep your chips.",
     ),
     Act0RunnerOptionV1(
       id: 'large',
@@ -92,7 +92,7 @@ final _w5TextureWetShowdownRunner = _world5WetBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the board and price.',
       feedbackReason:
-          'A full-pot bet risks 6 BB. Hands such as J-T and Q-8 already beat one pair and can call here.',
+          "Betting 6 BB costs more while the only callers already beat your aces. Checking avoids putting those chips at risk.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -103,7 +103,7 @@ final _w5TextureWetShowdownRunner = _world5WetBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the board and response.',
       feedbackReason:
-          'The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.',
+          "Check on J-T-9 because BB only calls with hands ahead of your aces. A bet of 2 BB pays to face straights or two pair.",
     ),
   ],
 );
@@ -118,7 +118,7 @@ final _w5ConnectedReadBetRunner = _world5ConnectedBoardRunner.copyWith(
   table: _day7PostflopV1('co', 'As Kd', '9s 8c 7d', betBb: 4, showTurn: true),
   teachingSteps: const [],
   feedbackReason:
-      'A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.',
+      "BB bets 4 BB with a straight on 9-8-7, so your ace-high falls short of the stated rule. Fold because a call pays with a weaker hand.",
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
@@ -129,7 +129,7 @@ final _w5ConnectedReadBetRunner = _world5ConnectedBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the board and response.',
       feedbackReason:
-          'A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.',
+          "BB bets 4 BB with a straight on 9-8-7, so your ace-high falls short of the stated rule. Fold because a call pays with a weaker hand.",
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -140,7 +140,7 @@ final _w5ConnectedReadBetRunner = _world5ConnectedBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Compare the board and price.',
       feedbackReason:
-          'Calling puts 4 BB in with ace-high. The nearby ranks on the flop do not turn your A-K into a straight.',
+          "Calling costs 4 BB with ace-high against the stated straight. Fold to keep those chips.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -225,7 +225,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     title: 'Connected boards',
     subtitle: 'Connected ranks create more ways to improve.',
     phaseLabel: 'Connected',
-    rewardXp: 35,
+    rewardXp: 51,
     sourceTasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_connected_intro',
@@ -258,6 +258,76 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         runner: _w5ConnectedReadBetRunner,
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w5_raise_read_guided",
+        title: "Read the raise on three spades",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner:
+            _day7ExampleV1(
+              5,
+              "connected_boards",
+              "w5_raise_read_guided",
+              _day7PostflopV1(
+                'co',
+                '9d 9h',
+                'Ks 7s 2s',
+                heroLeadBb: 3,
+                betBb: 9,
+                showTurn: true,
+              ),
+              caption:
+                  "On a monotone flop this BB usually calls with one pair and raises strong made hands.",
+              question: "After the raise, which group becomes more likely?",
+              choices: const [
+                "One small pair",
+                "A made flush",
+                "Unpaired cards without a spade",
+              ],
+              correct: 1,
+              reason:
+                  "BB raises strong made hands on the three-spade flop, so a flush becomes more likely. One pair more often calls.",
+              wrongReasons: const {
+                0: "Small pairs tend to call here. With three spades showing, a raise makes a made flush more likely.",
+                2: "BB seldom raises hands that missed in this model. Assuming a weak hand risks paying a flush.",
+              },
+            ).task.runner.copyWith(
+              hint: "First ask what two spades would make.",
+              hintPolicy: Act0HintPolicyV1.always,
+            ),
+      ),
+      Act0LessonTaskV1(
+        taskId: "w5_raise_read_repeat",
+        title: "Price after a turn raise",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          5,
+          "connected_boards",
+          "w5_raise_read_repeat",
+          _day7PostflopV1(
+            'co',
+            'Ah Qh',
+            'Kh 8h 5c 2s',
+            heroLeadBb: 3,
+            betBb: 9,
+            showTurn: true,
+          ),
+          caption:
+              "Assume BB calls a reraise. Nine hearts win and every other river loses. No more bets after this round.",
+          question: "What earns most now?",
+          choices: const ["Call", "Fold", "Raise to 18 BB"],
+          correct: 1,
+          reason:
+              "BB raised, so calling 6 BB makes a 24 BB pot and needs 25%. Fold because nine wins out of 46 are only about 20%.",
+          wrongReasons: const {
+            0: "Calling costs 6 BB for 24 BB in the middle. Nine wins out of 46 falls short of the price, so fold.",
+            2: "A raise to 18 BB costs another 15 BB and BB calls in the model. Folding keeps the chips you would risk on a draw.",
+          },
+        ).task.runner,
       ),
       Act0LessonTaskV1(
         taskId: 'w5_connected_recap',
@@ -509,6 +579,140 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     ],
   ),
   _lessonFromTasksV1(
+    lessonId: 'w5_semi_bluff',
+    title: 'Bet with a draw',
+    subtitle: 'Weigh the chance of folds and winning rivers.',
+    phaseLabel: 'Semi-bluff',
+    rewardXp: 30,
+    sourceTasks: [
+      Act0LessonTaskV1(
+        taskId: 'intro',
+        title: 'Two ways to win',
+        phase: Act0LessonPhaseV1.theory,
+        runner: _world5OutsIntroRunner.copyWith(
+          caption: 'You have a draw on the turn.',
+          question: 'When can a bet earn more than a check?',
+          table: _day7PostflopV1(
+            'co',
+            'As 8s',
+            'Qs 6s 2d Tc',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          options: const [],
+          feedbackReason:
+              'A bet with a draw can win on a fold or when the draw completes.',
+          teachingSteps: const [
+            Act0TeachingStepV1(
+              title: 'Two ways to win.',
+              body:
+                  'A semi-bluff is a bet with a draw. It can win when a better hand folds, '
+                  'or later when your draw hits. Checking gets the next card free. '
+                  'Compare what each choice wins and loses on average. '
+                  'Checking can earn the pot if the draw hits. '
+                  'When you bet, a fold wins the chips already in the middle. '
+                  'A call gives you a chance to win a bigger pot and costs you the bet when you miss. '
+                  'Count each good river once, even if it completes two draws.',
+            ),
+          ],
+        ),
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.learn,
+      ),
+      Act0LessonTaskV1(
+        taskId: "flush_draw",
+        title: "Bet the flush draw",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          5,
+          "w5_semi_bluff",
+          "flush_draw",
+          _day7PostflopV1(
+            'co',
+            'Ah 7h',
+            'Kh 9h 4s 2c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          caption:
+              "BB always calls 1 BB and folds to 3 BB on a third of hands. Nine rivers win either way. No more bets or ties.",
+          question: "Which play earns most?",
+          choices: const ["Check", "Bet 3 BB", "Bet 1 BB"],
+          correct: 1,
+          reason:
+              "Bet 3 BB. BB’s folds and nine winning rivers make the bet worth about 1.57 BB on average. Checking earns about 1.17 BB.",
+          wrongReasons: const {
+            0: "Checking leaves only nine winning rivers, worth about 1.17 BB on average. A bet of 3 BB can win immediately too.",
+            2: "BB always calls 1 BB, so that bet costs an extra chip on the rivers you miss. The 3 BB bet can win by getting a fold.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "combo_draw",
+        title: "Two draws, fewer folds",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          5,
+          "w5_semi_bluff",
+          "combo_draw",
+          _day7PostflopV1(
+            'co',
+            'Jh 8h',
+            'Th 7s 4h 2c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          caption:
+              "BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets.",
+          question: "Which play earns most?",
+          choices: const ["Bet 1 BB", "Check", "Bet 3 BB"],
+          correct: 1,
+          reason:
+              "Nine hearts and four nines share one card, so you have 12 outs. Check for about 1.57 BB on average. BB folds too rarely for a bet of 3 BB to beat it.",
+          wrongReasons: const {
+            0: "A bet of 1 BB never gets a fold here, so it costs a chip on most rivers. Checking sees the same river for free.",
+            2: "BB folds too rarely for a bet of 3 BB to pay more than a check. The bet earns about 1.30 BB on average against about 1.57 BB for checking.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "short_draw",
+        title: "A draw against a short stack",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          5,
+          "w5_semi_bluff",
+          "short_draw",
+          _day7PostflopV1(
+            'co',
+            'As 7s',
+            'Kd 9s 4s 2c',
+            checkedToHero: true,
+            opponentStartingBb: 4.75,
+            showTurn: true,
+          ),
+          caption:
+              "BB has 2 BB left and calls either bet. With 100 BB it would fold to 3 BB on a third of hands. Nine spades win. Other rivers lose. No more bets.",
+          question: "Which play earns most?",
+          choices: const ["Check", "Bet 2 BB", "Bet 1 BB"],
+          correct: 0,
+          reason:
+              "Check because BB always calls with its last 2 BB or less and you miss 37 of 46 rivers. A bet of 1 BB pays more for the same draw.",
+          wrongReasons: const {
+            1: "A bet of 2 BB gets called and costs the most on the 37 misses. Checking keeps the same chance of taking the chips in the middle.",
+            2: "Even a bet of 1 BB costs more on misses when BB always calls. Checking earns about 0.61 BB more on average.",
+          },
+        ).task.runner,
+      ),
+    ],
+  ),
+  _lessonFromTasksV1(
     lessonId: 'turn_river_changes',
     title: 'Turn and river changes',
     subtitle: 'Later streets can complete or miss a draw.',
@@ -654,7 +858,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
                 quality: Act0FeedbackQualityV1.correct,
                 feedbackTitle: 'Top pair can bet for value.',
                 feedbackReason:
-                    'KQ pairs the highest card on K-7-2. A weaker king can call a small bet.',
+                    "Bet KQ for value because BB can call with weaker kings on K-7-2. Checking misses the payment you can collect now.",
               ),
               Act0RunnerOptionV1(
                 id: 'bluff',
@@ -1013,7 +1217,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 36,
+    rewardXp: 76,
     runner: _world6RangeCheckpointRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -1037,6 +1241,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
                   'If only a stronger queen calls, the same bet has a different result.',
               focusLabels: <String>['Your pair', 'Hands that call'],
             ),
+            Act0TeachingStepV1(
+              title: 'When they bet after your check.',
+              body:
+                  'A check-call means calling the bet after you check. '
+                  'A check-fold means folding to that bet. A check-raise means raising it. '
+                  'In the examples ahead, the raising player often has two pair or a stronger hand.',
+            ),
           ],
           feedbackTitle: 'Put the reads together.',
           feedbackReason:
@@ -1056,7 +1267,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           question: "What do you do to earn a call from a weaker hand?",
           feedbackTitle: 'Read the range in this hand.',
           feedbackReason:
-              "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
+              "Bet half pot because BB calls with Q-9 and 5-4, which trail your queens. Checking leaves the payment from those weaker pairs uncollected.",
           teachingSteps: const [],
           table: _act0BoardLessonTableV1(
             heroCards: _act0LessonCardsV1('Qd Tc'),
@@ -1072,7 +1283,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               quality: Act0FeedbackQualityV1.correct,
               feedbackTitle: "A bet can earn weaker calls.",
               feedbackReason:
-                  "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
+                  "Bet half pot because BB calls with Q-9 and 5-4, which trail your queens. Checking leaves the payment from those weaker pairs uncollected.",
             ),
             Act0RunnerOptionV1(
               id: 'bluff',
@@ -1083,7 +1294,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Read the hands that call.",
               feedbackReason:
-                  "The hands named as calls are behind your pair of queens. That makes this a value bet.",
+                  "Treating the bet as a bluff misses the point. The goal is to collect calls from the smaller pairs and weaker queen.",
             ),
             Act0RunnerOptionV1(
               id: 'missed',
@@ -1094,7 +1305,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "You paired the queen.",
               feedbackReason:
-                  "You have a pair of queens. Both of the named calls make weaker hands.",
+                  "Checking misses a chance to collect from the two weaker pairs. Betting half pot gets their calls in this example.",
             ),
           ],
         ),
@@ -1210,6 +1421,167 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w6_check_line_call",
+        title: "Check, then call",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          6,
+          'range_reading_review',
+          "w6_check_line_call",
+          _day7PostflopV1(
+            'bb',
+            'Jh 8h',
+            'Jd 7s 4c 2s',
+            betBb: 2,
+            showTurn: true,
+          ),
+          caption:
+              "Assume you win 30% with no ties or further bets. The bettor calls your raise.",
+          question: "There is a bet after your check. What earns most now?",
+          choices: const ["Raise to 6 BB", "Fold", "Call"],
+          correct: 2,
+          reason:
+              "The bettor puts in 2 BB, so a call makes a 10 BB pot and needs 20%. Check-call because 30% beats that price. Folding misses a gain.",
+          wrongReasons: const {
+            0: "A raise of 6 BB gets called in the model and creates an 18 BB pot. At 30%, it loses 0.6 BB on average.",
+            1: "Folding gives up a call worth 1 BB. Your chance of winning exceeds the 20% threshold.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w6_check_line_fold",
+        title: "Check, then fold",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          6,
+          'range_reading_review',
+          "w6_check_line_fold",
+          _day7PostflopV1(
+            'bb',
+            '8h 7d',
+            'Kd 8s 4c 2s',
+            betBb: 4,
+            showTurn: true,
+          ),
+          caption:
+              "Assume 20% wins, no ties and no further bets. The bettor calls your raise.",
+          question: "Was checking a reason to keep playing?",
+          choices: const ["Fold", "Call", "Raise to 12 BB"],
+          correct: 0,
+          reason:
+              "The bettor puts in 4 BB, so calling makes a 14 BB pot and needs about 29%. Check-fold because 20% falls short of the price.",
+          wrongReasons: const {
+            1: "A call costs 4 BB and loses 1.2 BB on average at the stated 20%. Folding keeps the rest of your stack.",
+            2: "A raise of 12 BB gets called and costs you more when you lose. At 20% it loses 6 BB on average.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w6_check_line_raise_short",
+        title: "Check, then raise for value",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          6,
+          'range_reading_review',
+          "w6_check_line_raise_short",
+          _day7PostflopV1(
+            'bb',
+            '9c 9d',
+            '9h 6s 2d Qs',
+            betBb: 1,
+            opponentStartingBb: 4.75,
+            showTurn: true,
+          ),
+          caption:
+              "The bettor can call only 1 BB more and does so with a pair of queens. Assume your set wins. At full depth, that pair would pay up to 6 BB.",
+          question: "What earns most against this stack?",
+          choices: const ["Call", "Raise to 2 BB", "Fold"],
+          correct: 1,
+          reason:
+              "Check-raise to 2 BB because the bettor calls with a weaker pair and has just 1 BB left. Calling leaves that extra chip behind.",
+          wrongReasons: const {
+            0: "Calling the bet gets no more chips. Raising to 2 BB collects the last 1 BB from the weaker pair.",
+            2: "Folding gives up the pot with the winning set in this example. Raise to collect the last chip.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w6_check_raise_read",
+        title: "Read a check-raise",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner:
+            _day7ExampleV1(
+              6,
+              'range_reading_review',
+              "w6_check_raise_read",
+              _day7PostflopV1(
+                'co',
+                'As Jc',
+                'Ad 9d 5c',
+                heroLeadBb: 3,
+                betBb: 9,
+                showTurn: true,
+              ),
+              caption:
+                  "This BB calls with most one-pair hands and seldom raises a weak hand.",
+              question: "What became more likely when BB checked and raised?",
+              choices: const [
+                "A weaker top pair",
+                "Unpaired cards with no draw",
+                "Two pair or a set",
+              ],
+              correct: 2,
+              reason:
+                  "BB checked and raised, so two pair or a set becomes more likely under this model. A weaker ace usually just calls.",
+              wrongReasons: const {
+                0: "The model says weaker aces usually call. Treating this raise as a weaker ace can make you pay off a stronger hand.",
+                1: "A weak hand rarely raises in this example, so assuming a bluff risks paying against value.",
+              },
+            ).task.runner.copyWith(
+              hint: "Start with the hands BB usually calls.",
+              hintPolicy: Act0HintPolicyV1.always,
+            ),
+      ),
+      Act0LessonTaskV1(
+        taskId: "w6_check_raise_repeat",
+        title: "Answer the turn raise",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          6,
+          'range_reading_review',
+          "w6_check_raise_repeat",
+          _day7PostflopV1(
+            'co',
+            'Kh Qd',
+            'Kd 8s 4s 2c',
+            heroLeadBb: 3,
+            betBb: 9,
+            showTurn: true,
+          ),
+          caption:
+              "Assume 20% wins, with no ties or further bets. BB will call a reraise.",
+          question: "What earns most after BB raises?",
+          choices: const ["Call", "Fold", "Raise to 18 BB"],
+          correct: 1,
+          reason:
+              "BB raises, so calling 6 BB makes a 24 BB pot and needs 25%. Fold because the stated 20% falls short.",
+          wrongReasons: const {
+            0: "A call costs 6 BB and needs 25% wins. With 20%, you lose 1.2 BB per call on average.",
+            2: "A raise of 18 BB costs another 15 BB and BB calls. Folding avoids adding chips against hands that usually win.",
+          },
+        ).task.runner,
       ),
     ],
   ),
@@ -1475,7 +1847,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           question: "Which fact can narrow that range now?",
           feedbackTitle: 'Read the range in this hand.',
           feedbackReason:
-              "The ace on the flop removes any combination containing that exact card. World 7 shows you how to count what remains.",
+              "The flop ace cannot be in BB’s hand, so fewer ace pairs are possible. Pot size alone does not remove a card.",
           teachingSteps: const [],
           table: _act0BoardLessonTableV1(
             heroCards: _act0LessonCardsV1('Tc 7d'),
@@ -1491,7 +1863,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
               quality: Act0FeedbackQualityV1.correct,
               feedbackTitle: "A visible card cannot be in a private hand.",
               feedbackReason:
-                  "The ace on the flop removes any combination containing that exact card. World 7 shows you how to count what remains.",
+                  "The flop ace cannot be in BB’s hand, so fewer ace pairs are possible. Pot size alone does not remove a card.",
             ),
             Act0RunnerOptionV1(
               id: 'range_plus_pot_size',
@@ -2955,7 +3327,7 @@ final _w6ContinuationBetValue = _w6ContinuationBetIntro.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Three is the largest bet they call.',
       feedbackReason:
-          'KQ beats a weaker king on K-8-3. The half-pot size gets the full 3 BB those hands are willing to call.',
+          "Bet 3 BB because weaker kings call that much and your KQ beats them. Betting 1.5 BB collects half as much from the same hands.",
     ),
   ],
 );
@@ -2986,7 +3358,7 @@ final _w6ContinuationBetWet = _w6ContinuationBetIntro.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Look at what can continue.',
       feedbackReason:
-          'With A4o on J-T-9, spending 2 BB can get called by pairs and draws that connected with those three cards.',
+          "A small bet costs 2 BB when BB can call with pairs and draws. Check A4o to keep that wager.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -2996,7 +3368,7 @@ final _w6ContinuationBetWet = _w6ContinuationBetIntro.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Take the free turn.',
       feedbackReason:
-          'On J-T-9, A4o has no pair or direct draw. Checking behind keeps the 2 BB you would have put in for a small bet.',
+          "Check A4o on J-T-9 because BB can continue with pairs, straights and draws. A bet of 2 BB risks chips against that range without a strong reason to expect folds.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_large',
@@ -3007,7 +3379,7 @@ final _w6ContinuationBetWet = _w6ContinuationBetIntro.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A bigger bluff costs more.',
       feedbackReason:
-          'Betting the 6 BB pot on J-T-9 risks another 6 BB while BB can continue with pairs, straights and draws.',
+          "A big bet costs 6 BB when BB can continue with pairs, straights and draws. Checking saves that wager.",
     ),
   ],
 );
