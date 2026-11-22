@@ -6444,7 +6444,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · C
   - [suboptimal] Check — Look again. A check keeps the 14 BB pot. It also misses a 6 BB call from weaker aces and pairs in BB's known range.
     BETTER ANSWER: Bet 6 BB
     FEEDBACK TABLE: River | You Ac Jc | Board As 7d 2c 4s 9h | Pot 14 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] All-in to 68.25 BB — Look again. BB calls small with weak pairs and raises with strong hands. Shoving 68.25 BB may drive off weaker hands and risk too much against sets or two pair.
+  - [wrong] All-in to 68.25 BB — Look again. BB calls small with weak pairs and raises with strong hands. Going all-in for 68.25 BB may drive off weaker hands and risk too much against sets or two pair.
     BETTER ANSWER: Bet 6 BB
     FEEDBACK TABLE: River | You Ac Jc | Board As 7d 2c 4s 9h | Pot 14 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   + [correct] Bet 6 BB — Correct. AJ beats A3, A5, A6 and A8, 7x and 9x. A 6 BB value bet can get calls from worse while the bet stays small.
@@ -6506,7 +6506,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [suboptimal] Check from fear of another loss — Look again. Checking keeps your 53.5 BB behind, but BB has weak aces and 7x that may pay a value bet now.
     BETTER ANSWER: Bet 3 BB after a brief reset
     FEEDBACK TABLE: Flop | You Ah Qh | Board As 7d 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] All-in to 53.5 BB to win back chips — Look again. You have top pair, not the nuts. A 53.5 BB shove into 5.5 BB may fold weak calls and risk a lot against sets or two pair.
+  - [wrong] All-in to 53.5 BB to win back chips — Look again. You have top pair, not the nuts. A 53.5 BB all-in into 5.5 BB may fold weak calls and risk a lot against sets or two pair.
     BETTER ANSWER: Bet 3 BB after a brief reset
     FEEDBACK TABLE: Flop | You Ah Qh | Board As 7d 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] Bet 3 BB after a brief reset — Correct. Your AQ has top pair with a queen kicker. BB may call 3 BB with worse aces and 7x; the last loss is not part of this pot.
@@ -6565,7 +6565,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   + [correct] Raise to 2 BB — Correct. 99 is a Medium CO opener. The 2 BB size takes a normal spot without reacting to BB's talk.
   - [suboptimal] Raise to 3 BB — Look again. 99 is worth opening from CO, but a 3 BB size adds 1 BB of risk with no read that calls for it.
     BETTER ANSWER: Raise to 2 BB
-  - [wrong] All-in to 35 BB — Look again. 99 can open small in CO. A 35 BB shove to prove a point risks the stack for a 1.5 BB pot.
+  - [wrong] All-in to 35 BB — Look again. 99 can open small in CO. Going all-in for 35 BB to prove a point risks the stack for a 1.5 BB pot.
     BETTER ANSWER: Raise to 2 BB
 
 TASK w12_discipline_under_pressure [drill] Discipline under pressure
@@ -6615,7 +6615,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [suboptimal] Raise to 7 BB — Look again. The small CO bet contains missed hands. Raising to 7 BB may fold those hands and grow the pot against AJ, QQ and sets.
     BETTER ANSWER: Call 2 BB
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] All-in to 36.75 BB — Look again. Top pair QJ is not a reason to shove 36.75 BB. The shove can fold bluffs but get action from better pairs or sets.
+  - [wrong] All-in to 36.75 BB — Look again. Going all-in for 36.75 BB with top pair QJ can fold bluffs but get action from better pairs or sets.
     BETTER ANSWER: Call 2 BB
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] Call 2 BB — Correct. QJ is top pair with a queen kicker. Calling costs 16.7% of the final 12 BB pot and keeps CO's weak bets in.
@@ -6645,7 +6645,7 @@ HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   + [correct] Your table-based choice process — Correct. 99 from CO still has a normal open; QJ on J-7-4 still needs a read before a large raise.
-  - [wrong] The bet size used by your rival — Look again. A rival's taunt does not make a big bet a good response. Shoving 35 BB with 99 adds needless risk.
+  - [wrong] The bet size used by your rival — Look again. A rival's taunt does not make a big bet a good response. Going all-in for 35 BB with 99 adds needless risk.
     BETTER ANSWER: Your table-based choice process
   - [suboptimal] The choice to avoid that player — Look again. A calmer seat plan can help, but folding good CO opens gives up value from a fear of table talk.
     BETTER ANSWER: Your table-based choice process
@@ -6687,7 +6687,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB · HJ folds
   + [correct] Fold — Correct. QJo is Weak in the opening chart and is behind UTG's QQ+/AK. A reset keeps your 28 BB for a better spot.
   - [wrong] Call 3 BB to win chips back — Look again. QJo faces QQ+/AK with players behind. Paying 3 BB to chase the past loss risks a dominated flop hand.
     BETTER ANSWER: Fold
-  - [wrong] All-in to 28 BB — Look again. The UTG range is strong and can call. Shoving QJo risks 28 BB into a 4.5 BB pot with little fold pressure.
+  - [wrong] All-in to 28 BB — Look again. The UTG range is strong and can call. Going all-in with QJo risks 28 BB into a 4.5 BB pot with little fold pressure.
     BETTER ANSWER: Fold
 
 TASK w12_checkpoint_discipline_line [drill] Discipline line
@@ -6721,7 +6721,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK w12_checkpoint_review [review] Mindset recap
 ENTRY: drill
-CAPTION: You have AT on A-9-6-3-2. The pot is 14. BB calls a 6 BB bet with A4, A5, A7, A8 and 9x. BB raises two pair or sets. You have not seen BB call a river shove with weak hands.
+CAPTION: You have AT on A-9-6-3-2. The pot is 14. BB calls a 6 BB bet with A4, A5, A7, A8 and 9x. BB raises two pair or sets. You have not seen BB call a river all-in with weak hands.
 Q: What river action fits?
 HINT [hidden]: (none)
 TABLE: River | You Ac Tc | Board As 9d 6c 3h 2s | Pot 14 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
@@ -6732,7 +6732,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [suboptimal] Check — Look again. Checking keeps the 14 BB pot, but this BB is set to call 6 BB with weaker aces and 9x.
     BETTER ANSWER: Bet 6 BB
     FEEDBACK TABLE: River | You Ac Tc | Board As 9d 6c 3h 2s | Pot 14 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] All-in to 53.25 BB — Look again. A shove can drive off the weak aces and 9x that pay 6 BB. It risks 53.25 BB against a range with sets and two pair.
+  - [wrong] All-in to 53.25 BB — Look again. Going all-in can drive off the weak aces and 9x that pay 6 BB. It risks 53.25 BB against a range with sets and two pair.
     BETTER ANSWER: Bet 6 BB
     FEEDBACK TABLE: River | You Ac Tc | Board As 9d 6c 3h 2s | Pot 14 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 

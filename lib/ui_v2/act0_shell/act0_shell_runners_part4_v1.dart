@@ -8678,7 +8678,7 @@ final _w12TiltResetProtocolTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_53_5_bb_to_win_back_chips',
         'All-in to 53.5 BB to win back chips',
         Act0FeedbackQualityV1.wrong,
-        'You have top pair, not the nuts. A 53.5 BB shove into 5.5 BB may fold weak calls and risk a lot against sets or two pair.',
+        'You have top pair, not the nuts. A 53.5 BB all-in into 5.5 BB may fold weak calls and risk a lot against sets or two pair.',
       ),
       (
         'bet_3_bb_after_a_brief_reset',
@@ -8902,7 +8902,7 @@ final _w12ConfidenceAndDisciplineTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_35_bb',
         'All-in to 35 BB',
         Act0FeedbackQualityV1.wrong,
-        '99 can open small in CO. A 35 BB shove to prove a point risks the stack for a 1.5 BB pot.',
+        '99 can open small in CO. Going all-in for 35 BB to prove a point risks the stack for a 1.5 BB pot.',
       ),
     ],
     table: _day7TableV1(
@@ -9248,7 +9248,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_28_bb',
         'All-in to 28 BB',
         Act0FeedbackQualityV1.wrong,
-        'The UTG range is strong and can call. Shoving QJo risks 28 BB into a 4.5 BB pot with little fold pressure.',
+        'The UTG range is strong and can call. Going all-in with QJo risks 28 BB into a 4.5 BB pot with little fold pressure.',
       ),
     ],
     table: _day7TableV1(
@@ -9520,7 +9520,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
     xp: 17,
     family: Act0TaskFamilyV1.transfer,
     caption:
-        'You have AT on A-9-6-3-2. The pot is 14. BB calls a 6 BB bet with A4, A5, A7, A8 and 9x. BB raises two pair or sets. You have not seen BB call a river shove with weak hands.',
+        'You have AT on A-9-6-3-2. The pot is 14. BB calls a 6 BB bet with A4, A5, A7, A8 and 9x. BB raises two pair or sets. You have not seen BB call a river all-in with weak hands.',
     question: 'What river action fits?',
     teach: '',
     choices: const [
@@ -9540,7 +9540,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_53_25_bb',
         'All-in to 53.25 BB',
         Act0FeedbackQualityV1.wrong,
-        'A shove can drive off the weak aces and 9x that pay 6 BB. It risks 53.25 BB against a range with sets and two pair.',
+        'Going all-in can drive off the weak aces and 9x that pay 6 BB. It risks 53.25 BB against a range with sets and two pair.',
       ),
     ],
     table: _day7TableV1(
@@ -9871,7 +9871,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_68_25_bb',
         'All-in to 68.25 BB',
         Act0FeedbackQualityV1.wrong,
-        'BB calls small with weak pairs and raises with strong hands. Shoving 68.25 BB may drive off weaker hands and risk too much against sets or two pair.',
+        'BB calls small with weak pairs and raises with strong hands. Going all-in for 68.25 BB may drive off weaker hands and risk too much against sets or two pair.',
       ),
       (
         'bet_6_bb',
@@ -10243,7 +10243,7 @@ final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_36_75_bb',
         'All-in to 36.75 BB',
         Act0FeedbackQualityV1.wrong,
-        'Top pair QJ is not a reason to shove 36.75 BB. The shove can fold bluffs but get action from better pairs or sets.',
+        'Going all-in for 36.75 BB with top pair QJ can fold bluffs but get action from better pairs or sets.',
       ),
       (
         'call_2_bb',
@@ -10332,7 +10332,7 @@ final _w12ConfidenceRiverDisciplineTasksV1 = <Act0LessonTaskV1>[
         'the_bet_size_used_by_your_rival',
         'The bet size used by your rival',
         Act0FeedbackQualityV1.wrong,
-        'A rival\'s taunt does not make a big bet a good response. Shoving 35 BB with 99 adds needless risk.',
+        'A rival\'s taunt does not make a big bet a good response. Going all-in for 35 BB with 99 adds needless risk.',
       ),
       (
         'the_choice_to_avoid_that_player',
