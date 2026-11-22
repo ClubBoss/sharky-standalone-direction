@@ -4316,7 +4316,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         selectedLesson.lessonId,
                                         playSelectedTask.taskId,
                                       ),
-                                      playSelectedTask.guidedDecision
+                                      // Due review opens straight to the prompt.
+                                      playSelectedTask.guidedDecision &&
+                                              _spacedReviewReturnV1 == null
                                           ? Act0DecisionAssistanceV1
                                                 .theoryRecall
                                           : Act0DecisionAssistanceV1.none,
