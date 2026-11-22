@@ -2793,12 +2793,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     if (_routePracticeV1.inRunner && _routePracticeV1.run != null) {
-      return Scaffold(
-        backgroundColor: Act0AcademyLeafPaletteV1.ink,
-        body: SafeArea(
-          child: KeyedSubtree(
-            key: const Key('act0_shell_route_practice_runner'),
-            child: _buildRoutePracticeRunnerV1(_routePracticeV1.run!),
+      return _withRunnerChromeV1(
+        Scaffold(
+          key: const Key('act0_shell_preview_screen'),
+          backgroundColor: Act0ShellTokensV1.background,
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                _progressSaveNoticeV1(),
+                Expanded(
+                  child: KeyedSubtree(
+                    key: const Key('act0_shell_route_practice_runner'),
+                    child: _buildRoutePracticeRunnerV1(_routePracticeV1.run!),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -5152,6 +5163,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         child: shell,
       );
     }
+    return _withRunnerChromeV1(shell);
+  }
+
+  Widget _withRunnerChromeV1(Widget shell) {
     return MediaQuery.withClampedTextScaling(
       minScaleFactor: 1.0,
       maxScaleFactor: 1.3,
