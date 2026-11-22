@@ -4,10 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_daily_practice_queue_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_preflop_equity_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
 import 'package:poker_solver/poker_solver.dart';
 
+import '../../tools/act0_daily_deal_export_v1.dart'
+    show renderDailyDealExportSectionV1;
+import '../../tools/act0_preflop_equity_v1.dart';
 import '../support/act0_catalog_decision_copy_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
@@ -38,7 +42,7 @@ void main() {
             anchors[act0DailyDealSourceTasksV1.entries
                 .firstWhere((item) => item.value == template)
                 .key]!;
-        final correctActions = <String>{};
+        final correctActions = <String, int>{};
         final scenes = <String>{};
         final flopEquities = <String, double>{};
         final flopAnswers = <double, Set<String>>{};
@@ -87,12 +91,21 @@ void main() {
           );
           final correct = template == Act0DailyDealTemplateV1.lowSpr
               ? _verifiedLowSprAnswer(task, flopEquities, flopAnswers)
-              : _expected(template, table);
+              : _expected(template, task);
           expect(answer.label, correct, reason: id);
-          correctActions.add(correct);
+          correctActions.update(
+            correct,
+            (count) => count + 1,
+            ifAbsent: () => 1,
+          );
           scenes.add(catalogTableLine(table));
         }
-        expect(scenes.length, greaterThan(900));
+        if (template == Act0DailyDealTemplateV1.open) {
+          expect(scenes.length, greaterThan(500));
+          expect(correctActions.values, everyElement(lessThanOrEqualTo(700)));
+        } else {
+          expect(scenes.length, greaterThan(900));
+        }
         if (template == Act0DailyDealTemplateV1.lowSpr) {
           expect(flopEquities, hasLength(5));
           expect(flopAnswers[1059 / 2970], {'Call', 'Fold'});
@@ -101,6 +114,117 @@ void main() {
       },
     );
   }
+
+  test(
+    '20 defend-BB classes match direct legal pocket and board enumeration',
+    () async {
+      const sampled = [
+        'AA',
+        'JJ',
+        '22',
+        'AKs',
+        'AKo',
+        'AQs',
+        'A9o',
+        'A2s',
+        'KQs',
+        'K2o',
+        'QJs',
+        'Q9o',
+        'JTs',
+        'J9s',
+        'T9o',
+        '98s',
+        '76o',
+        '54s',
+        '83o',
+        '32s',
+      ];
+      final computed = <String, Map<String, ({int halfShares, int deals})>>{};
+      for (final opener in [Act0ChartSeatV1.co, Act0ChartSeatV1.btn]) {
+        final range = act0ChartHandsV1
+            .where(
+              (hand) =>
+                  act0ChartActionV1(hand, opener, Act0ChartPrefixV1.unopened) ==
+                  Act0ChartActionV1.raise,
+            )
+            .toSet();
+        final signature = range.join(',');
+        final direct = computed[signature] ??= await enumeratePreflopEquityV1(
+          range,
+          directHands: sampled,
+        );
+        expect(direct.keys, unorderedEquals(sampled));
+        for (final code in sampled) {
+          final count = direct[code]!;
+          final expected = (500 * count.halfShares / count.deals).round();
+          expect(
+            act0PreflopEquityTenthsV1(code, opener),
+            expected,
+            reason: '${opener.name} $code',
+          );
+          expect(count.deals, _matchups(code, range) * 1712304);
+        }
+        expect(
+          act0ChartHandsV1.every(
+            (code) => act0PreflopEquityTenthsV1(code, opener) != null,
+          ),
+          isTrue,
+        );
+      }
+      expect(act0PreflopEquityTenthsV1('AA', Act0ChartSeatV1.sb), isNull);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  test(
+    'the same defend-BB price allows opposite answers for different hands',
+    () {
+      final byPrice = <(String, String), Set<String>>{};
+      for (var seed = 0; seed < 100; seed++) {
+        final task = act0GenerateDailyDealV1(
+          taskId: 'defend_price_probe_$seed',
+          lessonId: 'defend',
+          template: Act0DailyDealTemplateV1.defendBb,
+          seed: seed,
+        )!;
+        final table = task.runner.table;
+        final opener = table.seats
+            .singleWhere((seat) => seat.bet?.kind == Act0SeatBetKindV1.raise)
+            .seatId;
+        final answer = task.runner.options.singleWhere(
+          (option) => option.isCorrect,
+        );
+        byPrice
+            .putIfAbsent((opener, table.toCallLabel), () => {})
+            .add(answer.label);
+      }
+      expect(
+        byPrice.values.where((answers) => answers.length == 2),
+        isNotEmpty,
+      );
+    },
+  );
+
+  test('low-SPR export cannot substitute the pot after a call', () {
+    final lines = renderDailyDealExportSectionV1(
+      Act0DailyDealTemplateV1.lowSpr,
+    ).toList();
+    final index = lines.indexWhere(
+      (line) => line.startsWith('TASK generated_lowSpr_0 '),
+    );
+    expect(index, greaterThanOrEqualTo(0));
+    final taskLines = lines.skip(index).takeWhile((line) => line.isNotEmpty);
+    final table = taskLines.singleWhere((line) => line.startsWith('TABLE:'));
+    final money = RegExp(
+      r'Pot ([\d.]+) BB \| To call ([\d.]+) BB',
+    ).firstMatch(table)!;
+    final currentPot = money[1]!;
+    final projectedPot = double.parse(currentPot) + double.parse(money[2]!);
+    final potLine = taskLines.singleWhere((line) => line.startsWith('POTS:'));
+    expect(potLine, 'POTS: current $currentPot');
+    expect(potLine, isNot(contains('main $projectedPot')));
+  });
 
   test('daily recipe and finite selection survive a queue round trip', () {
     final recipes = [
@@ -157,7 +281,8 @@ void main() {
   });
 }
 
-String _expected(Act0DailyDealTemplateV1 template, Act0TableStateV1 table) {
+String _expected(Act0DailyDealTemplateV1 template, Act0LessonTaskV1 task) {
+  final table = task.runner.table;
   if (template == Act0DailyDealTemplateV1.open) {
     final chart = act0ChartActionV1(
       CatalogPokerFacts(table).code!,
@@ -173,7 +298,24 @@ String _expected(Act0DailyDealTemplateV1 template, Act0TableStateV1 table) {
     return '${(price * 100).toStringAsFixed(1)}%';
   }
   if (template == Act0DailyDealTemplateV1.defendBb) {
-    return price < 0.30 ? 'Call' : 'Fold';
+    final opener = table.seats
+        .singleWhere((seat) => seat.bet?.kind == Act0SeatBetKindV1.raise)
+        .seatId;
+    final code = CatalogPokerFacts(table).code!;
+    final equity =
+        act0PreflopEquityTenthsV1(
+          code,
+          Act0ChartSeatV1.values.byName(opener),
+        )! /
+        1000;
+    expect((equity - price).abs(), inInclusiveRange(0.002, 0.05));
+    expect(
+      task.runner.caption,
+      contains(
+        "Your $code has ${(100 * equity).toStringAsFixed(1)}% equity against ${opener.toUpperCase()}'s chart opening range.",
+      ),
+    );
+    return equity > price ? 'Call' : 'Fold';
   }
   final hero = physicalCards(table.heroCards);
   final board = physicalCards(table.boardCards);
@@ -292,4 +434,25 @@ String _verifiedLowSprAnswer(
   final answer = equity > price ? 'Call' : 'Fold';
   answers.putIfAbsent(equity, () => {}).add(answer);
   return answer;
+}
+
+int _matchups(String code, Set<String> range) {
+  final deck = [
+    for (final rank in '23456789TJQKA'.split(''))
+      for (final suit in 'cdhs'.split('')) '$rank$suit',
+  ];
+  final pocket = [code[0] + 's', code[1] + (code.endsWith('s') ? 's' : 'h')];
+  final remaining = deck.where((card) => !pocket.contains(card)).toList();
+  var combinations = 0;
+  for (final (index, a) in remaining.indexed) {
+    for (final b in remaining.take(index)) {
+      if (range.contains(startingHandCode([a, b]))) combinations++;
+    }
+  }
+  return combinations *
+      (code.length == 2
+          ? 6
+          : code.endsWith('s')
+          ? 4
+          : 12);
 }
