@@ -136,14 +136,18 @@ void main() {
       expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
       final completed = await _saved();
       final firstRecords = completed['learningEvidenceHistory'] as List;
-      expect(firstRecords, hasLength(5));
+      expect(firstRecords, hasLength(6));
+      expect(
+        firstRecords.map((record) => record['taskId']),
+        contains('first_table_guide_first_decision'),
+      );
       final firstRun = firstRecords.first['runId'];
       final firstOrdinal = firstRecords.first['runOrdinal'] as int;
       final firstSession = firstRecords.first['sessionId'];
       expect(firstRecords.map((r) => r['runId']).toSet(), {firstRun});
       expect(firstRecords.map((r) => r['sessionId']).toSet(), {firstSession});
-      expect(completed['earnedXp'], 30);
-      expect(completed['completedTaskIds'], hasLength(6));
+      expect(completed['earnedXp'], 35);
+      expect(completed['completedTaskIds'], hasLength(7));
       expect(completed['completedLessonIds'], contains(lesson.lessonId));
 
       // Restart from app-produced preferences: no seeded IDs or historical backfill.
@@ -166,8 +170,8 @@ void main() {
       await _advanceTask(tester);
       final next = await _saved();
       final nextRecords = next['learningEvidenceHistory'] as List;
-      expect(nextRecords.take(5).toList(), firstRecords);
-      expect(nextRecords, hasLength(6));
+      expect(nextRecords.take(6).toList(), firstRecords);
+      expect(nextRecords, hasLength(7));
       final newRecord = nextRecords.last;
       expect(newRecord['taskId'], task.taskId);
       expect(newRecord['runId'], isNotEmpty);

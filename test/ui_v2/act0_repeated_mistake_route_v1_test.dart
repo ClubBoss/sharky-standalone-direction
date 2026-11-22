@@ -99,7 +99,7 @@ void main() {
     final onAnotherHand = _with(_repeat, {
       'taskId': differentTaskId,
       'sourceTaskId': differentTaskId,
-      'choiceId': 'pay_small_blind',
+      'choiceId': 'fold',
       'sessionId': _miss.sessionId,
       'reviewKind': 'initialAssessment',
       'authoredSourceFingerprint': act0AuthoredRepairFixtureFingerprintV1(

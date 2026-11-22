@@ -102,7 +102,7 @@ void main() {
               File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
             )
             as Map<String, dynamic>;
-    expect(w1Changes, hasLength(48));
+    expect(w1Changes, hasLength(47));
     for (final change in w1Changes.entries) {
       final index = entries.indexWhere((row) => row[2] == change.key);
       expect(index, isNonNegative, reason: change.key);

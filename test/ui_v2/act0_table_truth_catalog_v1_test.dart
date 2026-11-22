@@ -1226,7 +1226,7 @@ void main() {
     final metadataChanges = w1Revision.entries.where(
       (entry) => entry.value['tableMetadata'] != null,
     );
-    expect(metadataChanges, hasLength(40));
+    expect(metadataChanges, hasLength(39));
     for (final revision in metadataChanges) {
       final change = revision.value['tableMetadata'];
       expect(

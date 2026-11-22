@@ -2417,7 +2417,7 @@ void main() {
                 (event) => event['name'] == 'task_result',
               )['fields']
               as Map<String, dynamic>;
-      expect(physicalChoice['choiceId'], 'pay_small_blind');
+      expect(physicalChoice['choiceId'], 'fold');
       expect(physicalChoice['decisionTimeBucket'], isA<String>());
       expect(physicalResult['errorType'], 'misread_action_legality');
       _writeActionHnpPhysicalTraceV1(store.contents);

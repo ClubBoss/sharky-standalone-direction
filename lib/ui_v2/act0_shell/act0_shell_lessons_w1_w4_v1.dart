@@ -1595,20 +1595,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_check_drill',
         title: 'Check when no bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1WithNumericLabelsV1(
-          _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
-          const {'Fold': '0.5 BB', 'Check': '0 BB', 'Call': '1 BB'},
-          question: 'How much does the Check action cost here?',
-          reasons: const {
-            'fold':
-                'The small blind posted earlier. BB checked on this flop, so you keep your 0.5 BB by checking behind.',
-            'check':
-                'BB checked on A-7-2. With 9-8 you can see the turn by checking for 0 BB.',
-            'call':
-                'The big blind was due before the flop. BB has checked, so there is no 1 BB bet to match now.',
-          },
-          ids: const {'fold': 'pay_small_blind', 'call': 'pay_big_blind'},
-        ),
+        runner: _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         tablePresentation: Act0TaskTablePresentationV1.stablePractice,
