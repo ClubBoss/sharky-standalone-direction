@@ -1,3 +1,4 @@
+import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import 'dart:async';
 // SIMULATED normal production AppRoot journey on English iPhone 14 Pro.
@@ -1483,6 +1484,7 @@ void main() {
         containsAll(<String>[
           'what_poker_is_theory',
           'what_poker_is_find_hero',
+          'first_table_guide_first_decision',
         ]),
       );
 
@@ -1616,9 +1618,9 @@ void main() {
         containsAll(<String>[_source, _mappedRepair, _nextTask]),
       );
       expect(completed.toSet().length, completed.length);
-      // Main awards each ordinary first completion once: theory5 + Hero5 +
-      // source6BB5 + ordinary4BB5 + distinctpreflop5. The earlier wrong answer
-      // and same-source retry add no extra completion or XP.
+      // Main awards each independent first completion once: theory5 +
+      // Hero5 + source6BB5 + ordinary4BB5 + distinctpreflop5. The guided
+      // choice, earlier wrong answer and same-source retry add no XP.
       expect(acknowledged['selectedWorldId'], 'world_1');
       expect(acknowledged['selectedLessonId'], 'what_poker_is');
       expect(acknowledged['selectedTaskId'], 'first_table_guide_route_roles');
@@ -1725,7 +1727,10 @@ void main() {
       await tester.tap(find.text('Learn').last);
       await tester.pumpAndSettle();
       await _tap(tester, 'act0_shell_current_mission_cta');
-      expect(_runner(tester).selectedTaskId, 'cards_ranks_suits_suit_drill');
+      expect(
+        _runner(tester).selectedTaskId,
+        'cards_ranks_suits_premium_decision',
+      );
       await _foundationAdvanceToPrompt(tester);
       expect(_runner(tester).runner.selectedOptionId, isNull);
       final pendingNext = await _saved(tester);
@@ -1746,7 +1751,7 @@ void main() {
       }
       expect(
         pendingNext['completedTaskIds'],
-        isNot(contains('cards_ranks_suits_suit_drill')),
+        isNot(contains('cards_ranks_suits_premium_decision')),
       );
       final oldHost = tester.state(find.byType(Act0ShellPreviewScreenV1));
       // The normal widget disposal owns persistence of this unanswered choice.
@@ -1763,7 +1768,7 @@ void main() {
       expect(acknowledgedNext['selectedLessonId'], 'cards_ranks_suits');
       expect(
         acknowledgedNext['selectedTaskId'],
-        'cards_ranks_suits_suit_drill',
+        'cards_ranks_suits_premium_decision',
       );
       for (final field in [
         'earnedXp',
@@ -1932,7 +1937,11 @@ void main() {
 
       // Complete W1 prerequisites through the ordinary content path, including
       // the inline retry. The open Review item still gates the checkpoint.
-      for (var step = 0; step < 240; step++) {
+      for (var step = 0; step < prerequisites.length * 5; step++) {
+        if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+          await finishAct0RoutePracticeV1(tester, correct: true);
+          continue;
+        }
         final summary = find.byType(Act0BlockCompletionShellV1);
         if (summary.evaluate().isNotEmpty) {
           final completed = (await _saved(tester))['completedTaskIds'] as List;
@@ -1977,10 +1986,17 @@ void main() {
         }
       }
       final locked = await _saved(tester);
-      expect(locked['completedTaskIds'], containsAll(prerequisites));
+      final completed = (locked['completedTaskIds'] as List).cast<String>();
+      expect(prerequisites.difference(completed.toSet()), isEmpty);
       expect(_rows(locked, 'openRepairIntents').single, miss);
       await tester.tap(find.text('Learn').last);
       await tester.pumpAndSettle();
+      final learn = tester.widget<Act0LearnPathShellV1>(
+        find.byType(Act0LearnPathShellV1),
+      );
+      expect(learn.requiredPractice, isNotNull);
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      await finishAct0RoutePracticeV1(tester, correct: true);
       expect(find.text('Clear weak spots in Review to unlock'), findsOneWidget);
 
       await tester.tap(find.text('Review').last);
@@ -2027,9 +2043,9 @@ void main() {
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
-    expect(lessons, hasLength(31));
-    expect(tasks, hasLength(192));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(192));
+    expect(lessons, hasLength(33));
+    expect(tasks, hasLength(201));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(201));
     final sizingLesson = worlds.last.lessons.singleWhere(
       (lesson) => lesson.lessonId == 'small_half_pot',
     );
@@ -2048,7 +2064,7 @@ void main() {
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(156),
+      hasLength(165),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();
@@ -2152,6 +2168,10 @@ void main() {
         }
       }
       if (remountedBoundary) continue;
+      if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+        await finishAct0RoutePracticeV1(tester, correct: true);
+        continue;
+      }
       final summaryFinder = find.byType(Act0BlockCompletionShellV1);
       if (summaryFinder.evaluate().isNotEmpty) {
         final summary = tester.widget<Act0BlockCompletionShellV1>(
@@ -2184,7 +2204,7 @@ void main() {
             first.taskList.fold<int>(0, (sum, task) => sum + task.rewardXp),
           );
           expect(saved['studyObservations'], hasLength(1));
-          expect(summary.summary.assistedCount, 0);
+          expect(summary.summary.assistedCount, 1);
           final target = summary.nextUsefulHand?.targetTaskId;
           await _tap(tester, 'act0_shell_block_summary_continue_cta');
           expect(_runner(tester).selectedLessonId, lessons[1].lessonId);
@@ -2218,6 +2238,13 @@ void main() {
             required.contains(target) &&
             !completed.contains(target)) {
           await _tap(tester, 'act0_shell_block_summary_continue_cta');
+          if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+            await _tap(tester, 'act0_shell_current_mission_cta');
+          }
+          if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+            await finishAct0RoutePracticeV1(tester, correct: true);
+            await _tap(tester, 'act0_shell_current_mission_cta');
+          }
           expect(_runner(tester).selectedTaskId, target);
         } else {
           // Temporary Action orchestration does not complete legal-context.
@@ -2227,11 +2254,17 @@ void main() {
         continue;
       }
       if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
-        expect(
-          find.byKey(const Key('act0_shell_current_mission_cta')),
-          findsOneWidget,
-        );
+        final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
+        if (mission.evaluate().isEmpty) {
+          await tester.tap(find.text('Learn').last);
+          await tester.pumpAndSettle();
+        }
+        expect(mission, findsOneWidget);
         await _tap(tester, 'act0_shell_current_mission_cta');
+        if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+          await finishAct0RoutePracticeV1(tester, correct: true);
+          continue;
+        }
         expect(required, contains(_runner(tester).selectedTaskId));
         expect(completed, isNot(contains(_runner(tester).selectedTaskId)));
         continue;

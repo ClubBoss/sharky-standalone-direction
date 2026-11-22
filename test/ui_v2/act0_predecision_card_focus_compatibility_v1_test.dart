@@ -74,19 +74,22 @@ void main() {
   test(
     'self-consistent forged grade does not override actual source choice',
     () {
-      final wrong = task.runner.options.singleWhere((o) => o.id != 'pair');
-      final forged = record(current, choice: wrong.id);
-      expect(forged.isCorrect, isTrue);
-      expect(forged.expectedChoiceId, forged.choiceId);
-      final proof = act0CurrentAuthoredSourceProofV1(forged)!;
-      expect(proof.isCurrentlyCorrect, isFalse);
-      expect(
-        act0IndependentRepairProofV1(
-          isCorrect: proof.isCurrentlyCorrect,
-          assistanceKind: forged.assistanceKind,
-        ),
-        isFalse,
-      );
+      final distractors = task.runner.options.where((o) => o.id != 'pair');
+      expect(distractors, hasLength(2));
+      for (final wrong in distractors) {
+        final forged = record(current, choice: wrong.id);
+        expect(forged.isCorrect, isTrue);
+        expect(forged.expectedChoiceId, forged.choiceId);
+        final proof = act0CurrentAuthoredSourceProofV1(forged)!;
+        expect(proof.isCurrentlyCorrect, isFalse);
+        expect(
+          act0IndependentRepairProofV1(
+            isCorrect: proof.isCurrentlyCorrect,
+            assistanceKind: forged.assistanceKind,
+          ),
+          isFalse,
+        );
+      }
     },
   );
 

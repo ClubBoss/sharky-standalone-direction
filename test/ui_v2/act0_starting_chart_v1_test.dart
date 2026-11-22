@@ -13,12 +13,21 @@ final _tasks = [
 void main() {
   final chart = CatalogStartingChart.foundation();
 
-  test('typed starting rules render the exact two learner chart pages', () {
+  test('W2 introduces first in before the two exact starting chart pages', () {
     final steps = _tasks
         .singleWhere((t) => t.taskId == 'hand_discipline_buckets_intro')
         .runner
         .teachingSteps;
-    expect(steps, hasLength(2));
+    expect(steps, hasLength(3));
+    expect(steps.first.title, 'You are first in.');
+    expect(
+      steps.first.body,
+      'Enter first voluntarily. Open means the first raise.',
+    );
+    expect(
+      '${steps.first.title} ${steps.first.body}'.split(RegExp(r'\s+')).length,
+      lessThanOrEqualTo(60),
+    );
     expect(
       steps
           .singleWhere((s) => s.title == 'Groups and seats, before a raise.')

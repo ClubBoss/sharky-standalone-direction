@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -39,10 +41,20 @@ void main() {
         .lessons
         .expand((lesson) => lesson.taskList)
         .singleWhere((task) => task.taskId == 'w9_bubble_table_risk_transfer');
+    final table = source.runner.table;
+    final ledger = table.handContributions!;
+    final stacks = {...ledger.startingStackBbBySeat}..remove('btn');
     final findings = auditTableContributionsV1(
       source.taskId,
       'mutation',
-      source.runner.table.copyWith(toCallLabel: ''),
+      table.copyWith(
+        toCallLabel: '',
+        handContributions: Act0HandContributionsV1(
+          throughStreet: ledger.throughStreet,
+          entries: ledger.entries,
+          startingStackBbBySeat: stacks,
+        ),
+      ),
     );
 
     expect(
@@ -65,8 +77,8 @@ void main() {
 
     final findings = auditTableContributionsV1(
       source.taskId,
-      'authored/preflop',
-      source.runner.table,
+      'mutation/preflop',
+      source.runner.table.copyWith(actionTrail: const []),
     );
 
     expect(findings.map((row) => (row.invariant, row.result)), [
@@ -74,7 +86,7 @@ void main() {
     ]);
   });
 
-  test('W9 shows the wager and pot without claiming the exact call', () {
+  test('W9 shows the wager, pot and exact call from the stack ledger', () {
     final task = Act0ShellStateV1.sample
         .worldById('world_9')
         .lessons
@@ -84,11 +96,12 @@ void main() {
     final ledger = table.handContributions!;
     final seats = table.seats.map((seat) => seat.seatId).toSet();
     expect(table.potLabel, 'Pot 21 BB');
-    expect(table.toCallLabel, isEmpty);
-    expect(task.runner.caption, contains('15.5 BB more than BTN put in'));
+    expect(table.toCallLabel, 'To call 15.5 BB');
+    expect(ledger.startingStackBbBySeat['btn'], 18);
+    expect(ledger.startingStackBbBySeat['bb'], 50);
     expect(ledger.amounts(seatIds: seats, actorSeatId: 'btn'), (
       potBb: 21.0,
-      toCallBb: null,
+      toCallBb: 15.5,
     ));
     for (final (startingStack, price) in [(12.0, 9.5), (18.0, 15.5)]) {
       final withStack = Act0HandContributionsV1(
@@ -106,7 +119,7 @@ void main() {
     }
   });
 
-  test('W10 uses the authored BTN open and BB call before the check', () {
+  test('W10 uses the authored CO open and BB call before the check', () {
     final table = Act0ShellStateV1.sample
         .worldById('world_10')
         .lessons
@@ -123,38 +136,56 @@ void main() {
       table.handContributions!.entries.map(
         (entry) => (entry.seatId, entry.amountBb),
       ),
-      containsAll([('sb', 0.5), ('bb', 1.0), ('btn', 2.5), ('bb', 1.5)]),
+      containsAll([('sb', 0.5), ('bb', 1.0), ('co', 2.5), ('bb', 1.5)]),
     );
     expect(
       table.handContributions!.amounts(
         seatIds: table.seats.map((seat) => seat.seatId).toSet(),
-        actorSeatId: 'btn',
+        actorSeatId: 'co',
       ),
       (potBb: 5.5, toCallBb: 0.0),
     );
   });
 
-  test('a partial street ledger caps its source bound by prior investment', () {
-    const expected = {
-      'w11_checkpoint_mixed_table_line': 22.0,
-      'w12_pretty_hand_bad_price_fold': 80.0,
-      'w12_revenge_raise_trap': 27.0,
-      'w12_checkpoint_full_loop_line': 17.0,
-    };
-    final tasks = Act0ShellStateV1.sample.worlds
-        .expand((world) => world.lessons)
-        .expand((lesson) => lesson.taskList);
-    expect({
+  test(
+    'W11 and W12 full ledgers prove the effective stack at the decision',
+    () {
+      const expected = {
+        'w11_checkpoint_mixed_table_line': 30.0,
+        'w12_pretty_hand_bad_price_fold': 100.0,
+        'w12_revenge_raise_trap': 35.0,
+        'w12_checkpoint_full_loop_line': 25.0,
+      };
+      final tasks = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.taskList);
       for (final task in tasks.where(
         (task) => expected.containsKey(task.taskId),
-      ))
-        task.taskId: task
-            .runner
-            .table
-            .handContributions!
-            .minimumStartingStackBbBySeat['btn'],
-    }, expected);
-  });
+      )) {
+        final table = task.runner.table;
+        final ledger = table.handContributions!;
+        final hero = table.heroSeatId!;
+        final bettor = ledger.entries.last.seatId;
+        expect(ledger.fromStreet.name, 'preflop', reason: task.taskId);
+        expect(
+          ledger.minimumStartingStackBbBySeat,
+          isEmpty,
+          reason: task.taskId,
+        );
+        for (final seat in [hero, bettor]) {
+          final invested = ledger.entries
+              .take(ledger.entries.length - 1)
+              .where((entry) => entry.seatId == seat)
+              .fold<double>(0, (sum, entry) => sum + entry.amountBb);
+          expect(
+            ledger.startingStackBbBySeat[seat]! - invested,
+            expected[task.taskId],
+            reason: task.taskId,
+          );
+        }
+      }
+    },
+  );
 
   test('enumerates the live source and final runtime projections', () {
     final rows = auditTableTruth();
@@ -165,8 +196,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 156),
-      ('D3.to_call_completeness', 112),
+      ('D2.pot_feasibility', 165),
+      ('D3.to_call_completeness', 118),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -189,8 +220,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 110),
-      ('D3.to_call_completeness', 110),
+      ('D2.pot_feasibility', 118),
+      ('D3.to_call_completeness', 117),
     ]) {
       final proof = rows
           .where(
@@ -209,6 +240,7 @@ void main() {
           'w6_continuation_bet_intro',
           'w6_continuation_bet_dry_size',
           'w6_continuation_bet_wet_check',
+          'w6_continuation_bet_value_size',
         ]),
         reason: rule,
       );
@@ -247,14 +279,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     const lateMissingSource = {
-      'D2.pot_feasibility': {
-        'w9_m_ratio_table_window_transfer',
-        'w11_checkpoint_mixed_table_line',
-        'w12_checkpoint_full_loop_line',
-        'w12_pretty_hand_bad_price_fold',
-        'w12_revenge_raise_trap',
-      },
-      'D3.to_call_completeness': {'w9_bubble_table_risk_transfer'},
+      'D2.pot_feasibility': <String>{},
+      'D3.to_call_completeness': <String>{},
     };
     for (final MapEntry(key: rule, value: missing)
         in lateMissingSource.entries) {
@@ -272,12 +298,12 @@ void main() {
       );
     }
     const lateDecisionProof = {
-      'w9_bubble_table_risk_transfer': ('PASS', 'NEEDS_SOURCE_CONTEXT'),
+      'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
-      'w11_checkpoint_mixed_table_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_checkpoint_full_loop_line': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_pretty_hand_bad_price_fold': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
-      'w12_revenge_raise_trap': ('NEEDS_SOURCE_CONTEXT', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('PASS', 'PASS'),
+      'w12_checkpoint_full_loop_line': ('PASS', 'PASS'),
+      'w12_pretty_hand_bad_price_fold': ('PASS', 'PASS'),
+      'w12_revenge_raise_trap': ('PASS', 'PASS'),
       'asm05_new_known_holes_turn_call_10': ('PASS', 'PASS'),
       'asm05_new_known_holes_turn_call_40': ('PASS', 'PASS'),
     };
@@ -351,8 +377,45 @@ void main() {
     final presentAdditions = contract.keys.toSet().intersection(
       admittedAdditions,
     );
+    final w9Learning = {
+      for (final entry in contract.entries)
+        if (entry.key.startsWith('w9_')) entry.key: entry.value,
+    };
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(w9Learning))).toString(),
+      'ac9ae86c5283e58913c0a71cdf2cb83cbf8db1869dce1af14e927f1aff5cb0a3',
+    );
+    final preAtlasW9 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w9_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final w10Learning = {
+      for (final entry in contract.entries)
+        if (entry.key.startsWith('w10_')) entry.key: entry.value,
+    };
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(w10Learning))).toString(),
+      '30f317099467fc22ced9f7004fa009851f73348ad6ead65245d9d48449de11a5',
+    );
+    final preAtlasW10 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w10_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final historicalContract = Map<String, Object?>.from(contract)
-      ..removeWhere((id, _) => admittedAdditions.contains(id));
+      ..removeWhere(
+        (id, _) =>
+            admittedAdditions.contains(id) ||
+            id.startsWith('w9_') ||
+            id.startsWith('w10_'),
+      )
+      ..addAll((preAtlasW9['learning'] as Map).cast<String, Object?>())
+      ..addAll((preAtlasW10['learning'] as Map).cast<String, Object?>());
     // Keep the historical fixture immutable. PR460 quality cells and the
     // exact owner-admitted W01 theory option contracts are checked separately;
     // persisted records are never rewritten by this comparison.
@@ -908,6 +971,14 @@ void main() {
         'repairLabels': <String>[],
       });
     }
+    for (final entry in wave4CorrectOptionMovedLastV1.entries) {
+      final task = expectedComparison[entry.key] as Map<String, dynamic>;
+      final choices = (task['options'] as List).cast<Map<String, dynamic>>();
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices[1]['id'], entry.value, reason: entry.key);
+      expect(choices[1]['correct'], isTrue, reason: entry.key);
+      choices.add(choices.removeAt(1));
+    }
     for (final (taskId, family, correctChoice, choiceCount) in [
       ('w7_flop_bluff_one_player', 'decision', 1, 2),
       ('w7_flop_bluff_two_players', 'decision', 2, 2),
@@ -1200,11 +1271,245 @@ void main() {
         ],
       };
     }
+    expectedComparison['what_poker_is_side_pot_eligibility'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        {
+          ...w3Option('both_pots'),
+          'repairLabels': ['Confused chip commitment eligibility'],
+        },
+        w3Option('main_pot_only', correct: true),
+        {
+          ...w3Option('side_pot_only'),
+          'repairLabels': ['Confused chip commitment eligibility'],
+        },
+      ],
+    };
+    expectedComparison['first_table_guide_first_decision'] = {
+      'rewardXp': 0,
+      'family': 'decision',
+      'options': [
+        w3Option('fold'),
+        {...w3Option('call'), 'quality': 'suboptimal'},
+        w3Option('raise', correct: true),
+      ],
+    };
+    expectedComparison['hand_rankings_compare_ace_straights'] = {
+      'rewardXp': 7,
+      'family': 'compare',
+      'options': [
+        w3Option('broadway', correct: true),
+        w3Option('wheel'),
+        w3Option('tie'),
+      ],
+    };
+    expectedComparison['blinds_missing_post_amount'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final id in ['small_blind_only', 'big_blind_amount', 'both_posts'])
+          {
+            ...w3Option(id, correct: id == 'big_blind_amount'),
+            'repairSeats': ['bb', 'sb'],
+          },
+      ],
+    };
+    expectedComparison['actions_call_chip_cost'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        w3Option('free'),
+        w3Option('match_bet', correct: true),
+        w3Option('match_pot'),
+      ],
+    };
+    expectedComparison['cards_ranks_suits_premium_decision'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        {
+          ...w3Option('call'),
+          'quality': 'suboptimal',
+          'repairLabels': ['Top starting pairs'],
+        },
+        {
+          ...w3Option('raise', correct: true),
+          'repairLabels': ['Top starting pairs'],
+        },
+        {
+          ...w3Option('fold'),
+          'repairLabels': ['Top starting pairs'],
+        },
+      ],
+    };
+    final w1Revision =
+        jsonDecode(
+              File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final metadataChanges = w1Revision.entries.where(
+      (entry) => entry.value['tableMetadata'] != null,
+    );
+    expect(metadataChanges, hasLength(39));
+    for (final revision in metadataChanges) {
+      final change = revision.value['tableMetadata'];
+      expect(
+        historicalComparison[revision.key],
+        change['current'],
+        reason: revision.key,
+      );
+      historicalComparison[revision.key] = change['prior'];
+    }
+    expectedComparison['w4_price_find_bettor'] = {
+      'rewardXp': 7,
+      'family': 'decision',
+      'options': [
+        w3Option('bb', seat: 'bb'),
+        w3Option('btn', seat: 'btn'),
+        w3Option('co', seat: 'co', correct: true),
+      ],
+    };
+    for (final (id, choices, correct) in [
+      (
+        'board_texture_basics_w5_texture_dry_value',
+        ['check', 'two', 'six'],
+        'two',
+      ),
+      (
+        'board_texture_basics_w5_texture_wet_showdown',
+        ['small', 'large', 'check'],
+        'check',
+      ),
+      (
+        'connected_boards_w5_connected_read_bet',
+        ['fold', 'call', 'raise'],
+        'fold',
+      ),
+    ]) {
+      expectedComparison[id] = {
+        'rewardXp': 8,
+        'family': 'decision',
+        'options': [
+          for (final choice in choices)
+            {
+              ...w3Option(choice, correct: choice == correct),
+              'repairCards': ['board_0', 'board_1', 'board_2'],
+            },
+        ],
+      };
+    }
+    expectedComparison['w8_effective_stack_seat'] = {
+      'rewardXp': 8,
+      'family': 'compare',
+      'options': [
+        w3Option('co', seat: 'co'),
+        w3Option('bb', seat: 'bb', correct: true),
+        w3Option('sb', seat: 'sb'),
+      ],
+    };
+    expectedComparison['w8_spr_value_size'] = {
+      'rewardXp': 8,
+      'family': 'sizing',
+      'options': [
+        {...w3Option('two'), 'quality': 'suboptimal'},
+        w3Option('four', correct: true),
+        w3Option('eight'),
+      ],
+    };
+    expectedComparison.addAll(w11Wave4TableTruthContractV1());
+    expectedComparison.addAll(w12Wave4TableTruthContractV1());
+    for (final entry in [
+      ...w11Wave4GradeCorrectionsV1.entries,
+      ...w12Wave4GradeCorrectionsV1.entries,
+    ]) {
+      final task = historicalComparison[entry.key] as Map<String, dynamic>;
+      final option = (task['options'] as List<dynamic>)
+          .cast<Map<String, dynamic>>()
+          .singleWhere((option) => option['id'] == entry.value);
+      expect(option['correct'], isFalse, reason: entry.key);
+      expect(option['quality'], 'wrong', reason: entry.key);
+      option['quality'] = 'suboptimal';
+    }
+    expectedComparison['w6_continuation_bet_value_size'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        {...w3Option('bet_one_five'), 'quality': 'suboptimal'},
+        w3Option('bet_six'),
+        w3Option('bet_three', correct: true),
+      ],
+    };
+    // The explicitly reordered W6 answers retain every choice field.
+    for (final id in [
+      'w6_table_bucket_notice',
+      'w6_combo_weight_compare',
+      'range_checkpoint_pressure',
+    ]) {
+      final row = expectedComparison[id] as Map<String, dynamic>;
+      final options = row['options'] as List;
+      final correct = options.indexWhere((option) => option['correct'] == true);
+      expect(correct, isNonNegative, reason: id);
+      options.add(options.removeAt(correct));
+    }
+    // W4's reviewed answer order is independent of the frozen identity fixture.
+    for (final (id, correctId, index) in [
+      ('w4_value_purpose', 'value', 2),
+      ('w4_bad_price_fold', 'fold', 2),
+      ('w4_checkpoint_table_price', 'call', 2),
+      ('w4_bluff_purpose', 'bluff', 1),
+      ('w4_value_missed', 'bet_half', 2),
+      ('w4_bad_bluff', 'check', 1),
+      ('w4_protection_check', 'free_card', 2),
+    ]) {
+      final options = (expectedComparison[id] as Map)['options'] as List;
+      final correct = options.indexWhere((choice) => choice['id'] == correctId);
+      expect(correct, isNonNegative, reason: id);
+      options.insert(index, options.removeAt(correct));
+    }
+    expectedComparison['w4_value_worse_call_seat'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['btn', 'bb', 'co'])
+          {
+            ...w3Option(choice, seat: choice, correct: choice == 'bb'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['w4_bluff_target_seat'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['btn', 'co', 'bb'])
+          {
+            ...w3Option(choice, seat: choice, correct: choice == 'bb'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['w8_hero_stack_cap_seat'] = {
+      'rewardXp': 8,
+      'family': 'compare',
+      'options': [
+        for (final choice in ['hj', 'sb', 'bb'])
+          w3Option(choice, seat: choice, correct: choice == 'hj'),
+      ],
+    };
+    expectedComparison['w8_pot_bet_committed_seat'] = {
+      'rewardXp': 8,
+      'family': 'compare',
+      'options': [
+        for (final choice in ['co', 'bb', 'sb'])
+          w3Option(choice, seat: choice, correct: choice == 'bb'),
+      ],
+    };
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the World 2, 3 and 6 packets may '
+          'Only explicitly reviewed MAIN01, W01, W24, L1, L2, Q7, Q11 and the Worlds 2, 3, 6, 11 and 12 packets may '
           'differ. Other identity, XP, family, grading and repair fields stay pinned.',
     );
     const expectedAsmContracts = {

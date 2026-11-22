@@ -16,7 +16,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-const lesson = 'blinds_action_order';
+const lesson = 'blinds_order_practice';
 final family = act0FirstValueSkillReceiptForRunnerV1(
   runner: current.runner,
   option: current.runner.options.first,
@@ -46,6 +46,8 @@ Act0LessonTaskV1 withRunner(Act0LessonTaskV1 t, Act0RunnerStateV1 r) =>
       lockedSummary: t.lockedSummary,
     );
 final current = task('blinds_review');
+// Keep the forged BB source under the current identity so the false proof
+// still has to be rejected by the source fingerprint and grading checks.
 final oldBbSource = withRunner(
   current,
   current.runner.copyWith(

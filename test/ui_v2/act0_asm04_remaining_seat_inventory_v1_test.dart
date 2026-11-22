@@ -11,7 +11,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-// Bounded follow-up: 16 historical candidates, 15 active seat-only cases.
+// Bounded follow-up: 16 historical candidates, 14 active seat-only cases.
+// The button movement count is covered by the ASM04 counterexample test.
 // W24 now has context choices; its no-seat-action contract lives separately.
 // CO393 remains held.
 // A named-seat question is a legitimate prompt, not itself a leakage finding.
@@ -21,7 +22,6 @@ const _cases = {
   'blinds_first_actor': 'named-seat-recognition',
   'blinds_last_actor': 'named-seat-recognition',
   'blinds_postflop_button': 'relative-position-inference',
-  'blinds_button_moves': 'dealer-marker-recognition',
   'positions_button': 'named-seat-recognition',
   'positions_utg': 'named-seat-recognition',
   'positions_cutoff': 'named-seat-recognition',

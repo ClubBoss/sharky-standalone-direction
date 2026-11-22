@@ -907,6 +907,17 @@ const w4OpeningSeatsV1 = <String, String>{
 };
 
 /// New W4 choices preserve task IDs and the original winning choice IDs.
+const wave4CorrectOptionMovedLastV1 = <String, String>{
+  'w4_value_purpose': 'value',
+  'w4_bad_price_fold': 'fold',
+  'w4_value_missed': 'bet_half',
+  'w4_protection_check': 'free_card',
+  'w4_checkpoint_table_price': 'call',
+  'w6_table_bucket_notice': 'bucket_first',
+  'w6_combo_weight_compare': 'ak_more',
+  'range_checkpoint_pressure': 'bluff',
+};
+
 const w4AddedOptionQualityV1 = <String, (String, String)>{
   'w4_value_purpose': ('same_pair', 'wrong'),
   'w4_bluff_purpose': ('better_calls', 'wrong'),

@@ -243,17 +243,17 @@ const _boardFullHouseVsFlush = <Act0CardStateV1>[
   Act0CardStateV1(rank: '2', suit: 'c'),
 ];
 
-const _boardQuadsQueens = <Act0CardStateV1>[
-  Act0CardStateV1(rank: 'Q', suit: 'c'),
-  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+const _boardQuadsNines = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '9', suit: 'c'),
+  Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '7', suit: 'c'),
   Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: 'J', suit: 'c'),
 ];
 
 const _boardQuadsVsFullHouse = <Act0CardStateV1>[
-  Act0CardStateV1(rank: 'Q', suit: 'c'),
-  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '9', suit: 'c'),
+  Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '7', suit: 'c'),
   Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '2', suit: 's'),
@@ -267,8 +267,8 @@ const _boardRoyalFlushHearts = <Act0CardStateV1>[
   Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
 ];
 
-const _boardThreeQueens = <Act0CardStateV1>[
-  Act0CardStateV1(rank: 'Q', suit: 'c'),
+const _boardThreeTens = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'T', suit: 'c'),
   Act0CardStateV1(rank: '7', suit: 'c'),
   Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: 'J', suit: 'c'),
@@ -545,7 +545,7 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
     isCorrect: true,
     preferredLabel: 'Raise',
     quality: Act0FeedbackQualityV1.correct,
-    feedbackTitle: 'Strong choice.',
+    feedbackTitle: 'Correct.',
     feedbackReason: 'Raising to 3 BB increases the price above the 1 BB blind.',
     repairFocusSeatIds: <String>['btn'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
@@ -671,7 +671,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'No one entered yet.',
       body:
-          'First in means the first player to put chips in voluntarily after the blinds. Calling matches the blind. Raising increases the price.',
+          'First in means the first player to put chips in voluntarily after the blinds.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['First in', 'Button'],
     ),
@@ -1725,6 +1725,125 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
   ],
 );
 
+final _w1SidePotEligibilityRunner = _sidePotIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'what_poker_is_side_pot_eligibility',
+  caption: 'You put in all 10 BB. Both opponents later added 5 BB each.',
+  hint: '',
+  question: 'Which pot can your hand win: main pot, side pot or both?',
+  table: _day7TableV1(
+    hero: 'co',
+    hand: '8c 8d',
+    street: PokerStreet.flop,
+    folded: const {'utg', 'hj', 'sb'},
+    board: _act0LessonCardsV1('8s 4h 2d'),
+    stacks: const {'co': 10, 'btn': 60, 'bb': 60},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        9,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO all-in 10 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 10 BB'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(label: 'BB calls 9 BB more'),
+      Act0ActionTrailItemV1(label: 'Flop: BB bets 5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 5 BB'),
+    ],
+    bets: const {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '5 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '5 BB',
+      ),
+    },
+  ),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Side pot',
+      body:
+          'A side pot is extra chips matched after someone goes all-in. Only players who added chips to it can win it.',
+    ),
+  ],
+  feedbackTitle: 'You can win the main pot.',
+  feedbackReason:
+      'All three players put 10 BB into the main pot, plus the small blind’s 0.5 BB. Only BTN and BB matched the extra 5 BB each.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'both_pots',
+      label: 'Both pots',
+      isCorrect: false,
+      quality: Act0FeedbackQualityV1.wrong,
+      preferredLabel: 'Main pot only',
+      betterAnswerLabel: 'Main pot only',
+      repairFocusLabels: ['Confused chip commitment eligibility'],
+      feedbackTitle: 'Check which chips you matched.',
+      feedbackReason:
+          'Your chips were already in before BTN and BB added 5 BB each. Claiming both pots would add 10 BB that you did not contest.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'main_pot_only',
+      label: 'Main pot only',
+      isCorrect: true,
+      quality: Act0FeedbackQualityV1.correct,
+      preferredLabel: 'Main pot only',
+      feedbackTitle: 'You can win the main pot.',
+      feedbackReason:
+          'Your 10 BB matched each opponent’s first 10 BB. With the folded small blind, that makes the 30.5 BB main pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'side_pot_only',
+      label: 'Side pot only',
+      isCorrect: false,
+      quality: Act0FeedbackQualityV1.wrong,
+      preferredLabel: 'Main pot only',
+      betterAnswerLabel: 'Main pot only',
+      repairFocusLabels: ['Confused chip commitment eligibility'],
+      feedbackTitle: 'Find the chips you put in.',
+      feedbackReason:
+          'You put in 10 BB before the flop. Picking the 10 BB side pot would give up your claim to the 30.5 BB main pot.',
+    ),
+  ],
+);
+
 final _winWaysRunner = _meetTableRunner.copyWith(
   lessonId: 'win_ways',
   lessonTitle: 'What poker is',
@@ -2347,8 +2466,7 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       ...source.teachingSteps,
       const Act0TeachingStepV1(
         title: 'A new mechanical example.',
-        body:
-            'HJ bets 2 BB after three checks. It is your turn. Calling costs 2 BB. Raising makes the price 6 BB total.',
+        body: 'HJ bets 2 BB. Call for 2 BB or raise to 6 BB.',
         focusSeatIds: ['btn', 'hj'],
       ),
     ],
@@ -2564,10 +2682,11 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
     'sb': '99 BB',
     'bb': '99 BB',
   };
+  final table = _w1WithPocketPairV1(source.table, '9');
   return source.copyWith(
     caption:
         'HJ bets 1 BB on the flop. It is your turn. Raising makes the price 4 BB total.',
-    table: source.table.copyWith(
+    table: table.copyWith(
       decisionSeatId: 'btn',
       activeSeatId: 'btn',
       heroSeatId: 'btn',
@@ -2623,7 +2742,7 @@ Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
         Act0ActionTrailItemV1(label: 'Flop: HJ bets 1 BB'),
       ],
       seats: [
-        for (final seat in source.table.seats)
+        for (final seat in table.seats)
           Act0SeatStateV1(
             seatId: seat.seatId,
             seatLabel: seat.seatLabel,
@@ -3748,7 +3867,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
   lessonId: 'quads_rank',
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Four of a kind means all four cards of one rank.',
-  hint: 'Look for all four queens.',
+  hint: 'Look for all four nines.',
   question: 'What hand do you have here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3757,9 +3876,9 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Four of a kind',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Four queens.',
+      feedbackTitle: 'Four nines.',
       feedbackReason:
-          'You use all four queens. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
+          'You use all four nines. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
     ),
     Act0RunnerOptionV1(
       id: 'full_house',
@@ -3769,13 +3888,16 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'A full house needs three of one rank and two of another. Here you have all four queens, so the hand is four of a kind.',
+          'A full house needs three of one rank and two of another. Here you have all four nines, so the hand is four of a kind.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0BoardReadingContributionsV1(PokerStreet.river),
-    heroCards: _heroQqCards,
-    boardCards: _boardQuadsQueens,
+    heroCards: const [
+      Act0CardStateV1(rank: '9', suit: 'h'),
+      Act0CardStateV1(rank: '9', suit: 's'),
+    ],
+    boardCards: _boardQuadsNines,
     highlightedCardIds: const <String>[
       'hero_0',
       'hero_1',
@@ -3788,7 +3910,10 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
           (seat) => seat.seatId == 'btn'
               ? _act0CopySeatStateV1(
                   seat,
-                  holeCards: _heroQqCards,
+                  holeCards: const [
+                    Act0CardStateV1(rank: '9', suit: 'h'),
+                    Act0CardStateV1(rank: '9', suit: 's'),
+                  ],
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
               : seat,
@@ -3799,9 +3924,9 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Four of a kind uses all four of one rank.',
       body:
-          'You use Q-Q from hand and Q-Q from the board. All four queens count, so this hand outranks a full house.',
+          'Your two nines and the two board nines make 4 of one rank. This beats a full house.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
-      focusLabels: <String>['Q-Q-Q-Q'],
+      focusLabels: <String>['9-9-9-9'],
     ),
   ],
 );
@@ -3901,7 +4026,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Your full house',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Strong hand, lower rank.',
+      feedbackTitle: 'A flush ranks lower here.',
       feedbackReason:
           'The other player does make a flush, but your full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.',
     ),
@@ -3958,7 +4083,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
   lessonId: 'quads_vs_full_house',
   lessonTitle: 'Hand rankings, on the table',
   caption: 'Four of a kind beats a full house.',
-  hint: 'One player has all four queens. The other only has a full house.',
+  hint: 'One player has all four nines. The other only has a full house.',
   question: 'Who wins when both hands are shown?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3969,7 +4094,7 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Top hand found.',
       feedbackReason:
-          'You use all four queens. The other player makes a full house with three sevens and two queens, but four of a kind ranks above a full house.',
+          'You use all four nines. The other player makes a full house with three sevens and two nines, but four of a kind ranks above a full house.',
     ),
     Act0RunnerOptionV1(
       id: 'co_full_house',
@@ -3979,12 +4104,15 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'The other player does make a full house, but you hold all four queens. Four of a kind outranks a full house when the cards are shown.',
+          'The other player does make a full house, but you hold all four nines. Four of a kind outranks a full house when the cards are shown.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
     handContributions: _act0FivePlayerComparisonPot,
-    heroCards: _heroQqCards,
+    heroCards: const [
+      Act0CardStateV1(rank: '9', suit: 'h'),
+      Act0CardStateV1(rank: '9', suit: 's'),
+    ],
     boardCards: _boardQuadsVsFullHouse,
     highlightedCardIds: const <String>[
       'hero_0',
@@ -3999,7 +4127,10 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
           (seat) => seat.seatId == 'btn'
               ? _act0CopySeatStateV1(
                   seat,
-                  holeCards: _heroQqCards,
+                  holeCards: const [
+                    Act0CardStateV1(rank: '9', suit: 'h'),
+                    Act0CardStateV1(rank: '9', suit: 's'),
+                  ],
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
               : seat.seatId == 'co'
@@ -4017,9 +4148,9 @@ final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Four of a kind outranks a full house.',
       body:
-          'You use Q-Q-Q-Q with a seven as the fifth card. The other player uses 7-7-7 with Q-Q for a full house, but four of a kind still wins.',
+          'You use 9-9-9-9 with a seven as the fifth card. The other player uses 7-7-7 with 9-9 for a full house, but four of a kind still wins.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
-      focusLabels: <String>['Q-Q-Q-Q'],
+      focusLabels: <String>['9-9-9-9'],
     ),
   ],
 );
@@ -4241,7 +4372,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Correct.',
       feedbackReason:
           'At showdown, players use the best five-card hand they can make from private cards plus the shared board.',
     ),

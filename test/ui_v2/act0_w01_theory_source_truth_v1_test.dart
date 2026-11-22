@@ -23,7 +23,7 @@ const _controls = [
     lesson: 'blinds_action_order',
     task: 'blinds_theory',
     correct: 'bb',
-    answer: 'BB',
+    answer: '1 BB',
     meaning: '1 BB',
     oldChoice: 'bottom',
     oldFingerprint:
@@ -80,8 +80,9 @@ const _oldOrderFingerprints = <String, String>{
 
 void _explicitOrderFrameTests() {
   for (final entry in _oldOrderFingerprints.entries) {
-    final lesson =
-        (entry.key.startsWith('blinds_') || entry.key == 'positions_utg')
+    final lesson = entry.key.startsWith('blinds_')
+        ? 'blinds_order_practice'
+        : entry.key == 'positions_utg'
         ? 'blinds_action_order'
         : 'positions';
     test(
@@ -231,16 +232,23 @@ void _explicitOrderFrameTests() {
             ),
             isTrue,
           );
-          expect(
-            task.runner.options.where((o) => o.seatId == 'btn').single.label,
-            'BTN',
-          );
+          if (entry.key == 'positions_review') {
+            expect(correct.label, '5 players');
+            expect(table.selectableSeatIds, isEmpty);
+          } else {
+            expect(
+              task.runner.options.where((o) => o.seatId == 'btn').single.label,
+              'BTN',
+            );
+          }
         }
         final old = Act0LearningEvidenceRecordV1(
           recordId: 'synthetic-old-${entry.key}',
           createdOrder: 1,
           worldId: 'world_1',
-          lessonId: lesson,
+          lessonId: entry.key.startsWith('blinds_')
+              ? 'blinds_action_order'
+              : lesson,
           taskId: entry.key,
           sourceTaskId: entry.key,
           choiceId: correct.id,
@@ -569,7 +577,10 @@ void main() {
     final task = _task('positions', 'positions_review');
     expect(task.phase, Act0LessonPhaseV1.review);
     expect(task.entryPhase, Act0LessonPhaseV1.drill);
-    expect(task.runner.question, 'Which seat is latest after the flop here?');
+    expect(
+      task.runner.question,
+      'How many players act before the Button on this first flop pass?',
+    );
     expect(task.runner.options.map((option) => option.id), <String>[
       'top',
       'random',
@@ -580,16 +591,19 @@ void main() {
       'bottom',
     );
     final expected = <String, String>{
-      'top': 'UTG acts before BTN after the flop in this six-seat hand.',
-      'bottom': 'BTN acts last after the flop in this six-seat hand.',
-      'random': 'BB acts before BTN after the flop in this six-seat hand.',
+      'top':
+          'Two is the number of blinds. UTG, HJ and CO also act before BTN on this flop.',
+      'bottom':
+          'SB, BB, UTG, HJ and CO are all still in. Those five seats act before BTN.',
+      'random':
+          'One would be a heads-up hand. This flop still has six players, five of them before BTN.',
     };
     for (final option in task.runner.options) {
       expect(option.feedbackReason, expected[option.id]);
     }
   });
 
-  testWidgets('W01 recap shows postflop feedback after the BB choice', (
+  testWidgets('W01 recap shows postflop feedback after the one-player choice', (
     tester,
   ) async {
     final task = _task('positions', 'positions_review');
@@ -649,7 +663,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    final choice = find.byKey(const Key('act0_shell_seat_tap_bb'));
+    final choice = find.byKey(const Key('act0_shell_option_random'));
     // Follow the real teaching rail; do not force a recap into a drill or
     // bypass its authored explanation. This remains a widget consumer harness.
     for (var step = 0; step < 12 && runner.activeTeachingStep != null; step++) {
@@ -673,138 +687,143 @@ void main() {
         .toList();
     print('W01_POSITION_RENDER=${jsonEncode(rendered)}');
     expect(
-      find.text('BB acts before BTN after the flop in this six-seat hand.'),
+      find.text(
+        'One would be a heads-up hand. This flop still has six players, five of them before BTN.',
+      ),
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
   });
 
-  test(
-    'one-BB teaching rehearses the same goal and requires the original miss',
-    () {
-      const lesson = 'blinds_action_order';
-      final tasks = Act0ShellStateV1.sample.lessonById(lesson).taskList;
-      final source = _task(lesson, 'blinds_theory');
-      final target = _task(lesson, 'blinds_posts_drill');
-      // The normal lesson path still advances from this theory to its drill.
-      // That authored path does not itself validate a repair relation.
-      expect(source.phase, Act0LessonPhaseV1.theory);
-      expect(target.phase, Act0LessonPhaseV1.drill);
-      expect(tasks[tasks.indexOf(source) + 1].taskId, target.taskId);
-      expect(source.runner.question, 'Which blind posts 1 BB?');
-      expect(target.runner.question, 'Tap the blind that sets the 1 BB unit.');
-      expect(target.runner.options.map((option) => option.id), <String>[
-        'bb',
-        'sb',
-      ]);
+  test('one-BB teaching rehearses the same goal and requires the original miss', () {
+    const lesson = 'blinds_action_order';
+    final tasks = Act0ShellStateV1.sample.lessonById(lesson).taskList;
+    final source = _task(lesson, 'blinds_theory');
+    final target = _task(lesson, 'blinds_posts_drill');
+    // The normal lesson path still advances from this theory to its drill.
+    // That authored path does not itself validate a repair relation.
+    expect(source.phase, Act0LessonPhaseV1.theory);
+    expect(target.phase, Act0LessonPhaseV1.drill);
+    expect(tasks[tasks.indexOf(source) + 1].taskId, target.taskId);
+    expect(
+      source.runner.question,
+      'How many chips did BB post before anyone acted?',
+    );
+    expect(target.runner.question, 'Tap the blind that sets the 1 BB unit.');
+    expect(target.runner.options.map((option) => option.id), <String>[
+      'bb',
+      'sb',
+      'btn',
+    ]);
+    expect(
+      target.runner.options
+          .where(act0RunnerOptionIsAuthoredCorrectV1)
+          .single
+          .id,
+      'bb',
+    );
+    final expectedReasons = <String, String>{
+      'bb':
+          'BB posts the full 1 BB blind, so later prices count from that 1 BB post.',
+      'sb':
+          'The 0.5 BB next to SB is half of the 1 BB used to measure this pot.',
+      'btn':
+          'BTN has not paid a blind in this hand. The 1 BB chips are in front of BB.',
+    };
+    for (final option in target.runner.options) {
+      expect(option.feedbackReason, expectedReasons[option.id]);
       expect(
-        target.runner.options
-            .where(act0RunnerOptionIsAuthoredCorrectV1)
-            .single
-            .id,
-        'bb',
+        option.quality,
+        option.id == 'bb'
+            ? Act0FeedbackQualityV1.correct
+            : Act0FeedbackQualityV1.wrong,
       );
-      final expectedReasons = <String, String>{
-        'bb':
-            'BB posts the full 1 BB blind, so later prices count from that 1 BB post.',
-        'sb':
-            'SB posts only 0.5 BB. BB is the full 1 BB post players count from.',
-      };
-      for (final option in target.runner.options) {
-        expect(option.feedbackReason, expectedReasons[option.id]);
-        expect(
-          option.quality,
-          option.id == 'bb'
-              ? Act0FeedbackQualityV1.correct
-              : Act0FeedbackQualityV1.wrong,
-        );
-      }
+    }
 
-      void expectFamiliarRepair(Act0RepairIntentV1 intent) {
-        expect(intent.sourceWorldId, 'world_1');
-        expect(intent.sourceLessonId, lesson);
-        expect(intent.targetWorldId, intent.sourceWorldId);
-        expect(intent.targetLessonId, lesson);
-        expect(intent.targetTaskId, target.taskId);
-        expect(
-          intent.mappingType,
-          intent.sourceTaskId == target.taskId ? 'intentional_exact' : 'repair',
-        );
-        expect(intent.goalId, 'big_blind_baseline');
-        expect(intent.relationId, isNotEmpty);
-        expect(intent.sourceFingerprint, isNotEmpty);
-        expect(intent.targetFingerprint, isNotEmpty);
-        final resolution = act0RepairGoalResolutionForIntentV1(
-          intent,
-          learningEvidence: const Act0LearningEvidenceHistoryV1(),
-          currentFingerprintForIdentity:
-              act0CurrentAuthoredSourceFingerprintForIdentityV1,
-        );
-        expect(resolution.reason, 'source_occurrence_unconfirmed');
-        expect(resolution.isHeld, isTrue);
-        expect(resolution.retainsObligation, isTrue);
-        expect(resolution.canLaunch, isFalse);
-        expect(resolution.canClaimIndependentApplication, isFalse);
-        expect(resolution.canClaimMatchedRecheck, isFalse);
-      }
-
-      for (final option in source.runner.options) {
-        final intent = buildAct0RepairIntentV1(
-          sourceWorldId: 'world_1',
-          sourceLessonId: lesson,
-          sourceTaskId: source.taskId,
-          runner: source.runner,
-          selectedOption: option,
-          mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
-          currentFingerprintForIdentity:
-              act0CurrentAuthoredSourceFingerprintForIdentityV1,
-        );
-        if (act0RunnerOptionIsAuthoredCorrectV1(option)) {
-          expect(intent, isNull);
-          continue;
-        }
-        expect(intent, isNotNull);
-        expect(intent!.skillAtomId, 'table_read');
-        expect(intent.missedSignalId, 'big_blind');
-        expect(intent.sourceTaskId, source.taskId);
-        expectFamiliarRepair(intent);
-      }
-      // Preserve the legacy mechanical mapper, without treating it as semantic
-      // permission to launch a repair or claim independent learning evidence.
-      final legacyMapping = act0FirstValueSameSignalRepMappingV1(
-        nextRepId: 'repeat_table_read',
-        skillAtomId: 'table_read',
-        sourceSignalId: 'big_blind',
-        sourceTaskId: source.taskId,
-        receiptOutcome: 'repair_started',
-      );
-      expect(legacyMapping, isNotNull);
-      expect(legacyMapping!.taskId, target.taskId);
-      expect(legacyMapping.mappingType, 'repair');
+    void expectFamiliarRepair(Act0RepairIntentV1 intent) {
+      expect(intent.sourceWorldId, 'world_1');
+      expect(intent.sourceLessonId, lesson);
+      expect(intent.targetWorldId, intent.sourceWorldId);
+      expect(intent.targetLessonId, lesson);
+      expect(intent.targetTaskId, target.taskId);
       expect(
-        act0FirstValueSameSignalRepMappingV1(
-          nextRepId: 'repeat_table_read',
-          skillAtomId: 'table_read',
-          sourceSignalId: 'small_blind',
-          sourceTaskId: source.taskId,
-          receiptOutcome: 'repair_started',
-        ),
-        isNull,
+        intent.mappingType,
+        intent.sourceTaskId == target.taskId ? 'intentional_exact' : 'repair',
       );
-      final donorIntent = buildAct0RepairIntentV1(
+      expect(intent.goalId, 'big_blind_baseline');
+      expect(intent.relationId, isNotEmpty);
+      expect(intent.sourceFingerprint, isNotEmpty);
+      expect(intent.targetFingerprint, isNotEmpty);
+      final resolution = act0RepairGoalResolutionForIntentV1(
+        intent,
+        learningEvidence: const Act0LearningEvidenceHistoryV1(),
+        currentFingerprintForIdentity:
+            act0CurrentAuthoredSourceFingerprintForIdentityV1,
+      );
+      expect(resolution.reason, 'source_occurrence_unconfirmed');
+      expect(resolution.isHeld, isTrue);
+      expect(resolution.retainsObligation, isTrue);
+      expect(resolution.canLaunch, isFalse);
+      expect(resolution.canClaimIndependentApplication, isFalse);
+      expect(resolution.canClaimMatchedRecheck, isFalse);
+    }
+
+    for (final option in source.runner.options) {
+      final intent = buildAct0RepairIntentV1(
         sourceWorldId: 'world_1',
         sourceLessonId: lesson,
-        sourceTaskId: target.taskId,
-        runner: target.runner,
-        selectedOption: target.runner.options.singleWhere((o) => o.id == 'sb'),
+        sourceTaskId: source.taskId,
+        runner: source.runner,
+        selectedOption: option,
         mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
         currentFingerprintForIdentity:
             act0CurrentAuthoredSourceFingerprintForIdentityV1,
-      )!;
-      expect(donorIntent.sourceTaskId, target.taskId);
-      expectFamiliarRepair(donorIntent);
-    },
-  );
+      );
+      if (act0RunnerOptionIsAuthoredCorrectV1(option)) {
+        expect(intent, isNull);
+        continue;
+      }
+      expect(intent, isNotNull);
+      expect(intent!.skillAtomId, 'table_read');
+      expect(intent.missedSignalId, 'big_blind');
+      expect(intent.sourceTaskId, source.taskId);
+      expectFamiliarRepair(intent);
+    }
+    // Preserve the legacy mechanical mapper, without treating it as semantic
+    // permission to launch a repair or claim independent learning evidence.
+    final legacyMapping = act0FirstValueSameSignalRepMappingV1(
+      nextRepId: 'repeat_table_read',
+      skillAtomId: 'table_read',
+      sourceSignalId: 'big_blind',
+      sourceTaskId: source.taskId,
+      receiptOutcome: 'repair_started',
+    );
+    expect(legacyMapping, isNotNull);
+    expect(legacyMapping!.taskId, target.taskId);
+    expect(legacyMapping.mappingType, 'repair');
+    expect(
+      act0FirstValueSameSignalRepMappingV1(
+        nextRepId: 'repeat_table_read',
+        skillAtomId: 'table_read',
+        sourceSignalId: 'small_blind',
+        sourceTaskId: source.taskId,
+        receiptOutcome: 'repair_started',
+      ),
+      isNull,
+    );
+    final donorIntent = buildAct0RepairIntentV1(
+      sourceWorldId: 'world_1',
+      sourceLessonId: lesson,
+      sourceTaskId: target.taskId,
+      runner: target.runner,
+      selectedOption: target.runner.options.singleWhere((o) => o.id == 'sb'),
+      mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      currentFingerprintForIdentity:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1,
+    )!;
+    expect(donorIntent.sourceTaskId, target.taskId);
+    expectFamiliarRepair(donorIntent);
+  });
 
   for (final control in _controls) {
     // Finite meaning controls independent of source's isCorrect flag:
@@ -972,7 +991,7 @@ void _newCallPriceContextTests() {
       expect(task.rewardXp, 5);
       expect(task.runner.options.map((o) => o.id), ['fold', 'raise', 'call']);
       expect(task.runner.options.singleWhere((o) => o.isCorrect).id, 'call');
-      expect(table.heroCards.map((c) => c.label), ['Qh', 'Qs']);
+      expect(table.heroCards.map((c) => c.label), ['9h', '9s']);
       expect(table.boardCards.map((c) => c.label), ['Ah', '7c', '2d']);
       expect(table.streetLabel, 'Flop');
       expect(table.potLabel, 'Pot 5 BB');

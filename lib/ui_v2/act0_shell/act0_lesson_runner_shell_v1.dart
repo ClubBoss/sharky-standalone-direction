@@ -4016,6 +4016,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       Size? cameraStageSize,
       Act0SceneRegistrationV1? sceneRegistration,
     }) {
+      if (presentationTable.scope == Act0TableScopeV1.explanation &&
+          presentationTable.seats.isEmpty) {
+        return const SizedBox.shrink();
+      }
       final tableStage = _RunnerTableStageV1(
         sceneRegistration: sceneRegistration,
         attention: sceneAttention,

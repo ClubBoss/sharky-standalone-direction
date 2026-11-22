@@ -65,6 +65,16 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
         Act0W1RulesResultV1.passingScore,
     worldsWithOpenMistakes: _worldsWithOpenMistakesV1(state),
+    practiceBlockedLessonIds: {
+      for (final world in state.worlds)
+        if (_requiredRoutePracticeV1(
+              world,
+              completedTaskIds,
+              w1RulesBestScore: w1RulesBestScore,
+            )
+            case final step?)
+          world.lessons[step.beforeLessonIndex].lessonId,
+    },
   );
 
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>

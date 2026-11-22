@@ -5,6 +5,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
+
 final _worlds = Act0ShellStateV1.sample.worlds;
 final _tasks = [
   for (final world in _worlds.where(
@@ -82,7 +85,7 @@ void main() {
   );
 
   test(
-    'all 198 W1-W4 tasks have explicit curriculum topics and independent evidence',
+    'all W1-W4 tasks have explicit curriculum topics and independent evidence',
     () {
       final foundationWorlds = _worlds
           .where((w) => w.worldNumber <= 4)
@@ -90,7 +93,7 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 198);
+      expect(tasks.length, 207);
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
@@ -213,7 +216,7 @@ void main() {
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
-    expect(tasksByWorld, {5: 34, 6: 38});
+    expect(tasksByWorld, {5: 37, 6: 39});
   });
 
   test('every W7–W8 task projects to its authored topic', () {
@@ -249,7 +252,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {7: 13, 8: 26});
+    expect(taskCounts, {7: 13, 8: 30});
   });
 
   test('every W9–W10 task projects to its authored topic', () {
@@ -267,7 +270,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {9: 23, 10: 22});
+    expect(taskCounts, {9: 30, 10: 31});
   });
 
   test('every W11–W12 task projects to its authored topic', () {
@@ -301,7 +304,10 @@ void main() {
         reason: id,
       );
     }
-    expect(taskCounts, {11: 21, 12: 22});
+    expect(taskCounts, {
+      11: 21 + w11Wave4ChoiceContractV1.length,
+      12: 22 + w12Wave4ChoiceContractV1.length,
+    });
   });
 
   test('saved W6 help and stale answers cannot clear a miss', () {
@@ -386,10 +392,15 @@ void main() {
                   : Act0DecisionAssistanceV1.none,
             ),
       ];
-      final original = Act0LearningEvidenceHistoryV1(
-        records: records,
-        sourceAnchors: records.take(20).toList(),
+      final original = records.fold(
+        const Act0LearningEvidenceHistoryV1(),
+        (history, record) => history.append(record),
       );
+      expect(
+        original.records,
+        hasLength(Act0LearningEvidenceHistoryV1.maxRecords),
+      );
+      expect(original.provenanceRecords, hasLength(records.length));
       final restored = Act0LearningEvidenceHistoryV1.tryParseStorageString(
         original.toStorageString(),
       )!;

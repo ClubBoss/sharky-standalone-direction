@@ -12,6 +12,10 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_path_progress_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_route_practice_runner_test_v1.dart';
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
+
 void main() {
   for (final pair in [
     (
@@ -188,7 +192,10 @@ void main() {
           count++;
         }
       }
-      expect(count, 268);
+      expect(
+        count,
+        302 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      );
     },
   );
 
@@ -351,7 +358,7 @@ void main() {
   );
 
   testWidgets(
-    'Home suggests Practice after 3 new lessons today while keeping next lesson open in Learn',
+    'Home opens required practice then offers its voluntary daily set after three lessons',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(393, 852));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -449,6 +456,29 @@ void main() {
       expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
       await tester.tap(
         find.byKey(const Key('act0_shell_block_summary_home_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Start practice'), findsOneWidget);
+      expect(find.text('Start daily set'), findsNothing);
+      await tapAct0RoutePracticeKeyV1(tester, 'act0_academy_home_leaf_cta');
+      expect(act0RoutePracticeFinder, findsOneWidget);
+      final practice = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      for (var index = 0; index < practice.runner.beatCount; index++) {
+        await answerAct0RoutePracticeV1(tester, correct: true);
+        await tapAct0RoutePracticeKeyV1(
+          tester,
+          'act0_shell_feedback_continue_cta',
+        );
+      }
+      expect(act0RoutePracticeFinder, findsNothing);
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Home'),
+        ),
       );
       await tester.pumpAndSettle();
 

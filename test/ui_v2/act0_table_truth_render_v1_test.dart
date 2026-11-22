@@ -158,6 +158,7 @@ void main() {
   final capture = Platform.environment['ACT0_V3_CAPTURE_DIR'];
   final sweep = Platform.environment['ACT0_V3_SWEEP'] == '1' || capture != null;
   final fontDirectory = Platform.environment['ACT0_V3_FONT_DIR'];
+  final symbolFont = Platform.environment['ACT0_V3_SYMBOL_FONT'];
   if (fontDirectory != null) {
     setUpAll(() async {
       for (final family in ['Act0VisualSweep', 'Roboto']) {
@@ -169,6 +170,15 @@ void main() {
           loader.addFont(Future.value(ByteData.sublistView(bytes)));
         }
         await loader.load();
+      }
+      for (final (family, path) in [
+        ('MaterialIcons', '$fontDirectory/MaterialIcons-Regular.otf'),
+        if (symbolFont != null) ('Act0VisualSweepSymbols', symbolFont),
+      ]) {
+        final bytes = File(path).readAsBytesSync();
+        await (FontLoader(
+          family,
+        )..addFont(Future.value(ByteData.sublistView(bytes)))).load();
       }
     });
   }
@@ -260,13 +270,24 @@ void main() {
         double textScale = 1,
         int? teachingStepIndex,
       }) async {
+        final sizingConfig = phase == Act0LessonPhaseV1.drill
+            ? source.sizingConfig
+            : const Act0SizingConfigV1.disabled();
+        final selectingSize = sizingConfig.presets.any(
+          (preset) => preset.id == selected,
+        );
         tester.platformDispatcher.textScaleFactorTestValue = textScale;
         await tester.pumpWidget(
           MaterialApp(
             locale: const Locale('en'),
             theme: fontDirectory == null
                 ? null
-                : ThemeData(fontFamily: 'Act0VisualSweep'),
+                : ThemeData(
+                    fontFamily: 'Act0VisualSweep',
+                    fontFamilyFallback: symbolFont == null
+                        ? null
+                        : const ['Act0VisualSweepSymbols'],
+                  ),
             home: RepaintBoundary(
               key: captureKey,
               child: Scaffold(
@@ -276,7 +297,9 @@ void main() {
                       phase: phase,
                       teachingStepIndex:
                           teachingStepIndex ?? source.teachingSteps.length,
-                      selectedOptionId: selected,
+                      sizingConfig: sizingConfig,
+                      selectedOptionId: selectingSize ? null : selected,
+                      selectedPresetId: selectingSize ? selected : null,
                     ),
                     worldNumber: world.worldNumber,
                     selectedWorldId: world.worldId,
@@ -293,6 +316,7 @@ void main() {
                     onContinueTheory: () {},
                     onContinueReview: () {},
                     onChooseOption: (_) {},
+                    onSelectSizingPreset: (_) {},
                   ),
                 ),
               ),

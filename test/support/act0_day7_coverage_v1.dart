@@ -31,9 +31,15 @@ Map<Day7CoverageKeyV1, Day7MissSourceV1> _day7MissSourcesV1() {
         option: miss,
         taskFamily: task.resolvedTaskFamily,
       );
-      final family = receipt?.sourceSignalId ?? concept?.id;
+      final sourceFamily = receipt?.sourceSignalId ?? concept?.id;
       // With neither source, the runner cannot emit a durable skill record.
-      if (family == null || family.isEmpty) continue;
+      if (sourceFamily == null || sourceFamily.isEmpty) continue;
+      final family = act0Day7FamilyForSourceV1(
+        worldId: world,
+        lessonId: lesson,
+        taskId: task.taskId,
+        family: sourceFamily,
+      );
       sources.putIfAbsent((
         world,
         lesson,
@@ -58,6 +64,12 @@ bool day7MustBeCoveredV1(Day7CoverageKeyV1 key) => const {
   'world_4',
   'world_5',
   'world_6',
+  'world_7',
+  'world_8',
+  'world_9',
+  'world_10',
+  'world_11',
+  'world_12',
 }.contains(key.$1);
 
 final act0Day7CoverageV1 = {
@@ -71,7 +83,8 @@ String day7HandKeyV1(Act0TableStateV1 t) =>
 
 final _courseHands = {
   for (final row in [...catalogTasks, ...rulesCheckCatalogTasks])
-    day7HandKeyV1(row.task.runner.table),
+    if (row.task.runner.table.seats.isNotEmpty)
+      day7HandKeyV1(row.task.runner.table),
 };
 
 final _validDay7Keys = {

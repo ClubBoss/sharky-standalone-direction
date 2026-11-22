@@ -3,6 +3,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
     show w4MinRaiseTaskIdsV1, w4OpeningSeatsV1, w7AppliedTaskIdsV1;
 import '../support/act0_w2_catalog_contract_v1.dart';
@@ -130,49 +132,29 @@ void main() {
     };
     const w9HypotheticalIds = <String>{
       'w9_survival_intro',
-      'w9_cash_vs_tournament',
-      'w9_short_stack_survival',
+      'w9_ev_two_results',
       'w9_survival_stack_tradeoff',
       'w9_survival_recap',
       'w9_m_ratio_intro',
-      'w9_m_ratio_red_zone',
-      'w9_m_ratio_green_zone',
-      'w9_m_ratio_yellow_zone',
+      'w9_m_ratio_lap_count',
+      'w9_m_ratio_ante_cost',
       'w9_m_ratio_recap',
       'w9_bubble_intro',
-      'w9_medium_stack_tighten',
-      'w9_big_stack_leverage',
-      'w9_bubble_short_stack',
+      'w9_bubble_premium_gap',
+      'w9_bubble_cover_seat',
       'w9_bubble_recap',
       'w9_checkpoint_intro',
-      'w9_checkpoint_survival_line',
-      'w9_checkpoint_zone_line',
-      'w9_checkpoint_bubble_line',
-      'w9_checkpoint_table_notice',
-      'w9_checkpoint_review',
+      'w9_prize_model_inputs',
     };
     const w10HypotheticalIds = <String>{
       'w10_player_type_intro',
-      'w10_nit_tag',
-      'w10_loose_passive_tag',
-      'w10_overaggressive_tag',
       'w10_player_type_recap',
       'w10_one_lever_intro',
-      'w10_vs_nit_open_wider',
-      'w10_vs_caller_value_heavier',
-      'w10_vs_sticky_defender_tighten_steals',
       'w10_one_lever_recap',
       'w10_guardrails_intro',
-      'w10_overbluff_punish',
-      'w10_underbluff_fold_more',
-      'w10_guardrail_sample_size',
       'w10_guardrails_recap',
       'w10_checkpoint_intro',
-      'w10_checkpoint_tag_line',
-      'w10_checkpoint_lever_line',
-      'w10_checkpoint_guardrail_line',
-      'w10_checkpoint_table_notice',
-      'w10_checkpoint_review',
+      'w10_river_price_check',
     };
     const w11HypotheticalIds = <String>{
       'w11_session_plan_intro',
@@ -217,6 +199,7 @@ void main() {
       ...w9HypotheticalIds,
       ...w10HypotheticalIds,
       ...w11HypotheticalIds,
+      ...w11Wave4ConceptTasksV1,
       ...w12HypotheticalIds,
       'what_poker_is_all_in_meaning',
       'what_poker_is_matched_chips_transfer',
@@ -292,8 +275,18 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(397));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(397));
+    expect(
+      tasks,
+      hasLength(
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
+    expect(
+      tasks.map((task) => task.taskId).toSet(),
+      hasLength(
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -306,9 +299,19 @@ void main() {
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
-            !w6TaskIds.contains(task.taskId),
+            !w6TaskIds.contains(task.taskId) &&
+            task.taskId != 'first_table_guide_first_decision' &&
+            task.taskId != 'hand_rankings_compare_ace_straights' &&
+            task.taskId != 'w4_price_find_bettor' &&
+            task.taskId != 'w8_effective_stack_seat' &&
+            task.taskId != 'w8_spr_value_size' &&
+            !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            task.taskId != 'blinds_missing_post_amount' &&
+            task.taskId != 'actions_call_chip_cost' &&
+            task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(368),
+      hasLength(392),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -336,7 +339,7 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
     expect(orientationIds, hasLength(48));
-    expect(explanationIds, hasLength(81));
+    expect(explanationIds, hasLength(61 + w11Wave4ConceptTasksV1.length));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
@@ -371,7 +374,17 @@ void main() {
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
-            !w6TaskIds.contains(task.taskId))
+            !w6TaskIds.contains(task.taskId) &&
+            task.taskId != 'first_table_guide_first_decision' &&
+            task.taskId != 'hand_rankings_compare_ace_straights' &&
+            task.taskId != 'w4_price_find_bettor' &&
+            task.taskId != 'w8_effective_stack_seat' &&
+            task.taskId != 'w8_spr_value_size' &&
+            !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            task.taskId != 'blinds_missing_post_amount' &&
+            task.taskId != 'actions_call_chip_cost' &&
+            task.taskId != 'cards_ranks_suits_premium_decision')
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -529,9 +542,20 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 247);
-    expect(played, 275); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 291);
+    expect(
+      played,
+      328 + 10 + 9,
+    ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'cards_ranks_suits_premium_decision',
+      'blinds_missing_post_amount',
+      'actions_call_chip_cost',
+      'first_table_guide_first_decision',
+      'w4_price_find_bettor',
+      'w6_continuation_bet_value_size',
+      'w4_value_worse_call_seat',
+      'w4_bluff_target_seat',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
       'w3_play_from_blinds_small_blind_raise',
@@ -545,6 +569,12 @@ void main() {
       ...w4MinRaiseTaskIdsV1,
       ...w11ExplicitStreetHistoryIds,
       ...w12ExplicitFlopHistoryIds,
+      ...w11Wave4ReplayTasksV1,
+      // Full ledger now records each prior street and its contributions.
+      'w11_checkpoint_mixed_table_line',
+      ...w12Wave4ReplayTasksV1,
+      // Full ledger now records each prior street and its contributions.
+      'w12_pretty_hand_bad_price_fold',
       // The newly authored Call frame now supplies its full blind prefix,
       // folds, street actions and positive remaining stacks.
       'actions_call_drill',
@@ -578,7 +608,47 @@ void main() {
       'your_first_hand_turn',
       'your_first_hand_river',
       'your_first_hand_action_trail',
+      // W9 source histories with recorded contributions and stacks.
+      'w9_cash_vs_tournament',
+      'w9_short_stack_survival',
+      'w9_m_ratio_red_zone',
+      'w9_m_ratio_green_zone',
+      'w9_m_ratio_yellow_zone',
+      'w9_m_ratio_table_window_transfer',
+      'w9_m_ratio_red_zone_shove',
+      'w9_medium_stack_tighten',
+      'w9_big_stack_leverage',
+      'w9_bubble_short_stack',
       'w9_bubble_table_risk_transfer',
+      'w9_checkpoint_survival_line',
+      'w9_checkpoint_zone_line',
+      'w9_checkpoint_bubble_line',
+      'w9_checkpoint_table_notice',
+      'w9_checkpoint_review',
+      // W10 source histories with recorded contributions and stacks.
+      'w10_nit_tag',
+      'w10_loose_passive_tag',
+      'w10_find_limper',
+      'w10_underbluff_second',
+      'w10_overaggressive_tag',
+      'w10_vs_nit_open_wider',
+      'w10_vs_caller_value_heavier',
+      'w10_vs_sticky_defender_tighten_steals',
+      'w10_table_value_vs_caller_transfer',
+      'w10_isolate_limper_bb',
+      'w10_station_no_bluff_river_a',
+      'w10_overbluff_punish',
+      'w10_underbluff_fold_more',
+      'w10_guardrail_sample_size',
+      'w10_top_pair_turn_raise',
+      'w10_find_turn_raiser',
+      'w10_station_no_bluff_river',
+      'w10_outs_and_turn_price',
+      'w10_checkpoint_tag_line',
+      'w10_checkpoint_lever_line',
+      'w10_checkpoint_guardrail_line',
+      'w10_checkpoint_table_notice',
+      'w10_checkpoint_review',
       for (final task in _world5To8Tasks())
         if (task.runner.table.scope == Act0TableScopeV1.playedHand &&
             (task.runner.table.activeSeatId ?? '').isNotEmpty)

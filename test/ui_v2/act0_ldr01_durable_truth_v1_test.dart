@@ -1066,6 +1066,7 @@ void main() {
         'actions_theory',
         'actions_legal_context',
         _target,
+        'actions_call_chip_cost',
         'actions_fold_drill',
         'actions_call_drill',
         'actions_raise_drill',

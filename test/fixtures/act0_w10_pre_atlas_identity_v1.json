@@ -1,0 +1,1042 @@
+{
+  "identity": [
+    [
+      "world_10",
+      "player_adjustment_checkpoint",
+      "w10_checkpoint_guardrail_line",
+      "drill",
+      "practice",
+      [
+        [
+          "hard_counter",
+          "Overhaul your three-street calling plan right away",
+          false,
+          "wrong",
+          "Make a small adjustment and gather more evidence"
+        ],
+        [
+          "small_adjust",
+          "Make a small adjustment and gather more evidence",
+          true,
+          "correct",
+          "Make a small adjustment and gather more evidence"
+        ],
+        [
+          "no_adjust",
+          "Stick to default chart lines and ignore the table cue",
+          false,
+          "suboptimal",
+          "Make a small adjustment and gather more evidence"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "player_adjustment_checkpoint",
+      "w10_checkpoint_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_10",
+      "player_adjustment_checkpoint",
+      "w10_checkpoint_lever_line",
+      "drill",
+      "practice",
+      [
+        [
+          "widen_steal",
+          "Widen late steals slightly",
+          true,
+          "correct",
+          "Widen late steals slightly"
+        ],
+        [
+          "raise_all_sizes",
+          "Change open sizings across early and late seats",
+          false,
+          "wrong",
+          "Widen late steals slightly"
+        ],
+        [
+          "flat_everything",
+          "Flat-call wider from early and middle seats",
+          false,
+          "suboptimal",
+          "Widen late steals slightly"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "player_adjustment_checkpoint",
+      "w10_checkpoint_review",
+      "review",
+      "proveIt",
+      [
+        [
+          "structured_exploit",
+          "Structured adjustment before live play",
+          true,
+          "correct",
+          "Structured adjustment before live play"
+        ],
+        [
+          "intuition_only",
+          "Use table feel without a written routine",
+          false,
+          "wrong",
+          "Structured adjustment before live play"
+        ],
+        [
+          "baseline_only",
+          "Stay standard until another table cue confirms it",
+          false,
+          "suboptimal",
+          "Structured adjustment before live play"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "player_adjustment_checkpoint",
+      "w10_checkpoint_table_notice",
+      "drill",
+      "practice",
+      [
+        [
+          "rewrite_everything",
+          "Widen steals and add more barrels too",
+          false,
+          "wrong",
+          "Widen late steals a bit"
+        ],
+        [
+          "never_adjust",
+          "Ignore the pattern",
+          false,
+          "suboptimal",
+          "Widen late steals a bit"
+        ],
+        [
+          "widen_late_steals_small",
+          "Widen late steals a bit",
+          true,
+          "correct",
+          "Widen late steals a bit"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "player_adjustment_checkpoint",
+      "w10_checkpoint_tag_line",
+      "drill",
+      "practice",
+      [
+        [
+          "all_changes",
+          "Pair the blind steal with thinner river value",
+          false,
+          "wrong",
+          "Choose one primary tendency and act on it"
+        ],
+        [
+          "ignore_read",
+          "Wait for one more round before tagging",
+          false,
+          "suboptimal",
+          "Choose one primary tendency and act on it"
+        ],
+        [
+          "primary_tag",
+          "Choose one primary tendency and act on it",
+          true,
+          "correct",
+          "Choose one primary tendency and act on it"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "exploit_guardrails",
+      "w10_guardrail_sample_size",
+      "drill",
+      "practice",
+      [
+        [
+          "full_counter",
+          "Commit to a full counter-strategy immediately",
+          false,
+          "wrong",
+          "Make only a small adjustment and keep watching"
+        ],
+        [
+          "small_probe",
+          "Make only a small adjustment and keep watching",
+          true,
+          "correct",
+          "Make only a small adjustment and keep watching"
+        ],
+        [
+          "ignore_everything",
+          "Ignore the hands completely",
+          false,
+          "suboptimal",
+          "Make only a small adjustment and keep watching"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "exploit_guardrails",
+      "w10_guardrails_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_10",
+      "exploit_guardrails",
+      "w10_guardrails_recap",
+      "review",
+      "review",
+      []
+    ],
+    [
+      "world_10",
+      "player_type_basics",
+      "w10_loose_passive_tag",
+      "drill",
+      "practice",
+      [
+        [
+          "tight_aggressive",
+          "Tight-aggressive reg",
+          false,
+          "wrong",
+          "Loose-passive caller"
+        ],
+        [
+          "random",
+          "Possible sample noise, keep the tag light",
+          false,
+          "suboptimal",
+          "Loose-passive caller"
+        ],
+        [
+          "loose_passive",
+          "Loose-passive caller",
+          true,
+          "correct",
+          "Loose-passive caller"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "player_type_basics",
+      "w10_nit_tag",
+      "drill",
+      "practice",
+      [
+        [
+          "maniac",
+          "Overbluffing maniac",
+          false,
+          "wrong",
+          "Tight-folding profile (nit)"
+        ],
+        [
+          "nit",
+          "Tight-folding profile (nit)",
+          true,
+          "correct",
+          "Tight-folding profile (nit)"
+        ],
+        [
+          "unknown",
+          "Wait for one more orbit before adjusting",
+          false,
+          "suboptimal",
+          "Tight-folding profile (nit)"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "adjust_one_lever",
+      "w10_one_lever_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_10",
+      "adjust_one_lever",
+      "w10_one_lever_recap",
+      "review",
+      "review",
+      []
+    ],
+    [
+      "world_10",
+      "player_type_basics",
+      "w10_overaggressive_tag",
+      "drill",
+      "practice",
+      [
+        [
+          "overaggressive",
+          "Over-aggressive bluffer",
+          true,
+          "correct",
+          "Over-aggressive bluffer"
+        ],
+        [
+          "nit",
+          "Tight-folding nit",
+          false,
+          "wrong",
+          "Over-aggressive bluffer"
+        ],
+        [
+          "unknown",
+          "No useful read yet",
+          false,
+          "suboptimal",
+          "Over-aggressive bluffer"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "exploit_guardrails",
+      "w10_overbluff_punish",
+      "drill",
+      "practice",
+      [
+        [
+          "fold_everything",
+          "Fold the weakest bluff-catchers first",
+          false,
+          "wrong",
+          "Bluff-catch a bit wider with blockers"
+        ],
+        [
+          "hero_call_any",
+          "Call more rivers without checking blockers",
+          false,
+          "suboptimal",
+          "Bluff-catch a bit wider with blockers"
+        ],
+        [
+          "bluffcatch_more",
+          "Bluff-catch a bit wider with blockers",
+          true,
+          "correct",
+          "Bluff-catch a bit wider with blockers"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "player_type_basics",
+      "w10_player_type_intro",
+      "theory",
+      "learn",
+      []
+    ],
+    [
+      "world_10",
+      "player_type_basics",
+      "w10_player_type_recap",
+      "review",
+      "review",
+      []
+    ],
+    [
+      "world_10",
+      "adjust_one_lever",
+      "w10_table_value_vs_caller_transfer",
+      "drill",
+      "proveIt",
+      [
+        [
+          "bluff_more",
+          "Bluff more versus passive BB",
+          false,
+          "wrong",
+          "Lean value, bluff less"
+        ],
+        [
+          "lean_value",
+          "Lean value, bluff less",
+          true,
+          "correct",
+          "Lean value, bluff less"
+        ],
+        [
+          "force_big_pot",
+          "Push top pair into a huge pot immediately",
+          false,
+          "suboptimal",
+          "Lean value, bluff less"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "exploit_guardrails",
+      "w10_underbluff_fold_more",
+      "drill",
+      "practice",
+      [
+        [
+          "fold_more",
+          "Fold more marginal bluff-catchers",
+          true,
+          "correct",
+          "Fold more marginal bluff-catchers"
+        ],
+        [
+          "call_normal",
+          "Call normal standard frequency",
+          false,
+          "suboptimal",
+          "Fold more marginal bluff-catchers"
+        ],
+        [
+          "raise_bluff",
+          "Raise bluff more often",
+          false,
+          "wrong",
+          "Fold more marginal bluff-catchers"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "adjust_one_lever",
+      "w10_vs_caller_value_heavier",
+      "drill",
+      "practice",
+      [
+        [
+          "bluff_heavier",
+          "Bluff more anyway",
+          false,
+          "wrong",
+          "Value-bet heavier, bluff less often"
+        ],
+        [
+          "allin_only",
+          "Value-bet your strongest hands and check the rest",
+          false,
+          "suboptimal",
+          "Value-bet heavier, bluff less often"
+        ],
+        [
+          "value_heavier",
+          "Value-bet heavier, bluff less often",
+          true,
+          "correct",
+          "Value-bet heavier, bluff less often"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "adjust_one_lever",
+      "w10_vs_nit_open_wider",
+      "drill",
+      "practice",
+      [
+        [
+          "bluff_more_streets",
+          "Add more turn pressure first",
+          false,
+          "wrong",
+          "Open slightly wider in late position"
+        ],
+        [
+          "open_wider",
+          "Open slightly wider in late position",
+          true,
+          "correct",
+          "Open slightly wider in late position"
+        ],
+        [
+          "no_change",
+          "Keep default play until blinds show it again",
+          false,
+          "suboptimal",
+          "Open slightly wider in late position"
+        ]
+      ]
+    ],
+    [
+      "world_10",
+      "adjust_one_lever",
+      "w10_vs_sticky_defender_tighten_steals",
+      "drill",
+      "practice",
+      [
+        [
+          "tighten_steals",
+          "Tighten the weakest steals and keep stronger value",
+          true,
+          "correct",
+          "Tighten the weakest steals and keep stronger value"
+        ],
+        [
+          "steal_wider_anyway",
+          "Steal even wider",
+          false,
+          "wrong",
+          "Tighten the weakest steals and keep stronger value"
+        ],
+        [
+          "no_change",
+          "Make no change until the sample is huge",
+          false,
+          "suboptimal",
+          "Tighten the weakest steals and keep stronger value"
+        ]
+      ]
+    ]
+  ],
+  "learning": {
+    "w10_player_type_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w10_nit_tag": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "maniac",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "nit",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "unknown",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_loose_passive_tag": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "tight_aggressive",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "random",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "loose_passive",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_overaggressive_tag": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "overaggressive",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "nit",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "unknown",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_player_type_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w10_one_lever_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w10_vs_nit_open_wider": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "bluff_more_streets",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "open_wider",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_change",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_vs_caller_value_heavier": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "bluff_heavier",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "allin_only",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "value_heavier",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_vs_sticky_defender_tighten_steals": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "tighten_steals",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "steal_wider_anyway",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_change",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_table_value_vs_caller_transfer": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "bluff_more",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "lean_value",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "force_big_pot",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_one_lever_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w10_guardrails_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w10_overbluff_punish": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold_everything",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "hero_call_any",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bluffcatch_more",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_underbluff_fold_more": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold_more",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_normal",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_bluff",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_guardrail_sample_size": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "full_counter",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "small_probe",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "ignore_everything",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_guardrails_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w10_checkpoint_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w10_checkpoint_tag_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "all_changes",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "ignore_read",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "primary_tag",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_checkpoint_lever_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "widen_steal",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_all_sizes",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "flat_everything",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_checkpoint_guardrail_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "hard_counter",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "small_adjust",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "no_adjust",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_checkpoint_table_notice": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "rewrite_everything",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "never_adjust",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "widen_late_steals_small",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w10_checkpoint_review": {
+      "rewardXp": 17,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "structured_exploit",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "intuition_only",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "baseline_only",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    }
+  }
+}

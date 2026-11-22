@@ -89,7 +89,7 @@ void main() {
           text: runner.teachingSteps.last.body,
           compact: true,
         ),
-        hasLength(2),
+        ['HJ bets 2 BB. Call for 2 BB or raise to 6 BB.'],
       );
       expect(
         act0AuditInstructionBlockV1(

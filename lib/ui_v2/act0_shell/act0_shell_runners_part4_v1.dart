@@ -27,7 +27,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Your own stack can be deeper, but the hand risk is capped by the smaller stack across from you.',
+          'CO has 200 BB and BB has 30 BB. Planning a 200 BB wager overlooks that BB can match only 30 BB.',
     ),
     Act0RunnerOptionV1(
       id: '115',
@@ -38,10 +38,11 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Use the smaller stack.',
       feedbackReason:
-          'The average is 115 BB, but these players can only match 30 BB each.',
+          'Averaging 200 BB and 30 BB gives 115 BB. That counts 85 BB that BB could never match.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('7s 7c'),
     boardCards: _act0LessonCardsV1('Ad 9h 3c'),
     centerLabel: 'Compare the stacks',
@@ -67,7 +68,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'The matching stacks set the limit.',
       feedbackReason:
-          'When both stacks are equal, that shared stack is the effective stack.',
+          'CO and BB each have 100 BB behind. Either player can match the other up to 100 BB.',
     ),
     Act0RunnerOptionV1(
       id: '50',
@@ -78,7 +79,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Nothing cuts the stack in half here. With equal 100 BB stacks, the full 100 BB remains in play.',
+          'Both players have 100 BB remaining on T-8-3. Calling the limit 50 BB loses sight of half the amount each can match.',
     ),
     Act0RunnerOptionV1(
       id: '200',
@@ -89,10 +90,11 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.',
+          'These 100 BB stacks sum to 200 BB, but a bet has to be covered by the other player. Each can match only 100 BB.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kd Td'),
     boardCards: _act0LessonCardsV1('Th 8d 3c'),
     centerLabel: 'Compare the stacks',
@@ -105,7 +107,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
 final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_table_effective_notice',
-  caption: 'You cover a player 120 BB to 18 BB on a real table.',
+  caption: 'Compare your 120 BB behind with BB’s 18 BB behind.',
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Notice the number that caps the real risk.',
   question: 'What should you notice first before planning?',
@@ -118,7 +120,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          'That is the real live-table risk. The smaller stack sets the hand depth.',
+          'On T-7-3, BB’s 18 BB behind caps how much more your jacks can earn from that player.',
     ),
     Act0RunnerOptionV1(
       id: 'your_120',
@@ -129,7 +131,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'That answer is tempting because your stack looks bigger and feels more powerful. The cleaner read is the smaller 18 BB stack, because that is the number that actually caps what can go in.',
+          'Your 120 BB is visible, but BB can match only 18 BB. Starting from 120 BB exaggerates how much this opponent can pay.',
     ),
     Act0RunnerOptionV1(
       id: 'total_138',
@@ -140,10 +142,11 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Total chips are a real table detail, so this looks useful at first. But total chips do not drive the plan here. The dominant cue is the effective stack that caps the real risk.',
+          'You added the two displayed stacks correctly. For a bet, compare them instead: BB can match just 18 BB, so 138 BB overstates the risk.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Js Jc'),
     boardCards: _act0LessonCardsV1('Td 7c 3h'),
     centerLabel: 'Compare the stacks',
@@ -171,6 +174,7 @@ final _w7EffectiveStackRecapRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kh Qh'),
     boardCards: _act0LessonCardsV1('Qc 9s 2d'),
     centerLabel: 'Compare the stacks',
@@ -217,6 +221,15 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
   hint: 'Subtract each possible bet from the stack you have left.',
   question: 'Which bet fits your plan?',
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(id: '20bb', label: 'Bet 2 BB', potFraction: 2 / 5.5),
+      Act0SizingPresetV1(id: '100bb', label: 'Bet 4 BB', potFraction: 4 / 5.5),
+      Act0SizingPresetV1(id: 'same', label: 'Go all-in', potFraction: 20 / 5.5),
+    ],
+  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '20bb',
@@ -580,6 +593,7 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ah Tc'),
     boardCards: _act0LessonCardsV1('Ac 8s 3d'),
     centerLabel: 'Stack and pot',
@@ -608,7 +622,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'At SPR 2 there are two pots left in the effective stack. A large bet can put much of it at risk, but whether to commit depends on your hand and the price.',
+          'With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Use your KQ top pair and the price before committing.',
     ),
     Act0RunnerOptionV1(
       id: 'float',
@@ -619,7 +633,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.',
+          'The 10 BB left is only two times the 5 BB pot. Planning several large bets would use up those chips earlier than expected.',
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -630,10 +644,11 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'SPR changes the hand structure. SPR 2 is a much more commit-heavy situation than SPR 8.',
+          'A pot-sized 5 BB bet would put half of your 10 BB at risk. At SPR 8, it would risk only one eighth of the effective stack.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Kd Qc'),
     boardCards: _act0LessonCardsV1('Kh 7d 3s'),
     centerLabel: 'Stack and pot',
@@ -659,7 +674,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
-          'High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.',
+          'The 5 BB pot is small next to your 40 BB stack. You can choose a smaller bet or check and keep room for later streets.',
     ),
     Act0RunnerOptionV1(
       id: 'force',
@@ -670,7 +685,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'Immediate commitment is a low-SPR feature. High SPR creates more room, not less.',
+          'Putting in 40 BB right away would risk eight times the 5 BB pot with one pair. You can keep chips for later decisions.',
     ),
     Act0RunnerOptionV1(
       id: 'none',
@@ -681,10 +696,11 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'SPR changes how postflop decisions feel. High SPR leaves more chips for later bets on the same streets.',
+          'You have 40 BB behind after the preflop action, with 5 BB in the pot. Ignoring that ratio leaves you without a plan for the turn and river.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('As 9c'),
     boardCards: _act0LessonCardsV1('Ad 7h 2s'),
     centerLabel: 'Stack and pot',
@@ -710,7 +726,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'SPR 4 often means you still have choices, but commitment pressure is already starting to matter.',
+          'On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves room for later streets, while large bets can commit you quickly.',
     ),
     Act0RunnerOptionV1(
       id: 'auto_commit',
@@ -721,7 +737,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too shallow.',
       feedbackReason:
-          'That is more like very low SPR. SPR 4 is tighter than SPR 8, but not auto-commit by default.',
+          'Going all-in for your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_eight',
@@ -732,10 +748,11 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'At SPR 4, the smaller stack is four times the pot. At SPR 8, it is eight times the pot, leaving more chips for later bets.',
+          'With 20 BB behind, a pot bet costs one quarter of your stack. Treating it like SPR 8 underestimates how fast two bets can use up those chips.',
     ),
   ],
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Jd 9d'),
     boardCards: _act0LessonCardsV1('Js 8c 3h'),
     centerLabel: 'Stack and pot',
@@ -922,14 +939,14 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_6max_wider',
   caption:
-      "Practice rule for A-J offsuit: raise to 2.5 BB with at most five players still to act. Otherwise fold.",
+      "Practice rule for A-J suited: raise to 2.5 BB with at most five players still to act. Otherwise fold.",
   hint: 'Check the given limits before choosing.',
   question: "You are first to act. What fits this table?",
   feedbackTitle: "Count the players behind.",
   feedbackReason:
-      "The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.",
+      "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
   table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ac Jd'),
+    heroCards: _act0LessonCardsV1('Ad Jd'),
     centerLabel: 'Read the seats',
   ),
   teachingSteps: const [],
@@ -942,7 +959,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Five players are left to act.",
       feedbackReason:
-          "The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.",
+          "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
     ),
     Act0RunnerOptionV1(
       id: 'fullring',
@@ -953,7 +970,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The rule allows a raise here.",
       feedbackReason:
-          "Count the players besides you. There are five, so A-J offsuit can open in this example.",
+          "Five players remain in 6-max. Folding A-J suited passes up the chance to open a Strong hand and win the 1.5 BB in blinds.",
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -964,7 +981,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Use the size in the rule.",
       feedbackReason:
-          "A raise fits the five players behind. In this example, the given size is 2.5 BB.",
+          "Five players remain, so the rule allows an open. An 8 BB raise puts 5.5 BB more at risk than the stated 2.5 BB size.",
     ),
   ],
 );
@@ -973,14 +990,14 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_fullring_tighter',
   caption:
-      "Add UTG+1, UTG+2 and LJ after you. Open A-J offsuit for 2.5 BB with at most five to act. Otherwise fold.",
+      "Add UTG+1, UTG+2 and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.",
   hint: 'Check the given limits before choosing.',
   question: "What fits the nine-player version of this hand?",
   feedbackTitle: "More players can act after you.",
   feedbackReason:
-      "Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.",
+      "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
   table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ah Js'),
+    heroCards: _act0LessonCardsV1('Ah Jh'),
     centerLabel: 'Read the seats',
   ),
   teachingSteps: const [],
@@ -993,7 +1010,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Eight players are left to act.",
       feedbackReason:
-          "Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.",
+          "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
     ),
     Act0RunnerOptionV1(
       id: 'wider',
@@ -1004,7 +1021,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Count the three extra players.",
       feedbackReason:
-          "A 2.5 BB raise fit the six-player example. With eight players left, the rule says to fold instead.",
+          "Eight players can still wake up with a stronger hand. This full-ring rule folds A-J suited and saves the 2.5 BB open.",
     ),
     Act0RunnerOptionV1(
       id: 'depth',
@@ -1015,7 +1032,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The number of players still matters.",
       feedbackReason:
-          "A different bet size does not change how many players are left to act. Use the fold in the stated model.",
+          "An 8 BB raise still faces the same eight players. It puts 8 BB at risk in a spot where the example calls for a fold.",
     ),
   ],
 );
@@ -1040,6 +1057,27 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
     facingBb: 0,
   ),
   teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: 'open_same',
+        label: 'Bet 10 BB',
+        potFraction: 1.25,
+      ),
+      Act0SizingPresetV1(
+        id: 'depth_only',
+        label: 'Bet 12 BB',
+        potFraction: 1.5,
+      ),
+      Act0SizingPresetV1(
+        id: 'tighten_early',
+        label: 'Bet 6 BB',
+        potFraction: 0.75,
+      ),
+    ],
+  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'open_same',
@@ -1161,1744 +1199,5000 @@ final _w9ExampleTableBase = _readBoardRunner.table.copyWith(
   highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
 );
 
+// Concept questions carry text, with no authored deal or seat cue.
+const _w9TextStudyTableV1 = Act0TableStateV1(
+  scope: Act0TableScopeV1.explanation,
+  showDecisionPremise: true,
+  tableFormat: Act0TableFormatV1.sixMax,
+  playerCount: 6,
+  seats: [],
+  heroCards: [],
+  boardCards: [],
+  streetLabel: '',
+  potLabel: '',
+  toCallLabel: '',
+  centerLabel: '',
+  highlightedSeatIds: [],
+  highlightedCardIds: [],
+);
+
 final _w9SurvivalIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w9_survival_intro',
-  lessonTitle: 'Chips are not life',
+  lessonTitle: "Chips and prizes",
   lessonSubtitle: 'Tournament Pressure',
-  caption: 'Tournament chips carry survival value, not only chip EV.',
-  hint: 'When you bust, your tournament run ends.',
-  question: 'What makes tournament chips different from cash chips?',
-  feedbackTitle: 'Survival foundation.',
+  caption: "Chips and expected prize money are different measures.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What does EV describe?",
+  feedbackTitle: "Chips and prizes",
   feedbackReason:
-      'Tournament pressure means survival has value. Losing all chips ends the run, so not every thin chip-EV spot is equal.',
-  teachingSteps: const <Act0TeachingStepV1>[
+      "EV includes winning and losing outcomes, weighted by their chances; one lost hand can come from a profitable decision.",
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Life has value.',
+      title: "Chips and prizes",
       body:
-          'In cash you can reload. In tournaments, stack loss can end your whole run. That creates survival pressure before payouts and near the bubble.',
-      focusLabels: <String>['Tournament life', 'Survival', 'Bubble'],
+          "EV stands for expected value. It is your average result if you make the same choice many times. Chip EV counts chips. Prize EV counts prize money. Your run ends if you lose your stack. Near a payout, a small gain in chips can cost prize value. M = stack / (SB + BB + antes for one lap). Green is 20 or more. Yellow is 10 to under 20. Red is below 10.",
     ),
   ],
-  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+  options: const [],
+  table: _w9TextStudyTableV1,
 );
 
-final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
+final _w9CashVsTournamentRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w9_cash_vs_tournament',
-  caption: 'You face a thin all-in edge with 20 BB.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Compare cash-game reload logic with tournament survival.',
-  question: 'Which frame should be stronger in a tournament?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'survival',
-      label: 'Survival pressure matters more',
-      isCorrect: true,
-      preferredLabel: 'Survival pressure matters more',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
-      feedbackReason:
-          'Tournament chips are tied to staying alive. You still seek EV, but survival pressure changes which thin spots are worth taking.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'same_cash',
-      label: 'Play it exactly like cash',
-      isCorrect: false,
-      preferredLabel: 'Survival pressure matters more',
-      betterAnswerLabel: 'Survival pressure matters more',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'With 20 BB facing a thin all-in edge, using cash-game standards overlooks the cost of elimination in a tournament.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_everything',
-      label: 'Fold even premium hands until payouts begin',
-      isCorrect: false,
-      preferredLabel: 'Survival pressure matters more',
-      betterAnswerLabel: 'Survival pressure matters more',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable caution.',
-      feedbackReason:
-          'At 20 BB, tournament life can make a thin all-in edge worth passing up. Folding even premium hands until payouts begin also gives up the much larger edges those hands can offer.',
-    ),
-  ],
-);
-
-final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_short_stack_survival',
-  caption: 'You have 9 BB with blinds about to hit.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Very short stacks cannot wait forever.',
-  question: 'What is usually the sharper plan?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'take_spot',
-      label: 'Take a reasonable all-in spot, first in or over a raise',
-      isCorrect: true,
-      preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
-      feedbackReason:
-          'At very low stack depth, survival comes from acting before you get blinded out. Controlled urgency beats passive waiting.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'wait_premium',
-      label: 'Wait for AA or KK before entering a pot',
-      isCorrect: false,
-      preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
-      betterAnswerLabel:
-          'Take a reasonable all-in spot, first in or over a raise',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too tight here.',
-      feedbackReason:
-          'At 9 BB with blinds about to hit, waiting for AA or KK can cost you a chance to go all-in while your stack can still make opponents fold.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'open_fold',
-      label: 'Open small and fold to pressure',
-      isCorrect: false,
-      preferredLabel: 'Take a reasonable all-in spot, first in or over a raise',
-      betterAnswerLabel:
-          'Take a reasonable all-in spot, first in or over a raise',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'At 9 BB with blinds about to hit, automatically folding after a small open costs chips and leaves you with less leverage on your next all-in.',
-    ),
-  ],
-);
-
-final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_survival_stack_tradeoff',
-  caption: 'Cash table can reload. Tournament table cannot.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'The same thin edge does not carry the same downside.',
-  question: 'Which table should pass more thin stack-off spots?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'tournament_table',
-      label: 'Tournament table',
-      isCorrect: true,
-      preferredLabel: 'Tournament table',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
-      feedbackReason:
-          'Tournament life adds elimination risk. That makes thin stack-offs more expensive than in reloadable cash spots.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'cash_table',
-      label: 'Cash table',
-      isCorrect: false,
-      preferredLabel: 'Tournament table',
-      betterAnswerLabel: 'Tournament table',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'Passing thin edges at a reloadable cash table gives up profitable chip-EV spots where busting does not end your tournament life.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'same_both',
-      label: 'Both should pass equally',
-      isCorrect: false,
-      preferredLabel: 'Tournament table',
-      betterAnswerLabel: 'Tournament table',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Elimination changes the downside.',
-      feedbackReason:
-          'On a tournament table, treating both formats equally ignores elimination cost and risks tournament survival on thin stack-offs.',
-    ),
-  ],
-);
-
-final _w9SurvivalRecapRunner = _w9SurvivalIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w9_survival_recap',
-  caption: 'Lesson learned: tournament chips include survival value.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Life pressure changes which thin spots are worth taking.',
-  question: 'What is the key survival takeaway?',
-  feedbackTitle: 'Survival takeaway.',
-  feedbackReason:
-      'Tournament pressure does not remove aggression. It asks for cleaner risk selection because busting ends your run.',
-);
-
-final _w9MRatioIntroRunner = _w9SurvivalIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.theory,
-  lessonId: 'w9_m_ratio_intro',
-  lessonTitle: 'M-ratio zones',
-  caption: 'M-ratio gives a quick urgency signal for tournament decisions.',
-  hint: 'Think in simple zones first, not formulas.',
-  question: 'What does M-ratio help you read?',
-  feedbackTitle: 'Zone foundation.',
-  feedbackReason:
-      'M-ratio is a practical urgency signal. Lower zones mean less time and more pressure to act.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Urgency by zone.',
-      body:
-          'Green zone has room. Yellow zone needs planning. Red zone demands action soon. Use this to avoid both panic and passivity.',
-      focusLabels: <String>['M-ratio', 'Green', 'Yellow', 'Red'],
-    ),
-  ],
-);
-
-final _w9MZoneRedRunner = _w9MRatioIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_m_ratio_red_zone',
-  caption: 'Your M-ratio is in the red zone.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Low zone means blinds are hurting fast.',
-  question: 'What is the sharper mindset?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'urgent',
-      label: 'Use controlled urgency',
-      isCorrect: true,
-      preferredLabel: 'Use controlled urgency',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason:
-          'Red-zone stacks cannot drift. Tournament pressure rewards timely commitment when edges appear.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'wait',
-      label: 'Wait for a big pocket pair like AA or KK',
-      isCorrect: false,
-      preferredLabel: 'Use controlled urgency',
-      betterAnswerLabel: 'Use controlled urgency',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too narrow.',
-      feedbackReason:
-          'Waiting for AA or KK can cost you the chance to win the blinds uncontested while your stack can still threaten opponents. Look for a playable hand and a good position to act sooner.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'flat_call',
-      label: 'Flat-call wide and see flops',
-      isCorrect: false,
-      preferredLabel: 'Use controlled urgency',
-      betterAnswerLabel: 'Use controlled urgency',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'In the red zone, frequent flat-calls quickly commit a large share of your stack. Calling gives the raiser no chance to fold preflop.',
-    ),
-  ],
-);
-
-final _w9MZoneGreenRunner = _w9MRatioIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_m_ratio_green_zone',
-  caption: 'Your M-ratio is in the green zone.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'You still have room to pick spots.',
-  question: 'What usually improves in green zone?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'patience',
-      label: 'Patience and table selection',
-      isCorrect: true,
-      preferredLabel: 'Patience and table selection',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Green zone gives room.',
-      feedbackReason:
-          'With room in green zone, you can pass thin spots and choose cleaner pressure lines.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'panic',
-      label: 'Force all-ins quickly',
-      isCorrect: false,
-      preferredLabel: 'Patience and table selection',
-      betterAnswerLabel: 'Patience and table selection',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not needed.',
-      feedbackReason:
-          'With your M-ratio in the green zone, forcing early all-ins risks a healthy stack unnecessarily when you still have room to pick better spots.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'never_risk',
-      label: 'Avoid pressure spots entirely',
-      isCorrect: false,
-      preferredLabel: 'Patience and table selection',
-      betterAnswerLabel: 'Patience and table selection',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too passive.',
-      feedbackReason:
-          'In the green zone M-ratio spot, avoiding pressure spots entirely gives up profitable steals and lets your stack drift downward.',
-    ),
-  ],
-);
-
-final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_m_ratio_yellow_zone',
-  caption: 'Your M-ratio is in the yellow zone.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Yellow zone asks for planning before panic.',
-  question: 'What usually becomes sharper in yellow zone?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'prepare_windows',
-      label: 'Prepare action windows before red-zone panic',
-      isCorrect: true,
-      preferredLabel: 'Prepare action windows before red-zone panic',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
-      feedbackReason:
-          'Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner all-in and steal windows here.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'ignore',
-      label: 'Ignore urgency until the red zone',
-      isCorrect: false,
-      preferredLabel: 'Prepare action windows before red-zone panic',
-      betterAnswerLabel: 'Prepare action windows before red-zone panic',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'When your M-ratio is in the yellow zone, ignoring urgency until the red zone loses fold pressure and forces desperate decisions later.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'panic_now',
-      label: 'Go all-in with the next playable hand right away',
-      isCorrect: false,
-      preferredLabel: 'Prepare action windows before red-zone panic',
-      betterAnswerLabel: 'Prepare action windows before red-zone panic',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too rushed.',
-      feedbackReason:
-          'With an M-ratio in the yellow zone, going all-in with your next playable hand can risk your tournament life before position and the action give you a good opening.',
-    ),
-  ],
-);
-
-final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_m_ratio_table_window_transfer',
-  caption: 'Real table. You are BTN with A-J offsuit at 12 BB in yellow zone.',
-  hint:
-      'This is not red-zone panic yet, but the stack should not drift. Read what yellow-zone urgency changes first.',
-  question: 'What is the cleaner first zone adjustment here?',
-  table: _w9ExampleTableBase.copyWith(
-    heroCards: _heroAjCards,
-    streetLabel: 'Preflop',
-    boardCards: const <Act0CardStateV1>[],
-    highlightedCardIds: const ['hero_0', 'hero_1'],
-    potLabel: 'Pot 1.5 BB',
-    toCallLabel: '',
-    centerLabel: 'BTN, 12 BB, yellow zone',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'Folded to BTN'),
-    ],
-  ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'prepare_now',
-      label: 'Plan a practical action window now',
-      isCorrect: true,
-      preferredLabel: 'Plan a practical action window now',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp live read.',
-      feedbackReason:
-          'That is the live-table yellow-zone adjustment. You still have a little room, but urgency is real enough that you should prepare an action window before the stack slips into red zone.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'wait_for_red',
-      label: 'Wait until red zone before changing anything',
-      isCorrect: false,
-      preferredLabel: 'Plan a practical action window now',
-      betterAnswerLabel: 'Plan a practical action window now',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too late.',
-      feedbackReason:
-          'With 12 BB in the stated yellow zone, waiting for the red zone gives the blinds more time to shrink your stack. Plan ahead while an all-in can still put opponents under pressure.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'panic_now',
-      label: 'Treat yellow zone like instant all-in panic',
-      isCorrect: false,
-      preferredLabel: 'Plan a practical action window now',
-      betterAnswerLabel: 'Plan a practical action window now',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Right idea, wrong speed.',
-      feedbackReason:
-          'The spot gives you 12 BB and time to plan. Going all-in before the action gives you a suitable opening can put your tournament life at risk too early.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Yellow zone starts the countdown.',
-      body:
-          'This is the changed frame: same M-ratio idea, live table now. Yellow zone is not freeze mode and not red-zone panic. It is the spot where urgency becomes actionable before the stack gets desperate.',
-      focusLabels: <String>['Yellow zone', '12 BB', 'Urgency', 'Plan early'],
-    ),
-  ],
-);
-
-final _w9MRatioRecapRunner = _w9MRatioIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w9_m_ratio_recap',
-  caption: 'Lesson learned: M-ratio zones map urgency.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Green keeps room. Red needs action soon.',
-  question: 'What is the M-ratio takeaway?',
-  feedbackTitle: 'M-ratio takeaway.',
-  feedbackReason:
-      'Use M-ratio as a quick pressure map. The lower the zone, the less freedom you have to wait.',
-);
-
-final _w9BubblePressureIntroRunner = _w9SurvivalIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.theory,
-  lessonId: 'w9_bubble_intro',
-  lessonTitle: 'Bubble risk premium',
+  lessonTitle: "A close river call",
+  lessonSubtitle: 'Tournament Pressure',
   caption:
-      'Near the bubble, losing chips can hurt more than winning chips helps.',
-  hint: 'Medium stacks often feel this pressure most.',
-  question: 'What is risk premium in simple terms?',
-  feedbackTitle: 'Bubble foundation.',
+      "Six left, five paid. Prizes in order: 500, 250, 120, 80, 50. BTN bets 16 BB into 8.5 BB and can bust you. The given range is 60% AQ or KQ and 40% missed JT. You win 40% with no ties. The prize model needs a 62.4% win rate.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "A close river call",
   feedbackReason:
-      'Risk premium means you need extra hand strength before risking tournament life near payout pressure.',
-  teachingSteps: const <Act0TeachingStepV1>[
+      "Keep 16 BB. Your 40% wins barely beat the chip price but fall below the 62.4% payout threshold while UTG has 2 BB.",
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Bubble pressure shifts ranges.',
+      title: "A close river call",
       body:
-          'Medium stacks tighten because busting hurts. Big stacks can apply leverage. Short stacks still need practical spots to survive.',
-      focusLabels: <String>[
-        'Bubble',
-        'Risk premium',
-        'Medium stack',
-        'Leverage',
-      ],
+          "When a call can bust you, check both costs. First work out the chip price from the pot and call. Then compare your win rate with the prize model.",
     ),
   ],
-);
-
-final _w9MediumStackTightenRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_medium_stack_tighten',
-  caption: 'You are a medium stack two spots from the money.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Bust risk is expensive here.',
-  question: 'What is usually the sharper adjustment?',
-  options: const <Act0RunnerOptionV1>[
+  options: const [
     Act0RunnerOptionV1(
-      id: 'tighten_calls',
-      label: 'Tighten marginal calls',
+      id: "fold",
+      label: "Fold",
       isCorrect: true,
-      preferredLabel: 'Tighten marginal calls',
+      preferredLabel: "Fold",
+
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: "Correct.",
       feedbackReason:
-          'Risk premium near the bubble means medium stacks should avoid thin call-offs and protect tournament life.',
+          "Keep 16 BB. Your 40% wins barely beat the chip price but fall below the 62.4% payout threshold while UTG has 2 BB.",
     ),
     Act0RunnerOptionV1(
-      id: 'call_wide',
-      label: 'Call off as wide as chip EV says',
+      id: "call_16_bb",
+      label: "Call 16 BB",
       isCorrect: false,
-      preferredLabel: 'Tighten marginal calls',
-      betterAnswerLabel: 'Tighten marginal calls',
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'With a medium stack two spots from the money, calling off as wide as chip EV risks tournament elimination right before payouts begin.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_all',
-      label: 'Fold everything until paid',
-      isCorrect: false,
-      preferredLabel: 'Tighten marginal calls',
-      betterAnswerLabel: 'Tighten marginal calls',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable caution.',
-      feedbackReason:
-          'Two spots from the money, folding until payouts begin can cost a medium stack profitable steals and lets the blinds erode its stack.',
+          "QJ beats the missed JT but loses to AQ/KQ. Calling earns 0.20 BB in chips yet drops modeled prize value from \$192.16 to \$123.25.",
     ),
   ],
-);
-
-final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_big_stack_leverage',
-  caption: 'You cover both blinds near the bubble.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Leverage works because others face elimination risk.',
-  question: 'What usually improves for the big stack?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'apply_pressure',
-      label: 'Apply selective open pressure',
-      isCorrect: true,
-      preferredLabel: 'Apply selective open pressure',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
-      feedbackReason:
-          'Big stacks can leverage bubble pressure because medium stacks cannot call as freely.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'freeze',
-      label: 'Avoid stealing to protect stack',
-      isCorrect: false,
-      preferredLabel: 'Apply selective open pressure',
-      betterAnswerLabel: 'Apply selective open pressure',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too passive.',
-      feedbackReason:
-          'Near the bubble you cover both blinds. Passing up steals gives up the chance to win pots uncontested when those players tighten to protect their tournament lives.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'jam_any_two',
-      label: 'Go all-in with wide hands without checking position',
-      isCorrect: false,
-      preferredLabel: 'Apply selective open pressure',
-      betterAnswerLabel: 'Apply selective open pressure',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not that extreme.',
-      feedbackReason:
-          'With a big stack near the bubble, going all-in with a wider range without checking position risks running into strong hands from players who still have to act.',
-    ),
-  ],
-);
-
-final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_bubble_short_stack',
-  caption: 'You are the short stack near the bubble.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Short stacks still need survival spots, not endless folding.',
-  question: 'What usually stays true for the short stack?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'still_take_spots',
-      label: 'Still take practical all-in spots before blinded out',
-      isCorrect: true,
-      preferredLabel: 'Still take practical all-in spots before blinded out',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
-      feedbackReason:
-          'Bubble pressure matters, but short stacks cannot fold forever. Survival still needs practical action windows before the stack disappears.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_to_money',
-      label: 'Fold playable all-in hands to try to ladder into the money',
-      isCorrect: false,
-      preferredLabel: 'Still take practical all-in spots before blinded out',
-      betterAnswerLabel: 'Still take practical all-in spots before blinded out',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too passive.',
-      feedbackReason:
-          'As the short stack near the bubble, passing up playable all-in spots lets the blinds shrink your stack and makes later all-ins easier to call.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call_off_light',
-      label: 'Call off too light',
-      isCorrect: false,
-      preferredLabel: 'Still take practical all-in spots before blinded out',
-      betterAnswerLabel: 'Still take practical all-in spots before blinded out',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'For a short stack near the bubble, calling light risks elimination against a stronger range. Acting first in a suitable spot also gives opponents a chance to fold.',
-    ),
-  ],
-);
-
-final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_bubble_table_risk_transfer',
-  caption:
-      'BTN holds A-J offsuit with a medium stack near the bubble. There are no antes. BB goes all-in for 18 BB, 15.5 BB more than BTN put in. BTN’s remaining stack caps the call.',
-  hint:
-      'Check whether losing the hand could eliminate you. That changes how much of an edge you need.',
-  question: 'How should you adjust if losing to BB would eliminate you?',
-  table: _act0CurrentStreetTableV1(
-    _act0ExplicitFoldsV1(
-      _w9ExampleTableBase.copyWith(
-        seats: [
-          for (final seat in _w9ExampleTableBase.seats)
-            if (seat.seatId == 'bb')
-              _act0CopySeatStateV1(seat, stackLabel: '0 BB')
-            else
-              seat,
-        ],
-        heroCards: _heroAjCards,
-        boardCards: const [],
-        streetLabel: 'Preflop',
-        activeSeatId: 'btn',
-        highlightedCardIds: const ['hero_0', 'hero_1'],
-        potLabel: 'Pot 21 BB',
-        toCallLabel: '',
-        centerLabel: 'BTN, medium stack, bubble pressure',
-        handContributions: const Act0HandContributionsV1(
-          throughStreet: PokerStreet.preflop,
-          startingStackBbBySeat: {'bb': 18},
-          entries: [
-            ..._act0LessonBlinds,
-            Act0ContributionV1(
-              PokerStreet.preflop,
-              'btn',
-              Act0ContributionKindV1.wager,
-              2.5,
-            ),
-            Act0ContributionV1(
-              PokerStreet.preflop,
-              'bb',
-              Act0ContributionKindV1.wager,
-              17,
-            ),
-          ],
-        ),
-        actionTrail: const [
-          Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-          Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-          Act0ActionTrailItemV1(label: 'UTG folds'),
-          Act0ActionTrailItemV1(label: 'HJ folds'),
-          Act0ActionTrailItemV1(label: 'CO folds'),
-          Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
-          Act0ActionTrailItemV1(label: 'SB folds'),
-          Act0ActionTrailItemV1(label: 'BB all-in 18 BB'),
-        ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "Qh Jh",
+    street: PokerStreet.river,
+    actor: 'bb',
+    board: _act0LessonCardsV1("Qs 9c 5d 2h 3s"),
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {"utg": 2, "hj": 10, "co": 8, "btn": 50, "sb": 10, "bb": 20},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      {'utg', 'hj', 'co', 'sb'},
-    ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'btn',
+        Act0ContributionKindV1.wager,
+        16,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 2 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 2 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN checks"),
+      Act0ActionTrailItemV1(label: "River: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 16 BB"),
+    ],
     bets: const {
       'btn': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.raise,
-        label: 'BTN',
-        amountLabel: '2.5 BB',
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '16 BB',
+      ),
+    },
+  ),
+);
+
+final _w9EvTwoResultsRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_ev_two_results',
+  lessonTitle: "Average chip gain",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "You gain 3 BB half the time. You lose 1 BB the other half.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What is your chip EV?",
+  feedbackTitle: "Average chip gain",
+  feedbackReason: "Half of 3 BB minus half of 1 BB leaves a gain of 1 BB.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "1_bb",
+      label: "1 BB",
+      isCorrect: true,
+      preferredLabel: "1 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason: "Half of 3 BB minus half of 1 BB leaves a gain of 1 BB.",
+    ),
+    Act0RunnerOptionV1(
+      id: "2_bb",
+      label: "2 BB",
+      isCorrect: false,
+      preferredLabel: "1 BB",
+      betterAnswerLabel: "1 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "3 BB minus 1 BB is the sum of both results. It is twice the gain per try.",
+    ),
+    Act0RunnerOptionV1(
+      id: "3_bb",
+      label: "3 BB",
+      isCorrect: false,
+      preferredLabel: "1 BB",
+      betterAnswerLabel: "1 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "3 BB counts the wins. Skip the losses and the bet looks too good.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9ShortStackSurvivalRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_short_stack_survival',
+  lessonTitle: "Small blind choice",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls an all-in with 77+, A9s+, ATo+ or KQs. BB folds the rest.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Go all-in or fold?",
+  feedbackTitle: "Small blind choice",
+  feedbackReason:
+      "Add your remaining 8.5 BB. BB frequently folds under the stated calling-range model, letting K9s win the 1.5 BB pot before your stack shrinks.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Small blind choice",
+      body:
+          "An all-in puts your whole stack in. When just one player is left to act, an all-in can win the blinds. Check how often that player will call. This short-stack drill asks you to choose between an all-in and a fold.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "All-in to 9 BB",
+      betterAnswerLabel: "All-in to 9 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You start with 9 BB and face one tight caller. Folding K9s gives up the shot at the 1.5 BB pot.",
+    ),
+    Act0RunnerOptionV1(
+      id: "take_spot",
+      label: "All-in to 9 BB",
+      isCorrect: true,
+      preferredLabel: "All-in to 9 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Add your remaining 8.5 BB. BB frequently folds under the stated calling-range model, letting K9s win the 1.5 BB pot before your stack shrinks.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'sb',
+    hand: "Kd 9d",
+    street: PokerStreet.preflop,
+    actor: 'sb',
+
+    folded: const {"utg", "hj", "co", "btn"},
+    stacks: const {"utg": 28, "hj": 24, "co": 35, "btn": 22, "sb": 9, "bb": 30},
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
       ),
       'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.allIn,
-        label: 'BB',
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9SurvivalTradeoffRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_survival_stack_tradeoff',
+  lessonTitle: "Price of busting",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Two players have the same cards and chip price in two events.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What shapes the cost of busting?",
+  feedbackTitle: "Price of busting",
+  feedbackReason:
+      "These describe what you can gain by advancing and how much prize value you risk by busting.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "payouts_without_the_other_stacks",
+      label: "Payouts without the other stacks",
+      isCorrect: false,
+      preferredLabel: "Payouts and the remaining stacks",
+      betterAnswerLabel: "Payouts and the remaining stacks",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You have the prize ladder, but a 2 BB rival changes the cost of risking a medium stack; omitting that stack misses potential payout value.",
+    ),
+    Act0RunnerOptionV1(
+      id: "payouts_and_the_remaining_stacks",
+      label: "Payouts and the remaining stacks",
+      isCorrect: true,
+      preferredLabel: "Payouts and the remaining stacks",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "These describe what you can gain by advancing and how much prize value you risk by busting.",
+    ),
+    Act0RunnerOptionV1(
+      id: "same_both",
+      label: "Whether a reload is available",
+      isCorrect: false,
+      preferredLabel: "Payouts and the remaining stacks",
+      betterAnswerLabel: "Payouts and the remaining stacks",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Reload availability does not supply the prize ladder or stack distribution; it cannot tell you whether a particular tournament call is profitable.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9SurvivalRecapRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  lessonId: 'w9_survival_recap',
+  lessonTitle: "Chips and prizes recap",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Think back to the 20 BB call and the 9 BB all-in.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which plan balances growth and survival?",
+  feedbackTitle: "Chips and prizes recap",
+  feedbackReason:
+      "That includes folding a costly bubble call and taking a sound first-in short-stack all-in.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "avoid_thin_calls_but_skip_sound_steals",
+      label: "Avoid thin calls but skip sound steals",
+      isCorrect: false,
+      preferredLabel: "Take risks that improve prize EV",
+      betterAnswerLabel: "Take risks that improve prize EV",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Avoiding thin calls protects the stack, but passing the 9 BB SB opportunity also gives up chips available through folds.",
+    ),
+    Act0RunnerOptionV1(
+      id: "wait_for_aa_before_entering",
+      label: "Wait for AA before entering",
+      isCorrect: false,
+      preferredLabel: "Take risks that improve prize EV",
+      betterAnswerLabel: "Take risks that improve prize EV",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The 9 BB K9s example already offered a sound first-in all-in; waiting for AA lets forced bets consume opportunities.",
+    ),
+    Act0RunnerOptionV1(
+      id: "take_risks_that_improve_prize_ev",
+      label: "Take risks that improve prize EV",
+      isCorrect: true,
+      preferredLabel: "Take risks that improve prize EV",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "That includes folding a costly bubble call and taking a sound first-in short-stack all-in.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9MRatioIntroRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.theory,
+  lessonId: 'w9_m_ratio_intro',
+  lessonTitle: "How long will your stack last?",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Sharky Three-Zone M",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What does M estimate?",
+  feedbackTitle: "How long will your stack last?",
+  feedbackReason:
+      "Divide the starting stack by the blinds and orbit's antes; future blind rises and pots won or lost can change that estimate.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "How long will your stack last?",
+      body:
+          "M = stack / (SB + BB + antes for one lap). An ante is a forced fee. Green is 20 or more. Yellow is 10 to under 20. Red is below 10. At 0.5/1 with no ante, 12 BB gives M = 8.",
+    ),
+  ],
+  options: const [],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9MRatioLapCountRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_lap_count',
+  lessonTitle: "Laps left",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Stack: 24 BB. Blinds: 0.5 and 1 BB. No antes.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How many laps does M give you?",
+  feedbackTitle: "Laps left",
+  feedbackReason: "Each lap costs 1.5 BB. Divide 24 by 1.5 to get 16.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "16_laps",
+      label: "16 laps",
+      isCorrect: true,
+      preferredLabel: "16 laps",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason: "Each lap costs 1.5 BB. Divide 24 by 1.5 to get 16.",
+    ),
+    Act0RunnerOptionV1(
+      id: "24_laps",
+      label: "24 laps",
+      isCorrect: false,
+      preferredLabel: "16 laps",
+      betterAnswerLabel: "16 laps",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The big blind costs 1 BB. If you leave out the small blind, the stack seems to last too long.",
+    ),
+    Act0RunnerOptionV1(
+      id: "12_laps",
+      label: "12 laps",
+      isCorrect: false,
+      preferredLabel: "16 laps",
+      betterAnswerLabel: "16 laps",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The two blinds cost 1.5 BB, not 2 BB. Use the real cost or you may rush into a poor spot.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9MZoneRedRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_red_zone',
+  lessonTitle: "Facing two ranges",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "You start with 7.5 BB. UTG raises with QQ+ or AK. CO calls with JJ, TT, 99 or AQs.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What should you do?",
+  feedbackTitle: "Facing two ranges",
+  feedbackReason:
+      "You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_to_3_bb",
+      label: "Call to 3 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Paying 2 BB commits chips with Q8o against two strong ranges.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.",
+    ),
+    Act0RunnerOptionV1(
+      id: "all_in_to_7_5_bb",
+      label: "All-in to 7.5 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "UTG and CO have put in 3 BB each. An all-in with Q8o has little chance to win by folds.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "Qc 8d",
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {"hj", "btn", "sb"},
+    stacks: const {
+      "utg": 30,
+      "hj": 25,
+      "co": 24,
+      "btn": 18,
+      "sb": 22,
+      "bb": 7.5,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'utg',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG raises to 3 BB"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO calls 3 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+      'utg': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '3 BB',
+      ),
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '3 BB',
+      ),
+    },
+  ),
+);
+
+final _w9MRatioAnteCostRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_ante_cost',
+  lessonTitle: "Add the antes",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six players each pay 0.1 BB per hand. The blinds are 0.5 BB and 1 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What does a full lap cost?",
+  feedbackTitle: "Add the antes",
+  feedbackReason:
+      "Six antes cost 0.6 BB. Add both blinds for a total of 2.1 BB.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "1_6_bb",
+      label: "1.6 BB",
+      isCorrect: false,
+      preferredLabel: "2.1 BB",
+      betterAnswerLabel: "2.1 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You counted a 0.1 BB ante. It comes up six times in a lap.",
+    ),
+    Act0RunnerOptionV1(
+      id: "1_5_bb",
+      label: "1.5 BB",
+      isCorrect: false,
+      preferredLabel: "2.1 BB",
+      betterAnswerLabel: "2.1 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You counted both blinds but skipped the antes. That gives the stack too much time.",
+    ),
+    Act0RunnerOptionV1(
+      id: "2_1_bb",
+      label: "2.1 BB",
+      isCorrect: true,
+      preferredLabel: "2.1 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Six antes cost 0.6 BB. Add both blinds for a total of 2.1 BB.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_green_zone',
+  lessonTitle: "First raise from HJ",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Stack: 30 BB. No antes. No special read.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which opening size fits?",
+  feedbackTitle: "First raise from HJ",
+  feedbackReason:
+      "AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "First raise from HJ",
+      body: "A small first raise leaves room to play after the flop.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 2 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_3_bb",
+      label: "Raise to 3 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "From HJ with 30 BB, a 3 BB open loses one more chip if you fold to a raise. There is no read to pay for it.",
+    ),
+    Act0RunnerOptionV1(
+      id: "all_in_to_30_bb",
+      label: "All-in to 30 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "At M = 20, a 30 BB all-in risks far more than the 1.5 BB pot.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "Ac Jc",
+    street: PokerStreet.preflop,
+    actor: 'hj',
+
+    folded: const {"utg"},
+    stacks: const {
+      "utg": 24,
+      "hj": 30,
+      "co": 34,
+      "btn": 32,
+      "sb": 28,
+      "bb": 35,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_yellow_zone',
+  lessonTitle: "First seat choice",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "First to act. Stack: 18 BB. No antes.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What should you do?",
+  feedbackTitle: "First seat choice",
+  feedbackReason:
+      "KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "First seat choice",
+      body:
+          "First-in chart: Premium AA–QQ and AKs, plus Strong JJ–TT, AKo, AQs and AJs, open from UTG to BTN. Medium AQo, AJo, KQ and AT open from HJ to BTN. Medium 99–22, KJ, QJs, KT and QT open from CO to BTN. Fold Weak hands.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "UTG has five players left to act. Opening KQo can face a call or raise from a stronger hand.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.",
+    ),
+    Act0RunnerOptionV1(
+      id: "all_in_to_18_bb",
+      label: "All-in to 18 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "At M = 12, going all-in with 18 BB risks a full stack with KQo from first seat.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'utg',
+    hand: "Kc Qd",
+    street: PokerStreet.preflop,
+    actor: 'utg',
+
+    folded: const {},
+    stacks: const {
+      "utg": 18,
+      "hj": 24,
+      "co": 22,
+      "btn": 30,
+      "sb": 20,
+      "bb": 27,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9MTableWindowTransferRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_table_window_transfer',
+  lessonTitle: "Stack and seat",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Stack: 18 BB. No antes. SB limps for 1 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which zone and plan fit?",
+  feedbackTitle: "Stack and seat",
+  feedbackReason:
+      "18 BB pays for 12 orbits. You already put in the big blind and can see a flop for free.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "green_zone",
+      label: "Green. Check.",
+      isCorrect: false,
+      preferredLabel: "Yellow. Check.",
+      betterAnswerLabel: "Yellow. Check.",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Checking is fine in BB, but M is 12. That gives you less time than a green stack.",
+    ),
+    Act0RunnerOptionV1(
+      id: "wait_for_red",
+      label: "Red. Fold.",
+      isCorrect: false,
+      preferredLabel: "Yellow. Check.",
+      betterAnswerLabel: "Yellow. Check.",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason: "M is 12. A fold gives up a free flop after SB calls.",
+    ),
+    Act0RunnerOptionV1(
+      id: "prepare_now",
+      label: "Yellow. Check.",
+      isCorrect: true,
+      preferredLabel: "Yellow. Check.",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "18 BB pays for 12 orbits. You already put in the big blind and can see a flop for free.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "7d 2c",
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {"utg", "hj", "co", "btn"},
+    stacks: const {
+      "utg": 25,
+      "hj": 30,
+      "co": 24,
+      "btn": 12,
+      "sb": 20,
+      "bb": 18,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'sb',
+        Act0ContributionKindV1.wager,
+        0.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB calls 1 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '1 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9MRatioRedZoneShoveRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_red_zone_shove',
+  lessonTitle: "A short stack on BTN",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Stack: 12 BB. No antes. Each blind calls an all-in with 77+, ATs+, AJo+ or KQs.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Go all-in or fold?",
+  feedbackTitle: "A short stack on BTN",
+  feedbackReason:
+      "AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "A short stack on BTN",
+      body:
+          "For push or fold, check your hand and seat. Think about what the blinds call with.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "all_in_to_12_bb",
+      label: "All-in to 12 BB",
+      isCorrect: true,
+      preferredLabel: "All-in to 12 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "All-in to 12 BB",
+      betterAnswerLabel: "All-in to 12 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "With AJo first-in on BTN, folding passes a sound 12 BB all-in against the specified tight blind ranges; red-zone urgency is useful in this opening.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: "As Jd",
+    street: PokerStreet.preflop,
+    actor: 'btn',
+
+    folded: const {"utg", "hj", "co"},
+    stacks: const {
+      "utg": 25,
+      "hj": 30,
+      "co": 24,
+      "btn": 12,
+      "sb": 20,
+      "bb": 22,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9MRatioRecapRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  lessonId: 'w9_m_ratio_recap',
+  lessonTitle: "When M helps",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Use the cost of a lap.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How should you use the zone?",
+  feedbackTitle: "When M helps",
+  feedbackReason:
+      "The red-zone examples differed in position, cards and action, so their correct decisions differed too.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "combine_m_with_the_hand_and_tournament_context",
+      label: "Combine M with the hand and tournament context",
+      isCorrect: true,
+      preferredLabel: "Combine M with the hand and tournament context",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "The red-zone examples differed in position, cards and action, so their correct decisions differed too.",
+    ),
+    Act0RunnerOptionV1(
+      id: "use_m_and_cards_but_skip_the_payout_context",
+      label: "Use M and cards but skip the payout context",
+      isCorrect: false,
+      preferredLabel: "Combine M with the hand and tournament context",
+      betterAnswerLabel: "Combine M with the hand and tournament context",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You account for urgency and hand strength, but the 2 BB rival in the bubble example changed the cost of losing the stack.",
+    ),
+    Act0RunnerOptionV1(
+      id: "shove_because_the_zone_is_red",
+      label: "Commit your stack based on the red zone",
+      isCorrect: false,
+      preferredLabel: "Combine M with the hand and tournament context",
+      betterAnswerLabel: "Combine M with the hand and tournament context",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9BubblePressureIntroRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.theory,
+  lessonId: 'w9_bubble_intro',
+  lessonTitle: "What does a call cost?",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "The money bubble is the last stage before those left win a prize.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What is this example's risk premium?",
+  feedbackTitle: "What does a call cost?",
+  feedbackReason:
+      "Subtract the chip threshold from the payout threshold: 55%-40%=15 percentage points.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "What does a call cost?",
+      body:
+          "Equity is your share of a pot on average. A tie gets its share too. Near a prize, a call that could bust you may need more equity than the chip price asks for. The gap is the risk premium. A stack that can bust yours covers you. Check the rest of the stacks and the prizes too.",
+    ),
+  ],
+  options: const [],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9BubblePremiumGapRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_bubble_premium_gap',
+  lessonTitle: "The extra cost of a call",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "You need to win 36% of the time for chips. The prize model needs 51%.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How much extra equity does the call need?",
+  feedbackTitle: "The extra cost of a call",
+  feedbackReason: "The gap from 36% to 51% is 15 points.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "36_points",
+      label: "36 points",
+      isCorrect: false,
+      preferredLabel: "15 points",
+      betterAnswerLabel: "15 points",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "36% is the chip price. Using it as the gap overstates the extra cost.",
+    ),
+    Act0RunnerOptionV1(
+      id: "15_points",
+      label: "15 points",
+      isCorrect: true,
+      preferredLabel: "15 points",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason: "The gap from 36% to 51% is 15 points.",
+    ),
+    Act0RunnerOptionV1(
+      id: "51_points",
+      label: "51 points",
+      isCorrect: false,
+      preferredLabel: "15 points",
+      betterAnswerLabel: "15 points",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "51% is the whole target. Treating it as a gap counts the chip price twice.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9MediumStackTightenRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_medium_stack_tighten',
+  lessonTitle: "A raise behind you",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six left, five paid. Prizes in order: 500, 250, 120, 80, 50. BTN has you covered. BTN makes the third bet with JJ+ or AK. A call uses your last 16 BB. UTG has 2 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "A raise behind you",
+  feedbackReason:
+      "Keep 16 BB instead of committing AQo against JJ+/AK while a 2 BB player remains below you.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "A raise behind you",
+      body:
+          "A 3-bet is the next raise after the first raise. Think about the hands that make that raise. The strength to open a hand can fall short of the strength to call a re-raise.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_16_bb",
+      label: "Call 16 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AQo's CO opening permission does not cover this 3-bet. You risk elimination for a 42.7% chip price against a range that dominates or leads your hand.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Keep 16 BB instead of committing AQo against JJ+/AK while a 2 BB player remains below you.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ah Qd",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {"utg": 2, "hj": 12, "co": 18, "btn": 50, "sb": 8, "bb": 10},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        18,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2 BB"),
+      Act0ActionTrailItemV1(label: "BTN raises to 18 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
         amountLabel: '18 BB',
       ),
     },
   ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'tighten_stackoff',
-      label: 'Tighten thin stack-offs versus the covering blind',
-      isCorrect: true,
-      preferredLabel: 'Tighten thin stack-offs versus the covering blind',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong table read.',
-      feedbackReason:
-          'If BB can eliminate you, you may need more equity than chip odds suggest. That extra equity is the risk premium. Whether A-J should call depends on BB’s all-in range, the remaining stacks and the payouts.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call_chip_ev',
-      label: 'Call as wide as normal chip EV allows',
-      isCorrect: false,
-      preferredLabel: 'Tighten thin stack-offs versus the covering blind',
-      betterAnswerLabel: 'Tighten thin stack-offs versus the covering blind',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too loose for bubble pressure.',
-      feedbackReason:
-          'With A-J offsuit facing BB’s 18 BB all-in, chip odds price the call. If losing would eliminate you near the bubble, you may need extra equity because missing the payouts has a cost.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_anything_close',
-      label:
-          'Plan to fold borderline hands like A-J against the covering blind',
-      isCorrect: false,
-      preferredLabel: 'Tighten thin stack-offs versus the covering blind',
-      betterAnswerLabel: 'Tighten thin stack-offs versus the covering blind',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Right caution, too extreme.',
-      feedbackReason:
-          'Folding A-J can be right if calling the covering blind risks elimination. Deciding in advance ignores how often BB goes all-in with worse hands and how the remaining stacks and payouts affect your risk premium.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Bubble pressure changes the stack-off bar.',
-      body:
-          'An all-in for 18 BB tells you the big blind’s wager. To know whether a loss would eliminate you, compare it with your own stack. Payouts and other stacks determine how much extra equity you need.',
-      focusLabels: <String>[
-        'Real table',
-        'Bubble',
-        'Medium stack',
-        'Big blind leverage',
-      ],
-    ),
-  ],
 );
 
-final _w9BubbleRecapRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w9_bubble_recap',
-  caption: 'Lesson learned: bubble pressure changes who can risk chips.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Medium stacks tighten more; big stacks can lean with leverage.',
-  question: 'What is the bubble-pressure takeaway?',
-  feedbackTitle: 'Bubble takeaway.',
-  feedbackReason:
-      'Risk premium is not fear. It is a context shift: medium stacks defend life, big stacks can pressure selectively.',
-);
-
-final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
+final _w9BigStackLeverageRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_checkpoint_survival_line',
-  caption: 'You are short with one orbit left.',
-  hint: 'Tournament life still needs action windows.',
-  question: 'What is the best pressure line?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'disciplined_urgency',
-      label: 'Disciplined urgency in reasonable spots',
-      isCorrect: true,
-      preferredLabel: 'Disciplined urgency in reasonable spots',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
-      feedbackReason:
-          'Good tournament pressure play combines survival with timely action, not passive waiting.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'panic_any_two',
-      label:
-          'Go all-in with 7-2 offsuit over a tight early-position raise and a call',
-      isCorrect: false,
-      preferredLabel: 'Disciplined urgency in reasonable spots',
-      betterAnswerLabel: 'Disciplined urgency in reasonable spots',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too extreme.',
-      feedbackReason:
-          'After a tight early raise and a call, two players have already committed chips. With 7-2 offsuit you have little chance to win when called and little leverage to make both fold. Look for a spot where you can act first.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'wait_only_aa',
-      label: 'Fold until you pick up pocket aces',
-      isCorrect: false,
-      preferredLabel: 'Disciplined urgency in reasonable spots',
-      betterAnswerLabel: 'Disciplined urgency in reasonable spots',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too tight.',
-      feedbackReason:
-          'With a short stack and one orbit left, waiting for pocket aces gives up playable spots before the blinds come around and reduce your fold equity.',
-    ),
-  ],
-);
-
-final _w9CheckpointZoneLineRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_checkpoint_zone_line',
-  caption: 'Two players face similar hand strength in different M-ratio zones.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Zone changes urgency.',
-  question: 'Which player should act sooner?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'red_zone',
-      label: 'Red-zone player',
-      isCorrect: true,
-      preferredLabel: 'Red-zone player',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
-      feedbackReason:
-          'Lower M-ratio means fewer orbits and higher urgency. Red-zone stacks need earlier action windows.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'green_zone',
-      label: 'Green-zone player',
-      isCorrect: false,
-      preferredLabel: 'Red-zone player',
-      betterAnswerLabel: 'Red-zone player',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'With similar hands, the red-zone player has fewer orbits before the blinds erode their ability to make opponents fold. The green-zone player has more time to choose a spot.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'same_zone',
-      label: 'Both should act the same way',
-      isCorrect: false,
-      preferredLabel: 'Red-zone player',
-      betterAnswerLabel: 'Red-zone player',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'The red-zone player has fewer orbits.',
-      feedbackReason:
-          'Across M-ratio zones, acting the same way in both zones either bleeds a red zone short stack through passivity or risks a green zone stack too loosely.',
-    ),
-  ],
-);
-
-final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_checkpoint_bubble_line',
-  caption: 'Near bubble: medium stack faces big-stack open.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Risk premium should influence the response.',
-  question: 'What is often the cleaner medium-stack plan?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'tighten_defense',
-      label: 'Tighten defend and avoid thin all-ins',
-      isCorrect: true,
-      preferredLabel: 'Tighten defend and avoid thin all-ins',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason:
-          'Bubble risk premium raises the bar for medium-stack stack-offs against covering stacks.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'chip_ev_only',
-      label: 'Defend as wide as normal chip EV spot',
-      isCorrect: false,
-      preferredLabel: 'Tighten defend and avoid thin all-ins',
-      betterAnswerLabel: 'Tighten defend and avoid thin all-ins',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'Near the bubble when a medium stack faces a big stack open, defending as wide as chip EV risks tournament elimination without accounting for the payout risk premium.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_everything',
-      label:
-          'Fold borderline hands like A-J by default against a big-stack open',
-      isCorrect: false,
-      preferredLabel: 'Tighten defend and avoid thin all-ins',
-      betterAnswerLabel: 'Tighten defend and avoid thin all-ins',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too passive.',
-      feedbackReason:
-          'Folding A-J can be right against a tight opener. A big stack can also open wide to pressure you, so read its range and your position before folding. Calling a raise and calling off your stack carry different risks.',
-    ),
-  ],
-);
-
-final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w9_tournament_checkpoint',
-  caption:
-      'Lesson learned: tournament pressure changes risk and adjustment windows.',
-  hint:
-      'Next you will convert pressure reads into opponent-specific player adjustments.',
-  question:
-      'What does tournament-pressure thinking add before player adjustment?',
-  feedbackTitle: 'Tournament-pressure checkpoint.',
-  feedbackReason:
-      'You now read survival pressure, M-ratio urgency, and bubble risk premium. Next, apply those reads against specific player types.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Pressure before adjustment.',
-      body:
-          'First map pressure with stack and payout context. Then choose targeted lines based on who is overfolding, calling too wide, or avoiding risk.',
-      focusLabels: <String>[
-        'Survival pressure',
-        'M-ratio',
-        'Risk premium',
-        'Player adjustment',
-      ],
-    ),
-  ],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'player_only',
-      label: 'Adjust by player type and ignore stack pressure',
-      isCorrect: false,
-      preferredLabel: 'Map pressure first, then adjust by player',
-      betterAnswerLabel: 'Map pressure first, then adjust by player',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable start.',
-      feedbackReason:
-          'Across M-ratio zones and medium stack bubble spots, adjusting by player type while ignoring stack pressure can lead to thin stack-offs that put your tournament life at risk near the bubble.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'pressure_then_adjust',
-      label: 'Map pressure first, then adjust by player',
-      isCorrect: true,
-      preferredLabel: 'Map pressure first, then adjust by player',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Pressure comes first.',
-      feedbackReason:
-          'That sequence is the bridge to World 10: pressure context first, player-specific adjustment second.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'cards_only',
-      label: 'Map pressure, then copy broad player reads',
-      isCorrect: false,
-      preferredLabel: 'Map pressure first, then adjust by player',
-      betterAnswerLabel: 'Map pressure first, then adjust by player',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Order is right, adjustment is too broad.',
-      feedbackReason:
-          'After mapping M-ratio and medium stack bubble pressure, copying broad player reads without a specific tendency wastes chips against opponents who do not share that leak.',
-    ),
-  ],
-);
-
-final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w9_table_pressure_notice',
-  lessonTitle: 'Tournament pressure checkpoint',
+  lessonId: 'w9_big_stack_leverage',
+  lessonTitle: "Three players left to act",
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      'Near the bubble, suppose a covering big stack opens into your medium stack.',
-  hint: 'Consider who could be eliminated if the stacks go in.',
-  question: 'What is the clean first pressure read?',
-  feedbackTitle: 'Pressure read first.',
+      "Six left, five paid. You cover BTN, SB and BB. They all fold 85% of the time to either size. When one re-raises, you fold.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How should you open?",
+  feedbackTitle: "Three players left to act",
   feedbackReason:
-      'Tournament pressure starts with naming who carries the risk premium and who carries the leverage.',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'medium_stack_pressure',
-      label: 'Respect bubble pressure',
-      isCorrect: true,
-      preferredLabel: 'Respect bubble pressure',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
-      feedbackReason:
-          'That is the key shift. Bubble pressure hits the medium stack harder, while the covering stack can apply leverage.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'same_cash_logic',
-      label: 'Treat it like cash',
-      isCorrect: false,
-      preferredLabel: 'Respect bubble pressure',
-      betterAnswerLabel: 'Respect bubble pressure',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not quite.',
-      feedbackReason:
-          'Near the bubble when a covering big stack opens into your medium stack, treating the spot like cash ignores the payout risk premium and risks elimination on thin calls.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_everything_bubble',
-      label: 'Fold everything',
-      isCorrect: false,
-      preferredLabel: 'Respect bubble pressure',
-      betterAnswerLabel: 'Respect bubble pressure',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable caution.',
-      feedbackReason:
-          'When a covering big stack opens into your medium stack near the bubble, folding without looking at your hand or the opener’s range passes up profitable spots that still justify continuing under bubble pressure.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
+      "KJo applies pressure from CO for 2 BB; the stated folds win 1.5 BB without risking an opponent's full stack.",
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Name pressure before action.',
+      title: "Three players left to act",
       body:
-          'Real tournament spots get easier when you first identify who can pressure and who pays the bigger busting cost.',
-      focusLabels: <String>['Bubble', 'Medium stack', 'Leverage'],
+          "A big stack can put a smaller one at risk. Choose a size based on how the other players will act.",
     ),
   ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "raise_to_3_bb",
+      label: "Raise to 3 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You use the right pressure opportunity, but the same 85% fold rate means the extra 1 BB is lost on the 15% resistance branch.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "With KJo in CO and 85% joint folds behind, folding gives up a profitable chance to collect 1.5 BB from stacks you cover.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 2 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "KJo applies pressure from CO for 2 BB; the stated folds win 1.5 BB without risking an opponent's full stack.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Kc Jd",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg", "hj"},
+    stacks: const {"utg": 3, "hj": 12, "co": 60, "btn": 28, "sb": 24, "bb": 26},
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10PlayerTypeIntroRunner = _w9BubblePressureIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+final _w9BubbleCoverSeatRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_bubble_cover_seat',
+  lessonTitle: "Read the stacks",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "You have 32 BB. Three stacks behind you have 9 BB, 14 BB and 30 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How many of those stacks can bust you?",
+  feedbackTitle: "Read the stacks",
+  feedbackReason:
+      "You have more than each stack. One of those players can take chips but cannot bust you heads-up.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "0_stacks",
+      label: "0 stacks",
+      isCorrect: true,
+      preferredLabel: "0 stacks",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "You have more than each stack. One of those players can take chips but cannot bust you heads-up.",
+    ),
+    Act0RunnerOptionV1(
+      id: "1_stack",
+      label: "1 stack",
+      isCorrect: false,
+      preferredLabel: "0 stacks",
+      betterAnswerLabel: "0 stacks",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "30 BB comes close. You still have 2 BB if you lose 30 BB to that stack.",
+    ),
+    Act0RunnerOptionV1(
+      id: "3_stacks",
+      label: "3 stacks",
+      isCorrect: false,
+      preferredLabel: "0 stacks",
+      betterAnswerLabel: "0 stacks",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Each stack has less than 32 BB. Adding them up gives the wrong risk for a heads-up pot.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_bubble_short_stack',
+  lessonTitle: "Shortest stack",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six left, five paid. You start with 6 BB, the shortest stack. It folds to you in HJ.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Go all-in or fold?",
+  feedbackTitle: "Shortest stack",
+  feedbackReason:
+      "Use AKo first-in while your 6 BB can still win the 1.5 BB blinds without a showdown.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Shortest stack",
+      body:
+          "When you act first, an all-in can win the blinds. Compare the short stack and the hand with the cost of waiting.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "all_in_to_6_bb",
+      label: "All-in to 6 BB",
+      isCorrect: true,
+      preferredLabel: "All-in to 6 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Use AKo first-in while your 6 BB can still win the 1.5 BB blinds without a showdown.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "All-in to 6 BB",
+      betterAnswerLabel: "All-in to 6 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AKo is a strong first-in hand and you are the 6 BB shortest stack. Folding sacrifices a sound growth opportunity without a smaller rival to wait behind.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "Ac Kh",
+    street: PokerStreet.preflop,
+    actor: 'hj',
+
+    folded: const {"utg"},
+    stacks: const {"utg": 18, "hj": 6, "co": 20, "btn": 24, "sb": 12, "bb": 20},
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_bubble_table_risk_transfer',
+  lessonTitle: "A raise from BB",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six left, five paid. Prizes in order: 500, 250, 120, 80, 50. BB starts with 50 BB and raises to 18 BB with JJ+ or AK. You opened to 2.5 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "A raise from BB",
+  feedbackReason:
+      "Fold AJo here. You would need to add 15.5 BB and risk your last chips against JJ or better, or AK. A different raise range, set of stacks or set of prizes can change the call.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_15_5_bb",
+      label: "Call 15.5 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AJo needs to justify 15.5/36.5=42.5% before payout pressure. Against JJ+/AK, committing the rest to defend a 2.5 BB open risks elimination without enough strength.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Fold AJo here. You would need to add 15.5 BB and risk your last chips against JJ or better, or AK. A different raise range, set of stacks or set of prizes can change the call.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: "As Jd",
+    street: PokerStreet.preflop,
+    actor: 'btn',
+
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {"utg": 2, "hj": 12, "co": 10, "btn": 18, "sb": 8, "bb": 50},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        17,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB raises to 18 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '18 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2.5 BB',
+      ),
+    },
+  ).copyWith(autoPlayHistory: true),
+);
+
+final _w9BubbleRecapRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  lessonId: 'w9_bubble_recap',
+  lessonTitle: "Three stacks recap",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Recall the three stack sizes in this lesson.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What guides the bubble adjustment?",
+  feedbackTitle: "Three stacks recap",
+  feedbackReason:
+      "These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "stack_size_and_cards_without_the_payouts",
+      label: "Stack size and cards without the payouts",
+      isCorrect: false,
+      preferredLabel: "Coverage, payouts, ranges and the remaining stacks",
+      betterAnswerLabel: "Coverage, payouts, ranges and the remaining stacks",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You identify hand strength and depth, but omit the prize cost illustrated by the 20 BB river example with a 2 BB rival.",
+    ),
+    Act0RunnerOptionV1(
+      id: "coverage_payouts_ranges_and_the_remaining_stacks",
+      label: "Coverage, payouts, ranges and the remaining stacks",
+      isCorrect: true,
+      preferredLabel: "Coverage, payouts, ranges and the remaining stacks",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.",
+    ),
+    Act0RunnerOptionV1(
+      id: "being_short_justifies_a_loose_call_off",
+      label: "Being short justifies a loose call-off",
+      isCorrect: false,
+      preferredLabel: "Coverage, payouts, ranges and the remaining stacks",
+      betterAnswerLabel: "Coverage, payouts, ranges and the remaining stacks",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The 7.5 BB Q8o deal still faced strong ranges; calling or going all-in with weak cards can remove the stack before a suitable opportunity.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9CheckpointIntroRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.theory,
+  lessonId: 'w9_checkpoint_intro',
+  lessonTitle: "Read stack pressure",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Five deals test how you read risk.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What belongs in the pressure read?",
+  feedbackTitle: "Read stack pressure",
+  feedbackReason:
+      "Together these describe both the poker decision and the cost of tournament elimination.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Read stack pressure",
+      body:
+          "Read the hand and the action. Work out how long the stack can last. Check who can bust whom. When a prize model is given, use its inputs. The next five deals ask you to put these steps together.",
+    ),
+  ],
+  options: const [],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9PrizeModelInputsRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_prize_model_inputs',
+  lessonTitle: "What a prize model needs",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "One model gives a chip price. A second model gives the win rate you need to keep prize value.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which input belongs to the prize model?",
+  feedbackTitle: "What a prize model needs",
+  feedbackReason:
+      "A prize model needs the payouts and stacks. A bigger jump in prizes can change what a fold is worth.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "your_two_card_suits",
+      label: "Your two card suits",
+      isCorrect: false,
+      preferredLabel: "The prize for each place",
+      betterAnswerLabel: "The prize for each place",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Your suits can change your share of the pot. They give no value to the next paid place.",
+    ),
+    Act0RunnerOptionV1(
+      id: "the_name_of_the_street",
+      label: "The name of the street",
+      isCorrect: false,
+      preferredLabel: "The prize for each place",
+      betterAnswerLabel: "The prize for each place",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The street tells you when the bet came. It does not tell you what you stand to win by moving up.",
+    ),
+    Act0RunnerOptionV1(
+      id: "the_prize_for_each_place",
+      label: "The prize for each place",
+      isCorrect: true,
+      preferredLabel: "The prize for each place",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "A prize model needs the payouts and stacks. A bigger jump in prizes can change what a fold is worth.",
+    ),
+  ],
+  table: _w9TextStudyTableV1,
+);
+
+final _w9CheckpointSurvivalLineRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_checkpoint_survival_line',
+  lessonTitle: "First in from CO",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "You start with 7.5 BB. The money is far off. It folds to you in CO.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Go all-in or fold?",
+  feedbackTitle: "First in from CO",
+  feedbackReason:
+      "AQs is Strong. First-in from CO, your 7.5 BB can win the 1.5 BB blinds and has strength when called.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "all_in_to_7_5_bb",
+      label: "All-in to 7.5 BB",
+      isCorrect: true,
+      preferredLabel: "All-in to 7.5 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "AQs is Strong. First-in from CO, your 7.5 BB can win the 1.5 BB blinds and has strength when called.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "All-in to 7.5 BB",
+      betterAnswerLabel: "All-in to 7.5 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AQs with 7.5 BB first-in from CO is a suitable short-stack opportunity; folding gives up both fold equity and value when worse hands continue.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ac Qc",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg", "hj"},
+    stacks: const {
+      "utg": 24,
+      "hj": 28,
+      "co": 7.5,
+      "btn": 20,
+      "sb": 18,
+      "bb": 25,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9CheckpointZoneLineRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_checkpoint_zone_line',
+  lessonTitle: "First to act",
+  lessonSubtitle: 'Tournament Pressure',
+  caption: "Starting stack: 33 BB in first seat. No antes.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which zone and opening fit?",
+  feedbackTitle: "First to act",
+  feedbackReason:
+      "33/1.5=22 is green. TT is Strong and opens UTG while 31 BB remain for later decisions.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "green_raise_to_2_bb",
+      label: "Green; raise to 2 BB",
+      isCorrect: true,
+      preferredLabel: "Green; raise to 2 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "33/1.5=22 is green. TT is Strong and opens UTG while 31 BB remain for later decisions.",
+    ),
+    Act0RunnerOptionV1(
+      id: "yellow_raise_to_2_bb",
+      label: "Yellow; raise to 2 BB",
+      isCorrect: false,
+      preferredLabel: "Green; raise to 2 BB",
+      betterAnswerLabel: "Green; raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The TT open is suitable, but 33/1.5=22 is green, not yellow; the mistaken zone overstates urgency with 33 BB.",
+    ),
+    Act0RunnerOptionV1(
+      id: "same_zone",
+      label: "Red; all-in to 33 BB",
+      isCorrect: false,
+      preferredLabel: "Green; raise to 2 BB",
+      betterAnswerLabel: "Green; raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "33/1.5=22 is green, not red; TT has no urgency to risk 33 BB for a 1.5 BB pot; a small open retains useful options against the five players behind.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'utg',
+    hand: "Ts Th",
+    street: PokerStreet.preflop,
+    actor: 'utg',
+
+    folded: const {},
+    stacks: const {
+      "utg": 33,
+      "hj": 35,
+      "co": 22,
+      "btn": 40,
+      "sb": 28,
+      "bb": 31,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w9CheckpointBubbleLineRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_checkpoint_bubble_line',
+  lessonTitle: "River bet from BB",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six left, five paid. Prizes in order: 500, 250, 120, 80, 50. BB bets 12 BB into 8.5 BB. The range is 60% AK, K8 or 88 and 40% missed 97s. You win 40% with no ties. The prize threshold is 58.4%.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "River bet from BB",
+  feedbackReason:
+      "Keep 12 BB. KQ's 40% wins beat the 36.9% chip price, but fall below this deal's supplied payout threshold with a 3 BB rival still present.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_12_bb",
+      label: "Call 12 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "KQ is top pair, but loses to AK, K8 and 88. The 1 BB chip profit does not cover the prize value lost by risking elimination against the covering BB.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Keep 12 BB. KQ's 40% wins beat the 36.9% chip price, but fall below this deal's supplied payout threshold with a 3 BB rival still present.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Kc Qd",
+    street: PokerStreet.river,
+    actor: 'co',
+    board: _act0LessonCardsV1("Ks 8h 4d 6s 2c"),
+    folded: const {"utg", "hj", "btn", "sb"},
+    stacks: const {"utg": 3, "hj": 11, "co": 16, "btn": 15, "sb": 7, "bb": 48},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'bb',
+        Act0ContributionKindV1.wager,
+        12,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 2 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "CO checks"),
+      Act0ActionTrailItemV1(label: "River: BB bets 12 BB"),
+    ],
+    bets: const {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '12 BB',
+      ),
+    },
+  ),
+);
+
+final _w9TablePressureNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_checkpoint_table_notice',
+  lessonTitle: "Four seats behind",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six left, five paid. You cover the four seats behind. They all fold 80% of the time to either size. When one re-raises, you fold.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How should you open?",
+  feedbackTitle: "Four seats behind",
+  feedbackReason:
+      "KQs is a permitted HJ opener. The 55 BB stack can pressure four covered opponents for 2 BB and collect 1.5 BB when they fold.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "raise_to_3_bb",
+      label: "Raise to 3 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "You choose an allowed HJ hand, but the same 80% fold rate means the larger size loses an extra 1 BB on resistance without adding successful steals.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 2 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "KQs is a permitted HJ opener. The 55 BB stack can pressure four covered opponents for 2 BB and collect 1.5 BB when they fold.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "KQs from HJ can gain from the stated 80% joint fold rate; folding passes a profitable small-open opportunity despite covering the opponents behind.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "Kd Qd",
+    street: PokerStreet.preflop,
+    actor: 'hj',
+
+    folded: const {"utg"},
+    stacks: const {"utg": 3, "hj": 55, "co": 26, "btn": 22, "sb": 24, "bb": 20},
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _world9TournamentCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  lessonId: 'w9_checkpoint_review',
+  lessonTitle: "The last call",
+  lessonSubtitle: 'Tournament Pressure',
+  caption:
+      "Six left, five paid. BTN covers you and raises to 20 BB with QQ+ or AK. A call uses your last 19 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "The last call",
+  feedbackReason:
+      "AA is far ahead of this QQ+/AK range. Its advantage is large enough to justify the 19 BB commitment under these payouts and stacks.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_19_bb",
+      label: "Call 19 BB",
+      isCorrect: true,
+      preferredLabel: "Call 19 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "AA is far ahead of this QQ+/AK range. Its advantage is large enough to justify the 19 BB commitment under these payouts and stacks.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Call 19 BB",
+      betterAnswerLabel: "Call 19 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A 2 BB rival creates pressure, but AA against QQ+/AK is a sufficiently strong opportunity; folding gives up substantial prize value, not merely a thin chip edge.",
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "As Ah",
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {"utg": 2, "hj": 10, "co": 8, "btn": 50, "sb": 10, "bb": 20},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        20,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 20 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '20 BB',
+      ),
+    },
+  ),
+);
+
+// Concept questions use the stated setup without an unrelated deal.
+const _w10TextStudyTableV1 = Act0TableStateV1(
+  scope: Act0TableScopeV1.explanation,
+  showDecisionPremise: true,
+  tableFormat: Act0TableFormatV1.sixMax,
+  playerCount: 6,
+  seats: [],
+  heroCards: [],
+  boardCards: [],
+  streetLabel: '',
+  potLabel: '',
+  toCallLabel: '',
+  centerLabel: '',
+  highlightedSeatIds: [],
+  highlightedCardIds: [],
+);
+
+final _w10PlayerTypeIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w10_player_type_intro',
-  lessonTitle: 'Who is at the table',
+  lessonTitle: "How players act",
   lessonSubtitle: 'Player Adjustment',
-  caption: 'Tag one clear tendency before you change strategy.',
-  hint: 'One useful read beats five vague labels.',
-  question: 'What is the first step in player adjustment?',
-  feedbackTitle: 'Adjustment foundation.',
+  caption: "Read how the table plays.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which clue is most useful over time?",
+  feedbackTitle: "How players act",
   feedbackReason:
-      'Start by naming one reliable tendency. Then apply one targeted change instead of a full strategy rewrite.',
-  teachingSteps: const <Act0TeachingStepV1>[
+      "Several hands can show how often a player folds, calls or bets. You can use that read in the next hand.",
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Tag first, adjust second.',
+      title: "How players act",
       body:
-          'Look for repeated behavior: overfolding, calling too wide, bluffing too much, or bluffing too little. Build the adjustment from that one signal.',
-      focusLabels: <String>['Tendency', 'Tag', 'Adjust'],
+          "A nit plays few hands and folds a lot. A loose-passive player calls a lot and rarely raises. A calling station calls bets too much. An aggressive player bets and raises a lot. One who does so with too many weak hands is over-aggressive. An underbluffer bets strong hands and seldom bluffs. A 3-bet is a raise over an open raise. A c-bet is a flop bet by the player who raised preflop. These hands have no rake or antes.",
     ),
   ],
+  options: const [],
+
+  table: _w10TextStudyTableV1,
 );
 
-final _w10NitTagRunner = _w10PlayerTypeIntroRunner.copyWith(
+final _w10NitTagRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_nit_tag',
-  caption: 'Opponent folds to steals repeatedly and rarely 3-bets.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Tight fold-heavy behavior has one obvious label.',
-  question: 'What is the most useful quick tag?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'maniac',
-      label: 'Overbluffing maniac',
-      isCorrect: false,
-      preferredLabel: 'Tight-folding profile (nit)',
-      betterAnswerLabel: 'Tight-folding profile (nit)',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Opposite profile.',
-      feedbackReason:
-          'When an opponent repeatedly folds to steals and rarely puts in a 3-bet, tagging a maniac misreads a tight profile and forfeits easy blind-steal profit.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'nit',
-      label: 'Tight-folding profile (nit)',
-      isCorrect: true,
-      preferredLabel: 'Tight-folding profile (nit)',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
-      feedbackReason:
-          'Frequent folds and low aggression map to a tight profile. That supports selective steal pressure.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'unknown',
-      label: 'Wait for one more orbit before adjusting',
-      isCorrect: false,
-      preferredLabel: 'Tight-folding profile (nit)',
-      betterAnswerLabel: 'Tight-folding profile (nit)',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable caution.',
-      feedbackReason:
-          'After seeing repeated folds to steals and a low 3-bet rate, waiting another orbit leaves uncontested blind pots on the table.',
+  lessonTitle: "Read both blinds",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "Both blinds are nits. They fold 90% of the time to either size. When one 3-bets, you fold.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Open or fold?",
+  feedbackTitle: "Read both blinds",
+  feedbackReason:
+      "The blinds fold 90% of the time. The steal earns 1.15 BB on average: 0.90 x 1.5 - 0.10 x 2.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Read both blinds",
+      body:
+          "In the first-in chart, open Premium (AA–QQ and AKs) or Strong (JJ–TT, AKo, AQs and AJs) from UTG through BTN. Open Medium AQo, AJo, KQ and AT from HJ through BTN. Open Medium 99–22, KJ, QJs, KT and QT from CO or BTN. Fold Weak hands. This drill gives a rare exception based on who is left to act.",
     ),
   ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 2 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "The blinds fold 90% of the time. The steal earns 1.15 BB on average: 0.90 x 1.5 - 0.10 x 2.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "97s is Weak in the base chart, but this strong read gives a 90% chance to win 1.5 BB without a flop. Folding misses that small steal.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_4_bb",
+      label: "Raise to 4 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The same blinds fold 90% to either size in this read. A 4 BB open costs 2 BB more when one 3-bets.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: "9s 7s",
+    street: PokerStreet.preflop,
+    actor: 'btn',
+
+    folded: const {"utg", "hj", "co"},
+    stacks: const {
+      "utg": 65,
+      "hj": 70,
+      "co": 62,
+      "btn": 45,
+      "sb": 48,
+      "bb": 50,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
+final _w10LoosePassiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_loose_passive_tag',
-  caption: 'Opponent calls often preflop and postflop but rarely raises.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Calling wide without raises signals a common profile.',
-  question: 'Which profile matches the repeated calling pattern?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'tight_aggressive',
-      label: 'Tight-aggressive reg',
-      isCorrect: false,
-      preferredLabel: 'Loose-passive caller',
-      betterAnswerLabel: 'Loose-passive caller',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not this one.',
-      feedbackReason:
-          'When an opponent calls often preflop and postflop without raising, tagging a tight-aggressive profile misses thin value bets against a passive caller.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'random',
-      label: 'Possible sample noise, keep the tag light',
-      isCorrect: false,
-      preferredLabel: 'Loose-passive caller',
-      betterAnswerLabel: 'Loose-passive caller',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Could happen short term.',
-      feedbackReason:
-          'After repeated preflop and postflop calls without raises, dismissing the pattern as noise forfeits extra value against a loose-passive opponent.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'loose_passive',
-      label: 'Loose-passive caller',
-      isCorrect: true,
-      preferredLabel: 'Loose-passive caller',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
-      feedbackReason:
-          'Frequent calls with low raise rate is the classic loose-passive tendency.',
+  lessonTitle: "Facing a limp",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "HJ limps for 1 BB. In 12 shown hands, HJ called with weak aces and small pairs. HJ rarely 3-bets.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How should you enter?",
+  feedbackTitle: "Facing a limp",
+  feedbackReason:
+      "AJo is a Medium CO hand. The 4 BB raise puts more chips in against weak aces and pairs that HJ has called before.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Facing a limp",
+      body:
+          "A limp is a call before the first raise. An isolation raise aims to play a pot with just the limper. Check the limper and seats behind you.",
     ),
   ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_1_bb",
+      label: "Call 1 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 4 BB",
+      betterAnswerLabel: "Raise to 4 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AJo can play, but matching the 1 BB limp lets BTN and the blinds join for cheap. You miss value from HJ weak calls.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_4_bb",
+      label: "Raise to 4 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 4 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "AJo is a Medium CO hand. The 4 BB raise puts more chips in against weak aces and pairs that HJ has called before.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Raise to 4 BB",
+      betterAnswerLabel: "Raise to 4 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AJo is a Medium CO hand against a loose caller. Folding gives up a good chance to play for value after the 1 BB limp.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ah Jd",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg"},
+    stacks: const {
+      "utg": 70,
+      "hj": 55,
+      "co": 45,
+      "btn": 50,
+      "sb": 45,
+      "bb": 60,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ calls 1 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
+final _w10FindLimperRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_find_limper',
+  lessonTitle: "Track the first call",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Tap the seat that limped.",
+  feedbackTitle: "Track the first call",
+  feedbackReason: "HJ put in 1 BB before a raise. That call is a limp.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "sb",
+      label: "SB",
+      isCorrect: false,
+      preferredLabel: "HJ",
+      betterAnswerLabel: "HJ",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason: "SB posted 0.5 BB as a blind. That post was forced.",
+      seatId: "sb",
+    ),
+    Act0RunnerOptionV1(
+      id: "bb",
+      label: "BB",
+      isCorrect: false,
+      preferredLabel: "HJ",
+      betterAnswerLabel: "HJ",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BB posted 1 BB as a blind. That is part of the cost of a hand.",
+      seatId: "bb",
+    ),
+    Act0RunnerOptionV1(
+      id: "hj",
+      label: "HJ",
+      isCorrect: true,
+      preferredLabel: "HJ",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason: "HJ put in 1 BB before a raise. That call is a limp.",
+      seatId: "hj",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "As Tc",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg"},
+    stacks: const {
+      "utg": 70,
+      "hj": 55,
+      "co": 45,
+      "btn": 50,
+      "sb": 45,
+      "bb": 60,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ calls 1 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '1 BB',
+      ),
+    },
+  ).copyWith(selectableSeatIds: const ["hj", "sb", "bb"]),
+);
+
+final _w10UnderbluffSecondRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_underbluff_second',
+  lessonTitle: "A large river bet",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BB showed a strong hand on 11 of 12 large river leads. This bet is 92% AQ, AK, two pair or sets. The last 8% is missed KQ.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "A large river bet",
+  feedbackReason:
+      "The pot is 23.5 and a call costs 12. You need 33.8% wins, but AT beats 8% of this bet mix.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "The pot is 23.5 and a call costs 12. You need 33.8% wins, but AT beats 8% of this bet mix.",
+    ),
+    Act0RunnerOptionV1(
+      id: "call_12_bb",
+      label: "Call 12 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AT loses to AQ, AK, two pair and sets. With 8% wins, the 12 BB call loses about 9.16 BB.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_30_bb",
+      label: "Raise to 30 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The 92% value range can call a large raise. Betting more with AT builds a pot against hands that beat it.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "Ac Tc",
+    street: PokerStreet.river,
+    actor: 'hj',
+    board: _act0LessonCardsV1("As 8d 3c 6h 2s"),
+
+    folded: const {"utg", "co", "btn", "sb"},
+    stacks: const {
+      "utg": 55,
+      "hj": 62,
+      "co": 60,
+      "btn": 58,
+      "sb": 54,
+      "bb": 61,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'bb',
+        Act0ContributionKindV1.wager,
+        12,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "HJ bets 3 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 3 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "HJ checks"),
+      Act0ActionTrailItemV1(label: "River: BB bets 12 BB"),
+    ],
+    bets: const {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '12 BB',
+      ),
+    },
+  ),
+);
+
+final _w10OveraggressiveTagRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_overaggressive_tag',
+  lessonTitle: "Read the flop bet",
+  lessonSubtitle: 'Player Adjustment',
   caption:
-      'Opponent raises often. In several earlier hands, you saw them make two bets and then show a weak hand.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Frequent pressure with weak showdowns points to one useful tag.',
-  question: 'Which tag fits repeated pressure with weak showdowns?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'overaggressive',
-      label: 'Over-aggressive bluffer',
-      isCorrect: true,
-      preferredLabel: 'Over-aggressive bluffer',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
-      feedbackReason:
-          'The frequent raises and weak hands shown after two bets suggest a possible over-aggressive pattern. Keep watching for more examples.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'nit',
-      label: 'Tight-folding nit',
-      isCorrect: false,
-      preferredLabel: 'Over-aggressive bluffer',
-      betterAnswerLabel: 'Over-aggressive bluffer',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Wrong direction.',
-      feedbackReason:
-          'Frequent raises and weak hands shown after two bets point toward aggression. Treating this player as tight can lead you to fold hands that beat their bluffs.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'unknown',
-      label: 'No useful read yet',
-      isCorrect: false,
-      preferredLabel: 'Over-aggressive bluffer',
-      betterAnswerLabel: 'Over-aggressive bluffer',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Careful instinct.',
-      feedbackReason:
-          'After seeing repeated raises and two-street pressure with weak showdowns, claiming no read yet leaves you open to being bluffed off medium hands.',
+      "BTN has shown five weak hands after big flop bets. If you raise, BTN folds those weak hands and keeps the strongest ones.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What keeps the weak bets in?",
+  feedbackTitle: "Read the flop bet",
+  feedbackReason:
+      "KJ has top pair and the price is 4/13.5 = 29.6%. The earlier weak bets give you a sound reason to keep bluffs in.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Read the flop bet",
+      body:
+          "Top pair means your card pairs the top rank on the board. A bet on the flop by the preflop raiser is a c-bet. Check what each action does to that range.",
     ),
   ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Call 4 BB",
+      betterAnswerLabel: "Call 4 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "With KJ on K-8-2, you beat weak BTN bets. Folding for 4 BB gives up this 29.6% price against a player seen betting air.",
+    ),
+    Act0RunnerOptionV1(
+      id: "call_4_bb",
+      label: "Call 4 BB",
+      isCorrect: true,
+      preferredLabel: "Call 4 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "KJ has top pair and the price is 4/13.5 = 29.6%. The earlier weak bets give you a sound reason to keep bluffs in.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_12_bb",
+      label: "Raise to 12 BB",
+      isCorrect: false,
+      preferredLabel: "Call 4 BB",
+      betterAnswerLabel: "Call 4 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "KJ can beat bluffs, but a raise to 12 may push those weak hands out. It builds a bigger pot when BTN has a better king or a set.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "Kc Jd",
+    street: PokerStreet.flop,
+    actor: 'bb',
+    board: _act0LessonCardsV1("Ks 8c 2d"),
+
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {
+      "utg": 65,
+      "hj": 56,
+      "co": 61,
+      "btn": 52,
+      "sb": 45,
+      "bb": 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        4,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 4 BB"),
+    ],
+    bets: const {
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '4 BB',
+      ),
+    },
+  ),
 );
 
-final _w10PlayerTypeRecapRunner = _w10PlayerTypeIntroRunner.copyWith(
+final _w10PlayerTypeRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w10_player_type_recap',
-  caption:
-      'Lesson learned: one tendency tag creates a cleaner adjustment plan.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Avoid complex labels before evidence is stable.',
-  question: 'What is the tagging takeaway?',
-  feedbackTitle: 'Player-type takeaway.',
+  lessonTitle: "Keep a useful read",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "You see a new hand from a player you have watched.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What keeps a player tag useful?",
+  feedbackTitle: "Keep a useful read",
   feedbackReason:
-      'Start with one repeated tendency and one actionable adjustment. Complexity comes later if the read stays stable.',
+      "Fresh hands can confirm or change the tag. This keeps a costly old read from shaping new pots.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "treat_the_tag_as_a_fixed_rule",
+      label: "Treat the tag as a fixed rule",
+      isCorrect: false,
+      preferredLabel: "Check it against new hands",
+      betterAnswerLabel: "Check it against new hands",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A nit can get a strong hand. A fixed tag can make you raise into a strong range.",
+    ),
+    Act0RunnerOptionV1(
+      id: "change_several_bet_habits_at_once",
+      label: "Change several bet habits at once",
+      isCorrect: false,
+      preferredLabel: "Check it against new hands",
+      betterAnswerLabel: "Check it against new hands",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Large changes make it hard to see if one read helped, and they can cost chips in the wrong pots.",
+    ),
+    Act0RunnerOptionV1(
+      id: "check_it_against_new_hands",
+      label: "Check it against new hands",
+      isCorrect: true,
+      preferredLabel: "Check it against new hands",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Fresh hands can confirm or change the tag. This keeps a costly old read from shaping new pots.",
+    ),
+  ],
+
+  table: _w10TextStudyTableV1,
 );
 
-final _w10OneLeverIntroRunner = _w10PlayerTypeIntroRunner.copyWith(
+final _w10OneLeverIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w10_one_lever_intro',
-  lessonTitle: 'Adjust one piece',
-  caption:
-      'Change one piece first: opening width, value density, or bluff rate.',
-  hint: 'Small precise changes are easier to trust and test.',
-  question: 'Why adjust one piece at a time?',
-  feedbackTitle: 'One-piece foundation.',
+  lessonTitle: "Pick one change",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "One change at a time",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "A foe calls nine of ten bets. What is the risk?",
+  feedbackTitle: "Pick one change",
   feedbackReason:
-      'Single-piece changes reduce chaos. You can see if the adjustment works before layering more changes.',
-  teachingSteps: const <Act0TeachingStepV1>[
+      "A pure bluff needs folds. Nine calls in ten bets leave few wins without showdown.",
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Precision over chaos.',
+      title: "Pick one change",
       body:
-          'If a player overfolds, widen steals first. If a player overcalls, value-bet heavier first. Do not rewrite everything at once.',
-      focusLabels: <String>['One piece', 'Steal wider', 'Value heavier'],
+          "A value bet aims to get a call from a worse hand. A bluff aims to make a better hand fold. Tie the size to your goal and what the player does. An overpair is a pair in your own cards that ranks above the top card on the board.",
     ),
   ],
+  options: const [],
+
+  table: _w10TextStudyTableV1,
 );
 
-final _w10VsNitOpenWiderRunner = _w10OneLeverIntroRunner.copyWith(
+final _w10VsNitOpenWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_vs_nit_open_wider',
-  caption: 'Blinds fold too much to late-position steals.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Overfolding behind you increases steal EV.',
-  question: 'What is the clean first adjustment?',
-  options: const <Act0RunnerOptionV1>[
+  lessonTitle: "Three seats behind",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BTN, SB and BB often fold to late opens. They fold as a group 88% of the time to 2 BB or 5 BB. When one 3-bets, you fold.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Open or fold?",
+  feedbackTitle: "Three seats behind",
+  feedbackReason:
+      "The three players fold together 88%. Your small steal earns 1.08 BB on average under this read.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'bluff_more_streets',
-      label: 'Add more turn pressure first',
-      isCorrect: false,
-      preferredLabel: 'Open slightly wider in late position',
-      betterAnswerLabel: 'Open slightly wider in late position',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too much change.',
-      feedbackReason:
-          'When the blinds overfold to late-position steals, adding turn barrels risks extra chips postflop when a wider preflop open already wins the blinds.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'open_wider',
-      label: 'Open slightly wider in late position',
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
       isCorrect: true,
-      preferredLabel: 'Open slightly wider in late position',
+      preferredLabel: "Raise to 2 BB",
+
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
+      feedbackTitle: "Correct.",
       feedbackReason:
-          'Against overfolders, wider late opens capture blinds more often with low resistance.',
+          "The three players fold together 88%. Your small steal earns 1.08 BB on average under this read.",
     ),
     Act0RunnerOptionV1(
-      id: 'no_change',
-      label: 'Keep default play until blinds show it again',
+      id: "fold",
+      label: "Fold",
       isCorrect: false,
-      preferredLabel: 'Open slightly wider in late position',
-      betterAnswerLabel: 'Open slightly wider in late position',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Safe but misses value.',
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'When the blinds fold too much to late-position steals, keeping default play forfeits low-risk preflop blind steals.',
+          "J9s is Weak in the base CO chart. Still, folding here passes the 88% chance to take the 1.5 BB pot.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_5_bb",
+      label: "Raise to 5 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "This read gives the same folds to either size. Risking 5 BB instead of 2 BB gives up 3 BB more when someone 3-bets.",
     ),
   ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Js 9s",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg", "hj"},
+    stacks: const {
+      "utg": 55,
+      "hj": 65,
+      "co": 45,
+      "btn": 40,
+      "sb": 43,
+      "bb": 47,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
+final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_vs_caller_value_heavier',
-  caption: 'Opponent calls down too wide with weak pairs.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Call-heavy opponents pay off thin value more often.',
-  question: 'What is the cleaner adjustment?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'bluff_heavier',
-      label: 'Bluff more anyway',
-      isCorrect: false,
-      preferredLabel: 'Value-bet heavier, bluff less often',
-      betterAnswerLabel: 'Value-bet heavier, bluff less often',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Opposite adjustment.',
-      feedbackReason:
-          'This opponent calls down with weak pairs, so an extra bluff gets fewer folds and loses chips more often.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'allin_only',
-      label: 'Value-bet your strongest hands and check the rest',
-      isCorrect: false,
-      preferredLabel: 'Value-bet heavier, bluff less often',
-      betterAnswerLabel: 'Value-bet heavier, bluff less often',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too coarse.',
-      feedbackReason:
-          'Strong hands earn value, and some thinner bets do too when this opponent calls with weak pairs. Checking every medium-strength hand gives up those calls from worse.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'value_heavier',
-      label: 'Value-bet heavier, bluff less often',
-      isCorrect: true,
-      preferredLabel: 'Value-bet heavier, bluff less often',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
-      feedbackReason:
-          'Overcallers pay value and resist bluffs. Shift the mix toward value first.',
-    ),
-  ],
-);
-
-final _w10VsStickyDefenderTightenStealsRunner = _w10OneLeverIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w10_vs_sticky_defender_tighten_steals',
-  caption: 'Blinds defend wide and call postflop too often.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'A sticky defender changes the cleanest steal focus.',
-  question: 'What is the better first adjustment?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'tighten_steals',
-      label: 'Tighten the weakest steals and keep stronger value',
-      isCorrect: true,
-      preferredLabel: 'Tighten the weakest steals and keep stronger value',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason:
-          'If blinds defend too wide, weak auto-steals lose value. Keep the adjustment specific by trimming trash and preserving stronger opens.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'steal_wider_anyway',
-      label: 'Steal even wider',
-      isCorrect: false,
-      preferredLabel: 'Tighten the weakest steals and keep stronger value',
-      betterAnswerLabel: 'Tighten the weakest steals and keep stronger value',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too loose.',
-      feedbackReason:
-          'When the blinds defend wide and call postflop too often, stealing even wider bleeds chips out of weak hands with little fold equity.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'no_change',
-      label: 'Make no change until the sample is huge',
-      isCorrect: false,
-      preferredLabel: 'Tighten the weakest steals and keep stronger value',
-      betterAnswerLabel: 'Tighten the weakest steals and keep stronger value',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Safe default.',
-      feedbackReason:
-          'Against sticky blinds who defend wide and overcall postflop, waiting for a huge sample keeps funding losing auto-steals with weak hands.',
-    ),
-  ],
-);
-
-final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w10_table_value_vs_caller_transfer',
+  lessonTitle: "Pick a flop size",
+  lessonSubtitle: 'Player Adjustment',
   caption:
-      'You hold K-Q on K-7-2 rainbow. BB checks. In earlier hands, you saw BB call flop bets with weak pairs.',
-  hint:
-      'Call-heavy opponents pay value more often. Ask what changes first before adding more bluffs.',
-  question: 'What is the cleaner first adjustment here?',
-  table: _w6ValueRangeActionRunner.table.copyWith(
-    heroCards: _heroKqCards,
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 'c'),
-    ],
-    centerLabel: 'Top pair vs caller',
-    handContributions: _w6ValueRangeActionRunner.table.handContributions,
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
+      "BB calls 2 BB and 3 BB with weak kings and sevens. Past hands show that BB calls 15 BB with strong hands.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which size earns most from that read?",
+  feedbackTitle: "Pick a flop size",
+  feedbackReason:
+      "A 3 BB bet can get calls from 7x and weaker kings. That earns more than checking when those hands pay often.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "bet_2_bb",
+      label: "Bet 2 BB",
+      isCorrect: false,
+      preferredLabel: "Bet 3 BB",
+      betterAnswerLabel: "Bet 3 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BB calls 2 BB with weak kings and sevens. Your KQ can earn 1 BB more from the same hands.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_3_bb",
+      label: "Bet 3 BB",
+      isCorrect: true,
+      preferredLabel: "Bet 3 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "A 3 BB bet can get calls from 7x and weaker kings. That earns more than checking when those hands pay often.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_15_bb",
+      label: "Bet 15 BB",
+      isCorrect: false,
+      preferredLabel: "Bet 3 BB",
+      betterAnswerLabel: "Bet 3 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "If you bet 15 BB, sevens may fold. The stronger hands stay in a large pot.",
+    ),
+  ],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: "bet_3_bb",
+        label: "Bet 3 BB",
+        displayLabel: "3 BB",
+        potFraction: 3 / 5.5,
+      ),
+      Act0SizingPresetV1(
+        id: "bet_2_bb",
+        label: "Bet 2 BB",
+        displayLabel: "2 BB",
+        potFraction: 2 / 5.5,
+      ),
+      Act0SizingPresetV1(
+        id: "bet_15_bb",
+        label: "Bet 15 BB",
+        displayLabel: "15 BB",
+        potFraction: 15 / 5.5,
+      ),
     ],
   ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'bluff_more',
-      label: 'Bluff more versus passive BB',
-      isCorrect: false,
-      preferredLabel: 'Lean value, bluff less',
-      betterAnswerLabel: 'Lean value, bluff less',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Wrong mix shift.',
-      feedbackReason:
-          'On the K-7-2 flop from BTN after BB calls your 2.5 BB open and checks, bluffing more burns chips against a BB who already called flop bets with weak pairs.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'lean_value',
-      label: 'Lean value, bluff less',
-      isCorrect: true,
-      preferredLabel: 'Lean value, bluff less',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp live adjustment.',
-      feedbackReason:
-          'The earlier weak-pair calls support trying a value bet with top pair. The best size and whether a bet beats checking depend on how often this BB calls, folds or raises with each hand.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'force_big_pot',
-      label: 'Push top pair into a huge pot immediately',
-      isCorrect: false,
-      preferredLabel: 'Lean value, bluff less',
-      betterAnswerLabel: 'Lean value, bluff less',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too coarse.',
-      feedbackReason:
-          'On the K-7-2 flop from BTN after BB calls 2.5 BB and checks, forcing a huge pot immediately risks too many chips when controlled value betting gets paid by worse hands.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Caller changes the mix.',
-      body:
-          'Use the check in this hand and the calling pattern from earlier hands. A value bet aims to get called by worse hands.',
-      focusLabels: <String>['Real table', 'Calls too wide', 'Value', 'Bluff'],
-    ),
-  ],
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "Kc Qd",
+    street: PokerStreet.flop,
+    actor: 'hj',
+    board: _act0LessonCardsV1("Ks 7c 2d"),
+
+    folded: const {"utg", "co", "btn", "sb"},
+    stacks: const {
+      "utg": 68,
+      "hj": 55,
+      "co": 61,
+      "btn": 48,
+      "sb": 52,
+      "bb": 60,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+    ],
+    bets: const {},
+  ),
 );
 
-final _w10OneLeverRecapRunner = _w10OneLeverIntroRunner.copyWith(
+final _w10VsStickyDefenderTightenStealsRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_vs_sticky_defender_tighten_steals',
+  lessonTitle: "Read who calls",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BTN calls most opens. SB and BB defend a lot too. They call flop bets with weak pairs.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Open or fold?",
+  feedbackTitle: "Read who calls",
+  feedbackReason:
+      "72o is Weak in the CO chart. Three sticky players behind you make a weak 2 BB steal lose much of its fold value.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "72o has poor ways to win when called. BTN and both blinds defend a lot, so the raise buys fewer blind pots.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_4_bb",
+      label: "Raise to 4 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A 4 BB open risks twice as much as 2 BB with 72o. The sticky players may still call and leave you with a weak hand.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "72o is Weak in the CO chart. Three sticky players behind you make a weak 2 BB steal lose much of its fold value.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "7c 2d",
+    street: PokerStreet.preflop,
+    actor: 'co',
+
+    folded: const {"utg", "hj"},
+    stacks: const {
+      "utg": 65,
+      "hj": 65,
+      "co": 55,
+      "btn": 62,
+      "sb": 45,
+      "bb": 50,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_table_value_vs_caller_transfer',
+  lessonTitle: "Value on the flop",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BB calls 2 BB and 3 BB with sevens, 88–TT and weak jacks. At 18 BB, BB folds those hands and keeps strong ones.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which size earns most from that read?",
+  feedbackTitle: "Value on the flop",
+  feedbackReason:
+      "Bet 3 BB. With AJ, you get more from sevens and weak jacks than at 2 BB. If the calls, folds or raises with each hand change, the best size can change too.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "bet_3_bb",
+      label: "Bet 3 BB",
+      isCorrect: true,
+      preferredLabel: "Bet 3 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Bet 3 BB. With AJ, you get more from sevens and weak jacks than at 2 BB. If the calls, folds or raises with each hand change, the best size can change too.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_2_bb",
+      label: "Bet 2 BB",
+      isCorrect: false,
+      preferredLabel: "Bet 3 BB",
+      betterAnswerLabel: "Bet 3 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BB still calls with weak jacks and 88–TT. With AJ, 3 BB earns one more chip per call than 2 BB.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_18_bb",
+      label: "Bet 18 BB",
+      isCorrect: false,
+      preferredLabel: "Bet 3 BB",
+      betterAnswerLabel: "Bet 3 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "If you bet 18 BB, sevens and small pairs fold in this read. That builds a large pot with the hands that can beat AJ.",
+    ),
+  ],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: "bet_3_bb",
+        label: "Bet 3 BB",
+        displayLabel: "3 BB",
+        potFraction: 3 / 5.5,
+      ),
+      Act0SizingPresetV1(
+        id: "bet_2_bb",
+        label: "Bet 2 BB",
+        displayLabel: "2 BB",
+        potFraction: 2 / 5.5,
+      ),
+      Act0SizingPresetV1(
+        id: "bet_18_bb",
+        label: "Bet 18 BB",
+        displayLabel: "18 BB",
+        potFraction: 18 / 5.5,
+      ),
+    ],
+  ),
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ad Jc",
+    street: PokerStreet.flop,
+    actor: 'co',
+    board: _act0LessonCardsV1("Js 7h 2d"),
+
+    folded: const {"utg", "hj", "btn", "sb"},
+    stacks: const {
+      "utg": 72,
+      "hj": 58,
+      "co": 60,
+      "btn": 63,
+      "sb": 55,
+      "bb": 61,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+    ],
+    bets: const {},
+  ),
+);
+
+final _w10IsolateLimperBbRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_isolate_limper_bb',
+  lessonTitle: "Raise from BB",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "SB limps. In ten past hands, SB called raises with weak aces and kings. Those hands call 4 BB and fold to 15 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Check or raise?",
+  feedbackTitle: "Raise from BB",
+  feedbackReason:
+      "ATs is ahead of many weak aces and kings that SB calls with. Raising can win more when SB calls.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Raise from BB",
+      body:
+          "In BB, you can check after a limp. A raise changes the pot and which hands stay in.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "check",
+      label: "Check",
+      isCorrect: false,
+      preferredLabel: "Raise to 4 BB",
+      betterAnswerLabel: "Raise to 4 BB",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Checking costs nothing and sees a flop. It misses value against the weak hands SB has limp-called with.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_4_bb",
+      label: "Raise to 4 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 4 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "ATs is ahead of many weak aces and kings that SB calls with. Raising can win more when SB calls.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_15_bb",
+      label: "Raise to 15 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 4 BB",
+      betterAnswerLabel: "Raise to 4 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The pot is just 2 BB. A 15 BB raise risks too much when SB can still have a strong hand.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "Ac Tc",
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {"utg", "hj", "co", "btn"},
+    stacks: const {
+      "utg": 62,
+      "hj": 59,
+      "co": 66,
+      "btn": 58,
+      "sb": 50,
+      "bb": 54,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'sb',
+        Act0ContributionKindV1.wager,
+        0.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB calls 1 BB"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '1 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
+);
+
+final _w10StationNoBluffRiverARunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_station_no_bluff_river_a',
+  lessonTitle: "Ace-high on the river",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BB is a calling station. BB holds a pair 90% of the time and calls with it. The other 10% is a missed hand that you beat and that folds.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Bluff or check?",
+  feedbackTitle: "Ace-high on the river",
+  feedbackReason:
+      "BB folds just 10%. A 3 BB bluff needs 22.2% folds with no win at showdown. Your ace-high can beat the weak missed cards by checking.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "bet_3_bb",
+      label: "Bet 3 BB",
+      isCorrect: false,
+      preferredLabel: "Check",
+      betterAnswerLabel: "Check",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BB calls with a pair 90%. The 3 BB bluff loses 1.65 BB on its fold-only line, while a check can beat the weak missed cards.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_5_bb",
+      label: "Bet 5 BB",
+      isCorrect: false,
+      preferredLabel: "Check",
+      betterAnswerLabel: "Check",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The pot is 10.5 and BB still calls 90%. A 5 BB bluff risks more and loses 3.45 BB on its fold-only line.",
+    ),
+    Act0RunnerOptionV1(
+      id: "check",
+      label: "Check",
+      isCorrect: true,
+      preferredLabel: "Check",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "BB folds just 10%. A 3 BB bluff needs 22.2% folds with no win at showdown. Your ace-high can beat the weak missed cards by checking.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ah Qh",
+    street: PokerStreet.river,
+    actor: 'co',
+    board: _act0LessonCardsV1("Kd 8c 3s 6d 2c"),
+
+    folded: const {"utg", "hj", "btn", "sb"},
+    stacks: const {
+      "utg": 58,
+      "hj": 65,
+      "co": 57,
+      "btn": 62,
+      "sb": 54,
+      "bb": 59,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "CO checks"),
+      Act0ActionTrailItemV1(label: "River: BB checks"),
+    ],
+    bets: const {},
+  ),
+);
+
+final _w10OneLeverRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w10_one_lever_recap',
-  caption: 'Lesson learned: one change gives cleaner feedback.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Test one change before stacking new assumptions.',
-  question: 'What is the one-change takeaway?',
-  feedbackTitle: 'One-change takeaway.',
+  lessonTitle: "Pick a bet plan",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "Think back to the pots in this lesson.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What should set the bet plan?",
+  feedbackTitle: "Pick a bet plan",
   feedbackReason:
-      'Adjustment quality improves when changes are precise and testable. Broad rewrites create noise and confusion.',
+      "Those facts show what the bet may gain and what it may cost.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "the_hand_pot_and_player_read",
+      label: "The hand, pot and player read",
+      isCorrect: true,
+      preferredLabel: "The hand, pot and player read",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "Those facts show what the bet may gain and what it may cost.",
+    ),
+    Act0RunnerOptionV1(
+      id: "the_same_size_for_each_player",
+      label: "The same size for each player",
+      isCorrect: false,
+      preferredLabel: "The hand, pot and player read",
+      betterAnswerLabel: "The hand, pot and player read",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A weak 72o steal against sticky blinds has less fold value than a J9s steal against tight blinds.",
+    ),
+    Act0RunnerOptionV1(
+      id: "a_big_bet_to_look_strong",
+      label: "A big bet to look strong",
+      isCorrect: false,
+      preferredLabel: "The hand, pot and player read",
+      betterAnswerLabel: "The hand, pot and player read",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A large bet can pay too much when called. The 15 BB bet on K-7-2 may lose calls from weak pairs.",
+    ),
+  ],
+
+  table: _w10TextStudyTableV1,
 );
 
-final _w10ExploitGuardrailsIntroRunner = _w10OneLeverIntroRunner.copyWith(
+final _w10ExploitGuardrailsIntroRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w10_guardrails_intro',
-  lessonTitle: 'Adjustment guardrails',
-  caption: 'Adjusting does not mean abandoning discipline or hand quality.',
-  hint: 'Guardrails keep you from over-adjusting on thin evidence.',
-  question: 'Why do adjustment guardrails matter?',
-  feedbackTitle: 'Guardrail foundation.',
-  feedbackReason:
-      'Guardrails stop you from turning a useful adjustment into a leak. Strong adaptive play stays selective and evidence-based.',
-  teachingSteps: const <Act0TeachingStepV1>[
+  lessonTitle: "Check the read",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "A call has a price.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "A river call is 5 into 10. What is its price?",
+  feedbackTitle: "Check the read",
+  feedbackReason: "Call 5 into a 10 BB pot now. Final pot 15 BB: 5/15 = 33.3%.",
+  teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Adjust with control.',
+      title: "Check the read",
       body:
-          'Use sample-aware reads, keep standard anchors, and avoid extreme swings from one or two hands.',
-      focusLabels: <String>['Sample quality', 'Standard', 'Control'],
+          "A bluff-catcher beats bluffs. A blocker is a card you hold that rules out some hands. Divide the call by the pot after your call. Use the range and check the sample size.",
     ),
   ],
+  options: const [],
+
+  table: _w10TextStudyTableV1,
 );
 
-final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_overbluff_punish',
+  lessonTitle: "Facing a river bet",
+  lessonSubtitle: 'Player Adjustment',
   caption:
-      'In earlier river showdowns on this line, an opponent repeatedly showed missed draws after betting.',
-  hint: 'Overbluffing can be punished by wider bluff-catch windows.',
-  question: 'What is the cleaner adjustment response?',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'A blocker removes possible opponent hands.',
-      body:
-          'An opponent cannot hold a card you hold. A card that removes some of their strong value hands can make a close call more reasonable. Removing their missed draws instead can make a call worse.',
-      focusLabels: <String>[],
-    ),
-    Act0TeachingStepV1(
-      title: 'One repeated read, one measured adjustment.',
-      body:
-          'A bluff-catcher beats bluffs but loses to value bets. Repeated overbluffing can justify defending a little more selectively. This is not a reason to call every river: keep the observed tendency and which hands your cards remove in view.',
-      focusLabels: <String>[],
-    ),
-  ],
-  options: const <Act0RunnerOptionV1>[
+      "The SB open with QJo was already played. On this river, BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "Facing a river bet",
+  feedbackReason:
+      "QJ beats the missed draws 55% of the time. A call costs 10 into a final pot of 34.5, so it needs 29.0% wins.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'fold_everything',
-      label: 'Fold the weakest bluff-catchers first',
+      id: "fold",
+      label: "Fold",
       isCorrect: false,
-      preferredLabel: 'Bluff-catch a bit wider with blockers',
-      betterAnswerLabel: 'Bluff-catch a bit wider with blockers',
+      preferredLabel: "Call 10 BB",
+      betterAnswerLabel: "Call 10 BB",
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too passive.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'The opponent has repeatedly bet this river line and shown a missed draw at showdown. Folding more can give up profitable calls when there are enough bluffs for the price.',
+          "Your QJ beats 55% missed draws in the set range. Folding gives up a call worth 8.98 BB on average at this price.",
     ),
     Act0RunnerOptionV1(
-      id: 'hero_call_any',
-      label: 'Call more rivers without checking blockers',
-      isCorrect: false,
-      preferredLabel: 'Bluff-catch a bit wider with blockers',
-      betterAnswerLabel: 'Bluff-catch a bit wider with blockers',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too extreme.',
-      feedbackReason:
-          'On the river against an overbluffer, calling more rivers without checking blockers can pay off value hands. Your cards can make the missed draws you want to catch less likely.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'bluffcatch_more',
-      label: 'Bluff-catch a bit wider with blockers',
+      id: "call_10_bb",
+      label: "Call 10 BB",
       isCorrect: true,
-      preferredLabel: 'Bluff-catch a bit wider with blockers',
+      preferredLabel: "Call 10 BB",
+
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Selective bluff-catch works.',
+      feedbackTitle: "Correct.",
       feedbackReason:
-          'Against overbluffs, selective wider bluff-catching is profitable when your line blocks value combos.',
+          "QJ beats the missed draws 55% of the time. A call costs 10 into a final pot of 34.5, so it needs 29.0% wins.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_25_bb",
+      label: "Raise to 25 BB",
+      isCorrect: false,
+      preferredLabel: "Call 10 BB",
+      betterAnswerLabel: "Call 10 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "QJ beats the missed bluffs but loses to AQ and KQ. Raising may fold the bluffs and get calls from better queens.",
     ),
   ],
+
+  table: _day7TableV1(
+    hero: 'sb',
+    hand: "Qh Jd",
+    street: PokerStreet.river,
+    actor: 'sb',
+    board: _act0LessonCardsV1("Qd 8c 5s 2h 3c"),
+
+    folded: const {"utg", "hj", "co", "btn"},
+    stacks: const {
+      "utg": 65,
+      "hj": 67,
+      "co": 55,
+      "btn": 50,
+      "sb": 45,
+      "bb": 52,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'sb',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'sb',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'sb',
+        Act0ContributionKindV1.wager,
+        1.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'bb',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: SB checks"),
+      Act0ActionTrailItemV1(label: "BB bets 3 BB"),
+      Act0ActionTrailItemV1(label: "SB calls 3 BB"),
+      Act0ActionTrailItemV1(label: "Turn: SB checks"),
+      Act0ActionTrailItemV1(label: "BB bets 1.75 BB"),
+      Act0ActionTrailItemV1(label: "SB calls 1.75 BB"),
+      Act0ActionTrailItemV1(label: "River: SB checks"),
+      Act0ActionTrailItemV1(label: "BB bets 10 BB"),
+    ],
+    bets: const {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '10 BB',
+      ),
+    },
+  ),
 );
 
-final _w10UnderbluffFoldMoreRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10UnderbluffFoldMoreRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_underbluff_fold_more',
-  caption: 'Opponent reaches river with strong value and few bluffs.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Underbluffing changes bluff-catch requirements.',
-  question: 'How should low bluff frequency change your river calls?',
-  options: const <Act0RunnerOptionV1>[
+  lessonTitle: "River range",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BTN bets 10 BB into 11.5 BB. Use 90% AK, K9 or sets and 10% missed QJ. No ties.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "River range",
+  feedbackReason:
+      "KQ beats the missed QJ but loses to the 90% value group. The call needs 31.7% wins, far above 10%.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'fold_more',
-      label: 'Fold more marginal bluff-catchers',
-      isCorrect: true,
-      preferredLabel: 'Fold more marginal bluff-catchers',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
-      feedbackReason:
-          'If bluff frequency is too low, marginal calls lose EV. Disciplined folds become the adjustment.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call_normal',
-      label: 'Call normal standard frequency',
+      id: "call_10_bb",
+      label: "Call 10 BB",
       isCorrect: false,
-      preferredLabel: 'Fold more marginal bluff-catchers',
-      betterAnswerLabel: 'Fold more marginal bluff-catchers',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Reasonable default.',
-      feedbackReason:
-          'Against a river range with strong value and few bluffs, some usual calls lose chips because they beat too little of the betting range.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise_bluff',
-      label: 'Raise bluff more often',
-      isCorrect: false,
-      preferredLabel: 'Fold more marginal bluff-catchers',
-      betterAnswerLabel: 'Fold more marginal bluff-catchers',
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Wrong direction.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'On the river against an underbluffing opponent, bluff-raising burns extra chips against a range weighted toward strong value hands.',
+          "KQ is top pair but has just 10% wins against this bet mix. A 10 BB call loses 6.85 BB on average.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_26_bb",
+      label: "Raise to 26 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A raise risks more chips against AK, K9 and sets. Those strong hands form 90% of BTN bets here.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "KQ beats the missed QJ but loses to the 90% value group. The call needs 31.7% wins, far above 10%.",
     ),
   ],
+
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "Kd Qc",
+    street: PokerStreet.river,
+    actor: 'bb',
+    board: _act0LessonCardsV1("Kc 7d 4h 2s 9d"),
+
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {
+      "utg": 62,
+      "hj": 70,
+      "co": 67,
+      "btn": 60,
+      "sb": 50,
+      "bb": 55,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'btn',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 3 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 3 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN checks"),
+      Act0ActionTrailItemV1(label: "River: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 10 BB"),
+    ],
+    bets: const {
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '10 BB',
+      ),
+    },
+  ),
 );
 
-final _w10GuardrailSampleSizeRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10GuardrailSampleSizeRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_guardrail_sample_size',
-  caption: 'You saw two odd hands but no long pattern yet.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Guardrails protect you when evidence is still thin.',
-  question: 'What is the cleaner adjustment posture?',
-  options: const <Act0RunnerOptionV1>[
+  lessonTitle: "One shown bluff",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "BB showed one bluff last lap. Use the course’s first-in plan.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What size fits the read?",
+  feedbackTitle: "One shown bluff",
+  feedbackReason:
+      "AQs is Strong from HJ. The one BB bluff does not call for a new size or a loose stack-off plan.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'full_counter',
-      label: 'Commit to a full counter-strategy immediately',
-      isCorrect: false,
-      preferredLabel: 'Make only a small adjustment and keep watching',
-      betterAnswerLabel: 'Make only a small adjustment and keep watching',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too reactive.',
-      feedbackReason:
-          'After seeing only two odd hands, committing to a full counter-strategy overreacts to noise and exposes you to costly counter-leaks.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'small_probe',
-      label: 'Make only a small adjustment and keep watching',
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
       isCorrect: true,
-      preferredLabel: 'Make only a small adjustment and keep watching',
+      preferredLabel: "Raise to 2 BB",
+
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: "Correct.",
       feedbackReason:
-          'Two hands can justify attention, not a full strategy swing. Small probes plus more evidence keep your line disciplined.',
+          "AQs is Strong from HJ. The one BB bluff does not call for a new size or a loose stack-off plan.",
     ),
     Act0RunnerOptionV1(
-      id: 'ignore_everything',
-      label: 'Ignore the hands completely',
+      id: "raise_to_3_bb",
+      label: "Raise to 3 BB",
       isCorrect: false,
-      preferredLabel: 'Make only a small adjustment and keep watching',
-      betterAnswerLabel: 'Make only a small adjustment and keep watching',
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too rigid.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'With a two-hand sample, ignoring the hands completely misses an early table cue when a small, low-risk probe could test the read safely.',
+          "AQs can open, but the one wild bluff gives no sound reason to spend 1 BB more before the flop.",
+    ),
+    Act0RunnerOptionV1(
+      id: "all_in_to_52_bb",
+      label: "All-in to 52 BB",
+      isCorrect: false,
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AQs is strong, but going all-in with 52 BB to win a 1.5 BB pot gives strong hands a big chance to win your stack.",
     ),
   ],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: "raise_to_2_bb",
+        label: "Raise to 2 BB",
+        displayLabel: "2 BB",
+        potFraction: 2 / 1.5,
+      ),
+      Act0SizingPresetV1(
+        id: "raise_to_3_bb",
+        label: "Raise to 3 BB",
+        displayLabel: "3 BB",
+        potFraction: 3 / 1.5,
+      ),
+      Act0SizingPresetV1(
+        id: "all_in_to_52_bb",
+        label: "All-in to 52 BB",
+        displayLabel: "52 BB",
+        potFraction: 52 / 1.5,
+      ),
+    ],
+  ),
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "As Qs",
+    street: PokerStreet.preflop,
+    actor: 'hj',
+
+    folded: const {"utg"},
+    stacks: const {
+      "utg": 54,
+      "hj": 52,
+      "co": 61,
+      "btn": 66,
+      "sb": 48,
+      "bb": 57,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10ExploitGuardrailsRecapRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10TopPairTurnRaiseRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_top_pair_turn_raise',
+  lessonTitle: "The turn raise",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "Loose-passive BB showed two pair or a set on six turn raises. Use that range here.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "The turn raise",
+  feedbackReason:
+      "You need 15/50.5 = 29.7% equity to call. AJ is behind the sets and two pair seen in BB turn raises.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "The turn raise",
+      body:
+          "A turn raise can be much stronger than a call. Check what this player has shown.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "call_15_bb",
+      label: "Call 15 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "AJ is top pair, not a set. Calling 15 BB against this strong turn raise risks more chips with few winning river cards.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: true,
+      preferredLabel: "Fold",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "You need 15/50.5 = 29.7% equity to call. AJ is behind the sets and two pair seen in BB turn raises.",
+    ),
+    Act0RunnerOptionV1(
+      id: "all_in_to_55_bb",
+      label: "All-in to 55 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BB rarely raises worse hands. Going all-in with AJ commits the rest of your stack against better hands.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ac Jc",
+    street: PokerStreet.turn,
+    actor: 'co',
+    board: _act0LessonCardsV1("Js 8d 4h 2c"),
+
+    folded: const {"utg", "hj", "btn", "sb"},
+    stacks: const {
+      "utg": 65,
+      "hj": 68,
+      "co": 60,
+      "btn": 59,
+      "sb": 55,
+      "bb": 54,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'bb',
+        Act0ContributionKindV1.wager,
+        20,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB raises to 20 BB"),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '20 BB',
+      ),
+    },
+  ),
+);
+
+final _w10FindTurnRaiserRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_find_turn_raiser',
+  lessonTitle: "Find the turn raise",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Tap the seat that raised the turn.",
+  feedbackTitle: "Find the turn raise",
+  feedbackReason: "BB raised to 20 BB after the 5 BB turn bet.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "co",
+      label: "CO",
+      isCorrect: false,
+      preferredLabel: "BB",
+      betterAnswerLabel: "BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason: "CO made the first turn bet of 5 BB. BB made the raise.",
+      seatId: "co",
+    ),
+    Act0RunnerOptionV1(
+      id: "btn",
+      label: "BTN",
+      isCorrect: false,
+      preferredLabel: "BB",
+      betterAnswerLabel: "BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BTN folded before the flop and put no chips in on the turn.",
+      seatId: "btn",
+    ),
+    Act0RunnerOptionV1(
+      id: "bb",
+      label: "BB",
+      isCorrect: true,
+      preferredLabel: "BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason: "BB raised to 20 BB after the 5 BB turn bet.",
+      seatId: "bb",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'co',
+    hand: "Ad Jd",
+    street: PokerStreet.turn,
+    actor: 'co',
+    board: _act0LessonCardsV1("Jh 8c 4s 2d"),
+
+    folded: const {"utg", "hj", "btn", "sb"},
+    stacks: const {
+      "utg": 65,
+      "hj": 68,
+      "co": 60,
+      "btn": 59,
+      "sb": 55,
+      "bb": 54,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'bb',
+        Act0ContributionKindV1.wager,
+        20,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB raises to 20 BB"),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '20 BB',
+      ),
+    },
+  ).copyWith(selectableSeatIds: const ["bb", "co", "btn"]),
+);
+
+final _w10StationNoBluffRiverRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_station_no_bluff_river',
+  lessonTitle: "River choice",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "CO is a calling station. The 80% with a pair call either size. The rest lose to your hand and fold.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Bluff or check?",
+  feedbackTitle: "River choice",
+  feedbackReason:
+      "An 8 BB bluff into 10.5 needs 43.2% folds. CO folds 20%, so it costs chips.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "check",
+      label: "Check",
+      isCorrect: true,
+      preferredLabel: "Check",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "An 8 BB bluff into 10.5 needs 43.2% folds. CO folds 20%, so it costs chips.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_8_bb",
+      label: "Bet 8 BB",
+      isCorrect: false,
+      preferredLabel: "Check",
+      betterAnswerLabel: "Check",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "CO has a pair and calls 80% here. The pure 8 BB bluff loses 4.30 BB on average.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_4_bb",
+      label: "Bet 4 BB",
+      isCorrect: false,
+      preferredLabel: "Check",
+      betterAnswerLabel: "Check",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The smaller bet risks less, but it still has just 20% folds. Its pure bluff EV is -1.10 BB.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: "Kc Qc",
+    street: PokerStreet.river,
+    actor: 'hj',
+    board: _act0LessonCardsV1("As 9c 4d 2h 6s"),
+
+    folded: const {"utg", "btn", "sb", "bb"},
+    stacks: const {
+      "utg": 55,
+      "hj": 56,
+      "co": 64,
+      "btn": 62,
+      "sb": 59,
+      "bb": 60,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "CO calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: HJ bets 2 BB"),
+      Act0ActionTrailItemV1(label: "CO calls 2 BB"),
+      Act0ActionTrailItemV1(label: "Turn: HJ checks"),
+      Act0ActionTrailItemV1(label: "CO checks"),
+    ],
+    bets: const {},
+  ),
+);
+
+final _w10OutsAndTurnPriceRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_outs_and_turn_price',
+  lessonTitle: "A draw and a price",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "BTN shows 9c and 9d. No bets follow a call. BTN calls a raise.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Which call read fits?",
+  feedbackTitle: "A draw and a price",
+  feedbackReason:
+      "A heart that pairs the king or deuce gives BTN a full house. Seven hearts win, about 15.9%. You pay 2 BB for a final pot of 14.5 BB, a 13.8% price.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "A draw and a price",
+      body:
+          "A clean out makes you win. A card that gives the set a full house cannot help. Both hands are known, so 44 cards are unseen.",
+    ),
+  ],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "fold_price_too_high",
+      label: "Fold: price too high",
+      isCorrect: false,
+      preferredLabel: "Call: seven outs",
+      betterAnswerLabel: "Call: seven outs",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A 2 BB call costs 13.8% of the final pot. Seven outs give about 15.9%, so a fold gives up a small edge.",
+    ),
+    Act0RunnerOptionV1(
+      id: "call_seven_outs",
+      label: "Call: seven outs",
+      isCorrect: true,
+      preferredLabel: "Call: seven outs",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "A heart that pairs the king or deuce gives BTN a full house. Seven hearts win, about 15.9%. You pay 2 BB for a final pot of 14.5 BB, a 13.8% price.",
+    ),
+    Act0RunnerOptionV1(
+      id: "call_nine_outs",
+      label: "Call: nine outs",
+      isCorrect: false,
+      preferredLabel: "Call: seven outs",
+      betterAnswerLabel: "Call: seven outs",
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The call works, but two hearts make a full house for BTN. Count seven wins, not nine.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "8h 7h",
+    street: PokerStreet.turn,
+    actor: 'bb',
+    board: _act0LessonCardsV1("Ks 9h 3h 2c"),
+    shown: {'btn': _act0LessonCardsV1("9c 9d")},
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {
+      "utg": 58,
+      "hj": 60,
+      "co": 64,
+      "btn": 55,
+      "sb": 50,
+      "bb": 45,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 2 BB"),
+    ],
+    bets: const {
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '2 BB',
+      ),
+    },
+  ),
+);
+
+final _w10ExploitGuardrailsRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w10_guardrails_recap',
-  caption:
-      'Lesson learned: adjustments work best with guardrails and evidence.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Do not let one read become a full strategy collapse.',
-  question: 'What is the guardrail takeaway?',
-  feedbackTitle: 'Guardrail takeaway.',
+  lessonTitle: "Read the price",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "You have a read and a bet to face.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What should stop a rushed call?",
+  feedbackTitle: "Read the price",
   feedbackReason:
-      'Adjustment discipline means selective changes, stable standards, and enough evidence before major shifts.',
+      "If your hand wins less often than the call price needs, the call loses chips.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "a_loud_bet_from_the_foe",
+      label: "A loud bet from the foe",
+      isCorrect: false,
+      preferredLabel: "A poor price against the bet range",
+      betterAnswerLabel: "A poor price against the bet range",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "Loud play is not a range. A player can bluff big or bet a strong hand.",
+    ),
+    Act0RunnerOptionV1(
+      id: "a_loss_in_the_prior_hand",
+      label: "A loss in the prior hand",
+      isCorrect: false,
+      preferredLabel: "A poor price against the bet range",
+      betterAnswerLabel: "A poor price against the bet range",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A past loss does not change this pot or the cards. It can lead to a poor call if it drives your choice.",
+    ),
+    Act0RunnerOptionV1(
+      id: "a_poor_price_against_the_bet_range",
+      label: "A poor price against the bet range",
+      isCorrect: true,
+      preferredLabel: "A poor price against the bet range",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "If your hand wins less often than the call price needs, the call loses chips.",
+    ),
+  ],
+
+  table: _w10TextStudyTableV1,
 );
 
-final _w10CheckpointTagLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10CheckpointIntroRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.theory,
+  lessonId: 'w10_checkpoint_intro',
+  lessonTitle: "Read the whole hand",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "Check the cards and the read.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What is the key check on a call?",
+  feedbackTitle: "Read the whole hand",
+  feedbackReason:
+      "The pot sets the price. The bet range tells you how much of it your hand can beat.",
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: "Read the whole hand",
+      body:
+          "Use the hand and the seat. Check who has bet and how much. Then judge what that player may bet or call with. The next hands put all of these steps together.",
+    ),
+  ],
+  options: const [],
+
+  table: _w10TextStudyTableV1,
+);
+
+final _w10RiverPriceCheckRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_river_price_check',
+  lessonTitle: "River call price",
+  lessonSubtitle: 'Player Adjustment',
+  caption: "The pot holds 18 BB after the bet. The call costs 6 BB.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "What share of the final pot is the call?",
+  feedbackTitle: "River call price",
+  feedbackReason: "6 BB goes in a final pot of 24 BB. That is one in four.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "25",
+      label: "1 in 4 (25%)",
+      isCorrect: true,
+      preferredLabel: "1 in 4 (25%)",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason: "6 BB goes in a final pot of 24 BB. That is one in four.",
+    ),
+    Act0RunnerOptionV1(
+      id: "33_3",
+      label: "1 in 3 (33.3%)",
+      isCorrect: false,
+      preferredLabel: "1 in 4 (25%)",
+      betterAnswerLabel: "1 in 4 (25%)",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "6 BB divided by the 18 BB pot leaves out the chips from your call.",
+    ),
+    Act0RunnerOptionV1(
+      id: "50",
+      label: "1 in 2 (50%)",
+      isCorrect: false,
+      preferredLabel: "1 in 4 (25%)",
+      betterAnswerLabel: "1 in 4 (25%)",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "The 6 BB call brings the pot to 24 BB. A half pot would be 12 BB.",
+    ),
+  ],
+
+  table: _w10TextStudyTableV1,
+);
+
+final _w10CheckpointTagLineRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_checkpoint_tag_line',
-  caption: 'Opponent folds blinds often but calls rivers too wide.',
-  hint: 'You can tag both tendencies, then choose one main focus first.',
-  question: 'What is the cleaner first step?',
-  options: const <Act0RunnerOptionV1>[
+  lessonTitle: "The limper in HJ",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "HJ limps and calls raises with 22–88, weak aces and low suited hands. Both blinds tend to fold to a raise.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "How should you enter?",
+  feedbackTitle: "The limper in HJ",
+  feedbackReason:
+      "99 is a Medium BTN hand. The raise can isolate HJ, who calls with smaller pairs and weak cards.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'all_changes',
-      label: 'Pair the blind steal with thinner river value',
+      id: "call_1_bb",
+      label: "Call 1 BB",
       isCorrect: false,
-      preferredLabel: 'Choose one primary tendency and act on it',
-      betterAnswerLabel: 'Choose one primary tendency and act on it',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too chaotic.',
-      feedbackReason:
-          'When an opponent folds blinds often and calls rivers too wide, changing both preflop steals and river sizing at once muddies your feedback and risks mis-sizing both spots.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'ignore_read',
-      label: 'Wait for one more round before tagging',
-      isCorrect: false,
-      preferredLabel: 'Choose one primary tendency and act on it',
-      betterAnswerLabel: 'Choose one primary tendency and act on it',
+      preferredLabel: "Raise to 4 BB",
+      betterAnswerLabel: "Raise to 4 BB",
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Safe default.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'When an opponent repeatedly folds blinds and overcalls rivers, waiting another round forfeits immediate profit from a clear one-piece adjustment.',
+          "Calling 1 BB keeps the pot cheap but lets the blinds join. You give up value from the weaker hands HJ calls with.",
     ),
     Act0RunnerOptionV1(
-      id: 'primary_tag',
-      label: 'Choose one primary tendency and act on it',
+      id: "raise_to_4_bb",
+      label: "Raise to 4 BB",
       isCorrect: true,
-      preferredLabel: 'Choose one primary tendency and act on it',
+      preferredLabel: "Raise to 4 BB",
+
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: "Correct.",
       feedbackReason:
-          'Prioritizing one tendency keeps the adjustment coherent and measurable before layering more changes.',
+          "99 is a Medium BTN hand. The raise can isolate HJ, who calls with smaller pairs and weak cards.",
+    ),
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Raise to 4 BB",
+      betterAnswerLabel: "Raise to 4 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "99 is a Medium BTN open. HJ calls with many pairs below 99, so folding misses a good value spot.",
     ),
   ],
+
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: "9h 9c",
+    street: PokerStreet.preflop,
+    actor: 'btn',
+
+    folded: const {"utg", "co"},
+    stacks: const {
+      "utg": 70,
+      "hj": 62,
+      "co": 65,
+      "btn": 50,
+      "sb": 42,
+      "bb": 48,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ calls 1 BB"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10CheckpointLeverLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10CheckpointLeverLineRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_checkpoint_lever_line',
-  caption: 'A tight blind fold profile appears in your sample.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Single-change adjustment is the test.',
-  question: 'Which adjustment line is the cleanest first move?',
-  options: const <Act0RunnerOptionV1>[
+  lessonTitle: "Read the big blind",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BB is a nit. BB folds 90% of the time to both sizes. On the rest, BB 3-bets and you fold.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Raise or fold?",
+  feedbackTitle: "Read the big blind",
+  feedbackReason:
+      "The BB fold rate makes this steal worth 0.90 x 1.5 - 0.10 x 1.5 = 1.20 BB from this point.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'widen_steal',
-      label: 'Widen late steals slightly',
-      isCorrect: true,
-      preferredLabel: 'Widen late steals slightly',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
-      feedbackReason:
-          'That is a clear one-piece adjustment against fold-heavy blinds and is easy to track.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise_all_sizes',
-      label: 'Change open sizings across early and late seats',
+      id: "fold",
+      label: "Fold",
       isCorrect: false,
-      preferredLabel: 'Widen late steals slightly',
-      betterAnswerLabel: 'Widen late steals slightly',
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Over-adjustment.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'When a tight blind-fold profile appears, changing open sizes from early and late seats reaches beyond the evidence. The pattern supports stealing a little wider when those blinds are left to act.',
+          "65s is Weak in the chart. Under this read, folding gives up a 90% chance to take the blinds with a raise.",
     ),
     Act0RunnerOptionV1(
-      id: 'flat_everything',
-      label: 'Flat-call wider from early and middle seats',
+      id: "raise_to_6_bb",
+      label: "Raise to 6 BB",
       isCorrect: false,
-      preferredLabel: 'Widen late steals slightly',
-      betterAnswerLabel: 'Widen late steals slightly',
+      preferredLabel: "Raise to 2 BB",
+      betterAnswerLabel: "Raise to 2 BB",
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Not targeted.',
+      feedbackTitle: "Look again.",
       feedbackReason:
-          'Against a tight blind-fold profile, flat-calling wider from early and middle seats adds hands to pots before the blinds act. It misses the chance to win the blinds uncontested with a late open.',
+          "The BB folds 90% to either size. A 6 BB open risks 5.5 BB more than folding if BB 3-bets, not the 1.5 BB used by a 2 BB open.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_2_bb",
+      label: "Raise to 2 BB",
+      isCorrect: true,
+      preferredLabel: "Raise to 2 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "The BB fold rate makes this steal worth 0.90 x 1.5 - 0.10 x 1.5 = 1.20 BB from this point.",
     ),
   ],
+
+  table: _day7TableV1(
+    hero: 'sb',
+    hand: "6s 5s",
+    street: PokerStreet.preflop,
+    actor: 'sb',
+
+    folded: const {"utg", "hj", "co", "btn"},
+    stacks: const {
+      "utg": 64,
+      "hj": 61,
+      "co": 68,
+      "btn": 60,
+      "sb": 32,
+      "bb": 45,
+    },
+    entries: const [..._act0LessonBlinds],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'Post',
+        amountLabel: '1 BB',
+      ),
+    },
+  ),
 );
 
-final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
+final _w10CheckpointGuardrailLineRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w10_checkpoint_guardrail_line',
-  caption: 'You saw one wild bluff from an opponent this orbit.',
-  teachingSteps: const <Act0TeachingStepV1>[],
-  hint: 'Single hand reads can be noisy.',
-  question: 'What is the best guardrail action?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'hard_counter',
-      label: 'Overhaul your three-street calling plan right away',
-      isCorrect: false,
-      preferredLabel: 'Make a small adjustment and gather more evidence',
-      betterAnswerLabel: 'Make a small adjustment and gather more evidence',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too reactive.',
-      feedbackReason:
-          'One wild bluff this orbit gives little evidence about the full betting range. Changing your calls across three streets can put extra chips in against stronger hands.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'small_adjust',
-      label: 'Make a small adjustment and gather more evidence',
-      isCorrect: true,
-      preferredLabel: 'Make a small adjustment and gather more evidence',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
-      feedbackReason:
-          'Guardrails mean respecting uncertainty. Small moves plus more data beat extreme reactions.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'no_adjust',
-      label: 'Stick to default chart lines and ignore the table cue',
-      isCorrect: false,
-      preferredLabel: 'Make a small adjustment and gather more evidence',
-      betterAnswerLabel: 'Make a small adjustment and gather more evidence',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too rigid.',
-      feedbackReason:
-          'One wild bluff this orbit is worth remembering while you keep your usual line. If the same betting pattern produces more bluffs, you have better evidence for adjusting.',
-    ),
-  ],
-);
-
-final _world10PlayerAdjustmentCheckpointRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.review,
-  lessonId: 'w10_player_adjustment_checkpoint',
-  caption: 'Lesson learned: tag tendency, make one change, keep guardrails.',
-  hint:
-      'Next you will carry these guardrails-based adjustments into real-play decisions across mixed table conditions.',
-  question: 'What does player adjustment add before real-play practice?',
-  feedbackTitle: 'Player-adjustment checkpoint.',
-  feedbackReason:
-      'You can now convert pressure reads and tendency tags into opponent-specific lines while keeping guardrails and discipline. Real-play habits are the next layer.',
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Adjust with structure.',
-      body:
-          'Tag one tendency, choose one focus, keep guardrails, then test across table dynamics instead of one isolated hand.',
-      focusLabels: <String>[
-        'Tendency tag',
-        'One focus',
-        'Guardrails',
-        'Real-play habits',
-      ],
-    ),
-  ],
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'structured_exploit',
-      label: 'Structured adjustment before live play',
-      isCorrect: true,
-      preferredLabel: 'Structured adjustment before live play',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
-      feedbackReason:
-          'That is the W10 bridge to W11: structured adaptation first, then reliable habits across live play conditions.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'intuition_only',
-      label: 'Use table feel without a written routine',
-      isCorrect: false,
-      preferredLabel: 'Structured adjustment before live play',
-      betterAnswerLabel: 'Structured adjustment before live play',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too loose.',
-      feedbackReason:
-          'Across preflop and postflop spots, relying on raw table feel without a structured tendency tag leads to erratic swings and costly misreads.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'baseline_only',
-      label: 'Stay standard until another table cue confirms it',
-      isCorrect: false,
-      preferredLabel: 'Structured adjustment before live play',
-      betterAnswerLabel: 'Structured adjustment before live play',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Safe but capped.',
-      feedbackReason:
-          'When opponents show repeated blind folds or loose calls, staying strictly standard leaves profitable adjustments uncollected before real play.',
-    ),
-  ],
-);
-
-final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w10_table_adjustment_notice',
-  lessonTitle: 'Player-adjustment checkpoint',
+  lessonTitle: "Facing a turn raise",
   lessonSubtitle: 'Player Adjustment',
-  caption: 'Suppose both blinds keep folding to your late steals.',
-  hint: 'Choose the first adjustment you can actually track at the table.',
-  question: 'What is the clean first live adjustment?',
-  feedbackTitle: 'Adjustment first, not chaos.',
+  caption:
+      "HJ has raised the turn with sets and two pair in eight shown hands. Use that range for this raise.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "Facing a turn raise",
   feedbackReason:
-      'Real-table adjustment works when one repeated tendency turns into one small tracked change.',
-  options: const <Act0RunnerOptionV1>[
+      "The call costs 12 into a final pot of 41.5, or 28.9%. KQ is far behind the shown sets and two pair.",
+  teachingSteps: const [],
+  options: const [
     Act0RunnerOptionV1(
-      id: 'rewrite_everything',
-      label: 'Widen steals and add more barrels too',
-      isCorrect: false,
-      preferredLabel: 'Widen late steals a bit',
-      betterAnswerLabel: 'Widen late steals a bit',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too broad.',
-      feedbackReason:
-          'When both blinds keep folding to late steals, adding multi-street barrels on top of wider steals risks big postflop pots on a purely preflop read.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'never_adjust',
-      label: 'Ignore the pattern',
-      isCorrect: false,
-      preferredLabel: 'Widen late steals a bit',
-      betterAnswerLabel: 'Widen late steals a bit',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Safe fallback.',
-      feedbackReason:
-          'When both blinds repeatedly fold to your late steals, ignoring the pattern leaves free blind money uncollected every orbit.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'widen_late_steals_small',
-      label: 'Widen late steals a bit',
+      id: "fold",
+      label: "Fold",
       isCorrect: true,
-      preferredLabel: 'Widen late steals a bit',
+      preferredLabel: "Fold",
+
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
+      feedbackTitle: "Correct.",
       feedbackReason:
-          'That is the clean live move: repeated blind overfolding supports one small late-position widen, not a full strategy rewrite.',
+          "The call costs 12 into a final pot of 41.5, or 28.9%. KQ is far behind the shown sets and two pair.",
+    ),
+    Act0RunnerOptionV1(
+      id: "call_12_bb",
+      label: "Call 12 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "KQ is top pair, not a set. HJ has shown strong hands on turn raises. Calling 12 BB buys little chance to win.",
+    ),
+    Act0RunnerOptionV1(
+      id: "all_in_to_40_5_bb",
+      label: "All-in to 40.5 BB",
+      isCorrect: false,
+      preferredLabel: "Fold",
+      betterAnswerLabel: "Fold",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A 40.5 BB turn all-in means adding 36.5 after your 4 BB bet. It risks more against HJ turn raises that have shown strong hands.",
     ),
   ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Carry one change to the table.',
-      body:
-          'Tag the tendency, pick one focus, and keep the change small enough that you can see whether it is working.',
-      focusLabels: <String>['Repeated fold', 'One focus', 'Trackable change'],
+
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "Kd Qd",
+    street: PokerStreet.turn,
+    actor: 'bb',
+    board: _act0LessonCardsV1("Kc 8s 3h 2c"),
+
+    folded: const {"utg", "co", "btn", "sb"},
+    stacks: const {
+      "utg": 66,
+      "hj": 62,
+      "co": 70,
+      "btn": 68,
+      "sb": 50,
+      "bb": 45,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'bb',
+        Act0ContributionKindV1.wager,
+        4,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'hj',
+        Act0ContributionKindV1.wager,
+        16,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "HJ bets 2 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 2 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB bets 4 BB"),
+      Act0ActionTrailItemV1(label: "Turn: HJ raises to 16 BB"),
+    ],
+    bets: const {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '4 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '16 BB',
+      ),
+    },
+  ),
+);
+
+final _w10TableAdjustmentNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_checkpoint_table_notice',
+  lessonTitle: "River check and bet",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "CO has shown bluffs after this line. The bet is 50% missed JT or T9 and 50% AQ, KQ or QJ. No ties.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Call or fold?",
+  feedbackTitle: "River check and bet",
+  feedbackReason:
+      "QT wins against 50% missed draws. The 9 BB call needs 30.0% wins in the 30 BB final pot.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "fold",
+      label: "Fold",
+      isCorrect: false,
+      preferredLabel: "Call 9 BB",
+      betterAnswerLabel: "Call 9 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "QT beats half of CO bets by the stated read. Folding gives up a call worth 6 BB on average.",
+    ),
+    Act0RunnerOptionV1(
+      id: "call_9_bb",
+      label: "Call 9 BB",
+      isCorrect: true,
+      preferredLabel: "Call 9 BB",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "QT wins against 50% missed draws. The 9 BB call needs 30.0% wins in the 30 BB final pot.",
+    ),
+    Act0RunnerOptionV1(
+      id: "raise_to_24_bb",
+      label: "Raise to 24 BB",
+      isCorrect: false,
+      preferredLabel: "Call 9 BB",
+      betterAnswerLabel: "Call 9 BB",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "QT wins by catching bluffs. A raise may fold missed draws and get calls from better queens.",
     ),
   ],
+
+  table: _day7TableV1(
+    hero: 'sb',
+    hand: "Qs Ts",
+    street: PokerStreet.river,
+    actor: 'sb',
+    board: _act0LessonCardsV1("Qh 7d 3c 8s 2d"),
+
+    folded: const {"utg", "hj", "btn", "bb"},
+    stacks: const {
+      "utg": 67,
+      "hj": 62,
+      "co": 58,
+      "btn": 55,
+      "sb": 43,
+      "bb": 49,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'sb',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'sb',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'co',
+        Act0ContributionKindV1.wager,
+        9,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN folds"),
+      Act0ActionTrailItemV1(label: "SB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: SB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 3 BB"),
+      Act0ActionTrailItemV1(label: "SB calls 3 BB"),
+      Act0ActionTrailItemV1(label: "Turn: SB checks"),
+      Act0ActionTrailItemV1(label: "CO checks"),
+      Act0ActionTrailItemV1(label: "River: SB checks"),
+      Act0ActionTrailItemV1(label: "CO bets 9 BB"),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '9 BB',
+      ),
+    },
+  ),
+);
+
+final _world10PlayerAdjustmentCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  lessonId: 'w10_checkpoint_review',
+  lessonTitle: "Last street choice",
+  lessonSubtitle: 'Player Adjustment',
+  caption:
+      "BTN is a calling station. The pair hands call either size 85% of the time. The other 15% fold. No pair will fold to a bet.",
+  hint: '',
+  hintPolicy: Act0HintPolicyV1.theoryOnly,
+  question: "Bet or check?",
+  feedbackTitle: "Last street choice",
+  feedbackReason:
+      "A 8 BB pure bluff needs 8/19.5 = 41.0% folds. BTN folds just 15%. Checking saves the chips.",
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: "bet_8_bb",
+      label: "Bet 8 BB",
+      isCorrect: false,
+      preferredLabel: "Check",
+      betterAnswerLabel: "Check",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "BTN calls 85% with a pair. A pure 8 BB bluff would lose 5.08 BB on average at this 11.5 BB pot.",
+    ),
+    Act0RunnerOptionV1(
+      id: "bet_4_bb",
+      label: "Bet 4 BB",
+      isCorrect: false,
+      preferredLabel: "Check",
+      betterAnswerLabel: "Check",
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: "Look again.",
+      feedbackReason:
+          "A smaller bluff risks less, but BTN folds just 15%. It still loses 1.68 BB on average in this read.",
+    ),
+    Act0RunnerOptionV1(
+      id: "check",
+      label: "Check",
+      isCorrect: true,
+      preferredLabel: "Check",
+
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: "Correct.",
+      feedbackReason:
+          "A 8 BB pure bluff needs 8/19.5 = 41.0% folds. BTN folds just 15%. Checking saves the chips.",
+    ),
+  ],
+
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: "9h 8h",
+    street: PokerStreet.river,
+    actor: 'bb',
+    board: _act0LessonCardsV1("Kh 7h 2c 4s 3d"),
+
+    folded: const {"utg", "hj", "co", "sb"},
+    stacks: const {
+      "utg": 64,
+      "hj": 61,
+      "co": 59,
+      "btn": 57,
+      "sb": 50,
+      "bb": 52,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO folds"),
+      Act0ActionTrailItemV1(label: "BTN raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Flop: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN bets 3 BB"),
+      Act0ActionTrailItemV1(label: "BB calls 3 BB"),
+      Act0ActionTrailItemV1(label: "Turn: BB checks"),
+      Act0ActionTrailItemV1(label: "BTN checks"),
+    ],
+    bets: const {},
+  ),
 );
 
 final _w11SessionPlanIntroRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+  table: _act0ReassignHeroSeatV1(
+    _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+    heroSeatId: 'co',
+    activeSeatId: '',
+  ),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w11_session_plan_intro',
   lessonTitle: 'Session plan in 30 seconds',
@@ -2987,7 +6281,7 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Narrow to one session goal next time',
       betterAnswerLabel: 'Narrow to one session goal next time',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too passive.',
       feedbackReason:
           'With scattered notes from the last session, playing without a focus target gives you no consistent decision to track this time.',
@@ -3041,7 +6335,7 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Track only the blind-defense leak today',
       betterAnswerLabel: 'Track only the blind-defense leak today',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose a cycle.',
       feedbackReason:
           'If you play first and decide later, you start a fast first orbit tired and without a specific blind-defense cue to look for.',
@@ -3158,7 +6452,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Bet value heavier and trim bluffs',
       betterAnswerLabel: 'Bet value heavier and trim bluffs',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too rigid.',
       feedbackReason:
           'The earlier weak-pair showdowns give you a cue for thinner value bets now. Waiting for post-session review gives up that opportunity.',
@@ -3392,7 +6686,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Fold the turn',
       betterAnswerLabel: 'Fold the turn',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tempting hand-label trap.',
       feedbackReason:
           'Tight CO bets 12 BB into a 12 BB pot. Calling makes the pot 36 BB, so top pair needs about 33% equity. The read that CO rarely bluffs big on the turn makes that harder to find.',
@@ -3492,7 +6786,7 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Select one repeated leak as priority',
       betterAnswerLabel: 'Select one repeated leak as priority',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Volume helps.',
       feedbackReason:
           'After missing thin value and overcalling a river today, skipping review to grind more volume repeats the same chip-losing habits next session.',
@@ -3550,7 +6844,7 @@ final _w11ReviewDefineFixRunner = _w11ReviewLoopIntroRunner.copyWith(
           'If an opponent underbluffs, fold marginal bluff-catchers',
       betterAnswerLabel:
           'If an opponent underbluffs, fold marginal bluff-catchers',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Missed chance.',
       feedbackReason:
           'After identifying river overcalls against tight players, leaving the river leak unwritten gives you no specific cue to check the next time a tight player bets.',
@@ -3580,9 +6874,9 @@ final _w11ReviewLoopRecapRunner = _w11ReviewLoopIntroRunner.copyWith(
 final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_plan_line',
-  caption: 'You start a session after a long workday with low energy.',
+  caption: 'You start play tired.',
   hint: 'Plan should stay simple and executable.',
-  question: 'What is the clean session plan?',
+  question: 'What is your plan?',
   teachingSteps: const <Act0TeachingStepV1>[],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3612,7 +6906,7 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Set one low-friction focus target',
       betterAnswerLabel: 'Set one low-friction focus target',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Simpler, but blind.',
       feedbackReason:
           'In a low-energy session, playing with no objective lets tired autopilot take over and wastes the session\'s learning value.',
@@ -3623,9 +6917,9 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
 final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_trigger_line',
-  caption: 'You notice repeated blind overfold and river underbluff patterns.',
+  caption: 'The blinds give up often. River bets are rarely bluffs.',
   hint: 'Pick one prepared live cue first.',
-  question: 'Which table action is best?',
+  question: 'Which change fits?',
   teachingSteps: const <Act0TeachingStepV1>[],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3666,9 +6960,9 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
 final _w11CheckpointReviewLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_review_line',
-  caption: 'Session ends with mixed results and two recurring mistakes.',
+  caption: 'Two mistakes kept coming up.',
   hint: 'Review should output one next-session repair task.',
-  question: 'What is the strongest closeout action?',
+  question: 'What do you review?',
   teachingSteps: const <Act0TeachingStepV1>[],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -3698,7 +6992,7 @@ final _w11CheckpointReviewLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Review one leak',
       betterAnswerLabel: 'Review one leak',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Common habit.',
       feedbackReason:
           'When a session ends with two recurring mistakes, skipping closeout lets the details fade and carries the same unfixed leaks into tomorrow.',
@@ -3710,39 +7004,60 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_mixed_table_line',
   caption:
-      'Real table. HJ opens 2.5 BB. You call BTN with A-J suited at 30 BB effective. Flop is A-8-4 two-tone. HJ bets 5 BB into 8 BB.',
+      "HJ opens, and BTN calls. Both started the flop with 30 BB behind. HJ bets 5 BB into 8 BB.",
   hint: 'Read seat, hand, board, price, and stack before choosing.',
-  question: 'Which line continues in position and keeps HJ’s weaker bets in?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroAJsCards,
-      boardCards: _boardA84TwoToneCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 13 BB',
-      toCallLabel: 'To call 5 BB',
-      centerLabel: 'BTN, top pair, 30 BB',
-      highlightedSeatIds: const ['hj', 'btn'],
-      handContributions: _act0SingleStreetBetContributionsV1(
+  question: 'Which line keeps weaker bets in?',
+  table:
+      _day7TableV1(
+        hero: 'btn',
+        hand: _heroAJsCards.map((card) => card.label).join(' '),
         street: PokerStreet.flop,
-        bettor: 'hj',
-        betBb: 5,
-        effectiveStackAtHandStartBb: 30,
-        potBeforeBetBb: 8,
+        actor: 'btn',
+        board: _boardA84TwoToneCards,
+        folded: const {"utg", "co", "sb", "bb"},
+        stacks: const {'btn': 32.75, 'hj': 32.75},
+        entries: [
+          for (final entry in _w11QJsPreflopContributions)
+            if (entry.kind == Act0ContributionKindV1.wager &&
+                entry.seatId == 'co')
+              const Act0ContributionV1(
+                PokerStreet.preflop,
+                'hj',
+                Act0ContributionKindV1.wager,
+                2.5,
+              )
+            else
+              entry,
+          const Act0ContributionV1(
+            PokerStreet.flop,
+            'hj',
+            Act0ContributionKindV1.wager,
+            5,
+          ),
+        ],
+        history: const [
+          Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+          Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+          Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+          Act0ActionTrailItemV1(label: "UTG folds"),
+          Act0ActionTrailItemV1(label: "HJ raises to 2.5 BB"),
+          Act0ActionTrailItemV1(label: "CO folds"),
+          Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+          Act0ActionTrailItemV1(label: "SB folds"),
+          Act0ActionTrailItemV1(label: "BB folds"),
+          Act0ActionTrailItemV1(label: "Flop: HJ bets 5 BB"),
+        ],
+        bets: const {
+          'hj': Act0SeatBetStateV1(
+            kind: Act0SeatBetKindV1.bet,
+            label: 'Bet',
+            amountLabel: '5 BB',
+          ),
+        },
+      ).copyWith(
+        showDecisionPremise: true,
+        highlightedSeatIds: const ['hj', 'btn'],
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'HJ bets 5 BB'),
-      ],
-    ),
-    bets: {
-      'hj': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'HJ',
-        amountLabel: '5 BB',
-      ),
-    },
-  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_for_protection',
@@ -3777,32 +7092,23 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
           'On A-8-4, HJ has bet 5 BB and the pot is now 13 BB. Folding gives up your in-position equity against HJ\'s weaker flop bets and draws.',
     ),
   ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Real play combines cues.',
-      body:
-          'Real play means combining seat, hand, board, price, and stack depth before acting. One cue alone is usually too thin.',
-      focusLabels: <String>['Position', 'Top pair', 'Two-tone board', '30 BB'],
-    ),
-  ],
+  teachingSteps: const <Act0TeachingStepV1>[],
 );
 
 final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w11_real_play_checkpoint',
-  caption:
-      'Lesson learned: plan, trigger, and review form one daily practice cycle.',
+  caption: 'Pick a plan, look for a cue, then review.',
   hint:
       'This closes the core route and feeds your daily play-review habit. Next you build the mindset bridge.',
-  question: 'What does real-play carryover produce when done well?',
+  question: 'What can you repeat each day?',
   feedbackTitle: 'Real-play checkpoint.',
   feedbackReason:
       'You can now carry course logic into real sessions through a repeatable routine: one plan, one trigger adjustment, and one review repair output. The mindset bridge is the next layer.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Cycle beats intensity.',
-      body:
-          'Sustainable progress comes from repeating a clean study-to-table cycle daily, not from occasional complex sessions.',
+      body: 'Pick one fix to try next time.',
       focusLabels: <String>[
         'Session plan',
         'Trigger action',
@@ -3829,7 +7135,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'A repeatable daily practice cycle',
       betterAnswerLabel: 'A repeatable daily practice cycle',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Partial progress.',
       feedbackReason:
           'Before live play, studying another concept without applying a plan-trigger-review habit leaves your existing table leaks costing chips.',
@@ -3847,23 +7153,916 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
   ],
 );
 
+Act0LessonTaskV1 _w11Task(
+  String id,
+  String title,
+  String caption,
+  String question, {
+  required int correct,
+  required List<(String, String, String, String?)> choices,
+  Act0TableStateV1? table,
+  Act0TeachingStepV1? teaching,
+}) {
+  final answer = choices[correct].$2;
+  return Act0LessonTaskV1(
+    taskId: id,
+    title: title,
+    phase: Act0LessonPhaseV1.drill,
+    rewardXp: 10,
+    stepKind: Act0LessonStepKindV1.practice,
+    runner: _w11TriggerReadIntroRunner.copyWith(
+      lessonId: id,
+      phase: Act0LessonPhaseV1.drill,
+      caption: caption,
+      question: question,
+      hint: '',
+      hintPolicy: Act0HintPolicyV1.hidden,
+      feedbackTitle: 'Review your choice.',
+      feedbackReason: choices[correct].$3,
+      teachingSteps: [if (teaching != null) teaching],
+      table: table ?? _w11TriggerReadIntroRunner.table,
+      options: [
+        for (final (index, (choiceId, label, reason, seat)) in choices.indexed)
+          Act0RunnerOptionV1(
+            id: choiceId,
+            label: label,
+            seatId: seat,
+            isCorrect: index == correct,
+            preferredLabel: answer,
+            quality: index == correct
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            feedbackTitle: index == correct ? 'Correct.' : 'Look again.',
+            feedbackReason: reason,
+          ),
+      ],
+    ),
+  );
+}
+
+final _w11_bankroll_set_limit = _w11Task(
+  'w11_bankroll_set_limit',
+  'Set a buy-in limit',
+  'Your poker fund has 400 chips. Your plan sets aside one part in 40 for each cash-game buy-in.',
+  'What buy-in cap fits this bankroll?',
+  correct: 1,
+  choices: const [
+    (
+      'choice_1',
+      '5 chips',
+      'Five chips is one part in 80. You could still pick a cheaper game.',
+      null,
+    ),
+    (
+      'choice_2',
+      '10 chips',
+      '400 divided by 40 is 10 chips. That is the cap in this plan.',
+      null,
+    ),
+    (
+      'choice_3',
+      '20 chips',
+      '20 chips would use one part in 20. Each loss would take twice the planned share.',
+      null,
+    ),
+  ],
+  teaching: const Act0TeachingStepV1(
+    title: 'Set a limit before play',
+    body:
+        'Your bankroll is the money set aside for poker. Keep it apart from the money you need to live. Set a buy-in cap before you sit down. Divide the fund by the number of buy-ins your plan calls for. You can move down or stop if a game costs more.',
+  ),
+);
+
+final _w11_bankroll_move_down = _w11Task(
+  'w11_bankroll_move_down',
+  'Check the limit after a loss',
+  'Your poker fund fell from 600 chips to 480. Your cap is one part in 40. The next table costs 15 chips.',
+  'What is your new buy-in cap for this bankroll?',
+  correct: 0,
+  choices: const [
+    (
+      'choice_1',
+      '12 chips',
+      '480 divided by 40 is 12 chips. Find a lower cost game or stop.',
+      null,
+    ),
+    (
+      'choice_2',
+      '15 chips',
+      '15 chips was the cap with 600 chips. The same game now takes more of your fund.',
+      null,
+    ),
+    (
+      'choice_3',
+      '24 chips',
+      '24 chips would use one part in 20 of the fund. That would double the planned share.',
+      null,
+    ),
+  ],
+);
+
+final _w11_plan_hj_open = _w11Task(
+  'w11_plan_hj_open',
+  'Use your plan from HJ',
+  'Your goal is to stick to the chart when no one has raised. UTG folds. You have A-Q off suit in HJ.',
+  'What is the first-in play from HJ?',
+  correct: 1,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'A-Q off suit is in the first Medium row. HJ can open it after UTG folds.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise to 2.5 BB',
+      'The first Medium row can open from HJ through BTN. Use your plan and open A-Q off suit.',
+      null,
+    ),
+    (
+      'limp',
+      'Limp for 1 BB',
+      'A limp with A-Q puts in 1 BB but gives the players behind a cheap way in. The chart calls for a raise.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'hj',
+    hand: 'Ad Qs',
+    street: PokerStreet.preflop,
+    actor: 'hj',
+    folded: const {'utg'},
+    entries: _act0LessonBlinds,
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+    ],
+    bets: const {'sb': _smallBlindPost, 'bb': _bigBlindPost},
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_sb_ajo_vs_btn = _w11Task(
+  'w11_sb_ajo_vs_btn',
+  'A-J from the small blind',
+  'BTN opens to 2.5 BB. You are SB. Use the course chart for one open.',
+  'What is the chart action?',
+  correct: 2,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'A-J off suit is in the first Medium row. The chart gives up too much here if you fold to BTN.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'A flat call leaves BB in and gives BTN the lead. This Medium row makes a re-raise from SB.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise to 9 BB',
+      'A-J off suit is first-row Medium. SB re-raises this row over a BTN open.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'sb',
+    hand: 'Ah Jc',
+    street: PokerStreet.preflop,
+    actor: 'sb',
+
+    folded: const {'utg', 'hj', 'co'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'SB',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'BB',
+        amountLabel: '1 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2.5 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_sb_kjo_vs_btn = _w11Task(
+  'w11_sb_kjo_vs_btn',
+  'K-J from the small blind',
+  'BTN opens to 2.5 BB. Your small blind is posted. Use the course chart.',
+  'What is the chart action?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'K-J is in the second Medium row. The SB raise rule ends at the first Medium row.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'You would pay 2 BB more with K-J and act before BTN on the flop. The chart gives SB no flat call here.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise to 9 BB',
+      'A raise with K-J off suit risks 8.5 BB more and uses a hand outside the chart’s SB re-raise rows.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'sb',
+    hand: 'Ks Jd',
+    street: PokerStreet.preflop,
+    actor: 'sb',
+
+    folded: const {'utg', 'hj', 'co'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'SB',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'BB',
+        amountLabel: '1 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2.5 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_bb_72o_vs_hj = _w11Task(
+  'w11_bb_72o_vs_hj',
+  'Seven-deuce in the big blind',
+  'HJ makes it 2.5 BB. All seats between HJ and BB fold.',
+  'What is the chart action?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Seven-deuce off suit is Weak. Fold and save the rest of your stack.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'The posted blind is gone. With seven-deuce, the extra 1.5 BB goes in with a Weak hand.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'A raise with seven-deuce risks more chips against an early open. This hand is outside the course range.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: '7s 2c',
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {'utg', 'co', 'btn', 'sb'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'SB',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'BB',
+        amountLabel: '1 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2.5 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_multiway_turn_fold = _w11Task(
+  'w11_multiway_turn_fold',
+  'One pair in a three-way pot',
+  'Three players see the turn. For this drill, CO and BTN each have a straight and will stay in.',
+  'What should you do with your sevens?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Your pair of sevens cannot beat either straight on this board, even if a seven falls. Save the call.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'CO bet 8 BB and BTN called. No river card can give your two sevens a hand that beats a straight here.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'CO and BTN will stay in with their straights. More chips go in with no path to the best hand.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: '7h 7c',
+    street: PokerStreet.turn,
+    actor: 'bb',
+    board: _act0LessonCardsV1('Ks Qd Jc 2h'),
+    folded: const {'utg', 'hj', 'sb'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        8,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'btn',
+        Act0ContributionKindV1.wager,
+        8,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls 2.5 BB',
+        displayLabel: 'BB calls 1.5 BB more',
+      ),
+      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO checks'),
+      Act0ActionTrailItemV1(label: 'BTN checks'),
+      Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 8 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 8 BB'),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '8 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '8 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_first_in_seat = _w11Task(
+  'w11_first_in_seat',
+  'Find the opener',
+  'Read the voluntary action after the two blinds were posted.',
+  'Tap the seat that opened the pot.',
+  correct: 1,
+  choices: const [
+    (
+      'utg',
+      'UTG',
+      'UTG folded. Counting that seat as the opener ignores HJ’s 2.5 BB raise.',
+      'utg',
+    ),
+    (
+      'hj',
+      'HJ',
+      'HJ put in the first raise. The blinds posted before that action.',
+      'hj',
+    ),
+    (
+      'bb',
+      'BB',
+      'BB posted a 1 BB blind. Counting that post as a raise gives the lead to the wrong seat.',
+      'bb',
+    ),
+  ],
+  table: _day7PreflopV1('co', '6s 5s', opener: 'hj', showTurn: true).copyWith(
+    showDecisionPremise: true,
+    selectableSeatIds: const ['utg', 'hj', 'bb'],
+  ),
+);
+
+final _w11_multiway_first_seat = _w11Task(
+  'w11_multiway_first_seat',
+  'Find the first seat on the flop',
+  'CO opened. BTN and BB called.',
+  'Tap the first seat to act.',
+  correct: 1,
+  choices: const [
+    (
+      'co',
+      'CO',
+      'CO opened before the flop. Acting from CO now would skip BB, the first live seat after BTN.',
+      'co',
+    ),
+    (
+      'bb',
+      'BB',
+      'BB is the first live seat after BTN once the flop is out.',
+      'bb',
+    ),
+    (
+      'btn',
+      'BTN',
+      'BTN acts last among these three players on the flop. Starting there would skip both other live seats.',
+      'btn',
+    ),
+  ],
+  table:
+      _day7TableV1(
+        hero: 'co',
+        hand: 'Ac Qh',
+        street: PokerStreet.flop,
+
+        board: _act0LessonCardsV1('Qc 8s 3h'),
+        folded: const {'utg', 'hj', 'sb'},
+        stacks: const {
+          'utg': 40,
+          'hj': 40,
+          'co': 40,
+          'btn': 40,
+          'sb': 40,
+          'bb': 40,
+        },
+        entries: const [
+          ..._act0LessonBlinds,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'co',
+            Act0ContributionKindV1.wager,
+            2.5,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            2.5,
+          ),
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'bb',
+            Act0ContributionKindV1.wager,
+            1.5,
+          ),
+        ],
+        history: const [
+          Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+          Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+          Act0ActionTrailItemV1(label: 'UTG folds'),
+          Act0ActionTrailItemV1(label: 'HJ folds'),
+          Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'SB folds'),
+          Act0ActionTrailItemV1(
+            label: 'BB calls 2.5 BB',
+            displayLabel: 'BB calls 1.5 BB more',
+          ),
+        ],
+        bets: const {},
+      ).copyWith(
+        showDecisionPremise: true,
+        selectableSeatIds: const ['co', 'bb', 'btn'],
+      ),
+);
+
+final _w11_checkpoint_turn_price = _w11Task(
+  'w11_checkpoint_turn_price',
+  'Check the price on the turn',
+  'A heart wins. A miss loses. Assume the river checks through.',
+  'With nine outs and a one in 5 shot, what is your play?',
+  correct: 1,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'A fold gives up a draw that wins one time in five. A 1 BB call needs less than that to break even.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'You pay 1 BB to make a 7.5 BB pot. That is about 13%. One win in five pays for this call.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'CO offers a 1 BB price. A raise spends more, and this drill gives no reason to count on a fold.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Ah 5h',
+    street: PokerStreet.turn,
+    actor: 'bb',
+    board: _act0LessonCardsV1('Kh 8h 3c Js'),
+    folded: const {'utg', 'hj', 'btn', 'sb'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls 2.5 BB',
+        displayLabel: 'BB calls 1.5 BB more',
+      ),
+      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO checks'),
+      Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 1 BB'),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '1 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_checkpoint_multiway_value = _w11Task(
+  'w11_checkpoint_multiway_value',
+  'Use a clear edge in a three-way pot',
+  'CO will call one raise with a worse hand.',
+  'How do you get more chips in?',
+  correct: 2,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'With a jack-high straight on 9-8-7, a fold gives up the best hand on this flop.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'A call gets to the turn, but CO would put in more with a worse hand right now.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'Raise for value. J-T makes the best straight on 9-8-7, and CO will put in more with a worse hand.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Jc Tc',
+    street: PokerStreet.flop,
+    actor: 'bb',
+    board: _act0LessonCardsV1('9s 8h 7d'),
+    folded: const {'utg', 'hj', 'sb'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls 2.5 BB',
+        displayLabel: 'BB calls 1.5 BB more',
+      ),
+      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '2 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '2 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w11_checkpoint_short_spr = _w11Task(
+  'w11_checkpoint_short_spr',
+  'Two stacks, one cap',
+  'CO has more chips than you. The turn starts with 15 BB in the pot and 10 BB left at your seat.',
+  'Which stack do you use to find the SPR here?',
+  correct: 1,
+  choices: const [
+    (
+      'pot',
+      'The pot',
+      'The 15 BB in the middle is already at risk. It does not set the cap on new bets.',
+      null,
+    ),
+    (
+      'short',
+      'Your stack',
+      'Your 10 BB is the smaller stack. Divide it by 15 BB for an SPR of about 0.67.',
+      null,
+    ),
+    (
+      'deep',
+      'CO’s stack',
+      'CO covers your 10 BB. The part of CO’s stack above yours cannot go into this heads-up pot.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Kc Td',
+    street: PokerStreet.turn,
+    board: _act0LessonCardsV1('Ks 8h 3s 2c'),
+    folded: const {'utg', 'hj', 'btn', 'sb'},
+    stacks: const {
+      'utg': 17.25,
+      'hj': 17.25,
+      'co': 40,
+      'btn': 17.25,
+      'sb': 17.25,
+      'bb': 17.25,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        4.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        4.75,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls 2.5 BB',
+        displayLabel: 'BB calls 1.5 BB more',
+      ),
+      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 4.75 BB'),
+      Act0ActionTrailItemV1(label: 'BB calls 4.75 BB'),
+    ],
+    bets: const {},
+  ).copyWith(showDecisionPremise: true),
+);
+
 final _w12DecisionQualityIntroRunner = _w11ReviewLoopIntroRunner.copyWith(
-  table: _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+  table: _act0ReassignHeroSeatV1(
+    _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+    heroSeatId: 'co',
+    activeSeatId: '',
+  ),
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_decision_quality_intro',
   lessonTitle: 'Decision quality over outcome',
   lessonSubtitle: 'Mindset Bridge',
-  caption: 'Short-term outcomes can lie. Process quality must stay the anchor.',
+  caption: 'A good choice can lose. A poor choice can win.',
   hint: 'Judge choices by logic, not one card on river.',
   question: 'What should be judged first after a hand?',
   feedbackTitle: 'Mindset foundation.',
   feedbackReason:
-      'A strong mindset evaluates whether the decision process was sound before reacting to outcome variance.',
+      'Check how you made the choice. Then look at how the hand ends.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Process beats variance.',
+      title: 'Judge the choice',
       body:
-          'Good decisions can lose and bad decisions can win. Improvement comes from process quality, not short-term emotional swings.',
+          'Check the facts you had when you chose. One win or loss does not prove the choice was sound. Tilt is when a strong feeling starts to steer how you play.',
       focusLabels: <String>['Process', 'Variance', 'Outcome bias'],
     ),
   ],
@@ -3950,7 +8149,7 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flag the loose call as a possible leak',
       betterAnswerLabel: 'Flag the loose call as a possible leak',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too harsh.',
       feedbackReason:
           'After a loose call wins on a lucky river, letting confidence collapse turns a calm process audit into emotional tilt on the next hands.',
@@ -3974,19 +8173,17 @@ final _w12TiltResetIntroRunner = _w12DecisionQualityIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w12_tilt_reset_intro',
   lessonTitle: 'Tilt reset protocol',
-  caption:
-      'One short reset can protect decision quality after emotional spikes.',
-  hint: 'Pause, breathe, re-anchor to plan.',
+  caption: 'A loss or a big win can make you rush. A short pause can help.',
+  hint: 'Take one breath and come back to your plan.',
   question: 'What is the purpose of a tilt reset?',
   feedbackTitle: 'Reset foundation.',
-  feedbackReason:
-      'Tilt reset prevents one hand from contaminating the next decisions and keeps session discipline alive.',
+  feedbackReason: 'A pause gives you time to see the new hand clearly.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Fast reset routine.',
       body:
-          'Name the emotion, take one breath cycle, restate your one-focus plan, then continue with smaller decision scope.',
-      focusLabels: <String>['Emotion label', 'Breath', 'Re-anchor'],
+          'Name what you feel. Take a breath. Look at your cards, the board, and the next bet. Take a break if you still feel the urge to rush.',
+      focusLabels: <String>['Name the feeling', 'Breathe', 'Read the new hand'],
     ),
   ],
 );
@@ -4069,7 +8266,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Log leak briefly and reset to current hand',
       betterAnswerLabel: 'Log leak briefly and reset to current hand',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Protects emotion short term.',
       feedbackReason:
           'After an avoidable call error, skipping the note to rely on memory lets the leak slip away unreviewed after the session.',
@@ -4151,7 +8348,7 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Stick to process and your planned line',
       betterAnswerLabel: 'Stick to process and your planned line',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Safer but capped.',
       feedbackReason:
           'After table talk from an opponent, playing overly scared forfeits profitable value and steal spots out of fear of conflict.',
@@ -4213,40 +8410,74 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_pretty_hand_bad_price_fold',
   caption:
-      'Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. You hold K-Q at 100 BB effective.',
+      "CO bets both the flop and the turn. Both start the river with 100 BB behind. CO rarely bluffs and bets 18 BB into 20 BB.",
   hint: 'Do not make a stubborn call only because the hand looks pretty.',
   question: 'What is the cleaner disciplined action?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroKqCards,
-      boardCards: _boardK7294Cards,
-      streetLabel: 'River',
-      potLabel: 'Pot 38 BB',
-      toCallLabel: 'To call 18 BB',
-      centerLabel: 'Top pair, bad river price',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.river,
-        bettor: 'co',
-        betBb: 18,
-        effectiveStackAtHandStartBb: 100,
-        potBeforeBetBb: 20,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroKqCards.map((card) => card.label).join(' '),
+    street: PokerStreet.river,
+    actor: 'btn',
+    board: _boardK7294Cards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 108.75, 'co': 108.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2.5,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO barrels flop'),
-        Act0ActionTrailItemV1(label: 'CO barrels turn'),
-        Act0ActionTrailItemV1(label: 'CO bets 18 BB'),
-      ],
-    ),
-    bets: {
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        3.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.turn,
+        'btn',
+        Act0ContributionKindV1.wager,
+        3.5,
+      ),
+      const Act0ContributionV1(
+        PokerStreet.river,
+        'co',
+        Act0ContributionKindV1.wager,
+        18,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "Turn: CO bets 3.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 3.5 BB"),
+      Act0ActionTrailItemV1(label: "River: CO bets 18 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '18 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_river',
@@ -4264,7 +8495,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       isCorrect: false,
       preferredLabel: 'Fold the river',
       betterAnswerLabel: 'Fold the river',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Pretty-hand trap.',
       feedbackReason:
           'Tight CO bets 18 BB into 20 BB on K-7-2-9-4. Calling makes the pot 56 BB, so K-Q needs about 32% equity. The tight read makes it harder to find enough bluffs or worse value hands.',
@@ -4300,38 +8531,48 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_revenge_raise_trap',
   caption:
-      'The same opponent bluffed you last orbit and needles you now. New hand: You hold Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.',
+      "CO bluffed you last orbit and taunts you now. Both start the flop with 35 BB behind. CO bets 2 BB into 8 BB.",
   hint:
       'Do not raise just to take control when the table read says stay simple.',
   question: 'What is the clean discipline line?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Top pair, ego trap',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.flop,
-        bettor: 'co',
-        betBb: 2,
-        effectiveStackAtHandStartBb: 35,
-        potBeforeBetBb: 8,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroQJsCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: 'btn',
+    board: _boardJ74FlopCards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 37.75, 'co': 37.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1.note(label: 'CO needled you last orbit'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: {
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1.note(label: "CO needled you last orbit"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '2 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_to_take_control',
@@ -4342,7 +8583,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Revenge leak.',
       feedbackReason:
-          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge bloats the pot and folds out CO\'s bluffs while isolating you against stronger hands.',
+          'On the J-7-4 flop from BTN at 35 BB effective facing CO\'s 2 BB bet into an 8 BB pot, raising out of revenge can grow the pot and fold out CO\'s bluffs while isolating you against stronger hands.',
     ),
     Act0RunnerOptionV1(
       id: 'call_once',
@@ -4360,7 +8601,7 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Call once and keep the pot controlled',
       betterAnswerLabel: 'Call once and keep the pot controlled',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Emotion still steering.',
       feedbackReason:
           'CO’s 2 BB bet on J-7-4 brings the pot to 10 BB. Folding out of irritation gives up a low-cost chance to continue in position against weaker bets.',
@@ -4424,7 +8665,7 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       isCorrect: false,
       preferredLabel: 'Audit process first, then outcome',
       betterAnswerLabel: 'Audit process first, then outcome',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Protective instinct.',
       feedbackReason:
           'After a sound decision loses a high-variance pot, skipping review to avoid frustration leaves you unsure whether the price and range read were actually solid.',
@@ -4484,7 +8725,7 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
       isCorrect: false,
       preferredLabel: 'Run brief reset and re-anchor to plan',
       betterAnswerLabel: 'Run brief reset and re-anchor to plan',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Common response.',
       feedbackReason:
           'After two rough spots in a row, continuing without an explicit reset lets hidden tilt degrade your next high-stakes decision.',
@@ -4527,7 +8768,7 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       isCorrect: false,
       preferredLabel: 'Take only evidence-backed lines',
       betterAnswerLabel: 'Take only evidence-backed lines',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Defensive but capped.',
       feedbackReason:
           'Folding a close spot to avoid a player’s taunts can surrender an edge your read of their range and the price still support.',
@@ -4539,40 +8780,48 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_checkpoint_full_loop_line',
   caption:
-      'You made a loose bluff last orbit. New hand: CO opens, You call BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.',
+      "Your bluff failed last orbit. Both start this flop with 25 BB behind. CO bets 2 BB into 8 BB.",
   hint:
       'Use the same decision routine even after a mistake: seat, hand, board, price, stack and action, then the clean action.',
   question: 'What keeps the next decision stable?',
-  table: _act0CurrentStreetTableV1(
-    _legacyFacingOpenTableV1.copyWith(
-      heroCards: _heroAJsCards,
-      boardCards: _boardA84TwoToneCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'After mistake, stay clean',
-      handContributions: _act0SingleStreetBetContributionsV1(
-        street: PokerStreet.flop,
-        bettor: 'co',
-        betBb: 2,
-        effectiveStackAtHandStartBb: 25,
-        potBeforeBetBb: 8,
+  table: _day7TableV1(
+    hero: 'btn',
+    hand: _heroAJsCards.map((card) => card.label).join(' '),
+    street: PokerStreet.flop,
+    actor: 'btn',
+    board: _boardA84TwoToneCards,
+    folded: const {"utg", "hj", "sb", "bb"},
+    stacks: const {'btn': 27.75, 'co': 27.75},
+    entries: [
+      ..._w11QJsPreflopContributions,
+      const Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
       ),
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1.note(label: 'Last orbit: loose bluff'),
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: {
+    ],
+    history: const [
+      Act0ActionTrailItemV1.note(label: "SB blind 0.5 BB"),
+      Act0ActionTrailItemV1.note(label: "BB blind 1 BB"),
+      Act0ActionTrailItemV1.note(label: "6 antes of 0.25 BB each"),
+      Act0ActionTrailItemV1.note(label: "Last orbit: loose bluff"),
+      Act0ActionTrailItemV1(label: "UTG folds"),
+      Act0ActionTrailItemV1(label: "HJ folds"),
+      Act0ActionTrailItemV1(label: "CO raises to 2.5 BB"),
+      Act0ActionTrailItemV1(label: "BTN calls 2.5 BB"),
+      Act0ActionTrailItemV1(label: "SB folds"),
+      Act0ActionTrailItemV1(label: "BB folds"),
+      Act0ActionTrailItemV1(label: "Flop: CO bets 2 BB"),
+    ],
+    bets: const {
       'co': Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
+        label: 'Bet',
         amountLabel: '2 BB',
       ),
     },
-  ),
+  ).copyWith(showDecisionPremise: true),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'raise_to_recover',
@@ -4591,7 +8840,7 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       isCorrect: false,
       preferredLabel: 'Call with the same routine',
       betterAnswerLabel: 'Call with the same routine',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too reactive.',
       feedbackReason:
           'CO’s 2 BB bet brings the pot to 10 BB. Folding because of last orbit’s mistake gives up a low-cost chance to continue in position with top pair.',
@@ -4620,6 +8869,541 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       ],
     ),
   ],
+);
+
+Act0LessonTaskV1 _w12Task(
+  String id,
+  String title,
+  String caption,
+  String question, {
+  required int correct,
+  required List<(String, String, String, String?)> choices,
+  Act0TableStateV1? table,
+  Act0TeachingStepV1? teaching,
+}) {
+  final answer = choices[correct].$2;
+  return Act0LessonTaskV1(
+    taskId: id,
+    title: title,
+    phase: Act0LessonPhaseV1.drill,
+    rewardXp: 10,
+    stepKind: Act0LessonStepKindV1.practice,
+    runner: _w12DecisionQualityIntroRunner.copyWith(
+      lessonId: id,
+      phase: Act0LessonPhaseV1.drill,
+      caption: caption,
+      question: question,
+      hint: '',
+      hintPolicy: Act0HintPolicyV1.hidden,
+      feedbackTitle: 'Review your choice.',
+      feedbackReason: choices[correct].$3,
+      teachingSteps: [if (teaching != null) teaching],
+      table: table ?? _w12DecisionQualityIntroRunner.table,
+      options: [
+        for (final (index, (choiceId, label, reason, seat)) in choices.indexed)
+          Act0RunnerOptionV1(
+            id: choiceId,
+            label: label,
+            seatId: seat,
+            isCorrect: index == correct,
+            preferredLabel: answer,
+            quality: index == correct
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            feedbackTitle: index == correct ? 'Correct.' : 'Look again.',
+            feedbackReason: reason,
+          ),
+      ],
+    ),
+  );
+}
+
+final _w12_river_price_call = _w12Task(
+  'w12_river_price_call',
+  'River price',
+  'CO bets 10 into 20 on K-8-4-2-9. This river range is 35% missed QJ/JT and 65% AK, K9 or 88. Your KQ beats the misses and loses to the value hands. No ties.',
+  'Call or fold?',
+  correct: 0,
+  choices: const [
+    (
+      'call_10_bb',
+      'Call 10 BB',
+      'KQ wins 35% of this river range. A 10 BB call needs 25%. Its average gain is 4 BB.',
+      null,
+    ),
+    (
+      'fold',
+      'Fold',
+      'The bet makes the pot 30 BB. KQ beats the 35% missed hands, so folding gives up 4 BB of expected call value.',
+      null,
+    ),
+    (
+      'raise_to_35_bb',
+      'Raise to 35 BB',
+      'KQ can catch missed QJ/JT for 10 BB. A raise to 35 may fold those bluffs and face calls from AK, K9 and 88.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Kc Qd',
+    street: PokerStreet.river,
+    actor: 'bb',
+    board: _act0LessonCardsV1('Ks 8c 4d 2h 9s'),
+
+    folded: const {'utg', 'hj', 'btn', 'sb'},
+    stacks: const {
+      'utg': 70,
+      'hj': 69,
+      'co': 70,
+      'btn': 65,
+      'sb': 62,
+      'bb': 70,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        3.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        3.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        4,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'bb',
+        Act0ContributionKindV1.wager,
+        4,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'co',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 2 BB'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 3.75 BB'),
+      Act0ActionTrailItemV1(label: 'BB calls 3.75 BB'),
+      Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 4 BB'),
+      Act0ActionTrailItemV1(label: 'BB calls 4 BB'),
+      Act0ActionTrailItemV1(label: 'River: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 10 BB'),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'bet',
+        amountLabel: '10 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
+
+  teaching: const Act0TeachingStepV1(
+    title: 'Read the river price',
+    body:
+        'W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.',
+  ),
+);
+
+final _w12_river_ev_costly_call = _w12Task(
+  'w12_river_ev_costly_call',
+  'A costly river call',
+  'BB bets 5 BB. Two of ten bets are bluffs you beat. The rest beat your kings. BB folds the bluffs to a raise and calls with the better hands.',
+  'Which action has the best EV in this model?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Five out of 15.5 is about 32%. Your chance to win is 20%. Fold to save the 5 BB.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'The bet costs 5 BB to call. With just two wins in ten bets, the cost of the eight losses is too high.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'A raise asks BB to fold. The model says the better hands stay and make you pay more.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'co',
+    'Kd 9c',
+    'Ks Jh 8d 4s 2h',
+    openBb: 2.5,
+    betBb: 5,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_confidence_spr = _w12Task(
+  'w12_confidence_spr',
+  'Check how much is at risk',
+  'You were quick to call in the last hand. Stop and read this flop. Both live stacks have 16.5 BB left. The pot is 5.5 BB.',
+  'What is the SPR at the start of this flop?',
+  correct: 0,
+  choices: const [
+    (
+      'choice_1',
+      '3',
+      '16.5 divided by 5.5 is 3. The most either player can put in from here is three times the pot.',
+      null,
+    ),
+    (
+      'choice_2',
+      '6',
+      'Six would count both stacks. Use just the smaller stack to see what each player can risk.',
+      null,
+    ),
+    (
+      'choice_3',
+      '9',
+      'Nine would need a stack of 49.5 BB. The live stacks are 16.5 BB each.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Kc Js',
+    street: PokerStreet.flop,
+    board: _act0LessonCardsV1('Kd 8c 3h'),
+    folded: const {'utg', 'co', 'btn', 'sb'},
+    stacks: const {'hj': 19, 'bb': 19},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(
+        label: 'BB calls 2.5 BB',
+        displayLabel: 'BB calls 1.5 BB more',
+      ),
+    ],
+    bets: const {},
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_river_ev_turn_draw_miss = _w12Task(
+  'w12_river_ev_turn_draw_miss',
+  'The draw missed',
+  'You had a heart draw with one card to come. The river is Jd. You beat one in 10 CO bets. CO bets 3 BB and will call a raise with its value hands.',
+  'Which action has the best EV in this model?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'The river is a diamond. The price is 3 out of 11.5, about 26%. One win in ten is too few.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'There are no cards to come after Jd. Counting the old heart outs would sell you a chance that has passed.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'With ace high on this river, the raise spends more against CO’s better hands, which will call.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Ah Qh',
+    'Kh 8h 3c 2s Jd',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 3,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_river_ev_draw_hit = _w12Task(
+  'w12_river_ev_draw_hit',
+  'The draw hit',
+  'A heart lands on the river. BB bets 4 BB with a lower flush and will call one raise. Use this fixed hand model.',
+  'Which action has the best EV in this model?',
+  correct: 2,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'Your ace-high flush wins against BB’s lower flush on this board. A fold gives up the pot.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'Calling wins the pot, but BB would put in more with a lower flush in this model.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'Ah Th makes the best possible flush. BB will call one raise with a lower flush. Get paid for the out that hit.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'co',
+    'Ah Th',
+    'Kh 6h 2s 8c 3h',
+    openBb: 2.5,
+    betBb: 4,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_river_ev_new_sample = _w12Task(
+  'w12_river_ev_new_sample',
+  'Price the last hand',
+  'You lost a close call last hand. In this new hand you beat four of ten CO bets. CO bets 4 BB and keeps just the better hands if raised.',
+  'Which action has the best EV in this model?',
+  correct: 1,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      '4 BB needs about 30% to call. This hand wins 40% in the model. The last result does not take that edge away.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      '4 divided by 13.5 is about 30%. You win 40%. A call gains 1.4 BB on average in this model.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'The hands that beat your jacks will call a raise. Making the bet larger just adds a cost against those hands.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Jh Tc',
+    'Js 9h 6d 4c 2s',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 4,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_turn_count_heart_outs = _w12Task(
+  'w12_turn_count_heart_outs',
+  'Count before the last card',
+  'At the turn, you hold two hearts and see two more on the board. Recall the outs from W5 before you move on.',
+  'How many unseen heart outs could fill the flush?',
+  correct: 1,
+  choices: const [
+    (
+      'choice_1',
+      '7',
+      'Four hearts are seen. Taking six out of 13 would remove two hearts you have not seen.',
+      null,
+    ),
+    (
+      'choice_2',
+      '9',
+      '13 hearts minus the four you see leaves nine. A heart on the river makes your flush.',
+      null,
+    ),
+    (
+      'choice_3',
+      '11',
+      'Eleven skips the two hearts at your seat. Both private and board cards are already known.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Ah Qh',
+    'Kh 8h 3c 2s',
+    opponent: 'co',
+    openBb: 2.5,
+  ).copyWith(showDecisionPremise: true),
+);
+
+final _w12_tilt_after_river_beat = _w12Task(
+  'w12_tilt_after_river_beat',
+  'Pause after a bad beat',
+  'Last hand, your kings lost when an ace fell as the last card. Now CO bets on a new flop. You feel a rush to win it back.',
+  'What should you do before you pick an action?',
+  correct: 1,
+  choices: const [
+    (
+      'speed',
+      'Speed up so you do not freeze',
+      'The board is Q-7-2 and CO just put in 2 BB. Acting fast skips the new facts and can cost chips.',
+      null,
+    ),
+    (
+      'pause',
+      'Take one breath and read the new hand',
+      'You have a new pair on Q-7-2. Take a breath. Then read the price and the board before you choose.',
+      null,
+    ),
+    (
+      'target',
+      'Focus on bets from CO for this orbit',
+      'CO’s 2 BB bet belongs to this hand. Targeting a seat after a loss can make you pay for a grudge.',
+      null,
+    ),
+  ],
+  table: _day7PostflopV1(
+    'bb',
+    'Qc Td',
+    'Qh 7d 2c',
+    opponent: 'co',
+    openBb: 2.5,
+    betBb: 2,
+    showTurn: true,
+  ).copyWith(showDecisionPremise: true),
+  teaching: const Act0TeachingStepV1(
+    title: 'What is tilt?',
+    body:
+        'Tilt is when a strong feeling starts to steer how you play. After a loss, you may rush. After a big win, you may take risks you would not take before. Pause and read the new hand. If the urge stays, take a break.',
+  ),
+);
+
+final _w12_tilt_after_lucky_win = _w12Task(
+  'w12_tilt_after_lucky_win',
+  'Pause after a lucky win',
+  'You won a pot after a loose call last hand. In this new hand HJ opens, and you feel like your cards cannot miss. Take one breath and use the course chart.',
+  'What action fits the new hand?',
+  correct: 0,
+  choices: const [
+    (
+      'fold',
+      'Fold',
+      'J-5 off suit is Weak. The good result last hand does not move it to a new row.',
+      null,
+    ),
+    (
+      'call',
+      'Call',
+      'HJ made it 2.5 BB. The first blind is already in. Calling pays another 1.5 BB with J-5 off suit.',
+      null,
+    ),
+    (
+      'raise',
+      'Raise',
+      'A raise risks more chips with J-5 off suit against an HJ open. The last win does not give this hand a better chance.',
+      null,
+    ),
+  ],
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Js 5d',
+    street: PokerStreet.preflop,
+    actor: 'bb',
+
+    folded: const {'utg', 'co', 'btn', 'sb'},
+    stacks: const {
+      'utg': 40,
+      'hj': 40,
+      'co': 40,
+      'btn': 40,
+      'sb': 40,
+      'bb': 40,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'hj',
+        Act0ContributionKindV1.wager,
+        2.5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ raises to 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+    ],
+    bets: const {
+      'sb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'SB',
+        amountLabel: '0.5 BB',
+      ),
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.post,
+        label: 'BB',
+        amountLabel: '1 BB',
+      ),
+      'hj': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.raise,
+        label: 'Raise',
+        amountLabel: '2.5 BB',
+      ),
+    },
+  ).copyWith(showDecisionPremise: true),
 );
 
 final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(

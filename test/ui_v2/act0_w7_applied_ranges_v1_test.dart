@@ -147,6 +147,68 @@ void main() {
     }
   });
 
+  test('W7 Day 7 compares clean hearts with the actual turn price', () {
+    final review = act0NewReviewTasksV1
+        .singleWhere(
+          (entry) =>
+              entry.worldId == 'world_7' &&
+              entry.lessonId == 'w7_visible_cards_and_price' &&
+              entry.conceptFamilyId == 'pot_to_call',
+        )
+        .task
+        .runner;
+    final table = review.table;
+    final hero = physicalCards(table.heroCards);
+    final board = physicalCards(table.boardCards);
+    final visible = {...hero, ...board};
+    final available = [
+      for (final rank in pokerRanks.split(''))
+        for (final suit in 'cdhs'.split(''))
+          if (!visible.contains('$rank$suit')) '$rank$suit',
+    ];
+    for (final king in available.where((c) => c[0] == 'K' && c[1] != 'h')) {
+      for (final queen in available.where((c) => c[0] == 'Q' && c[1] != 'h')) {
+        final shares = [
+          for (final river in available)
+            if (river != king && river != queen)
+              _share(hero, [king, queen], [...board, river]),
+        ];
+        expect(shares, hasLength(44));
+        expect(shares.where((result) => result == 1), hasLength(8));
+        expect(shares, isNot(contains(0.5)));
+      }
+    }
+    expect(_requiredShare(table), 0.2);
+    expect(8 / 44, lessThan(_requiredShare(table)));
+    expect(_correct(review), 'Fold');
+  });
+
+  test('W7 Day 7 calls when one of the three stated river hands loses', () {
+    final review = act0NewReviewTasksV1
+        .singleWhere(
+          (entry) =>
+              entry.worldId == 'world_7' &&
+              entry.lessonId == 'w7_visible_cards_range_checkpoint',
+        )
+        .task
+        .runner;
+    final table = review.table;
+    final hero = physicalCards(table.heroCards);
+    final board = physicalCards(table.boardCards);
+    final outcomes = [
+      for (final opponent in [
+        ['Kd', 'Qs'],
+        ['As', 'Qs'],
+        ['Td', '9d'],
+      ])
+        _share(hero, opponent, board),
+    ];
+    expect(outcomes, [0, 0, 1]);
+    expect(_requiredShare(table), 4 / 14);
+    expect(1 / 3, greaterThan(_requiredShare(table)));
+    expect(_correct(review), 'Call');
+  });
+
   test('river grading uses only compatible combinations and exact price', () {
     final tasks = Act0ShellStateV1.sample
         .lessonById('w7_visible_cards_range_checkpoint')

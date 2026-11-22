@@ -118,6 +118,25 @@ void main() {
     expect(pkr06FindingsV1('x', sbFolded), isEmpty);
   });
 
+  test('PKR06 checks a collected preflop all-in against its own budget', () {
+    final source = _task('what_poker_is_side_pot_eligibility').runner.table;
+    expect(pkr06FindingsV1('source', source), isEmpty);
+    final wrong = source.copyWith(
+      handContributions: source.handContributions,
+      actionTrail: [
+        for (final item in source.actionTrail)
+          if (item.label == 'CO all-in 10 BB')
+            const Act0ActionTrailItemV1(label: 'CO all-in 11 BB')
+          else
+            item,
+      ],
+    );
+    expect(
+      pkr06FindingsV1('mutation', wrong).map((item) => item.rule),
+      contains('bet_exceeds_stack'),
+    );
+  });
+
   test('PKR06 negative controls fail closed', () {
     // Synthetic consistent control: UTG/HJ folds are added to the trail so the
     // seat flags carry provenance. This is not a claim about the source hand.
@@ -322,7 +341,7 @@ void main() {
     const labels = <String, String>{
       'hand_rankings_quads_vs_full_house_drill': 'Your four of a kind',
       'your_first_hand_showdown': 'You — A-A-K-J-7',
-      'showdown_best_hand_drill': 'You · Q-Q-Q-K-8',
+      'showdown_best_hand_drill': 'You · 8-8-8-K-Q',
       'showdown_review': 'Split the pot',
     };
     for (final e in labels.entries) {

@@ -12,14 +12,14 @@ void main() {
     final beginnerTasks = lessons
         .takeWhile((lesson) => lesson.lessonId != 'blinds_action_order')
         .expand((lesson) => lesson.taskList);
-    expect(tasks, hasLength(71));
+    expect(tasks, hasLength(77));
     expect(
       tasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
-      hasLength(35),
+      hasLength(36),
     );
     expect(
       beginnerTasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
-      hasLength(28),
+      hasLength(29),
     );
     final repair = beginnerTasks.singleWhere(
       (task) => task.taskId == 'first_table_guide_shared_cards_repair',
@@ -160,7 +160,11 @@ void main() {
     expect(table.activeSeatId, 'co');
     final bb = table.seats.singleWhere((s) => s.seatId == 'bb');
     expect(bb.isInHand && !bb.isFolded, isTrue);
-    expect(task.runner.options.map((o) => o.id), ['sb_post', 'bb_check']);
+    expect(task.runner.options.map((o) => o.id), [
+      'sb_post',
+      'bb_check',
+      'hj_limp',
+    ]);
     for (final option in task.runner.options) {
       expect(option.preferredLabel, 'Flop: BB checks');
     }

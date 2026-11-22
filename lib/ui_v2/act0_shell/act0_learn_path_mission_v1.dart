@@ -293,6 +293,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                 en: 'Find your seat, read one clue, and make your first table decision.',
                 ru: 'Найдите своё место, прочитайте одну подсказку и примите первое решение.',
               )
+            : lesson.phaseLabel == 'Practice'
+            ? lesson.subtitle
             : _currentMissionSupportCopyV1(
                 context: context,
                 lesson: lesson,

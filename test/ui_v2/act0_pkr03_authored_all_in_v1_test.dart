@@ -5,18 +5,13 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 
-Act0TableStateV1 _source() => Act0ShellStateV1.sample.worlds
-    .expand((w) => w.lessons)
-    .expand((l) => l.taskList)
-    .singleWhere((t) => t.taskId == 'w9_bubble_table_risk_transfer')
-    .runner
-    .table;
+import '../support/act0_w9_historical_all_in_v1.dart';
 
 void main() {
   test(
     'source BB shove cannot acquire another betting action after a response',
     () {
-      final source = _source();
+      final source = act0W9HistoricalAllInV1();
       expect(source.actionTrail.last.label, 'BB all-in 18 BB');
       final invalid = source.copyWith(
         actionTrail: [
@@ -38,7 +33,7 @@ void main() {
   );
 
   test('source BB shove cannot become the current poker actor', () {
-    final source = _source();
+    final source = act0W9HistoricalAllInV1();
     expect(
       act0BettingRoundOrderTruthForTableV1(source.copyWith(activeSeatId: 'bb')),
       Act0BettingRoundOrderTruthV1.contradiction,
@@ -48,7 +43,7 @@ void main() {
   test(
     'source BTN still owes a response; one all-in does not end the hand',
     () {
-      final source = _source();
+      final source = act0W9HistoricalAllInV1();
       expect(source.activeSeatId, 'btn');
       expect(
         act0BettingRoundOrderTruthForTableV1(source),
@@ -62,7 +57,7 @@ void main() {
   // The learner word "all-in" and the older "shoves to" grammar read the same
   // hand: price, order, replay and table choreography do not change.
   test('BB all-in reads exactly like BB shoves in every poker reader', () {
-    final allIn = _source();
+    final allIn = act0W9HistoricalAllInV1();
     final shoves = allIn.copyWith(
       actionTrail: [
         for (final a in allIn.actionTrail)

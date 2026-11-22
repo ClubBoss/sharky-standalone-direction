@@ -154,15 +154,14 @@ void main() {
             .toList(growable: false);
     final state = Act0ShellStateV1.sample;
     final world = state.worldById(decoded['world_id'] as String);
-    final completedTaskIds = <String>[
-      for (final lessonId in completedLessonIds)
-        ...world.lessons
-            .firstWhere((lesson) => lesson.lessonId == lessonId)
-            .taskList
-            .map((task) => task.taskId),
-    ];
     final target = decoded['target'] as Map<String, dynamic>;
     final targetLessonId = target['lesson_id'] as String;
+    final completedTaskIds = <String>[
+      for (final lesson in world.lessons.takeWhile(
+        (lesson) => lesson.lessonId != targetLessonId,
+      ))
+        for (final task in lesson.taskList) task.taskId,
+    ];
     final targetTaskId = target['task_id'] as String;
     expect(
       world.lessons

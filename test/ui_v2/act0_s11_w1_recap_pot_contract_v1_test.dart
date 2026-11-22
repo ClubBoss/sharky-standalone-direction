@@ -36,23 +36,34 @@ void main() {
       final task = lesson.taskList.last;
       expect(task.taskId, 'what_poker_is_review');
       expect(task.rewardXp, 3);
-      expect(task.runner.question, 'What is the pot?');
+      expect(
+        task.runner.question,
+        'How many chips are in the pot after the blinds post?',
+      );
+      expect(task.runner.table.potLabel, 'Pot 1.5 BB');
       expect(
         task.runner.options.where((o) => o.isCorrect).single.id,
         _pot,
-        reason: 'Everyone folds answers a win condition, not a pot definition',
+        reason: 'The blind posts already count in the pot before anyone folds',
       );
       expect(task.runner.options[2].id, _pot);
       final correct = task.runner.options[2];
-      expect(correct.label, 'Chips already committed to the middle');
+      expect(correct.label, '1.5 BB');
       expect(correct.quality, Act0FeedbackQualityV1.correct);
-      expect(correct.feedbackReason, contains('prize'));
-      for (final id in ['everyone_folds', 'largest_stack']) {
+      expect(correct.feedbackReason, contains('0.5 BB and 1 BB'));
+      for (final (id, label, cause) in [
+        ('everyone_folds', '0 BB', 'before anyone decides to fold'),
+        ('largest_stack', '100 BB', 'belongs to your stack'),
+      ]) {
         final wrong = task.runner.options.firstWhere((o) => o.id == id);
+        expect(wrong.label, label);
         expect(wrong.isCorrect, false);
         expect(wrong.quality, Act0FeedbackQualityV1.wrong);
         expect(wrong.betterAnswerLabel, correct.label);
-        expect(wrong.feedbackReason, contains('pot'));
+        expect(
+          wrong.feedbackReason,
+          allOf(contains('1.5 BB'), contains(cause)),
+        );
       }
       final transfer = Act0ShellStateV1.sample
           .lessonById('what_poker_is')

@@ -83,6 +83,34 @@ String? act0NewReviewConceptFamilyV1(
     .firstOrNull
     ?.conceptFamilyId;
 
+// These W6 tasks use a distinct Day 7 exercise family. Keep the source
+// receipt for immediate repair and the saved due item, and use the dedicated
+// family to find the correct new situation.
+String act0Day7FamilyForSourceV1({
+  required String worldId,
+  required String lessonId,
+  required String taskId,
+  required String family,
+}) {
+  if (worldId != 'world_6' || family != 'pot_to_call') return family;
+  return switch ((lessonId, taskId)) {
+    (
+      'range_combo_counts',
+      'w6_ak_combos' || 'w6_pair_combos' || 'w6_combo_weight_compare',
+    ) ||
+    ('range_reading_review', 'range_checkpoint_combos') ||
+    (
+      'range_thinking_checkpoint',
+      'w6_suited_offsuit_weight_compare' ||
+          'w6_pair_vs_suited_weight_compare' ||
+          'w6_checkpoint_table_combo_weight',
+    ) => 'starting_hand_combinations',
+    ('range_thinking_checkpoint', 'w6_checkpoint_table_best_five') =>
+      'board_cards',
+    _ => family,
+  };
+}
+
 Act0LessonTaskV1? act0ReviewOnlyTaskV1(
   String worldId,
   String lessonId,

@@ -1,5 +1,161 @@
 part of 'act0_shell_state_v1.dart';
 
+final _w5TextureDryValueRunner = _world5DryBoardRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_texture_dry_value',
+  caption:
+      'BB checks. You want one more bet from a worse pair. A seven can call 2 BB, but folds to a larger bet.',
+  hint: '',
+  question: 'Which action gets a call from the weaker pair?',
+  table: _day7PostflopV1(
+    'co',
+    'Jh Jd',
+    'Qs 7c 2h',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  feedbackReason:
+      'Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'check',
+      label: 'Check',
+      isCorrect: false,
+      preferredLabel: 'Bet 2 BB',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'Checking behind on Q-7-2 gives a seven a free turn and collects no chips from that pair.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'two',
+      label: 'Bet 2 BB',
+      isCorrect: true,
+      preferredLabel: 'Bet 2 BB',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the board and response.',
+      feedbackReason:
+          'Your jacks beat a pair of sevens. Under this rule a seven pays the 2 BB bet.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'six',
+      label: 'Bet 6 BB',
+      isCorrect: false,
+      preferredLabel: 'Bet 2 BB',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'A seven folds to a pot-size bet on this board, so betting 6 BB gives up the call you wanted.',
+    ),
+  ],
+);
+
+final _w5TextureWetShowdownRunner = _world5WetBoardRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_texture_wet_showdown',
+  caption:
+      'BB checks and will call a bet only with a straight or two pair or better.',
+  hint: '',
+  question: 'Which action fits a plan to bet only when a worse hand calls?',
+  table: _day7PostflopV1(
+    'co',
+    'Ac Ad',
+    'Jh Th 9c',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  feedbackReason:
+      'The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'small',
+      label: 'Bet 2 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'On J-T-9 your aces are one pair. Even a 2 BB bet gets called only by hands ahead under the stated rule.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'large',
+      label: 'Bet 6 BB',
+      isCorrect: false,
+      preferredLabel: 'Check',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'A full-pot bet risks 6 BB. Hands such as J-T and Q-8 already beat one pair and can call here.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'check',
+      label: 'Check',
+      isCorrect: true,
+      preferredLabel: 'Check',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the board and response.',
+      feedbackReason:
+          'The hands that call already beat your aces. Checking keeps your hand in without paying to face that response.',
+    ),
+  ],
+);
+
+final _w5ConnectedReadBetRunner = _world5ConnectedBoardRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_connected_read_bet',
+  caption:
+      'BB bets 4 BB with a made straight. Continue only if your current hand is at least as strong.',
+  hint: '',
+  question: 'What will you do with ace-king?',
+  table: _day7PostflopV1('co', 'As Kd', '9s 8c 7d', betBb: 4, showTurn: true),
+  teachingSteps: const [],
+  feedbackReason:
+      'A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: true,
+      preferredLabel: 'Fold',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Read the board and response.',
+      feedbackReason:
+          'A-K has ace-high on 9-8-7. Folding saves the 4 BB that a call would cost against a made straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'Calling puts 4 BB in with ace-high. The nearby ranks on the flop do not turn your A-K into a straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      repairFocusCardIds: ['board_0', 'board_1', 'board_2'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare the board and price.',
+      feedbackReason:
+          'A raise risks more than 4 BB with a hand below the stated continuation threshold. Ace-high still trails the straight.',
+    ),
+  ],
+);
+
 final _boardDrawsLessons = <Act0LessonCardV1>[
   _lessonFromTasksV1(
     lessonId: 'board_texture_basics',
@@ -36,6 +192,22 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_texture_dry_value',
+        title: 'Dry flop bet size',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w5TextureDryValueRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_texture_wet_showdown',
+        title: 'Wet flop, protect your stack',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w5TextureWetShowdownRunner,
+        rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -77,6 +249,14 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _world5ConnectedBoardRunner,
         rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_connected_read_bet',
+        title: 'Connected flop against a straight',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w5ConnectedReadBetRunner,
+        rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -520,7 +700,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _w6TableBucketNoticeRunner.options,
             correctOptionId: 'bucket_first',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
@@ -766,7 +946,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _w6ComboWeightCompareRunner.options,
             correctOptionId: 'ak_more',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
@@ -804,6 +984,14 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _w6ContinuationBetDry,
         rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'value_size',
+        title: 'Bet a size that gets called',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w6ContinuationBetValue,
+        rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -865,7 +1053,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           caption:
               "BB checks. Assume BB calls half pot with Q-9 and 5-4; other unpaired hands fold.",
           hint: 'Read the cards and the stated range.',
-          question: "What is a half-pot bet trying to achieve?",
+          question: "What do you do to earn a call from a weaker hand?",
           feedbackTitle: 'Read the range in this hand.',
           feedbackReason:
               "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
@@ -878,9 +1066,9 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: const <Act0RunnerOptionV1>[
             Act0RunnerOptionV1(
               id: 'value',
-              label: "Get called by worse hands",
+              label: "Bet half pot for value",
               isCorrect: true,
-              preferredLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.correct,
               feedbackTitle: "A bet can earn weaker calls.",
               feedbackReason:
@@ -888,10 +1076,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             ),
             Act0RunnerOptionV1(
               id: 'bluff',
-              label: "Make stronger hands fold",
+              label: "Bet half pot as a bluff",
               isCorrect: false,
-              preferredLabel: "Get called by worse hands",
-              betterAnswerLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
+              betterAnswerLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Read the hands that call.",
               feedbackReason:
@@ -899,10 +1087,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             ),
             Act0RunnerOptionV1(
               id: 'missed',
-              label: "Give up on a missed flop",
+              label: "Check",
               isCorrect: false,
-              preferredLabel: "Get called by worse hands",
-              betterAnswerLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
+              betterAnswerLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "You paired the queen.",
               feedbackReason:
@@ -1086,8 +1274,8 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _w6BluffCandidateRunner.copyWith(
           caption:
-              'On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.',
-          question: 'Which plan fits 9-6 under this rule?',
+              'On K-8-3, BB checks. Any pair calls half pot. Q-J and A-9 fold. Check if your hand already beats either unpaired hand.',
+          question: 'What do you do with nine-six after BB checks?',
           feedbackTitle: 'A bet can fold better hands.',
           feedbackReason:
               'On K-8-3, 9-6 trails both Q-J and A-9. In this example, both of those hands fold to a half-pot bet.',
@@ -1099,7 +1287,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _w6BluffCandidateOptionsV1('9-6'),
             correctOptionId: 'bluff',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
@@ -1381,7 +1569,7 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       title: 'Which cards actually win?',
       question:
           'Suppose BB has K♣ Q♠. How many river cards give you the winning hand?',
-      caption: 'Only one card is left to come.',
+      caption: 'Count the rivers that beat the stated hand. One card is left.',
       table: _w7TurnPriceTableV1(3),
       labels: const ['9', '12', '11'],
       correctAt: 1,
@@ -1389,13 +1577,6 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
         'Nine hearts make a winning flush. Three non-heart aces also win.',
         'Nine hearts make a winning flush. The three unseen aces also win with a pair of aces.',
         'Count the three unseen aces as well as all nine unseen hearts.',
-      ],
-      teaching: const [
-        Act0TeachingStepV1(
-          title: 'An out has to win',
-          body:
-              'An unseen card that improves your hand is not always a winning card. If a new card also improves your opponent to a stronger hand, do not count it.',
-        ),
       ],
       family: Act0TaskFamilyV1.counting,
     ),
@@ -1405,6 +1586,8 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       correctAt: 0,
       feedback:
           'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+      wrongFeedback:
+          'Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.',
     ),
     _w7TurnPriceTaskV1(
       id: 'w7_clean_outs_higher_price',
@@ -1412,6 +1595,8 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       correctAt: 1,
       feedback:
           'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
+      wrongFeedback:
+          'The draw wins on the same 12 of 44 rivers. Paying 6 BB now requires 30%, so the call risks more than this chance is worth.',
     ),
   ],
 );
@@ -1428,6 +1613,8 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       correctAt: 1,
       feedback:
           'If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
+      wrongFeedback:
+          'Your queen-jack beats just the jack-ten bluff. Paying 4 BB with one win in six fails the 25% threshold and loses chips on average.',
     ),
     _w7RiverTaskV1(
       id: 'w7_river_two_bluffs_of_six',
@@ -1435,6 +1622,8 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       correctAt: 0,
       feedback:
           'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+      wrongFeedback:
+          'Folding gives up wins against jack-ten and ace-eight. Those two of the six hands are enough to clear the 25% call price.',
     ),
     _w7UnseenRiverTaskV1(),
   ],
@@ -1512,7 +1701,18 @@ Act0LessonTaskV1 _w7FlopTaskV1({required bool multiway}) {
     table: table,
     labels: const ['Bet 3 BB', 'Check'],
     correctAt: multiway ? 1 : 0,
-    feedback: [explanation, explanation],
+    feedback: multiway
+        ? [
+            'With SB and BB both in, the 3 BB bet loses money on average. '
+                'It wins 9 BB on 16% of hands and costs 3 BB on the rest.',
+            explanation,
+          ]
+        : [
+            explanation,
+            'Checking gets 0 BB in this model. With BB as the only opponent, '
+                'winning 6.5 BB on 40% of hands more than offsets the 3 BB you '
+                'lose when BB continues.',
+          ],
     family: Act0TaskFamilyV1.decision,
   );
 }
@@ -1607,6 +1807,7 @@ Act0LessonTaskV1 _w7TurnPriceTaskV1({
   required int bet,
   required int correctAt,
   required String feedback,
+  required String wrongFeedback,
 }) => _w7AppliedTaskV1(
   id: id,
   title: 'A turn price',
@@ -1615,7 +1816,10 @@ Act0LessonTaskV1 _w7TurnPriceTaskV1({
   table: _w7TurnPriceTableV1(bet),
   labels: const ['Call', 'Fold'],
   correctAt: correctAt,
-  feedback: [feedback, feedback],
+  feedback: [
+    for (var index = 0; index < 2; index++)
+      index == correctAt ? feedback : wrongFeedback,
+  ],
   family: Act0TaskFamilyV1.decision,
 );
 
@@ -1624,6 +1828,7 @@ Act0LessonTaskV1 _w7RiverTaskV1({
   required String range,
   required int correctAt,
   required String feedback,
+  required String wrongFeedback,
 }) => _w7AppliedTaskV1(
   id: id,
   title: 'A river decision',
@@ -1638,7 +1843,10 @@ Act0LessonTaskV1 _w7RiverTaskV1({
   ),
   labels: const ['Call', 'Fold'],
   correctAt: correctAt,
-  feedback: [feedback, feedback],
+  feedback: [
+    for (var index = 0; index < 2; index++)
+      index == correctAt ? feedback : wrongFeedback,
+  ],
   family: Act0TaskFamilyV1.transfer,
   kind: Act0LessonStepKindV1.proveIt,
 );
@@ -1778,11 +1986,14 @@ List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
         caption: 'Use the cards you can see at this table.',
         question: 'How many A-Q combinations could BB still hold?',
         hint: 'Count the aces and queens that are still available.',
-        table: _act0BoardLessonTableV1(
-          heroCards: _act0LessonCardsV1('Td 8d'),
-          boardCards: _act0LessonCardsV1('Qc 6h 2s'),
-          centerLabel: 'Count available cards',
-        ),
+        table: _day7PostflopV1(
+          'co',
+          'Td 8d',
+          'Qc 6h 2s',
+          openBb: 2.5,
+          checkedToHero: true,
+          showTurn: true,
+        ).copyWith(centerLabel: 'Count available cards'),
         teachingSteps: const [],
         feedbackTitle: 'Four choices times three.',
         feedbackReason:
@@ -1841,6 +2052,9 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     _ when phase == Act0LessonPhaseV1.review => _act0LessonCardsV1('Qh Qs'),
     _ => _heroQdQsCards,
   };
+  final boardCards = phase == Act0LessonPhaseV1.review
+      ? _act0LessonCardsV1('Qc Jd 5s')
+      : _w7VisibleBoardCardsForSpecV1(spec);
   return _w6ComboCountsIntroRunner.copyWith(
     lessonId: spec.taskId,
     lessonTitle: 'Visible Cards Change Ranges',
@@ -1871,13 +2085,14 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     ],
     feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
     feedbackReason: spec.feedbackReason,
-    table: _act0BoardLessonTableV1(
-      centerLabel: spec.boardContext,
-      heroCards: heroCards,
-      boardCards: phase == Act0LessonPhaseV1.review
-          ? _act0LessonCardsV1('Qc Jd 5s')
-          : _w7VisibleBoardCardsForSpecV1(spec),
-    ),
+    table: _day7PostflopV1(
+      'co',
+      heroCards.map((card) => card.label).join(' '),
+      boardCards.map((card) => card.label).join(' '),
+      openBb: 2.5,
+      checkedToHero: true,
+      showTurn: true,
+    ).copyWith(centerLabel: spec.boardContext),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
         title: _w7LearnerTheoryTitleV1(spec.taskId),
@@ -1917,6 +2132,178 @@ String _w7LearnerTheoryTitleV1(String taskId) => switch (taskId) {
     'The same clue works across boards',
   _ => 'Shown cards change the possible hands',
 };
+
+final _w8EffectiveStackSeatRunner = _w7EffectiveStackIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w8_effective_stack_seat',
+  caption: 'You and one opponent reached the flop.',
+  hint: '',
+  question:
+      'Tap the seat whose stack limits how much the two of you can still bet.',
+  table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
+    heroCards: _act0LessonCardsV1('Th Tc'),
+    boardCards: _act0LessonCardsV1('9d 5c 2h'),
+    centerLabel: 'Compare the stacks',
+    heroBehindBb: 70,
+    bbBehindBb: 18,
+  ).copyWith(selectableSeatIds: const ['co', 'sb', 'bb']),
+  teachingSteps: const [],
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'co',
+      label: 'Your seat',
+      seatId: 'co',
+      isCorrect: false,
+      preferredLabel: 'Big blind',
+      betterAnswerLabel: 'Big blind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Compare both live stacks.',
+      feedbackReason:
+          'From CO you have 70 BB left, but BB can match only 18 BB. Using your own stack overstates how much you can win from BB.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bb',
+      label: 'Big blind',
+      seatId: 'bb',
+      isCorrect: true,
+      preferredLabel: 'Big blind',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The smaller live stack.',
+      feedbackReason:
+          'You have 18 BB effective against BB. Your larger stack can match that amount, so 18 BB is the most either of you can still lose to the other.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'sb',
+      label: 'Small blind',
+      seatId: 'sb',
+      isCorrect: false,
+      preferredLabel: 'Big blind',
+      betterAnswerLabel: 'Big blind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Use the seats still in the hand.',
+      feedbackReason:
+          'SB folded before the flop. Using that stack hides the 18 BB limit on what the remaining opponent can pay.',
+    ),
+  ],
+);
+
+Act0RunnerStateV1 _w8StackSeatDecisionV1({
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required String answer,
+  required Map<String, (String, String)> feedback,
+}) {
+  final preferred = feedback[answer]!.$1;
+  final completedFlop = answer == table.heroSeatId;
+  return _w8EffectiveStackSeatRunner.copyWith(
+    lessonId: id,
+    caption: caption,
+    question: question,
+    table: table.copyWith(
+      activeSeatId: completedFlop ? '' : table.activeSeatId,
+      clearDecisionSeatId: completedFlop,
+      handContributions: table.handContributions,
+      actionTrail: [
+        ...table.actionTrail,
+        if (completedFlop)
+          Act0ActionTrailItemV1(label: '${answer.toUpperCase()} checks'),
+      ],
+      seats: completedFlop
+          ? [
+              for (final seat in table.seats)
+                _act0CopySeatStateV1(seat, isActive: false, hasActed: true),
+            ]
+          : table.seats,
+      highlightedSeatIds: const [],
+      selectableSeatIds: feedback.keys.toList(),
+    ),
+    feedbackTitle: 'The smaller stack sets the limit.',
+    feedbackReason: feedback[answer]!.$2,
+    options: [
+      for (final entry in feedback.entries)
+        Act0RunnerOptionV1(
+          id: entry.key,
+          seatId: entry.key,
+          label: entry.value.$1,
+          isCorrect: entry.key == answer,
+          quality: entry.key == answer
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          preferredLabel: preferred,
+          betterAnswerLabel: entry.key == answer ? '' : preferred,
+          feedbackTitle: entry.key == answer
+              ? 'The smaller stack sets the limit.'
+              : 'Compare the chips behind each live seat.',
+          feedbackReason: entry.value.$2,
+        ),
+    ],
+  );
+}
+
+final _w8SprValueSizeRunner = _w7SprIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w8_spr_value_size',
+  caption:
+      'BB checked. In this example, BB calls up to 4 BB with weaker kings and folds to larger bets.',
+  hint: '',
+  question: 'Which bet wins the most chips when a weaker king calls?',
+  table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
+    heroCards: _act0LessonCardsV1('Ks Qc'),
+    boardCards: _act0LessonCardsV1('Kd 8c 4h'),
+    centerLabel: 'Choose a bet',
+    heroBehindBb: 16,
+    bbBehindBb: 18,
+    openBb: 3.75,
+  ),
+  teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(id: 'two', label: '2 BB', potFraction: 0.25),
+      Act0SizingPresetV1(id: 'four', label: '4 BB', potFraction: 0.5),
+      Act0SizingPresetV1(id: 'eight', label: '8 BB', potFraction: 1),
+    ],
+  ),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'two',
+      label: '2 BB',
+      isCorrect: false,
+      preferredLabel: '4 BB',
+      betterAnswerLabel: '4 BB',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'It gets called, but earns less.',
+      feedbackReason:
+          'Weaker kings call 2 BB in this example. Those same hands also call 4 BB, so betting 2 BB gives up 2 BB of value on each call.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'four',
+      label: '4 BB',
+      isCorrect: true,
+      preferredLabel: '4 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The largest bet they call.',
+      feedbackReason:
+          'Your king and queen beat weaker kings here. BB pays up to 4 BB with those hands, so that is the largest bet that earns those calls.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'eight',
+      label: '8 BB',
+      isCorrect: false,
+      preferredLabel: '4 BB',
+      betterAnswerLabel: '4 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'This price loses the weaker calls.',
+      feedbackReason:
+          'The 8 BB bet fits your stack, but BB folds weaker kings above 4 BB. You lose the extra chips those hands would have paid.',
+    ),
+  ],
+);
 
 final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
@@ -1975,6 +2362,53 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w8_effective_stack_seat',
+        title: 'Find the smaller live stack',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8EffectiveStackSeatRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w8_hero_stack_cap_seat',
+        title: 'Find the stack that caps the bet',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8StackSeatDecisionV1(
+          id: 'w8_hero_stack_cap_seat',
+          caption:
+              'Only you and the big blind saw the flop. Compare the chips behind.',
+          question:
+              'Tap the seat that caps how much either player can still win from the other.',
+          table: _act0BoardLessonTableV1(
+            openingSeat: 'hj',
+            heroCards: _act0LessonCardsV1('Ac 9h'),
+            boardCards: _act0LessonCardsV1('Ad 8s 4c'),
+            centerLabel: 'Read the stacks',
+            heroBehindBb: 22,
+            bbBehindBb: 65,
+          ),
+          answer: 'hj',
+          feedback: const {
+            'hj': (
+              'Hijack',
+              'You have 22 BB left in HJ. BB can match those 22 BB, so that is the most either live seat can add against the other.',
+            ),
+            'sb': (
+              'Small blind',
+              'SB folded. Including that seat would use chips no live player can win during this flop.',
+            ),
+            'bb': (
+              'Big blind',
+              'BB can still bet 65 BB and you can match only 22 BB. Using 65 BB overstates how much BB could win from you by 43 BB.',
+            ),
+          },
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
       ),
       Act0LessonTaskV1(
         taskId: 'w7_effective_stack_recap',
@@ -2069,6 +2503,44 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.review,
       ),
+      Act0LessonTaskV1(
+        taskId: 'w8_pot_bet_committed_seat',
+        title: 'Find who would be all-in',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8StackSeatDecisionV1(
+          id: 'w8_pot_bet_committed_seat',
+          caption: 'Imagine you bet one pot and your opponent calls.',
+          question:
+              'Tap the seat that would have zero chips left after the call.',
+          table: _act0BoardLessonTableV1(
+            openingSeat: 'co',
+            heroCards: _act0LessonCardsV1('Jc Td'),
+            boardCards: _act0LessonCardsV1('Js 6h 2d'),
+            centerLabel: 'Read the pot and stacks',
+            openBb: 2.75,
+            heroBehindBb: 42,
+            bbBehindBb: 6,
+          ),
+          answer: 'bb',
+          feedback: const {
+            'co': (
+              'Cutoff',
+              'CO starts with 42 BB behind and would keep 36 BB after betting 6 BB. Selecting CO hides the remaining chips.',
+            ),
+            'bb': (
+              'Big blind',
+              'BB has 6 BB left. Calling the 6 BB bet would use that entire stack.',
+            ),
+            'sb': (
+              'Small blind',
+              'SB folded preflop, so no extra chips come from that seat after the flop bet.',
+            ),
+          },
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
     ],
   ),
   Act0LessonCardV1(
@@ -2119,6 +2591,15 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w8_spr_value_size',
+        title: 'Choose a size for value',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8SprValueSizeRunner,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.sizing,
       ),
       Act0LessonTaskV1(
         taskId: 'w7_spr4_middle',
@@ -2369,6 +2850,15 @@ final _w6ContinuationBetDry = _w6ContinuationBetIntro.copyWith(
     showTurn: true,
   ),
   teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(id: 'bet_two', label: '2 BB', potFraction: 1 / 3),
+      Act0SizingPresetV1(id: 'bet_six', label: '6 BB', potFraction: 1),
+      Act0SizingPresetV1(id: 'bet_nine', label: '9 BB', potFraction: 1.5),
+    ],
+  ),
   options: const [
     Act0RunnerOptionV1(
       id: 'bet_two',
@@ -2401,6 +2891,71 @@ final _w6ContinuationBetDry = _w6ContinuationBetIntro.copyWith(
       feedbackTitle: 'That is bigger than the pot.',
       feedbackReason:
           'With QJ on Q-7-2, putting in 9 BB risks 7 BB more than the small bet and can leave you facing stronger hands.',
+    ),
+  ],
+);
+
+final _w6ContinuationBetValue = _w6ContinuationBetIntro.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  caption:
+      'BB checked. In this example, weaker kings call bets of 3 BB or less.',
+  hint: '',
+  question: 'How much can you bet to get the most chips from those calls?',
+  feedbackTitle: 'Use the highest price they pay.',
+  feedbackReason: 'A weaker king calls 3 BB in this example and folds to 6 BB.',
+  table: _day7PostflopV1(
+    'co',
+    'Kh Qh',
+    'Kc 8d 3s',
+    checkedToHero: true,
+    showTurn: true,
+  ),
+  teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: 'bet_one_five',
+        label: '1.5 BB',
+        potFraction: 0.25,
+      ),
+      Act0SizingPresetV1(id: 'bet_six', label: '6 BB', potFraction: 1),
+      Act0SizingPresetV1(id: 'bet_three', label: '3 BB', potFraction: 0.5),
+    ],
+  ),
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'bet_one_five',
+      label: '1.5 BB',
+      isCorrect: false,
+      preferredLabel: '3 BB',
+      betterAnswerLabel: '3 BB',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The bet leaves value behind.',
+      feedbackReason:
+          'A weaker king calls 1.5 BB on K-8-3 in this example. If you pick that amount, you miss the extra 1.5 BB the same hand would pay.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_six',
+      label: '6 BB',
+      isCorrect: false,
+      preferredLabel: '3 BB',
+      betterAnswerLabel: '3 BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The weaker hands fold.',
+      feedbackReason:
+          'The 6 BB bet is the size of the pot. BB folds weaker kings at that price in this example, costing you their 3 BB calls.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_three',
+      label: '3 BB',
+      isCorrect: true,
+      preferredLabel: '3 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Three is the largest bet they call.',
+      feedbackReason:
+          'KQ beats a weaker king on K-8-3. The half-pot size gets the full 3 BB those hands are willing to call.',
     ),
   ],
 );

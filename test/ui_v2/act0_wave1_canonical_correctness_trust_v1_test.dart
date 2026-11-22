@@ -320,15 +320,15 @@ void main() {
     test('W3 model revisions keep five assessments anchored to current source', () {
       const expected = <String, String>{
         'same_hand_different_seat_same_hand_late_open':
-            '0794bf9f25fefe76cc0472e884df6eeb4edf1a6bb47653b9d7c831237d2ddd61',
+            'f2e5bfbaf8060151da4caccecc70e83cea72659bfa94b0f7995904fac09ddc84',
         'position_apply_late_open':
-            '8492553084f6faa229dc8bea111cc51bda5ba7962b8ea8f63022c71e70eb1891',
+            '8bd92d0c17d6e1a08ae957716a370c75a4f5510b50b253cac5cfb9ee4e226254',
         'position_checkpoint_position_checkpoint_late_open':
             '06b04f9855bad9e18c3db9e043ff42ada3beb56d2ca451bf61e31168e71cb687',
         'position_apply_recap':
-            '715eb2d756dfc6917847b183be9ff1114299977012ecd3ef7807539dfc2f4cbd',
+            '07fb62d0d9bd16ecc4ac2247bb06407ecd112d97f63b8508303f9b46c5eeb9c8',
         'position_checkpoint_position_checkpoint_review':
-            'f5ece850c209be54cce9911c877fd85370731719ca6bf1e00e298b63553f42b0',
+            '2f66eb36d08df700ea1ac77f34d9be305b6754deba7a6cca921bd4fd3773a5ba',
       };
       final world = Act0ShellStateV1.sample.worldById('world_3');
       final observed = <String>{};

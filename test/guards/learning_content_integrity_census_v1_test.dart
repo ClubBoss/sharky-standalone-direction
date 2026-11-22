@@ -17,6 +17,8 @@ import '../support/act0_catalog_truth_audit_v1.dart'
         w4MinRaiseTaskIdsV1,
         w5AddedOptionQualityV1,
         w7AppliedTaskIdsV1;
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_w6_catalog_contract_v1.dart';
@@ -34,37 +36,24 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
   'positions_theory',
   'blinds_button_moves',
-  // This is a played hand with an unknown caller stack.
-  _w9BubbleTableRiskId,
-  // The remaining questions use hypothetical setups.
-  'w9_cash_vs_tournament',
-  'w9_short_stack_survival',
+  // W9 concept questions receive the familiar-replay disposition.
+  'w9_ev_two_results',
   'w9_survival_stack_tradeoff',
-  'w9_m_ratio_red_zone',
-  'w9_m_ratio_green_zone',
-  'w9_m_ratio_yellow_zone',
-  'w9_medium_stack_tighten',
-  'w9_big_stack_leverage',
-  'w9_bubble_short_stack',
-  'w9_checkpoint_survival_line',
-  'w9_checkpoint_zone_line',
-  'w9_checkpoint_bubble_line',
-  'w9_checkpoint_table_notice',
-  'w9_checkpoint_review',
-  'w10_nit_tag',
-  'w10_loose_passive_tag',
-  'w10_overaggressive_tag',
-  'w10_vs_nit_open_wider',
-  'w10_vs_caller_value_heavier',
-  'w10_vs_sticky_defender_tighten_steals',
-  'w10_overbluff_punish',
-  'w10_underbluff_fold_more',
-  'w10_guardrail_sample_size',
-  'w10_checkpoint_tag_line',
-  'w10_checkpoint_lever_line',
-  'w10_checkpoint_guardrail_line',
-  'w10_checkpoint_table_notice',
-  'w10_checkpoint_review',
+  'w9_survival_recap',
+  'w9_m_ratio_lap_count',
+  'w9_m_ratio_ante_cost',
+  'w9_m_ratio_recap',
+  'w9_bubble_premium_gap',
+  'w9_bubble_cover_seat',
+  'w9_bubble_recap',
+  'w9_prize_model_inputs',
+  'w10_find_limper',
+  'w10_player_type_recap',
+  'w10_isolate_limper_bb',
+  'w10_one_lever_recap',
+  'w10_find_turn_raiser',
+  'w10_guardrails_recap',
+  'w10_river_price_check',
   'w11_plan_focus_choice',
   'w11_plan_avoid_overload',
   'w11_plan_table_focus_transfer',
@@ -99,6 +88,19 @@ const _newW01OrderGapIds = <String>{
   'positions_review',
 };
 
+// These separately checked, current choices do not belong to the frozen
+// legacy declared-mapper fixtures below.
+const _wave5CurrentChoiceTaskIds = <String>{
+  'what_poker_is_side_pot_eligibility',
+  'w4_value_worse_call_seat',
+  'w4_bluff_target_seat',
+  'board_texture_basics_w5_texture_dry_value',
+  'board_texture_basics_w5_texture_wet_showdown',
+  'connected_boards_w5_connected_read_bet',
+  'w8_hero_stack_cap_seat',
+  'w8_pot_bet_committed_seat',
+};
+
 /// Source inventory and legacy DECLARED-mapper regression, not semantic repair
 /// admission or learner proof. Current typed eligibility is checked separately.
 /// Full original zero-gap semantic coverage remains HOLD until independently
@@ -111,10 +113,19 @@ void main() {
           .where(
             (row) =>
                 !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-                !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+                !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+                row.task.taskId != 'first_table_guide_first_decision' &&
+                row.task.taskId != 'hand_rankings_compare_ace_straights' &&
+                row.task.taskId != 'w4_price_find_bettor' &&
+                row.task.taskId != 'w8_effective_stack_seat' &&
+                row.task.taskId != 'w8_spr_value_size' &&
+                row.task.taskId != 'blinds_missing_post_amount' &&
+                row.task.taskId != 'actions_call_chip_cost' &&
+                row.task.taskId != 'cards_ranks_suits_premium_decision' &&
+                !_wave5CurrentChoiceTaskIds.contains(row.task.taskId),
           )
           .toList();
-      expect(allRows, hasLength(294));
+      expect(allRows, hasLength(316));
       expect(
         allRows
             .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
@@ -128,7 +139,7 @@ void main() {
       final rows = allRows
           .where((row) => !_asm05NewTaskIds.contains(row.task.taskId))
           .toList(growable: false);
-      expect(rows, hasLength(292));
+      expect(rows, hasLength(314));
 
       final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
       final repair = repairRows.map(_declaredRepairRow).toList(growable: false);
@@ -246,21 +257,21 @@ void main() {
       print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
       expect(snapshot['optionCounts'], <String, int>{
-        '2': 127,
-        '3': 164,
+        '2': 100,
+        '3': 213,
         '4': 1,
       });
       expect(snapshot['correctPositions'], <String, int>{
-        '0': 112,
-        '1': 122,
-        '2': 58,
+        '0': 122,
+        '1': 126,
+        '2': 66,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
       // decisions are action decisions (3 tasks moved from clue reading).
       expect(snapshot['lateWorldAuthenticity'], <String, int>{
-        'TABLE_ACTION_DECISION': 34,
-        'CONCEPTUAL_OR_VERBAL_RECALL': 24,
+        'TABLE_ACTION_DECISION': 60,
+        'CONCEPTUAL_OR_VERBAL_RECALL': 20,
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
@@ -282,7 +293,7 @@ void main() {
       );
       expect(
         repairSnapshot['sameSignalMapped'],
-        270 - _legacyFallbacksWithoutSourceClue.length,
+        292 - _legacyFallbacksWithoutSourceClue.length,
       );
       expect(
         repairSnapshot['fallbackOnly'],
@@ -321,9 +332,9 @@ void main() {
             (repairSnapshot['unresolvedProductGap'] as int) -
             currentGaps.length,
       };
-      expect(repairSnapshot['incorrectOptions'], 458);
+      expect(repairSnapshot['incorrectOptions'], 529);
       expect(repairSnapshot['exactReplayCovered'], 17);
-      expect(historicalRepairComparison['sameSignalMapped'], 276);
+      expect(historicalRepairComparison['sameSignalMapped'], 298);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 17);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
@@ -333,9 +344,9 @@ void main() {
       );
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
-        'confused_card_rank_suit': 5,
-        'confused_chip_commitment_eligibility': 7,
-        'confused_private_board_cards': 18,
+        'confused_card_rank_suit': 6,
+        'confused_chip_commitment_eligibility': 8,
+        'confused_private_board_cards': 20,
         'confused_table_identity': 10,
         'misread_action_legality': 14,
         'misread_bet_price': 14,
@@ -343,16 +354,16 @@ void main() {
         'misread_board_texture': 13,
         'misread_draw_outs': 19,
         'misread_mindset_discipline': 26,
-        'misread_player_adjustment': 30,
+        'misread_player_adjustment': 54,
         'misread_poker_win_condition': 8,
-        'misread_position_action_order': 47,
+        'misread_position_action_order': 53,
         'misread_range_card_removal': 65,
         'misread_real_play_process': 28,
-        'misread_showdown_hand_strength': 25,
+        'misread_showdown_hand_strength': 46,
         'misread_stack_depth_risk': 34,
         'misread_starting_hand_discipline': 37,
-        'misread_table_position': 18,
-        'misread_tournament_pressure': 32,
+        'misread_table_position': 23,
+        'misread_tournament_pressure': 43,
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
       expect(act0RepairGapAdjudicationsV1.take(37), hasLength(37));
@@ -432,10 +443,7 @@ void main() {
       final firstTable = rows.singleWhere(
         (row) => row.task.taskId == 'what_poker_is_theory',
       );
-      expect(
-        firstTable.task.runner.question,
-        contains('two cards you can use on your own'),
-      );
+      expect(firstTable.task.runner.question, 'Which two cards are yours?');
       expect(firstTable.task.runner.question, isNot(contains('hero seat')));
 
       final value = rows.singleWhere(
@@ -467,17 +475,17 @@ void main() {
     }
   });
 
-  test('W9 bubble repair stays on tournament pressure without a price cue', () {
+  test('W9 bubble repair keeps the exact decision with a proved price', () {
     final source = _assessedRows().singleWhere(
       (row) => row.task.taskId == _w9BubbleTableRiskId,
     );
-    expect(source.task.runner.table.toCallLabel, isEmpty);
+    expect(source.task.runner.table.toCallLabel, 'To call 15.5 BB');
     final legacy = _declaredRepairRow(source);
-    expect(legacy.fallbackOnly, isTrue);
-    expect(legacy.mappingType, 'exact');
+    expect(legacy.fallbackOnly, isFalse);
+    expect(legacy.mappingType, 'repair');
     for (final choice in source.incorrectOptions) {
       final intent = _incorrectOptionRow(source, choice).intent;
-      expect(intent?.missedSignalId, 'misread_tournament_pressure');
+      expect(intent?.missedSignalId, 'pot_to_call');
       expect(intent?.targetWorldId, 'world_9');
       expect(intent?.targetTaskId, _w9BubbleTableRiskId);
       expect(intent?.mappingType, 'intentional_exact');
@@ -489,30 +497,39 @@ void main() {
         .where(
           (row) =>
               !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
-              !w4MinRaiseTaskIdsV1.contains(row.task.taskId),
+              !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
+              row.task.taskId != 'first_table_guide_first_decision' &&
+              row.task.taskId != 'hand_rankings_compare_ace_straights' &&
+              row.task.taskId != 'w4_price_find_bettor' &&
+              row.task.taskId != 'w8_effective_stack_seat' &&
+              row.task.taskId != 'w8_spr_value_size' &&
+              row.task.taskId != 'blinds_missing_post_amount' &&
+              row.task.taskId != 'actions_call_chip_cost' &&
+              row.task.taskId != 'cards_ranks_suits_premium_decision' &&
+              !_wave5CurrentChoiceTaskIds.contains(row.task.taskId),
         )
         .toList();
     final additions = rows
         .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
         .toList(growable: false);
-    expect(rows, hasLength(294));
+    expect(rows, hasLength(316));
     expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
-    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(294));
+    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(316));
     expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
-      '2': 129,
-      '3': 164,
+      '2': 102,
+      '3': 213,
       '4': 1,
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
-      '0': 113,
-      '1': 123,
-      '2': 58,
+      '0': 123,
+      '1': 127,
+      '2': 66,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
     expect(_countBy(late, (row) => row.category), <String, int>{
-      'TABLE_ACTION_DECISION': 36,
-      'CONCEPTUAL_OR_VERBAL_RECALL': 24,
+      'TABLE_ACTION_DECISION': 62,
+      'CONCEPTUAL_OR_VERBAL_RECALL': 20,
     });
 
     final extensionRepair = <_RepairRow>[];
@@ -618,7 +635,7 @@ void main() {
         for (final option in row.incorrectOptions)
           _incorrectOptionRow(row, option),
     ];
-    expect(incorrect, hasLength(460));
+    expect(incorrect, hasLength(531));
     final currentGaps = allRepair
         .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
         .toList();
@@ -628,7 +645,7 @@ void main() {
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped),
-      hasLength(272 - _legacyFallbacksWithoutSourceClue.length),
+      hasLength(294 - _legacyFallbacksWithoutSourceClue.length),
     );
     expect(
       allRepair.where((row) => row.fallbackOnly),
@@ -639,7 +656,7 @@ void main() {
           currentGaps.length +
           3 +
           _legacyFallbacksWithoutSourceClue.length,
-      278,
+      300,
     );
     expect(
       allRepair.where((row) => row.fallbackOnly).length -
@@ -659,7 +676,7 @@ void main() {
     // assertion. A raw 'exact' fallback is not an accepted repair disposition.
     print(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_294',
+        'cohort': 'ASM05_DECLARED_MAP_EXTENSION_2_WITH_AGGREGATE_316',
         'semanticAdmission': 'UNKNOWN_NOT_REVIEWED_NO_CREDIT',
         'sameSignalMapped': allRepair
             .where((row) => row.sameSignalMapped)
@@ -756,7 +773,9 @@ void main() {
     }
     expect(choices, <String>{
       'blinds_postflop_button/utg',
+      'blinds_postflop_button/bb',
       'positions_late_seat/utg',
+      'positions_late_seat/bb',
       'positions_review/top',
       'positions_review/random',
     });
@@ -867,13 +886,41 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(319));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(319));
+    final addedContracts = {
+      ...w11Wave4ChoiceContractV1,
+      ...w12Wave4ChoiceContractV1,
+    };
+    final addedRows = rows
+        .where((row) => addedContracts.containsKey(row.task.taskId))
+        .toList();
+    expect(
+      addedRows.map((row) => row.task.taskId).toSet(),
+      addedContracts.keys.toSet(),
+    );
+    final addedWrongChoices = {
+      for (final row in addedRows)
+        for (final [choiceId, _, correct, _, _]
+            in addedContracts[row.task.taskId]!.$2)
+          if (correct == false)
+            'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
+    };
+    expect(rows, hasLength(358 + addedContracts.length));
+    expect(
+      rows.map((r) => r.task.taskId).toSet(),
+      hasLength(358 + addedContracts.length),
+    );
     expect(
       allChoices,
       hasLength(
-        566 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        671 +
+            w4AddedOptionQualityV1.length +
+            w5AddedOptionQualityV1.length +
+            addedWrongChoices.length,
       ),
+    );
+    expect(
+      foundationDefaults.where(addedWrongChoices.contains).toSet(),
+      addedWrongChoices,
     );
     final ordinaryContracts = act0RepairGoalContractsV1
         .where((row) => !row.isDiagnosticLearningEntry)
@@ -916,9 +963,9 @@ void main() {
       );
     }
     expect(admitted, <String>{
-      'world_1/blinds_action_order/blinds_first_actor/btn',
-      'world_1/blinds_action_order/blinds_last_actor/sb',
-      'world_1/blinds_action_order/blinds_review/btn',
+      'world_1/blinds_order_practice/blinds_first_actor/btn',
+      'world_1/blinds_order_practice/blinds_last_actor/sb',
+      'world_1/blinds_order_practice/blinds_review/btn',
       'world_1/blinds_action_order/positions_utg/hj',
       'world_1/cards_ranks_suits/cards_ranks_suits_rank_drill/king',
       'world_1/cards_ranks_suits/cards_ranks_suits_rank_drill/suit',
@@ -945,7 +992,10 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        528 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        633 +
+            w4AddedOptionQualityV1.length +
+            w5AddedOptionQualityV1.length +
+            addedWrongChoices.length,
       ),
     );
     expect(
@@ -989,6 +1039,8 @@ List<_Row> _assessedRows({bool historical = false}) => <_Row>[
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
                       !w3NewChoiceContractV1.containsKey(task.taskId) &&
                       !w6NewChoiceContractV1.containsKey(task.taskId) &&
+                      !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
+                      !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
               task.runner.options.length >= 2 &&
               task.runner.options.where((option) => option.isCorrect).length ==

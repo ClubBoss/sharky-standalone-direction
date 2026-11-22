@@ -1,6 +1,6 @@
 // Report: ACT0_ATLAS_REPORT=/absolute/path/atlas_status.md flutter test \
 //   test/guards/act0_atlas_dod_v1_test.dart
-// Use the absolute l0-audit/wave4 path when publishing to the other streams.
+// Use the absolute l0-audit/wave5 path when publishing to the other streams.
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
@@ -10,12 +10,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_atlas_concepts_v1.dart';
 import '../support/act0_atlas_practice_v1.dart';
+import '../support/act0_atlas_preflop_feedback_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
+const _s3BridgeScope = 'W12 · Связь навыков в TEACH или разборе';
 
 typedef _Metric = ({
   String id,
@@ -62,6 +64,44 @@ final _enteredPreflop = RegExp(
   caseSensitive: false,
 );
 
+final _turnOutsLesson = RegExp(
+  r'\b(?:turn|one card to come)\b[^.!?]{0,90}\b(?:outs?|cards left)\b'
+  r'|\b(?:outs?|cards left)\b[^.!?]{0,90}\b(?:turn|one card to come)\b',
+);
+final _riverPriceLesson = RegExp(
+  r'\briver\b[^.!?]{0,110}\b(?:price|break.even|to call)\b'
+  r'|\b(?:price|break.even|to call)\b[^.!?]{0,110}\briver\b',
+);
+
+final _namedW5Outs = RegExp(r"\bw5(?:['’]s)? (?:clean )?outs?\b");
+final _namedW4Price = RegExp(r"\bw4(?:['’]s)? (?:call )?price\b");
+
+bool _linksTurnOutsAndRiverPrice(CatalogTask row) {
+  final runner = row.task.runner;
+  if (_norm(runner.table.streetLabel) != 'river') return false;
+  final visibleCopy = [
+    for (final step in runner.teachingSteps) '${step.title} ${step.body}',
+    for (final option in runner.options) option.feedbackReason,
+  ];
+  final callouts = _norm(visibleCopy.join(' '));
+  if (_turnOutsLesson.hasMatch(callouts) &&
+      _riverPriceLesson.hasMatch(callouts)) {
+    return true;
+  }
+
+  // The approved river lesson names both previous lessons in one visible
+  // explanation. Its river board supplies the street for the W4 formula.
+  return visibleCopy
+      .map(_norm)
+      .any(
+        (copy) =>
+            _namedW5Outs.hasMatch(copy) &&
+            _namedW4Price.hasMatch(copy) &&
+            copy.contains('another card') &&
+            copy.contains('river'),
+      );
+}
+
 int _confirmedPostflopSeats(Act0TableStateV1 table) {
   final active = table.seats
       .where((seat) => seat.isOccupied && seat.isInHand && !seat.isFolded)
@@ -78,17 +118,121 @@ int _confirmedPostflopSeats(Act0TableStateV1 table) {
   return active.intersection(known).length;
 }
 
-Map<String, String> _priorChecklist(File report) {
-  final input = Platform.environment['ACT0_ATLAS_CHECKLIST'];
-  final checklist = File(
-    input ?? '${report.absolute.parent.parent.path}/dod_checklist_20261121.md',
+typedef _AtlasComparison = ({
+  String label,
+  Map<String, String> checklist,
+  Map<(String, String), String> rows,
+});
+
+_AtlasComparison _priorChecklist(File report) {
+  final auditRoot = report.absolute.parent.parent.path;
+  final wave4 = File(
+    Platform.environment['ACT0_ATLAS_PRIOR_REPORT'] ??
+        '$auditRoot/wave4/atlas_status.md',
   );
-  if (!checklist.existsSync()) return {};
-  return {
-    for (final row in checklist.readAsLinesSync())
-      if (row.startsWith('| ☐ |'))
-        row.split('|')[2].trim(): row.split('|')[4].trim(),
-  };
+  final checklist = File(
+    Platform.environment['ACT0_ATLAS_CHECKLIST'] ??
+        '$auditRoot/dod_checklist_20261121.md',
+  );
+  final original = <String, String>{};
+  if (checklist.existsSync()) {
+    for (final line in checklist.readAsLinesSync()) {
+      if (!line.startsWith('| ☐ |')) continue;
+      final fields = line.split('|');
+      original[fields[2].trim()] = fields[4].trim();
+    }
+  }
+  final evidence = <(String, String), String>{};
+  if (wave4.existsSync()) {
+    var supplemental = false;
+    for (final line in wave4.readAsLinesSync()) {
+      if (line.startsWith('## Дополнительные свидетельства')) {
+        supplemental = true;
+      }
+      if (!line.startsWith('| ')) continue;
+      final fields = line.split('|').map((field) => field.trim()).toList();
+      if (!RegExp(r'^[A-Z][0-9]+$').hasMatch(fields[1])) continue;
+      if (supplemental && fields.length == 6) {
+        original.putIfAbsent(fields[1], () => fields[2]);
+        evidence[(fields[1], '')] = '${fields[3]} (${fields[4]})';
+      } else if (!supplemental && fields.length == 8) {
+        original.putIfAbsent(fields[1], () => fields[3]);
+        evidence[(fields[1], fields[2])] = '${fields[4]} (${fields[6]})';
+      }
+    }
+  }
+  return (
+    label: evidence.isEmpty ? 'Было 21.11' : 'После волны 4',
+    checklist: original,
+    rows: evidence,
+  );
+}
+
+// Optional machine receipt for P3. From a clean checkout, capture:
+//   flutter test test/ui_v2/act0_w1_long_session_v1_test.dart \
+//     --dart-define=ACT0_LONG_SESSION_FULL_ROUTE=true --reporter=json \
+//     > "/tmp/act0-full-route-$(git rev-parse HEAD).jsonl"
+// Pass that file as ACT0_ATLAS_ROUTE_EVENTS when generating the atlas.
+bool _fullRoutePassed() {
+  final path = Platform.environment['ACT0_ATLAS_ROUTE_EVENTS'];
+  if (path == null || path.isEmpty) return false;
+  final sha = Process.runSync('git', ['rev-parse', 'HEAD']);
+  final tree = Process.runSync('git', [
+    'status',
+    '--porcelain',
+    '--untracked-files=no',
+  ]);
+  if (sha.exitCode != 0 ||
+      tree.exitCode != 0 ||
+      tree.stdout.toString().trim().isNotEmpty) {
+    return false;
+  }
+  final file = File(path);
+  if (file.uri.pathSegments.last !=
+          'act0-full-route-${sha.stdout.toString().trim()}.jsonl' ||
+      !file.existsSync()) {
+    return false;
+  }
+  int? routeSuite;
+  final names = <int, String>{};
+  final passed = <String>{};
+  var done = false;
+  for (final line in file.readAsLinesSync()) {
+    if (!line.startsWith('{')) continue;
+    final event = jsonDecode(line) as Map<String, dynamic>;
+    switch (event['type']) {
+      case 'suite':
+        final suite = event['suite'] as Map<String, dynamic>;
+        if ((suite['path'] as String).endsWith(
+          '/test/ui_v2/act0_w1_long_session_v1_test.dart',
+        )) {
+          routeSuite = suite['id'] as int;
+        }
+      case 'testStart':
+        final test = event['test'] as Map<String, dynamic>;
+        if (test['suiteID'] == routeSuite) {
+          names[test['id'] as int] = test['name'] as String;
+        }
+      case 'testDone':
+        final name = names[event['testID']];
+        if (event['result'] == 'success' &&
+            event['skipped'] != true &&
+            name != null) {
+          passed.add(name);
+        }
+      case 'done':
+        done = event['success'] == true;
+    }
+  }
+  return done &&
+      const {
+        'a fresh learner finishes W1–W12 with mistakes, retries and restarts',
+        'a fresh learner finishes W2–W12 with mistakes, retries and restarts',
+        'W1 save resumes a drill from before the lesson split',
+        'pre-Q8 save keeps Position Thinking credit',
+        'pre-Q9 save keeps World 2 credit and opens the new lesson',
+        'pre-Q10 save keeps World 6 credit and opens the new lesson',
+      }.every(passed.contains);
 }
 
 double _flesch(Iterable<String> texts) {
@@ -139,6 +283,30 @@ double _minutes(List<CatalogTask> lesson) {
 }
 
 void main() {
+  test('R1 distinguishes a concrete loss from a chart or amount alone', () {
+    for (final feedback in [
+      'The 4 BB pot includes the earlier raise. Use the chart.',
+      'You lose value here.',
+      'You give up value here.',
+      'The starting hand needs position.',
+      'UTG acts first.',
+      'BB posted 1 BB. There are five players behind.',
+    ]) {
+      expect(atlasExplainsPreflopLossV1(feedback), isFalse, reason: feedback);
+    }
+    for (final feedback in [
+      'Calling costs 2.5 BB with a dominated ace.',
+      'Folding gives up the in-position call against CO.',
+      'Calling leaves you out of position against BTN.',
+      'Limping lets the blinds see a cheap flop.',
+    ]) {
+      expect(atlasExplainsPreflopLossV1(feedback), isTrue, reason: feedback);
+    }
+    expect(atlasPreflopFeedbackShortfallV1(2, 3), 0);
+    expect(atlasPreflopFeedbackShortfallV1(2, 4), 1);
+    expect(atlasPreflopFeedbackShortfallV1(0, 0), 1);
+  });
+
   test('Act0 atlas checklist and optional ratchet', () {
     final metrics = <_Metric>[];
     final details = <String>[];
@@ -167,6 +335,48 @@ void main() {
 
     final route = catalogTasks.where((row) => !row.task.repairOnly).toList();
     final graded = route.where(atlasIsGradedV1).toList();
+    add(
+      'F1',
+      'W1',
+      'Замер на устройстве',
+      'Первое решение до 3 минут',
+      0,
+      manual: true,
+    );
+    var explained = 0;
+    var wrongOptions = 0;
+    final preflopFeedback = [...catalogTasks, ...day7CatalogTasks].where(
+      (row) =>
+          atlasIsGradedV1(row) &&
+          _norm(row.task.runner.table.streetLabel) == 'preflop',
+    );
+    for (final number in [2, 3]) {
+      final before = (explained, wrongOptions);
+      for (final row in preflopFeedback.where(
+        (r) => r.world.worldNumber == number,
+      )) {
+        for (final option in row.task.runner.options.where(
+          (option) => !option.isCorrect,
+        )) {
+          wrongOptions++;
+          if (atlasExplainsPreflopLossV1(option.feedbackReason)) {
+            explained++;
+          } else {
+            details.add('R1 · ${_location(row)}/${option.id}');
+          }
+        }
+      }
+      details.add(
+        'R1 · W$number · ${explained - before.$1}/${wrongOptions - before.$2}',
+      );
+    }
+    add(
+      'R1',
+      atlasPreflopFeedbackScopeV1,
+      '$explained/$wrongOptions (${_pct(_share(explained, wrongOptions))})',
+      atlasPreflopFeedbackTargetV1,
+      atlasPreflopFeedbackShortfallV1(explained, wrongOptions),
+    );
     final played = graded.where(_hand).toList();
     final lessons = <String, List<CatalogTask>>{};
     final format = {
@@ -488,7 +698,7 @@ void main() {
     }
 
     final betWidgets = <int, int>{};
-    final seatWidgets = <int, int>{};
+    final seatWidgets = {4: 0, 8: 0, 10: 0, 11: 0};
     final courseExceptions = <String>[];
     var oneFormatLessons = 0;
     var longestStreak = 0;
@@ -626,18 +836,32 @@ void main() {
             .where(atlasIsGradedV1)
             .where(_hand)
             .toList();
-        final distinct = hands
-            .map((row) => day7HandKeyV1(row.task.runner.table))
-            .toSet();
+        final checkpointIndex = hands.firstOrNull?.lessonIndex ?? 0;
+        final earlierHands = {
+          for (final row in played)
+            if (row.world.worldNumber < number ||
+                (row.world.worldNumber == number &&
+                    row.lessonIndex < checkpointIndex))
+              day7HandKeyV1(row.task.runner.table),
+        };
+        final distinct = {
+          for (final row in hands) day7HandKeyV1(row.task.runner.table),
+        };
+        final fresh = distinct.difference(earlierHands);
         add(
           'S3',
           name,
-          '${distinct.length} отдельных раздач',
+          '${fresh.length} новых из ${distinct.length} разных раздач',
           '4–5 новых раздач в чекпоинте',
-          distinct.length < 4
-              ? 4 - distinct.length
-              : math.max(0, distinct.length - 5),
-          manual: distinct.length >= 4 && distinct.length <= 5,
+          math.max(0, 4 - fresh.length) + math.max(0, distinct.length - 5),
+        );
+        details.addAll(
+          hands
+              .where(
+                (row) =>
+                    earlierHands.contains(day7HandKeyV1(row.task.runner.table)),
+              )
+              .map((row) => 'S3 · Повтор раздачи · ${_location(row)}'),
         );
       }
       if (number == 12) {
@@ -656,14 +880,15 @@ void main() {
           1,
           '${expectedValue.length} задач EV на ривере',
         );
-        add(
+        final bridge = tasks.where(_linksTurnOutsAndRiverPrice).toList();
+        minimum(
           'S3',
-          'W12 · Связь навыков',
-          'Нужно чтение разбора',
-          'Цена W4 и ауты W5',
-          0,
-          manual: true,
+          _s3BridgeScope,
+          bridge.length,
+          1,
+          '${bridge.length} задач с ценой на ривере и аутами на тёрне',
         );
+        details.addAll(bridge.map((row) => 'S3 · Связь · ${_location(row)}'));
       }
       final formats = worldGraded.map(kind).toSet();
       if (number >= 2) {
@@ -698,7 +923,7 @@ void main() {
             .where((r) => kind(r) == 'betSize')
             .length;
       }
-      if ([4, 8, 10, 11].contains(number)) {
+      if (seatWidgets.containsKey(number)) {
         seatWidgets[number] = worldGraded
             .where((r) => kind(r) == 'seatTap')
             .length;
@@ -764,6 +989,9 @@ void main() {
         math.max(0, minimumTotal - total) + missing,
       );
     }
+    for (final MapEntry(key: world, value: count) in seatWidgets.entries) {
+      minimum('V5', 'W$world', count, 1);
+    }
     final numerics = graded.where((r) => kind(r) == 'numeric').length;
     final statement = graded.where((r) => kind(r) == 'statement').length;
     final statementShare = _share(statement, graded.length);
@@ -783,15 +1011,15 @@ void main() {
       '${route.length} обязательных, $routeXp XP',
       'FULL_ROUTE, точный XP и старые сохранения',
       0,
-      manual: true,
+      manual: !_fullRoutePassed(),
     );
 
     final output = Platform.environment['ACT0_ATLAS_REPORT'];
     final writeBaseline =
         Platform.environment['ACT0_ATLAS_UPDATE_BASELINE'] == '1';
     final file = File(_baseline);
-    // Key by criterion + scope so healthy worlds cannot mask regressions in
-    // another world. Persist debt only. Missing baseline means report-only.
+    // Keep separate ceilings by criterion and scope. Closed and new measures
+    // have no allowed debt unless the tracked baseline records it explicitly.
     final debt = {for (final m in metrics) '${m.id}|${m.scope}': m.debt};
     for (final lesson in lessonMinutes.entries) {
       final minutes = lesson.value;
@@ -816,7 +1044,14 @@ void main() {
         return '◐';
       }
 
-      final statuses = byId.map((id, rows) => MapEntry(id, groupStatus(rows)));
+      final statuses = byId.map(
+        (id, rows) => MapEntry(
+          id,
+          id == 'V5' && rows.any((row) => row.debt > 0)
+              ? '❌'
+              : groupStatus(rows),
+        ),
+      );
       final sha = Process.runSync('git', ['rev-parse', 'HEAD']);
       final worktree = Process.runSync('git', [
         'status',
@@ -829,7 +1064,31 @@ void main() {
           : 'неизвестно';
       final destination = File(output)..parent.createSync(recursive: true);
       final prior = _priorChecklist(destination);
-      final unmeasured = prior.keys.where((id) => !statuses.containsKey(id));
+      final unmeasured = prior.checklist.keys.where(
+        (id) => !statuses.containsKey(id),
+      );
+      String priorValue(_Metric metric) {
+        if (prior.rows[(metric.id, metric.scope)] case final exact?) {
+          return exact;
+        }
+        if (metric.id == 'S3' && metric.scope == _s3BridgeScope) {
+          return prior.rows[('S3', 'W12 · Связь навыков')] ?? '—';
+        }
+        if (metric.id == 'V5' && RegExp(r'^W[0-9]+$').hasMatch(metric.scope)) {
+          final oldTotal = prior.rows[('V5', 'Целевые миры')] ?? '';
+          final match = RegExp(
+            '${metric.scope}: ([0-9]+)',
+          ).firstMatch(oldTotal);
+          if (match != null) {
+            final count = int.parse(match[1]!);
+            return '$count (${count >= 1 ? '✅' : '❌'})';
+          }
+        }
+        return prior.rows[(metric.id, '')] ??
+            (prior.rows.isEmpty ? prior.checklist[metric.id] : null) ??
+            '—';
+      }
+
       final report = <String>[
         '# Атлас Act0 · машинная проверка',
         '',
@@ -841,10 +1100,10 @@ void main() {
         if (unmeasured.isNotEmpty)
           '- Вне этого прогона (${unmeasured.length}) · ${unmeasured.join(', ')}',
         '',
-        '| Пункт | Разрез | Было 21.11 (пункт целиком) | Сейчас | Цель | Статус |',
+        '| Пункт | Разрез | ${prior.label} | Сейчас | Цель | Статус |',
         '| --- | --- | --- | --- | --- | --- |',
         for (final m in metrics)
-          '| ${m.id} | ${m.scope} | ${prior[m.id] ?? '—'} | ${m.current} | ${m.target} | ${rowStatus(m)} |',
+          '| ${m.id} | ${m.scope} | ${priorValue(m)} | ${m.current} | ${m.target} | ${rowStatus(m)} |',
         '',
         '## Как читать',
         '',
@@ -853,8 +1112,10 @@ void main() {
         '- M9 — Flesch Reading Ease по английским подписям, вопросам и теории. Слоги оценены по группам гласных. T1–T3 — оценка темпа без ошибок и повторов.',
         '- A1–A2 используют допуск 10 п.п. как рабочее определение «на уровне случая». A3 измеряет маркеры лексики.',
         '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
+        '- S3 проверяет новизну рук W11 относительно пройденных миров и доступную игроку связку цены ривера и аутов тёрна в W12. Ссылки на конкретные задачи даны ниже.',
         '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
-        '- P3 показывает объём по каталогу. Исполнение подтверждается отдельным FULL_ROUTE прогоном на том же коммите.',
+        '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий W2–W3, включая ремонт и Day 7. Нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
+        '- P3 показывает объём по каталогу и проверяет приложенный JSONL FULL_ROUTE на том же коммите.',
         '',
         '## Места для проверки',
         '',
@@ -863,7 +1124,7 @@ void main() {
       destination.writeAsStringSync('$report\n');
     }
 
-    if (file.existsSync() && !writeBaseline) {
+    if (!writeBaseline) {
       final prior =
           (jsonDecode(file.readAsStringSync()) as Map<String, dynamic>);
       final regressions = [

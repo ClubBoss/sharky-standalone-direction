@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_w11_wave4_contract_v1.dart';
+import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
@@ -32,8 +35,18 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(397));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(397));
+    expect(
+      tasks,
+      hasLength(
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
+    expect(
+      tasks.map((t) => t.taskId).toSet(),
+      hasLength(
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -96,7 +109,111 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(397));
+    final w1Changes =
+        jsonDecode(
+              File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    expect(w1Changes, hasLength(47));
+    for (final change in w1Changes.entries) {
+      final index = entries.indexWhere((row) => row[2] == change.key);
+      expect(index, isNonNegative, reason: change.key);
+      expect(entries[index][0], 'world_1', reason: change.key);
+      expect(entries[index], change.value['current'], reason: change.key);
+      final prior = (change.value['prior'] as List).cast<Object?>();
+      entries[index] = [
+        ...prior.take(5),
+        (prior[5] as List)
+            .map((option) => (option as List).cast<Object?>())
+            .toList(),
+      ];
+    }
+    expect(
+      entries,
+      hasLength(
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
+    const w1Additions = {
+      'what_poker_is_side_pot_eligibility': [
+        'world_1',
+        'what_poker_is_content',
+        'what_poker_is_side_pot_eligibility',
+        'drill',
+        'practice',
+        [
+          ['both_pots', 'Both pots', false, 'wrong', 'Main pot only'],
+          ['main_pot_only', 'Main pot only', true, 'correct', 'Main pot only'],
+          ['side_pot_only', 'Side pot only', false, 'wrong', 'Main pot only'],
+        ],
+      ],
+      'cards_ranks_suits_premium_decision': [
+        'world_1',
+        'cards_ranks_suits',
+        'cards_ranks_suits_premium_decision',
+        'drill',
+        'practice',
+        [
+          ['call', 'Call', false, 'suboptimal', 'Raise to 7.5 BB'],
+          ['raise', 'Raise to 7.5 BB', true, 'correct', 'Raise to 7.5 BB'],
+          ['fold', 'Fold', false, 'wrong', 'Raise to 7.5 BB'],
+        ],
+      ],
+      'blinds_missing_post_amount': [
+        'world_1',
+        'blinds_action_order',
+        'blinds_missing_post_amount',
+        'drill',
+        'practice',
+        [
+          ['small_blind_only', '0.5 BB', false, 'wrong', '1 BB'],
+          ['big_blind_amount', '1 BB', true, 'correct', '1 BB'],
+          ['both_posts', '1.5 BB', false, 'wrong', '1 BB'],
+        ],
+      ],
+      'actions_call_chip_cost': [
+        'world_1',
+        'fold_check_call_raise',
+        'actions_call_chip_cost',
+        'drill',
+        'practice',
+        [
+          ['free', '0 BB', false, 'wrong', '2 BB'],
+          ['match_bet', '2 BB', true, 'correct', '2 BB'],
+          ['match_pot', '8 BB', false, 'wrong', '2 BB'],
+        ],
+      ],
+      'first_table_guide_first_decision': [
+        'world_1',
+        'what_poker_is',
+        'first_table_guide_first_decision',
+        'drill',
+        'practice',
+        [
+          ['fold', 'Fold', false, 'wrong', 'Raise to 7.5 BB'],
+          ['call', 'Call', false, 'suboptimal', 'Raise to 7.5 BB'],
+          ['raise', 'Raise to 7.5 BB', true, 'correct', 'Raise to 7.5 BB'],
+        ],
+      ],
+      'hand_rankings_compare_ace_straights': [
+        'world_1',
+        'hand_rankings_comparisons',
+        'hand_rankings_compare_ace_straights',
+        'drill',
+        'practice',
+        [
+          ['broadway', 'Broadway wins', true, 'correct', 'Broadway wins'],
+          ['wheel', 'A-2-3-4-5 wins', false, 'wrong', 'Broadway wins'],
+          ['tie', 'Both straights tie', false, 'wrong', 'Broadway wins'],
+        ],
+      ],
+    };
+    for (final addition in w1Additions.entries) {
+      expect(
+        entries.singleWhere((row) => row[2] == addition.key),
+        addition.value,
+      );
+    }
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -148,6 +265,15 @@ void main() {
       expect(choices.last[2], isFalse, reason: entry.key);
       expect(choices.last[3], 'wrong', reason: entry.key);
       choices.removeLast();
+    }
+    for (final entry in wave4CorrectOptionMovedLastV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last[0], entry.value, reason: entry.key);
+      expect(choices.last[2], isTrue, reason: entry.key);
+      // Restore the historical comparison while keeping today's order asserted.
+      choices.insert(1, choices.removeLast());
     }
     for (final entry in w4AddedOptionQualityV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
@@ -272,15 +398,224 @@ void main() {
           ];
       }
     }
-    final legacyEntries = entries
+    const w4SeatAdditions = {
+      'w4_value_worse_call_seat': [
+        'world_4',
+        'value_bets',
+        'w4_value_worse_call_seat',
+        'drill',
+        'practice',
+        [
+          ['btn', 'Button', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+        ],
+      ],
+      'w4_bluff_target_seat': [
+        'world_4',
+        'bluff_pressure',
+        'w4_bluff_target_seat',
+        'drill',
+        'practice',
+        [
+          ['btn', 'Button', false, 'wrong', 'Big blind'],
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+        ],
+      ],
+    };
+    for (final addition in w4SeatAdditions.entries) {
+      expect(
+        entries.singleWhere((row) => row[2] == addition.key),
+        addition.value,
+      );
+    }
+    const w4BettorTask = 'w4_price_find_bettor';
+    expect(entries.singleWhere((row) => row[2] == w4BettorTask), [
+      'world_4',
+      'call_price',
+      w4BettorTask,
+      'drill',
+      'practice',
+      [
+        ['bb', 'Your seat', false, 'wrong', 'Cutoff'],
+        ['btn', 'Button', false, 'wrong', 'Cutoff'],
+        ['co', 'Cutoff', true, 'correct', 'Cutoff'],
+      ],
+    ]);
+    const w5Additions = {
+      'board_texture_basics_w5_texture_dry_value': (
+        'board_texture_basics',
+        [
+          ['check', 'Check', false, 'wrong', 'Bet 2 BB'],
+          ['two', 'Bet 2 BB', true, 'correct', 'Bet 2 BB'],
+          ['six', 'Bet 6 BB', false, 'wrong', 'Bet 2 BB'],
+        ],
+      ),
+      'board_texture_basics_w5_texture_wet_showdown': (
+        'board_texture_basics',
+        [
+          ['small', 'Bet 2 BB', false, 'wrong', 'Check'],
+          ['large', 'Bet 6 BB', false, 'wrong', 'Check'],
+          ['check', 'Check', true, 'correct', 'Check'],
+        ],
+      ),
+      'connected_boards_w5_connected_read_bet': (
+        'connected_boards',
+        [
+          ['fold', 'Fold', true, 'correct', 'Fold'],
+          ['call', 'Call', false, 'wrong', 'Fold'],
+          ['raise', 'Raise', false, 'wrong', 'Fold'],
+        ],
+      ),
+    };
+    for (final entry in w5Additions.entries) {
+      expect(entries.singleWhere((row) => row[2] == entry.key), [
+        'world_5',
+        entry.value.$1,
+        entry.key,
+        'drill',
+        'practice',
+        entry.value.$2,
+      ], reason: entry.key);
+    }
+    const w8Additions = {
+      'w8_hero_stack_cap_seat': [
+        'world_8',
+        'effective_stack_basics',
+        'w8_hero_stack_cap_seat',
+        'drill',
+        'practice',
+        [
+          ['hj', 'Hijack', true, 'correct', 'Hijack'],
+          ['sb', 'Small blind', false, 'wrong', 'Hijack'],
+          ['bb', 'Big blind', false, 'wrong', 'Hijack'],
+        ],
+      ],
+      'w8_pot_bet_committed_seat': [
+        'world_8',
+        'same_hand_different_depth',
+        'w8_pot_bet_committed_seat',
+        'drill',
+        'practice',
+        [
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['sb', 'Small blind', false, 'wrong', 'Big blind'],
+        ],
+      ],
+      'w8_effective_stack_seat': [
+        'world_8',
+        'effective_stack_basics',
+        'w8_effective_stack_seat',
+        'drill',
+        'practice',
+        [
+          ['co', 'Your seat', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['sb', 'Small blind', false, 'wrong', 'Big blind'],
+        ],
+      ],
+      'w8_spr_value_size': [
+        'world_8',
+        'spr_and_commitment',
+        'w8_spr_value_size',
+        'drill',
+        'practice',
+        [
+          ['two', '2 BB', false, 'suboptimal', '4 BB'],
+          ['four', '4 BB', true, 'correct', '4 BB'],
+          ['eight', '8 BB', false, 'wrong', '4 BB'],
+        ],
+      ],
+    };
+    for (final addition in w8Additions.entries) {
+      expect(
+        entries.singleWhere((row) => row[2] == addition.key),
+        addition.value,
+      );
+    }
+    for (final entry in w11Wave4ChoiceContractV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      expect(task, [
+        'world_11',
+        entry.value.$1,
+        entry.key,
+        'drill',
+        'practice',
+        entry.value.$2,
+      ], reason: entry.key);
+    }
+    for (final entry in w12Wave4ChoiceContractV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      expect(task, [
+        'world_12',
+        entry.value.$1,
+        entry.key,
+        'drill',
+        'practice',
+        entry.value.$2,
+      ], reason: entry.key);
+    }
+    // Compare the new W9 identities separately. Reconstruct the old view for
+    // the earlier frozen hashes so those hashes still witness their own source.
+    expect(
+      sha256
+          .convert(
+            utf8.encode(
+              jsonEncode(entries.where((row) => row[0] == 'world_9').toList()),
+            ),
+          )
+          .toString(),
+      '45bbd95d0a3e80dc5a8a2c6374444eb84f04c97f4c1eb9bb9c3287e34ae4478e',
+    );
+    final preAtlasW9 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w9_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    // Compare the new W10 identities separately. Reconstruct the earlier
+    // frozen view from its own task and choice records.
+    expect(
+      sha256
+          .convert(
+            utf8.encode(
+              jsonEncode(entries.where((row) => row[0] == 'world_10').toList()),
+            ),
+          )
+          .toString(),
+      '473edd7ace18f2b8ff5af25c786324cb5555cdfb73a2a095d3574b58577c0e08',
+    );
+    final preAtlasW10 =
+        jsonDecode(
+              File(
+                'test/fixtures/act0_w10_pre_atlas_identity_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final comparisonEntries = [
+      ...entries.where((row) => !{'world_9', 'world_10'}.contains(row[0])),
+      ...(preAtlasW9['identity'] as List).cast<List<Object?>>(),
+      ...(preAtlasW10['identity'] as List).cast<List<Object?>>(),
+    ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
+    final legacyEntries = comparisonEntries
         .where(
           (row) =>
               !_asm05NewTaskIds.contains(row[2]) &&
+              !w11Wave4ChoiceContractV1.containsKey(row[2]) &&
+              !w12Wave4ChoiceContractV1.containsKey(row[2]) &&
               !w7AppliedTaskIdsV1.contains(row[2]) &&
               !w4MinRaiseTaskIdsV1.contains(row[2]) &&
               !w2Q9ChoiceContractV1.containsKey(row[2]) &&
               !w3NewChoiceContractV1.containsKey(row[2]) &&
               !w6NewChoiceContractV1.containsKey(row[2]) &&
+              !w1Additions.containsKey(row[2]) &&
+              row[2] != w4BettorTask &&
+              !w5Additions.containsKey(row[2]) &&
+              !w8Additions.containsKey(row[2]) &&
+              !w4SeatAdditions.containsKey(row[2]) &&
               row[2] != boardRepair,
         )
         .toList(growable: false);
@@ -905,6 +1240,17 @@ void main() {
       for (final row in beforeL1.cast<List<dynamic>>())
         row[2] as String: (row[5] as List).cast<List<dynamic>>(),
     };
+    for (final entry in [
+      ...w11Wave4GradeCorrectionsV1.entries,
+      ...w12Wave4GradeCorrectionsV1.entries,
+    ]) {
+      final option = beforeP8[entry.key]!.singleWhere(
+        (row) => row[0] == entry.value,
+      );
+      expect(option[2], isFalse, reason: entry.key);
+      expect(option[3], 'wrong', reason: entry.key);
+      option[3] = 'suboptimal';
+    }
     const w1FactualGrades = {
       'what_poker_is_table_read_transfer': 'hand_first_only',
       'what_poker_is_table_read_recheck': 'hero_cards_only',
@@ -992,14 +1338,15 @@ void main() {
     expect(stack[1], "The other player's whole 100 BB stack");
     stack[1] = 'All 100 BB from the covering stack';
     const pressureLabels = {
-      'Missed: check': 'Missed',
-      'Consider a bluff': 'Bluff candidate',
-      'Value: bet': 'Value',
+      'Check': 'Missed',
+      'Bet half pot as a bluff': 'Bluff candidate',
+      'Bet half pot for value': 'Value',
     };
     const l2AssessmentLabels = {
       'w6_missed_dry_board': pressureLabels,
       'w6_bluff_candidate': pressureLabels,
       'range_checkpoint_pressure': pressureLabels,
+      'w6_turn_pressure_shift_transfer': {'Check': 'Check more often'},
       'w6_value_range_action': {'Check': 'Check and see'},
       'w6_table_value_line_transfer': {'Check': 'Check back'},
       'w7_20bb_wider': {
@@ -1225,25 +1572,19 @@ void main() {
         [
           [
             "value",
-            "Get called by worse hands",
+            "Bet half pot for value",
             true,
             "correct",
-            "Get called by worse hands",
+            "Bet half pot for value",
           ],
           [
             "bluff",
-            "Make stronger hands fold",
+            "Bet half pot as a bluff",
             false,
             "suboptimal",
-            "Get called by worse hands",
+            "Bet half pot for value",
           ],
-          [
-            "missed",
-            "Give up on a missed flop",
-            false,
-            "wrong",
-            "Get called by worse hands",
-          ],
+          ["missed", "Check", false, "wrong", "Bet half pot for value"],
         ],
         [
           ["value", "Value", true, "correct", "Value"],
@@ -1701,10 +2042,7 @@ void main() {
         'Keep betting across streets',
         'Always barrel as pressure',
       ),
-      'w6_turn_pressure_shift_transfer': (
-        'Make another big bet',
-        'Barrel big again',
-      ),
+      'w6_turn_pressure_shift_transfer': ('Bet big again', 'Barrel big again'),
       'w7_low_spr_commit': (
         'Plenty of chips left for later bets',
         'Plenty of room to float and wait',
@@ -1954,7 +2292,12 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(397));
+    expect(
+      taskIndex,
+      hasLength(
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+      ),
+    );
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

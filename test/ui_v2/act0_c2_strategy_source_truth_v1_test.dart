@@ -63,7 +63,7 @@ void main() {
         'w7_ajs_btn_25bb_transfer': 'CO’s full range',
         'w7_ajs_btn_100bb_transfer': 'CO’s full range',
         'w9_bubble_table_risk_transfer':
-            'all-in range, the remaining stacks and the payouts',
+            'different raise range, set of stacks or set of prizes',
         'w10_table_value_vs_caller_transfer':
             'calls, folds or raises with each hand',
         'w11_trigger_small_price_continue': 'CO’s range and later betting',
@@ -85,6 +85,34 @@ void main() {
       }
     },
   );
+
+  test('W10 counts winning cards against a known set', () {
+    final practice = _tasks['w10_outs_and_turn_price']!.runner;
+    final day7 = act0NewReviewTasksV1
+        .singleWhere(
+          (entry) =>
+              entry.task.taskId ==
+              'spaced_review_w10_exploit_guardrails_pot_to_call_v1',
+        )
+        .task
+        .runner;
+    for (final (runner, hand, price, best) in [
+      (practice, '9c 9d', 2 / 14.5, 'call_seven_outs'),
+      (day7, '8c 8d', 8 / 26.5, 'fold'),
+    ]) {
+      final table = runner.table;
+      final amounts = table.handContributions!.amounts(
+        seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: table.decisionSeatId,
+      );
+      final call = amounts.toCallBb!;
+      final actualPrice = call / (amounts.potBb + call);
+      expect(actualPrice, closeTo(price, 1e-9));
+      expect(_showdownShare(table, hand), closeTo(7 / 44, 1e-9));
+      expect(runner.options.singleWhere((option) => option.isCorrect).id, best);
+      expect(7 / 44 > actualPrice, best != 'fold');
+    }
+  });
 
   test('the same price permits opposite equity comparisons', () {
     // These are legal opponent holdings used as counterexamples. A bet does

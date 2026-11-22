@@ -330,7 +330,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'blinds_action_order',
+    sourceLessonId: 'blinds_order_practice',
     sourceTaskId: 'blinds_first_actor',
     misconception: 'first preflop actor',
     conceptErrorId: 'misread_position_action_order',
@@ -344,7 +344,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'blinds_action_order',
+    sourceLessonId: 'blinds_order_practice',
     sourceTaskId: 'blinds_last_actor',
     misconception: 'last preflop actor',
     conceptErrorId: 'misread_position_action_order',
@@ -358,7 +358,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'blinds_action_order',
+    sourceLessonId: 'blinds_order_practice',
     sourceTaskId: 'blinds_review',
     misconception: 'first preflop actor',
     conceptErrorId: 'misread_position_action_order',
@@ -680,7 +680,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   // Explicit new F0 context: BTN is not Hero; no admitted alternate repair.
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'blinds_action_order',
+    sourceLessonId: 'blinds_order_practice',
     sourceTaskId: 'blinds_postflop_button',
     misconception: 'last eligible BTN in the stated initial postflop pass',
     conceptErrorId: 'misread_position_action_order',
@@ -914,12 +914,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "barrel_big",
     sourceCorrectChoiceId: "check_more",
     sourceFingerprint:
-        "823635de5a9d3eb72907a3de7a7ff0f15e4bdadcef2c9006c01b1ff3b2e0952f",
-    sourceQuestion:
-        "Suppose fold pressure has dropped on this turn. What is the cleaner plan?",
+        "9b649a9369583e8ea5883c7a63404a14791ab3193ff1326ced597fd812f514d5",
+    sourceQuestion: "Fold pressure dropped on this turn. What do you do now?",
     sourceChoiceReason:
         "BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.",
-    sourceChoiceLabel: "Make another big bet",
+    sourceChoiceLabel: "Bet big again",
     sourceChoiceQuality: "suboptimal",
     goalId: "bluff_needs_better_folds",
     misconceptionId: "repeat_bluff_after_callers_change",
@@ -1026,11 +1025,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "5273d9d5bd4aa397f6bc64e5cf75769ffcdb3b3806667c0c39092bdf2b203ae6",
+        "8e5c1469d63e755b01f7272125eee78431a455260593c45e0613dfcf95850b2c",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "UTG is earlier than HJ, where the Sharky starting chart begins opening ATo.",
+        "Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
@@ -1059,10 +1058,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "same_as_btn",
     sourceCorrectChoiceId: "more_players_behind",
     sourceFingerprint:
-        "d5f59d55504b3b4b983a90c4db462b325687a131b190e303573cc18ca6ae7f3a",
+        "0db2471f7340df5ad327a718b3441a7e12f51959e27fcd4a457bcf5a5da32f4d",
     sourceQuestion: "Why does UTG need more discipline here?",
     sourceChoiceReason:
-        "BTN is later and sees much more first. UTG is pressured because almost everyone still acts after it.",
+        "Opening from UTG with five players behind risks an open into more possible calls and raises than opening from BTN.",
     sourceChoiceLabel: "UTG gets the same information as BTN",
     sourceChoiceQuality: "wrong",
     goalId: "early_seat_players_behind",
@@ -1113,9 +1112,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "1340f77e34d243a0e649ebdb42b79ac2565ff80d1ea58418f3b440c61b10ce16",
+        "aaccd2c5d5a67f93e6c37125358d65995e697e8296386bc640a7332640cb43e6",
     sourceQuestion: "Tap UTG.",
-    sourceChoiceReason: "HJ is close, but this drill is asking for UTG.",
+    sourceChoiceReason:
+        "HJ has four players behind. Picking HJ for UTG gives up the information that five players can still act on the first seat.",
     sourceChoiceLabel: "HJ",
     sourceChoiceQuality: "wrong",
     goalId: "utg_seat_identity",
@@ -1139,11 +1139,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "e04ab98c73793dc93a6dccc3adb90a41450c21d1afffec02eefda54d91a1ade2",
+        "c383244189a89edbabf127477aad87c4e042b1981ffb04977d39cec5913ca090",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
     sourceChoiceReason:
-        "Sitting at CO in this 1.5 BB pot puts you one seat earlier than BTN, so tapping CO misses which seat actually holds the dealer marker.",
+        "The Cutoff acts before BTN, so choosing CO gives up the chance to see the Cutoff act first.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1167,9 +1167,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "e9ee749da20cfb134a19f03cf6567729ec3ae2f78117b5569eb7bc43398abe8c",
+        "b7ff4922b8c707215724a79ee7a454222be2ba036a27d52c8288fffd6b9c756d",
     sourceQuestion: "Tap BTN.",
-    sourceChoiceReason: "CO is close, but this drill is asking for BTN.",
+    sourceChoiceReason:
+        "CO acts before the Button. Choosing CO misses the seat that can see CO's action first.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1206,7 +1207,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "what_poker_is",
     targetTaskId: "first_table_guide_shared_cards_repair",
     targetFingerprint:
-        "f08cfc7cfb742b642ded789d67f0a775812fa1241c7f5d87e7590083832a0331",
+        "910c79fa580964468ff13e8874151f80e3070c2f13e8b77549d68c68f38641b8",
     targetCorrectChoiceId: "board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1371,7 +1372,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "220875ad0c22aacff61d7b30582949c2712bf20efd0c676fd03ff457fe0a930b",
+        "a738087b0ba463dcb70c042bab182d69e2e3ddbe0c05d51beaf560d775159a0b",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1387,7 +1388,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "6f195be8c845b100044566a9247e01fd18fa7ccbcdb71b49bc0ff460a28d9cf4",
+        "e2b1993062d7d6d8d0338c44584b62afc60bd3f01f3326dbb59d656a4da5e3d7",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1403,7 +1404,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "b80479d11f7daf7b1578a775df7b5e398e562aad9199cd14407b64907d7c0452",
+        "59bd581ebb9c07bb1697f497bc7b6a36346129147139d1d2dcd2f52d97e4805e",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1546,7 +1547,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'cards_ranks_suits',
     targetTaskId: 'cards_ranks_suits_private_board',
     targetFingerprint:
-        'fa4595ef7ba62cb0ec2e2eec9ea7f2b1b6fbd8d593a79e844904373920fc60ff',
+        '1819c2262ba1fab61d3b4d3914ef425300c77cbbd4209c1dddd727e4ab2e6f06',
     targetCorrectChoiceId: 'board',
     targetChoiceIds: <String>{'board', 'private'},
     evidenceClass: 'diagnostic_learning_entry',
@@ -1584,12 +1585,12 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   // promoted into one of these relations by current lookup alone.
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
-    sourceLessonId: "blinds_action_order",
+    sourceLessonId: "blinds_order_practice",
     sourceTaskId: "blinds_first_actor",
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "6f77d20814d535054b1f34eadd258db890336d7c54126b733f29979c7fe9bdee",
+        "746d03221ccee3e9b7730a5c568e3ab14033c770bb4abf7035bbd0f42c2c1c75",
     sourceQuestion: "Who acts first preflop in this frame?",
     sourceChoiceReason: "The Button acts late, not first preflop.",
     sourceChoiceLabel: "BTN",
@@ -1597,24 +1598,24 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     misconceptionId: "first_preflop_actor_read_as_button",
     relationId: "w01_blinds_first_actor_btn_intentional_exact_r1",
     targetWorldId: "world_1",
-    targetLessonId: "blinds_action_order",
+    targetLessonId: "blinds_order_practice",
     targetTaskId: "blinds_first_actor",
     targetFingerprint:
-        "6f77d20814d535054b1f34eadd258db890336d7c54126b733f29979c7fe9bdee",
+        "746d03221ccee3e9b7730a5c568e3ab14033c770bb4abf7035bbd0f42c2c1c75",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
-    targetChoiceIds: <String>{"utg", "btn"},
+    targetChoiceIds: <String>{"utg", "btn", "bb"},
     requireCapturedGoalWitness: true,
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
-    sourceLessonId: "blinds_action_order",
+    sourceLessonId: "blinds_order_practice",
     sourceTaskId: "blinds_last_actor",
     sourceChoiceId: "sb",
     sourceCorrectChoiceId: "bb",
     sourceFingerprint:
-        "badb8cbdab70f35caf5f99e71fc25774e38a587b5ce155259279c553689ce625",
+        "a6f234aba20e1b6f86161d4ce6fe4c3f4e9f13cdcbc45845b0cb51a0973efea0",
     sourceQuestion: "Who has the next option before the flop here?",
     sourceChoiceReason: "The small blind acts before the big blind preflop.",
     sourceChoiceLabel: "SB",
@@ -1622,24 +1623,24 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     misconceptionId: "matched_initial_bb_option_read_as_sb",
     relationId: "w01_blinds_last_actor_sb_intentional_exact_r1",
     targetWorldId: "world_1",
-    targetLessonId: "blinds_action_order",
+    targetLessonId: "blinds_order_practice",
     targetTaskId: "blinds_last_actor",
     targetFingerprint:
-        "badb8cbdab70f35caf5f99e71fc25774e38a587b5ce155259279c553689ce625",
+        "a6f234aba20e1b6f86161d4ce6fe4c3f4e9f13cdcbc45845b0cb51a0973efea0",
     targetCorrectChoiceId: "bb",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
-    targetChoiceIds: <String>{"sb", "bb"},
+    targetChoiceIds: <String>{"sb", "bb", "btn"},
     requireCapturedGoalWitness: true,
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
-    sourceLessonId: "blinds_action_order",
+    sourceLessonId: "blinds_order_practice",
     sourceTaskId: "blinds_review",
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "9aa94516750620168188d1dd35e7ffb6f86dc9b002a53af7d01c374ef7529c9d",
+        "6fbc69ee38ad3eff64e3cb42a6b49850f609e7864b364a5699eedfb753d395eb",
     sourceQuestion: "Who acts first preflop?",
     sourceChoiceReason:
         "In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.",
@@ -1648,14 +1649,14 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     misconceptionId: "first_preflop_actor_read_as_button",
     relationId: "w01_blinds_review_btn_intentional_exact_r1",
     targetWorldId: "world_1",
-    targetLessonId: "blinds_action_order",
+    targetLessonId: "blinds_order_practice",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "9aa94516750620168188d1dd35e7ffb6f86dc9b002a53af7d01c374ef7529c9d",
+        "6fbc69ee38ad3eff64e3cb42a6b49850f609e7864b364a5699eedfb753d395eb",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
-    targetChoiceIds: <String>{"utg", "btn"},
+    targetChoiceIds: <String>{"utg", "btn", "sb"},
     requireCapturedGoalWitness: true,
   ),
   Act0RepairGoalContractV1(
@@ -1665,7 +1666,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "3bb2f375c7e68bdd380853ef1e0888f2982b4308b0827838fcc5cdd0116bff23",
+        "30c293c3ee96d45b7d53b7bae0991798c9a09b52175fdae28e202de5a000bae5",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is after UTG in this order.",
     sourceChoiceLabel: "HJ",
@@ -1676,11 +1677,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "positions_utg",
     targetFingerprint:
-        "3bb2f375c7e68bdd380853ef1e0888f2982b4308b0827838fcc5cdd0116bff23",
+        "30c293c3ee96d45b7d53b7bae0991798c9a09b52175fdae28e202de5a000bae5",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
-    targetChoiceIds: <String>{"hj", "utg"},
+    targetChoiceIds: <String>{"hj", "utg", "sb"},
     requireCapturedGoalWitness: true,
   ),
 ];
@@ -1773,11 +1774,13 @@ const _foundationSharedRepairGoals = <String, String>{
   'w9_checkpoint_bubble_line': 'medium_stack_bubble_risk',
   'w10_vs_nit_open_wider': 'widen_late_steals_against_overfolding',
   'w10_checkpoint_lever_line': 'widen_late_steals_against_overfolding',
-  'w10_checkpoint_table_notice': 'widen_late_steals_against_overfolding',
+  'w10_overbluff_punish': 'call_within_price_against_bluffs',
+  'w10_checkpoint_table_notice': 'call_within_price_against_bluffs',
   'w10_vs_caller_value_heavier': 'value_heavier_against_overcalling',
   'w10_table_value_vs_caller_transfer': 'value_heavier_against_overcalling',
   'w10_guardrail_sample_size': 'keep_adjustments_small_on_thin_evidence',
-  'w10_checkpoint_guardrail_line': 'keep_adjustments_small_on_thin_evidence',
+  'w10_top_pair_turn_raise': 'respect_a_passive_turn_raise',
+  'w10_checkpoint_guardrail_line': 'respect_a_passive_turn_raise',
   'w11_plan_focus_choice': 'choose_one_measurable_session_focus',
   'w11_plan_table_focus_transfer': 'choose_one_measurable_session_focus',
   'w11_checkpoint_plan_line': 'choose_one_measurable_session_focus',

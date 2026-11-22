@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_pot_showdown_truth_v1.dart';
+import '../support/act0_w9_historical_all_in_v1.dart';
 
 Act0TableStateV1 _table(String id) => Act0ShellStateV1.sample.worlds
     .expand((w) => w.lessons)
@@ -15,9 +16,9 @@ const _w9 = 'w9_bubble_table_risk_transfer';
 
 void main() {
   test(
-    'PKR06 proves the W9 BB budget and preserves the missing BTN budget',
+    'PKR06 historical W9 all-in is applicable but missing stacks are UNPROVED',
     () {
-      final t = _table(_w9);
+      final t = act0W9HistoricalAllInV1();
       expect(t.scope, Act0TableScopeV1.playedHand);
       expect(t.potLabel, 'Pot 21 BB');
       expect(t.toCallLabel, isEmpty);
@@ -30,7 +31,7 @@ void main() {
         '18 BB',
       );
       expect(t.seats.singleWhere((s) => s.seatId == 'btn').stackLabel, isNull);
-      expect(t.seats.singleWhere((s) => s.seatId == 'bb').stackLabel, '0 BB');
+      expect(t.seats.singleWhere((s) => s.seatId == 'bb').stackLabel, isNull);
       expect(pkr06FindingsV1(_w9, t), isEmpty);
       final r = pkr06CapEvidenceV1(_w9, t);
       expect(r.applicability, Pkr06CapApplicabilityV1.playedHand);
@@ -39,55 +40,44 @@ void main() {
         r.comparisons
             .singleWhere((c) => c.sourceLabel == 'BB all-in 18 BB')
             .reason,
-        'source_amount_within_preflop_budget',
-      );
-      expect(
-        r.comparisons
-            .singleWhere((c) => c.sourceLabel == 'seats.btn.currentBetLabel')
-            .reason,
-        'stack_missing:btn',
+        'stack_missing:bb',
       );
     },
   );
 
-  test(
-    'PKR06 exact W9 18 to 999 mutation contradicts the proved BB budget',
-    () {
-      final source = _table(_w9);
-      const original = 'BB all-in 18 BB';
-      expect(
-        source.actionTrail.where((a) => a.label == original),
-        hasLength(1),
-      );
-      final mutated = source.copyWith(
-        actionTrail: [
-          for (final a in source.actionTrail)
-            if (a.label == original)
-              const Act0ActionTrailItemV1(label: 'BB all-in 999 BB')
-            else
-              a,
-        ],
-      );
-      // Exactly the trail amount changes. No invented stacks/cards/outcomes.
-      expect(mutated.seats, source.seats);
-      expect(mutated.heroCards, same(source.heroCards));
-      expect(mutated.boardCards, same(source.boardCards));
-      expect(mutated.potLabel, 'Pot 21 BB');
-      expect(mutated.toCallLabel, isEmpty);
-      expect(
-        mutated.seats.singleWhere((s) => s.seatId == 'bb').currentBetLabel,
-        '18 BB',
-      );
-      final r = pkr06CapEvidenceV1(_w9, mutated);
-      expect(r.verdict, PotTruthVerdictV1.contradiction);
-      final overCap = r.comparisons.singleWhere(
-        (c) => c.sourceLabel == 'BB all-in 999 BB',
-      );
-      expect(overCap.verdict, PotTruthVerdictV1.contradiction);
-      expect(overCap.reason, 'amount_exceeds_preflop_budget');
-      expect(source.actionTrail.last.label, original);
-    },
-  );
+  test('PKR06 exact W9 18 to 999 mutation cannot certify cap evidence', () {
+    final source = act0W9HistoricalAllInV1();
+    const original = 'BB all-in 18 BB';
+    expect(source.actionTrail.where((a) => a.label == original), hasLength(1));
+    final mutated = source.copyWith(
+      actionTrail: [
+        for (final a in source.actionTrail)
+          if (a.label == original)
+            const Act0ActionTrailItemV1(label: 'BB all-in 999 BB')
+          else
+            a,
+      ],
+    );
+    // Exactly the trail amount changes. No invented stacks/cards/outcomes.
+    expect(mutated.seats, source.seats);
+    expect(mutated.heroCards, same(source.heroCards));
+    expect(mutated.boardCards, same(source.boardCards));
+    expect(mutated.potLabel, 'Pot 21 BB');
+    expect(mutated.toCallLabel, isEmpty);
+    expect(
+      mutated.seats.singleWhere((s) => s.seatId == 'bb').currentBetLabel,
+      '18 BB',
+    );
+    final r = pkr06CapEvidenceV1(_w9, mutated);
+    expect(r.verdict, PotTruthVerdictV1.unproved);
+    expect(
+      r.comparisons
+          .singleWhere((c) => c.sourceLabel == 'BB all-in 999 BB')
+          .verdict,
+      PotTruthVerdictV1.unproved,
+    );
+    expect(source.actionTrail.last.label, original);
+  });
 
   test('PKR06 source-owned amount comparisons preserve all three verdicts', () {
     final t = _table('what_poker_is_all_in_meaning');

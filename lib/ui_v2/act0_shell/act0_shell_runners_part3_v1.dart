@@ -748,7 +748,7 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Deny free cards.',
       body:
-          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.',
+          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.',
       focusLabels: <String>['Next card', 'Cost', 'Deny'],
     ),
   ],
@@ -807,7 +807,7 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   caption:
       'Both players check. BB can beat your pair if the next card pairs an ace or king in their hand.',
   hint: 'Ask what the opponent receives by not facing a bet.',
-  question: 'What did checking allow?',
+  question: 'What did your check give an opponent holding two overcards?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'free_card',
@@ -817,7 +817,7 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'Checking allowed the other player to continue without paying.',
+          'With two overcards to Q-9-4, BB can pair an ace or king without paying for the turn.',
     ),
     Act0RunnerOptionV1(
       id: 'made_pay',
@@ -896,7 +896,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Call 2 BB into a pot of 8 BB.',
       body:
-          'You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.',
+          'You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call. Middle pair means your private card matches the second-highest rank on the flop.',
       focusLabels: <String>['8 BB in the pot', '2 BB to call', '1 in 5'],
     ),
     Act0TeachingStepV1(
@@ -1157,7 +1157,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       'Middle pair means a private card matches the second-highest rank on the flop.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
+      '6-max micro-stakes model. Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
@@ -2399,18 +2399,10 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Look at ranks and suits.',
+      title: 'What can change?',
       body:
-          'A dry board has few straight and flush draws, often because its ranks are far apart and its suits differ. '
-          'A wet board offers many plausible draws, as on three close ranks with two matching suits. Semi-wet sits between the extremes. Two matching suits with wide rank gaps are one example.',
+          'A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.',
       focusLabels: <String>['Rank gaps', 'Suits'],
-    ),
-    Act0TeachingStepV1(
-      title: 'Name the flop shape.',
-      body:
-          'Rainbow means three different suits. Two-tone means two cards share a suit. '
-          'A paired board repeats a rank, such as 8-8-3.',
-      focusLabels: <String>['Number of suits', 'Repeated ranks'],
     ),
   ],
   feedbackTitle: 'Texture first.',
@@ -2446,7 +2438,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against draws the flop barely supports.',
+          'K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against unlikely straights and flushes.',
     ),
     Act0RunnerOptionV1(
       id: 'semi_wet',
@@ -2458,7 +2450,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The flop has few short paths.',
       feedbackReason:
-          'K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to draws that need both remaining cards.',
+          'K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to hands that still need both remaining cards.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -2497,7 +2489,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'On T-9-8 with two hearts, a straight can already be made and hearts can complete a flush draw. Treating the flop as dry risks giving a free card on a board with many live draws.',
+          'On T-9-8 with two hearts, a straight can already be made and another heart can complete a flush. Treating the flop as dry risks giving a free card on a board with several ways to make a better hand.',
     ),
     Act0RunnerOptionV1(
       id: 'semi_wet',
@@ -2507,7 +2499,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       betterAnswerLabel: 'Wet',
       repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Both sources of draws are present.',
+      feedbackTitle: 'Both ways to improve are present.',
       feedbackReason:
           'T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.',
     ),
@@ -2535,7 +2527,7 @@ final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Texture checklist.',
       body:
-          'Look at rank connection and suits before choosing an action. Spread ranks with mixed suits stay calmer across streets because fewer draws can form. Close ranks or matching suits add draw pressure, while a paired flop cuts down matching combinations. Check both shapes first so your plan fits how fast the board can shift.',
+          'Read the gaps between ranks and count matching suits. Those two facts tell you how much the next card may change.',
       focusLabels: <String>['Ranks', 'Suits', 'Change'],
     ),
   ],
@@ -2562,12 +2554,24 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
     centerLabel: 'Read the ranks',
     highlightedCardIds: const ['board_0', 'board_1', 'board_2'],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
+  teachingSteps: <Act0TeachingStepV1>[
+    const Act0TeachingStepV1(
       title: 'Ranks can connect.',
       body:
           'Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.',
       focusLabels: <String>['9', '8', '7', 'Connected'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Ranks and suits describe different things.',
+      table: _day7PostflopV1(
+        'co',
+        'Qd Jc',
+        '9c 9h 4c',
+        openBb: 2.5,
+        checkedToHero: true,
+      ),
+      body:
+          'A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.',
     ),
   ],
   feedbackTitle: 'Read the rank gaps.',
@@ -2721,6 +2725,11 @@ final _world5FlushIntroRunner = _world5TextureIntroRunner.copyWith(
           'There are 13 cards in a suit, so 13 minus 4 leaves 9 that can complete your flush.',
       focusLabels: <String>['Suit', 'Heart', 'Flush draw'],
     ),
+    Act0TeachingStepV1(
+      title: 'Allow for both remaining cards.',
+      body:
+          'Rainbow means the three flop cards have different suits. A backdoor draw needs both the turn and the river to help.',
+    ),
   ],
   feedbackTitle: 'Count matching suits.',
   feedbackReason: 'Four cards of one suit leave you one card short of a flush.',
@@ -2788,7 +2797,8 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
   lessonId: 'w5_no_flush_draw',
   lessonTitle: 'Flush draws',
   hint: 'Rainbow means three different suits on the flop.',
-  question: 'How many more clubs do you need to make a flush by the river?',
+  question:
+      'Do you have a backdoor draw to a club flush? How many clubs do you need?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'no',
@@ -4198,13 +4208,13 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
   caption:
       'BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.',
   hint: 'Compare the high cards if neither hand improves.',
-  question: 'Which plan fits A-Q under this rule?',
+  question: 'What do you do with ace-queen after BB checks?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'missed',
-      label: 'Missed: check',
+      label: 'Check',
       isCorrect: true,
-      preferredLabel: 'Missed: check',
+      preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace-high can win.',
       feedbackReason:
@@ -4212,10 +4222,10 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'bluff',
-      label: 'Consider a bluff',
+      label: 'Bet half pot as a bluff',
       isCorrect: false,
-      preferredLabel: 'Missed: check',
-      betterAnswerLabel: 'Missed: check',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Ace-high has a reason to check.',
       feedbackReason:
@@ -4223,10 +4233,10 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'value',
-      label: 'Value: bet',
+      label: 'Bet half pot for value',
       isCorrect: false,
-      preferredLabel: 'Missed: check',
-      betterAnswerLabel: 'Missed: check',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The weaker hands would fold.',
       feedbackReason:
@@ -4331,7 +4341,7 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Board changes the bucket.',
       body:
-          'A preflop strong hand can become missed if it does not connect with the flop.',
+          'A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop.',
       focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
     ),
     Act0TeachingStepV1(
@@ -4646,9 +4656,9 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
 ) => <Act0RunnerOptionV1>[
   Act0RunnerOptionV1(
     id: 'bluff',
-    label: 'Consider a bluff',
+    label: 'Bet half pot as a bluff',
     isCorrect: true,
-    preferredLabel: 'Consider a bluff',
+    preferredLabel: 'Bet half pot as a bluff',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'A bet can fold out a better hand.',
     feedbackReason:
@@ -4656,10 +4666,10 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
   ),
   Act0RunnerOptionV1(
     id: 'missed',
-    label: 'Missed: check',
+    label: 'Check',
     isCorrect: false,
-    preferredLabel: 'Consider a bluff',
-    betterAnswerLabel: 'Consider a bluff',
+    preferredLabel: 'Bet half pot as a bluff',
+    betterAnswerLabel: 'Bet half pot as a bluff',
     quality: Act0FeedbackQualityV1.suboptimal,
     feedbackTitle: 'Both high-card hands beat yours.',
     feedbackReason:
@@ -4667,10 +4677,10 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
   ),
   Act0RunnerOptionV1(
     id: 'value',
-    label: 'Value: bet',
+    label: 'Bet half pot for value',
     isCorrect: false,
-    preferredLabel: 'Consider a bluff',
-    betterAnswerLabel: 'Consider a bluff',
+    preferredLabel: 'Bet half pot as a bluff',
+    betterAnswerLabel: 'Bet half pot as a bluff',
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Worse calls are missing.',
     feedbackReason:
@@ -4685,7 +4695,7 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
   caption:
       'BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.',
   hint: 'Would you beat either unpaired hand if no one improves?',
-  question: 'Which plan fits J-T under this rule?',
+  question: 'What do you do with jack-ten after BB checks?',
   options: _w6BluffCandidateOptionsV1('J-T'),
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Js Tc'),
@@ -4807,14 +4817,13 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       'You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.',
   hint:
       'When the board pairs and the first bluff gets called, some pressure lines cool off.',
-  question:
-      'Suppose fold pressure has dropped on this turn. What is the cleaner plan?',
+  question: 'Fold pressure dropped on this turn. What do you do now?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check_more',
-      label: 'Check more often',
+      label: 'Check',
       isCorrect: true,
-      preferredLabel: 'Check more often',
+      preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good pressure reset.',
       feedbackReason:
@@ -4822,10 +4831,10 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
-      label: 'Make another big bet',
+      label: 'Bet big again',
       isCorrect: false,
-      preferredLabel: 'Check more often',
-      betterAnswerLabel: 'Check more often',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
@@ -4835,8 +4844,8 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       id: 'bet_value',
       label: 'Bet for value',
       isCorrect: false,
-      preferredLabel: 'Check more often',
-      betterAnswerLabel: 'Check more often',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket now.',
       feedbackReason:
@@ -5270,6 +5279,7 @@ final _w7EffectiveStackIntroRunner = _w6ComboCountsIntroRunner.copyWith(
   hint: 'Compare the two players who can put chips in against each other.',
   question: 'What is the effective stack?',
   table: _act0BoardLessonTableV1(
+    openingSeat: 'co',
     heroCards: _act0LessonCardsV1('Ac Qd'),
     boardCards: _act0LessonCardsV1('Qs 8c 3h'),
     centerLabel: 'Compare the stacks',

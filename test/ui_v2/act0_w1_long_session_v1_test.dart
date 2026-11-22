@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
 import '../support/act0_source_choreography_test_wait_v1.dart';
+import '../support/act0_route_practice_runner_test_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
 
 // Long session through the real app shell on iPhone 14 Pro: a fresh learner
 // goes through Worlds 1–7 by default, or 1–12 with
@@ -104,6 +106,8 @@ Future<int> _openSavedCourseTask(
   WidgetTester t, {
   required String worldId,
   required String taskId,
+  String? legacyLessonId,
+  bool finishTeaching = true,
 }) async {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(worldId);
@@ -141,7 +145,7 @@ Future<int> _openSavedCourseTask(
       'skippedTaskIds': <String>[],
       'earnedXp': xp,
       'selectedWorldId': worldId,
-      'selectedLessonId': lesson.lessonId,
+      'selectedLessonId': legacyLessonId ?? lesson.lessonId,
       'selectedTaskId': taskId,
     }),
   });
@@ -169,8 +173,9 @@ Future<int> _openSavedCourseTask(
   );
   final shell = find.byType(Act0LessonRunnerShellV1);
   expect(t.widget<Act0LessonRunnerShellV1>(shell).selectedTaskId, taskId);
-  while (t.widget<Act0LessonRunnerShellV1>(shell).runner.activeTeachingStep !=
-      null) {
+  while (finishTeaching &&
+      t.widget<Act0LessonRunnerShellV1>(shell).runner.activeTeachingStep !=
+          null) {
     expect(
       await _tapFirst(t, [
         find.byKey(const Key('act0_shell_theory_continue_cta')),
@@ -187,6 +192,29 @@ Future<int> _openSavedCourseTask(
 }
 
 void main() {
+  testWidgets('W1 save resumes a drill from before the lesson split', (
+    t,
+  ) async {
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_1',
+      taskId: 'hand_rankings_full_house_vs_flush_drill',
+      legacyLessonId: 'hand_rankings_upper',
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'hand_rankings_comparisons');
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_co_flush'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
+    expect(saved['selectedLessonId'], 'hand_rankings_comparisons');
+    expect(saved['selectedTaskId'], 'hand_rankings_full_house_vs_flush_drill');
+    expect(saved['earnedXp'], xp);
+  });
+
   testWidgets('pre-L1 saved progress resumes at the first new prerequisite', (
     t,
   ) async {
@@ -262,7 +290,7 @@ void main() {
     final runner = t.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
     );
-    expect(runner.selectedTaskId, 'hand_rankings_theory');
+    expect(runner.selectedTaskId, 'first_table_guide_first_decision');
     final saved = await _saved(t);
     expect((saved['completedTaskIds'] as List).toSet(), oldCompleted.toSet());
     expect(saved['earnedXp'], oldXp);
@@ -406,7 +434,9 @@ void main() {
     final world = Act0ShellStateV1.sample.worldById('world_1');
     final completed = [
       for (final lesson in world.lessons)
-        if (earlierLessons.contains(lesson.lessonId)) ...lesson.courseTaskList,
+        if (earlierLessons.contains(lesson.lessonId) ||
+            lesson.lessonId == 'hand_rankings_comparisons')
+          ...lesson.courseTaskList,
     ];
     final completedIds = completed.map((task) => task.taskId).toList();
     final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
@@ -467,11 +497,11 @@ void main() {
       worldId: 'world_9',
       taskId: 'w9_short_stack_survival',
     );
+    expect(find.textContaining('You start with 9 BB.'), findsOneWidget);
     expect(
-      find.text('You have 9 BB with blinds about to hit.'),
-      findsOneWidget,
+      find.textContaining('BB frequently folds under the stated'),
+      findsNothing,
     );
-    expect(find.text('Very short stacks cannot wait forever.'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_option_take_spot')).hitTestable(),
       findsOneWidget,
@@ -481,6 +511,66 @@ void main() {
   testWidgets('W9 long inline history keeps the current decision playable', (
     t,
   ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    t.view.physicalSize = const Size(393, 852);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.resetPhysicalSize);
+    addTearDown(t.view.resetDevicePixelRatio);
+    await t.pumpWidget(
+      const MaterialApp(
+        locale: Locale('en'),
+        home: Act0ShellPreviewScreenV1(
+          initialPhase: Act0LessonPhaseV1.drill,
+          showPlacementOnStart: false,
+          debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+            worldId: 'world_9',
+            lessonId: 'm_ratio_zones_lite',
+            taskId: 'w9_m_ratio_table_window_transfer',
+          ),
+        ),
+      ),
+    );
+    await t.pumpAndSettle();
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'w9_m_ratio_table_window_transfer');
+    await pumpSourceChoreographyToDecisionV1(t, runner.runner.table);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_center_pot_stat')),
+        matching: find.text('Pot 2 BB'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_center_to_call_stat')),
+      findsNothing,
+    );
+    final history = find.byKey(const Key('act0_shell_street_replay_scroll'));
+    expect(history, findsOneWidget);
+    final scroll = t.state<ScrollableState>(
+      find.descendant(of: history, matching: find.byType(Scrollable)),
+    );
+    expect(scroll.position.maxScrollExtent, greaterThan(0));
+    expect(scroll.position.pixels, 0);
+    final correct = runner.runner.options.singleWhere(
+      (option) => option.isCorrect,
+    );
+    final answer = find.byKey(Key('act0_shell_option_${correct.id}'));
+    expect(answer.hitTestable(), findsOneWidget);
+    await t.tap(answer);
+    await t.pumpAndSettle();
+    expect(
+      find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      findsOneWidget,
+    );
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('W9 proved bubble price keeps the decision playable', (t) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
     t.view.physicalSize = const Size(393, 852);
     t.view.devicePixelRatio = 1;
@@ -516,16 +606,16 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.byKey(const Key('act0_shell_center_to_call_stat')),
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_center_to_call_stat')),
+        matching: find.text('To call 15.5 BB'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_street_replay_scroll')),
       findsNothing,
     );
-    final history = find.byKey(const Key('act0_shell_street_replay_scroll'));
-    expect(history, findsOneWidget);
-    final scroll = t.state<ScrollableState>(
-      find.descendant(of: history, matching: find.byType(Scrollable)),
-    );
-    expect(scroll.position.maxScrollExtent, greaterThan(0));
-    expect(scroll.position.pixels, 0);
     final correct = runner.runner.options.singleWhere(
       (option) => option.isCorrect,
     );
@@ -695,8 +785,8 @@ void main() {
     (
       'a W10 blind-overfold miss reopens the one-lever exercise',
       'world_10',
-      'w10_checkpoint_table_notice',
-      'rewrite_everything',
+      'w10_checkpoint_lever_line',
+      'fold',
       'w10_vs_nit_open_wider',
     ),
     (
@@ -828,6 +918,64 @@ void main() {
     expect(saved['skippedTaskIds'], isEmpty);
   });
 
+  testWidgets('W9 text theory opens without a table', (t) async {
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_9',
+      taskId: 'w9_survival_intro',
+      finishTeaching: false,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'w9_survival_intro');
+    expect(
+      runner.runner.activeTeachingStep?.body,
+      contains('EV stands for expected value.'),
+    );
+    expect(
+      find.textContaining('expected value', findRichText: true),
+      findsWidgets,
+      reason: t
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data ?? text.textSpan?.toPlainText())
+          .whereType<String>()
+          .toList()
+          .join(' | '),
+    );
+    expect(find.byKey(const Key('act0_shell_table')), findsNothing);
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('W10 text theory opens without a table', (t) async {
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_10',
+      taskId: 'w10_player_type_intro',
+      finishTeaching: false,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'w10_player_type_intro');
+    expect(
+      runner.runner.activeTeachingStep?.body,
+      contains('A nit plays few hands and folds a lot.'),
+    );
+    expect(
+      find.textContaining('A nit', findRichText: true),
+      findsWidgets,
+      reason: t
+          .widgetList<Text>(find.byType(Text))
+          .map((text) => text.data ?? text.textSpan?.toPlainText())
+          .whereType<String>()
+          .toList()
+          .join(' | '),
+    );
+    expect(find.byKey(const Key('act0_shell_table')), findsNothing);
+    expect(t.takeException(), isNull);
+  });
+
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const w7ToW8 = bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
   const lastWorld = w7ToW8 ? 8 : (fullRoute ? 12 : 7);
@@ -890,6 +1038,25 @@ void main() {
           step++
         ) {
           Map<String, dynamic>? routeSnapshot;
+          if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+            final runner = t
+                .widget<Act0LessonRunnerShellV1>(
+                  find.descendant(
+                    of: act0RoutePracticeFinder,
+                    matching: find.byType(Act0LessonRunnerShellV1),
+                  ),
+                )
+                .runner;
+            if (runner.phase == Act0LessonPhaseV1.drill) {
+              await answerAct0RoutePracticeV1(t, correct: false);
+            } else {
+              await tapAct0RoutePracticeKeyV1(
+                t,
+                'act0_shell_feedback_continue_cta',
+              );
+            }
+            continue;
+          }
           final runnerFinder = find.byType(Act0LessonRunnerShellV1);
           if (runnerFinder.evaluate().isNotEmpty) {
             final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
@@ -1100,13 +1267,24 @@ void main() {
             .cast<String>()
             .toSet();
         expect(taskWorld.keys.toSet().difference(completed), isEmpty);
+        final practiced =
+            (snapshot['routePractice'] as Map)['finished'] as List;
+        expect(
+          practiced.toSet(),
+          {
+            for (final world in worlds)
+              for (final step in act0RoutePracticeStepsV1(world)) step.id,
+          },
+          reason:
+              'Every scheduled practice boundary was completed on the route',
+        );
         final w1Ids = Act0ShellStateV1.sample
             .worldById('world_1')
             .lessons
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 39 : (fullRoute ? 389 : 275);
+        final expectedCount = w7ToW8 ? 43 : (fullRoute ? 443 : 288);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
