@@ -196,6 +196,12 @@ void main() {
     });
     expect(geometryTasks.where((item) => item.route == 'day7'), isNotEmpty);
   });
+  const exposedCardRegressions = {
+    'asm05_new_known_holes_turn_call_10',
+    'asm05_new_known_holes_turn_call_40',
+    'spaced_review_w1_showdown_winning_hero_cards_board_pot_v1',
+    'spaced_review_w1_showdown_winning_w1_rules_check_board_tie_v1',
+  };
   const shelfRegressions = {
     'board_texture_basics_w5_dry_board',
     'board_texture_basics_w5_wet_board',
@@ -208,8 +214,10 @@ void main() {
       in geometryTasks) {
     final id = task.taskId;
     final checkLateShelf = !sweep && shelfRegressions.contains(id);
+    final checkExposedCards = exposedCardRegressions.contains(id);
     if (!sweep &&
         !checkLateShelf &&
+        !checkExposedCards &&
         (route != 'course' ||
             world.worldNumber > 4 ||
             task.entryPhase == Act0LessonPhaseV1.theory ||
@@ -390,6 +398,7 @@ void main() {
       ];
       Rect? reference;
       var checkedCardFrames = 0;
+      var checkedExposedCards = 0;
       var checkedTableFrames = 0;
       final viewport = const Rect.fromLTWH(0, 59, 393, 759);
       for (final state in states) {
@@ -491,6 +500,12 @@ void main() {
             'act0_shell_card_',
           );
           if (isCard) checkedCardFrames++;
+          final isExposedOpponentCard =
+              isCard &&
+              !key.value.startsWith('act0_shell_card_hero_') &&
+              !key.value.startsWith('act0_shell_card_board_');
+          if (isExposedOpponentCard) checkedExposedCards++;
+          if (!sweep && checkExposedCards && !isExposedOpponentCard) continue;
           if (!sweep && !checkLateShelf && !isCard) continue;
           final visible = _visibleBounds(tester, subject).intersect(viewport);
           if (sweep &&
@@ -571,6 +586,9 @@ void main() {
             'issues': [...widgetErrors, ...geometryErrors],
           }),
         );
+      }
+      if (checkExposedCards) {
+        expect(checkedExposedCards, greaterThan(0), reason: id);
       }
       expect(widgetErrors, isEmpty, reason: id);
       expect(geometryErrors, isEmpty, reason: id);
