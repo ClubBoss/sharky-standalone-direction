@@ -1536,10 +1536,10 @@ Strong: JJ–TT, AK offsuit, AQ suited, AJ suited (UTG–BTN).
 
 Medium: AQ offsuit, AJ offsuit, KQ, AT (HJ–BTN).
 
-Medium: 99–22, KJ, QJ suited, KT, QT (CO–BTN).
+Medium: 99–22, KJ, QJ, KT, QT (CO–BTN).
 
 Weak: other hands (Fold).
-TEACH: On BTN after a raise. Facing one HJ or CO raise, BTN calls with KQo, KJs or QJs and folds Weak hands (A7o, J8o).
+TEACH: On BTN after a raise. Facing one HJ or CO raise, BTN calls with KQs, KQo, KJs or QJs and folds Weak hands (A7o, J8o).
 Q: What should you name before the action?
 HINT [theoryOnly]: Hand code writes the two ranks together. T means ten, s means suited, and o means offsuit.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Center Your turn | Facts no applicable hand facts
@@ -1901,7 +1901,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
 
 TASK w2_narrow_three_bet_intro [theory] One open ahead
 CAPTION: Face one opening raise with nobody else in the pot.
-TEACH: A 3-bet is a raise over the first raise. In these examples, HJ or CO opens once and you have position against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). Call with the other Strong hands: JJ, TT, AQs, and AJs. With Medium hands, call from BTN with KQo, KJs, or QJs. Fold the rest of Medium, including all Medium hands from CO, and fold Weak hands. If other players enter or you are out of position, the example no longer applies.
+TEACH: A 3-bet is a raise over the first raise. In these examples, HJ or CO opens once and you have position against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). Call with the other Strong hands: JJ, TT, AQs, and AJs. With Medium hands, call from BTN with KQs, KQo, KJs, or QJs. Fold the rest of Medium, including all Medium hands from CO, and fold Weak hands. If other players enter or you are out of position, the example no longer applies.
 Q: What changes when you raise over an open?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ah Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
@@ -2702,7 +2702,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w3_play_from_blinds_intro [theory] Two blinds, different choices
 CAPTION: BTN raised and you already posted a blind.
-TEACH: Use the price that is still due. Against one BTN open from SB, reraise Premium, Strong, and the HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, KJ, QJs, KT, QT) and Weak hands. BB still acts behind you. In BB after SB folds, your posted 1 BB lowers what you owe. If calling ends betting, divide the extra call by the final pot: calling 1.5 BB makes 5.5 BB, needing about 27% equity (your pot share from winning or splitting).
+TEACH: Use the price that is still due. Against one BTN open from SB, reraise Premium, Strong, and the HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, KJ, QJ, KT, QT) and Weak hands. BB still acts behind you. In BB after SB folds, your posted 1 BB lowers what you owe. If calling ends betting, divide the extra call by the final pot: calling 1.5 BB makes 5.5 BB, needing about 27% equity (your pot share from winning or splitting).
 Q: How does posting a blind change the decision?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Qc Tc | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
@@ -5397,7 +5397,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
 
 TASK w9_m_ratio_yellow_zone [drill] First seat choice
 CAPTION: First to act. Stack: 18 BB. No antes.
-TEACH: First seat choice First-in chart: Premium AA–QQ and AKs, plus Strong JJ–TT, AKo, AQs and AJs, open from UTG to BTN. Medium AQo, AJo, KQ and AT open from HJ to BTN. Medium 99–22, KJ, QJs, KT and QT open from CO to BTN. Fold Weak hands.
+TEACH: First seat choice First-in chart: Premium AA–QQ and AKs, plus Strong JJ–TT, AKo, AQs and AJs, open from UTG to BTN. Medium AQo, AJo, KQ and AT open from HJ to BTN. Medium 99–22, KJ, QJ, KT and QT open from CO to BTN. Fold Weak hands.
 Q: What should you do?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kc Qd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
@@ -5642,7 +5642,7 @@ REVIEW: Several hands can show how often a player folds, calls or bets. You can 
 
 TASK w10_nit_tag [drill] Read both blinds
 CAPTION: Both blinds are nits. They fold 90% of the time to either size. When one 3-bets, you fold.
-TEACH: Read both blinds In the first-in chart, open Premium (AA–QQ and AKs) or Strong (JJ–TT, AKo, AQs and AJs) from UTG through BTN. Open Medium AQo, AJo, KQ and AT from HJ through BTN. Open Medium 99–22, KJ, QJs, KT and QT from CO or BTN. Fold Weak hands. This drill gives a rare exception based on who is left to act.
+TEACH: Read both blinds In the first-in chart, open Premium (AA–QQ and AKs) or Strong (JJ–TT, AKo, AQs and AJs) from UTG through BTN. Open Medium AQo, AJo, KQ and AT from HJ through BTN. Open Medium 99–22, KJ, QJ, KT and QT from CO or BTN. Fold Weak hands. This drill gives a rare exception based on who is left to act.
 Q: Open or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You 9s 7s | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
@@ -6950,7 +6950,7 @@ TABLE: Preflop | You Qs Jd | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | D
 EFFECTIVE: UTG 28 · BTN 28 · SB 28 · BB 28
 SEATS: UTG stack 37 BB raise 3 BB | HJ folded stack 45 BB | CO Qs Jd stack 28 BB | BTN dealer stack 36 BB | SB stack 31.5 BB post 0.5 BB | BB stack 37 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB · HJ folds
-  + [correct] Fold — Correct. QJo is Weak in the opening chart and is behind UTG's QQ+/AK. A reset keeps your 28 BB for a better spot.
+  + [correct] Fold — Correct. QJo is far behind UTG's QQ+/AK. A reset keeps your 28 BB for a better spot.
   - [wrong] Call 3 BB to win chips back — Look again. QJo faces QQ+/AK with players behind. Paying 3 BB to chase the past loss risks a dominated flop hand.
     BETTER ANSWER: Fold
   - [wrong] All-in to 28 BB — Look again. The UTG range is strong and can call. Going all-in with QJo risks 28 BB into a 4.5 BB pot with little fold pressure.
@@ -8468,7 +8468,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB
     BETTER ANSWER: Your seat changed and an opponent has already raised
   - [wrong] QJo is now a pair — Look again. QJo has different ranks. Treating it as a pair risks paying 3 BB without a hand the chart supports.
     BETTER ANSWER: Your seat changed and an opponent has already raised
-  + [correct] Your seat changed and an opponent has already raised — Correct. You are earlier at HJ and face UTG's raise. A first-in choice depends on both position and prior action.
+  + [correct] Your seat changed and an opponent has already raised — Correct. The chart opens QJo first in from CO. Here you are earlier at HJ and face UTG's raise.
 
 ===== WORLD 3 · LESSON position_apply · Position at the table =====
 
@@ -9660,7 +9660,7 @@ TABLE: Preflop | You Qd Js | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | D
 EFFECTIVE: CO 52 · BTN 51 · SB 44 · BB 48
 SEATS: UTG folded stack 68 BB | HJ Qd Js stack 60 BB | CO stack 52 BB | BTN dealer stack 51 BB | SB stack 43.5 BB post 0.5 BB | BB stack 47 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  + [correct] Raise to 2 BB — Correct. QJo is Weak in the HJ first-in chart, but a 95% group fold rate makes the 2 BB steal earn 1.325 BB.
+  + [correct] Raise to 2 BB — Correct. QJo is outside the HJ first-in row, but a 95% group fold rate makes the 2 BB steal earn 1.325 BB.
   - [wrong] Fold — Look again. The base chart folds QJo from HJ. Here four players fold together 95%, so folding misses a sound small steal.
     BETTER ANSWER: Raise to 2 BB
   - [suboptimal] Raise to 5 BB — Look again. The read gives the same folds to either size. A 5 BB raise risks 3 BB more when a player 3-bets.

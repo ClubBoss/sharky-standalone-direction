@@ -1900,13 +1900,13 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
           'Premium: AA–QQ, AK suited (UTG–BTN).\n\n'
           'Strong: JJ–TT, AK offsuit, AQ suited, AJ suited (UTG–BTN).\n\n'
           'Medium: AQ offsuit, AJ offsuit, KQ, AT (HJ–BTN).\n\n'
-          'Medium: 99–22, KJ, QJ suited, KT, QT (CO–BTN).\n\n'
+          'Medium: 99–22, KJ, QJ, KT, QT (CO–BTN).\n\n'
           'Weak: other hands (Fold).',
     ),
     Act0TeachingStepV1(
       title: 'On BTN after a raise.',
       body:
-          'Facing one HJ or CO raise, BTN calls with KQo, KJs or QJs and folds Weak hands (A7o, J8o).',
+          'Facing one HJ or CO raise, BTN calls with KQs, KQo, KJs or QJs and folds Weak hands (A7o, J8o).',
     ),
   ],
 );
@@ -1999,7 +1999,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Check the clue again.',
       feedbackReason:
-          'J8o is not in any chart row, so it belongs in Weak. The only jack hands in Medium are KJ, QJs, and AJo.',
+          'J8o is not in any chart row, so it belongs in Weak. The only jack hands in Medium are KJ, QJ, and AJo.',
     ),
   ],
   table: _act0ReassignHeroSeatV1(
@@ -4767,7 +4767,7 @@ final _w2ThreeBetIntroRunner = _world3BucketsIntroRunner.copyWith(
           'In these examples, HJ or CO opens once and you have position '
           'against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). '
           'Call with the other Strong hands: JJ, TT, AQs, and AJs. '
-          'With Medium hands, call from BTN with KQo, KJs, or QJs. '
+          'With Medium hands, call from BTN with KQs, KQo, KJs, or QJs. '
           'Fold the rest of Medium, including all Medium hands from CO, '
           'and fold Weak hands. '
           'If other players enter or you are out of position, the example no '
@@ -5036,7 +5036,7 @@ final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
       body:
           'Against one BTN open from SB, reraise Premium, Strong, and the '
           'HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, '
-          'KJ, QJs, KT, QT) and Weak hands. BB still acts behind you. In BB '
+          'KJ, QJ, KT, QT) and Weak hands. BB still acts behind you. In BB '
           'after SB folds, your posted 1 BB lowers what you owe. If calling '
           'ends betting, divide the extra call by the final pot: calling '
           '1.5 BB makes 5.5 BB, needing about 27% equity (your pot share '

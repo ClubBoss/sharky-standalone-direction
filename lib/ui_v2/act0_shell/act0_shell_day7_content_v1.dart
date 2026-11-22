@@ -1064,7 +1064,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 2,
     reason:
-        "You are earlier at HJ and face UTG's raise. A first-in choice depends on both position and prior action.",
+        "The chart opens QJo first in from CO. Here you are earlier at HJ and face UTG's raise.",
     wrongReasons: const {
       0: "UTG has already raised to 3 BB. Ignoring it misses the price of seeing the flop.",
       1: "QJo has different ranks. Treating it as a pair risks paying 3 BB without a hand the chart supports.",
@@ -3199,7 +3199,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "QJo is Weak in the HJ first-in chart, but a 95% group fold rate makes the 2 BB steal earn 1.325 BB.",
+                "QJo is outside the HJ first-in row, but a 95% group fold rate makes the 2 BB steal earn 1.325 BB.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
