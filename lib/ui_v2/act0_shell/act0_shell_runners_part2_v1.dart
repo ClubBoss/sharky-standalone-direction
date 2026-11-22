@@ -3911,7 +3911,7 @@ final _world3DominatedIntroRunner = _world3FacingOpenIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare similar hands',
       body:
-          'Broadway ranks are T, J, Q, K, and A. One kind of domination is when two hands share a rank and one has the weaker side card.',
+          'Broadway ranks are T, J, Q, K, and A. In one common case, dominated means you share a rank with another hand and your other card is lower.',
     ),
     Act0TeachingStepV1(
       title: 'Acting after your opponent',
