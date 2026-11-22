@@ -113,7 +113,9 @@ void main() {
                 !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
                 !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
                 row.task.taskId != 'w8_effective_stack_seat' &&
-                row.task.taskId != 'w8_spr_value_size',
+                row.task.taskId != 'w8_spr_value_size' &&
+                row.task.taskId != 'w8_hero_stack_cap_seat' &&
+                row.task.taskId != 'w8_pot_bet_committed_seat',
           )
           .toList();
       expect(allRows, hasLength(294));
@@ -493,7 +495,9 @@ void main() {
               !w7AppliedTaskIdsV1.contains(row.task.taskId) &&
               !w4MinRaiseTaskIdsV1.contains(row.task.taskId) &&
               row.task.taskId != 'w8_effective_stack_seat' &&
-              row.task.taskId != 'w8_spr_value_size',
+              row.task.taskId != 'w8_spr_value_size' &&
+              row.task.taskId != 'w8_hero_stack_cap_seat' &&
+              row.task.taskId != 'w8_pot_bet_committed_seat',
         )
         .toList();
     final additions = rows
@@ -871,12 +875,12 @@ void main() {
         expect(withoutOccurrence.retainsObligation, isTrue);
       }
     }
-    expect(rows, hasLength(321));
-    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(321));
+    expect(rows, hasLength(323));
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(323));
     expect(
       allChoices,
       hasLength(
-        570 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        574 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     final ordinaryContracts = act0RepairGoalContractsV1
@@ -949,7 +953,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        532 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
+        536 + w4AddedOptionQualityV1.length + w5AddedOptionQualityV1.length,
       ),
     );
     expect(
