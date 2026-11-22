@@ -225,7 +225,8 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "bet_8_bb",
     edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
     stackMatters: false,
-    preChoiceAssumption: "The pair hands call either size 85% of the time.",
+    preChoiceAssumption:
+        "On 85% of hands, BTN has a pair and calls either size.",
   ),
   "spaced_review_w10_player_type_basics_misread_player_adjustment_v1":
       Act0DecisionReasoningV1(
@@ -507,10 +508,10 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
     edgeBb: 4.1,
     opponentRead:
-        "CO bets 8 into 10 on K-8-4-2. In eight past big turn bets, CO showed sets, K8 or AK in seven. Assume KQ wins 15% against this betting range by the river, about 1 in 7.",
+        "CO bets 8 into 10 on K-8-4-2. CO showed sets, K8 or AK on seven of eight big turn bets. Assume KQ wins 15% against this betting range by the river, about 1 in 7. No ties or later bets.",
     stackMatters: false,
     preChoiceAssumption:
-        "CO bets 8 into 10 on K-8-4-2. In eight past big turn bets, CO showed sets, K8 or AK in seven. Assume KQ wins 15% against this betting range by the river, about 1 in 7.",
+        "CO bets 8 into 10 on K-8-4-2. CO showed sets, K8 or AK on seven of eight big turn bets. Assume KQ wins 15% against this betting range by the river, about 1 in 7. No ties or later bets.",
   ),
   "w11_bb_defend_price": Act0DecisionReasoningV1(
     taskId: "w11_bb_defend_price",
