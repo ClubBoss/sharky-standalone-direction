@@ -462,4 +462,266 @@ const act0DecisionReasoningW7W9V1 = <String, Act0DecisionReasoningV1>{
     preChoiceAssumption:
         "BB bets two pair or better 85% of the time and missed spade draws 15% of the time. Your ace beats only the bluffs.",
   ),
+  'w9_cash_vs_tournament': Act0DecisionReasoningV1(
+    taskId: 'w9_cash_vs_tournament',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'call_16_bb',
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead:
+        "BTN bets better queens for value and missed jack-ten as a bluff.",
+    stackMatters: true,
+    stackNote:
+        "A call risks all 16 BB while UTG has 2 BB. At the stated stacks, survival raises the threshold from 39.5% in chips to 62.4% for prizes.",
+    preChoiceAssumption: "The prize model needs a 62.4% win rate.",
+  ),
+  'w9_short_stack_survival': Act0DecisionReasoningV1(
+    taskId: 'w9_short_stack_survival',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    stackMatters: true,
+    stackNote:
+        "From a 9 BB start, only 8.5 BB more is at risk. Even losing every time BB calls leaves a gain at the stated fold rate.",
+    preChoiceAssumption: "each legal hand is equally likely before BB decides",
+  ),
+  'w9_survival_recap': Act0DecisionReasoningV1(
+    taskId: 'w9_survival_recap',
+    kind: Act0DecisionKindV1.process,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'avoid_thin_calls_but_skip_sound_steals',
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    suboptimalKinds: {
+      'avoid_thin_calls_but_skip_sound_steals':
+          Act0SuboptimalKindV1.clearlyWorse,
+    },
+  ),
+  'w9_m_ratio_red_zone': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_red_zone',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'all_in_to_7_5_bb',
+    edgeMechanism: Act0EdgeMechanismV1.avoidsDomination,
+    opponentRead:
+        "UTG raises with queens or better and ace-king; CO calls with medium-high pairs and ace-queen suited.",
+    stackMatters: true,
+    stackNote:
+        "A 7.5 BB stack pays for five rounds of 1.5 BB. Opening first from the right seat could justify all-in, but here two strong ranges already entered.",
+    preChoiceAssumption: "UTG raises with QQ+ or AK.",
+  ),
+  'w9_m_ratio_ante_cost': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_ante_cost',
+    kind: Act0DecisionKindV1.process,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: '1_6_bb',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    suboptimalKinds: {'1_6_bb': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w9_m_ratio_green_zone': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_green_zone',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'raise_to_3_bb',
+    edgeMechanism: Act0EdgeMechanismV1.cheaperSameResult,
+    stackMatters: false,
+    preChoiceAssumption: "No special read.",
+    suboptimalKinds: {'raise_to_3_bb': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w9_m_ratio_yellow_zone': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_yellow_zone',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'raise_to_2_bb',
+    edgeMechanism: Act0EdgeMechanismV1.avoidsDomination,
+    stackMatters: false,
+  ),
+  'w9_m_ratio_table_window_transfer': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_table_window_transfer',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'green_zone',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+    suboptimalKinds: {'green_zone': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w9_m_ratio_red_zone_shove': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_red_zone_shove',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    stackMatters: false,
+    preChoiceAssumption:
+        "Each blind calls an all-in with 77+, ATs+, AJo+ or KQs.",
+  ),
+  'w9_m_ratio_recap': Act0DecisionReasoningV1(
+    taskId: 'w9_m_ratio_recap',
+    kind: Act0DecisionKindV1.process,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'use_m_and_cards_but_skip_the_payout_context',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    suboptimalKinds: {
+      'use_m_and_cards_but_skip_the_payout_context':
+          Act0SuboptimalKindV1.clearlyWorse,
+    },
+  ),
+  'w9_medium_stack_tighten': Act0DecisionReasoningV1(
+    taskId: 'w9_medium_stack_tighten',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'call_16_bb',
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead: "BTN reraises with jacks or better and ace-king.",
+    stackMatters: false,
+    preChoiceAssumption: "BTN makes the third bet with JJ+ or AK.",
+  ),
+  'w9_big_stack_leverage': Act0DecisionReasoningV1(
+    taskId: 'w9_big_stack_leverage',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'smallest_size_same_job',
+    bestAlternativeOptionId: 'raise_to_3_bb',
+    edgeMechanism: Act0EdgeMechanismV1.cheaperSameResult,
+    edgeBb: 0.15,
+    stackMatters: false,
+    preChoiceAssumption: "They all fold 85% of the time to either size.",
+    suboptimalKinds: {'raise_to_3_bb': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w9_bubble_short_stack': Act0DecisionReasoningV1(
+    taskId: 'w9_bubble_short_stack',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    stackMatters: false,
+    preChoiceAssumption: "You start with 6 BB, the shortest stack.",
+  ),
+  'w9_bubble_table_risk_transfer': Act0DecisionReasoningV1(
+    taskId: 'w9_bubble_table_risk_transfer',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'call_15_5_bb',
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead: "BB raises with jacks or better and ace-king.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB starts with 50 BB and raises to 18 BB with JJ+ or AK.",
+  ),
+  'w9_bubble_recap': Act0DecisionReasoningV1(
+    taskId: 'w9_bubble_recap',
+    kind: Act0DecisionKindV1.process,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'stack_size_and_cards_without_the_payouts',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    suboptimalKinds: {
+      'stack_size_and_cards_without_the_payouts':
+          Act0SuboptimalKindV1.clearlyWorse,
+    },
+  ),
+  'w9_checkpoint_survival_line': Act0DecisionReasoningV1(
+    taskId: 'w9_checkpoint_survival_line',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'm_zone_shove',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    stackMatters: false,
+    preChoiceAssumption: "You start with 7.5 BB.",
+  ),
+  'w9_checkpoint_bubble_line': Act0DecisionReasoningV1(
+    taskId: 'w9_checkpoint_bubble_line',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'call_12_bb',
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead:
+        "BB bets stronger kings and sets for value and missed nine-seven as a bluff.",
+    stackMatters: false,
+    preChoiceAssumption: "The prize threshold is 58.4%.",
+  ),
+  'w9_checkpoint_table_notice': Act0DecisionReasoningV1(
+    taskId: 'w9_checkpoint_table_notice',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'smallest_size_same_job',
+    bestAlternativeOptionId: 'raise_to_3_bb',
+    edgeMechanism: Act0EdgeMechanismV1.cheaperSameResult,
+    edgeBb: 0.2,
+    stackMatters: false,
+    preChoiceAssumption: "They all fold 80% of the time to either size.",
+    suboptimalKinds: {'raise_to_3_bb': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w9_checkpoint_review': Act0DecisionReasoningV1(
+    taskId: 'w9_checkpoint_review',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'risk_premium',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead: "BTN raises all-in with queens or better and ace-king.",
+    stackMatters: false,
+    preChoiceAssumption: "BTN covers you and raises to 20 BB with QQ+ or AK.",
+  ),
+  'spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1':
+      Act0DecisionReasoningV1(
+        taskId:
+            'spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'm_zone_shove',
+        bestAlternativeOptionId: 'fold',
+        edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+        stackMatters: false,
+        preChoiceAssumption: "You start with 8 BB.",
+      ),
+  'spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1':
+      Act0DecisionReasoningV1(
+        taskId:
+            'spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'risk_premium',
+        bestAlternativeOptionId: 'fold',
+        edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+        opponentRead:
+            "BTN bets one pair, two pair or a higher set in the stated model.",
+        stackMatters: false,
+        preChoiceAssumption: "The prize threshold is 50.7%.",
+      ),
+  'spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1':
+      Act0DecisionReasoningV1(
+        taskId:
+            'spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'smallest_size_same_job',
+        bestAlternativeOptionId: 'raise_to_3_bb',
+        edgeMechanism: Act0EdgeMechanismV1.cheaperSameResult,
+        edgeBb: 0.15,
+        stackMatters: false,
+        preChoiceAssumption: "They both fold 85% of the time to either size.",
+        suboptimalKinds: {'raise_to_3_bb': Act0SuboptimalKindV1.clearlyWorse},
+      ),
+  "w9_bubble_read_decision": Act0DecisionReasoningV1(
+    taskId: "w9_bubble_read_decision",
+    kind: Act0DecisionKindV1.table,
+    principleId: "risk_premium",
+    bestAlternativeOptionId: "call",
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead:
+        "BTN raises with ace-king and both higher and lower pairs at the modeled mix.",
+    stackMatters: true,
+    stackNote:
+        "Calling with 8 BB at the start uses all 7 BB remaining, so busting on the bubble raises the modeled threshold above the direct chip price.",
+    preChoiceAssumption:
+        "Six players remain and five get paid. BTN’s all-in range includes A-K and both lower and higher pairs. The model gives you 48% wins with no ties and sets the threshold for expected prize money at 60% wins.",
+  ),
+  "spaced_review_w9_bubble_read_decision_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w9_bubble_read_decision_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "risk_premium",
+    bestAlternativeOptionId: "call",
+    edgeMechanism: Act0EdgeMechanismV1.riskPremium,
+    opponentRead:
+        "BTN raises all-in with high pairs and strong aces at the modeled mix.",
+    stackMatters: true,
+    stackNote:
+        "The full remaining 6.5 BB would go into the pot. On the bubble, the supplied prize threshold accounts for the risk of busting.",
+    preChoiceAssumption:
+        "Six players remain and five get paid. BTN’s all-in range includes high pairs and strong aces. The model gives you 46% wins with no ties and sets the threshold for expected prize money at 57% wins.",
+  ),
 };

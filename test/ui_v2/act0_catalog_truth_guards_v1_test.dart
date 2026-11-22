@@ -1292,6 +1292,34 @@ void main() {
         expect(pots.fold(0.0, (total, pot) => total + pot.amountBb), 70);
       },
     );
+    test('W8 side-pot drill derives eligibility from the authored table', () {
+      final table = _catalogRow('short_stack_spots_side_pot').task.runner.table;
+      final source = table.handContributions!;
+      final active = {'sb', 'bb', 'btn'};
+      final price = source.amounts(
+        seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: 'btn',
+      );
+      expect(price.potBb, 42.5);
+      expect(price.toCallBb, 27.5);
+      final matched = Act0HandContributionsV1(
+        throughStreet: source.throughStreet,
+        startingStackBbBySeat: source.startingStackBbBySeat,
+        entries: [
+          ...source.entries,
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'btn',
+            Act0ContributionKindV1.wager,
+            price.toCallBb!,
+          ),
+        ],
+      );
+      final pots = act0PotEligibilityV1(matched, activeSeatIds: active)!;
+      expect(pots.map((pot) => pot.amountBb), [30, 40]);
+      expect(pots.first.eligibleSeatIds, active);
+      expect(pots.last.eligibleSeatIds, {'bb', 'btn'});
+    });
   });
 
   group('G1 reasoning falsifiers', () {

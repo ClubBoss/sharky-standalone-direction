@@ -2,6 +2,31 @@ part of 'act0_shell_state_v1.dart';
 
 final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
+    9,
+    "bubble_risk_premium",
+    "misread_tournament_pressure",
+    _day7PreflopV1(
+      'bb',
+      'Th Tc',
+      opener: 'btn',
+      openBb: 7.5,
+      heroStartingBb: 7.5,
+      allIn: true,
+      showTurn: true,
+    ),
+    caption:
+        "Six players remain and five get paid. BTN’s all-in range includes high pairs and strong aces. The model gives you 46% wins with no ties and sets the threshold for expected prize money at 57% wins.",
+    question: "Call or fold?",
+    choices: const ["Fold", "Call"],
+    correct: 0,
+    reason:
+        "BTN raises all-in with high pairs and strong aces. Folding keeps your last 6.5 BB because 46% beats the chip price but falls below the 57% prize threshold for calling.",
+    wrongReasons: const {
+      1: "Calling makes a 15.5 BB pot and can earn chips at 46%. Folding keeps your last 6.5 BB because the prize threshold is 57% wins.",
+    },
+    savedTaskId: "spaced_review_w9_bubble_read_decision_v1",
+  ),
+  _day7ExampleV1(
     8,
     "effective_stack_basics",
     "pot_to_call",
@@ -2447,7 +2472,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "AKs is Premium even from UTG. At 8 BB, the first-in all-in can collect the 1.5 BB pot and has strength when called.",
+                "Go all-in from UTG with AKs because players can fold and weaker aces can call. Folding gives up the chance to win 1.5 BB with an 8 BB stack far from the money.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
@@ -2689,7 +2714,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "Your set of eights beats AA, AK and K9. Its 70% wins clear both the 31.0% chip price and the supplied payout threshold.",
+                "BTN bets AA, AK or K9 on 70% of hands and your set beats them. Call 9 BB because 70% clears the 50.7% prize threshold; folding gives up the gain from those weaker hands.",
           ),
           Act0RunnerOptionV1(
             id: "fold",
@@ -2816,7 +2841,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             quality: Act0FeedbackQualityV1.correct,
             feedbackTitle: "Correct.",
             feedbackReason:
-                "KTs is a Medium BTN opening hand. Risk 2 BB to apply pressure to covered blinds who jointly fold 85% in this read.",
+                "Raise to 2 BB from BTN because SB and BB both fold 85% of the time at either size. Raising to 3 BB costs another blind when one raises again and you fold.",
           ),
           Act0RunnerOptionV1(
             id: "raise_to_3_bb",

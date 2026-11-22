@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 487 tasks · W1–W12
+SHARKY POKER — EN learning content, 489 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -5820,9 +5820,10 @@ Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: River | You Qh Jh | Board Qs 9c 5d 2h 3s | Pot 24.5 BB | To call 16 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 EFFECTIVE: BTN 16
+REASONING: principle risk_premium · alt call_16_bb · edge riskPremium · stack_matters true · assumption The prize model needs a 62.4% win rate.
 SEATS: UTG folded stack 2 BB | HJ folded stack 10 BB | CO folded stack 8 BB | BTN dealer stack 30 BB bet 16 BB | SB folded stack 9.5 BB | BB Qh Jh stack 16 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2 BB · SB folds · BB calls 2 BB · Flop: BB checks · BTN bets 2 BB · BB calls 2 BB · Turn: BB checks · BTN checks · River: BB checks · BTN bets 16 BB
-  + [correct] Fold — Correct. Keep 16 BB. Your 40% wins barely beat the chip price but fall below the 62.4% payout threshold while UTG has 2 BB.
+  + [correct] Fold — Correct. BTN bets missed jack-ten and stronger queens. Folding saves your last 16 BB because calling with 40% wins earns a little in chips but falls below the 62.4% needed for prizes.
   - [wrong] Call 16 BB — Look again. QJ beats the missed JT but loses to AQ/KQ. Calling earns 0.20 BB in chips yet drops modeled prize value from $192.16 to $123.25.
     BETTER ANSWER: Fold
 
@@ -5837,18 +5838,32 @@ TABLE: Facts no applicable hand facts
   - [wrong] 3 BB — Look again. 3 BB counts the wins. Skip the losses and the bet looks too good.
     BETTER ANSWER: 1 BB
 
+TASK w9_bubble_read_guided [drill] Read the bubble range
+CAPTION: Six players remain and five get paid. The button goes all-in with pairs of tens or better and some strong aces. Weaker aces fold in this example.
+Q: Which hands can the opener still have?
+HINT [always]: Start with the hands the opener would fold instead.
+TABLE: Preflop | You 9h 9d | Pot 9.5 BB | To call 7 BB | Seat BB | Active bb | Decision bb | Facts pocket pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 0 BB allIn 8 BB | SB folded stack 99.5 BB post 0.5 BB | BB 9h 9d stack 7 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN all-in 8 BB · SB folds
+  - [wrong] Weaker aces — Look again. The weaker aces fold. Counting them would give nines more winning matchups than the stated range allows.
+    BETTER ANSWER: Tens or better and strong aces
+  + [correct] Tens or better and strong aces — Correct. The button raises all-in with strong aces and high pairs. The weaker aces fold, so they cannot be part of this wager.
+  - [wrong] Sevens through nines — Look again. Smaller pairs fall outside the model. Counting them would overstate the value of pocket nines.
+    BETTER ANSWER: Tens or better and strong aces
+
 TASK w9_short_stack_survival [drill] Small blind choice
-CAPTION: You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls an all-in with 77+, A9s+, ATo+ or KQs. BB folds the rest.
+CAPTION: You start with 9 BB. It folds to you in the small blind. The money is far off. Assume each legal hand is equally likely before BB decides. BB calls an all-in with 77+, A9s+, ATo+ or KQs and folds the rest.
 TEACH: Small blind choice An all-in puts your whole stack in. When just one player is left to act, an all-in can win the blinds. Check how often that player will call. This short-stack drill asks you to choose between an all-in and a fold.
 Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd 9d | Pot 1.5 BB | To call 0.5 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
 EFFECTIVE: BB 9
+REASONING: principle m_zone_shove · alt fold · edge foldsBetter · stack_matters true · assumption each legal hand is equally likely before BB decides
 SEATS: UTG folded stack 28 BB | HJ folded stack 24 BB | CO folded stack 35 BB | BTN folded dealer stack 22 BB | SB Kd 9d stack 8.5 BB post 0.5 BB | BB stack 29 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds
   - [wrong] Fold — Look again. You start with 9 BB and face one tight caller. Folding K9s gives up the shot at the 1.5 BB pot.
     BETTER ANSWER: All-in to 9 BB
-  + [correct] All-in to 9 BB — Correct. Add your remaining 8.5 BB. BB frequently folds under the stated calling-range model, letting K9s win the 1.5 BB pot before your stack shrinks.
+  + [correct] All-in to 9 BB — Correct. BB folds 1,117 of 1,225 equally likely hands, about 91.2%. Going all-in for 8.5 BB more earns at least 0.62 BB on average even if every call beats you, so folding misses a profitable chance.
 
 TASK w9_survival_stack_tradeoff [drill] Price of busting
 CAPTION: Two players have the same cards and chip price in two events.
@@ -5867,6 +5882,7 @@ CAPTION: Think back to the 20 BB call and the 9 BB all-in.
 Q: Which plan balances growth and survival?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
+REASONING: principle risk_premium · alt avoid_thin_calls_but_skip_sound_steals · edge riskPremium · stack_matters unknown · assumption none
   - [suboptimal] Avoid thin calls but skip sound steals — Look again. Avoiding thin calls protects the stack, but passing the 9 BB SB opportunity also gives up chips available through folds.
     BETTER ANSWER: Take risks that improve prize EV
   - [wrong] Wait for AA before entering — Look again. The 9 BB K9s example already offered a sound first-in all-in; waiting for AA lets forced bets consume opportunities.
@@ -5900,11 +5916,12 @@ Q: What should you do?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Qc 8d | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
 EFFECTIVE: UTG 7.5 · CO 7.5
+REASONING: principle m_zone_shove · alt all_in_to_7_5_bb · edge avoidsDomination · stack_matters true · assumption UTG raises with QQ+ or AK.
 SEATS: UTG stack 27 BB raise 3 BB | HJ folded stack 25 BB | CO stack 21 BB call 3 BB | BTN folded dealer stack 18 BB | SB folded stack 21.5 BB post 0.5 BB | BB Qc 8d stack 6.5 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB · HJ folds · CO calls 3 BB · BTN folds · SB folds
-  - [wrong] Call to 3 BB — Look again. Paying 2 BB commits chips with Q8o against two strong ranges.
+  - [wrong] Call to 3 BB — Look again. Calling costs 2 BB with Q8o against two strong ranges. Folding saves that payment and keeps 6.5 BB behind.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.
+  + [correct] Fold — Correct. Your M is 5 from 7.5 BB and 1.5 BB per lap. Fold Q8o to UTG’s raise and CO’s call because going all-in risks the last 6.5 BB against two strong ranges.
   - [wrong] All-in to 7.5 BB — Look again. UTG and CO have put in 3 BB each. An all-in with Q8o has little chance to win by folds.
     BETTER ANSWER: Fold
 
@@ -5913,9 +5930,10 @@ CAPTION: Six players each pay 0.1 BB per hand. The blinds are 0.5 BB and 1 BB.
 Q: What does a full lap cost?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
-  - [suboptimal] 1.6 BB — Look again. You counted a 0.1 BB ante. It comes up six times in a lap.
+REASONING: principle m_zone_shove · alt 1_6_bb · edge processRule · stack_matters unknown · assumption none
+  - [suboptimal] 1.6 BB — Look again. Counting only one ante misses five more payments. The full lap costs 2.1 BB.
     BETTER ANSWER: 2.1 BB
-  - [wrong] 1.5 BB — Look again. You counted both blinds but skipped the antes. That gives the stack too much time.
+  - [wrong] 1.5 BB — Look again. Leaving out six antes understates the cost by 0.6 BB. The full lap costs 2.1 BB.
     BETTER ANSWER: 2.1 BB
   + [correct] 2.1 BB — Correct. Six antes cost 0.6 BB. Add both blinds for a total of 2.1 BB.
 
@@ -5926,12 +5944,13 @@ Q: Which opening size fits?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Jc | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: CO 30 · BTN 30 · SB 28 · BB 30
+REASONING: principle m_zone_shove · alt raise_to_3_bb · edge cheaperSameResult · stack_matters false · assumption No special read.
 SEATS: UTG folded stack 24 BB | HJ Ac Jc stack 30 BB | CO stack 34 BB | BTN dealer stack 32 BB | SB stack 27.5 BB post 0.5 BB | BB stack 34 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  + [correct] Raise to 2 BB — Correct. AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.
+  + [correct] Raise to 2 BB — Correct. Raise AJs from HJ to 2 BB because M is 20 and you can still play later streets. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.
   - [suboptimal] Raise to 3 BB — Look again. From HJ with 30 BB, a 3 BB open loses one more chip if you fold to a raise. There is no read to pay for it.
     BETTER ANSWER: Raise to 2 BB
-  - [wrong] All-in to 30 BB — Look again. At M = 20, a 30 BB all-in risks far more than the 1.5 BB pot.
+  - [wrong] All-in to 30 BB — Look again. At M = 20, risking 30 BB all-in for the blinds wastes the room you have. Raise to 2 BB instead.
     BETTER ANSWER: Raise to 2 BB
 
 TASK w9_m_ratio_yellow_zone [drill] First seat choice
@@ -5941,12 +5960,13 @@ Q: What should you do?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kc Qd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
 EFFECTIVE: HJ 18 · CO 18 · BTN 18 · SB 18 · BB 18
+REASONING: principle m_zone_shove · alt raise_to_2_bb · edge avoidsDomination · stack_matters false · assumption none
 SEATS: UTG Kc Qd stack 18 BB | HJ stack 24 BB | CO stack 22 BB | BTN dealer stack 30 BB | SB stack 19.5 BB post 0.5 BB | BB stack 26 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] Raise to 2 BB — Look again. UTG has five players left to act. Opening KQo can face a call or raise from a stronger hand.
+  - [wrong] Raise to 2 BB — Look again. Raising risks 2 BB while five players can call or raise with a stronger hand. Fold and look for a later seat.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.
-  - [wrong] All-in to 18 BB — Look again. At M = 12, going all-in with 18 BB risks a full stack with KQo from first seat.
+  + [correct] Fold — Correct. Fold KQo from UTG because five players can still call or raise with stronger hands. Raising from this seat spends chips at M = 12 before you see what those players do.
+  - [wrong] All-in to 18 BB — Look again. At M = 12, going all-in risks the full 18 BB against stronger hands behind. Folding keeps those chips.
     BETTER ANSWER: Fold
 
 TASK w9_m_ratio_table_window_transfer [drill] Stack and seat
@@ -5954,6 +5974,7 @@ CAPTION: Stack: 18 BB. No antes. SB limps for 1 BB.
 Q: Which zone and plan fit?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You 7d 2c | Pot 2 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+REASONING: principle m_zone_shove · alt green_zone · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 25 BB | HJ folded stack 30 BB | CO folded stack 24 BB | BTN folded dealer stack 12 BB | SB stack 19 BB call 1 BB | BB 7d 2c stack 17 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds · SB calls 1 BB
   - [suboptimal] Green. Check. — Look again. Checking is fine in BB, but M is 12. That gives you less time than a green stack.
@@ -5969,9 +5990,10 @@ Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Jd | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 EFFECTIVE: SB 12 · BB 12
+REASONING: principle m_zone_shove · alt fold · edge foldsBetter · stack_matters false · assumption Each blind calls an all-in with 77+, ATs+, AJo+ or KQs.
 SEATS: UTG folded stack 25 BB | HJ folded stack 30 BB | CO folded stack 24 BB | BTN dealer As Jd stack 12 BB | SB stack 19.5 BB post 0.5 BB | BB stack 21 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  + [correct] All-in to 12 BB — Correct. AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.
+  + [correct] All-in to 12 BB — Correct. At M = 8, go all-in with AJo from BTN because both blinds fold outside their tight ranges. Folding gives up the 1.5 BB you can collect when both pass.
   - [wrong] Fold — Look again. With AJo first-in on BTN, folding passes a sound 12 BB all-in against the specified tight blind ranges; red-zone urgency is useful in this opening.
     BETTER ANSWER: All-in to 12 BB
 
@@ -5981,10 +6003,11 @@ CAPTION: Use the cost of a lap.
 Q: How should you use the zone?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
+REASONING: principle m_zone_shove · alt use_m_and_cards_but_skip_the_payout_context · edge processRule · stack_matters unknown · assumption none
   + [correct] Combine M with the hand and tournament context — Correct. The red-zone examples differed in position, cards and action, so their correct decisions differed too.
-  - [suboptimal] Use M and cards but skip the payout context — Look again. You account for urgency and hand strength, but the 2 BB rival in the bubble example changed the cost of losing the stack.
+  - [suboptimal] Use M and cards but skip the payout context — Look again. Ignoring prizes misses what a bust costs with a 2 BB rival. Use the hand, stack pressure and payout context together.
     BETTER ANSWER: Combine M with the hand and tournament context
-  - [wrong] Commit your stack based on the red zone — Look again. Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.
+  - [wrong] Commit your stack based on the red zone — Look again. Going all-in with Q8o risks 6.5 BB more against a tight raise and a call. A stack that lasts five rounds still needs a hand and a betting spot that can win.
     BETTER ANSWER: Combine M with the hand and tournament context
 
 ===== WORLD 9 · LESSON bubble_risk_premium · Bubble risk premium =====
@@ -6015,11 +6038,12 @@ Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ah Qd | Pot 21.5 BB | To call 16 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 EFFECTIVE: BTN 18
+REASONING: principle risk_premium · alt call_16_bb · edge riskPremium · stack_matters false · assumption BTN makes the third bet with JJ+ or AK.
 SEATS: UTG folded stack 2 BB | HJ folded stack 12 BB | CO Ah Qd stack 16 BB raise 2 BB | BTN dealer stack 32 BB raise 18 BB | SB folded stack 7.5 BB post 0.5 BB | BB folded stack 9 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2 BB · BTN raises to 18 BB · SB folds · BB folds
-  - [wrong] Call 16 BB — Look again. AQo's CO opening permission does not cover this 3-bet. You risk elimination for a 42.7% chip price against a range that dominates or leads your hand.
+  - [wrong] Call 16 BB — Look again. Calling AQo costs 16 BB and needs 42.7% in chips. The strong range and the cost of busting give you a reason to fold.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. Keep 16 BB instead of committing AQo against JJ+/AK while a 2 BB player remains below you.
+  + [correct] Fold — Correct. BTN raises with JJ or better or AK, so a 16 BB call risks your last chips against a strong range. Fold because UTG has just 2 BB and surviving can pay.
 
 TASK w9_big_stack_leverage [drill] Three players left to act
 CAPTION: Six left, five paid. You cover BTN, SB and BB. They all fold 85% of the time to either size. When one re-raises, you fold.
@@ -6028,13 +6052,14 @@ Q: How should you open?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kc Jd | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 EFFECTIVE: BTN 28 · SB 24 · BB 26
+REASONING: principle smallest_size_same_job · alt raise_to_3_bb · edge cheaperSameResult 0.15 BB · stack_matters false · assumption They all fold 85% of the time to either size.
 SEATS: UTG folded stack 3 BB | HJ folded stack 12 BB | CO Kc Jd stack 60 BB | BTN dealer stack 28 BB | SB stack 23.5 BB post 0.5 BB | BB stack 25 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [suboptimal] Raise to 3 BB — Look again. You use the right pressure opportunity, but the same 85% fold rate means the extra 1 BB is lost on the 15% resistance branch.
     BETTER ANSWER: Raise to 2 BB
   - [wrong] Fold — Look again. With KJo in CO and 85% joint folds behind, folding gives up a profitable chance to collect 1.5 BB from stacks you cover.
     BETTER ANSWER: Raise to 2 BB
-  + [correct] Raise to 2 BB — Correct. KJo applies pressure from CO for 2 BB; the stated folds win 1.5 BB without risking an opponent's full stack.
+  + [correct] Raise to 2 BB — Correct. Raise to 2 BB from CO because BTN and both blinds all fold 85% of the time at either size. Raising to 3 BB costs another blind when they raise and you fold.
 
 TASK w9_bubble_cover_seat [drill] Read the stacks
 CAPTION: You have 32 BB. Three stacks behind you have 9 BB, 14 BB and 30 BB.
@@ -6054,10 +6079,11 @@ Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Kh | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: CO 6 · BTN 6 · SB 6 · BB 6
+REASONING: principle risk_premium · alt fold · edge foldsBetter · stack_matters false · assumption You start with 6 BB, the shortest stack.
 SEATS: UTG folded stack 18 BB | HJ Ac Kh stack 6 BB | CO stack 20 BB | BTN dealer stack 24 BB | SB stack 11.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  + [correct] All-in to 6 BB — Correct. Use AKo first-in while your 6 BB can still win the 1.5 BB blinds without a showdown.
-  - [wrong] Fold — Look again. AKo is a strong first-in hand and you are the 6 BB shortest stack. Folding sacrifices a sound growth opportunity without a smaller rival to wait behind.
+  + [correct] All-in to 6 BB — Correct. Go all-in with AKo from HJ because you are the 6 BB shortest stack and others can fold. Folding forfeits the chance to win the 1.5 BB in blinds while you can still threaten a raise.
+  - [wrong] Fold — Look again. Folding misses a chance to take the blinds because AKo can go all-in first at 6 BB. No smaller stack can bust ahead of you.
     BETTER ANSWER: All-in to 6 BB
 
 TASK w9_bubble_table_risk_transfer [drill] A raise from BB
@@ -6066,11 +6092,12 @@ Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Jd | Pot 21 BB | To call 15.5 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 EFFECTIVE: BB 18
+REASONING: principle risk_premium · alt call_15_5_bb · edge riskPremium · stack_matters false · assumption BB starts with 50 BB and raises to 18 BB with JJ+ or AK.
 SEATS: UTG folded stack 2 BB | HJ folded stack 12 BB | CO folded stack 10 BB | BTN dealer As Jd stack 15.5 BB raise 2.5 BB | SB folded stack 7.5 BB post 0.5 BB | BB stack 32 BB raise 18 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds · BB raises to 18 BB
-  - [wrong] Call 15.5 BB — Look again. AJo needs to justify 15.5/36.5=42.5% before payout pressure. Against JJ+/AK, committing the rest to defend a 2.5 BB open risks elimination without enough strength.
+  - [wrong] Call 15.5 BB — Look again. Calling 15.5 BB needs 42.5% before payout pressure. AJo falls short against JJ+ or AK, so folding keeps your last chips.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. Fold AJo here. You would need to add 15.5 BB and risk your last chips against JJ or better, or AK. A different raise range, set of stacks or set of prizes can change the call.
+  + [correct] Fold — Correct. BB raises with JJ+ or AK. Calling 15.5 BB needs 42.5% and risks elimination, so fold. A different raise range, set of stacks or set of prizes can change the answer.
 
 TASK w9_bubble_recap [review] Three stacks recap
 ENTRY: drill
@@ -6078,7 +6105,8 @@ CAPTION: Recall the three stack sizes in this lesson.
 Q: What guides the bubble adjustment?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
-  - [suboptimal] Stack size and cards without the payouts — Look again. You identify hand strength and depth, but omit the prize cost illustrated by the 20 BB river example with a 2 BB rival.
+REASONING: principle risk_premium · alt stack_size_and_cards_without_the_payouts · edge processRule · stack_matters unknown · assumption none
+  - [suboptimal] Stack size and cards without the payouts — Look again. Ignoring prizes misses the cost of busting before a 2 BB rival. Include payouts, the hands in play and who covers whom.
     BETTER ANSWER: Coverage, payouts, ranges and the remaining stacks
   + [correct] Coverage, payouts, ranges and the remaining stacks — Correct. These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.
   - [wrong] Being short justifies a loose call-off — Look again. The 7.5 BB Q8o deal still faced strong ranges; calling or going all-in with weak cards can remove the stack before a suitable opportunity.
@@ -6111,9 +6139,10 @@ Q: Go all-in or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Qc | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 EFFECTIVE: BTN 7.5 · SB 7.5 · BB 7.5
+REASONING: principle m_zone_shove · alt fold · edge foldsBetter · stack_matters false · assumption You start with 7.5 BB.
 SEATS: UTG folded stack 24 BB | HJ folded stack 28 BB | CO Ac Qc stack 7.5 BB | BTN dealer stack 20 BB | SB stack 17.5 BB post 0.5 BB | BB stack 24 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  + [correct] All-in to 7.5 BB — Correct. AQs is Strong. First-in from CO, your 7.5 BB can win the 1.5 BB blinds and has strength when called.
+  + [correct] All-in to 7.5 BB — Correct. Go all-in first from CO with AQs because BTN and the blinds may fold, and weaker aces can pay. Folding gives up a chance to add the 1.5 BB blinds to your 7.5 BB stack.
   - [wrong] Fold — Look again. AQs with 7.5 BB first-in from CO is a suitable short-stack opportunity; folding gives up both fold equity and value when worse hands continue.
     BETTER ANSWER: All-in to 7.5 BB
 
@@ -6130,17 +6159,32 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] Red; all-in to 33 BB — Look again. 33/1.5=22 is green, not red; TT has no urgency to risk 33 BB for a 1.5 BB pot; a small open retains useful options against the five players behind.
     BETTER ANSWER: Green; raise to 2 BB
 
+TASK w9_bubble_read_decision [drill] Price the call in chips and prizes
+CAPTION: Six players remain and five get paid. BTN’s all-in range includes A-K and both lower and higher pairs. The model gives you 48% wins with no ties and sets the threshold for expected prize money at 60% wins.
+Q: Do you call with your last 7 BB?
+HINT [hidden]: (none)
+TABLE: Preflop | You 9c 9s | Pot 9.5 BB | To call 7 BB | Seat BB | Active bb | Decision bb | Facts pocket pair
+EFFECTIVE: BTN 8
+POTS: main 2.5 (BB, BTN)
+REASONING: principle risk_premium · alt call · edge riskPremium · stack_matters true · assumption Six players remain and five get paid. BTN’s all-in range includes A-K and both lower and higher pairs. The model gives you 48% wins with no ties and sets the threshold for expected prize money at 60% wins.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 0 BB allIn 8 BB | SB folded stack 99.5 BB post 0.5 BB | BB 9c 9s stack 7 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN all-in 8 BB · SB folds
+  - [wrong] Call — Look again. Calling needs about 42% for chips, but 48% falls short of the 60% prize threshold. Fold if your aim is prize money.
+    BETTER ANSWER: Fold
+  + [correct] Fold — Correct. BTN raises all-in with pairs or ace-king. Calling 7 BB earns chips at 48% wins, but fold because the prize threshold is 60%.
+
 TASK w9_checkpoint_bubble_line [drill] River bet from BB
 CAPTION: Six left, five paid. Prizes in order: 500, 250, 120, 80, 50. BB bets 12 BB into 8.5 BB. The range is 60% AK, K8 or 88 and 40% missed 97s. You win 40% with no ties. The prize threshold is 58.4%.
 Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: River | You Kc Qd | Board Ks 8h 4d 6s 2c | Pot 20.5 BB | To call 12 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 12
+REASONING: principle risk_premium · alt call_12_bb · edge riskPremium · stack_matters false · assumption The prize threshold is 58.4%.
 SEATS: UTG folded stack 3 BB | HJ folded stack 11 BB | CO Kc Qd stack 12 BB | BTN folded dealer stack 15 BB | SB folded stack 6.5 BB | BB stack 32 BB bet 12 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2 BB · BTN folds · SB folds · BB calls 2 BB · Flop: BB checks · CO bets 2 BB · BB calls 2 BB · Turn: BB checks · CO checks · River: BB bets 12 BB
   - [wrong] Call 12 BB — Look again. KQ is top pair, but loses to AK, K8 and 88. The 1 BB chip profit does not cover the prize value lost by risking elimination against the covering BB.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. Keep 12 BB. KQ's 40% wins beat the 36.9% chip price, but fall below this deal's supplied payout threshold with a 3 BB rival still present.
+  + [correct] Fold — Correct. BB bets stronger hands and missed nine-seven. Fold because your 40% wins beat the 36.9% chip price but do not clear the 58.4% prize threshold for calling your last 12 BB.
 
 TASK w9_checkpoint_table_notice [drill] Four seats behind
 CAPTION: Six left, five paid. You cover the four seats behind. They all fold 80% of the time to either size. When one re-raises, you fold.
@@ -6148,11 +6192,12 @@ Q: How should you open?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd Qd | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: CO 26 · BTN 22 · SB 24 · BB 20
+REASONING: principle smallest_size_same_job · alt raise_to_3_bb · edge cheaperSameResult 0.2 BB · stack_matters false · assumption They all fold 80% of the time to either size.
 SEATS: UTG folded stack 3 BB | HJ Kd Qd stack 55 BB | CO stack 26 BB | BTN dealer stack 22 BB | SB stack 23.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   - [suboptimal] Raise to 3 BB — Look again. You choose an allowed HJ hand, but the same 80% fold rate means the larger size loses an extra 1 BB on resistance without adding successful steals.
     BETTER ANSWER: Raise to 2 BB
-  + [correct] Raise to 2 BB — Correct. KQs is a permitted HJ opener. The 55 BB stack can pressure four covered opponents for 2 BB and collect 1.5 BB when they fold.
+  + [correct] Raise to 2 BB — Correct. Raise to 2 BB from HJ because all four players behind fold 80% of the time at either size. Raising to 3 BB risks another blind on the hands where they resist.
   - [wrong] Fold — Look again. KQs from HJ can gain from the stated 80% joint fold rate; folding passes a profitable small-open opportunity despite covering the opponents behind.
     BETTER ANSWER: Raise to 2 BB
 
@@ -6163,9 +6208,10 @@ Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ah | Pot 21.5 BB | To call 19 BB | Seat BB | Active bb | Decision bb | Facts pocket pair
 EFFECTIVE: BTN 20
+REASONING: principle risk_premium · alt fold · edge riskPremium · stack_matters false · assumption BTN covers you and raises to 20 BB with QQ+ or AK.
 SEATS: UTG folded stack 2 BB | HJ folded stack 10 BB | CO folded stack 8 BB | BTN dealer stack 30 BB raise 20 BB | SB folded stack 9.5 BB post 0.5 BB | BB As Ah stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 20 BB · SB folds
-  + [correct] Call 19 BB — Correct. AA is far ahead of this QQ+/AK range. Its advantage is large enough to justify the 19 BB commitment under these payouts and stacks.
+  + [correct] Call 19 BB — Correct. Call 19 BB because BTN raises with QQ or better or AK, and AA is ahead of most of that range. Folding protects your stack but gives up a strong prize opportunity even with a 2 BB rival.
   - [wrong] Fold — Look again. A 2 BB rival creates pressure, but AA against QQ+/AK is a sufficiently strong opportunity; folding gives up substantial prize value, not merely a thin chip edge.
     BETTER ANSWER: Call 19 BB
 
@@ -7882,6 +7928,23 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: Check
   - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
     BETTER ANSWER: Check
+
+===== WORLD 9 · LESSON bubble_risk_premium · Bubble risk premium =====
+
+TASK spaced_review_w9_bubble_read_decision_v1 [drill] Review decision
+DAY 7 FAMILY: misread_tournament_pressure
+CAPTION: Six players remain and five get paid. BTN’s all-in range includes high pairs and strong aces. The model gives you 46% wins with no ties and sets the threshold for expected prize money at 57% wins.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: Preflop | You Th Tc | Pot 9 BB | To call 6.5 BB | Seat BB | Active bb | Decision bb | Facts pocket pair
+EFFECTIVE: BTN 7.5
+POTS: main 2.5 (BB, BTN)
+REASONING: principle risk_premium · alt call · edge riskPremium · stack_matters true · assumption Six players remain and five get paid. BTN’s all-in range includes high pairs and strong aces. The model gives you 46% wins with no ties and sets the threshold for expected prize money at 57% wins.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 0 BB allIn 7.5 BB | SB folded stack 99.5 BB post 0.5 BB | BB Th Tc stack 6.5 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN all-in 7.5 BB · SB folds
+  + [correct] Fold — Correct. BTN raises all-in with high pairs and strong aces. Folding keeps your last 6.5 BB because 46% beats the chip price but falls below the 57% prize threshold for calling.
+  - [wrong] Call — Look again. Calling makes a 15.5 BB pot and can earn chips at 46%. Folding keeps your last 6.5 BB because the prize threshold is 57% wins.
+    BETTER ANSWER: Fold
 
 ===== WORLD 8 · LESSON effective_stack_basics · Effective stack =====
 
@@ -10249,9 +10312,10 @@ Q: Go all-in or fold?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ah Kh | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
 EFFECTIVE: HJ 8 · CO 8 · BTN 8 · SB 8 · BB 8
+REASONING: principle m_zone_shove · alt fold · edge foldsBetter · stack_matters false · assumption You start with 8 BB.
 SEATS: UTG Ah Kh stack 8 BB | HJ stack 26 BB | CO stack 18 BB | BTN dealer stack 31 BB | SB stack 22.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  + [correct] All-in to 8 BB — Correct. AKs is Premium even from UTG. At 8 BB, the first-in all-in can collect the 1.5 BB pot and has strength when called.
+  + [correct] All-in to 8 BB — Correct. Go all-in from UTG with AKs because players can fold and weaker aces can call. Folding gives up the chance to win 1.5 BB with an 8 BB stack far from the money.
   - [wrong] Fold — Look again. UTG requires stronger hands, but AKs meets that requirement; folding at 8 BB gives up a sound short-stack opportunity.
     BETTER ANSWER: All-in to 8 BB
 
@@ -10280,9 +10344,10 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You 8c 8d | Board Ks 8h 4d 2c 9h | Pot 20 BB | To call 9 BB | Seat SB | Active sb | Decision sb | Facts set, pocket pair
 EFFECTIVE: BTN 9
+REASONING: principle risk_premium · alt fold · edge riskPremium · stack_matters false · assumption The prize threshold is 50.7%.
 SEATS: UTG folded stack 3 BB | HJ folded stack 11 BB | CO folded stack 15 BB | BTN dealer stack 29 BB bet 9 BB | SB 8c 8d stack 9 BB | BB folded stack 13 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2 BB · SB calls 2 BB · BB folds · Flop: SB checks · BTN bets 3 BB · SB calls 3 BB · Turn: SB checks · BTN checks · River: SB checks · BTN bets 9 BB
-  + [correct] Call 9 BB — Correct. Your set of eights beats AA, AK and K9. Its 70% wins clear both the 31.0% chip price and the supplied payout threshold.
+  + [correct] Call 9 BB — Correct. BTN bets AA, AK or K9 on 70% of hands and your set beats them. Call 9 BB because 70% clears the 50.7% prize threshold; folding gives up the gain from those weaker hands.
   - [wrong] Fold — Look again. The 3 BB rival increases the cost of losing, but your set's 70% wins exceed that cost here; folding gives up a profitable prize-EV call.
     BETTER ANSWER: Call 9 BB
 
@@ -10295,9 +10360,10 @@ Q: How should you open?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kc Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 EFFECTIVE: SB 23 · BB 27
+REASONING: principle smallest_size_same_job · alt raise_to_3_bb · edge cheaperSameResult 0.15 BB · stack_matters false · assumption They both fold 85% of the time to either size.
 SEATS: UTG folded stack 4 BB | HJ folded stack 17 BB | CO folded stack 19 BB | BTN dealer Kc Tc stack 50 BB | SB stack 22.5 BB post 0.5 BB | BB stack 26 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  + [correct] Raise to 2 BB — Correct. KTs is a Medium BTN opening hand. Risk 2 BB to apply pressure to covered blinds who jointly fold 85% in this read.
+  + [correct] Raise to 2 BB — Correct. Raise to 2 BB from BTN because SB and BB both fold 85% of the time at either size. Raising to 3 BB costs another blind when one raises again and you fold.
   - [suboptimal] Raise to 3 BB — Look again. KTs takes the right steal opportunity, but the same 85% folds mean the extra 1 BB costs more when a blind 3-bets.
     BETTER ANSWER: Raise to 2 BB
   - [wrong] Fold — Look again. KTs on BTN can gain from two covered blinds and their stated 85% joint folds; folding gives up the chance to earn the 1.5 BB pot.

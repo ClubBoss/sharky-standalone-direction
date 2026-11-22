@@ -15,7 +15,13 @@ const y5cNewChoicesV1 = <String, List<List<Object?>>>{
   ],
   "short_stack_spots_draw_shallow": [
     ["call", "Call", false, "wrong", "Fold"],
-    ["choice_1", "Raise to 7 BB (puts the bettor all-in)", false, "wrong", "Fold"],
+    [
+      "choice_1",
+      "Raise to 7 BB (puts the bettor all-in)",
+      false,
+      "wrong",
+      "Fold",
+    ],
     ["fold", "Fold", true, "correct", "Fold"],
   ],
   "short_stack_spots_set_mine": [
@@ -78,4 +84,59 @@ const y5cNewChoicesV1 = <String, List<List<Object?>>>{
       "Bet 4 BB (puts BB all-in)",
     ],
   ],
+  "w9_bubble_read_guided": [
+    [
+      "choice_0",
+      "Weaker aces",
+      false,
+      "wrong",
+      "Tens or better and strong aces",
+    ],
+    [
+      "choice_1",
+      "Tens or better and strong aces",
+      true,
+      "correct",
+      "Tens or better and strong aces",
+    ],
+    [
+      "choice_2",
+      "Sevens through nines",
+      false,
+      "wrong",
+      "Tens or better and strong aces",
+    ],
+  ],
+  "w9_bubble_read_decision": [
+    ["call", "Call", false, "wrong", "Fold"],
+    ["fold", "Fold", true, "correct", "Fold"],
+  ],
 };
+
+const y5cLessonByTaskV1 = <String, (String, String)>{
+  'w7_read_visible_card_guided': (
+    'world_7',
+    'w7_visible_cards_range_checkpoint',
+  ),
+  'w7_read_visible_card_call': ('world_7', 'w7_visible_cards_range_checkpoint'),
+  'short_stack_spots_intro': ('world_8', 'short_stack_spots'),
+  'short_stack_spots_draw_deep': ('world_8', 'short_stack_spots'),
+  'short_stack_spots_draw_shallow': ('world_8', 'short_stack_spots'),
+  'short_stack_spots_set_mine': ('world_8', 'short_stack_spots'),
+  'short_stack_spots_value_cap': ('world_8', 'short_stack_spots'),
+  'short_stack_spots_all_in_price': ('world_8', 'short_stack_spots'),
+  'short_stack_spots_side_pot': ('world_8', 'short_stack_spots'),
+  'w8_big_hand_turn_fold': ('world_8', 'effective_stack_basics'),
+  'w8_big_hand_river_fold': ('world_8', 'same_hand_different_depth'),
+  'w8_guided_short_read': ('world_8', 'format_pressure'),
+  'w8_unguided_short_read': ('world_8', 'format_pressure'),
+  'w9_bubble_read_guided': ('world_9', 'survival_pressure_basics'),
+  'w9_bubble_read_decision': ('world_9', 'tournament_pressure_checkpoint'),
+};
+
+int y5cTasksInWorldV1(int world) =>
+    y5cLessonByTaskV1.values.where((row) => row.$1 == 'world_$world').length;
+
+final y5cDrillCountV1 = y5cNewChoicesV1.values
+    .where((rows) => rows.isNotEmpty)
+    .length;

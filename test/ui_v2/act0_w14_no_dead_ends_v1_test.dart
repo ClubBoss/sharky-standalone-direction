@@ -16,6 +16,7 @@ import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
+import '../support/act0_y5c_catalog_contract_v1.dart';
 
 // Dead-end classes across the whole W1–W12 route. Progress is a pure function
 // of completed task ids, so a learner gets stuck only when a task cannot be
@@ -70,7 +71,8 @@ void main() {
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
-            y5bNewChoicesV1.length,
+            y5bNewChoicesV1.length +
+            y5cNewChoicesV1.length,
       ),
     );
     final seen = <String>{};
