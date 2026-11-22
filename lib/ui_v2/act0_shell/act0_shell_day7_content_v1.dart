@@ -719,6 +719,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["HJ", "CO", "BB"],
     correct: 0,
     reason: "The six-seat preflop order starts UTG, HJ, then CO.",
+    wrongReasons: const {
+      1: "CO follows HJ. Choosing CO gives up the information CO gets from seeing HJ act first.",
+      2: "BB posted 1 BB before acting. Picking BB skips the information from both early seats.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -729,6 +733,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["SB", "CO", "UTG"],
     correct: 1,
     reason: "CO sits one place before the Button and one place after HJ.",
+    wrongReasons: const {
+      0: "SB posts 0.5 BB after BTN. Picking it gives up the information BTN gets from seeing CO act.",
+      2: "UTG acts before HJ. Choosing UTG gives up the information CO gets from seeing HJ act.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -741,6 +749,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "The dealer marker is at BTN. Your own HJ seat and the dealer are separate.",
+    wrongReasons: const {
+      0: "SB posted 0.5 BB. Picking SB gives up the last postflop action that belongs to BTN.",
+      1: "HJ is your seat. Choosing it misses the information BTN gets by seeing other players act.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -752,6 +764,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "SB is the smaller blind immediately after the Button. It posts 0.5 BB here.",
+    wrongReasons: const {
+      1: "BB pays 1 BB. Using that for SB would overstate your post by 0.5 BB.",
+      2: "BTN has the dealer marker. Picking BTN misses the 0.5 BB in the pot from SB.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -763,6 +779,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Button", "Big blind", "Small blind"],
     correct: 1,
     reason: "BB means big blind. It is the seat that posted 1 BB in this hand.",
+    wrongReasons: const {
+      0: "BTN has not posted. Choosing that seat misses the 1 BB in the pot from your blind.",
+      2: "SB pays 0.5 BB. Using that as your full blind would miss another 0.5 BB in the pot.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -802,6 +822,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "A pair of sevens is included in the chart's BTN first-in opens. Only the blinds have decisions left.",
+    wrongReasons: const {
+      0: "Folding from BTN gives up the open with sevens and a chance to win both blinds.",
+      2: "Calling costs 1 BB and lets the blinds enter cheaply. The chart opens BTN sevens here.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -857,6 +881,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "The chart includes QTs when CO is first in. An earlier raise would give you a different decision.",
+    wrongReasons: const {
+      1: "Folding QTs in CO gives up the chart open and a chance to win the blind pot.",
+      2: "Calling costs 1 BB and lets BTN and the blinds enter cheaply.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -888,6 +916,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "You are earlier at HJ and face UTG's raise. A first-in choice depends on both position and prior action.",
+    wrongReasons: const {
+      0: "UTG has already raised to 3 BB. Ignoring it misses the price of seeing the flop.",
+      1: "QJo has different ranks. Treating it as a pair risks paying 3 BB without a hand the chart supports.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -900,6 +932,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "AQo is included in HJ's first-in raises. No opponent has entered before you.",
+    wrongReasons: const {
+      1: "Limping costs 1 BB and lets CO, BTN and the blinds enter cheaply.",
+      2: "Folding AQo from HJ gives up a chart open and the chance to win the blind pot.",
+    },
   ),
   _day7ExampleV1(
     3,
@@ -912,6 +948,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "A8o is a weak offsuit ace from UTG. The chart leaves it out of that seat's first-in opens.",
+    wrongReasons: const {
+      0: "Limping A8o costs 1 BB with five players behind UTG still able to raise.",
+      2: "Opening to 2.5 BB risks 2.5 BB with a hand outside the UTG opening row.",
+    },
   ),
   _day7ExampleV1(
     3,
