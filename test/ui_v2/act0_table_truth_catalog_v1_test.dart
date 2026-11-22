@@ -1437,22 +1437,6 @@ void main() {
       expect(correct, isNonNegative, reason: id);
       options.add(options.removeAt(correct));
     }
-    for (final (id, label) in [
-      ('w6_ak_combos', 'Starting hand combinations'),
-      ('w6_pair_combos', 'Starting hand combinations'),
-      ('w6_combo_weight_compare', 'Starting hand combinations'),
-      ('range_checkpoint_combos', 'Starting hand combinations'),
-      ('w6_suited_offsuit_weight_compare', 'Starting hand combinations'),
-      ('w6_pair_vs_suited_weight_compare', 'Starting hand combinations'),
-      ('w6_checkpoint_table_combo_weight', 'Starting hand combinations'),
-      ('w6_checkpoint_table_best_five', 'Board cards'),
-    ]) {
-      final row = expectedComparison[id] as Map<String, dynamic>;
-      for (final option
-          in (row['options'] as List).cast<Map<String, dynamic>>()) {
-        option['repairLabels'] = [label];
-      }
-    }
     // W4's reviewed answer order is independent of the frozen identity fixture.
     for (final (id, correctId, index) in [
       ('w4_value_purpose', 'value', 2),

@@ -117,7 +117,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     // Day 2 checks retention on familiar material. After a spaced success,
     // offer a new hand only if its review-only source has never been opened.
     if (family == null || family.spacedSuccessStage == 0) return null;
-    final reviewFamily = act0Day7FamilyForSavedSourceV1(
+    final reviewFamily = act0Day7FamilyForSourceV1(
       worldId: item.worldId,
       lessonId: item.lessonId,
       taskId: item.taskId,

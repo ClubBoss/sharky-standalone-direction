@@ -36,14 +36,6 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
   'positions_theory',
   'blinds_button_moves',
-  // W6 combination tasks now name their own skill instead of pot price.
-  'range_checkpoint_combos',
-  'w6_ak_combos',
-  'w6_checkpoint_table_combo_weight',
-  'w6_combo_weight_compare',
-  'w6_pair_combos',
-  'w6_pair_vs_suited_weight_compare',
-  'w6_suited_offsuit_weight_compare',
   // W9 concept questions receive the familiar-replay disposition.
   'w9_ev_two_results',
   'w9_survival_stack_tradeoff',
