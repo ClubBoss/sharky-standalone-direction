@@ -29,7 +29,13 @@ class Act0AttemptReflectionV1 {
 }
 
 class Act0ArchivedAttemptV1 {
-  Act0ArchivedAttemptV1._(this.evidence, this.reflection, this.events);
+  Act0ArchivedAttemptV1._(
+    this.evidence,
+    this.reflection,
+    this.events,
+    this.taskLabel,
+    this.choiceLabel,
+  );
 
   static final _sourceRevision = RegExp(r'^[a-f0-9]{64}$');
 
@@ -39,6 +45,8 @@ class Act0ArchivedAttemptV1 {
     Act0LearningEvidenceRecordV1 evidence, {
     Act0AttemptReflectionV1 reflection = const Act0AttemptReflectionV1(),
     Iterable<Act0ActionTrailItemV1> recordedTrail = const [],
+    String? taskLabel,
+    String? choiceLabel,
   }) {
     if (Act0LearningEvidenceRecordV1.tryParse(evidence.toPayload()) == null ||
         !_sourceRevision.hasMatch(evidence.authoredSourceFingerprint) ||
@@ -59,17 +67,23 @@ class Act0ArchivedAttemptV1 {
       evidence,
       reflection,
       List.unmodifiable(events),
+      taskLabel,
+      choiceLabel,
     );
   }
 
   final Act0LearningEvidenceRecordV1 evidence;
   final Act0AttemptReflectionV1 reflection;
   final List<Act0ActionTrailItemV1> events;
+  final String? taskLabel;
+  final String? choiceLabel;
 
   String get id => evidence.recordId;
 
   Map<String, Object?> toPayload() => {
     'evidence': evidence.toPayload(),
+    if (taskLabel != null) 'taskLabel': taskLabel,
+    if (choiceLabel != null) 'choiceLabel': choiceLabel,
     if (reflection.confidence case final confidence?)
       'confidence': confidence.name,
     if (reflection.openedClue case final clue?) 'openedClue': clue.name,
@@ -87,6 +101,12 @@ class Act0ArchivedAttemptV1 {
     if (raw is! Map || raw['events'] is! List) return null;
     final evidence = Act0LearningEvidenceRecordV1.tryParse(raw['evidence']);
     if (evidence == null) return null;
+    final taskLabel = raw['taskLabel'];
+    final choiceLabel = raw['choiceLabel'];
+    if ((taskLabel != null && taskLabel is! String) ||
+        (choiceLabel != null && choiceLabel is! String)) {
+      return null;
+    }
     final confidence = Act0DecisionConfidenceV1.values
         .where((value) => value.name == raw['confidence'])
         .firstOrNull;
@@ -129,6 +149,8 @@ class Act0ArchivedAttemptV1 {
         openedClue: clue,
       ),
       recordedTrail: events,
+      taskLabel: taskLabel as String?,
+      choiceLabel: choiceLabel as String?,
     );
   }
 }
@@ -176,6 +198,21 @@ class Act0AttemptArchiveV1 {
     'entries': attempts.map((attempt) => attempt.toPayload()).toList(),
     if (selectedId != null) 'selectedId': selectedId,
   };
+
+  /// Migrate once, when the progress payload predates the archive field.
+  /// These records can prove a decision but have no historical event journal.
+  static Act0AttemptArchiveV1 fromOlderSave(
+    Act0LearningEvidenceHistoryV1 history,
+  ) {
+    var archive = const Act0AttemptArchiveV1.empty();
+    for (final evidence in history.records) {
+      if (Act0ArchivedAttemptV1.fromRecordedDecision(evidence)
+          case final attempt?) {
+        archive = archive.add(attempt);
+      }
+    }
+    return archive;
+  }
 
   static Act0AttemptArchiveV1 restore(Object? payload) {
     if (payload is! Map ||

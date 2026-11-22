@@ -48,9 +48,30 @@ Act0ArchivedAttemptV1 _attempt(int n) =>
         openedClue: Act0CausalClueV1.callPrice,
       ),
       recordedTrail: _trail,
+      taskLabel: "How does the price affect your decision?",
+      choiceLabel: "Call",
     )!;
 
 void main() {
+  test(
+    'migrates only exact older decisions and leaves their journal empty',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: [
+          _evidence(1, revision: ''),
+          _evidence(2),
+          _evidence(3, assistance: Act0DecisionAssistanceV1.legacyUnknown),
+        ],
+      );
+      final archive = Act0AttemptArchiveV1.fromOlderSave(history);
+      final attempt = archive.attempts.single;
+      expect(attempt.id, 'attempt-2');
+      expect(attempt.events, isEmpty);
+      expect(attempt.taskLabel, isNull);
+      expect(attempt.choiceLabel, isNull);
+    },
+  );
+
   test('restores exact version, choice, help, grade, time and journal', () {
     final archive = const Act0AttemptArchiveV1.empty()
         .add(_attempt(1))

@@ -188,6 +188,7 @@ Widget act0AcademyReviewRuntimeV1(
         legacy.onOpenRecommendedAction,
       ),
       onOpenLearn: _guard(isCurrent, legacy.onOpenLearn),
+      onOpenAttempts: _guard(isCurrent, legacy.onOpenAttempts),
       backdrop: _backdrop,
     ),
   );

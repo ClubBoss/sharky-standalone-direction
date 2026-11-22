@@ -751,6 +751,8 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _activeLearningEvidenceRunKeyV1 = null;
       _learningEvidenceRunOrdinalV1 = 0;
       _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
+      _attemptArchiveV1 = const Act0AttemptArchiveV1.empty();
+      _showAttemptArchiveV1 = false;
       _studyObservationsV1 = const [];
       _savedPracticeDaysV1 = const [];
       _durableRetentionHistoryV1 = const Act0DurableRetentionHistoryV1();

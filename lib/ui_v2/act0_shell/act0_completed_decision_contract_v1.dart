@@ -39,6 +39,9 @@ class Act0CompletedDecisionV1 {
     this.repairFocusId,
     this.missedSignalId,
     this.assistanceKind = Act0DecisionAssistanceV1.none,
+    this.recordedTaskLabel,
+    this.recordedChoiceLabel,
+    this.recordedTrail = const [],
   });
 
   final int schemaVersion;
@@ -60,4 +63,7 @@ class Act0CompletedDecisionV1 {
   final String? repairFocusId;
   final String? missedSignalId;
   final Act0DecisionAssistanceV1 assistanceKind;
+  final String? recordedTaskLabel;
+  final String? recordedChoiceLabel;
+  final List<Act0ActionTrailItemV1> recordedTrail;
 }
