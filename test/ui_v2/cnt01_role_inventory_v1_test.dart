@@ -199,7 +199,7 @@ void main() {
               ),
             )
             .toList();
-        expect(rows, hasLength(199));
+        expect(rows, hasLength(201));
         final counts = <String, int>{};
         for (final row in rows) {
           final purpose = row['declaredPurpose']! as String;
@@ -221,7 +221,7 @@ void main() {
           'TEACHING': 30,
           'REPAIR': 12,
           'CORRECTION_CANDIDATE': 1,
-          'PRACTICE': 117,
+          'PRACTICE': 119,
           'TRANSFER_CANDIDATE': 22,
           'REVIEW_CANDIDATE': 17,
         });
