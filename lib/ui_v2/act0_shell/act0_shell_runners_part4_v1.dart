@@ -221,6 +221,15 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
   hint: 'Subtract each possible bet from the stack you have left.',
   question: 'Which bet fits your plan?',
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(id: '20bb', label: 'Bet 2 BB', potFraction: 2 / 5.5),
+      Act0SizingPresetV1(id: '100bb', label: 'Bet 4 BB', potFraction: 4 / 5.5),
+      Act0SizingPresetV1(id: 'same', label: 'Go all-in', potFraction: 20 / 5.5),
+    ],
+  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: '20bb',
@@ -1048,6 +1057,27 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
     facingBb: 0,
   ),
   teachingSteps: const [],
+  sizingConfig: const Act0SizingConfigV1(
+    mode: Act0SizingUiModeV1.presetsOnly,
+    showGuidance: false,
+    presets: [
+      Act0SizingPresetV1(
+        id: 'open_same',
+        label: 'Bet 10 BB',
+        potFraction: 1.25,
+      ),
+      Act0SizingPresetV1(
+        id: 'depth_only',
+        label: 'Bet 12 BB',
+        potFraction: 1.5,
+      ),
+      Act0SizingPresetV1(
+        id: 'tighten_early',
+        label: 'Bet 6 BB',
+        potFraction: 0.75,
+      ),
+    ],
+  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'open_same',
