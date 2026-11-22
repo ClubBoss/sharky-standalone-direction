@@ -4441,10 +4441,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
     Widget buildRunnerScreen({Act0SceneRegistrationV1? registration}) {
       final registeredScene = registration != null;
+      // The action shelf must leave the registered table readable even
+      // when later Act0 worlds show a long street replay above the answers.
       final decisionShelfMaxHeight =
           registration == null ||
               widget.worldNumber < 1 ||
-              widget.worldNumber > 4
+              widget.worldNumber > 12
           ? null
           : math.max(
               0.0,

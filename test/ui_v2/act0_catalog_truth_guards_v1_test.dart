@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -13,6 +15,7 @@ import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
+import '../support/act0_table_chip_labels_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
 import '../support/act0_practice_generator_v1.dart';
 import '../support/act0_shell_source_files_v1.dart';
@@ -562,6 +565,171 @@ void main() {
         ),
         isEmpty,
       );
+    },
+  );
+
+  group('G1 chip label falsifiers', () {
+    const entries = [
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'sb',
+        Act0ContributionKindV1.blind,
+        0.5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.blind,
+        1,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        3,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        7,
+      ),
+    ];
+    const ledger = Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      startingStackBbBySeat: {'sb': 100, 'bb': 100, 'co': 10},
+      entries: entries,
+    );
+
+    Act0TableStateV1 frame({
+      String bbStack = '97 BB',
+      String coBet = '7 BB',
+      String raise = 'CO raises to 3 BB',
+      String call = 'BB calls 2 BB more',
+      String? foldedBet,
+      String coStack = '0 BB',
+      bool spellAllIn = true,
+    }) {
+      final template = _catalogRow(
+        'what_poker_is_all_in_meaning',
+      ).task.runner.table;
+      return template.copyWith(
+        streetLabel: 'Flop',
+        handContributions: ledger,
+        seats: [
+          Act0SeatStateV1(
+            seatId: 'sb',
+            seatLabel: 'SB',
+            displayName: 'SB',
+            stackLabel: '99.5 BB',
+            isFolded: true,
+            isInHand: false,
+            currentBetLabel: foldedBet,
+          ),
+          Act0SeatStateV1(
+            seatId: 'bb',
+            seatLabel: 'BB',
+            displayName: 'BB',
+            stackLabel: bbStack,
+          ),
+          Act0SeatStateV1(
+            seatId: 'co',
+            seatLabel: 'CO',
+            displayName: 'CO',
+            stackLabel: coStack,
+            bet: Act0SeatBetStateV1(
+              kind: Act0SeatBetKindV1.allIn,
+              label: 'All-in',
+              amountLabel: coBet,
+            ),
+          ),
+        ],
+        actionTrail: [
+          const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+          const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+          Act0ActionTrailItemV1(label: raise),
+          const Act0ActionTrailItemV1(label: 'SB folds'),
+          Act0ActionTrailItemV1(label: 'BB calls 3 BB', displayLabel: call),
+          Act0ActionTrailItemV1(
+            label: spellAllIn ? 'Flop: CO all-in 7 BB' : 'Flop: CO bets 7 BB',
+          ),
+        ],
+      );
+    }
+
+    Set<(String, String)> fails(Act0TableStateV1 table) => {
+      for (final finding in auditAct0TableChipLabelsV1(
+        'fixture',
+        'question',
+        table,
+      ))
+        if (finding.passes == false) (finding.rule, finding.anchor),
+    };
+
+    test('reconciles a late street with earlier bets and a previous fold', () {
+      expect(fails(frame()), isEmpty);
+    });
+    test('rejects a wrong stack after deducting earlier contributions', () {
+      expect(fails(frame(bbStack: '99 BB')), {('22.stack', 'bb')});
+    });
+    test('rejects a seat chip label with the wrong current contribution', () {
+      expect(fails(frame(coBet: '10 BB')), {('22.seat_wager', 'co')});
+    });
+    test('rejects wrong numeric amounts on both action label channels', () {
+      expect(
+        fails(frame(raise: 'CO raises to 4 BB', call: 'BB calls 3 BB more')),
+        {
+          ('22.action_amount', '2/label'),
+          ('22.action_amount', '4/displayLabel'),
+        },
+      );
+    });
+    test('rejects a chip image on a street after the seat folded', () {
+      expect(
+        fails(frame(foldedBet: '0.5 BB')),
+        contains(('22.folded_wager', 'sb')),
+      );
+    });
+    test('all-in must have a zero stack and an all-in action', () {
+      expect(fails(frame(coStack: '1 BB')), contains(('22.all_in', 'co')));
+      expect(fails(frame(spellAllIn: false)), {('22.all_in', 'co')});
+    });
+  });
+
+  test(
+    'G1 reconciles table stack, wager and action labels with contributions',
+    () {
+      final evidence = auditAct0CatalogChipLabelsV1().toList();
+      if (Platform.environment['G1_REPORT_DIR'] case final directory?) {
+        Directory(directory).createSync(recursive: true);
+        File('$directory/chip-labels.json').writeAsStringSync(
+          _json.convert([
+            for (final row in evidence)
+              [
+                row.task,
+                row.frame,
+                row.rule,
+                row.anchor,
+                row.passes,
+                row.detail,
+              ],
+          ]),
+        );
+      }
+      expect(evidence.where((row) => row.passes == true), isNotEmpty);
+      final failed = evidence
+          .where((row) => row.passes == false)
+          .map(
+            (row) =>
+                '${row.task}|${row.frame}|${row.rule}|${row.anchor}|${row.detail}',
+          );
+      expect(failed, isEmpty, reason: failed.join('\n'));
     },
   );
 
