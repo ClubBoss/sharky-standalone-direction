@@ -246,8 +246,8 @@ void main() {
       });
       expect(snapshot['correctPositions'], <String, int>{
         '0': 122,
-        '1': 129,
-        '2': 63,
+        '1': 126,
+        '2': 66,
       });
       expect(snapshot['longestCorrectPositionRun'], 4);
       // A10: "all-in" counts as an action word like "jam", so W9+ all-in
@@ -504,8 +504,8 @@ void main() {
     });
     expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
       '0': 123,
-      '1': 130,
-      '2': 63,
+      '1': 127,
+      '2': 66,
     });
     expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
     final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);

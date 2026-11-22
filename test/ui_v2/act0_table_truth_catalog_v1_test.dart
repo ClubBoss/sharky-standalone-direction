@@ -971,7 +971,7 @@ void main() {
         'repairLabels': <String>[],
       });
     }
-    for (final entry in w4CorrectOptionMovedLastV1.entries) {
+    for (final entry in wave4CorrectOptionMovedLastV1.entries) {
       final task = expectedComparison[entry.key] as Map<String, dynamic>;
       final choices = (task['options'] as List).cast<Map<String, dynamic>>();
       expect(choices, hasLength(3), reason: entry.key);

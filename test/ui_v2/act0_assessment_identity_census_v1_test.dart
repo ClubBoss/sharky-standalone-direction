@@ -218,7 +218,7 @@ void main() {
       expect(choices.last[3], 'wrong', reason: entry.key);
       choices.removeLast();
     }
-    for (final entry in w4CorrectOptionMovedLastV1.entries) {
+    for (final entry in wave4CorrectOptionMovedLastV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
       final choices = task.last as List<List<Object?>>;
       expect(choices, hasLength(3), reason: entry.key);
