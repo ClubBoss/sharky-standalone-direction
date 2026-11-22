@@ -176,6 +176,40 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     1,
+    'hand_rankings_sequences',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', '8d 9d', '6d 7d Td 2c Qs'),
+    question: 'Which hand can you make with your two cards?',
+    choices: const [
+      'A pair',
+      'A straight flush',
+      'A straight with mixed suits',
+    ],
+    correct: 1,
+    reason:
+        'Your 8d and 9d join the 6d, 7d and Td for five consecutive diamonds.',
+    wrongReasons: const {
+      0: 'None of the displayed ranks repeats. Looking for a pair misses the run from six to ten.',
+      2: 'Every card in your run from six to ten is a diamond. Ignoring the suits understates your best hand.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_sequences',
+    'board_cards',
+    _day7PostflopV1('bb', '7c 8d', '5h 6s 9c Ks 2d'),
+    question: 'Which hand do the five consecutive cards make?',
+    choices: const ['A flush', 'Two pair', 'A straight'],
+    correct: 2,
+    reason:
+        'The five ranks from five to nine are consecutive and come from different suits.',
+    wrongReasons: const {
+      0: 'The run uses hearts, spades, clubs and diamonds. Reading a flush credits five cards of one suit that are not there.',
+      1: 'The five ranks are all different. Counting two pair would miss the sequence that your seven and eight complete.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
     "blinds_action_order",
     "hero_button",
     _day7PreflopV1("hj", "9s 7s"),

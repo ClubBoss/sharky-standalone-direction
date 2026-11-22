@@ -361,7 +361,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier
   + [correct] Eights — Correct. Your eight matches the shared eight, making one pair.
     FEEDBACK TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, middle pair, two-tone
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_sequences · Straights and flushes =====
 
 TASK hand_rankings_straight_drill [drill] Hand ranking question
 AUTHORED TITLE: Find the straight
@@ -399,6 +399,45 @@ SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
     BETTER ANSWER: Flush
     FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
 
+TASK hand_rankings_royal_flush_drill [drill] Hand ranking question
+AUTHORED TITLE: Royal flush check
+CAPTION: A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 of hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.
+TEACH: Royal flush is the ace-high straight flush. You use T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five cards of one suit also run in sequence to the ace.
+TEACH LABELS: T-J-Q-K-A, Same suit
+Q: What is the highest hand category you can make?
+HINT [theoryOnly]: A flush with an ace is not royal unless the ranks run to ace.
+TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
+SEATS: UTG | HJ | CO | BTN dealer Kh Qh | SB | BB
+  + [correct] Royal flush — Top of the ladder. You make T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  - [wrong] Ace-high flush without a straight — Same suit, but stronger. The five hearts run T-J-Q-K-A in sequence. An ace-high flush without a straight would have a gap in its ranks.
+    BETTER ANSWER: Royal flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  - [wrong] Straight with mixed suits — Read the deciding detail. The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.
+    BETTER ANSWER: Royal flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+
+TASK hand_rankings_review [review] Hand ranking question
+ENTRY: drill
+AUTHORED TITLE: Ranking recap
+CAPTION: Lesson learned: compare the best five.
+TEACH: Ranking takeaway. First identify the hand type, then compare the ladder.
+TEACH LABELS: Pair, Straight
+Q: Which ranks higher: flush or straight?
+HINT [theoryOnly]: Compare the two hand types on the ranking ladder.
+TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Two completed hands | Facts flush
+SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
+  + [correct] Flush — Read the hand rankings. A flush ranks above a straight.
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+  - [wrong] Straight — Compare consecutive ranks with matching suits. A straight beats three of a kind. Five cards of one suit make a flush, which ranks higher.
+    BETTER ANSWER: Flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+  - [wrong] They rank the same — Read the deciding detail. Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.
+    BETTER ANSWER: Flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
+
 TASK hand_rankings_full_house_drill [drill] Hand ranking question
 AUTHORED TITLE: Full house shape
 CAPTION: A full house is three of one rank plus two of another.
@@ -434,26 +473,6 @@ SEATS: UTG | HJ | CO | BTN dealer 9h 9s | SB | BB
   - [wrong] 3 of one rank — Read the deciding detail. Two matching private cards join the two matching board cards. Three of a kind leaves out one card from the four of that rank.
     BETTER ANSWER: 4 of one rank
     FEEDBACK TABLE: River | You 9h 9s | Board 9c 9d 7c 2d Jc | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
-
-TASK hand_rankings_royal_flush_drill [drill] Hand ranking question
-AUTHORED TITLE: Royal flush check
-CAPTION: A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 of hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.
-TEACH: Royal flush is the ace-high straight flush. You use T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five cards of one suit also run in sequence to the ace.
-TEACH LABELS: T-J-Q-K-A, Same suit
-Q: What is the highest hand category you can make?
-HINT [theoryOnly]: A flush with an ace is not royal unless the ranks run to ace.
-TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
-SEATS: UTG | HJ | CO | BTN dealer Kh Qh | SB | BB
-  + [correct] Royal flush — Top of the ladder. You make T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  - [wrong] Ace-high flush without a straight — Same suit, but stronger. The five hearts run T-J-Q-K-A in sequence. An ace-high flush without a straight would have a gap in its ranks.
-    BETTER ANSWER: Royal flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  - [wrong] Straight with mixed suits — Read the deciding detail. The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.
-    BETTER ANSWER: Royal flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-
-===== WORLD 1 · LESSON hand_rankings_comparisons · Compare made hands =====
 
 TASK hand_rankings_full_house_vs_flush_drill [drill] Hand ranking question
 AUTHORED TITLE: Full house beats flush
@@ -492,23 +511,7 @@ SEATS: UTG | HJ | CO Ac 7h | BTN dealer 9h 9s | SB | BB
     BETTER ANSWER: Your four of a kind
     FEEDBACK TABLE: River | You 9h 9s | Board 9c 9d 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
 
-TASK hand_rankings_royal_vs_flush_drill [drill] Hand ranking question
-AUTHORED TITLE: Royal flush wins
-CAPTION: A royal flush beats an ace-high flush.
-TEACH: Royal flush is more than ace-high. You use T-J-Q-K-A in hearts. The other player also has five hearts, but only you connect the ranks all the way to the ace.
-TEACH LABELS: T-J-Q-K-A, Royal flush wins
-Q: Which run of hearts wins this comparison?
-HINT [theoryOnly]: Same suit is not enough. Check whether the cards also run T-J-Q-K-A.
-TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
-SEATS: UTG | HJ | CO 9h 3h | BTN dealer Kh Qh | SB | BB
-  - [wrong] 3 in a row, other player’s — Same suit, different ceiling. The other player does make an ace-high flush, but the five hearts do not run to the ace in sequence. You make a straight flush all the way to A, so it is the royal flush.
-    BETTER ANSWER: 5 in a row, yours
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  + [correct] 5 in a row, yours — Exactly. You have the royal flush because the hearts run T-J-Q-K-A. The other player has only an ace-high flush, so you win with the higher flush type.
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  - [wrong] 3 in a row each — Read the deciding detail. You finish the T-J-Q-K-A run in hearts. Treating it like the other flush ignores the connected ranks that win.
-    BETTER ANSWER: 5 in a row, yours
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+===== WORLD 1 · LESSON hand_rankings_comparisons · Compare made hands =====
 
 TASK hand_rankings_best_five_drill [drill] Hand ranking question
 AUTHORED TITLE: Choose best five
@@ -546,24 +549,23 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier
     BETTER ANSWER: Broadway wins
     FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts straight
 
-TASK hand_rankings_review [review] Hand ranking question
-ENTRY: drill
-AUTHORED TITLE: Ranking recap
-CAPTION: Lesson learned: compare the best five.
-TEACH: Ranking takeaway. First identify the hand type, then compare the ladder.
-TEACH LABELS: Pair, Straight
-Q: Which ranks higher: flush or straight?
-HINT [theoryOnly]: Compare the two hand types on the ranking ladder.
-TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Two completed hands | Facts flush
-SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
-  + [correct] Flush — Read the hand rankings. A flush ranks above a straight.
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
-  - [wrong] Straight — Compare consecutive ranks with matching suits. A straight beats three of a kind. Five cards of one suit make a flush, which ranks higher.
-    BETTER ANSWER: Flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
-  - [wrong] They rank the same — Read the deciding detail. Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.
-    BETTER ANSWER: Flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+TASK hand_rankings_royal_vs_flush_drill [drill] Hand ranking question
+AUTHORED TITLE: Royal flush wins
+CAPTION: A royal flush beats an ace-high flush.
+TEACH: Royal flush is more than ace-high. You use T-J-Q-K-A in hearts. The other player also has five hearts, but only you connect the ranks all the way to the ace.
+TEACH LABELS: T-J-Q-K-A, Royal flush wins
+Q: Which run of hearts wins this comparison?
+HINT [theoryOnly]: Same suit is not enough. Check whether the cards also run T-J-Q-K-A.
+TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
+SEATS: UTG | HJ | CO 9h 3h | BTN dealer Kh Qh | SB | BB
+  - [wrong] 3 in a row, other player’s — Same suit, different ceiling. The other player does make an ace-high flush, but the five hearts do not run to the ace in sequence. You make a straight flush all the way to A, so it is the royal flush.
+    BETTER ANSWER: 5 in a row, yours
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  + [correct] 5 in a row, yours — Exactly. You have the royal flush because the hearts run T-J-Q-K-A. The other player has only an ace-high flush, so you win with the higher flush type.
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  - [wrong] 3 in a row each — Read the deciding detail. You finish the T-J-Q-K-A run in hearts. Treating it like the other flush ignores the connected ranks that win.
+    BETTER ANSWER: 5 in a row, yours
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
 
 TASK showdown_kicker_drill [drill] Same pair, better kicker
 CAPTION: Both players show their cards.
@@ -6871,7 +6873,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 ===== W1 RULES CHECK =====
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
 
 TASK w1_rules_check_made_hand [drill] Hand rankings
 Q: At showdown, which hand wins in Hold’em?
@@ -7202,7 +7204,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
     BETTER ANSWER: Three
     FEEDBACK TABLE: Flop | You 7s 7d | Board Qh 7c 2s | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
 
 TASK spaced_review_w1_hand_rankings_upper_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
@@ -7235,6 +7237,40 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
     FEEDBACK TABLE: River | You As 5s | Board Js 8s 3d 9s 2c | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts flush
   + [correct] Flush — Correct. As, Js, 9s, 8s and 5s are all spades. They do not form five consecutive ranks.
     FEEDBACK TABLE: River | You As 5s | Board Js 8s 3d 9s 2c | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts flush
+
+===== WORLD 1 · LESSON hand_rankings_sequences · Straights and flushes =====
+
+TASK spaced_review_w1_hand_rankings_sequences_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Which hand can you make with your two cards?
+HINT [hidden]: (none)
+TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Facts straight flush
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 8d 9d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks
+  - [wrong] A pair — Look again. None of the displayed ranks repeats. Looking for a pair misses the run from six to ten.
+    BETTER ANSWER: A straight flush
+    FEEDBACK TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight flush
+  + [correct] A straight flush — Correct. Your 8d and 9d join the 6d, 7d and Td for five consecutive diamonds.
+    FEEDBACK TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight flush
+  - [wrong] A straight with mixed suits — Look again. Every card in your run from six to ten is a diamond. Ignoring the suits understates your best hand.
+    BETTER ANSWER: A straight flush
+    FEEDBACK TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight flush
+
+TASK spaced_review_w1_hand_rankings_sequences_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Which hand do the five consecutive cards make?
+HINT [hidden]: (none)
+TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Facts straight
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 7c 8d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks
+  - [wrong] A flush — Look again. The run uses hearts, spades, clubs and diamonds. Reading a flush credits five cards of one suit that are not there.
+    BETTER ANSWER: A straight
+    FEEDBACK TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
+  - [wrong] Two pair — Look again. The five ranks are all different. Counting two pair would miss the sequence that your seven and eight complete.
+    BETTER ANSWER: A straight
+    FEEDBACK TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
+  + [correct] A straight — Correct. The five ranks from five to nine are consecutive and come from different suits.
+    FEEDBACK TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
 
 ===== WORLD 1 · LESSON blinds_action_order · Seats and blinds =====
 
@@ -7482,7 +7518,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     BETTER ANSWER: It is split
     FEEDBACK TABLE: River | You Jd 7c | Board As Ks Qh Td 9c | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts straight
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
 
 TASK spaced_review_w1_hand_rankings_upper_w1_rules_check_made_hand_v1 [drill] Review decision
 DAY 7 FAMILY: w1_rules_check_made_hand

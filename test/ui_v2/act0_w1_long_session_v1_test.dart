@@ -204,14 +204,33 @@ void main() {
     final runner = t.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
     );
-    expect(runner.selectedLessonId, 'hand_rankings_comparisons');
+    expect(runner.selectedLessonId, 'hand_rankings_upper');
     expect(
       await _tapFirst(t, [find.byKey(const Key('act0_shell_option_co_flush'))]),
       isTrue,
     );
     final saved = await _saved(t);
-    expect(saved['selectedLessonId'], 'hand_rankings_comparisons');
+    expect(saved['selectedLessonId'], 'hand_rankings_upper');
     expect(saved['selectedTaskId'], 'hand_rankings_full_house_vs_flush_drill');
+    expect(saved['earnedXp'], xp);
+  });
+
+  testWidgets('W1 save finds a sequence drill in its new lesson', (t) async {
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_1',
+      taskId: 'hand_rankings_flush_drill',
+      legacyLessonId: 'hand_rankings_upper',
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'hand_rankings_sequences');
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_straight'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
     expect(saved['earnedXp'], xp);
   });
 
@@ -429,6 +448,7 @@ void main() {
       'cards_ranks_suits',
       'hand_rankings_table',
       'hand_rankings_upper',
+      'hand_rankings_sequences',
       'your_first_hand',
     ];
     final world = Act0ShellStateV1.sample.worldById('world_1');

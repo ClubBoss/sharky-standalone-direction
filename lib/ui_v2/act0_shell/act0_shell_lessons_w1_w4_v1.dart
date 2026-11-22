@@ -993,15 +993,15 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
     ],
   ),
   Act0LessonCardV1(
-    lessonId: 'hand_rankings_upper',
-    title: 'Hand rankings 2',
-    subtitle: 'Compare sequences, suits, and stronger groups.',
+    lessonId: 'hand_rankings_sequences',
+    title: 'Straights and flushes',
+    subtitle: 'Use consecutive ranks and matching suits.',
     state: Act0LessonStateV1.locked,
     phaseLabel: 'Ranks',
     primaryCtaLabel: 'Locked',
     isSelectable: false,
     isLocked: true,
-    rewardXp: 35,
+    rewardXp: 29,
     runner: _straightRankRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -1046,6 +1046,48 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'hand_rankings_royal_flush_drill',
+        title: 'Royal flush check',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1WithDistractorV1(
+          _royalFlushRankRunner,
+          id: 'mixed_straight',
+          label: 'Straight with mixed suits',
+          reason:
+              'The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.',
+        ),
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_review',
+        title: 'Ranking recap',
+        phase: Act0LessonPhaseV1.review,
+        runner: _w1WithDistractorV1(
+          _rankingRecapRunner,
+          id: 'tied_ranks',
+          label: 'They rank the same',
+          reason:
+              'Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.',
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.proveIt,
+      ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'hand_rankings_upper',
+    title: 'Full houses and four of a kind',
+    subtitle: 'Count matching ranks and compare the resulting hands.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Ranks',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 28,
+    runner: _fullHouseRankRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
         taskId: 'hand_rankings_full_house_drill',
         title: 'Full house shape',
         phase: Act0LessonPhaseV1.drill,
@@ -1088,34 +1130,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
-        taskId: 'hand_rankings_royal_flush_drill',
-        title: 'Royal flush check',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1WithDistractorV1(
-          _royalFlushRankRunner,
-          id: 'mixed_straight',
-          label: 'Straight with mixed suits',
-          reason:
-              'The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.',
-        ),
-        rewardXp: 7,
-        stepKind: Act0LessonStepKindV1.practice,
-      ),
-    ],
-  ),
-  Act0LessonCardV1(
-    lessonId: 'hand_rankings_comparisons',
-    title: 'Compare made hands',
-    subtitle: 'Use the best five to break a tie or rank two hands.',
-    state: Act0LessonStateV1.locked,
-    phaseLabel: 'Ranks',
-    primaryCtaLabel: 'Locked',
-    isSelectable: false,
-    isLocked: true,
-    rewardXp: 43,
-    runner: _fullHouseVsFlushRunner,
-    tasks: <Act0LessonTaskV1>[
-      Act0LessonTaskV1(
         taskId: 'hand_rankings_full_house_vs_flush_drill',
         title: 'Full house beats flush',
         phase: Act0LessonPhaseV1.drill,
@@ -1151,6 +1165,43 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
       ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'hand_rankings_comparisons',
+    title: 'Compare made hands',
+    subtitle: 'Use the best five to break a tie or rank two hands.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Ranks',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 28,
+    runner: _bestFiveShowdownRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_best_five_drill',
+        title: 'Choose best five',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1WithDistractorV1(
+          _bestFiveShowdownRunner,
+          id: 'omit_pair',
+          label: 'Seven',
+          reason:
+              'The sevens form one of your two pairs. The jack plays as a side card, leaving the four outside the best five.',
+        ),
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_compare_ace_straights',
+        title: 'Two straights, one winner',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1CompareAceStraightsRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
       Act0LessonTaskV1(
         taskId: 'hand_rankings_royal_vs_flush_drill',
         title: 'Royal flush wins',
@@ -1179,43 +1230,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
-      ),
-      Act0LessonTaskV1(
-        taskId: 'hand_rankings_best_five_drill',
-        title: 'Choose best five',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1WithDistractorV1(
-          _bestFiveShowdownRunner,
-          id: 'omit_pair',
-          label: 'Seven',
-          reason:
-              'The sevens form one of your two pairs. The jack plays as a side card, leaving the four outside the best five.',
-        ),
-        rewardXp: 7,
-        stepKind: Act0LessonStepKindV1.practice,
-      ),
-      Act0LessonTaskV1(
-        taskId: 'hand_rankings_compare_ace_straights',
-        title: 'Two straights, one winner',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1CompareAceStraightsRunner,
-        rewardXp: 7,
-        stepKind: Act0LessonStepKindV1.practice,
-        taskFamily: Act0TaskFamilyV1.compare,
-      ),
-      Act0LessonTaskV1(
-        taskId: 'hand_rankings_review',
-        title: 'Ranking recap',
-        phase: Act0LessonPhaseV1.review,
-        runner: _w1WithDistractorV1(
-          _rankingRecapRunner,
-          id: 'tied_ranks',
-          label: 'They rank the same',
-          reason:
-              'Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.',
-        ),
-        rewardXp: 8,
-        stepKind: Act0LessonStepKindV1.proveIt,
       ),
       Act0LessonTaskV1(
         taskId: 'showdown_kicker_drill',
