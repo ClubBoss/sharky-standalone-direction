@@ -54,6 +54,32 @@ Act0ArchivedAttemptV1 _attempt(int n) =>
     )!;
 
 void main() {
+  test('shares exact evidence and keeps expired records self-contained', () {
+    final archive = const Act0AttemptArchiveV1.empty()
+        .add(_attempt(1))
+        .add(_attempt(2))
+        .add(_attempt(3))
+        .select('attempt-2');
+    final shared = [_evidence(2), _evidence(3, callIsCorrect: true)];
+    final payload = archive.toPayload(snapshotRecords: shared);
+    final [third, second, first] = (payload['entries'] as List).cast<Map>();
+    expect(first['evidence'], isNotNull);
+    expect(second['recordId'], 'attempt-2');
+    expect(second.containsKey('evidence'), isFalse);
+    expect(third['evidence'], isNotNull);
+    final restored = Act0AttemptArchiveV1.restore(
+      payload,
+      snapshotRecords: shared,
+    );
+    expect(restored.toPayload(), archive.toPayload());
+    final missing = Act0AttemptArchiveV1.restore(payload);
+    expect(missing.attempts.map((attempt) => attempt.id), [
+      'attempt-3',
+      'attempt-1',
+    ]);
+    expect(missing.selected, isNull);
+  });
+
   test(
     'migrates only exact older decisions and leaves their journal empty',
     () {
