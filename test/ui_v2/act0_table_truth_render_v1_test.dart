@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_f7_scene_gate_v1.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
@@ -12,6 +17,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_presentation_config_v1.dart';
 
+import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 
 Rect _paintedTableBounds(WidgetTester tester) {
@@ -149,17 +155,57 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  final capture = Platform.environment['ACT0_V3_CAPTURE_DIR'];
+  final sweep = Platform.environment['ACT0_V3_SWEEP'] == '1' || capture != null;
+  final fontDirectory = Platform.environment['ACT0_V3_FONT_DIR'];
+  if (fontDirectory != null) {
+    setUpAll(() async {
+      for (final family in ['Act0VisualSweep', 'Roboto']) {
+        final loader = FontLoader(family);
+        for (final weight in ['Regular', 'Medium', 'Bold', 'Black']) {
+          final bytes = File(
+            '$fontDirectory/Roboto-$weight.ttf',
+          ).readAsBytesSync();
+          loader.addFont(Future.value(ByteData.sublistView(bytes)));
+        }
+        await loader.load();
+      }
+    });
+  }
   final geometryTasks = [
-    for (final world in Act0ShellStateV1.sample.worlds.take(4))
-      for (final lesson in world.lessons)
-        for (final task in lesson.taskList)
-          if (task.entryPhase != Act0LessonPhaseV1.theory &&
-              task.runner.options.any((option) => option.isCorrect) &&
-              task.runner.options.any((option) => !option.isCorrect))
-            (world: world, lesson: lesson, task: task),
+    for (final (route, rows) in [
+      ('course', [...catalogTasks, if (sweep) ...rulesCheckCatalogTasks]),
+      ('day7', day7CatalogTasks),
+    ])
+      for (final row in rows)
+        if (row.task.runner.table.seats.isNotEmpty) (route: route, row: row),
   ];
-  for (final (:world, :lesson, :task) in geometryTasks) {
+  test('V3 registers tables from every world and Day 7', () {
+    expect(geometryTasks.map((item) => item.row.world.worldNumber).toSet(), {
+      for (var world = 1; world <= 12; world++) world,
+    });
+    expect(geometryTasks.where((item) => item.route == 'day7'), isNotEmpty);
+  });
+  const shelfRegressions = {
+    'board_texture_basics_w5_dry_board',
+    'board_texture_basics_w5_wet_board',
+    'w6_checkpoint_table_combo_weight',
+    'w7_ajs_btn_100bb_transfer',
+    'w7_ajs_btn_25bb_transfer',
+    'w9_bubble_table_risk_transfer',
+  };
+  for (final (route: route, row: (:world, :lesson, :task, lessonIndex: _))
+      in geometryTasks) {
     final id = task.taskId;
+    final checkLateShelf = !sweep && shelfRegressions.contains(id);
+    if (!sweep &&
+        !checkLateShelf &&
+        (route != 'course' ||
+            world.worldNumber > 4 ||
+            task.entryPhase == Act0LessonPhaseV1.theory ||
+            !task.runner.options.any((option) => option.isCorrect) ||
+            !task.runner.options.any((option) => !option.isCorrect)))
+      continue;
     testWidgets('V3 table geometry and readable cards · $id', (tester) async {
       tester.view.physicalSize = const Size(393, 852);
       tester.view.devicePixelRatio = 1;
@@ -171,39 +217,83 @@ void main() {
       );
 
       final source = task.runner;
-      final wrong = source.options.firstWhere((option) => !option.isCorrect);
-      final correct = source.options.firstWhere((option) => option.isCorrect);
+      final wrong = source.options
+          .where((option) => !option.isCorrect)
+          .firstOrNull;
+      final correct = source.options
+          .where((option) => option.isCorrect)
+          .firstOrNull;
+      final hasChoice =
+          task.entryPhase != Act0LessonPhaseV1.theory &&
+          source.options.isNotEmpty;
+      final captureKey = GlobalKey();
+      final widgetErrors = <String>[];
+      final geometryErrors = <String>{};
+      final files = <String, String>{};
+
+      Future<void> snapshot(String frame) async {
+        if (capture == null) return;
+        final name = '$route-w${world.worldNumber}-$id-$frame.png';
+        final boundary =
+            captureKey.currentContext!.findRenderObject()!
+                as RenderRepaintBoundary;
+        await tester.runAsync(() async {
+          final image = await boundary.toImage(pixelRatio: 1);
+          try {
+            final bytes = (await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            ))!;
+            final folder = Directory(capture)..createSync(recursive: true);
+            await File(
+              '${folder.path}/$name',
+            ).writeAsBytes(bytes.buffer.asUint8List());
+            files[frame] = name;
+          } finally {
+            image.dispose();
+          }
+        });
+      }
 
       Future<void> show(
         Act0LessonPhaseV1 phase, {
         String? selected,
         double textScale = 1,
+        int? teachingStepIndex,
       }) async {
         tester.platformDispatcher.textScaleFactorTestValue = textScale;
         await tester.pumpWidget(
           MaterialApp(
-            home: Scaffold(
-              body: SafeArea(
-                child: Act0LessonRunnerShellV1(
-                  runner: source.copyWith(
-                    phase: phase,
-                    teachingStepIndex: source.teachingSteps.length,
-                    selectedOptionId: selected,
+            locale: const Locale('en'),
+            theme: fontDirectory == null
+                ? null
+                : ThemeData(fontFamily: 'Act0VisualSweep'),
+            home: RepaintBoundary(
+              key: captureKey,
+              child: Scaffold(
+                body: SafeArea(
+                  child: Act0LessonRunnerShellV1(
+                    runner: source.copyWith(
+                      phase: phase,
+                      teachingStepIndex:
+                          teachingStepIndex ?? source.teachingSteps.length,
+                      selectedOptionId: selected,
+                    ),
+                    worldNumber: world.worldNumber,
+                    selectedWorldId: world.worldId,
+                    selectedLessonId: lesson.lessonId,
+                    selectedTaskId: id,
+                    selectedTaskTitle: sweep ? task.title : null,
+                    selectedTaskFamily: task.resolvedTaskFamily,
+                    compositionFamily: task.resolvedCompositionFamily,
+                    tablePresentation: task.tablePresentation,
+                    tableIdentityPolicy: lesson.lessonId == 'what_poker_is'
+                        ? Act0TableIdentityPolicyV1.learnerOnly
+                        : null,
+                    onBack: () {},
+                    onContinueTheory: () {},
+                    onContinueReview: () {},
+                    onChooseOption: (_) {},
                   ),
-                  worldNumber: world.worldNumber,
-                  selectedWorldId: world.worldId,
-                  selectedLessonId: lesson.lessonId,
-                  selectedTaskId: id,
-                  selectedTaskFamily: task.resolvedTaskFamily,
-                  compositionFamily: task.resolvedCompositionFamily,
-                  tablePresentation: task.tablePresentation,
-                  tableIdentityPolicy: lesson.lessonId == 'what_poker_is'
-                      ? Act0TableIdentityPolicyV1.learnerOnly
-                      : null,
-                  onBack: () {},
-                  onContinueTheory: () {},
-                  onContinueReview: () {},
-                  onChooseOption: (_) {},
                 ),
               ),
             ),
@@ -211,50 +301,129 @@ void main() {
         );
         await tester.pumpAndSettle();
         await pumpSourceChoreographyToDecisionV1(tester, source.table);
-        expect(
-          tester.takeException(),
-          isNull,
-          reason: '$id $phase @$textScale',
-        );
+        if (tester.takeException() case final error?) {
+          widgetErrors.add('$phase @$textScale: $error');
+        }
       }
 
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-      await show(Act0LessonPhaseV1.drill);
-      if (kAct0F7TableScenePreview && id == 'what_poker_is_find_hero') {
-        expect(
-          find.byKey(const Key('act0_f7_baked_room_cast_hero')),
-          findsOneWidget,
-        );
-      }
-      final reference = _paintedTableBounds(tester);
-      expect(reference.isEmpty, isFalse);
-      expect(
-        find.byKey(const Key('act0_shell_learning_scene_sharky_avatar')),
-        findsNothing,
-      );
-      var checkedCardFrames = 0;
       final states = [
-        (phase: Act0LessonPhaseV1.drill, selected: null, scale: 1.0),
-        (phase: Act0LessonPhaseV1.drill, selected: wrong.id, scale: 1.0),
-        (phase: Act0LessonPhaseV1.review, selected: wrong.id, scale: 1.0),
-        (phase: Act0LessonPhaseV1.review, selected: correct.id, scale: 1.0),
-        (phase: Act0LessonPhaseV1.drill, selected: null, scale: 1.3),
-        (phase: Act0LessonPhaseV1.drill, selected: wrong.id, scale: 1.3),
-        (phase: Act0LessonPhaseV1.review, selected: wrong.id, scale: 1.3),
-        (phase: Act0LessonPhaseV1.review, selected: correct.id, scale: 1.3),
+        if (hasChoice)
+          for (final scale in [1.0, 1.3]) ...[
+            (
+              label: 'decision',
+              phase: Act0LessonPhaseV1.drill,
+              selected: null,
+              scale: scale,
+              step: null,
+            ),
+            if (wrong != null) ...[
+              (
+                label: 'selected',
+                phase: Act0LessonPhaseV1.drill,
+                selected: wrong.id,
+                scale: scale,
+                step: null,
+              ),
+              (
+                label: 'feedback',
+                phase: Act0LessonPhaseV1.review,
+                selected: wrong.id,
+                scale: scale,
+                step: null,
+              ),
+              (
+                label: 'repeat',
+                phase: Act0LessonPhaseV1.drill,
+                selected: null,
+                scale: scale,
+                step: null,
+              ),
+            ],
+            if (correct != null)
+              (
+                label: wrong == null ? 'feedback' : 'correct',
+                phase: Act0LessonPhaseV1.review,
+                selected: correct.id,
+                scale: scale,
+                step: null,
+              ),
+          ],
+        if (!hasChoice)
+          for (final scale in [1.0, 1.3])
+            for (
+              var index = 0;
+              index < math.max(source.teachingSteps.length, 1);
+              index++
+            )
+              (
+                label: 'teach-$index',
+                phase: Act0LessonPhaseV1.theory,
+                selected: null,
+                scale: scale,
+                step: index,
+              ),
       ];
+      Rect? reference;
+      var checkedCardFrames = 0;
+      var checkedTableFrames = 0;
+      final viewport = const Rect.fromLTWH(0, 59, 393, 759);
       for (final state in states) {
         await show(
           state.phase,
           selected: state.selected,
           textScale: state.scale,
+          teachingStepIndex: state.step,
         );
+        if (state.scale == 1 &&
+            (state.label == 'decision' ||
+                state.label == 'feedback' ||
+                state.label == 'teach-0')) {
+          await snapshot(state.label);
+        }
+        final hasTable = [
+          find.byKey(const Key('act0_shell_table_felt')),
+          find.byKey(const Key('act0_f7_baked_room_cast_hero')),
+        ].any((finder) => finder.evaluate().isNotEmpty);
+        if (!hasTable) {
+          if (!sweep) geometryErrors.add('${state.label}: table is missing');
+          continue;
+        }
+        if (!sweep && checkedTableFrames == 0) {
+          expect(
+            find.byKey(const Key('act0_shell_learning_scene_sharky_avatar')),
+            findsNothing,
+          );
+          if (kAct0F7TableScenePreview && id == 'what_poker_is_find_hero') {
+            expect(
+              find.byKey(const Key('act0_f7_baked_room_cast_hero')),
+              findsOneWidget,
+            );
+          }
+        }
+        checkedTableFrames++;
         final actual = _paintedTableBounds(tester);
-        _expectStationaryTable(reference, actual, stage: '$id $state');
+        reference ??= actual;
+        if (hasChoice) {
+          final movement = [
+            (reference.left - actual.left).abs(),
+            (reference.top - actual.top).abs(),
+            (reference.right - actual.right).abs(),
+            (reference.bottom - actual.bottom).abs(),
+            (reference.width - actual.width).abs(),
+            (reference.height - actual.height).abs(),
+          ].reduce(math.max);
+          if (movement > 0.5) {
+            geometryErrors.add(
+              '${state.label} @${state.scale}: table moved $movement pt',
+            );
+          }
+        }
         final controls = [
           find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
           find.byKey(const Key('act0_integrated_scene_prompt')),
           find.byKey(const Key('act0_shell_review_question')),
+          if (sweep) find.byKey(const Key('act0_shell_action_trail')),
         ];
         final tableLabels = find.byWidgetPredicate((widget) {
           final key = widget.key;
@@ -282,22 +451,45 @@ void main() {
                   ),
                 )
                 .toList();
-        final cards = find.byWidgetPredicate((widget) {
+        final subjects = find.byWidgetPredicate((widget) {
           final key = widget.key;
           return key is ValueKey<String> &&
-              key.value.startsWith('act0_shell_card_');
+              (key.value.startsWith('act0_shell_card_') ||
+                  key.value.startsWith('act0_shell_bet_chip_owner_') ||
+                  key.value == 'act0_shell_center_pot_stat' ||
+                  key.value == 'act0_shell_center_to_call_stat');
         });
-        for (var i = 0; i < cards.evaluate().length; i++) {
-          final card = cards.at(i);
-          final bounds = _paintBounds(tester, card);
-          checkedCardFrames++;
-          for (final overlay in overlays) {
-            expect(
-              overlay.bounds.overlaps(bounds),
-              isFalse,
-              reason:
-                  '$id $state: overlay $overlay covers ${card.evaluate().single.widget.key} at $bounds',
+        for (var i = 0; i < subjects.evaluate().length; i++) {
+          final subject = subjects.at(i);
+          final key = subject.evaluate().single.widget.key!;
+          final bounds = _paintBounds(tester, subject);
+          final isCard = (key as ValueKey<String>).value.startsWith(
+            'act0_shell_card_',
+          );
+          if (isCard) checkedCardFrames++;
+          if (!sweep && !checkLateShelf && !isCard) continue;
+          final visible = _visibleBounds(tester, subject).intersect(viewport);
+          if (sweep &&
+              (visible.width + 0.5 < bounds.width ||
+                  visible.height + 0.5 < bounds.height)) {
+            geometryErrors.add(
+              '${state.label} @${state.scale}: $key is clipped',
             );
+          }
+          for (final overlay in overlays) {
+            if (overlay.key == key ||
+                (checkLateShelf &&
+                    overlay.key !=
+                        const Key('act0_shell_shared_runner_lower_surface'))) {
+              continue;
+            }
+            final intersection = overlay.bounds.intersect(bounds);
+            if (intersection.width > (sweep ? 0.5 : 0) &&
+                intersection.height > (sweep ? 0.5 : 0)) {
+              geometryErrors.add(
+                '${state.label} @${state.scale}: ${overlay.key} overlaps $key',
+              );
+            }
           }
         }
       }
@@ -316,15 +508,53 @@ void main() {
           await tester.pumpAndSettle();
           expect(choice.hitTestable(), findsOneWidget);
           _expectStationaryTable(
-            reference,
+            reference!,
             _paintedTableBounds(tester),
             stage: '$id: scroll to ${option.id} at 1.3×',
           );
         }
       }
-      if (source.table.heroCards.isNotEmpty ||
-          source.table.boardCards.isNotEmpty) {
-        expect(checkedCardFrames, greaterThan(0));
+      if (sweep && checkedTableFrames == 0) {
+        geometryErrors.add('Source table has no rendered table frame');
+      }
+      if (capture != null) {
+        final folder = Directory(capture)..createSync(recursive: true);
+        File(
+          '${folder.path}/$route-w${world.worldNumber}-$id.json',
+        ).writeAsStringSync(
+          jsonEncode({
+            'route': route,
+            'world': world.worldNumber,
+            'lesson': lesson.lessonId,
+            'task': id,
+            'title': task.title,
+            'files': files,
+            'street': source.table.streetLabel,
+            'boardCards': source.table.boardCards.length,
+            'bets': source.table.seats.where((seat) => seat.bet != null).length,
+            'trail': source.table.actionTrail.length,
+            'sidePot':
+                source.table.potLabel.toLowerCase().contains('side') ||
+                source.table.actionTrail.any(
+                  (item) =>
+                      item.learnerLabel.toLowerCase().contains('side pot'),
+                ),
+            'allIn': source.table.seats.any(
+              (seat) => seat.bet?.kind == Act0SeatBetKindV1.allIn,
+            ),
+            'checkedTableFrames': checkedTableFrames,
+            'checkedCardFrames': checkedCardFrames,
+            'issues': [...widgetErrors, ...geometryErrors],
+          }),
+        );
+      }
+      expect(widgetErrors, isEmpty, reason: id);
+      expect(geometryErrors, isEmpty, reason: id);
+      if (checkedTableFrames > 0 &&
+          hasChoice &&
+          (source.table.heroCards.isNotEmpty ||
+              source.table.boardCards.isNotEmpty)) {
+        expect(checkedCardFrames, greaterThan(0), reason: id);
       }
     });
   }
