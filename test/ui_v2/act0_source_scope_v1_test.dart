@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(398));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(398));
+    expect(tasks, hasLength(400));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(400));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -309,7 +309,7 @@ void main() {
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'w4_price_find_bettor',
       ),
-      hasLength(368),
+      hasLength(370),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -531,10 +531,12 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 247);
-    expect(played, 276); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 249);
+    expect(played, 278); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w4_price_find_bettor',
+      'w4_value_worse_call_seat',
+      'w4_bluff_target_seat',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
       'w3_play_from_blinds_small_blind_raise',
