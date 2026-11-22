@@ -600,7 +600,8 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
             showTurn: true,
           ),
           options: const [],
-          feedbackReason: '',
+          feedbackReason:
+              'A bet with a draw can win on a fold or when the draw completes.',
           teachingSteps: const [
             Act0TeachingStepV1(
               title: 'Two ways to win.',

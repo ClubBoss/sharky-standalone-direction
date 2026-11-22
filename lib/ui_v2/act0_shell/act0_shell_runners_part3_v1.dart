@@ -3416,7 +3416,7 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nine outs are enough at this price.',
       feedbackReason:
-          "BB bets 2 BB, so calling needs 2 wins per 12. Your flush wins on 9 of 46 rivers in this model. Folding gives up the gain.",
+          "BB bets 2 BB, so calling needs two wins per 12. Under the stated rule your flush wins on nine of 46 rivers, so folding gives up the gain.",
     ),
     Act0RunnerOptionV1(
       id: 'price_only',
@@ -3530,7 +3530,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Eight outs are too few at this price.',
       feedbackReason:
-          "BB bets 3 BB, so calling needs 3 wins per 12. A four or nine wins on 8 of 46 rivers in this model. Fold because those outs fall short.",
+          "BB bets 3 BB, so calling needs three wins per 12. Under the stated rule a four or nine wins eight of 46 rivers, so fold.",
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
@@ -4632,7 +4632,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Weaker pairs can pay.',
       feedbackReason:
-          "Bet for value because BB calls with weaker pairs such as K-J or 7-6. A check leaves the payment from those hands uncollected.",
+          "Bet for value because BB calls with K-J or 7-6. Checking misses those calls. Against a broader range, profit depends on how often BB calls or raises.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -4676,7 +4676,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'A bet can fold out a better hand.',
     feedbackReason:
-        'Bet as a bluff because BB folds Q-J and A-9 in the example and both lead $hand. A check keeps them in without asking them to fold.',
+        'Bluff because BB folds Q-J and A-9, both ahead of $hand if you check. Profit depends on how often BB has those hands.',
   ),
   Act0RunnerOptionV1(
     id: 'missed',
@@ -4782,7 +4782,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A worse hand can call.',
       feedbackReason:
-          "Bet for value because BB calls with weaker kings and pairs such as 8-7. A check misses the chance to collect chips from those hands this round.",
+          "Bet for value because BB calls with weaker kings and 8-7. Checking misses those calls. Profit across hands depends on the full response range.",
     ),
     Act0RunnerOptionV1(
       id: 'check_back',

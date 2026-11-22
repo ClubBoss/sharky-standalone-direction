@@ -269,6 +269,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_5/flush_draws',
       'world_5/straight_draws',
       'world_5/outs_improvement',
+      'world_5/w5_semi_bluff',
     },
     taskKeys: <String>{
       'world_7/w7_visible_cards_and_price/w7_count_winning_rivers',
