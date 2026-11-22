@@ -2668,7 +2668,7 @@ tasks:
   });
 
   test(
-    'offline 2-template practice generator satisfies G1, C1 contributions, and quality guards',
+    'offline practice generators satisfy G1, C1 contributions, and quality guards',
     () {
       final openFold = generateOpenFoldByChartTasksV1(count: 12, seed: 7);
       final turnDecision = generateTurnCallPriceWithOutsTasksV1(
@@ -2681,14 +2681,44 @@ tasks:
         seed: 19,
         mode: TurnOutsModeV1.outsPriceNumeric,
       );
-      final allGenerated = [...openFold, ...turnDecision, ...turnNumeric];
-      expect(allGenerated, hasLength(32));
+      const generatedPerSkill = 8;
+      final postflop = {
+        for (final skill in PostflopPracticeSkillV1.values)
+          skill: generatePostflopPracticeV1(
+            skill,
+            count: generatedPerSkill,
+            seed: 19,
+          ),
+      };
+      for (final batch in postflop.values) {
+        final correctOptions = [
+          for (final item in batch)
+            item.task.runner.options.singleWhere((option) => option.isCorrect),
+        ];
+        expect(
+          correctOptions.where((option) => option.id == 'first'),
+          hasLength(4),
+        );
+        expect(
+          correctOptions.where((option) => option.id == 'second'),
+          hasLength(4),
+        );
+      }
+      final allGenerated = [
+        ...openFold,
+        ...turnDecision,
+        ...turnNumeric,
+        ...postflop.values.expand((batch) => batch),
+      ];
+      expect(allGenerated, hasLength(32 + generatedPerSkill * postflop.length));
 
       final rows = [for (final item in allGenerated) item.toCatalogRow()];
-      final truthAudit = runCatalogAudit(rows: rows);
-      final unexpectedTruth = truthAudit.findings.keys
-          .where((key) => !key.startsWith('10.'))
-          .toList();
+      final truthAudit = runCatalogAudit(rows: rows.take(32));
+      final unexpectedTruth = [
+        ...truthAudit.findings.keys,
+        for (final row in rows.skip(32))
+          ...runCatalogAudit(rows: [row]).findings.keys,
+      ].where((key) => !key.startsWith('10.')).toList();
       expect(unexpectedTruth, isEmpty, reason: unexpectedTruth.join('\n'));
       expect(truthAudit.checks['2.starting_chart'], openFold.length);
 

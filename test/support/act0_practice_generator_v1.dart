@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_solver/poker_solver.dart';
 
 import 'act0_catalog_poker_facts_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
 import 'act0_catalog_starting_chart_v1.dart';
+
+part 'act0_postflop_practice_templates_v1.dart';
 
 enum TurnOutsModeV1 { callOrFoldAllIn, outsPriceNumeric }
 
