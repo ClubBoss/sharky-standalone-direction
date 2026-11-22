@@ -1,0 +1,5156 @@
+{
+  "previous": {
+    "w12_decision_quality_intro": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_decision_quality_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_good_fold_bad_result": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_good_fold_bad_result",
+        "drill",
+        "practice",
+        [
+          [
+            "process_review",
+            "Check the cues before judging the result",
+            true,
+            "correct",
+            "Check the cues before judging the result"
+          ],
+          [
+            "instant_regret",
+            "Mark the fold suspicious because it lost",
+            false,
+            "wrong",
+            "Check the cues before judging the result"
+          ],
+          [
+            "ignore_hand",
+            "Skip the cue check and move to the next hand",
+            false,
+            "suboptimal",
+            "Check the cues before judging the result"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_bad_call_good_result": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_bad_call_good_result",
+        "drill",
+        "practice",
+        [
+          [
+            "celebrate_only",
+            "Result was good so process is good",
+            false,
+            "wrong",
+            "Flag the loose call as a possible leak"
+          ],
+          [
+            "flag_leak",
+            "Flag the loose call as a possible leak",
+            true,
+            "correct",
+            "Flag the loose call as a possible leak"
+          ],
+          [
+            "self_blame",
+            "Call was lucky so confidence is gone",
+            false,
+            "wrong",
+            "Flag the loose call as a possible leak"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "asm05_new_known_holes_turn_call_10": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "asm05_new_known_holes_turn_call_10",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call"
+          ],
+          [
+            "call",
+            "Call",
+            true,
+            "correct",
+            "Call"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 0,
+      "family": "decision"
+    },
+    "asm05_new_known_holes_turn_call_40": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "asm05_new_known_holes_turn_call_40",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 0,
+      "family": "decision"
+    },
+    "w12_river_price_call": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_river_price_call",
+        "drill",
+        "practice",
+        [
+          [
+            "call_10_bb",
+            "Call 10 BB",
+            true,
+            "correct",
+            "Call 10 BB"
+          ],
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 10 BB"
+          ],
+          [
+            "raise_to_35_bb",
+            "Raise to 35 BB",
+            false,
+            "wrong",
+            "Call 10 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_ev_costly_call": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_river_ev_costly_call",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_turn_count_heart_outs": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_turn_count_heart_outs",
+        "drill",
+        "practice",
+        [
+          [
+            "choice_1",
+            "7",
+            false,
+            "wrong",
+            "9"
+          ],
+          [
+            "choice_2",
+            "9",
+            true,
+            "correct",
+            "9"
+          ],
+          [
+            "choice_3",
+            "11",
+            false,
+            "wrong",
+            "9"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_decision_quality_recap": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_decision_quality_recap",
+        "review",
+        "review",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w12_tilt_reset_intro": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_tilt_reset_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_after_bad_beat_reset": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_after_bad_beat_reset",
+        "drill",
+        "practice",
+        [
+          [
+            "revenge_hand",
+            "Take the next thin edge to regain chips",
+            false,
+            "wrong",
+            "Run short reset protocol before next major spot"
+          ],
+          [
+            "quit_immediately",
+            "End the orbit before deciding to continue",
+            false,
+            "suboptimal",
+            "Run short reset protocol before next major spot"
+          ],
+          [
+            "reset_protocol",
+            "Run short reset protocol before next major spot",
+            true,
+            "correct",
+            "Run short reset protocol before next major spot"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_tilt_after_lucky_win": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_tilt_after_lucky_win",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_after_mistake_reset": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_after_mistake_reset",
+        "drill",
+        "practice",
+        [
+          [
+            "note_and_reset",
+            "Log leak briefly and reset to current hand",
+            true,
+            "correct",
+            "Log leak briefly and reset to current hand"
+          ],
+          [
+            "self_attack",
+            "Replay the mistake for the next few hands",
+            false,
+            "wrong",
+            "Log leak briefly and reset to current hand"
+          ],
+          [
+            "deny_mistake",
+            "Skip the note and rely on memory",
+            false,
+            "wrong",
+            "Log leak briefly and reset to current hand"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_tilt_after_river_beat": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_tilt_after_river_beat",
+        "drill",
+        "practice",
+        [
+          [
+            "speed",
+            "Speed up so you do not freeze",
+            false,
+            "wrong",
+            "Take one breath and read the new hand"
+          ],
+          [
+            "pause",
+            "Take one breath and read the new hand",
+            true,
+            "correct",
+            "Take one breath and read the new hand"
+          ],
+          [
+            "target",
+            "Focus on bets from CO for this orbit",
+            false,
+            "wrong",
+            "Take one breath and read the new hand"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_tilt_reset_recap": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_tilt_reset_recap",
+        "review",
+        "review",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w12_confidence_intro": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_confidence_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_assertive_not_ego": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_assertive_not_ego",
+        "drill",
+        "practice",
+        [
+          [
+            "prove_point",
+            "Widen the next close spot to answer back",
+            false,
+            "wrong",
+            "Stick to process and your planned line"
+          ],
+          [
+            "stick_process",
+            "Stick to process and your planned line",
+            true,
+            "correct",
+            "Stick to process and your planned line"
+          ],
+          [
+            "play_scared",
+            "Play overly scared to avoid conflict",
+            false,
+            "wrong",
+            "Stick to process and your planned line"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_discipline_under_pressure": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_discipline_under_pressure",
+        "drill",
+        "practice",
+        [
+          [
+            "autopilot",
+            "Keep normal pace through large pots",
+            false,
+            "wrong",
+            "Pause briefly on high-EV decision nodes"
+          ],
+          [
+            "tank_every_spot",
+            "Slow medium pots as much as major ones",
+            false,
+            "suboptimal",
+            "Pause briefly on high-EV decision nodes"
+          ],
+          [
+            "critical_pause",
+            "Pause briefly on high-EV decision nodes",
+            true,
+            "correct",
+            "Pause briefly on high-EV decision nodes"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_pretty_hand_bad_price_fold": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_pretty_hand_bad_price_fold",
+        "drill",
+        "practice",
+        [
+          [
+            "fold_river",
+            "Fold the river",
+            true,
+            "correct",
+            "Fold the river"
+          ],
+          [
+            "hero_call",
+            "Call down anyway with top pair",
+            false,
+            "wrong",
+            "Fold the river"
+          ],
+          [
+            "jam_back",
+            "Raise large to end the decision now",
+            false,
+            "wrong",
+            "Fold the river"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_revenge_raise_trap": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_revenge_raise_trap",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_take_control",
+            "Raise now to take control back",
+            false,
+            "wrong",
+            "Call once and keep the pot controlled"
+          ],
+          [
+            "call_once",
+            "Call once and keep the pot controlled",
+            true,
+            "correct",
+            "Call once and keep the pot controlled"
+          ],
+          [
+            "snap_fold_noise",
+            "Fold now to avoid the annoying player",
+            false,
+            "wrong",
+            "Call once and keep the pot controlled"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_confidence_spr": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_confidence_spr",
+        "drill",
+        "practice",
+        [
+          [
+            "choice_1",
+            "3",
+            true,
+            "correct",
+            "3"
+          ],
+          [
+            "choice_2",
+            "6",
+            false,
+            "wrong",
+            "3"
+          ],
+          [
+            "choice_3",
+            "9",
+            false,
+            "wrong",
+            "3"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_ev_turn_draw_miss": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_river_ev_turn_draw_miss",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_confidence_recap": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_confidence_recap",
+        "review",
+        "review",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w12_checkpoint_intro": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_intro",
+        "theory",
+        "learn",
+        []
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_checkpoint_process_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_process_line",
+        "drill",
+        "practice",
+        [
+          [
+            "outcome_only",
+            "Outcome proves decision quality",
+            false,
+            "wrong",
+            "Audit process first, then outcome"
+          ],
+          [
+            "avoid_review",
+            "Skip review to avoid frustration",
+            false,
+            "wrong",
+            "Audit process first, then outcome"
+          ],
+          [
+            "process_first",
+            "Audit process first, then outcome",
+            true,
+            "correct",
+            "Audit process first, then outcome"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_reset_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_reset_line",
+        "drill",
+        "practice",
+        [
+          [
+            "run_reset",
+            "Run brief reset and re-anchor to plan",
+            true,
+            "correct",
+            "Run brief reset and re-anchor to plan"
+          ],
+          [
+            "revenge_mode",
+            "Take the next close spot to recover momentum",
+            false,
+            "wrong",
+            "Run brief reset and re-anchor to plan"
+          ],
+          [
+            "deny_tilt",
+            "Keep playing and check emotions later",
+            false,
+            "wrong",
+            "Run brief reset and re-anchor to plan"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_discipline_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_discipline_line",
+        "drill",
+        "practice",
+        [
+          [
+            "ego_line",
+            "Take thin line to win respect",
+            false,
+            "wrong",
+            "Take only evidence-backed lines"
+          ],
+          [
+            "evidence_line",
+            "Take only evidence-backed lines",
+            true,
+            "correct",
+            "Take only evidence-backed lines"
+          ],
+          [
+            "fear_line",
+            "Fold all close spots now",
+            false,
+            "wrong",
+            "Take only evidence-backed lines"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_full_loop_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_full_loop_line",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_recover",
+            "Raise to recover confidence",
+            false,
+            "wrong",
+            "Call with the same routine"
+          ],
+          [
+            "fold_scared",
+            "Fold to play safer now",
+            false,
+            "wrong",
+            "Call with the same routine"
+          ],
+          [
+            "call_clean",
+            "Call with the same routine",
+            true,
+            "correct",
+            "Call with the same routine"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_river_ev_draw_hit": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_river_ev_draw_hit",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Raise"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Raise"
+          ],
+          [
+            "raise",
+            "Raise",
+            true,
+            "correct",
+            "Raise"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_ev_new_sample": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_river_ev_new_sample",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call"
+          ],
+          [
+            "call",
+            "Call",
+            true,
+            "correct",
+            "Call"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Call"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_review": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_review",
+        "review",
+        "proveIt",
+        [
+          [
+            "stable_bridge",
+            "A repeatable process-reset-discipline cycle",
+            true,
+            "correct",
+            "A repeatable process-reset-discipline cycle"
+          ],
+          [
+            "optional_soft",
+            "Optional soft skill with little EV impact",
+            false,
+            "wrong",
+            "A repeatable process-reset-discipline cycle"
+          ],
+          [
+            "done_forever",
+            "One-time fix, no daily upkeep needed",
+            false,
+            "suboptimal",
+            "A repeatable process-reset-discipline cycle"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 17,
+      "family": "transfer"
+    }
+  },
+  "current": {
+    "w12_decision_quality_intro": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_decision_quality_intro",
+        "theory",
+        "learn",
+        [
+          [
+            "the_price_and_range_you_faced",
+            "The price and range you faced",
+            true,
+            "correct",
+            "The price and range you faced"
+          ],
+          [
+            "the_size_of_the_pot_you_won",
+            "The size of the pot you won",
+            false,
+            "wrong",
+            "The price and range you faced"
+          ],
+          [
+            "how_happy_the_win_made_you",
+            "How happy the win made you",
+            false,
+            "wrong",
+            "The price and range you faced"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_good_fold_bad_result": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_good_fold_bad_result",
+        "drill",
+        "practice",
+        [
+          [
+            "call_12_bb",
+            "Call 12 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise_to_32_bb",
+            "Raise to 32 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_bad_call_good_result": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_bad_call_good_result",
+        "drill",
+        "practice",
+        [
+          [
+            "call_12_bb",
+            "Call 12 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "all_in_to_75_25_bb",
+            "All-in to 75.25 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "asm05_new_known_holes_turn_call_10": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "asm05_new_known_holes_turn_call_10",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 10 BB"
+          ],
+          [
+            "call",
+            "Call 10 BB",
+            true,
+            "correct",
+            "Call 10 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 0,
+      "family": "decision"
+    },
+    "asm05_new_known_holes_turn_call_40": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "asm05_new_known_holes_turn_call_40",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call 40 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 0,
+      "family": "decision"
+    },
+    "w12_turn_count_heart_outs": {
+      "identity": [
+        "world_12",
+        "decision_over_outcome",
+        "w12_turn_count_heart_outs",
+        "drill",
+        "practice",
+        [
+          [
+            "choice_1",
+            "7",
+            false,
+            "wrong",
+            "9"
+          ],
+          [
+            "choice_2",
+            "9",
+            true,
+            "correct",
+            "9"
+          ],
+          [
+            "choice_3",
+            "11",
+            false,
+            "wrong",
+            "9"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_clean_outs_vs_set": {
+      "identity": [
+        "world_12",
+        "decision_price_and_clean_outs",
+        "w12_clean_outs_vs_set",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 2 BB"
+          ],
+          [
+            "raise_to_10_bb",
+            "Raise to 10 BB",
+            false,
+            "wrong",
+            "Call 2 BB"
+          ],
+          [
+            "call_2_bb",
+            "Call 2 BB",
+            true,
+            "correct",
+            "Call 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_price_call": {
+      "identity": [
+        "world_12",
+        "decision_price_and_clean_outs",
+        "w12_river_price_call",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            false,
+            "wrong",
+            "Call 10 BB"
+          ],
+          [
+            "call_10_bb",
+            "Call 10 BB",
+            true,
+            "correct",
+            "Call 10 BB"
+          ],
+          [
+            "raise_to_35_bb",
+            "Raise to 35 BB",
+            false,
+            "wrong",
+            "Call 10 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_ev_costly_call": {
+      "identity": [
+        "world_12",
+        "decision_price_and_clean_outs",
+        "w12_river_ev_costly_call",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call",
+            "Call",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "raise",
+            "Raise",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_value_vs_caller": {
+      "identity": [
+        "world_12",
+        "decision_price_and_clean_outs",
+        "w12_river_value_vs_caller",
+        "drill",
+        "practice",
+        [
+          [
+            "check",
+            "Check",
+            false,
+            "suboptimal",
+            "Bet 6 BB"
+          ],
+          [
+            "all_in_to_68_25_bb",
+            "All-in to 68.25 BB",
+            false,
+            "wrong",
+            "Bet 6 BB"
+          ],
+          [
+            "bet_6_bb",
+            "Bet 6 BB",
+            true,
+            "correct",
+            "Bet 6 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_river_draw_missed": {
+      "identity": [
+        "world_12",
+        "decision_price_and_clean_outs",
+        "w12_river_draw_missed",
+        "drill",
+        "practice",
+        [
+          [
+            "check",
+            "Check",
+            true,
+            "correct",
+            "Check"
+          ],
+          [
+            "bet_6_bb",
+            "Bet 6 BB",
+            false,
+            "wrong",
+            "Check"
+          ],
+          [
+            "bet_12_bb",
+            "Bet 12 BB",
+            false,
+            "wrong",
+            "Check"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_decision_quality_recap": {
+      "identity": [
+        "world_12",
+        "decision_price_and_clean_outs",
+        "w12_decision_quality_recap",
+        "review",
+        "review",
+        [
+          [
+            "mark_the_40_bb_draw_call_right_after_a_heart",
+            "Mark the 40 BB draw call right after a heart",
+            false,
+            "wrong",
+            "Compare the call price with wins in the range"
+          ],
+          [
+            "compare_the_call_price_with_wins_in_the_range",
+            "Compare the call price with wins in the range",
+            true,
+            "correct",
+            "Compare the call price with wins in the range"
+          ],
+          [
+            "judge_a_fold_by_the_next_shown_card",
+            "Judge a fold by the next shown card",
+            false,
+            "wrong",
+            "Compare the call price with wins in the range"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w12_tilt_reset_intro": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_tilt_reset_intro",
+        "theory",
+        "learn",
+        [
+          [
+            "the_next_choice_from_the_last_hand_s_mood",
+            "The next choice from the last hand's mood",
+            true,
+            "correct",
+            "The next choice from the last hand's mood"
+          ],
+          [
+            "the_stack_from_a_normal_bad_beat",
+            "The stack from a normal bad beat",
+            false,
+            "wrong",
+            "The next choice from the last hand's mood"
+          ],
+          [
+            "the_odds_on_the_next_board",
+            "The odds on the next board",
+            false,
+            "wrong",
+            "The next choice from the last hand's mood"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_after_bad_beat_reset": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_after_bad_beat_reset",
+        "drill",
+        "practice",
+        [
+          [
+            "check_from_fear_of_another_loss",
+            "Check from fear of another loss",
+            false,
+            "suboptimal",
+            "Bet 3 BB after a brief reset"
+          ],
+          [
+            "all_in_to_53_5_bb_to_win_back_chips",
+            "All-in to 53.5 BB to win back chips",
+            false,
+            "wrong",
+            "Bet 3 BB after a brief reset"
+          ],
+          [
+            "bet_3_bb_after_a_brief_reset",
+            "Bet 3 BB after a brief reset",
+            true,
+            "correct",
+            "Bet 3 BB after a brief reset"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_after_mistake_reset": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_after_mistake_reset",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_2_bb",
+            "Raise to 2 BB",
+            true,
+            "correct",
+            "Raise to 2 BB"
+          ],
+          [
+            "raise_to_3_bb",
+            "Raise to 3 BB",
+            false,
+            "suboptimal",
+            "Raise to 2 BB"
+          ],
+          [
+            "fold_to_avoid_another_error",
+            "Fold to avoid another error",
+            false,
+            "wrong",
+            "Raise to 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_tilt_reset_recap": {
+      "identity": [
+        "world_12",
+        "tilt_reset_protocol",
+        "w12_tilt_reset_recap",
+        "review",
+        "review",
+        [
+          [
+            "keep_playing_to_recover_a_lost_stack",
+            "Keep playing to recover a lost stack",
+            false,
+            "wrong",
+            "Sit out and review when ready"
+          ],
+          [
+            "sit_out_and_review_when_ready",
+            "Sit out and review when ready",
+            true,
+            "correct",
+            "Sit out and review when ready"
+          ],
+          [
+            "raise_the_next_hand_to_gain_control",
+            "Raise the next hand to gain control",
+            false,
+            "wrong",
+            "Sit out and review when ready"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w12_confidence_intro": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_confidence_intro",
+        "theory",
+        "learn",
+        [
+          [
+            "25",
+            "25%",
+            true,
+            "correct",
+            "25%"
+          ],
+          [
+            "33_3",
+            "33.3%",
+            false,
+            "wrong",
+            "25%"
+          ],
+          [
+            "50",
+            "50%",
+            false,
+            "wrong",
+            "25%"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "learn"
+    },
+    "w12_assertive_not_ego": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_assertive_not_ego",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_2_bb",
+            "Raise to 2 BB",
+            true,
+            "correct",
+            "Raise to 2 BB"
+          ],
+          [
+            "raise_to_3_bb",
+            "Raise to 3 BB",
+            false,
+            "suboptimal",
+            "Raise to 2 BB"
+          ],
+          [
+            "all_in_to_35_bb",
+            "All-in to 35 BB",
+            false,
+            "wrong",
+            "Raise to 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_discipline_under_pressure": {
+      "identity": [
+        "world_12",
+        "confidence_and_discipline",
+        "w12_discipline_under_pressure",
+        "drill",
+        "practice",
+        [
+          [
+            "fold_to_end_the_session",
+            "Fold to end the session",
+            false,
+            "wrong",
+            "Call 9 BB"
+          ],
+          [
+            "raise_to_25_bb",
+            "Raise to 25 BB",
+            false,
+            "wrong",
+            "Call 9 BB"
+          ],
+          [
+            "call_9_bb",
+            "Call 9 BB",
+            true,
+            "correct",
+            "Call 9 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_pretty_hand_bad_price_fold": {
+      "identity": [
+        "world_12",
+        "confidence_river_discipline",
+        "w12_pretty_hand_bad_price_fold",
+        "drill",
+        "practice",
+        [
+          [
+            "call_18_bb",
+            "Call 18 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "raise_to_45_bb",
+            "Raise to 45 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_revenge_raise_trap": {
+      "identity": [
+        "world_12",
+        "confidence_river_discipline",
+        "w12_revenge_raise_trap",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_7_bb",
+            "Raise to 7 BB",
+            false,
+            "suboptimal",
+            "Call 2 BB"
+          ],
+          [
+            "all_in_to_36_75_bb",
+            "All-in to 36.75 BB",
+            false,
+            "wrong",
+            "Call 2 BB"
+          ],
+          [
+            "call_2_bb",
+            "Call 2 BB",
+            true,
+            "correct",
+            "Call 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_confidence_spr": {
+      "identity": [
+        "world_12",
+        "confidence_river_discipline",
+        "w12_confidence_spr",
+        "drill",
+        "practice",
+        [
+          [
+            "choice_1",
+            "3",
+            true,
+            "correct",
+            "3"
+          ],
+          [
+            "choice_2",
+            "6",
+            false,
+            "wrong",
+            "3"
+          ],
+          [
+            "choice_3",
+            "9",
+            false,
+            "wrong",
+            "3"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": false,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_confidence_recap": {
+      "identity": [
+        "world_12",
+        "confidence_river_discipline",
+        "w12_confidence_recap",
+        "review",
+        "review",
+        [
+          [
+            "your_table_based_choice_process",
+            "Your table-based choice process",
+            true,
+            "correct",
+            "Your table-based choice process"
+          ],
+          [
+            "the_bet_size_used_by_your_rival",
+            "The bet size used by your rival",
+            false,
+            "wrong",
+            "Your table-based choice process"
+          ],
+          [
+            "the_choice_to_avoid_that_player",
+            "The choice to avoid that player",
+            false,
+            "suboptimal",
+            "Your table-based choice process"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 16,
+      "family": "review"
+    },
+    "w12_checkpoint_intro": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_intro",
+        "drill",
+        "learn",
+        [
+          [
+            "the_current_pot_and_amount_to_call",
+            "The current pot and amount to call",
+            true,
+            "correct",
+            "The current pot and amount to call"
+          ],
+          [
+            "the_win_or_loss_in_the_prior_orbit",
+            "The win or loss in the prior orbit",
+            false,
+            "wrong",
+            "The current pot and amount to call"
+          ],
+          [
+            "how_much_you_want_to_win_this_hour",
+            "How much you want to win this hour",
+            false,
+            "wrong",
+            "The current pot and amount to call"
+          ]
+        ]
+      ],
+      "scope": "explanation",
+      "replay": false,
+      "xp": 7,
+      "family": "decision"
+    },
+    "w12_checkpoint_process_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_process_line",
+        "drill",
+        "practice",
+        [
+          [
+            "fold_after_last_orbit_s_loss",
+            "Fold after last orbit's loss",
+            false,
+            "wrong",
+            "Call 7 BB"
+          ],
+          [
+            "raise_to_25_bb",
+            "Raise to 25 BB",
+            false,
+            "wrong",
+            "Call 7 BB"
+          ],
+          [
+            "call_7_bb",
+            "Call 7 BB",
+            true,
+            "correct",
+            "Call 7 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_reset_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_reset_line",
+        "drill",
+        "practice",
+        [
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "call_3_bb_to_win_chips_back",
+            "Call 3 BB to win chips back",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "all_in_to_28_bb",
+            "All-in to 28 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_discipline_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_discipline_line",
+        "drill",
+        "practice",
+        [
+          [
+            "call_16_bb",
+            "Call 16 BB",
+            false,
+            "wrong",
+            "Fold"
+          ],
+          [
+            "fold",
+            "Fold",
+            true,
+            "correct",
+            "Fold"
+          ],
+          [
+            "raise_to_40_bb",
+            "Raise to 40 BB",
+            false,
+            "wrong",
+            "Fold"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "decision"
+    },
+    "w12_checkpoint_full_loop_line": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_full_loop_line",
+        "drill",
+        "practice",
+        [
+          [
+            "raise_to_8_bb_to_feel_in_control",
+            "Raise to 8 BB to feel in control",
+            false,
+            "suboptimal",
+            "Call 2 BB"
+          ],
+          [
+            "fold_to_avoid_a_new_error",
+            "Fold to avoid a new error",
+            false,
+            "wrong",
+            "Call 2 BB"
+          ],
+          [
+            "call_2_bb",
+            "Call 2 BB",
+            true,
+            "correct",
+            "Call 2 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 10,
+      "family": "transfer"
+    },
+    "w12_checkpoint_review": {
+      "identity": [
+        "world_12",
+        "mindset_bridge_checkpoint",
+        "w12_checkpoint_review",
+        "review",
+        "proveIt",
+        [
+          [
+            "bet_6_bb",
+            "Bet 6 BB",
+            true,
+            "correct",
+            "Bet 6 BB"
+          ],
+          [
+            "check",
+            "Check",
+            false,
+            "suboptimal",
+            "Bet 6 BB"
+          ],
+          [
+            "all_in_to_53_25_bb",
+            "All-in to 53.25 BB",
+            false,
+            "wrong",
+            "Bet 6 BB"
+          ]
+        ]
+      ],
+      "scope": "playedHand",
+      "replay": true,
+      "xp": 17,
+      "family": "transfer"
+    }
+  },
+  "previousLearning": {
+    "w12_decision_quality_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w12_good_fold_bad_result": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "process_review",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "instant_regret",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "ignore_hand",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_bad_call_good_result": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "celebrate_only",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "flag_leak",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "self_blame",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "asm05_new_known_holes_turn_call_10": {
+      "rewardXp": 0,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "asm05_new_known_holes_turn_call_40": {
+      "rewardXp": 0,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_price_call": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "call_10_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_35_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_ev_costly_call": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_turn_count_heart_outs": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "choice_1",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_2",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_decision_quality_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w12_tilt_reset_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w12_after_bad_beat_reset": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "revenge_hand",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "quit_immediately",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "reset_protocol",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_tilt_after_lucky_win": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_after_mistake_reset": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "note_and_reset",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "self_attack",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "deny_mistake",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_tilt_after_river_beat": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "speed",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "pause",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "target",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_tilt_reset_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w12_confidence_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w12_assertive_not_ego": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "prove_point",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "stick_process",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "play_scared",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_discipline_under_pressure": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "autopilot",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "tank_every_spot",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "critical_pause",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_pretty_hand_bad_price_fold": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "fold_river",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "hero_call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "jam_back",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_revenge_raise_trap": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_take_control",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_once",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "snap_fold_noise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_confidence_spr": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "choice_1",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_2",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_ev_turn_draw_miss": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_confidence_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": []
+    },
+    "w12_checkpoint_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": []
+    },
+    "w12_checkpoint_process_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "outcome_only",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "avoid_review",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "process_first",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_reset_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "run_reset",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "revenge_mode",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "deny_tilt",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_discipline_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "ego_line",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "evidence_line",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fear_line",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_full_loop_line": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_recover",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_scared",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_clean",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_ev_draw_hit": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_ev_new_sample": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_review": {
+      "rewardXp": 17,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "stable_bridge",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "optional_soft",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "done_forever",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    }
+  },
+  "currentLearning": {
+    "w12_decision_quality_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": [
+        {
+          "id": "the_price_and_range_you_faced",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_size_of_the_pot_you_won",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "how_happy_the_win_made_you",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_good_fold_bad_result": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "call_12_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_32_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_bad_call_good_result": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "call_12_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_75_25_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "asm05_new_known_holes_turn_call_10": {
+      "rewardXp": 0,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "asm05_new_known_holes_turn_call_40": {
+      "rewardXp": 0,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_turn_count_heart_outs": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "choice_1",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_2",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_clean_outs_vs_set": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_10_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_price_call": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_10_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_35_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_ev_costly_call": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_value_vs_caller": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "check",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_68_25_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bet_6_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_river_draw_missed": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "check",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bet_6_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bet_12_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_decision_quality_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": [
+        {
+          "id": "mark_the_40_bb_draw_call_right_after_a_heart",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "compare_the_call_price_with_wins_in_the_range",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "judge_a_fold_by_the_next_shown_card",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_tilt_reset_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": [
+        {
+          "id": "the_next_choice_from_the_last_hand_s_mood",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_stack_from_a_normal_bad_beat",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_odds_on_the_next_board",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_after_bad_beat_reset": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "check_from_fear_of_another_loss",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_53_5_bb_to_win_back_chips",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "bet_3_bb_after_a_brief_reset",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_after_mistake_reset": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_3_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_to_avoid_another_error",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_tilt_reset_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": [
+        {
+          "id": "keep_playing_to_recover_a_lost_stack",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "sit_out_and_review_when_ready",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_the_next_hand_to_gain_control",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_confidence_intro": {
+      "rewardXp": 7,
+      "family": "learn",
+      "options": [
+        {
+          "id": "25",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "33_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "50",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_assertive_not_ego": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "raise_to_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_3_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_35_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_discipline_under_pressure": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "fold_to_end_the_session",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_25_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_9_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_pretty_hand_bad_price_fold": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "call_18_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_45_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_revenge_raise_trap": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_7_bb",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_36_75_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_confidence_spr": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "choice_1",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_2",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "choice_3",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_confidence_recap": {
+      "rewardXp": 16,
+      "family": "review",
+      "options": [
+        {
+          "id": "your_table_based_choice_process",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_bet_size_used_by_your_rival",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_choice_to_avoid_that_player",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_intro": {
+      "rewardXp": 7,
+      "family": "decision",
+      "options": [
+        {
+          "id": "the_current_pot_and_amount_to_call",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "the_win_or_loss_in_the_prior_orbit",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "how_much_you_want_to_win_this_hour",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_process_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold_after_last_orbit_s_loss",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_25_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_7_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_reset_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_3_bb_to_win_chips_back",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_28_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_discipline_line": {
+      "rewardXp": 10,
+      "family": "decision",
+      "options": [
+        {
+          "id": "call_16_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "raise_to_40_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_full_loop_line": {
+      "rewardXp": 10,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "raise_to_8_bb_to_feel_in_control",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "fold_to_avoid_a_new_error",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "call_2_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    },
+    "w12_checkpoint_review": {
+      "rewardXp": 17,
+      "family": "transfer",
+      "options": [
+        {
+          "id": "bet_6_bb",
+          "correct": true,
+          "quality": "correct",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "check",
+          "correct": false,
+          "quality": "suboptimal",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        },
+        {
+          "id": "all_in_to_53_25_bb",
+          "correct": false,
+          "quality": "wrong",
+          "seat": null,
+          "repairSeats": [],
+          "repairCards": [],
+          "repairLabels": []
+        }
+      ]
+    }
+  },
+  "historicalCensus": [
+    {
+      "id": "w12_good_fold_bad_result",
+      "world": "world_12",
+      "lesson": "decision_over_outcome",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "instant_regret": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_good_fold_bad_result",
+          "choiceId": "instant_regret",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_good_fold_bad_result",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "ignore_hand": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_good_fold_bad_result",
+          "choiceId": "ignore_hand",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_good_fold_bad_result",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "instant_regret": {
+          "schemaVersion": 1,
+          "goalId": "review_process_before_outcome",
+          "relationId": "foundation_replay/w12_good_fold_bad_result/instant_regret",
+          "relationRevision": 1,
+          "sourceFingerprint": "1c1a389c5e8c99b6ff715d7f92c6b9fc3a9e39beb05c147ada16973134830fc4",
+          "targetFingerprint": "1c1a389c5e8c99b6ff715d7f92c6b9fc3a9e39beb05c147ada16973134830fc4",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_good_fold_bad_result",
+          "choiceId": "instant_regret",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_good_fold_bad_result",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "ignore_hand": {
+          "schemaVersion": 1,
+          "goalId": "review_process_before_outcome",
+          "relationId": "foundation_replay/w12_good_fold_bad_result/ignore_hand",
+          "relationRevision": 1,
+          "sourceFingerprint": "1c1a389c5e8c99b6ff715d7f92c6b9fc3a9e39beb05c147ada16973134830fc4",
+          "targetFingerprint": "1c1a389c5e8c99b6ff715d7f92c6b9fc3a9e39beb05c147ada16973134830fc4",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_good_fold_bad_result",
+          "choiceId": "ignore_hand",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_good_fold_bad_result",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_bad_call_good_result",
+      "world": "world_12",
+      "lesson": "decision_over_outcome",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "celebrate_only": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_bad_call_good_result",
+          "choiceId": "celebrate_only",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_process_line",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        },
+        "self_blame": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_bad_call_good_result",
+          "choiceId": "self_blame",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_process_line",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        }
+      },
+      "current": {
+        "celebrate_only": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_bad_call_good_result",
+          "relationId": "foundation_replay/w12_bad_call_good_result/celebrate_only",
+          "relationRevision": 1,
+          "sourceFingerprint": "9d7d333ec6583d0965655038b6915ef4b815add965befb364144f6ad14f316d0",
+          "targetFingerprint": "9d7d333ec6583d0965655038b6915ef4b815add965befb364144f6ad14f316d0",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_bad_call_good_result",
+          "choiceId": "celebrate_only",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_bad_call_good_result",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        },
+        "self_blame": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_bad_call_good_result",
+          "relationId": "foundation_replay/w12_bad_call_good_result/self_blame",
+          "relationRevision": 1,
+          "sourceFingerprint": "9d7d333ec6583d0965655038b6915ef4b815add965befb364144f6ad14f316d0",
+          "targetFingerprint": "9d7d333ec6583d0965655038b6915ef4b815add965befb364144f6ad14f316d0",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "w12_bad_call_good_result",
+          "choiceId": "self_blame",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_bad_call_good_result",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        }
+      }
+    },
+    {
+      "id": "asm05_new_known_holes_turn_call_10",
+      "world": "world_12",
+      "lesson": "decision_over_outcome",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "fold": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "asm05_new_known_holes_turn_call_10",
+          "choiceId": "fold",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Known cards and price; process over outcome",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "asm05_new_known_holes_turn_call_40",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        }
+      },
+      "current": {
+        "fold": {
+          "schemaVersion": 1,
+          "goalId": "exercise/asm05_new_known_holes_turn_call_10",
+          "relationId": "foundation_replay/asm05_new_known_holes_turn_call_10/fold",
+          "relationRevision": 1,
+          "sourceFingerprint": "dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184",
+          "targetFingerprint": "dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "asm05_new_known_holes_turn_call_10",
+          "choiceId": "fold",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Known cards and price; process over outcome",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "asm05_new_known_holes_turn_call_10",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        }
+      }
+    },
+    {
+      "id": "asm05_new_known_holes_turn_call_40",
+      "world": "world_12",
+      "lesson": "decision_over_outcome",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "call": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "asm05_new_known_holes_turn_call_40",
+          "choiceId": "call",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Known cards and price; process over outcome",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "asm05_new_known_holes_turn_call_10",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        }
+      },
+      "current": {
+        "call": {
+          "schemaVersion": 1,
+          "goalId": "exercise/asm05_new_known_holes_turn_call_40",
+          "relationId": "foundation_replay/asm05_new_known_holes_turn_call_40/call",
+          "relationRevision": 1,
+          "sourceFingerprint": "ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7",
+          "targetFingerprint": "ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "decision_over_outcome",
+          "sourceTaskId": "asm05_new_known_holes_turn_call_40",
+          "choiceId": "call",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Known cards and price; process over outcome",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "asm05_new_known_holes_turn_call_40",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_process_over_outcome"
+        }
+      }
+    },
+    {
+      "id": "w12_after_bad_beat_reset",
+      "world": "world_12",
+      "lesson": "tilt_reset_protocol",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "revenge_hand": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_bad_beat_reset",
+          "choiceId": "revenge_hand",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_bad_beat_reset",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "quit_immediately": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_bad_beat_reset",
+          "choiceId": "quit_immediately",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_bad_beat_reset",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "revenge_hand": {
+          "schemaVersion": 1,
+          "goalId": "reset_before_the_next_tilt_decision",
+          "relationId": "foundation_replay/w12_after_bad_beat_reset/revenge_hand",
+          "relationRevision": 1,
+          "sourceFingerprint": "26757ae35f1986e05f23a55554cd844c12c7ae5d09887f2c03136751f4d0a811",
+          "targetFingerprint": "26757ae35f1986e05f23a55554cd844c12c7ae5d09887f2c03136751f4d0a811",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_bad_beat_reset",
+          "choiceId": "revenge_hand",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_bad_beat_reset",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "quit_immediately": {
+          "schemaVersion": 1,
+          "goalId": "reset_before_the_next_tilt_decision",
+          "relationId": "foundation_replay/w12_after_bad_beat_reset/quit_immediately",
+          "relationRevision": 1,
+          "sourceFingerprint": "26757ae35f1986e05f23a55554cd844c12c7ae5d09887f2c03136751f4d0a811",
+          "targetFingerprint": "26757ae35f1986e05f23a55554cd844c12c7ae5d09887f2c03136751f4d0a811",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_bad_beat_reset",
+          "choiceId": "quit_immediately",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_bad_beat_reset",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_after_mistake_reset",
+      "world": "world_12",
+      "lesson": "tilt_reset_protocol",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "self_attack": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_mistake_reset",
+          "choiceId": "self_attack",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_mistake_reset",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "deny_mistake": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_mistake_reset",
+          "choiceId": "deny_mistake",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_mistake_reset",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "self_attack": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_after_mistake_reset",
+          "relationId": "foundation_replay/w12_after_mistake_reset/self_attack",
+          "relationRevision": 1,
+          "sourceFingerprint": "8eb8fa4638e346eb7d03ea9232518a42c70e566bf7c2ba46e60614c9c39c0431",
+          "targetFingerprint": "8eb8fa4638e346eb7d03ea9232518a42c70e566bf7c2ba46e60614c9c39c0431",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_mistake_reset",
+          "choiceId": "self_attack",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_mistake_reset",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "deny_mistake": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_after_mistake_reset",
+          "relationId": "foundation_replay/w12_after_mistake_reset/deny_mistake",
+          "relationRevision": 1,
+          "sourceFingerprint": "8eb8fa4638e346eb7d03ea9232518a42c70e566bf7c2ba46e60614c9c39c0431",
+          "targetFingerprint": "8eb8fa4638e346eb7d03ea9232518a42c70e566bf7c2ba46e60614c9c39c0431",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "tilt_reset_protocol",
+          "sourceTaskId": "w12_after_mistake_reset",
+          "choiceId": "deny_mistake",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_mistake_reset",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_assertive_not_ego",
+      "world": "world_12",
+      "lesson": "confidence_and_discipline",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "prove_point": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_assertive_not_ego",
+          "choiceId": "prove_point",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_assertive_not_ego",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "play_scared": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_assertive_not_ego",
+          "choiceId": "play_scared",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_assertive_not_ego",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "prove_point": {
+          "schemaVersion": 1,
+          "goalId": "choose_evidence_over_ego_pressure",
+          "relationId": "foundation_replay/w12_assertive_not_ego/prove_point",
+          "relationRevision": 1,
+          "sourceFingerprint": "e5df7ad58d298778ce5135614d34ca7744f044256a85fc8c3d54253fdc835d02",
+          "targetFingerprint": "e5df7ad58d298778ce5135614d34ca7744f044256a85fc8c3d54253fdc835d02",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_assertive_not_ego",
+          "choiceId": "prove_point",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_assertive_not_ego",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "play_scared": {
+          "schemaVersion": 1,
+          "goalId": "choose_evidence_over_ego_pressure",
+          "relationId": "foundation_replay/w12_assertive_not_ego/play_scared",
+          "relationRevision": 1,
+          "sourceFingerprint": "e5df7ad58d298778ce5135614d34ca7744f044256a85fc8c3d54253fdc835d02",
+          "targetFingerprint": "e5df7ad58d298778ce5135614d34ca7744f044256a85fc8c3d54253fdc835d02",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_assertive_not_ego",
+          "choiceId": "play_scared",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_assertive_not_ego",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_discipline_under_pressure",
+      "world": "world_12",
+      "lesson": "confidence_and_discipline",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "autopilot": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_discipline_under_pressure",
+          "choiceId": "autopilot",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_discipline_under_pressure",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "tank_every_spot": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_discipline_under_pressure",
+          "choiceId": "tank_every_spot",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_discipline_under_pressure",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "autopilot": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_discipline_under_pressure",
+          "relationId": "foundation_replay/w12_discipline_under_pressure/autopilot",
+          "relationRevision": 1,
+          "sourceFingerprint": "ff1cda56a73f25a07d9f1012b6670e6971f3cfbb477a69a4c181f71d968d872d",
+          "targetFingerprint": "ff1cda56a73f25a07d9f1012b6670e6971f3cfbb477a69a4c181f71d968d872d",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_discipline_under_pressure",
+          "choiceId": "autopilot",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_discipline_under_pressure",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "tank_every_spot": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_discipline_under_pressure",
+          "relationId": "foundation_replay/w12_discipline_under_pressure/tank_every_spot",
+          "relationRevision": 1,
+          "sourceFingerprint": "ff1cda56a73f25a07d9f1012b6670e6971f3cfbb477a69a4c181f71d968d872d",
+          "targetFingerprint": "ff1cda56a73f25a07d9f1012b6670e6971f3cfbb477a69a4c181f71d968d872d",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_discipline_under_pressure",
+          "choiceId": "tank_every_spot",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_discipline_under_pressure",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_pretty_hand_bad_price_fold",
+      "world": "world_12",
+      "lesson": "confidence_and_discipline",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "hero_call": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_pretty_hand_bad_price_fold",
+          "choiceId": "hero_call",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "fold_check_call_raise",
+          "targetTaskId": "actions_call_drill",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        },
+        "jam_back": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_pretty_hand_bad_price_fold",
+          "choiceId": "jam_back",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "fold_check_call_raise",
+          "targetTaskId": "actions_call_drill",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        }
+      },
+      "current": {
+        "hero_call": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_pretty_hand_bad_price_fold",
+          "relationId": "foundation_replay/w12_pretty_hand_bad_price_fold/hero_call",
+          "relationRevision": 1,
+          "sourceFingerprint": "a0a1bc15669d7e906fd6b452dee3c0aa6e375067dde6553b1ad11d0ddb26189b",
+          "targetFingerprint": "a0a1bc15669d7e906fd6b452dee3c0aa6e375067dde6553b1ad11d0ddb26189b",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_pretty_hand_bad_price_fold",
+          "choiceId": "hero_call",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_pretty_hand_bad_price_fold",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        },
+        "jam_back": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_pretty_hand_bad_price_fold",
+          "relationId": "foundation_replay/w12_pretty_hand_bad_price_fold/jam_back",
+          "relationRevision": 1,
+          "sourceFingerprint": "a0a1bc15669d7e906fd6b452dee3c0aa6e375067dde6553b1ad11d0ddb26189b",
+          "targetFingerprint": "a0a1bc15669d7e906fd6b452dee3c0aa6e375067dde6553b1ad11d0ddb26189b",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_pretty_hand_bad_price_fold",
+          "choiceId": "jam_back",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "pot_to_call",
+          "missedSignalLabel": "Pot / to call",
+          "skillAtomId": "price_read",
+          "skillLabel": "Price read",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_pretty_hand_bad_price_fold",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_price_read_pot_to_call"
+        }
+      }
+    },
+    {
+      "id": "w12_revenge_raise_trap",
+      "world": "world_12",
+      "lesson": "confidence_and_discipline",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "raise_to_take_control": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_revenge_raise_trap",
+          "choiceId": "raise_to_take_control",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "what_poker_is",
+          "targetTaskId": "what_poker_is_table_read_recheck",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        },
+        "snap_fold_noise": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_revenge_raise_trap",
+          "choiceId": "snap_fold_noise",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "what_poker_is",
+          "targetTaskId": "what_poker_is_table_read_recheck",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        }
+      },
+      "current": {
+        "raise_to_take_control": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_revenge_raise_trap",
+          "relationId": "foundation_replay/w12_revenge_raise_trap/raise_to_take_control",
+          "relationRevision": 1,
+          "sourceFingerprint": "43898c09b16cbf9f78fb355306f27d64977d34acebd6c77e4748ada8655f85ab",
+          "targetFingerprint": "43898c09b16cbf9f78fb355306f27d64977d34acebd6c77e4748ada8655f85ab",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_revenge_raise_trap",
+          "choiceId": "raise_to_take_control",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_revenge_raise_trap",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        },
+        "snap_fold_noise": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_revenge_raise_trap",
+          "relationId": "foundation_replay/w12_revenge_raise_trap/snap_fold_noise",
+          "relationRevision": 1,
+          "sourceFingerprint": "43898c09b16cbf9f78fb355306f27d64977d34acebd6c77e4748ada8655f85ab",
+          "targetFingerprint": "43898c09b16cbf9f78fb355306f27d64977d34acebd6c77e4748ada8655f85ab",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "confidence_and_discipline",
+          "sourceTaskId": "w12_revenge_raise_trap",
+          "choiceId": "snap_fold_noise",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_revenge_raise_trap",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        }
+      }
+    },
+    {
+      "id": "w12_checkpoint_process_line",
+      "world": "world_12",
+      "lesson": "mindset_bridge_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "outcome_only": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_process_line",
+          "choiceId": "outcome_only",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_bad_call_good_result",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_process_over_outcome"
+        },
+        "avoid_review": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_process_line",
+          "choiceId": "avoid_review",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_bad_call_good_result",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_process_over_outcome"
+        }
+      },
+      "current": {
+        "outcome_only": {
+          "schemaVersion": 1,
+          "goalId": "review_process_before_outcome",
+          "relationId": "foundation_replay/w12_checkpoint_process_line/outcome_only",
+          "relationRevision": 1,
+          "sourceFingerprint": "07c5c85db769093f4ea2cadbb50d6dc8521fe476cc214e1f83da7118b4eb424c",
+          "targetFingerprint": "1c1a389c5e8c99b6ff715d7f92c6b9fc3a9e39beb05c147ada16973134830fc4",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_process_line",
+          "choiceId": "outcome_only",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_good_fold_bad_result",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_process_over_outcome"
+        },
+        "avoid_review": {
+          "schemaVersion": 1,
+          "goalId": "review_process_before_outcome",
+          "relationId": "foundation_replay/w12_checkpoint_process_line/avoid_review",
+          "relationRevision": 1,
+          "sourceFingerprint": "07c5c85db769093f4ea2cadbb50d6dc8521fe476cc214e1f83da7118b4eb424c",
+          "targetFingerprint": "1c1a389c5e8c99b6ff715d7f92c6b9fc3a9e39beb05c147ada16973134830fc4",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_process_line",
+          "choiceId": "avoid_review",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "process_over_outcome",
+          "missedSignalLabel": "Stated premise: decision process and result",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Process over outcome",
+          "targetWorldId": "world_12",
+          "targetLessonId": "decision_over_outcome",
+          "targetTaskId": "w12_good_fold_bad_result",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_process_over_outcome"
+        }
+      }
+    },
+    {
+      "id": "w12_checkpoint_reset_line",
+      "world": "world_12",
+      "lesson": "mindset_bridge_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "revenge_mode": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_reset_line",
+          "choiceId": "revenge_mode",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_reset_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "deny_tilt": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_reset_line",
+          "choiceId": "deny_tilt",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_reset_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "revenge_mode": {
+          "schemaVersion": 1,
+          "goalId": "reset_before_the_next_tilt_decision",
+          "relationId": "foundation_replay/w12_checkpoint_reset_line/revenge_mode",
+          "relationRevision": 1,
+          "sourceFingerprint": "bf002cbb7fe83b73af2710775176e145e7d63958a5e9a8a460c5a828c185f101",
+          "targetFingerprint": "26757ae35f1986e05f23a55554cd844c12c7ae5d09887f2c03136751f4d0a811",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_reset_line",
+          "choiceId": "revenge_mode",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_bad_beat_reset",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "deny_tilt": {
+          "schemaVersion": 1,
+          "goalId": "reset_before_the_next_tilt_decision",
+          "relationId": "foundation_replay/w12_checkpoint_reset_line/deny_tilt",
+          "relationRevision": 1,
+          "sourceFingerprint": "bf002cbb7fe83b73af2710775176e145e7d63958a5e9a8a460c5a828c185f101",
+          "targetFingerprint": "26757ae35f1986e05f23a55554cd844c12c7ae5d09887f2c03136751f4d0a811",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_reset_line",
+          "choiceId": "deny_tilt",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "tilt_reset_protocol",
+          "targetTaskId": "w12_after_bad_beat_reset",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_checkpoint_discipline_line",
+      "world": "world_12",
+      "lesson": "mindset_bridge_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        false,
+        true,
+        false
+      ],
+      "declared": {
+        "ego_line": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_discipline_line",
+          "choiceId": "ego_line",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_discipline_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "fear_line": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_discipline_line",
+          "choiceId": "fear_line",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_discipline_line",
+          "mappingType": "exact",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "ego_line": {
+          "schemaVersion": 1,
+          "goalId": "choose_evidence_over_ego_pressure",
+          "relationId": "foundation_replay/w12_checkpoint_discipline_line/ego_line",
+          "relationRevision": 1,
+          "sourceFingerprint": "86ee37545cb9b22661a32c56780e81e2ccb719af8022e50d49652cf10daa9c88",
+          "targetFingerprint": "e5df7ad58d298778ce5135614d34ca7744f044256a85fc8c3d54253fdc835d02",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_discipline_line",
+          "choiceId": "ego_line",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_assertive_not_ego",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "fear_line": {
+          "schemaVersion": 1,
+          "goalId": "choose_evidence_over_ego_pressure",
+          "relationId": "foundation_replay/w12_checkpoint_discipline_line/fear_line",
+          "relationRevision": 1,
+          "sourceFingerprint": "86ee37545cb9b22661a32c56780e81e2ccb719af8022e50d49652cf10daa9c88",
+          "targetFingerprint": "e5df7ad58d298778ce5135614d34ca7744f044256a85fc8c3d54253fdc835d02",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_discipline_line",
+          "choiceId": "fear_line",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "confidence_and_discipline",
+          "targetTaskId": "w12_assertive_not_ego",
+          "mappingType": "repair",
+          "reasonCode": "same_signal_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    },
+    {
+      "id": "w12_checkpoint_full_loop_line",
+      "world": "world_12",
+      "lesson": "mindset_bridge_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "TABLE_ACTION_DECISION",
+        true,
+        true,
+        false
+      ],
+      "declared": {
+        "raise_to_recover": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_full_loop_line",
+          "choiceId": "raise_to_recover",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "what_poker_is",
+          "targetTaskId": "what_poker_is_table_read_recheck",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        },
+        "fold_scared": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_full_loop_line",
+          "choiceId": "fold_scared",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_1",
+          "targetLessonId": "what_poker_is",
+          "targetTaskId": "what_poker_is_table_read_recheck",
+          "mappingType": "repair",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        }
+      },
+      "current": {
+        "raise_to_recover": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_checkpoint_full_loop_line",
+          "relationId": "foundation_replay/w12_checkpoint_full_loop_line/raise_to_recover",
+          "relationRevision": 1,
+          "sourceFingerprint": "eb748a5c915bdeaebe488f1fa0c575b1cd99387e74051c5a9ebea0293f836fa2",
+          "targetFingerprint": "eb748a5c915bdeaebe488f1fa0c575b1cd99387e74051c5a9ebea0293f836fa2",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_full_loop_line",
+          "choiceId": "raise_to_recover",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_full_loop_line",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        },
+        "fold_scared": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_checkpoint_full_loop_line",
+          "relationId": "foundation_replay/w12_checkpoint_full_loop_line/fold_scared",
+          "relationRevision": 1,
+          "sourceFingerprint": "eb748a5c915bdeaebe488f1fa0c575b1cd99387e74051c5a9ebea0293f836fa2",
+          "targetFingerprint": "eb748a5c915bdeaebe488f1fa0c575b1cd99387e74051c5a9ebea0293f836fa2",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_full_loop_line",
+          "choiceId": "fold_scared",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "hero_cards_board_pot",
+          "missedSignalLabel": "Hero cards + board + pot",
+          "skillAtomId": "table_read",
+          "skillLabel": "Table read",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_full_loop_line",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_table_read_hero_cards_board_pot"
+        }
+      }
+    },
+    {
+      "id": "w12_checkpoint_review",
+      "world": "world_12",
+      "lesson": "mindset_bridge_checkpoint",
+      "repairTarget": false,
+      "late": [
+        "CONCEPTUAL_OR_VERBAL_RECALL",
+        false,
+        false,
+        true
+      ],
+      "declared": {
+        "optional_soft": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_review",
+          "choiceId": "optional_soft",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_review",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "done_forever": {
+          "schemaVersion": 1,
+          "relationRevision": -1,
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_review",
+          "choiceId": "done_forever",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_review",
+          "mappingType": "exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      },
+      "current": {
+        "optional_soft": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_checkpoint_review",
+          "relationId": "foundation_replay/w12_checkpoint_review/optional_soft",
+          "relationRevision": 1,
+          "sourceFingerprint": "a74476b7037d2161e9b3284ef26735e19ff4faa53599842673609dffd4301cae",
+          "targetFingerprint": "a74476b7037d2161e9b3284ef26735e19ff4faa53599842673609dffd4301cae",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_review",
+          "choiceId": "optional_soft",
+          "result": "incorrect",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_review",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        },
+        "done_forever": {
+          "schemaVersion": 1,
+          "goalId": "exercise/w12_checkpoint_review",
+          "relationId": "foundation_replay/w12_checkpoint_review/done_forever",
+          "relationRevision": 1,
+          "sourceFingerprint": "a74476b7037d2161e9b3284ef26735e19ff4faa53599842673609dffd4301cae",
+          "targetFingerprint": "a74476b7037d2161e9b3284ef26735e19ff4faa53599842673609dffd4301cae",
+          "sourceWorldId": "world_12",
+          "sourceLessonId": "mindset_bridge_checkpoint",
+          "sourceTaskId": "w12_checkpoint_review",
+          "choiceId": "done_forever",
+          "result": "suboptimal",
+          "errorType": "misread_mindset_discipline",
+          "missedSignalId": "misread_mindset_discipline",
+          "missedSignalLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "skillAtomId": "mindset_process_discipline",
+          "skillLabel": "Confused decision quality with outcome, or missed the reset and discipline process.",
+          "targetWorldId": "world_12",
+          "targetLessonId": "mindset_bridge_checkpoint",
+          "targetTaskId": "w12_checkpoint_review",
+          "mappingType": "intentional_exact",
+          "reasonCode": "intentional_exact_replay_mindset_process_discipline_misread_mindset_discipline"
+        }
+      }
+    }
+  ],
+  "previousAssessed": 24,
+  "previousWrong": 46
+}

@@ -69,9 +69,9 @@ void main() {
         'w11_trigger_small_price_continue': 'CO’s range and later betting',
         'w11_trigger_bad_price_fold': 'how often CO bets hands you beat',
         'w11_checkpoint_mixed_table_line': 'betting range and later action',
-        'w12_pretty_hand_bad_price_fold': 'the exact range is unknown',
-        'w12_revenge_raise_trap': 'CO’s range here',
-        'w12_checkpoint_full_loop_line': 'CO’s range and later action',
+        'w12_pretty_hand_bad_price_fold': 'wins 5% of this river bet range',
+        'w12_revenge_raise_trap': 'keeps CO\'s weak bets in',
+        'w12_checkpoint_full_loop_line': 'calling keeps weak aces and draws in',
       };
       for (final MapEntry(key: id, value: boundary) in boundaries.entries) {
         final correct = _tasks[id]!.runner.options.singleWhere(

@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -38,13 +39,19 @@ void main() {
     expect(
       tasks,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     final problems = <String>[];
@@ -131,9 +138,13 @@ void main() {
     expect(
       entries,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
+    verifyWave6AndRestoreIdentityV1(entries);
     const w1Additions = {
       'hand_rankings_find_the_match': [
         'world_1',
@@ -2355,7 +2366,10 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     var validated = 0;
