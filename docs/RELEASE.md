@@ -195,3 +195,152 @@ Sharky is operated by <operator name, country>. Questions about this notice or y
 
 Если текст в приложении меняется, страница обновляется в том же PR. Страницу публикует владелец,
 например на GitHub Pages.
+
+## 0.3.3 · Черновики для публичного выпуска 1.0
+
+### Тексты App Store Connect для English (U.S.)
+
+**Name**
+
+Sharky Poker
+
+**Subtitle**
+
+Learn Texas Hold’em
+
+**Promotional Text**
+
+Practice poker decisions in short lessons. See why an answer works, then revisit the clues you missed.
+
+**Description**
+
+```text
+Learn Texas Hold'em one decision at a time. Sharky Poker teaches table positions, hand strength and betting basics through short lessons and simulated hands.
+
+Read the table, choose an answer and see why it works. When you miss a clue, try it again or revisit it in Review. Sharky saves your progress on your iPhone so you can pick up where you left off.
+
+The lessons work offline and require no account. Training chips have no cash value.
+```
+
+**Keywords**
+
+no limit,positions,hand rankings,pot odds,bet sizing,practice,table decisions
+
+**App Review Notes**
+
+```text
+No sign-in is required. On first launch, choose Start with the basics, then tap Next in the first lesson. In the first table question, choose “The shared cards in the middle” to see the explanation. Tap Try same clue, then choose “Board cards” on the repeat. Open You → Settings for Privacy Policy and Delete local data. The app uses simulated poker hands and training chips with no cash value.
+```
+
+**Release summary для первого выпуска**
+
+Practice table positions, hand strength and betting decisions in short Texas Hold’em lessons, with explanations and a chance to revisit missed decisions.
+
+Эта фраза подходит для сводки первого выпуска. Поле What’s New появляется с первым обновлением. Его текст заполняют по реально выпущенным изменениям. Сверить кнопки из App Review Notes с подписанным RC.
+Ограничения полей сверены с документацией Apple.
+[Имя и подзаголовок](https://developer.apple.com/help/app-store-connect/reference/app-information/app-and-compliance-information/),
+[описание, ключевые слова и данные для проверки](https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information/).
+
+### Политика конфиденциальности и поддержка
+
+- Текст страницы для 1.0 — [Sharky Poker Privacy Policy](release/privacy_policy_1_0_en.md).
+  Перед публикацией владелец добавляет подтверждённые имя, страну, контактный адрес,
+  почту и дату вступления в силу. Он подтверждает обработку и хранение писем и правила хостинга страницы. Если хостинг или поддержка собирают дополнительные данные, это
+  отражается в политике до публикации. Адрес и сведения об операторе должны
+  соответствовать требованиям выбранных стран.
+- В App Store Connect указываются проверенные публичные HTTPS-адреса для
+  **Privacy Policy URL** и **Support URL**. На странице поддержки должны быть
+  действующая почта, информация об операторе и путь **You → Settings → Delete local data**.
+  Перед GO открыть обе ссылки без входа и отправить тестовое обращение с получением
+  ответа. Контакт App Review вносится в закрытые поля консоли.
+- На подписанном публичном RC проверить состав SDK, Privacy Report, отсутствие
+  передачи учебных записей, трекинга и beta-метрик, а также удаление данных при
+  выключенной сети. Для сборки 1.0 не передавать `SHARKY_BETA_METRICS=true`.
+  **Data Not Collected** подходит для данных, остающихся на устройстве. Ответы в
+  App Privacy сверить по фактическому сбору в RC, включая данные, доступные через
+  интеграции Apple, и условия Apple для добровольной поддержки. Перед подачей
+  версия текста в A7 всё ещё озаглавлена «English iPhone beta» и описывает
+  TestFlight. Перед GO требуется отдельное изменение A7 с текстом для
+  публичной сборки. Сверить его с политикой по типам данных, локальному хранению,
+  напоминанию, резервным копиям, удалению и обработке обращений.
+  [Критерии App Privacy](https://developer.apple.com/app-store/app-privacy-details/),
+  [App Review Guidelines, разделы 1.5 и 5.1.1](https://developer.apple.com/app-store/review/guidelines/).
+- В анкете возраста для текущего формата уроков заложены **Gambling — No** и
+  **Simulated Gambling — Frequent**. Владелец сверяет остальные поля с RC,
+  подтверждает права на все материалы и выбирает страны. При Frequent
+  Simulated Gambling таблица Apple даёт 18+ на новых версиях ОС, итог по
+  регионам берётся из App Store Connect. Экспортное соответствие сверяется с
+  подписанным архивом.
+  [Определения возрастных категорий Apple](https://developer.apple.com/help/app-store-connect/reference/app-information/age-ratings-values-and-definitions).
+
+### Права на продукт и материалы
+
+Владелец подтверждает права на название и логотип, иллюстрации и карточную графику,
+шрифты, звук, тексты и материалы зависимостей для конкретного RC. В реестр идут
+источник, правообладатель и разрешение на распространение. Поле **Copyright**
+получает год возникновения исключительных прав и юридическое имя правообладателя
+после подтверждения. Сведения для подачи остаются открытыми.
+[Владелец метаданных](release/submission_metadata_truth_v1.md).
+[Требование Apple к полю Copyright](https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information/).
+
+### Текст для страницы поддержки
+
+For help with Sharky Poker, use the contact details on this page. Include the
+app version, your iPhone model and what you were doing when the issue occurred.
+Keep personal information out of screenshots. To clear progress and settings
+on this iPhone, open You → Settings → Delete local data.
+
+### GO / HOLD
+
+Текущее решение — **HOLD**. Для 1.0 выбрать **Manually release this version**.
+Apple оставляет одобренную сборку в **Pending Developer Release** до действия
+оператора. [Ручной выпуск](https://developer.apple.com/help/app-store-connect/manage-your-apps-availability/select-an-app-store-version-release-option/).
+
+1. **Условия Roadmap.** Владелец письменно определяет, как применить к 1.0
+   исходный release gate и расхождение 94/119 из REL-03. До решения действуют
+   исходные условия. Подготовка плана не засчитывает ни REL-02, ни REL-03.
+   [Roadmap 2.0, критерии REL-01–03](https://docs.google.com/spreadsheets/d/1gPCmABS47i6dhO2JHeFyOd6WH4upspRUSWYmbz7Na00/edit#gid=2026111401&range=B172:J175).
+2. **Точный RC.** Записать коммит, Bundle ID, Team ID, версию и номер сборки,
+   ссылку на архив и запись App Store Connect. Собрать из чистого коммита с
+   постоянным ID, проверить `tools/ios_candidate_guard_v1.py`, применимые CI и
+   проверку подписи. Для выбранного архива записать рабочий канал поддержки,
+   ссылку на политику, проверенные возрастную анкету и права. Финальные материалы
+   магазина берутся после утверждения экрана и V9.
+3. **Физический iPhone.** Из того же подписанного RC пройти запуск, W1, ошибку,
+   повтор, продолжение и выход с возвратом к сохранённому шагу. Проверить
+   офлайн-режим, обновление поверх допустимой предыдущей сборки без потери XP и
+   истории, локальное удаление, Reduce Motion, VoiceOver и Dynamic Type.
+   Сверить бюджеты P1 выше. Для первой поставки согласовать с владельцем, как
+   обрабатываются существующие установки TestFlight.
+4. **Решение владельца.** Владелец проверяет материалы, протокол и результаты,
+   назначает оператора и дублёра с ролью App Store Connect, фиксирует сборку и
+   совместимую базу восстановления в
+   [шаблоне решения](release/release_owner_decision_template_v1.md).
+   При сбое запуска, потере прогресса, неверной оценке или цене колла,
+   противоречии политике, проблеме с правами или невыполненном условии релиза —
+   HOLD. Оператор нажимает **Release This Version** только для номера сборки
+   из зафиксированного GO владельца.
+5. **После выхода.** В день выпуска проверить доступность в выбранных странах,
+   страницу магазина, ссылки и установку на физический iPhone. Оператор и
+   дублёр проверяют поддержку и доступные отчёты Apple в день выпуска и на
+   следующий день. Для инцидента записывают время, версию/build, влияние,
+   воспроизведение и решение владельца. Учебные записи остаются на устройстве.
+
+### Остановка распространения и восстановление
+
+| Когда | Действие оператора | Как подтвердить |
+|---|---|---|
+| Критический дефект до публикации | HOLD в Pending Developer Release. Если ранее началось распространение и кнопка ещё доступна, нажать **Cancel This Release**. Загрузить исправленную сборку с новым номером и заново проверить её. | В консоли выпуск остановлен, публичная установка не началась. Для нового номера повторены затронутые проверки. |
+| Критический дефект после выхода 1.0 | По решению владельца через **Pricing and Availability** снять затронутые страны или выбрать **Remove App From Sale**. Зафиксировать прежний список стран и время действия. | Проверить статусы стран в консоли и доступность с витрины, учитывая до 24 часов на распространение изменения. Уже скачавшие пользователи сохраняют установленное приложение, могут получать обновления и, пока действует соглашение, могут повторно скачать его из истории. |
+| Сбой в будущем поэтапном обновлении | Приостановить **Phased Release**. При серьёзном риске оценить снятие с витрины, поскольку ручная загрузка остаётся доступной при паузе. | Консоль показывает паузу. Пауза влияет на автоматическое обновление. |
+| Возврат к стабильной работе | Собрать новую версию с тем же Bundle ID и следующими версией и номером. Взять минимальное исправление либо совместимый проверенный код из зафиксированной базы. Для критического бага запросить ускоренную проверку, приложив шаги воспроизведения. | На iPhone выполнить обновление поверх проблемной версии без удаления приложения. Проверить XP, историю, запуск, урок и исправленный сценарий. Владелец заново фиксирует GO для исправления и доступность стран. |
+
+App Store не может заменить уже вышедшую версию старой. Восстановление
+установленных копий выполняется новым обновлением. При выборе базы сравнить
+формат локального прогресса и совместимость обратного чтения. Не просить
+переустанавливать приложение для устранения инцидента с потерей прогресса.
+Кнопку удаления записи приложения из App Store Connect не использовать.
+[Ограничение на возврат версии](https://developer.apple.com/help/app-store-connect/update-your-app/create-a-new-version),
+[управление доступностью](https://developer.apple.com/help/app-store-connect/manage-your-apps-availability/manage-availability-for-your-app-on-the-app-store),
+[пауза обновления](https://developer.apple.com/help/app-store-connect/update-your-app/release-a-version-update-in-phases/),
+[ускоренная проверка](https://developer.apple.com/help/app-review/after-submitting-for-review/request-expedited-review).
