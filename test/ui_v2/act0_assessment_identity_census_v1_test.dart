@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,10 +131,46 @@ void main() {
     expect(
       entries,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
+      'cards_ranks_suits_premium_decision': [
+        'world_1',
+        'cards_ranks_suits',
+        'cards_ranks_suits_premium_decision',
+        'drill',
+        'practice',
+        [
+          ['call', 'Call', false, 'suboptimal', 'Raise to 7.5 BB'],
+          ['raise', 'Raise to 7.5 BB', true, 'correct', 'Raise to 7.5 BB'],
+          ['fold', 'Fold', false, 'wrong', 'Raise to 7.5 BB'],
+        ],
+      ],
+      'blinds_missing_post_amount': [
+        'world_1',
+        'blinds_action_order',
+        'blinds_missing_post_amount',
+        'drill',
+        'practice',
+        [
+          ['small_blind_only', '0.5 BB', false, 'wrong', '1 BB'],
+          ['big_blind_amount', '1 BB', true, 'correct', '1 BB'],
+          ['both_posts', '1.5 BB', false, 'wrong', '1 BB'],
+        ],
+      ],
+      'actions_call_chip_cost': [
+        'world_1',
+        'fold_check_call_raise',
+        'actions_call_chip_cost',
+        'drill',
+        'practice',
+        [
+          ['free', '0 BB', false, 'wrong', '2 BB'],
+          ['match_bet', '2 BB', true, 'correct', '2 BB'],
+          ['match_pot', '8 BB', false, 'wrong', '2 BB'],
+        ],
+      ],
       'first_table_guide_first_decision': [
         'world_1',
         'what_poker_is',
@@ -142,9 +178,9 @@ void main() {
         'drill',
         'practice',
         [
-          ['fold', 'Fold', false, 'wrong', 'Raise'],
-          ['call', 'Call', false, 'suboptimal', 'Raise'],
-          ['raise', 'Raise', true, 'correct', 'Raise'],
+          ['fold', 'Fold', false, 'wrong', 'Raise to 7.5 BB'],
+          ['call', 'Call', false, 'suboptimal', 'Raise to 7.5 BB'],
+          ['raise', 'Raise to 7.5 BB', true, 'correct', 'Raise to 7.5 BB'],
         ],
       ],
       'hand_rankings_compare_ace_straights': [
@@ -2161,7 +2197,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;

@@ -278,13 +278,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        419 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final newTasks = tasks
@@ -306,7 +306,10 @@ void main() {
             task.taskId != 'w8_effective_stack_seat' &&
             task.taskId != 'w8_spr_value_size' &&
             !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
-            !w12Wave4ChoiceContractV1.containsKey(task.taskId),
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            task.taskId != 'blinds_missing_post_amount' &&
+            task.taskId != 'actions_call_chip_cost' &&
+            task.taskId != 'cards_ranks_suits_premium_decision',
       ),
       hasLength(384),
     );
@@ -378,7 +381,10 @@ void main() {
             task.taskId != 'w8_effective_stack_seat' &&
             task.taskId != 'w8_spr_value_size' &&
             !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
-            !w12Wave4ChoiceContractV1.containsKey(task.taskId))
+            !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
+            task.taskId != 'blinds_missing_post_amount' &&
+            task.taskId != 'actions_call_chip_cost' &&
+            task.taskId != 'cards_ranks_suits_premium_decision')
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -539,9 +545,12 @@ void main() {
     expect(legacyPlayed, 283);
     expect(
       played,
-      317 + 10 + 9,
+      320 + 10 + 9,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'cards_ranks_suits_premium_decision',
+      'blinds_missing_post_amount',
+      'actions_call_chip_cost',
       'first_table_guide_first_decision',
       'w4_price_find_bettor',
       'w6_continuation_bet_value_size',

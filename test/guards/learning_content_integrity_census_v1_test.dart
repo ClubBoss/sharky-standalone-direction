@@ -105,7 +105,10 @@ void main() {
                 row.task.taskId != 'hand_rankings_compare_ace_straights' &&
                 row.task.taskId != 'w4_price_find_bettor' &&
                 row.task.taskId != 'w8_effective_stack_seat' &&
-                row.task.taskId != 'w8_spr_value_size',
+                row.task.taskId != 'w8_spr_value_size' &&
+                row.task.taskId != 'blinds_missing_post_amount' &&
+                row.task.taskId != 'actions_call_chip_cost' &&
+                row.task.taskId != 'cards_ranks_suits_premium_decision',
           )
           .toList();
       expect(allRows, hasLength(316));
@@ -485,7 +488,10 @@ void main() {
               row.task.taskId != 'hand_rankings_compare_ace_straights' &&
               row.task.taskId != 'w4_price_find_bettor' &&
               row.task.taskId != 'w8_effective_stack_seat' &&
-              row.task.taskId != 'w8_spr_value_size',
+              row.task.taskId != 'w8_spr_value_size' &&
+              row.task.taskId != 'blinds_missing_post_amount' &&
+              row.task.taskId != 'actions_call_chip_cost' &&
+              row.task.taskId != 'cards_ranks_suits_premium_decision',
         )
         .toList();
     final additions = rows
@@ -883,15 +889,15 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(347 + addedContracts.length));
+    expect(rows, hasLength(350 + addedContracts.length));
     expect(
       rows.map((r) => r.task.taskId).toSet(),
-      hasLength(347 + addedContracts.length),
+      hasLength(350 + addedContracts.length),
     );
     expect(
       allChoices,
       hasLength(
-        649 +
+        655 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
@@ -971,7 +977,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        611 +
+        617 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,

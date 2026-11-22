@@ -545,7 +545,7 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
     isCorrect: true,
     preferredLabel: 'Raise',
     quality: Act0FeedbackQualityV1.correct,
-    feedbackTitle: 'Strong choice.',
+    feedbackTitle: 'Correct.',
     feedbackReason: 'Raising to 3 BB increases the price above the 1 BB blind.',
     repairFocusSeatIds: <String>['btn'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
@@ -671,7 +671,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'No one entered yet.',
       body:
-          'First in means the first player to put chips in voluntarily after the blinds. Calling matches the blind. Raising increases the price.',
+          'First in means the first player to put chips in voluntarily after the blinds.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['First in', 'Button'],
     ),
@@ -2347,8 +2347,7 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       ...source.teachingSteps,
       const Act0TeachingStepV1(
         title: 'A new mechanical example.',
-        body:
-            'HJ bets 2 BB after three checks. It is your turn. Calling costs 2 BB. Raising makes the price 6 BB total.',
+        body: 'HJ bets 2 BB. Call for 2 BB or raise to 6 BB.',
         focusSeatIds: ['btn', 'hj'],
       ),
     ],
@@ -3908,7 +3907,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Your full house',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Strong hand, lower rank.',
+      feedbackTitle: 'A flush ranks lower here.',
       feedbackReason:
           'The other player does make a flush, but your full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.',
     ),
@@ -4254,7 +4253,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Correct.',
       feedbackReason:
           'At showdown, players use the best five-card hand they can make from private cards plus the shared board.',
     ),

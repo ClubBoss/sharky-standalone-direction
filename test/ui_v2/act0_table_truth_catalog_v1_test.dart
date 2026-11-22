@@ -196,8 +196,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 159),
-      ('D3.to_call_completeness', 114),
+      ('D2.pot_feasibility', 161),
+      ('D3.to_call_completeness', 115),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1272,7 +1272,7 @@ void main() {
       };
     }
     expectedComparison['first_table_guide_first_decision'] = {
-      'rewardXp': 5,
+      'rewardXp': 0,
       'family': 'decision',
       'options': [
         w3Option('fold'),
@@ -1287,6 +1287,45 @@ void main() {
         w3Option('broadway', correct: true),
         w3Option('wheel'),
         w3Option('tie'),
+      ],
+    };
+    expectedComparison['blinds_missing_post_amount'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final id in ['small_blind_only', 'big_blind_amount', 'both_posts'])
+          {
+            ...w3Option(id, correct: id == 'big_blind_amount'),
+            'repairSeats': ['bb', 'sb'],
+          },
+      ],
+    };
+    expectedComparison['actions_call_chip_cost'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        w3Option('free'),
+        w3Option('match_bet', correct: true),
+        w3Option('match_pot'),
+      ],
+    };
+    expectedComparison['cards_ranks_suits_premium_decision'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        {
+          ...w3Option('call'),
+          'quality': 'suboptimal',
+          'repairLabels': ['Top starting pairs'],
+        },
+        {
+          ...w3Option('raise', correct: true),
+          'repairLabels': ['Top starting pairs'],
+        },
+        {
+          ...w3Option('fold'),
+          'repairLabels': ['Top starting pairs'],
+        },
       ],
     };
     final w1Revision =

@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 440 tasks · W1–W12
+SHARKY POKER — EN learning content, 443 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -7,7 +7,7 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand.
-TEACH: Find your cards. The two cards by You are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
+TEACH: Find your cards. Your cards are private. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
 TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which two cards are yours?
@@ -41,19 +41,19 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     BETTER ANSWER: The two cards at your seat
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
-TASK first_table_guide_first_decision [drill] Make your first choice
-CAPTION: You have two aces. A player raised to 2.5 BB.
-TEACH: Three choices. Fold to exit. Call to match. Raise to increase the price. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff.
-Q: What is the best choice with your aces?
+TASK first_table_guide_first_decision [drill] Decide with your coach
+CAPTION: HJ raised to 2.5 BB.
+TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
+Q: How will you play your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As Ac stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
   - [wrong] Fold — Your aces can play. Folding aces to one raise gives up the strongest starting hand and the chance to win this pot.
-    BETTER ANSWER: Raise
+    BETTER ANSWER: Raise to 7.5 BB
   - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.
-    BETTER ANSWER: Raise
-  + [correct] Raise — Raise with aces. Aces are Premium. Raise again to build the pot against one raise.
+    BETTER ANSWER: Raise to 7.5 BB
+  + [correct] Raise to 7.5 BB — Raise with aces. Raise to build the pot with your aces.
 
 TASK what_poker_is_table_read_transfer [drill] Read the table
 SUMMARY: Read one real table spot: your cards, the board, and the pot.
@@ -153,6 +153,8 @@ TEACH: Ranks have an order. The beginner order is 2, 3, 4, 5, 6, 7, 8, 9, 10, J,
 Ace is highest for now, so ace beats king in this drill.
 TEACH LABELS: 2 ... 10, J Q K A, A beats K
 TEACH TABLE: Preflop | You As Kd | Pot 1.5 BB | Seat BTN | Seat focus btn | Card focus hero_0, hero_1 | Center Ranks and suits | Facts no applicable hand facts
+TEACH: Pairs at the top. Top starting pairs can reraise to get paid by weaker hands.
+TEACH TABLE: Preflop | You As Kd | Pot 1.5 BB | Seat BTN | Seat focus btn | Card focus hero_0, hero_1 | Center Ranks and suits | Facts no applicable hand facts
 Q: Which rank is higher here?
 HINT [theoryOnly]: Aces are high in this beginner drill.
 TABLE: Preflop | You As Kd | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Ranks and suits | Facts no applicable hand facts
@@ -162,6 +164,23 @@ SEATS: UTG | HJ | CO | BTN dealer | SB post 0.5 BB | BB post 1 BB
   - [wrong] Suit decides — Not quite. Suit does not make one rank higher than another.
     BETTER ANSWER: Ace
   + [correct] Ace — Spot on. Compare top card first: ace outranks king in this spot.
+
+TASK cards_ranks_suits_premium_decision [drill] Decide with kings
+CAPTION: CO raised to 2.5 BB.
+TEACH: Your starting cards. Two kings are a top starting pair. BTN is Button.
+Q: How will you play your kings?
+HINT [hidden]: (none)
+TABLE: Preflop | You Kh Kd | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts pocket pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kh Kd stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB
+  - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
+    BETTER ANSWER: Raise to 7.5 BB
+    REPAIR LABELS: Top starting pairs
+  + [correct] Raise to 7.5 BB — Raise with kings. Raising KK to 7.5 BB builds the pot against the single CO raise.
+    REPAIR LABELS: Top starting pairs
+  - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.
+    BETTER ANSWER: Raise to 7.5 BB
+    REPAIR LABELS: Top starting pairs
 
 TASK cards_ranks_suits_suit_drill [drill] Name a suit
 CAPTION: Each card has a rank and a suit. Ah means ace of hearts.
@@ -428,7 +447,7 @@ Q: Which shown hand is stronger?
 HINT [theoryOnly]: Build both best five hands before choosing the stronger one.
 TABLE: River | You As 7s | Board Ah Ad 7h 2h 2c | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the cards | Facts full house, paired board
 SEATS: UTG | HJ | CO Kh Qh | BTN dealer As 7s | SB | BB
-  - [wrong] Other player: flush — Strong hand, lower rank. The other player does make a flush, but your full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.
+  - [wrong] Other player: flush — A flush ranks lower here. The other player does make a flush, but your full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.
     BETTER ANSWER: Your full house
     FEEDBACK TABLE: River | You As 7s | Board Ah Ad 7h 2h 2c | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts full house, paired board
   + [correct] Your full house — Correct comparison. You make A-A-A-7-7 for a full house. The other player has a heart flush, but a full house ranks above a flush.
@@ -628,6 +647,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     BETTER ANSWER: CO
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus co | Tap co, hj, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
+TASK blinds_missing_post_amount [drill] Find the big blind amount
+CAPTION: The pot starts at 1.5 BB. SB posted 0.5 BB.
+Q: How much of the starting pot came from BB?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | Pot 1.5 BB | Seat CO | Decision utg | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
+SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB
+  - [wrong] 0.5 BB — Look at which player paid. The 0.5 BB was posted by SB. Using it for BB would leave half a big blind uncounted.
+    BETTER ANSWER: 1 BB
+    FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Decision utg | Seat focus bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
+  + [correct] 1 BB — BB posted 1 BB. One big blind plus the small blind of 0.5 BB makes the 1.5 BB pot.
+    FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Decision utg | Seat focus bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
+  - [wrong] 1.5 BB — Separate the two posts. The 1.5 BB includes both posts. Giving BB all of it counts SB’s 0.5 BB twice.
+    BETTER ANSWER: 1 BB
+    FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Decision utg | Seat focus bb, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
+
 TASK blinds_theory [theory] Blinds post first
 CAPTION: SB and BB post before cards are played.
 TEACH: Blinds force a starting pot. Blinds are real chips or money put in first. Players often count them in big blinds because BB is the clean shortcut for the price.
@@ -815,15 +850,15 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO
 
 TASK actions_theory [theory] Action words
 SUMMARY: Lock in the four core verbs first: fold, check, call, raise.
-CAPTION: Everyone before you folds. You have K and T of the same suit on the Button. Calling costs 1 BB. Raising makes the price 3 BB total.
-TEACH: Actions are table verbs. Fold exits. Check passes when you owe nothing. Call matches the price. Your blind already pays part of a call. A raise sets a higher price, so players who already acted may have to act again.
+CAPTION: You’re on BTN. Everyone before you folded.
+TEACH: Actions are table verbs. Fold leaves the hand. Check passes for free. Call matches the bet. Raise makes others pay more to continue.
 TEACH LABELS: Fold, Check, Call
 Q: Which action would make the next player match more than the big blind?
 HINT [theoryOnly]: The table state tells which actions are legal.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Ts stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  + [correct] Raise [3 BB] — Strong choice. Raising to 3 BB increases the price above the 1 BB blind.
+  + [correct] Raise [3 BB] — Correct. Raising to 3 BB increases the price above the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
@@ -838,7 +873,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
 TASK actions_legal_context [drill] Legal actions
 SUMMARY: Match the table state to the actions that are actually allowed.
 CAPTION: BB checks on the flop. It is your turn and there is no bet to match.
-TEACH: Legality depends on price. No price means check is available. A price unlocks call.
+TEACH: Legality depends on price. With no bet, you can check for free.
 TEACH LABELS: No bet
 TEACH TABLE: Flop | You 9c 8d | Board Kh 7c 2d | Pot 4.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1 | Center No bet faces you | Facts high card, rainbow, backdoor straight
 Q: No bet faces you. Which action keeps you in the hand without adding chips?
@@ -869,13 +904,26 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
     BETTER ANSWER: Check
 
+TASK actions_call_chip_cost [drill] Count the cost of a call
+CAPTION: BB bets 2 BB on the turn. You have put in nothing on this street.
+Q: How many BB would your call add?
+HINT [theoryOnly]: (none)
+TABLE: Turn | You Qc 9c | Board Ks 9d 5h 2s | Pot 8 BB | To call 2 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qc 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.25 BB bet 2 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB bets 2 BB
+  - [wrong] 0 BB — A bet has arrived. BB put out 2 BB on this street. Paying nothing leaves the bet unmatched and gives up the hand.
+    BETTER ANSWER: 2 BB
+  + [correct] 2 BB — Match the 2 BB. BB bet 2 BB and your turn contribution is zero, so the full 2 BB is due.
+  - [wrong] 8 BB — Read the bet amount. The middle shows 8 BB after the bet. Paying that amount would put in 6 BB more than a call requires.
+    BETTER ANSWER: 2 BB
+
 TASK actions_fold_drill [drill] Fold to exit
 SUMMARY: Recognize the action that gives up the hand without paying the bet.
 CAPTION: HJ bets 2 BB on an ace-high flop. You hold two queens.
 TEACH: A bet creates a price. Folding ends your part in the hand without paying the call. The flop alone does not tell you whether folding is best.
 TEACH LABELS: Facing a bet, Gives up the hand
 TEACH TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, hj | Card focus board_0, board_1, board_2 | Center Facing a bet | Facts one pair, pocket pair, rainbow
-TEACH: A new mechanical example. HJ bets 2 BB after three checks. It is your turn. Calling costs 2 BB. Raising makes the price 6 BB total.
+TEACH: A new mechanical example. HJ bets 2 BB. Call for 2 BB or raise to 6 BB.
 TEACH TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, hj | Card focus board_0, board_1, board_2 | Center Facing a bet | Facts one pair, pocket pair, rainbow
 Q: Which action gives up the hand?
 HINT [theoryOnly]: Folding saves chips when continuing is not worth it.
@@ -907,11 +955,11 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ calls 1 BB · CO fold
 
 TASK actions_raise_drill [drill] Raise the price
 SUMMARY: Recognize which option increases the price for the next player.
-CAPTION: Everyone before you folds. You have a queen and jack of the same suit on the Button. Calling costs 1 BB. Raising makes the price 3 BB total.
+CAPTION: You’re on BTN. Everyone before you folded.
 TEACH: Look before you act. First ask: is anyone already in the pot?
 TEACH LABELS: Your turn, Blinds posted
 TEACH TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-TEACH: No one entered yet. First in means the first player to put chips in voluntarily after the blinds. Calling matches the blind. Raising increases the price.
+TEACH: No one entered yet. First in means the first player to put chips in voluntarily after the blinds.
 TEACH LABELS: First in, Button
 Q: Which action increases the price above the big blind?
 HINT [theoryOnly]: Compare how many chips each action adds to the pot.
@@ -926,22 +974,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
     BETTER ANSWER: Raise
     REPAIR LABELS: Matches 1 BB, Sets a higher price, Button
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  + [correct] Raise [3 BB] — Strong choice. Raising to 3 BB increases the price above the 1 BB blind.
+  + [correct] Raise [3 BB] — Correct. Raising to 3 BB increases the price above the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 
 TASK actions_review [review] Action recap
 ENTRY: drill
 SUMMARY: Prove you can name the right action without prompts.
-CAPTION: Everyone before you folds. You have K and T of the same suit on the Button. Calling costs 1 BB. Raising makes the price 3 BB total.
-TEACH: Action takeaway. First read the price. Then choose the matching action family.
+CAPTION: You’re on BTN. Everyone before you folded.
+TEACH: Action takeaway. Read the price before acting.
 TEACH LABELS: Price first
 Q: Which action sets a higher price for the next player?
 HINT [theoryOnly]: Compare what each action asks the next player to match.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Ts stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  + [correct] Raise [3 BB] — Strong choice. Raising to 3 BB increases the price above the 1 BB blind.
+  + [correct] Raise [3 BB] — Correct. Raising to 3 BB increases the price above the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] Fold — Not quite. Folding Ks Ts on BTN surrenders the 1.5 BB pot immediately and leaves the 1 BB blind price unchanged for SB and BB.
@@ -1201,7 +1249,7 @@ SEATS: UTG | HJ Kc Ks | CO Kh Jh | BTN dealer | SB | BB
   - [wrong] The two private cards at your seat — Only part of the hand. Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.
     BETTER ANSWER: Best hand
     FEEDBACK TABLE: River | You Kc Ks | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat HJ | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Your pair of kings beats CO’s pair of jacks | Facts one pair, pocket pair
-  + [correct] Best hand — Strong choice. At showdown, players use the best five-card hand they can make from private cards plus the shared board.
+  + [correct] Best hand — Correct. At showdown, players use the best five-card hand they can make from private cards plus the shared board.
     FEEDBACK TABLE: River | You Kc Ks | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat HJ | Card focus hero_0, hero_1, board_0, board_1, board_3, board_2, board_4 | Center Your pair of kings beats CO’s pair of jacks | Facts one pair, pocket pair
 
 TASK what_poker_is_live_win_transfer [drill] Live win paths
@@ -6858,6 +6906,19 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
     FEEDBACK TABLE: Turn | You Td 8d | Board Js 5c 3h Kc | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card
 
 ===== WORLD 1 · LESSON cards_ranks_suits · Cards, ranks & suits =====
+
+TASK spaced_review_w1_cards_ranks_suits_top_starting_pairs_v1 [drill] Review decision
+DAY 7 FAMILY: top_starting_pairs
+Q: What fits your kings after the first raise?
+HINT [hidden]: (none)
+TABLE: Preflop | You Kc Ks | Pot 4 BB | Seat BTN | Facts pocket pair
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Kc Ks stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds
+  - [wrong] Call — Look again. Calling HJ’s 2.5 BB from BTN gives up the chance to charge a weaker hand more for the flop.
+    BETTER ANSWER: Raise to 7.5 BB
+  - [wrong] Fold — Look again. Folding Kc Ks after one raise gives up the chance to win the 4 BB already in the middle.
+    BETTER ANSWER: Raise to 7.5 BB
+  + [correct] Raise to 7.5 BB — Correct. KK is one of the highest starting pairs. Raising again against HJ can get a call from a weaker hand.
 
 TASK spaced_review_w1_cards_ranks_suits_confused_card_rank_suit_v1 [drill] Review decision
 DAY 7 FAMILY: confused_card_rank_suit

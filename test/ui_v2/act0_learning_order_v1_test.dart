@@ -8,6 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_catalog_poker_facts_v1.dart';
+import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_shell_source_files_v1.dart';
 
 const _baselineFile = 'test/fixtures/act0_learning_order_baseline_v1.json';
@@ -25,6 +27,8 @@ final _route = [
 // Title words, examples without a rule, optional hints and feedback alone
 // cannot establish knowledge for a later first attempt.
 const _definitions = {
+  'Strongest starting hand':
+      r'(?:two aces|pocket aces|a pair of aces|aa) (?:is|are) the strongest starting hand',
   'Hero': r'hero means you',
   'Blinds (SB, BB)':
       r'blinds? (?:are|means?) (?:forced|mandatory)|bb also measures chips|small blind (?:\(sb\) )?is .*half.*big blind',
@@ -96,7 +100,14 @@ String _normalized(String text) =>
 
 Set<String> _earlyUses() {
   final terms = {
-    for (final term in act0GlossaryTermsV1)
+    for (final term in [
+      ...act0GlossaryTermsV1,
+      const Act0GlossaryTermV1(
+        'Strongest starting hand',
+        r'\bstrongest starting hand\b',
+        '',
+      ),
+    ])
       if (_definitions.containsKey(term.name))
         term: RegExp(_definitions[term.name]!, caseSensitive: false),
   };
@@ -338,6 +349,105 @@ Set<String> _inheritedChoices(Iterable<String> sources) {
   return check.failures;
 }
 
+final _chartLabel = RegExp(r'\b(?:Premium|Strong|Medium|Weak)\b');
+final _preflopAction = RegExp(
+  r'^(?:fold|check|call|raise|re-?raise|limp|all-in|go all-in|jam)\b',
+  caseSensitive: false,
+);
+final _mechanicalPrompt = RegExp(
+  r'\b(?:makes? the next player match more|make the next player match more|'
+  r'sets? a higher price|increases? the price|matches? the [0-9.]+ bb price|'
+  r'gives? up the hand|keeps? playing for free|keeps? you in the hand without adding chips)\b',
+  caseSensitive: false,
+);
+const _handStrengthDescription =
+    r'\s+(?:is|are|belongs? to)\b[^.?!]{0,35}'
+    r'(?:\b(?:premium|strong|medium|weak)\s+(?:bucket|group|tier)\b|'
+    r'\b(?:strongest|top|premium|strong|medium|weak)\b[^.?!]{0,35}\b(?:starting|preflop)\b)';
+
+bool _needsStartingStrength(Act0LessonTaskV1 task) {
+  final runner = task.runner;
+  return task.phase != Act0LessonPhaseV1.theory &&
+      !task.repairOnly &&
+      runner.table.streetLabel.toLowerCase() == 'preflop' &&
+      runner.options.any(
+        (option) => option.isCorrect && _preflopAction.hasMatch(option.label),
+      ) &&
+      runner.options
+              .where((option) => _preflopAction.hasMatch(option.label))
+              .length >=
+          2 &&
+      !_mechanicalPrompt.hasMatch(runner.question);
+}
+
+bool _teachesOwnStartingStrength(Act0LessonTaskV1 task, String text) {
+  final code = startingHandCode(physicalCards(task.runner.table.heroCards));
+  if (code == null) return false;
+  final pairName = switch (code) {
+    'AA' => 'aces',
+    'KK' => 'kings',
+    'QQ' => 'queens',
+    'JJ' => 'jacks',
+    'TT' => 'tens',
+    '99' => 'nines',
+    '88' => 'eights',
+    '77' => 'sevens',
+    '66' => 'sixes',
+    '55' => 'fives',
+    '44' => 'fours',
+    '33' => 'threes',
+    '22' => 'twos',
+    _ => null,
+  };
+  final names = [
+    RegExp.escape(code),
+    if (pairName != null) '(?:two|pocket|a pair of) $pairName',
+  ];
+  return RegExp(
+    r'\b(?:' + names.join('|') + r')\b' + _handStrengthDescription,
+    caseSensitive: false,
+  ).hasMatch(text);
+}
+
+Set<String> _earlyStartingHandFindings(
+  Act0LessonTaskV1 task, {
+  required bool checkChartLabels,
+}) {
+  final runner = task.runner;
+  final teaching = [
+    for (final step in runner.teachingSteps) '${step.title} ${step.body}',
+  ];
+  final findings = <String>{};
+  if (_needsStartingStrength(task) &&
+      !teaching.any((text) => _teachesOwnStartingStrength(task, text))) {
+    findings.add('${task.taskId}: starting-hand strength missing from TEACH');
+  }
+  if (checkChartLabels &&
+      [
+        task.title,
+        runner.caption,
+        runner.question,
+        runner.hint,
+        runner.feedbackTitle,
+        runner.feedbackReason,
+        for (final option in runner.options) ...[
+          option.label,
+          option.preferredLabel,
+          option.betterAnswerLabel,
+          option.feedbackTitle,
+          option.feedbackReason,
+          ...option.repairFocusLabels,
+        ],
+        for (final text in teaching)
+          if (!_teachesOwnStartingStrength(task, text)) text,
+      ].any(_chartLabel.hasMatch)) {
+    findings.add(
+      '${task.taskId}: starting-chart label outside its TEACH explanation',
+    );
+  }
+  return findings;
+}
+
 void main() {
   final baseline = jsonDecode(File(_baselineFile).readAsStringSync()) as Map;
   void guard(String name, Set<String> Function() check) {
@@ -354,6 +464,80 @@ void main() {
       );
     });
   }
+
+  test(
+    'Starting-hand decisions before Hand buckets explain their own hand',
+    () {
+      final end = catalogTasks.lastIndexWhere(
+        (row) =>
+            row.world.worldNumber == 2 &&
+            row.lesson.lessonId == 'hand_discipline_buckets',
+      );
+      expect(end, greaterThan(0));
+      final early = catalogTasks.take(end + 1).toList();
+      expect({
+        for (final row in early)
+          ..._earlyStartingHandFindings(
+            row.task,
+            checkChartLabels: row.world.worldNumber == 1,
+          ),
+      }, isEmpty);
+      final first = early.firstWhere(
+        (row) =>
+            row.world.worldNumber == 1 &&
+            _needsStartingStrength(row.task) &&
+            !row.task.guidedDecision,
+      );
+      expect(
+        first.task.taskId,
+        'cards_ranks_suits_premium_decision',
+        reason: 'F1 counts the independent decision.',
+      );
+    },
+  );
+
+  test(
+    'A preflop strength decision fails when the explanation is only after the choice',
+    () {
+      final source = catalogTasks
+          .singleWhere(
+            (row) => row.task.taskId == 'first_table_guide_first_decision',
+          )
+          .task;
+      final withoutTeaching = Act0LessonTaskV1(
+        taskId: source.taskId,
+        title: source.title,
+        phase: source.phase,
+        runner: source.runner.copyWith(
+          teachingSteps: const [],
+          feedbackReason: 'Two aces are the strongest starting hand.',
+        ),
+        rewardXp: source.rewardXp,
+        guidedDecision: true,
+      );
+      expect(
+        _earlyStartingHandFindings(withoutTeaching, checkChartLabels: true),
+        {
+          'first_table_guide_first_decision: starting-hand strength missing from TEACH',
+        },
+      );
+      expect(
+        _teachesOwnStartingStrength(
+          source,
+          'You hold AA. Two kings are a top starting pair.',
+        ),
+        isFalse,
+      );
+      expect(
+        _teachesOwnStartingStrength(source, 'AA is in the Premium group.'),
+        isTrue,
+      );
+      expect(
+        _earlyStartingHandFindings(source, checkChartLabels: true),
+        isEmpty,
+      );
+    },
+  );
 
   test('Foundation copy uses the learner name and plain hand facts', () {
     final jargon = RegExp(

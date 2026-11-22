@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -129,7 +131,12 @@ void main() {
           expect(record['sourceLessonId'], lesson.lessonId);
           expect(record['sessionId'], isNotEmpty);
           expect(record['isCorrect'], true);
-          expect(record['assistanceKind'], 'none');
+          expect(
+            record['assistanceKind'],
+            record['taskId'] == 'first_table_guide_first_decision'
+                ? 'theoryRecall'
+                : 'none',
+          );
           expect(record['choiceId'], record['expectedChoiceId']);
         }
       }
@@ -141,12 +148,26 @@ void main() {
         firstRecords.map((record) => record['taskId']),
         contains('first_table_guide_first_decision'),
       );
+      final evidence = [
+        for (final raw in firstRecords)
+          Act0LearningEvidenceRecordV1.tryParse(raw)!,
+      ];
+      final scores = Act0BetaLearningMetricsV1.fromProgress(
+        firstWorld: Act0ShellStateV1.sample.worldById('world_1'),
+        completedTaskIds: (completed['completedTaskIds'] as List)
+            .cast<String>()
+            .toSet(),
+        correctedMistakes: 0,
+        history: Act0LearningEvidenceHistoryV1(records: evidence),
+      ).decisionsSince(evidence.first.recordedAtUtc!);
+      expect(scores.withHelp, (correct: 1, total: 1));
+      expect(scores.onYourOwn, (correct: 5, total: 5));
       final firstRun = firstRecords.first['runId'];
       final firstOrdinal = firstRecords.first['runOrdinal'] as int;
       final firstSession = firstRecords.first['sessionId'];
       expect(firstRecords.map((r) => r['runId']).toSet(), {firstRun});
       expect(firstRecords.map((r) => r['sessionId']).toSet(), {firstSession});
-      expect(completed['earnedXp'], 35);
+      expect(completed['earnedXp'], 30);
       expect(completed['completedTaskIds'], hasLength(7));
       expect(completed['completedLessonIds'], contains(lesson.lessonId));
 
@@ -185,6 +206,15 @@ void main() {
       expect(newRecord['sessionId'], isNot(firstSession));
       expect(newRecord['isCorrect'], true);
       expect(newRecord['assistanceKind'], 'none');
+      const independentId = 'cards_ranks_suits_premium_decision';
+      expect(_runner(tester).selectedTaskId, independentId);
+      await _advanceTask(tester);
+      final afterKings = (await _saved())['learningEvidenceHistory'] as List;
+      final independent = Act0LearningEvidenceRecordV1.tryParse(
+        afterKings.last,
+      )!;
+      expect(independent.taskId, independentId);
+      expect(independent.isIndependentCorrect, isTrue);
     },
   );
 }

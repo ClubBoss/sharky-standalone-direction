@@ -4310,10 +4310,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       },
                                     ),
                                 initialChoiceAssistance:
-                                    _pendingAssistanceForV1(
-                                      selectedWorld.worldId,
-                                      selectedLesson.lessonId,
-                                      playSelectedTask.taskId,
+                                    act0MergeDecisionAssistanceV1(
+                                      _pendingAssistanceForV1(
+                                        selectedWorld.worldId,
+                                        selectedLesson.lessonId,
+                                        playSelectedTask.taskId,
+                                      ),
+                                      playSelectedTask.guidedDecision
+                                          ? Act0DecisionAssistanceV1
+                                                .theoryRecall
+                                          : Act0DecisionAssistanceV1.none,
                                     ),
                                 onAssistanceExposureRequested: (_) async {
                                   if (!(_acceptRecoveryCallbackV1(

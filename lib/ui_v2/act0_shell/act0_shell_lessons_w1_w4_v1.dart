@@ -273,16 +273,16 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   beatIndex: 1,
   beatCount: 1,
   phase: Act0LessonPhaseV1.drill,
-  caption: 'You have two aces. A player raised to 2.5 BB.',
+  caption: 'HJ raised to 2.5 BB.',
   hint: '',
-  question: 'What is the best choice with your aces?',
+  question: 'How will you play your aces?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: false,
-      preferredLabel: 'Raise',
-      betterAnswerLabel: 'Raise',
+      preferredLabel: 'Raise to 7.5 BB',
+      betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Your aces can play.',
       feedbackReason:
@@ -293,8 +293,8 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       label: 'Call',
       amountLabel: '2.5 BB',
       isCorrect: false,
-      preferredLabel: 'Raise',
-      betterAnswerLabel: 'Raise',
+      preferredLabel: 'Raise to 7.5 BB',
+      betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Calling keeps you in.',
       feedbackReason:
@@ -302,13 +302,12 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
     ),
     Act0RunnerOptionV1(
       id: 'raise',
-      label: 'Raise',
+      label: 'Raise to 7.5 BB',
       isCorrect: true,
-      preferredLabel: 'Raise',
+      preferredLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with aces.',
-      feedbackReason:
-          'Aces are Premium. Raise again to build the pot against one raise.',
+      feedbackReason: 'Raise to build the pot with your aces.',
     ),
   ],
   feedbackTitle: 'Raise with aces.',
@@ -322,7 +321,60 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'Three choices.',
       body:
-          'Fold to exit. Call to match. Raise to increase the price. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff.',
+          'Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
+    ),
+  ],
+);
+
+final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
+  lessonId: 'cards_ranks_suits_premium_decision',
+  lessonTitle: 'Cards, ranks & suits',
+  caption: 'CO raised to 2.5 BB.',
+  question: 'How will you play your kings?',
+  table: _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
+  hintPolicy: Act0HintPolicyV1.hidden,
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Your starting cards.',
+      body: 'Two kings are a top starting pair. BTN is Button.',
+    ),
+  ],
+  feedbackTitle: 'Raise with kings.',
+  feedbackReason: 'Kings can raise to get paid by a weaker hand.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      amountLabel: '2.5 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise to 7.5 BB',
+      repairFocusLabels: ['Top starting pairs'],
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The call keeps you in.',
+      feedbackReason:
+          'Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise to 7.5 BB',
+      isCorrect: true,
+      preferredLabel: 'Raise to 7.5 BB',
+      repairFocusLabels: ['Top starting pairs'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Raise with kings.',
+      feedbackReason:
+          'Raising KK to 7.5 BB builds the pot against the single CO raise.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Raise to 7.5 BB',
+      repairFocusLabels: ['Top starting pairs'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Your kings can play.',
+      feedbackReason:
+          'Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.',
     ),
   ],
 );
@@ -431,10 +483,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'first_table_guide_first_decision',
-        title: 'Make your first choice',
+        title: 'Decide with your coach',
         phase: Act0LessonPhaseV1.drill,
         runner: _w1FirstDecisionRunner,
-        rewardXp: 5,
+        guidedDecision: true,
+        rewardXp: 0,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -594,6 +647,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Higher card',
         phase: Act0LessonPhaseV1.drill,
         runner: _cardsRanksRunner.copyWith(
+          teachingSteps: [
+            ..._cardsRanksRunner.teachingSteps,
+            const Act0TeachingStepV1(
+              title: 'Pairs at the top.',
+              body:
+                  'Top starting pairs can reraise to get paid by weaker hands.',
+            ),
+          ],
           options: _act0AuthoredCorrectOptionAtV1(
             _cardsRanksRunner.options,
             correctOptionId: 'ace',
@@ -601,6 +662,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'cards_ranks_suits_premium_decision',
+        title: 'Decide with kings',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1FirstIndependentDecisionRunner,
+        rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -1187,6 +1256,63 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'blinds_missing_post_amount',
+        title: 'Find the big blind amount',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _blindsOrderRunner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+          table: _act0W01ExplicitOrderRunnerV1(
+            _blindsOrderRunner,
+            frame: _Act0W01OrderFrameV1.first,
+            taskId: 'blinds_missing_post_amount',
+          ).table.copyWith(selectableSeatIds: const []),
+          caption: 'The pot starts at 1.5 BB. SB posted 0.5 BB.',
+          hint: '',
+          question: 'How much of the starting pot came from BB?',
+          feedbackTitle: 'Subtract the small blind.',
+          feedbackReason:
+              'Subtract the 0.5 BB from SB. The remaining 1 BB came from BB.',
+          options: const [
+            Act0RunnerOptionV1(
+              id: 'small_blind_only',
+              label: '0.5 BB',
+              isCorrect: false,
+              preferredLabel: '1 BB',
+              repairFocusSeatIds: ['bb', 'sb'],
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: 'Look at which player paid.',
+              feedbackReason:
+                  'The 0.5 BB was posted by SB. Using it for BB would leave half a big blind uncounted.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'big_blind_amount',
+              label: '1 BB',
+              isCorrect: true,
+              preferredLabel: '1 BB',
+              repairFocusSeatIds: ['bb', 'sb'],
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: 'BB posted 1 BB.',
+              feedbackReason:
+                  'One big blind plus the small blind of 0.5 BB makes the 1.5 BB pot.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'both_posts',
+              label: '1.5 BB',
+              isCorrect: false,
+              preferredLabel: '1 BB',
+              repairFocusSeatIds: ['bb', 'sb'],
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: 'Separate the two posts.',
+              feedbackReason:
+                  'The 1.5 BB includes both posts. Giving BB all of it counts SB’s 0.5 BB twice.',
+            ),
+          ],
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'blinds_theory',
         title: 'Blinds post first',
         phase: Act0LessonPhaseV1.theory,
@@ -1570,7 +1696,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
               correctIndex: 0,
             ),
           ),
-        ),
+        ).copyWith(caption: 'You’re on BTN. Everyone before you folded.'),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
         tablePresentation: Act0TaskTablePresentationV1.spatialTheory,
@@ -1606,6 +1732,63 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         tablePresentation: Act0TaskTablePresentationV1.stablePractice,
         summary: 'Recognize the one moment checking is free and correct.',
         lockedSummary: 'Clear Action words first, then unlock the no-bet read.',
+      ),
+      Act0LessonTaskV1(
+        taskId: 'actions_call_chip_cost',
+        title: 'Count the cost of a call',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _callActionRunner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          table: _day7PostflopV1(
+            'co',
+            'Qc 9c',
+            'Ks 9d 5h 2s',
+            betBb: 2,
+            showTurn: true,
+          ),
+          teachingSteps: const [],
+          caption:
+              'BB bets 2 BB on the turn. You have put in nothing on this street.',
+          hint: '',
+          question: 'How many BB would your call add?',
+          feedbackTitle: 'A call matches the bet.',
+          feedbackReason:
+              'Match the 2 BB turn bet. Chips paid on earlier streets do not count toward the call.',
+          options: const [
+            Act0RunnerOptionV1(
+              id: 'free',
+              label: '0 BB',
+              isCorrect: false,
+              preferredLabel: '2 BB',
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: 'A bet has arrived.',
+              feedbackReason:
+                  'BB put out 2 BB on this street. Paying nothing leaves the bet unmatched and gives up the hand.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'match_bet',
+              label: '2 BB',
+              isCorrect: true,
+              preferredLabel: '2 BB',
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: 'Match the 2 BB.',
+              feedbackReason:
+                  'BB bet 2 BB and your turn contribution is zero, so the full 2 BB is due.',
+            ),
+            Act0RunnerOptionV1(
+              id: 'match_pot',
+              label: '8 BB',
+              isCorrect: false,
+              preferredLabel: '2 BB',
+              quality: Act0FeedbackQualityV1.wrong,
+              feedbackTitle: 'Read the bet amount.',
+              feedbackReason:
+                  'The middle shows 8 BB after the bet. Paying that amount would put in 6 BB more than a call requires.',
+            ),
+          ],
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
         taskId: 'actions_fold_drill',
@@ -1654,7 +1837,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             'call':
                 'Calling 1 BB on BTN with Qs Js only matches the big blind in the 1.5 BB pot instead of raising to 3 BB and making the blinds pay more.',
           },
-        ),
+        ).copyWith(caption: 'You’re on BTN. Everyone before you folded.'),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
@@ -1682,7 +1865,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             'call':
                 'Calling 1 BB on BTN with Ks Ts only matches the blind in the 1.5 BB pot and gives up the chance to raise to 3 BB and pressure the blinds.',
           },
-        ),
+        ).copyWith(caption: 'You’re on BTN. Everyone before you folded.'),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
         summary: 'Prove you can name the right action without prompts.',
