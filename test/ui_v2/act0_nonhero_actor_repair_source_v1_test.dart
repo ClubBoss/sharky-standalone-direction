@@ -16,12 +16,6 @@ void main() {
   test(
     'four mechanical repair inputs preserve goals and exact authored HJ contrast',
     () {
-      const wrongChoicesBySource = {
-        'blinds_first_actor': ['btn', 'bb'],
-        'blinds_last_actor': ['sb', 'btn'],
-        'blinds_review': ['btn', 'sb'],
-        'positions_utg': ['hj', 'sb'],
-      };
       final records = <String, Object?>{};
       for (final id in nonHeroActorRepairSourceIdsV1) {
         final matches = [
@@ -37,13 +31,22 @@ void main() {
         final correct = task.runner.options
             .where((option) => option.isCorrect)
             .single;
-        final expectedWrongIds = wrongChoicesBySource[id]!;
+        final (originalWrongId, newWrongId) = switch (id) {
+          'blinds_first_actor' => ('btn', 'bb'),
+          'blinds_last_actor' => ('sb', 'btn'),
+          'blinds_review' => ('btn', 'sb'),
+          'positions_utg' => ('hj', 'sb'),
+          _ => throw StateError('Missing wrong options for $id'),
+        };
         final wrongOptions = task.runner.options.where(
           (option) => !option.isCorrect,
         );
-        expect(wrongOptions.map((option) => option.id), expectedWrongIds);
+        expect(wrongOptions.map((option) => option.id), [
+          originalWrongId,
+          newWrongId,
+        ]);
         final wrong = wrongOptions.singleWhere(
-          (option) => option.id == expectedWrongIds.first,
+          (option) => option.id == originalWrongId,
         );
         expect(correct.seatId, id == 'blinds_last_actor' ? 'bb' : 'utg');
         if (id == 'positions_utg') {

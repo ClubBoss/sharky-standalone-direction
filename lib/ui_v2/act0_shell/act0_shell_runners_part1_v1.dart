@@ -3806,7 +3806,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Four of a kind uses all four of one rank.',
       body:
-          'You use 9-9 from hand and 9-9 from the board. All four nines count, so this hand outranks a full house.',
+          'Your two nines and the two board nines make 4 of one rank. This beats a full house.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
       focusLabels: <String>['9-9-9-9'],
     ),

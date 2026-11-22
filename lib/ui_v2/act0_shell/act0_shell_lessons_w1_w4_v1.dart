@@ -286,7 +286,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Your aces can play.',
       feedbackReason:
-          'Folding two aces against one raise gives up the strongest starting hand and your chance to win the chips in the middle.',
+          'Folding aces to one raise gives up the strongest starting hand and the chance to win this pot.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -298,7 +298,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Calling keeps you in.',
       feedbackReason:
-          'Matching HJ’s 2.5 BB keeps your aces in the hand at the current price. Raising gives HJ a chance to put more chips in while your hand is strongest.',
+          'Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -308,7 +308,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with aces.',
       feedbackReason:
-          'Two aces are in the Premium group. Against one raise, raise again to build the pot with your strongest starting hand.',
+          'Aces are Premium. Raise again to build the pot against one raise.',
     ),
   ],
   feedbackTitle: 'Raise with aces.',
@@ -322,7 +322,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'Three choices.',
       body:
-          'Fold to give up the hand. Call to match the bet. Raise to set a higher price.',
+          'Fold to exit. Call to match. Raise to increase the price. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff.',
     ),
   ],
 );
@@ -379,9 +379,14 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
   table: _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
   teachingSteps: const [
     Act0TeachingStepV1(
+      title: 'Read the board.',
+      body:
+          'The flop has three shared cards. The turn is the fourth. BTN is Button, the dealer marker.',
+    ),
+    Act0TeachingStepV1(
       title: 'Compare the highest rank.',
       body:
-          'Broadway is T-J-Q-K-A, the ace-high straight. A-2-3-4-5 is the wheel, the five-high straight. A higher straight wins.',
+          'Broadway ranks are ten, jack, queen, king, and ace. A-2-3-4-5 is the five-high straight, called the wheel. The higher straight wins.',
     ),
   ],
 );
