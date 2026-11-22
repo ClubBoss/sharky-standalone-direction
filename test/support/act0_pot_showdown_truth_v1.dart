@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/models/poker_street.dart';
 // PKR-06 / PKR-08 source oracle over the authored Act0 tables (MACHINE).
 //
 // Independent of the Runner: it reads only supplied stacks, bets, trail
@@ -178,10 +179,14 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
     if (stack == 0 && bet > 0 && !allIns.any((a) => a.actor == actor)) {
       bad('zero_stack_without_all_in', actor);
     }
-    // Contribution cap: nothing attributed to a seat may exceed the chips it
-    // is shown to own (behind + committed).
-    if (stack != null) {
-      final cap = stack + bet;
+    // An earlier all-in can already be in the pot. Use its starting
+    // budget when the source covers the whole hand.
+    final ledger = t.handContributions;
+    final initial = ledger?.fromStreet == PokerStreet.preflop
+        ? ledger?.startingStackBbBySeat[s.seatId]
+        : null;
+    if (initial != null || stack != null) {
+      final cap = initial ?? stack! + bet;
       for (final a in actions.where((a) => a.actor == actor)) {
         final contribution = potTruthContributionVerbsV1.contains(a.chipVerb);
         if (a.amount != null && contribution && a.amount! > cap + 1e-9) {
