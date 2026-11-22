@@ -2004,7 +2004,7 @@ final _w9MTableWindowTransferRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which zone and plan fit?",
   feedbackTitle: "Stack and seat",
   feedbackReason:
-      "18 BB pays for 12 laps. You already put in the big blind and can see a flop for free.",
+      "18 BB pays for 12 orbits. You already put in the big blind and can see a flop for free.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2037,7 +2037,7 @@ final _w9MTableWindowTransferRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "18 BB pays for 12 laps. You already put in the big blind and can see a flop for free.",
+          "18 BB pays for 12 orbits. You already put in the big blind and can see a flop for free.",
     ),
   ],
   table: _day7TableV1(

@@ -5130,7 +5130,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: Yellow. Check.
   - [wrong] Red. Fold. — Look again. M is 12. A fold gives up a free flop after SB calls.
     BETTER ANSWER: Yellow. Check.
-  + [correct] Yellow. Check. — Correct. 18 BB pays for 12 laps. You already put in the big blind and can see a flop for free.
+  + [correct] Yellow. Check. — Correct. 18 BB pays for 12 orbits. You already put in the big blind and can see a flop for free.
 
 TASK w9_m_ratio_red_zone_shove [drill] A short stack on BTN
 CAPTION: Stack: 12 BB. No antes. Each blind calls an all-in with 77+, ATs+, AJo+ or KQs.
