@@ -7,7 +7,7 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand.
-TEACH: Find your cards. Your cards are private. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
+TEACH: Find your cards. Your private cards are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
 TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which two cards are yours?
@@ -217,7 +217,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK cards_ranks_suits_board_count [drill] Board count
 CAPTION: Count the cards in the middle.
-TEACH: The board grows during the hand. A table can have up to five shared cards.
+TEACH: Count the board. The flop has three shared cards. The turn is the fourth.
 TEACH LABELS: Shared cards
 TEACH TABLE: River | You 9h 9s | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts one pair, pocket pair
 Q: How many shared cards can the table show?
@@ -531,7 +531,6 @@ SEATS: UTG | HJ | CO | BTN dealer As 7d | SB | BB
 TASK hand_rankings_compare_ace_straights [drill] Hand ranking question
 AUTHORED TITLE: Two straights, one winner
 CAPTION: Suppose the other player has 4♠ 5♥.
-TEACH: Read the board. The flop has three shared cards. The turn is the fourth. BTN is Button, the dealer marker.
 TEACH: Compare the highest rank. Broadway ranks are ten, jack, queen, king, and ace. A-2-3-4-5 is the five-high straight, called the wheel. The higher straight wins.
 Q: Which straight wins, Broadway or A-2-3-4-5?
 HINT [theoryOnly]: (none)
@@ -588,7 +587,7 @@ SEATS: UTG | HJ | CO Ad Qd | BTN dealer As Kh | SB | BB
 
 TASK positions_theory [theory] Six seats
 CAPTION: The six seats are UTG, HJ, CO, BTN, SB, and BB.
-TEACH: When cards reach the board Preflop means no board cards yet. The flop has three. The turn is the fourth board card.
+TEACH: When cards reach the board Preflop means no board cards yet. The flop has three.
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Read the seat labels. UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.
 TEACH LABELS: UTG, HJ, CO, SB, BB
@@ -682,7 +681,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK blinds_theory [theory] Blinds post first
 CAPTION: SB and BB post before cards are played.
-TEACH: Blinds force a starting pot. Blinds are real chips or money put in first. Players often count them in big blinds because BB is the clean shortcut for the price.
+TEACH: Blinds force a starting pot. The blinds put chips in before anyone decides. One big blind (1 BB) is the unit we use to count chips.
 TEACH LABELS: Real money, Count in BB
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus sb, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Action starts after BB. BB is a unit for chips. A bet of 3 BB is three times the big blind. UTG is first to choose before the flop.
