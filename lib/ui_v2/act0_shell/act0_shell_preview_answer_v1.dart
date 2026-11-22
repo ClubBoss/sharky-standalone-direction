@@ -130,6 +130,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
           entry.lessonId == item.lessonId &&
           item.taskId != id &&
           !_openedSpacedReviewTaskIdsV1.contains(id) &&
+          !_routePracticeV1.seen.contains(id) &&
           !_learningEvidenceHistoryV1.provenanceRecords.any(
             (record) => record.taskId == id,
           )) {

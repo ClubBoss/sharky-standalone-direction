@@ -217,6 +217,8 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.onDismissWorldDetail,
     required this.onPreviewPremiumWorld,
     required this.onSelectLesson,
+    this.requiredPractice,
+    this.onStartRequiredPractice,
     required this.onOpenLessonAfterScroll,
     required this.onDismissDetail,
     required this.onSelectTask,
@@ -251,6 +253,8 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final VoidCallback onDismissWorldDetail;
   final ValueChanged<Act0WorldCardV1> onPreviewPremiumWorld;
   final bool Function(String lessonId) onSelectLesson;
+  final Act0LessonCardV1? requiredPractice;
+  final VoidCallback? onStartRequiredPractice;
   final ValueChanged<String> onOpenLessonAfterScroll;
   final VoidCallback onDismissDetail;
   final void Function(String lessonId, String taskId) onSelectTask;
@@ -617,13 +621,15 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
         : detailLessonId;
     final shouldShowDefaultTaskFocus =
         detailLesson != null && _shouldShowDefaultTaskFocusV1(detailLesson);
-    final currentMissionLesson = widget.lessons.firstWhere(
-      (lesson) => lesson.state == Act0LessonStateV1.current,
-      orElse: () => widget.lessons.firstWhere(
-        (lesson) => lesson.lessonId == widget.selectedLessonId,
-        orElse: () => widget.lessons.first,
-      ),
-    );
+    final currentMissionLesson =
+        widget.requiredPractice ??
+        widget.lessons.firstWhere(
+          (lesson) => lesson.state == Act0LessonStateV1.current,
+          orElse: () => widget.lessons.firstWhere(
+            (lesson) => lesson.lessonId == widget.selectedLessonId,
+            orElse: () => widget.lessons.first,
+          ),
+        );
     final currentMissionTask = currentMissionLesson.courseTaskList.firstWhere(
       (task) => !widget.pathClosedTaskIds.contains(task.taskId),
       orElse: () => currentMissionLesson.courseTaskList.first,
@@ -740,12 +746,14 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         currentMissionStepIndex: currentMissionStepIndex,
                         detailMode: detailLessonId != null,
                         firstLessonLanding: isFirstLessonLanding,
-                        onStartMission: currentMissionLesson.isSelectable
-                            ? () => widget.onStartTask(
-                                currentMissionLesson.lessonId,
-                                currentMissionTask.taskId,
-                              )
-                            : null,
+                        onStartMission:
+                            widget.onStartRequiredPractice ??
+                            (currentMissionLesson.isSelectable
+                                ? () => widget.onStartTask(
+                                    currentMissionLesson.lessonId,
+                                    currentMissionTask.taskId,
+                                  )
+                                : null),
                         lessons: widget.lessons,
                         journeyLessonIndexes: journeyLessonIndexes,
                         deferredLockedCount: deferredLockedCount,

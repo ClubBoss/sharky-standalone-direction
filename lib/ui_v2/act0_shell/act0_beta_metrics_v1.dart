@@ -284,6 +284,7 @@ class Act0BetaLearningMetricsV1 {
     required this.firstLessonCompleted,
     required this.worldOneCompleted,
     required this.correctedMistakes,
+    this.completedRoutePracticeSteps = 0,
     this.firstLessonId = '',
     this.firstLessonTaskIds = const {},
     this.courseWorlds = const [],
@@ -298,6 +299,7 @@ class Act0BetaLearningMetricsV1 {
     required Act0WorldCardV1 firstWorld,
     required Set<String> completedTaskIds,
     required int correctedMistakes,
+    int completedRoutePracticeSteps = 0,
     List<Act0WorldCardV1> courseWorlds = const [],
     String currentLessonId = '',
     int rulesBestScore = 0,
@@ -314,6 +316,7 @@ class Act0BetaLearningMetricsV1 {
       worldOneCompleted:
           firstLesson != null && firstWorld.lessons.every(completed),
       correctedMistakes: correctedMistakes,
+      completedRoutePracticeSteps: completedRoutePracticeSteps,
       firstLessonId: firstLesson?.lessonId ?? '',
       firstLessonTaskIds: {
         if (firstLesson != null)
@@ -330,6 +333,7 @@ class Act0BetaLearningMetricsV1 {
 
   final bool firstLessonCompleted, worldOneCompleted;
   final int correctedMistakes;
+  final int completedRoutePracticeSteps;
   final String firstLessonId;
   final Set<String> firstLessonTaskIds;
   final Act0LearningEvidenceHistoryV1 history;
@@ -425,6 +429,7 @@ class Act0BetaLearningMetricsV1 {
       'Current lesson: ${describeLesson(current, forCopy: forCopy)}',
       'Farthest lesson reached: ${describeLesson(farthest, forCopy: forCopy)}',
       'Completed lessons: ${finished.length}',
+      'Completed route practice steps: $completedRoutePracticeSteps',
       'W1 rules check: ${!tookCheck
           ? 'Not started'
           : rulesCheckCompleted

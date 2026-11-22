@@ -1,3 +1,4 @@
+import 'act0_route_practice_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
@@ -100,6 +101,7 @@ part 'act0_shell_preview_launch_v1.dart';
 part 'act0_shell_preview_placement_v1.dart';
 part 'act0_shell_preview_w1_rules_v1.dart';
 part 'act0_shell_preview_answer_v1.dart';
+part 'act0_shell_preview_route_practice_v1.dart';
 part 'act0_shell_preview_profile_v1.dart';
 part 'act0_shell_preview_flow_v1.dart';
 
@@ -1467,6 +1469,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
   final Set<String> _dailyCompletedLessonIds = <String>{};
+  Act0RoutePracticeProgressV1 _routePracticeV1 =
+      const Act0RoutePracticeProgressV1();
+  String? _routePracticePresetV1;
   Act0DailyPracticeQueueV1 _dailyPracticeQueue =
       const Act0DailyPracticeQueueV1();
   int _dailyCompletedRepCount = 0;
@@ -2787,6 +2792,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       );
     }
+    if (_routePracticeV1.inRunner && _routePracticeV1.run != null) {
+      return _withRunnerChromeV1(
+        Scaffold(
+          key: const Key('act0_shell_preview_screen'),
+          backgroundColor: Act0ShellTokensV1.background,
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                _progressSaveNoticeV1(),
+                Expanded(
+                  child: KeyedSubtree(
+                    key: const Key('act0_shell_route_practice_runner'),
+                    child: _buildRoutePracticeRunnerV1(_routePracticeV1.run!),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
@@ -2844,6 +2871,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld.lessons,
       _selectedLessonId,
     );
+    final requiredPractice = selectedWorld.isSelectable
+        ? _requiredRoutePracticeV1(selectedWorld, _pathClosedTaskIds)
+        : null;
+    final requiredPracticeMission =
+        _tab == Act0ShellTabV1.learn && requiredPractice != null
+        ? _routePracticeMissionV1(selectedWorld, requiredPractice)
+        : null;
     final practiceGroups = _practiceGroups(
       state: state,
       world: selectedWorld,
@@ -3119,6 +3153,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ctaLabel: 'Continue lesson',
             onPressed: () =>
                 setState(() => _resumeHomeLessonV1(resumableLesson!)),
+          )
+        : requiredPractice != null
+        ? Act0AcademyHomeNextActionV1(
+            title: _copyV1(en: 'Practice', ru: 'Практика'),
+            subtitle: _copyV1(
+              en: 'Complete this set to open the next lesson.',
+              ru: 'Пройди эту серию, чтобы открыть следующий урок.',
+            ),
+            ctaLabel: _copyV1(en: 'Start practice', ru: 'Начать практику'),
+            onPressed: () => setState(() {
+              _startRoutePracticeV1(selectedWorld, requiredPractice);
+            }),
           )
         : _dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
               dailyGroup.isEnabled &&
@@ -3503,6 +3549,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : null,
                         worldDetailId: _learnDetailWorldId,
                         lessons: selectedWorld.lessons,
+                        requiredPractice: requiredPracticeMission,
+                        onStartRequiredPractice: requiredPracticeMission == null
+                            ? null
+                            : () => setState(() {
+                                _startRoutePracticeV1(
+                                  selectedWorld,
+                                  requiredPractice!,
+                                );
+                              }),
                         selectedLessonId: _selectedLessonId,
                         selectedTaskId: _selectedTaskId,
                         activePopupTaskId: _learnPopupTaskId,
@@ -4950,6 +5005,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _w1RulesFocusTaskIdsV1.isNotEmpty,
                                 history: _learningEvidenceHistoryV1,
                                 completedTaskIds: _completedTaskIds,
+                                completedRoutePracticeSteps:
+                                    _routePracticeV1.finished.length,
                                 correctedMistakes:
                                     _fixProofProjectionV1().proofs.length,
                               )
@@ -5114,6 +5171,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         child: shell,
       );
     }
+    return _withRunnerChromeV1(shell);
+  }
+
+  Widget _withRunnerChromeV1(Widget shell) {
     return MediaQuery.withClampedTextScaling(
       minScaleFactor: 1.0,
       maxScaleFactor: 1.3,
@@ -5952,6 +6013,7 @@ class _Act0PersistedProgressV1 {
     this.hasEarnedDailyDayField = false,
     this.dailyCompletedRepCount = 0,
     this.dailyPracticeQueue = const Act0DailyPracticeQueueV1(),
+    this.routePractice,
     this.dailyCompletedTaskIds = const {},
     this.dailyCompletedLessonIds = const {},
     this.persistedStreakDays = 0,
@@ -6008,6 +6070,7 @@ class _Act0PersistedProgressV1 {
   final bool hasEarnedDailyDayField;
   final int dailyCompletedRepCount;
   final Act0DailyPracticeQueueV1 dailyPracticeQueue;
+  final Act0RoutePracticeProgressV1? routePractice;
   final Set<String> dailyCompletedTaskIds;
   final Set<String> dailyCompletedLessonIds;
   final int persistedStreakDays;
@@ -6093,6 +6156,7 @@ class _Act0PersistedProgressV1 {
       'lastEarnedDailyDay': lastEarnedDailyDay,
       'dailyCompletedRepCount': dailyCompletedRepCount,
       'dailyPracticeQueue': dailyPracticeQueue.toPayload(),
+      if (routePractice != null) 'routePractice': routePractice!.toPayload(),
       'dailyCompletedTaskIds': dailyCompletedTaskIds.toList()..sort(),
       if (dailyCompletedLessonIds.isNotEmpty)
         'dailyCompletedLessonIds': dailyCompletedLessonIds.toList()..sort(),
@@ -6341,6 +6405,7 @@ class _Act0PersistedProgressV1 {
     }
     return _Act0PersistedProgressV1(
       schemaVersion: schemaVersion,
+      routePractice: Act0RoutePracticeProgressV1.tryParse(map['routePractice']),
       suppressLegacyRecheckAfterRecovery:
           map['suppressLegacyRecheckAfterRecovery'] == true,
       completedTaskIds: completedTaskIds,
