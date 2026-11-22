@@ -297,7 +297,7 @@ void main() {
     final routeBoard = tester.widget<Text>(
       find.byKey(const Key('act0_shell_learn_route_board')),
     );
-    expect(routeBoard.data, '0 of 12 lessons');
+    expect(routeBoard.data, '0 of 13 lessons');
 
     await tester.tap(
       find.byKey(const Key('act0_shell_learn_v5_view_full_path')),
@@ -334,7 +334,7 @@ void main() {
     final routeBoard = tester.widget<Text>(
       find.byKey(const Key('act0_shell_learn_route_board')),
     );
-    expect(routeBoard.data, '1 of 12 lessons');
+    expect(routeBoard.data, '1 of 13 lessons');
     expect(
       find.byKey(const Key('act0_shell_current_mission_cta')),
       findsOneWidget,
@@ -351,8 +351,8 @@ void main() {
             .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
             .input;
         expect(input.earnedLessonCount, 4);
-        expect(input.courseLessonCount, 12);
-        expect(find.text('4 of 12 lessons complete'), findsOneWidget);
+        expect(input.courseLessonCount, 13);
+        expect(find.text('4 of 13 lessons complete'), findsOneWidget);
         expect(find.text('Continue with the next hand.'), findsNothing);
         expect(find.textContaining('mastery'), findsNothing);
       } else {
@@ -404,7 +404,7 @@ void main() {
 
     if (act0AcademyHomePreviewV1) {
       expect(find.text('First Table Guide'), findsOneWidget);
-      expect(find.text('0 of 12 lessons complete'), findsOneWidget);
+      expect(find.text('0 of 13 lessons complete'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_academy_home_leaf_next_card')),
         findsOneWidget,
@@ -418,7 +418,7 @@ void main() {
       expect(cta.hitTestable(), findsOneWidget);
     } else {
       expect(find.text('First Table Guide'), findsOneWidget);
-      expect(find.text('0 of 12 lessons complete'), findsOneWidget);
+      expect(find.text('0 of 13 lessons complete'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_home_daily_plan_card')),
         findsOneWidget,
@@ -440,7 +440,7 @@ void main() {
 
     if (act0AcademyHomePreviewV1) {
       expect(find.text('Cards, ranks & suits'), findsOneWidget);
-      expect(find.text('1 of 12 lessons complete'), findsOneWidget);
+      expect(find.text('1 of 13 lessons complete'), findsOneWidget);
       expect(find.text('8%'), findsOneWidget);
       expect(
         tester
@@ -457,7 +457,7 @@ void main() {
       );
     } else {
       expect(find.text('Cards, ranks & suits'), findsOneWidget);
-      expect(find.text('1 of 12 lessons complete'), findsOneWidget);
+      expect(find.text('1 of 13 lessons complete'), findsOneWidget);
       expect(find.text('Continue with the next hand.'), findsOneWidget);
       expect(find.textContaining('1 lessons complete'), findsNothing);
       expect(

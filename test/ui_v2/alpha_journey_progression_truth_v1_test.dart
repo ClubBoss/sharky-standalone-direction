@@ -133,7 +133,7 @@ void main() {
       );
 
       await openLearn(tester);
-      expect(find.textContaining('0 of 12 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 13 lessons'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_current_mission_card')),
         findsOneWidget,
@@ -325,7 +325,7 @@ void main() {
       });
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('1 of 12 lessons'), findsOneWidget);
+      expect(find.textContaining('1 of 13 lessons'), findsOneWidget);
       expect(find.text('Cards, ranks & suits'), findsWidgets);
       await tester.tap(find.text('All lessons'));
       await tester.pumpAndSettle();
@@ -358,7 +358,7 @@ void main() {
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
       expect(find.text('First Table Guide'), findsWidgets);
-      expect(find.textContaining('0 of 12 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 13 lessons'), findsOneWidget);
     },
   );
 
@@ -367,7 +367,7 @@ void main() {
     (tester) async {
       await seedValidActionPrecondition();
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('8 of 12 lessons'), findsOneWidget);
+      expect(find.textContaining('9 of 13 lessons'), findsOneWidget);
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_current_mission_card')),
