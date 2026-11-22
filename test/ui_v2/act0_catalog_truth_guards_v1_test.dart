@@ -1085,6 +1085,13 @@ void main() {
       isEmpty,
       reason: 'G1·48 cash bankroll thresholds must use the course rule',
     );
+    expect(
+      report.findings.where(
+        (key) => key.startsWith('$catalogSharedFeedbackBodyRuleV1|'),
+      ),
+      isEmpty,
+      reason: 'G1·49 scored options need distinct feedback bodies',
+    );
     final baselineFile = File(_qualityBaselinePath);
     if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
       final existing = baselineFile.existsSync()
@@ -2279,6 +2286,49 @@ void main() {
           withReason(options[2], sharedReason, id: options[1].id),
         ]),
         ['21.duplicate_wrong_reason|${base.task.taskId}|choice_1'],
+      );
+    });
+
+    test('G1·49 rejects a shared body despite different verdict titles', () {
+      final row = day7CatalogTasks.singleWhere(
+        (row) =>
+            row.task.taskId ==
+            'spaced_review_w5_outs_improvement_hero_cards_board_pot_v1',
+      );
+      final runner = row.task.runner;
+      final shared = runner.options.first.feedbackReason;
+      final altered = _withRunner(
+        row,
+        runner.copyWith(
+          options: [
+            for (final option in runner.options)
+              Act0RunnerOptionV1(
+                id: option.id,
+                label: option.label,
+                isCorrect: option.isCorrect,
+                preferredLabel: option.preferredLabel,
+                quality: option.quality,
+                feedbackTitle: option.feedbackTitle,
+                feedbackReason: option.isCorrect ? shared : '  $shared  ',
+              ),
+          ],
+        ),
+      );
+      Iterable<String> findingsFor(CatalogTask task) =>
+          runCatalogQualityAudit(rows: [task]).findings.where(
+            (key) => key.startsWith('$catalogSharedFeedbackBodyRuleV1|'),
+          );
+      expect(findingsFor(row), isEmpty);
+      expect(findingsFor(altered), [
+        '$catalogSharedFeedbackBodyRuleV1|${row.task.taskId}',
+      ]);
+      expect(
+        findingsFor(
+          rulesCheckCatalogTasks.singleWhere(
+            (row) => row.task.taskId == 'w1_rules_check_forced_bets',
+          ),
+        ),
+        isEmpty,
       );
     });
 

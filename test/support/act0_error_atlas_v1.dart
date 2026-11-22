@@ -78,7 +78,7 @@ void _writeReport(
     '| E06 | Коды миров | G1 world codes: ${rows.expand((r) => catalogWorldCodeFindingsV1(r.task)).length} |',
     '| E07 | Числа банка и цены | Отдельная проверка G1 decision copy numbers |',
     '| E08 | Стеки и фишки | Отдельная проверка Table Truth D7 |',
-    '| E09 | Повтор одного разбора | G1·21: ${quality.findings.where((key) => key.startsWith('21.')).length} |',
+    '| E09 | Повтор одного разбора | G1·21/49: ${quality.findings.where((key) => key.startsWith('21.') || key.startsWith('$catalogSharedFeedbackBodyRuleV1|')).length} |',
     '| E10 | Повтор раздачи | Каталог, semantic repeat: ${truthFindings('5.semantic_repeat')} находок; отдельный guard дубликатов |',
     '| E11 | Покерные термины | Claim audit: ${truthFindings('1.')} находок по фактам; C5: ${concepts.length} пар задание × понятие до объяснения |',
     '| E12 | Комбо как частота | Отдельный тест raw combo counts |',
