@@ -2,7 +2,13 @@ name: Test Authority Lanes
 
 on:
   pull_request:
-    paths-ignore: ['docs/**', '**/*.md']
+    # Release policy drafts need the same checks with a bounded PR changeset.
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!**/*.md'
+      - 'docs/RELEASE.md'
+      - 'docs/release/privacy_policy_1_0_en.md'
   push:
     branches: [ main ]
   workflow_dispatch:
