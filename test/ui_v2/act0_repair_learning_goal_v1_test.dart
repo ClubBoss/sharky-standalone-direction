@@ -92,13 +92,13 @@ const _rehearsals = <_Subject>[
     world: "world_1",
     lesson: "fold_check_call_raise",
     task: "actions_check_drill",
-    choice: "pay_small_blind",
+    choice: "fold",
   ),
   (
     world: "world_1",
     lesson: "fold_check_call_raise",
     task: "actions_check_drill",
-    choice: "pay_big_blind",
+    choice: "call",
   ),
   (
     world: 'world_1',
@@ -491,7 +491,7 @@ void main() {
     () {
       // The guided Check destination genuinely coincides with this existing
       // ordinary repair's original source, exercising the prior-proof cap seam.
-      final intent = _intent(_rehearsals[2]); // Check cost -> legal context.
+      final intent = _intent(_rehearsals[2]); // Check/fold -> legal context.
       final source = _sourceRecord(intent);
       final target = _task(
         intent.targetWorldId,
@@ -575,7 +575,7 @@ void main() {
       ).seedForId(act0AchievementSeedFirstCorrectReadV1);
       expect(firstRead.earned, isTrue);
       expect(firstRead.sourceSummary['completedCorrectDecisions'], 1);
-      for (final choice in ['check', 'pay_small_blind']) {
+      for (final choice in ['check', 'fold']) {
         final next = _appendAuthoredDiagnosticControl(
           history: history,
           focus: intent,
@@ -660,7 +660,7 @@ void main() {
           source.recordId,
           attempt.recordId,
           'guided-source-check',
-          'guided-source-pay_small_blind',
+          'guided-source-fold',
         ]),
       );
       expect(history.records.first.toPayload(), source.toPayload());
@@ -829,12 +829,11 @@ void main() {
         expect(fresh?.canClaimRepairClosure, isFalse);
         expect(
           intent.relationRevision,
-          diagnostic.id == 'action_basics' ? 3 : 1,
+          diagnostic.id == 'action_basics' ? 2 : 1,
         );
         if (diagnostic.id == 'action_basics') {
           for (final patch in <Map<String, Object?>>[
             {'relationRevision': 1},
-            {'relationRevision': 2},
             {
               'targetFingerprint':
                   '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
@@ -983,12 +982,11 @@ void main() {
             'actions_legal_context':
                 'd889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4',
           };
-          expect(intent.relationRevision, 3);
+          expect(intent.relationRevision, 2);
           expect(intent.sourceFingerprint, isNot(oldFp[source.task]));
           expect(intent.targetFingerprint, isNot(oldFp[intent.targetTaskId]));
           for (final patch in <Map<String, Object?>>[
             {'relationRevision': 1},
-            {'relationRevision': 2},
             {'sourceFingerprint': oldFp[source.task]},
             {'targetFingerprint': oldFp[intent.targetTaskId]},
             {

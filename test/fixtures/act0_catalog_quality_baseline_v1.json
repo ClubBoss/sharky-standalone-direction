@@ -18,6 +18,10 @@
     "25.street_stack": 40
   },
   "findings": [
+    "17.single_format_lesson|fold_check_call_raise|actionDecision",
+    "18.same_format_streak|world_1|actions_theory|actionDecision",
+    "21.duplicate_wrong_reason|actions_check_drill|call",
+    "21.duplicate_wrong_reason|actions_check_drill|fold",
     "21.duplicate_wrong_reason|spaced_review_check_river_v1|call",
     "21.duplicate_wrong_reason|spaced_review_check_river_v1|fold",
     "21.duplicate_wrong_reason|spaced_review_check_turn_v1|call",

@@ -857,16 +857,16 @@ CAPTION: BB checks on the flop. It is your turn and there is no bet to match.
 TEACH: No bet is facing you. When no one has bet, check keeps playing for free.
 TEACH LABELS: No bet, Check is free
 TEACH TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center No bet faces you | Facts high card, rainbow, backdoor straight
-Q: How much does the Check action cost here?
+Q: What action keeps playing for free?
 HINT [theoryOnly]: Read the amount required to stay in the hand.
 TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
-  - [wrong] 0.5 BB — Not quite. The small blind posted earlier. BB checked on this flop, so you keep your 0.5 BB by checking behind.
-    BETTER ANSWER: 0 BB
-  + [correct] 0 BB — Check is legal with no bet to call. BB checked on A-7-2. With 9-8 you can see the turn by checking for 0 BB.
-  - [wrong] 1 BB — Not quite. The big blind was due before the flop. BB has checked, so there is no 1 BB bet to match now.
-    BETTER ANSWER: 0 BB
+  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
+    BETTER ANSWER: Check
+  + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
+  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
+    BETTER ANSWER: Check
 
 TASK actions_fold_drill [drill] Fold to exit
 SUMMARY: Recognize the action that gives up the hand without paying the bet.

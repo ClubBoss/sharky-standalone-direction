@@ -313,13 +313,13 @@ void main() {
     );
     await tester.pumpAndSettle();
     await _advanceTeachingToDrill(tester);
-    await _answerOption(tester, 'pay_small_blind');
+    await _answerOption(tester, 'fold');
 
     final outcomes = _repairOutcomePayload(tester);
     expect(outcomes, hasLength(1));
     expect(outcomes.single['sourceTaskId'], 'actions_legal_context');
     expect(outcomes.single['repairTaskId'], 'actions_check_drill');
-    expect(outcomes.single['selectedChoiceId'], 'pay_small_blind');
+    expect(outcomes.single['selectedChoiceId'], 'fold');
     expect(outcomes.single['correctChoiceId'], 'check');
     expect(outcomes.single['isCorrect'], isFalse);
     expect(outcomes.single['outcomeState'], 'repair_still_needs_rep_v1');

@@ -85,7 +85,7 @@ void main() {
   );
 
   test(
-    'all 201 W1-W4 tasks have explicit curriculum topics and independent evidence',
+    'all W1-W4 tasks have explicit curriculum topics and independent evidence',
     () {
       final foundationWorlds = _worlds
           .where((w) => w.worldNumber <= 4)

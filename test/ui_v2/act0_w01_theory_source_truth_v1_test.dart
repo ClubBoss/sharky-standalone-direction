@@ -1236,142 +1236,128 @@ void _newFreeCheckContextTests() {
       'd889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4',
     ),
     'actions_check_drill': (
-      'How much does the Check action cost here?',
+      'What action keeps playing for free?',
       '45f862c2af3aa0be312896d02a20391e432d349fd42a074228b3a32205905205',
     ),
   };
   for (final entry in sources.entries) {
     final id = entry.key;
     _contextPremisesWidgetTest('fold_check_call_raise', id, neutral: false);
-    test('new mechanical Check $id retains goal and complete declared facts', () {
-      final task = _task('fold_check_call_raise', id);
-      final hero = id == 'actions_legal_context' ? 'co' : 'btn';
-      final foldedLateSeat = hero == 'co' ? 'btn' : 'co';
-      final table = task.runner.table;
-      expect(task.runner.question, entry.value.$1);
-      expect(task.rewardXp, 5);
-      expect(
-        task.runner.options.map((o) => o.id),
-        id == 'actions_legal_context'
-            ? ['fold', 'check', 'call']
-            : ['pay_small_blind', 'check', 'pay_big_blind'],
-      );
-      if (id == 'actions_check_drill') {
-        expect(task.runner.options.map((o) => o.label), [
-          '0.5 BB',
-          '0 BB',
-          '1 BB',
+    test(
+      'new mechanical Check $id retains goal and complete declared facts',
+      () {
+        final task = _task('fold_check_call_raise', id);
+        final hero = id == 'actions_legal_context' ? 'co' : 'btn';
+        final foldedLateSeat = hero == 'co' ? 'btn' : 'co';
+        final table = task.runner.table;
+        expect(task.runner.question, entry.value.$1);
+        expect(task.rewardXp, 5);
+        expect(task.runner.options.map((o) => o.id), ['fold', 'check', 'call']);
+        expect(task.runner.options.map((o) => o.isCorrect), [
+          false,
+          true,
+          false,
         ]);
-      }
-      expect(task.runner.options.map((o) => o.isCorrect), [false, true, false]);
-      expect(task.runner.options.map((o) => o.quality.name), [
-        'wrong',
-        'correct',
-        'wrong',
-      ]);
-      expect(task.runner.options.map((o) => o.feedbackReason), [
-        if (id == 'actions_legal_context')
-          'Folding gives up the hand. Checking is free here.'
-        else
-          'The small blind posted earlier. BB checked on this flop, so you keep your 0.5 BB by checking behind.',
-        if (id == 'actions_legal_context')
-          'Checking keeps the hand going when no bet faces you.'
-        else
-          'BB checked on A-7-2. With 9-8 you can see the turn by checking for 0 BB.',
-        if (id == 'actions_legal_context')
-          'Calling means matching a bet. There is no bet here.'
-        else
-          'The big blind was due before the flop. BB has checked, so there is no 1 BB bet to match now.',
-      ]);
-      expect(table.scope, Act0TableScopeV1.playedHand);
-      expect(table.playerCount, 6);
-      const expectedCards = ['9c', '8d'];
-      expect(table.heroCards.map((c) => c.label), expectedCards);
-      expect(table.heroCards.last.tone, Act0CardToneV1.red);
-      final expectedBoard = [
-        id == 'actions_legal_context' ? 'Kh' : 'Ah',
-        '7c',
-        '2d',
-      ];
-      expect(table.boardCards.map((c) => c.label), expectedBoard);
-      expect(
-        {...table.heroCards, ...table.boardCards}.map((c) => c.label).toSet(),
-        hasLength(5),
-      );
-      expect(table.heroSeat.holeCards.map((c) => c.label), expectedCards);
-      expect(table.streetLabel, 'Flop');
-      expect(table.potLabel, 'Pot 4.5 BB');
-      expect(table.toCallLabel, isEmpty);
-      expect(table.heroSeatId, hero);
-      expect(table.decisionSeatId, hero);
-      expect(table.activeSeatId, hero);
-      expect(
-        table.seats.where((s) => s.isInHand).map((s) => s.seatId).toSet(),
-        {hero, 'bb'},
-      );
-      expect(
-        table.seats.where((s) => s.isFolded).map((s) => s.seatId).toSet(),
-        {'utg', 'hj', foldedLateSeat, 'sb'},
-      );
-      expect(table.seats.singleWhere((s) => s.isSmallBlind).seatId, 'sb');
-      expect(table.seats.singleWhere((s) => s.isBigBlind).seatId, 'bb');
-      expect(table.seats.singleWhere((s) => s.isDealerButton).seatId, 'btn');
-      expect(
-        {for (final s in table.seats) s.seatId: s.stackLabel},
-        {
-          'utg': '100 BB',
-          'hj': '100 BB',
-          hero: '98 BB',
-          foldedLateSeat: '100 BB',
-          'sb': '99.5 BB',
-          'bb': '98 BB',
-        },
-      );
-      expect(_freeCheckTotal(table), 600);
-      expect(
-        table.seats.every(
-          (s) =>
-              s.blindAmountLabel == null &&
-              s.currentBetLabel == null &&
-              s.bet == null &&
-              !s.isLastAggressor,
-        ),
-        isTrue,
-      );
-      expect(table.highlightedSeatIds, isEmpty);
-      expect(table.highlightedCardIds, isEmpty);
-      expect(table.actionTrail.map((a) => a.label), [
-        'SB blind 0.5 BB',
-        'BB blind 1 BB',
-        'UTG folds',
-        'HJ folds',
-        if (hero == 'btn') 'CO folds',
-        '${hero.toUpperCase()} raises 2 BB',
-        if (hero == 'co') 'BTN folds',
-        'SB folds',
-        'BB calls 1 BB more',
-        'Flop: BB checks',
-      ]);
-      expect(
-        task.runner.caption,
-        'BB checks on the flop. It is your turn and there is no bet to match.',
-      );
-      expect(table.actionTrail[7].learnerLabel, 'BB calls 1 more, 2 total');
-      final proof = act0BettingRoundOrderProofForTableV1(table);
-      expect(proof.truth, Act0BettingRoundOrderTruthV1.consistent);
-      expect(proof.reason, 'consistent_current_decision');
-      final feedback = act0FeedbackTableForRunnerV1(
-        runner: task.runner.copyWith(selectedOptionId: 'check'),
-        taskFamily: task.resolvedTaskFamily,
-      );
-      expect(feedback.streetLabel, 'Flop');
-      expect(feedback.boardCards.map((c) => c.label), expectedBoard);
-      expect(feedback.potLabel, 'Pot 4.5 BB');
-      expect(
-        feedback.actionTrail.map((a) => a.label),
-        table.actionTrail.map((a) => a.label),
-      );
-    });
+        expect(task.runner.options.map((o) => o.quality.name), [
+          'wrong',
+          'correct',
+          'wrong',
+        ]);
+        expect(task.runner.options.map((o) => o.feedbackReason), [
+          'Folding gives up the hand. Checking is free here.',
+          'Checking keeps the hand going when no bet faces you.',
+          'Calling means matching a bet. There is no bet here.',
+        ]);
+        expect(table.scope, Act0TableScopeV1.playedHand);
+        expect(table.playerCount, 6);
+        const expectedCards = ['9c', '8d'];
+        expect(table.heroCards.map((c) => c.label), expectedCards);
+        expect(table.heroCards.last.tone, Act0CardToneV1.red);
+        final expectedBoard = [
+          id == 'actions_legal_context' ? 'Kh' : 'Ah',
+          '7c',
+          '2d',
+        ];
+        expect(table.boardCards.map((c) => c.label), expectedBoard);
+        expect(
+          {...table.heroCards, ...table.boardCards}.map((c) => c.label).toSet(),
+          hasLength(5),
+        );
+        expect(table.heroSeat.holeCards.map((c) => c.label), expectedCards);
+        expect(table.streetLabel, 'Flop');
+        expect(table.potLabel, 'Pot 4.5 BB');
+        expect(table.toCallLabel, isEmpty);
+        expect(table.heroSeatId, hero);
+        expect(table.decisionSeatId, hero);
+        expect(table.activeSeatId, hero);
+        expect(
+          table.seats.where((s) => s.isInHand).map((s) => s.seatId).toSet(),
+          {hero, 'bb'},
+        );
+        expect(
+          table.seats.where((s) => s.isFolded).map((s) => s.seatId).toSet(),
+          {'utg', 'hj', foldedLateSeat, 'sb'},
+        );
+        expect(table.seats.singleWhere((s) => s.isSmallBlind).seatId, 'sb');
+        expect(table.seats.singleWhere((s) => s.isBigBlind).seatId, 'bb');
+        expect(table.seats.singleWhere((s) => s.isDealerButton).seatId, 'btn');
+        expect(
+          {for (final s in table.seats) s.seatId: s.stackLabel},
+          {
+            'utg': '100 BB',
+            'hj': '100 BB',
+            hero: '98 BB',
+            foldedLateSeat: '100 BB',
+            'sb': '99.5 BB',
+            'bb': '98 BB',
+          },
+        );
+        expect(_freeCheckTotal(table), 600);
+        expect(
+          table.seats.every(
+            (s) =>
+                s.blindAmountLabel == null &&
+                s.currentBetLabel == null &&
+                s.bet == null &&
+                !s.isLastAggressor,
+          ),
+          isTrue,
+        );
+        expect(table.highlightedSeatIds, isEmpty);
+        expect(table.highlightedCardIds, isEmpty);
+        expect(table.actionTrail.map((a) => a.label), [
+          'SB blind 0.5 BB',
+          'BB blind 1 BB',
+          'UTG folds',
+          'HJ folds',
+          if (hero == 'btn') 'CO folds',
+          '${hero.toUpperCase()} raises 2 BB',
+          if (hero == 'co') 'BTN folds',
+          'SB folds',
+          'BB calls 1 BB more',
+          'Flop: BB checks',
+        ]);
+        expect(
+          task.runner.caption,
+          'BB checks on the flop. It is your turn and there is no bet to match.',
+        );
+        expect(table.actionTrail[7].learnerLabel, 'BB calls 1 more, 2 total');
+        final proof = act0BettingRoundOrderProofForTableV1(table);
+        expect(proof.truth, Act0BettingRoundOrderTruthV1.consistent);
+        expect(proof.reason, 'consistent_current_decision');
+        final feedback = act0FeedbackTableForRunnerV1(
+          runner: task.runner.copyWith(selectedOptionId: 'check'),
+          taskFamily: task.resolvedTaskFamily,
+        );
+        expect(feedback.streetLabel, 'Flop');
+        expect(feedback.boardCards.map((c) => c.label), expectedBoard);
+        expect(feedback.potLabel, 'Pot 4.5 BB');
+        expect(
+          feedback.actionTrail.map((a) => a.label),
+          table.actionTrail.map((a) => a.label),
+        );
+      },
+    );
     test('new mechanical Check $id rejects missing facts and paid Call', () {
       final table = _task('fold_check_call_raise', id).runner.table;
       Act0RunnerOptionV1 wager(String action, String amount) =>
