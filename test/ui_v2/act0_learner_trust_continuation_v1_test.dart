@@ -84,7 +84,7 @@ void main() {
       }
 
       const blockerDefinition =
-          'A blocker is a card you hold that rules out some hands.';
+          'A blocker is a known card that rules out some hands.';
       if (id == 'w10_overbluff_punish') {
         expect(task.runner.teachingSteps, isEmpty);
         await mount(
