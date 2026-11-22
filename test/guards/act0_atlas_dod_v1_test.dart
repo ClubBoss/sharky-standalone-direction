@@ -333,12 +333,15 @@ void main() {
     );
     var explained = 0;
     var wrongOptions = 0;
+    final preflopFeedback = [...catalogTasks, ...day7CatalogTasks].where(
+      (row) =>
+          atlasIsGradedV1(row) &&
+          _norm(row.task.runner.table.streetLabel) == 'preflop',
+    );
     for (final number in [2, 3]) {
       final before = (explained, wrongOptions);
-      for (final row in graded.where(
-        (r) =>
-            r.world.worldNumber == number &&
-            _norm(r.task.runner.table.streetLabel) == 'preflop',
+      for (final row in preflopFeedback.where(
+        (r) => r.world.worldNumber == number,
       )) {
         for (final option in row.task.runner.options.where(
           (option) => !option.isCorrect,
@@ -1099,7 +1102,7 @@ void main() {
         '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
         '- S3 проверяет новизну рук W11 относительно пройденных миров и доступную игроку связку цены ривера и аутов тёрна в W12. Ссылки на конкретные задачи даны ниже.',
         '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
-        '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий основного маршрута W2–W3. Нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
+        '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий W2–W3, включая ремонт и Day 7. Нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
         '- P3 показывает объём по каталогу и проверяет приложенный JSONL FULL_ROUTE на том же коммите.',
         '',
         '## Места для проверки',
