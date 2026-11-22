@@ -31,9 +31,15 @@ Map<Day7CoverageKeyV1, Day7MissSourceV1> _day7MissSourcesV1() {
         option: miss,
         taskFamily: task.resolvedTaskFamily,
       );
-      final family = receipt?.sourceSignalId ?? concept?.id;
+      final sourceFamily = receipt?.sourceSignalId ?? concept?.id;
       // With neither source, the runner cannot emit a durable skill record.
-      if (family == null || family.isEmpty) continue;
+      if (sourceFamily == null || sourceFamily.isEmpty) continue;
+      final family = act0Day7FamilyForSourceV1(
+        worldId: world,
+        lessonId: lesson,
+        taskId: task.taskId,
+        family: sourceFamily,
+      );
       sources.putIfAbsent((
         world,
         lesson,

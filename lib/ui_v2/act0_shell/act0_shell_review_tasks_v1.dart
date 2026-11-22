@@ -83,10 +83,10 @@ String? act0NewReviewConceptFamilyV1(
     .firstOrNull
     ?.conceptFamilyId;
 
-// Earlier W6 saves attached these authored card-counting tasks to a
-// table-price fallback. Use their current Day 7 family for lookup while the
-// existing due item keeps its schedule, history and exact task id.
-String act0Day7FamilyForSavedSourceV1({
+// These W6 tasks use a distinct Day 7 exercise family. Keep the source
+// receipt for immediate repair and the saved due item, and use the dedicated
+// family to find the correct new situation.
+String act0Day7FamilyForSourceV1({
   required String worldId,
   required String lessonId,
   required String taskId,
