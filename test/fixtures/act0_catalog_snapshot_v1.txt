@@ -6238,19 +6238,19 @@ TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds 
   - [wrong] Call [40 BB] — Fold has the higher expected value. River 5h: You receive 120 BB. Stacks You 160, SB 40. Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk.
     BETTER ANSWER: Fold
 
-TASK w12_river_ev_small_price [drill] A small river price
-CAPTION: CO bets 2 BB. Your model has seven better hands and three bluffs out of ten bets. CO will call a raise with the better hands and fold the bluffs.
-TEACH: What is EV? Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. On the river, no more cards come. Work out which bets you beat now.
-Q: Which action has the best EV in this model?
+TASK w12_river_price_call [drill] River price
+CAPTION: CO bets 10 into 20 on K-8-4-2-9. This river range is 35% missed QJ/JT and 65% AK, K9 or 88. Your KQ beats the misses and loses to the value hands. No ties.
+TEACH: Read the river price W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.
+Q: Call or fold?
 HINT [hidden]: (none)
-TABLE: River | You Ac 8c | Board As Td 7h 3c 2d | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 95.5 BB bet 2 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ac 8c stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks · CO bets 2 BB
-  - [wrong] Fold — Look again. Fold gives up a gain. You win 3 times in 10 at a price that needs about 21%.
-    BETTER ANSWER: Call
-  + [correct] Call — Correct. A 2 BB call needs 2 out of 9.5, or about 21%. You win 30% in the model. A call gains 0.85 BB on average.
-  - [wrong] Raise — Look again. Raising puts in extra chips when the better hands call. Against bluffs it earns no more than a call.
-    BETTER ANSWER: Call
+TABLE: River | You Kc Qd | Board Ks 8c 4d 2h 9s | Pot 30 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 70 BB | HJ folded stack 69 BB | CO stack 50.25 BB bet 10 BB | BTN folded dealer stack 65 BB | SB folded stack 61.5 BB | BB Kc Qd stack 60.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2 BB · BTN folds · SB folds · BB calls 1 BB more · Flop: BB checks · CO bets 3.75 BB · BB calls 3.75 BB · Turn: BB checks · CO bets 4 BB · BB calls 4 BB · River: BB checks · CO bets 10 BB
+  + [correct] Call 10 BB — Correct. KQ wins 35% of this river range. A 10 BB call needs 25%. Its average gain is 4 BB.
+  - [wrong] Fold — Look again. The bet makes the pot 30 BB. KQ beats the 35% missed hands, so folding gives up 4 BB of expected call value.
+    BETTER ANSWER: Call 10 BB
+  - [wrong] Raise to 35 BB — Look again. KQ can catch missed QJ/JT for 10 BB. A raise to 35 may fold those bluffs and face calls from AK, K9 and 88.
+    BETTER ANSWER: Call 10 BB
 
 TASK w12_river_ev_costly_call [drill] A costly river call
 CAPTION: BB bets 5 BB. Two of ten bets are bluffs you beat. The rest beat your kings. BB folds the bluffs to a raise and calls with the better hands.
