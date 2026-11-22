@@ -108,6 +108,7 @@ Future<int> _openSavedCourseTask(
   required String taskId,
   String? legacyLessonId,
   Set<String>? legacyCompletedIds,
+  bool restoreActive = false,
   bool finishTeaching = true,
 }) async {
   final state = Act0ShellStateV1.sample;
@@ -154,6 +155,15 @@ Future<int> _openSavedCourseTask(
       'selectedWorldId': worldId,
       'selectedLessonId': legacyLessonId ?? lesson.lessonId,
       'selectedTaskId': taskId,
+      if (restoreActive) ...{
+        'resumeInRunner': true,
+        'resumePhase': 'drill',
+        'resumeTeachingStepIndex': lesson.courseTaskList
+            .singleWhere((task) => task.taskId == taskId)
+            .runner
+            .teachingSteps
+            .length,
+      },
     }),
   });
   t.view.physicalSize = const Size(393, 852);
@@ -164,10 +174,11 @@ Future<int> _openSavedCourseTask(
     await Future<void>.delayed(const Duration(milliseconds: 50));
   });
   await t.pumpAndSettle();
-  await _tapFirst(t, [find.text('Learn')]);
+  if (!restoreActive) await _tapFirst(t, [find.text('Learn')]);
   expect(
     await _tapFirst(t, [
-      find.byKey(const Key('act0_shell_current_mission_cta')),
+      if (!restoreActive)
+        find.byKey(const Key('act0_shell_current_mission_cta')),
       find.byKey(const Key('act0_academy_home_leaf_cta')),
     ]),
     isTrue,
@@ -208,6 +219,7 @@ void main() {
       legacyLessonId: 'what_poker_is',
       taskId: 'what_poker_is_find_hero',
       legacyCompletedIds: {'what_poker_is_theory'},
+      restoreActive: true,
     );
     final runner = t.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
@@ -232,6 +244,7 @@ void main() {
         legacyLessonId: 'what_poker_is',
         taskId: taskId,
         legacyCompletedIds: {'what_poker_is_theory', 'what_poker_is_find_hero'},
+        restoreActive: true,
       );
       final runner = t.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),
