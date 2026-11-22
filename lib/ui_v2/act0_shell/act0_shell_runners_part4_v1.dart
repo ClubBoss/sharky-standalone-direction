@@ -4613,7 +4613,8 @@ final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonId: 'w10_overbluff_punish',
   lessonTitle: "Facing a river bet",
   lessonSubtitle: 'Player Adjustment',
-  caption: "BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.",
+  caption:
+      "The SB open with QJo was already played. On this river, BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Call or fold?",

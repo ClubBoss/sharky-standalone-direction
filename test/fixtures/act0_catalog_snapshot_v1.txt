@@ -5548,7 +5548,7 @@ TABLE: Facts no applicable hand facts
 REVIEW: Call 5 into a 10 BB pot now. Final pot 15 BB: 5/15 = 33.3%.
 
 TASK w10_overbluff_punish [drill] Facing a river bet
-CAPTION: BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.
+CAPTION: The SB open with QJo was already played. On this river, BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.
 Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: River | You Qh Jd | Board Qd 8c 5s 2h 3c | Pot 24.5 BB | To call 10 BB | Seat SB | Active sb | Decision sb | Facts one pair, top pair
@@ -9092,13 +9092,27 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ folds · C
     BETTER ANSWER: Bet 4 BB
     FEEDBACK TABLE: Turn | You As Ks | Board Kc 6h 3d 9s | Pot 6.5 BB | Seat UTG | Active utg | Decision utg | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
 
+TASK spaced_review_w10_adjust_one_lever_call_price_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: HJ has been betting the flop often. This time HJ bets 3 BB into 5.5 BB.
+Q: What win rate covers the flop call before you adjust to HJ?
+HINT [hidden]: (none)
+TABLE: Flop | You Jd 8d | Board Js 6h 3c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jd 8d stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ bets 3 BB
+  + [correct] 26.1% — Correct. Your 3 BB call makes an 11.5 BB pot. The immediate price is 3 divided by 11.5, about 26.1%. HJ’s frequent bets can change your estimate of how often you win.
+  - [wrong] 35.3% — Look again. 8.5 BB is in the pot after HJ bets. Leaving your 3 BB call out of the final pot overstates the win rate you need.
+    BETTER ANSWER: 26.1%
+  - [wrong] 54.5% — Look again. 5.5 BB was in the pot before HJ bet. Using that amount leaves out both 3 BB contributions and makes the call look too expensive.
+    BETTER ANSWER: 26.1%
+
 TASK spaced_review_w10_adjust_one_lever_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
 CAPTION: UTG limps and calls raises with K9, QT, J9 and small pairs. CO, BTN and the blinds play tight.
 Q: How should you enter?
 HINT [hidden]: (none)
-TABLE: Preflop | You Kd Qd | Pot 2.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
-SEATS: UTG stack 60 BB call 1 BB | HJ Kd Qd stack 66 BB | CO stack 62 BB | BTN dealer stack 55 BB | SB stack 52.5 BB post 0.5 BB | BB stack 57 BB post 1 BB
+TABLE: Preflop | You Kh Qh | Pot 2.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
+SEATS: UTG stack 60 BB call 1 BB | HJ Kh Qh stack 66 BB | CO stack 62 BB | BTN dealer stack 55 BB | SB stack 52.5 BB post 0.5 BB | BB stack 57 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB
   - [suboptimal] Call 1 BB — Look again. A call sees a cheap flop but lets four players act behind. It misses value from UTG weak limp-calls.
     BETTER ANSWER: Raise to 4 BB
