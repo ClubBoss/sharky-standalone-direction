@@ -756,6 +756,18 @@ void main() {
         ];
       }
     }
+    final raiseDrill =
+        expectedComparison['actions_raise_drill'] as Map<String, dynamic>;
+    final raiseDrillFold = (raiseDrill['options'] as List)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((option) => option['id'] == 'fold');
+    expect(raiseDrillFold['repairLabels'], [
+      'Your turn',
+      'Blinds posted',
+      'KTs',
+    ]);
+    raiseDrillFold['repairLabels'] = ['Your turn', 'Blinds posted', 'QJs'];
+
     const w1FactualGrades = {
       'what_poker_is_table_read_transfer': 'hand_first_only',
       'what_poker_is_table_read_recheck': 'hero_cards_only',
