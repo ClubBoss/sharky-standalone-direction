@@ -260,6 +260,12 @@ void main() {
         double textScale = 1,
         int? teachingStepIndex,
       }) async {
+        final sizingConfig = phase == Act0LessonPhaseV1.drill
+            ? source.sizingConfig
+            : const Act0SizingConfigV1.disabled();
+        final selectingSize = sizingConfig.presets.any(
+          (preset) => preset.id == selected,
+        );
         tester.platformDispatcher.textScaleFactorTestValue = textScale;
         await tester.pumpWidget(
           MaterialApp(
@@ -276,7 +282,9 @@ void main() {
                       phase: phase,
                       teachingStepIndex:
                           teachingStepIndex ?? source.teachingSteps.length,
-                      selectedOptionId: selected,
+                      sizingConfig: sizingConfig,
+                      selectedOptionId: selectingSize ? null : selected,
+                      selectedPresetId: selectingSize ? selected : null,
                     ),
                     worldNumber: world.worldNumber,
                     selectedWorldId: world.worldId,
@@ -293,6 +301,7 @@ void main() {
                     onContinueTheory: () {},
                     onContinueReview: () {},
                     onChooseOption: (_) {},
+                    onSelectSizingPreset: (_) {},
                   ),
                 ),
               ),
