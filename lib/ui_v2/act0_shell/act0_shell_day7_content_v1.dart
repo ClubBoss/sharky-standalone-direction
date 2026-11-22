@@ -1147,6 +1147,21 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     5,
+    "connected_boards",
+    "board_cards",
+    _day7PostflopV1("bb", "Jd 8d", "Ts 9h 7s", betBb: 3),
+    question: "Which made hand can continue against this flop bet?",
+    choices: const ["One pair", "Jack-high straight", "Only a draw"],
+    correct: 1,
+    reason:
+        "Your jack and eight fill the sequence seven through jack. You already have a jack-high straight.",
+    wrongReasons: const {
+      0: "Calling this one pair misses the five consecutive ranks and undervalues the hand.",
+      2: "Waiting to make a straight would give up a made hand. Seven through jack are already visible.",
+    },
+  ),
+  _day7ExampleV1(
+    5,
     "board_texture_basics",
     "board_cards",
     _day7PostflopV1("co", "Ad Tc", "Kh 9d 2s"),

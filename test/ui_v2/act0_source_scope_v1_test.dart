@@ -311,7 +311,7 @@ void main() {
             task.taskId != 'actions_call_chip_cost' &&
             task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(384),
+      hasLength(387),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -542,7 +542,7 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 283);
+    expect(legacyPlayed, 286);
     expect(
       played,
       320 + 10 + 9,
