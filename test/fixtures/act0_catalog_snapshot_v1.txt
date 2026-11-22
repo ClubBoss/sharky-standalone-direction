@@ -3214,9 +3214,9 @@ TABLE: Flop | You Ah Tc | Board Kc 7d 2s | Pot 5.5 BB | Seat CO | Active co | De
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
   + [correct] Dry — Sharp read. Spread ranks and mixed suits make this a dry board.
-  - [wrong] Wet — Not quite. K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against draws the flop barely supports.
+  - [wrong] Wet — Not quite. K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against unlikely straights and flushes.
     BETTER ANSWER: Dry
-  - [wrong] Semi-wet — The flop has few short paths. K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to draws that need both remaining cards.
+  - [wrong] Semi-wet — The flop has few short paths. K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to hands that still need both remaining cards.
     BETTER ANSWER: Dry
 
 TASK board_texture_basics_w5_wet_board [drill] Read another flop
@@ -3226,10 +3226,10 @@ HINT [theoryOnly]: Notice the connected ranks and two hearts before choosing tex
 TABLE: Flop | You Js Td | Board Th 9h 8c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the flop | Facts one pair, top pair, two-tone, consecutive board, open-ended, completion cards 8
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Td stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] Dry — Not quite. On T-9-8 with two hearts, a straight can already be made and hearts can complete a flush draw. Treating the flop as dry risks giving a free card on a board with many live draws.
+  - [wrong] Dry — Not quite. On T-9-8 with two hearts, a straight can already be made and another heart can complete a flush. Treating the flop as dry risks giving a free card on a board with several ways to make a better hand.
     BETTER ANSWER: Wet
   + [correct] Wet — Strong choice. The connected ranks and two hearts create many changes. Straight paths, heart pressure, and future cards can all change the next decision quickly.
-  - [wrong] Semi-wet — Both sources of draws are present. T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.
+  - [wrong] Semi-wet — Both ways to improve are present. T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.
     BETTER ANSWER: Wet
 
 TASK board_texture_basics_w5_texture_dry_value [drill] Dry flop bet size

@@ -2438,7 +2438,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against draws the flop barely supports.',
+          'K-7-2 has three suits and wide gaps. Treating it as wet can make you pay to protect against unlikely straights and flushes.',
     ),
     Act0RunnerOptionV1(
       id: 'semi_wet',
@@ -2450,7 +2450,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The flop has few short paths.',
       feedbackReason:
-          'K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to draws that need both remaining cards.',
+          'K-7-2 has wide rank gaps and three suits. Marking it semi-wet gives too much weight to hands that still need both remaining cards.',
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -2489,7 +2489,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'On T-9-8 with two hearts, a straight can already be made and hearts can complete a flush draw. Treating the flop as dry risks giving a free card on a board with many live draws.',
+          'On T-9-8 with two hearts, a straight can already be made and another heart can complete a flush. Treating the flop as dry risks giving a free card on a board with several ways to make a better hand.',
     ),
     Act0RunnerOptionV1(
       id: 'semi_wet',
@@ -2499,7 +2499,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       betterAnswerLabel: 'Wet',
       repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Both sources of draws are present.',
+      feedbackTitle: 'Both ways to improve are present.',
       feedbackReason:
           'T-9-8 has consecutive ranks and two hearts. Calling it semi-wet misses one set of threats and makes the next card easier to underestimate.',
     ),

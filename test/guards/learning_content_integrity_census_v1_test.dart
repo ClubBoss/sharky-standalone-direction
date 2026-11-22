@@ -104,6 +104,11 @@ void main() {
                 row.task.taskId != 'first_table_guide_first_decision' &&
                 row.task.taskId != 'hand_rankings_compare_ace_straights' &&
                 row.task.taskId != 'w4_price_find_bettor' &&
+                row.task.taskId !=
+                    'board_texture_basics_w5_texture_dry_value' &&
+                row.task.taskId !=
+                    'board_texture_basics_w5_texture_wet_showdown' &&
+                row.task.taskId != 'connected_boards_w5_connected_read_bet' &&
                 row.task.taskId != 'w8_effective_stack_seat' &&
                 row.task.taskId != 'w8_spr_value_size',
           )
@@ -484,6 +489,10 @@ void main() {
               row.task.taskId != 'first_table_guide_first_decision' &&
               row.task.taskId != 'hand_rankings_compare_ace_straights' &&
               row.task.taskId != 'w4_price_find_bettor' &&
+              row.task.taskId != 'board_texture_basics_w5_texture_dry_value' &&
+              row.task.taskId !=
+                  'board_texture_basics_w5_texture_wet_showdown' &&
+              row.task.taskId != 'connected_boards_w5_connected_read_bet' &&
               row.task.taskId != 'w8_effective_stack_seat' &&
               row.task.taskId != 'w8_spr_value_size',
         )
@@ -883,15 +892,15 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(347 + addedContracts.length));
+    expect(rows, hasLength(350 + addedContracts.length));
     expect(
       rows.map((r) => r.task.taskId).toSet(),
-      hasLength(347 + addedContracts.length),
+      hasLength(350 + addedContracts.length),
     );
     expect(
       allChoices,
       hasLength(
-        649 +
+        655 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
@@ -971,7 +980,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        611 +
+        617 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
