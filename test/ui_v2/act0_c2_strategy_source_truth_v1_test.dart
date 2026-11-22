@@ -66,12 +66,12 @@ void main() {
             'different raise range, set of stacks or set of prizes',
         'w10_table_value_vs_caller_transfer':
             'calls, folds or raises with each hand',
-        'w11_trigger_small_price_continue': 'CO’s range and later betting',
-        'w11_trigger_bad_price_fold': 'how often CO bets hands you beat',
-        'w11_checkpoint_mixed_table_line': 'betting range and later action',
-        'w12_pretty_hand_bad_price_fold': 'the exact range is unknown',
-        'w12_revenge_raise_trap': 'CO’s range here',
-        'w12_checkpoint_full_loop_line': 'CO’s range and later action',
+        'w11_trigger_small_price_continue': 'CO overcards and BTN weak pairs',
+        'w11_trigger_bad_price_fold': '15% by this read',
+        'w11_checkpoint_mixed_table_line': 'AJ, AT and 88-JJ',
+        'w12_pretty_hand_bad_price_fold': 'wins 5% of this river bet range',
+        'w12_revenge_raise_trap': 'keeps CO\'s weak bets in',
+        'w12_checkpoint_full_loop_line': 'calling keeps weak aces and draws in',
       };
       for (final MapEntry(key: id, value: boundary) in boundaries.entries) {
         final correct = _tasks[id]!.runner.options.singleWhere(
@@ -118,9 +118,8 @@ void main() {
     // These are legal opponent holdings used as counterexamples. A bet does
     // not establish how often either holding is in the opponent's range.
     const cases = {
-      'w11_trigger_small_price_continue': (2 / 12, 'Jc Td', 'Jc Jd'),
-      'w11_trigger_bad_price_fold': (12 / 36, '6h 5h', 'Ac Ad'),
-      'w11_checkpoint_mixed_table_line': (5 / 18, 'Ad 9d', '8c 8d'),
+      'w11_trigger_small_price_continue': (2 / 14, 'Jc Td', 'Jc Jd'),
+      'w11_trigger_bad_price_fold': (8 / 26, '6h 5h', 'Ac Ad'),
       'w12_pretty_hand_bad_price_fold': (18 / 56, 'Js Ts', 'Kc As'),
       'w12_revenge_raise_trap': (2 / 12, 'Jc Td', 'Jc Jd'),
       'w12_checkpoint_full_loop_line': (2 / 12, 'Ad 9d', '8c 8d'),

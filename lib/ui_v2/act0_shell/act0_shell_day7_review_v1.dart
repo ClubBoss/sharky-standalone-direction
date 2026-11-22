@@ -352,3 +352,83 @@ Act0TableStateV1 _day7TableV1({
     ],
   );
 }
+
+final _wave6StudyTableV1 = _act0ReassignHeroSeatV1(
+  _act0HypotheticalConceptTableV1(_w9ExampleTableBase),
+  heroSeatId: 'co',
+  activeSeatId: '',
+);
+
+List<Act0RunnerOptionV1> _wave6AuthoredChoicesV1(
+  List<(String, String, Act0FeedbackQualityV1, String)> choices,
+) {
+  final answer = choices
+      .singleWhere((choice) => choice.$3 == Act0FeedbackQualityV1.correct)
+      .$2;
+  return [
+    for (final (id, label, grade, feedback) in choices)
+      Act0RunnerOptionV1(
+        id: id,
+        label: label,
+        isCorrect: grade == Act0FeedbackQualityV1.correct,
+        preferredLabel: answer,
+        quality: grade,
+        feedbackTitle: grade == Act0FeedbackQualityV1.correct
+            ? 'Correct.'
+            : 'Look again.',
+        feedbackReason: feedback,
+      ),
+  ];
+}
+
+Act0LessonTaskV1 _wave6AuthoredTaskV1({
+  required String id,
+  required String lesson,
+  required String lessonTitle,
+  required String title,
+  required Act0LessonPhaseV1 phase,
+  required Act0LessonStepKindV1 step,
+  required int xp,
+  required String caption,
+  required String question,
+  required String teach,
+  required List<(String, String, Act0FeedbackQualityV1, String)> choices,
+  required Act0TableStateV1 table,
+  Act0TaskFamilyV1? family,
+  String? signal,
+}) {
+  final answers = _wave6AuthoredChoicesV1(choices);
+  return Act0LessonTaskV1(
+    taskId: id,
+    title: title,
+    phase: phase,
+    rewardXp: xp,
+    stepKind: step,
+    taskFamily: family,
+    runner: Act0RunnerStateV1(
+      lessonId: xp == 0 ? lesson : id,
+      lessonTitle: lessonTitle,
+      lessonSubtitle: '',
+      beatIndex: 1,
+      beatCount: 1,
+      phase: phase,
+      caption: caption,
+      hint: '',
+      hintPolicy: Act0HintPolicyV1.hidden,
+      question: question,
+      options: answers,
+      feedbackTitle: 'Review your choice.',
+      feedbackReason: answers
+          .singleWhere((answer) => answer.isCorrect)
+          .feedbackReason,
+      feedbackSignalId: signal,
+      primaryCtaLabel: '',
+      nextLessonId: null,
+      returnTarget: 'learn',
+      table: table,
+      teachingSteps: [
+        if (teach.isNotEmpty) Act0TeachingStepV1(title: title, body: teach),
+      ],
+    ),
+  );
+}

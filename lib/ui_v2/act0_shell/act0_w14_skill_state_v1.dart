@@ -9,7 +9,9 @@ const act0SkillMapLastWorldV1 = 12;
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
 const act0W14LessonSkillsV1 = <String, List<String>>{
-  'what_poker_is': ['Table sense'],
+  'what_poker_is': ['Table sense', 'Board reading'],
+  'chips_in_the_middle': ['Table sense'],
+  'first_table_guide': ['Table sense', 'Betting decisions'],
   'what_poker_is_content': ['Table sense'],
   'cards_ranks_suits': ['Hand reading', 'Board reading'],
   'your_first_hand': ['Table sense', 'Board reading'],
@@ -75,12 +77,16 @@ const _extensionLessonSkills = <String, List<String>>{
   'exploit_guardrails': ['Player adjustment'],
   'player_adjustment_checkpoint': ['Player adjustment'],
   'session_plan_basics': ['Session routine'],
+  'session_plan_bankroll_followup': ['Session routine'],
   'table_trigger_reads': ['Session routine'],
+  'table_trigger_multiway_and_spr': ['Session routine'],
   'post_session_review_loop': ['Session routine'],
   'real_play_transfer_checkpoint': ['Session routine'],
   'decision_over_outcome': ['Mental game'],
+  'decision_price_and_clean_outs': ['Mental game'],
   'tilt_reset_protocol': ['Mental game'],
   'confidence_and_discipline': ['Mental game'],
+  'confidence_river_discipline': ['Mental game'],
   'mindset_bridge_checkpoint': ['Mental game'],
 };
 

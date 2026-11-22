@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import '../../tools/cnt01_role_inventory_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 
@@ -202,7 +203,7 @@ void main() {
               ),
             )
             .toList();
-        expect(rows, hasLength(212));
+        expect(rows, hasLength(216));
         final counts = <String, int>{};
         for (final row in rows) {
           final purpose = row['declaredPurpose']! as String;
@@ -224,7 +225,7 @@ void main() {
           'TEACHING': 30,
           'REPAIR': 12,
           'CORRECTION_CANDIDATE': 1,
-          'PRACTICE': 130,
+          'PRACTICE': 134,
           'TRANSFER_CANDIDATE': 22,
           'REVIEW_CANDIDATE': 17,
         });
@@ -321,14 +322,20 @@ void main() {
         hasLength(
           223 +
               w11Wave4ChoiceContractV1.length +
-              w12Wave4ChoiceContractV1.length,
+              w12Wave4ChoiceContractV1.length +
+              wave6TaskDeltaV1,
         ),
       );
       expect(
         rows.map((row) => row['taskId']).toSet(),
         containsAll([
-          ...w11Wave4ChoiceContractV1.keys,
-          ...w12Wave4ChoiceContractV1.keys,
+          ...w11Wave4ChoiceContractV1.keys.where(
+            (id) => !wave6PreviousRowsV1.containsKey(id),
+          ),
+          ...w12Wave4ChoiceContractV1.keys.where(
+            (id) => !wave6PreviousRowsV1.containsKey(id),
+          ),
+          ...wave6CurrentRowsV1.keys,
         ]),
       );
       for (final row in rows) {

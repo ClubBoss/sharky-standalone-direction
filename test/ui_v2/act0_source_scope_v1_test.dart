@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
@@ -83,6 +84,7 @@ void main() {
     const orientationIds = <String>{
       'position_six_seats_position_order_reason',
       'first_table_guide_shared_cards_repair',
+      'w1_shared_card_access',
       'what_poker_is_theory',
       'what_poker_is_find_hero',
       'what_poker_is_pot_stack',
@@ -263,6 +265,18 @@ void main() {
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
     ];
+    for (final task in tasks.where(
+      (t) => wave6CurrentRowsV1.containsKey(t.taskId),
+    )) {
+      final current = wave6CurrentRowsV1[task.taskId] as Map<String, dynamic>;
+      final table = task.runner.table;
+      expect(table.scope.name, current['scope'], reason: task.taskId);
+      expect(
+        act0StreetReplayFromTableV1(table)?.isConsumerSafe == true,
+        current['replay'],
+        reason: task.taskId,
+      );
+    }
     final w2Q9TaskIds = w2Q9ChoiceContractV1.keys.toSet();
     final w3NewTaskIds = w3NewChoiceContractV1.keys.toSet();
     expect(tasks.map((task) => task.taskId).toSet(), containsAll(w3NewTaskIds));
@@ -278,13 +292,19 @@ void main() {
     expect(
       tasks,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     final newTasks = tasks
@@ -294,6 +314,7 @@ void main() {
     expect(
       tasks.where(
         (task) =>
+            !wave6CurrentRowsV1.containsKey(task.taskId) &&
             !_asm05NewTaskIds.contains(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
@@ -311,7 +332,17 @@ void main() {
             task.taskId != 'actions_call_chip_cost' &&
             task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(397),
+      hasLength(
+        401 -
+            wave6PreviousRowsV1.keys
+                .where(
+                  (id) =>
+                      !_asm05NewTaskIds.contains(id) &&
+                      !w11Wave4ChoiceContractV1.containsKey(id) &&
+                      !w12Wave4ChoiceContractV1.containsKey(id),
+                )
+                .length,
+      ),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -338,14 +369,16 @@ void main() {
       expect(replay.isConsumerSafe, isFalse);
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
-    expect(orientationIds, hasLength(48));
+    expect(orientationIds, hasLength(49));
     expect(explanationIds, hasLength(61 + w11Wave4ConceptTasksV1.length));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
     var legacyPlayed = 0;
     final historyConsumers = <String>{};
-    for (final task in tasks) {
+    for (final task in tasks.where(
+      (task) => !wave6CurrentRowsV1.containsKey(task.taskId),
+    )) {
       final table = task.runner.table;
       final expected = _newW01OrderContextIds.contains(task.taskId)
           ? Act0TableScopeV1.playedHand
@@ -511,7 +544,10 @@ void main() {
             expect(table.seats.where((seat) => seat.isActive), isEmpty);
           }
         } else {
-          if (task.taskId == 'first_table_guide_shared_cards_repair') {
+          if (const {
+            'first_table_guide_shared_cards_repair',
+            'w1_shared_card_access',
+          }.contains(task.taskId)) {
             expect(table.boardCards, hasLength(3));
             expect(table.heroCards, hasLength(2));
             expect(table.potLabel, isEmpty);
@@ -542,12 +578,31 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 296);
+    final previousLegacy = wave6PreviousRowsV1.entries.where(
+      (e) =>
+          !_asm05NewTaskIds.contains(e.key) &&
+          !w11Wave4ChoiceContractV1.containsKey(e.key) &&
+          !w12Wave4ChoiceContractV1.containsKey(e.key),
+    );
+    expect(
+      legacyPlayed,
+      299 -
+          previousLegacy.where((e) => e.value['scope'] == 'playedHand').length,
+    );
     expect(
       played,
-      328 + 10 + 9 + 2 + 3,
+      328 +
+          10 +
+          9 +
+          2 +
+          3 +
+          3 -
+          wave6PreviousRowsV1.values
+              .where((row) => row['scope'] == 'playedHand')
+              .length,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'w1_chips_starting_pot',
       'blinds_pot_after_posts',
       'positions_read_first_check',
       'w4_purpose_collect_value',
@@ -658,6 +713,7 @@ void main() {
             (task.runner.table.activeSeatId ?? '').isNotEmpty)
           task.taskId,
     };
+    expectedHistories.removeAll(wave6PreviousRowsV1.keys);
     expect(
       historyConsumers.difference(expectedHistories),
       isEmpty,

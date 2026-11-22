@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -151,10 +152,10 @@ void main() {
     'W11 and W12 full ledgers prove the effective stack at the decision',
     () {
       const expected = {
-        'w11_checkpoint_mixed_table_line': 30.0,
-        'w12_pretty_hand_bad_price_fold': 100.0,
-        'w12_revenge_raise_trap': 35.0,
-        'w12_checkpoint_full_loop_line': 25.0,
+        'w11_checkpoint_mixed_table_line': (26.0, 26.0),
+        'w12_pretty_hand_bad_price_fold': (90.75, 80.75),
+        'w12_revenge_raise_trap': (36.75, 51.75),
+        'w12_checkpoint_full_loop_line': (31.75, 56.75),
       };
       final tasks = Act0ShellStateV1.sample.worlds
           .expand((world) => world.lessons)
@@ -165,7 +166,10 @@ void main() {
         final table = task.runner.table;
         final ledger = table.handContributions!;
         final hero = table.heroSeatId!;
-        final bettor = ledger.entries.last.seatId;
+        final facing = table.toCallLabel.isNotEmpty;
+        final bettor = facing
+            ? ledger.entries.last.seatId
+            : table.seats.singleWhere((s) => s.isInHand && !s.isHero).seatId;
         expect(ledger.fromStreet.name, 'preflop', reason: task.taskId);
         expect(
           ledger.minimumStartingStackBbBySeat,
@@ -174,12 +178,14 @@ void main() {
         );
         for (final seat in [hero, bettor]) {
           final invested = ledger.entries
-              .take(ledger.entries.length - 1)
+              .take(ledger.entries.length - (facing ? 1 : 0))
               .where((entry) => entry.seatId == seat)
               .fold<double>(0, (sum, entry) => sum + entry.amountBb);
           expect(
             ledger.startingStackBbBySeat[seat]! - invested,
-            expected[task.taskId],
+            seat == hero
+                ? expected[task.taskId]!.$1
+                : expected[task.taskId]!.$2,
             reason: task.taskId,
           );
         }
@@ -196,8 +202,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 170),
-      ('D3.to_call_completeness', 122),
+      ('D2.pot_feasibility', 173),
+      ('D3.to_call_completeness', 123),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -300,7 +306,7 @@ void main() {
     const lateDecisionProof = {
       'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
-      'w11_checkpoint_mixed_table_line': ('PASS', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('PASS', null),
       'w12_checkpoint_full_loop_line': ('PASS', 'PASS'),
       'w12_pretty_hand_bad_price_fold': ('PASS', 'PASS'),
       'w12_revenge_raise_trap': ('PASS', 'PASS'),
@@ -317,7 +323,7 @@ void main() {
           (row) => row.taskId == id && row.invariant == rule,
         );
         expect(proof.map((row) => row.result).toSet(), {
-          verdict,
+          if (verdict != null) verdict,
         }, reason: '$id $rule');
       }
     }
@@ -337,7 +343,7 @@ void main() {
     File(
       '${out.path}/ledger.json',
     ).writeAsStringSync(jsonEncode(rows.map((r) => r.toJson()).toList()));
-    final contract = {
+    final contract = <String, Object?>{
       for (final t in tasks)
         t.taskId: {
           'rewardXp': t.rewardXp,
@@ -359,6 +365,7 @@ void main() {
     File(
       '${out.path}/learning-contract.json',
     ).writeAsStringSync(jsonEncode(contract));
+    verifyWave6AndRestoreLearningV1(contract);
     const admittedAdditions = {
       'asm05_new_known_holes_turn_call_10',
       'asm05_new_known_holes_turn_call_40',
@@ -1470,6 +1477,41 @@ void main() {
             ...w3Option(choice, correct: choice == 'bet_two'),
             'repairCards': ['board_0', 'board_1', 'board_2'],
           },
+      ],
+    };
+    expectedComparison['w1_shared_card_access'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['private', 'shared', 'all'])
+          {
+            ...w3Option(choice, correct: choice == 'shared'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['w1_chips_starting_pot'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['only_big', 'both', 'only_small'])
+          w3Option(choice, correct: choice == 'both'),
+      ],
+    };
+    expectedComparison['w1_chips_matched_pot'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['two_players', 'post_twice', 'total'])
+          w3Option(choice, correct: choice == 'total'),
+      ],
+    };
+    expectedComparison['w1_chips_read_middle'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['pot', 'one_share', 'stack'])
+          w3Option(choice, correct: choice == 'pot'),
       ],
     };
     expectedComparison.addAll(w11Wave4TableTruthContractV1());

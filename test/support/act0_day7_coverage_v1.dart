@@ -87,9 +87,31 @@ final _courseHands = {
       day7HandKeyV1(row.task.runner.table),
 };
 
+/// The one owner-admitted concept review without a hand.
+bool isWave6BankrollDay7V1(
+  String world,
+  String lesson,
+  String taskId,
+  Act0TableStateV1 table,
+) =>
+    world == 'world_11' &&
+    lesson == 'session_plan_bankroll_followup' &&
+    taskId == 'w11_day7_bankroll' &&
+    table.scope == Act0TableScopeV1.explanation &&
+    table.heroCards.isEmpty &&
+    table.boardCards.isEmpty &&
+    table.actionTrail.isEmpty &&
+    table.handContributions == null;
+
 final _validDay7Keys = {
   for (final row in act0NewReviewTasksV1)
-    if (!_courseHands.contains(day7HandKeyV1(row.task.runner.table)) &&
+    if ((isWave6BankrollDay7V1(
+              row.worldId,
+              row.lessonId,
+              row.task.taskId,
+              row.task.runner.table,
+            ) ||
+            !_courseHands.contains(day7HandKeyV1(row.task.runner.table))) &&
         atlasDay7SkillMismatchV1(row.conceptFamilyId, row.task) == null &&
         row.task.runner.options.where((option) => option.isCorrect).length == 1)
       (row.worldId, row.lessonId, row.conceptFamilyId),

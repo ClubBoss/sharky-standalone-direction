@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_claims_v1.dart';
+import '../support/act0_catalog_learner_copy_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
@@ -115,6 +116,104 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 }
 
 void main() {
+  test('G1 relative seat copy and world codes across learner surfaces', () {
+    final rows = [
+      ...catalogTasks,
+      ...rulesCheckCatalogTasks,
+      ...day7CatalogTasks,
+    ];
+    expect(
+      rows.expand((row) => catalogRelativeSeatFindingsV1(row.task)),
+      isEmpty,
+    );
+    expect(rows.expand((row) => catalogWorldCodeFindingsV1(row.task)), isEmpty);
+  });
+
+  test('G1 rejects non-adjacent raise and out-of-order check claims', () {
+    for (final (id, source, display) in [
+      (
+        'hand_rankings_find_the_match',
+        'BTN raises to 2.75 BB',
+        'The player before you raises to 2.75 BB',
+      ),
+      (
+        'hand_rankings_compare_ace_straights',
+        'CO raises to 2.75 BB',
+        'The player before you raises to 2.75 BB',
+      ),
+      (
+        'hand_rankings_compare_ace_straights',
+        'CO checks',
+        'The player before you checks',
+      ),
+    ]) {
+      final row = _catalogRow(id);
+      final runner = row.task.runner;
+      expect(
+        runner.table.actionTrail.any((item) => item.label == source),
+        isTrue,
+      );
+      final task = _withRunner(
+        row,
+        runner.copyWith(
+          table: runner.table.copyWith(
+            handContributions: runner.table.handContributions,
+            actionTrail: [
+              for (final item in runner.table.actionTrail)
+                if (item.label == source)
+                  Act0ActionTrailItemV1(label: source, displayLabel: display)
+                else
+                  item,
+            ],
+          ),
+        ),
+      ).task;
+      expect(
+        catalogRelativeSeatFindingsV1(task),
+        isNotEmpty,
+        reason: '$id: $source',
+      );
+    }
+  });
+
+  test('G1 checks intervening action even when the seats are adjacent', () {
+    final row = _catalogRow('first_table_guide_first_decision');
+    final runner = row.task.runner;
+    expect(catalogRelativeSeatFindingsV1(row.task), isEmpty);
+    final task = _withRunner(
+      row,
+      runner.copyWith(
+        table: runner.table.copyWith(
+          handContributions: runner.table.handContributions,
+          actionTrail: [
+            ...runner.table.actionTrail,
+            const Act0ActionTrailItemV1(label: 'BTN folds'),
+          ],
+        ),
+      ),
+    ).task;
+    expect(catalogRelativeSeatFindingsV1(task), isNotEmpty);
+  });
+
+  test('G1 rejects internal world codes in learner copy', () {
+    final row = _catalogRow('w12_river_price_call');
+    final mutated = _withRunner(
+      row,
+      row.task.runner.copyWith(
+        caption: 'Recall the outs from W5.',
+        teachingSteps: const [
+          Act0TeachingStepV1(
+            title: 'River price',
+            body: 'Use W4’s call price.',
+          ),
+        ],
+        question: 'What did W12 ask?',
+        feedbackReason: 'We covered the call in W4.',
+      ),
+    ).task;
+    expect(catalogWorldCodeFindingsV1(mutated), hasLength(5));
+  });
+
   test('W1–W12 catalog snapshot', () {
     final fixture = File(_snapshotPath);
     final current = renderCatalogSnapshot();
@@ -181,9 +280,14 @@ void main() {
       act0Day7CoverageV1,
     );
     expect(missing.where(day7MustBeCoveredV1), isEmpty);
+    // These two existing review IDs still resolve for pre-split due items.
+    // Newly authored families must have a current course or Rules check source.
     expect(
       act0Day7CoverageV1.difference(act0Day7MissSourcesV1.keys.toSet()),
-      isEmpty,
+      const {
+        ('world_1', 'what_poker_is', 'hero_cards_board_pot'),
+        ('world_1', 'what_poker_is', 'pot_to_call'),
+      },
     );
     final log = Platform.environment['G1_REPORT_DIR'];
     if (log != null) {
@@ -205,6 +309,9 @@ void main() {
 
   test('G1 Day 7 uses new scenes with valid tables and one scored answer', () {
     final seen = <String>{};
+    const bankrollExceptionId =
+        'w11_day7_bankroll'; // Bankroll is not a hand decision.
+
     final courseIds = [
       ...catalogTasks,
       ...rulesCheckCatalogTasks,
@@ -221,7 +328,7 @@ void main() {
       final id = task.taskId;
       expect(seen.add(id), isTrue, reason: id);
       expect(courseIds.contains(id), isFalse, reason: id);
-      expect(courseHands.contains(day7HandKeyV1(table)), isFalse, reason: id);
+
       expect(task.rewardXp, 0, reason: id);
       expect(runner.hint, isEmpty, reason: id);
       expect(runner.teachingSteps, isEmpty, reason: id);
@@ -237,6 +344,17 @@ void main() {
         isTrue,
         reason: id,
       );
+      if (id == bankrollExceptionId) {
+        expect(row.world.worldId, 'world_11');
+        expect(row.lesson.lessonId, 'session_plan_bankroll_followup');
+        expect(table.scope, Act0TableScopeV1.explanation);
+        expect(table.heroCards, isEmpty);
+        expect(table.boardCards, isEmpty);
+        expect(table.actionTrail, isEmpty);
+        expect(table.handContributions, isNull);
+        continue;
+      }
+      expect(courseHands.contains(day7HandKeyV1(table)), isFalse, reason: id);
       final cards = [
         ...table.heroCards,
         ...table.boardCards,
@@ -260,6 +378,7 @@ void main() {
         reason: id,
       );
     }
+    expect(seen, contains(bankrollExceptionId));
     final audit = runCatalogAudit(rows: [...catalogTasks, ...day7CatalogTasks]);
     final day7Findings = audit.findings.keys.where(
       (key) => seen.contains(key.split('|')[1]),
@@ -994,7 +1113,7 @@ void main() {
               potLabel: 'Pot 99 BB',
               toCallLabel: 'To call 9 BB',
             ),
-            hint: 'Need 34% to call. CO bet 12 into 12.',
+            hint: 'Need 31% to call. CO bet 8 into 10.',
           ),
         ),
         isEmpty,
@@ -1003,10 +1122,10 @@ void main() {
 
     test('rejects the after-bet pot in bet-into phrasing', () {
       expect(
-        numericFindings(runner.copyWith(caption: 'CO bets 12 BB into 24 BB.')),
+        numericFindings(runner.copyWith(caption: 'CO bets 8 BB into 18 BB.')),
         contains(
           '22.bet_into_pot|world_11|w11_trigger_bad_price_fold|caption|'
-          'bets 12 BB into 24|before bet expected 12.0',
+          'bets 8 BB into 18|before bet expected 10.0',
         ),
       );
     });
@@ -1036,11 +1155,11 @@ void main() {
     test('rejects the before-bet pot in pot-now phrasing', () {
       expect(
         numericFindings(
-          runner.copyWith(feedbackReason: 'The pot is now 12 BB.'),
+          runner.copyWith(feedbackReason: 'The pot is now 10 BB.'),
         ),
         contains(
           '23.pot_with_bet|world_11|w11_trigger_bad_price_fold|feedbackReason|'
-          'pot is now 12 BB|expected 24.0',
+          'pot is now 10 BB|expected 18.0',
         ),
       );
     });
@@ -1057,7 +1176,7 @@ void main() {
       () {
         expect(
           numericFindings(
-            runner.copyWith(hint: 'Use the 33 BB effective stack.'),
+            runner.copyWith(hint: 'Use the 32.5 BB effective stack.'),
           ),
           isEmpty,
         );
@@ -1077,14 +1196,14 @@ void main() {
             teachingSteps: const [
               Act0TeachingStepV1(
                 title: 'Read your stack',
-                body: 'You have 35 BB behind.',
+                body: 'You have 34.5 BB behind.',
               ),
             ],
           ),
         ),
         contains(
           '25.street_stack|world_11|w11_trigger_bad_price_fold|theory[0].body|'
-          '35 BB behind|expected 33.0',
+          '34.5 BB behind|expected 32.5',
         ),
       );
     });

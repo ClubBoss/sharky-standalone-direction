@@ -4,55 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
-const _flopTrail = <Act0ActionTrailItemV1>[
-  Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-  Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
-  Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-];
-const _turnTrail = <Act0ActionTrailItemV1>[
-  ..._flopTrail,
-  Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
-  Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
-];
-
-void _expectProjection(Act0TableStateV1 table, bool turn) {
-  final replay = act0StreetReplayFromTableV1(table)!;
-  expect(replay.isConsumerSafe, isTrue);
-  expect(
-    replay.currentStreet,
-    turn ? Act0StreetReplayStreetV1.turn : Act0StreetReplayStreetV1.flop,
-  );
-  expect(
-    replay.steps.map((s) => s.actorLabel),
-    turn ? ['CO', 'BTN', 'CO', 'BTN', 'CO'] : ['CO', 'BTN', 'CO'],
-  );
-  expect(
-    replay.steps.map((s) => s.actionTypeLabel),
-    turn
-        ? ['raises', 'calls', 'bets', 'calls', 'bets']
-        : ['raises', 'calls', 'bets'],
-  );
-  expect(
-    replay.steps.map((s) => s.amountLabel),
-    turn
-        ? ['2.5 BB', '2.5 BB', '2 BB', '2 BB', '12 BB']
-        : ['2.5 BB', '2.5 BB', '2 BB'],
-  );
-  expect(replay.steps.map((s) => s.street), [
-    Act0StreetReplayStreetV1.preflop,
-    Act0StreetReplayStreetV1.preflop,
-    Act0StreetReplayStreetV1.flop,
-    if (turn) Act0StreetReplayStreetV1.flop,
-    if (turn) Act0StreetReplayStreetV1.turn,
-  ]);
-  expect(
-    replay.steps.map((s) => s.boardCardsAtStreet.length),
-    turn ? [0, 0, 3, 3, 4] : [0, 0, 3],
-  );
-  expect(replay.steps.last.potAtStreet, turn ? 'Pot 24 BB' : 'Pot 10 BB');
-  expect(replay.steps.last.isCurrentStreet, isTrue);
-}
-
 void main() {
   final lesson = Act0ShellStateV1.sample
       .worldById('world_11')
@@ -63,123 +14,94 @@ void main() {
         ? 'w11_trigger_bad_price_fold'
         : 'w11_trigger_small_price_continue';
     final task = lesson.taskList.firstWhere((t) => t.taskId == id);
-    testWidgets('$id real newly enabled replay paints authored context only', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(393, 852);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Act0LessonRunnerShellV1(
-              runner: task.runner.copyWith(
-                phase: task.entryPhase,
-                teachingStepIndex: task.runner.teachingSteps.length,
+    testWidgets(
+      '$id priced decision renders with the guarded inline replay closed',
+      (tester) async {
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: task.runner.copyWith(
+                  phase: task.entryPhase,
+                  teachingStepIndex: task.runner.teachingSteps.length,
+                ),
+                worldNumber: 11,
+                selectedWorldId: 'world_11',
+                selectedLessonId: lesson.lessonId,
+                selectedTaskId: id,
+                selectedTaskTitle: task.title,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                compositionFamily: task.resolvedCompositionFamily,
+                tablePresentation: task.tablePresentation,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
               ),
-              worldNumber: 11,
-              selectedWorldId: 'world_11',
-              selectedLessonId: lesson.lessonId,
-              selectedTaskId: id,
-              selectedTaskTitle: task.title,
-              selectedTaskFamily: task.resolvedTaskFamily,
-              compositionFamily: task.resolvedCompositionFamily,
-              tablePresentation: task.tablePresentation,
-              onBack: () {},
-              onContinueTheory: () {},
-              onChooseOption: (_) {},
-              onContinueReview: () {},
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final subtree = find.byKey(const Key('act0_shell_street_replay_inline'));
-      expect(subtree, findsOneWidget);
-      final texts = tester
-          .widgetList<Text>(
-            find.descendant(of: subtree, matching: find.byType(Text)),
-          )
-          .map((t) => t.data ?? '')
-          .toList();
-      expect(texts, contains(turn ? 'CO bets 12 BB' : 'CO bets 2 BB'));
-      expect(texts, contains(turn ? 'Turn - Jh 7c 4d 2s' : 'Flop - Jh 7c 4d'));
-      expect(texts, contains(turn ? 'Pot 24 BB' : 'Pot 10 BB'));
-      expect(texts, contains('You are here'));
-      final text = texts.join(' ');
-      expect(text, isNot(contains('UTG')));
-      expect(text.toLowerCase(), isNot(contains('winner')));
-      expect(text.toLowerCase(), isNot(contains('complete hand')));
-      expect(text.toLowerCase(), isNot(contains('stack')));
-      expect(text, isNot(contains('?')));
-      expect(tester.takeException(), isNull);
-    });
-    test('$id incomplete trail retains source pot fallback at every index', () {
-      final table = task.runner.table;
-      for (var index = 0; index < table.actionTrail.length; index++) {
-        expect(act0CalcTableTrailPotV1(table, index), (
-          potBb: -1.0,
-          street: '',
-        ));
-      }
-    });
-    test(
-      '$id pot and call price reconcile with the authored contributions',
-      () {
-        final table = task.runner.table;
-        final notes = table.actionTrail.where((item) => item.isNote).toList();
-        final amounts = notes
-            .map((note) => act0ParseBbAmountV1(note.label))
-            .toList();
-        expect(amounts, [0.5, 1, 0.25]);
-        expect(notes.last.label, startsWith('${table.playerCount} antes'));
-        final forcedMoney =
-            amounts[0] + amounts[1] + table.playerCount * amounts[2];
-        final actions = table.actionTrail
-            .where((item) => !item.isNote)
-            .toList();
-        final voluntaryMoney = actions
-            .map((action) => act0ParseBbAmountV1(action.label))
-            .reduce((a, b) => a + b);
-        final wager = act0ParseBbAmountV1(actions.last.label);
-        final currentStreet = turn ? 'Turn' : 'Flop';
-        expect(actions.last.label, startsWith('$currentStreet: CO bets '));
-        expect(table.activeSeatId, 'btn');
-        expect(
-          table.seats
-              .singleWhere((seat) => seat.seatId == 'btn')
-              .currentBetLabel,
-          isNull,
         );
-        expect(
-          act0ParseBbAmountV1(table.potLabel),
-          forcedMoney + voluntaryMoney,
+        await tester.pumpAndSettle();
+        final subtree = find.byKey(
+          const Key('act0_shell_street_replay_inline'),
         );
-        expect(act0ParseBbAmountV1(table.toCallLabel), wager);
-        expect(
-          wager / (forcedMoney + voluntaryMoney + wager),
-          closeTo(turn ? 1 / 3 : 1 / 6, 1e-8),
+        expect(subtree, findsNothing);
+        final shell = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
         );
+        expect(shell.runner.table.potLabel, turn ? 'Pot 18 BB' : 'Pot 12 BB');
+        expect(
+          shell.runner.table.toCallLabel,
+          turn ? 'To call 8 BB' : 'To call 2 BB',
+        );
+        expect(shell.runner.table.decisionSeatId, turn ? 'sb' : 'bb');
+        expect(find.textContaining('winner', findRichText: true), findsNothing);
+        expect(tester.takeException(), isNull);
       },
     );
-    test('$id authored source exposes correct street projection', () {
-      _expectProjection(task.runner.table, turn);
-    });
-    test('$id source-preserving trail feasibility without parser changes', () {
-      // Only explicit authored actions: no forced folds/checks, terminal result,
-      // missing cards or opponent hand are supplied to make the parser pass.
-      _expectProjection(
-        task.runner.table.copyWith(actionTrail: turn ? _turnTrail : _flopTrail),
-        turn,
+    test('$id replays only its exact prefix and active decision', () {
+      final table = task.runner.table;
+      final replay = act0StreetReplayFromTableV1(table)!;
+      expect(replay.isConsumerSafe, isTrue);
+      expect(
+        replay.currentStreet,
+        turn ? Act0StreetReplayStreetV1.turn : Act0StreetReplayStreetV1.flop,
       );
-      expect(task.runner.table.heroCards.map((c) => c.label), ['Qs', 'Js']);
-      expect(task.runner.table.boardCards.map((c) => c.label), [
-        'Jh',
-        '7c',
-        '4d',
-        if (turn) '2s',
-      ]);
+      expect(table.decisionSeatId, turn ? 'sb' : 'bb');
+      expect(replay.currentDecisionActor, 'Hero');
+      expect(replay.steps.last.actorLabel, turn ? 'CO' : 'BTN');
+      expect(replay.steps.last.actionTypeLabel, turn ? 'bets' : 'calls');
+      expect(replay.steps.last.amountLabel, turn ? '8 BB' : '2 BB');
+      expect(replay.steps.last.potAtStreet, turn ? 'Pot 18 BB' : 'Pot 12 BB');
+      expect(replay.steps.last.isCurrentStreet, isTrue);
+      expect(replay.steps.last.boardCardsAtStreet.length, turn ? 4 : 3);
+      final missingFinalAction = table.copyWith(
+        actionTrail: table.actionTrail
+            .take(table.actionTrail.length - 1)
+            .toList(),
+      );
+      expect(
+        act0StreetReplayFromTableV1(missingFinalAction)?.isConsumerSafe,
+        isNot(true),
+      );
+    });
+
+    test('$id pot and call price reconcile with its complete ledger', () {
+      final table = task.runner.table;
+      final amounts = table.handContributions!.amounts(
+        seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: table.decisionSeatId,
+      );
+      final pot = turn ? 18.0 : 12.0;
+      final call = turn ? 8.0 : 2.0;
+      expect(amounts.potBb, pot);
+      expect(amounts.toCallBb, call);
+      expect(table.toCallLabel, turn ? 'To call 8 BB' : 'To call 2 BB');
+      expect(call / (pot + call), closeTo(turn ? 8 / 26 : 2 / 14, 1e-9));
     });
   }
 }

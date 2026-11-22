@@ -1,4 +1,10 @@
 {
+  "m7MaxShareExceptions": {
+    "W11": {
+      "maxShare": 0.55,
+      "reason": "Wave 7 approval: Real Play teaches close alternatives, so the approved grades justify a 55% ceiling for W11. Other worlds retain 40%."
+    }
+  },
   "F1|W1": 0,
   "R1|W2–W3": 0,
   "D1|Курс": 3,

@@ -1093,10 +1093,6 @@ String act0AcademyWorldSubtitleV1(
 );
 
 String act0AcademyLessonTitleV1(BuildContext context, Act0LessonCardV1 lesson) {
-  // This stable ID now names First Table Guide, not the older poker lesson.
-  if (act0AcademyLanguageV1(context) == 'ru' &&
-      lesson.lessonId == 'what_poker_is')
-    return '\u041f\u0435\u0440\u0432\u044b\u0439 \u0440\u0430\u0437\u0431\u043e\u0440 \u0441\u0442\u043e\u043b\u0430';
   return act0LocalizedLessonTitleAtomByIdV1(
     lesson.lessonId,
     fallback: lesson.title,
@@ -1108,9 +1104,6 @@ String act0AcademyLessonSubtitleV1(
   BuildContext context,
   Act0LessonCardV1 lesson,
 ) {
-  if (act0AcademyLanguageV1(context) == 'ru' &&
-      lesson.lessonId == 'what_poker_is')
-    return '\u041f\u0440\u043e\u0447\u0438\u0442\u0430\u0439 \u0441\u0442\u043e\u043b, \u043e\u0442\u0432\u0435\u0442\u044c \u043e\u0434\u0438\u043d \u0440\u0430\u0437 \u0438 \u0443\u0437\u043d\u0430\u0439 \u043f\u0440\u0438\u0447\u0438\u043d\u0443.';
   return act0LocalizedLessonSubtitleAtomByIdV1(
     lesson.lessonId,
     fallback: lesson.subtitle,

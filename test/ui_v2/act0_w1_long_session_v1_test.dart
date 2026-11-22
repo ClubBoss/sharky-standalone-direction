@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
@@ -107,6 +108,9 @@ Future<int> _openSavedCourseTask(
   required String worldId,
   required String taskId,
   String? legacyLessonId,
+  String? legacyTaskId,
+  Set<String>? legacyCompletedIds,
+  bool restoreActive = false,
   bool finishTeaching = true,
 }) async {
   final state = Act0ShellStateV1.sample;
@@ -123,10 +127,16 @@ Future<int> _openSavedCourseTask(
       (candidate) => candidate.lessonId != lesson.lessonId,
     ),
   ];
-  final completed = [
-    for (final earlier in earlierLessons) ...earlier.courseTaskList,
-    ...lesson.courseTaskList.takeWhile((task) => task.taskId != taskId),
-  ];
+  final completed = legacyCompletedIds == null
+      ? [
+          for (final earlier in earlierLessons) ...earlier.courseTaskList,
+          ...lesson.courseTaskList.takeWhile((task) => task.taskId != taskId),
+        ]
+      : [
+          for (final lesson in world.lessons)
+            for (final task in lesson.courseTaskList)
+              if (legacyCompletedIds.contains(task.taskId)) task,
+        ];
   final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
   SharedPreferences.setMockInitialValues({
     'act0_welcome_completed_v1': true,
@@ -139,14 +149,23 @@ Future<int> _openSavedCourseTask(
           .lineagePayload(),
       'durableRetentionHistory': <Object>[],
       'completedTaskIds': completed.map((task) => task.taskId).toList(),
-      'completedLessonIds': earlierLessons
-          .map((lesson) => lesson.lessonId)
-          .toList(),
+      'completedLessonIds': legacyCompletedIds == null
+          ? earlierLessons.map((lesson) => lesson.lessonId).toList()
+          : <String>[],
       'skippedTaskIds': <String>[],
       'earnedXp': xp,
       'selectedWorldId': worldId,
       'selectedLessonId': legacyLessonId ?? lesson.lessonId,
-      'selectedTaskId': taskId,
+      'selectedTaskId': legacyTaskId ?? taskId,
+      if (restoreActive) ...{
+        'resumeInRunner': true,
+        'resumePhase': 'drill',
+        'resumeTeachingStepIndex': lesson.courseTaskList
+            .singleWhere((task) => task.taskId == taskId)
+            .runner
+            .teachingSteps
+            .length,
+      },
     }),
   });
   t.view.physicalSize = const Size(393, 852);
@@ -157,10 +176,11 @@ Future<int> _openSavedCourseTask(
     await Future<void>.delayed(const Duration(milliseconds: 50));
   });
   await t.pumpAndSettle();
-  await _tapFirst(t, [find.text('Learn')]);
+  if (!restoreActive) await _tapFirst(t, [find.text('Learn')]);
   expect(
     await _tapFirst(t, [
-      find.byKey(const Key('act0_shell_current_mission_cta')),
+      if (!restoreActive)
+        find.byKey(const Key('act0_shell_current_mission_cta')),
       find.byKey(const Key('act0_academy_home_leaf_cta')),
     ]),
     isTrue,
@@ -191,7 +211,67 @@ Future<int> _openSavedCourseTask(
   return xp;
 }
 
+const _preSplitIntroTasks = <String>{
+  'w1_shared_card_access',
+  'w1_chips_starting_pot',
+  'w1_chips_matched_pot',
+  'w1_chips_read_middle',
+};
+
 void main() {
+  testWidgets('pre-split first lesson resumes the card read with its XP', (
+    t,
+  ) async {
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_1',
+      legacyLessonId: 'what_poker_is',
+      taskId: 'what_poker_is_find_hero',
+      legacyCompletedIds: {'what_poker_is_theory'},
+      restoreActive: true,
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'what_poker_is');
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_top'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
+    expect(saved['earnedXp'], xp);
+    expect(saved['completedTaskIds'], ['what_poker_is_theory']);
+  });
+
+  testWidgets(
+    'pre-split AA save resumes the assisted raise in its new lesson',
+    (t) async {
+      const taskId = 'first_table_guide_first_decision';
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: 'world_1',
+        legacyLessonId: 'what_poker_is',
+        taskId: taskId,
+        legacyCompletedIds: {'what_poker_is_theory', 'what_poker_is_find_hero'},
+        restoreActive: true,
+      );
+      final runner = t.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedLessonId, 'first_table_guide');
+      expect(find.text('Raise to 7.5 BB'), findsOneWidget);
+      expect(
+        await _tapFirst(t, [find.byKey(const Key('act0_shell_option_raise'))]),
+        isTrue,
+      );
+      final saved = await _saved(t);
+      expect(saved['earnedXp'], xp);
+      final evidence = (saved['learningEvidenceHistory'] as List).cast<Map>();
+      final move = evidence.singleWhere((row) => row['taskId'] == taskId);
+      expect(move['assistanceKind'], 'theoryRecall');
+    },
+  );
+
   testWidgets('W1 save resumes a drill from before the lesson split', (
     t,
   ) async {
@@ -313,7 +393,7 @@ void main() {
     final saved = await _saved(t);
     expect((saved['completedTaskIds'] as List).toSet(), oldCompleted.toSet());
     expect(saved['earnedXp'], oldXp);
-    expect(saved['skippedTaskIds'], isEmpty);
+    expect(saved['skippedTaskIds'], unorderedEquals(_preSplitIntroTasks));
     expect(t.takeException(), isNull);
   });
 
@@ -440,6 +520,42 @@ void main() {
     expect(saved['skippedTaskIds'], isEmpty);
   });
 
+  testWidgets(
+    'pre-beta W12 save skips a retired task and preserves earned XP',
+    (tester) async {
+      const retiredTaskId = 'w12_tilt_after_river_beat';
+      const nextTaskId = 'w12_after_bad_beat_reset';
+      expect(wave6RetiredRowsV1, contains(retiredTaskId));
+      final xp = await _openSavedCourseTask(
+        tester,
+        worldId: 'world_12',
+        taskId: nextTaskId,
+        legacyTaskId: retiredTaskId,
+      );
+      expect(
+        await _tapFirst(tester, [
+          find.byKey(
+            const Key('act0_shell_option_check_from_fear_of_another_loss'),
+          ),
+        ]),
+        isTrue,
+      );
+      final saved = await _saved(tester);
+      expect(saved['selectedTaskId'], nextTaskId);
+      final completed = (saved['completedTaskIds'] as List).toSet();
+      expect(completed, isNot(contains(retiredTaskId)));
+      final retainedXp = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.courseTaskList)
+          .where((task) => completed.contains(task.taskId))
+          .fold<int>(0, (sum, task) => sum + task.rewardXp);
+      expect(saved['earnedXp'], isNonNegative);
+      expect(saved['earnedXp'], xp);
+      expect(saved['earnedXp'], retainedXp);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('P8 keeps progress earned before the full hand moved', (
     tester,
   ) async {
@@ -455,8 +571,10 @@ void main() {
     final completed = [
       for (final lesson in world.lessons)
         if (earlierLessons.contains(lesson.lessonId) ||
-            lesson.lessonId == 'hand_rankings_comparisons')
-          ...lesson.courseTaskList,
+            lesson.lessonId == 'hand_rankings_comparisons' ||
+            lesson.lessonId == 'first_table_guide')
+          for (final task in lesson.courseTaskList)
+            if (!_preSplitIntroTasks.contains(task.taskId)) task,
     ];
     final completedIds = completed.map((task) => task.taskId).toList();
     final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
@@ -507,7 +625,7 @@ void main() {
     final saved = await _saved(tester);
     expect(saved['completedTaskIds'], unorderedEquals(completedIds));
     expect(saved['earnedXp'], xp);
-    expect(saved['skippedTaskIds'], isEmpty);
+    expect(saved['skippedTaskIds'], unorderedEquals(_preSplitIntroTasks));
     expect(tester.takeException(), isNull);
   });
 
@@ -810,17 +928,17 @@ void main() {
       'w10_vs_nit_open_wider',
     ),
     (
-      'a W11 planning miss reopens choosing one session focus',
+      'a W11 small-blind call miss reopens the value three-bet',
       'world_11',
       'w11_checkpoint_plan_line',
-      'complex_plan',
-      'w11_plan_focus_choice',
+      'call_2_bb',
+      'w11_sb_3bet_value',
     ),
     (
       'a W12 outcome-bias miss reopens reviewing the decision',
       'world_12',
       'w12_checkpoint_process_line',
-      'outcome_only',
+      'fold_after_last_orbit_s_loss',
       'w12_good_fold_bad_result',
     ),
   ]) {
@@ -1304,7 +1422,9 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 43 : (fullRoute ? 448 : 293);
+        final expectedCount = w7ToW8
+            ? 43
+            : (fullRoute ? 452 + wave6TaskDeltaV1 : 297);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

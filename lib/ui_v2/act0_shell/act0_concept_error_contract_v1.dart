@@ -53,7 +53,11 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
         'Confused the learner seat, private cards, board, pot, or table role.',
     sourceConceptOwner: 'Act0ShellStateV1:first_table_identity',
     eligibleRepairFamily: 'table_identity',
-    lessonKeys: <String>{'world_1/what_poker_is'},
+    lessonKeys: <String>{
+      'world_1/what_poker_is',
+      'world_1/first_table_guide',
+      'world_1/chips_in_the_middle',
+    },
     legacyAliases: <String>{'missed_table_read', 'thin_table_read'},
   ),
   Act0ConceptErrorDefinitionV1(
@@ -365,7 +369,9 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     eligibleRepairFamily: 'real_play_process_transfer',
     lessonKeys: <String>{
       'world_11/session_plan_basics',
+      'world_11/session_plan_bankroll_followup',
       'world_11/table_trigger_reads',
+      'world_11/table_trigger_multiway_and_spr',
       'world_11/post_session_review_loop',
       'world_11/real_play_transfer_checkpoint',
     },
@@ -385,7 +391,9 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     lessonKeys: <String>{
       'world_12/tilt_reset_protocol',
       'world_12/decision_over_outcome',
+      'world_12/decision_price_and_clean_outs',
       'world_12/confidence_and_discipline',
+      'world_12/confidence_river_discipline',
       'world_12/mindset_bridge_checkpoint',
     },
     legacyAliases: <String>{

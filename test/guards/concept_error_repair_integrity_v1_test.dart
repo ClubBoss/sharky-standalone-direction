@@ -59,7 +59,7 @@ void main() {
     const expectedSources = <String>[
       'world_1/what_poker_is/what_poker_is_find_hero',
       'world_3/position_checkpoint/position_checkpoint_position_checkpoint_table_notice',
-      'world_1/what_poker_is/what_poker_is_table_read_recheck',
+      'world_1/first_table_guide/what_poker_is_table_read_recheck',
       'world_1/what_poker_is_content/what_poker_is_pot_stack',
       'world_1/what_poker_is_content/what_poker_is_win_ways',
       'world_1/what_poker_is_content/what_poker_is_all_in_meaning',

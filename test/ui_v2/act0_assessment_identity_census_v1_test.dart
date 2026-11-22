@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -38,13 +39,19 @@ void main() {
     expect(
       tasks,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     final problems = <String>[];
@@ -109,6 +116,18 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
+    // The three legacy read/route tasks and guided AA retain their identities
+    // and grading when the first curriculum is split by lesson.
+    for (final taskId in [
+      'first_table_guide_first_decision',
+      'what_poker_is_table_read_transfer',
+      'what_poker_is_table_read_recheck',
+      'first_table_guide_route_roles',
+    ]) {
+      final row = entries.singleWhere((row) => row[2] == taskId);
+      expect(row[1], 'first_table_guide', reason: taskId);
+      row[1] = 'what_poker_is';
+    }
     final w1Changes =
         jsonDecode(
               File('test/fixtures/act0_w1_revision_v1.json').readAsStringSync(),
@@ -131,10 +150,80 @@ void main() {
     expect(
       entries,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
+    verifyWave6AndRestoreIdentityV1(entries);
     const w1Additions = {
+      'w1_shared_card_access': [
+        'world_1',
+        'what_poker_is',
+        'w1_shared_card_access',
+        'drill',
+        'practice',
+        [
+          [
+            'private',
+            'The jack and four beside you',
+            false,
+            'wrong',
+            'The queen, eight and three',
+          ],
+          [
+            'shared',
+            'The queen, eight and three',
+            true,
+            'correct',
+            'The queen, eight and three',
+          ],
+          [
+            'all',
+            'Jack, four, queen, eight and three',
+            false,
+            'wrong',
+            'The queen, eight and three',
+          ],
+        ],
+      ],
+      'w1_chips_starting_pot': [
+        'world_1',
+        'chips_in_the_middle',
+        'w1_chips_starting_pot',
+        'drill',
+        'practice',
+        [
+          ['only_big', '1 BB', false, 'wrong', '1.5 BB'],
+          ['both', '1.5 BB', true, 'correct', '1.5 BB'],
+          ['only_small', '0.5 BB', false, 'wrong', '1.5 BB'],
+        ],
+      ],
+      'w1_chips_matched_pot': [
+        'world_1',
+        'chips_in_the_middle',
+        'w1_chips_matched_pot',
+        'drill',
+        'practice',
+        [
+          ['two_players', '5 BB', false, 'wrong', '5.5 BB'],
+          ['post_twice', '6.5 BB', false, 'wrong', '5.5 BB'],
+          ['total', '5.5 BB', true, 'correct', '5.5 BB'],
+        ],
+      ],
+      'w1_chips_read_middle': [
+        'world_1',
+        'chips_in_the_middle',
+        'w1_chips_read_middle',
+        'drill',
+        'practice',
+        [
+          ['pot', '7 BB', true, 'correct', '7 BB'],
+          ['one_share', '3.25 BB', false, 'wrong', '7 BB'],
+          ['stack', '96.75 BB', false, 'wrong', '7 BB'],
+        ],
+      ],
       'hand_rankings_find_the_match': [
         'world_1',
         'hand_rankings_table',
@@ -2355,7 +2444,10 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     var validated = 0;

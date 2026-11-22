@@ -49,7 +49,11 @@ final _actionOptionPattern = RegExp(
   r'^(?:raise|open|fold|call|check|bet|limp|3-bet|all-in)\b',
   caseSensitive: false,
 );
-final _numericLeadingPattern = RegExp(r'^[~≈<>]?\s*\d');
+final _numericLeadingPattern = RegExp(r'^[~≈<>]?\s*\$?\d');
+final _cashStakePattern = RegExp(
+  r'^(?:(?:move to|stay at) )?NL\d+\b',
+  caseSensitive: false,
+);
 final _numericUnitPattern = RegExp(
   r'\b\d+(?:\.\d+)?\s*(?:bb|outs?|%|cards?|chips?|times?)\b',
   caseSensitive: false,
@@ -107,6 +111,7 @@ String classifyCatalogScoredFormatV1(Act0LessonTaskV1 task) {
   if (options.every(
     (o) =>
         _numericLeadingPattern.hasMatch(o.label.trim()) ||
+        _cashStakePattern.hasMatch(o.label.trim()) ||
         _numericUnitPattern.hasMatch(o.label),
   )) {
     return 'numeric';

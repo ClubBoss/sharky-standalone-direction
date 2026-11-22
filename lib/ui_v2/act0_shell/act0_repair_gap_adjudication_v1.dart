@@ -116,7 +116,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'what_poker_is',
+    sourceLessonId: 'first_table_guide',
     sourceTaskId: 'what_poker_is_table_read_recheck',
     misconception: 'private cards, board, and pot table scan',
     conceptErrorId: 'confused_table_identity',
@@ -124,7 +124,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     candidateTargetIds: <String>['what_poker_is_table_read_transfer'],
     outcome: Act0RepairGapOutcomeV1.alternateSameSignalTarget,
     targetWorldId: 'world_1',
-    targetLessonId: 'what_poker_is',
+    targetLessonId: 'first_table_guide',
     targetTaskId: 'what_poker_is_table_read_transfer',
     learnerEquivalenceRationale: _same,
     difficultyRelationship: _sameDifficulty,
@@ -1194,7 +1194,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "top",
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
-        "126229140138e9a6819ac1697c01995d720bcb3704386cdaaa84f26eeec153c7",
+        "a181b1dcb91facb86b8088c045760b4aa53f1e41a2cb98476af6aefe74df5b6c",
     sourceQuestion: "Which cards belong to you alone?",
     sourceChoiceReason:
         "Everyone still playing can use the cards in the middle.",
@@ -1222,7 +1222,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "random",
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
-        "126229140138e9a6819ac1697c01995d720bcb3704386cdaaa84f26eeec153c7",
+        "a181b1dcb91facb86b8088c045760b4aa53f1e41a2cb98476af6aefe74df5b6c",
     sourceQuestion:
         "Which label could change next hand while the player is still you?",
     sourceChoiceReason:
@@ -1527,13 +1527,13 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   // Navigation-only placement teaching entries. Neither is repair proof.
   Act0RepairGoalContractV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'what_poker_is',
+    sourceLessonId: 'first_table_guide',
     sourceTaskId: 'what_poker_is_table_read_transfer',
     sourceChoiceId: 'hero_private_cards',
     sourceCorrectChoiceId: 'board_cards',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        '004cc7da3d67627764b31439a3f62b056b9d5b62b1c4e361cf7bbea86d2e0163',
+        'a85682842726457d849afda232a6138a3901609870d07aa0c8e367e5c1275079',
     diagnosticVariantId: 'board_private_cards',
     sourceQuestion: 'Which cards can everyone use?',
     sourceChoiceReason:
@@ -1555,13 +1555,13 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: 'world_1',
-    sourceLessonId: 'what_poker_is',
+    sourceLessonId: 'first_table_guide',
     sourceTaskId: 'what_poker_is_table_read_transfer',
     sourceChoiceId: 'not_sure_yet',
     sourceCorrectChoiceId: 'check',
     sourceFingerprint: '', // Captured full variant witness, never base-only.
     sourceContainerFingerprint:
-        '004cc7da3d67627764b31439a3f62b056b9d5b62b1c4e361cf7bbea86d2e0163',
+        'a85682842726457d849afda232a6138a3901609870d07aa0c8e367e5c1275079',
     diagnosticVariantId: 'action_basics',
     sourceQuestion: 'No bet faces Hero. Which action is free?',
     sourceChoiceReason: 'Sharky will start simple.',
@@ -1783,9 +1783,9 @@ const _foundationSharedRepairGoals = <String, String>{
   'w10_checkpoint_guardrail_line': 'respect_a_passive_turn_raise',
   'w11_plan_focus_choice': 'choose_one_measurable_session_focus',
   'w11_plan_table_focus_transfer': 'choose_one_measurable_session_focus',
-  'w11_checkpoint_plan_line': 'choose_one_measurable_session_focus',
+  'w11_sb_3bet_value': 'three_bet_for_value_from_small_blind',
+  'w11_checkpoint_plan_line': 'three_bet_for_value_from_small_blind',
   'w11_review_pick_leak': 'choose_one_review_leak',
-  'w11_checkpoint_review_line': 'choose_one_review_leak',
   'w12_good_fold_bad_result': 'review_process_before_outcome',
   'w12_checkpoint_process_line': 'review_process_before_outcome',
   'w12_after_bad_beat_reset': 'reset_before_the_next_tilt_decision',

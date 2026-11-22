@@ -33,7 +33,7 @@ import 'package:shared_preferences_platform_interface/shared_preferences_platfor
 const _progressKey = 'act0_shell_progress_v1';
 const _source = 'what_poker_is_table_read_transfer';
 const _mappedRepair = 'what_poker_is_table_read_recheck';
-const _nextTask = 'first_table_guide_one_clear_choice';
+const _nextTask = 'first_table_guide_route_roles';
 
 void main() {
   testWidgets(
@@ -648,9 +648,7 @@ void main() {
     await _replayTableReadForXpV1(tester);
     final independentlyEarned = await _saved(tester);
     final reward = Act0ShellStateV1.sample
-        .worldById('world_1')
-        .lessons
-        .first
+        .lessonById('first_table_guide')
         .courseTaskList
         .singleWhere((task) => task.taskId == _source)
         .rewardXp;
@@ -762,7 +760,7 @@ void main() {
           expect(_runner(tester).selectedTaskId, _nextTask);
           await _advanceToPrompt(tester);
           expect(avatar, findsNothing);
-          await _choose(tester, 'co_still_acting');
+          await _choose(tester, 'learn');
           expect(
             _runner(tester).runner.reviewQuality,
             Act0FeedbackQualityV1.wrong,
@@ -996,7 +994,7 @@ void main() {
     final task = Act0ShellStateV1.sample
         .worldById('world_1')
         .lessons
-        .firstWhere((l) => l.lessonId == 'what_poker_is')
+        .firstWhere((l) => l.lessonId == 'first_table_guide')
         .taskList
         .firstWhere((t) => t.taskId == _source);
     final decisions = <Act0CompletedDecisionV1>[];
@@ -1011,7 +1009,7 @@ void main() {
             teachingStepIndex: task.runner.teachingSteps.length,
           ),
           selectedWorldId: 'world_1',
-          selectedLessonId: 'what_poker_is',
+          selectedLessonId: 'first_table_guide',
           selectedTaskId: sourceId,
           selectedTaskFamily: task.resolvedTaskFamily,
           compositionFamily: task.resolvedCompositionFamily,
@@ -1475,10 +1473,10 @@ void main() {
       expect(_runner(tester).selectedLessonId, 'what_poker_is');
       expect(_runner(tester).selectedTaskId, 'what_poker_is_theory');
       await _advanceToTask(tester, _source);
-      expect(_runner(tester).selectedLessonId, 'what_poker_is');
+      expect(_runner(tester).selectedLessonId, 'first_table_guide');
       await _advanceToPrompt(tester);
       final beforeWrong = await _saved(tester);
-      expect(beforeWrong['earnedXp'], 10);
+      expect(beforeWrong['earnedXp'], 35);
       expect(
         beforeWrong['completedTaskIds'],
         containsAll(<String>[
@@ -1491,7 +1489,7 @@ void main() {
       await _choose(tester, 'five_board_now');
       expect(_runner(tester).repairReasonLine, contains('Replay this spot'));
       final missed = await _saved(tester);
-      expect(missed['earnedXp'], 10, reason: 'A wrong choice earns no XP.');
+      expect(missed['earnedXp'], 35, reason: 'A wrong choice earns no XP.');
       final miss = _rows(missed, 'learningEvidenceHistory').singleWhere(
         (row) =>
             row['taskId'] == _source && row['choiceId'] == 'five_board_now',
@@ -1519,24 +1517,24 @@ void main() {
       expect(_runner(tester).selectedTaskId, _source);
       expect(_runner(tester).repairResultReceiptLine, isNull);
       final retried = await _saved(tester);
-      expect(retried['earnedXp'], 10);
+      expect(retried['earnedXp'], 35);
       expect(retried['completedTaskIds'], isNot(contains(_mappedRepair)));
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_six');
-      expect((await _saved(tester))['earnedXp'], 10);
+      expect((await _saved(tester))['earnedXp'], 35);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       final sourceCompleted = await _saved(tester);
-      expect(sourceCompleted['earnedXp'], 15);
+      expect(sourceCompleted['earnedXp'], 40);
       expect(sourceCompleted['completedTaskIds'], contains(_source));
 
       // The ordinary lesson then visits the existing 4 BB task.
       expect(_runner(tester).selectedTaskId, _mappedRepair);
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_four');
-      expect((await _saved(tester))['earnedXp'], 15);
+      expect((await _saved(tester))['earnedXp'], 40);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       final ordinaryFour = await _saved(tester);
-      expect(ordinaryFour['earnedXp'], 20);
+      expect(ordinaryFour['earnedXp'], 45);
       expect(ordinaryFour['completedTaskIds'], contains(_mappedRepair));
 
       final skillsBeforeFour = Map<String, dynamic>.from(
@@ -1559,12 +1557,12 @@ void main() {
       expect(_runner(tester).selectedTaskId, _nextTask);
       expect(_nextTask, isNot(anyOf(_source, _mappedRepair)));
       await _advanceToPrompt(tester);
-      await _choose(tester, 'hero_btn_preflop_setup');
+      await _choose(tester, 'review');
       expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-      expect((await _saved(tester))['earnedXp'], 20);
+      expect((await _saved(tester))['earnedXp'], 45);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       final acknowledged = await _saved(tester);
-      expect(acknowledged['earnedXp'], 25);
+      expect(acknowledged['earnedXp'], 50);
       final evidence = _rows(acknowledged, 'learningEvidenceHistory');
       expect(
         evidence.singleWhere((row) => row['recordId'] == miss['recordId']),
@@ -1590,9 +1588,7 @@ void main() {
         isTrue,
       );
       final nextAnswer = evidence.singleWhere(
-        (row) =>
-            row['taskId'] == _nextTask &&
-            row['choiceId'] == 'hero_btn_preflop_setup',
+        (row) => row['taskId'] == _nextTask && row['choiceId'] == 'review',
       );
       expect(nextAnswer['isCorrect'], isTrue);
       expect(nextAnswer['recordId'], isNot(miss['recordId']));
@@ -1622,8 +1618,7 @@ void main() {
       // Hero5 + source6BB5 + ordinary4BB5 + distinctpreflop5. The guided
       // choice, earlier wrong answer and same-source retry add no XP.
       expect(acknowledged['selectedWorldId'], 'world_1');
-      expect(acknowledged['selectedLessonId'], 'what_poker_is');
-      expect(acknowledged['selectedTaskId'], 'first_table_guide_route_roles');
+      expect(acknowledged['selectedLessonId'], 'first_table_guide');
       // Retain a genuine repair-positive on the earliest admitted ordinary
       // exact-replay source. All prerequisites are earned through visible W1
       // curriculum controls; no skipped-credit fixture or injected route.
@@ -2043,9 +2038,9 @@ void main() {
     ]);
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
-    expect(lessons, hasLength(34));
-    expect(tasks, hasLength(206));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(206));
+    expect(lessons, hasLength(36));
+    expect(tasks, hasLength(210));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(210));
     final sizingLesson = worlds.last.lessons.singleWhere(
       (lesson) => lesson.lessonId == 'small_half_pot',
     );
@@ -2064,7 +2059,7 @@ void main() {
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(170),
+      hasLength(174),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();
@@ -2204,7 +2199,7 @@ void main() {
             first.taskList.fold<int>(0, (sum, task) => sum + task.rewardXp),
           );
           expect(saved['studyObservations'], hasLength(1));
-          expect(summary.summary.assistedCount, 1);
+          expect(summary.summary.assistedCount, 0);
           final target = summary.nextUsefulHand?.targetTaskId;
           await _tap(tester, 'act0_shell_block_summary_continue_cta');
           expect(_runner(tester).selectedLessonId, lessons[1].lessonId);
@@ -2617,12 +2612,39 @@ Future<void> _advanceToPrompt(WidgetTester tester) async {
 }
 
 Future<void> _advanceToTask(WidgetTester tester, String taskId) async {
-  for (var step = 0; step < 30; step++) {
+  for (var step = 0; step < 90; step++) {
+    if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+      final summary = find.byType(Act0BlockCompletionShellV1);
+      if (summary.evaluate().isNotEmpty) {
+        final next = tester
+            .widget<Act0BlockCompletionShellV1>(summary)
+            .nextUsefulHand
+            ?.targetTaskId;
+        final completed = (await _saved(tester))['completedTaskIds'] as List;
+        await _tap(
+          tester,
+          next != null && !completed.contains(next)
+              ? 'act0_shell_block_summary_continue_cta'
+              : 'act0_shell_block_summary_home_cta',
+        );
+      } else {
+        final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
+        if (mission.evaluate().isEmpty) {
+          await tester.tap(find.text('Learn').last);
+          await tester.pumpAndSettle();
+        }
+        await _tap(tester, 'act0_shell_current_mission_cta');
+      }
+      continue;
+    }
     final active = _runner(tester);
     if (active.selectedTaskId == taskId) return;
     if (active.runner.activeTeachingStep != null ||
         active.runner.phase == Act0LessonPhaseV1.theory) {
       await _continueTeaching(tester);
+    } else if (active.runner.phase == Act0LessonPhaseV1.review &&
+        active.runner.selectedOptionId != null) {
+      await _tap(tester, 'act0_shell_feedback_continue_cta');
     } else {
       await _advanceToPrompt(tester);
       final correct = _runner(
@@ -2632,7 +2654,7 @@ Future<void> _advanceToTask(WidgetTester tester, String taskId) async {
       await _tap(tester, 'act0_shell_feedback_continue_cta');
     }
   }
-  fail('The ordinary first lesson did not reach $taskId.');
+  fail('The ordinary route did not reach $taskId.');
 }
 
 // Only waits on the production store's shared serial queue. The false callback
@@ -2903,6 +2925,10 @@ Future<void> _advanceOrdinaryW1ToRank(WidgetTester tester) async {
       for (final task in lesson.taskList) task.taskId,
   };
   for (var step = 0; step < 160; step++) {
+    if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+      await finishAct0RoutePracticeV1(tester, correct: true);
+      continue;
+    }
     if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
       final active = _runner(tester);
       expect(active.selectedWorldId, 'world_1');
@@ -2958,7 +2984,9 @@ Future<void> _replayTableReadForXpV1(WidgetTester tester) async {
   await tester.tap(find.text('Learn').last);
   await tester.pumpAndSettle();
   final world = Act0ShellStateV1.sample.worldById('world_1');
-  final lesson = world.lessons.first;
+  final lesson = world.lessons.singleWhere(
+    (lesson) => lesson.lessonId == 'first_table_guide',
+  );
   tester
       .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
       .onStartTask(lesson.lessonId, _source);

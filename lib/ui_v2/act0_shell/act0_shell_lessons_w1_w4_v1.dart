@@ -266,20 +266,41 @@ Act0RunnerStateV1 _w1WithNumericLabelsV1(
   );
 }
 
-// Use the names the opening lessons have explained in the visible history.
+// Keep the canonical trail for source consumers and anonymize only learner copy.
 Act0TableStateV1 _w1EarlySeatCopyV1(
   Act0TableStateV1 table, {
   required String opener,
+  bool adjacentOpener = false,
+  bool hideEarlySeats = false,
 }) => table.copyWith(
   handContributions: table.handContributions,
   actionTrail: [
     for (final action in table.actionTrail)
-      Act0ActionTrailItemV1(
-        label: action.label,
-        displayLabel: action.learnerLabel
-            .replaceAll(opener, 'The player before you')
-            .replaceAll(RegExp(r'\b(?:UTG|HJ|CO)\b'), 'An earlier player'),
-      ),
+      if (action.isNote)
+        action
+      else
+        Act0ActionTrailItemV1(
+          label: action.label,
+          displayLabel: action.learnerLabel
+              .replaceAllMapped(
+                RegExp('\\b$opener (raises|checks)\\b'),
+                (match) => switch (match[1]) {
+                  'raises' =>
+                    adjacentOpener
+                        ? 'The player before you raises'
+                        : 'Another player raises',
+                  _ => 'The raiser checks',
+                },
+              )
+              .replaceAll(
+                RegExp(
+                  hideEarlySeats
+                      ? r'\b(?:UTG|HJ|CO|BTN)\b'
+                      : r'\b(?:UTG|HJ|CO)\b',
+                ),
+                'An earlier player',
+              ),
+        ),
   ],
 );
 
@@ -336,6 +357,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   table: _w1EarlySeatCopyV1(
     _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
     opener: 'HJ',
+    adjacentOpener: true,
   ),
   teachingSteps: const [
     Act0TeachingStepV1(
@@ -354,6 +376,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
   table: _w1EarlySeatCopyV1(
     _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
     opener: 'CO',
+    adjacentOpener: true,
   ),
   hintPolicy: Act0HintPolicyV1.hidden,
   teachingSteps: const [
@@ -511,8 +534,8 @@ Act0RunnerStateV1 _w1ExtraReadV1({
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
-    title: 'First Table Guide',
-    subtitle: 'Find your cards, the shared board, and the chips in the middle.',
+    title: 'Your cards and the board',
+    subtitle: 'Tell your own cards apart from the cards everyone can use.',
     state: Act0LessonStateV1.completed,
     phaseLabel: 'Start',
     primaryCtaLabel: 'Replay',
@@ -534,8 +557,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
-        summary:
-            'Start with one calm read: hero, blinds, table, and the Sharky loop.',
+        summary: 'Find the two cards that belong to you.',
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_find_hero',
@@ -546,6 +568,262 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'Spot where Hero sits before anything else starts moving.',
       ),
+      Act0LessonTaskV1(
+        taskId: 'first_table_guide_one_clear_choice',
+        title: 'Read the preflop setup',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _firstTableGuideActionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstTableGuideActionRunner.options,
+            correctOptionId: 'hero_btn_preflop_setup',
+            correctIndex: 1,
+          ),
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+        summary: 'Identify the private cards when the middle is empty.',
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w1_shared_card_access',
+        title: 'Which cards can both players use?',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _firstTableGuideFindHeroRunner,
+          id: 'w1_shared_card_access',
+          caption:
+              'A second player still has cards at another seat. Your two cards sit beside you, and three more sit in the middle. Read the ranks and check where each group is placed.',
+          question: 'Which of the visible cards can that other player use too?',
+          table: _day7PostflopV1('bb', 'Jd 4c', 'Qh 8s 3d').copyWith(
+            scope: Act0TableScopeV1.orientation,
+            potLabel: '',
+            actionTrail: const [],
+          ),
+          choices: const [
+            (
+              'private',
+              'The jack and four beside you',
+              'The jack and four sit beside your seat. Giving them to the other player would mix up the two sets of cards.',
+            ),
+            (
+              'shared',
+              'The queen, eight and three',
+              'The queen, eight and three are in the middle, where both players can use them.',
+            ),
+            (
+              'all',
+              'Jack, four, queen, eight and three',
+              'The queen, eight and three are shared. Your jack and four belong to your seat, so the other player cannot use them.',
+            ),
+          ],
+          correct: 1,
+          repairCards: const ['board_0', 'board_1', 'board_2'],
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'first_table_guide_shared_cards_repair',
+        title: 'Read the cards',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1WithDistractorV1(
+          _act0W1SeatObserverV1(
+            _privateBoardRunner.copyWith(
+              lessonId: 'first_table_guide_shared_cards_repair',
+              lessonTitle: 'First Table Guide',
+              caption: 'There are two groups of cards in view.',
+              feedbackReason:
+                  'Everyone can use the cards in the middle. Your two cards belong only to you.',
+              table: _privateBoardRunner.table.copyWith(
+                scope: Act0TableScopeV1.orientation,
+                potLabel: '',
+                heroCards: const [
+                  Act0CardStateV1(rank: 'K', suit: 'c'),
+                  Act0CardStateV1(
+                    rank: '9',
+                    suit: 'd',
+                    tone: Act0CardToneV1.red,
+                  ),
+                ],
+                boardCards: const [
+                  Act0CardStateV1(
+                    rank: '8',
+                    suit: 'h',
+                    tone: Act0CardToneV1.red,
+                  ),
+                  Act0CardStateV1(
+                    rank: '5',
+                    suit: 'd',
+                    tone: Act0CardToneV1.red,
+                  ),
+                  Act0CardStateV1(rank: '2', suit: 'c'),
+                ],
+              ),
+              teachingSteps: const [],
+            ),
+            'co',
+          ),
+          id: 'burn_cards',
+          label: 'Cards set aside by the dealer',
+          reason:
+              'The three middle cards on 8-5-2 can play. Cards set aside by the dealer cannot complete any player’s hand.',
+        ),
+        rewardXp: 0,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
+        repairOnly: true,
+      ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'chips_in_the_middle',
+    title: 'Blinds and the pot',
+    subtitle: 'Read the posted chips and the running total in the middle.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Chips',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 15,
+    runner: _firstTableGuideMeetTableRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'w1_chips_starting_pot',
+        title: 'Read the two forced posts',
+        phase: Act0LessonPhaseV1.drill,
+        runner:
+            _w1ExtraReadV1(
+              source: _firstTableGuideFindHeroRunner,
+              id: 'w1_chips_starting_pot',
+              caption:
+                  'The two marked seats have put in their starting amounts. Every other stack is still untouched. Read their two contributions before you read the total.',
+              question:
+                  'What is the total in the middle before anyone chooses what to do?',
+              table: _day7PreflopV1('utg', '5s 8c', showTurn: true),
+              choices: const [
+                (
+                  'only_big',
+                  '1 BB',
+                  'The big blind put in 1 BB. Counting that seat alone leaves out the half chip unit at the other marked seat.',
+                ),
+                (
+                  'both',
+                  '1.5 BB',
+                  'The two forced amounts are 0.5 and 1 BB. Adding them gives the 1.5 BB already in the middle.',
+                ),
+                (
+                  'only_small',
+                  '0.5 BB',
+                  'The small blind put in 0.5 BB. The 1 BB from the other marked seat belongs in the same total.',
+                ),
+              ],
+              correct: 1,
+            ).copyWith(
+              teachingSteps: const [
+                Act0TeachingStepV1(
+                  title: 'The first two contributions',
+                  body:
+                      'Blinds are forced contributions: the small blind puts in 0.5 BB and the big blind puts in 1 BB before anyone chooses.',
+                ),
+                Act0TeachingStepV1(
+                  title: 'Read the middle',
+                  body:
+                      'The pot is the chips in the middle, so add what both players have put in and leave out the chips still in their stacks.',
+                ),
+              ],
+            ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w1_chips_matched_pot',
+        title: 'Count each contribution once',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _firstTableGuideFindHeroRunner,
+          id: 'w1_chips_matched_pot',
+          caption:
+              'One player put in 2.5 BB. The big blind added enough to reach the same total. The small blind stopped playing, and the shared cards arrived with no new chips added.',
+          question:
+              'How many chips are in the pot when the shared cards arrive?',
+          table: _w1EarlySeatCopyV1(
+            _day7PostflopV1('bb', '9h 3c', 'Ks 7d 2h', openBb: 2.5),
+            opener: 'HJ',
+            hideEarlySeats: true,
+          ),
+          choices: const [
+            (
+              'two_players',
+              '5 BB',
+              'Two contributions of 2.5 BB add to 5 BB. That leaves out the half BB the small blind already put in.',
+            ),
+            (
+              'post_twice',
+              '6.5 BB',
+              'The big blind reached 2.5 BB by adding to its first chip. Adding that first chip again counts it twice.',
+            ),
+            (
+              'total',
+              '5.5 BB',
+              'Count 2.5 BB from each continuing player and 0.5 BB left by the small blind.',
+            ),
+          ],
+          correct: 2,
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w1_chips_read_middle',
+        title: 'Separate the pot from a stack',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _firstTableGuideFindHeroRunner,
+          id: 'w1_chips_read_middle',
+          caption:
+              'The two players still in each put in 3.25 BB. A third player left a half BB in the middle. The numbers beside the seats show the chips those players have left. Keep the chips in those stacks separate from everything the players have put in.',
+          question:
+              'Which amount tells you how much the players have put in together?',
+          table: _w1EarlySeatCopyV1(
+            _day7PostflopV1('bb', 'Ts 6d', 'Ah 5s 3h', openBb: 3.25),
+            opener: 'HJ',
+            hideEarlySeats: true,
+          ),
+          choices: const [
+            (
+              'pot',
+              '7 BB',
+              'The two 3.25 BB amounts and the half BB add up to 7 BB already in the middle.',
+            ),
+            (
+              'one_share',
+              '3.25 BB',
+              'This is one player’s contribution. Using it alone leaves out the other player and the small blind.',
+            ),
+            (
+              'stack',
+              '96.75 BB',
+              'This amount is still beside a seat. Counting a remaining stack mistakes chips available for chips already put in.',
+            ),
+          ],
+          correct: 0,
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'first_table_guide',
+    title: 'First Table Guide',
+    subtitle:
+        'Learn Fold, Call and Raise, then make your first coached choice.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Start',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 15,
+    runner: _w1FirstDecisionRunner,
+    tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'first_table_guide_first_decision',
         title: 'Decide with your coach',
@@ -603,22 +881,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             'Repeat the same table scan on a second spot: Hero cards, board, and pot.',
       ),
       Act0LessonTaskV1(
-        taskId: 'first_table_guide_one_clear_choice',
-        title: 'Read the preflop setup',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _firstTableGuideActionRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _firstTableGuideActionRunner.options,
-            correctOptionId: 'hero_btn_preflop_setup',
-            correctIndex: 1,
-          ),
-        ),
-        rewardXp: 5,
-        stepKind: Act0LessonStepKindV1.practice,
-        summary:
-            'Carry the same scan into a preflop setup read before strategy choices start.',
-      ),
-      Act0LessonTaskV1(
         taskId: 'first_table_guide_route_roles',
         title: 'Where to go next',
         phase: Act0LessonPhaseV1.review,
@@ -634,56 +896,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.transfer,
         summary:
             'Lock in what Home, Learn, Practice, Review, and You do after the first loop.',
-      ),
-      Act0LessonTaskV1(
-        taskId: 'first_table_guide_shared_cards_repair',
-        title: 'Read the cards',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1WithDistractorV1(
-          _act0W1SeatObserverV1(
-            _privateBoardRunner.copyWith(
-              lessonId: 'first_table_guide_shared_cards_repair',
-              lessonTitle: 'First Table Guide',
-              caption: 'There are two groups of cards in view.',
-              feedbackReason:
-                  'Everyone can use the cards in the middle. Your two cards belong only to you.',
-              table: _privateBoardRunner.table.copyWith(
-                scope: Act0TableScopeV1.orientation,
-                potLabel: '',
-                heroCards: const [
-                  Act0CardStateV1(rank: 'K', suit: 'c'),
-                  Act0CardStateV1(
-                    rank: '9',
-                    suit: 'd',
-                    tone: Act0CardToneV1.red,
-                  ),
-                ],
-                boardCards: const [
-                  Act0CardStateV1(
-                    rank: '8',
-                    suit: 'h',
-                    tone: Act0CardToneV1.red,
-                  ),
-                  Act0CardStateV1(
-                    rank: '5',
-                    suit: 'd',
-                    tone: Act0CardToneV1.red,
-                  ),
-                  Act0CardStateV1(rank: '2', suit: 'c'),
-                ],
-              ),
-              teachingSteps: const [],
-            ),
-            'co',
-          ),
-          id: 'burn_cards',
-          label: 'Cards set aside by the dealer',
-          reason:
-              'The three middle cards on 8-5-2 can play. Cards set aside by the dealer cannot complete any player’s hand.',
-        ),
-        rewardXp: 0,
-        stepKind: Act0LessonStepKindV1.fixMistakes,
-        repairOnly: true,
       ),
     ],
   ),

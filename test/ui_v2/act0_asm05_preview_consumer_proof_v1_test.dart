@@ -7,7 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
-// TEST-ONLY PROPOSAL / NOT_RUN. Reuses the existing W1 repair-route fixture's
+// Widget proof. Reuses the existing W1 repair-route fixture's
 // Preview debugHarnessEntry; adds no unlock, injected grade or state setter.
 // Tests the Preview consumer contract, not ordinary W1-to-W12 navigation,
 // native presentation, durable restart or Human learning.
@@ -72,8 +72,8 @@ void main() {
       final before = _mountedText(tester);
       // These are instructional model facts, not optional answer hints.
       for (final fact in [
-        'SB holds As Ad',
-        'both players must check',
+        'SB shows As Ad',
+        'both check the river',
         'Raises are excluded',
         'No ante or rake',
         '100 BB',
@@ -86,7 +86,8 @@ void main() {
           reason: 'Model assumption must be available in UI: $fact',
         );
       }
-      expect(find.textContaining('Call $price BB or fold'), findsOneWidget);
+      expect(find.text('Call or fold?'), findsOneWidget);
+      expect(find.text('To call $price BB'), findsOneWidget);
       final modelSupport = find.byKey(
         const Key('act0_learning_scene_v3_model_support_scroll'),
       );
