@@ -177,25 +177,25 @@
   "reasoning_v1": {
     "findings_by_world": {
       "world_1": {},
-      "world_2": {},
-      "world_3": {},
+      "world_2": {
+        "30": [
+          "discipline_checkpoint_checkpoint_borderline_continue|call",
+          "w2_narrow_three_bet_strong|call",
+          "weak_ace_warning_w3_strong_continue|call"
+        ]
+      },
+      "world_3": {
+        "30": [
+          "w3_play_from_blinds_small_blind_medium_raise|raise"
+        ]
+      },
       "world_4": {},
       "world_5": {},
       "world_6": {},
       "world_7": {
-        "28": [
-          "w7_clean_outs_higher_price|choice_2",
-          "w7_clean_outs_lower_price|choice_1",
-          "w7_river_one_bluff_of_six|choice_2"
-        ],
         "29": [
           "w7_clean_outs_lower_price|choice_1",
           "w7_flop_bluff_one_player|choice_1",
-          "w7_river_one_bluff_of_six|choice_2"
-        ],
-        "30": [
-          "w7_clean_outs_higher_price|choice_2",
-          "w7_clean_outs_lower_price|choice_1",
           "w7_river_one_bluff_of_six|choice_2"
         ]
       },
@@ -583,7 +583,6 @@
     "W1|positions_review|141",
     "W1|positions_review|31",
     "W1|positions_review|button",
-    "W1|positions_review|heads_up",
     "W1|positions_theory|13",
     "W1|positions_theory|139",
     "W1|positions_theory|140",
@@ -849,7 +848,6 @@
     "W3|position_checkpoint_position_checkpoint_review|starting_chart",
     "W3|position_checkpoint_position_checkpoint_table_notice|141",
     "W3|position_checkpoint_position_checkpoint_table_notice|146",
-    "W3|position_checkpoint_position_checkpoint_table_notice|156",
     "W3|position_checkpoint_position_checkpoint_table_notice|action_order",
     "W3|position_six_seats_hj_co_contrast|139",
     "W3|position_six_seats_position_order_reason|139",

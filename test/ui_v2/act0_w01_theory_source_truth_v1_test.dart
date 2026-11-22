@@ -596,7 +596,7 @@ void main() {
       'bottom':
           'SB, BB, UTG, HJ and CO are all still in. Those five seats act before BTN.',
       'random':
-          'One would be a heads-up hand. This flop still has six players, five of them before BTN.',
+          'One would be a two-player hand. This flop still has six players, five of them before BTN.',
     };
     for (final option in task.runner.options) {
       expect(option.feedbackReason, expected[option.id]);
@@ -688,7 +688,7 @@ void main() {
     print('W01_POSITION_RENDER=${jsonEncode(rendered)}');
     expect(
       find.text(
-        'One would be a heads-up hand. This flop still has six players, five of them before BTN.',
+        'One would be a two-player hand. This flop still has six players, five of them before BTN.',
       ),
       findsOneWidget,
     );

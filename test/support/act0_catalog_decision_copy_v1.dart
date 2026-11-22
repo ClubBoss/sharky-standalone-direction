@@ -34,6 +34,15 @@ final _otherSubject = RegExp(
   r'\s+(?:has|have|with|faces?)\b|\bbehind (?:it|them|him|her)\b|\b(?:adding|add|remove|removing)\s+(?:seats?|players?|UTG\+|LJ)',
   caseSensitive: false,
 );
+final _utgFrame = RegExp(
+  r'\b(?:UTG\s+(?:is|acts)\s+first|behind\s+UTG\b(?![+’\x27])|'
+  r'(?:five|5)\s+players?\s+(?:are\s+)?(?:still\s+)?left(?:\s+to\s+act\b|(?=\s*[,.;!?]|$)))',
+  caseSensitive: false,
+);
+final _utgQuestion = RegExp(
+  r'\b(?:UTG(?![+])|(?:who|which (?:seat|player))\s+acts? first|next clockwise after the big blind)\b',
+  caseSensitive: false,
+);
 final _heroSizing = RegExp(
   r'(?:^(?:your\s+|a\s+|an\s+|the\s+)?|\byour\s+|\b(?:pressure\s+of|instead\s+of|rather\s+than)\s+(?:(?:a|an|the)\s+)?)'
   r'(\d+(?:\.\d+)?)\s*BB\s+(open|raise|bet)\b',
@@ -86,19 +95,52 @@ int? _playersAfterHero(CatalogDecisionLedgerV1 decision, PokerStreet? street) {
 
 Iterable<DecisionCopyFindingV1> auditDecisionCopyV1(CatalogTask row) sync* {
   final task = row.task;
-  if (catalogDecisionKindV1(task, row.world.worldNumber) !=
-      Act0DecisionKindV1.table)
-    return;
   final runner = task.runner;
-  final decision = CatalogDecisionLedgerV1(runner.table);
-  final hero = runner.table.heroSeat.seatLabel.toUpperCase();
-  final behind = _playersAfterHero(decision, decisionStreetV1(runner.table));
+  final table = runner.table;
+  final heroSeat = table.seats.where((seat) => seat.isHero).singleOrNull;
+  if (heroSeat == null || runner.options.isEmpty) return;
+  final hero = heroSeat.seatLabel.toUpperCase();
+  final street = decisionStreetV1(table);
+  final isTableDecision =
+      catalogDecisionKindV1(task, row.world.worldNumber) ==
+      Act0DecisionKindV1.table;
+  final playedHand = table.scope == Act0TableScopeV1.playedHand;
+  final active = table.activeSeatId;
+  final authoredTurn = table.decisionSeatId;
+  final heroDecides =
+      isTableDecision ||
+      authoredTurn == heroSeat.seatId ||
+      (authoredTurn == null &&
+          table.actionTrail.where((item) => !item.isNote).lastOrNull?.label ==
+              '${active?.toUpperCase()} acts');
+  if (playedHand &&
+      heroDecides &&
+      active != null &&
+      active.isNotEmpty &&
+      active != heroSeat.seatId) {
+    yield (
+      rule: 39,
+      taskId: task.taskId,
+      optionId: 'table',
+      quote: 'Seat $hero · Active ${active.toUpperCase()}',
+    );
+  }
+
+  final question = catalogQuestion(task).split(RegExp(r'(?<=[.!?])\s+')).last;
+  final checkUtgFrame =
+      playedHand && hero != 'UTG' && !_utgQuestion.hasMatch(question);
+  if (!isTableDecision && !checkUtgFrame) return;
+  final decision = CatalogDecisionLedgerV1(table);
+  final behind = isTableDecision ? _playersAfterHero(decision, street) : null;
   for (final option in runner.options) {
     final text = option.feedbackReason;
-    final seatMatches = _heroSeat.allMatches(text);
-    String? seatQuote;
-    for (final match in seatMatches) {
-      if (match[1]!.toUpperCase() != hero) seatQuote ??= match[0]!.trim();
+    String? seatQuote = checkUtgFrame
+        ? _utgFrame.firstMatch(text)?.group(0)
+        : null;
+    if (isTableDecision) {
+      for (final match in _heroSeat.allMatches(text)) {
+        if (match[1]!.toUpperCase() != hero) seatQuote ??= match[0]!.trim();
+      }
     }
     if (behind != null && seatQuote == null) {
       for (final sentence in text.split(RegExp(r'(?<=[.!?])\s+'))) {
@@ -119,6 +161,7 @@ Iterable<DecisionCopyFindingV1> auditDecisionCopyV1(CatalogTask row) sync* {
       );
     }
 
+    if (!isTableDecision) continue;
     final choices = [
       option,
       ...runner.options.where(

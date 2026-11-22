@@ -220,7 +220,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     lessonId: 'blinds_action_order',
     topic: 'Blinds',
     question:
-        'At a six-player table with no ante or straddle, who must put chips in before the deal?',
+        "Who posts the forced bets before the deal at this six-player table?",
     choices: [
       'Only the big blind',
       'Every player',

@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_catalog_chart_audit_v1.dart';
 import '../support/act0_catalog_claims_v1.dart';
 import '../support/act0_catalog_decision_copy_v1.dart';
 import '../support/act0_catalog_learner_copy_v1.dart';
@@ -1625,6 +1626,98 @@ void main() {
       ).single.rule,
       39,
     );
+  });
+
+  test('G1·44 checks opening-range comparisons against the starting chart', () {
+    final claims = reasoningCatalogRowsV1.expand(openingRangeClaimsV1);
+    expect(claims, isNotEmpty);
+    expect(reasoningCatalogRowsV1.expand(auditOpeningRangeClaimsV1), isEmpty);
+
+    final kqo = _catalogRow('weak_ace_warning_w3_strong_continue');
+    final tt = _catalogRow('w2_narrow_three_bet_strong');
+    for (final (row, copy) in [
+      (kqo, 'HJ can raise weaker unpaired hands.'),
+      (kqo, 'HJ can open weaker kings such as KJs and KTs.'),
+      (kqo, 'CO can open weaker suited hands such as KJs and K9s.'),
+      (tt, 'HJ can raise lower pairs and unpaired hands.'),
+      (tt, 'HJ can raise with lower pocket pairs like 99.'),
+    ]) {
+      final result = auditOpeningRangeClaimsV1(
+        _withDecisionCopy(row, {'call': copy}),
+      ).single;
+      expect(result.rule, 'G1·44');
+      expect(result.id, row.task.taskId);
+      expect(result.detail, contains('call:'));
+    }
+    for (final (row, copy) in [
+      (kqo, 'CO can open weaker suited hands such as KJs and KTs.'),
+      (tt, 'CO can open lower pairs.'),
+      (tt, 'HJ can open AQ, AJ and KQ along with TT and higher pairs.'),
+    ]) {
+      expect(
+        auditOpeningRangeClaimsV1(_withDecisionCopy(row, {'call': copy})),
+        isEmpty,
+        reason: copy,
+      );
+    }
+  });
+
+  test('G1·39 checks that the hero turn names the same seat as the table', () {
+    final late = _catalogRow('early_vs_late_late_info_choice');
+    final runner = late.task.runner;
+    expect(runner.table.heroSeat.seatId, 'co');
+    expect(runner.table.activeSeatId, 'co');
+    final buttonTable = _catalogRow(
+      'position_apply_late_open',
+    ).task.runner.table;
+    final wrongSeat = _withRunner(
+      late,
+      runner.copyWith(
+        table: buttonTable.copyWith(
+          activeSeatId: 'co',
+          actionTrail: runner.table.actionTrail,
+        ),
+      ),
+    );
+    final finding = auditDecisionCopyV1(wrongSeat).single;
+    expect(finding.rule, 39);
+    expect(finding.optionId, 'table');
+    expect(finding.quote, 'Seat BTN · Active CO');
+
+    final observer = _catalogRow('w4_checkpoint_table_purpose_price');
+    expect(observer.task.runner.table.activeSeatId, 'bb');
+    expect(auditDecisionCopyV1(observer), isEmpty);
+  });
+
+  test('G1·39 catches an inherited UTG explanation in a CO seat read', () {
+    final row = _catalogRow(
+      'position_checkpoint_position_checkpoint_table_notice',
+    );
+    final copied = _withDecisionCopy(row, {
+      'acts_last': 'UTG is first and has five players left to act.',
+      'late_free_pass':
+          'The first-in raise still faces the players behind UTG.',
+    });
+    expect(
+      auditDecisionCopyV1(copied).map((f) => (f.rule, f.optionId)).toSet(),
+      {(39, 'acts_last'), (39, 'late_free_pass')},
+    );
+    expect(
+      auditDecisionCopyV1(
+        _withDecisionCopy(row, {'acts_last': 'Five players left.'}),
+      ).single.rule,
+      39,
+    );
+    expect(
+      auditDecisionCopyV1(
+        _withRunner(
+          copied,
+          copied.task.runner.copyWith(question: 'Where does UTG act?'),
+        ),
+      ),
+      isEmpty,
+    );
+    expect(auditDecisionCopyV1(row), isEmpty);
   });
 
   group('G1 decision copy numbers', () {

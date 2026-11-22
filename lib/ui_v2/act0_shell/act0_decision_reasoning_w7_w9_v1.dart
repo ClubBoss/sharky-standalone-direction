@@ -339,7 +339,7 @@ const act0DecisionReasoningW7W9V1 = <String, Act0DecisionReasoningV1>{
     stackNote:
         "CO has 12.5 BB behind after opening 2.5 BB. A deeper CO can pay the full modeled 18 BB on a hit, reversing the decision.",
     preChoiceAssumption:
-        "CO starts with 15 BB. Assume your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.",
+        "CO starts with 15 BB. Assume SB and BB fold. Your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.",
   ),
   "short_stack_spots_value_cap": Act0DecisionReasoningV1(
     taskId: "short_stack_spots_value_cap",

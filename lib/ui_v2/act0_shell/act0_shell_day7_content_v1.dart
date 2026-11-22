@@ -1227,7 +1227,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Raise", "Call"],
     correct: 1,
     reason:
-        "Raise sevens on BTN so the blinds can fold and hand you the pot. A limp lets BB see a cheap flop and hit an overcard.",
+        "Raise sevens on BTN so the blinds can fold and hand you the pot. A limp lets BB see a cheap flop and hit a higher card.",
     wrongReasons: const {
       0: "Folding from BTN gives up the open with sevens and a chance to win both blinds.",
       2: "Calling costs 1 BB and lets the blinds enter cheaply. The chart opens BTN sevens here.",

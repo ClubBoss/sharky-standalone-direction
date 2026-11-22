@@ -1293,6 +1293,7 @@ Act0TableStateV1 _act0ReassignHeroSeatV1(
   Act0TableStateV1 table, {
   required String heroSeatId,
   String? activeSeatId,
+  Act0CardsVisibleModeV1 heroCardsVisibleMode = Act0CardsVisibleModeV1.faceUp,
 }) {
   final previousHeroSeatId = table.heroSeatId ?? table.heroSeat.seatId;
   final resolvedActiveSeatId = activeSeatId ?? table.activeSeatId ?? heroSeatId;
@@ -1311,7 +1312,7 @@ Act0TableStateV1 _act0ReassignHeroSeatV1(
               ? table.heroCards
               : (wasHeroSeat ? _unknownHoleCards : null),
           cardsVisibleMode: isHeroSeat
-              ? Act0CardsVisibleModeV1.faceUp
+              ? heroCardsVisibleMode
               : (wasHeroSeat ? Act0CardsVisibleModeV1.faceDown : null),
         );
       })

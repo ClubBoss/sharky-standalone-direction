@@ -2081,7 +2081,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             'bottom':
                 'SB, BB, UTG, HJ and CO are all still in. Those five seats act before BTN.',
             'random':
-                'One would be a heads-up hand. This flop still has six players, five of them before BTN.',
+                "One would be a two-player hand. This flop still has six players, five of them before BTN.",
           },
         ),
         rewardXp: 5,
@@ -2253,6 +2253,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
                 'Folding Qs Js on BTN gives up the 1.5 BB pot without putting in chips or forcing SB and BB to pay more than the 1 BB blind.',
             'call':
                 'Calling 1 BB on BTN with Qs Js only matches the big blind in the 1.5 BB pot instead of raising to 3 BB and making the blinds pay more.',
+          },
+          repairLabelsByOptionId: const {
+            'fold': ['Your turn', 'Blinds posted', 'QJs'],
           },
         ).copyWith(caption: 'You’re on BTN. Everyone before you folded.'),
         rewardXp: 5,
@@ -2920,8 +2923,9 @@ List<Act0RunnerOptionV1> _act0AuthoredCorrectOptionAtV1(
 
 Act0RunnerStateV1 _act0WithWrongFeedbackReasonsV1(
   Act0RunnerStateV1 runner,
-  Map<String, String> reasonsByOptionId,
-) {
+  Map<String, String> reasonsByOptionId, {
+  Map<String, List<String>> repairLabelsByOptionId = const {},
+}) {
   final matched = <String>{};
   final updatedOptions = <Act0RunnerOptionV1>[
     for (final option in runner.options)
@@ -2941,7 +2945,8 @@ Act0RunnerStateV1 _act0WithWrongFeedbackReasonsV1(
             feedbackReason: reasonsByOptionId[option.id]!,
             repairFocusSeatIds: option.repairFocusSeatIds,
             repairFocusCardIds: option.repairFocusCardIds,
-            repairFocusLabels: option.repairFocusLabels,
+            repairFocusLabels:
+                repairLabelsByOptionId[option.id] ?? option.repairFocusLabels,
           );
         }(),
       ] else
@@ -4420,7 +4425,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
               'TT is Strong on CO. Reraising to 7.5 BB risks '
               '5 BB more than the call against HJ.',
           callReason:
-              "Call 2.5 BB with TT because HJ can raise lower pairs and unpaired hands. A reraise builds a bigger pot against the higher pairs that can call.",
+              "Call 2.5 BB with TT because HJ also opens AQ, AJ and KQ, which your tens lead. A reraise builds a bigger pot against the higher pairs that can call.",
           foldReason:
               'Folding TT on CO gives up a call with a Strong '
               'pair against one 2.5 BB open from HJ.',
@@ -5007,9 +5012,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "only_blinds":
-                "CO and BTN are live seats too. Counting only the blinds misses the bets both can still make.",
+                "BTN, SB and BB are on the table, but this list leaves out UTG, HJ and CO.",
             "blinds_and_button_only":
-                "HJ and CO still have turns before BTN. Leaving them out misses the information their actions can reveal.",
+                "This list keeps CO but labels the seat before it MP. On this table that seat is HJ.",
           },
         ),
         rewardXp: 10,
@@ -5275,15 +5280,15 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           _w3AddAlternative(
             _w3LateInfoEdgeRunner,
             id: 'smaller_blinds',
-            label: 'CO posts a smaller blind than UTG',
+            label: "CO gets to act again before BTN",
             reason:
-                'The 0.5 BB and 1 BB posts belong to SB and BB. The earlier two folds give CO information, not a discount.',
+                'CO has already seen two folds, but BTN and both blinds still act. CO does not get a second turn before BTN.',
           ),
           const {
             "always_last":
-                "BTN still has two blinds behind preflop. Assuming BTN already saw every action misses the chance either blind raises.",
+                "CO still has BTN, SB and BB behind. Choosing the last seat misses the chance that one of those three players raises.",
             "smaller_blinds":
-                "The blinds still cost 0.5 BB and 1 BB. Treating BTN's advantage as cheaper blinds misses the actions BTN gets to see first.",
+                "CO and UTG post no blind. After seeing two folds, CO acts once before BTN, SB and BB.",
           },
         ),
         rewardXp: 9,
@@ -5391,7 +5396,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'position_apply_btn_open',
-        title: 'BTN: open strong hand',
+        title: "BTN: open playable hand",
         phase: Act0LessonPhaseV1.drill,
         runner: _act0WithWrongFeedbackReasonsV1(
           _world3ButtonOpenQtsRunner.copyWith(
@@ -5643,7 +5648,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                 id: 'raise',
                 label: 'Reraise to 10 BB',
                 reason:
-                    "Reraise AQo to 10 BB because BTN can raise weaker aces and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop.",
+                    "Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop.",
               ),
               (
                 id: 'call',
@@ -5802,7 +5807,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               id: 'raise',
               label: 'Raise to 3 BB',
               reason:
-                  'Raise AA so BB can call with weaker pairs or strong aces. Calling gives BB a free check and the last turn after the flop.',
+                  'Raise AA so BB can call with weaker pairs or strong aces. Calling gives BB a free check.',
             ),
             (
               id: 'fold',
@@ -6018,9 +6023,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "acts_last":
-                "UTG is first and has five players left to act. Choosing the last seat misses those possible responses.",
+                "CO acts before BTN, SB and BB. Choosing the last seat misses what those three players can still do.",
             "late_free_pass":
-                "An early seat still puts chips at risk if it opens. Treating a seat label as a free pass misses the five players behind UTG.",
+                "CO can still face a call or raise from BTN, SB or BB. Opening from CO puts chips at risk even after the earlier folds.",
           },
         ),
         rewardXp: 10,
