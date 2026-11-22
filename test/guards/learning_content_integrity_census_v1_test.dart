@@ -623,10 +623,10 @@ void main() {
         price == 10
             ? (wave6WorldTaskDeltaV1(12) == 0
                   ? 'dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184'
-                  : '2bd8093f7f3387fd86cf89f22884b9c92b2e5843b64650d2f5cddc152b1c97ff')
+                  : 'a9b1856a673365adcb98d36ed0e165d1b760c559cf1134722aadecfdfee2c446')
             : (wave6WorldTaskDeltaV1(12) == 0
                   ? 'ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7'
-                  : '07c06e13705028ff9f4387b791ee9cce99b3d43fa07089e4ec35b7c6b89cbc29'),
+                  : 'fd2e4b34c743efe3dabbe3796519744cf5d2f851c96141bd29e8a5fb0e48498b'),
       );
       final current = _repairRow(row).intents.single;
       expect(current.mappingType, 'intentional_exact');
