@@ -218,6 +218,15 @@ void main() {
       expect(choices.last[3], 'wrong', reason: entry.key);
       choices.removeLast();
     }
+    for (final entry in w4CorrectOptionMovedLastV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last[0], entry.value, reason: entry.key);
+      expect(choices.last[2], isTrue, reason: entry.key);
+      // Restore the historical comparison while keeping today's order asserted.
+      choices.insert(1, choices.removeLast());
+    }
     for (final entry in w4AddedOptionQualityV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
       final choices = task.last as List<List<Object?>>;
