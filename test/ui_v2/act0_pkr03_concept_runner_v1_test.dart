@@ -27,20 +27,25 @@ void main() {
       );
       final task = lesson.taskList.singleWhere((task) => task.taskId == id);
       void expectContext({bool feedback = false}) {
-        if (id.startsWith('w6_')) {
-          final dynamic tableWidget = t.widget(
-            find.byWidgetPredicate(
-              (widget) => widget.runtimeType.toString() == '_Act0TableV1',
-            ),
-          );
-          final table = tableWidget.table as Act0TableStateV1;
-          expect(table.boardCards, task.runner.table.boardCards);
-          expect(table.boardCards, hasLength(4));
-          expect(find.text('Hypothetical example'), findsNothing);
-        } else {
-          if (!feedback) expect(find.textContaining('Suppose'), findsWidgets);
-          expect(find.text('Hypothetical example'), findsWidgets);
-          expect(find.text('Flop'), findsNothing);
+        final dynamic tableWidget = t.widget(
+          find.byWidgetPredicate(
+            (widget) => widget.runtimeType.toString() == '_Act0TableV1',
+          ),
+        );
+        final table = tableWidget.table as Act0TableStateV1;
+        expect(table.scope, Act0TableScopeV1.playedHand);
+        expect(table.boardCards, task.runner.table.boardCards);
+        expect(table.boardCards, hasLength(4));
+        expect(find.text('Hypothetical example'), findsNothing);
+        if (id == 'w12_bad_call_good_result') {
+          expect(table.streetLabel, 'Turn');
+          expect(table.potLabel, 'Pot 22 BB');
+          expect(table.toCallLabel, 'To call 12 BB');
+          expect(table.heroCards.map((card) => card.label), ['Ah', 'Th']);
+          if (!feedback) {
+            expect(find.text('Call or fold?'), findsOneWidget);
+            expect(find.textContaining('BB shows Kc Kd'), findsWidgets);
+          }
         }
       }
 

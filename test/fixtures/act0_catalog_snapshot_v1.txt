@@ -6352,7 +6352,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK asm05_new_known_holes_turn_call_10 [drill] Decision and outcome
 SUMMARY: New authored exercise. Six players started with 100 BB each, no ante or rake. Hero BB has Kh Qh; SB is known to hold As Ad. The deck is uniformly shuffled. The other four players were instructed to fold independently of their cards; their cards and burns are unknown and give no information. All prior actions and this bet are prescribed and give no additional card information. Compare call with fold only; raises are outside this exercise. After a call both players must check the river, with no more betting. Compare incremental expected value at this decision; the previous 20 BB is already spent in either case.
-CAPTION: SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. No rake. Compare call with fold; prior 20 BB is spent.
+CAPTION: SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. Raises are excluded. No ante or rake.
 Q: Call or fold?
 HINT [always]: All seats started with 100 BB. Uniform deck; prior actions and this bet were prescribed independently of unknown cards. The other four players folded without adding chips; their cards and burns are unknown and give no information. The earlier 20 BB is already spent in either case.
 TABLE: Turn | You Kh Qh | Board 2h 7h 9s 3c | Pot 50 BB | To call 10 BB | Seat BB | Active bb | Center Turn decision snapshot | Facts high card, flush draw, completion cards 9
@@ -6364,7 +6364,7 @@ TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds 
 
 TASK asm05_new_known_holes_turn_call_40 [drill] Decision and outcome
 SUMMARY: New authored exercise. Six players started with 100 BB each, no ante or rake. Hero BB has Kh Qh; SB is known to hold As Ad. The deck is uniformly shuffled. The other four players were instructed to fold independently of their cards; their cards and burns are unknown and give no information. All prior actions and this bet are prescribed and give no additional card information. Compare call with fold only; raises are outside this exercise. After a call both players must check the river, with no more betting. Compare incremental expected value at this decision; the previous 20 BB is already spent in either case.
-CAPTION: SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. No rake. Compare call with fold; prior 20 BB is spent.
+CAPTION: SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. Raises are excluded. No ante or rake.
 Q: Call or fold?
 HINT [always]: All seats started with 100 BB. Uniform deck; prior actions and this bet were prescribed independently of unknown cards. The other four players folded without adding chips; their cards and burns are unknown and give no information. The earlier 20 BB is already spent in either case.
 TABLE: Turn | You Kh Qh | Board 2h 7h 9s 3c | Pot 80 BB | To call 40 BB | Seat BB | Active bb | Center Turn decision snapshot | Facts high card, flush draw, completion cards 9

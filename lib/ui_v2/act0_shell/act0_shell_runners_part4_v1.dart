@@ -8567,7 +8567,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
       nextLessonId: 'tilt_reset_protocol',
     ),
     caption:
-        'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. No rake. Compare call with fold; prior 20 BB is spent.',
+        'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. Raises are excluded. No ante or rake.',
     question: 'Call or fold?',
     choices: const [
       (
@@ -8598,7 +8598,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
       nextLessonId: 'tilt_reset_protocol',
     ),
     caption:
-        'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. No rake. Compare call with fold; prior 20 BB is spent.',
+        'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. Raises are excluded. No ante or rake.',
     question: 'Call or fold?',
     choices: const [
       (
