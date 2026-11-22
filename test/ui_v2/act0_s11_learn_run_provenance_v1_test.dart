@@ -9,6 +9,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../support/act0_route_practice_runner_test_v1.dart';
+
 const _progressKey = 'act0_shell_progress_v1';
 
 Act0LessonRunnerShellV1 _runner(WidgetTester tester) => tester
@@ -131,22 +133,17 @@ void main() {
           expect(record['sourceLessonId'], lesson.lessonId);
           expect(record['sessionId'], isNotEmpty);
           expect(record['isCorrect'], true);
-          expect(
-            record['assistanceKind'],
-            record['taskId'] == 'first_table_guide_first_decision'
-                ? 'theoryRecall'
-                : 'none',
-          );
+          expect(record['assistanceKind'], 'none');
           expect(record['choiceId'], record['expectedChoiceId']);
         }
       }
       expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
       final completed = await _saved();
       final firstRecords = completed['learningEvidenceHistory'] as List;
-      expect(firstRecords, hasLength(6));
+      expect(firstRecords, hasLength(3));
       expect(
         firstRecords.map((record) => record['taskId']),
-        contains('first_table_guide_first_decision'),
+        contains('w1_shared_card_access'),
       );
       final evidence = [
         for (final raw in firstRecords)
@@ -160,15 +157,15 @@ void main() {
         correctedMistakes: 0,
         history: Act0LearningEvidenceHistoryV1(records: evidence),
       ).decisionsSince(evidence.first.recordedAtUtc!);
-      expect(scores.withHelp, (correct: 1, total: 1));
-      expect(scores.onYourOwn, (correct: 5, total: 5));
+      expect(scores.withHelp, (correct: 0, total: 0));
+      expect(scores.onYourOwn, (correct: 3, total: 3));
       final firstRun = firstRecords.first['runId'];
       final firstOrdinal = firstRecords.first['runOrdinal'] as int;
       final firstSession = firstRecords.first['sessionId'];
       expect(firstRecords.map((r) => r['runId']).toSet(), {firstRun});
       expect(firstRecords.map((r) => r['sessionId']).toSet(), {firstSession});
-      expect(completed['earnedXp'], 30);
-      expect(completed['completedTaskIds'], hasLength(7));
+      expect(completed['earnedXp'], 20);
+      expect(completed['completedTaskIds'], hasLength(4));
       expect(completed['completedLessonIds'], contains(lesson.lessonId));
 
       // Restart from app-produced preferences: no seeded IDs or historical backfill.
@@ -182,7 +179,7 @@ void main() {
       expect(restored['completedLessonIds'], completed['completedLessonIds']);
       await _startLearnMission(tester);
       final nextLesson = Act0ShellStateV1.sample.lessonById(
-        'cards_ranks_suits',
+        'chips_in_the_middle',
       );
       expect(_runner(tester).selectedTaskId, nextLesson.taskList.first.taskId);
       await _advanceTask(tester);
@@ -191,8 +188,8 @@ void main() {
       await _advanceTask(tester);
       final next = await _saved();
       final nextRecords = next['learningEvidenceHistory'] as List;
-      expect(nextRecords.take(6).toList(), firstRecords);
-      expect(nextRecords, hasLength(7));
+      expect(nextRecords.take(firstRecords.length).toList(), firstRecords);
+      expect(nextRecords, hasLength(5));
       final newRecord = nextRecords.last;
       expect(newRecord['taskId'], task.taskId);
       expect(newRecord['runId'], isNotEmpty);
@@ -207,6 +204,21 @@ void main() {
       expect(newRecord['isCorrect'], true);
       expect(newRecord['assistanceKind'], 'none');
       const independentId = 'cards_ranks_suits_premium_decision';
+      for (var step = 0; step < 18; step++) {
+        if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+          await finishAct0RoutePracticeV1(tester, correct: true);
+        } else if (find
+            .byType(Act0BlockCompletionShellV1)
+            .evaluate()
+            .isNotEmpty) {
+          await _tap(tester, 'act0_shell_block_summary_continue_cta');
+        } else if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+          await _startLearnMission(tester);
+        } else {
+          if (_runner(tester).selectedTaskId == independentId) break;
+          await _advanceTask(tester);
+        }
+      }
       expect(_runner(tester).selectedTaskId, independentId);
       await _advanceTask(tester);
       final afterKings = (await _saved())['learningEvidenceHistory'] as List;
@@ -215,6 +227,11 @@ void main() {
       )!;
       expect(independent.taskId, independentId);
       expect(independent.isIndependentCorrect, isTrue);
+      final coached = afterKings.singleWhere(
+        (record) => record['taskId'] == 'first_table_guide_first_decision',
+      );
+      expect(coached['lessonId'], 'first_table_guide');
+      expect(coached['assistanceKind'], 'theoryRecall');
     },
   );
 }

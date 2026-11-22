@@ -209,6 +209,13 @@ Future<int> _openSavedCourseTask(
   return xp;
 }
 
+const _preSplitIntroTasks = <String>{
+  'w1_shared_card_access',
+  'w1_chips_starting_pot',
+  'w1_chips_matched_pot',
+  'w1_chips_read_middle',
+};
+
 void main() {
   testWidgets('pre-split first lesson resumes the card read with its XP', (
     t,
@@ -384,7 +391,7 @@ void main() {
     final saved = await _saved(t);
     expect((saved['completedTaskIds'] as List).toSet(), oldCompleted.toSet());
     expect(saved['earnedXp'], oldXp);
-    expect(saved['skippedTaskIds'], isEmpty);
+    expect(saved['skippedTaskIds'], unorderedEquals(_preSplitIntroTasks));
     expect(t.takeException(), isNull);
   });
 
@@ -526,8 +533,10 @@ void main() {
     final completed = [
       for (final lesson in world.lessons)
         if (earlierLessons.contains(lesson.lessonId) ||
-            lesson.lessonId == 'hand_rankings_comparisons')
-          ...lesson.courseTaskList,
+            lesson.lessonId == 'hand_rankings_comparisons' ||
+            lesson.lessonId == 'first_table_guide')
+          for (final task in lesson.courseTaskList)
+            if (!_preSplitIntroTasks.contains(task.taskId)) task,
     ];
     final completedIds = completed.map((task) => task.taskId).toList();
     final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
@@ -578,7 +587,7 @@ void main() {
     final saved = await _saved(tester);
     expect(saved['completedTaskIds'], unorderedEquals(completedIds));
     expect(saved['earnedXp'], xp);
-    expect(saved['skippedTaskIds'], isEmpty);
+    expect(saved['skippedTaskIds'], unorderedEquals(_preSplitIntroTasks));
     expect(tester.takeException(), isNull);
   });
 

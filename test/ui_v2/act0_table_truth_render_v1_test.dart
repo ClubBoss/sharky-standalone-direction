@@ -774,7 +774,7 @@ void main() {
       }
 
       await mount(
-        'what_poker_is',
+        'first_table_guide',
         'what_poker_is_table_read_transfer',
         feedback: true,
       );

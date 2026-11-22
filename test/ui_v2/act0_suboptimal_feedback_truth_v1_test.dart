@@ -20,7 +20,7 @@ void main() {
     final task = Act0ShellStateV1.sample
         .worldById('world_1')
         .lessons
-        .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+        .firstWhere((lesson) => lesson.lessonId == 'first_table_guide')
         .taskList
         .firstWhere(
           (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
@@ -98,7 +98,7 @@ void main() {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
           .lessons
-          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .firstWhere((lesson) => lesson.lessonId == 'first_table_guide')
           .taskList
           .firstWhere(
             (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
