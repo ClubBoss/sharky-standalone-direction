@@ -328,10 +328,12 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
           [...catalogTasks, ...rulesCheckCatalogTasks, ...day7CatalogTasks]) {
     auditCatalogNumericCopy(row, count: count, findings: findings);
     final task = row.task;
-    for (final (:surface, :buyIns) in catalogBankrollThresholdsV1(task)) {
+    for (final (:surface, :buyIns, :isPersonal) in catalogBankrollThresholdsV1(
+      task,
+    )) {
       const rule = catalogBankrollThresholdRuleV1;
       count(rule);
-      if (buyIns != act0CashBankrollBuyInsV1) {
+      if (!isPersonal && buyIns != act0CashBankrollBuyInsV1) {
         findings.add('$rule|${task.taskId}|$surface|$buyIns');
       }
     }
