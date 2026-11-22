@@ -5896,7 +5896,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK w11_bankroll_rule [drill] Bankroll rule
 CAPTION: Sharky cash-game plan: keep 40 full buy-ins for your stake. NL25 is $0.10/$0.25.
-TEACH: Bankroll rule A full buy-in is 100 big blinds (BB). Our course uses a buffer of 40 full buy-ins for cash games. At NL10, a full buy-in is $10. At NL5, it is $5. This is a risk guide, not a promise of profit.
+TEACH: Bankroll rule A full buy-in is 100 BB. Our course uses a buffer of 40 full buy-ins for cash games. At NL10, a full buy-in is $10. At NL5, it is $5. This is a risk guide, not a promise of profit.
 Q: What bankroll does NL25 need?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -6048,7 +6048,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   + [correct] Call 2 BB — Correct. The pot is 12 BB now. Your 2 BB call needs 14.3% of a 14 BB final pot. QJ can beat CO overcards and BTN weak pairs. In a multiway pot, think about both players. A call closes the action here. If you raise, CO and BTN can act again.
     FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
-TASK w11_trigger_bad_price_fold [drill] Price under pressure
+TASK w11_trigger_bad_price_fold [drill] A tight turn raise
 CAPTION: CO bets 8 into 10 on K-8-4-2. In eight past big turn bets, CO showed sets, K8 or AK in seven. Assume KQ wins 15% against this betting range by the river, about 1 in 7.
 Q: Call or fold?
 HINT [hidden]: (none)
@@ -6060,7 +6060,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] Call 8 BB — Look again. KQ loses to the sets, K8 and AK in this turn range. With 15% wins, calling loses 4.1 BB on average.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You Kc Qd | Board Ks 8d 4c 2h | Pot 18 BB | To call 8 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] All-in to 32.5 BB — Look again. You have 32.5 BB left before this choice. Shoving into a strong turn range risks the rest of the stack with top pair.
+  - [wrong] All-in to 32.5 BB — Look again. You have 32.5 BB left before this choice. Going all-in into a strong turn range risks the rest of the stack with top pair.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You Kc Qd | Board Ks 8d 4c 2h | Pot 18 BB | To call 8 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
 
@@ -6131,7 +6131,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Raise to 4 BB — Correct. KQs is ahead of the weak kings and queens SB calls with. A 4 BB raise can earn value from those hands. The BB can check for free after an SB limp. A raise costs more but can get calls from weaker hands. Judge the size by the limper read.
   - [suboptimal] Check — Look again. Checking costs no more chips, but it gives K9 and Q8 a free flop. A value raise can get paid by them.
     BETTER ANSWER: Raise to 4 BB
-  - [wrong] All-in to 48 BB — Look again. The pot is 2 BB. A 48 BB shove can scare off the worse hands and risks too much against SB strong hands.
+  - [wrong] All-in to 48 BB — Look again. The pot is 2 BB. A 48 BB all-in can scare off the worse hands and risks too much against SB strong hands.
     BETTER ANSWER: Raise to 4 BB
 
 TASK w11_first_in_seat [drill] Find the opener
@@ -6160,7 +6160,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ folds · C
   + [correct] Fold — Correct. KQ is top pair, but CO raises with sets and two pair. Calling 18 needs at least 36% wins and UTG can act again. Three players can see the flop, but more than one foe can hold a strong hand. A raise after a bet may leave the first bettor able to act again. A small call price is not the full story.
   - [wrong] Call 18 BB — Look again. KQ loses to the shown raises. The price is 18/50=36% before more action from UTG. A call puts a lot at risk.
     BETTER ANSWER: Fold
-  - [wrong] All-in to 52.5 BB — Look again. Your top pair is behind CO value raises. A shove of the rest of your stack can get calls from better hands.
+  - [wrong] All-in to 52.5 BB — Look again. Your top pair is behind CO value raises. Going all-in can get calls from better hands.
     BETTER ANSWER: Fold
 
 TASK w11_multiway_dirty_outs [drill] Multiway dirty outs
@@ -6178,15 +6178,15 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Turn | You 9h 8h | Board Ah 6h 2c 4c | Pot 15 BB | To call 2.5 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
 TASK w11_spr_low_overpair [drill] Spr low overpair
-CAPTION: Flop SPR is 2.1. BB shoves 8x or 99 four times as often as sets. Assume JJ wins 65%.
+CAPTION: Flop SPR is 2.1. BB goes all-in with 8x or 99 four times as often as sets. Assume JJ wins 65%.
 Q: Call or fold at this SPR?
 HINT [hidden]: (none)
 TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, overpair, pocket pair, rainbow
 SEATS: UTG folded stack 63 BB | HJ Jc Jh stack 11.5 BB | CO folded stack 55 BB | BTN folded dealer stack 50 BB | SB folded stack 44.5 BB | BB stack 0 BB allIn 11.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB shoves 11.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB goes all-in for 11.5 BB
   + [correct] Call 11.5 BB — Correct. An overpair is above the top board card. Your 65% wins beat the 40.4% call price, so calling earns 7.03 BB on average. At a low SPR, a bet can put most of the stack at risk. Compare what the hand may beat with the final pot and call cost. SPR by itself is not a call signal. Both started with 14 BB. With 11.5 behind and 5.5 in the middle, SPR was about 2.1.
     FEEDBACK TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
-  - [wrong] Fold — Look again. JJ beats many 8x and 99 hands in this shove range. A 65% chance clears the 40.4% call cost by a large gap.
+  - [wrong] Fold — Look again. JJ beats many 8x and 99 hands in this all-in range. A 65% chance clears the 40.4% call cost by a large gap.
     BETTER ANSWER: Call 11.5 BB
 
 TASK w11_spr_high_top_pair [drill] Spr high top pair
@@ -6327,7 +6327,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ calls 2.5 
     FEEDBACK TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
 
 TASK w11_checkpoint_mixed_table_line [drill] Mixed table line
-CAPTION: SB and BTN start with 35 BB. Flop pot 19 and 26 behind: SPR 1.4. BTN calls 7 BB with AJ, AT and 88-JJ. BTN calls a 26 BB shove with sets and AK.
+CAPTION: SB and BTN start with 35 BB. Flop pot 19 and 26 behind: SPR 1.4. BTN calls 7 BB with AJ, AT and 88-JJ. BTN calls a 26 BB all-in with sets and AK.
 Q: Bet or check?
 HINT [hidden]: (none)
 TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Facts one pair, top pair, rainbow
@@ -6336,7 +6336,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [suboptimal] Check — Look again. Checking can control the pot, but AQ is ahead of BTN weak calls. You miss a clear 7 BB value bet.
     BETTER ANSWER: Bet 7 BB
     FEEDBACK TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] All-in to 26 BB — Look again. The large shove can fold the worse aces and pairs that call 7 BB. It risks 26 BB when BTN has a strong hand.
+  - [wrong] All-in to 26 BB — Look again. Going all-in can fold the worse aces and pairs that call 7 BB. It risks 26 BB when BTN has a strong hand.
     BETTER ANSWER: Bet 7 BB
     FEEDBACK TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] Bet 7 BB — Correct. AQ beats AJ, AT and 88-JJ. Those hands often call 7 BB, so this size gets paid at the low SPR.
@@ -6344,12 +6344,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w11_checkpoint_review [review] Real-play recap
 ENTRY: drill
-CAPTION: CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO shoves 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.
+CAPTION: CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO goes all-in with 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.
 Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Facts one pair, overpair, pocket pair, rainbow
 SEATS: UTG folded stack 64 BB | HJ folded stack 60 BB | CO stack 0 BB allIn 10 BB | BTN folded dealer stack 55 BB | SB folded stack 53.5 BB | BB Td Th stack 10 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO shoves 10 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO goes all-in for 10 BB
   + [correct] Call 10 BB — Correct. Your overpair wins 60% of the time in this model. The 10 BB call needs 37.7%, so calling has a strong edge.
     FEEDBACK TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
   - [wrong] Fold — Look again. TT is an overpair on 8-5-2. The given 60% win chance is far above the 37.7% call price, so folding gives up value.

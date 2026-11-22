@@ -6505,7 +6505,7 @@ final _w11SessionPlanBasicsTasksV1 = <Act0LessonTaskV1>[
         'Sharky cash-game plan: keep 40 full buy-ins for your stake. NL25 is \$0.10/\$0.25.',
     question: 'What bankroll does NL25 need?',
     teach:
-        'A full buy-in is 100 big blinds (BB). Our course uses a buffer of 40 full buy-ins for cash games. At NL10, a full buy-in is \$10. At NL5, it is \$5. This is a risk guide, not a promise of profit.',
+        'A full buy-in is 100 BB. Our course uses a buffer of 40 full buy-ins for cash games. At NL10, a full buy-in is \$10. At NL5, it is \$5. This is a risk guide, not a promise of profit.',
     choices: const [
       (
         '250',
@@ -6900,7 +6900,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
     id: 'w11_trigger_bad_price_fold',
     lesson: 'table_trigger_reads',
     lessonTitle: 'In-session trigger reads',
-    title: 'Price under pressure',
+    title: 'A tight turn raise',
     phase: Act0LessonPhaseV1.drill,
     step: Act0LessonStepKindV1.practice,
     xp: 10,
@@ -6926,7 +6926,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_32_5_bb',
         'All-in to 32.5 BB',
         Act0FeedbackQualityV1.wrong,
-        'You have 32.5 BB left before this choice. Shoving into a strong turn range risks the rest of the stack with top pair.',
+        'You have 32.5 BB left before this choice. Going all-in into a strong turn range risks the rest of the stack with top pair.',
       ),
     ],
     table: _day7TableV1(
@@ -7612,7 +7612,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
     xp: 10,
     family: Act0TaskFamilyV1.transfer,
     caption:
-        'SB and BTN start with 35 BB. Flop pot 19 and 26 behind: SPR 1.4. BTN calls 7 BB with AJ, AT and 88-JJ. BTN calls a 26 BB shove with sets and AK.',
+        'SB and BTN start with 35 BB. Flop pot 19 and 26 behind: SPR 1.4. BTN calls 7 BB with AJ, AT and 88-JJ. BTN calls a 26 BB all-in with sets and AK.',
     question: 'Bet or check?',
     teach: '',
     choices: const [
@@ -7626,7 +7626,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_26_bb',
         'All-in to 26 BB',
         Act0FeedbackQualityV1.wrong,
-        'The large shove can fold the worse aces and pairs that call 7 BB. It risks 26 BB when BTN has a strong hand.',
+        'Going all-in can fold the worse aces and pairs that call 7 BB. It risks 26 BB when BTN has a strong hand.',
       ),
       (
         'bet_7_bb',
@@ -7696,7 +7696,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.proveIt,
     xp: 17,
     caption:
-        'CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO shoves 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.',
+        'CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO goes all-in with 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.',
     question: 'Call or fold?',
     teach: '',
     choices: const [
@@ -7760,7 +7760,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         Act0ActionTrailItemV1(label: 'SB folds'),
         Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
         Act0ActionTrailItemV1(label: 'Flop: BB checks'),
-        Act0ActionTrailItemV1(label: 'CO shoves 10 BB'),
+        Act0ActionTrailItemV1(label: 'CO goes all-in for 10 BB'),
       ],
       bets: const {
         'co': Act0SeatBetStateV1(
@@ -8027,7 +8027,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_48_bb',
         'All-in to 48 BB',
         Act0FeedbackQualityV1.wrong,
-        'The pot is 2 BB. A 48 BB shove can scare off the worse hands and risks too much against SB strong hands.',
+        'The pot is 2 BB. A 48 BB all-in can scare off the worse hands and risks too much against SB strong hands.',
       ),
     ],
     table: _day7TableV1(
@@ -8107,7 +8107,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_52_5_bb',
         'All-in to 52.5 BB',
         Act0FeedbackQualityV1.wrong,
-        'Your top pair is behind CO value raises. A shove of the rest of your stack can get calls from better hands.',
+        'Your top pair is behind CO value raises. Going all-in can get calls from better hands.',
       ),
     ],
     table: _day7TableV1(
@@ -8314,7 +8314,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'Flop SPR is 2.1. BB shoves 8x or 99 four times as often as sets. Assume JJ wins 65%.',
+        'Flop SPR is 2.1. BB goes all-in with 8x or 99 four times as often as sets. Assume JJ wins 65%.',
     question: 'Call or fold at this SPR?',
     teach: '',
     choices: const [
@@ -8328,7 +8328,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.wrong,
-        'JJ beats many 8x and 99 hands in this shove range. A 65% chance clears the 40.4% call cost by a large gap.',
+        'JJ beats many 8x and 99 hands in this all-in range. A 65% chance clears the 40.4% call cost by a large gap.',
       ),
     ],
     table: _day7TableV1(
@@ -8377,7 +8377,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         Act0ActionTrailItemV1(label: 'BTN folds'),
         Act0ActionTrailItemV1(label: 'SB folds'),
         Act0ActionTrailItemV1(label: 'BB calls 1.5 BB more'),
-        Act0ActionTrailItemV1(label: 'Flop: BB shoves 11.5 BB'),
+        Act0ActionTrailItemV1(label: 'Flop: BB goes all-in for 11.5 BB'),
       ],
       bets: const {
         'bb': Act0SeatBetStateV1(
