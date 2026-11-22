@@ -3608,7 +3608,7 @@ REVIEW: Value, bluff candidate, and missed. Board fit decides which bucket your 
 
 TASK w6_board_fit_intro [theory] Board shifts bucket
 CAPTION: Board texture can shift a hand from value to missed.
-TEACH: Board changes the bucket. A preflop strong hand can become missed if it does not connect with the flop.
+TEACH: Board changes the bucket. A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop.
 TEACH LABELS: Board fit, Value, Missed, Texture
 TEACH: Compare both ranges. Range advantage is about which player has more strong hands on this board. In this lesson, use only the hands listed for each player and count hand types that make two pair or better.
 TEACH LABELS: Preflop raiser, Caller, Two pair or better

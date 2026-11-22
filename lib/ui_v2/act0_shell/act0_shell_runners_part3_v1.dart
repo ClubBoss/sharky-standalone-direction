@@ -4331,7 +4331,7 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Board changes the bucket.',
       body:
-          'A preflop strong hand can become missed if it does not connect with the flop.',
+          'A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop.',
       focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
     ),
     Act0TeachingStepV1(
