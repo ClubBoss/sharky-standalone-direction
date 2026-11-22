@@ -239,7 +239,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
     choices: ['Call', 'Check', 'Fold'],
     correctChoice: 1,
     reason:
-        'You can check when there is no bet to match. A fold takes you out of the hand.',
+        'CO checked on the river, so checking takes you to showdown without paying. A fold gives up your chance to win.',
     board: '2s 6c 9d Jh Qc',
     occupiedSeats: ['CO', 'BTN'],
     actedSeats: ['CO'],

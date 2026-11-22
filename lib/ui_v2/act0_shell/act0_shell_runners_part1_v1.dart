@@ -546,7 +546,8 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'Raise',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Correct.',
-    feedbackReason: 'Raising to 3 BB increases the price above the 1 BB blind.',
+    feedbackReason:
+        'Raise to 3 BB so the blinds have to match a higher price to stay in. A call only matches the 1 BB blind.',
     repairFocusSeatIds: <String>['btn'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
     repairFocusLabels: <String>['Button raise', 'Your turn'],
@@ -2120,7 +2121,8 @@ const _noPriceActionChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'Check',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Check is legal with no bet to call.',
-    feedbackReason: 'Checking keeps the hand going when no bet faces you.',
+    feedbackReason:
+        'BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.',
   ),
   Act0RunnerOptionV1(
     id: 'call',
@@ -2129,7 +2131,8 @@ const _noPriceActionChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'Check',
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Not quite.',
-    feedbackReason: 'Calling means matching a bet. There is no bet here.',
+    feedbackReason:
+        'BB has put in no bet on this street. Trying to call misses the free check that keeps you in.',
   ),
 ];
 
@@ -2168,7 +2171,8 @@ const _foldMeaningChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'Fold',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Fold gives up this hand.',
-    feedbackReason: 'Fold gives up the hand and saves the call.',
+    feedbackReason:
+        'HJ bets 2 BB. If you want to leave the hand, fold because a call pays the bet and keeps your queens in play.',
   ),
   Act0RunnerOptionV1(
     id: 'call',
@@ -2179,7 +2183,7 @@ const _foldMeaningChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Not quite.',
     feedbackReason:
-        'Calling pays 2 BB to stay in the hand. Your queens still beat some hands.',
+        'Calling HJ costs 2 BB and leaves you in the hand. Fold to leave without paying.',
   ),
   Act0RunnerOptionV1(
     id: 'raise',
@@ -2189,7 +2193,8 @@ const _foldMeaningChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'Fold',
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Not quite.',
-    feedbackReason: 'Raising puts in more chips and keeps you in the hand.',
+    feedbackReason:
+        'Raising invites HJ to call or raise again and keeps you in the hand. Fold if your goal is to leave.',
   ),
 ];
 
@@ -2268,7 +2273,8 @@ final _foldActionRunner = _readBoardRunner.copyWith(
 final _callActionRunner = _readBoardRunner.copyWith(
   lessonId: 'actions_call',
   lessonTitle: 'Fold, check, call, raise',
-  lessonSubtitle: 'Calling matches the current price.',
+  lessonSubtitle:
+      'HJ bet 1 BB, so calling matches that wager and keeps your hand live. A raise makes HJ pay more to stay in.',
   caption: 'You face a small bet and want the cheapest continue.',
   hint: 'Read the price and ask what each action changes.',
   question: 'Which action matches the 1 BB price?',
@@ -2280,7 +2286,8 @@ final _callActionRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
-      feedbackReason: 'Folding gives up instead of continuing.',
+      feedbackReason:
+          'Folding gives up your chance to win the pot. A call pays HJ’s 1 BB bet and keeps your hand live.',
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -2290,7 +2297,8 @@ final _callActionRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Call matches the current bet.',
-      feedbackReason: 'Calling matches the current price.',
+      feedbackReason:
+          'HJ bet 1 BB, so calling matches that wager and keeps your hand live. A raise makes HJ pay more to stay in.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -4353,7 +4361,8 @@ final _showdownIntroRunner = _showdownRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Two endings.',
-      body: 'Win when everyone else folds, or win by best hand at showdown.',
+      body:
+          'Win when everyone else folds, or win by best hand at showdown. To muck means to discard your cards without showing them.',
       focusLabels: <String>['Folds', 'Showdown'],
     ),
   ],

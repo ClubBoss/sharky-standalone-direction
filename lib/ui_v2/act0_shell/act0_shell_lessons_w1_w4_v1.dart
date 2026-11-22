@@ -345,7 +345,8 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       preferredLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with aces.',
-      feedbackReason: 'Raise to build the pot with your aces.',
+      feedbackReason:
+          'With AA, a raise can get HJ to pay more with weaker pairs or strong aces. A call lets HJ see the flop for the price already set.',
     ),
   ],
   feedbackTitle: 'Raise with aces.',
@@ -409,7 +410,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with kings.',
       feedbackReason:
-          'Raising KK to 7.5 BB builds the pot against the single raise.',
+          'With KK, raise to 7.5 BB because CO can call with weaker pairs and strong aces. Calling leaves the price at 2.5 BB against hands you lead here.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',

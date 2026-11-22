@@ -1,0 +1,158 @@
+import 'act0_decision_reasoning_v1.dart';
+
+const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
+  'first_table_guide_first_decision': Act0DecisionReasoningV1(
+    taskId: 'first_table_guide_first_decision',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead: "HJ can continue with strong aces and medium or high pairs.",
+    stackMatters: false,
+    suboptimalKinds: {'call': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'first_table_guide_route_roles': Act0DecisionReasoningV1(
+    taskId: 'first_table_guide_route_roles',
+    kind: Act0DecisionKindV1.process,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'practice',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    suboptimalKinds: {'practice': Act0SuboptimalKindV1.wrongReason},
+  ),
+  'cards_ranks_suits_premium_decision': Act0DecisionReasoningV1(
+    taskId: 'cards_ranks_suits_premium_decision',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead: "CO can continue with weaker pairs and strong aces.",
+    stackMatters: false,
+    suboptimalKinds: {'call': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'actions_theory': Act0DecisionReasoningV1(
+    taskId: 'actions_theory',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'actions_legal_context': Act0DecisionReasoningV1(
+    taskId: 'actions_legal_context',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'actions_check_drill': Act0DecisionReasoningV1(
+    taskId: 'actions_check_drill',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'actions_fold_drill': Act0DecisionReasoningV1(
+    taskId: 'actions_fold_drill',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "HJ’s wager sets the price. Its range is irrelevant to what folding does.",
+    stackMatters: false,
+  ),
+  'actions_call_drill': Act0DecisionReasoningV1(
+    taskId: 'actions_call_drill',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'raise',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "HJ can bet made hands and draws. The action question uses the wager itself.",
+    stackMatters: false,
+  ),
+  'actions_raise_drill': Act0DecisionReasoningV1(
+    taskId: 'actions_raise_drill',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'actions_review': Act0DecisionReasoningV1(
+    taskId: 'actions_review',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'w1_rules_check_check_behind': Act0DecisionReasoningV1(
+    taskId: 'w1_rules_check_check_behind',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'choice_2',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'spaced_review_check_turn_v1': Act0DecisionReasoningV1(
+    taskId: 'spaced_review_check_turn_v1',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'spaced_review_check_river_v1': Act0DecisionReasoningV1(
+    taskId: 'spaced_review_check_river_v1',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+  ),
+  'spaced_review_w1_cards_ranks_suits_top_starting_pairs_v1':
+      Act0DecisionReasoningV1(
+        taskId: 'spaced_review_w1_cards_ranks_suits_top_starting_pairs_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'value_vs_worse',
+        bestAlternativeOptionId: 'call',
+        edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+        opponentRead:
+            "HJ can call again with hands such as medium or high pairs and strong aces.",
+        stackMatters: false,
+      ),
+  'spaced_review_w1_fold_check_call_raise_pot_to_call_v1':
+      Act0DecisionReasoningV1(
+        taskId: 'spaced_review_w1_fold_check_call_raise_pot_to_call_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'value_vs_worse',
+        bestAlternativeOptionId: 'check',
+        edgeMechanism: Act0EdgeMechanismV1.processRule,
+        opponentRead:
+            "HJ can bet made hands or bluffs. Either sets the same call price.",
+        stackMatters: false,
+      ),
+  'spaced_review_w1_fold_check_call_raise_hero_button_v1': Act0DecisionReasoningV1(
+    taskId: 'spaced_review_w1_fold_check_call_raise_hero_button_v1',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "UTG can open good pairs and strong broadways. Its wager sets the minimum price.",
+    stackMatters: false,
+  ),
+  'spaced_review_w1_fold_check_call_raise_w1_rules_check_check_behind_v1':
+      Act0DecisionReasoningV1(
+        taskId:
+            'spaced_review_w1_fold_check_call_raise_w1_rules_check_check_behind_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'value_vs_worse',
+        bestAlternativeOptionId: 'fold',
+        edgeMechanism: Act0EdgeMechanismV1.processRule,
+        stackMatters: false,
+      ),
+};

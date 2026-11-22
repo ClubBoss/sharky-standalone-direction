@@ -1,3 +1,5 @@
+import 'act0_decision_reasoning_w1_w3_v1.dart';
+
 // Authored reasoning metadata for catalog validation and owner review.
 enum Act0DecisionKindV1 { table, process }
 
@@ -75,4 +77,6 @@ const act0PrinciplesV1 = <String, int>{
   'tilt_reset': 12,
 };
 
-const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{};
+const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
+  ...act0DecisionReasoningW1W3V1,
+};

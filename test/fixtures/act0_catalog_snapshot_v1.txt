@@ -136,13 +136,14 @@ Q: How will you play your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
 EFFECTIVE: HJ 100 · BTN 100 · SB 100 · BB 100
+REASONING: principle value_vs_worse · alt call · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As Ac stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · The player before you raises to 2.5 BB
   - [wrong] Fold — Your aces can play. Folding aces to one raise gives up the strongest starting hand and the chance to win this pot.
     BETTER ANSWER: Raise to 7.5 BB
   - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling 2.5 BB keeps you in. Raising can get the player before you to pay more while you have the strongest hand.
     BETTER ANSWER: Raise to 7.5 BB
-  + [correct] Raise to 7.5 BB — Raise with aces. Raise to build the pot with your aces.
+  + [correct] Raise to 7.5 BB — Raise with aces. With AA, a raise can get HJ to pay more with weaker pairs or strong aces. A call lets HJ see the flop for the price already set.
 
 TASK what_poker_is_table_read_transfer [drill] Read the table
 SUMMARY: Read one real table spot: your cards, the board, and the pot.
@@ -186,6 +187,7 @@ TEACH LABELS: Home, Learn, Practice, You
 Q: Where do you go to fix mistakes after a miss?
 HINT [theoryOnly]: Home shows what to do now. Learn shows what to study next.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
+REASONING: principle value_vs_worse · alt practice · edge processRule · stack_matters unknown · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
   - [suboptimal] Practice — Close, but one tab is sharper. Practice gives extra reps after Learn teaches the concept. Review is where a miss gets fixed first.
     BETTER ANSWER: Review
@@ -239,12 +241,13 @@ Q: How will you play your kings?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kh Kd | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts pocket pair
 EFFECTIVE: CO 100 · SB 100 · BB 100
+REASONING: principle value_vs_worse · alt call · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kh Kd stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · The player before you raises to 2.5 BB
   - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
-  + [correct] Raise to 7.5 BB — Raise with kings. Raising KK to 7.5 BB builds the pot against the single raise.
+  + [correct] Raise to 7.5 BB — Raise with kings. With KK, raise to 7.5 BB because CO can call with weaker pairs and strong aces. Calling leaves the price at 2.5 BB against hands you lead here.
     REPAIR LABELS: Top starting pairs
   - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.
     BETTER ANSWER: Raise to 7.5 BB
@@ -975,9 +978,10 @@ Q: Which action would make the next player match more than the big blind?
 HINT [theoryOnly]: The table state tells which actions are legal.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle value_vs_worse · alt call · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Ts stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  + [correct] Raise [3 BB] — Correct. Raising to 3 BB increases the price above the 1 BB blind.
+  + [correct] Raise [3 BB] — Correct. Raise to 3 BB so the blinds have to match a higher price to stay in. A call only matches the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] Fold — Not quite. Folding gives up the hand without adding chips. It does not change what the next player needs to call.
@@ -999,12 +1003,13 @@ Q: No bet faces you. Which action keeps you in the hand without adding chips?
 HINT [theoryOnly]: When no chips are owed, you can check. Facing a bet, a call matches the price and a fold exits. A raise may also be available.
 TABLE: Flop | You 9c 8d | Board Kh 7c 2d | Pot 4.5 BB | Seat CO | Active co | Decision co | Center No bet faces you | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB unknown
+REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 9c 8d stack 98 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2 BB · BTN folds · SB folds · BB calls 1 more, 2 total · Flop: BB checks
   - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
-  + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
-  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
+  + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.
+  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
     BETTER ANSWER: Check
 
 TASK actions_check_drill [drill] Check when no bet
@@ -1017,12 +1022,13 @@ Q: What action keeps playing for free?
 HINT [theoryOnly]: Read the amount required to stay in the hand.
 TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB unknown
+REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
   - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
-  + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
-  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
+  + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.
+  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
     BETTER ANSWER: Check
 
 TASK actions_call_chip_cost [drill] Count the cost of a call
@@ -1050,12 +1056,13 @@ Q: Which action gives up the hand?
 HINT [theoryOnly]: Folding saves chips when continuing is not worth it.
 TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Facing a bet | Facts one pair, pocket pair, rainbow
 EFFECTIVE: UTG unknown · HJ unknown · SB unknown · BB unknown
+REASONING: principle value_vs_worse · alt call · edge processRule · stack_matters false · assumption none
 SEATS: UTG stack 99 BB | HJ stack 97 BB bet 2 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 1 BB · BB checks · Flop: SB checks · BB checks · UTG checks · HJ bets 2 BB · Your turn
-  + [correct] Fold — Fold gives up this hand. Fold gives up the hand and saves the call.
-  - [wrong] Call [2 BB] — Not quite. Calling pays 2 BB to stay in the hand. Your queens still beat some hands.
+  + [correct] Fold — Fold gives up this hand. HJ bets 2 BB. If you want to leave the hand, fold because a call pays the bet and keeps your queens in play.
+  - [wrong] Call [2 BB] — Not quite. Calling HJ costs 2 BB and leaves you in the hand. Fold to leave without paying.
     BETTER ANSWER: Fold
-  - [wrong] Raise [6 BB] — Not quite. Raising puts in more chips and keeps you in the hand.
+  - [wrong] Raise [6 BB] — Not quite. Raising invites HJ to call or raise again and keeps you in the hand. Fold if your goal is to leave.
     BETTER ANSWER: Fold
 
 TASK actions_call_drill [drill] Call a price
@@ -1068,13 +1075,14 @@ Q: Which action matches the 1 BB price?
 HINT [theoryOnly]: Read the price and ask what each action changes.
 TABLE: Flop | You 9h 9s | Board Ah 7c 2d | Pot 5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Center Facing a price | Facts one pair, pocket pair, rainbow
 EFFECTIVE: HJ unknown · SB unknown · BB unknown
+REASONING: principle value_vs_worse · alt raise · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 98 BB bet 1 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 0.5 more, 1 total · BB checks · Flop: SB checks · Flop: BB checks · Flop: HJ bets 1 BB
-  - [wrong] Fold — Not quite. Folding gives up instead of continuing.
+  - [wrong] Fold — Not quite. Folding gives up your chance to win the pot. A call pays HJ’s 1 BB bet and keeps your hand live.
     BETTER ANSWER: Call
   - [wrong] Raise [4 BB] — Not quite. Raising adds more chips than calling, which only matches the current bet.
     BETTER ANSWER: Call
-  + [correct] Call [1 BB] — Call matches the current bet. Calling matches the current price.
+  + [correct] Call [1 BB] — Call matches the current bet. HJ bet 1 BB, so calling matches that wager and keeps your hand live. A raise makes HJ pay more to stay in.
 
 TASK actions_raise_drill [drill] Raise the price
 SUMMARY: Recognize which option increases the price for the next player.
@@ -1088,6 +1096,7 @@ Q: Which action increases the price above the big blind?
 HINT [theoryOnly]: Compare how many chips each action adds to the pot.
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle value_vs_worse · alt call · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   - [wrong] Fold — Not quite. Folding Qs Js on BTN gives up the 1.5 BB pot without putting in chips or forcing SB and BB to pay more than the 1 BB blind.
@@ -1098,7 +1107,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
     BETTER ANSWER: Raise
     REPAIR LABELS: Matches 1 BB, Sets a higher price, Button
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
-  + [correct] Raise [3 BB] — Correct. Raising to 3 BB increases the price above the 1 BB blind.
+  + [correct] Raise [3 BB] — Correct. Raise to 3 BB so the blinds have to match a higher price to stay in. A call only matches the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -1112,9 +1121,10 @@ Q: Which action sets a higher price for the next player?
 HINT [theoryOnly]: Compare what each action asks the next player to match.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle value_vs_worse · alt call · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Ts stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
-  + [correct] Raise [3 BB] — Correct. Raising to 3 BB increases the price above the 1 BB blind.
+  + [correct] Raise [3 BB] — Correct. Raise to 3 BB so the blinds have to match a higher price to stay in. A call only matches the 1 BB blind.
     REPAIR LABELS: Button raise, Your turn
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] Fold — Not quite. Folding Ks Ts on BTN surrenders the 1.5 BB pot immediately and leaves the 1 BB blind price unchanged for SB and BB.
@@ -1420,7 +1430,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK showdown_theory [theory] Two ways to win
 CAPTION: A hand can end before or at showdown.
-TEACH: Two endings. Win when everyone else folds, or win by best hand at showdown.
+TEACH: Two endings. Win when everyone else folds, or win by best hand at showdown. To muck means to discard your cards without showing them.
 TEACH LABELS: Folds, Showdown
 Q: What happens if everyone else folds to you?
 HINT [theoryOnly]: Folds end it early. Showdown compares hands.
@@ -1651,7 +1661,7 @@ TABLE: Flop | You Qh Qs | Board Ah 7c 2d | Pot 7 BB | To call 2 BB | Seat BTN | 
 EFFECTIVE: UTG unknown · HJ unknown · SB unknown · BB unknown
 SEATS: UTG stack 99 BB | HJ stack 97 BB bet 2 BB | CO folded stack 100 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO folds · BTN calls 1 BB · SB calls 1 BB · BB checks · Flop: SB checks · BB checks · UTG checks · HJ bets 2 BB · Your turn
-  + [correct] Fold — Fold gives up this hand. Fold gives up the hand and saves the call.
+  + [correct] Fold — Fold gives up this hand. HJ bets 2 BB. If you want to leave the hand, fold because a call pays the bet and keeps your queens in play.
   - [wrong] Call [2 BB] — Not quite. Calling the 2 BB bet into the 7 BB pot on Ah 7c 2d keeps your Qh Qs in the hand and commits chips instead of exiting.
     BETTER ANSWER: Fold
   - [wrong] Raise [6 BB] — Not quite. Raising to 6 BB against HJ's 2 BB bet in the 7 BB pot risks even more chips with Qh Qs on Ah 7c 2d instead of folding out.
@@ -7272,13 +7282,14 @@ Q: It is your turn on the river. Every player before you checked. How can you st
 HINT [hidden]: (none)
 TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Facts no applicable hand facts
 EFFECTIVE: CO unknown
+REASONING: principle value_vs_worse · alt choice_2 · edge processRule · stack_matters false · assumption none
 SEATS: UTG empty | HJ empty | CO | BTN dealer | SB empty | BB empty
-  - [wrong] Call — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
+  - [wrong] Call — Legal actions CO checked on the river, so checking takes you to showdown without paying. A fold gives up your chance to win.
     BETTER ANSWER: Check
     FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
-  + [correct] Check — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
+  + [correct] Check — Legal actions CO checked on the river, so checking takes you to showdown without paying. A fold gives up your chance to win.
     FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
-  - [wrong] Fold — Legal actions You can check when there is no bet to match. A fold takes you out of the hand.
+  - [wrong] Fold — Legal actions CO checked on the river, so checking takes you to showdown without paying. A fold gives up your chance to win.
     BETTER ANSWER: Check
     FEEDBACK TABLE: River | Board 2s 6c 9d Jh Qc | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
 
@@ -7317,13 +7328,14 @@ Q: How can BTN see the river without putting in chips?
 HINT [theoryOnly]: (none)
 TABLE: Turn | You 9c 8d | Board Qc 5d 3s Kh | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card
 EFFECTIVE: BB unknown
+REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks · Flop: BTN checks · Turn: BB checks
   - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
-  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
+  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
     BETTER ANSWER: Check
-  + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
+  + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.
 
 TASK spaced_review_check_river_v1 [drill] A river decision
 DAY 7 FAMILY: no_bet_yet
@@ -7332,12 +7344,13 @@ Q: Which action gets BTN to showdown without adding chips?
 HINT [theoryOnly]: (none)
 TABLE: River | You 9c 8d | Board Jc 6s 4d Tc 3h | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Center No bet faces you | Facts high card
 EFFECTIVE: BB unknown
+REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks · Flop: BTN checks · Turn: BB checks · Turn: BTN checks · River: BB checks
-  + [correct] Check — Check is legal with no bet to call. Checking keeps the hand going when no bet faces you.
+  + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.
   - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
     BETTER ANSWER: Check
-  - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
+  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
     BETTER ANSWER: Check
 
 ===== WORLD 1 · LESSON chips_in_the_middle · Blinds and the pot =====
@@ -7473,13 +7486,14 @@ Q: What fits your kings after the first raise?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kc Ks | Pot 4 BB | Seat BTN | Facts pocket pair
 EFFECTIVE: HJ 100 · SB 100 · BB 100
+REASONING: principle value_vs_worse · alt call · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Kc Ks stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds
   - [wrong] Call — Look again. Calling HJ’s 2.5 BB from BTN gives up the chance to charge a weaker hand more for the flop.
     BETTER ANSWER: Raise to 7.5 BB
   - [wrong] Fold — Look again. Folding Kc Ks after one raise gives up the chance to win the 4 BB already in the middle.
     BETTER ANSWER: Raise to 7.5 BB
-  + [correct] Raise to 7.5 BB — Correct. KK is one of the highest starting pairs. Raising again against HJ can get a call from a weaker hand.
+  + [correct] Raise to 7.5 BB — Correct. With KK on BTN, you can raise because HJ may call with a weaker pair or a strong ace. A call keeps the pot smaller against those hands.
 
 TASK spaced_review_w1_cards_ranks_suits_confused_card_rank_suit_v1 [drill] Review decision
 DAY 7 FAMILY: confused_card_rank_suit
@@ -7743,12 +7757,13 @@ Q: HJ has bet. Which action matches the wager and keeps your hand in?
 HINT [hidden]: (none)
 TABLE: Turn | You Qh 7d | Board Ts 6c 3d Ah | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts high card
 EFFECTIVE: HJ 97.25
+REASONING: principle value_vs_worse · alt check · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qh 7d stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
-  - [wrong] Check — Look again. Calling pays the outstanding bet. A check cannot match it, and folding ends your participation.
+  - [wrong] Check — Look again. Checking cannot match HJ’s 2 BB turn bet. Call to stay in.
     BETTER ANSWER: Call
-  + [correct] Call — Correct. Calling pays the outstanding bet. A check cannot match it, and folding ends your participation.
-  - [wrong] Fold — Look again. Calling pays the outstanding bet. A check cannot match it, and folding ends your participation.
+  + [correct] Call — Correct. HJ bets 2 BB on the turn, so a call pays that amount and keeps you in. A check leaves the bet unmatched.
+  - [wrong] Fold — Look again. Folding gives up your chance to win. A call keeps the hand live for 2 BB.
     BETTER ANSWER: Call
 
 TASK spaced_review_w1_fold_check_call_raise_hero_button_v1 [drill] Review decision
@@ -7757,13 +7772,14 @@ Q: UTG raised. Which action would set a higher wager than UTG's?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ac Kd | Pot 4.5 BB | To call 3 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: UTG 100 · CO 100 · BTN 100 · SB 100 · BB 100
+REASONING: principle value_vs_worse · alt call · edge processRule · stack_matters false · assumption none
 SEATS: UTG stack 97 BB raise 3 BB | HJ Ac Kd stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB
-  - [wrong] Call — Look again. A raise increases the live wager. A call matches the current price and a fold gives up the hand.
+  - [wrong] Call — Look again. Calling matches the 3 BB and leaves UTG’s price unchanged. A raise sets a higher price.
     BETTER ANSWER: Raise
-  - [wrong] Fold — Look again. A raise increases the live wager. A call matches the current price and a fold gives up the hand.
+  - [wrong] Fold — Look again. Folding gives up the hand and never changes the wager. A raise sets a higher price.
     BETTER ANSWER: Raise
-  + [correct] Raise — Correct. A raise increases the live wager. A call matches the current price and a fold gives up the hand.
+  + [correct] Raise — Correct. UTG raised to 3 BB, so a reraise asks UTG to pay more to stay in. Calling only matches that 3 BB wager.
 
 ===== WORLD 1 · LESSON your_first_hand · Streets and showdown =====
 
@@ -8006,14 +8022,15 @@ Q: BB has checked this turn. How can you see the last card without putting in an
 HINT [hidden]: (none)
 TABLE: Turn | You 9s 7c | Board Ah Td 4h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card
 EFFECTIVE: BB 97.25
+REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 9s 7c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
-  + [correct] Check — Correct. There is nothing to match. A check keeps your hand live without adding chips.
+  + [correct] Check — Correct. BB checked on the turn, so checking behind gives you the last card for free. Folding gives up your chance to win.
     FEEDBACK TABLE: Turn | You 9s 7c | Board Ah Td 4h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card
-  - [wrong] Call — Look again. There is nothing to match. A check keeps your hand live without adding chips.
+  - [wrong] Call — Look again. BB checked, leaving no turn bet to call. Checking gives you the last card for free.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Turn | You 9s 7c | Board Ah Td 4h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card
-  - [wrong] Fold — Look again. There is nothing to match. A check keeps your hand live without adding chips.
+  - [wrong] Fold — Look again. Folding forfeits the pot. A check lets you see the river.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Turn | You 9s 7c | Board Ah Td 4h 3s | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card
 

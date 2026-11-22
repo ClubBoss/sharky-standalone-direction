@@ -135,7 +135,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold', 'Raise to 7.5 BB'],
     correct: 2,
     reason:
-        'KK is one of the highest starting pairs. Raising again against HJ can get a call from a weaker hand.',
+        'With KK on BTN, you can raise because HJ may call with a weaker pair or a strong ace. A call keeps the pot smaller against those hands.',
     wrongReasons: const {
       0: 'Calling HJ’s 2.5 BB from BTN gives up the chance to charge a weaker hand more for the flop.',
       1: 'Folding Kc Ks after one raise gives up the chance to win the 4 BB already in the middle.',
@@ -378,7 +378,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Call", "Fold"],
     correct: 1,
     reason:
-        "Calling pays the outstanding bet. A check cannot match it, and folding ends your participation.",
+        "HJ bets 2 BB on the turn, so a call pays that amount and keeps you in. A check leaves the bet unmatched.",
+    wrongReasons: const {
+      0: "Checking cannot match HJ’s 2 BB turn bet. Call to stay in.",
+      2: "Folding gives up your chance to win. A call keeps the hand live for 2 BB.",
+    },
+    //DAY7_REMOVE_QUOTE"",
   ),
   _day7ExampleV1(
     1,
@@ -389,7 +394,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Fold", "Raise"],
     correct: 2,
     reason:
-        "A raise increases the live wager. A call matches the current price and a fold gives up the hand.",
+        "UTG raised to 3 BB, so a reraise asks UTG to pay more to stay in. Calling only matches that 3 BB wager.",
+    wrongReasons: const {
+      0: "Calling matches the 3 BB and leaves UTG’s price unchanged. A raise sets a higher price.",
+      1: "Folding gives up the hand and never changes the wager. A raise sets a higher price.",
+    },
+    //DAY7_REMOVE_QUOTE"",
   ),
   _day7ExampleV1(
     1,
@@ -592,7 +602,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Call", "Fold"],
     correct: 0,
     reason:
-        "There is nothing to match. A check keeps your hand live without adding chips.",
+        "BB checked on the turn, so checking behind gives you the last card for free. Folding gives up your chance to win.",
+    wrongReasons: const {
+      1: "BB checked, leaving no turn bet to call. Checking gives you the last card for free.",
+      2: "Folding forfeits the pot. A check lets you see the river.",
+    },
+    //DAY7_REMOVE_QUOTE"",
   ),
   _day7ExampleV1(
     1,
