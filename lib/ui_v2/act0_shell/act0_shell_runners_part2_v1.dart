@@ -680,7 +680,7 @@ final _actionWordsRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Actions are table verbs.',
       body:
-          'Fold exits. Check passes when you owe nothing. Call matches the price. Your blind already pays part of a call. A raise sets a higher price, so players who already acted may have to act again.',
+          'Fold leaves the hand. Check passes for free. Call matches the bet. Raise makes others pay more to continue.',
       focusLabels: <String>['Fold', 'Check', 'Call', 'Raise'],
     ),
   ],
@@ -697,7 +697,7 @@ final _legalActionRunner = _checkActionRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Legality depends on price.',
-      body: 'No price means check is available. A price unlocks call.',
+      body: 'With no bet, you can check for free.',
       focusLabels: <String>['No bet', 'Check'],
     ),
   ],
@@ -716,7 +716,7 @@ final _actionRecapRunner = _whatYouCanDoRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Action takeaway.',
-      body: 'First read the price. Then choose the matching action family.',
+      body: 'Read the price before acting.',
       focusLabels: <String>['Price first'],
     ),
   ],

@@ -188,7 +188,7 @@ void main() {
           count++;
         }
       }
-      expect(count, 270);
+      expect(count, 272);
     },
   );
 

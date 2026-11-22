@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(399));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(399));
+    expect(tasks, hasLength(401));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(401));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -308,7 +308,9 @@ void main() {
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'first_table_guide_first_decision' &&
-            task.taskId != 'hand_rankings_compare_ace_straights',
+            task.taskId != 'hand_rankings_compare_ace_straights' &&
+            task.taskId != 'blinds_missing_post_amount' &&
+            task.taskId != 'actions_call_chip_cost',
       ),
       hasLength(368),
     );
@@ -375,7 +377,9 @@ void main() {
             !w3NewTaskIds.contains(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'first_table_guide_first_decision' &&
-            task.taskId != 'hand_rankings_compare_ace_straights')
+            task.taskId != 'hand_rankings_compare_ace_straights' &&
+            task.taskId != 'blinds_missing_post_amount' &&
+            task.taskId != 'actions_call_chip_cost')
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -534,8 +538,10 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 277); // Authored contexts, not certified replay histories.
+    expect(played, 279); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'blinds_missing_post_amount',
+      'actions_call_chip_cost',
       'first_table_guide_first_decision',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',

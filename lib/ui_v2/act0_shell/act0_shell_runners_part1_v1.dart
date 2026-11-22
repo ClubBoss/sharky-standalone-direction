@@ -671,7 +671,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'No one entered yet.',
       body:
-          'First in means the first player to put chips in voluntarily after the blinds. Calling matches the blind. Raising increases the price.',
+          'First in means the first player to put chips in voluntarily after the blinds.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['First in', 'Button'],
     ),
@@ -2347,8 +2347,7 @@ Act0RunnerStateV1 _act0W01ExplicitFoldMechanicalContextV1(
       ...source.teachingSteps,
       const Act0TeachingStepV1(
         title: 'A new mechanical example.',
-        body:
-            'HJ bets 2 BB after three checks. It is your turn. Calling costs 2 BB. Raising makes the price 6 BB total.',
+        body: 'HJ bets 2 BB. Call for 2 BB or raise to 6 BB.',
         focusSeatIds: ['btn', 'hj'],
       ),
     ],

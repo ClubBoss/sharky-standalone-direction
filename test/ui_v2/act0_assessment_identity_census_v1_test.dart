@@ -33,8 +33,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(399));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(399));
+    expect(tasks, hasLength(401));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(401));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -116,8 +116,32 @@ void main() {
             .toList(),
       ];
     }
-    expect(entries, hasLength(399));
+    expect(entries, hasLength(401));
     const w1Additions = {
+      'blinds_missing_post_amount': [
+        'world_1',
+        'blinds_action_order',
+        'blinds_missing_post_amount',
+        'drill',
+        'practice',
+        [
+          ['small_blind_only', '0.5 BB', false, 'wrong', '1 BB'],
+          ['big_blind_amount', '1 BB', true, 'correct', '1 BB'],
+          ['both_posts', '1.5 BB', false, 'wrong', '1 BB'],
+        ],
+      ],
+      'actions_call_chip_cost': [
+        'world_1',
+        'fold_check_call_raise',
+        'actions_call_chip_cost',
+        'drill',
+        'practice',
+        [
+          ['free', '0 BB', false, 'wrong', '2 BB'],
+          ['match_bet', '2 BB', true, 'correct', '2 BB'],
+          ['match_pot', '8 BB', false, 'wrong', '2 BB'],
+        ],
+      ],
       'first_table_guide_first_decision': [
         'world_1',
         'what_poker_is',
@@ -2007,7 +2031,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(399));
+    expect(taskIndex, hasLength(401));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

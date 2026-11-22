@@ -2030,8 +2030,8 @@ void main() {
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
     expect(lessons, hasLength(33));
-    expect(tasks, hasLength(194));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(194));
+    expect(tasks, hasLength(196));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(196));
     final sizingLesson = worlds.last.lessons.singleWhere(
       (lesson) => lesson.lessonId == 'small_half_pot',
     );
@@ -2050,7 +2050,7 @@ void main() {
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(158),
+      hasLength(160),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();
