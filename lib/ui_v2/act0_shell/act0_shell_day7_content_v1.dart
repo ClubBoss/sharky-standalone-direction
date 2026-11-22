@@ -1643,6 +1643,29 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     8,
     'effective_stack_basics',
+    'hero_seat',
+    _act0BoardLessonTableV1(
+      openingSeat: 'hj',
+      heroCards: _act0LessonCardsV1('Qs Jc'),
+      boardCards: _act0LessonCardsV1('Qh 9d 5c'),
+      centerLabel: 'Read the stacks',
+      heroBehindBb: 16,
+      bbBehindBb: 54,
+    ),
+    question:
+        'Which live seat limits what these players can still win from each other?',
+    choices: const ['BB', 'HJ', 'SB'],
+    correct: 1,
+    reason:
+        'HJ has 16 BB left. The larger BB stack can match at most 16 BB against HJ.',
+    wrongReasons: const {
+      0: 'BB can still bet 54 BB, but only 16 BB can be matched. Using the bigger stack overstates the limit by 38 BB.',
+      2: 'SB folded before the flop. The folded stack cannot change what HJ and BB can win from each other.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'effective_stack_basics',
     'big_blind',
     _act0BoardLessonTableV1(
       openingSeat: 'co',
@@ -1707,6 +1730,29 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     wrongReasons: const {
       0: 'The 82 BB belongs to CO. BB has 24 BB left, so planning around 82 BB overstates what the opponent can pay.',
       1: 'The 5.5 BB already belongs to the pot. It cannot measure what BB can still add from the 24 BB stack.',
+    },
+  ),
+  _day7ExampleV1(
+    8,
+    'same_hand_different_depth',
+    'big_blind',
+    _act0BoardLessonTableV1(
+      openingSeat: 'co',
+      heroCards: _act0LessonCardsV1('Kc 9d'),
+      boardCards: _act0LessonCardsV1('Kh 7s 3c'),
+      centerLabel: 'Compare the pot and stacks',
+      heroBehindBb: 28,
+      bbBehindBb: 3,
+    ),
+    question:
+        'If CO bets 3 BB and the other player calls, who would use all their chips?',
+    choices: const ['SB', 'CO', 'BB'],
+    correct: 2,
+    reason:
+        'BB has 3 BB left. Matching a 3 BB bet would use that entire stack.',
+    wrongReasons: const {
+      0: 'The small blind folded before this flop. Counting SB invents a call from someone out of the hand.',
+      1: 'CO would keep 25 BB after betting 3 BB. That seat still has chips for a later round.',
     },
   ),
   _day7ExampleV1(

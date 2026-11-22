@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 448 tasks · W1–W12
+SHARKY POKER — EN learning content, 450 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -4673,6 +4673,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
     BETTER ANSWER: Big blind
     FEEDBACK TABLE: Flop | You Th Tc | Board 9d 5c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap co, sb, bb | Center Compare the stacks | Facts one pair, overpair, pocket pair, rainbow
 
+TASK w8_hero_stack_cap_seat [drill] Find the stack that caps the bet
+CAPTION: Only you and the big blind saw the flop. Compare the chips behind.
+Q: Tap the seat that caps how much either player can still win from the other.
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ac 9h | Board Ad 8s 4c | Pot 5.5 BB | Seat HJ | Tap hj, sb, bb | Center Read the stacks | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ Ac 9h stack 22 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 65 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks
+  + [correct] Hijack [seat hj] — The smaller stack sets the limit. You have 22 BB left in HJ. BB can match those 22 BB, so that is the most either live seat can add against the other.
+    FEEDBACK TABLE: Flop | You Ac 9h | Board Ad 8s 4c | Pot 5.5 BB | Seat HJ | Seat focus hj | Tap hj, sb, bb | Center Read the stacks | Facts one pair, top pair, rainbow
+  - [wrong] Small blind [seat sb] — Compare the chips behind each live seat. SB folded. Including that seat would use chips no live player can win during this flop.
+    BETTER ANSWER: Hijack
+    FEEDBACK TABLE: Flop | You Ac 9h | Board Ad 8s 4c | Pot 5.5 BB | Seat HJ | Seat focus hj | Tap hj, sb, bb | Center Read the stacks | Facts one pair, top pair, rainbow
+  - [wrong] Big blind [seat bb] — Compare the chips behind each live seat. BB can still bet 65 BB and you can match only 22 BB. Using 65 BB overstates how much BB could win from you by 43 BB.
+    BETTER ANSWER: Hijack
+    FEEDBACK TABLE: Flop | You Ac 9h | Board Ad 8s 4c | Pot 5.5 BB | Seat HJ | Seat focus hj | Tap hj, sb, bb | Center Read the stacks | Facts one pair, top pair, rainbow
+
 TASK w7_effective_stack_recap [review] Effective stack recap
 CAPTION: Lesson learned: the smaller stack sets the hand risk.
 TEACH: Risk starts here. Find the smaller stack first. That tells you how deep the hand really plays.
@@ -4786,6 +4802,22 @@ TABLE: Flop | You As Js | Board Jh 9c 3d | Pot 6.5 BB | Seat BTN | Active btn | 
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Js stack 78 BB | SB folded stack 99.5 BB | BB stack 36 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks
 REVIEW: A shorter stack limits future losses, but also limits what you can win when a small pair makes a set or suited connectors make a big hand.
+
+TASK w8_pot_bet_committed_seat [drill] Find who would be all-in
+CAPTION: Imagine you bet one pot and your opponent calls.
+Q: Tap the seat that would have zero chips left after the call.
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Jc Td | Board Js 6h 2d | Pot 6 BB | Seat CO | Active co | Decision co | Tap co, bb, sb | Center Read the pot and stacks | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jc Td stack 42 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 6 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Cutoff [seat co] — Compare the chips behind each live seat. CO starts with 42 BB behind and would keep 36 BB after betting 6 BB. Selecting CO hides the remaining chips.
+    BETTER ANSWER: Big blind
+    FEEDBACK TABLE: Flop | You Jc Td | Board Js 6h 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap co, bb, sb | Center Read the pot and stacks | Facts one pair, top pair, rainbow
+  + [correct] Big blind [seat bb] — The smaller stack sets the limit. BB has 6 BB left. Calling the 6 BB bet would use that entire stack.
+    FEEDBACK TABLE: Flop | You Jc Td | Board Js 6h 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap co, bb, sb | Center Read the pot and stacks | Facts one pair, top pair, rainbow
+  - [wrong] Small blind [seat sb] — Compare the chips behind each live seat. SB folded preflop, so no extra chips come from that seat after the flop bet.
+    BETTER ANSWER: Big blind
+    FEEDBACK TABLE: Flop | You Jc Td | Board Js 6h 2d | Pot 6 BB | Seat CO | Active co | Decision co | Seat focus bb | Tap co, bb, sb | Center Read the pot and stacks | Facts one pair, top pair, rainbow
 
 ===== WORLD 8 · LESSON spr_and_commitment · Room or commitment =====
 
@@ -8743,6 +8775,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
 
 ===== WORLD 8 · LESSON effective_stack_basics · Effective stack =====
 
+TASK spaced_review_w8_effective_stack_basics_hero_seat_v1 [drill] Review decision
+DAY 7 FAMILY: hero_seat
+Q: Which live seat limits what these players can still win from each other?
+HINT [hidden]: (none)
+TABLE: Flop | You Qs Jc | Board Qh 9d 5c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Center Read the stacks | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ Qs Jc stack 16 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 54 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  - [wrong] BB — Look again. BB can still bet 54 BB, but only 16 BB can be matched. Using the bigger stack overstates the limit by 38 BB.
+    BETTER ANSWER: HJ
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 9d 5c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the stacks | Facts one pair, top pair, rainbow, backdoor straight
+  + [correct] HJ — Correct. HJ has 16 BB left. The larger BB stack can match at most 16 BB against HJ.
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 9d 5c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the stacks | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] SB — Look again. SB folded before the flop. The folded stack cannot change what HJ and BB can win from each other.
+    BETTER ANSWER: HJ
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 9d 5c | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Center Read the stacks | Facts one pair, top pair, rainbow, backdoor straight
+
 TASK spaced_review_w8_effective_stack_basics_big_blind_v1 [drill] Review decision
 DAY 7 FAMILY: big_blind
 Q: Which seat sets the maximum that either active player can still bet against the other?
@@ -8792,6 +8840,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
     FEEDBACK TABLE: Flop | You Js Jd | Board Ts 6h 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
 
 ===== WORLD 8 · LESSON same_hand_different_depth · Same hand, different depth =====
+
+TASK spaced_review_w8_same_hand_different_depth_big_blind_v1 [drill] Review decision
+DAY 7 FAMILY: big_blind
+Q: If CO bets 3 BB and the other player calls, who would use all their chips?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc 9d | Board Kh 7s 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Center Compare the pot and stacks | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc 9d stack 28 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 3 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  - [wrong] SB — Look again. The small blind folded before this flop. Counting SB invents a call from someone out of the hand.
+    BETTER ANSWER: BB
+    FEEDBACK TABLE: Flop | You Kc 9d | Board Kh 7s 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the pot and stacks | Facts one pair, top pair, rainbow
+  - [wrong] CO — Look again. CO would keep 25 BB after betting 3 BB. That seat still has chips for a later round.
+    BETTER ANSWER: BB
+    FEEDBACK TABLE: Flop | You Kc 9d | Board Kh 7s 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the pot and stacks | Facts one pair, top pair, rainbow
+  + [correct] BB — Correct. BB has 3 BB left. Matching a 3 BB bet would use that entire stack.
+    FEEDBACK TABLE: Flop | You Kc 9d | Board Kh 7s 3c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Compare the pot and stacks | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w8_same_hand_different_depth_board_cards_v1 [drill] Review decision
 DAY 7 FAMILY: board_cards

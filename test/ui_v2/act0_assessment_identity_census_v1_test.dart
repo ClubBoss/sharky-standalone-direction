@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,7 +131,7 @@ void main() {
     expect(
       entries,
       hasLength(
-        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
@@ -468,6 +468,30 @@ void main() {
       ], reason: entry.key);
     }
     const w8Additions = {
+      'w8_hero_stack_cap_seat': [
+        'world_8',
+        'effective_stack_basics',
+        'w8_hero_stack_cap_seat',
+        'drill',
+        'practice',
+        [
+          ['hj', 'Hijack', true, 'correct', 'Hijack'],
+          ['sb', 'Small blind', false, 'wrong', 'Hijack'],
+          ['bb', 'Big blind', false, 'wrong', 'Hijack'],
+        ],
+      ],
+      'w8_pot_bet_committed_seat': [
+        'world_8',
+        'same_hand_different_depth',
+        'w8_pot_bet_committed_seat',
+        'drill',
+        'practice',
+        [
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['sb', 'Small blind', false, 'wrong', 'Big blind'],
+        ],
+      ],
       'w8_effective_stack_seat': [
         'world_8',
         'effective_stack_basics',
@@ -2267,7 +2291,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;
