@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
+import '../support/act0_w3_catalog_contract_v1.dart';
 
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
@@ -94,7 +95,7 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 216);
+      expect(tasks.length, 216 + w3BlindVsBlindChoicesV1.length);
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
