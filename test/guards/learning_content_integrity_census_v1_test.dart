@@ -426,10 +426,7 @@ void main() {
       final firstTable = rows.singleWhere(
         (row) => row.task.taskId == 'what_poker_is_theory',
       );
-      expect(
-        firstTable.task.runner.question,
-        contains('two cards you can use on your own'),
-      );
+      expect(firstTable.task.runner.question, 'Which two cards are yours?');
       expect(firstTable.task.runner.question, isNot(contains('hero seat')));
 
       final value = rows.singleWhere(
