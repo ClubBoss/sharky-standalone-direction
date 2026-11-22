@@ -116,7 +116,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'You win early if all other players fold. If the hand reaches showdown, the strongest eligible hands win or split the pot.',
+          'You win early if all other players fold. If the hand reaches showdown, the strongest eligible hand wins. Tied winners share the pot.',
     ),
     Act0RunnerOptionV1(
       id: 'button_wins_now',
@@ -3911,7 +3911,7 @@ final _world3DominatedIntroRunner = _world3FacingOpenIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare similar hands',
       body:
-          'Broadway ranks are T, J, Q, K, and A. One common kind of domination happens when hands share a rank and one has the weaker side card.',
+          'Broadway ranks are T, J, Q, K, and A. One kind of domination is when two hands share a rank and one has the weaker side card.',
     ),
     Act0TeachingStepV1(
       title: 'Acting after your opponent',
@@ -5063,7 +5063,7 @@ final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
       body:
           'Blind versus blind means everyone folded to SB. SB acts before BB after the flop. '
           'An SB limp means completing the blind, usually worse than raising or folding. '
-          'When everyone else has folded and SB opens to 3 BB, BB must add 2 BB to call. That call finishes the preflop betting.',
+          'A raise to 3 BB makes BB pay 2 BB more. BB’s call ends preflop here.',
     ),
   ],
 );

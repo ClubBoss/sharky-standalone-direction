@@ -1765,7 +1765,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           id: 'btn',
           label: 'BTN',
           reason:
-              'BTN has already matched the blind. BB has posted the same amount and still gets its first voluntary turn.',
+              'BTN has already matched the blind. BB has posted the same amount and still has the option.',
           seatId: 'btn',
         ),
         rewardXp: 5,
@@ -4818,8 +4818,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             seat: 'utg',
           ).copyWith(teachingSteps: const []),
           const {
-            "co":
-                "CO sits immediately before BTN. HJ is one seat earlier, immediately after UTG.",
+            "co": "CO comes one seat after HJ. HJ sits between UTG and CO.",
             "utg":
                 "UTG sits between BB and HJ. HJ is the seat immediately after UTG.",
           },
@@ -5578,7 +5577,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           _w3PositionApplyRecapRunner,
           const {
             "off_chart":
-                "The opening row for AJo starts at HJ and includes CO and BTN. This choice leaves out BTN, your seat in this hand.",
+                "The chart opens AJo from HJ, CO and BTN. This choice leaves out BTN, your seat in this hand.",
           },
         ),
         rewardXp: 16,

@@ -3054,7 +3054,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
             ? 'The first pass after the flop.'
             : 'Preflop starts after the big blind.',
         body: flop
-            ? 'From the flop on, the first player still in and able to act clockwise after the Button acts first. The Button, if still able to act, takes its first turn after the other players.'
+            ? 'From the flop on, the first player still in and able to act clockwise after the Button acts first. If the Button can still act, it goes after all the others on the first pass.'
             : 'On the first preflop pass, UTG acts first, right after the big blind. Then the order is HJ, CO, BTN, SB and BB. A raise can bring the action back to earlier seats.',
         focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
       ),
@@ -3629,7 +3629,7 @@ const _laterSeatChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Late seat found.',
     feedbackReason:
-        'Before the flop, BTN follows UTG, HJ and CO, with only the blinds behind. After the flop, the other live seats get their first turn before BTN if BTN can still act.',
+        'On the first preflop pass, only SB and BB act after BTN. From the flop on, if BTN can still act, it sees the other players act first.',
   ),
   Act0RunnerOptionV1(
     id: 'utg',
