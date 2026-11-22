@@ -67,6 +67,25 @@ q=subprocess.run(['git','-C',str(root),'update-index','--index-info'],input=f'10
 assert q.returncode==0
 run('conflict_unknown',code=75)
 git('reset','--hard','-q',head)
+# A malformed historical allowlist may be removed, but not added or hidden.
+allowlist = 'tooling/allowlists/target_tokens_allowlist_core\nlegacy.txt'
+put(allowlist)
+git('add','--',allowlist)
+run('live_newline_allowlist_unknown',code=75)
+git('commit','-qm','legacy malformed allowlist')
+legacy=git('rev-parse','HEAD')
+git('rm','--',allowlist)
+git('commit','-qm','delete malformed allowlist')
+cleaned=git('rev-parse','HEAD')
+cleanup_env={
+ 'SHARKY_CHANGE_BASE':legacy,'SHARKY_CHANGE_HEAD':cleaned,
+ 'SHARKY_CHANGE_CANDIDATE':cleaned,
+}
+run('deleted_newline_allowlist',cleanup_env)
+put(allowlist)
+run('restored_newline_allowlist_unknown',cleanup_env,code=75)
+(root/allowlist).unlink()
+git('reset','--hard','-q',head)
 # Shallow clone read-only transport from local fixture, no network.
 shallow_parent=Path(tempfile.mkdtemp(prefix='changeset-shallow-'));atexit.register(shutil.rmtree,shallow_parent,ignore_errors=True);shallow=shallow_parent/'repo'
 subprocess.run(['git','clone','-q','--depth','1',root.as_uri(),str(shallow)],check=True,env=BASE_ENV)
