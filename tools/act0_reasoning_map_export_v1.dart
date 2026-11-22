@@ -97,10 +97,11 @@ void main() {
       });
     }
     final out = File(path)..createSync(recursive: true);
+    final requiredCourse = catalogTasks.where((row) => !row.task.repairOnly);
     out.writeAsStringSync(
       '${const JsonEncoder.withIndent('  ').convert({
         'sourceSha': sha,
-        'course': {'tasks': catalogTasks.length, 'xp': catalogTasks.fold<int>(0, (xp, row) => xp + row.task.rewardXp)},
+        'course': {'tasks': catalogTasks.length, 'mandatoryTasks': requiredCourse.length, 'mandatoryXp': requiredCourse.fold<int>(0, (xp, row) => xp + row.task.rewardXp), 'repairOnlyXp': catalogTasks.where((row) => row.task.repairOnly).fold<int>(0, (xp, row) => xp + row.task.rewardXp)},
         'byWorld': byWorld,
         'decisions': tasks,
       })}\n',
