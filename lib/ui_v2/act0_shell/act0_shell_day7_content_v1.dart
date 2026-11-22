@@ -1020,6 +1020,28 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     4,
+    'why_bets_happen',
+    'board_cards',
+    _day7PostflopV1(
+      'co',
+      'Ad 9c',
+      'As 6c 2h',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    caption: 'BB checks with A-7, calls 2 BB and folds to 4 BB.',
+    question: 'Which action gets paid by the weaker ace?',
+    choices: const ['Check', 'Bet 4 BB', 'Bet 2 BB'],
+    correct: 2,
+    reason:
+        'Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.',
+    wrongReasons: const {
+      0: 'Checking on A-6-2 skips the 2 BB that BB would pay with A-7.',
+      1: 'BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.',
+    },
+  ),
+  _day7ExampleV1(
+    4,
     "why_bets_happen",
     "hero_cards_board_pot",
     _day7PostflopV1(

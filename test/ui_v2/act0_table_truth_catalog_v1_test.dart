@@ -196,8 +196,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 165),
-      ('D3.to_call_completeness', 118),
+      ('D2.pot_feasibility', 167),
+      ('D3.to_call_completeness', 120),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1415,6 +1415,28 @@ void main() {
         {...w3Option('two'), 'quality': 'suboptimal'},
         w3Option('four', correct: true),
         w3Option('eight'),
+      ],
+    };
+    expectedComparison['w4_purpose_collect_value'] = {
+      'rewardXp': 7,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['bet_two', 'check', 'bet_four'])
+          {
+            ...w3Option(choice, correct: choice == 'bet_two'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['w4_protection_small_denial'] = {
+      'rewardXp': 7,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['check', 'bet_four', 'bet_two'])
+          {
+            ...w3Option(choice, correct: choice == 'bet_two'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
       ],
     };
     expectedComparison.addAll(w11Wave4TableTruthContractV1());

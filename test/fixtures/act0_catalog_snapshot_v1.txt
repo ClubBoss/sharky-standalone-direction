@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 451 tasks · W1–W12
+SHARKY POKER — EN learning content, 453 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -2779,6 +2779,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
     BETTER ANSWER: BB folds a better hand
     FEEDBACK TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Flop | Facts high card, rainbow, backdoor flush, backdoor straight
 
+TASK w4_purpose_collect_value [drill] Get a call from a worse hand
+CAPTION: BB checks with Q-8 and will call 2 BB or fold to 4 BB.
+Q: What do you do to get paid by the weaker queen?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Jc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  + [correct] Bet 2 BB — The smaller bet fits. Your jack beats BB’s eight beside the pair of queens. A 2 BB bet gets that weaker hand to pay.
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Check — Look at the response. Checking with Q-J against Q-8 skips the 2 BB that the weaker queen would pay.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Bet 4 BB — Compare both bets. BB folds Q-8 to 4 BB under this rule, so the bigger bet loses the call you wanted.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
 TASK w4_purpose_recap [review] Purpose recap
 CAPTION: Lesson learned: name the purpose before the size.
 TEACH: Purpose checklist. Ask what the bet wants before asking how big it should be.
@@ -3172,6 +3188,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
   + [correct] Free card — Strong choice. With two overcards to Q-9-4, BB can pair an ace or king without paying for the turn.
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
+
+TASK w4_protection_small_denial [drill] Charge for the next card
+CAPTION: BB checks with A-K. In this example BB folds to either bet.
+Q: Which play makes BB give up the chance to catch up while risking the fewest chips?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Check — Look at the response. Checking lets BB see a card for free. An ace or a king could put A-K ahead of your tens.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] Bet 4 BB — Compare both bets. BB folds A-K to either bet. The 4 BB bet puts another 2 BB at risk for the same result in this example.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  + [correct] Bet 2 BB — The smaller bet fits. BB folds A-K to 2 BB. Your pair of tens wins the 6 BB pot without letting BB see another card.
+    FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
 
 TASK w4_protection_recap [review] Protection recap
 CAPTION: Lesson learned: protection denies a free next card.
@@ -8026,6 +8058,23 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: The price is too high
 
 ===== WORLD 4 · LESSON why_bets_happen · Why bets happen =====
+
+TASK spaced_review_w4_why_bets_happen_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+CAPTION: BB checks with A-7, calls 2 BB and folds to 4 BB.
+Q: Which action gets paid by the weaker ace?
+HINT [hidden]: (none)
+TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Check — Look again. Checking on A-6-2 skips the 2 BB that BB would pay with A-7.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Bet 4 BB — Look again. BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] Bet 2 BB — Correct. Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.
+    FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w4_why_bets_happen_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
