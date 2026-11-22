@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(402));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(402));
+    expect(tasks, hasLength(403));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(403));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -313,7 +313,7 @@ void main() {
             task.taskId != 'actions_call_chip_cost' &&
             task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(368),
+      hasLength(369),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -539,8 +539,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 247);
-    expect(played, 280); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 248);
+    expect(played, 281); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'cards_ranks_suits_premium_decision',
       'blinds_missing_post_amount',

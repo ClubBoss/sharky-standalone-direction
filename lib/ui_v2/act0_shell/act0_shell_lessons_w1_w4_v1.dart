@@ -2052,7 +2052,21 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Pot and stack',
         phase: Act0LessonPhaseV1.theory,
         runner: _w1WithDistractorV1(
-          _w1PotStackSeatedRunner,
+          _w1PotStackSeatedRunner.copyWith(
+            caption: '',
+            teachingSteps: const [
+              Act0TeachingStepV1(
+                title: 'BB also counts chips.',
+                body:
+                    r'BB also measures chips. In a $1/$2 game, $200 is 100 BB.',
+              ),
+              Act0TeachingStepV1(
+                title: 'Pot and stack',
+                body:
+                    'The pot is in the middle. Your stack stays at your seat.',
+              ),
+            ],
+          ),
           id: 'blind',
           label: 'Blind',
           reason:
@@ -2104,11 +2118,20 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             'A short stack can only win the chips that were actually matched in front of it.',
       ),
       Act0LessonTaskV1(
+        taskId: 'what_poker_is_side_pot_eligibility',
+        title: 'Which chips can you win?',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1SidePotEligibilityRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'what_poker_is_win_ways',
         title: 'How pots are won',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0W1SeatObserverV1(
           _winWaysRunner.copyWith(
+            caption: '',
             options: _act0AuthoredCorrectOptionAtV1(
               _winWaysRunner.options,
               correctOptionId: 'everyone_folds',
@@ -2159,7 +2182,8 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Live win paths',
         phase: Act0LessonPhaseV1.drill,
         runner: _w1LiveWinTransferRunner.copyWith(
-          caption: 'The blinds have posted. The hand is still live.',
+          caption: 'Only the blinds have posted.',
+          teachingSteps: const [],
           table: _act0W1MoveHeroV1(
             _w1LiveWinTransferRunner.table,
             'co',

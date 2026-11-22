@@ -33,8 +33,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(402));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(402));
+    expect(tasks, hasLength(403));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(403));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -116,8 +116,20 @@ void main() {
             .toList(),
       ];
     }
-    expect(entries, hasLength(402));
+    expect(entries, hasLength(403));
     const w1Additions = {
+      'what_poker_is_side_pot_eligibility': [
+        'world_1',
+        'what_poker_is_content',
+        'what_poker_is_side_pot_eligibility',
+        'drill',
+        'practice',
+        [
+          ['both_pots', 'Both pots', false, 'wrong', 'Main pot only'],
+          ['main_pot_only', 'Main pot only', true, 'correct', 'Main pot only'],
+          ['side_pot_only', 'Side pot only', false, 'wrong', 'Main pot only'],
+        ],
+      ],
       'cards_ranks_suits_premium_decision': [
         'world_1',
         'cards_ranks_suits',
@@ -2043,7 +2055,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(402));
+    expect(taskIndex, hasLength(403));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;
