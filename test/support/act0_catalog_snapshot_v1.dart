@@ -1,7 +1,9 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import 'act0_catalog_decision_v1.dart';
 import 'act0_catalog_poker_facts_v1.dart';
 
 typedef CatalogTask = ({
@@ -167,6 +169,34 @@ Iterable<String> _section(Iterable<CatalogTask> rows) sync* {
     yield 'HINT [${runner.hintPolicy.name}]: ' +
         (runner.hint.trim().isEmpty ? '(none)' : runner.hint);
     yield 'TABLE: $tableLine';
+    if (catalogDecisionKindV1(task, row.world.worldNumber) ==
+        Act0DecisionKindV1.table) {
+      final decision = CatalogDecisionLedgerV1(table);
+      final stacks = [
+        for (final seat in decision.activeSeatIds)
+          if (seat != table.heroSeat.seatId)
+            '${decision.seatLabel(seat)} '
+                '${decision.effectiveStacks[seat] == null ? 'unknown' : _bb(decision.effectiveStacks[seat]!)}',
+      ];
+      yield 'EFFECTIVE: ${stacks.isEmpty ? 'none' : stacks.join(' · ')}';
+      if (decision.hasAllIn) {
+        final pots = decision.pots;
+        yield 'POTS: ${pots == null
+            ? 'unknown'
+            : pots.isEmpty
+            ? 'pending'
+            : [for (final (i, pot) in pots.indexed) '${i == 0 ? 'main' : 'side'} ${_bb(pot.amountBb)} '
+                    '(${pot.eligibleSeatIds.map(decision.seatLabel).join(', ')})'].join(' · ')}';
+      }
+    }
+    if (act0DecisionReasoningV1[task.taskId] case final reason?) {
+      yield 'REASONING: principle ${reason.principleId} · '
+          'alt ${reason.bestAlternativeOptionId} · '
+          'edge ${reason.edgeMechanism.name}'
+          '${reason.edgeBb == null ? '' : ' ${_bb(reason.edgeBb!)} BB'} · '
+          'stack_matters ${reason.stackMatters ?? 'unknown'} · '
+          'assumption ${reason.preChoiceAssumption ?? 'none'}';
+    }
     if (table.seats.isNotEmpty) yield 'SEATS: ' + _seatLine(table);
     if (table.actionTrail.isNotEmpty) yield 'TRAIL: ' + _trail(table);
     if (runner.options.isEmpty && runner.feedbackReason.isNotEmpty)
@@ -245,3 +275,7 @@ String renderCatalogSnapshot({Set<int>? worlds}) {
       ].join('\n').trimRight() +
       '\n');
 }
+
+String _bb(double value) => double.parse(
+  value.toStringAsFixed(8),
+).toString().replaceFirst(RegExp(r'\.0$'), '');

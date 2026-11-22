@@ -4,16 +4,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_claims_v1.dart';
+import '../support/act0_catalog_decision_copy_v1.dart';
 import '../support/act0_catalog_learner_copy_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
+import '../support/act0_catalog_reasoning_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_chip_labels_v1.dart';
@@ -67,6 +71,36 @@ CatalogTask _withRunner(
     ),
   );
 }
+
+Act0RunnerOptionV1 _withOptionReason(
+  Act0RunnerOptionV1 option,
+  String reason,
+) => Act0RunnerOptionV1(
+  id: option.id,
+  label: option.label,
+  amountLabel: option.amountLabel,
+  seatId: option.seatId,
+  isCorrect: option.isCorrect,
+  preferredLabel: option.preferredLabel,
+  betterAnswerLabel: option.betterAnswerLabel,
+  quality: option.quality,
+  feedbackTitle: option.feedbackTitle,
+  feedbackReason: reason,
+  repairFocusSeatIds: option.repairFocusSeatIds,
+  repairFocusCardIds: option.repairFocusCardIds,
+  repairFocusLabels: option.repairFocusLabels,
+);
+
+CatalogTask _withDecisionCopy(CatalogTask row, Map<String, String> copy) =>
+    _withRunner(
+      row,
+      row.task.runner.copyWith(
+        options: [
+          for (final option in row.task.runner.options)
+            _withOptionReason(option, copy[option.id] ?? option.feedbackReason),
+        ],
+      ),
+    );
 
 void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
   final log = Platform.environment['G1_REPORT_DIR'];
@@ -1020,9 +1054,12 @@ void main() {
     final report = runCatalogQualityAudit();
     final baselineFile = File(_qualityBaselinePath);
     if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
+      final existing = baselineFile.existsSync()
+          ? jsonDecode(baselineFile.readAsStringSync()) as Map<String, dynamic>
+          : <String, dynamic>{};
       baselineFile.createSync(recursive: true);
       baselineFile.writeAsStringSync(
-        '${_json.convert(report.toBaselineJson())}\n',
+        '${_json.convert({...existing, ...report.toBaselineJson()})}\n',
       );
       return;
     }
@@ -1093,6 +1130,360 @@ void main() {
       isEmpty,
       reason:
           'Remove resolved G1 quality findings from baseline:\n${removed.take(30).join('\n')}',
+    );
+  });
+
+  test('G1·26–G1·35 reasoning baseline admits no regressions', () {
+    final file = File(_qualityBaselinePath);
+    final baseline =
+        jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+    final current = catalogReasoningBaselineV1();
+    if (Platform.environment['G1_UPDATE_REASONING_BASELINE'] == '1') {
+      baseline['reasoning_v1'] = current;
+      file.writeAsStringSync('${_json.convert(baseline)}\n');
+      return;
+    }
+    final expected = baseline['reasoning_v1'] as Map<String, dynamic>;
+    final currentWorlds =
+        current['findings_by_world'] as Map<String, Map<String, List<String>>>;
+    final expectedWorlds =
+        expected['findings_by_world'] as Map<String, dynamic>;
+    for (final world in {...currentWorlds.keys, ...expectedWorlds.keys}) {
+      final old = expectedWorlds[world] as Map<String, dynamic>? ?? {};
+      final now = currentWorlds[world] ?? {};
+      for (final rule in {...old.keys, ...now.keys}) {
+        final previous = (old[rule] as List<dynamic>? ?? [])
+            .cast<String>()
+            .toSet();
+        final findings = (now[rule] ?? []).toSet();
+        expect(
+          findings.difference(previous),
+          isEmpty,
+          reason: 'New G1·$rule findings in $world',
+        );
+        expect(
+          previous.difference(findings),
+          isEmpty,
+          reason: 'Ratchet down G1·$rule baseline for $world',
+        );
+      }
+    }
+    expect(current['short_stacks_by_world'], expected['short_stacks_by_world']);
+    expect(
+      current['stack_matters_by_world'],
+      expected['stack_matters_by_world'],
+    );
+  });
+
+  group('decision ledger', () {
+    test('100 BB against 25 BB has a 25 BB effective stack', () {
+      const ledger = Act0HandContributionsV1(
+        throughStreet: PokerStreet.preflop,
+        startingStackBbBySeat: {'btn': 100, 'bb': 25},
+        entries: [
+          Act0ContributionV1(
+            PokerStreet.preflop,
+            'bb',
+            Act0ContributionKindV1.blind,
+            1,
+          ),
+        ],
+      );
+      expect(
+        act0EffectiveStacksV1(
+          ledger,
+          heroSeatId: 'btn',
+          activeSeatIds: {'btn', 'bb'},
+        ),
+        {'bb': 25},
+      );
+    });
+
+    test(
+      'multiway stacks use previous streets and include live street wagers',
+      () {
+        const ledger = Act0HandContributionsV1(
+          throughStreet: PokerStreet.flop,
+          startingStackBbBySeat: {'btn': 100, 'sb': 25, 'bb': 50, 'co': 10},
+          minimumStartingStackBbBySeat: {'hj': 30},
+          entries: [
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'btn',
+              Act0ContributionKindV1.wager,
+              2.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'sb',
+              Act0ContributionKindV1.wager,
+              2.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'bb',
+              Act0ContributionKindV1.wager,
+              2.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.flop,
+              'bb',
+              Act0ContributionKindV1.wager,
+              3,
+            ),
+          ],
+        );
+        expect(
+          act0EffectiveStacksV1(
+            ledger,
+            heroSeatId: 'btn',
+            activeSeatIds: {'btn', 'sb', 'bb', 'hj'},
+          ),
+          {'sb': 22.5, 'bb': 47.5},
+        );
+      },
+    );
+
+    test(
+      'SB 10 BB and BB 30 BB all-in called by BTN forms 30 and 40 BB pots',
+      () {
+        const ledger = Act0HandContributionsV1(
+          throughStreet: PokerStreet.preflop,
+          entries: [
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'sb',
+              Act0ContributionKindV1.wager,
+              10,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'bb',
+              Act0ContributionKindV1.wager,
+              30,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              'btn',
+              Act0ContributionKindV1.wager,
+              30,
+            ),
+          ],
+        );
+        final pots = act0PotEligibilityV1(
+          ledger,
+          activeSeatIds: {'sb', 'bb', 'btn'},
+        )!;
+        expect(pots.map((pot) => pot.amountBb), [30, 40]);
+        expect(pots.first.eligibleSeatIds, {'sb', 'bb', 'btn'});
+        expect(pots.last.eligibleSeatIds, {'bb', 'btn'});
+        expect(pots.fold(0.0, (total, pot) => total + pot.amountBb), 70);
+      },
+    );
+  });
+
+  group('G1 reasoning falsifiers', () {
+    final row = _catalogRow('w11_trigger_bad_price_fold');
+    final runner = row.task.runner;
+    final taskId = row.task.taskId;
+    final correct = runner.options.firstWhere((option) => option.isCorrect);
+    final call = runner.options.firstWhere(
+      (option) => option.label.startsWith('Call'),
+    );
+
+    Act0DecisionReasoningV1 reasoning({
+      String principle = 'price_vs_equity',
+      String? alternative,
+      String? opponent = 'Big turn bets favor made hands.',
+      String? assumption,
+      double? edge,
+      bool stackMatters = false,
+    }) => Act0DecisionReasoningV1(
+      taskId: taskId,
+      kind: Act0DecisionKindV1.table,
+      principleId: principle,
+      bestAlternativeOptionId: alternative ?? call.id,
+      edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+      opponentRead: opponent,
+      preChoiceAssumption: assumption,
+      edgeBb: edge,
+      stackMatters: stackMatters,
+    );
+
+    CatalogReasoningResultV1 audit(
+      Act0DecisionReasoningV1 fields, {
+      Map<String, String> copy = const {},
+    }) => auditCatalogReasoningV1(
+      _withRunner(
+        row,
+        runner.copyWith(
+          options: [
+            for (final option in runner.options)
+              _withOptionReason(
+                option,
+                copy[option.id] ??
+                    (option.isCorrect
+                        ? 'Fold because an 8 BB call costs too much and CO continues with strong hands.'
+                        : 'Fold to save chips.'),
+              ),
+          ],
+        ),
+      ),
+      reasoning: {taskId: fields},
+    )!;
+
+    test('26 rejects a missing or later principle', () {
+      expect(auditCatalogReasoningV1(row)!.findings, contains(26));
+      expect(
+        audit(reasoning(principle: 'process_over_outcome')).findings,
+        contains(26),
+      );
+      expect(audit(reasoning()).findings, isNot(contains(26)));
+    });
+    test('27 rejects another task ID or the correct option', () {
+      expect(
+        audit(reasoning(alternative: 'no_such_option')).findings,
+        contains(27),
+      );
+      expect(audit(reasoning(alternative: correct.id)).findings, contains(27));
+      expect(audit(reasoning()).findings, isNot(contains(27)));
+    });
+    test('28 needs a real table fact and a causal link', () {
+      expect(
+        audit(
+          reasoning(),
+          copy: {correct.id: 'Fold because 999 BB is too expensive.'},
+        ).findings,
+        contains(28),
+      );
+      expect(
+        audit(
+          reasoning(),
+          copy: {correct.id: 'Fold. The call costs 8 BB.'},
+        ).findings,
+        contains(28),
+      );
+      expect(audit(reasoning()).findings, isNot(contains(28)));
+    });
+    test('29 needs the alternative action in feedback', () {
+      expect(
+        audit(
+          reasoning(),
+          copy: {correct.id: 'Fold because CO continues with strong hands.'},
+        ).findings,
+        contains(29),
+      );
+      expect(audit(reasoning()).findings, isNot(contains(29)));
+    });
+    test('30 requires opponent read and response when facing a wager', () {
+      expect(audit(reasoning(opponent: null)).findings, contains(30));
+      expect(
+        audit(
+          reasoning(),
+          copy: {correct.id: 'Fold because an 8 BB call costs too much.'},
+        ).findings,
+        contains(30),
+      );
+      expect(audit(reasoning()).findings, isNot(contains(30)));
+    });
+    test('31 rejects wrong feedback without a better action or cost', () {
+      expect(
+        audit(reasoning(), copy: {call.id: 'Look again.'}).findings[31],
+        contains(call.id),
+      );
+      expect(audit(reasoning()).findings, isNot(contains(31)));
+    });
+    test('32 requires the claimed assumption before choosing', () {
+      expect(
+        audit(reasoning(assumption: 'CO always folds to a minraise.')).findings,
+        contains(32),
+      );
+      expect(
+        audit(
+          reasoning(assumption: 'KQ wins 15% against this betting range'),
+        ).findings,
+        isNot(contains(32)),
+      );
+    });
+    test('33 rejects a wrong alternative with zero edge', () {
+      expect(audit(reasoning(edge: 0)).findings[33], contains(call.id));
+      expect(audit(reasoning(edge: 0.1)).findings, isNot(contains(33)));
+    });
+    test('34 distinguishes concealed cards from disclosed hand groups', () {
+      expect(
+        audit(
+          reasoning(),
+          copy: {call.id: 'CO has AdQh, so fold.'},
+        ).findings[34],
+        contains(call.id),
+      );
+      expect(
+        audit(
+          reasoning(),
+          copy: {call.id: 'CO has A-Q, so fold.'},
+        ).findings[34],
+        contains(call.id),
+      );
+      expect(
+        audit(
+          reasoning(),
+          copy: {call.id: 'CO can have A-Q or sets, so fold.'},
+        ).findings,
+        isNot(contains(34)),
+      );
+    });
+    test('35 counts a short decision only with stackMatters true', () {
+      expect(audit(reasoning()).eligibleShortStack, isTrue);
+      expect(audit(reasoning()).stackMatters, isFalse);
+      expect(audit(reasoning(stackMatters: true)).stackMatters, isTrue);
+    });
+  });
+
+  test('G1·39–40 catches the W3 hero mismatches, not chart references', () {
+    final ato = _catalogRow('same_hand_different_seat_same_hand_late_open');
+    final kto = _catalogRow('position_apply_late_open');
+    final findings = [
+      ...auditDecisionCopyV1(
+        _withDecisionCopy(ato, {
+          'call': 'A 1 BB limp from CO gives up raise pressure.',
+          'fold':
+              'Folding from CO gives up the blinds with only BTN, SB and BB left to act.',
+        }),
+      ),
+      ...auditDecisionCopyV1(
+        _withDecisionCopy(kto, {
+          'call':
+              'Calling 1 BB from CO gives up the pressure of a 2.5 BB open.',
+          'fold':
+              'Folding this hand first in from CO gives up the chart open with three players left to act.',
+        }),
+      ),
+    ];
+    expect(findings.map((f) => (f.rule, f.taskId, f.optionId)).toSet(), {
+      (39, ato.task.taskId, 'call'),
+      (39, ato.task.taskId, 'fold'),
+      (39, kto.task.taskId, 'call'),
+      (39, kto.task.taskId, 'fold'),
+      (40, kto.task.taskId, 'call'),
+    });
+    expect(
+      auditDecisionCopyV1(
+        _withDecisionCopy(kto, {
+          'call': 'Calling 1 BB from BTN gives up the pressure of a 3 BB open.',
+          'fold':
+              'The chart opens ATo from HJ. UTG has five players behind. Folding from BTN with two players left to act gives up the blinds.',
+        }),
+      ),
+      isEmpty,
+    );
+    expect(
+      auditDecisionCopyV1(
+        _withDecisionCopy(kto, {
+          'call': 'Calling from BTN keeps three players left to act.',
+          'fold': 'Fold from BTN.',
+        }),
+      ).single.rule,
+      39,
     );
   });
 
