@@ -1288,9 +1288,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
+        "5506ab649ba33347066436c977b0ad512521c568624d039a2eac5c1147f1e8b9",
     sourceQuestion: "What action keeps playing for free?",
-    sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
+    sourceChoiceReason:
+        "You give up your chance at the pot when you fold. BB has checked, so you can stay in for free.",
     sourceChoiceLabel: "Fold",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
@@ -1313,10 +1314,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
+        "5506ab649ba33347066436c977b0ad512521c568624d039a2eac5c1147f1e8b9",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason:
-        "BB has put in no bet on this street. Trying to call misses the free check that keeps you in.",
+        "No wager followed BB’s check. A call needs a bet to match. Check for the next board card.",
     sourceChoiceLabel: "Call",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
@@ -1467,7 +1468,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
+        "5506ab649ba33347066436c977b0ad512521c568624d039a2eac5c1147f1e8b9",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1495,7 +1496,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
+        "5506ab649ba33347066436c977b0ad512521c568624d039a2eac5c1147f1e8b9",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1577,7 +1578,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        '3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24',
+        '5506ab649ba33347066436c977b0ad512521c568624d039a2eac5c1147f1e8b9',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',

@@ -1025,11 +1025,12 @@ EFFECTIVE: BB unknown
 REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
-  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
+  - [wrong] Fold — Not quite. You give up your chance at the pot when you fold. BB has checked, so you can stay in for free.
     BETTER ANSWER: Check
   + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.
-  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
+  - [wrong] Call — Not quite. No wager followed BB’s check. A call needs a bet to match. Check for the next board card.
     BETTER ANSWER: Check
+    FEEDBACK TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center No bet faces you | Facts high card, rainbow, backdoor straight
 
 TASK actions_call_chip_cost [drill] Count the cost of a call
 CAPTION: BB bets 2 BB on the turn. You have put in nothing on this street.
@@ -2788,7 +2789,7 @@ EFFECTIVE: BTN 100 · BB 100
 REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Ah Qd stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop. BTN can fold or call the higher price against the reraise.
+  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs. BTN can fold or call the higher price. Calling lets BB in cheaply while you act before BTN after the flop.
   - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB with AQo gives BB a cheap entry while you still act before BTN after the flop. A reraise charges BB more.
     BETTER ANSWER: Reraise to 10 BB
   - [wrong] Fold — Read the price and seat. Folding gives up a chance to win the 2.5 BB BTN open and the BB post with a hand in the chart's SB reraise row.
@@ -8105,9 +8106,9 @@ EFFECTIVE: BB unknown
 REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks · Flop: BTN checks · Turn: BB checks
-  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
+  - [wrong] Fold — Not quite. BTN can stay in until the river by checking behind BB. A fold ends BTN’s hand now.
     BETTER ANSWER: Check
-  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
+  - [wrong] Call — Not quite. BB checked the turn, so there is no bet to match. Checking behind takes you to the river.
     BETTER ANSWER: Check
   + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.
 
@@ -8122,9 +8123,9 @@ REASONING: principle value_vs_worse · alt fold · edge processRule · stack_mat
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks · Flop: BTN checks · Turn: BB checks · Turn: BTN checks · River: BB checks
   + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.
-  - [wrong] Fold — Not quite. Folding gives up the hand. Checking is free here.
+  - [wrong] Fold — Not quite. BB’s river check leaves you a free showdown. Folding gives up the pot before the cards are compared.
     BETTER ANSWER: Check
-  - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
+  - [wrong] Call — Not quite. There is nothing to call on the river. Check behind BB to see which hand wins.
     BETTER ANSWER: Check
 
 ===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====

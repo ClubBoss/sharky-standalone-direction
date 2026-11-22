@@ -2143,7 +2143,15 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_check_drill',
         title: 'Check when no bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
+          const {
+            'fold':
+                'You give up your chance at the pot when you fold. BB has checked, so you can stay in for free.',
+            'call':
+                'No wager followed BB’s check. A call needs a bet to match. Check for the next board card.',
+          },
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         tablePresentation: Act0TaskTablePresentationV1.stablePractice,
@@ -5683,7 +5691,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                 id: 'raise',
                 label: 'Reraise to 10 BB',
                 reason:
-                    "Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop. BTN can fold or call the higher price against the reraise.",
+                    "Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs. BTN can fold or call the higher price. Calling lets BB in cheaply while you act before BTN after the flop.",
               ),
               (
                 id: 'call',
