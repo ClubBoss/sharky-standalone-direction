@@ -5,6 +5,8 @@
 // contribution or winner; anything it cannot derive is UNPROVED, not PASS.
 // Hand strength uses the accepted PKR-07 ranking (`poker_solver`) and is only
 // applied to real source cards. This is not a betting engine.
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_solver/poker_solver.dart';
 
@@ -129,10 +131,22 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
   void bad(String rule, String detail) =>
       out.add(PotTruthFindingV1(taskId, rule, detail));
   final seats = {for (final s in t.seats) s.seatLabel.trim().toUpperCase(): s};
-  final actions = [
-    for (final item in t.actionTrail)
-      if (potTruthParseActionV1(t, item.label) case final a?) a,
-  ];
+  final streetMarker = RegExp(
+    r'^(Preflop|Flop|Turn|River)(?=:| dealt\b)',
+    caseSensitive: false,
+  );
+  final streetActions = <({PotTruthActionV1 action, PokerStreet street})>[];
+  var street = PokerStreet.preflop;
+  for (final item in t.actionTrail) {
+    if (streetMarker.firstMatch(item.label.trim()) case final marker?) {
+      street = pokerStreetFromString(marker[1]!);
+    }
+    if (potTruthParseActionV1(t, item.label) case final action?) {
+      streetActions.add((action: action, street: street));
+    }
+  }
+  final actions = streetActions.map((row) => row.action).toList();
+  final ledger = t.handContributions;
 
   for (final s in t.seats) {
     for (final (name, label) in [
@@ -181,11 +195,39 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
     // Contribution cap: nothing attributed to a seat may exceed the chips it
     // is shown to own (behind + committed).
     if (stack != null) {
-      final cap = stack + bet;
-      for (final a in actions.where((a) => a.actor == actor)) {
-        final contribution = potTruthContributionVerbsV1.contains(a.chipVerb);
-        if (a.amount != null && contribution && a.amount! > cap + 1e-9) {
-          bad('bet_exceeds_stack', '$actor ${a.raw} cap=$cap');
+      for (final (:action, :street) in streetActions.where(
+        (row) => row.action.actor == actor,
+      )) {
+        if (action.amount == null ||
+            !potTruthContributionVerbsV1.contains(action.chipVerb)) {
+          continue;
+        }
+        // With an exact full ledger the action's own street sets its budget.
+        // A later frame has already collected the chips from earlier bets.
+        final start = ledger?.startingStackBbBySeat[s.seatId];
+        final cap =
+            ledger != null &&
+                ledger.fromStreet == PokerStreet.preflop &&
+                street.index < ledger.throughStreet.index &&
+                start != null
+            ? ledger.entries
+                  .where(
+                    (entry) =>
+                        entry.seatId == s.seatId &&
+                        (entry.street.index < street.index ||
+                            entry.street == street &&
+                                entry.kind == Act0ContributionKindV1.ante),
+                  )
+                  .fold<double>(
+                    start,
+                    (available, entry) =>
+                        entry.kind == Act0ContributionKindV1.uncalledReturn
+                        ? available + entry.amountBb
+                        : available - entry.amountBb,
+                  )
+            : stack + bet;
+        if (action.amount! > cap + 1e-9) {
+          bad('bet_exceeds_stack', '$actor ${action.raw} cap=$cap');
         }
       }
     }
