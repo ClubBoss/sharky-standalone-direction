@@ -4582,7 +4582,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "raise":
-                "Raising to 2.5 BB from UTG puts those chips at risk while five players can still call or raise.",
+                "Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.",
           },
         ),
         rewardXp: 9,
@@ -5142,7 +5142,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "call":
-                "Limping from UTG costs 1 BB before any of the five seats behind have acted.",
+                "Limping A9o from UTG costs 1 BB before any of the five seats behind have acted.",
           },
         ),
         rewardXp: 10,

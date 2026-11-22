@@ -1026,11 +1026,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "5d1a5f341952779ba5a4318f36487516433384ff1a5117f8460e795bebe00ffa",
+        "8e5c1469d63e755b01f7272125eee78431a455260593c45e0613dfcf95850b2c",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "Raising to 2.5 BB from UTG puts those chips at risk while five players can still call or raise.",
+        "Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
