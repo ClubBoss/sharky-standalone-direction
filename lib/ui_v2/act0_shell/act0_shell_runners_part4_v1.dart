@@ -4754,7 +4754,7 @@ final _w12_river_ev_small_price = _w12Task(
   teaching: const Act0TeachingStepV1(
     title: 'What is EV?',
     body:
-        'Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. On the river, no more cards come. Work out which bets you beat now.',
+        'Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. W5 clean outs count winning cards when there is another card to come. On the river the board is complete. Work out which bets you beat now.',
   ),
 );
 

@@ -5486,7 +5486,7 @@ TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds 
 
 TASK w12_river_ev_small_price [drill] A small river price
 CAPTION: CO bets 2 BB. Your model has seven better hands and three bluffs out of ten bets. CO will call a raise with the better hands and fold the bluffs.
-TEACH: What is EV? Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. On the river, no more cards come. Work out which bets you beat now.
+TEACH: What is EV? Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. W5 clean outs count winning cards when there is another card to come. On the river the board is complete. Work out which bets you beat now.
 Q: Which action has the best EV in this model?
 HINT [hidden]: (none)
 TABLE: River | You Ac 8c | Board As Td 7h 3c 2d | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
