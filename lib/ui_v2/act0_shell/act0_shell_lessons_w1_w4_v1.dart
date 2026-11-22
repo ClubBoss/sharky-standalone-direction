@@ -266,6 +266,23 @@ Act0RunnerStateV1 _w1WithNumericLabelsV1(
   );
 }
 
+// Use the names the opening lessons have explained in the visible history.
+Act0TableStateV1 _w1EarlySeatCopyV1(
+  Act0TableStateV1 table, {
+  required String opener,
+}) => table.copyWith(
+  handContributions: table.handContributions,
+  actionTrail: [
+    for (final action in table.actionTrail)
+      Act0ActionTrailItemV1(
+        label: action.label,
+        displayLabel: action.learnerLabel
+            .replaceAll(opener, 'The player before you')
+            .replaceAll(RegExp(r'\b(?:UTG|HJ|CO)\b'), 'An earlier player'),
+      ),
+  ],
+);
+
 final _w1FirstDecisionRunner = Act0RunnerStateV1(
   lessonId: 'first_table_guide_first_decision',
   lessonTitle: 'First Table Guide',
@@ -273,7 +290,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   beatIndex: 1,
   beatCount: 1,
   phase: Act0LessonPhaseV1.drill,
-  caption: 'HJ raised to 2.5 BB.',
+  caption: 'The player before you raised to 2.5 BB.',
   hint: '',
   question: 'How will you play your aces?',
   options: const [
@@ -298,7 +315,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Calling keeps you in.',
       feedbackReason:
-          'Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.',
+          'Calling 2.5 BB keeps you in. Raising can get the player before you to pay more while you have the strongest hand.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -316,12 +333,15 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   primaryCtaLabel: '',
   nextLessonId: null,
   returnTarget: '',
-  table: _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
+  table: _w1EarlySeatCopyV1(
+    _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
+    opener: 'HJ',
+  ),
   teachingSteps: const [
     Act0TeachingStepV1(
       title: 'Three choices.',
       body:
-          'Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
+          'Fold gives up. Call matches the bet. Raise increases it. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
     ),
   ],
 );
@@ -329,9 +349,12 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
 final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
   lessonId: 'cards_ranks_suits_premium_decision',
   lessonTitle: 'Cards, ranks & suits',
-  caption: 'CO raised to 2.5 BB.',
+  caption: 'The player before you raised to 2.5 BB.',
   question: 'How will you play your kings?',
-  table: _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
+  table: _w1EarlySeatCopyV1(
+    _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
+    opener: 'CO',
+  ),
   hintPolicy: Act0HintPolicyV1.hidden,
   teachingSteps: const [
     Act0TeachingStepV1(
@@ -352,7 +375,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The call keeps you in.',
       feedbackReason:
-          'Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.',
+          'Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -363,7 +386,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with kings.',
       feedbackReason:
-          'Raising KK to 7.5 BB builds the pot against the single CO raise.',
+          'Raising KK to 7.5 BB builds the pot against the single raise.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -374,7 +397,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Your kings can play.',
       feedbackReason:
-          'Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.',
+          'Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.',
     ),
   ],
 );
@@ -428,7 +451,10 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
   primaryCtaLabel: '',
   nextLessonId: null,
   returnTarget: '',
-  table: _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
+  table: _w1EarlySeatCopyV1(
+    _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
+    opener: 'CO',
+  ),
   teachingSteps: const [
     Act0TeachingStepV1(
       title: 'Read the board.',
@@ -1139,7 +1165,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
               Act0TeachingStepV1(
                 title: 'When cards reach the board',
                 body:
-                    'Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.',
+                    'Preflop means no board cards yet. The flop has three. The turn is the fourth board card.',
               ),
               Act0TeachingStepV1(
                 title: 'Read the seat labels.',

@@ -42,16 +42,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
 TASK first_table_guide_first_decision [drill] Decide with your coach
-CAPTION: HJ raised to 2.5 BB.
-TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
+CAPTION: The player before you raised to 2.5 BB.
+TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
 Q: How will you play your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As Ac stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · The player before you raises to 2.5 BB
   - [wrong] Fold — Your aces can play. Folding aces to one raise gives up the strongest starting hand and the chance to win this pot.
     BETTER ANSWER: Raise to 7.5 BB
-  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.
+  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling 2.5 BB keeps you in. Raising can get the player before you to pay more while you have the strongest hand.
     BETTER ANSWER: Raise to 7.5 BB
   + [correct] Raise to 7.5 BB — Raise with aces. Raise to build the pot with your aces.
 
@@ -166,19 +166,19 @@ SEATS: UTG | HJ | CO | BTN dealer | SB post 0.5 BB | BB post 1 BB
   + [correct] Ace — Spot on. Compare top card first: ace outranks king in this spot.
 
 TASK cards_ranks_suits_premium_decision [drill] Decide with kings
-CAPTION: CO raised to 2.5 BB.
+CAPTION: The player before you raised to 2.5 BB.
 TEACH: Your starting cards. Two kings are a top starting pair. BTN is Button.
 Q: How will you play your kings?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kh Kd | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kh Kd stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB
-  - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · The player before you raises to 2.5 BB
+  - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
-  + [correct] Raise to 7.5 BB — Raise with kings. Raising KK to 7.5 BB builds the pot against the single CO raise.
+  + [correct] Raise to 7.5 BB — Raise with kings. Raising KK to 7.5 BB builds the pot against the single raise.
     REPAIR LABELS: Top starting pairs
-  - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.
+  - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
 
@@ -520,7 +520,7 @@ Q: Which straight wins, Broadway or A-2-3-4-5?
 HINT [theoryOnly]: (none)
 TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Facts straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · The player before you raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · The player before you checks · Turn: BB checks · The player before you checks
   + [correct] Broadway wins — The ace-high straight wins. Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.
     FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
   - [wrong] A-2-3-4-5 wins — Read the top of the sequence. The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.
@@ -571,7 +571,7 @@ SEATS: UTG | HJ | CO Ad Qd | BTN dealer As Kh | SB | BB
 
 TASK positions_theory [theory] Six seats
 CAPTION: The six seats are UTG, HJ, CO, BTN, SB, and BB.
-TEACH: When cards reach the board Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.
+TEACH: When cards reach the board Preflop means no board cards yet. The flop has three. The turn is the fourth board card.
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Read the seat labels. UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.
 TEACH LABELS: UTG, HJ, CO, SB, BB
