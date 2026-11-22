@@ -9,6 +9,7 @@ import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
+import '../support/act0_y5c_catalog_contract_v1.dart';
 
 Map<String, Object?> _row({
   String id = 'task_a',
@@ -331,6 +332,7 @@ void main() {
           223 +
               y5bNewChoicesV1.length -
               y5bFoundationTaskCountV1 +
+              y5cNewChoicesV1.length +
               w11Wave4ChoiceContractV1.length +
               w12Wave4ChoiceContractV1.length +
               wave6TaskDeltaV1,
@@ -339,6 +341,7 @@ void main() {
       expect(
         rows.map((row) => row['taskId']).toSet(),
         containsAll([
+          ...y5cNewChoicesV1.keys,
           ...w11Wave4ChoiceContractV1.keys.where(
             (id) => !wave6PreviousRowsV1.containsKey(id),
           ),
