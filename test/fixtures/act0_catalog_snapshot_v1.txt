@@ -3330,8 +3330,8 @@ CAPTION: Connected ranks sit close together, like 9-8-7.
 TEACH: Ranks can connect. Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.
 TEACH LABELS: 9, 8, 7, Connected
 TEACH: Ranks and suits describe different things. A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.
-TEACH TABLE: Flop | You Qd Jc | Board 9c 9h 4c | Pot 6 BB | Seat CO | Active co | Facts one pair, two-tone, paired board, backdoor flush, backdoor straight
-TEACH TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+TEACH TABLE: Flop | You Qd Jc | Board 9c 9h 4c | Pot 5.5 BB | Seat CO | Active co | Facts one pair, two-tone, paired board, backdoor flush, backdoor straight
+TEACH TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 Q: What makes a board connected?
 HINT [theoryOnly]: Close ranks create more straight paths.
 TABLE: Flop | You Qd Jc | Board 9h 8s 7d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Read the ranks | Facts high card, rainbow, consecutive board, gutshot, completion cards 4
@@ -6008,7 +6008,7 @@ Q: What should you do with your sevens?
 HINT [hidden]: (none)
 TABLE: Turn | You 7h 7c | Board Ks Qd Jc 2h | Pot 24 BB | To call 8 BB | Seat BB | Active bb | Decision bb | Facts one pair, pocket pair
 SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO stack 29.5 BB bet 8 BB | BTN dealer stack 29.5 BB call 8 BB | SB folded stack 39.5 BB | BB 7h 7c stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB · Flop: BB checks · CO checks · BTN checks · Turn: BB checks · CO bets 8 BB · BTN calls 8 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · BTN checks · Turn: BB checks · CO bets 8 BB · BTN calls 8 BB
   + [correct] Fold — Correct. Your pair of sevens cannot beat either straight on this board, even if a seven falls. Save the call.
     FEEDBACK TABLE: Turn | You 7h 7c | Board Ks Qd Jc 2h | Pot 24 BB | To call 8 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, pocket pair
   - [wrong] Call — Look again. CO bet 8 BB and BTN called. No river card can give your two sevens a hand that beats a straight here.
@@ -6038,7 +6038,7 @@ Q: Which stack do you use to find the SPR here?
 HINT [hidden]: (none)
 TABLE: Turn | You Kc Td | Board Ks 8h 3s 2c | Pot 15 BB | Seat BB | Facts one pair, top pair
 SEATS: UTG folded stack 17.25 BB | HJ folded stack 17.25 BB | CO stack 32.75 BB | BTN folded dealer stack 17.25 BB | SB folded stack 16.75 BB | BB Kc Td stack 10 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB · Flop: BB checks · CO bets 4.75 BB · BB calls 4.75 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 4.75 BB · BB calls 4.75 BB
   - [wrong] The pot — Look again. The 15 BB in the middle is already at risk. It does not set the cap on new bets.
     BETTER ANSWER: Your stack
     FEEDBACK TABLE: Turn | You Kc Td | Board Ks 8h 3s 2c | Pot 15 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
@@ -6127,7 +6127,7 @@ Q: Tap the first seat to act.
 HINT [hidden]: (none)
 TABLE: Flop | You Ac Qh | Board Qc 8s 3h | Pot 8 BB | Seat CO | Tap co, bb, btn | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO Ac Qh stack 37.5 BB | BTN dealer stack 37.5 BB | SB folded stack 39.5 BB | BB stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more
   - [wrong] CO [seat co] — Look again. CO opened before the flop. Acting from CO now would skip BB, the first live seat after BTN.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Flop | You Ac Qh | Board Qc 8s 3h | Pot 8 BB | Seat CO | Seat focus bb | Tap co, bb, btn | Facts one pair, top pair, rainbow
@@ -6143,7 +6143,7 @@ Q: With nine outs and a one in 5 shot, what is your play?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 5h | Board Kh 8h 3c Js | Pot 6.5 BB | To call 1 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
 SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO stack 36.5 BB bet 1 BB | BTN folded dealer stack 40 BB | SB folded stack 39.5 BB | BB Ah 5h stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB · Flop: BB checks · CO checks · Turn: BB checks · CO bets 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO bets 1 BB
   - [wrong] Fold — Look again. A fold gives up a draw that wins one time in five. A 1 BB call needs less than that to break even.
     BETTER ANSWER: Call
   + [correct] Call — Correct. You pay 1 BB to make a 7.5 BB pot. That is about 13%. One win in five pays for this call.
@@ -6156,7 +6156,7 @@ Q: How do you get more chips in?
 HINT [hidden]: (none)
 TABLE: Flop | You Jc Tc | Board 9s 8h 7d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts straight, rainbow, consecutive board
 SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO stack 35.5 BB bet 2 BB | BTN dealer stack 35.5 BB call 2 BB | SB folded stack 39.5 BB | BB Jc Tc stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB · Flop: BB checks · CO bets 2 BB · BTN calls 2 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 2 BB · BTN calls 2 BB
   - [wrong] Fold — Look again. With a jack-high straight on 9-8-7, a fold gives up the best hand on this flop.
     BETTER ANSWER: Raise
   - [wrong] Call — Look again. A call gets to the turn, but CO would put in more with a worse hand right now.
@@ -6444,7 +6444,7 @@ Q: What is the SPR at the start of this flop?
 HINT [hidden]: (none)
 TABLE: Flop | You Kc Js | Board Kd 8c 3h | Pot 5.5 BB | Seat BB | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ stack 16.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Js stack 16.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more
   + [correct] 3 — Correct. 16.5 divided by 5.5 is 3. The most either player can put in from here is three times the pot.
     FEEDBACK TABLE: Flop | You Kc Js | Board Kd 8c 3h | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] 6 — Look again. Six would count both stacks. Use just the smaller stack to see what each player can risk.

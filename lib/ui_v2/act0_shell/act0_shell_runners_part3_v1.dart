@@ -2563,7 +2563,13 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
     ),
     Act0TeachingStepV1(
       title: 'Ranks and suits describe different things.',
-      table: _day7PostflopV1('co', 'Qd Jc', '9c 9h 4c', checkedToHero: true),
+      table: _day7PostflopV1(
+        'co',
+        'Qd Jc',
+        '9c 9h 4c',
+        openBb: 2.5,
+        checkedToHero: true,
+      ),
       body:
           'A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.',
     ),
