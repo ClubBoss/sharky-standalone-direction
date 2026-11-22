@@ -4613,8 +4613,7 @@ Act0LessonTaskV1 _w2WeakAceTask(Act0LessonTaskV1 task) {
     'w3_dominated_fold' => (
       label: 'Reraise to 7.5 BB',
       reason:
-          'Reraising to 7.5 BB with A6o on BTN risks more against CO. '
-          'A better ace can continue and leave you with the worse pair.',
+          'A6o on BTN is Weak against CO. A 7.5 BB reraise risks 7.5 BB and can get called by a stronger ace.',
     ),
     'w3_strong_continue' => (
       label: 'Reraise to 7.5 BB',

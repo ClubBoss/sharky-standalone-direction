@@ -2459,7 +2459,8 @@ final _w2FirstInIntroRunner =
       teachingSteps: [
         const Act0TeachingStepV1(
           title: 'You are first in.',
-          body: 'The players before you folded. You may open.',
+          body:
+              'Enter first voluntarily. Open means the first raise.',
         ),
         ..._world3BucketsIntroRunner.teachingSteps,
       ],
@@ -2490,7 +2491,15 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_premium',
         title: 'Premium hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2UnopenedSeat(_world3PremiumBucketRunner, 'utg', 'As Ah'),
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2UnopenedSeat(_world3PremiumBucketRunner, 'utg', 'As Ah'),
+          const {
+            "medium":
+                "AA belongs to Premium. Folding AA from UTG under a Medium rule gives up an open and a chance to win both blinds.",
+            "strong":
+                "Both rows can open from UTG here. Against a prior raise, putting AA in Strong gives up the Premium reraise.",
+          },
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2498,12 +2507,20 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_strong',
         title: 'Strong hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2UnopenedSeat(_w1StrongBucketRunner, 'hj', 'Jh Js').copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w1StrongBucketRunner.options,
-            correctOptionId: 'strong',
-            correctIndex: 1,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2UnopenedSeat(_w1StrongBucketRunner, 'hj', 'Jh Js').copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w1StrongBucketRunner.options,
+              correctOptionId: 'strong',
+              correctIndex: 1,
+            ),
           ),
+          const {
+            "premium":
+                "JJ on HJ is Strong. If UTG opens to 2.5 BB, an incorrect Premium reraise to 7.5 BB risks more with a hand outside the narrow raise range.",
+            "medium":
+                "JJ is Strong and HJ can open it. Applying the CO–BTN Medium row would give up an HJ open and the chance to win 1.5 BB.",
+          },
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2512,12 +2529,20 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_medium',
         title: 'Medium hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2UnopenedSeat(_w1MediumBucketRunner, 'co', 'Kd Tc').copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _w1MediumBucketRunner.options,
-            correctOptionId: 'medium',
-            correctIndex: 2,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2UnopenedSeat(_w1MediumBucketRunner, 'co', 'Kd Tc').copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w1MediumBucketRunner.options,
+              correctOptionId: 'medium',
+              correctIndex: 2,
+            ),
           ),
+          const {
+            "strong":
+                "KTo can open first in from this CO seat. Treating it as Strong from UTG risks 2.5 BB on an open the chart folds.",
+            "trash":
+                "KTo is in the second Medium row. Folding it first in from CO gives up a chart open and the chance to win both blinds.",
+          },
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2526,12 +2551,20 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_trash',
         title: 'Weak hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3TrashBucketRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _world3TrashBucketRunner.options,
-            correctOptionId: 'trash',
-            correctIndex: 1,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _world3TrashBucketRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _world3TrashBucketRunner.options,
+              correctOptionId: 'trash',
+              correctIndex: 1,
+            ),
           ),
+          const {
+            "strong":
+                "UTG has J8o with five players still to act. Putting in 2.5 BB would risk chips with a Weak hand outside the chart.",
+            "medium":
+                "J8o is outside both Medium rows. Treating it as Medium at CO risks 2.5 BB on an open the chart folds.",
+          },
         ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2540,14 +2573,21 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_borderline',
         title: 'Borderline hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2UnopenedSeat(_w2BorderlineBucketRunner, 'co', 'Qs Js')
-            .copyWith(
-              options: _act0AuthoredCorrectOptionAtV1(
-                _w2BorderlineBucketRunner.options,
-                correctOptionId: 'medium',
-                correctIndex: 1,
-              ),
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2UnopenedSeat(_w2BorderlineBucketRunner, 'co', 'Qs Js').copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _w2BorderlineBucketRunner.options,
+              correctOptionId: 'medium',
+              correctIndex: 1,
             ),
+          ),
+          const {
+            "strong":
+                "QJs can open here from CO. Treating it as Strong from HJ risks 2.5 BB with a hand the chart folds there.",
+            "trash":
+                "QJs is Medium and CO is in its opening row. Calling it Weak gives up a first-in raise and the chance to win 1.5 BB.",
+          },
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2555,32 +2595,38 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_recap',
         title: 'Bucket recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w2ReasonDecision(
-          _w2UnopenedSeat(_world3BucketsRecapRunner, 'co', 'Ks Ts'),
-          question:
-              'Which pair of facts should you check together before a first-in raise?',
-          correctTitle: 'Use the hand group and seat.',
-          choices: const [
-            (
-              id: 'suit_only',
-              label: 'The suits and your chip color',
-              reason:
-                  'KTs shares a suit, but knowing that alone can put 1 BB in with a hand your seat should fold.',
-            ),
-            (
-              id: 'bucket_and_seat',
-              label: 'Your hand group and your seat',
-              reason:
-                  'KTs is Medium and CO is in the CO–BTN opening row. The same hand from HJ falls outside that row.',
-            ),
-            (
-              id: 'blinds_only',
-              label: 'The blind amounts and dealer puck',
-              reason:
-                  'The 1.5 BB in blinds cannot tell you whether KTs can open. Using the bank alone can cost a raise from the wrong seat.',
-            ),
-          ],
-          correct: 1,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2ReasonDecision(
+            _w2UnopenedSeat(_world3BucketsRecapRunner, 'co', 'Ks Ts'),
+            question:
+                'Which pair of facts should you check together before a first-in raise?',
+            correctTitle: 'Use the hand group and seat.',
+            choices: const [
+              (
+                id: 'suit_only',
+                label: 'The suits and your chip color',
+                reason:
+                    'KTs shares a suit, but knowing that alone can put 1 BB in with a hand your seat should fold.',
+              ),
+              (
+                id: 'bucket_and_seat',
+                label: 'Your hand group and your seat',
+                reason:
+                    'KTs is Medium and CO is in the CO–BTN opening row. The same hand from HJ falls outside that row.',
+              ),
+              (
+                id: 'blinds_only',
+                label: 'The blind amounts and dealer puck',
+                reason:
+                    'The 1.5 BB in blinds cannot tell you whether KTs can open. Using the bank alone can cost a raise from the wrong seat.',
+              ),
+            ],
+            correct: 1,
+          ),
+          const {
+            "blinds_only":
+                "The 1.5 BB in blinds is the same from CO and HJ. Ignoring the seat can cost a 2.5 BB raise from HJ, where the chart folds KTs.",
+          },
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
@@ -2751,18 +2797,24 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'weak_ace_kicker_compare',
         title: 'A7 vs KQ spot',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2WithDistractor(
-          _world2KqoContrastRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _world2KqoContrastRunner.options,
-              correctOptionId: 'less_dominated',
-              correctIndex: 1,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2WithDistractor(
+            _world2KqoContrastRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _world2KqoContrastRunner.options,
+                correctOptionId: 'less_dominated',
+                correctIndex: 1,
+              ),
             ),
+            id: 'ace_and_king_equal',
+            label: 'Both hands lose for the same reason',
+            reason:
+                'KQo is in the call row on BTN against CO. Treating it like A7o can make you give up the chart call for 2.5 BB.',
           ),
-          id: 'ace_and_king_equal',
-          label: 'Both hands lose for the same reason',
-          reason:
-              'KQo is in the call row on BTN against CO. Treating it like A7o can make you give up the chart call for 2.5 BB.',
+          const {
+            "two_big_cards_auto":
+                "KQo on BTN shares a king with AK, which wins on a king-high board if the other cards do not change the best hand. Treating KQ as safe can cost extra chips after the 2.5 BB call.",
+          },
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2800,43 +2852,51 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'premium_continue',
         title: 'Premium continue',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2WithDistractor(
-          _world3PremiumBucketRunner.copyWith(
-            caption: 'You hold ace-king suited.',
-            table: _day7PreflopV1(
-              'utg',
-              'As Ks',
-              showTurn: true,
-            ).copyWith(centerLabel: ''),
-            question: 'Which bucket does ace-king suited fit?',
-            options: const <Act0RunnerOptionV1>[
-              Act0RunnerOptionV1(
-                id: 'premium',
-                label: 'Premium',
-                isCorrect: true,
-                preferredLabel: 'Premium',
-                quality: Act0FeedbackQualityV1.correct,
-                feedbackTitle: 'Check the suited ace-king row.',
-                feedbackReason:
-                    'AK suited from UTG is Premium. That group can raise even from the first seat.',
-              ),
-              Act0RunnerOptionV1(
-                id: 'medium',
-                label: 'Medium',
-                isCorrect: false,
-                preferredLabel: 'Premium',
-                quality: Act0FeedbackQualityV1.wrong,
-                feedbackTitle: 'Check the top of the chart.',
-                feedbackReason:
-                    'AK suited from UTG qualifies for a first-in raise. Treating it as Medium can make you fold and miss a chance to build the pot.',
-              ),
-            ],
-            teachingSteps: const <Act0TeachingStepV1>[],
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2WithDistractor(
+            _world3PremiumBucketRunner.copyWith(
+              caption: 'You hold ace-king suited.',
+              table: _day7PreflopV1(
+                'utg',
+                'As Ks',
+                showTurn: true,
+              ).copyWith(centerLabel: ''),
+              question: 'Which bucket does ace-king suited fit?',
+              options: const <Act0RunnerOptionV1>[
+                Act0RunnerOptionV1(
+                  id: 'premium',
+                  label: 'Premium',
+                  isCorrect: true,
+                  preferredLabel: 'Premium',
+                  quality: Act0FeedbackQualityV1.correct,
+                  feedbackTitle: 'Check the suited ace-king row.',
+                  feedbackReason:
+                      'AK suited from UTG is Premium. That group can raise even from the first seat.',
+                ),
+                Act0RunnerOptionV1(
+                  id: 'medium',
+                  label: 'Medium',
+                  isCorrect: false,
+                  preferredLabel: 'Premium',
+                  quality: Act0FeedbackQualityV1.wrong,
+                  feedbackTitle: 'Check the top of the chart.',
+                  feedbackReason:
+                      'AK suited from UTG qualifies for a first-in raise. Treating it as Medium can make you fold and miss a chance to build the pot.',
+                ),
+              ],
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            id: 'strong',
+            label: 'Strong',
+            reason:
+                'AK suited from UTG has the same opening seats as Strong, but this chart puts it in Premium. Using the Strong row would miss its reraise in the narrow model.',
           ),
-          id: 'strong',
-          label: 'Strong',
-          reason:
-              'AK suited from UTG has the same opening seats as Strong, but this chart puts it in Premium. Using the Strong row would miss its reraise in the narrow model.',
+          const {
+            "medium":
+                "AKs is Premium, so it can raise first from UTG. Applying the later Medium row gives up the open and the chance to win 1.5 BB.",
+            "strong":
+                "AKs opens here from UTG under either label. The cost appears when facing an open: calling it Strong gives up the Premium reraise.",
+          },
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2867,20 +2927,26 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'weak_let_go',
         title: 'Weak let go',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2WithDistractor(
-          _act0WeakHandAfterRaiseContrastV1(
-            _world3WeakFacingFoldRunner,
-            handName: 'jack-seven offsuit',
-            cards: const [
-              Act0CardStateV1(rank: 'J', suit: 's'),
-              Act0CardStateV1(rank: '7', suit: 'd'),
-            ],
-            correctIndex: 0,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2WithDistractor(
+            _act0WeakHandAfterRaiseContrastV1(
+              _world3WeakFacingFoldRunner,
+              handName: 'jack-seven offsuit',
+              cards: const [
+                Act0CardStateV1(rank: 'J', suit: 's'),
+                Act0CardStateV1(rank: '7', suit: 'd'),
+              ],
+              correctIndex: 0,
+            ),
+            id: 'raise',
+            label: 'Reraise to 7.5 BB',
+            reason:
+                'A 7.5 BB reraise from BTN with J7o risks three times the price of calling a CO open with a hand outside the chart.',
           ),
-          id: 'raise',
-          label: 'Reraise to 7.5 BB',
-          reason:
-              'A 7.5 BB reraise from BTN with J7o risks three times the price of calling a CO open with a hand outside the chart.',
+          const {
+            "raise":
+                "J7o is Weak and CO already opened. A BTN reraise risks 7.5 BB with a hand this chart folds to one open.",
+          },
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2958,20 +3024,26 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'premium',
         title: 'Facing an HJ open',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2ThreeBetDecision(
-          hero: 'co',
-          opener: 'hj',
-          cards: 'Ad Ac',
-          correctId: 'raise',
-          raiseReason:
-              'AA on CO is in the Premium row. Raising to 7.5 BB '
-              'builds the pot against weaker hands when HJ continues.',
-          callReason:
-              'Calling 2.5 BB with AA on CO leaves the pot small and '
-              'misses a chance to charge weaker hands for a flop.',
-          foldReason:
-              'Folding AA on CO surrenders the strongest starting '
-              'hand to HJ and gives up the chance to win the 4 BB already in.',
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2ThreeBetDecision(
+            hero: 'co',
+            opener: 'hj',
+            cards: 'Ad Ac',
+            correctId: 'raise',
+            raiseReason:
+                'AA on CO is in the Premium row. Raising to 7.5 BB '
+                'builds the pot against weaker hands when HJ continues.',
+            callReason:
+                'Calling 2.5 BB with AA on CO leaves the pot small and '
+                'misses a chance to charge weaker hands for a flop.',
+            foldReason:
+                'Folding AA on CO surrenders the strongest starting '
+                'hand to HJ and gives up the chance to win the 4 BB already in.',
+          ),
+          const {
+            "fold":
+                "CO holds AA facing an HJ open. Folding gives up a chance to win the 4 BB already in the pot with the highest starting pair.",
+          },
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -2980,38 +3052,49 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'medium',
         title: 'Facing a CO open',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2ReasonDecision(
-          _w2ThreeBetIntroRunner.copyWith(
-            phase: Act0LessonPhaseV1.drill,
-            caption: 'CO opened to 2.5 BB. No one has called.',
-            table: _day7PreflopV1('btn', 'Qc Jc', opener: 'co', showTurn: true),
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2ReasonDecision(
+            _w2ThreeBetIntroRunner.copyWith(
+              phase: Act0LessonPhaseV1.drill,
+              caption: 'CO opened to 2.5 BB. No one has called.',
+              table: _day7PreflopV1(
+                'btn',
+                'Qc Jc',
+                opener: 'co',
+                showTurn: true,
+              ),
+            ),
+            question: 'Which table fact supports matching the 2.5 BB open?',
+            correctTitle: 'QJs can call in position.',
+            choices: const [
+              (
+                id: 'premium',
+                label: 'QJs is in the top group',
+                reason:
+                    'QJs is Medium. Treating it as Premium on BTN can '
+                    'put 5 BB more than a call at risk against CO.',
+              ),
+              (
+                id: 'call',
+                label: 'QJs is Medium and you act after CO',
+                reason:
+                    'The chart calls one CO open with QJs from BTN. Paying '
+                    '2.5 BB keeps the pot smaller while you act after CO.',
+              ),
+              (
+                id: 'unopened',
+                label: 'Nobody has raised yet',
+                reason:
+                    'CO already raised to 2.5 BB. Treating this as an '
+                    'unopened pot can turn a call into a more expensive reraise.',
+              ),
+            ],
+            correct: 1,
           ),
-          question: 'Which table fact supports matching the 2.5 BB open?',
-          correctTitle: 'QJs can call in position.',
-          choices: const [
-            (
-              id: 'premium',
-              label: 'QJs is in the top group',
-              reason:
-                  'QJs is Medium. Treating it as Premium on BTN can '
-                  'put 5 BB more than a call at risk against CO.',
-            ),
-            (
-              id: 'call',
-              label: 'QJs is Medium and you act after CO',
-              reason:
-                  'The chart calls one CO open with QJs from BTN. Paying '
-                  '2.5 BB keeps the pot smaller while you act after CO.',
-            ),
-            (
-              id: 'unopened',
-              label: 'Nobody has raised yet',
-              reason:
-                  'CO already raised to 2.5 BB. Treating this as an '
-                  'unopened pot can turn a call into a more expensive reraise.',
-            ),
-          ],
-          correct: 1,
+          const {
+            "unopened":
+                "CO already put in 2.5 BB. Treating it as unopened can turn BTN’s QJs call into a reraise that risks 5 BB more.",
+          },
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3042,21 +3125,27 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'fold',
         title: 'A high card facing a raise',
         phase: Act0LessonPhaseV1.review,
-        runner: _w2ThreeBetDecision(
-          hero: 'co',
-          opener: 'hj',
-          cards: 'Ad 5c',
-          correctId: 'fold',
-          openBb: 3,
-          raiseReason:
-              'Reraising to 9 BB with A5o on CO risks six more blinds '
-              'than a call with a weak ace.',
-          callReason:
-              'Calling 3 BB with A5o on CO can lose more when an ace '
-              'pairs both you and a stronger ace in HJ.',
-          foldReason:
-              'A5o is Weak. Folding keeps the 3 BB you would have to '
-              'pay to see a flop.',
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2ThreeBetDecision(
+            hero: 'co',
+            opener: 'hj',
+            cards: 'Ad 5c',
+            correctId: 'fold',
+            openBb: 3,
+            raiseReason:
+                'Reraising to 9 BB with A5o on CO risks six more blinds '
+                'than a call with a weak ace.',
+            callReason:
+                'Calling 3 BB with A5o on CO can lose more when an ace '
+                'pairs both you and a stronger ace in HJ.',
+            foldReason:
+                'A5o is Weak. Folding keeps the 3 BB you would have to '
+                'pay to see a flop.',
+          ),
+          const {
+            "call":
+                "CO holds A5o against a single HJ open. Calling pays 3 BB to continue with a Weak hand whose ace can be outkicked.",
+          },
         ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
@@ -3140,40 +3229,46 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'apply_recap',
         title: 'Discipline holds',
         phase: Act0LessonPhaseV1.review,
-        runner: _w2ReasonDecision(
-          _act0WeakHandAfterRaiseContrastV1(
-            _world3DominatedRecapRunner,
-            handName: 'ace-three offsuit',
-            cards: const [
-              Act0CardStateV1(rank: 'A', suit: 's'),
-              Act0CardStateV1(rank: '3', suit: 'd'),
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2ReasonDecision(
+            _act0WeakHandAfterRaiseContrastV1(
+              _world3DominatedRecapRunner,
+              handName: 'ace-three offsuit',
+              cards: const [
+                Act0CardStateV1(rank: 'A', suit: 's'),
+                Act0CardStateV1(rank: '3', suit: 'd'),
+              ],
+              correctIndex: 0,
+              cutoffFacingHijack: true,
+            ),
+            question: 'Which fact makes matching this raise risky?',
+            correctTitle: 'A better ace can outkick A3o.',
+            choices: const [
+              (
+                id: 'fold',
+                label: 'A3o can lose to a higher ace when both pair',
+                reason:
+                    'A3o from CO can be dominated by HJ. Folding saves the 2.5 BB call and avoids paying more with a worse pair.',
+              ),
+              (
+                id: 'call',
+                label: 'The ace makes your kicker unimportant',
+                reason:
+                    'If both players pair an ace, HJ can win with a higher kicker. A call puts 2.5 BB at risk with A3o.',
+              ),
+              (
+                id: 'seat_guarantee',
+                label: 'Sitting in CO makes your kicker play higher',
+                reason:
+                    'Position can give information, but cannot change A3o. A 2.5 BB call still pays in with a weak kicker.',
+              ),
             ],
-            correctIndex: 0,
-            cutoffFacingHijack: true,
+            correct: 0,
           ),
-          question: 'Which fact makes matching this raise risky?',
-          correctTitle: 'A better ace can outkick A3o.',
-          choices: const [
-            (
-              id: 'fold',
-              label: 'A3o can lose to a higher ace when both pair',
-              reason:
-                  'A3o from CO can be dominated by HJ. Folding saves the 2.5 BB call and avoids paying more with a worse pair.',
-            ),
-            (
-              id: 'call',
-              label: 'The ace makes your kicker unimportant',
-              reason:
-                  'If both players pair an ace, HJ can win with a higher kicker. A call puts 2.5 BB at risk with A3o.',
-            ),
-            (
-              id: 'seat_guarantee',
-              label: 'Sitting in CO makes your kicker play higher',
-              reason:
-                  'Position can give information, but cannot change A3o. A 2.5 BB call still pays in with a weak kicker.',
-            ),
-          ],
-          correct: 0,
+          const {
+            "seat_guarantee":
+                "CO’s seat cannot improve the three kicker. Calling pays 2.5 BB even though HJ can win with a higher ace when both pair.",
+          },
         ),
         rewardXp: 16,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -3210,43 +3305,51 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'checkpoint_premium',
         title: 'Premium hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2WithDistractor(
-          _world3PremiumBucketRunner.copyWith(
-            caption: 'You hold a pair of kings.',
-            table: _day7PreflopV1(
-              'hj',
-              'Ks Kh',
-              showTurn: true,
-            ).copyWith(centerLabel: ''),
-            question: 'Which bucket does this pair fit?',
-            options: const <Act0RunnerOptionV1>[
-              Act0RunnerOptionV1(
-                id: 'premium',
-                label: 'Premium',
-                isCorrect: true,
-                preferredLabel: 'Premium',
-                quality: Act0FeedbackQualityV1.correct,
-                feedbackTitle: 'Use the highest pairs row.',
-                feedbackReason:
-                    'A pair of kings is in the Premium group of the chart.',
-              ),
-              Act0RunnerOptionV1(
-                id: 'medium',
-                label: 'Medium',
-                isCorrect: false,
-                preferredLabel: 'Premium',
-                quality: Act0FeedbackQualityV1.wrong,
-                feedbackTitle: 'Check the top of the chart.',
-                feedbackReason:
-                    'The Medium group has lower pairs. The Premium group includes kings.',
-              ),
-            ],
-            teachingSteps: const <Act0TeachingStepV1>[],
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2WithDistractor(
+            _world3PremiumBucketRunner.copyWith(
+              caption: 'You hold a pair of kings.',
+              table: _day7PreflopV1(
+                'hj',
+                'Ks Kh',
+                showTurn: true,
+              ).copyWith(centerLabel: ''),
+              question: 'Which bucket does this pair fit?',
+              options: const <Act0RunnerOptionV1>[
+                Act0RunnerOptionV1(
+                  id: 'premium',
+                  label: 'Premium',
+                  isCorrect: true,
+                  preferredLabel: 'Premium',
+                  quality: Act0FeedbackQualityV1.correct,
+                  feedbackTitle: 'Use the highest pairs row.',
+                  feedbackReason:
+                      'A pair of kings is in the Premium group of the chart.',
+                ),
+                Act0RunnerOptionV1(
+                  id: 'medium',
+                  label: 'Medium',
+                  isCorrect: false,
+                  preferredLabel: 'Premium',
+                  quality: Act0FeedbackQualityV1.wrong,
+                  feedbackTitle: 'Check the top of the chart.',
+                  feedbackReason:
+                      'The Medium group has lower pairs. The Premium group includes kings.',
+                ),
+              ],
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            id: 'strong',
+            label: 'Strong',
+            reason:
+                'KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise with a stronger hand against one open in position.',
           ),
-          id: 'strong',
-          label: 'Strong',
-          reason:
-              'KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise with a stronger hand against one open in position.',
+          const {
+            "medium":
+                "KK on HJ can open first because it is Premium. Using a CO–BTN Medium row gives up the HJ open and a chance at both blinds.",
+            "strong":
+                "KK can open from HJ either way here. The Strong row gives up a Premium reraise if UTG has already raised.",
+          },
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -3287,12 +3390,15 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         title: 'Real-table discipline read',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0WithWrongFeedbackReasonsV1(
-          _w2DisciplineTableNoticeRunner,
-          const {
+          _act0WithWrongFeedbackReasonsV1(_w2DisciplineTableNoticeRunner, const {
             'looks_fun_open':
                 'Raising J4o from HJ into the 1.5 BB pot risks chips with a weak offsuit hand while CO, BTN, and both blinds still act behind you.',
             'maybe_limp':
                 'Limping 1 BB from HJ with J4o into the 1.5 BB pot leaks chips with a weak offsuit hand instead of folding and saving your stack.',
+          }),
+          const {
+            "maybe_limp":
+                "HJ holds J4o, outside the chart. Limping pays 1 BB and leaves CO, BTN and the blinds free to raise.",
           },
         ),
         rewardXp: 10,
@@ -3303,18 +3409,24 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'checkpoint_review',
         title: 'Discipline recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w2WithDistractor(
-          _w1DisciplineCheckpointRunner.copyWith(
-            options: _act0AuthoredCorrectOptionAtV1(
-              _w1DisciplineCheckpointRunner.options,
-              correctOptionId: 'seat_context',
-              correctIndex: 1,
+        runner: _act0WithWrongFeedbackReasonsV1(
+          _w2WithDistractor(
+            _w1DisciplineCheckpointRunner.copyWith(
+              options: _act0AuthoredCorrectOptionAtV1(
+                _w1DisciplineCheckpointRunner.options,
+                correctOptionId: 'seat_context',
+                correctIndex: 1,
+              ),
             ),
+            id: 'fix_size',
+            label: 'Choose a size first',
+            reason:
+                'A7o faces a CO raise. Picking a size before checking the seat and prior action can lead to paying 2.5 BB with a weak ace.',
           ),
-          id: 'fix_size',
-          label: 'Choose a size first',
-          reason:
-              'A7o faces a CO raise. Picking a size before checking the seat and prior action can lead to paying 2.5 BB with a weak ace.',
+          const {
+            "auto_action":
+                "BTN sees a CO raise and holds A7o. Choosing by bucket alone gives up the chance to read that raise and can cost a 2.5 BB call.",
+          },
         ),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.proveIt,
