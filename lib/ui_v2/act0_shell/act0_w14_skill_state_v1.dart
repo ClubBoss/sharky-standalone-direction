@@ -79,8 +79,10 @@ const _extensionLessonSkills = <String, List<String>>{
   'post_session_review_loop': ['Session routine'],
   'real_play_transfer_checkpoint': ['Session routine'],
   'decision_over_outcome': ['Mental game'],
+  'decision_price_and_clean_outs': ['Mental game'],
   'tilt_reset_protocol': ['Mental game'],
   'confidence_and_discipline': ['Mental game'],
+  'confidence_river_discipline': ['Mental game'],
   'mindset_bridge_checkpoint': ['Mental game'],
 };
 

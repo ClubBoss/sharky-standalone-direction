@@ -24,10 +24,7 @@ void main() {
       'w12_bad_call_good_result',
       'asm05_new_known_holes_turn_call_10',
       'asm05_new_known_holes_turn_call_40',
-      'w12_river_price_call',
-      'w12_river_ev_costly_call',
       'w12_turn_count_heart_outs',
-      'w12_decision_quality_recap',
     ]);
     expect(lesson.rewardXp, 45);
     for (final task in lesson.taskList.skip(3).take(2)) {

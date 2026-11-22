@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
@@ -107,6 +108,7 @@ Future<int> _openSavedCourseTask(
   required String worldId,
   required String taskId,
   String? legacyLessonId,
+  String? legacyTaskId,
   bool finishTeaching = true,
 }) async {
   final state = Act0ShellStateV1.sample;
@@ -146,7 +148,7 @@ Future<int> _openSavedCourseTask(
       'earnedXp': xp,
       'selectedWorldId': worldId,
       'selectedLessonId': legacyLessonId ?? lesson.lessonId,
-      'selectedTaskId': taskId,
+      'selectedTaskId': legacyTaskId ?? taskId,
     }),
   });
   t.view.physicalSize = const Size(393, 852);
@@ -439,6 +441,42 @@ void main() {
     expect(saved['earnedXp'], xp);
     expect(saved['skippedTaskIds'], isEmpty);
   });
+
+  testWidgets(
+    'pre-beta W12 save skips a retired task and preserves earned XP',
+    (tester) async {
+      const retiredTaskId = 'w12_tilt_after_river_beat';
+      const nextTaskId = 'w12_after_bad_beat_reset';
+      expect(wave6RetiredRowsV1, contains(retiredTaskId));
+      final xp = await _openSavedCourseTask(
+        tester,
+        worldId: 'world_12',
+        taskId: nextTaskId,
+        legacyTaskId: retiredTaskId,
+      );
+      expect(
+        await _tapFirst(tester, [
+          find.byKey(
+            const Key('act0_shell_option_check_from_fear_of_another_loss'),
+          ),
+        ]),
+        isTrue,
+      );
+      final saved = await _saved(tester);
+      expect(saved['selectedTaskId'], nextTaskId);
+      final completed = (saved['completedTaskIds'] as List).toSet();
+      expect(completed, isNot(contains(retiredTaskId)));
+      final retainedXp = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.courseTaskList)
+          .where((task) => completed.contains(task.taskId))
+          .fold<int>(0, (sum, task) => sum + task.rewardXp);
+      expect(saved['earnedXp'], isNonNegative);
+      expect(saved['earnedXp'], xp);
+      expect(saved['earnedXp'], retainedXp);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('P8 keeps progress earned before the full hand moved', (
     tester,
@@ -820,7 +858,7 @@ void main() {
       'a W12 outcome-bias miss reopens reviewing the decision',
       'world_12',
       'w12_checkpoint_process_line',
-      'outcome_only',
+      'fold_after_last_orbit_s_loss',
       'w12_good_fold_bad_result',
     ),
   ]) {
@@ -1304,7 +1342,9 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 43 : (fullRoute ? 448 : 293);
+        final expectedCount = w7ToW8
+            ? 43
+            : (fullRoute ? 448 + wave6TaskDeltaV1 : 293);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

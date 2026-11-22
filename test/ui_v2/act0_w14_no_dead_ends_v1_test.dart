@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
@@ -62,7 +63,10 @@ void main() {
     expect(
       worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
       hasLength(
-        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6TaskDeltaV1,
       ),
     );
     final seen = <String>{};

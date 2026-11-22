@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_path_progress_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
@@ -135,10 +136,12 @@ void main() {
           await tester.pumpAndSettle();
         }
 
+        final secondFirst =
+            pair.throughWorld == 12 && wave6WorldTaskDeltaV1(11) != 0;
         await openDaily();
-        await answer(pair.firstTask);
+        await answer(secondFirst ? pair.secondTask : pair.firstTask);
         await openDaily();
-        await answer(pair.secondTask);
+        await answer(secondFirst ? pair.firstTask : pair.secondTask);
         final prefs = await SharedPreferences.getInstance();
         final saved = jsonDecode(prefs.getString(progressKey)!) as Map;
         expect(saved['completedTaskIds'], unorderedEquals(completedIds));
@@ -194,7 +197,15 @@ void main() {
       }
       expect(
         count,
-        307 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        307 +
+            w11Wave4ChoiceContractV1.length +
+            w12Wave4ChoiceContractV1.length +
+            wave6CurrentRowsV1.values
+                .where((row) => row['identity'][3] == 'drill')
+                .length -
+            wave6PreviousRowsV1.values
+                .where((row) => row['identity'][3] == 'drill')
+                .length,
       );
     },
   );

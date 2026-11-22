@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
     show
         q3AppendedChoicesV1,
@@ -556,11 +557,11 @@ void main() {
       ]);
       expect(row.task.runner.options.map((option) => option.label), [
         'Fold',
-        'Call',
+        wave6WorldTaskDeltaV1(12) == 0 ? 'Call' : 'Call $price BB',
       ]);
       expect(row.task.runner.options.map((option) => option.amountLabel), [
         '',
-        '$price BB',
+        wave6WorldTaskDeltaV1(12) == 0 ? '$price BB' : '',
       ]);
       for (final option in row.task.runner.options) {
         expect(option.isCorrect, option.id == (price == 10 ? 'call' : 'fold'));
@@ -570,7 +571,12 @@ void main() {
               ? Act0FeedbackQualityV1.correct
               : Act0FeedbackQualityV1.wrong,
         );
-        expect(option.preferredLabel, price == 10 ? 'Call' : 'Fold');
+        expect(
+          option.preferredLabel,
+          price == 40
+              ? 'Fold'
+              : (wave6WorldTaskDeltaV1(12) == 0 ? 'Call' : 'Call 10 BB'),
+        );
       }
       final authenticity = _lateWorldRow(row);
       expect(authenticity.category, 'TABLE_ACTION_DECISION');
@@ -615,8 +621,12 @@ void main() {
           taskId: row.task.taskId,
         ),
         price == 10
-            ? 'dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184'
-            : 'ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7',
+            ? (wave6WorldTaskDeltaV1(12) == 0
+                  ? 'dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184'
+                  : 'a9b1856a673365adcb98d36ed0e165d1b760c559cf1134722aadecfdfee2c446')
+            : (wave6WorldTaskDeltaV1(12) == 0
+                  ? 'ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7'
+                  : 'fd2e4b34c743efe3dabbe3796519744cf5d2f851c96141bd29e8a5fb0e48498b'),
       );
       final current = _repairRow(row).intents.single;
       expect(current.mappingType, 'intentional_exact');
@@ -895,12 +905,14 @@ void main() {
       ...w11Wave4ChoiceContractV1,
       ...w12Wave4ChoiceContractV1,
     };
+    final activeAddedContracts = Map.of(addedContracts)
+      ..removeWhere((id, _) => wave6PreviousRowsV1.containsKey(id));
     final addedRows = rows
-        .where((row) => addedContracts.containsKey(row.task.taskId))
+        .where((row) => activeAddedContracts.containsKey(row.task.taskId))
         .toList();
     expect(
       addedRows.map((row) => row.task.taskId).toSet(),
-      addedContracts.keys.toSet(),
+      activeAddedContracts.keys.toSet(),
     );
     final addedWrongChoices = {
       for (final row in addedRows)
@@ -909,18 +921,52 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(363 + addedContracts.length));
-    expect(
-      rows.map((r) => r.task.taskId).toSet(),
-      hasLength(363 + addedContracts.length),
+    final previousLateCount = wave6ContractsV1.values.fold<int>(
+      0,
+      (sum, contract) => sum + (contract['previousAssessed'] as int),
     );
+    final previousLateWrong = wave6ContractsV1.values.fold<int>(
+      0,
+      (sum, contract) => sum + (contract['previousWrong'] as int),
+    );
+    final currentLate = wave6CurrentRowsV1.values
+        .map((entry) => entry['identity'] as List)
+        .where((entry) => (entry[5] as List).length >= 2)
+        .toList();
+    expect(
+      rows
+          .map((row) => row.task.taskId)
+          .toSet()
+          .intersection(wave6RetiredRowsV1.keys.toSet()),
+      isEmpty,
+      reason: 'Retired pre-beta W12 IDs remain in the historical census only.',
+    );
+    final currentLateWrong = {
+      for (final entry in currentLate)
+        for (final option in (entry[5] as List).cast<List>())
+          if (option[2] == false)
+            '${entry[0]}/${entry[1]}/${entry[2]}/${option[0]}',
+    };
+    final expectedRows =
+        363 + addedContracts.length + currentLate.length - previousLateCount;
+    expect(rows, hasLength(expectedRows));
+    expect(
+      allChoices
+          .where((key) => wave6ContractsV1.containsKey(key.split('/').first))
+          .toSet(),
+      currentLateWrong,
+    );
+    expect(rows.map((r) => r.task.taskId).toSet(), hasLength(expectedRows));
     expect(
       allChoices,
       hasLength(
         681 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
-            addedWrongChoices.length,
+            addedWrongChoices.length +
+            _archivedWave4WrongCount(addedContracts) +
+            currentLateWrong.length -
+            previousLateWrong,
       ),
     );
     expect(
@@ -1000,7 +1046,10 @@ void main() {
         643 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
-            addedWrongChoices.length,
+            addedWrongChoices.length +
+            _archivedWave4WrongCount(addedContracts) +
+            currentLateWrong.length -
+            previousLateWrong,
       ),
     );
     expect(
@@ -1032,7 +1081,40 @@ void main() {
   });
 }
 
-List<_Row> _assessedRows({bool historical = false}) => <_Row>[
+int _archivedWave4WrongCount(
+  Map<String, (String, List<List<Object?>>)> wave4,
+) => wave4.entries
+    .where((entry) => wave6PreviousRowsV1.containsKey(entry.key))
+    .fold(
+      0,
+      (sum, entry) =>
+          sum + entry.value.$2.where((option) => option[2] == false).length,
+    );
+
+List<_Row> _assessedRows({bool historical = false}) {
+  final live = _assessedSourceRows(historical: historical);
+  if (!historical || wave6ContractsV1.isEmpty) return live;
+  final byId = {
+    for (final world in Act0ShellStateV1.sample.worlds)
+      for (final lesson in world.lessons)
+        for (final task in lesson.taskList) task.taskId: task,
+  };
+  return [
+    for (var world = 1; world <= 12; world++)
+      if (wave6ContractsV1['world_$world'] case final contract?)
+        for (final record in (contract['historicalCensus'] as List).cast<Map>())
+          _Row(
+            record['world'] as String,
+            record['lesson'] as String,
+            byId[record['id']]!,
+            archived: record.cast<String, dynamic>(),
+          )
+      else
+        ...live.where((row) => row.worldNumber == world),
+  ];
+}
+
+List<_Row> _assessedSourceRows({bool historical = false}) => <_Row>[
   for (final world in Act0ShellStateV1.sample.worlds)
     if (RegExp(r'^world_([1-9]|1[0-2])$').hasMatch(world.worldId))
       for (final lesson in world.lessons)
@@ -1107,6 +1189,13 @@ _RepairRow _repairRow(_Row row, {bool declaredMetadataOnly = false}) {
 }
 
 _IncorrectOptionRow _incorrectOptionRow(_Row row, Act0RunnerOptionV1 option) {
+  if (row.archived case final prior?) {
+    return _IncorrectOptionRow(
+      row,
+      option,
+      Act0RepairIntentV1.tryParse((prior['current'] as Map)[option.id]),
+    );
+  }
   final intent = buildAct0RepairIntentV1(
     sourceWorldId: row.worldId,
     sourceLessonId: row.lessonId,
@@ -1121,6 +1210,15 @@ _IncorrectOptionRow _incorrectOptionRow(_Row row, Act0RunnerOptionV1 option) {
 }
 
 _LateWorldRow _lateWorldRow(_Row row) {
+  if (row.archived case final prior?) {
+    final fields = prior['late'] as List;
+    return _LateWorldRow(
+      fields[0] as String,
+      tableRequired: fields[1] as bool,
+      actionConsequence: fields[2] as bool,
+      terminologyOnly: fields[3] as bool,
+    );
+  }
   final copy = <String>[
     row.task.title,
     row.task.runner.caption,
@@ -1207,7 +1305,9 @@ class _Row {
     this.task, {
     this.omittedChoiceId,
     this.historicalChoices,
+    this.archived,
   });
+  final Map<String, dynamic>? archived;
   final String worldId;
   final String lessonId;
   final Act0LessonTaskV1 task;
@@ -1215,6 +1315,22 @@ class _Row {
   final List<List<Object?>>? historicalChoices;
 
   List<Act0RunnerOptionV1> get options {
+    if (archived != null && !_asm05NewTaskIds.contains(task.taskId)) {
+      final previous = wave6PreviousRowsV1[task.taskId] as Map;
+      final answers = (previous['identity'] as List)[5] as List;
+      return [
+        for (final raw in answers.cast<List>())
+          Act0RunnerOptionV1(
+            id: raw[0] as String,
+            label: raw[1] as String,
+            isCorrect: raw[2] as bool,
+            quality: Act0FeedbackQualityV1.values.byName(raw[3] as String),
+            preferredLabel: raw[4] as String,
+            feedbackTitle: '',
+            feedbackReason: '',
+          ),
+      ];
+    }
     final previous = historicalChoices;
     if (previous != null) {
       return [
@@ -1235,15 +1351,16 @@ class _Row {
   bool get isCheckpoint =>
       lessonId.contains('checkpoint') || task.taskId.contains('checkpoint');
   bool get isRepairTarget =>
-      task.stepKind == Act0LessonStepKindV1.fixMistakes ||
-      task.resolvedTaskFamily == Act0TaskFamilyV1.repair ||
-      task.taskId.contains('repair') ||
-      task.runner.options.any(
-        (option) =>
-            option.repairFocusSeatIds.isNotEmpty ||
-            option.repairFocusCardIds.isNotEmpty ||
-            option.repairFocusLabels.isNotEmpty,
-      );
+      archived?['repairTarget'] as bool? ??
+      (task.stepKind == Act0LessonStepKindV1.fixMistakes ||
+          task.resolvedTaskFamily == Act0TaskFamilyV1.repair ||
+          task.taskId.contains('repair') ||
+          task.runner.options.any(
+            (option) =>
+                option.repairFocusSeatIds.isNotEmpty ||
+                option.repairFocusCardIds.isNotEmpty ||
+                option.repairFocusLabels.isNotEmpty,
+          ));
   Iterable<Act0RunnerOptionV1> get incorrectOptions =>
       options.where((option) => !option.isCorrect);
 }
@@ -1323,6 +1440,9 @@ class _LateWorldRow {
 _RepairRow _declaredRepairRow(_Row row) =>
     _repairRow(row, declaredMetadataOnly: true);
 Act0RepairIntentV1? _declaredIntent(_Row row, Act0RunnerOptionV1 option) {
+  if (row.archived case final prior?) {
+    return Act0RepairIntentV1.tryParse((prior['declared'] as Map)[option.id]);
+  }
   final base = buildAct0RepairIntentV1(
     sourceWorldId: row.worldId,
     sourceLessonId: row.lessonId,
