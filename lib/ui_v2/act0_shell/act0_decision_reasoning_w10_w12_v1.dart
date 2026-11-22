@@ -1127,7 +1127,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
       Act0DecisionReasoningV1(
         taskId: 'spaced_review_w11_post_session_review_loop_pot_to_call_v1',
         kind: Act0DecisionKindV1.table,
-        principleId: 'pot_to_call',
+        principleId: 'price_vs_equity',
         bestAlternativeOptionId: 'fold',
         edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
         opponentRead: 'BB bets sets alongside 45% missed heart draws.',
@@ -1141,7 +1141,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
       Act0DecisionReasoningV1(
         taskId: 'spaced_review_w12_confidence_river_discipline_pot_to_call_v1',
         kind: Act0DecisionKindV1.table,
-        principleId: 'pot_to_call',
+        principleId: 'price_vs_equity',
         bestAlternativeOptionId: 'call',
         edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
         opponentRead: 'BB bets sets alongside 20% missed spade draws.',
