@@ -19,6 +19,7 @@ _SpacedReviewEntryV1 _day7ExampleV1(
   Map<int, String> wrongReasons = const {},
   String caption = '',
   String? savedTaskId,
+  Set<int> suboptimalIndexes = const {},
 }) {
   final answer = choices[correct];
   return (
@@ -65,8 +66,14 @@ _SpacedReviewEntryV1 _day7ExampleV1(
               betterAnswerLabel: index == correct ? '' : answer,
               quality: index == correct
                   ? Act0FeedbackQualityV1.correct
+                  : suboptimalIndexes.contains(index)
+                  ? Act0FeedbackQualityV1.suboptimal
                   : Act0FeedbackQualityV1.wrong,
-              feedbackTitle: index == correct ? 'Correct.' : 'Look again.',
+              feedbackTitle: index == correct
+                  ? 'Correct.'
+                  : suboptimalIndexes.contains(index)
+                  ? 'There is a higher-value option.'
+                  : 'Look again.',
               feedbackReason: index == correct
                   ? reason
                   : wrongReasons[index] ?? reason,
@@ -93,6 +100,7 @@ Act0TableStateV1 _day7PreflopV1(
   String? opener,
   double openBb = 2.5,
   double heroStartingBb = 100,
+  double? openerStartingBb,
   bool allIn = false,
   bool showTurn = false,
 }) {
@@ -106,7 +114,13 @@ Act0TableStateV1 _day7PreflopV1(
     street: street,
     actor: showTurn ? hero : null,
     folded: folded,
-    stacks: {hero: heroStartingBb, if (allIn) opener!: openBb},
+    stacks: {
+      hero: heroStartingBb,
+      if (allIn)
+        opener!: openBb
+      else if (openerStartingBb != null)
+        opener!: openerStartingBb,
+    },
     entries: [
       ..._act0LessonBlinds,
       if (opener != null)
@@ -151,6 +165,7 @@ Act0TableStateV1 _day7PostflopV1(
   double openBb = 2.75,
   double betBb = 0,
   double heroLeadBb = 0,
+  double flopBetAndCallBb = 0,
   double? opponentStartingBb,
   bool opponentAllIn = false,
   bool checkedToHero = false,
@@ -217,6 +232,20 @@ Act0TableStateV1 _day7PostflopV1(
         Act0ContributionKindV1.wager,
         openBb - 1,
       ),
+      if (flopBetAndCallBb > 0) ...[
+        Act0ContributionV1(
+          PokerStreet.flop,
+          opener,
+          Act0ContributionKindV1.wager,
+          flopBetAndCallBb,
+        ),
+        Act0ContributionV1(
+          PokerStreet.flop,
+          caller,
+          Act0ContributionKindV1.wager,
+          flopBetAndCallBb,
+        ),
+      ],
       if (heroLeadBb > 0)
         Act0ContributionV1(
           street,
@@ -245,7 +274,15 @@ Act0TableStateV1 _day7PostflopV1(
           Act0ActionTrailItemV1(
             label: '${pokerStreetToString(prior)}: $first checks',
           ),
-          Act0ActionTrailItemV1(label: '$last checks'),
+          if (prior == PokerStreet.flop && flopBetAndCallBb > 0) ...[
+            Act0ActionTrailItemV1(
+              label: '$last bets ${_act0BbLabelV1(flopBetAndCallBb)}',
+            ),
+            Act0ActionTrailItemV1(
+              label: '$first calls ${_act0BbLabelV1(flopBetAndCallBb)}',
+            ),
+          ] else
+            Act0ActionTrailItemV1(label: '$last checks'),
         ],
       ...current,
     ],

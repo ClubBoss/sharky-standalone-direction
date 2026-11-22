@@ -2,6 +2,128 @@ part of 'act0_shell_state_v1.dart';
 
 final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
+    8,
+    "effective_stack_basics",
+    "pot_to_call",
+    _day7PostflopV1(
+      'co',
+      'Qh Qd',
+      '9d 7s 4s 2c',
+      openBb: 3.75,
+      heroLeadBb: 3,
+      betBb: 10,
+      showTurn: true,
+    ),
+    caption:
+        "BB check-raises the turn only with sets. Assume no further betting.",
+    question: "Call or fold?",
+    choices: const ["Fold", "Call"],
+    correct: 0,
+    reason:
+        "BB raises with sets, so only two queens of 44 rivers win. Fold because a 7 BB call into 21 BB needs 25%.",
+    wrongReasons: const {
+      1: "Calling 7 BB needs 25%. With only about 4.5% wins, the call loses about 5.73 BB.",
+    },
+    savedTaskId: "spaced_review_w8_effective_stack_fold_v1",
+  ),
+  _day7ExampleV1(
+    8,
+    "same_hand_different_depth",
+    "pot_to_call",
+    _day7PostflopV1(
+      'co',
+      'Ah Td',
+      'As 8c 6s 5d 2h',
+      openBb: 3.75,
+      betBb: 9,
+      showTurn: true,
+    ),
+    caption:
+        "BB bets two pair or better 85% of the time and missed spade draws 15% of the time. Your ace beats only the bluffs.",
+    question: "Call or fold?",
+    choices: const ["Call", "Fold"],
+    correct: 1,
+    reason:
+        "BB bets mostly two pair or better, so fold. Calling 9 BB for a final pot of 26 BB needs about 34.6%, above the 15% you win.",
+    wrongReasons: const {
+      0: "Calling 9 BB needs about 34.6% wins. With 15% wins, that call loses 5.10 BB.",
+    },
+    savedTaskId: "spaced_review_w8_depth_fold_v1",
+  ),
+  _day7ExampleV1(
+    8,
+    "format_pressure",
+    "board_cards",
+    _day7PostflopV1(
+      'co',
+      'Ah Kd',
+      'As Tc 7d 5c 2h',
+      openBb: 3.75,
+      opponentStartingBb: 9.75,
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    caption: "BB checks. A pair of tens calls 3 BB. Missed club draws fold.",
+    question: "Which hand pays a 3 BB bet?",
+    choices: const ["A pair of tens", "A missed club draw"],
+    correct: 0,
+    reason:
+        "BB calls with tens because they have a pair. Missed club draws fold to the bet.",
+    wrongReasons: const {
+      1: "A missed club draw folds, so counting it as a call overstates what you can win.",
+    },
+    savedTaskId: "spaced_review_w8_format_value_cap_v1",
+  ),
+  _day7ExampleV1(
+    8,
+    "short_stack_spots",
+    "pot_to_call",
+    _day7PostflopV1(
+      'bb',
+      'Ah 7h',
+      'Kh 9h 6s 3c',
+      openBb: 3.75,
+      betBb: 4,
+      opponentStartingBb: 9.75,
+      showTurn: true,
+    ),
+    caption:
+        "The bettor has 2 BB left after betting. Of 46 rivers, nine win. Assume you lose on a miss, pay no more on a miss, and collect HJ’s last 2 BB on a hit.",
+    question: "Call or fold?",
+    choices: const ["Call", "Fold"],
+    correct: 1,
+    reason:
+        "HJ can pay only another 2 BB on a hit, leaving a 4 BB call worth about minus 0.48 BB. Fold because nine winning rivers in 46 cannot cover that price.",
+    wrongReasons: const {
+      0: "Calling earns only 14 BB on a hit and costs 4 BB on a miss. That loses about 0.48 BB on average.",
+    },
+    savedTaskId: "spaced_review_w8_short_draw_cap_v1",
+  ),
+  _day7ExampleV1(
+    8,
+    "short_stack_spots",
+    "hero_cards_board_pot",
+    _day7PreflopV1(
+      'bb',
+      'Kh Qh',
+      opener: 'btn',
+      openBb: 9,
+      allIn: true,
+      showTurn: true,
+    ),
+    caption:
+        "In this example BTN goes all-in with a range of high pairs and stronger aces. Your stated equity is 30%.",
+    question: "Call or fold?",
+    choices: const ["Fold", "Call"],
+    correct: 0,
+    reason:
+        "BTN bets all-in with high pairs and strong aces, so a call of 8 BB needs about 43%. Fold because the stated 30% falls short.",
+    wrongReasons: const {
+      1: "Calling needs about 43% and loses 2.45 BB on average under the model. Folding keeps the 8 BB.",
+    },
+    savedTaskId: "spaced_review_w8_short_all_in_price_v1",
+  ),
+  _day7ExampleV1(
     7,
     "w7_visible_cards_range_checkpoint",
     "pot_to_call",
@@ -2129,15 +2251,15 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       showTurn: true,
     ),
     caption:
-        'Assume players behind fold. HJ calls a reraise to 9 BB with ATs, but folds it to a shove.',
+        "Assume players behind fold. HJ calls a reraise to 9 BB with ATs, but folds it to an all-in.",
     question: 'Of these actions, which puts more chips from ATs into the pot?',
     choices: const ['Match the 3 BB open', 'Reraise to 9 BB', 'Shove 24 BB'],
     correct: 1,
     reason:
-        'With AKs in the Premium group, the 9 BB reraise gets 6 BB more from the weaker ace in this model. Calling or shoving gets no extra chips from ATs.',
+        "Raise to 9 BB because HJ pays another 6 BB with the weaker suited ace. Match the 3 BB open and that hand adds nothing.",
     wrongReasons: const {
       0: 'Matching the 3 BB open leaves ATs at the amount already committed. Reraising to 9 BB gets 6 BB more from that hand in this model.',
-      2: 'HJ folds ATs when CO moves all-in. The shove gives up the additional chips the smaller reraise would get from ATs.',
+      2: "HJ folds ATs when CO goes all-in. That misses the 6 BB more the smaller reraise gets from ATs.",
     },
   ),
   _day7ExampleV1(
@@ -2264,7 +2386,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Fold', 'Limp for 1 BB', 'Raise to 2.5 BB'],
     correct: 2,
     reason:
-        'Five players are still to act in this six-seat hand. JJ meets the size and position specified in the rule.',
+        "Raise JJ to 2.5 BB from UTG because only five seats remain and some can pay with weaker pairs. Folding misses both those weaker calls and the chance to win the blinds.",
     wrongReasons: const {
       0: 'You have pocket jacks in an unopened six-seat hand. Folding gives up the opening opportunity described by the rule.',
       1: 'Putting in 1 BB matches the blind. The rule asks for a 2.5 BB first raise with jacks and five players behind.',
@@ -2283,15 +2405,14 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       heroBehindBb: 18,
       bbBehindBb: 12,
     ),
-    caption:
-        'BB checks. Under the stated plan, aim to get called by weaker pairs, which will call 2 BB and fold to a shove.',
+    caption: "BB checks. Weaker pairs will call 2 BB and fold to an all-in.",
     question: 'Which bet fits the stated plan?',
     choices: const ['Shove 18 BB', 'Bet 2 BB', 'Bet 12 BB'],
     correct: 1,
     reason:
-        'JJ is an overpair on 9-6-3 and the 2 BB size gets called in this model. BB’s 12 BB behind is the most that a larger shove can put at risk for the weaker pairs.',
+        "Bet 2 BB because BB calls with weaker pairs on 9-6-3. Bet the 12 BB size and BB folds those weaker pairs instead of paying.",
     wrongReasons: const {
-      0: 'BB can match only 12 BB of the shove. The weaker pairs fold to that pressure here, so you miss their smaller calls.',
+      0: "BB can match only 12 BB of the all-in bet. Weaker pairs fold, so you miss their 2 BB calls.",
       2: 'Twelve BB puts BB all-in. Weaker pairs fold to an all-in bet in this model, so the overpair misses their 2 BB calls.',
     },
   ),

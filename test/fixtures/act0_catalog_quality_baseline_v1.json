@@ -3,18 +3,18 @@
   "checks": {
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 231,
-    "13.intro_over_100_words": 79,
-    "14.duplicate_theory_in_lesson": 244,
-    "15.internal_jargon": 476,
-    "16.extreme_wrong_option": 418,
-    "17.single_format_lesson": 66,
+    "13.intro_over_100_words": 80,
+    "14.duplicate_theory_in_lesson": 245,
+    "15.internal_jargon": 487,
+    "16.extreme_wrong_option": 428,
+    "17.single_format_lesson": 67,
     "18.same_format_streak": 12,
-    "19.lesson_length_corridor": 77,
+    "19.lesson_length_corridor": 78,
     "20.hero_qq_per_world": 5,
-    "21.duplicate_wrong_reason": 1191,
-    "22.bet_into_pot": 52,
-    "24.call_equity": 81,
-    "25.street_stack": 30
+    "21.duplicate_wrong_reason": 1211,
+    "22.bet_into_pot": 54,
+    "24.call_equity": 90,
+    "25.street_stack": 26
   },
   "findings": [
     "21.duplicate_wrong_reason|actions_check_drill|call",
@@ -199,67 +199,7 @@
           "w7_river_one_bluff_of_six|choice_2"
         ]
       },
-      "world_8": {
-        "26": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1",
-          "w7_20bb_wider",
-          "w7_6max_wider",
-          "w7_ajs_btn_100bb_transfer",
-          "w7_ajs_btn_25bb_transfer",
-          "w7_format_table_notice",
-          "w7_fullring_tighter"
-        ],
-        "27": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1",
-          "w7_20bb_wider",
-          "w7_6max_wider",
-          "w7_ajs_btn_100bb_transfer",
-          "w7_ajs_btn_25bb_transfer",
-          "w7_format_table_notice",
-          "w7_fullring_tighter"
-        ],
-        "28": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1|choice_1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1|choice_2",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1|choice_1",
-          "w7_20bb_wider|20bb",
-          "w7_ajs_btn_25bb_transfer|cleaner_shallow",
-          "w7_format_table_notice|tighten_early",
-          "w7_fullring_tighter|tighter"
-        ],
-        "29": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1|choice_1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1|choice_2",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1|choice_1",
-          "w7_20bb_wider|20bb",
-          "w7_6max_wider|6max",
-          "w7_ajs_btn_100bb_transfer|more_fragile_deep",
-          "w7_ajs_btn_25bb_transfer|cleaner_shallow",
-          "w7_format_table_notice|tighten_early",
-          "w7_fullring_tighter|tighter"
-        ],
-        "30": [
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1|choice_1",
-          "w7_ajs_btn_100bb_transfer|more_fragile_deep",
-          "w7_ajs_btn_25bb_transfer|cleaner_shallow"
-        ],
-        "31": [
-          "w7_20bb_wider|100bb",
-          "w7_20bb_wider|same",
-          "w7_ajs_btn_100bb_transfer|same_clean_call",
-          "w7_format_table_notice|open_same"
-        ],
-        "36": [
-          "w7_table_effective_notice|total_138",
-          "w7_top_pair_spr2_transfer|ignore_stack_pressure",
-          "w7_top_pair_spr8_transfer|stack_irrelevant",
-          "w8_spr_value_size|two"
-        ]
-      },
+      "world_8": {},
       "world_9": {
         "26": [
           "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1",
@@ -879,11 +819,18 @@
         "w7_river_two_bluffs_of_six"
       ],
       "world_8": [
+        "short_stack_spots_all_in_price",
+        "short_stack_spots_draw_shallow",
+        "short_stack_spots_set_mine",
+        "short_stack_spots_value_cap",
         "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
         "spaced_review_w8_same_hand_different_depth_pot_to_call_v1",
+        "spaced_review_w8_short_all_in_price_v1",
+        "spaced_review_w8_short_draw_cap_v1",
         "w7_20bb_wider",
         "w7_ajs_btn_25bb_transfer",
-        "w7_format_table_notice"
+        "w7_format_table_notice",
+        "w8_unguided_short_read"
       ],
       "world_9": [
         "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1",
@@ -971,6 +918,19 @@
       ],
       "world_7": [
         "w7_river_two_bluffs_of_six"
+      ],
+      "world_8": [
+        "short_stack_spots_all_in_price",
+        "short_stack_spots_draw_shallow",
+        "short_stack_spots_set_mine",
+        "short_stack_spots_value_cap",
+        "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
+        "spaced_review_w8_short_all_in_price_v1",
+        "spaced_review_w8_short_draw_cap_v1",
+        "w7_20bb_wider",
+        "w7_ajs_btn_25bb_transfer",
+        "w7_format_table_notice",
+        "w8_unguided_short_read"
       ]
     }
   },
@@ -1709,7 +1669,6 @@
     "W8|w7_table_effective_notice|effective_stack",
     "W8|w7_top_pair_spr2_transfer|commitment",
     "W8|w7_top_pair_spr2_transfer|push_fold",
-    "W8|w7_top_pair_spr8_transfer|board_texture",
     "W8|w7_top_pair_spr8_transfer|commitment",
     "W8|w8_effective_stack_seat|14",
     "W8|w8_hero_stack_cap_seat|139",
@@ -1727,9 +1686,7 @@
     "W9|w9_bubble_recap|bubble",
     "W9|w9_bubble_recap|exploit",
     "W9|w9_bubble_short_stack|139",
-    "W9|w9_bubble_short_stack|300",
     "W9|w9_bubble_short_stack|action_order",
-    "W9|w9_bubble_short_stack|short_stack",
     "W9|w9_bubble_table_risk_transfer|blind_defense",
     "W9|w9_bubble_table_risk_transfer|commitment",
     "W9|w9_cash_vs_tournament|141",
@@ -1737,7 +1694,6 @@
     "W9|w9_checkpoint_review|commitment",
     "W9|w9_checkpoint_survival_line|359",
     "W9|w9_checkpoint_survival_line|fold_equity",
-    "W9|w9_checkpoint_survival_line|short_stack",
     "W9|w9_checkpoint_table_notice|139",
     "W9|w9_checkpoint_table_notice|steal",
     "W9|w9_checkpoint_zone_line|842",
@@ -1759,10 +1715,8 @@
     "W9|w9_m_ratio_recap|ip_oop",
     "W9|w9_m_ratio_recap|mtt",
     "W9|w9_m_ratio_red_zone_shove|141",
-    "W9|w9_m_ratio_red_zone_shove|300",
     "W9|w9_m_ratio_red_zone_shove|842",
     "W9|w9_m_ratio_red_zone_shove|push_fold",
-    "W9|w9_m_ratio_red_zone_shove|short_stack",
     "W9|w9_m_ratio_red_zone|commitment",
     "W9|w9_m_ratio_table_window_transfer|842",
     "W9|w9_m_ratio_yellow_zone|139",
@@ -1775,7 +1729,6 @@
     "W9|w9_medium_stack_tighten|commitment",
     "W9|w9_prize_model_inputs|winrate",
     "W9|w9_short_stack_survival|14",
-    "W9|w9_short_stack_survival|short_stack",
     "W9|w9_survival_intro|385",
     "W9|w9_survival_intro|842",
     "W9|w9_survival_intro|845",
@@ -1783,7 +1736,6 @@
     "W9|w9_survival_recap|889",
     "W9|w9_survival_recap|bubble",
     "W9|w9_survival_recap|gto",
-    "W9|w9_survival_recap|short_stack",
     "W9|w9_survival_recap|steal",
     "W9|w9_survival_stack_tradeoff|mtt"
   ],

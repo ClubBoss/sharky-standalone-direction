@@ -314,6 +314,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     lessonKeys: <String>{
       'world_8/effective_stack_basics',
       'world_8/spr_and_commitment',
+      'world_8/short_stack_spots',
       'world_8/same_hand_different_depth',
       'world_8/format_pressure',
     },

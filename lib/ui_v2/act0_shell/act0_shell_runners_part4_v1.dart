@@ -218,7 +218,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   teachingSteps: const [],
   lessonId: 'w7_20bb_wider',
   caption:
-      'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
+      "BB checks. You have top pair and want to keep at least 18 BB for later streets, so you can bet for value or respond to pressure on the turn and river.",
   hint: 'Subtract each possible bet from the stack you have left.',
   question: 'Which bet fits your plan?',
   sizingConfig: const Act0SizingConfigV1(
@@ -239,7 +239,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'You keep 18 BB.',
       feedbackReason:
-          'You have 20 BB behind. Betting 2 BB leaves 18 BB for the turn and river.',
+          "BB checks and you have 20 BB behind. Bet 2 BB because the 4 BB size leaves just 16 BB to play later. The smaller size holds 18 BB for a turn or river bet.",
     ),
     Act0RunnerOptionV1(
       id: '100bb',
@@ -250,7 +250,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Four leaves 16 BB.',
       feedbackReason:
-          'Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.',
+          "Betting 4 BB leaves just 16 BB to play later. The 2 BB bet keeps the 18 BB you want.",
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -261,7 +261,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'All-in leaves nothing behind.',
       feedbackReason:
-          'At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to go all-in.',
+          "An all-in risks the full 20 BB and leaves nothing for later bets. The 2 BB bet keeps 18 BB.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -457,7 +457,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A-T suited calls the raise.',
       feedbackReason:
-          'Under the stated rule, A-T suited pays the extra 5 BB. Both players then have 17.5 BB behind. The best line against CO’s full range would depend on what else opens and responds to a raise.',
+          "CO calls the 7.5 BB raise with A-T suited but folds to an all-in. That gains 5 BB from that hand; the best line overall depends on CO’s full range.",
     ),
     Act0RunnerOptionV1(
       id: 'same_as_100',
@@ -513,7 +513,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A call keeps the weaker aces in.',
       feedbackReason:
-          'Under the stated rule, a call keeps weaker aces in and leaves both players 97.5 BB behind. The best line against CO’s full range depends on the mix of hands and how they play later.',
+          "Call 2.5 BB because CO keeps weaker aces in. Raising folds them out and invites stronger hands to raise again. Profit overall depends on CO’s full range.",
     ),
     Act0RunnerOptionV1(
       id: 'same_clean_call',
@@ -524,7 +524,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A raise folds the hands you want to keep.',
       feedbackReason:
-          'In this example CO folds the weaker aces to either raise and raises again with stronger hands such as A-Q.',
+          "Raising folds weaker aces and brings in a reraise from stronger aces. Calling keeps the weaker hands in for 2.5 BB.",
     ),
     Act0RunnerOptionV1(
       id: 'shove_now',
@@ -795,7 +795,7 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Depth changed the job.',
       feedbackReason:
-          'The board and hand stayed the same, but SPR did not. At SPR 2, low room changes the pressure and makes the hand much closer to commitment than at SPR 8.',
+          "Comparing this with SPR 8 misses how much the same bet uses from a smaller stack. With 16 BB behind and 8 BB in the pot, one bet moves you closer to playing for the whole stack.",
     ),
     Act0RunnerOptionV1(
       id: 'ignore_stack_pressure',
@@ -854,7 +854,7 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tempting shortcut.',
       feedbackReason:
-          'Top pair makes this answer tempting, but SPR changes the structure. At SPR 8, one bet does not commit the hand the way SPR 2 can.',
+          "Treating this like SPR 2 risks building a large pot with one pair. With 64 BB behind, you can still fold if BB puts much more in.",
     ),
     Act0RunnerOptionV1(
       id: 'stack_irrelevant',
@@ -865,7 +865,7 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Only part of the picture.',
       feedbackReason:
-          'Board texture still matters, but stack depth changes how much that one-pair hand can safely absorb across later streets.',
+          "Ignoring depth risks paying off a stronger hand over several rounds of betting. At SPR 8, top pair can keep the pot smaller before BB commits a large stack.",
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -944,7 +944,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "You are first to act. What fits this table?",
   feedbackTitle: "Count the players behind.",
   feedbackReason:
-      "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
+      "Open AJs for 2.5 BB because only five players act after UTG and they may fold and leave the blinds. Folding passes up that chance when fewer players remain who might hold a stronger hand.",
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Jd'),
     centerLabel: 'Read the seats',
@@ -959,7 +959,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Five players are left to act.",
       feedbackReason:
-          "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
+          "Open AJs for 2.5 BB because only five players act after UTG and they may fold and leave the blinds. Folding passes up that chance when fewer players remain who might hold a stronger hand.",
     ),
     Act0RunnerOptionV1(
       id: 'fullring',
@@ -995,7 +995,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What fits the nine-player version of this hand?",
   feedbackTitle: "More players can act after you.",
   feedbackReason:
-      "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
+      "Fold AJs because eight players still act from UTG, increasing the chance someone has a stronger ace or a high pair. Raising to 2.5 BB risks chips against more possible callers and reraises.",
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ah Jh'),
     centerLabel: 'Read the seats',
@@ -1010,7 +1010,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Eight players are left to act.",
       feedbackReason:
-          "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
+          "Fold AJs because eight players still act from UTG, increasing the chance someone has a stronger ace or a high pair. Raising to 2.5 BB risks chips against more possible callers and reraises.",
     ),
     Act0RunnerOptionV1(
       id: 'wider',
@@ -1046,7 +1046,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which bet fits that plan?",
   feedbackTitle: "Track what remains after a call.",
   feedbackReason:
-      "With 18 BB and 42 BB behind, a 6 BB bet and call leave 12 BB and 36 BB. Both are above 9 BB.",
+      "Bet 6 BB because BB can call while your shorter stack keeps 12 BB. The 10 BB size leaves just 8 BB, below the amount you want for later bets.",
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Td'),
     boardCards: _act0LessonCardsV1('Ac 8h 4s'),
@@ -1088,7 +1088,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The shorter stack would have 8 BB.",
       feedbackReason:
-          "After matching 10 BB, your 18 BB stack would have 8 BB left. That is below the target.",
+          "Betting 10 BB leaves just 8 BB if called and misses the target. A 6 BB bet holds 12 BB for later.",
     ),
     Act0RunnerOptionV1(
       id: 'tighten_early',
@@ -1098,7 +1098,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Both players keep enough chips.",
       feedbackReason:
-          "With 18 BB and 42 BB behind, a 6 BB bet and call leave 12 BB and 36 BB. Both are above 9 BB.",
+          "Bet 6 BB because BB can call while your shorter stack keeps 12 BB. The 10 BB size leaves just 8 BB, below the amount you want for later bets.",
     ),
     Act0RunnerOptionV1(
       id: 'depth_only',
