@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
@@ -418,3 +419,132 @@ Set<ChartFindingV1> chartCatalogFindingsV1(Iterable<CatalogTask> catalog) => {
       ...chartCopyFindingsV1(row.task.taskId, text),
   ],
 };
+
+typedef OpeningRangeClaimV1 = ({
+  String source,
+  Act0ChartSeatV1 seat,
+  String family,
+  List<String> examples,
+  String quote,
+});
+
+final _openingRangeClaim = RegExp(
+  '\\b($_seatText)\\s+(?:(?:can|may|could)\\s+(?:open|raise|bet)|opens|raises|bets)'
+  r'\s+(?:with\s+)?(?:some\s+)?(?:weaker|lower)\s+'
+  r'((?:pocket\s+)?pairs?|aces?|kings?|queens?|jacks?|'
+  r'(?:(?:unpaired|suited|offsuit)\s+)?hands?|high cards?)\b',
+  caseSensitive: false,
+);
+final _openingExamples = RegExp(
+  '(?:such as|like|including)\\s+'
+  '($_handText(?:(?:,\\s*(?:and\\s+|or\\s+)?|\\s+(?:and|or)\\s+)$_handText)*)'
+  r'(?![a-zA-Z0-9])',
+);
+
+Iterable<OpeningRangeClaimV1> openingRangeClaimsV1(CatalogTask row) sync* {
+  final runner = row.task.runner;
+  // A preflop opening chart cannot establish a flop betting range or an
+  // opponent-specific adaptation. Reuse the chart's covered source prefix.
+  if (decisionStreetV1(runner.table) != PokerStreet.preflop) return;
+  final prefix = chartPrefixV1(row);
+  if (prefix == Act0ChartPrefixV1.notCovered) return;
+  final optionReasons = runner.options.map((o) => o.feedbackReason).toSet();
+  final sources = {
+    for (final option in runner.options) option.id: option.feedbackReason,
+    if (!optionReasons.contains(runner.feedbackReason))
+      'runner': runner.feedbackReason,
+    if (act0DecisionReasoningV1[row.task.taskId]?.opponentRead case final read?)
+      'opponentRead': read,
+  };
+  for (final MapEntry(key: source, value: text) in sources.entries) {
+    for (final match in _openingRangeClaim.allMatches(text)) {
+      final seat = _seat(match[1]!)!;
+      if (seat.index > Act0ChartSeatV1.btn.index) {
+        continue;
+      }
+      // Examples must follow the claim. A hand mentioned in another clause
+      // might be the hero's hand, a later caller, or a different chart row.
+      final tail = text.substring(match.end).trimLeft();
+      final sample = _openingExamples.matchAsPrefix(tail);
+      yield (
+        source: source,
+        seat: seat,
+        family: match[2]!.toLowerCase(),
+        examples: [
+          if (sample != null)
+            for (final hand in _handPattern.allMatches(sample[1]!)) hand[1]!,
+        ],
+        quote: match[0]! + (sample == null ? '' : ' ${sample[0]}'),
+      );
+    }
+  }
+}
+
+bool _matchesRangeComparison(String hand, String hero, String family) {
+  final high = act0ChartRanksV1.indexOf(hand[0]);
+  final low = act0ChartRanksV1.indexOf(hand[1]);
+  final heroHigh = act0ChartRanksV1.indexOf(hero[0]);
+  final heroLow = act0ChartRanksV1.indexOf(hero[1]);
+  if (family.endsWith('pair') || family.endsWith('pairs')) {
+    return high == low && heroHigh == heroLow && high > heroHigh;
+  }
+  final rank = switch (family) {
+    'ace' || 'aces' => 'A',
+    'king' || 'kings' => 'K',
+    'queen' || 'queens' => 'Q',
+    'jack' || 'jacks' => 'J',
+    _ => null,
+  };
+  if (rank != null) {
+    return hand[0] == rank && hero[0] == rank && low > heroLow;
+  }
+  // Rank comparison only. This is not a solver or an ordering of equities
+  // across unrelated suited and offsuit holdings.
+  return high != low &&
+      high >= heroHigh &&
+      low >= heroLow &&
+      (high > heroHigh || low > heroLow) &&
+      (!family.startsWith('suited') || hand.endsWith('s')) &&
+      (!family.startsWith('offsuit') || hand.endsWith('o'));
+}
+
+Iterable<ChartFindingV1> auditOpeningRangeClaimsV1(CatalogTask row) sync* {
+  final hero = _heroHand(row.task.runner.table);
+  if (hero == null) return;
+  for (final claim in openingRangeClaimsV1(row)) {
+    final isRankFamily =
+        claim.family.endsWith('pair') ||
+        claim.family.endsWith('pairs') ||
+        const {
+          'ace',
+          'aces',
+          'king',
+          'kings',
+          'queen',
+          'queens',
+          'jack',
+          'jacks',
+        }.contains(claim.family);
+    final candidates = claim.examples.isNotEmpty
+        ? claim.examples
+        : isRankFamily
+        ? act0ChartHandsV1
+        : const <String>[];
+    bool supportsClaim(String hand) =>
+        act0ChartActionV1(hand, claim.seat, Act0ChartPrefixV1.unopened) ==
+            Act0ChartActionV1.raise &&
+        _matchesRangeComparison(hand, hero, claim.family);
+    final supported = claim.examples.isEmpty
+        ? candidates.any(supportsClaim)
+        : candidates.every(supportsClaim);
+    if (!supported) {
+      yield (
+        rule: 'G1·44',
+        id: row.task.taskId,
+        detail:
+            '${claim.source}: "${claim.quote}" versus $hero. '
+            'Use a chart-backed example or explain the decision with price and position.',
+      );
+    }
+  }
+}

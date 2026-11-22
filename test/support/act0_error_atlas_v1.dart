@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'act0_catalog_chart_audit_v1.dart';
 import 'act0_catalog_concept_order_v1.dart';
 import 'act0_catalog_decision_copy_v1.dart';
 import 'act0_catalog_learner_copy_v1.dart';
@@ -72,7 +73,7 @@ void _writeReport(
     '| E01 | Целостность строк чарта | G1·43; межформенная проверка — Lane A |',
     '| E02 | Оценка против чарта | G1·41 / catalog starting chart: ${truthFindings('2.starting_chart')} находок на ${truth.checks['2.starting_chart'] ?? 0} проверках |',
     '| E03 | Текст против чарта | Отдельная проверка G1·42 |',
-    '| E04 | Места и размер в разборе | G1·39–40: ${rows.expand(auditDecisionCopyV1).length} |',
+    '| E04 | Место героя, действующее место и размер в разборе | G1·39–40: ${rows.expand(auditDecisionCopyV1).length} |',
     '| E05 | Относительное место | G1 relative seat copy: ${rows.expand((r) => catalogRelativeSeatFindingsV1(r.task)).length} |',
     '| E06 | Коды миров | G1 world codes: ${rows.expand((r) => catalogWorldCodeFindingsV1(r.task)).length} |',
     '| E07 | Числа банка и цены | Отдельная проверка G1 decision copy numbers |',
@@ -96,6 +97,7 @@ void _writeReport(
     '| E25 | Карты перекрывает интерфейс | D8, визуальное доказательство отдельно |',
     '| E26 | Пороги M-ratio | Спека W9, проверка содержания |',
     '| E27 | Доступность скриптов ревью | Проверка рабочего окружения |',
+    '| E28 | Младшие руки в диапазоне открытия | G1·44: ${rows.expand(auditOpeningRangeClaimsV1).length} находок в ${rows.expand(openingRangeClaimsV1).length} утверждениях в области стартового чарта |',
     '',
     '## E13 — расхождения',
     '',
