@@ -1973,6 +1973,61 @@ final _w8EffectiveStackSeatRunner = _w7EffectiveStackIntroRunner.copyWith(
   ],
 );
 
+Act0RunnerStateV1 _w8StackSeatDecisionV1({
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required String answer,
+  required Map<String, (String, String)> feedback,
+}) {
+  final preferred = feedback[answer]!.$1;
+  final completedFlop = answer == table.heroSeatId;
+  return _w8EffectiveStackSeatRunner.copyWith(
+    lessonId: id,
+    caption: caption,
+    question: question,
+    table: table.copyWith(
+      activeSeatId: completedFlop ? '' : table.activeSeatId,
+      clearDecisionSeatId: completedFlop,
+      handContributions: table.handContributions,
+      actionTrail: [
+        ...table.actionTrail,
+        if (completedFlop)
+          Act0ActionTrailItemV1(label: '${answer.toUpperCase()} checks'),
+      ],
+      seats: completedFlop
+          ? [
+              for (final seat in table.seats)
+                _act0CopySeatStateV1(seat, isActive: false, hasActed: true),
+            ]
+          : table.seats,
+      highlightedSeatIds: const [],
+      selectableSeatIds: feedback.keys.toList(),
+    ),
+    feedbackTitle: 'The smaller stack sets the limit.',
+    feedbackReason: feedback[answer]!.$2,
+    options: [
+      for (final entry in feedback.entries)
+        Act0RunnerOptionV1(
+          id: entry.key,
+          seatId: entry.key,
+          label: entry.value.$1,
+          isCorrect: entry.key == answer,
+          quality: entry.key == answer
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          preferredLabel: preferred,
+          betterAnswerLabel: entry.key == answer ? '' : preferred,
+          feedbackTitle: entry.key == answer
+              ? 'The smaller stack sets the limit.'
+              : 'Compare the chips behind each live seat.',
+          feedbackReason: entry.value.$2,
+        ),
+    ],
+  );
+}
+
 final _w8SprValueSizeRunner = _w7SprIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w8_spr_value_size',
@@ -2103,6 +2158,44 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.compare,
       ),
       Act0LessonTaskV1(
+        taskId: 'w8_hero_stack_cap_seat',
+        title: 'Find the stack that caps the bet',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8StackSeatDecisionV1(
+          id: 'w8_hero_stack_cap_seat',
+          caption:
+              'Only you and the big blind saw the flop. Compare the chips behind.',
+          question:
+              'Tap the seat that caps how much either player can still win from the other.',
+          table: _act0BoardLessonTableV1(
+            openingSeat: 'hj',
+            heroCards: _act0LessonCardsV1('Ac 9h'),
+            boardCards: _act0LessonCardsV1('Ad 8s 4c'),
+            centerLabel: 'Read the stacks',
+            heroBehindBb: 22,
+            bbBehindBb: 65,
+          ),
+          answer: 'hj',
+          feedback: const {
+            'hj': (
+              'Hijack',
+              'You have 22 BB left in HJ. BB can match those 22 BB, so that is the most either live seat can add against the other.',
+            ),
+            'sb': (
+              'Small blind',
+              'SB folded. Including that seat would use chips no live player can win during this flop.',
+            ),
+            'bb': (
+              'Big blind',
+              'BB can still bet 65 BB and you can match only 22 BB. Using 65 BB overstates how much BB could win from you by 43 BB.',
+            ),
+          },
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w7_effective_stack_recap',
         title: 'Effective stack recap',
         phase: Act0LessonPhaseV1.review,
@@ -2194,6 +2287,44 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         runner: _w7DepthShiftRecapRunner,
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.review,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w8_pot_bet_committed_seat',
+        title: 'Find who would be all-in',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w8StackSeatDecisionV1(
+          id: 'w8_pot_bet_committed_seat',
+          caption: 'Imagine you bet one pot and your opponent calls.',
+          question:
+              'Tap the seat that would have zero chips left after the call.',
+          table: _act0BoardLessonTableV1(
+            openingSeat: 'co',
+            heroCards: _act0LessonCardsV1('Jc Td'),
+            boardCards: _act0LessonCardsV1('Js 6h 2d'),
+            centerLabel: 'Read the pot and stacks',
+            openBb: 2.75,
+            heroBehindBb: 42,
+            bbBehindBb: 6,
+          ),
+          answer: 'bb',
+          feedback: const {
+            'co': (
+              'Cutoff',
+              'CO starts with 42 BB behind and would keep 36 BB after betting 6 BB. Selecting CO hides the remaining chips.',
+            ),
+            'bb': (
+              'Big blind',
+              'BB has 6 BB left. Calling the 6 BB bet would use that entire stack.',
+            ),
+            'sb': (
+              'Small blind',
+              'SB folded preflop, so no extra chips come from that seat after the flop bet.',
+            ),
+          },
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
       ),
     ],
   ),

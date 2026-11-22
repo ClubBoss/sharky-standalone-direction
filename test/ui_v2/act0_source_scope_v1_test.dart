@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(399));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(399));
+    expect(tasks, hasLength(401));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(401));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -310,7 +310,7 @@ void main() {
             task.taskId != 'w8_effective_stack_seat' &&
             task.taskId != 'w8_spr_value_size',
       ),
-      hasLength(368),
+      hasLength(370),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -533,8 +533,8 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 247);
-    expect(played, 277); // Authored contexts, not certified replay histories.
+    expect(legacyPlayed, 249);
+    expect(played, 279); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',

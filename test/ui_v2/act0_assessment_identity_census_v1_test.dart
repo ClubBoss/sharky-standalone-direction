@@ -32,8 +32,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(399));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(399));
+    expect(tasks, hasLength(401));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(401));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -96,7 +96,7 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(399));
+    expect(entries, hasLength(401));
     const boardRepair = 'first_table_guide_shared_cards_repair';
     expect(entries.singleWhere((row) => row[2] == boardRepair), [
       'world_1',
@@ -273,6 +273,30 @@ void main() {
       }
     }
     const w8Additions = {
+      'w8_hero_stack_cap_seat': [
+        'world_8',
+        'effective_stack_basics',
+        'w8_hero_stack_cap_seat',
+        'drill',
+        'practice',
+        [
+          ['hj', 'Hijack', true, 'correct', 'Hijack'],
+          ['sb', 'Small blind', false, 'wrong', 'Hijack'],
+          ['bb', 'Big blind', false, 'wrong', 'Hijack'],
+        ],
+      ],
+      'w8_pot_bet_committed_seat': [
+        'world_8',
+        'same_hand_different_depth',
+        'w8_pot_bet_committed_seat',
+        'drill',
+        'practice',
+        [
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['sb', 'Small blind', false, 'wrong', 'Big blind'],
+        ],
+      ],
       'w8_effective_stack_seat': [
         'world_8',
         'effective_stack_basics',
@@ -1987,7 +2011,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(399));
+    expect(taskIndex, hasLength(401));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

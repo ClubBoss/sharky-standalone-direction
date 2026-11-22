@@ -189,8 +189,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 112),
-      ('D3.to_call_completeness', 112),
+      ('D2.pot_feasibility', 114),
+      ('D3.to_call_completeness', 113),
     ]) {
       final proof = rows
           .where(
@@ -1216,6 +1216,22 @@ void main() {
         {...w3Option('two'), 'quality': 'suboptimal'},
         w3Option('four', correct: true),
         w3Option('eight'),
+      ],
+    };
+    expectedComparison['w8_hero_stack_cap_seat'] = {
+      'rewardXp': 8,
+      'family': 'compare',
+      'options': [
+        for (final choice in ['hj', 'sb', 'bb'])
+          w3Option(choice, seat: choice, correct: choice == 'hj'),
+      ],
+    };
+    expectedComparison['w8_pot_bet_committed_seat'] = {
+      'rewardXp': 8,
+      'family': 'compare',
+      'options': [
+        for (final choice in ['co', 'bb', 'sb'])
+          w3Option(choice, seat: choice, correct: choice == 'bb'),
       ],
     };
     expect(
