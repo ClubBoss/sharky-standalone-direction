@@ -1920,7 +1920,7 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "First seat choice",
       body:
-          "First-in chart: Premium AA–QQ and AKs, plus Strong JJ–TT, AKo, AQs and AJs, open from UTG to BTN. Medium AQo, AJo, KQ and AT open from HJ to BTN. Medium 99–22, KJ, QJs, KT and QT open from CO to BTN. Fold Weak hands.",
+          "First-in chart: Premium AA–QQ and AKs, plus Strong JJ–TT, AKo, AQs and AJs, open from UTG to BTN. Medium AQo, AJo, KQ and AT open from HJ to BTN. Medium 99–22, KJ, QJ, KT and QT open from CO to BTN. Fold Weak hands.",
     ),
   ],
   options: const [
@@ -3306,7 +3306,7 @@ final _w10NitTagRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "Read both blinds",
       body:
-          "In the first-in chart, open Premium (AA–QQ and AKs) or Strong (JJ–TT, AKo, AQs and AJs) from UTG through BTN. Open Medium AQo, AJo, KQ and AT from HJ through BTN. Open Medium 99–22, KJ, QJs, KT and QT from CO or BTN. Fold Weak hands. This drill gives a rare exception based on who is left to act.",
+          "In the first-in chart, open Premium (AA–QQ and AKs) or Strong (JJ–TT, AKo, AQs and AJs) from UTG through BTN. Open Medium AQo, AJo, KQ and AT from HJ through BTN. Open Medium 99–22, KJ, QJ, KT and QT from CO or BTN. Fold Weak hands. This drill gives a rare exception based on who is left to act.",
     ),
   ],
   options: const [
@@ -9717,7 +9717,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'QJo is Weak in the opening chart and is behind UTG\'s QQ+/AK. A reset keeps your 28 BB for a better spot.',
+        'QJo is far behind UTG\'s QQ+/AK. A reset keeps your 28 BB for a better spot.',
       ),
       (
         'call_3_bb_to_win_chips_back',

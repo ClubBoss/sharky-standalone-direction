@@ -29,13 +29,13 @@ const _openingRules =
       ),
       (
         group: _OpeningGroup.medium,
-        entries: ['99–22', 'KJ', 'QJ suited', 'KT', 'QT'],
+        entries: ['99–22', 'KJ', 'QJ', 'KT', 'QT'],
         firstSeat: 'CO',
       ),
     ];
 const _openerSeats = ['HJ', 'CO'];
 const _callerSeat = 'BTN';
-const _callHands = ['KQo', 'KJs', 'QJs'];
+final _callHands = act0ChartButtonCallsV1.toList(growable: false);
 const _weakGroup = 'Weak';
 
 String _groupName(_OpeningGroup group) =>
