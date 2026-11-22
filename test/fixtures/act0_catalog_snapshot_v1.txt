@@ -3500,7 +3500,7 @@ Q: Which choice earns more?
 HINT [hidden]: (none)
 TABLE: Turn | You Qd Jd | Board Qs 9c 5h 2d | Pot 12 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 6
-POTS: main 6 (BB, CO)
+POTS: main 18 (BB, CO)
 REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity 1.2 BB · stack_matters true · assumption Assume you win 40% and never tie.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Jd stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB all-in 6 BB
@@ -5081,7 +5081,7 @@ Q: BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 11 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 3
-POTS: main 8 (BB, BTN)
+POTS: main 14 (BB, BTN)
 REASONING: principle price_vs_equity · alt choice_2 · edge priceBeatsEquity 0.81818182 BB · stack_matters false · assumption Suppose BB holds K♣ Q♠.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 3 BB
@@ -5095,7 +5095,7 @@ Q: BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 14 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 6
-POTS: main 8 (BB, BTN)
+POTS: main 20 (BB, BTN)
 REASONING: principle price_vs_equity · alt choice_1 · edge equityBelowPrice 0.54545455 BB · stack_matters false · assumption Suppose BB holds K♣ Q♠.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 6 BB
@@ -5111,7 +5111,7 @@ Q: BB is all-in and could have any of these equally likely hands: K♥ Q♦, K�
 HINT [theoryOnly]: (none)
 TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts one pair, top pair
 EFFECTIVE: BB 4
-POTS: main 8 (BB, BTN)
+POTS: main 16 (BB, BTN)
 REASONING: principle price_vs_equity · alt choice_1 · edge equityBelowPrice 1.33333 BB · stack_matters false · assumption could have any of these equally likely hands
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 4 BB
@@ -5127,7 +5127,7 @@ Q: BB is all-in and could have any of these equally likely hands: K♥ Q♦, K�
 HINT [theoryOnly]: (none)
 TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts one pair, top pair
 EFFECTIVE: BB 4
-POTS: main 8 (BB, BTN)
+POTS: main 16 (BB, BTN)
 REASONING: principle price_vs_equity · alt choice_2 · edge priceBeatsEquity 1.33333 BB · stack_matters true · assumption could have any of these equally likely hands
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 4 BB
@@ -5157,7 +5157,7 @@ Q: What is your decision?
 HINT [hidden]: (none)
 TABLE: River | You Qh Jd | Board Qs 9c 7d 4h Ac | Pot 12 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair
 EFFECTIVE: BB 4
-POTS: main 8 (BB, CO)
+POTS: main 16 (BB, CO)
 REASONING: principle combos_and_blockers · alt fold · edge priceBeatsEquity 6.66666667 BB · stack_matters false · assumption Before the river, BB could bet A♣ Q♦, K♥ Q♦, Q♣ T♦ or T♥ 8♥. Give all hands still possible equal weight.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qh Jd stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 4 BB
@@ -5173,7 +5173,7 @@ Q: BB is all-in. Before the river, BB could have T♣ 8♣, T♠ 8♠, T♦ 8♦
 HINT [theoryOnly]: (none)
 TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts set, pocket pair
 EFFECTIVE: BB 5
-POTS: main 8 (BB, BTN)
+POTS: main 18 (BB, BTN)
 REASONING: principle combos_and_blockers · alt choice_1 · edge equityBelowPrice 0.5 BB · stack_matters false · assumption Give all hands that are still possible equal weight.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 5 BB
@@ -6448,7 +6448,7 @@ Q: Call or fold?
 HINT [always]: Find the share of missed draws that your king beats, then compare it with the price.
 TABLE: River | You Kh Qd | Board Ks Jc 8s 6d 2c | Pot 14 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 6
-POTS: main 8 (BB, CO)
+POTS: main 20 (BB, CO)
 REASONING: principle one_adjustment · alt fold · edge priceBeatsEquity 4 BB · stack_matters true · assumption BB is all-in for 6 BB. Half the bets are missed spade draws you beat; half are sets. The call price is 30%.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qd stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 6 BB
@@ -6605,7 +6605,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Kh Qd | Board Ks Jc 8s 6d 2c | Pot 14 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 6
-POTS: main 8 (BB, CO)
+POTS: main 20 (BB, CO)
 REASONING: principle one_adjustment · alt call · edge equityBelowPrice 4 BB · stack_matters true · assumption BB is all-in for 6 BB. Missed spade draws you beat are 10%; sets are 90%. The call price is 30%.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh Qd stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 6 BB
@@ -7061,7 +7061,7 @@ Q: Call or fold at this SPR?
 HINT [hidden]: (none)
 TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, overpair, pocket pair, rainbow
 EFFECTIVE: BB 11.5
-POTS: main 5.5 (BB, HJ)
+POTS: main 28.5 (BB, HJ)
 REASONING: principle stack_depth_changes_play · alt fold · edge priceBeatsEquity 7.025 BB · stack_matters true · assumption Flop SPR is 2.1. BB goes all-in with 8x or 99 four times as often as sets. Assume JJ wins 65%.
 SEATS: UTG folded stack 63 BB | HJ Jc Jh stack 11.5 BB | CO folded stack 55 BB | BTN folded dealer stack 50 BB | SB folded stack 44.5 BB | BB stack 0 BB allIn 11.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB all-in 11.5 BB
@@ -7158,7 +7158,7 @@ Q: Call 9 BB or fold?
 HINT [always]: Ask which opponents can win each pot after you call.
 TABLE: Turn | You Qc Qd | Board Js 8d 4h 2c | Pot 21.5 BB | To call 9 BB | Seat BTN | Active btn | Decision btn | Facts one pair, overpair, pocket pair
 EFFECTIVE: HJ 27 · BB 3
-POTS: main 9.5 (BB, HJ, BTN) · side 6 (BB, HJ)
+POTS: main 18.5 (BB, HJ, BTN) · side 12 (HJ, BTN)
 REASONING: principle multiway_tighten · alt fold · edge priceBeatsEquity 2.45238095 BB · stack_matters true · assumption A side pot is a separate pot for players who can match the extra bet. HJ means hijack. That player holds a pair of jacks. BB is all-in for 3 BB with a set and HJ raises to 9 BB. Every remaining river card is equally likely and nobody bets after a call.
 SEATS: UTG folded stack 100 BB | HJ Jd Tc stack 18 BB raise 9 BB | CO folded stack 100 BB | BTN dealer Qc Qd stack 37 BB | SB folded stack 99.5 BB | BB 8c 8s stack 0 BB allIn 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB · CO folds · BTN calls 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · HJ checks · BTN checks · Turn: BB all-in 3 BB · HJ raises to 9 BB
@@ -7183,7 +7183,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Kd Tc | Board Kc 9d 6d 5h 2c | Pot 13.5 BB | To call 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 6
-POTS: main 7.5 (BB, CO)
+POTS: main 19.5 (BB, CO)
 REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 3.075 BB · stack_matters true · assumption In this exercise, BB is all-in for 6 BB. Missed draws you beat are 15% of the bets; sets are 85%. No ties.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Tc stack 96.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.5 BB · BTN folds · SB folds · BB calls 2.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 6 BB
@@ -7280,7 +7280,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Facts one pair, overpair, pocket pair, rainbow
 EFFECTIVE: CO 10
-POTS: main 6.5 (BB, CO)
+POTS: main 26.5 (BB, CO)
 REASONING: principle stack_depth_changes_play · alt fold · edge priceBeatsEquity 5.9 BB · stack_matters true · assumption CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO goes all-in with 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.
 SEATS: UTG folded stack 64 BB | HJ folded stack 60 BB | CO stack 0 BB allIn 10 BB | BTN folded dealer stack 55 BB | SB folded stack 53.5 BB | BB Td Th stack 10 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO all-in 10 BB
@@ -7684,7 +7684,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Ad Th | Board As 9h 7h 4d 2c | Pot 12.5 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 5
-POTS: main 7.5 (BB, CO)
+POTS: main 17.5 (BB, CO)
 REASONING: principle process_over_outcome · alt fold · edge priceBeatsEquity 1.125 BB · stack_matters true · assumption In this exercise, BB is all-in for 5 BB. Missed draws you beat are 35% of the bets; sets are 65%. No ties.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad Th stack 96.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.5 BB · BTN folds · SB folds · BB calls 2.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 5 BB
@@ -8136,7 +8136,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Jd Th | Board Js 8h 6h 4c 2d | Pot 12 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 5
-POTS: main 7 (BB, CO)
+POTS: main 17 (BB, CO)
 REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity 2.65 BB · stack_matters true · assumption BB bets the last 5 BB. Missed heart draws make up 45% of the bets and sets make up 55%. Your pair wins only against the missed draws.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jd Th stack 96.75 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.25 BB · BTN folds · SB folds · BB calls 2.25 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 5 BB
@@ -8153,7 +8153,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Ah 9d | Board Ac 7s 6s 3h 2c | Pot 11.5 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 5
-POTS: main 6.5 (BB, CO)
+POTS: main 16.5 (BB, CO)
 REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 1.7 BB · stack_matters true · assumption BB bets the last 5 BB. Missed spade draws make up 20% of the bets and sets make up 80%. Your pair wins only against the missed draws.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah 9d stack 97 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 5 BB
@@ -8170,7 +8170,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Qd Th | Board Qc 9s 7s 6d 3c | Pot 15 BB | To call 7 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 7
-POTS: main 8 (BB, CO)
+POTS: main 22 (BB, CO)
 REASONING: principle one_adjustment · alt call · edge equityBelowPrice 2.6 BB · stack_matters true · assumption BB bets the last 7 BB. Missed spade draws account for 20% of the bets and sets for 80%. Your queen beats only the bluffs.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Th stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 7 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 7 BB
@@ -8283,7 +8283,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Th 9d | Board Ts 8c 5d 2h Kc | Pot 12 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair
 EFFECTIVE: BB 4
-POTS: main 8 (BB, CO)
+POTS: main 16 (BB, CO)
 REASONING: principle combos_and_blockers · alt fold · edge priceBeatsEquity 6.66666667 BB · stack_matters false · assumption Before the river, BB could bet K♣ T♦, Q♥ T♦, T♣ 7♦ or J♥ 9♥. Give all hands still possible equal weight.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Th 9d stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 4 BB
@@ -9666,7 +9666,7 @@ Q: Does the chance to win beat the price of a call?
 HINT [hidden]: (none)
 TABLE: Turn | You 9c 8c | Board 9h 6s 2d Ks | Pot 9 BB | To call 3 BB | Seat HJ | Active hj | Decision hj | Facts one pair, middle pair
 EFFECTIVE: BB 3
-POTS: main 6 (BB, HJ)
+POTS: main 12 (BB, HJ)
 REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 0.6 BB · stack_matters false · assumption Assume 20% wins and no ties against this all-in range.
 SEATS: UTG folded stack 100 BB | HJ 9c 8c stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB all-in 3 BB

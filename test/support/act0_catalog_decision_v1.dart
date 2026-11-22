@@ -85,9 +85,47 @@ class CatalogDecisionLedgerV1 {
       table.actionTrail.any(
         (item) => potTruthParseActionV1(table, item.label)?.verb == 'all_in',
       );
-  late final pots = hasAllIn && ledger != null
-      ? act0PotEligibilityV1(ledger!, activeSeatIds: activeSeatIds)
-      : null;
+  late final pots = _potsForDecision();
+
+  List<Act0DecisionPotV1>? _potsForDecision() {
+    final current = ledger;
+    if (!hasAllIn ||
+        current == null ||
+        current.fromStreet != PokerStreet.preflop) {
+      return null;
+    }
+
+    final hero = table.heroSeat.seatId;
+    var projected = current;
+    if (current.throughStreet != PokerStreet.preflop &&
+        activeSeatIds.contains(hero)) {
+      // Show what the hero can contest after calling. Use the ledger's
+      // stack-capped price and project no other player's future action.
+      final due = current
+          .amounts(seatIds: occupiedSeatIds, actorSeatId: hero)
+          .toCallBb;
+      if (due == null) return null;
+      if (due > 0) {
+        projected = Act0HandContributionsV1(
+          fromStreet: current.fromStreet,
+          throughStreet: current.throughStreet,
+          startingStackBbBySeat: current.startingStackBbBySeat,
+          minimumStartingStackBbBySeat: current.minimumStartingStackBbBySeat,
+          entries: [
+            ...current.entries,
+            Act0ContributionV1(
+              current.throughStreet,
+              hero,
+              Act0ContributionKindV1.wager,
+              due,
+            ),
+          ],
+        );
+      }
+    }
+    return act0PotEligibilityV1(projected, activeSeatIds: activeSeatIds);
+  }
+
   late final callBb =
       ledger
           ?.amounts(
