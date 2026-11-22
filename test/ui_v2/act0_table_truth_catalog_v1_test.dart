@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
@@ -12,42 +11,34 @@ import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
+import '../support/act0_catalog_decision_v1.dart';
+import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 
 void main() {
-  test('W11 call closes the main and side pots with different eligibility', () {
-    final table = Act0ShellStateV1.sample
-        .worldById('world_11')
-        .lessons
-        .expand((lesson) => lesson.taskList)
-        .singleWhere((task) => task.taskId == 'w11_y5d_two_pot_call')
-        .runner
-        .table;
-    final ledger = table.handContributions!;
-    const active = {'bb', 'hj', 'btn'};
-    expect(
-      act0EffectiveStacksV1(ledger, heroSeatId: 'btn', activeSeatIds: active),
-      {'bb': 3, 'hj': 27},
-    );
-    final closedLedger = Act0HandContributionsV1(
-      throughStreet: ledger.throughStreet,
-      startingStackBbBySeat: ledger.startingStackBbBySeat,
-      entries: [
-        ...ledger.entries,
-        Act0ContributionV1(
-          ledger.throughStreet,
-          'btn',
-          Act0ContributionKindV1.wager,
-          9,
-        ),
-      ],
-    );
-    final pots = act0PotEligibilityV1(closedLedger, activeSeatIds: active)!;
+  test('W11 all-in decision projects both pots after the hero calls', () {
+    const taskId = 'w11_y5d_two_pot_call';
+    final row = catalogTasks.singleWhere((row) => row.task.taskId == taskId);
+    final table = row.task.runner.table;
+    final decision = CatalogDecisionLedgerV1(table);
+
+    expect(decision.hasAllIn, isTrue);
+    expect(table.potLabel, 'Pot 21.5 BB');
+    expect(decision.callBb, 9);
+    expect(decision.effectiveStacks, {'bb': 3, 'hj': 27});
+
+    final pots = decision.pots!;
     expect(pots.map((pot) => pot.amountBb), [18.5, 12.0]);
     expect(pots.first.eligibleSeatIds, {'bb', 'hj', 'btn'});
     expect(pots.last.eligibleSeatIds, {'hj', 'btn'});
+
+    final snapshot = renderCatalogSnapshot(worlds: {11});
+    final task = snapshot.split('TASK $taskId ').last.split('\n\n').first;
+    expect(task.split('\n').where((line) => line.startsWith('POTS:')), [
+      'POTS: main 18.5 (BB, HJ, BTN) · side 12 (HJ, BTN)',
+    ]);
   });
 
   test('contribution checks reject a changed pot or a missing price label', () {
