@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
@@ -16,6 +17,39 @@ import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 
 void main() {
+  test('W11 call closes the main and side pots with different eligibility', () {
+    final table = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((task) => task.taskId == 'w11_y5d_two_pot_call')
+        .runner
+        .table;
+    final ledger = table.handContributions!;
+    const active = {'bb', 'hj', 'btn'};
+    expect(
+      act0EffectiveStacksV1(ledger, heroSeatId: 'btn', activeSeatIds: active),
+      {'bb': 3, 'hj': 27},
+    );
+    final closedLedger = Act0HandContributionsV1(
+      throughStreet: ledger.throughStreet,
+      startingStackBbBySeat: ledger.startingStackBbBySeat,
+      entries: [
+        ...ledger.entries,
+        Act0ContributionV1(
+          ledger.throughStreet,
+          'btn',
+          Act0ContributionKindV1.wager,
+          9,
+        ),
+      ],
+    );
+    expect(act0PotEligibilityV1(closedLedger, activeSeatIds: active), [
+      (amountBb: 18.5, eligibleSeatIds: {'bb', 'hj', 'btn'}),
+      (amountBb: 12.0, eligibleSeatIds: {'hj', 'btn'}),
+    ]);
+  });
+
   test('contribution checks reject a changed pot or a missing price label', () {
     final source = Act0ShellStateV1.sample
         .worldById('world_11')

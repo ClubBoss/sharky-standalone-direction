@@ -4632,7 +4632,7 @@ final _w10OverbluffPunishRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Your QJ beats 55% missed draws in the set range. Folding gives up a call worth 8.98 BB on average at this price.",
+          "Your QJ beats the 55% of bets that come from missed draws. Folding gives up a call worth 8.98 BB on average at this price.",
     ),
     Act0RunnerOptionV1(
       id: "call_10_bb",
@@ -8060,7 +8060,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'CO raises to 18 BB with sets and two pair on this read, and UTG can still respond. Fold KQ because calling needs at least 36% wins against more than one opponent.',
+        'CO raises to 18 BB with sets and two pair on this read, and UTG can still respond. Fold KQ because calling needs 36% wins at the current price, and UTG could still raise.',
       ),
       (
         'call_18_bb',

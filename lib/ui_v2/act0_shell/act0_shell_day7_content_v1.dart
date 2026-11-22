@@ -12,7 +12,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold'],
     correct: 0,
     reason:
-        'Call because BB bets enough missed draws. You win 45% of the time and paying 5 BB for a 17 BB pot needs about 29%.',
+        'BB bets missed draws 45% of the time. Call because 5 BB for a 17 BB pot needs about 29%, so folding gives up 2.65 BB on average.',
     wrongReasons: const {
       1: 'Folding gives up 2.65 BB on average because BB bets enough missed draws to make the call profitable.',
     },
@@ -29,7 +29,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold'],
     correct: 1,
     reason:
-        'Fold because BB bets primarily sets. Paying 5 BB for a 16.5 BB pot needs about 30% wins and your pair wins only 20%.',
+        'BB bets primarily sets. Fold because calling 5 BB for a 16.5 BB pot needs about 30% wins and your pair wins only 20%.',
     wrongReasons: const {
       0: 'The call loses 1.7 BB on average because BB bets too few missed draws to justify paying 5 BB.',
     },
