@@ -16,6 +16,12 @@ void main() {
   test(
     'four mechanical repair inputs preserve goals and exact authored HJ contrast',
     () {
+      const wrongChoicesBySource = {
+        'blinds_first_actor': ['btn', 'bb'],
+        'blinds_last_actor': ['sb', 'btn'],
+        'blinds_review': ['btn', 'sb'],
+        'positions_utg': ['hj', 'sb'],
+      };
       final records = <String, Object?>{};
       for (final id in nonHeroActorRepairSourceIdsV1) {
         final matches = [
@@ -31,9 +37,14 @@ void main() {
         final correct = task.runner.options
             .where((option) => option.isCorrect)
             .single;
-        final wrong = task.runner.options
-            .where((option) => !option.isCorrect)
-            .single;
+        final expectedWrongIds = wrongChoicesBySource[id]!;
+        final wrongOptions = task.runner.options.where(
+          (option) => !option.isCorrect,
+        );
+        expect(wrongOptions.map((option) => option.id), expectedWrongIds);
+        final wrong = wrongOptions.singleWhere(
+          (option) => option.id == expectedWrongIds.first,
+        );
         expect(correct.seatId, id == 'blinds_last_actor' ? 'bb' : 'utg');
         if (id == 'positions_utg') {
           expect(task.runner.question, 'Tap UTG.');
