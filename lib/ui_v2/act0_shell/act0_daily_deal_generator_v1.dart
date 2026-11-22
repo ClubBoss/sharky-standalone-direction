@@ -1,6 +1,6 @@
 part of 'act0_shell_state_v1.dart';
 
-enum Act0DailyDealTemplateV1 { callPrice, cleanOuts, open, spr, defendBb }
+enum Act0DailyDealTemplateV1 { callPrice, cleanOuts, open, defendBb }
 
 /// A rep is admitted only by a completed drill on the concrete skill. A lesson
 /// title or high world number by itself cannot unlock a generated decision.
@@ -19,9 +19,7 @@ const act0DailyDealSourceTasksV1 = <String, Act0DailyDealTemplateV1>{
       Act0DailyDealTemplateV1.cleanOuts,
   'w7_clean_outs_lower_price': Act0DailyDealTemplateV1.cleanOuts,
   'w7_clean_outs_higher_price': Act0DailyDealTemplateV1.cleanOuts,
-  'w7_low_spr_commit': Act0DailyDealTemplateV1.spr,
   'w11_multiway_dirty_outs': Act0DailyDealTemplateV1.cleanOuts,
-  'w11_spr_low_overpair': Act0DailyDealTemplateV1.spr,
   'w12_clean_outs_vs_set': Act0DailyDealTemplateV1.cleanOuts,
   'w12_bad_call_good_result': Act0DailyDealTemplateV1.cleanOuts,
 };
@@ -103,8 +101,7 @@ Act0LessonTaskV1? act0GenerateDailyDealV1({
     Act0DailyDealTemplateV1.open || Act0DailyDealTemplateV1.defendBb =>
       _dailyPreflopV1(template, deck, rng, seed),
     Act0DailyDealTemplateV1.callPrice => _dailyPriceV1(deck, rng),
-    Act0DailyDealTemplateV1.cleanOuts ||
-    Act0DailyDealTemplateV1.spr => _dailyTurnV1(template, rng),
+    Act0DailyDealTemplateV1.cleanOuts => _dailyTurnV1(rng),
   };
   if (content == null || !_dailyDealIsValidV1(content)) return null;
   final choices = [content.preferred, content.alternative]..shuffle(rng);
@@ -256,10 +253,7 @@ _DailyDealContentV1 _dailyPriceV1(List<String> deck, math.Random rng) {
   );
 }
 
-_DailyDealContentV1? _dailyTurnV1(
-  Act0DailyDealTemplateV1 template,
-  math.Random rng,
-) {
+_DailyDealContentV1? _dailyTurnV1(math.Random rng) {
   final suits = 'shdc'.split('')..shuffle(rng);
   final low = '234'.split('')..shuffle(rng);
   final middle = '56789T'.split('')..shuffle(rng);
@@ -277,7 +271,6 @@ _DailyDealContentV1? _dailyTurnV1(
   final villain = ['$set$turn', '$set$spare'];
   final hero = ['bb', 'btn', 'co', 'hj'][rng.nextInt(4)];
   final opponent = hero == 'bb' ? 'btn' : 'bb';
-  final spr = template == Act0DailyDealTemplateV1.spr;
   final open = 2.5 + rng.nextInt(4) * 0.5;
   final bet = rng.nextBool() ? 1.0 : 4.0 + rng.nextInt(8);
   final base = _day7PostflopV1(
@@ -289,13 +282,6 @@ _DailyDealContentV1? _dailyTurnV1(
     betBb: bet,
     showTurn: true,
   );
-  final trail = [...base.actionTrail];
-  if (spr) {
-    final currentBet = trail.removeLast().label;
-    trail.add(
-      Act0ActionTrailItemV1(label: currentBet.replaceFirst('bets', 'all-in')),
-    );
-  }
   final table = _day7TableV1(
     hero: hero,
     hand: hand.join(' '),
@@ -307,17 +293,10 @@ _DailyDealContentV1? _dailyTurnV1(
         .where((seat) => seat != hero && seat != opponent)
         .toSet(),
     entries: base.handContributions!.entries,
-    history: trail,
+    history: base.actionTrail,
     bets: {
-      opponent: spr
-          ? Act0SeatBetStateV1(
-              kind: Act0SeatBetKindV1.allIn,
-              label: 'All-in',
-              amountLabel: _act0BbLabelV1(bet),
-            )
-          : base.seats.firstWhere((seat) => seat.seatId == opponent).bet!,
+      opponent: base.seats.firstWhere((seat) => seat.seatId == opponent).bet!,
     },
-    stacks: spr ? {opponent: open + bet, hero: open + bet} : const {},
   );
   final (potBb: pot, toCallBb: callPrice) = _dailyDealAmountsV1(table);
   final due = callPrice!;
@@ -349,26 +328,15 @@ _DailyDealContentV1? _dailyTurnV1(
   final comparison = calls
       ? 'calling earns more than folding'
       : 'folding saves chips';
-  final priorPot = pot - bet;
-  final effective = act0EffectiveStacksV1(
-    table.handContributions!,
-    heroSeatId: hero,
-    activeSeatIds: {hero, opponent},
-  )[opponent]!;
-  final ratio = (effective / priorPot).toStringAsFixed(2);
   return (
     table: table,
-    question: spr
-        ? 'Given this stack-to-pot ratio and shove, call or fold?'
-        : 'Count the rivers that win. Call or fold?',
-    premise: spr
-        ? '$other shows a set and shoves the remaining effective stack. Treat other cards as random.'
-        : '$other shows a set. Both players check the river after a call. Treat other cards as random.',
+    question: 'Count the rivers that win. Call or fold?',
+    premise:
+        '$other shows a set. Both players check the river after a call. Treat other cards as random.',
     preferred: calls ? 'Call' : 'Fold',
     alternative: calls ? 'Fold' : 'Call',
-    explanation: spr
-        ? 'Turn SPR was $ratio. Against $other’s set you win $wins of 44 rivers, ${calls ? 'more' : 'less'} than the ${_dailyPctV1(price)} this shove costs, so $comparison.'
-        : '$other shows a set, so count only rivers that leave you ahead. You win $wins of 44 rivers, ${calls ? 'above' : 'below'} the ${_dailyPctV1(price)} price, so $comparison.',
+    explanation:
+        '$other shows a set, so count only rivers that leave you ahead. You win $wins of 44 rivers, ${calls ? 'above' : 'below'} the ${_dailyPctV1(price)} price, so $comparison.',
     correction: calls
         ? 'Count the rivers that beat $other’s set. The $wins winners clear the ${_dailyPctV1(price)} price, so folding passes up value.'
         : 'Count only the rivers where you beat $other’s set. The $wins winners fall short of the ${_dailyPctV1(price)} price.',
