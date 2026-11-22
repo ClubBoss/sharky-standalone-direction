@@ -5110,7 +5110,7 @@ TABLE: Facts no applicable hand facts
 REVIEW: Call 5 into a 10 BB pot now. Final pot 15 BB: 5/15 = 33.3%.
 
 TASK w10_overbluff_punish [drill] Facing a river bet
-CAPTION: BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.
+CAPTION: The SB open with QJo was already played. On this river, BB bets missed JT or T9 55% and AQ or KQ 45%. No ties.
 Q: Call or fold?
 HINT [theoryOnly]: (none)
 TABLE: River | You Qh Jd | Board Qd 8c 5s 2h 3c | Pot 24.5 BB | To call 10 BB | Seat SB | Active sb | Decision sb | Facts one pair, top pair
