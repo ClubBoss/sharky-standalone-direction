@@ -36,6 +36,14 @@ const _legacyFallbacksWithoutSourceClue = <String>{
   // W1 moved Hero off BTN. The legacy mapper used the old Hero seat as a clue.
   'positions_theory',
   'blinds_button_moves',
+  // W6 combination tasks now name their own skill instead of pot price.
+  'range_checkpoint_combos',
+  'w6_ak_combos',
+  'w6_checkpoint_table_combo_weight',
+  'w6_combo_weight_compare',
+  'w6_pair_combos',
+  'w6_pair_vs_suited_weight_compare',
+  'w6_suited_offsuit_weight_compare',
   // W9 concept questions receive the familiar-replay disposition.
   'w9_ev_two_results',
   'w9_survival_stack_tradeoff',
@@ -88,6 +96,18 @@ const _newW01OrderGapIds = <String>{
   'positions_review',
 };
 
+// These separately checked, current choices do not belong to the frozen
+// legacy declared-mapper fixtures below.
+const _wave5CurrentChoiceTaskIds = <String>{
+  'w4_value_worse_call_seat',
+  'w4_bluff_target_seat',
+  'board_texture_basics_w5_texture_dry_value',
+  'board_texture_basics_w5_texture_wet_showdown',
+  'connected_boards_w5_connected_read_bet',
+  'w8_hero_stack_cap_seat',
+  'w8_pot_bet_committed_seat',
+};
+
 /// Source inventory and legacy DECLARED-mapper regression, not semantic repair
 /// admission or learner proof. Current typed eligibility is checked separately.
 /// Full original zero-gap semantic coverage remains HOLD until independently
@@ -108,7 +128,8 @@ void main() {
                 row.task.taskId != 'w8_spr_value_size' &&
                 row.task.taskId != 'blinds_missing_post_amount' &&
                 row.task.taskId != 'actions_call_chip_cost' &&
-                row.task.taskId != 'cards_ranks_suits_premium_decision',
+                row.task.taskId != 'cards_ranks_suits_premium_decision' &&
+                !_wave5CurrentChoiceTaskIds.contains(row.task.taskId),
           )
           .toList();
       expect(allRows, hasLength(316));
@@ -491,7 +512,8 @@ void main() {
               row.task.taskId != 'w8_spr_value_size' &&
               row.task.taskId != 'blinds_missing_post_amount' &&
               row.task.taskId != 'actions_call_chip_cost' &&
-              row.task.taskId != 'cards_ranks_suits_premium_decision',
+              row.task.taskId != 'cards_ranks_suits_premium_decision' &&
+              !_wave5CurrentChoiceTaskIds.contains(row.task.taskId),
         )
         .toList();
     final additions = rows
@@ -889,15 +911,15 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(350 + addedContracts.length));
+    expect(rows, hasLength(357 + addedContracts.length));
     expect(
       rows.map((r) => r.task.taskId).toSet(),
-      hasLength(350 + addedContracts.length),
+      hasLength(357 + addedContracts.length),
     );
     expect(
       allChoices,
       hasLength(
-        655 +
+        669 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
@@ -977,7 +999,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        617 +
+        631 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,

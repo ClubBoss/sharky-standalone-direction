@@ -202,7 +202,7 @@ void main() {
               ),
             )
             .toList();
-        expect(rows, hasLength(204));
+        expect(rows, hasLength(206));
         final counts = <String, int>{};
         for (final row in rows) {
           final purpose = row['declaredPurpose']! as String;
@@ -224,7 +224,7 @@ void main() {
           'TEACHING': 30,
           'REPAIR': 12,
           'CORRECTION_CANDIDATE': 1,
-          'PRACTICE': 122,
+          'PRACTICE': 124,
           'TRANSFER_CANDIDATE': 22,
           'REVIEW_CANDIDATE': 17,
         });
@@ -319,7 +319,7 @@ void main() {
       expect(
         rows,
         hasLength(
-          218 +
+          223 +
               w11Wave4ChoiceContractV1.length +
               w12Wave4ChoiceContractV1.length,
         ),

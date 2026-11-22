@@ -1433,8 +1433,9 @@ void main() {
     ]) {
       final row = expectedComparison[id] as Map<String, dynamic>;
       final options = row['options'] as List;
-      expect((options[1] as Map)['correct'], isTrue, reason: id);
-      options.add(options.removeAt(1));
+      final correct = options.indexWhere((option) => option['correct'] == true);
+      expect(correct, isNonNegative, reason: id);
+      options.add(options.removeAt(correct));
     }
     for (final (id, label) in [
       ('w6_ak_combos', 'Starting hand combinations'),

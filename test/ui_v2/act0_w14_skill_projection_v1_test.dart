@@ -93,7 +93,7 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 204);
+      expect(tasks.length, 206);
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
@@ -216,7 +216,7 @@ void main() {
       );
     }
     expect(lessons, {...boardLessons, ...rangeLessons});
-    expect(tasksByWorld, {5: 34, 6: 39});
+    expect(tasksByWorld, {5: 37, 6: 39});
   });
 
   test('every W7–W8 task projects to its authored topic', () {
@@ -252,7 +252,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {7: 13, 8: 28});
+    expect(taskCounts, {7: 13, 8: 30});
   });
 
   test('every W9–W10 task projects to its authored topic', () {

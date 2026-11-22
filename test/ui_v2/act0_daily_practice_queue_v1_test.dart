@@ -193,7 +193,7 @@ void main() {
       }
       expect(
         count,
-        294 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        301 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       );
     },
   );
