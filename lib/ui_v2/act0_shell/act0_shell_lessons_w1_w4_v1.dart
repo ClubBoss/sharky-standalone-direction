@@ -5736,6 +5736,66 @@ Act0RunnerStateV1 _w4SeatDecisionV1({
   );
 }
 
+Act0RunnerStateV1 _w4ChooseSmallBetV1({
+  required Act0RunnerStateV1 source,
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required String correctReason,
+  required String checkReason,
+  required String largerBetReason,
+  required int correctIndex,
+}) => source.copyWith(
+  lessonId: id,
+  phase: Act0LessonPhaseV1.drill,
+  caption: caption,
+  question: question,
+  hint: '',
+  table: table,
+  teachingSteps: const [],
+  feedbackTitle: 'The smaller bet fits.',
+  feedbackReason: correctReason,
+  options: _act0AuthoredCorrectOptionAtV1(
+    [
+      Act0RunnerOptionV1(
+        id: 'check',
+        label: 'Check',
+        isCorrect: false,
+        preferredLabel: 'Bet 2 BB',
+        betterAnswerLabel: 'Bet 2 BB',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Look at the response.',
+        feedbackReason: checkReason,
+        repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
+      Act0RunnerOptionV1(
+        id: 'bet_two',
+        label: 'Bet 2 BB',
+        isCorrect: true,
+        preferredLabel: 'Bet 2 BB',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'The smaller bet fits.',
+        feedbackReason: correctReason,
+        repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
+      Act0RunnerOptionV1(
+        id: 'bet_four',
+        label: 'Bet 4 BB',
+        isCorrect: false,
+        preferredLabel: 'Bet 2 BB',
+        betterAnswerLabel: 'Bet 2 BB',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Compare both bets.',
+        feedbackReason: largerBetReason,
+        repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
+    ],
+    correctOptionId: 'bet_two',
+    correctIndex: correctIndex,
+  ),
+);
+
 final _betPurposePriceLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'why_bets_happen',
@@ -5789,6 +5849,33 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           hero: 'hj',
         ),
         rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_purpose_collect_value',
+        title: 'Get a call from a worse hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4ChooseSmallBetV1(
+          source: _world4ValuePurposeRunner,
+          id: 'w4_purpose_collect_value',
+          correctIndex: 0,
+          caption: 'BB checks with Q-8 and will call 2 BB or fold to 4 BB.',
+          question: 'What do you do to get paid by the weaker queen?',
+          table: _day7PostflopV1(
+            'co',
+            'Qs Jc',
+            'Qh 6d 2c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          correctReason:
+              'Your jack beats BB’s eight beside the pair of queens. A 2 BB bet gets that weaker hand to pay.',
+          checkReason:
+              'Checking with Q-J against Q-8 skips the 2 BB that the weaker queen would pay.',
+          largerBetReason:
+              'BB folds Q-8 to 4 BB under this rule, so the bigger bet loses the call you wanted.',
+        ),
+        rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -6210,6 +6297,35 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_protection_small_denial',
+        title: 'Charge for the next card',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4ChooseSmallBetV1(
+          source: _world4ProtectionBetRunner,
+          id: 'w4_protection_small_denial',
+          correctIndex: 2,
+          caption:
+              'BB checks with A-K. In this example BB folds to either bet.',
+          question:
+              'Which play makes BB give up the chance to catch up while risking the fewest chips?',
+          table: _day7PostflopV1(
+            'co',
+            'Ts 9c',
+            'Th 6s 3d',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          correctReason:
+              'BB folds A-K to 2 BB. Your pair of tens wins the 6 BB pot without letting BB see another card.',
+          checkReason:
+              'Checking lets BB see a card for free. An ace or a king could put A-K ahead of your tens.',
+          largerBetReason:
+              'BB folds A-K to either bet. The 4 BB bet puts another 2 BB at risk for the same result in this example.',
+        ),
+        rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
