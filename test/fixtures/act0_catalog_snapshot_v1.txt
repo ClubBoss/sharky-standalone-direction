@@ -4380,6 +4380,7 @@ HINT [theoryOnly]: Subtract each possible bet from the stack you have left.
 TABLE: Flop | You Ah Jh | Board Ad 8c 4h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Jh stack 20 BB | SB folded stack 99.5 BB | BB stack 20 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+SIZES: Bet 2 BB 0.36363636363636365 | Bet 4 BB 0.7272727272727273 | Go all-in 3.6363636363636362
   + [correct] Bet 2 BB — You keep 18 BB. You have 20 BB behind. Betting 2 BB leaves 18 BB for the turn and river.
     FEEDBACK TABLE: Flop | You Ah Jh | Board Ad 8c 4h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the stack depth | Facts one pair, top pair, rainbow, backdoor flush
   - [wrong] Bet 4 BB — Four leaves 16 BB. Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.
@@ -4647,6 +4648,7 @@ HINT [theoryOnly]: Check the given limits before choosing.
 TABLE: Flop | You Ad Td | Board Ac 8h 4s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Center Read the stacks | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Td stack 18 BB | SB folded stack 99.5 BB | BB stack 42 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3.75 BB · SB folds · BB calls 2.75 BB more · Flop: BB checks
+SIZES: Bet 10 BB 1.25 | Bet 12 BB 1.5 | Bet 6 BB 0.75
   - [wrong] Bet 10 BB — The shorter stack would have 8 BB. After matching 10 BB, your 18 BB stack would have 8 BB left. That is below the target.
     BETTER ANSWER: Bet 6 BB
     FEEDBACK TABLE: Flop | You Ad Td | Board Ac 8h 4s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the stacks | Facts one pair, top pair, rainbow
