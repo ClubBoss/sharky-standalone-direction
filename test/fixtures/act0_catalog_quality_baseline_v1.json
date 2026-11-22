@@ -14,7 +14,8 @@
     "21.duplicate_wrong_reason": 1231,
     "22.bet_into_pot": 54,
     "24.call_equity": 92,
-    "25.street_stack": 27
+    "25.street_stack": 27,
+    "45.duplicate_option_label": 656
   },
   "findings": [
     "21.duplicate_wrong_reason|actions_check_drill|call",
