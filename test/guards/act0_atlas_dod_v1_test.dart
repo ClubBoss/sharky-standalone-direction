@@ -18,10 +18,6 @@ import '../support/act0_day7_coverage_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
 const _s3BridgeScope = 'W12 · Связь навыков в TEACH или разборе';
-const _wave5NewDebtKeys = {
-  'R1|$atlasPreflopFeedbackScopeV1',
-  'S3|$_s3BridgeScope',
-};
 
 typedef _Metric = ({
   String id,
@@ -1022,8 +1018,8 @@ void main() {
     final writeBaseline =
         Platform.environment['ACT0_ATLAS_UPDATE_BASELINE'] == '1';
     final file = File(_baseline);
-    // Key by criterion + scope so healthy worlds cannot mask regressions in
-    // another world. Persist debt only. Missing baseline means report-only.
+    // Keep separate ceilings by criterion and scope. Closed and new measures
+    // have no allowed debt unless the tracked baseline records it explicitly.
     final debt = {for (final m in metrics) '${m.id}|${m.scope}': m.debt};
     for (final lesson in lessonMinutes.entries) {
       final minutes = lesson.value;
@@ -1128,16 +1124,12 @@ void main() {
       destination.writeAsStringSync('$report\n');
     }
 
-    if (file.existsSync() && !writeBaseline) {
+    if (!writeBaseline) {
       final prior =
           (jsonDecode(file.readAsStringSync()) as Map<String, dynamic>);
       final regressions = [
         for (final entry in debt.entries)
-          // New measurements join the ratchet after the candidate records
-          // their thresholds. Existing checks retain the prior debt ceiling.
-          if ((!_wave5NewDebtKeys.contains(entry.key) ||
-                  prior.containsKey(entry.key)) &&
-              entry.value > (prior[entry.key] as num? ?? 0) + 1e-9)
+          if (entry.value > (prior[entry.key] as num? ?? 0) + 1e-9)
             '${entry.key}: ${prior[entry.key] ?? 0} → ${entry.value}',
       ];
       expect(regressions, isEmpty, reason: regressions.join('\n'));
