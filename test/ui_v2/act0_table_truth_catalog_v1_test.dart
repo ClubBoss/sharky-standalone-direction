@@ -196,8 +196,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 161),
-      ('D3.to_call_completeness', 115),
+      ('D2.pot_feasibility', 162),
+      ('D3.to_call_completeness', 116),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
