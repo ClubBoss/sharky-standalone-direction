@@ -1025,12 +1025,11 @@ EFFECTIVE: BB unknown
 REASONING: principle value_vs_worse · alt fold · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9c 8d stack 98 BB | SB folded stack 99.5 BB | BB stack 98 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2 BB · SB folds · BB calls 1 more, 2 total · Flop: BB checks
-  - [wrong] Fold — Not quite. You give up your chance at the pot when you fold. BB has checked, so you can stay in for free.
+  - [wrong] Fold — Not quite. With no bet facing you, a check keeps you in for free. A fold takes you out of the hand.
     BETTER ANSWER: Check
   + [correct] Check — Check is legal with no bet to call. BB checked and there is no bet, so checking keeps you in for free. Folding takes you out of the hand.
-  - [wrong] Call — Not quite. No wager followed BB’s check. A call needs a bet to match. Check for the next board card.
+  - [wrong] Call — Not quite. BB checked, leaving no bet to match. Checking lets you stay in without adding chips.
     BETTER ANSWER: Check
-    FEEDBACK TABLE: Flop | You 9c 8d | Board Ah 7c 2d | Pot 4.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center No bet faces you | Facts high card, rainbow, backdoor straight
 
 TASK actions_call_chip_cost [drill] Count the cost of a call
 CAPTION: BB bets 2 BB on the turn. You have put in nothing on this street.

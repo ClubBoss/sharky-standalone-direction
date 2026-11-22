@@ -2147,9 +2147,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
           const {
             'fold':
-                'You give up your chance at the pot when you fold. BB has checked, so you can stay in for free.',
+                'With no bet facing you, a check keeps you in for free. A fold takes you out of the hand.',
             'call':
-                'No wager followed BB’s check. A call needs a bet to match. Check for the next board card.',
+                'BB checked, leaving no bet to match. Checking lets you stay in without adding chips.',
           },
         ),
         rewardXp: 5,
