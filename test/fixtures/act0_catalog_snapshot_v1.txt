@@ -2315,7 +2315,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO takes its own turn before BTN on this flop. BTN is the seat that can observe CO’s first action.
+  - [wrong] CO [seat co] — Read the earlier actions and seat order. After the flop, CO takes its first turn before BTN. BTN is the seat that can observe CO’s first action.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 

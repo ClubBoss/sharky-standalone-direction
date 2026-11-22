@@ -5045,7 +5045,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           id: 'co',
           label: 'CO',
           reason:
-              'CO takes its own turn before BTN on this flop. BTN is the seat that can observe CO’s first action.',
+              'After the flop, CO takes its first turn before BTN. BTN is the seat that can observe CO’s first action.',
           seat: 'co',
         ),
         rewardXp: 6,
