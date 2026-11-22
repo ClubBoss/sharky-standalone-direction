@@ -20,7 +20,10 @@ void main() {
         .teachingSteps;
     expect(steps, hasLength(3));
     expect(steps.first.title, 'You are first in.');
-    expect(steps.first.body, contains('The players before you folded'));
+    expect(
+      steps.first.body,
+      'Enter first voluntarily. Open means the first raise.',
+    );
     expect(
       '${steps.first.title} ${steps.first.body}'.split(RegExp(r'\s+')).length,
       lessThanOrEqualTo(60),

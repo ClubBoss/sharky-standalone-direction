@@ -1440,7 +1440,7 @@ HINT [theoryOnly]: It is below the absolute top but does not need a perfect seat
 TABLE: Preflop | You Jh Js | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1 | Center Pocket jacks | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ Jh Js stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] Premium — Not quite. JJ on HJ is Strong. If UTG opens to 2.5 BB, an incorrect Premium reraise to 7.5 BB risks more with a hand outside the narrow raise range.
+  - [wrong] Premium — Not quite. JJ on HJ is Strong. If UTG opens to 2.5 BB, treating JJ as Premium risks 7.5 BB on a reraise outside the narrow chart.
     BETTER ANSWER: Strong
   + [correct] Strong — Excellent spot. JJ is a strong hand — second bucket. Very playable, but not premium.
   - [wrong] Medium — Not quite. JJ is Strong and HJ can open it. Applying the CO–BTN Medium row would give up an HJ open and the chance to win 1.5 BB.

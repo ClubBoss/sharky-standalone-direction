@@ -1371,7 +1371,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "220875ad0c22aacff61d7b30582949c2712bf20efd0c676fd03ff457fe0a930b",
+        "a738087b0ba463dcb70c042bab182d69e2e3ddbe0c05d51beaf560d775159a0b",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1387,7 +1387,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "6f195be8c845b100044566a9247e01fd18fa7ccbcdb71b49bc0ff460a28d9cf4",
+        "e2b1993062d7d6d8d0338c44584b62afc60bd3f01f3326dbb59d656a4da5e3d7",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
@@ -1403,7 +1403,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "medium",
     sourceCorrectChoiceId: "premium",
     sourceFingerprint:
-        "b80479d11f7daf7b1578a775df7b5e398e562aad9199cd14407b64907d7c0452",
+        "59bd581ebb9c07bb1697f497bc7b6a36346129147139d1d2dcd2f52d97e4805e",
     goalId: "starting_hand_premium_bucket",
     misconceptionId: "premium_as_medium",
     relationId: "selected_w2_01_medium_v1",
