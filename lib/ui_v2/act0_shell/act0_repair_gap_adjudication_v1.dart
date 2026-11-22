@@ -1115,7 +1115,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
         "aaccd2c5d5a67f93e6c37125358d65995e697e8296386bc640a7332640cb43e6",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason:
-        "HJ has four players behind. Picking HJ for UTG gives up the information that five players can still act on the first seat.",
+        "HJ is one seat clockwise after UTG. UTG sits immediately clockwise after BB and acts first preflop here.",
     sourceChoiceLabel: "HJ",
     sourceChoiceQuality: "wrong",
     goalId: "utg_seat_identity",
@@ -1143,7 +1143,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
     sourceChoiceReason:
-        "The Cutoff acts before BTN, so choosing CO gives up the chance to see the Cutoff act first.",
+        "CO sits one seat before BTN clockwise. The round dealer marker identifies BTN itself.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1170,7 +1170,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
         "b7ff4922b8c707215724a79ee7a454222be2ba036a27d52c8288fffd6b9c756d",
     sourceQuestion: "Tap BTN.",
     sourceChoiceReason:
-        "CO acts before the Button. Choosing CO misses the seat that can see CO's action first.",
+        "CO sits immediately before the dealer marker. The seat with the marker is BTN.",
     sourceChoiceLabel: "CO",
     sourceChoiceQuality: "wrong",
     goalId: "dealer_button_seat",
@@ -1645,7 +1645,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
         "6fbc69ee38ad3eff64e3cb42a6b49850f609e7864b364a5699eedfb753d395eb",
     sourceQuestion: "Who acts first preflop?",
     sourceChoiceReason:
-        "In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.",
+        "BTN acts after UTG, HJ and CO on this first preflop pass. UTG has the first voluntary decision.",
     sourceChoiceLabel: "BTN",
     goalId: "six_max_initial_preflop_first_actor",
     misconceptionId: "first_preflop_actor_read_as_button",

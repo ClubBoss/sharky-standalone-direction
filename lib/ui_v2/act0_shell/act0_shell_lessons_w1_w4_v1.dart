@@ -1574,7 +1574,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           id: 'sb',
           label: 'SB',
           reason:
-              'SB has already posted half a blind. UTG follows BB in first-round order, so picking SB misses who acts first.',
+              'SB is the seat between BTN and BB. UTG is the next seat clockwise after BB.',
           seatId: 'sb',
         ),
         rewardXp: 5,
@@ -1905,7 +1905,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             ).copyWith(teachingSteps: const <Act0TeachingStepV1>[]),
             const {
               'btn':
-                  'In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.',
+                  'BTN acts after UTG, HJ and CO on this first preflop pass. UTG has the first voluntary decision.',
             },
           ),
           id: 'sb',
@@ -3213,7 +3213,7 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         runner: _w3AddAlternative(
           _act0WithWrongFeedbackReasonsV1(_world2PositionIntroRunner, const {
             'utg':
-                'In this 1.5 BB preflop pot, UTG acts first with five players behind, so picking UTG misses that BTN gathers the most information before acting.',
+                'UTG takes the first preflop turn and sees no earlier voluntary actions. BTN acts later than UTG and HJ.',
           }),
           question:
               'Which of UTG, HJ and BTN usually gets the most information before acting?',
@@ -3245,7 +3245,7 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
             ),
             const {
               'utg':
-                  'UTG is the seat acting first in this 1.5 BB pot, so picking UTG misses that BTN is the later seat that can respond after seeing UTG\'s choice.',
+                  'UTG acts first preflop and sees no earlier voluntary actions. BTN sees the most earlier actions among these seats.',
             },
           ),
           question:
@@ -3271,7 +3271,7 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
           id: 'co',
           label: 'CO',
           reason:
-              'CO acts after UTG and HJ. Picking CO misses the first seat to act after the blinds.',
+              'CO is third on the first preflop pass, after UTG and HJ. UTG starts the pass after the blinds.',
           seat: 'co',
         ),
         rewardXp: 8,
@@ -4787,9 +4787,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ).copyWith(teachingSteps: const []),
           const {
             "hj":
-                "HJ has four players behind. Picking HJ for UTG gives up the information that five players can still act on the first seat.",
+                "HJ is one seat clockwise after UTG. UTG sits immediately clockwise after BB and acts first preflop here.",
             "bb":
-                "BB already posted 1 BB and usually acts last preflop. Picking BB misses that the first voluntary action is UTG's with five players behind.",
+                "BB is the seat that posted the full blind. UTG sits immediately clockwise after BB and takes the first voluntary action.",
           },
         ),
         rewardXp: 5,
@@ -4821,7 +4821,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "co":
                 "CO has three players behind. Treating it as HJ misses one more live player still to act.",
             "utg":
-                "UTG acts before HJ and has five players behind. Choosing it gives up the extra action HJ gets to see.",
+                "UTG is the first seat after BB. HJ is the next seat clockwise after UTG.",
           },
         ),
         rewardXp: 6,
@@ -4842,7 +4842,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ).copyWith(teachingSteps: const []),
           const {
             "hj":
-                "HJ sees one fewer action than CO before deciding. Choosing HJ misses that extra information.",
+                "HJ comes immediately before CO. CO is the seat between HJ and BTN.",
             "btn":
                 "BTN takes its preflop turn after CO. Mixing them up misses the player CO must wait to hear from.",
           },
@@ -4856,7 +4856,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _act0WithWrongFeedbackReasonsV1(_w3SeatOrderReasonRunner, const {
           "cutoff_first":
-              "UTG acts before CO and leaves five players to act. Choosing CO misses the early seat with the most players behind.",
+              "HJ comes immediately after UTG. The correct sequence continues through CO and BTN.",
           "button_before_cutoff":
               "BTN gets to see what CO does before acting. Reversing them gives up that information advantage in your read.",
         }),
@@ -4878,9 +4878,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ).copyWith(teachingSteps: const []),
           const {
             "co":
-                "CO acts before the Button. Choosing CO misses the seat that can see CO's action first.",
+                "CO sits immediately before the dealer marker. The seat with the marker is BTN.",
             "sb":
-                "SB posts 0.5 BB and normally acts first after the flop if still in. Choosing SB gives up the Button's last-action advantage.",
+                "SB is one seat clockwise after BTN. The dealer marker belongs to BTN.",
           },
         ),
         rewardXp: 5,
@@ -4912,7 +4912,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "bb":
                 "BB has posted 1 BB. Mixing it up with SB makes you count the wrong 0.5 BB post.",
             "btn":
-                "BTN has the dealer marker and did not post a blind here. Choosing BTN misses the forced 0.5 BB you need to account for.",
+                "BTN has the dealer marker. SB is the next seat clockwise and posts 0.5 BB in this setup.",
           },
         ),
         rewardXp: 5,
@@ -4944,7 +4944,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "sb":
                 "SB put in 0.5 BB. Treating it as BB leaves another 0.5 BB missing from your count.",
             "utg":
-                "UTG has not put chips in. Choosing it misses the 1 BB already paid by the big blind.",
+                "UTG sits immediately after BB. The seat that posted the full 1 BB is BB.",
           },
         ),
         rewardXp: 5,
@@ -5045,7 +5045,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           id: 'co',
           label: 'CO',
           reason:
-              'CO has to act before BTN after the flop. Choosing CO misses the seat that gets to observe it.',
+              'CO takes its own turn before BTN on this flop. BTN is the seat that can observe CO’s first action.',
           seat: 'co',
         ),
         rewardXp: 6,
@@ -5082,9 +5082,9 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "co":
-                "The Cutoff acts before BTN, so choosing CO gives up the chance to see the Cutoff act first.",
+                "CO sits one seat before BTN clockwise. The round dealer marker identifies BTN itself.",
             "sb":
-                "SB posts 0.5 BB and can act first after the flop. Choosing that seat misses BTN's chance to see the other live players act.",
+                "SB is immediately clockwise after the seat with the dealer marker. The marker is on BTN.",
           },
         ),
         rewardXp: 7,
@@ -5140,12 +5140,12 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             id: 'hj',
             label: 'HJ',
             reason:
-                'HJ sits before CO, so choosing it misses the actions HJ still has to wait to see.',
+                'HJ acts before both CO and BTN on the first preflop pass. BTN is the latest of these three seats.',
             seat: 'hj',
           ),
           const {
             "co":
-                "CO must act before BTN, so choosing CO misses one action the Button gets to see.",
+                "CO acts immediately before BTN on the first preflop pass. BTN therefore acts later than CO.",
           },
         ),
         rewardXp: 8,
@@ -5243,7 +5243,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           id: 'bb',
           label: 'BB',
           reason:
-              'BB acts before BTN on A-7-2. Picking BB misses the player who can see the other first-round flop actions.',
+              'BB acts before BTN on A-7-2. BTN acts after the other live seats on the first flop pass.',
           seat: 'bb',
         ),
         rewardXp: 6,
@@ -5322,7 +5322,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "always_last":
-                "CO still has BTN, SB and BB behind. Choosing the last seat misses the chance that one of those three players raises.",
+                "CO has BTN, SB and BB still to act preflop. CO has fewer players behind than UTG, but it does not close this pass.",
             "smaller_blinds":
                 "CO and UTG post no blind. After seeing two folds, CO acts once before BTN, SB and BB.",
           },
@@ -5424,7 +5424,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           id: 'co',
           label: 'CO',
           reason:
-              'CO has BTN and both blinds behind. Choosing CO instead of BTN misses one player who can raise after CO acts.',
+              'CO has BTN, SB and BB behind it on the first preflop pass. BTN has only SB and BB behind it.',
           seat: 'co',
         ),
         rewardXp: 6,
@@ -5947,7 +5947,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               ),
               const {
                 'utg':
-                    'UTG acts before HJ in this 1.5 BB preflop pot, so picking UTG misses that only a later seat like BTN gets to see HJ act first.',
+                    'UTG takes its first preflop turn before HJ. BTN follows HJ and can see that action first.',
               },
             ),
             'co',
@@ -5955,7 +5955,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           id: 'hj',
           label: 'HJ',
           reason:
-              'HJ makes its own decision before BTN. Picking HJ misses the later seat that observes HJ’s action.',
+              'HJ takes the action the question asks you to observe. BTN acts later and can see what HJ did.',
           seat: 'hj',
         ),
         rewardXp: 6,
@@ -6059,7 +6059,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "acts_last":
-                "CO acts before BTN, SB and BB. Choosing the last seat misses what those three players can still do.",
+                "CO acts before BTN, SB and BB on this first pass. Those three seats still have decisions.",
             "late_free_pass":
                 "CO can still face a call or raise from BTN, SB or BB. Opening from CO puts chips at risk even after the earlier folds.",
           },

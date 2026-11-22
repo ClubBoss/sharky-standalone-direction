@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import '../support/act0_atlas_concepts_v1.dart';
 import '../support/act0_atlas_practice_v1.dart';
 import '../support/act0_atlas_preflop_feedback_v1.dart';
+import '../support/act0_catalog_learner_copy_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
@@ -382,6 +383,7 @@ void main() {
     final preflopFeedback = [...catalogTasks, ...day7CatalogTasks].where(
       (row) =>
           atlasIsGradedV1(row) &&
+          !catalogIsSeatRecognitionV1(row.task) &&
           _norm(row.task.runner.table.streetLabel) == 'preflop',
     );
     for (final number in [2, 3]) {
@@ -1170,7 +1172,7 @@ void main() {
         '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
         '- S3 проверяет новизну рук W11 относительно пройденных миров и доступную игроку связку цены ривера и аутов тёрна в W12. Ссылки на конкретные задачи даны ниже.',
         '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
-        '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий W2–W3, включая ремонт и Day 7. Нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
+        '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий W2–W3, включая ремонт и Day 7. Вопросы, где нужно назвать место или порядок, проверяются G1·50. Для решения нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
         '- P3 показывает объём по каталогу и проверяет приложенный JSONL FULL_ROUTE на том же коммите.',
         '',
         '## Места для проверки',

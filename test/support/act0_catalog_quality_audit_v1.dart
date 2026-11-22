@@ -46,6 +46,7 @@ const catalogActionQuestionRuleV1 = '46.action_question_options';
 const catalogCorrectFeedbackLengthRuleV1 = '47.correct_feedback_length';
 const catalogBankrollThresholdRuleV1 = '48.bankroll_threshold';
 const catalogSharedFeedbackBodyRuleV1 = '49.shared_feedback_body';
+const catalogSeatRecognitionFeedbackRuleV1 = '50.seat_recognition_feedback';
 
 // The standalone rules check repeats one neutral rule reminder after every
 // response. Its Day 7 counterparts teach the selected misconception instead.
@@ -385,6 +386,16 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
       }
     }
     if (options.length < 2) continue;
+    if (catalogIsSeatRecognitionV1(task)) {
+      for (final option in options.where((option) => !option.isCorrect)) {
+        count(catalogSeatRecognitionFeedbackRuleV1);
+        if (catalogSeatRecognitionDecisionLossV1(option.feedbackReason)) {
+          findings.add(
+            '$catalogSeatRecognitionFeedbackRuleV1|${task.taskId}|${option.id}',
+          );
+        }
+      }
+    }
     count(catalogSharedFeedbackBodyRuleV1);
     final bodies = options
         .map((option) => _normalizedCopy(option.feedbackReason))

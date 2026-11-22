@@ -712,7 +712,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Decision utg | Seat focus utg | Tap utg, hj, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] UTG [seat utg] — UTG seat found. UTG names the seat immediately after BB in this preflop order.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Decision utg | Seat focus utg | Tap utg, hj, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Read the deciding detail. SB has already posted half a blind. UTG follows BB in first-round order, so picking SB misses who acts first.
+  - [wrong] SB [seat sb] — Read the deciding detail. SB is the seat between BTN and BB. UTG is the next seat clockwise after BB.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Decision utg | Seat focus utg | Tap utg, hj, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -887,7 +887,7 @@ SEATS: UTG stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 1
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] UTG [seat utg] — UTG acts first preflop. UTG acts first before the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Decision utg | Seat focus utg | Tap utg, btn, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — Not quite. In this 1.5 BB preflop pot, BTN waits behind UTG, HJ, and CO, so picking BTN misses that UTG faces the first voluntary decision.
+  - [wrong] BTN [seat btn] — Not quite. BTN acts after UTG, HJ and CO on this first preflop pass. UTG has the first voluntary decision.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Decision utg | Seat focus utg | Tap utg, btn, sb | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] SB [seat sb] — Read the deciding detail. The 0.5 BB post starts the pot. It does not make SB first to act voluntarily before the flop.
@@ -2182,12 +2182,12 @@ HINT [theoryOnly]: Start at the seat after the blinds, then read the label.
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap utg, hj, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] HJ [seat hj] — Check the seat label. HJ has four players behind. Picking HJ for UTG gives up the information that five players can still act on the first seat.
+  - [wrong] HJ [seat hj] — Check the seat label. HJ is one seat clockwise after UTG. UTG sits immediately clockwise after BB and acts first preflop here.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap utg, hj, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] UTG [seat utg] — UTG recognized. UTG is the first non-blind seat to act before the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap utg, hj, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BB [seat bb] — Read the earlier actions and seat order. BB already posted 1 BB and usually acts last preflop. Picking BB misses that the first voluntary action is UTG's with five players behind.
+  - [wrong] BB [seat bb] — Read the earlier actions and seat order. BB is the seat that posted the full blind. UTG sits immediately clockwise after BB and takes the first voluntary action.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap utg, hj, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2203,7 +2203,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus hj | Tap hj, co, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] HJ [seat hj] — HJ recognized. HJ sits after UTG and before CO.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus hj | Tap hj, co, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Read the earlier actions and seat order. UTG acts before HJ and has five players behind. Choosing it gives up the extra action HJ gets to see.
+  - [wrong] UTG [seat utg] — Read the earlier actions and seat order. UTG is the first seat after BB. HJ is the next seat clockwise after UTG.
     BETTER ANSWER: HJ
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus hj | Tap hj, co, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2216,7 +2216,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] CO [seat co] — CO recognized. CO is the cutoff, one seat before the Button.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus co | Tap co, hj, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] HJ [seat hj] — Check the seat label. HJ sees one fewer action than CO before deciding. Choosing HJ misses that extra information.
+  - [wrong] HJ [seat hj] — Check the seat label. HJ comes immediately before CO. CO is the seat between HJ and BTN.
     BETTER ANSWER: CO
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus co | Tap co, hj, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] BTN [seat btn] — Read the earlier actions and seat order. BTN takes its preflop turn after CO. Mixing them up misses the player CO must wait to hear from.
@@ -2230,7 +2230,7 @@ HINT [theoryOnly]: Use the table labels first. Button and blinds are only part o
 TABLE: Preflop | Pot 1.5 BB | Seat UTG | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] CO, HJ, BTN — Follow the seat after UTG. UTG acts before CO and leaves five players to act. Choosing CO misses the early seat with the most players behind.
+  - [wrong] CO, HJ, BTN — Follow the seat after UTG. HJ comes immediately after UTG. The correct sequence continues through CO and BTN.
     BETTER ANSWER: HJ, CO, BTN
   + [correct] HJ, CO, BTN — Read three seats clockwise. HJ acts after UTG, CO acts after HJ, and BTN acts before the two blinds on the first preflop pass.
   - [wrong] HJ, BTN, CO — CO is before BTN. BTN gets to see what CO does before acting. Reversing them gives up that information advantage in your read.
@@ -2245,10 +2245,10 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — BTN recognized. BTN is the dealer-button seat and late-position anchor.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Check the seat label. CO acts before the Button. Choosing CO misses the seat that can see CO's action first.
+  - [wrong] CO [seat co] — Check the seat label. CO sits immediately before the dealer marker. The seat with the marker is BTN.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Read the earlier actions and seat order. SB posts 0.5 BB and normally acts first after the flop if still in. Choosing SB gives up the Button's last-action advantage.
+  - [wrong] SB [seat sb] — Read the earlier actions and seat order. SB is one seat clockwise after BTN. The dealer marker belongs to BTN.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, co, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2264,7 +2264,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus sb | Tap sb, bb, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] SB [seat sb] — SB recognized. SB is the small blind, posted before the big blind.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus sb | Tap sb, bb, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — Read the earlier actions and seat order. BTN has the dealer marker and did not post a blind here. Choosing BTN misses the forced 0.5 BB you need to account for.
+  - [wrong] BTN [seat btn] — Read the earlier actions and seat order. BTN has the dealer marker. SB is the next seat clockwise and posts 0.5 BB in this setup.
     BETTER ANSWER: SB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus sb | Tap sb, bb, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2280,7 +2280,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus bb | Tap bb, sb, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BB [seat bb] — BB recognized. BB is the big blind, the full forced blind before the hand.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus bb | Tap bb, sb, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Read the earlier actions and seat order. UTG has not put chips in. Choosing it misses the 1 BB already paid by the big blind.
+  - [wrong] UTG [seat utg] — Read the earlier actions and seat order. UTG sits immediately after BB. The seat that posted the full 1 BB is BB.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus bb | Tap bb, sb, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2315,7 +2315,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO has to act before BTN after the flop. Choosing CO misses the seat that gets to observe it.
+  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO takes its own turn before BTN on this flop. BTN is the seat that can observe CO’s first action.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2330,10 +2330,10 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — BTN seat found. BTN is the dealer button and acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Not quite. The Cutoff acts before BTN, so choosing CO gives up the chance to see the Cutoff act first.
+  - [wrong] CO [seat co] — Not quite. CO sits one seat before BTN clockwise. The round dealer marker identifies BTN itself.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] SB [seat sb] — Read the earlier actions and seat order. SB posts 0.5 BB and can act first after the flop. Choosing that seat misses BTN's chance to see the other live players act.
+  - [wrong] SB [seat sb] — Read the earlier actions and seat order. SB is immediately clockwise after the seat with the dealer marker. The marker is on BTN.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, co, sb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2383,12 +2383,12 @@ HINT [theoryOnly]: Compare the two latest seats directly.
 TABLE: Preflop | Pot 1.5 BB | Seat HJ | Tap btn, co, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] CO [seat co] — Follow the seats in order. CO must act before BTN, so choosing CO misses one action the Button gets to see.
+  - [wrong] CO [seat co] — Follow the seats in order. CO acts immediately before BTN on the first preflop pass. BTN therefore acts later than CO.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, co, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BTN [seat btn] — Button acts later. The first pass goes from CO to BTN, then to the blinds.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, co, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] HJ [seat hj] — Read the earlier actions and seat order. HJ sits before CO, so choosing it misses the actions HJ still has to wait to see.
+  - [wrong] HJ [seat hj] — Read the earlier actions and seat order. HJ acts before both CO and BTN on the first preflop pass. BTN is the latest of these three seats.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, co, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2440,7 +2440,7 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Not quite. In this 1.5 BB preflop pot, UTG acts first with five players behind, so picking UTG misses that BTN gathers the most information before acting.
+  - [wrong] UTG [seat utg] — Not quite. UTG takes the first preflop turn and sees no earlier voluntary actions. BTN acts later than UTG and HJ.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] HJ [seat hj] — Read the earlier actions and seat order. HJ acts after UTG but before CO and BTN. Reading HJ as the latest seat misses decisions BTN can observe.
@@ -2457,7 +2457,7 @@ HINT [theoryOnly]: Follow how the order moves from the blinds to the dealer mark
 TABLE: Preflop | Pot 1.5 BB | Seat BTN | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] UTG [seat utg] — Not quite. UTG is the seat acting first in this 1.5 BB pot, so picking UTG misses that BTN is the later seat that can respond after seeing UTG's choice.
+  - [wrong] UTG [seat utg] — Not quite. UTG acts first preflop and sees no earlier voluntary actions. BTN sees the most earlier actions among these seats.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
@@ -2481,7 +2481,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] BTN [seat btn] — Not quite. BTN is late and usually has more information.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO acts after UTG and HJ. Picking CO misses the first seat to act after the blinds.
+  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO is third on the first preflop pass, after UTG and HJ. UTG starts the pass after the blinds.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus utg | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2511,7 +2511,7 @@ TABLE: Preflop | Pot 1.5 BB | Seat CO | Active co | Decision co | Seat focus co,
 SEATS: UTG folded | HJ folded | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
   + [correct] Fewer players still act after CO — Excellent spot. CO has already seen two folds. BTN, SB and BB still get a turn, so CO has more information without acting last.
-  - [wrong] CO acts last before and after the flop — Not quite. CO still has BTN, SB and BB behind. Choosing the last seat misses the chance that one of those three players raises.
+  - [wrong] CO acts last before and after the flop — Not quite. CO has BTN, SB and BB still to act preflop. CO has fewer players behind than UTG, but it does not close this pass.
     BETTER ANSWER: Fewer players still act after CO
   - [wrong] CO gets to act again before BTN — Read the earlier actions and seat order. CO and UTG post no blind. After seeing two folds, CO acts once before BTN, SB and BB.
     BETTER ANSWER: Fewer players still act after CO
@@ -2653,7 +2653,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] UTG [seat utg] — Not quite. UTG has five players left to act behind it in this 1.5 BB preflop pot, so picking UTG overlooks how much more crowded early position is than BTN.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO has BTN and both blinds behind. Choosing CO instead of BTN misses one player who can raise after CO acts.
+  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO has BTN, SB and BB behind it on the first preflop pass. BTN has only SB and BB behind it.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2895,10 +2895,10 @@ SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] BTN [seat btn] — Late seat found. BTN is late and often acts last after the flop.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Not quite. UTG acts before HJ in this 1.5 BB preflop pot, so picking UTG misses that only a later seat like BTN gets to see HJ act first.
+  - [wrong] UTG [seat utg] — Not quite. UTG takes its first preflop turn before HJ. BTN follows HJ and can see that action first.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] HJ [seat hj] — Read the earlier actions and seat order. HJ makes its own decision before BTN. Picking HJ misses the later seat that observes HJ’s action.
+  - [wrong] HJ [seat hj] — Read the earlier actions and seat order. HJ takes the action the question asks you to observe. BTN acts later and can see what HJ did.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn | Tap btn, utg, hj | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2961,7 +2961,7 @@ HINT [theoryOnly]: Before choosing an action, notice what the seat order gives y
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Seat focus co, btn, sb, bb | Center CO with three seats behind | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO Qs Js | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
-  - [wrong] You already act last — Not quite. CO acts before BTN, SB and BB. Choosing the last seat misses what those three players can still do.
+  - [wrong] You already act last — Not quite. CO acts before BTN, SB and BB on this first pass. Those three seats still have decisions.
     BETTER ANSWER: BTN, SB, and BB still act after you
   - [wrong] Late seat makes most hands easy — Count the players behind. CO can still face a call or raise from BTN, SB or BB. Opening from CO puts chips at risk even after the earlier folds.
     BETTER ANSWER: BTN, SB, and BB still act after you
@@ -7863,7 +7863,7 @@ SEATS: UTG | HJ | CO | BTN dealer Jd Js | SB | BB
   - [wrong] UTG [seat utg] — Not quite. UTG is early, not the seat that acts last after the flop here.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | You Jd Js | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg, bb | Center Shared board | Facts one pair, pocket pair, rainbow
-  - [wrong] BB [seat bb] — Read the earlier actions and seat order. BB acts before BTN on A-7-2. Picking BB misses the player who can see the other first-round flop actions.
+  - [wrong] BB [seat bb] — Read the earlier actions and seat order. BB acts before BTN on A-7-2. BTN acts after the other live seats on the first flop pass.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Flop | You Jd Js | Board Ah 7c 2d | Pot 5 BB | Seat BTN | Seat focus btn | Card focus board_0, board_1, board_2 | Tap btn, utg, bb | Center Shared board | Facts one pair, pocket pair, rainbow
 
@@ -9229,7 +9229,7 @@ TABLE: Preflop | You 9c 6d | Pot 1.5 BB | Seat HJ | Facts no applicable hand fac
 SEATS: UTG folded stack 100 BB | HJ 9c 6d stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   + [correct] HJ — Correct. The six-seat preflop order starts UTG, HJ, then CO.
-  - [wrong] CO — Look again. CO follows HJ. Choosing CO gives up the information CO gets from seeing HJ act first.
+  - [wrong] CO — Look again. CO follows HJ. HJ is the seat immediately clockwise after UTG.
     BETTER ANSWER: HJ
   - [wrong] BB — Look again. BB posted 1 BB before acting. Picking BB skips the information from both early seats.
     BETTER ANSWER: HJ
@@ -9241,10 +9241,10 @@ HINT [hidden]: (none)
 TABLE: Preflop | You 8h 5h | Pot 1.5 BB | Seat CO | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 8h 5h stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [wrong] SB — Look again. SB posts 0.5 BB after BTN. Picking it gives up the information BTN gets from seeing CO act.
+  - [wrong] SB — Look again. SB sits immediately clockwise after BTN. CO is between HJ and BTN.
     BETTER ANSWER: CO
   + [correct] CO — Correct. CO sits one place before the Button and one place after HJ.
-  - [wrong] UTG — Look again. UTG acts before HJ. Choosing UTG gives up the information CO gets from seeing HJ act.
+  - [wrong] UTG — Look again. UTG is immediately before HJ. CO comes after HJ and before BTN.
     BETTER ANSWER: CO
 
 TASK spaced_review_w3_position_six_seats_hero_button_v1 [drill] Review decision
@@ -9254,9 +9254,9 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Td 7h | Pot 1.5 BB | Seat HJ | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ Td 7h stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] SB — Look again. SB posted 0.5 BB. Picking SB gives up the last postflop action that belongs to BTN.
+  - [wrong] SB — Look again. SB is the seat to the left of the dealer marker. The marker itself is on BTN.
     BETTER ANSWER: BTN
-  - [wrong] HJ — Look again. HJ is your seat. Choosing it misses the information BTN gets by seeing other players act.
+  - [wrong] HJ — Look again. HJ is your seat in this hand. The round dealer marker identifies BTN.
     BETTER ANSWER: BTN
   + [correct] BTN — Correct. The dealer marker is at BTN. Your own HJ seat and the dealer are separate.
 
@@ -9270,7 +9270,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] SB — Correct. SB is the smaller blind immediately after the Button. It posts 0.5 BB here.
   - [wrong] BB — Look again. BB pays 1 BB. Using that for SB would overstate your post by 0.5 BB.
     BETTER ANSWER: SB
-  - [wrong] BTN — Look again. BTN has the dealer marker. Picking BTN misses the 0.5 BB in the pot from SB.
+  - [wrong] BTN — Look again. BTN has the dealer marker. The half-blind is posted by SB, the next seat clockwise.
     BETTER ANSWER: SB
 
 TASK spaced_review_w3_position_six_seats_big_blind_v1 [drill] Review decision
@@ -9280,7 +9280,7 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Ks 4h | Pot 1.5 BB | Seat BB | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB post 0.5 BB | BB Ks 4h stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds · SB folds
-  - [wrong] Button — Look again. BTN has not posted. Choosing that seat misses the 1 BB in the pot from your blind.
+  - [wrong] Button — Look again. BTN holds the dealer marker in this hand. The full blind was posted by BB.
     BETTER ANSWER: Big blind
   + [correct] Big blind — Correct. BB means big blind. It is the seat that posted 1 BB in this hand.
   - [wrong] Small blind — Look again. SB pays 0.5 BB. Using that as your full blind would miss another 0.5 BB in the pot.
