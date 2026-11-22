@@ -1390,7 +1390,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   static Act0ProgressStoreV1 _makeProgressStoreV1() => Act0ProgressStoreV1(
     key: _progressPrefsKey,
-    isValidPayload: (raw) => _Act0PersistedProgressV1.tryParse(raw) != null,
+    // The optional archive is recovered independently when opening a save.
+    // Validating each progress copy only needs the rest of the snapshot.
+    isValidPayload: (raw) =>
+        _Act0PersistedProgressV1.tryParse(raw, restoreAttemptArchive: false) !=
+        null,
     debugRecoveryBoundary:
         kDebugMode &&
             const bool.fromEnvironment('SHARKY_DAT06_PAUSE_AFTER_INTENT')
@@ -6305,7 +6309,10 @@ class _Act0PersistedProgressV1 {
     );
   }
 
-  static _Act0PersistedProgressV1? tryParse(String raw) {
+  static _Act0PersistedProgressV1? tryParse(
+    String raw, {
+    bool restoreAttemptArchive = true,
+  }) {
     final Object? decoded;
     try {
       decoded = jsonDecode(raw);
@@ -6537,7 +6544,9 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
-      attemptArchive: map.containsKey('attemptArchive')
+      attemptArchive: !restoreAttemptArchive
+          ? const Act0AttemptArchiveV1.empty()
+          : map.containsKey('attemptArchive')
           ? Act0AttemptArchiveV1.restore(map['attemptArchive'])
           : Act0AttemptArchiveV1.fromOlderSave(learningEvidenceHistory),
       studyObservations: studyObservations,
