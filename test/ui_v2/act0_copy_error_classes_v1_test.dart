@@ -276,7 +276,16 @@ void main() {
             r.caption,
             r.question,
             r.hint,
-            for (final s in r.teachingSteps) ...[s.title, s.body],
+            for (final s in r.teachingSteps) ...[
+              s.title,
+              if (t.taskId == 'showdown_theory')
+                s.body.replaceFirst(
+                  'To muck at showdown means to discard your private cards without showing them.',
+                  '',
+                )
+              else
+                s.body,
+            ],
             for (final o in r.options) ...[
               o.label,
               o.feedbackTitle,

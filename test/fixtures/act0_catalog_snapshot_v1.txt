@@ -143,7 +143,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · The player
     BETTER ANSWER: Raise to 7.5 BB
   - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling 2.5 BB keeps you in. Raising can get the player before you to pay more while you have the strongest hand.
     BETTER ANSWER: Raise to 7.5 BB
-  + [correct] Raise to 7.5 BB — Raise with aces. With AA, a raise can get HJ to pay more with weaker pairs or strong aces. A call lets HJ see the flop for the price already set.
+  + [correct] Raise to 7.5 BB — Raise with aces. With AA, a raise can get the earlier raiser to pay more with weaker pairs or strong aces. A call keeps the pot smaller against those hands.
 
 TASK what_poker_is_table_read_transfer [drill] Read the table
 SUMMARY: Read one real table spot: your cards, the board, and the pot.
@@ -247,7 +247,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier
   - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
-  + [correct] Raise to 7.5 BB — Raise with kings. With KK, raise to 7.5 BB because CO can call with weaker pairs and strong aces. Calling leaves the price at 2.5 BB against hands you lead here.
+  + [correct] Raise to 7.5 BB — Raise with kings. With KK, raise to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling leaves the price at 2.5 BB.
     REPAIR LABELS: Top starting pairs
   - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.
     BETTER ANSWER: Raise to 7.5 BB
@@ -1430,7 +1430,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK showdown_theory [theory] Two ways to win
 CAPTION: A hand can end before or at showdown.
-TEACH: Two endings. Win when everyone else folds, or win by best hand at showdown. To muck means to discard your cards without showing them.
+TEACH: Two endings. Win when everyone else folds, or win by best hand at showdown. To muck at showdown means to discard your private cards without showing them.
 TEACH LABELS: Folds, Showdown
 Q: What happens if everyone else folds to you?
 HINT [theoryOnly]: Folds end it early. Showdown compares hands.
@@ -1754,7 +1754,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
   - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with A6o pays to play a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
   + [correct] Fold — Use the Weak row. Fold A6o because CO can raise stronger aces. Calling costs 2.5 BB and can leave you behind even when you pair your high card.
-  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. A reraise risks 7.5 BB on A6o and can draw a call from a better ace. Folding keeps those chips.
+  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. A reraise risks 7.5 BB on A6o and can get called by a better ace. Folding keeps those chips.
     BETTER ANSWER: Fold
 
 TASK weak_ace_warning_w3_strong_continue [drill] Strong continue
@@ -2031,7 +2031,7 @@ EFFECTIVE: SB unknown · BB unknown
 REASONING: principle value_vs_worse · alt call · edge foldsBetter · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Jd stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. Folding AJo on BTN gives up a raise that can win the blind pot or draw a call from a weaker ace.
+  - [wrong] Fold — The chart gives this hand an open. Folding AJo on BTN gives up a raise that can win the blind pot or get paid by a weaker ace.
     BETTER ANSWER: Raise
   - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with AJo into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and invites SB and BB in cheaply.
     BETTER ANSWER: Raise
@@ -2596,10 +2596,10 @@ EFFECTIVE: HJ unknown · CO unknown · BTN unknown · SB unknown · BB unknown
 REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG Ad Tc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  + [correct] Fold — Read the UTG row. With ATo at UTG, five players can still raise or call with stronger aces. Folding saves the 1 BB a limp would risk.
-  - [wrong] Raise — Re-check ATo and UTG. Raising ATo from UTG costs 2.5 BB with five players still able to respond, including players with better aces. Folding saves that wager.
+  + [correct] Fold — Read the UTG row. The Sharky starting chart folds ATo at UTG because five players can still raise or call with stronger aces. Limping risks 1 BB before they act.
+  - [wrong] Raise — Re-check ATo and UTG. Raising ATo from UTG costs 2.5 BB with five players ready to respond. The Sharky starting chart folds here to save that wager.
     BETTER ANSWER: Fold
-  - [wrong] Call — Read the earlier actions and seat order. Limping with ATo costs 1 BB while five players can still raise. Folding avoids paying to find out whether they do.
+  - [wrong] Call — Read the earlier actions and seat order. Limping ATo from UTG costs 1 BB while five players can still raise. Folding saves that chip.
     BETTER ANSWER: Fold
 
 TASK same_hand_different_seat_same_hand_late_open [drill] Late seat open
@@ -2700,7 +2700,7 @@ EFFECTIVE: HJ unknown · CO unknown · BTN unknown · SB unknown · BB unknown
 REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG Ad Qc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  + [correct] Fold — UTG is before HJ. In this chart, AQo folds at UTG because five players can still raise or call with strong hands. Limping pays 1 BB and gives them a cheap entry.
+  + [correct] Fold — UTG is before HJ. The Sharky starting chart folds AQo at UTG because five players can still raise or call with strong hands. Limping risks 1 BB before they act.
   - [wrong] Raise — Find the first seat for AQo. Raising AQo from UTG into the 1.5 BB pot risks chips with five players still to act behind you, before HJ, where the Sharky starting chart first opens AQo.
     BETTER ANSWER: Fold
   - [wrong] Call — Read the earlier actions and seat order. Calling AQo costs 1 BB from UTG, with five players behind who can raise and make you pay more.
@@ -2719,7 +2719,7 @@ SEATS: UTG folded | HJ Kd Tc | CO | BTN dealer stack 100 BB | SB post 0.5 BB | B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ acts
   - [wrong] Raise — Re-check KTo and HJ. Raising KTo from HJ into the 1.5 BB pot risks chips with CO, BTN, and both blinds still behind you, one seat too early for KTo in the Sharky starting chart.
     BETTER ANSWER: Fold
-  + [correct] Fold — Read the HJ row. Fold KTo from HJ because CO, BTN and both blinds can raise or call with better kings. Limping pays 1 BB before they decide.
+  + [correct] Fold — Read the HJ row. The Sharky starting chart folds KTo from HJ because CO, BTN and the blinds can raise or call with better kings. Limping pays 1 BB before they decide.
   - [wrong] Call — Read the earlier actions and seat order. Limping KTo from HJ costs 1 BB before CO, BTN and the blinds decide. Folding keeps that chip.
     BETTER ANSWER: Fold
 
@@ -2761,7 +2761,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call 2 BB — Read the price and seat. Calling costs 2 BB with Q5o from SB, and BB still has a turn. A better queen can cost you more after the flop.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. Fold Q5o because BTN can raise stronger queens and BB still has a turn. Calling 2 BB puts you first to act after the flop with a weak kicker.
-  - [wrong] Reraise to 10 BB — Read the price and seat. A reraise from SB costs 9.5 BB more and may draw action from stronger hands. Folding keeps those chips with Q5o.
+  - [wrong] Reraise to 10 BB — Read the price and seat. A reraise from SB costs 9.5 BB more and can get called by stronger hands. Folding keeps those chips with Q5o.
     BETTER ANSWER: Fold
 
 TASK w3_play_from_blinds_small_blind_raise [drill] Premium in SB
@@ -2930,7 +2930,7 @@ SEATS: UTG Ac 9d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   - [wrong] Raise — Re-check A9o and UTG. Raising A9o from UTG into the 1.5 BB pot risks chips with five players still to act. The Sharky starting chart folds A9o here because stronger aces can dominate it.
     BETTER ANSWER: Fold
-  + [correct] Fold — Ace discipline applied. Fold A9o at UTG because one of the five players behind can raise or call with a stronger ace. A limp puts chips at risk before any of them acts.
+  + [correct] Fold — Ace discipline applied. The Sharky starting chart folds A9o at UTG because five players can still raise or call with stronger aces. A limp risks chips before they act.
   - [wrong] Call — Read the earlier actions and seat order. Limping A9o from UTG costs 1 BB before any of the five seats behind have acted.
     BETTER ANSWER: Fold
 

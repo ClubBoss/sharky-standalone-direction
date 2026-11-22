@@ -346,7 +346,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with aces.',
       feedbackReason:
-          'With AA, a raise can get HJ to pay more with weaker pairs or strong aces. A call lets HJ see the flop for the price already set.',
+          'With AA, a raise can get the earlier raiser to pay more with weaker pairs or strong aces. A call keeps the pot smaller against those hands.',
     ),
   ],
   feedbackTitle: 'Raise with aces.',
@@ -410,7 +410,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with kings.',
       feedbackReason:
-          'With KK, raise to 7.5 BB because CO can call with weaker pairs and strong aces. Calling leaves the price at 2.5 BB against hands you lead here.',
+          'With KK, raise to 7.5 BB because the earlier raiser can call with weaker pairs and strong aces. Calling leaves the price at 2.5 BB.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -4506,7 +4506,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           _w1DisciplineApplyLateOpenRunner,
           const {
             'fold':
-                "Folding AJo on BTN gives up a raise that can win the blind pot or draw a call from a weaker ace.",
+                "Folding AJo on BTN gives up a raise that can win the blind pot or get paid by a weaker ace.",
             'call':
                 'Limping 1 BB on BTN with AJo into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and invites SB and BB in cheaply.',
           },
@@ -5309,11 +5309,11 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             id: 'call',
             label: 'Call',
             reason:
-                "Limping with ATo costs 1 BB while five players can still raise. Folding avoids paying to find out whether they do.",
+                "Limping ATo from UTG costs 1 BB while five players can still raise. Folding saves that chip.",
           ),
           const {
             "raise":
-                "Raising ATo from UTG costs 2.5 BB with five players still able to respond, including players with better aces. Folding saves that wager.",
+                "Raising ATo from UTG costs 2.5 BB with five players ready to respond. The Sharky starting chart folds here to save that wager.",
           },
         ),
         rewardXp: 9,
@@ -5471,7 +5471,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                 quality: Act0FeedbackQualityV1.correct,
                 feedbackTitle: 'UTG is before HJ.',
                 feedbackReason:
-                    "In this chart, AQo folds at UTG because five players can still raise or call with strong hands. Limping pays 1 BB and gives them a cheap entry.",
+                    "The Sharky starting chart folds AQo at UTG because five players can still raise or call with strong hands. Limping risks 1 BB before they act.",
               ),
               Act0RunnerOptionV1(
                 id: 'raise',
@@ -5586,7 +5586,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               id: 'raise',
               label: 'Reraise to 10 BB',
               reason:
-                  "A reraise from SB costs 9.5 BB more and may draw action from stronger hands. Folding keeps those chips with Q5o.",
+                  "A reraise from SB costs 9.5 BB more and can get called by stronger hands. Folding keeps those chips with Q5o.",
             ),
           ],
           correct: 1,

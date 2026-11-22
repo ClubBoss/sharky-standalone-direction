@@ -29,6 +29,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
+import '../support/act0_w3_catalog_contract_v1.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
 const _source = 'what_poker_is_table_read_transfer';
@@ -2039,8 +2040,11 @@ void main() {
     final lessons = [for (final world in worlds) ...world.lessons];
     final tasks = [for (final lesson in lessons) ...lesson.courseTaskList];
     expect(lessons, hasLength(36));
-    expect(tasks, hasLength(210));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(210));
+    expect(tasks, hasLength(210 + w3BlindVsBlindChoicesV1.length));
+    expect(
+      tasks.map((task) => task.taskId).toSet(),
+      hasLength(210 + w3BlindVsBlindChoicesV1.length),
+    );
     final sizingLesson = worlds.last.lessons.singleWhere(
       (lesson) => lesson.lessonId == 'small_half_pot',
     );
@@ -2059,7 +2063,7 @@ void main() {
             task.entryPhase == Act0LessonPhaseV1.drill &&
             task.runner.options.isNotEmpty,
       ),
-      hasLength(174),
+      hasLength(174 + w3BlindVsBlindChoicesV1.length),
     );
     final first = lessons.first;
     final required = tasks.map((task) => task.taskId).toSet();

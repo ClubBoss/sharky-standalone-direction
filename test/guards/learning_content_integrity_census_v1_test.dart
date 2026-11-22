@@ -906,6 +906,8 @@ void main() {
       }
     }
     final addedContracts = {
+      for (final entry in w3BlindVsBlindChoicesV1.entries)
+        entry.key: ('w3_play_from_blinds', entry.value),
       ...w11Wave4ChoiceContractV1,
       ...w12Wave4ChoiceContractV1,
     };

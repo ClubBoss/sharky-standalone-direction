@@ -1244,7 +1244,7 @@ void _newFreeCheckContextTests() {
     final id = entry.key;
     _contextPremisesWidgetTest('fold_check_call_raise', id, neutral: false);
     test(
-      'new mechanical Check $id retains goal and complete declared facts',
+      'new mechanical Check $id retains its goal and all declared table facts',
       () {
         final task = _task('fold_check_call_raise', id);
         final hero = id == 'actions_legal_context' ? 'co' : 'btn';
@@ -1265,8 +1265,8 @@ void _newFreeCheckContextTests() {
         ]);
         expect(task.runner.options.map((o) => o.feedbackReason), [
           'Folding gives up the hand. Checking is free here.',
-          'Checking keeps the hand going when no bet faces you.',
-          'Calling means matching a bet. There is no bet here.',
+          'BB checked and there is no bet, so checking keeps you in for free. Folding gives up your chance to win the pot.',
+          'BB has put in no bet on this street. Trying to call misses the free check that keeps you in.',
         ]);
         expect(table.scope, Act0TableScopeV1.playedHand);
         expect(table.playerCount, 6);

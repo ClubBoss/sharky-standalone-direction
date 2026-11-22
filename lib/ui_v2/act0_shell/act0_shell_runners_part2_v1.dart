@@ -3177,7 +3177,7 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the UTG row.',
       feedbackReason:
-          "With ATo at UTG, five players can still raise or call with stronger aces. Folding saves the 1 BB a limp would risk.",
+          "The Sharky starting chart folds ATo at UTG because five players can still raise or call with stronger aces. Limping risks 1 BB before they act.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -3230,7 +3230,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the HJ row.',
       feedbackReason:
-          "Fold KTo from HJ because CO, BTN and both blinds can raise or call with better kings. Limping pays 1 BB before they decide.",
+          "The Sharky starting chart folds KTo from HJ because CO, BTN and the blinds can raise or call with better kings. Limping pays 1 BB before they decide.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -3291,7 +3291,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace discipline applied.',
       feedbackReason:
-          "Fold A9o at UTG because one of the five players behind can raise or call with a stronger ace. A limp puts chips at risk before any of them acts.",
+          "The Sharky starting chart folds A9o at UTG because five players can still raise or call with stronger aces. A limp risks chips before they act.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -4657,7 +4657,7 @@ Act0LessonTaskV1 _w2WeakAceTask(Act0LessonTaskV1 task) {
     'w3_dominated_fold' => (
       label: 'Reraise to 7.5 BB',
       reason:
-          'A reraise risks 7.5 BB on A6o and can draw a call from a better ace. Folding keeps those chips.',
+          'A reraise risks 7.5 BB on A6o and can get called by a better ace. Folding keeps those chips.',
     ),
     'w3_strong_continue' => (
       label: 'Reraise to 7.5 BB',

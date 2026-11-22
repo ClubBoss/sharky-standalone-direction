@@ -4362,7 +4362,7 @@ final _showdownIntroRunner = _showdownRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Two endings.',
       body:
-          'Win when everyone else folds, or win by best hand at showdown. To muck means to discard your cards without showing them.',
+          'Win when everyone else folds, or win by best hand at showdown. To muck at showdown means to discard your private cards without showing them.',
       focusLabels: <String>['Folds', 'Showdown'],
     ),
   ],
