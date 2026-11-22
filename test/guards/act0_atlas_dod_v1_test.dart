@@ -657,7 +657,7 @@ void main() {
     }
 
     final betWidgets = <int, int>{};
-    final seatWidgets = <int, int>{};
+    final seatWidgets = {4: 0, 8: 0, 10: 0, 11: 0};
     final courseExceptions = <String>[];
     var oneFormatLessons = 0;
     var longestStreak = 0;
@@ -867,7 +867,7 @@ void main() {
             .where((r) => kind(r) == 'betSize')
             .length;
       }
-      if ([4, 8, 10, 11].contains(number)) {
+      if (seatWidgets.containsKey(number)) {
         seatWidgets[number] = worldGraded
             .where((r) => kind(r) == 'seatTap')
             .length;
