@@ -2315,7 +2315,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] UTG [seat utg] — Not quite. UTG is early and has less information.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] CO [seat co] — Read the earlier actions and seat order. CO takes its own turn before BTN on this flop. BTN is the seat that can observe CO’s first action.
+  - [wrong] CO [seat co] — Read the earlier actions and seat order. After the flop, CO takes its first turn before BTN. BTN is the seat that can observe CO’s first action.
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -6074,7 +6074,7 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_bubble_short_stack [drill] Shortest stack
 CAPTION: Six left, five paid. You start with 6 BB, the shortest stack. It folds to you in HJ.
-TEACH: Shortest stack A first-in all-in can win the blinds. A short stack must weigh the cost of waiting.
+TEACH: Shortest stack Compare the cost of waiting with what the shortest stack can still risk.
 Q: Which option can win the blinds?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Kh | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
