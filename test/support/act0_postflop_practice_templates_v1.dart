@@ -591,7 +591,7 @@ List<GeneratedPracticeTaskV1> generatePostflopPracticeV1(
               ? Act0FeedbackQualityV1.correct
               : Act0FeedbackQualityV1.wrong,
           feedbackTitle: label == correctLabel ? 'Correct.' : 'Look again.',
-          feedbackReason: 'With ${deal.hero} on ${deal.board}, $reason',
+          feedbackReason: 'You hold ${deal.hero} on ${deal.board}. $reason',
         ),
     ]..shuffle(rng);
     final lesson = 'generated_${skill.name}';
