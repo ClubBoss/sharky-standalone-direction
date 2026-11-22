@@ -4821,7 +4821,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "co":
                 "CO has three players behind. Treating it as HJ misses one more live player still to act.",
             "utg":
-                "UTG is the first seat after BB. HJ is the next seat clockwise after UTG.",
+                "UTG sits between BB and HJ. HJ is the seat immediately after UTG.",
           },
         ),
         rewardXp: 6,
@@ -4912,7 +4912,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "bb":
                 "BB has posted 1 BB. Mixing it up with SB makes you count the wrong 0.5 BB post.",
             "btn":
-                "BTN has the dealer marker. SB is the next seat clockwise and posts 0.5 BB in this setup.",
+                "BTN has the dealer marker. Its neighbor SB posts the 0.5 BB small blind in this setup.",
           },
         ),
         rewardXp: 5,

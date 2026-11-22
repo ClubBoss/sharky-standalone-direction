@@ -2203,7 +2203,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus hj | Tap hj, co, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] HJ [seat hj] — HJ recognized. HJ sits after UTG and before CO.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus hj | Tap hj, co, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] UTG [seat utg] — Read the earlier actions and seat order. UTG is the first seat after BB. HJ is the next seat clockwise after UTG.
+  - [wrong] UTG [seat utg] — Read the earlier actions and seat order. UTG sits between BB and HJ. HJ is the seat immediately after UTG.
     BETTER ANSWER: HJ
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus hj | Tap hj, co, utg | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
@@ -2264,7 +2264,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus sb | Tap sb, bb, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
   + [correct] SB [seat sb] — SB recognized. SB is the small blind, posted before the big blind.
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus sb | Tap sb, bb, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] BTN [seat btn] — Read the earlier actions and seat order. BTN has the dealer marker. SB is the next seat clockwise and posts 0.5 BB in this setup.
+  - [wrong] BTN [seat btn] — Read the earlier actions and seat order. BTN has the dealer marker. Its neighbor SB posts the 0.5 BB small blind in this setup.
     BETTER ANSWER: SB
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat UTG | Seat focus sb | Tap sb, bb, btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 

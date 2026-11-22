@@ -1098,7 +1098,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "button_advantage",
     targetTaskId: "button_advantage_position_repair_btn_last_postflop",
     targetFingerprint:
-        "d849d56d7e220eeebdfdd0d46d8fd5ae947abddcfa494610bbac33821e64b4ab",
+        "4f288e008ea47e63ccdcf9cf702269e7445525b0f37388d5bbb82ea4acfa187f",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1112,7 +1112,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "aaccd2c5d5a67f93e6c37125358d65995e697e8296386bc640a7332640cb43e6",
+        "80d056139a4b323ae2bb92fa147265913b02c820bd452f668ed74c4135d07cd1",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason:
         "HJ is one seat clockwise after UTG. UTG sits immediately clockwise after BB and acts first preflop here.",
@@ -1139,7 +1139,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "c383244189a89edbabf127477aad87c4e042b1981ffb04977d39cec5913ca090",
+        "56bc4ceae88956349b897389bb78e08742542430f2449a6024d3db095337677c",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
     sourceChoiceReason:
@@ -1167,7 +1167,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "b7ff4922b8c707215724a79ee7a454222be2ba036a27d52c8288fffd6b9c756d",
+        "91cbab2fe81a0a48d5963e7e01c449a1dd7fc3cc88d6da8f1f1ef01c4c9bb8ca",
     sourceQuestion: "Tap BTN.",
     sourceChoiceReason:
         "CO sits immediately before the dealer marker. The seat with the marker is BTN.",
@@ -1642,7 +1642,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "btn",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "6fbc69ee38ad3eff64e3cb42a6b49850f609e7864b364a5699eedfb753d395eb",
+        "ae3581533787d2d53e96b93cd5716cb1d49e3efd75fdf5a27736d05f69125c73",
     sourceQuestion: "Who acts first preflop?",
     sourceChoiceReason:
         "BTN acts after UTG, HJ and CO on this first preflop pass. UTG has the first voluntary decision.",
@@ -1654,7 +1654,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_order_practice",
     targetTaskId: "blinds_review",
     targetFingerprint:
-        "6fbc69ee38ad3eff64e3cb42a6b49850f609e7864b364a5699eedfb753d395eb",
+        "ae3581533787d2d53e96b93cd5716cb1d49e3efd75fdf5a27736d05f69125c73",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
@@ -1668,7 +1668,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "hj",
     sourceCorrectChoiceId: "utg",
     sourceFingerprint:
-        "30c293c3ee96d45b7d53b7bae0991798c9a09b52175fdae28e202de5a000bae5",
+        "8c38c881893ef8fadb8e702f942cb8a600b0d28e0e62c2fa74e3a153ea803ebf",
     sourceQuestion: "Tap UTG.",
     sourceChoiceReason: "HJ is after UTG in this order.",
     sourceChoiceLabel: "HJ",
@@ -1679,7 +1679,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_action_order",
     targetTaskId: "positions_utg",
     targetFingerprint:
-        "30c293c3ee96d45b7d53b7bae0991798c9a09b52175fdae28e202de5a000bae5",
+        "8c38c881893ef8fadb8e702f942cb8a600b0d28e0e62c2fa74e3a153ea803ebf",
     targetCorrectChoiceId: "utg",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",
