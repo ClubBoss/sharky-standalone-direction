@@ -90,7 +90,7 @@ void main() {
       final tasks = _tasks
           .where((item) => item.world.worldNumber <= 4)
           .toList();
-      expect(tasks.length, 199);
+      expect(tasks.length, 201);
       expect(
         tasks.map((s) => s.lesson.lessonId).toSet(),
         act0W14LessonSkillsV1.keys.toSet(),
@@ -386,9 +386,9 @@ void main() {
                   : Act0DecisionAssistanceV1.none,
             ),
       ];
-      final original = Act0LearningEvidenceHistoryV1(
-        records: records,
-        sourceAnchors: records.take(20).toList(),
+      final original = records.fold(
+        Act0LearningEvidenceHistoryV1(sourceAnchors: records.take(20).toList()),
+        (history, record) => history.append(record),
       );
       final restored = Act0LearningEvidenceHistoryV1.tryParseStorageString(
         original.toStorageString(),
