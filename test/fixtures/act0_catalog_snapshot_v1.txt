@@ -1394,7 +1394,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.25 BB · CO 
 
 TASK hand_discipline_buckets_intro [theory] Four buckets
 CAPTION: Preflop starts by sorting the hand into a simple bucket.
-TEACH: You are first in. The players before you folded. You may open.
+TEACH: You are first in. Enter first voluntarily. Open means the first raise.
 TEACH: Groups and seats, before a raise. T means ten. Suited means same suit (s); offsuit means different suits (o).
 
 Sharky 6-max starting chart. Open means the first raise preflop.
@@ -1426,9 +1426,9 @@ TABLE: Preflop | You As Ah | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG As Ah stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] Premium — Solid understanding. AA belongs to premium pairs and usually raises to grow the pot with the best hand.
-  - [wrong] Medium — Not quite. AA is stronger than a medium hand.
+  - [wrong] Medium — Not quite. AA belongs to Premium. Folding AA from UTG under a Medium rule gives up an open and a chance to win both blinds.
     BETTER ANSWER: Premium
-  - [wrong] Strong — Check the clue again. The chart puts aces with kings and queens in Premium. Strong starts below that group.
+  - [wrong] Strong — Check the clue again. Both rows can open from UTG here. Against a prior raise, putting AA in Strong gives up the Premium reraise.
     BETTER ANSWER: Premium
 
 TASK hand_discipline_buckets_strong [drill] Strong hand
@@ -1440,10 +1440,10 @@ HINT [theoryOnly]: It is below the absolute top but does not need a perfect seat
 TABLE: Preflop | You Jh Js | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1 | Center Pocket jacks | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ Jh Js stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] Premium — Not quite. Premium is reserved for the absolute top hands like AA, KK, and AKs.
+  - [wrong] Premium — Not quite. JJ on HJ is Strong. If UTG opens to 2.5 BB, an incorrect Premium reraise to 7.5 BB risks more with a hand outside the narrow raise range.
     BETTER ANSWER: Strong
   + [correct] Strong — Excellent spot. JJ is a strong hand — second bucket. Very playable, but not premium.
-  - [wrong] Medium — Not quite. JJ is above medium. Medium hands need more context to play well.
+  - [wrong] Medium — Not quite. JJ is Strong and HJ can open it. Applying the CO–BTN Medium row would give up an HJ open and the chance to win 1.5 BB.
     BETTER ANSWER: Strong
 
 TASK hand_discipline_buckets_medium [drill] Medium hand
@@ -1455,9 +1455,9 @@ HINT [theoryOnly]: Two high unpaired cards can play, but seat and frame matter.
 TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1 | Center KTo preflop | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Tc stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [wrong] Strong — Not quite. Strong hands need less context. KTo wants a good position and a clear frame.
+  - [wrong] Strong — Not quite. KTo can open first in from this CO seat. Treating it as Strong from UTG risks 2.5 BB on an open the chart folds.
     BETTER ANSWER: Medium
-  - [wrong] Weak — Not quite. KTo is in the medium row. In this model, it opens from CO or BTN if nobody has raised.
+  - [wrong] Weak — Not quite. KTo is in the second Medium row. Folding it first in from CO gives up a chart open and the chance to win both blinds.
     BETTER ANSWER: Medium
   + [correct] Medium — Spot on. KTo is a medium hand — good enough to play but needs a comfortable spot.
 
@@ -1470,10 +1470,10 @@ HINT [theoryOnly]: Weak early hands should not be forced into action.
 TABLE: Preflop | You Js 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center J8o early | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG Js 8d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  - [wrong] Strong — Not quite. Offsuit disconnected hands are not strong starters.
+  - [wrong] Strong — Not quite. UTG has J8o with five players still to act. Putting in 2.5 BB would risk chips with a Weak hand outside the chart.
     BETTER ANSWER: Weak
   + [correct] Weak — Well done. J8o from early position belongs in the weak bucket.
-  - [wrong] Medium — Check the clue again. J8o is not in any chart row, so it belongs in Weak. The only jack hands in Medium are KJ, QJs, and AJo.
+  - [wrong] Medium — Check the clue again. J8o is outside both Medium rows. Treating it as Medium at CO risks 2.5 BB on an open the chart folds.
     BETTER ANSWER: Weak
 
 TASK hand_discipline_buckets_borderline [drill] Borderline hand
@@ -1485,10 +1485,10 @@ HINT [theoryOnly]: Connected high cards can play, but they need position and fra
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1 | Center QJs preflop | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Js stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [wrong] Strong — QJs is in the Medium bucket. Strong hands need less help from position and action frame. QJs still wants context before chips go in.
+  - [wrong] Strong — QJs is in the Medium bucket. QJs can open here from CO. Treating it as Strong from HJ risks 2.5 BB with a hand the chart folds there.
     BETTER ANSWER: Medium
   + [correct] Medium — Conditional bucket found. QJs sits in the medium border zone. It can continue in good context, but it is not a self-starting strong hand.
-  - [wrong] Weak — Too low. QJs has connected high-card value. It is conditional, not weak.
+  - [wrong] Weak — Too low. QJs is Medium and CO is in its opening row. Calling it Weak gives up a first-in raise and the chance to win 1.5 BB.
     BETTER ANSWER: Medium
 
 TASK hand_discipline_buckets_recap [review] Bucket recap
@@ -1502,7 +1502,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [wrong] The suits and your chip color — Use the table facts. KTs shares a suit, but knowing that alone can put 1 BB in with a hand your seat should fold.
     BETTER ANSWER: Your hand group and your seat
   + [correct] Your hand group and your seat — Use the hand group and seat. KTs is Medium and CO is in the CO–BTN opening row. The same hand from HJ falls outside that row.
-  - [wrong] The blind amounts and dealer puck — Use the table facts. The 1.5 BB in blinds cannot tell you whether KTs can open. Using the bank alone can cost a raise from the wrong seat.
+  - [wrong] The blind amounts and dealer puck — Use the table facts. The 1.5 BB in blinds is the same from CO and HJ. Ignoring the seat can cost a 2.5 BB raise from HJ, where the chart folds KTs.
     BETTER ANSWER: Your hand group and your seat
 
 ===== WORLD 2 · LESSON fold_discipline · Fold discipline =====
@@ -1603,7 +1603,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
   - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with A6o pays to play a weak ace that loses big pots when CO holds a stronger ace.
     BETTER ANSWER: Fold
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts ace-six offsuit in the Weak group and folds it on BTN against a CO raise.
-  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. Reraising to 7.5 BB with A6o on BTN risks more against CO. A better ace can continue and leave you with the worse pair.
+  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. A6o on BTN is Weak against CO. A 7.5 BB reraise risks 7.5 BB and can get called by a stronger ace.
     BETTER ANSWER: Fold
 
 TASK weak_ace_warning_w3_strong_continue [drill] Strong continue
@@ -1645,7 +1645,7 @@ HINT [theoryOnly]: Look for a shared rank, then compare the other card.
 TABLE: Preflop | You Kd Qc | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center CO opened | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kd Qc stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] KQo shares its queen with AK and has the lower second card — Not quite. AK has no queen. KQo shares its king with AK, and the queen loses to the ace.
+  - [wrong] KQo shares its queen with AK and has the lower second card — Not quite. KQo on BTN shares a king with AK, which wins on a king-high board if the other cards do not change the best hand. Treating KQ as safe can cost extra chips after the 2.5 BB call.
     BETTER ANSWER: A7o shares an ace with AK and has the lower second card
   + [correct] A7o shares an ace with AK and has the lower second card — Strong contrast read. A7o shares its ace with AK or AQ and has the lower second card. KQo avoids that specific comparison, but it can be dominated by AK or AQ itself.
   - [wrong] Both hands lose for the same reason — Read the hand and earlier action. KQo is in the call row on BTN against CO. Treating it like A7o can make you give up the chart call for 2.5 BB.
@@ -1685,9 +1685,9 @@ TABLE: Preflop | You As Ks | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG As Ks stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] Premium — Check the suited ace-king row. AK suited from UTG is Premium. That group can raise even from the first seat.
-  - [wrong] Medium — Check the top of the chart. AK suited from UTG qualifies for a first-in raise. Treating it as Medium can make you fold and miss a chance to build the pot.
+  - [wrong] Medium — Check the top of the chart. AKs is Premium, so it can raise first from UTG. Applying the later Medium row gives up the open and the chance to win 1.5 BB.
     BETTER ANSWER: Premium
-  - [wrong] Strong — Read the hand and earlier action. AK suited from UTG has the same opening seats as Strong, but this chart puts it in Premium. Using the Strong row would miss its reraise in the narrow model.
+  - [wrong] Strong — Read the hand and earlier action. AKs opens here from UTG under either label. The cost appears when facing an open: calling it Strong gives up the Premium reraise.
     BETTER ANSWER: Premium
 
 TASK continue_or_let_go_medium_open [drill] Medium hand opens
@@ -1719,7 +1719,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
   + [correct] Fold — Use the Weak row. The Sharky starting chart puts jack-seven offsuit in the Weak group and folds it on BTN against a CO raise.
   - [wrong] Call [2.5 BB] — Read the cards before the seat. Calling 2.5 BB into a 4 BB pot on BTN with J7o risks chips with a weak offsuit hand that loses big pots to CO's stronger high cards.
     BETTER ANSWER: Fold
-  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. A 7.5 BB reraise from BTN with J7o risks three times the price of calling a CO open with a hand outside the chart.
+  - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. J7o is Weak and CO already opened. A BTN reraise risks 7.5 BB with a hand this chart folds to one open.
     BETTER ANSWER: Fold
 
 TASK continue_or_let_go_medium_call_or_fold [drill] Medium facing open
@@ -1776,7 +1776,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO ac
   + [correct] Reraise to 7.5 BB — Correct. AA on CO is in the Premium row. Raising to 7.5 BB builds the pot against weaker hands when HJ continues.
   - [wrong] Call 2.5 BB — Check the response rule. Calling 2.5 BB with AA on CO leaves the pot small and misses a chance to charge weaker hands for a flop.
     BETTER ANSWER: Reraise to 7.5 BB
-  - [wrong] Fold — Check the response rule. Folding AA on CO surrenders the strongest starting hand to HJ and gives up the chance to win the 4 BB already in.
+  - [wrong] Fold — Check the response rule. CO holds AA facing an HJ open. Folding gives up a chance to win the 4 BB already in the pot with the highest starting pair.
     BETTER ANSWER: Reraise to 7.5 BB
 
 TASK w2_narrow_three_bet_medium [drill] Facing a CO open
@@ -1789,7 +1789,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] QJs is in the top group — Use the table facts. QJs is Medium. Treating it as Premium on BTN can put 5 BB more than a call at risk against CO.
     BETTER ANSWER: QJs is Medium and you act after CO
   + [correct] QJs is Medium and you act after CO — QJs can call in position. The chart calls one CO open with QJs from BTN. Paying 2.5 BB keeps the pot smaller while you act after CO.
-  - [wrong] Nobody has raised yet — Use the table facts. CO already raised to 2.5 BB. Treating this as an unopened pot can turn a call into a more expensive reraise.
+  - [wrong] Nobody has raised yet — Use the table facts. CO already put in 2.5 BB. Treating it as unopened can turn BTN’s QJs call into a reraise that risks 5 BB more.
     BETTER ANSWER: QJs is Medium and you act after CO
 
 TASK w2_narrow_three_bet_strong [drill] Tens facing an HJ open
@@ -1815,7 +1815,7 @@ SEATS: UTG folded stack 100 BB | HJ stack 97 BB raise 3 BB | CO Ad 5c stack 100 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 3 BB · CO acts
   - [wrong] Reraise to 9 BB — Check the response rule. Reraising to 9 BB with A5o on CO risks six more blinds than a call with a weak ace.
     BETTER ANSWER: Fold
-  - [wrong] Call 3 BB — Check the response rule. Calling 3 BB with A5o on CO can lose more when an ace pairs both you and a stronger ace in HJ.
+  - [wrong] Call 3 BB — Check the response rule. CO holds A5o against a single HJ open. Calling pays 3 BB to continue with a Weak hand whose ace can be outkicked.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. A5o is Weak. Folding keeps the 3 BB you would have to pay to see a flop.
 
@@ -1892,7 +1892,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO ac
   + [correct] A3o can lose to a higher ace when both pair — A better ace can outkick A3o. A3o from CO can be dominated by HJ. Folding saves the 2.5 BB call and avoids paying more with a worse pair.
   - [wrong] The ace makes your kicker unimportant — Use the table facts. If both players pair an ace, HJ can win with a higher kicker. A call puts 2.5 BB at risk with A3o.
     BETTER ANSWER: A3o can lose to a higher ace when both pair
-  - [wrong] Sitting in CO makes your kicker play higher — Use the table facts. Position can give information, but cannot change A3o. A 2.5 BB call still pays in with a weak kicker.
+  - [wrong] Sitting in CO makes your kicker play higher — Use the table facts. CO’s seat cannot improve the three kicker. Calling pays 2.5 BB even though HJ can win with a higher ace when both pair.
     BETTER ANSWER: A3o can lose to a higher ace when both pair
 
 ===== WORLD 2 · LESSON discipline_checkpoint · Hand discipline checkpoint =====
@@ -1915,9 +1915,9 @@ TABLE: Preflop | You Ks Kh | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | D
 SEATS: UTG folded stack 100 BB | HJ Ks Kh stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   + [correct] Premium — Use the highest pairs row. A pair of kings is in the Premium group of the chart.
-  - [wrong] Medium — Check the top of the chart. The Medium group has lower pairs. The Premium group includes kings.
+  - [wrong] Medium — Check the top of the chart. KK on HJ can open first because it is Premium. Using a CO–BTN Medium row gives up the HJ open and a chance at both blinds.
     BETTER ANSWER: Premium
-  - [wrong] Strong — Read the hand and earlier action. KK from HJ is Premium. Dropping it to Strong would miss a chance to reraise with a stronger hand against one open in position.
+  - [wrong] Strong — Read the hand and earlier action. KK can open from HJ either way here. The Strong row gives up a Premium reraise if UTG has already raised.
     BETTER ANSWER: Premium
 
 TASK discipline_checkpoint_checkpoint_fold [drill] Disciplined fold
@@ -1961,7 +1961,7 @@ TRAIL: UTG folds · HJ acts
   + [correct] Weak · Fold — Well done. That is the disciplined read. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.
   - [wrong] Medium · Raise — Not quite. Raising J4o from HJ into the 1.5 BB pot risks chips with a weak offsuit hand while CO, BTN, and both blinds still act behind you.
     BETTER ANSWER: Weak · Fold
-  - [suboptimal] Weak · Call — Playable thought. Limping 1 BB from HJ with J4o into the 1.5 BB pot leaks chips with a weak offsuit hand instead of folding and saving your stack.
+  - [suboptimal] Weak · Call — Playable thought. HJ holds J4o, outside the chart. Limping pays 1 BB and leaves CO, BTN and the blinds free to raise.
     BETTER ANSWER: Weak · Fold
 
 TASK discipline_checkpoint_checkpoint_review [review] Discipline recap
@@ -1974,7 +1974,7 @@ HINT [theoryOnly]: Next world adds position: the same bucket can change action b
 TABLE: Preflop | You As 7d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center Weak ace | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer As 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  - [wrong] Auto action — Not quite. One bucket does not force one action. Position changes comfort.
+  - [wrong] Auto action — Not quite. BTN sees a CO raise and holds A7o. Choosing by bucket alone gives up the chance to read that raise and can cost a 2.5 BB call.
     BETTER ANSWER: Seat context
   + [correct] Seat context — Solid understanding. Bucket is step one. Seat context is the next check before choosing action.
   - [wrong] Choose a size first — Read the hand and earlier action. A7o faces a CO raise. Picking a size before checking the seat and prior action can lead to paying 2.5 BB with a weak ace.
