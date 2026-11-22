@@ -2579,10 +2579,10 @@ TABLE: Preflop | You Ad Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn |
 EFFECTIVE: SB unknown · BB unknown
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ad Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [suboptimal] Call [1 BB] — Limp is legal, raise is stronger. A 1 BB limp from CO gives BTN and the blinds a cheaper way to enter and gives up the pressure of a raise.
+  - [suboptimal] Call [1 BB] — Limp is legal, raise is stronger. A 1 BB limp from BTN lets both blinds see a cheap flop and gives up the fold pressure of a 2.5 BB raise.
     BETTER ANSWER: Raise
   + [correct] Raise [2.5 BB] — Sharp read. ATo in late position can open an unopened pot.
-  - [wrong] Fold — Read the earlier actions and seat order. Folding from CO gives up a chance to win the blinds with only BTN, SB and BB left to act.
+  - [wrong] Fold — Read the earlier actions and seat order. Folding from BTN gives up a chance to win the 1.5 BB in blinds with only SB and BB left to act.
     BETTER ANSWER: Raise
 
 TASK same_hand_different_seat_w3_same_hand_recap [review] Frame recap
@@ -2647,10 +2647,10 @@ TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn |
 EFFECTIVE: SB unknown · BB unknown
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Kd Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [suboptimal] Call [1 BB] — Calling matches the blind. Calling 1 BB from CO lets the blinds see a cheap flop and gives up the pressure of a 2.5 BB open.
+  - [suboptimal] Call [1 BB] — Calling matches the blind. Calling 1 BB from BTN lets the blinds see a cheap flop and gives up the pressure of a 3 BB open.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
-  - [wrong] Fold — Read the earlier actions and seat order. Folding this hand first in from CO gives up the chart open with just three players left to act.
+  - [wrong] Fold — Read the earlier actions and seat order. Folding this hand first in from BTN gives up the chart open with just two players left to act.
     BETTER ANSWER: Raise
 
 TASK position_apply_early_fold [drill] Early: AQo first in

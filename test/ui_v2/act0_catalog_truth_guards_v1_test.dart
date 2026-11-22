@@ -1534,6 +1534,11 @@ void main() {
     expect(flags('Bet 2 BB instead of 4 BB.'), isFalse);
   });
 
+  test('G1·39–40 decision copy agrees with position and sizing', () {
+    final findings = reasoningCatalogRowsV1.expand(auditDecisionCopyV1);
+    expect(findings, isEmpty);
+  });
+
   test('G1·39–40 catches the W3 hero mismatches, not chart references', () {
     final ato = _catalogRow('same_hand_different_seat_same_hand_late_open');
     final kto = _catalogRow('position_apply_late_open');
