@@ -3,8 +3,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 /// Internal handoff for a completed Act0 decision.
 ///
 /// This is deliberately separate from telemetry and durable learning evidence.
-/// It carries stable decision identity only; the shell retains ownership of
-/// repair-intent construction and any future persistence policy.
+/// Stable decision identity and the captured presentation reach the shell
+/// together. The shell owns repair intent construction and persistence.
 enum Act0CompletedDecisionKindV1 { actionList, seat, sizing }
 
 /// No provenance is inferred for records created before this field existed.

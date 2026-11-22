@@ -28,6 +28,7 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
 class _Act0AttemptArchiveScreenV1State
     extends State<Act0AttemptArchiveScreenV1> {
   String? _confirmRemovalId;
+  String _query = '';
   Act0ArchivedAttemptV1? _replayingAttempt;
 
   void _back() {
@@ -40,25 +41,36 @@ class _Act0AttemptArchiveScreenV1State
 
   @override
   Widget build(BuildContext context) {
-    final archive = widget.archive;
     final attempt = _replayingAttempt;
-    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     return PopScope<void>(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _back();
       },
-      child: attempt != null
-          ? Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back)
-          : _archiveList(context, archive, pagePadding),
+      child: attempt == null
+          ? _archiveList(context)
+          : Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back),
     );
   }
 
-  Widget _archiveList(
-    BuildContext context,
-    Act0AttemptArchiveV1 archive,
-    double pagePadding,
-  ) {
+  Widget _archiveList(BuildContext context) {
+    final archive = widget.archive;
+    final query = _query.trim().toLowerCase();
+    final attempts = query.isEmpty
+        ? archive.attempts
+        : archive.attempts
+              .where((attempt) {
+                return [
+                  attempt.taskLabel,
+                  attempt.choiceLabel,
+                  attempt.evidence.taskId,
+                  attempt.evidence.choiceId,
+                ].whereType<String>().any(
+                  (label) => label.toLowerCase().contains(query),
+                );
+              })
+              .toList(growable: false);
+    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     return ListView.builder(
       key: const PageStorageKey('act0_attempt_archive_list'),
       padding: EdgeInsets.fromLTRB(
@@ -67,7 +79,7 @@ class _Act0AttemptArchiveScreenV1State
         pagePadding,
         Act0ShellTokensV1.gapXl,
       ),
-      itemCount: archive.attempts.isEmpty ? 2 : archive.attempts.length + 1,
+      itemCount: attempts.isEmpty ? 2 : attempts.length + 1,
       itemBuilder: (context, index) {
         final Widget child;
         if (index == 0) {
@@ -84,15 +96,33 @@ class _Act0AttemptArchiveScreenV1State
                 style: Act0AcademyReadingStyleV1.sectionTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
+              if (archive.attempts.isNotEmpty) ...[
+                TextFormField(
+                  key: const Key('act0_attempt_archive_search'),
+                  initialValue: _query,
+                  style: Act0AcademyReadingStyleV1.body,
+                  decoration: const InputDecoration(
+                    labelText: 'Search saved attempts',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) => setState(() {
+                    _query = value;
+                    _confirmRemovalId = null;
+                  }),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
             ],
           );
-        } else if (archive.attempts.isEmpty) {
-          child = const Text(
-            'No saved attempts yet.',
+        } else if (attempts.isEmpty) {
+          child = Text(
+            archive.attempts.isEmpty
+                ? 'No saved attempts yet.'
+                : 'No matching attempts.',
             style: Act0AcademyReadingStyleV1.muted,
           );
         } else {
-          child = _attemptRow(context, archive.attempts[index - 1]);
+          child = _attemptRow(context, attempts[index - 1]);
         }
         return Act0ShellTokensV1.centeredContent(
           context,
@@ -163,7 +193,10 @@ class _Act0AttemptArchiveScreenV1State
           if (_confirmRemovalId != attempt.id)
             TextButton(
               key: const Key('act0_attempt_archive_open_replay'),
-              onPressed: () => setState(() => _replayingAttempt = attempt),
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                setState(() => _replayingAttempt = attempt);
+              },
               child: const Text('Replay attempt'),
             ),
           if (_confirmRemovalId == attempt.id) ...[
