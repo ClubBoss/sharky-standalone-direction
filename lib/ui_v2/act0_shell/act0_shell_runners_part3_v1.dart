@@ -4198,13 +4198,13 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
   caption:
       'BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.',
   hint: 'Compare the high cards if neither hand improves.',
-  question: 'Which plan fits A-Q under this rule?',
+  question: 'What do you do with ace-queen after BB checks?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'missed',
-      label: 'Missed: check',
+      label: 'Check',
       isCorrect: true,
-      preferredLabel: 'Missed: check',
+      preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace-high can win.',
       feedbackReason:
@@ -4212,10 +4212,10 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'bluff',
-      label: 'Consider a bluff',
+      label: 'Bet half pot as a bluff',
       isCorrect: false,
-      preferredLabel: 'Missed: check',
-      betterAnswerLabel: 'Missed: check',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Ace-high has a reason to check.',
       feedbackReason:
@@ -4223,10 +4223,10 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'value',
-      label: 'Value: bet',
+      label: 'Bet half pot for value',
       isCorrect: false,
-      preferredLabel: 'Missed: check',
-      betterAnswerLabel: 'Missed: check',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The weaker hands would fold.',
       feedbackReason:
@@ -4646,9 +4646,9 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
 ) => <Act0RunnerOptionV1>[
   Act0RunnerOptionV1(
     id: 'bluff',
-    label: 'Consider a bluff',
+    label: 'Bet half pot as a bluff',
     isCorrect: true,
-    preferredLabel: 'Consider a bluff',
+    preferredLabel: 'Bet half pot as a bluff',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'A bet can fold out a better hand.',
     feedbackReason:
@@ -4656,10 +4656,10 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
   ),
   Act0RunnerOptionV1(
     id: 'missed',
-    label: 'Missed: check',
+    label: 'Check',
     isCorrect: false,
-    preferredLabel: 'Consider a bluff',
-    betterAnswerLabel: 'Consider a bluff',
+    preferredLabel: 'Bet half pot as a bluff',
+    betterAnswerLabel: 'Bet half pot as a bluff',
     quality: Act0FeedbackQualityV1.suboptimal,
     feedbackTitle: 'Both high-card hands beat yours.',
     feedbackReason:
@@ -4667,10 +4667,10 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
   ),
   Act0RunnerOptionV1(
     id: 'value',
-    label: 'Value: bet',
+    label: 'Bet half pot for value',
     isCorrect: false,
-    preferredLabel: 'Consider a bluff',
-    betterAnswerLabel: 'Consider a bluff',
+    preferredLabel: 'Bet half pot as a bluff',
+    betterAnswerLabel: 'Bet half pot as a bluff',
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Worse calls are missing.',
     feedbackReason:
@@ -4685,7 +4685,7 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
   caption:
       'BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.',
   hint: 'Would you beat either unpaired hand if no one improves?',
-  question: 'Which plan fits J-T under this rule?',
+  question: 'What do you do with jack-ten after BB checks?',
   options: _w6BluffCandidateOptionsV1('J-T'),
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Js Tc'),
@@ -4700,7 +4700,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   caption: 'K-7-2 rainbow. You hold J-T with no draw.',
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Pure missed hands usually do not want a big pot.',
-  question: 'What is the clean action direction?',
+  question: 'What do you do after BB checks?',
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Jd Th'),
     boardCards: _act0LessonCardsV1('Ks 7h 2c'),
@@ -4709,9 +4709,9 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check_fold',
-      label: 'Usually check or fold',
+      label: 'Check',
       isCorrect: true,
-      preferredLabel: 'Usually check or fold',
+      preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
@@ -4721,8 +4721,8 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
       id: 'value_bet',
       label: 'Bet for value',
       isCorrect: false,
-      preferredLabel: 'Usually check or fold',
-      betterAnswerLabel: 'Usually check or fold',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket.',
       feedbackReason:
@@ -4730,10 +4730,10 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_barrel',
-      label: 'Keep betting across streets',
+      label: 'Bet big now',
       isCorrect: false,
-      preferredLabel: 'Usually check or fold',
-      betterAnswerLabel: 'Usually check or fold',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too aggressive.',
       feedbackReason:
@@ -4807,14 +4807,13 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       'You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.',
   hint:
       'When the board pairs and the first bluff gets called, some pressure lines cool off.',
-  question:
-      'Suppose fold pressure has dropped on this turn. What is the cleaner plan?',
+  question: 'Fold pressure dropped on this turn. What do you do now?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check_more',
-      label: 'Check more often',
+      label: 'Check',
       isCorrect: true,
-      preferredLabel: 'Check more often',
+      preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good pressure reset.',
       feedbackReason:
@@ -4822,10 +4821,10 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
-      label: 'Make another big bet',
+      label: 'Bet big again',
       isCorrect: false,
-      preferredLabel: 'Check more often',
-      betterAnswerLabel: 'Check more often',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
@@ -4835,8 +4834,8 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       id: 'bet_value',
       label: 'Bet for value',
       isCorrect: false,
-      preferredLabel: 'Check more often',
-      betterAnswerLabel: 'Check more often',
+      preferredLabel: 'Check',
+      betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket now.',
       feedbackReason:

@@ -1094,8 +1094,8 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _w6BluffCandidateRunner.copyWith(
           caption:
-              'On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.',
-          question: 'Which plan fits 9-6 under this rule?',
+              'On K-8-3, BB checks. Any pair calls half pot. Q-J and A-9 fold. Check if your hand already beats either unpaired hand.',
+          question: 'What do you do with nine-six after BB checks?',
           feedbackTitle: 'A bet can fold better hands.',
           feedbackReason:
               'On K-8-3, 9-6 trails both Q-J and A-9. In this example, both of those hands fold to a half-pot bet.',

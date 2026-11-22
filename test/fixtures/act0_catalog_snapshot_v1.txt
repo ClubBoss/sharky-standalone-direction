@@ -3563,18 +3563,18 @@ TASK w6_missed_dry_board [drill] Missed on dry board
 CAPTION: BB checks with a pair, Q-J, or A-9. BB calls a half-pot bet with any pair and folds Q-J and A-9. In this example, check if you can already beat either unpaired hand.
 TEACH: Compare the three buckets. Before acting postflop, sort your hand into value, bluff candidate, or missed by asking what calls and what folds.
 TEACH LABELS: Hand strength, Can it improve?, What folds?
-Q: Which plan fits A-Q under this rule?
+Q: What do you do with ace-queen after BB checks?
 HINT [theoryOnly]: Compare the high cards if neither hand improves.
 TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Range bucket? | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] Missed: check — Ace-high can win. A-Q missed the flop, but if nobody improves, it beats both Q-J and A-9. The rule says to check when your hand can already win.
+  + [correct] Check — Ace-high can win. A-Q missed the flop, but if nobody improves, it beats both Q-J and A-9. The rule says to check when your hand can already win.
     FEEDBACK TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts high card, rainbow, backdoor straight
-  - [suboptimal] Consider a bluff — Ace-high has a reason to check. A bet makes Q-J and A-9 fold. A-Q is already ahead of both, so that is not the goal in this example.
-    BETTER ANSWER: Missed: check
+  - [suboptimal] Bet half pot as a bluff — Ace-high has a reason to check. A bet makes Q-J and A-9 fold. A-Q is already ahead of both, so that is not the goal in this example.
+    BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts high card, rainbow, backdoor straight
-  - [wrong] Value: bet — The weaker hands would fold. A-Q has no pair here. Both weaker high-card hands fold under the rule, so they cannot pay off a value bet.
-    BETTER ANSWER: Missed: check
+  - [wrong] Bet half pot for value — The weaker hands would fold. A-Q has no pair here. Both weaker high-card hands fold under the rule, so they cannot pay off a value bet.
+    BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You As Qd | Board Kh 7s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Range bucket? | Facts high card, rainbow, backdoor straight
 
 TASK w6_table_bucket_notice [drill] First live read
@@ -3711,32 +3711,32 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_bluff_candidate [drill] When better hands fold
 CAPTION: BB checks this K-7-2 flop. In this example, BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J. Check if you can already beat either of those two hands.
-Q: Which plan fits J-T under this rule?
+Q: What do you do with jack-ten after BB checks?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [suboptimal] Missed: check — Both high-card hands beat yours. J-T missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
-    BETTER ANSWER: Consider a bluff
+  - [suboptimal] Check — Both high-card hands beat yours. J-T missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
+    BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Consider a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat J-T. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
+  + [correct] Bet half pot as a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat J-T. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  - [wrong] Value: bet — Worse calls are missing. Q-J and A-9 are both ahead of J-T if no one improves. Getting those hands to fold is a bluff.
-    BETTER ANSWER: Consider a bluff
+  - [wrong] Bet half pot for value — Worse calls are missing. Q-J and A-9 are both ahead of J-T if no one improves. Getting those hands to fold is a bluff.
+    BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You Js Tc | Board Kh 7d 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_missed_hand_action [drill] Missed hand direction
 CAPTION: K-7-2 rainbow. You hold J-T with no draw.
-Q: What is the clean action direction?
+Q: What do you do after BB checks?
 HINT [theoryOnly]: Pure missed hands usually do not want a big pot.
 TABLE: Flop | You Jd Th | Board Ks 7h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center After BB checks | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Th stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Bet for value — Wrong bucket. Value betting belongs to made hands, not pure missed hands.
-    BETTER ANSWER: Usually check or fold
-  - [suboptimal] Keep betting across streets — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
-    BETTER ANSWER: Usually check or fold
-  + [correct] Usually check or fold — Spot on. Pure missed hands conserve chips more often than they force action.
+    BETTER ANSWER: Check
+  - [suboptimal] Bet big now — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
+    BETTER ANSWER: Check
+  + [correct] Check — Spot on. Pure missed hands conserve chips more often than they force action.
 
 TASK w6_table_value_line_transfer [drill] Live-table value line
 CAPTION: BB checks. In this example, BB calls a half-pot bet with weaker kings and hands such as 8-7.
@@ -3758,16 +3758,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_turn_pressure_shift_transfer [drill] Turn pressure shift
 CAPTION: You bluffed the K-7-2 flop with J-T. BB called, and the turn pairs the 2.
-Q: Suppose fold pressure has dropped on this turn. What is the cleaner plan?
+Q: Fold pressure dropped on this turn. What do you do now?
 HINT [theoryOnly]: When the board pairs and the first bluff gets called, some pressure lines cool off.
 TABLE: Turn | You Jd Ts | Board Kc 7h 2s 2d | Pot 11 BB | Seat BTN | Active btn | Decision btn | Card focus board_2, board_3 | Center After BB checks | Facts one pair, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Ts stack 94.75 BB | SB folded stack 99.5 BB | BB stack 94.75 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks · BTN bets 2.5 BB · BB calls 2.5 BB · Turn: BB checks
-  - [suboptimal] Make another big bet — Tempting, but noisy. BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.
-    BETTER ANSWER: Check more often
-  + [correct] Check more often — Good pressure reset. Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.
+  - [suboptimal] Bet big again — Tempting, but noisy. BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.
+    BETTER ANSWER: Check
+  + [correct] Check — Good pressure reset. Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.
   - [wrong] Bet for value — Wrong bucket now. J-T has not paired either private card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.
-    BETTER ANSWER: Check more often
+    BETTER ANSWER: Check
 
 TASK w6_pressure_lines_recap [review] Pressure recap
 CAPTION: Lesson learned: bucket decides the action direction.
@@ -4014,19 +4014,19 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
     BETTER ANSWER: 12 AK offsuit, 6 pairs
 
 TASK range_checkpoint_pressure [drill] Pressure after a check
-CAPTION: On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.
-Q: Which plan fits 9-6 under this rule?
+CAPTION: On K-8-3, BB checks. Any pair calls half pot. Q-J and A-9 fold. Check if your hand already beats either unpaired hand.
+Q: What do you do with nine-six after BB checks?
 HINT [theoryOnly]: Would you beat either unpaired hand if no one improves?
 TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the flop | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 9h 6d stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [suboptimal] Missed: check — Both high-card hands beat yours. 9-6 missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
-    BETTER ANSWER: Consider a bluff
+  - [suboptimal] Check — Both high-card hands beat yours. 9-6 missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
+    BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  - [wrong] Value: bet — Worse calls are missing. Q-J and A-9 are both ahead of 9-6 if no one improves. Getting those hands to fold is a bluff.
-    BETTER ANSWER: Consider a bluff
+  - [wrong] Bet half pot for value — Worse calls are missing. Q-J and A-9 are both ahead of 9-6 if no one improves. Getting those hands to fold is a bluff.
+    BETTER ANSWER: Bet half pot as a bluff
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Consider a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat 9-6. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
+  + [correct] Bet half pot as a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat 9-6. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_kicker_showdown_compare [drill] Find weaker calls
