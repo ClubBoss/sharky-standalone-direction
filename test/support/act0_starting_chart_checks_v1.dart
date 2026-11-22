@@ -222,7 +222,7 @@ void registerAct0StartingChartChecksV1() {
     expect(
       chartCopyFindingsV1(
         'complete',
-        'With Medium hands, call from BTN with KQs, KQo, KJs, or QJs.',
+        'With Medium hands, call from BTN with AQo, AJo, KQs, KQo, ATs, ATo, KJs, or QJs.',
       ),
       isEmpty,
     );

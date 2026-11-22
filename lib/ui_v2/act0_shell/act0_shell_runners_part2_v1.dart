@@ -1906,7 +1906,7 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'On BTN after a raise.',
       body:
-          'Facing one HJ or CO raise, BTN calls with KQs, KQo, KJs or QJs and folds Weak hands (A7o, J8o).',
+          'Facing one HJ or CO raise, BTN calls with AQo, AJo, KQs, KQo, ATs, ATo, KJs or QJs and folds the rest of Medium. Weak hands (A7o, J8o) fold.',
     ),
   ],
 );
@@ -2101,7 +2101,7 @@ const _sharkyOpenChartChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'That hand and seat fit the chart.',
     feedbackReason:
-        'The Sharky starting chart includes this hand from this seat when nobody has raised.',
+        "With BTN first in, a raise lets you win the blinds when they fold. A limp gives BB a cheap flop and leaves SB a cheaper call.",
   ),
 ];
 
@@ -2310,7 +2310,8 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
-      feedbackReason: 'Weak offsuit hands from early position can simply fold.',
+      feedbackReason:
+          "At UTG with a weak offsuit hand, five players can raise after you, so folding saves the chips a limp puts at risk.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -2564,7 +2565,7 @@ const _kqoButtonFacingRaiseChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Clean execution.',
     feedbackReason:
-        'The Sharky starting chart calls one CO raise with KQo on BTN.',
+        "With KQo on BTN, call because CO can raise weaker high cards and acts first after the flop. A reraise puts more at risk against stronger hands.",
   ),
   Act0RunnerOptionV1(
     id: 'fold',
@@ -2623,7 +2624,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'The Sharky starting chart calls one HJ raise with KQo on BTN.',
+          "Call with KQo on BTN because HJ acts first after the flop and can raise weaker high cards preflop. A reraise risks more against the stronger aces and pairs that can continue.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -2711,7 +2712,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'The Sharky starting chart calls one CO raise with QJs on BTN.',
+          "Call QJs on BTN because CO can raise weaker suited hands and acts first after the flop. Reraising risks more when CO continues with stronger hands.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -3916,7 +3917,7 @@ const _weakAceFacingRaiseChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Disciplined fold.',
     feedbackReason:
-        'The Sharky starting chart folds A7o on BTN against a CO raise because stronger aces can win when both players pair their ace. Experienced players sometimes continue with more hands.',
+        "Fold A7o because CO can raise stronger aces that win when you both pair your ace. Calling pays to enter against those hands.",
   ),
   Act0RunnerOptionV1(
     id: 'call',
@@ -3999,6 +4000,14 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
   final handCode = '${cards[0].rank}${cards[1].rank}o';
   final opener = cutoffFacingHijack ? 'HJ' : 'CO';
   final seatName = cutoffFacingHijack ? 'from CO' : 'on BTN';
+  final strongerHands = switch (cards[0].rank) {
+    'A' => 'stronger aces',
+    'K' => 'stronger kings',
+    _ => 'stronger jacks',
+  };
+  final foldReason =
+      'Fold $handCode because $opener can raise $strongerHands. '
+      'Calling costs 2.5 BB and can leave you behind even when you pair your high card.';
   final wrongCallReason = cards[0].rank == 'A'
       ? 'Calling 2.5 BB into a 4 BB pot $seatName with $handCode pays to play a weak ace that loses big pots when $opener holds a stronger ace.'
       : 'Calling 2.5 BB into a 4 BB pot $seatName with $handCode risks chips with a weak offsuit hand that loses big pots to $opener\'s stronger high cards.';
@@ -4007,8 +4016,7 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
         ? 'HJ raised. You are in CO with $handName.'
         : 'CO raised. You are on the Button with $handName.',
     hint: 'Read your two cards and find their group in the chart.',
-    feedbackReason:
-        'The Sharky starting chart puts $handName in the Weak group against a $opener raise.',
+    feedbackReason: foldReason,
     table: cutoffFacingHijack
         ? _act0FacingOpenTableV1(
             base.table.copyWith(
@@ -4032,8 +4040,7 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
           preferredLabel: 'Fold',
           quality: Act0FeedbackQualityV1.correct,
           feedbackTitle: 'Use the Weak row.',
-          feedbackReason:
-              'The Sharky starting chart puts $handName in the Weak group and folds it $seatName against a $opener raise.',
+          feedbackReason: foldReason,
         ),
         Act0RunnerOptionV1(
           id: 'call',
@@ -4056,7 +4063,7 @@ Act0RunnerStateV1 _act0WeakHandAfterRaiseContrastV1(
             feedbackTitle: 'Keep the chips for a stronger hand.',
             feedbackReason:
                 'Reraising $handCode from CO puts 7.5 BB at risk against '
-                'an HJ opener who can continue with much stronger hands.',
+                'an HJ opener who can continue with stronger hands. Folding saves that wager.',
           ),
       ],
       correctOptionId: 'fold',
@@ -4148,7 +4155,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Well done.',
       feedbackReason:
-          'That is the disciplined read. J4o from HJ is not a curiosity spot. Name weak, protect chips, and move on.',
+          "Fold J4o from HJ because CO, BTN and both blinds still act. Limping pays 1 BB before any of them can raise.",
     ),
     Act0RunnerOptionV1(
       id: 'looks_fun_open',
@@ -4442,7 +4449,8 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
       preferredLabel: 'Raise',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise is the sharp Button play.',
-      feedbackReason: 'KQo on the Button is a clean first-in open.',
+      feedbackReason:
+          "With KQo on BTN, raise because the blinds can fold or pay with weaker kings and queens. A limp lets BB see a cheap flop.",
       repairFocusSeatIds: <String>['btn'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['BTN open', 'KQo'],
@@ -4625,7 +4633,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'HJ open is clean.',
       feedbackReason:
-          'KQo is a medium hand with enough strength to open first in from HJ.',
+          "From HJ, raise KQo because CO, BTN and the blinds can fold or continue with weaker high cards. A limp invites them to enter cheaply.",
       repairFocusSeatIds: <String>['hj'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['HJ open', 'KQo'],
@@ -4648,7 +4656,7 @@ Act0LessonTaskV1 _w2WeakAceTask(Act0LessonTaskV1 task) {
     'w3_dominated_fold' => (
       label: 'Reraise to 7.5 BB',
       reason:
-          'A6o on BTN is Weak against CO. A 7.5 BB reraise risks 7.5 BB and can get called by a stronger ace.',
+          'A reraise risks 7.5 BB on A6o and can draw a call from a better ace. Folding keeps those chips.',
     ),
     'w3_strong_continue' => (
       label: 'Reraise to 7.5 BB',
@@ -4767,7 +4775,7 @@ final _w2ThreeBetIntroRunner = _world3BucketsIntroRunner.copyWith(
           'In these examples, HJ or CO opens once and you have position '
           'against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). '
           'Call with the other Strong hands: JJ, TT, AQs, and AJs. '
-          'With Medium hands, call from BTN with KQs, KQo, KJs, or QJs. '
+          'With Medium hands, call from BTN with AQo, AJo, KQs, KQo, ATs, ATo, KJs, or QJs. '
           'Fold the rest of Medium, including all Medium hands from CO, '
           'and fold Weak hands. '
           'If other players enter or you are out of position, the example no '

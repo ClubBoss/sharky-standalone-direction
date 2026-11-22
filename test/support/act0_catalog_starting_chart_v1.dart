@@ -51,7 +51,7 @@ String renderStartingChartOpening() => [
 String renderStartingChartFacingRaise() =>
     'Facing one ${_openerSeats.join(' or ')} raise, $_callerSeat calls with '
     '${_callHands.take(_callHands.length - 1).join(', ')} or ${_callHands.last} '
-    'and folds $_weakGroup hands (A7o, J8o).';
+    'and folds the rest of Medium. $_weakGroup hands (A7o, J8o) fold.';
 
 typedef StartingChartRow = ({String group, List<String> seats});
 

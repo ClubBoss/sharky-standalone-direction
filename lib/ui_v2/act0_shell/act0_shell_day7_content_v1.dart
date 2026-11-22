@@ -776,7 +776,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Raise", "Fold"],
     correct: 2,
     reason:
-        "94o is a Weak offsuit hand. The chart folds this hand first in from HJ.",
+        "Fold 94o from HJ because CO, BTN and the blinds can still raise. A limp costs 1 BB and leaves you with weak cards if they continue.",
+    wrongReasons: const {
+      0: "Calling costs 1 BB with weak cards, and CO, BTN or either blind can still raise. Folding saves that chip.",
+      1: "A raise puts chips at risk against four players who can still act. Folding protects those chips with 94o.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -820,7 +824,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Call", "Raise"],
     correct: 2,
     reason:
-        "KJs has two high cards of one suit. The chart includes KJs for a first-in raise from CO.",
+        "Raise KJs from CO because BTN and both blinds can fold, while weaker suited hands can pay. A call brings those players in cheaply.",
+    wrongReasons: const {
+      0: "Folding gives up a chance to win the blinds when BTN, SB and BB all fold to a raise.",
+      1: "Limping lets BB see a flop cheaply. A raise can win the pot before the flop.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -831,9 +839,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold', 'Raise'],
     correct: 2,
     reason:
-        'AK suited is Premium in the starting chart. From CO, you can '
-        'reraise the 3 BB HJ open to build the pot in position. Calling '
-        'leaves the pot smaller, and folding gives up a Premium hand.',
+        "With AK suited, reraise the 3 BB HJ open because weaker suited aces can pay and some pairs can fold. Calling misses the chance to put HJ to that choice.",
+    wrongReasons: const {
+      0: "A call keeps the pot smaller and misses a chance to charge weaker suited aces. Reraising puts HJ to a new decision.",
+      1: "Folding gives up a strong suited ace with position on HJ. Reraising can get more chips from hands you lead.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -845,7 +855,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Raise", "Call"],
     correct: 0,
     reason:
-        "62o is a weak offsuit hand in the first seat to act. The chart leaves it out of UTG opens.",
+        "Fold 62o from UTG because five players can still raise. A limp risks 1 BB before any of them has acted.",
+    wrongReasons: const {
+      1: "A raise risks more chips with 62o while five players can still call or reraise. Folding saves the raise.",
+      2: "Limping costs 1 BB and gives players behind a chance to raise you off the hand. Folding keeps that chip.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -857,7 +871,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Raise", "Fold"],
     correct: 1,
     reason:
-        "AJo is Medium. The chart includes it for first-in raises from HJ and the later non-blind seats.",
+        "Raise AJo from HJ because CO, BTN and the blinds can fold or supply a call with a weaker ace. Limping makes it cheap for the blinds to stay.",
+    wrongReasons: const {
+      0: "Limping gives CO and BTN a cheap entry and lets BB check for free. Raising applies pressure before the flop.",
+      2: "Folding gives up a chance to win the blind pot or get paid by a weaker ace when you raise.",
+    },
   ),
   _day7ExampleV1(
     2,

@@ -3974,7 +3974,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           ),
           const {
             'call':
-                'Calling the 2 BB bet into the 7 BB pot on Ah 7c 2d keeps your Qh Qs in the hand and commits chips instead of exiting.',
+                'Calling HJ’s 2 BB keeps your queens in the hand and costs chips. Fold to leave with your remaining stack.',
             'raise':
                 'Raising to 6 BB against HJ\'s 2 BB bet in the 7 BB pot risks even more chips with Qh Qs on Ah 7c 2d instead of folding out.',
           },
@@ -4050,7 +4050,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           id: 'raise',
           label: 'Reraise to 9 BB',
           reason:
-              'A7o on BTN would risk 9 BB against the 3 BB CO open. A weak kicker can leave you paying more with the second-best pair.',
+              'Reraising A7o to 9 BB against CO risks more with a kicker that can lose even after pairing your ace. Folding saves the whole wager.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
@@ -4340,8 +4340,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             cards: 'Ad Ac',
             correctId: 'raise',
             raiseReason:
-                'AA on CO is in the Premium row. Raising to 7.5 BB '
-                'builds the pot against weaker hands when HJ continues.',
+                "Raise AA to 7.5 BB because HJ can call with high pairs and strong aces that trail you. Calling 2.5 BB leaves the pot smaller against those hands.",
             callReason:
                 'Calling 2.5 BB with AA on CO leaves the pot small and '
                 'misses a chance to charge weaker hands for a flop.',
@@ -4421,8 +4420,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
               'TT is Strong on CO. Reraising to 7.5 BB risks '
               '5 BB more than the call against HJ.',
           callReason:
-              'TT is Strong and CO acts after HJ on the flop '
-              'if both continue. Calling 2.5 BB keeps the opening price.',
+              "Call 2.5 BB with TT because HJ can raise worse pairs and overcards. A reraise builds a bigger pot against the higher pairs that can call.",
           foldReason:
               'Folding TT on CO gives up a call with a Strong '
               'pair against one 2.5 BB open from HJ.',
@@ -4442,18 +4440,16 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             correctId: 'fold',
             openBb: 3,
             raiseReason:
-                'Reraising to 9 BB with A5o on CO risks six more blinds '
-                'than a call with a weak ace.',
+                'Reraising to 9 BB risks the full wager with a weak ace that can lose even when it pairs. A fold saves those chips.',
             callReason:
                 'Calling 3 BB with A5o on CO can lose more when an ace '
                 'pairs both you and a stronger ace in HJ.',
             foldReason:
-                'A5o is Weak. Folding keeps the 3 BB you would have to '
-                'pay to see a flop.',
+                "Fold A5o because HJ can raise stronger aces. Calling costs 3 BB and a paired ace can still lose to a higher kicker.",
           ),
           const {
             "call":
-                "CO holds A5o against a single HJ open. Calling pays 3 BB to continue with a Weak hand whose ace can be outkicked.",
+                "Calling costs 3 BB with A5o and you can still lose when you pair the ace. A fold preserves those chips.",
           },
         ),
         rewardXp: 12,
@@ -4497,7 +4493,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           id: 'call',
           label: 'Call',
           reason:
-              'Limping from UTG pays 1 BB with 84o and leaves five players the chance to raise.',
+              'Limping from UTG costs 1 BB with 84o and leaves five players the chance to raise. Folding keeps that chip.',
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,
