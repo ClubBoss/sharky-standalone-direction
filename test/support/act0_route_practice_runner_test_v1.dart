@@ -52,3 +52,27 @@ Future<void> tapAct0RoutePracticeKeyV1(WidgetTester tester, String id) async {
   await tester.tap(reachable);
   await tester.pumpAndSettle();
 }
+
+Future<void> finishAct0RoutePracticeV1(
+  WidgetTester tester, {
+  required bool correct,
+}) async {
+  expect(act0RoutePracticeFinder, findsOneWidget);
+  for (
+    var rep = 0;
+    rep < 6 && act0RoutePracticeFinder.evaluate().isNotEmpty;
+    rep++
+  ) {
+    final shell = tester.widget<Act0LessonRunnerShellV1>(
+      find.descendant(
+        of: act0RoutePracticeFinder,
+        matching: find.byType(Act0LessonRunnerShellV1),
+      ),
+    );
+    if (shell.runner.phase == Act0LessonPhaseV1.drill) {
+      await answerAct0RoutePracticeV1(tester, correct: correct);
+    }
+    await tapAct0RoutePracticeKeyV1(tester, 'act0_shell_feedback_continue_cta');
+  }
+  expect(act0RoutePracticeFinder, findsNothing);
+}

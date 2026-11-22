@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_path_progress_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -52,8 +51,8 @@ class AtlasPracticeWorldV1 {
 AtlasPracticeWorldV1 auditAtlasPracticeWorldV1(Act0WorldCardV1 world) {
   final report = AtlasPracticeWorldV1(world.worldId);
   final steps = act0RoutePracticeStepsV1(world);
-  final checkpoint = world.lessons.lastOrNull;
-  if (checkpoint == null || !act0LessonIsWorldCheckpointV1(world, checkpoint)) {
+  final checkpoint = act0RoutePracticeBoundaryLessonV1(world);
+  if (checkpoint == null) {
     report.gaps.add('нет чекпоинта в маршруте');
     return report;
   }

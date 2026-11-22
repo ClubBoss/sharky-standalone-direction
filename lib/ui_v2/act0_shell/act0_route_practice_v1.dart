@@ -1,3 +1,4 @@
+import 'act0_path_progress_v1.dart';
 import 'act0_shell_state_v1.dart';
 
 typedef Act0RoutePracticeRepV1 = ({
@@ -9,12 +10,26 @@ typedef Act0RoutePracticeRepV1 = ({
 
 typedef Act0RoutePracticeStepV1 = ({String id, int beforeLessonIndex});
 
-/// The final authored lesson is the world boundary. W5 and W8 use ordinary
-/// lesson titles there, so scheduling does not depend on a display label.
+/// W5 and W8 have a final course lesson without a separate checkpoint.
+Act0LessonCardV1? act0RoutePracticeBoundaryLessonV1(Act0WorldCardV1 world) {
+  final last = world.lessons.lastOrNull;
+  if (last == null) return null;
+  final terminalLesson = switch (world.worldId) {
+    'world_5' => 'turn_river_changes',
+    'world_8' => 'format_pressure',
+    _ => null,
+  };
+  return act0LessonIsWorldCheckpointV1(world, last) ||
+          last.lessonId == terminalLesson
+      ? last
+      : null;
+}
+
 List<Act0RoutePracticeStepV1> act0RoutePracticeStepsV1(Act0WorldCardV1 world) {
   if (world.worldNumber < 1 ||
       world.worldNumber > 12 ||
-      world.lessons.length < 3) {
+      world.lessons.length < 3 ||
+      act0RoutePracticeBoundaryLessonV1(world) == null) {
     return const [];
   }
   final preCheckpoint = world.lessons.length - 1;

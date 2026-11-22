@@ -51,9 +51,7 @@ bool act0LessonIsWorldCheckpointV1(
 ) =>
     world.lessons.length > 1 &&
     lesson.lessonId == world.lessons.last.lessonId &&
-    (lesson.lessonId == 'turn_river_changes' ||
-        lesson.lessonId == 'format_pressure' ||
-        lesson.lessonId.contains('checkpoint') ||
+    (lesson.lessonId.contains('checkpoint') ||
         lesson.phaseLabel.toLowerCase().contains('checkpoint') ||
         lesson.title.toLowerCase().contains('checkpoint'));
 

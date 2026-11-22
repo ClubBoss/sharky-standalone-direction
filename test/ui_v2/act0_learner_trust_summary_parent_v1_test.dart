@@ -1,3 +1,4 @@
+import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_authored_repair_goal_fixture_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -316,10 +317,16 @@ void main() {
           );
           // The actual curriculum advances beyond the completed Guide.
           await _openTab(t, 'Learn');
-          final learn = t.widget<Act0LearnPathShellV1>(
-            find.byType(Act0LearnPathShellV1),
-          );
-          final current = learn.lessons.firstWhere(
+          Act0LearnPathShellV1 learn() =>
+              t.widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1));
+          if (learn().requiredPractice != null) {
+            await tapAct0RoutePracticeKeyV1(
+              t,
+              'act0_shell_current_mission_cta',
+            );
+            await finishAct0RoutePracticeV1(t, correct: true);
+          }
+          final current = learn().lessons.firstWhere(
             (lesson) =>
                 lesson.isSelectable &&
                 lesson.state == Act0LessonStateV1.current,

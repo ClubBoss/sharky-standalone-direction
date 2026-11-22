@@ -1,3 +1,4 @@
+import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import 'dart:async';
 // SIMULATED normal production AppRoot journey on English iPhone 14 Pro.
@@ -1934,6 +1935,10 @@ void main() {
       // Complete W1 prerequisites through the ordinary content path, including
       // the inline retry. The open Review item still gates the checkpoint.
       for (var step = 0; step < prerequisites.length * 5; step++) {
+        if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+          await finishAct0RoutePracticeV1(tester, correct: true);
+          continue;
+        }
         final summary = find.byType(Act0BlockCompletionShellV1);
         if (summary.evaluate().isNotEmpty) {
           final completed = (await _saved(tester))['completedTaskIds'] as List;
@@ -1983,6 +1988,12 @@ void main() {
       expect(_rows(locked, 'openRepairIntents').single, miss);
       await tester.tap(find.text('Learn').last);
       await tester.pumpAndSettle();
+      final learn = tester.widget<Act0LearnPathShellV1>(
+        find.byType(Act0LearnPathShellV1),
+      );
+      expect(learn.requiredPractice, isNotNull);
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      await finishAct0RoutePracticeV1(tester, correct: true);
       expect(find.text('Clear weak spots in Review to unlock'), findsOneWidget);
 
       await tester.tap(find.text('Review').last);
@@ -2154,6 +2165,10 @@ void main() {
         }
       }
       if (remountedBoundary) continue;
+      if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+        await finishAct0RoutePracticeV1(tester, correct: true);
+        continue;
+      }
       final summaryFinder = find.byType(Act0BlockCompletionShellV1);
       if (summaryFinder.evaluate().isNotEmpty) {
         final summary = tester.widget<Act0BlockCompletionShellV1>(
@@ -2220,6 +2235,13 @@ void main() {
             required.contains(target) &&
             !completed.contains(target)) {
           await _tap(tester, 'act0_shell_block_summary_continue_cta');
+          if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+            await _tap(tester, 'act0_shell_current_mission_cta');
+          }
+          if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+            await finishAct0RoutePracticeV1(tester, correct: true);
+            await _tap(tester, 'act0_shell_current_mission_cta');
+          }
           expect(_runner(tester).selectedTaskId, target);
         } else {
           // Temporary Action orchestration does not complete legal-context.
@@ -2229,11 +2251,17 @@ void main() {
         continue;
       }
       if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
-        expect(
-          find.byKey(const Key('act0_shell_current_mission_cta')),
-          findsOneWidget,
-        );
+        final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
+        if (mission.evaluate().isEmpty) {
+          await tester.tap(find.text('Learn').last);
+          await tester.pumpAndSettle();
+        }
+        expect(mission, findsOneWidget);
         await _tap(tester, 'act0_shell_current_mission_cta');
+        if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
+          await finishAct0RoutePracticeV1(tester, correct: true);
+          continue;
+        }
         expect(required, contains(_runner(tester).selectedTaskId));
         expect(completed, isNot(contains(_runner(tester).selectedTaskId)));
         continue;
