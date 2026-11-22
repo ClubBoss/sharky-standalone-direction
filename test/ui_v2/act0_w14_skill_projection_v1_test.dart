@@ -393,7 +393,7 @@ void main() {
             ),
       ];
       final original = records.fold(
-        Act0LearningEvidenceHistoryV1(sourceAnchors: records.take(20).toList()),
+        const Act0LearningEvidenceHistoryV1(),
         (history, record) => history.append(record),
       );
       expect(
