@@ -210,7 +210,7 @@ void main() {
         (
           task: taskFor(
             worldId: 'world_1',
-            lessonId: 'hand_rankings_upper',
+            lessonId: 'hand_rankings_sequences',
             taskId: 'hand_rankings_flush_drill',
           ),
           banned: <String>['flush beats straight'],
