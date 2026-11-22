@@ -4700,7 +4700,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   caption: 'K-7-2 rainbow. You hold J-T with no draw.',
   teachingSteps: const <Act0TeachingStepV1>[],
   hint: 'Pure missed hands usually do not want a big pot.',
-  question: 'What do you do after BB checks?',
+  question: 'What is the clean action direction?',
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Jd Th'),
     boardCards: _act0LessonCardsV1('Ks 7h 2c'),
@@ -4709,9 +4709,9 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check_fold',
-      label: 'Check',
+      label: 'Usually check or fold',
       isCorrect: true,
-      preferredLabel: 'Check',
+      preferredLabel: 'Usually check or fold',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
@@ -4721,8 +4721,8 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
       id: 'value_bet',
       label: 'Bet for value',
       isCorrect: false,
-      preferredLabel: 'Check',
-      betterAnswerLabel: 'Check',
+      preferredLabel: 'Usually check or fold',
+      betterAnswerLabel: 'Usually check or fold',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket.',
       feedbackReason:
@@ -4730,10 +4730,10 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'always_barrel',
-      label: 'Bet big now',
+      label: 'Keep betting across streets',
       isCorrect: false,
-      preferredLabel: 'Check',
-      betterAnswerLabel: 'Check',
+      preferredLabel: 'Usually check or fold',
+      betterAnswerLabel: 'Usually check or fold',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too aggressive.',
       feedbackReason:

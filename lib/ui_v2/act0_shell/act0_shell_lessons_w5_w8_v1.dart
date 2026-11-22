@@ -873,7 +873,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           caption:
               "BB checks. Assume BB calls half pot with Q-9 and 5-4; other unpaired hands fold.",
           hint: 'Read the cards and the stated range.',
-          question: "What is a half-pot bet trying to achieve?",
+          question: "What do you do to earn a call from a weaker hand?",
           feedbackTitle: 'Read the range in this hand.',
           feedbackReason:
               "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
@@ -886,9 +886,9 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: const <Act0RunnerOptionV1>[
             Act0RunnerOptionV1(
               id: 'value',
-              label: "Get called by worse hands",
+              label: "Bet half pot for value",
               isCorrect: true,
-              preferredLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.correct,
               feedbackTitle: "A bet can earn weaker calls.",
               feedbackReason:
@@ -896,10 +896,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             ),
             Act0RunnerOptionV1(
               id: 'bluff',
-              label: "Make stronger hands fold",
+              label: "Bet half pot as a bluff",
               isCorrect: false,
-              preferredLabel: "Get called by worse hands",
-              betterAnswerLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
+              betterAnswerLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Read the hands that call.",
               feedbackReason:
@@ -907,10 +907,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             ),
             Act0RunnerOptionV1(
               id: 'missed',
-              label: "Give up on a missed flop",
+              label: "Check",
               isCorrect: false,
-              preferredLabel: "Get called by worse hands",
-              betterAnswerLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
+              betterAnswerLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "You paired the queen.",
               feedbackReason:

@@ -1015,7 +1015,6 @@ void main() {
       'w6_missed_dry_board': pressureLabels,
       'w6_bluff_candidate': pressureLabels,
       'range_checkpoint_pressure': pressureLabels,
-      'w6_missed_hand_action': {'Check': 'Usually check or fold'},
       'w6_turn_pressure_shift_transfer': {'Check': 'Check more often'},
       'w6_value_range_action': {'Check': 'Check and see'},
       'w6_table_value_line_transfer': {'Check': 'Check back'},
@@ -1242,25 +1241,19 @@ void main() {
         [
           [
             "value",
-            "Get called by worse hands",
+            "Bet half pot for value",
             true,
             "correct",
-            "Get called by worse hands",
+            "Bet half pot for value",
           ],
           [
             "bluff",
-            "Make stronger hands fold",
+            "Bet half pot as a bluff",
             false,
             "suboptimal",
-            "Get called by worse hands",
+            "Bet half pot for value",
           ],
-          [
-            "missed",
-            "Give up on a missed flop",
-            false,
-            "wrong",
-            "Get called by worse hands",
-          ],
+          ["missed", "Check", false, "wrong", "Bet half pot for value"],
         ],
         [
           ["value", "Value", true, "correct", "Value"],
@@ -1714,7 +1707,10 @@ void main() {
       'w6_combo_weight_compare': 'same_weight',
     };
     const l2PlainLanguage = {
-      'w6_missed_hand_action': ('Bet big now', 'Always barrel as pressure'),
+      'w6_missed_hand_action': (
+        'Keep betting across streets',
+        'Always barrel as pressure',
+      ),
       'w6_turn_pressure_shift_transfer': ('Bet big again', 'Barrel big again'),
       'w7_low_spr_commit': (
         'Plenty of chips left for later bets',

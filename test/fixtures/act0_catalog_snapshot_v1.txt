@@ -3727,16 +3727,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w6_missed_hand_action [drill] Missed hand direction
 CAPTION: K-7-2 rainbow. You hold J-T with no draw.
-Q: What do you do after BB checks?
+Q: What is the clean action direction?
 HINT [theoryOnly]: Pure missed hands usually do not want a big pot.
 TABLE: Flop | You Jd Th | Board Ks 7h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center After BB checks | Facts high card, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jd Th stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
   - [wrong] Bet for value — Wrong bucket. Value betting belongs to made hands, not pure missed hands.
-    BETTER ANSWER: Check
-  - [suboptimal] Bet big now — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
-    BETTER ANSWER: Check
-  + [correct] Check — Spot on. Pure missed hands conserve chips more often than they force action.
+    BETTER ANSWER: Usually check or fold
+  - [suboptimal] Keep betting across streets — Too aggressive. Some missed hands can bluff, but pure missed hands usually check or fold more often than they force large pressure.
+    BETTER ANSWER: Usually check or fold
+  + [correct] Usually check or fold — Spot on. Pure missed hands conserve chips more often than they force action.
 
 TASK w6_table_value_line_transfer [drill] Live-table value line
 CAPTION: BB checks. In this example, BB calls a half-pot bet with weaker kings and hands such as 8-7.
@@ -3923,18 +3923,18 @@ REVIEW: Read how the flop fits the hand, then consider weaker calls and the hand
 
 TASK range_checkpoint_value [drill] A flop bet against a stated range
 CAPTION: BB checks. Assume BB calls half pot with Q-9 and 5-4; other unpaired hands fold.
-Q: What is a half-pot bet trying to achieve?
+Q: What do you do to earn a call from a weaker hand?
 HINT [theoryOnly]: Read the cards and the stated range.
 TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Center Read the range | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qd Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  + [correct] Get called by worse hands — A bet can earn weaker calls. Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.
+  + [correct] Bet half pot for value — A bet can earn weaker calls. Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.
     FEEDBACK TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts one pair, top pair, rainbow
-  - [wrong] Make stronger hands fold — Read the hands that call. The hands named as calls are behind your pair of queens. That makes this a value bet.
-    BETTER ANSWER: Get called by worse hands
+  - [wrong] Bet half pot as a bluff — Read the hands that call. The hands named as calls are behind your pair of queens. That makes this a value bet.
+    BETTER ANSWER: Bet half pot for value
     FEEDBACK TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts one pair, top pair, rainbow
-  - [wrong] Give up on a missed flop — You paired the queen. You have a pair of queens. Both of the named calls make weaker hands.
-    BETTER ANSWER: Get called by worse hands
+  - [wrong] Check — You paired the queen. You have a pair of queens. Both of the named calls make weaker hands.
+    BETTER ANSWER: Bet half pot for value
     FEEDBACK TABLE: Flop | You Qd Tc | Board Qs 5h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the range | Facts one pair, top pair, rainbow
 
 TASK range_checkpoint_board_fit [drill] Compare your hand with the flop
