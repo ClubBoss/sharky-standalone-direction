@@ -897,7 +897,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Call 2 BB into a pot of 8 BB.',
       body:
-          'Five calls cost 10 BB. One win returns 10 BB, so you break even at one in five. Middle pair means matching the middle flop rank. Bottom pair means matching the lowest.',
+          'Five calls cost 10 BB. One win returns 10 BB, so you break even at one in five. Middle pair means your private card matches the second-highest rank on the flop. Bottom pair means matching the lowest.',
       focusLabels: <String>['8 BB in the pot', '2 BB to call', '1 in 5'],
     ),
     Act0TeachingStepV1(
@@ -4090,7 +4090,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice repair.',
       feedbackReason:
-          'The turn adds draws, and the model says BB now calls with the better hands. Checking avoids betting just to repeat the flop plan.',
+          "Check because BB calls again with better hands. If you make the same bluff again, it pays those hands and gets no folds.",
     ),
     Act0RunnerOptionV1(
       id: 'nothing_changed',
@@ -4101,7 +4101,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          "The turn adds new draws. Under the model, the better hands now call, so the earlier bluff no longer has the same purpose.",
+          "Repeating the bluff costs chips when the better hands call again. Check because the turn changed which hands can continue.",
     ),
     Act0RunnerOptionV1(
       id: 'smaller_same_story',
@@ -4112,7 +4112,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Read the new board first.',
       feedbackReason:
-          'Changing the size is not enough if the board read is still wrong. Repair the story first, then choose the line.',
+          "A smaller bet still costs chips against better hands that call again. A check fits the wetter board and the stated reaction.",
     ),
   ],
   teachingSteps: const [],
@@ -4232,7 +4232,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace-high can win.',
       feedbackReason:
-          'A-Q missed the flop, but if nobody improves, it beats both Q-J and A-9. The rule says to check when your hand can already win.',
+          "Check A-Q because you already lead BB’s Q-J and A-9, and the rule says only pairs call a bet. Bluffing forces out the hands you already beat.",
     ),
     Act0RunnerOptionV1(
       id: 'bluff',
@@ -4243,7 +4243,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Ace-high has a reason to check.',
       feedbackReason:
-          'A bet makes Q-J and A-9 fold. A-Q is already ahead of both, so that is not the goal in this example.',
+          "A bluff folds the two hands you beat and risks chips against the pairs that call. A check keeps the weaker hands in.",
     ),
     Act0RunnerOptionV1(
       id: 'value',
@@ -4254,7 +4254,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The weaker hands would fold.',
       feedbackReason:
-          'A-Q has no pair here. Both weaker high-card hands fold under the rule, so they cannot pay off a value bet.',
+          "A value bet costs chips against pairs. The two weaker hands fold and cannot pay you in this model.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -4285,7 +4285,7 @@ final _w6TableBucketNoticeRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice start.',
       feedbackReason:
-          'That is the clean live-table read. Bucket first, then action.',
+          "Read A-Q against the K-7-2 board first, because the best bet depends on what you can get to call or fold now. The preflop label misses that change.",
     ),
     Act0RunnerOptionV1(
       id: 'size_first',
@@ -4506,7 +4506,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
-          'On A-7-4-4, J9 has no pair of its own, and better hands now call. Checking saves the chips a second bluff would risk.',
+          "Check J9 on A-7-4-4 because BB calls with every better hand in this model. An extra bet pays those hands without getting the folds a bluff needs.",
     ),
     Act0RunnerOptionV1(
       id: 'always_value',
@@ -4632,7 +4632,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Weaker pairs can pay.',
       feedbackReason:
-          'BB can call this half-pot bet with weaker pairs such as K-J or 7-6. That gives the bet a value purpose. Comparing bet with check requires knowing how often BB calls or raises with each hand.',
+          "Bet for value because BB calls with weaker pairs such as K-J or 7-6. A check leaves the payment from those hands uncollected.",
     ),
     Act0RunnerOptionV1(
       id: 'check',
@@ -4654,7 +4654,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'The bet earns a call.',
       feedbackReason:
-          'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
+          "Calling it a bluff misses the source of profit. The bet earns chips when weaker pairs call.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -4676,7 +4676,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'A bet can fold out a better hand.',
     feedbackReason:
-        'If no one improves, both Q-J and A-9 beat $hand. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.',
+        'Bet as a bluff because BB folds Q-J and A-9 in the example and both lead $hand. A check keeps them in without asking them to fold.',
   ),
   Act0RunnerOptionV1(
     id: 'missed',
@@ -4698,7 +4698,7 @@ List<Act0RunnerOptionV1> _w6BluffCandidateOptionsV1(
     quality: Act0FeedbackQualityV1.wrong,
     feedbackTitle: 'Worse calls are missing.',
     feedbackReason:
-        'Q-J and A-9 are both ahead of $hand if no one improves. Getting those hands to fold is a bluff.',
+        'A value bet misses which hands would pay. This bluff asks better hands like Q-J and A-9 to fold because they already lead $hand.',
   ),
 ];
 
@@ -4739,7 +4739,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Spot on.',
       feedbackReason:
-          'Pure missed hands conserve chips more often than they force action.',
+          "On K-7-2, your J-T missed and has no draw, so checking keeps the next card free. Keep betting and you risk chips when BB continues with a made hand.",
     ),
     Act0RunnerOptionV1(
       id: 'value_bet',
@@ -4782,7 +4782,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A worse hand can call.',
       feedbackReason:
-          'Under this rule, weaker kings and hands such as 8-7 can pay you. That is a reason to bet for value. The best size and frequency depend on BB’s full response range.',
+          "Bet for value because BB calls with weaker kings and pairs such as 8-7. A check misses the chance to collect chips from those hands this round.",
     ),
     Act0RunnerOptionV1(
       id: 'check_back',
@@ -4804,7 +4804,7 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Look for the weaker calls.',
       feedbackReason:
-          'The point of the bet is to collect chips from worse hands that call. BB does not have to fold a better hand.',
+          "Calling it a bluff misses who pays. Bet for value when weaker kings and smaller pairs are the intended callers.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -4841,7 +4841,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good pressure reset.',
       feedbackReason:
-          'Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.',
+          "BB already called the flop, and the model gives you fewer folds on the paired turn. Check because a big bet risks more chips without the earlier fold pressure.",
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
@@ -4852,7 +4852,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
-          'BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.',
+          "A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.",
     ),
     Act0RunnerOptionV1(
       id: 'bet_value',

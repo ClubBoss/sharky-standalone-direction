@@ -914,10 +914,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "barrel_big",
     sourceCorrectChoiceId: "check_more",
     sourceFingerprint:
-        "9b649a9369583e8ea5883c7a63404a14791ab3193ff1326ced597fd812f514d5",
+        "fa36224e539c1f1386a13370c3e0bc47f12cc832a98ca79a412cba837845b167",
     sourceQuestion: "Fold pressure dropped on this turn. What do you do now?",
     sourceChoiceReason:
-        "BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.",
+        "A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.",
     sourceChoiceLabel: "Bet big again",
     sourceChoiceQuality: "suboptimal",
     goalId: "bluff_needs_better_folds",
@@ -927,7 +927,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "range_pressure_lines",
     targetTaskId: "w6_wet_board_repair",
     targetFingerprint:
-        "748afdf9b2df3715b7172e2f48157ea5289b6027c7a739ff014b413d506e1cbd",
+        "3363313472f78fd5a81047994211885fc14d3f8beaa997000e3f69f343cfcfc5",
     targetCorrectChoiceId: "respect_wetter_board",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -999,10 +999,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: 'bet_bluff',
     sourceCorrectChoiceId: 'bet',
     sourceFingerprint:
-        'd45607470d96309daf38e7921b41056603c59834f0954fad325948327ba8bbb7',
+        'aaa4ab181c31a78161d42d5a70c041659a4b43477cbf004c2eb0383ea78abc1b',
     sourceQuestion: 'What is the purpose of a half-pot bet here?',
     sourceChoiceReason:
-        'BB can call with a weaker pair, such as K-J or 7-6. You are betting to get called by worse hands.',
+        "Calling it a bluff misses the source of profit. The bet earns chips when weaker pairs call.",
     sourceChoiceLabel: 'Bet as a bluff',
     goalId: 'value_bet_purpose',
     misconceptionId: 'value_bet_seen_as_bluff',
@@ -1011,7 +1011,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'range_pressure_lines',
     targetTaskId: 'w6_value_range_action',
     targetFingerprint:
-        'd45607470d96309daf38e7921b41056603c59834f0954fad325948327ba8bbb7',
+        'aaa4ab181c31a78161d42d5a70c041659a4b43477cbf004c2eb0383ea78abc1b',
     targetCorrectChoiceId: 'bet',
     targetChoiceIds: <String>{'bet', 'check', 'bet_bluff'},
     evidenceClass: 'intentional_exact_replay',

@@ -8,6 +8,7 @@ import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_y5b_catalog_contract_v1.dart';
 
 Map<String, Object?> _row({
   String id = 'task_a',
@@ -204,7 +205,12 @@ void main() {
               ),
             )
             .toList();
-        expect(rows, hasLength(216 + w3BlindVsBlindChoicesV1.length));
+        expect(
+          rows,
+          hasLength(
+            216 + w3BlindVsBlindChoicesV1.length + y5bFoundationTaskCountV1,
+          ),
+        );
         final counts = <String, int>{};
         for (final row in rows) {
           final purpose = row['declaredPurpose']! as String;
@@ -226,7 +232,8 @@ void main() {
           'TEACHING': 30,
           'REPAIR': 12,
           'CORRECTION_CANDIDATE': 1,
-          'PRACTICE': 134 + w3BlindVsBlindChoicesV1.length,
+          'PRACTICE':
+              134 + w3BlindVsBlindChoicesV1.length + y5bFoundationTaskCountV1,
           'TRANSFER_CANDIDATE': 22,
           'REVIEW_CANDIDATE': 17,
         });
@@ -322,6 +329,8 @@ void main() {
         rows,
         hasLength(
           223 +
+              y5bNewChoicesV1.length -
+              y5bFoundationTaskCountV1 +
               w11Wave4ChoiceContractV1.length +
               w12Wave4ChoiceContractV1.length +
               wave6TaskDeltaV1,

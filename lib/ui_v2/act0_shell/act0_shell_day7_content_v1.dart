@@ -1712,7 +1712,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 1,
     reason:
-        'The third club completes possible flushes. Under the stated rule only hands that beat KT call, so checking saves the cost of a turn bet.',
+        "Check KT because BB calls only with stronger hands on this three-club turn. A big bet for value risks chips without getting paid by a weaker hand.",
   ),
   _day7ExampleV1(
     6,
@@ -1824,6 +1824,23 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       1: 'Twelve counts only different-suit K-J. Leaving out one K-J hand per suit misses four legal combinations.',
     },
     savedTaskId: 'spaced_review_w6_range_reading_review_pot_to_call_v1',
+  ),
+  _day7ExampleV1(
+    6,
+    'range_reading_review',
+    'pot_to_call',
+    _day7PostflopV1('bb', 'Qs 9d', 'Qh 8c 5d 3s', betBb: 3, showTurn: true),
+    caption: 'Assume you win 30% and face no ties or further bets.',
+    question: 'What does the price of the call allow after you checked?',
+    choices: const ['Fold', 'Call', 'Both earn the same'],
+    correct: 1,
+    reason:
+        'HJ bets 3 BB, so the call makes a 12 BB pot and needs 25%. Call because 30% clears the price. Folding misses that gain.',
+    savedTaskId: 'spaced_review_w6_range_reading_review_check_call_price_v1',
+    wrongReasons: const {
+      0: 'Folding gives up a call that earns 0.6 BB on average in this example.',
+      2: 'At 30%, you average 3.6 BB from the final pot and pay 3 BB. Calling earns more than folding.',
+    },
   ),
   _day7ExampleV1(
     7,

@@ -53,6 +53,7 @@ const _extensionLessonSkills = <String, List<String>>{
   'flush_draws': ['Board reading'],
   'straight_draws': ['Board reading'],
   'outs_improvement': ['Board reading'],
+  'w5_semi_bluff': ['Board reading', 'Betting decisions'],
   'turn_river_changes': ['Board reading'],
   'range_bucket_basics': ['Range reading'],
   'range_board_fit': ['Range reading'],

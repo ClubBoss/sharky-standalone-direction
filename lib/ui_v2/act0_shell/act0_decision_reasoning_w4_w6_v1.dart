@@ -404,4 +404,234 @@ const act0DecisionReasoningW4W6V1 = <String, Act0DecisionReasoningV1>{
     preChoiceAssumption:
         'BB calls 1 BB and folds half the time to 3 BB. Nine clubs win. Other rivers lose. No more bets.',
   ),
+  'w6_value_dry_board': Act0DecisionReasoningV1(
+    taskId: 'w6_value_dry_board',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'missed',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    stackMatters: false,
+  ),
+  'w6_missed_dry_board': Act0DecisionReasoningV1(
+    taskId: 'w6_missed_dry_board',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'bluff',
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB calls a half-pot bet with any pair and folds Q-J and A-9.",
+    suboptimalKinds: {'bluff': Act0SuboptimalKindV1.wrongReason},
+  ),
+  'w6_table_bucket_notice': Act0DecisionReasoningV1(
+    taskId: 'w6_table_bucket_notice',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'preflop_only',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    suboptimalKinds: {'preflop_only': Act0SuboptimalKindV1.wrongReason},
+  ),
+  'w6_turn_shift_bucket': Act0DecisionReasoningV1(
+    taskId: 'w6_turn_shift_bucket',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'never_changes',
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    stackMatters: false,
+    preChoiceAssumption: "BB calls with every hand that beats J9.",
+  ),
+  'w6_value_range_action': Act0DecisionReasoningV1(
+    taskId: 'w6_value_range_action',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'check',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB checks, then calls half-pot bets with weaker pairs such as K-J and 7-6.",
+  ),
+  'w6_bluff_candidate': Act0DecisionReasoningV1(
+    taskId: 'w6_bluff_candidate',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'folds_better',
+    bestAlternativeOptionId: 'missed',
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB calls a half-pot bet with any pair and folds unpaired A-9 and Q-J.",
+    suboptimalKinds: {'missed': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w6_missed_hand_action': Act0DecisionReasoningV1(
+    taskId: 'w6_missed_hand_action',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'always_barrel',
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    suboptimalKinds: {'always_barrel': Act0SuboptimalKindV1.wrongReason},
+  ),
+  'w6_table_value_line_transfer': Act0DecisionReasoningV1(
+    taskId: 'w6_table_value_line_transfer',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'check_back',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB calls a half-pot bet with weaker kings and hands such as 8-7.",
+  ),
+  'w6_turn_pressure_shift_transfer': Act0DecisionReasoningV1(
+    taskId: 'w6_turn_pressure_shift_transfer',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'barrel_big',
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    stackMatters: false,
+    suboptimalKinds: {'barrel_big': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w6_wet_board_repair': Act0DecisionReasoningV1(
+    taskId: 'w6_wet_board_repair',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'board_changes_strength',
+    bestAlternativeOptionId: 'nothing_changed',
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB will call again with the better hands in its range.",
+  ),
+  'w6_continuation_bet_value_size': Act0DecisionReasoningV1(
+    taskId: 'w6_continuation_bet_value_size',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'bet_one_five',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    preChoiceAssumption: "weaker kings call bets of 3 BB or less.",
+    suboptimalKinds: {'bet_one_five': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'w6_continuation_bet_wet_check': Act0DecisionReasoningV1(
+    taskId: 'w6_continuation_bet_wet_check',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'bet_small',
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    stackMatters: false,
+  ),
+  'range_checkpoint_value': Act0DecisionReasoningV1(
+    taskId: 'range_checkpoint_value',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'missed',
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB calls half pot with Q-9 and 5-4; other unpaired hands fold.",
+  ),
+  'range_checkpoint_pressure': Act0DecisionReasoningV1(
+    taskId: 'range_checkpoint_pressure',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'folds_better',
+    bestAlternativeOptionId: 'missed',
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    stackMatters: false,
+    preChoiceAssumption: "Any pair calls half pot. Q-J and A-9 fold.",
+    suboptimalKinds: {'missed': Act0SuboptimalKindV1.clearlyWorse},
+  ),
+  'range_checkpoint_review': Act0DecisionReasoningV1(
+    taskId: 'range_checkpoint_review',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'combos_and_blockers',
+    bestAlternativeOptionId: 'range_plus_pot_size',
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    suboptimalKinds: {'range_plus_pot_size': Act0SuboptimalKindV1.wrongReason},
+  ),
+  'spaced_review_w6_range_pressure_lines_board_texture_change_v1':
+      Act0DecisionReasoningV1(
+        taskId: 'spaced_review_w6_range_pressure_lines_board_texture_change_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'range_vs_board',
+        bestAlternativeOptionId: 'choice_0',
+        edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+        stackMatters: false,
+        preChoiceAssumption:
+            "BB calls bets only with a flush or two pair or better.",
+      ),
+  'w6_check_line_call': Act0DecisionReasoningV1(
+    taskId: 'w6_check_line_call',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'price_vs_equity',
+    bestAlternativeOptionId: 'fold',
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "HJ can bet a pair or a bluff. The model supplies a 30% win rate and says The bettor calls your raise.",
+    stackMatters: false,
+    edgeBb: 1,
+    preChoiceAssumption:
+        "Assume you win 30% with no ties or further bets. The bettor calls your raise.",
+  ),
+  'w6_check_line_fold': Act0DecisionReasoningV1(
+    taskId: 'w6_check_line_fold',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'price_vs_equity',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "HJ can bet stronger pairs and other made hands. The model gives a 20% win rate and says The bettor calls your raise.",
+    stackMatters: false,
+    edgeBb: 1.2,
+    preChoiceAssumption:
+        "Assume 20% wins, no ties and no further bets. The bettor calls your raise.",
+  ),
+  'w6_check_line_raise_short': Act0DecisionReasoningV1(
+    taskId: 'w6_check_line_raise_short',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'value_vs_worse',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.stackLimitsPayoff,
+    opponentRead:
+        "HJ bets a pair of queens and pays another blind in the stated example.",
+    stackMatters: true,
+    stackNote:
+        "HJ starts the turn with 2 BB and has 1 BB behind after betting. At deeper stacks the call cap is 6 BB, so the best size increases.",
+    edgeBb: 1,
+    preChoiceAssumption:
+        "The bettor can call only 1 BB more and does so with a pair of queens. Assume your set wins. At full depth, that pair would pay up to 6 BB.",
+  ),
+  'w6_check_raise_read': Act0DecisionReasoningV1(
+    taskId: 'w6_check_raise_read',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'range_vs_board',
+    bestAlternativeOptionId: 'choice_0',
+    edgeMechanism: Act0EdgeMechanismV1.avoidsDomination,
+    opponentRead:
+        "This opponent usually calls with top pair and check-raises stronger hands. Two pair and sets gain weight.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "This BB calls with most one-pair hands and seldom raises a weak hand.",
+  ),
+  'w6_check_raise_repeat': Act0DecisionReasoningV1(
+    taskId: 'w6_check_raise_repeat',
+    kind: Act0DecisionKindV1.table,
+    principleId: 'price_vs_equity',
+    bestAlternativeOptionId: 'call',
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "BB can raise stronger hands such as two pair and sets. The model supplies the win rate and says a reraise gets called.",
+    stackMatters: false,
+    edgeBb: 1.2,
+    preChoiceAssumption:
+        "Assume 20% wins, with no ties or further bets. BB will call a reraise.",
+  ),
+  'spaced_review_w6_range_reading_review_check_call_price_v1':
+      Act0DecisionReasoningV1(
+        taskId: 'spaced_review_w6_range_reading_review_check_call_price_v1',
+        kind: Act0DecisionKindV1.table,
+        principleId: 'price_vs_equity',
+        bestAlternativeOptionId: 'fold',
+        edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+        opponentRead:
+            'HJ can bet a made hand or a bluff. The exercise gives their combined win rate.',
+        stackMatters: false,
+        edgeBb: 0.6,
+        preChoiceAssumption:
+            'Assume you win 30% and face no ties or further bets.',
+      ),
 };

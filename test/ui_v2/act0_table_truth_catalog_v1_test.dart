@@ -227,8 +227,14 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 124),
-      ('D3.to_call_completeness', 123),
+      (
+        'D2.pot_feasibility',
+        118 + y5bNewChoicesV1.length - y5bFoundationTaskCountV1,
+      ),
+      (
+        'D3.to_call_completeness',
+        117 + y5bNewChoicesV1.length - y5bFoundationTaskCountV1,
+      ),
     ]) {
       final proof = rows
           .where(

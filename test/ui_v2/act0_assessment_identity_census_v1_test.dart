@@ -466,6 +466,10 @@ void main() {
           'world_5',
           'connected_boards',
         ),
+        final id when id.startsWith('w6_check_') => (
+          'world_6',
+          'range_reading_review',
+        ),
         _ => throw StateError('Unexpected Y5b task ${entry.key}'),
       };
       expect(task.take(2), [worldId, lessonId], reason: entry.key);

@@ -43,4 +43,43 @@ const y5bNewChoicesV1 = <String, List<List<Object?>>>{
     ["fold", "Fold", true, "correct", "Fold"],
     ["choice_2", "Raise to 18 BB", false, "wrong", "Fold"],
   ],
+  'w6_check_line_call': [
+    ["choice_0", "Raise to 6 BB", false, "wrong", "Call"],
+    ["fold", "Fold", false, "wrong", "Call"],
+    ["call", "Call", true, "correct", "Call"],
+  ],
+  'w6_check_line_fold': [
+    ["fold", "Fold", true, "correct", "Fold"],
+    ["call", "Call", false, "wrong", "Fold"],
+    ["choice_2", "Raise to 12 BB", false, "wrong", "Fold"],
+  ],
+  'w6_check_line_raise_short': [
+    ["call", "Call", false, "wrong", "Raise to 2 BB"],
+    ["choice_1", "Raise to 2 BB", true, "correct", "Raise to 2 BB"],
+    ["fold", "Fold", false, "wrong", "Raise to 2 BB"],
+  ],
+  'w6_check_raise_read': [
+    ["choice_0", "A weaker top pair", false, "wrong", "Two pair or a set"],
+    [
+      "choice_1",
+      "Unpaired cards with no draw",
+      false,
+      "wrong",
+      "Two pair or a set",
+    ],
+    ["choice_2", "Two pair or a set", true, "correct", "Two pair or a set"],
+  ],
+  'w6_check_raise_repeat': [
+    ["call", "Call", false, "wrong", "Fold"],
+    ["fold", "Fold", true, "correct", "Fold"],
+    ["choice_2", "Raise to 18 BB", false, "wrong", "Fold"],
+  ],
 };
+
+final y5bFoundationTaskCountV1 = y5bNewChoicesV1.keys
+    .where((id) => id.startsWith('w4_'))
+    .length;
+
+final y5bDrillCountV1 = y5bNewChoicesV1.values
+    .where((choices) => choices.isNotEmpty)
+    .length;

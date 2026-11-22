@@ -22,6 +22,7 @@ import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
+import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_w6_catalog_contract_v1.dart';
 
 const _w9BubbleTableRiskId = 'w9_bubble_table_risk_transfer';
@@ -908,6 +909,9 @@ void main() {
     final addedContracts = {
       for (final entry in w3BlindVsBlindChoicesV1.entries)
         entry.key: ('w3_play_from_blinds', entry.value),
+      for (final row in rows)
+        if (y5bNewChoicesV1[row.task.taskId] case final choices?)
+          row.task.taskId: (row.lessonId, choices),
       ...w11Wave4ChoiceContractV1,
       ...w12Wave4ChoiceContractV1,
     };
@@ -1178,6 +1182,7 @@ List<_Row> _assessedSourceRows({bool historical = false}) => <_Row>[
               (!historical ||
                   (!w2Q9ChoiceContractV1.containsKey(task.taskId) &&
                       !w3NewChoiceContractV1.containsKey(task.taskId) &&
+                      !y5bNewChoicesV1.containsKey(task.taskId) &&
                       !w6NewChoiceContractV1.containsKey(task.taskId) &&
                       !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
