@@ -144,7 +144,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["A pair of tens", "A missed club draw"],
     correct: 0,
     reason:
-        "BB calls with tens because they have a pair. Missed club draws fold to the bet.",
+        "Under the stated read, a pair of tens calls this bet and a missed club draw folds. The pair supplies the payment.",
     wrongReasons: const {
       1: "A missed club draw folds, so counting it as a call overstates what you can win.",
     },
@@ -2394,7 +2394,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         'The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.',
     wrongReasons: const {
       0: 'Sixteen counts four queens. The queen on the flop cannot appear in BB’s hand.',
-      2: 'Nine would count three kings and three queens. The board contains one queen and no kings, so BB can still use any of the four kings.',
+      2: 'Nine would count three kings and three queens. The board shows one queen, and no king is visible at your seat or on the board. All four kings are available.',
     },
   ),
   _day7ExampleV1(
@@ -2812,7 +2812,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         caption: "You start with 8 BB. The money is far off. You act first.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
-        question: "Go all-in or fold?",
+        question: "Which option can win the blinds?",
         options: const [
           Act0RunnerOptionV1(
             id: "all_in_to_8_bb",
@@ -3178,7 +3178,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         beatCount: 1,
         phase: Act0LessonPhaseV1.drill,
         caption:
-            "Six left, five paid. You cover both blinds. They both fold 85% of the time to either size. When one re-raises, you fold.",
+            "Six left, five paid. You cover both blinds. They both fold 85% of the time to either size. If either blind continues, that player reraises and you fold.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
         question: "How should you open?",

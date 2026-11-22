@@ -159,7 +159,8 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
 final _w7EffectiveStackRecapRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w7_effective_stack_recap',
-  caption: 'Lesson learned: the smaller stack sets the hand risk.',
+  caption:
+      'Against one opponent, the smaller stack caps the chips each can match.',
   hint: 'Effective stack tells you how much room the hand really has.',
   question: 'Why does effective stack matter?',
   feedbackTitle: 'Effective-stack takeaway.',
@@ -1532,7 +1533,7 @@ final _w9SurvivalRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonId: 'w9_survival_recap',
   lessonTitle: "Chips and prizes recap",
   lessonSubtitle: 'Tournament Pressure',
-  caption: "Think back to the 20 BB call and the 9 BB all-in.",
+  caption: "Think back to the bubble decision and the 9 BB all-in.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which plan balances growth and survival?",
@@ -1823,14 +1824,14 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
   caption: "Stack: 30 BB. No antes. No special read.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Which opening size fits?",
+  question: "Which size leaves the most chips behind?",
   feedbackTitle: "First raise from HJ",
   feedbackReason:
-      "Raise AJs from HJ to 2 BB because M is 20 and you can still play later streets. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.",
+      "Raise AJs from HJ to 2 BB because it leaves the most chips for later streets at M = 20. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "First raise from HJ",
-      body: "A small first raise leaves room to play after the flop.",
+      body: "A small open leaves room after the flop.",
     ),
   ],
   options: const [
@@ -1843,7 +1844,7 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Raise AJs from HJ to 2 BB because M is 20 and you can still play later streets. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.",
+          "Raise AJs from HJ to 2 BB because it leaves the most chips for later streets at M = 20. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_3_bb",
@@ -2402,7 +2403,7 @@ final _w9BigStackLeverageRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Three players left to act",
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      "Six left, five paid. You cover BTN, SB and BB. They all fold 85% of the time to either size. When one re-raises, you fold.",
+      "Six left, five paid. You cover BTN, SB and BB. They all fold 85% of the time to either size. If anyone continues, they reraise and you fold.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you open?",
@@ -2542,7 +2543,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
       "Six left, five paid. You start with 6 BB, the shortest stack. It folds to you in HJ.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Go all-in or fold?",
+  question: "Which option can win the blinds?",
   feedbackTitle: "Shortest stack",
   feedbackReason:
       "Go all-in with AKo from HJ because you are the 6 BB shortest stack and others can fold. Folding forfeits the chance to win the 1.5 BB in blinds while you can still threaten a raise.",
@@ -2550,7 +2551,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "Shortest stack",
       body:
-          "When you act first, an all-in can win the blinds. Compare the short stack and the hand with the cost of waiting.",
+          "A first-in all-in can win the blinds. A short stack must weigh the cost of waiting.",
     ),
   ],
   options: const [
@@ -2574,7 +2575,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Folding misses a chance to take the blinds because AKo can go all-in first at 6 BB. No smaller stack can bust ahead of you.",
+          "You still have 6 BB if you fold. An all-in with AKo gives the later seats a fold decision and could win the blinds now.",
     ),
   ],
   table: _day7TableV1(
@@ -2618,7 +2619,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "A raise from BB",
   feedbackReason:
-      "BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.",
+      "BB raises with JJ+ or AK, a range that leads AJo. Folding saves your remaining chips when the call needs 42.5% just to break even in chips. A different raise range, set of stacks or set of prizes can change the answer.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2641,7 +2642,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.",
+          "BB raises with JJ+ or AK, a range that leads AJo. Folding saves your remaining chips when the call needs 42.5% just to break even in chips. A different raise range, set of stacks or set of prizes can change the answer.",
     ),
   ],
   table: _day7TableV1(
@@ -2832,7 +2833,7 @@ final _w9CheckpointSurvivalLineRunner = _w7FormatPressureIntroRunner.copyWith(
       "You start with 7.5 BB. The money is far off. It folds to you in CO.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Go all-in or fold?",
+  question: "Which option can win the blinds?",
   feedbackTitle: "First in from CO",
   feedbackReason:
       "Go all-in first from CO with AQs because BTN and the blinds may fold, and weaker aces can pay. Folding gives up a chance to add the 1.5 BB blinds to your 7.5 BB stack.",
@@ -3092,7 +3093,7 @@ final _w9TablePressureNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Four seats behind",
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      "Six left, five paid. You cover the four seats behind. They all fold 80% of the time to either size. When one re-raises, you fold.",
+      "Six left, five paid. You cover the four seats behind. They all fold 80% of the time to either size. If anyone continues, they reraise and you fold.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "How should you open?",
