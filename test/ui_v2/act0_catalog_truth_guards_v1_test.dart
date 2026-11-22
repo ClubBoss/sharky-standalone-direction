@@ -20,6 +20,7 @@ import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_reachability_v1.dart';
 import '../support/act0_catalog_reasoning_audit_v1.dart';
+import '../support/act0_catalog_rubric_guards_v1.dart';
 import '../support/act0_starting_chart_checks_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -157,6 +158,124 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 void main() {
   registerAct0StartingChartChecksV1();
   registerAct0ErrorAtlasV1();
+  group('G1 catalog rubric', () {
+    test('E11/E17/E18/E20 across course and both review banks', () {
+      final rows = [
+        ...catalogTasks,
+        ...rulesCheckCatalogTasks,
+        ...day7CatalogTasks,
+      ];
+      final findings = [
+        for (final row in rows) ...catalogRubricFindingsV1(row.task),
+      ];
+      // These inherited Day 7 labels can only disappear from the baseline.
+      const terminology = {
+        'spaced_review_w5_flush_draws_board_cards_v1|hole card',
+        'spaced_review_w5_turn_river_changes_board_cards_v1|hole card',
+        'spaced_review_w6_range_board_fit_hero_cards_board_pot_v1|hole card',
+        'spaced_review_w6_range_pressure_lines_hero_cards_board_pot_v1|hole card',
+        'spaced_review_w8_same_hand_different_depth_pot_to_call_v1|shove',
+        'spaced_review_w8_format_pressure_hero_cards_board_pot_v1|shove',
+        'w11_day7_review_repair|shove',
+        'spaced_review_w11_table_trigger_reads_board_cards_v1|hole card',
+        'w12_day7_tilt_badbeat|shove',
+        'w12_day7_tilt_after_error|shove',
+        'w12_day7_fatigue_no_bluff|shove',
+      };
+      final added = findings.where(
+        (hit) =>
+            hit.rule != 'E11' ||
+            !terminology.contains('${hit.task}|${hit.detail}'),
+      );
+      expect(added, isEmpty, reason: added.join('\n'));
+    });
+
+    test('rejects hidden premises, explicit answers, filler and jargon', () {
+      final source = _catalogRow(
+        'w3_play_from_blinds_small_blind_medium_raise',
+      );
+      final correct = source.task.runner.options.firstWhere((o) => o.isCorrect);
+      final wrong = source.task.runner.options.firstWhere((o) => !o.isCorrect);
+      const assumption = 'the opponent folds every second time';
+      final bad = _withDecisionCopy(source, {
+        correct.id: 'Assume $assumption. This is a donk bet.',
+        wrong.id: 'On seat BTN.',
+      });
+      final leak = _withRunner(
+        bad,
+        bad.task.runner.copyWith(
+          question: 'The best answer is ${correct.label}.',
+          teachingSteps: [
+            Act0TeachingStepV1(
+              title: 'Decision',
+              body: 'Choose ${correct.label}.',
+            ),
+          ],
+        ),
+      );
+      expect(
+        catalogRubricFindingsV1(leak.task).map((hit) => hit.rule),
+        unorderedEquals(['E11', 'E17', 'E18', 'E18', 'E20']),
+      );
+      final visible = _withRunner(
+        bad,
+        bad.task.runner.copyWith(
+          caption: 'In this example $assumption.',
+          question: 'Is ${correct.label} the right decision?',
+        ),
+      );
+      expect(
+        catalogRubricFindingsV1(visible.task).map((hit) => hit.rule),
+        unorderedEquals(['E11', 'E20']),
+      );
+      final empty = _withDecisionCopy(source, {wrong.id: '  '});
+      expect(catalogRubricFindingsV1(empty.task).map((hit) => hit.rule), [
+        'E20',
+      ]);
+    });
+
+    test('E19 rejects relabeling with the original grade', () {
+      const previous = '''
+TASK river [decision] River
+  + [best] Fold — Fold. Explanation.
+  - [wrong] Call 2 BB — Call. Explanation.
+''';
+      const relabeled = '''
+TASK river [decision] River
+  + [best] Fold — Fold. New explanation.
+  - [wrong] Call 6 BB — Call. Explanation.
+''';
+      expect(
+        catalogOptionLabelChangesV1(previous, relabeled).single.rule,
+        'E19',
+      );
+      expect(
+        catalogOptionLabelChangesV1(previous, '''
+TASK river [decision] River
+  + [best] Call 2 BB — Call. Explanation.
+  - [wrong] Fold — Fold. Explanation.
+'''),
+        isEmpty,
+      );
+      expect(
+        catalogOptionLabelChangesV1(
+          previous,
+          previous.replaceFirst('Fold —', 'Fold! —'),
+        ),
+        isEmpty,
+      );
+    });
+
+    test('E19 compares option labels with the previous catalog snapshot', () {
+      final previous = previousCatalogSnapshotV1();
+      if (previous == null) return;
+      final findings = catalogOptionLabelChangesV1(
+        previous,
+        renderCatalogSnapshot(),
+      ).toList();
+      expect(findings, isEmpty, reason: findings.join('\n'));
+    });
+  });
   test('G1 relative seat copy and world codes across learner surfaces', () {
     final rows = [
       ...catalogTasks,
