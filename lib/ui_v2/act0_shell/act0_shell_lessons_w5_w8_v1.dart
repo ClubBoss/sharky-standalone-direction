@@ -703,7 +703,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
           choices: const ["Check", "Bet 2 BB", "Bet 1 BB"],
           correct: 0,
           reason:
-              "Check because BB always calls with its last 2 BB or less and you miss 37 of 46 rivers. A bet of 1 BB pays more for the same draw.",
+              "Check because BB always calls with its last 2 BB or less and you miss 37 of 46 rivers. Betting 1 BB costs more on the 37 misses.",
           wrongReasons: const {
             1: "A bet of 2 BB gets called and costs the most on the 37 misses. Checking keeps the same chance of taking the chips in the middle.",
             2: "Even a bet of 1 BB costs more on misses when BB always calls. Checking earns about 0.61 BB more on average.",
@@ -1957,7 +1957,7 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       bet: 3,
       correctAt: 0,
       feedback:
-          'You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+          'BB bets all-in, so this is the last decision. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
       wrongFeedback:
           'Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.',
     ),
@@ -1966,7 +1966,7 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       bet: 6,
       correctAt: 1,
       feedback:
-          'You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
+          'BB bets all-in, so no later bet can change the price. You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.',
       wrongFeedback:
           'The draw wins on the same 12 of 44 rivers. Paying 6 BB now requires 30%, so the call risks more than this chance is worth.',
     ),
@@ -1984,7 +1984,7 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♣ Q♦',
       correctAt: 1,
       feedback:
-          'If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
+          'BB bets all-in, so use only the six stated hands. If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.',
       wrongFeedback:
           'Your queen-jack beats just the jack-ten bluff. Paying 4 BB with one win in six fails the 25% threshold and loses chips on average.',
     ),
@@ -3366,7 +3366,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
             showTurn: true,
           ),
           caption:
-              "CO starts with 15 BB. Assume your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.",
+              "CO starts with 15 BB. Assume SB and BB fold. Your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.",
           question: "With CO starting at 15 BB, what should you do?",
           choices: const ["Fold", "Call"],
           correct: 0,

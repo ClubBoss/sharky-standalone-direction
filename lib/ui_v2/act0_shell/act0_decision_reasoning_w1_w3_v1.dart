@@ -208,7 +208,7 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: 'raise',
     edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
     opponentRead:
-        "HJ can raise pairs and strong aces alongside weaker high cards.",
+        "HJ opens hands such as AQo, AJo and KQo, plus TT and higher pairs.",
     stackMatters: false,
   ),
   'weak_ace_warning_weak_ace_pressure_fold': Act0DecisionReasoningV1(
@@ -284,8 +284,7 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     principleId: 'narrow_3bet',
     bestAlternativeOptionId: 'raise',
     edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
-    opponentRead:
-        "HJ can open lower pairs and high cards, while higher pairs can continue against a raise.",
+    opponentRead: "HJ opens AQ, AJ and KQ alongside TT and higher pairs.",
     stackMatters: false,
   ),
   'w2_narrow_three_bet_fold': Act0DecisionReasoningV1(
@@ -339,7 +338,7 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: 'raise',
     edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
     opponentRead:
-        "CO opens weaker suited hands and pairs, and stronger hands can continue to a reraise.",
+        "CO opens hands such as QTs, KQo and small pairs. BTN acts after CO on the flop.",
     stackMatters: false,
   ),
   'discipline_checkpoint_checkpoint_table_discipline': Act0DecisionReasoningV1(
@@ -491,7 +490,7 @@ const act0DecisionReasoningW1W3V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: 'call',
     edgeMechanism: Act0EdgeMechanismV1.realizesPosition,
     opponentRead:
-        "BTN can open weaker aces and pairs. BB can call a small price or raise if SB calls.",
+        "BTN opens hands such as AJo, ATs and small pairs. BB can call at a lower price or raise if SB calls.",
     stackMatters: false,
   ),
   'w3_play_from_blinds_small_blind_medium_fold': Act0DecisionReasoningV1(

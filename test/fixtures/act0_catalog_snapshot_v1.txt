@@ -961,7 +961,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO
   - [wrong] 2 players — Read the order after the flop. Two is the number of blinds. UTG, HJ and CO also act before BTN on this flop.
     BETTER ANSWER: 5 players
     FEEDBACK TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus btn | Center First pass on the flop | Facts rainbow
-  - [wrong] 1 player — Read the order after the flop. One would be a heads-up hand. This flop still has six players, five of them before BTN.
+  - [wrong] 1 player — Read the order after the flop. One would be a two-player hand. This flop still has six players, five of them before BTN.
     BETTER ANSWER: 5 players
     FEEDBACK TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus btn | Center First pass on the flop | Facts rainbow
   + [correct] 5 players — Order after the flop read. SB, BB, UTG, HJ and CO are all still in. Those five seats act before BTN.
@@ -1101,7 +1101,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   - [wrong] Fold — Not quite. Folding Qs Js on BTN gives up the 1.5 BB pot without putting in chips or forcing SB and BB to pay more than the 1 BB blind.
     BETTER ANSWER: Raise
-    REPAIR LABELS: Your turn, Blinds posted, KTs
+    REPAIR LABELS: Your turn, Blinds posted, QJs
     FEEDBACK TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
   - [wrong] Call [1 BB] — Calling matches the blind. Calling 1 BB on BTN with Qs Js only matches the big blind in the 1.5 BB pot instead of raising to 3 BB and making the blinds pay more.
     BETTER ANSWER: Raise
@@ -1771,7 +1771,7 @@ SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
   - [wrong] Fold — Not quite. HJ opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
-  + [correct] Call [2.5 BB] — Clean execution. Call with KQo on BTN because HJ can raise weaker unpaired hands and you see HJ’s decisions before yours. A reraise risks more against the stronger aces and pairs that can continue.
+  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with KQo on BTN because you see HJ’s decisions before yours on later rounds. A reraise risks more against the stronger aces and pairs that continue.
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. Against the 2.5 BB HJ open, the BTN call row includes KQo. Reraising instead risks five extra blinds against better hands.
     BETTER ANSWER: Call
 
@@ -1897,7 +1897,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   - [wrong] Fold — Not quite. CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
-  + [correct] Call [2.5 BB] — Clean execution. With KQo on BTN, call because CO can raise weaker unpaired hands and you see CO’s decisions before yours. A reraise puts more at risk against stronger hands.
+  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with KQo on BTN because CO can open weaker kings such as KJo and KTs, and you see CO’s decisions before yours. A reraise risks more against stronger hands that continue.
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. KQo on BTN is a call against CO in this chart. A 7.5 BB reraise risks 5 BB extra without a Premium hand.
     BETTER ANSWER: Call
 
@@ -1915,7 +1915,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
   - [wrong] Fold — Not quite. Folding KQo on BTN for 2.5 BB gives up the chart’s in-position call against CO.
     BETTER ANSWER: Call
-  + [correct] Call [2.5 BB] — Clean execution. With KQo on BTN, call because CO can raise weaker unpaired hands and you see CO’s decisions before yours. A reraise puts more at risk against stronger hands.
+  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with KQo on BTN because CO can open weaker kings such as KJo and KTs, and you see CO’s decisions before yours. A reraise risks more against stronger hands that continue.
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. The 4 BB pot includes CO’s 2.5 BB open. Reraising KQo from BTN puts 5 BB more at risk than the chart call.
     BETTER ANSWER: Call
 
@@ -1970,7 +1970,7 @@ SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO Th Tc stack 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO acts
   - [wrong] Reraise to 7.5 BB — Check the response rule. TT is Strong on CO. Reraising to 7.5 BB risks 5 BB more than the call against HJ.
     BETTER ANSWER: Call 2.5 BB
-  + [correct] Call 2.5 BB — Correct. Call 2.5 BB with TT because HJ can raise lower pairs and unpaired hands. A reraise builds a bigger pot against the higher pairs that can call.
+  + [correct] Call 2.5 BB — Correct. Call 2.5 BB with TT because HJ also opens AQ, AJ and KQ, which your tens lead. A reraise builds a bigger pot against the higher pairs that can call.
   - [wrong] Fold — Check the response rule. Folding TT on CO gives up a call with a Strong pair against one 2.5 BB open from HJ.
     BETTER ANSWER: Call 2.5 BB
 
@@ -2124,7 +2124,7 @@ EFFECTIVE: CO unknown · SB unknown · BB unknown
 REASONING: principle domination · alt raise · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  + [correct] Call [2.5 BB] — Clean execution. Call QJs on BTN because CO can raise weaker suited hands and you see CO’s decisions before yours. Reraising risks more when CO continues with stronger hands.
+  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with QJs on BTN because you see CO’s decisions before yours. Reraising risks more against stronger queens and pairs that can continue.
   - [wrong] Fold — A bit too tight. CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding QJs on BTN gives up the call the Sharky starting chart allows against one CO open.
     BETTER ANSWER: Call
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead gives CO the chance to call your larger bet with better hands.
@@ -2143,7 +2143,7 @@ TRAIL: UTG folds · HJ acts
   + [correct] Weak · Fold — Well done. Fold J4o from HJ because CO, BTN and both blinds still act. Limping pays 1 BB before any of them can raise.
   - [wrong] Medium · Raise — Not quite. Raising J4o from HJ into the 1.5 BB pot risks chips with a weak offsuit hand while CO, BTN, and both blinds still act behind you.
     BETTER ANSWER: Weak · Fold
-  - [suboptimal] Weak · Call — Playable thought. HJ holds J4o, outside the chart. Limping pays 1 BB and leaves CO, BTN and the blinds free to raise.
+  - [suboptimal] Weak · Call — The limp still costs a blind. HJ holds J4o, outside the chart. Limping pays 1 BB and leaves CO, BTN and the blinds free to raise.
     BETTER ANSWER: Weak · Fold
 
 TASK discipline_checkpoint_checkpoint_review [review] Discipline recap
@@ -2292,10 +2292,10 @@ HINT [theoryOnly]: Read all six labels before using position.
 TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] BTN, SB, and BB — Too narrow. CO and BTN are live seats too. Counting only the blinds misses the bets both can still make.
+  - [wrong] BTN, SB, and BB — Too narrow. BTN, SB and BB are on the table, but this list leaves out UTG, HJ and CO.
     BETTER ANSWER: UTG, HJ, CO, BTN, SB, BB
   + [correct] UTG, HJ, CO, BTN, SB, BB — Six-seat map complete. Those are the six seat labels used by this table before position decisions.
-  - [wrong] UTG, MP, CO, BTN, SB, BB — Read the earlier actions and seat order. HJ and CO still have turns before BTN. Leaving them out misses the information their actions can reveal.
+  - [wrong] UTG, MP, CO, BTN, SB, BB — Read the earlier actions and seat order. This list keeps CO but labels the seat before it MP. On this table that seat is HJ.
     BETTER ANSWER: UTG, HJ, CO, BTN, SB, BB
 
 ===== WORLD 3 · LESSON button_advantage · Button advantage =====
@@ -2504,16 +2504,16 @@ TASK early_vs_late_late_info_choice [drill] Late info edge
 CAPTION: CO already saw UTG and HJ fold before acting.
 TEACH: Late edge is practical. Seeing two folds before CO acts is already more information than UTG gets.
 TEACH LABELS: Two folds seen, Players behind
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active co | Seat focus co, btn | Tap btn, utg | Center CO after two folds | Empty board No board cards yet | Facts no applicable hand facts
+TEACH TABLE: Preflop | Pot 1.5 BB | Seat CO | Active co | Decision co | Seat focus co, btn | Center CO after two folds | Empty board No board cards yet | Facts no applicable hand facts
 Q: What gives CO more comfort than UTG here?
 HINT [theoryOnly]: Late comfort comes from fewer players left to act.
-TABLE: Preflop | Pot 1.5 BB | Seat BTN | Active co | Seat focus co, btn, sb, bb | Tap btn, utg | Center CO after two folds | Empty board No board cards yet | Facts no applicable hand facts
+TABLE: Preflop | Pot 1.5 BB | Seat CO | Active co | Decision co | Seat focus co, btn, sb, bb | Center CO after two folds | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
-  + [correct] Fewer players still act after CO — Excellent spot. That is the late-position edge: more information first, fewer players left to respond after you.
-  - [wrong] CO acts last before and after the flop — Not quite. BTN still has two blinds behind preflop. Assuming BTN already saw every action misses the chance either blind raises.
+  + [correct] Fewer players still act after CO — Excellent spot. CO has already seen two folds. BTN, SB and BB still get a turn, so CO has more information without acting last.
+  - [wrong] CO acts last before and after the flop — Not quite. CO still has BTN, SB and BB behind. Choosing the last seat misses the chance that one of those three players raises.
     BETTER ANSWER: Fewer players still act after CO
-  - [wrong] CO posts a smaller blind than UTG — Read the earlier actions and seat order. The blinds still cost 0.5 BB and 1 BB. Treating BTN's advantage as cheaper blinds misses the actions BTN gets to see first.
+  - [wrong] CO gets to act again before BTN — Read the earlier actions and seat order. CO and UTG post no blind. After seeing two folds, CO acts once before BTN, SB and BB.
     BETTER ANSWER: Fewer players still act after CO
 
 TASK early_vs_late_w2_position_recap [review] Position recap
@@ -2657,7 +2657,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     BETTER ANSWER: BTN
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap btn, utg, co | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
-TASK position_apply_btn_open [drill] BTN: open strong hand
+TASK position_apply_btn_open [drill] BTN: open playable hand
 CAPTION: Folded to BTN with QTs.
 TEACH: Late playable hand. QTs can still open first in from the Button.
 TEACH LABELS: QTs, Open
@@ -2788,7 +2788,7 @@ EFFECTIVE: BTN 100 · BB 100
 REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Ah Qd stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can raise weaker aces and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop.
+  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop.
   - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB with AQo gives BB a cheap entry while you still act before BTN after the flop. A reraise charges BB more.
     BETTER ANSWER: Reraise to 10 BB
   - [wrong] Fold — Read the price and seat. Folding gives up a chance to win the 2.5 BB BTN open and the BB post with a hand in the chart's SB reraise row.
@@ -2833,7 +2833,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds
   - [wrong] Call 0.5 BB — Read the price and seat. Completing costs 0.5 BB and gives BB a free check. A raise can get more chips in while your aces are ahead.
     BETTER ANSWER: Raise to 3 BB
-  + [correct] Raise to 3 BB — Correct. Raise AA so BB can call with weaker pairs or strong aces. Calling gives BB a free check and the last turn after the flop.
+  + [correct] Raise to 3 BB — Correct. Raise AA so BB can call with weaker pairs or strong aces. Calling gives BB a free check.
   - [wrong] Fold — Read the price and seat. Folding gives up a chance to win the blinds or get paid by a weaker hand. Raise against the one player still to act.
     BETTER ANSWER: Raise to 3 BB
 
@@ -2961,11 +2961,11 @@ HINT [theoryOnly]: Before choosing an action, notice what the seat order gives y
 TABLE: Preflop | You Qs Js | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Seat focus co, btn, sb, bb | Center CO with three seats behind | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO Qs Js | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
-  - [wrong] You already act last — Not quite. UTG is first and has five players left to act. Choosing the last seat misses those possible responses.
+  - [wrong] You already act last — Not quite. CO acts before BTN, SB and BB. Choosing the last seat misses what those three players can still do.
     BETTER ANSWER: BTN, SB, and BB still act after you
-  - [wrong] Late seat makes most hands easy — Count the players behind. An early seat still puts chips at risk if it opens. Treating a seat label as a free pass misses the five players behind UTG.
+  - [wrong] Late seat makes most hands easy — Count the players behind. CO can still face a call or raise from BTN, SB or BB. Opening from CO puts chips at risk even after the earlier folds.
     BETTER ANSWER: BTN, SB, and BB still act after you
-  + [correct] BTN, SB, and BB still act after you — Strong choice. That is the real-table read. Count the players behind before treating the seat as comfortable.
+  + [correct] BTN, SB, and BB still act after you — Strong choice. CO still has BTN, SB and BB behind. Treating CO as last overlooks three players who can call or raise after you.
 
 TASK position_checkpoint_position_checkpoint_review [review] Position recap
 ENTRY: drill
@@ -4170,7 +4170,7 @@ EFFECTIVE: BB 2
 REASONING: principle folds_better · alt choice_2 · edge stackLimitsPayoff 0.6087 BB · stack_matters true · assumption BB has 2 BB left and calls either bet. With 100 BB it would fold to 3 BB on a third of hands. Nine spades win. Other rivers lose. No more bets.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 7s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 2 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks
-  + [correct] Check — Correct. Check because BB always calls with its last 2 BB or less and you miss 37 of 46 rivers. A bet of 1 BB pays more for the same draw.
+  + [correct] Check — Correct. Check because BB always calls with its last 2 BB or less and you miss 37 of 46 rivers. Betting 1 BB costs more on the 37 misses.
     FEEDBACK TABLE: Turn | You As 7s | Board Kd 9s 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
   - [wrong] Bet 2 BB — Look again. A bet of 2 BB gets called and costs the most on the 37 misses. Checking keeps the same chance of taking the chips in the middle.
     BETTER ANSWER: Check
@@ -5085,7 +5085,7 @@ POTS: main 8 (BB, BTN)
 REASONING: principle price_vs_equity · alt choice_2 · edge priceBeatsEquity 0.81818182 BB · stack_matters false · assumption Suppose BB holds K♣ Q♠.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 3 BB
-  + [correct] Call — That fits the table. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
+  + [correct] Call — That fits the table. BB bets all-in, so this is the last decision. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
   - [wrong] Fold — Check what can still win. Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.
     BETTER ANSWER: Call
 
@@ -5101,7 +5101,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 6 BB
   - [wrong] Call — Check what can still win. The draw wins on the same 12 of 44 rivers. Paying 6 BB now requires 30%, so the call risks more than this chance is worth.
     BETTER ANSWER: Fold
-  + [correct] Fold — That fits the table. You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.
+  + [correct] Fold — That fits the table. BB bets all-in, so no later bet can change the price. You still win on 12 of 44 rivers, about 27%. To call 6 BB you need 6 of the final 20 BB, or 30%. The chance did not change; the price did.
 
 ===== WORLD 7 · LESSON w7_visible_cards_range_checkpoint · Range and price checkpoint =====
 
@@ -5118,7 +5118,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call — Check what can still win. Your queen-jack beats just the jack-ten bluff. Paying 4 BB with one win in six fails the 25% threshold and loses chips on average.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
-  + [correct] Fold — That fits the table. If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.
+  + [correct] Fold — That fits the table. BB bets all-in, so use only the six stated hands. If BB has J♥ T♥, you win. Every other hand on the list beats you. You win one of six times, about 17%, but paying 4 BB for a final pot of 16 BB needs 25%.
     FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
 
 TASK w7_river_two_bluffs_of_six [drill] A river decision
@@ -5635,12 +5635,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: Main 30 BB, side 40 BB
 
 TASK short_stack_spots_set_mine [drill] Set mining at two depths
-CAPTION: CO starts with 15 BB. Assume your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.
+CAPTION: CO starts with 15 BB. Assume SB and BB fold. Your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.
 Q: With CO starting at 15 BB, what should you do?
 HINT [hidden]: (none)
 TABLE: Preflop | You 4h 4d | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts pocket pair
 EFFECTIVE: CO 15 · SB 100 · BB 100
-REASONING: principle implied_odds · alt call · edge stackLimitsPayoff 0.26653061 BB · stack_matters true · assumption CO starts with 15 BB. Assume your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.
+REASONING: principle implied_odds · alt call · edge stackLimitsPayoff 0.26653061 BB · stack_matters true · assumption CO starts with 15 BB. Assume SB and BB fold. Your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 12.5 BB raise 2.5 BB | BTN dealer 4h 4d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB
   + [correct] Fold — Correct. CO can pay only 12.5 BB more when you hit, so fold. Calling loses about 0.27 BB on average here but earns about 0.38 BB if a deeper CO pays another 18 BB.
@@ -7841,7 +7841,7 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB | BB folded
 ===== WORLD 1 · LESSON blinds_action_order · Seats and blinds =====
 
 TASK w1_rules_check_forced_bets [drill] Blinds
-Q: At a six-player table with no ante or straddle, who must put chips in before the deal?
+Q: Who posts the forced bets before the deal at this six-player table?
 HINT [hidden]: (none)
 TABLE: Preflop | Seat BTN | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
@@ -9076,7 +9076,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   - [wrong] Fold — Look again. Folding from BTN gives up the open with sevens and a chance to win both blinds.
     BETTER ANSWER: Raise
-  + [correct] Raise — Correct. Raise sevens on BTN so the blinds can fold and hand you the pot. A limp lets BB see a cheap flop and hit an overcard.
+  + [correct] Raise — Correct. Raise sevens on BTN so the blinds can fold and hand you the pot. A limp lets BB see a cheap flop and hit a higher card.
   - [wrong] Call — Look again. Calling costs 1 BB and lets the blinds enter cheaply. The chart opens BTN sevens here.
     BETTER ANSWER: Raise
 

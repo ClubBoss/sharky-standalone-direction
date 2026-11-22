@@ -2565,7 +2565,7 @@ const _kqoButtonFacingRaiseChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Clean execution.',
     feedbackReason:
-        "With KQo on BTN, call because CO can raise weaker unpaired hands and you see CO’s decisions before yours. A reraise puts more at risk against stronger hands.",
+        "Call 2.5 BB with KQo on BTN because CO can open weaker kings such as KJo and KTs, and you see CO’s decisions before yours. A reraise risks more against stronger hands that continue.",
   ),
   Act0RunnerOptionV1(
     id: 'fold',
@@ -2624,7 +2624,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Call with KQo on BTN because HJ can raise weaker unpaired hands and you see HJ’s decisions before yours. A reraise risks more against the stronger aces and pairs that can continue.",
+          "Call 2.5 BB with KQo on BTN because you see HJ’s decisions before yours on later rounds. A reraise risks more against the stronger aces and pairs that continue.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -2712,7 +2712,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Call QJs on BTN because CO can raise weaker suited hands and you see CO’s decisions before yours. Reraising risks more when CO continues with stronger hands.",
+          "Call 2.5 BB with QJs on BTN because you see CO’s decisions before yours. Reraising risks more against stronger queens and pairs that can continue.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -3385,7 +3385,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'That is the late-position edge: more information first, fewer players left to respond after you.',
+          'CO has already seen two folds. BTN, SB and BB still get a turn, so CO has more information without acting last.',
     ),
     Act0RunnerOptionV1(
       id: 'always_last',
@@ -3400,26 +3400,22 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
     ),
   ],
   table: _act0ExplicitFoldsV1(
-    _latePositionRunner.table.copyWith(
-      scope: Act0TableScopeV1.playedHand,
-      seats: [
-        for (final seat in _latePositionRunner.table.seats)
-          seat.seatId == 'btn'
-              ? _act0CopySeatStateV1(
-                  seat,
-                  cardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
-                )
-              : seat,
-      ],
-      highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'UTG folds'),
-        Act0ActionTrailItemV1(label: 'HJ folds'),
-        Act0ActionTrailItemV1(label: 'CO acts'),
-      ],
-      centerLabel: 'CO after two folds',
+    _act0ReassignHeroSeatV1(
+      _latePositionRunner.table.copyWith(
+        scope: Act0TableScopeV1.playedHand,
+        selectableSeatIds: const [],
+        highlightedSeatIds: const ['co', 'btn', 'sb', 'bb'],
+        actionTrail: const [
+          Act0ActionTrailItemV1(label: 'UTG folds'),
+          Act0ActionTrailItemV1(label: 'HJ folds'),
+          Act0ActionTrailItemV1(label: 'CO acts'),
+        ],
+        centerLabel: 'CO after two folds',
+        decisionSeatId: 'co',
+        handContributions: _act0BlindsOnlyContributions,
+      ),
+      heroSeatId: 'co',
       activeSeatId: 'co',
-      handContributions: _act0BlindsOnlyContributions,
     ),
     const {'utg', 'hj'},
   ),
@@ -3638,7 +3634,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'That is the real-table read. Count the players behind before treating the seat as comfortable.',
+          'CO still has BTN, SB and BB behind. Treating CO as last overlooks three players who can call or raise after you.',
     ),
     Act0RunnerOptionV1(
       id: 'acts_last',
@@ -4176,7 +4172,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
       preferredLabel: 'Weak · Fold',
       betterAnswerLabel: 'Weak · Fold',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
+      feedbackTitle: 'The limp still costs a blind.',
       feedbackReason:
           'An unopened pot does not rescue a weak bucket. Discipline still says let it go instead of leaking a limp.',
     ),
