@@ -1,6 +1,7 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import 'act0_catalog_decision_v1.dart';
+import 'act0_catalog_learner_copy_v1.dart';
 import 'act0_catalog_numeric_copy_v1.dart';
 import 'act0_catalog_poker_facts_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
@@ -43,6 +44,7 @@ final _whitespacePattern = RegExp(r'\s+');
 const catalogDuplicateOptionLabelRuleV1 = '45.duplicate_option_label';
 const catalogActionQuestionRuleV1 = '46.action_question_options';
 const catalogCorrectFeedbackLengthRuleV1 = '47.correct_feedback_length';
+const catalogBankrollThresholdRuleV1 = '48.bankroll_threshold';
 const catalogCorrectFeedbackWordLimitV1 = 45;
 final _actionPairQuestion = RegExp(
   r'\b(bet|check|call|fold|raise)(?:\s+(?:to\s+)?\d+(?:\.\d+)?\s*BB)?'
@@ -326,6 +328,13 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
           [...catalogTasks, ...rulesCheckCatalogTasks, ...day7CatalogTasks]) {
     auditCatalogNumericCopy(row, count: count, findings: findings);
     final task = row.task;
+    for (final (:surface, :buyIns) in catalogBankrollThresholdsV1(task)) {
+      const rule = catalogBankrollThresholdRuleV1;
+      count(rule);
+      if (buyIns != act0CashBankrollBuyInsV1) {
+        findings.add('$rule|${task.taskId}|$surface|$buyIns');
+      }
+    }
     final options = task.runner.options;
     final correct = options.where((option) => option.isCorrect);
     for (final option in correct) {

@@ -1077,6 +1077,13 @@ void main() {
       reason:
           'G1·46 the named actions must be available and include the answer',
     );
+    expect(
+      report.findings.where(
+        (key) => key.startsWith('$catalogBankrollThresholdRuleV1|'),
+      ),
+      isEmpty,
+      reason: 'G1·48 cash bankroll thresholds must use the course rule',
+    );
     final baselineFile = File(_qualityBaselinePath);
     if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
       final existing = baselineFile.existsSync()
@@ -2290,6 +2297,43 @@ void main() {
           _withRunner(row, row.task.runner.copyWith(question: 'Bet or check?')),
         ),
         ['$catalogActionQuestionRuleV1|${row.task.taskId}|missing check'],
+      );
+    });
+
+    test('G1·48 rejects the old NL10 thresholds and checks other copy', () {
+      final row = _catalogRow('w11_y5d_stay_at_nl10');
+      Iterable<String> findingsFor(Act0RunnerStateV1 runner) =>
+          runCatalogQualityAudit(
+            rows: [_withRunner(row, runner)],
+          ).findings.where(
+            (key) => key.startsWith('$catalogBankrollThresholdRuleV1|'),
+          );
+      final runner = row.task.runner;
+      final prefix = '$catalogBankrollThresholdRuleV1|${row.task.taskId}';
+      expect(findingsFor(runner), isEmpty);
+      expect(
+        findingsFor(
+          runner.copyWith(
+            caption:
+                r'Your bankroll is $475. A buy-in costs $10 at NL10 and $25 at NL25. '
+                'Move up at 30 buy-ins for the next stake. Move down below 20 at the current stake.',
+            hint: 'The thirty-buy-in floor applies to cash games.',
+          ),
+        ),
+        unorderedEquals([
+          '$prefix|caption|30',
+          '$prefix|caption|20',
+          '$prefix|hint|30',
+        ]),
+      );
+      expect(
+        findingsFor(
+          runner.copyWith(
+            hint:
+                'You have 19 buy-ins at NL25, 21 buy-ins short of the buffer.',
+          ),
+        ),
+        isEmpty,
       );
     });
 

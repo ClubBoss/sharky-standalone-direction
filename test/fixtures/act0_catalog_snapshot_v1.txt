@@ -6777,16 +6777,16 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: End the session
 
 TASK w11_y5d_stay_at_nl10 [drill] Choose a stake for the session
-CAPTION: Your bankroll is $475. A buy-in costs $10 at NL10 and $25 at NL25. Move up at 30 buy-ins for the next stake. Move down below 20 at the current stake.
+CAPTION: Your bankroll is $475. A full buy-in costs $10 at NL10 and $25 at NL25. Move up when you have 40 buy-ins for the next stake. Move down below 40 buy-ins at the current stake.
 Q: Which stake fits your bankroll rule?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 REASONING: principle bankroll_rule · alt choice_1 · edge processRule · stack_matters unknown · assumption none
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Stay at NL10 — Correct. At NL10 you have 47.5 buy-ins, above the 20-buy-in floor. NL25 requires $750 for 30 buy-ins, so stay at NL10.
-  - [wrong] Move up to NL25 — Look again. NL25 gives you 19 buy-ins at $475. Wait for $750 before moving up.
+  + [correct] Stay at NL10 — Correct. Stay at NL10. Your $475 buys 47.5 full buy-ins, above the 40-buy-in floor. Moving up to NL25 requires $1000.
+  - [wrong] Move up to NL25 — Look again. At NL25, $475 buys 19 full buy-ins. Wait until you have $1000 before moving up.
     BETTER ANSWER: Stay at NL10
-  - [wrong] Move down to NL5 — Look again. You move below NL10 when your bankroll falls under $200. With $475 you can stay.
+  - [wrong] Move down to NL5 — Look again. Move down from NL10 only below $400. Your $475 still covers the 40-buy-in floor.
     BETTER ANSWER: Stay at NL10
 
 TASK w11_y5d_top_up_to_100 [drill] Top up between hands

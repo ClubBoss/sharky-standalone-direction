@@ -17,7 +17,8 @@
     "25.street_stack": 27,
     "45.duplicate_option_label": 656,
     "46.action_question_options": 71,
-    "47.correct_feedback_length": 656
+    "47.correct_feedback_length": 656,
+    "48.bankroll_threshold": 17
   },
   "correct_feedback_word_limits_v1": {
     "w3_play_from_blinds_small_blind_medium_raise|raise": 48,
