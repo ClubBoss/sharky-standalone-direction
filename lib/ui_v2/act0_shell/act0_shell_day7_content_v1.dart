@@ -1201,9 +1201,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Check', 'Bet 4 BB', 'Bet 2 BB'],
     correct: 2,
     reason:
-        'Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.',
+        "Bet 2 BB because BB calls with A-7, behind your better kicker. A bet of 4 BB makes BB fold and loses the payment.",
     wrongReasons: const {
-      0: 'Checking on A-6-2 skips the 2 BB that BB would pay with A-7.',
+      0: "Checking on A-6-2 misses the 2 BB call from BB’s weaker ace.",
       1: 'BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.',
     },
   ),
@@ -1279,9 +1279,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Both choices earn zero", "Call"],
     correct: 2,
     reason:
-        "Pay 2 BB to play for a final 10 BB pot. You need 20% and have 25%, so calling is ahead.",
-    caption:
-        "6-max micro-stakes. With one decision left, assume you win 1 time in 4 if you call.",
+        "HJ bets 2 BB, so calling makes a 10 BB pot and needs 20%. Call because the stated 25% is higher. Folding gives up the gain.",
+    caption: "With one decision left, assume you win 1 time in 4 if you call.",
   ),
   _day7ExampleV1(
     4,
@@ -1298,9 +1297,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Bet 3 BB", "Check to showdown", "Fold"],
     correct: 0,
     reason:
-        "A 3 BB bet gets a call from the weaker kings in this model. A check ends the hand without that payment.",
-    caption:
-        "6-max micro-stakes. In this example BB calls 3 BB with K-J and K-T.",
+        "BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.",
+    caption: "In this example BB calls 3 BB with K-J and K-T.",
   ),
   _day7ExampleV1(
     4,
@@ -1318,9 +1316,32 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Bet 3 BB", "Fold"],
     correct: 1,
     reason:
-        "A pair of sevens beats your queen-high. Betting 3 BB makes that better hand fold in this model.",
-    caption:
-        "6-max micro-stakes. BB has a pair of sevens and folds it to a 3 BB bet.",
+        "Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.",
+    caption: "BB has a pair of sevens and folds it to a 3 BB bet.",
+  ),
+  _day7ExampleV1(
+    4,
+    'protection_and_denial',
+    'pot_to_call',
+    _day7PostflopV1(
+      'hj',
+      '9c 8c',
+      '9h 6s 2d Ks',
+      betBb: 3,
+      opponentStartingBb: 5.75,
+      opponentAllIn: true,
+      showTurn: true,
+    ),
+    caption: 'Assume 20% wins and no ties against this all-in range.',
+    question: 'Does the chance to win beat the price of a call?',
+    choices: const ['Call', 'Fold', 'Both earn the same'],
+    correct: 1,
+    reason:
+        'BB is all-in for 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because 20% falls short and a call loses chips.',
+    wrongReasons: const {
+      0: 'Calling costs 3 BB with a 20% chance, below the 25% the price requires.',
+      2: 'One win in five earns 9 BB, but four losses cost 12 BB in total. Folding saves an average 0.6 BB.',
+    },
   ),
   _day7ExampleV1(
     4,
@@ -1338,9 +1359,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Fold", "Bet 3 BB"],
     correct: 2,
     reason:
-        "Your check lets the round end without a price. A bet sets a price BB must pay to see the next card.",
-    caption:
-        "6-max micro-stakes. Assume BB has A-K and can pair either card on the turn.",
+        "A bet makes BB pay or fold with ace-king. Checking gives BB a free chance to pair one of those cards and beat your nines.",
+    caption: "Assume BB has A-K and can pair either card on the turn.",
   ),
   _day7ExampleV1(
     4,
@@ -1358,7 +1378,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "Your jack beats A-9's nine side card. A-Q has the higher side card and beats your pair of aces.",
-    caption: "6-max micro-stakes. Assume BB calls 3 BB with either A-9 or A-Q.",
+    caption: "Assume BB calls 3 BB with either A-9 or A-Q.",
   ),
   _day7ExampleV1(
     4,
@@ -1370,9 +1390,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Fold", "Both earn the same"],
     correct: 1,
     reason:
-        "Calling costs 3 BB for a final 12 BB pot and needs 25% wins. One win in five is 20%; folding saves the 3 BB.",
+        "HJ bets 3 BB, so a call makes a 12 BB pot and needs 25%. Fold because the stated 20% is below the price. A call loses chips here.",
     caption:
-        "6-max micro-stakes. Two players, no ties or further betting. Assume one win in five against this opponent's range.",
+        "Two players, no ties or further betting. Assume one win in five against this opponent's range.",
   ),
   _day7ExampleV1(
     5,

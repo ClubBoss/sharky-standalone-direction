@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_wave6_contract_v1.dart';
+import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -43,7 +44,8 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
-            w3BlindVsBlindChoicesV1.length,
+            w3BlindVsBlindChoicesV1.length +
+            y5bNewChoicesV1.length,
       ),
     );
     expect(
@@ -53,7 +55,8 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
-            w3BlindVsBlindChoicesV1.length,
+            w3BlindVsBlindChoicesV1.length +
+            y5bNewChoicesV1.length,
       ),
     );
     final problems = <String>[];
@@ -157,7 +160,8 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
-            w3BlindVsBlindChoicesV1.length,
+            w3BlindVsBlindChoicesV1.length +
+            y5bNewChoicesV1.length,
       ),
     );
     verifyWave6AndRestoreIdentityV1(entries);
@@ -447,6 +451,12 @@ void main() {
       expect(task.first, 'world_3');
       expect(task.last, entry.value, reason: entry.key);
     }
+    for (final entry in y5bNewChoicesV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      expect(task[0], 'world_4', reason: entry.key);
+      expect(task[1], 'protection_and_denial', reason: entry.key);
+      expect(task.last, entry.value, reason: entry.key);
+    }
     for (final entry in w3CurrentReasonChoicesV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
       expect(task.last, entry.value, reason: entry.key);
@@ -548,7 +558,7 @@ void main() {
         'practice',
         [
           ['check', 'Check', false, 'wrong', 'Bet 2 BB'],
-          ['bet_four', 'Bet 4 BB', false, 'wrong', 'Bet 2 BB'],
+          ['bet_four', 'Bet 4 BB', false, 'suboptimal', 'Bet 2 BB'],
           ['bet_two', 'Bet 2 BB', true, 'correct', 'Bet 2 BB'],
         ],
       ],
@@ -763,6 +773,7 @@ void main() {
               !w4MinRaiseTaskIdsV1.contains(row[2]) &&
               !w2Q9ChoiceContractV1.containsKey(row[2]) &&
               !w3NewChoiceContractV1.containsKey(row[2]) &&
+              !y5bNewChoicesV1.containsKey(row[2]) &&
               !w6NewChoiceContractV1.containsKey(row[2]) &&
               !w1Additions.containsKey(row[2]) &&
               row[2] != w4BettorTask &&
@@ -2452,7 +2463,8 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
-            w3BlindVsBlindChoicesV1.length,
+            w3BlindVsBlindChoicesV1.length +
+            y5bNewChoicesV1.length,
       ),
     );
     var validated = 0;

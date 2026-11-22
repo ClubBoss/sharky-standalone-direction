@@ -151,6 +151,8 @@ Act0TableStateV1 _day7PostflopV1(
   double openBb = 2.75,
   double betBb = 0,
   double heroLeadBb = 0,
+  double? opponentStartingBb,
+  bool opponentAllIn = false,
   bool checkedToHero = false,
   bool showTurn = false,
 }) {
@@ -168,6 +170,9 @@ Act0TableStateV1 _day7PostflopV1(
   final first = caller.toUpperCase();
   final last = opener.toUpperCase();
   final streetLabel = pokerStreetToString(street);
+  final betVerb = opponentAllIn
+      ? 'all-in'
+      : (heroLeadBb > 0 ? 'raises to' : 'bets');
   final current = [
     if ((checkedToHero && hero != 'bb') ||
         heroLeadBb > 0 ||
@@ -179,7 +184,7 @@ Act0TableStateV1 _day7PostflopV1(
       Act0ActionTrailItemV1(
         label:
             '${heroLeadBb == 0 && hero != 'bb' ? '$streetLabel: ' : ''}'
-            '${other.toUpperCase()} ${heroLeadBb > 0 ? 'raises to' : 'bets'} '
+            '${other.toUpperCase()} $betVerb '
             '${_act0BbLabelV1(betBb)}',
       ),
     if (shownHand.isNotEmpty) ...[
@@ -197,6 +202,7 @@ Act0TableStateV1 _day7PostflopV1(
         ? const {}
         : {other: _act0LessonCardsV1(shownHand)},
     folded: folded,
+    stacks: {if (opponentStartingBb != null) other: opponentStartingBb},
     entries: [
       ..._act0LessonBlinds,
       Act0ContributionV1(
@@ -252,10 +258,12 @@ Act0TableStateV1 _day7PostflopV1(
         ),
       if (betBb > 0)
         other: Act0SeatBetStateV1(
-          kind: heroLeadBb > 0
+          kind: opponentAllIn
+              ? Act0SeatBetKindV1.allIn
+              : heroLeadBb > 0
               ? Act0SeatBetKindV1.raise
               : Act0SeatBetKindV1.bet,
-          label: heroLeadBb > 0 ? 'Raise' : 'Bet',
+          label: opponentAllIn ? 'All-in' : (heroLeadBb > 0 ? 'Raise' : 'Bet'),
           amountLabel: _act0BbLabelV1(betBb),
         ),
     },

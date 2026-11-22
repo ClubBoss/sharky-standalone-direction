@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
 import '../support/act0_wave6_contract_v1.dart';
+import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
@@ -296,7 +297,8 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
-            w3BlindVsBlindChoicesV1.length,
+            w3BlindVsBlindChoicesV1.length +
+            y5bNewChoicesV1.length,
       ),
     );
     expect(
@@ -306,7 +308,8 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
-            w3BlindVsBlindChoicesV1.length,
+            w3BlindVsBlindChoicesV1.length +
+            y5bNewChoicesV1.length,
       ),
     );
     final newTasks = tasks
@@ -322,6 +325,7 @@ void main() {
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
+            !y5bNewChoicesV1.containsKey(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'first_table_guide_first_decision' &&
             task.taskId != 'hand_rankings_compare_ace_straights' &&
@@ -409,6 +413,7 @@ void main() {
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
             !w3NewTaskIds.contains(task.taskId) &&
+            !y5bNewChoicesV1.containsKey(task.taskId) &&
             !w6TaskIds.contains(task.taskId) &&
             task.taskId != 'first_table_guide_first_decision' &&
             task.taskId != 'hand_rankings_compare_ace_straights' &&
@@ -595,6 +600,7 @@ void main() {
       played,
       328 +
           w3BlindVsBlindChoicesV1.length +
+          y5bNewChoicesV1.length +
           10 +
           9 +
           2 +
@@ -626,6 +632,7 @@ void main() {
       'w3_play_from_blinds_big_blind_price',
       'w3_play_from_blinds_big_blind_defend',
       ...w3BlindVsBlindChoicesV1.keys,
+      ...y5bNewChoicesV1.keys,
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
       ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
