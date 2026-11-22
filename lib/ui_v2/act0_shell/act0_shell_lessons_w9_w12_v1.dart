@@ -10,7 +10,7 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 45,
+    rewardXp: 53,
     runner: _w9SurvivalIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -35,6 +35,46 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _w9EvTwoResultsRunner,
         rewardXp: 10,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w9_bubble_read_guided",
+        title: "Read the bubble range",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner:
+            _day7ExampleV1(
+              9,
+              "survival_pressure_basics",
+              "w9_bubble_read_guided",
+              _day7PreflopV1(
+                'bb',
+                '9h 9d',
+                opener: 'btn',
+                openBb: 8,
+                heroStartingBb: 8,
+                allIn: true,
+                showTurn: true,
+              ),
+              caption:
+                  "Six players remain and five get paid. The button goes all-in with pairs of tens or better and some strong aces. Weaker aces fold in this example.",
+              question: "Which hands can the opener still have?",
+              choices: const [
+                "Weaker aces",
+                "Tens or better and strong aces",
+                "Sevens through nines",
+              ],
+              correct: 1,
+              reason:
+                  "The button raises all-in with strong aces and high pairs. The weaker aces fold, so they cannot be part of this wager.",
+              wrongReasons: const {
+                0: "The weaker aces fold. Counting them would give nines more winning matchups than the stated range allows.",
+                2: "Smaller pairs fall outside the model. Counting them would overstate the value of pocket nines.",
+              },
+            ).task.runner.copyWith(
+              hint: "Start with the hands the opener would fold instead.",
+              hintPolicy: Act0HintPolicyV1.always,
+            ),
       ),
       Act0LessonTaskV1(
         taskId: 'w9_short_stack_survival',
@@ -236,7 +276,7 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 50,
+    rewardXp: 58,
     runner: _world9TournamentCheckpointRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -269,6 +309,38 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         runner: _w9CheckpointZoneLineRunner,
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w9_bubble_read_decision",
+        title: "Price the call in chips and prizes",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.transfer,
+        runner: _day7ExampleV1(
+          9,
+          "tournament_pressure_checkpoint",
+          "w9_bubble_read_decision",
+          _day7PreflopV1(
+            'bb',
+            '9c 9s',
+            opener: 'btn',
+            openBb: 8,
+            heroStartingBb: 8,
+            allIn: true,
+            showTurn: true,
+          ),
+          caption:
+              "Six players remain and five get paid. BTN’s all-in range includes A-K and both lower and higher pairs. The model gives you 48% wins with no ties and sets the threshold for expected prize money at 60% wins.",
+          question: "Do you call with your last 7 BB?",
+          choices: const ["Call", "Fold"],
+          correct: 1,
+          reason:
+              "BTN raises all-in with pairs or ace-king. Calling 7 BB earns chips at 48% wins, but fold because the prize threshold is 60%.",
+          wrongReasons: const {
+            0: "Calling needs about 42% for chips, but 48% falls short of the 60% prize threshold. Fold if your aim is prize money.",
+          },
+        ).task.runner,
       ),
       Act0LessonTaskV1(
         taskId: 'w9_checkpoint_bubble_line',

@@ -188,7 +188,8 @@ void main() {
         .singleWhere(
           (entry) =>
               entry.worldId == 'world_7' &&
-              entry.lessonId == 'w7_visible_cards_range_checkpoint',
+              entry.lessonId == 'w7_visible_cards_range_checkpoint' &&
+              entry.conceptFamilyId == 'hero_cards_board_pot',
         )
         .task
         .runner;
@@ -213,7 +214,13 @@ void main() {
     final tasks = Act0ShellStateV1.sample
         .lessonById('w7_visible_cards_range_checkpoint')
         .taskList;
-    for (final (index, task) in tasks.indexed) {
+    const originalTasks = [
+      'w7_river_one_bluff_of_six',
+      'w7_river_two_bluffs_of_six',
+      'w7_checkpoint_river_card_excludes_hand',
+    ];
+    for (final (index, id) in originalTasks.indexed) {
+      final task = tasks.singleWhere((task) => task.taskId == id);
       final runner = task.runner;
       final table = runner.table;
       final hero = physicalCards(table.heroCards);
@@ -250,6 +257,55 @@ void main() {
         _correct(runner),
         wins / compatible.length > _requiredShare(table) ? 'Call' : 'Fold',
       );
+    }
+  });
+  test('W7 fresh reads use the available river hands and price', () {
+    final lesson = Act0ShellStateV1.sample.lessonById(
+      'w7_visible_cards_range_checkpoint',
+    );
+    final guided = lesson.taskList
+        .singleWhere((t) => t.taskId == 'w7_read_visible_card_guided')
+        .runner;
+    final transfer = lesson.taskList
+        .singleWhere((t) => t.taskId == 'w7_read_visible_card_call')
+        .runner;
+    final review = act0NewReviewTasksV1
+        .singleWhere(
+          (entry) =>
+              entry.task.taskId == 'spaced_review_w7_visible_card_call_v1',
+        )
+        .task
+        .runner;
+    expect(guided.hintPolicy, Act0HintPolicyV1.always);
+    expect(transfer.hint, isEmpty);
+    expect(review.hint, isEmpty);
+
+    for (final (runner, removed) in [
+      (guided, ['2s', '2d']),
+      (transfer, ['Ac', 'Qd']),
+      (review, ['Kc', 'Td']),
+    ]) {
+      final table = runner.table;
+      final hero = physicalCards(table.heroCards);
+      final board = physicalCards(table.boardCards);
+      final known = {...hero, ...board};
+      final names = _namedCards(runner.caption);
+      expect(names.length.isEven, isTrue);
+      final hands = [
+        for (var i = 0; i < names.length; i += 2) names.sublist(i, i + 2),
+      ];
+      expect(hands.where((hand) => hand.any(known.contains)), [removed]);
+      if (identical(runner, guided)) {
+        expect(_namedCards(_correct(runner)), removed);
+      } else {
+        final shares = [
+          for (final hand in hands.where((hand) => !hand.any(known.contains)))
+            _share(hero, hand, board),
+        ];
+        expect(shares, [0, 1, 1]);
+        expect(_requiredShare(table), 0.25);
+        expect(_correct(runner), 'Call');
+      }
     }
   });
 }

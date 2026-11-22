@@ -68,6 +68,7 @@ const _extensionLessonSkills = <String, List<String>>{
   'effective_stack_basics': ['Stack decisions'],
   'same_hand_different_depth': ['Stack decisions'],
   'spr_and_commitment': ['Stack decisions'],
+  'short_stack_spots': ['Stack decisions'],
   'format_pressure': ['Position play'],
   'survival_pressure_basics': ['Tournament decisions'],
   'm_ratio_zones_lite': ['Tournament decisions'],
@@ -100,6 +101,8 @@ const _skillOverridesByTaskId = <String, List<String>>{
   'w7_clean_outs_lower_price': ['Board reading', 'Betting decisions'],
   'w7_clean_outs_higher_price': ['Board reading', 'Betting decisions'],
   'w7_format_table_notice': ['Stack decisions'],
+  'w8_guided_short_read': ['Stack decisions'],
+  'w8_unguided_short_read': ['Stack decisions'],
   'w7_stack_checkpoint': ['Stack decisions'],
   'outs_improvement_w5_table_outs_flush_transfer': [
     'Board reading',

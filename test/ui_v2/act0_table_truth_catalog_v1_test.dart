@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
+import '../support/act0_y5c_catalog_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
@@ -229,11 +230,19 @@ void main() {
     for (final (rule, count) in [
       (
         'D2.pot_feasibility',
-        118 + y5bNewChoicesV1.length - y5bFoundationTaskCountV1,
+        118 +
+            y5bNewChoicesV1.length -
+            y5bFoundationTaskCountV1 +
+            y5cTasksInWorldV1(7) +
+            y5cTasksInWorldV1(8),
       ),
       (
         'D3.to_call_completeness',
-        117 + y5bNewChoicesV1.length - y5bFoundationTaskCountV1,
+        117 +
+            y5bNewChoicesV1.length -
+            y5bFoundationTaskCountV1 +
+            y5cTasksInWorldV1(7) +
+            y5cTasksInWorldV1(8),
       ),
     ]) {
       final proof = rows
@@ -393,7 +402,9 @@ void main() {
     );
     final w9Learning = {
       for (final entry in contract.entries)
-        if (entry.key.startsWith('w9_')) entry.key: entry.value,
+        if (entry.key.startsWith('w9_') &&
+            !y5cNewChoicesV1.containsKey(entry.key))
+          entry.key: entry.value,
     };
     expect(
       sha256.convert(utf8.encode(jsonEncode(w9Learning))).toString(),
@@ -425,7 +436,7 @@ void main() {
       ..removeWhere(
         (id, _) =>
             admittedAdditions.contains(id) ||
-            id.startsWith('w9_') ||
+            (id.startsWith('w9_') && !y5cNewChoicesV1.containsKey(id)) ||
             id.startsWith('w10_'),
       )
       ..addAll((preAtlasW9['learning'] as Map).cast<String, Object?>())
@@ -1496,13 +1507,21 @@ void main() {
           },
       ],
     };
-    for (final entry in y5bNewChoicesV1.entries) {
+    for (final entry in {...y5bNewChoicesV1, ...y5cNewChoicesV1}.entries) {
       expectedComparison[entry.key] = {
         'rewardXp': entry.value.isEmpty ? 6 : 8,
-        'family': entry.value.isEmpty ? 'learn' : 'decision',
+        'family': switch (entry.key) {
+          'short_stack_spots_value_cap' ||
+          'w7_read_visible_card_call' ||
+          'w9_bubble_read_decision' => 'transfer',
+          _ => entry.value.isEmpty ? 'learn' : 'decision',
+        },
         'options': [
           for (final choice in entry.value)
-            w3Option(choice[0] as String, correct: choice[2] as bool),
+            {
+              ...w3Option(choice[0] as String, correct: choice[2] as bool),
+              'quality': choice[3],
+            },
         ],
       };
     }

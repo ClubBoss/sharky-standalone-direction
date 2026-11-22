@@ -86,8 +86,9 @@ TIER_A_COMMANDS = [
     },
     {
         "name": "W1-W4 long session across restarts",
-        # The full-course test has a five-minute body budget; allow compilation too.
-        "min_timeout_seconds": 360,
+        # One invocation runs several AppRoot journeys, including the full course.
+        # The previous 360s watchdog expired on CI after Y5c extended that route.
+        "min_timeout_seconds": 480,
         "cmd": [
             "flutter",
             "test",

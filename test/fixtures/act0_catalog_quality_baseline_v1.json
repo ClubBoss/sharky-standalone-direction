@@ -3,18 +3,18 @@
   "checks": {
     "11.btn_share_per_world": 12,
     "12.two_option_w1_w5": 231,
-    "13.intro_over_100_words": 79,
-    "14.duplicate_theory_in_lesson": 244,
-    "15.internal_jargon": 474,
-    "16.extreme_wrong_option": 416,
-    "17.single_format_lesson": 65,
+    "13.intro_over_100_words": 80,
+    "14.duplicate_theory_in_lesson": 245,
+    "15.internal_jargon": 489,
+    "16.extreme_wrong_option": 430,
+    "17.single_format_lesson": 67,
     "18.same_format_streak": 12,
-    "19.lesson_length_corridor": 77,
+    "19.lesson_length_corridor": 78,
     "20.hero_qq_per_world": 5,
-    "21.duplicate_wrong_reason": 1187,
-    "22.bet_into_pot": 52,
-    "24.call_equity": 80,
-    "25.street_stack": 30
+    "21.duplicate_wrong_reason": 1215,
+    "22.bet_into_pot": 54,
+    "24.call_equity": 95,
+    "25.street_stack": 27
   },
   "findings": [
     "21.duplicate_wrong_reason|actions_check_drill|call",
@@ -183,224 +183,24 @@
       "world_5": {},
       "world_6": {},
       "world_7": {
-        "26": [
-          "spaced_review_w7_w7_visible_cards_and_price_board_cards_v1",
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1",
-          "w7_checkpoint_river_card_excludes_hand",
-          "w7_clean_outs_higher_price",
-          "w7_clean_outs_lower_price",
-          "w7_flop_bluff_one_player",
-          "w7_flop_bluff_two_players",
-          "w7_river_one_bluff_of_six",
-          "w7_river_two_bluffs_of_six"
-        ],
-        "27": [
-          "spaced_review_w7_w7_visible_cards_and_price_board_cards_v1",
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1",
-          "w7_checkpoint_river_card_excludes_hand",
-          "w7_clean_outs_higher_price",
-          "w7_clean_outs_lower_price",
-          "w7_flop_bluff_one_player",
-          "w7_flop_bluff_two_players",
-          "w7_river_one_bluff_of_six",
-          "w7_river_two_bluffs_of_six"
-        ],
         "28": [
           "w7_clean_outs_higher_price|choice_2",
           "w7_clean_outs_lower_price|choice_1",
-          "w7_river_one_bluff_of_six|choice_2",
-          "w7_river_two_bluffs_of_six|choice_1"
+          "w7_river_one_bluff_of_six|choice_2"
         ],
         "29": [
-          "spaced_review_w7_w7_visible_cards_and_price_board_cards_v1|choice_0",
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1|fold",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1|call",
-          "w7_checkpoint_river_card_excludes_hand|choice_2",
-          "w7_clean_outs_higher_price|choice_2",
           "w7_clean_outs_lower_price|choice_1",
           "w7_flop_bluff_one_player|choice_1",
-          "w7_flop_bluff_two_players|choice_2",
-          "w7_river_one_bluff_of_six|choice_2",
-          "w7_river_two_bluffs_of_six|choice_1"
+          "w7_river_one_bluff_of_six|choice_2"
         ],
         "30": [
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1|fold",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1|call",
-          "w7_checkpoint_river_card_excludes_hand|choice_2",
           "w7_clean_outs_higher_price|choice_2",
           "w7_clean_outs_lower_price|choice_1",
-          "w7_river_one_bluff_of_six|choice_2",
-          "w7_river_two_bluffs_of_six|choice_1"
-        ],
-        "31": [
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1|call",
-          "w7_checkpoint_river_card_excludes_hand|choice_1"
+          "w7_river_one_bluff_of_six|choice_2"
         ]
       },
-      "world_8": {
-        "26": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1",
-          "w7_20bb_wider",
-          "w7_6max_wider",
-          "w7_ajs_btn_100bb_transfer",
-          "w7_ajs_btn_25bb_transfer",
-          "w7_format_table_notice",
-          "w7_fullring_tighter"
-        ],
-        "27": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1",
-          "w7_20bb_wider",
-          "w7_6max_wider",
-          "w7_ajs_btn_100bb_transfer",
-          "w7_ajs_btn_25bb_transfer",
-          "w7_format_table_notice",
-          "w7_fullring_tighter"
-        ],
-        "28": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1|choice_1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1|choice_2",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1|choice_1",
-          "w7_20bb_wider|20bb",
-          "w7_ajs_btn_25bb_transfer|cleaner_shallow",
-          "w7_format_table_notice|tighten_early",
-          "w7_fullring_tighter|tighter"
-        ],
-        "29": [
-          "spaced_review_w8_format_pressure_hero_cards_board_pot_v1|choice_1",
-          "spaced_review_w8_format_pressure_pot_to_call_v1|choice_2",
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1|choice_1",
-          "w7_20bb_wider|20bb",
-          "w7_6max_wider|6max",
-          "w7_ajs_btn_100bb_transfer|more_fragile_deep",
-          "w7_ajs_btn_25bb_transfer|cleaner_shallow",
-          "w7_format_table_notice|tighten_early",
-          "w7_fullring_tighter|tighter"
-        ],
-        "30": [
-          "spaced_review_w8_same_hand_different_depth_pot_to_call_v1|choice_1",
-          "w7_ajs_btn_100bb_transfer|more_fragile_deep",
-          "w7_ajs_btn_25bb_transfer|cleaner_shallow"
-        ],
-        "31": [
-          "w7_20bb_wider|100bb",
-          "w7_20bb_wider|same",
-          "w7_ajs_btn_100bb_transfer|same_clean_call",
-          "w7_format_table_notice|open_same"
-        ],
-        "36": [
-          "w7_table_effective_notice|total_138",
-          "w7_top_pair_spr2_transfer|ignore_stack_pressure",
-          "w7_top_pair_spr8_transfer|stack_irrelevant",
-          "w8_spr_value_size|two"
-        ]
-      },
-      "world_9": {
-        "26": [
-          "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1",
-          "spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1",
-          "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1",
-          "w9_big_stack_leverage",
-          "w9_bubble_short_stack",
-          "w9_bubble_table_risk_transfer",
-          "w9_cash_vs_tournament",
-          "w9_checkpoint_bubble_line",
-          "w9_checkpoint_review",
-          "w9_checkpoint_survival_line",
-          "w9_checkpoint_table_notice",
-          "w9_m_ratio_green_zone",
-          "w9_m_ratio_red_zone",
-          "w9_m_ratio_red_zone_shove",
-          "w9_m_ratio_yellow_zone",
-          "w9_medium_stack_tighten",
-          "w9_short_stack_survival"
-        ],
-        "27": [
-          "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1",
-          "spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1",
-          "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1",
-          "w9_big_stack_leverage",
-          "w9_bubble_short_stack",
-          "w9_bubble_table_risk_transfer",
-          "w9_cash_vs_tournament",
-          "w9_checkpoint_bubble_line",
-          "w9_checkpoint_review",
-          "w9_checkpoint_survival_line",
-          "w9_checkpoint_table_notice",
-          "w9_m_ratio_green_zone",
-          "w9_m_ratio_red_zone",
-          "w9_m_ratio_red_zone_shove",
-          "w9_m_ratio_yellow_zone",
-          "w9_medium_stack_tighten",
-          "w9_short_stack_survival"
-        ],
-        "28": [
-          "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1|call_9_bb",
-          "spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1|all_in_to_8_bb",
-          "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1|raise_to_2_bb",
-          "w9_bubble_short_stack|all_in_to_6_bb",
-          "w9_bubble_table_risk_transfer|fold",
-          "w9_checkpoint_review|call_19_bb",
-          "w9_checkpoint_survival_line|all_in_to_7_5_bb",
-          "w9_checkpoint_table_notice|raise_to_2_bb",
-          "w9_m_ratio_red_zone_shove|all_in_to_12_bb",
-          "w9_m_ratio_red_zone|fold",
-          "w9_m_ratio_yellow_zone|fold"
-        ],
-        "29": [
-          "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1|call_9_bb",
-          "spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1|all_in_to_8_bb",
-          "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1|raise_to_2_bb",
-          "w9_big_stack_leverage|raise_to_2_bb",
-          "w9_bubble_short_stack|all_in_to_6_bb",
-          "w9_bubble_table_risk_transfer|fold",
-          "w9_cash_vs_tournament|fold",
-          "w9_checkpoint_bubble_line|fold",
-          "w9_checkpoint_review|call_19_bb",
-          "w9_checkpoint_survival_line|all_in_to_7_5_bb",
-          "w9_checkpoint_table_notice|raise_to_2_bb",
-          "w9_m_ratio_green_zone|raise_to_2_bb",
-          "w9_m_ratio_red_zone_shove|all_in_to_12_bb",
-          "w9_m_ratio_red_zone|fold",
-          "w9_m_ratio_yellow_zone|fold",
-          "w9_medium_stack_tighten|fold",
-          "w9_short_stack_survival|take_spot"
-        ],
-        "30": [
-          "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1|call_9_bb",
-          "w9_bubble_table_risk_transfer|fold",
-          "w9_cash_vs_tournament|fold",
-          "w9_checkpoint_bubble_line|fold",
-          "w9_checkpoint_review|call_19_bb",
-          "w9_m_ratio_red_zone|fold",
-          "w9_medium_stack_tighten|fold"
-        ],
-        "31": [
-          "w9_bubble_short_stack|fold",
-          "w9_bubble_table_risk_transfer|call_15_5_bb",
-          "w9_m_ratio_green_zone|all_in_to_30_bb",
-          "w9_m_ratio_red_zone|call_to_3_bb",
-          "w9_m_ratio_yellow_zone|all_in_to_18_bb",
-          "w9_m_ratio_yellow_zone|raise_to_2_bb",
-          "w9_medium_stack_tighten|call_16_bb"
-        ],
-        "36": [
-          "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1|raise_to_3_bb",
-          "w9_big_stack_leverage|raise_to_3_bb",
-          "w9_bubble_recap|stack_size_and_cards_without_the_payouts",
-          "w9_checkpoint_table_notice|raise_to_3_bb",
-          "w9_m_ratio_ante_cost|1_6_bb",
-          "w9_m_ratio_green_zone|raise_to_3_bb",
-          "w9_m_ratio_recap|use_m_and_cards_but_skip_the_payout_context",
-          "w9_m_ratio_table_window_transfer|green_zone",
-          "w9_survival_recap|avoid_thin_calls_but_skip_sound_steals"
-        ]
-      },
+      "world_8": {},
+      "world_9": {},
       "world_10": {
         "26": [
           "spaced_review_w10_adjust_one_lever_board_cards_v1",
@@ -910,24 +710,35 @@
         "w6_check_line_raise_short"
       ],
       "world_7": [
+        "spaced_review_w7_visible_card_call_v1",
         "w7_checkpoint_river_card_excludes_hand",
         "w7_clean_outs_higher_price",
         "w7_clean_outs_lower_price",
+        "w7_read_visible_card_call",
         "w7_river_one_bluff_of_six",
         "w7_river_two_bluffs_of_six"
       ],
       "world_8": [
+        "short_stack_spots_all_in_price",
+        "short_stack_spots_draw_shallow",
+        "short_stack_spots_set_mine",
+        "short_stack_spots_value_cap",
         "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
         "spaced_review_w8_same_hand_different_depth_pot_to_call_v1",
+        "spaced_review_w8_short_all_in_price_v1",
+        "spaced_review_w8_short_draw_cap_v1",
         "w7_20bb_wider",
         "w7_ajs_btn_25bb_transfer",
-        "w7_format_table_notice"
+        "w7_format_table_notice",
+        "w8_unguided_short_read"
       ],
       "world_9": [
+        "spaced_review_w9_bubble_read_decision_v1",
         "spaced_review_w9_bubble_risk_premium_misread_tournament_pressure_v1",
         "spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1",
         "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1",
         "w9_big_stack_leverage",
+        "w9_bubble_read_decision",
         "w9_bubble_short_stack",
         "w9_bubble_table_risk_transfer",
         "w9_cash_vs_tournament",
@@ -1006,6 +817,29 @@
       ],
       "world_6": [
         "w6_check_line_raise_short"
+      ],
+      "world_7": [
+        "w7_river_two_bluffs_of_six"
+      ],
+      "world_8": [
+        "short_stack_spots_all_in_price",
+        "short_stack_spots_draw_shallow",
+        "short_stack_spots_set_mine",
+        "short_stack_spots_value_cap",
+        "spaced_review_w8_format_pressure_hero_cards_board_pot_v1",
+        "spaced_review_w8_short_all_in_price_v1",
+        "spaced_review_w8_short_draw_cap_v1",
+        "w7_20bb_wider",
+        "w7_ajs_btn_25bb_transfer",
+        "w7_format_table_notice",
+        "w8_unguided_short_read"
+      ],
+      "world_9": [
+        "spaced_review_w9_bubble_read_decision_v1",
+        "w9_bubble_read_decision",
+        "w9_cash_vs_tournament",
+        "w9_m_ratio_red_zone",
+        "w9_short_stack_survival"
       ]
     }
   },
@@ -1744,7 +1578,6 @@
     "W8|w7_table_effective_notice|effective_stack",
     "W8|w7_top_pair_spr2_transfer|commitment",
     "W8|w7_top_pair_spr2_transfer|push_fold",
-    "W8|w7_top_pair_spr8_transfer|board_texture",
     "W8|w7_top_pair_spr8_transfer|commitment",
     "W8|w8_effective_stack_seat|14",
     "W8|w8_hero_stack_cap_seat|139",
@@ -1762,17 +1595,11 @@
     "W9|w9_bubble_recap|bubble",
     "W9|w9_bubble_recap|exploit",
     "W9|w9_bubble_short_stack|139",
-    "W9|w9_bubble_short_stack|300",
     "W9|w9_bubble_short_stack|action_order",
-    "W9|w9_bubble_short_stack|short_stack",
-    "W9|w9_bubble_table_risk_transfer|blind_defense",
-    "W9|w9_bubble_table_risk_transfer|commitment",
     "W9|w9_cash_vs_tournament|141",
     "W9|w9_cash_vs_tournament|winrate",
-    "W9|w9_checkpoint_review|commitment",
     "W9|w9_checkpoint_survival_line|359",
     "W9|w9_checkpoint_survival_line|fold_equity",
-    "W9|w9_checkpoint_survival_line|short_stack",
     "W9|w9_checkpoint_table_notice|139",
     "W9|w9_checkpoint_table_notice|steal",
     "W9|w9_checkpoint_zone_line|842",
@@ -1786,31 +1613,21 @@
     "W9|w9_m_ratio_lap_count|14",
     "W9|w9_m_ratio_lap_count|842",
     "W9|w9_m_ratio_recap|147",
-    "W9|w9_m_ratio_recap|359",
-    "W9|w9_m_ratio_recap|889",
-    "W9|w9_m_ratio_recap|bubble",
     "W9|w9_m_ratio_recap|commitment",
-    "W9|w9_m_ratio_recap|fold_equity",
     "W9|w9_m_ratio_recap|ip_oop",
     "W9|w9_m_ratio_recap|mtt",
     "W9|w9_m_ratio_red_zone_shove|141",
-    "W9|w9_m_ratio_red_zone_shove|300",
     "W9|w9_m_ratio_red_zone_shove|842",
     "W9|w9_m_ratio_red_zone_shove|push_fold",
-    "W9|w9_m_ratio_red_zone_shove|short_stack",
-    "W9|w9_m_ratio_red_zone|commitment",
     "W9|w9_m_ratio_table_window_transfer|842",
     "W9|w9_m_ratio_yellow_zone|139",
     "W9|w9_m_ratio_yellow_zone|141",
     "W9|w9_m_ratio_yellow_zone|152",
-    "W9|w9_m_ratio_yellow_zone|156",
     "W9|w9_m_ratio_yellow_zone|842",
     "W9|w9_m_ratio_yellow_zone|starting_chart",
     "W9|w9_medium_stack_tighten|141",
-    "W9|w9_medium_stack_tighten|commitment",
     "W9|w9_prize_model_inputs|winrate",
     "W9|w9_short_stack_survival|14",
-    "W9|w9_short_stack_survival|short_stack",
     "W9|w9_survival_intro|385",
     "W9|w9_survival_intro|842",
     "W9|w9_survival_intro|845",
@@ -1818,7 +1635,6 @@
     "W9|w9_survival_recap|889",
     "W9|w9_survival_recap|bubble",
     "W9|w9_survival_recap|gto",
-    "W9|w9_survival_recap|short_stack",
     "W9|w9_survival_recap|steal",
     "W9|w9_survival_stack_tradeoff|mtt"
   ],

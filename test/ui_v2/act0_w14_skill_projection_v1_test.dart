@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
+import '../support/act0_y5c_catalog_contract_v1.dart';
 
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
@@ -229,7 +230,12 @@ void main() {
   });
 
   test('every W7–W8 task projects to its authored topic', () {
-    const formatStackTasks = {'w7_format_table_notice', 'w7_stack_checkpoint'};
+    const formatStackTasks = {
+      'w7_format_table_notice',
+      'w7_stack_checkpoint',
+      'w8_guided_short_read',
+      'w8_unguided_short_read',
+    };
     final taskCounts = <int, int>{};
     for (final (i, source) in _tasks.indexed) {
       final world = source.world.worldNumber;
@@ -261,7 +267,10 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {7: 13, 8: 30});
+    expect(taskCounts, {
+      7: 13 + y5cTasksInWorldV1(7),
+      8: 30 + y5cTasksInWorldV1(8),
+    });
   });
 
   test('every W9–W10 task projects to its authored topic', () {
@@ -279,7 +288,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {9: 30, 10: 31});
+    expect(taskCounts, {9: 30 + y5cTasksInWorldV1(9), 10: 31});
   });
 
   test('every W11–W12 task projects to its authored topic', () {

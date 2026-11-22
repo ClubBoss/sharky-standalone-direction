@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
+import '../support/act0_y5c_catalog_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
@@ -1425,10 +1426,11 @@ void main() {
             .map((task) => task.taskId)
             .toSet();
         final expectedCount = w7ToW8
-            ? 43
+            ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
             : (fullRoute ? 452 + wave6TaskDeltaV1 : 297) +
                   w3BlindVsBlindChoicesV1.length +
-                  y5bNewChoicesV1.length;
+                  y5bNewChoicesV1.length +
+                  (fullRoute ? y5cNewChoicesV1.length : y5cTasksInWorldV1(7));
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

@@ -1993,9 +1993,79 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♠ 8♠',
       correctAt: 0,
       feedback:
-          'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+          "BB bets all-in with two bluffs among six equally likely hands. Call because two wins in six clear the 25% price, and folding gives up about 1.33 BB.",
       wrongFeedback:
           'Folding gives up wins against jack-ten and ace-eight. Those two of the six hands are enough to clear the 25% call price.',
+    ),
+    Act0LessonTaskV1(
+      taskId: "w7_read_visible_card_guided",
+      title: "Read the possible value hands",
+      phase: Act0LessonPhaseV1.drill,
+      rewardXp: 8,
+      stepKind: Act0LessonStepKindV1.practice,
+      runner:
+          _day7ExampleV1(
+            7,
+            "w7_visible_cards_range_checkpoint",
+            "w7_read_visible_card_guided",
+            _day7PostflopV1(
+              'co',
+              'Jh Jd',
+              'Js 9c 7c 4h 2s',
+              openBb: 3.75,
+              betBb: 5,
+              opponentStartingBb: 8.75,
+              opponentAllIn: true,
+              showTurn: true,
+            ),
+            caption:
+                "BB can bet T♣8♣, 9♥9♦ or 2♠2♦ if the cards are available.",
+            question: "Which possible hand did the river remove?",
+            choices: const ["T♣8♣", "2♠2♦", "9♥9♦"],
+            correct: 1,
+            reason:
+                "BB cannot bet the listed twos because the river is 2♠. Ten-eight remains possible and can bet a straight.",
+            wrongReasons: const {
+              0: "Ten-eight can still bet a straight. Removing it would miss a hand that beats your jacks.",
+              2: "Nines can still bet a lower set. Removing them would miss a hand your set beats.",
+            },
+          ).task.runner.copyWith(
+            hint: "Find the river card in one of the possible hands.",
+            hintPolicy: Act0HintPolicyV1.always,
+          ),
+    ),
+    Act0LessonTaskV1(
+      taskId: "w7_read_visible_card_call",
+      title: "Use the hands left in range",
+      phase: Act0LessonPhaseV1.drill,
+      rewardXp: 8,
+      stepKind: Act0LessonStepKindV1.practice,
+      taskFamily: Act0TaskFamilyV1.transfer,
+      runner: _day7ExampleV1(
+        7,
+        "w7_visible_cards_range_checkpoint",
+        "w7_read_visible_card_call",
+        _day7PostflopV1(
+          'co',
+          'Qh Jd',
+          'Qs 9c 7d 4h Ac',
+          openBb: 3.75,
+          betBb: 4,
+          opponentStartingBb: 7.75,
+          opponentAllIn: true,
+          showTurn: true,
+        ),
+        caption:
+            "Before the river, BB could bet A♣ Q♦, K♥ Q♦, Q♣ T♦ or T♥ 8♥. Give all hands still possible equal weight.",
+        question: "What is your decision?",
+        choices: const ["Fold", "Call"],
+        correct: 1,
+        reason:
+            "BB bets one better queen and two hands you beat after the A♣ removes ace-queen. Call because two wins in three clear the 25% price, and folding misses that gain.",
+        wrongReasons: const {
+          0: "Folding gives up two wins in three against the hands that can remain. Calling 4 BB only needs 25%.",
+        },
+      ).task.runner,
     ),
     _w7UnseenRiverTaskV1(),
   ],
@@ -2020,12 +2090,8 @@ Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
   feedback: const [
     'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
         'If BB has a pair of nines, you win. The three ten-eight hands '
-        'make a straight. One win in four (25%) is below the roughly '
-        '28% needed to call 5 BB for a final pot of 18 BB.',
-    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
-        'If BB has a pair of nines, you win. The three ten-eight hands '
-        'make a straight. One win in four (25%) is below the roughly '
-        '28% this call needs.',
+        'make a straight. Calling costs 5 BB and needs about 28%, so fold with just one win in four.',
+    "BB bets three straights and a lower set once the river 2♠ removes the listed pocket twos. Fold because one win in four falls short of the 28% needed to call 5 BB.",
   ],
   family: Act0TaskFamilyV1.transfer,
   kind: Act0LessonStepKindV1.proveIt,
@@ -2687,7 +2753,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 40,
+    rewardXp: 48,
     runner: _w7EffectiveStackIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -2734,6 +2800,37 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w8_big_hand_turn_fold",
+        title: "Fold an overpair to a turn raise",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "effective_stack_basics",
+          "w8_big_hand_turn_fold",
+          _day7PostflopV1(
+            'co',
+            'Ah Ad',
+            'Kd 9s 4s 2c',
+            openBb: 3.75,
+            heroLeadBb: 3,
+            betBb: 9,
+            showTurn: true,
+          ),
+          caption:
+              "BB check-raises the turn only with three of a kind made from a pocket pair. Assume no further bets.",
+          question: "Call or fold?",
+          choices: const ["Call", "Fold"],
+          correct: 1,
+          reason:
+              "BB raises only with sets, so two winning aces out of 44 rivers give about 4.5%. Fold because calling 6 BB for a final pot of 26 BB needs 23.1%.",
+          wrongReasons: const {
+            0: "A call costs 6 BB and needs 23.1% wins. Two aces among 44 rivers give about 4.5%, so the call loses chips.",
+          },
+        ).task.runner,
       ),
       Act0LessonTaskV1(
         taskId: 'w8_effective_stack_seat',
@@ -2801,7 +2898,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 40,
+    rewardXp: 48,
     runner: _w7DepthShiftIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -2874,6 +2971,36 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         runner: _w7DepthShiftRecapRunner,
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.review,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w8_big_hand_river_fold",
+        title: "Fold top pair to the big river bet",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "same_hand_different_depth",
+          "w8_big_hand_river_fold",
+          _day7PostflopV1(
+            'co',
+            'Kh Qd',
+            'Ks Jc 8s 6d 2c',
+            openBb: 3.75,
+            betBb: 12,
+            showTurn: true,
+          ),
+          caption:
+              "BB bets sets for value 90% of the time and missed spade draws 10% of the time. Top pair beats every bluff and loses to every value hand.",
+          question: "Fold or call?",
+          choices: const ["Fold", "Call"],
+          correct: 0,
+          reason:
+              "BB bets 12 BB into 8 BB with too few bluffs. Fold because beating only 10% of the range falls short of the 37.5% that calling needs.",
+          wrongReasons: const {
+            1: "Calling costs 12 BB and breaks even at 37.5%. Beating just the 10% bluff share loses 8.8 BB on average.",
+          },
+        ).task.runner,
       ),
       Act0LessonTaskV1(
         taskId: 'w8_pot_bet_committed_seat',
@@ -3086,6 +3213,237 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
       ),
     ],
   ),
+  _lessonFromTasksV1(
+    lessonId: 'short_stack_spots',
+    title: 'Short-stack spots',
+    subtitle: 'Price calls and size bets against the shorter stack.',
+    phaseLabel: 'Effective stacks',
+    rewardXp: 54,
+    sourceTasks: [
+      Act0LessonTaskV1(
+        taskId: 'intro',
+        title: 'Effective stack at two depths',
+        phase: Act0LessonPhaseV1.theory,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.learn,
+        runner: _w7SprIntroRunner.copyWith(
+          caption: 'Compare a stack of 100 BB with a stack of 25 BB.',
+          question:
+              'How much can these two players put at risk against each other?',
+          table: _day7PreflopV1(
+            'btn',
+            'Kh Qh',
+            opener: 'co',
+            openerStartingBb: 25,
+            showTurn: true,
+          ),
+          options: const [],
+          feedbackTitle: 'Only the smaller stack can be matched.',
+          feedbackReason:
+              'You can risk only 25 BB against a player with 25 BB.',
+          teachingSteps: const [
+            Act0TeachingStepV1(
+              title: 'Only chips both players can match count.',
+              body:
+                  'With two players, 100 BB against 25 BB plays like 25 BB. '
+                  'A short stack is a stack with fewer chips than the other player can match. That stack limits what a draw can earn and what a weaker hand can pay. '
+                  'In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra chips that only the deeper players can win.',
+            ),
+          ],
+        ),
+      ),
+      Act0LessonTaskV1(
+        taskId: "draw_deep",
+        title: "Same draw, deep stack",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "short_stack_spots",
+          "draw_deep",
+          _day7PostflopV1(
+            'bb',
+            'Ah 8h',
+            'Kh 7h 4s 2c',
+            openBb: 3.75,
+            betBb: 4,
+            opponentStartingBb: 67.75,
+            showTurn: true,
+          ),
+          caption:
+              "The bettor has 60 BB left after betting. Count nine winning rivers out of 46. Assume you win only by hitting, pay nothing more on a miss, and the bettor pays another 6 BB on a hit.",
+          question: "Call or fold?",
+          choices: const ["Fold", "Call"],
+          correct: 1,
+          reason:
+              "Call the 4 BB wager because the bettor pays 6 BB more when a heart hits. Nine wins in 46 miss the direct 25% price, but that later payment makes calling earn about 0.30 BB over folding.",
+          wrongReasons: const {
+            0: "Folding gives up about 0.30 BB on average. The 6 BB payoff on winning rivers exceeds the roughly 4.44 BB you need to justify the call.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "draw_shallow",
+        title: "Same draw, short stack",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "short_stack_spots",
+          "draw_shallow",
+          _day7PostflopV1(
+            'bb',
+            'Ah 8h',
+            'Kh 7h 4s 2c',
+            openBb: 3.75,
+            betBb: 4,
+            opponentStartingBb: 10.75,
+            showTurn: true,
+          ),
+          caption:
+              "The bettor has 3 BB left after betting. Count nine winning rivers out of 46. You win only by hitting, pay nothing more on a miss after calling, and collect the final 3 BB on a hit. The bettor calls a raise to put the rest in.",
+          question: "Which action earns most?",
+          choices: const [
+            "Call",
+            "Raise to 7 BB (puts the bettor all-in)",
+            "Fold",
+          ],
+          correct: 2,
+          reason:
+              "Fold because the bettor can pay only 3 BB more when you hit. That caps the payoff, so calling the 4 BB wager loses about 0.28 BB on average.",
+          wrongReasons: const {
+            0: "Calling costs 4 BB on a miss. Even winning 15 BB on a hit loses about 0.28 BB on average, so fold.",
+            1: "The bettor calls the full 7 BB, which loses about 2.70 BB on average. Folding keeps those chips.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "side_pot",
+        title: "Who can win each pot?",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "short_stack_spots",
+          "side_pot",
+          _y5ShortMultiwayV1('Ah Qh', 10, 30),
+          caption:
+              "You opened to 2.5 BB. SB moved all-in for 10 BB and BB raised all-in to 30 BB. If you call to 30 BB, compare each player’s total contribution.",
+          question: "How is the pot divided after you call?",
+          choices: const [
+            "One pot of 70 BB",
+            "Main 30 BB, side 40 BB",
+            "Main 20 BB, side 50 BB",
+          ],
+          correct: 1,
+          reason:
+              "SB matches 10 BB from each seat, so all three can win the 30 BB main pot. You and the big blind each add 20 BB. Only you two can win that 40 BB side pot.",
+          wrongReasons: const {
+            0: "A single pot would let SB win chips it did not match. SB can win only the first 10 BB from each of the three players.",
+            2: "Three players contribute to the main pot, so leaving out one 10 BB share understates it. You and the big blind add 20 BB each to the side pot.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "set_mine",
+        title: "Set mining at two depths",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "short_stack_spots",
+          "set_mine",
+          _day7PreflopV1(
+            'btn',
+            '4h 4d',
+            opener: 'co',
+            openBb: 2.5,
+            openerStartingBb: 15,
+            showTurn: true,
+          ),
+          caption:
+              "CO starts with 15 BB. Assume your pair wins only if at least one of the two remaining fours flops, about 11.8%. You pay nothing else on a miss. On a hit CO pays 18 BB more if deep enough, or the rest of a shorter stack.",
+          question: "With CO starting at 15 BB, what should you do?",
+          choices: const ["Fold", "Call"],
+          correct: 0,
+          reason:
+              "CO can pay only 12.5 BB more when you hit, so fold. Calling loses about 0.27 BB on average here but earns about 0.38 BB if a deeper CO pays another 18 BB.",
+          wrongReasons: const {
+            1: "Calling costs 2.5 BB on misses and can win only 16.5 BB on hits at this depth. That loses about 0.27 BB on average, so fold.",
+          },
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "value_cap",
+        taskFamily: Act0TaskFamilyV1.transfer,
+        title: "Value bet up to their stack",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "short_stack_spots",
+          "value_cap",
+          _day7PostflopV1(
+            'co',
+            'Kh Qd',
+            'Ks Jc 8s 6d 2c',
+            openBb: 3.75,
+            flopBetAndCallBb: 6,
+            opponentStartingBb: 15.75,
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          caption:
+              "BB checks with just a pair of jacks in this example and calls any amount up to the 6 BB left.",
+          question: "What is the most profitable river bet?",
+          choices: const ["Check", "Bet 3 BB", "Bet 6 BB (puts BB all-in)"],
+          correct: 2,
+          reason:
+              "Bet 6 BB because BB calls with a pair of jacks for the entire remaining stack. Bet the full amount because the 3 BB size earns only half as much.",
+          wrongReasons: const {
+            0: "Checking misses all 6 BB that BB pays with a weaker pair. Make the value bet now.",
+            1: "BB calls 3 BB, but betting 6 BB earns another 3 BB from the same hand.",
+          },
+          suboptimalIndexes: const {1},
+        ).task.runner,
+      ),
+      Act0LessonTaskV1(
+        taskId: "all_in_price",
+        title: "Price against a short all-in",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "short_stack_spots",
+          "all_in_price",
+          _day7PreflopV1(
+            'bb',
+            'Ah Qh',
+            opener: 'btn',
+            openBb: 10,
+            allIn: true,
+            showTurn: true,
+          ),
+          caption:
+              "The button only goes all-in with JJ or ace-jack suited here. Each available two-card hand is equally likely. A♥Q♥ has 54.19% equity, counting a tie as half a win.",
+          question: "Call or fold?",
+          choices: const ["Call", "Fold"],
+          correct: 0,
+          reason:
+              "The raiser bets all-in with jacks or suited ace-jack, so calling 9 BB for a 20.5 BB final pot needs 43.9%. Call with 54.19%, because folding loses a gain of about 2.11 BB.",
+          wrongReasons: const {
+            1: "Folding gives up about 2.11 BB. Your 54.19% exceeds the 43.9% needed for the 9 BB call.",
+          },
+        ).task.runner,
+      ),
+    ],
+  ),
   Act0LessonCardV1(
     lessonId: 'format_pressure',
     title: '6-max vs full ring',
@@ -3095,7 +3453,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 45,
+    rewardXp: 61,
     runner: _w7FormatPressureIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -3158,6 +3516,78 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         runner: _world7StackCheckpointRunner,
         rewardXp: 16,
         stepKind: Act0LessonStepKindV1.proveIt,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w8_guided_short_read",
+        title: "Read the stack-limited caller",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner:
+            _day7ExampleV1(
+              8,
+              "format_pressure",
+              "w8_guided_short_read",
+              _day7PostflopV1(
+                'co',
+                'Kh Qd',
+                'Ks Jc 8s 6d 2c',
+                openBb: 3.75,
+                opponentStartingBb: 9.75,
+                checkedToHero: true,
+                showTurn: true,
+              ),
+              caption:
+                  "BB has 6 BB left. In this example a paired jack calls a 3 BB river bet. Ace-high and missed straight draws fold.",
+              question: "Which part of BB’s range pays this bet?",
+              choices: const [
+                "Missed straight draws",
+                "Ace-high",
+                "A pair of jacks",
+              ],
+              correct: 2,
+              reason:
+                  "BB calls with a pair of jacks under this model. Ace-high folds, so a bet earns value from the weaker pair.",
+              wrongReasons: const {
+                0: "The draws fold. Counting them as callers overstates what the bet earns.",
+                1: "Ace-high folds to the 3 BB bet. Expect the payment from a made pair instead.",
+              },
+            ).task.runner.copyWith(
+              hint: "Look for the weakest hand this player still calls with.",
+              hintPolicy: Act0HintPolicyV1.always,
+            ),
+      ),
+      Act0LessonTaskV1(
+        taskId: "w8_unguided_short_read",
+        title: "Collect the last few blinds",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          8,
+          "format_pressure",
+          "w8_unguided_short_read",
+          _day7PostflopV1(
+            'co',
+            'Qh Jd',
+            'Qs 9c 8s 6d 2c',
+            openBb: 3.75,
+            opponentStartingBb: 7.75,
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          caption:
+              "BB has 4 BB left and calls with a pair of nines at any size. In this example you always win when called.",
+          question: "What earns most?",
+          choices: const ["Bet 2 BB", "Check", "Bet 4 BB (puts BB all-in)"],
+          correct: 2,
+          reason:
+              "Bet 4 BB because BB calls with a pair of nines for the full amount. Bet the full amount because the 2 BB size collects only half.",
+          wrongReasons: const {
+            0: "Betting 2 BB gets called, but you miss another 2 BB that the weaker pair pays with the larger bet.",
+            1: "Checking misses the full 4 BB that BB would pay with a weaker pair.",
+          },
+        ).task.runner,
       ),
     ],
   ),
@@ -3382,4 +3812,67 @@ final _w6ContinuationBetWet = _w6ContinuationBetIntro.copyWith(
           "A big bet costs 6 BB when BB can continue with pairs, straights and draws. Checking saves that wager.",
     ),
   ],
+);
+
+Act0TableStateV1 _y5ShortMultiwayV1(
+  String hand,
+  double smallBlindStack,
+  double bigBlindStack,
+) => _day7TableV1(
+  hero: 'btn',
+  hand: hand,
+  street: PokerStreet.preflop,
+  actor: 'btn',
+  folded: const {'utg', 'hj', 'co'},
+  stacks: {'sb': smallBlindStack, 'bb': bigBlindStack},
+  entries: [
+    ..._act0LessonBlinds,
+    const Act0ContributionV1(
+      PokerStreet.preflop,
+      'btn',
+      Act0ContributionKindV1.wager,
+      2.5,
+    ),
+    Act0ContributionV1(
+      PokerStreet.preflop,
+      'sb',
+      Act0ContributionKindV1.wager,
+      smallBlindStack - .5,
+    ),
+    Act0ContributionV1(
+      PokerStreet.preflop,
+      'bb',
+      Act0ContributionKindV1.wager,
+      bigBlindStack - 1,
+    ),
+  ],
+  history: [
+    const Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+    const Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+    const Act0ActionTrailItemV1(label: 'UTG folds'),
+    const Act0ActionTrailItemV1(label: 'HJ folds'),
+    const Act0ActionTrailItemV1(label: 'CO folds'),
+    const Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
+    Act0ActionTrailItemV1(
+      label: 'SB all-in ${_act0BbLabelV1(smallBlindStack)}',
+    ),
+    Act0ActionTrailItemV1(label: 'BB all-in ${_act0BbLabelV1(bigBlindStack)}'),
+  ],
+  bets: {
+    'btn': const Act0SeatBetStateV1(
+      kind: Act0SeatBetKindV1.raise,
+      label: 'Raise',
+      amountLabel: '2.5 BB',
+    ),
+    'sb': Act0SeatBetStateV1(
+      kind: Act0SeatBetKindV1.allIn,
+      label: 'All-in',
+      amountLabel: _act0BbLabelV1(smallBlindStack),
+    ),
+    'bb': Act0SeatBetStateV1(
+      kind: Act0SeatBetKindV1.allIn,
+      label: 'All-in',
+      amountLabel: _act0BbLabelV1(bigBlindStack),
+    ),
+  },
 );

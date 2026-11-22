@@ -218,7 +218,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   teachingSteps: const [],
   lessonId: 'w7_20bb_wider',
   caption:
-      'BB checks. You have top pair and want to keep at least 18 BB for later streets.',
+      "BB checks. You have top pair and want to keep at least 18 BB for later streets, so you can bet for value or respond to a raise later.",
   hint: 'Subtract each possible bet from the stack you have left.',
   question: 'Which bet fits your plan?',
   sizingConfig: const Act0SizingConfigV1(
@@ -239,7 +239,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'You keep 18 BB.',
       feedbackReason:
-          'You have 20 BB behind. Betting 2 BB leaves 18 BB for the turn and river.',
+          "BB checks and you have 20 BB behind. Bet 2 BB because the 4 BB size leaves just 16 BB to play later. The smaller size holds 18 BB for a turn or river bet.",
     ),
     Act0RunnerOptionV1(
       id: '100bb',
@@ -250,7 +250,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Four leaves 16 BB.',
       feedbackReason:
-          'Subtract the 4 BB bet from your 20 BB stack. That leaves 16 BB, below your 18 BB target.',
+          "Betting 4 BB leaves just 16 BB to play later. The 2 BB bet keeps the 18 BB you want.",
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -261,7 +261,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'All-in leaves nothing behind.',
       feedbackReason:
-          'At 20 BB behind, an all-in uses the entire stack. Top pair does not require you to go all-in.',
+          "An all-in risks the full 20 BB and leaves nothing for later bets. The 2 BB bet keeps 18 BB.",
     ),
   ],
   table: _act0BoardLessonTableV1(
@@ -457,7 +457,7 @@ final _w7AjsButtonTwentyFiveBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A-T suited calls the raise.',
       feedbackReason:
-          'Under the stated rule, A-T suited pays the extra 5 BB. Both players then have 17.5 BB behind. The best line against CO’s full range would depend on what else opens and responds to a raise.',
+          "CO calls the 7.5 BB raise with A-T suited but folds to an all-in. That gains 5 BB from that hand; the best line overall depends on CO’s full range.",
     ),
     Act0RunnerOptionV1(
       id: 'same_as_100',
@@ -513,7 +513,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'A call keeps the weaker aces in.',
       feedbackReason:
-          'Under the stated rule, a call keeps weaker aces in and leaves both players 97.5 BB behind. The best line against CO’s full range depends on the mix of hands and how they play later.',
+          "Call 2.5 BB because CO keeps weaker aces in. Raising folds them out and invites stronger hands to raise again. Profit overall depends on CO’s full range.",
     ),
     Act0RunnerOptionV1(
       id: 'same_clean_call',
@@ -524,7 +524,7 @@ final _w7AjsButtonHundredBbRunner = _w7DepthShiftIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'A raise folds the hands you want to keep.',
       feedbackReason:
-          'In this example CO folds the weaker aces to either raise and raises again with stronger hands such as A-Q.',
+          "Raising folds weaker aces and brings in a reraise from stronger aces. Calling keeps the weaker hands in for 2.5 BB.",
     ),
     Act0RunnerOptionV1(
       id: 'shove_now',
@@ -795,7 +795,7 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Depth changed the job.',
       feedbackReason:
-          'The board and hand stayed the same, but SPR did not. At SPR 2, low room changes the pressure and makes the hand much closer to commitment than at SPR 8.',
+          "Comparing this with SPR 8 misses how much the same bet uses from a smaller stack. With 16 BB behind and 8 BB in the pot, one bet moves you closer to playing for the whole stack.",
     ),
     Act0RunnerOptionV1(
       id: 'ignore_stack_pressure',
@@ -854,7 +854,7 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tempting shortcut.',
       feedbackReason:
-          'Top pair makes this answer tempting, but SPR changes the structure. At SPR 8, one bet does not commit the hand the way SPR 2 can.',
+          "Treating this like SPR 2 risks building a large pot with one pair. With 64 BB behind, you can still fold if BB puts much more in.",
     ),
     Act0RunnerOptionV1(
       id: 'stack_irrelevant',
@@ -865,7 +865,7 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Only part of the picture.',
       feedbackReason:
-          'Board texture still matters, but stack depth changes how much that one-pair hand can safely absorb across later streets.',
+          "Ignoring depth risks paying off a stronger hand over several rounds of betting. At SPR 8, top pair can keep the pot smaller before BB commits a large stack.",
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -944,7 +944,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "You are first to act. What fits this table?",
   feedbackTitle: "Count the players behind.",
   feedbackReason:
-      "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
+      "Open AJs for 2.5 BB because only five players act after UTG and they may fold and leave the blinds. Folding passes up that chance when fewer players remain who might hold a stronger hand.",
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Jd'),
     centerLabel: 'Read the seats',
@@ -959,7 +959,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Five players are left to act.",
       feedbackReason:
-          "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
+          "Open AJs for 2.5 BB because only five players act after UTG and they may fold and leave the blinds. Folding passes up that chance when fewer players remain who might hold a stronger hand.",
     ),
     Act0RunnerOptionV1(
       id: 'fullring',
@@ -995,7 +995,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What fits the nine-player version of this hand?",
   feedbackTitle: "More players can act after you.",
   feedbackReason:
-      "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
+      "Fold AJs because eight players still act from UTG, increasing the chance someone has a stronger ace or a high pair. Raising to 2.5 BB risks chips against more possible callers and reraises.",
   table: _act0UnopenedLessonTableV1(
     heroCards: _act0LessonCardsV1('Ah Jh'),
     centerLabel: 'Read the seats',
@@ -1010,7 +1010,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Eight players are left to act.",
       feedbackReason:
-          "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
+          "Fold AJs because eight players still act from UTG, increasing the chance someone has a stronger ace or a high pair. Raising to 2.5 BB risks chips against more possible callers and reraises.",
     ),
     Act0RunnerOptionV1(
       id: 'wider',
@@ -1046,7 +1046,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which bet fits that plan?",
   feedbackTitle: "Track what remains after a call.",
   feedbackReason:
-      "With 18 BB and 42 BB behind, a 6 BB bet and call leave 12 BB and 36 BB. Both are above 9 BB.",
+      "Bet 6 BB because BB can call while your shorter stack keeps 12 BB. The 10 BB size leaves just 8 BB, below the amount you want for later bets.",
   table: _act0BoardLessonTableV1(
     heroCards: _act0LessonCardsV1('Ad Td'),
     boardCards: _act0LessonCardsV1('Ac 8h 4s'),
@@ -1088,7 +1088,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The shorter stack would have 8 BB.",
       feedbackReason:
-          "After matching 10 BB, your 18 BB stack would have 8 BB left. That is below the target.",
+          "Betting 10 BB leaves just 8 BB if called and misses the target. A 6 BB bet holds 12 BB for later.",
     ),
     Act0RunnerOptionV1(
       id: 'tighten_early',
@@ -1098,7 +1098,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Both players keep enough chips.",
       feedbackReason:
-          "With 18 BB and 42 BB behind, a 6 BB bet and call leave 12 BB and 36 BB. Both are above 9 BB.",
+          "Bet 6 BB because BB can call while your shorter stack keeps 12 BB. The 10 BB size leaves just 8 BB, below the amount you want for later bets.",
     ),
     Act0RunnerOptionV1(
       id: 'depth_only',
@@ -1251,7 +1251,7 @@ final _w9CashVsTournamentRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "A close river call",
   feedbackReason:
-      "Keep 16 BB. Your 40% wins barely beat the chip price but fall below the 62.4% payout threshold while UTG has 2 BB.",
+      "BTN bets missed jack-ten and stronger queens. Folding saves your last 16 BB because calling with 40% wins earns a little in chips but falls below the 62.4% needed for prizes.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A close river call",
@@ -1269,7 +1269,7 @@ final _w9CashVsTournamentRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Keep 16 BB. Your 40% wins barely beat the chip price but fall below the 62.4% payout threshold while UTG has 2 BB.",
+          "BTN bets missed jack-ten and stronger queens. Folding saves your last 16 BB because calling with 40% wins earns a little in chips but falls below the 62.4% needed for prizes.",
     ),
     Act0RunnerOptionV1(
       id: "call_16_bb",
@@ -1406,13 +1406,13 @@ final _w9ShortStackSurvivalRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Small blind choice",
   lessonSubtitle: 'Tournament Pressure',
   caption:
-      "You start with 9 BB. It folds to you in the small blind. The money is far off. BB calls an all-in with 77+, A9s+, ATo+ or KQs. BB folds the rest.",
+      "You start with 9 BB. It folds to you in the small blind. The money is far off. Assume each legal hand is equally likely before BB decides. BB calls an all-in with 77+, A9s+, ATo+ or KQs and folds the rest.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Go all-in or fold?",
   feedbackTitle: "Small blind choice",
   feedbackReason:
-      "Add your remaining 8.5 BB. BB frequently folds under the stated calling-range model, letting K9s win the 1.5 BB pot before your stack shrinks.",
+      "BB folds 1,117 of 1,225 equally likely hands, about 91.2%. Going all-in for 8.5 BB more earns at least 0.62 BB on average even if every call beats you, so folding misses a profitable chance.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Small blind choice",
@@ -1441,7 +1441,7 @@ final _w9ShortStackSurvivalRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Add your remaining 8.5 BB. BB frequently folds under the stated calling-range model, letting K9s win the 1.5 BB pot before your stack shrinks.",
+          "BB folds 1,117 of 1,225 equally likely hands, about 91.2%. Going all-in for 8.5 BB more earns at least 0.62 BB on average even if every call beats you, so folding misses a profitable chance.",
     ),
   ],
   table: _day7TableV1(
@@ -1662,7 +1662,7 @@ final _w9MZoneRedRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What should you do?",
   feedbackTitle: "Facing two ranges",
   feedbackReason:
-      "You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.",
+      "Your M is 5 from 7.5 BB and 1.5 BB per lap. Fold Q8o to UTG’s raise and CO’s call because going all-in risks the last 6.5 BB against two strong ranges.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -1674,7 +1674,7 @@ final _w9MZoneRedRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Paying 2 BB commits chips with Q8o against two strong ranges.",
+          "Calling costs 2 BB with Q8o against two strong ranges. Folding saves that payment and keeps 6.5 BB behind.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -1685,7 +1685,7 @@ final _w9MZoneRedRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "You face an early raise and a call. With Q8o, save the rest of your 7.5 BB starting stack.",
+          "Your M is 5 from 7.5 BB and 1.5 BB per lap. Fold Q8o to UTG’s raise and CO’s call because going all-in risks the last 6.5 BB against two strong ranges.",
     ),
     Act0RunnerOptionV1(
       id: "all_in_to_7_5_bb",
@@ -1787,7 +1787,7 @@ final _w9MRatioAnteCostRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "You counted a 0.1 BB ante. It comes up six times in a lap.",
+          "Counting only one ante misses five more payments. The full lap costs 2.1 BB.",
     ),
     Act0RunnerOptionV1(
       id: "1_5_bb",
@@ -1798,7 +1798,7 @@ final _w9MRatioAnteCostRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "You counted both blinds but skipped the antes. That gives the stack too much time.",
+          "Leaving out six antes understates the cost by 0.6 BB. The full lap costs 2.1 BB.",
     ),
     Act0RunnerOptionV1(
       id: "2_1_bb",
@@ -1826,7 +1826,7 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which opening size fits?",
   feedbackTitle: "First raise from HJ",
   feedbackReason:
-      "AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.",
+      "Raise AJs from HJ to 2 BB because M is 20 and you can still play later streets. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "First raise from HJ",
@@ -1843,7 +1843,7 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "AJs can open in HJ. At M = 20, a small raise gives you room to play beyond the flop.",
+          "Raise AJs from HJ to 2 BB because M is 20 and you can still play later streets. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_3_bb",
@@ -1865,7 +1865,7 @@ final _w9MZoneGreenRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "At M = 20, a 30 BB all-in risks far more than the 1.5 BB pot.",
+          "At M = 20, risking 30 BB all-in for the blinds wastes the room you have. Raise to 2 BB instead.",
     ),
   ],
   table: _day7TableV1(
@@ -1915,7 +1915,7 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What should you do?",
   feedbackTitle: "First seat choice",
   feedbackReason:
-      "KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.",
+      "Fold KQo from UTG because five players can still call or raise with stronger hands. Raising from this seat spends chips at M = 12 before you see what those players do.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "First seat choice",
@@ -1933,7 +1933,7 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "UTG has five players left to act. Opening KQo can face a call or raise from a stronger hand.",
+          "Raising risks 2 BB while five players can call or raise with a stronger hand. Fold and look for a later seat.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -1944,7 +1944,7 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "KQ is in the first Medium row. From UTG, pass and look for a seat that fits it.",
+          "Fold KQo from UTG because five players can still call or raise with stronger hands. Raising from this seat spends chips at M = 12 before you see what those players do.",
     ),
     Act0RunnerOptionV1(
       id: "all_in_to_18_bb",
@@ -1955,7 +1955,7 @@ final _w9MZoneYellowRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "At M = 12, going all-in with 18 BB risks a full stack with KQo from first seat.",
+          "At M = 12, going all-in risks the full 18 BB against stronger hands behind. Folding keeps those chips.",
     ),
   ],
   table: _day7TableV1(
@@ -2100,7 +2100,7 @@ final _w9MRatioRedZoneShoveRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Go all-in or fold?",
   feedbackTitle: "A short stack on BTN",
   feedbackReason:
-      "AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.",
+      "At M = 8, go all-in with AJo from BTN because both blinds fold outside their tight ranges. Folding gives up the 1.5 BB you can collect when both pass.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A short stack on BTN",
@@ -2118,7 +2118,7 @@ final _w9MRatioRedZoneShoveRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "AJo can win the 1.5 BB blinds immediately and still compete when called; take the suitable BTN opportunity at M=8.",
+          "At M = 8, go all-in with AJo from BTN because both blinds fold outside their tight ranges. Folding gives up the 1.5 BB you can collect when both pass.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -2204,7 +2204,7 @@ final _w9MRatioRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "You account for urgency and hand strength, but the 2 BB rival in the bubble example changed the cost of losing the stack.",
+          "Ignoring prizes misses what a bust costs with a 2 BB rival. Use the hand, stack pressure and payout context together.",
     ),
     Act0RunnerOptionV1(
       id: "shove_because_the_zone_is_red",
@@ -2215,7 +2215,7 @@ final _w9MRatioRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Q8o at M=5 faced a tight raise and a call; the color did not create fold equity or justify risking 6.5 BB more.",
+          "Going all-in with Q8o risks 6.5 BB more against a tight raise and a call. A stack that lasts five rounds still needs a hand and a betting spot that can win.",
     ),
   ],
   table: _w9TextStudyTableV1,
@@ -2306,7 +2306,7 @@ final _w9MediumStackTightenRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "A raise behind you",
   feedbackReason:
-      "Keep 16 BB instead of committing AQo against JJ+/AK while a 2 BB player remains below you.",
+      "BTN raises with JJ or better or AK, so a 16 BB call risks your last chips against a strong range. Fold because UTG has just 2 BB and surviving can pay.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "A raise behind you",
@@ -2324,7 +2324,7 @@ final _w9MediumStackTightenRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "AQo's CO opening permission does not cover this 3-bet. You risk elimination for a 42.7% chip price against a range that dominates or leads your hand.",
+          "Calling AQo costs 16 BB and needs 42.7% in chips. The strong range and the cost of busting give you a reason to fold.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -2335,7 +2335,7 @@ final _w9MediumStackTightenRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Keep 16 BB instead of committing AQo against JJ+/AK while a 2 BB player remains below you.",
+          "BTN raises with JJ or better or AK, so a 16 BB call risks your last chips against a strong range. Fold because UTG has just 2 BB and surviving can pay.",
     ),
   ],
   table: _day7TableV1(
@@ -2408,7 +2408,7 @@ final _w9BigStackLeverageRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "How should you open?",
   feedbackTitle: "Three players left to act",
   feedbackReason:
-      "KJo applies pressure from CO for 2 BB; the stated folds win 1.5 BB without risking an opponent's full stack.",
+      "Raise to 2 BB from CO because BTN and both blinds all fold 85% of the time at either size. Raising to 3 BB costs another blind when they raise and you fold.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Three players left to act",
@@ -2448,7 +2448,7 @@ final _w9BigStackLeverageRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "KJo applies pressure from CO for 2 BB; the stated folds win 1.5 BB without risking an opponent's full stack.",
+          "Raise to 2 BB from CO because BTN and both blinds all fold 85% of the time at either size. Raising to 3 BB costs another blind when they raise and you fold.",
     ),
   ],
   table: _day7TableV1(
@@ -2545,7 +2545,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Go all-in or fold?",
   feedbackTitle: "Shortest stack",
   feedbackReason:
-      "Use AKo first-in while your 6 BB can still win the 1.5 BB blinds without a showdown.",
+      "Go all-in with AKo from HJ because you are the 6 BB shortest stack and others can fold. Folding forfeits the chance to win the 1.5 BB in blinds while you can still threaten a raise.",
   teachingSteps: const [
     Act0TeachingStepV1(
       title: "Shortest stack",
@@ -2563,7 +2563,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Use AKo first-in while your 6 BB can still win the 1.5 BB blinds without a showdown.",
+          "Go all-in with AKo from HJ because you are the 6 BB shortest stack and others can fold. Folding forfeits the chance to win the 1.5 BB in blinds while you can still threaten a raise.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -2574,7 +2574,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "AKo is a strong first-in hand and you are the 6 BB shortest stack. Folding sacrifices a sound growth opportunity without a smaller rival to wait behind.",
+          "Folding misses a chance to take the blinds because AKo can go all-in first at 6 BB. No smaller stack can bust ahead of you.",
     ),
   ],
   table: _day7TableV1(
@@ -2618,7 +2618,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "A raise from BB",
   feedbackReason:
-      "Fold AJo here. You would need to add 15.5 BB and risk your last chips against JJ or better, or AK. A different raise range, set of stacks or set of prizes can change the call.",
+      "BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2630,7 +2630,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "AJo needs to justify 15.5/36.5=42.5% before payout pressure. Against JJ+/AK, committing the rest to defend a 2.5 BB open risks elimination without enough strength.",
+          "Calling 15.5 BB needs 42.5% before payout pressure. AJo falls short against JJ+ or AK, so folding keeps your last chips.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -2641,7 +2641,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Fold AJo here. You would need to add 15.5 BB and risk your last chips against JJ or better, or AK. A different raise range, set of stacks or set of prizes can change the call.",
+          "BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.",
     ),
   ],
   table: _day7TableV1(
@@ -2720,7 +2720,7 @@ final _w9BubbleRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "You identify hand strength and depth, but omit the prize cost illustrated by the 20 BB river example with a 2 BB rival.",
+          "Ignoring prizes misses the cost of busting before a 2 BB rival. Include payouts, the hands in play and who covers whom.",
     ),
     Act0RunnerOptionV1(
       id: "coverage_payouts_ranges_and_the_remaining_stacks",
@@ -2835,7 +2835,7 @@ final _w9CheckpointSurvivalLineRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Go all-in or fold?",
   feedbackTitle: "First in from CO",
   feedbackReason:
-      "AQs is Strong. First-in from CO, your 7.5 BB can win the 1.5 BB blinds and has strength when called.",
+      "Go all-in first from CO with AQs because BTN and the blinds may fold, and weaker aces can pay. Folding gives up a chance to add the 1.5 BB blinds to your 7.5 BB stack.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2847,7 +2847,7 @@ final _w9CheckpointSurvivalLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "AQs is Strong. First-in from CO, your 7.5 BB can win the 1.5 BB blinds and has strength when called.",
+          "Go all-in first from CO with AQs because BTN and the blinds may fold, and weaker aces can pay. Folding gives up a chance to add the 1.5 BB blinds to your 7.5 BB stack.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -2993,7 +2993,7 @@ final _w9CheckpointBubbleLineRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "River bet from BB",
   feedbackReason:
-      "Keep 12 BB. KQ's 40% wins beat the 36.9% chip price, but fall below this deal's supplied payout threshold with a 3 BB rival still present.",
+      "BB bets stronger hands and missed nine-seven. Fold because your 40% wins beat the 36.9% chip price but do not clear the 58.4% prize threshold for calling your last 12 BB.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3016,7 +3016,7 @@ final _w9CheckpointBubbleLineRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Keep 12 BB. KQ's 40% wins beat the 36.9% chip price, but fall below this deal's supplied payout threshold with a 3 BB rival still present.",
+          "BB bets stronger hands and missed nine-seven. Fold because your 40% wins beat the 36.9% chip price but do not clear the 58.4% prize threshold for calling your last 12 BB.",
     ),
   ],
   table: _day7TableV1(
@@ -3098,7 +3098,7 @@ final _w9TablePressureNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "How should you open?",
   feedbackTitle: "Four seats behind",
   feedbackReason:
-      "KQs is a permitted HJ opener. The 55 BB stack can pressure four covered opponents for 2 BB and collect 1.5 BB when they fold.",
+      "Raise to 2 BB from HJ because all four players behind fold 80% of the time at either size. Raising to 3 BB risks another blind on the hands where they resist.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3121,7 +3121,7 @@ final _w9TablePressureNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "KQs is a permitted HJ opener. The 55 BB stack can pressure four covered opponents for 2 BB and collect 1.5 BB when they fold.",
+          "Raise to 2 BB from HJ because all four players behind fold 80% of the time at either size. Raising to 3 BB risks another blind on the hands where they resist.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
@@ -3176,7 +3176,7 @@ final _world9TournamentCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "The last call",
   feedbackReason:
-      "AA is far ahead of this QQ+/AK range. Its advantage is large enough to justify the 19 BB commitment under these payouts and stacks.",
+      "Call 19 BB because BTN raises with QQ or better or AK, and AA is ahead of most of that range. Folding protects your stack but gives up a strong prize opportunity even with a 2 BB rival.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -3188,7 +3188,7 @@ final _world9TournamentCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "AA is far ahead of this QQ+/AK range. Its advantage is large enough to justify the 19 BB commitment under these payouts and stacks.",
+          "Call 19 BB because BTN raises with QQ or better or AK, and AA is ahead of most of that range. Folding protects your stack but gives up a strong prize opportunity even with a 2 BB rival.",
     ),
     Act0RunnerOptionV1(
       id: "fold",
