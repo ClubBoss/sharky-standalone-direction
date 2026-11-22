@@ -56,7 +56,7 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
         course = next(c for c in run_lane_v1.TIER_A_COMMANDS
                       if "test/ui_v2/act0_w1_long_session_v1_test.dart" in c["cmd"])
         ordinary = {"name": "fixture ordinary command", "cmd": ["fixture"]}
-        for requested, expected in ((120, [120, 360]), (480, [480, 480])):
+        for requested, expected in ((120, [120, 480]), (600, [600, 600])):
             with self.subTest(requested=requested), \
                  mock.patch.dict(os.environ, {"TEST_AUTHORITY_SHARD": ""}), \
                  mock.patch.object(run_lane_v1, "TIER_A_COMMANDS", [ordinary, course]), \

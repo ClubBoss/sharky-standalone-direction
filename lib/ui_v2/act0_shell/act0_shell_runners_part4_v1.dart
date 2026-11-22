@@ -218,7 +218,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
   teachingSteps: const [],
   lessonId: 'w7_20bb_wider',
   caption:
-      "BB checks. You have top pair and want to keep at least 18 BB for later streets, so you can bet for value or respond to pressure on the turn and river.",
+      "BB checks. You have top pair and want to keep at least 18 BB for later streets, so you can bet for value or respond to a raise later.",
   hint: 'Subtract each possible bet from the stack you have left.',
   question: 'Which bet fits your plan?',
   sizingConfig: const Act0SizingConfigV1(
@@ -2618,7 +2618,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Call or fold?",
   feedbackTitle: "A raise from BB",
   feedbackReason:
-      "BB raises with JJ+ or AK. Calling 15.5 BB needs 42.5% and risks elimination, so fold. A different raise range, set of stacks or set of prizes can change the answer.",
+      "BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2641,7 +2641,7 @@ final _w9BubbleTableRiskTransferRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "BB raises with JJ+ or AK. Calling 15.5 BB needs 42.5% and risks elimination, so fold. A different raise range, set of stacks or set of prizes can change the answer.",
+          "BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.",
     ),
   ],
   table: _day7TableV1(

@@ -1997,7 +1997,6 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       wrongFeedback:
           'Folding gives up wins against jack-ten and ace-eight. Those two of the six hands are enough to clear the 25% call price.',
     ),
-    _w7UnseenRiverTaskV1(),
     Act0LessonTaskV1(
       taskId: "w7_read_visible_card_guided",
       title: "Read the possible value hands",
@@ -2068,6 +2067,7 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
         },
       ).task.runner,
     ),
+    _w7UnseenRiverTaskV1(),
   ],
 );
 
@@ -2821,7 +2821,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
             showTurn: true,
           ),
           caption:
-              "BB check-raises the turn only with three of a kind made from a pocket pair. Assume no bets on the river.",
+              "BB check-raises the turn only with three of a kind made from a pocket pair. Assume no further bets.",
           question: "Call or fold?",
           choices: const ["Call", "Fold"],
           correct: 1,

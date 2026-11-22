@@ -381,7 +381,7 @@ const act0DecisionReasoningW7W9V1 = <String, Act0DecisionReasoningV1>{
     edgeBb: 4.8181818182,
     stackMatters: false,
     preChoiceAssumption:
-        "BB check-raises the turn only with three of a kind made from a pocket pair. Assume no bets on the river.",
+        "BB check-raises the turn only with three of a kind made from a pocket pair. Assume no further bets.",
   ),
   "w8_big_hand_river_fold": Act0DecisionReasoningV1(
     taskId: "w8_big_hand_river_fold",
