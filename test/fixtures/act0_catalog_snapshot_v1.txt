@@ -2415,7 +2415,7 @@ TABLE: Preflop | You Ad Tc | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG Ad Tc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   + [correct] Fold — Read the UTG row. The Sharky starting chart opens ATo from HJ or later. Fold it from UTG here. Experienced players sometimes open ATo from earlier seats.
-  - [wrong] Raise — Re-check ATo and UTG. Raising to 2.5 BB from UTG puts those chips at risk while five players can still call or raise.
+  - [wrong] Raise — Re-check ATo and UTG. Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.
     BETTER ANSWER: Fold
   - [wrong] Call — Read the earlier actions and seat order. ATo must pay 1 BB to limp from UTG. Five players can still raise and make the hand more expensive.
     BETTER ANSWER: Fold
@@ -2682,7 +2682,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   - [wrong] Raise — Re-check A9o and UTG. Raising A9o from UTG into the 1.5 BB pot risks chips with five players still to act. The Sharky starting chart folds A9o here because stronger aces can dominate it.
     BETTER ANSWER: Fold
   + [correct] Fold — Ace discipline applied. A9o is in the Weak group of the Sharky starting chart. Fold it from UTG here.
-  - [wrong] Call — Read the earlier actions and seat order. Limping from UTG costs 1 BB before any of the five seats behind have acted.
+  - [wrong] Call — Read the earlier actions and seat order. Limping A9o from UTG costs 1 BB before any of the five seats behind have acted.
     BETTER ANSWER: Fold
 
 TASK position_checkpoint_position_checkpoint_btn_call [drill] BTN: callable spot
