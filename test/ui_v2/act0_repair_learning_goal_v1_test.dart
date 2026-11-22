@@ -689,12 +689,12 @@ void main() {
       () {
         final source = _task(
           'world_1',
-          'what_poker_is',
+          'first_table_guide',
           'what_poker_is_table_read_transfer',
         );
         final base = _fingerprint(
           worldId: 'world_1',
-          lessonId: 'what_poker_is',
+          lessonId: 'first_table_guide',
           taskId: source.taskId,
         );
         final runner = placementQuickCheckRunnerV1(
@@ -733,7 +733,7 @@ void main() {
         String? variant(Act0RunnerStateV1 value) =>
             act0PlacementDiagnosticFingerprintV1(
               worldId: 'world_1',
-              lessonId: 'what_poker_is',
+              lessonId: 'first_table_guide',
               diagnosticVariantId: diagnostic.id,
               sourceTask: source,
               diagnosticRunner: value,
@@ -751,7 +751,7 @@ void main() {
         expect(
           _fingerprint(
             worldId: 'world_1',
-            lessonId: 'what_poker_is',
+            lessonId: 'first_table_guide',
             taskId: source.taskId,
           ),
           base,
@@ -771,12 +771,12 @@ void main() {
         expect(
           act0AuthoredSourceFingerprintV1(
             worldId: 'world_1',
-            lessonId: 'what_poker_is',
+            lessonId: 'first_table_guide',
             task: hashView(runner),
           ),
           act0AuthoredSourceFingerprintV1(
             worldId: 'world_1',
-            lessonId: 'what_poker_is',
+            lessonId: 'first_table_guide',
             task: hashView(changed),
           ),
           reason: 'Ordinary fingerprint label policy remains unchanged.',
@@ -788,14 +788,14 @@ void main() {
           required String diagnosticVariantId,
         }) =>
             worldId == 'world_1' &&
-                lessonId == 'what_poker_is' &&
+                lessonId == 'first_table_guide' &&
                 taskId == source.taskId &&
                 diagnosticVariantId == diagnostic.id
             ? before
             : null;
         final built = buildAct0RepairIntentV1(
           sourceWorldId: 'world_1',
-          sourceLessonId: 'what_poker_is',
+          sourceLessonId: 'first_table_guide',
           sourceTaskId: source.taskId,
           runner: runner,
           selectedOption: selected,

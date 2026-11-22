@@ -66,7 +66,7 @@ void main() {
         );
       }
       final transfer = Act0ShellStateV1.sample
-          .lessonById('what_poker_is')
+          .lessonById('first_table_guide')
           .taskList
           .firstWhere((t) => t.taskId == 'what_poker_is_table_read_transfer');
       expect(

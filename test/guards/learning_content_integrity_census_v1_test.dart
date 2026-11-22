@@ -101,6 +101,10 @@ const _wave5CurrentChoiceTaskIds = <String>{
   'w8_hero_stack_cap_seat',
   'w8_pot_bet_committed_seat',
   'hand_rankings_find_the_match',
+  'w1_shared_card_access',
+  'w1_chips_starting_pot',
+  'w1_chips_matched_pot',
+  'w1_chips_read_middle',
   'blinds_pot_after_posts',
   'positions_read_first_check',
   'w4_purpose_collect_value',
@@ -948,7 +952,7 @@ void main() {
             '${entry[0]}/${entry[1]}/${entry[2]}/${option[0]}',
     };
     final expectedRows =
-        363 + addedContracts.length + currentLate.length - previousLateCount;
+        367 + addedContracts.length + currentLate.length - previousLateCount;
     expect(rows, hasLength(expectedRows));
     expect(
       allChoices
@@ -960,7 +964,7 @@ void main() {
     expect(
       allChoices,
       hasLength(
-        681 +
+        689 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length +
@@ -1043,7 +1047,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        643 +
+        651 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length +

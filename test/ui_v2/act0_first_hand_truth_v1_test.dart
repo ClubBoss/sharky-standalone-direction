@@ -12,7 +12,7 @@ void main() {
     final beginnerTasks = lessons
         .takeWhile((lesson) => lesson.lessonId != 'blinds_action_order')
         .expand((lesson) => lesson.taskList);
-    expect(tasks, hasLength(80));
+    expect(tasks, hasLength(84));
     expect(
       tasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
       hasLength(37),

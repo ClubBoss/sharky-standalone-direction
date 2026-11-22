@@ -9,7 +9,9 @@ const act0SkillMapLastWorldV1 = 12;
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
 const act0W14LessonSkillsV1 = <String, List<String>>{
-  'what_poker_is': ['Table sense'],
+  'what_poker_is': ['Table sense', 'Board reading'],
+  'chips_in_the_middle': ['Table sense'],
+  'first_table_guide': ['Table sense', 'Betting decisions'],
   'what_poker_is_content': ['Table sense'],
   'cards_ranks_suits': ['Hand reading', 'Board reading'],
   'your_first_hand': ['Table sense', 'Board reading'],

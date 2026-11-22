@@ -53,7 +53,11 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
         'Confused the learner seat, private cards, board, pot, or table role.',
     sourceConceptOwner: 'Act0ShellStateV1:first_table_identity',
     eligibleRepairFamily: 'table_identity',
-    lessonKeys: <String>{'world_1/what_poker_is'},
+    lessonKeys: <String>{
+      'world_1/what_poker_is',
+      'world_1/first_table_guide',
+      'world_1/chips_in_the_middle',
+    },
     legacyAliases: <String>{'missed_table_read', 'thin_table_read'},
   ),
   Act0ConceptErrorDefinitionV1(

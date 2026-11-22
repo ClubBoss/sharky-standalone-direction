@@ -1,12 +1,17 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
-String _w1RankingsResumeLessonV1(
-  String worldId,
-  String lessonId,
-  String taskId,
-) {
+String _w1ResumeLessonV1(String worldId, String lessonId, String taskId) {
   if (worldId != 'world_1') return lessonId;
   return switch ((lessonId, taskId)) {
+    (
+      'what_poker_is',
+      'first_table_guide_first_decision' ||
+          'what_poker_is_table_read_transfer' ||
+          'what_poker_is_table_read_recheck' ||
+          'first_table_guide_route_roles',
+    ) =>
+      'first_table_guide',
+
     (
       'hand_rankings_upper',
       'hand_rankings_straight_drill' ||
@@ -130,13 +135,40 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         for (final task in state.lessonById(lessonId).taskList) task.taskId,
     }.where(validTaskIds.contains).toSet();
     skippedTaskIds.addAll(compatSkipTaskIds.difference(completedTaskIds));
-    final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
-    final resumedLessonId = _w1RankingsResumeLessonV1(
+
+    final resumedLessonId = _w1ResumeLessonV1(
       parsed.selectedWorldId,
       parsed.selectedLessonId,
       parsed.selectedTaskId,
     );
     final lessonResume = parsed.lessonResume;
+    final hasLegacyGuideCursor =
+        parsed.selectedWorldId == 'world_1' &&
+        parsed.selectedLessonId == 'what_poker_is' &&
+        resumedLessonId == 'first_table_guide';
+    final finishedLegacyGuide =
+        parsed.completedLessonIds.contains('what_poker_is') &&
+        completedTaskIds.contains('first_table_guide_route_roles');
+    final reachedOldGuide = completedTaskIds.containsAll({
+      'what_poker_is_theory',
+      'what_poker_is_find_hero',
+    });
+    // A save already at the old coach move can resume it without earning
+    // retroactive XP or having to play prerequisites that did not exist.
+    if (reachedOldGuide && (hasLegacyGuideCursor || finishedLegacyGuide)) {
+      skippedTaskIds.addAll(
+        {
+          'first_table_guide_one_clear_choice',
+          'w1_shared_card_access',
+          'w1_chips_starting_pot',
+          'w1_chips_matched_pot',
+          'w1_chips_read_middle',
+        }.where(
+          (id) => validTaskIds.contains(id) && !completedTaskIds.contains(id),
+        ),
+      );
+    }
+    final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
 
     _routePracticeV1 =
         parsed.routePractice ??
@@ -144,7 +176,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           state.worlds,
           closedTaskIds,
           resumedLessonId: lessonResume != null
-              ? _w1RankingsResumeLessonV1(
+              ? _w1ResumeLessonV1(
                   lessonResume.worldId,
                   lessonResume.lessonId,
                   lessonResume.taskId,
@@ -322,7 +354,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..clear()
         ..addEntries(
           parsed.pendingDecisionAssistance.map((receipt) {
-            final lessonId = _w1RankingsResumeLessonV1(
+            final lessonId = _w1ResumeLessonV1(
               receipt.worldId,
               receipt.lessonId,
               receipt.taskId,
@@ -431,7 +463,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       // Q3 shortened these authored sequences. Keep their task and feedback
       // cursor when loading an older save, then run the ordinary validation.
       if (savedResume != null) {
-        final newLessonId = _w1RankingsResumeLessonV1(
+        final newLessonId = _w1ResumeLessonV1(
           savedResume.worldId,
           savedResume.lessonId,
           savedResume.taskId,

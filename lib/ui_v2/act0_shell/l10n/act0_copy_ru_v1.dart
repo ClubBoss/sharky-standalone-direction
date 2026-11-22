@@ -55,8 +55,16 @@ _ruWorldCopyByIdV1 = <String, Act0WorldDisplayCopyV1>{
 const Map<String, Act0LessonDisplayCopyV1>
 _ruLessonCopyByIdV1 = <String, Act0LessonDisplayCopyV1>{
   'what_poker_is': Act0LessonDisplayCopyV1(
-    title: 'Что такое покер',
-    subtitle: 'Познакомься со столом, игроками и целью раздачи.',
+    title: 'Твои и общие карты',
+    subtitle: 'Различай свои карты и карты, доступные всем игрокам.',
+  ),
+  'chips_in_the_middle': Act0LessonDisplayCopyV1(
+    title: 'Блайнды и банк',
+    subtitle: 'Считай обязательные взносы и фишки в центре.',
+  ),
+  'first_table_guide': Act0LessonDisplayCopyV1(
+    title: 'Первый разбор стола',
+    subtitle: 'Разбери фолд, колл и рейз и сделай первый ход с тренером.',
   ),
   'what_poker_is_content': Act0LessonDisplayCopyV1(
     title: 'Что такое покер',

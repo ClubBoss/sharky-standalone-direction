@@ -63,7 +63,7 @@ void main() {
     expect(
       worlds.expand((w) => w.lessons).expand((l) => l.courseTaskList),
       hasLength(
-        427 +
+        431 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1,

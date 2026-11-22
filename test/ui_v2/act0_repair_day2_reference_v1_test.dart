@@ -118,7 +118,7 @@ Map<String, Object?> _fixture(String kind, DateTime yesterday) {
         'your_first_hand',
         'your_first_hand_showdown',
         'first_actor',
-        'what_poker_is',
+        'first_table_guide',
         'what_poker_is_table_read_recheck',
       ),
     };

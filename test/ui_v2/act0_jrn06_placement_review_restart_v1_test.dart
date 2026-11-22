@@ -127,12 +127,12 @@ Future<void> _placementToReview(
       final source = Act0ShellStateV1.sample
           .worldById('world_1')
           .lessons
-          .singleWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .singleWhere((lesson) => lesson.lessonId == 'first_table_guide')
           .taskList
           .singleWhere((task) => task.taskId == _sourceTask);
       final rendered = act0PlacementDiagnosticFingerprintV1(
         worldId: 'world_1',
-        lessonId: 'what_poker_is',
+        lessonId: 'first_table_guide',
         diagnosticVariantId: index == 1
             ? 'board_private_cards'
             : 'action_basics',
@@ -215,7 +215,7 @@ Future<void> _launchAndCancelPlacementTeaching(
       : 'actions_check_drill';
   final lesson = board ? 'cards_ranks_suits' : 'fold_check_call_raise';
   expect(intent['sourceWorldId'], 'world_1');
-  expect(intent['sourceLessonId'], 'what_poker_is');
+  expect(intent['sourceLessonId'], 'first_table_guide');
   expect(intent['sourceTaskId'], _sourceTask);
   expect(intent['choiceId'], choice);
   expect(intent['targetWorldId'], 'world_1');

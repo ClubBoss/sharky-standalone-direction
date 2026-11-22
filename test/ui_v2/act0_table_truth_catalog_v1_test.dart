@@ -202,8 +202,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 170),
-      ('D3.to_call_completeness', 122),
+      ('D2.pot_feasibility', 173),
+      ('D3.to_call_completeness', 123),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1477,6 +1477,41 @@ void main() {
             ...w3Option(choice, correct: choice == 'bet_two'),
             'repairCards': ['board_0', 'board_1', 'board_2'],
           },
+      ],
+    };
+    expectedComparison['w1_shared_card_access'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['private', 'shared', 'all'])
+          {
+            ...w3Option(choice, correct: choice == 'shared'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['w1_chips_starting_pot'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['only_big', 'both', 'only_small'])
+          w3Option(choice, correct: choice == 'both'),
+      ],
+    };
+    expectedComparison['w1_chips_matched_pot'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['two_players', 'post_twice', 'total'])
+          w3Option(choice, correct: choice == 'total'),
+      ],
+    };
+    expectedComparison['w1_chips_read_middle'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['pot', 'one_share', 'stack'])
+          w3Option(choice, correct: choice == 'pot'),
       ],
     };
     expectedComparison.addAll(w11Wave4TableTruthContractV1());
