@@ -68,7 +68,8 @@ void main() {
   for (final entry in const {
     'w6_turn_shift_bucket': 'slide_missed',
     'w6_wet_board_repair': 'respect_wetter_board',
-    'w12_bad_call_good_result': 'flag_leak',
+    'w12_bad_call_good_result': 'fold',
+    'w12_decision_quality_intro': 'the_price_and_range_you_faced',
   }.entries) {
     test('${entry.key} preserves its evidence in each table projection', () {
       final task = _task(entry.key);
@@ -112,7 +113,28 @@ void main() {
           expect(act0StreetReplayFromTableV1(table)?.isConsumerSafe, isTrue);
           continue;
         }
-        expect(runner.caption.toLowerCase(), contains('suppose'));
+        if (entry.key == 'w12_bad_call_good_result') {
+          expect(
+            runner.caption,
+            contains('Last hand you called a costly draw'),
+          );
+          expect(table.scope, Act0TableScopeV1.playedHand);
+          expect(table.streetLabel, 'Turn');
+          expect(table.heroSeatId, 'co');
+          expect(table.heroCards.map((card) => card.label), ['Ah', 'Th']);
+          expect(table.boardCards.map((card) => card.label), [
+            'Kh',
+            '7h',
+            '2c',
+            '4d',
+          ]);
+          expect(table.potLabel, 'Pot 22 BB');
+          expect(table.toCallLabel, 'To call 12 BB');
+          expect(table.actionTrail.last.label, 'Turn: BB bets 12 BB');
+          expect(act0StreetReplayFromTableV1(table)?.isConsumerSafe, isTrue);
+          continue;
+        }
+        expect(runner.caption, contains('A poor choice can win'));
         expect(table.scope, Act0TableScopeV1.explanation);
         expect(table.centerLabel, 'Hypothetical example');
         expect(table.streetLabel, isEmpty);
