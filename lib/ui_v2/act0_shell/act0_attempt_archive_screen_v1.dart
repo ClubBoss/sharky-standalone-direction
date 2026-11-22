@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'act0_academy_reading_style_v1.dart';
 import 'act0_attempt_archive_v1.dart';
+import 'act0_attempt_replay_screen_v1.dart';
 import 'act0_completed_decision_contract_v1.dart';
 import 'act0_shell_tokens_v1.dart';
 
@@ -28,9 +29,31 @@ class _Act0AttemptArchiveScreenV1State
     extends State<Act0AttemptArchiveScreenV1> {
   String? _confirmRemovalId;
   String _query = '';
+  Act0ArchivedAttemptV1? _replayingAttempt;
+
+  void _back() {
+    if (_replayingAttempt == null) {
+      widget.onClose();
+    } else {
+      setState(() => _replayingAttempt = null);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final attempt = _replayingAttempt;
+    return PopScope<void>(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _back();
+      },
+      child: attempt == null
+          ? _archiveList(context)
+          : Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back),
+    );
+  }
+
+  Widget _archiveList(BuildContext context) {
     final archive = widget.archive;
     final query = _query.trim().toLowerCase();
     final attempts = query.isEmpty
@@ -48,71 +71,65 @@ class _Act0AttemptArchiveScreenV1State
               })
               .toList(growable: false);
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
-    return PopScope<void>(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) widget.onClose();
-      },
-      child: ListView.builder(
-        key: const Key('act0_attempt_archive_list'),
-        padding: EdgeInsets.fromLTRB(
-          pagePadding,
-          Act0ShellTokensV1.gapMd,
-          pagePadding,
-          Act0ShellTokensV1.gapXl,
-        ),
-        itemCount: attempts.isEmpty ? 2 : attempts.length + 1,
-        itemBuilder: (context, index) {
-          final Widget child;
-          if (index == 0) {
-            child = Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton(
-                  key: const Key('act0_attempt_archive_back'),
-                  onPressed: widget.onClose,
-                  child: const Text('Back to Review'),
-                ),
-                const Text(
-                  'Attempt archive',
-                  style: Act0AcademyReadingStyleV1.sectionTitle,
+    return ListView.builder(
+      key: const PageStorageKey('act0_attempt_archive_list'),
+      padding: EdgeInsets.fromLTRB(
+        pagePadding,
+        Act0ShellTokensV1.gapMd,
+        pagePadding,
+        Act0ShellTokensV1.gapXl,
+      ),
+      itemCount: attempts.isEmpty ? 2 : attempts.length + 1,
+      itemBuilder: (context, index) {
+        final Widget child;
+        if (index == 0) {
+          child = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextButton(
+                key: const Key('act0_attempt_archive_back'),
+                onPressed: widget.onClose,
+                child: const Text('Back to Review'),
+              ),
+              const Text(
+                'Attempt archive',
+                style: Act0AcademyReadingStyleV1.sectionTitle,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              if (archive.attempts.isNotEmpty) ...[
+                TextFormField(
+                  key: const Key('act0_attempt_archive_search'),
+                  initialValue: _query,
+                  style: Act0AcademyReadingStyleV1.body,
+                  decoration: const InputDecoration(
+                    labelText: 'Search saved attempts',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) => setState(() {
+                    _query = value;
+                    _confirmRemovalId = null;
+                  }),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
-                if (archive.attempts.isNotEmpty) ...[
-                  TextFormField(
-                    key: const Key('act0_attempt_archive_search'),
-                    initialValue: _query,
-                    style: Act0AcademyReadingStyleV1.body,
-                    decoration: const InputDecoration(
-                      labelText: 'Search saved attempts',
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                    onChanged: (value) => setState(() {
-                      _query = value;
-                      _confirmRemovalId = null;
-                    }),
-                  ),
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
-                ],
               ],
-            );
-          } else if (attempts.isEmpty) {
-            child = Text(
-              archive.attempts.isEmpty
-                  ? 'No saved attempts yet.'
-                  : 'No matching attempts.',
-              style: Act0AcademyReadingStyleV1.muted,
-            );
-          } else {
-            child = _attemptRow(context, attempts[index - 1]);
-          }
-          return Act0ShellTokensV1.centeredContent(
-            context,
-            tabletMaxWidth: 860,
-            child: child,
+            ],
           );
-        },
-      ),
+        } else if (attempts.isEmpty) {
+          child = Text(
+            archive.attempts.isEmpty
+                ? 'No saved attempts yet.'
+                : 'No matching attempts.',
+            style: Act0AcademyReadingStyleV1.muted,
+          );
+        } else {
+          child = _attemptRow(context, attempts[index - 1]);
+        }
+        return Act0ShellTokensV1.centeredContent(
+          context,
+          tabletMaxWidth: 860,
+          child: child,
+        );
+      },
     );
   }
 
@@ -172,6 +189,15 @@ class _Act0AttemptArchiveScreenV1State
             Text(
               'Opened clue: ${clue.text}',
               style: Act0AcademyReadingStyleV1.muted,
+            ),
+          if (_confirmRemovalId != attempt.id)
+            TextButton(
+              key: const Key('act0_attempt_archive_open_replay'),
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                setState(() => _replayingAttempt = attempt);
+              },
+              child: const Text('Replay attempt'),
             ),
           if (_confirmRemovalId == attempt.id) ...[
             const Text(

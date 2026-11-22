@@ -918,6 +918,30 @@ void main() {
       expect(await _tapFirst(t, [find.byKey(key)]), isTrue);
       expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
       expect(find.text('Help: none'), findsOneWidget);
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_attempt_archive_open_replay')),
+        ]),
+        isTrue,
+      );
+      expect(
+        find.text('Step 0 of ${(entry['events'] as List).length}'),
+        findsOneWidget,
+      );
+      expect(
+        await _tapFirst(t, [find.byKey(const Key('act0_attempt_replay_next'))]),
+        isTrue,
+      );
+      final firstEvent = (entry['events'] as List).first as Map;
+      expect(
+        find.text(
+          (firstEvent['displayLabel'] ?? firstEvent['label']) as String,
+        ),
+        findsOneWidget,
+      );
+      expect(await t.binding.handlePopRoute(), isTrue);
+      await t.pumpAndSettle();
+      expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
       final selected = await _saved(t);
       expect(
         (selected['attemptArchive'] as Map)['selectedId'],
