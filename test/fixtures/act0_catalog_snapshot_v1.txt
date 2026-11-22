@@ -2890,7 +2890,7 @@ REVIEW: Size is not decoration. It creates the price your opponent must face.
 
 TASK w4_price_intro [theory] Facing a price
 CAPTION: When someone bets, they set your price to continue.
-TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.
+TEACH: Call 2 BB into a pot of 8 BB. You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call. Middle pair means your private card matches the second-highest rank on the flop.
 TEACH LABELS: 8 BB in the pot, 2 BB to call, 1 in 5
 TEACH: Write the same chance as a percentage. One win in five is 20%. To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time when there are no ties or further bets.
 TEACH LABELS: 1 in 5, 20%
@@ -2945,7 +2945,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK w4_cheap_price_marginal_call [drill] Cheap call with middle pair
 CAPTION: The turn is a two. HJ bet 1 BB. Compare your chance to win with the call divided by the pot after you call.
-Q: 6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?
+Q: 6-max micro-stakes model. Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?
 HINT [theoryOnly]: Compare the stated chance with the share of the final pot you pay.
 TABLE: Turn | You 9s 7d | Board Kc 9h 4d 2s | Pot 10 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, board_1 | Center Turn decision | Facts one pair, middle pair
 SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 1 BB | CO folded stack 100 BB | BTN dealer 9s 7d stack 96.25 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
@@ -3094,14 +3094,14 @@ REVIEW: Bluffing is pressure with a purpose: make better hands fold without risk
 
 TASK w4_protection_intro [theory] Deny free card
 CAPTION: Protection bets make the next card cost something.
-TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
+TEACH: Deny free cards. Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.
 TEACH LABELS: Next card, Cost, Deny
 Q: What does protection deny?
 HINT [theoryOnly]: A pair can be ahead now and fall behind on the next card.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Active btn | Seat focus btn, bb | Card focus board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.75 BB · SB folds · BB calls 1.75 more, 2.75 total · Flop: BB checks
-REVIEW: Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.
+REVIEW: Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.
 
 TASK w4_protection_bet [drill] Protect pair
 CAPTION: BB checked on queen, nine and four.
@@ -3121,7 +3121,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w4_protection_check [drill] Free card risk
 CAPTION: Both players check. BB can beat your pair if the next card pairs an ace or king in their hand.
-Q: What did checking allow?
+Q: What did your check give an opponent holding two overcards?
 HINT [theoryOnly]: Ask what the opponent receives by not facing a bet.
 TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer | SB folded | BB
@@ -3132,7 +3132,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Won the pot now — Both players stayed in. BB checked and BTN checked behind on Q-9-4. Without a bet, neither hand folded and BB could catch up on the turn for free.
     BETTER ANSWER: Free card
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
-  + [correct] Free card — Strong choice. Checking allowed the other player to continue without paying.
+  + [correct] Free card — Strong choice. With two overcards to Q-9-4, BB can pair an ace or king without paying for the turn.
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
 
 TASK w4_protection_recap [review] Protection recap

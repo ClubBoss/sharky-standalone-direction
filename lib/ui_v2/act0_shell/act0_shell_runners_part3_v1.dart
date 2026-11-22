@@ -748,7 +748,7 @@ final _world4ProtectionIntroRunner = _world4PurposeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Deny free cards.',
       body:
-          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. If the other player holds ace-king, both ranks are overcards to your queens: pairing either one puts them ahead.',
+          'Protection makes the next card cost chips. You have a pair of queens on Q-9-4. An overcard is a card higher than the top board rank. Ace and king are overcards here. Pairing one can beat your queens.',
       focusLabels: <String>['Next card', 'Cost', 'Deny'],
     ),
   ],
@@ -807,7 +807,7 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   caption:
       'Both players check. BB can beat your pair if the next card pairs an ace or king in their hand.',
   hint: 'Ask what the opponent receives by not facing a bet.',
-  question: 'What did checking allow?',
+  question: 'What did your check give an opponent holding two overcards?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'free_card',
@@ -817,7 +817,7 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'Checking allowed the other player to continue without paying.',
+          'With two overcards to Q-9-4, BB can pair an ace or king without paying for the turn.',
     ),
     Act0RunnerOptionV1(
       id: 'made_pay',
@@ -896,7 +896,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Call 2 BB into a pot of 8 BB.',
       body:
-          'You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call.',
+          'You need to win at least 1 time in 5. Five calls cost 10 BB in all. Winning once returns 10 BB, including the chips from that call. Middle pair means your private card matches the second-highest rank on the flop.',
       focusLabels: <String>['8 BB in the pot', '2 BB to call', '1 in 5'],
     ),
     Act0TeachingStepV1(
@@ -1157,7 +1157,7 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       'Middle pair means a private card matches the second-highest rank on the flop.',
   hint: 'Compare the stated chance with the share of the final pot you pay.',
   question:
-      '6-max micro-stakes model. Two players, no ties or more bets. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
+      '6-max micro-stakes model. Two players, no ties or more bets. You have middle pair. If you call, you win 3 times in 20, about 1 in 7 (15%). Which earns more, call or fold?',
   options: const [
     Act0RunnerOptionV1(
       id: 'call',
