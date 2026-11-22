@@ -93,6 +93,7 @@ test/ui_v2/act0_repair_intent_contract_v1_test.dart
 test/ui_v2/act0_repair_intent_copy_guard_v1_test.dart
 test/ui_v2/act0_review_history_amount_v1_test.dart
 test/ui_v2/act0_review_shell_v1_test.dart
+test/ui_v2/act0_attempt_archive_v1_test.dart
 test/ui_v2/act0_repeated_mistake_route_v1_test.dart
 test/ui_v2/act0_rule_based_repair_personalization_v1_test.dart
 test/ui_v2/act0_s10_retake_persistence_safety_v1_test.dart
