@@ -11,9 +11,10 @@ import 'act0_pot_showdown_truth_v1.dart';
 typedef ChartFindingV1 = ({String rule, String id, String detail});
 
 final _chartReference = RegExp(
-  r'\b(?:chart|opening row|bucket|premium|strong row|medium row|weak hand)\b',
+  r'\b(?:chart|opening row|bucket)\b',
   caseSensitive: false,
 );
+final _groupReference = RegExp(r'\b(?:Premium|Strong|Medium|Weak)\b');
 final _adaptation = RegExp(
   r'\b(?:short.stack|tournament|bubble|ICM)\b',
   caseSensitive: false,
@@ -155,7 +156,11 @@ bool chartGradesAgreeV1(String required, Set<String?> actual) =>
 
 ChartFindingV1? chartGradeFindingV1(CatalogTask row) {
   final runner = row.task.runner;
-  if (!_copy(runner).any(_chartReference.hasMatch)) return null;
+  if (!_copy(runner).any(
+    (copy) => _chartReference.hasMatch(copy) || _groupReference.hasMatch(copy),
+  )) {
+    return null;
+  }
   final chart = chartDecisionV1(row);
   if (chart == Act0ChartActionV1.notCovered) return null;
   final actions = runner.options
