@@ -108,86 +108,51 @@ void main() {
     }
   });
 
-  test('W11 mixed-table focus highlights the actual HJ bettor', () {
-    final task = Act0ShellStateV1.sample
-        .worldById('world_11')
-        .lessons
-        .expand((lesson) => lesson.taskList)
-        .singleWhere(
-          (task) => task.taskId == 'w11_checkpoint_mixed_table_line',
-        );
+  Act0LessonTaskV1 taskById(String id) => Act0ShellStateV1.sample
+      .worldById('world_11')
+      .lessons
+      .expand((lesson) => lesson.taskList)
+      .singleWhere((task) => task.taskId == id);
+
+  test('W11 mixed-table checkpoint starts with a legal SB flop lead', () {
+    final task = taskById('w11_checkpoint_mixed_table_line');
     final table = task.runner.table;
-    final bettor = table.seats.singleWhere((seat) => seat.bet != null);
-
-    expect(bettor.seatId, 'hj');
-    final hero = table.seats.singleWhere((seat) => seat.isHero);
-    expect(table.highlightedSeatIds, [bettor.seatId, hero.seatId]);
-    expect(bettor.bet!.amountLabel, '5 BB');
-    expect(table.potLabel, 'Pot 13 BB');
-    expect(table.toCallLabel, 'To call 5 BB');
+    expect(table.decisionSeatId, 'sb');
+    expect(table.seats.where((seat) => seat.bet != null), isEmpty);
+    expect(table.potLabel, 'Pot 19 BB');
+    expect(table.toCallLabel, isEmpty);
+    expect(table.highlightedSeatIds, isEmpty);
+    final answer = task.runner.options.singleWhere(
+      (choice) => choice.isCorrect,
+    );
+    expect(answer.label, 'Bet 7 BB');
   });
 
-  test('W11 QJs flop-to-turn is one coherent 35 BB effective hand', () {
-    final lesson = Act0ShellStateV1.sample
-        .worldById('world_11')
-        .lessons
-        .firstWhere((l) => l.lessonId == 'table_trigger_reads');
-    final flop = lesson.taskList.firstWhere(
-      (t) => t.taskId == 'w11_trigger_small_price_continue',
-    );
-    final turn = lesson.taskList.firstWhere(
-      (t) => t.taskId == 'w11_trigger_bad_price_fold',
-    );
-
-    expect(flop.runner.table.potLabel, 'Pot 10 BB');
-    expect(flop.runner.table.toCallLabel, 'To call 2 BB');
-    expect(flop.runner.caption, contains('0.25 BB ante each'));
-    expect(flop.runner.caption, contains('35 BB behind'));
-    expect(turn.runner.table.potLabel, 'Pot 24 BB');
-    expect(turn.runner.table.toCallLabel, 'To call 12 BB');
-    expect(turn.runner.caption.toLowerCase(), contains('same hand again'));
-    expect(turn.runner.caption, contains('33 BB behind'));
-    expect(turn.runner.caption, contains('rarely bluffs'));
-
-    // Preflop: 2*2.5 invested + SB/BB 1.5 + 6*0.25 antes = 8.
-    expect(2 * 2.5 + 1.5 + 6 * .25, 8);
-    // Flop: a 2 BB bet/call brings the 8 BB pot to 12; both lose 2 BB.
-    expect(8 + 2 + 2, 12);
-    expect(35 - 2, 33);
-    expect(flop.runner.table.boardCards.map((c) => c.rank).toList(), <String>[
-      'J',
-      '7',
-      '4',
-    ]);
-    expect(turn.runner.table.boardCards.map((c) => c.rank).toList(), <String>[
-      'J',
-      '7',
-      '4',
-      '2',
-    ]);
-    expect(
-      flop.runner.table.heroCards.map((c) => c.label).toList(),
-      turn.runner.table.heroCards.map((c) => c.label).toList(),
-    );
+  test('W11 price drills use two distinct legal ledger frames', () {
+    final flop = taskById('w11_trigger_small_price_continue').runner.table;
+    final turn = taskById('w11_trigger_bad_price_fold').runner.table;
+    expect(flop.heroSeatId, 'bb');
+    expect(flop.heroCards.map((card) => card.label), ['Qs', 'Js']);
+    expect(flop.boardCards.map((card) => card.label), ['Jh', '7c', '4d']);
+    expect(flop.potLabel, 'Pot 12 BB');
+    expect(flop.toCallLabel, 'To call 2 BB');
+    expect(turn.heroSeatId, 'sb');
+    expect(turn.heroCards.map((card) => card.label), ['Kc', 'Qd']);
+    expect(turn.boardCards.map((card) => card.label), ['Ks', '8d', '4c', '2h']);
+    expect(turn.potLabel, 'Pot 18 BB');
+    expect(turn.toCallLabel, 'To call 8 BB');
   });
 
-  test('W11 turn fold is opponent-conditioned, not universal poker advice', () {
-    final lesson = Act0ShellStateV1.sample
-        .worldById('world_11')
-        .lessons
-        .firstWhere((l) => l.lessonId == 'table_trigger_reads');
-    final turn = lesson.taskList.firstWhere(
-      (t) => t.taskId == 'w11_trigger_bad_price_fold',
-    );
-    final fold = turn.runner.options.firstWhere((o) => o.id == 'fold_turn');
-    final call = turn.runner.options.firstWhere((o) => o.id == 'call_top_pair');
-
+  test('W11 turn fold depends on its exact opponent range and call price', () {
+    final runner = taskById('w11_trigger_bad_price_fold').runner;
+    final fold = runner.options.firstWhere((o) => o.id == 'fold');
+    final call = runner.options.firstWhere((o) => o.id == 'call_8_bb');
     expect(fold.isCorrect, isTrue);
     expect(call.isCorrect, isFalse);
-    expect(fold.feedbackReason, contains('33%'));
-    expect(fold.feedbackReason, contains('rarely bluffs'));
-    expect(fold.feedbackReason, contains('what happens on the river'));
-    expect(call.feedbackReason, contains('33%'));
-    expect(12 / (12 + 12 + 12), closeTo(1 / 3, 1e-8));
+    expect(fold.feedbackReason, contains('30.8%'));
+    expect(fold.feedbackReason, contains('15%'));
+    expect(call.feedbackReason, contains('loses 4.1 BB'));
+    expect(8 / (18 + 8), closeTo(.3076923077, 1e-8));
+    expect(.15 * 18 - .85 * 8, closeTo(-4.1, 1e-8));
   });
 }

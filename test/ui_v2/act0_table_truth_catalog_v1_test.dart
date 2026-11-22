@@ -152,7 +152,7 @@ void main() {
     'W11 and W12 full ledgers prove the effective stack at the decision',
     () {
       const expected = {
-        'w11_checkpoint_mixed_table_line': (30.0, 30.0),
+        'w11_checkpoint_mixed_table_line': (26.0, 26.0),
         'w12_pretty_hand_bad_price_fold': (90.75, 80.75),
         'w12_revenge_raise_trap': (36.75, 51.75),
         'w12_checkpoint_full_loop_line': (31.75, 56.75),
@@ -306,7 +306,7 @@ void main() {
     const lateDecisionProof = {
       'w9_bubble_table_risk_transfer': ('PASS', 'PASS'),
       'w10_table_value_vs_caller_transfer': ('PASS', 'PASS'),
-      'w11_checkpoint_mixed_table_line': ('PASS', 'PASS'),
+      'w11_checkpoint_mixed_table_line': ('PASS', null),
       'w12_checkpoint_full_loop_line': ('PASS', 'PASS'),
       'w12_pretty_hand_bad_price_fold': ('PASS', 'PASS'),
       'w12_revenge_raise_trap': ('PASS', 'PASS'),
