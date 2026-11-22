@@ -810,11 +810,11 @@ void main() {
       'w10_vs_nit_open_wider',
     ),
     (
-      'a W11 planning miss reopens choosing one session focus',
+      'a W11 small-blind call miss reopens the value three-bet',
       'world_11',
       'w11_checkpoint_plan_line',
-      'complex_plan',
-      'w11_plan_focus_choice',
+      'call_2_bb',
+      'w11_sb_3bet_value',
     ),
     (
       'a W12 outcome-bias miss reopens reviewing the decision',

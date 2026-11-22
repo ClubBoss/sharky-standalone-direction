@@ -92,6 +92,11 @@ String act0Day7FamilyForSourceV1({
   required String taskId,
   required String family,
 }) {
+  if (worldId == 'world_11' &&
+      lessonId == 'session_plan_bankroll_followup' &&
+      taskId == 'w11_bankroll_move_down') {
+    return 'bankroll_limit';
+  }
   if (worldId != 'world_6' || family != 'pot_to_call') return family;
   return switch ((lessonId, taskId)) {
     (

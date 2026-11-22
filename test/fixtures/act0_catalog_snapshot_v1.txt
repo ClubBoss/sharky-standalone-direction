@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 456 tasks · W1–W12
+SHARKY POKER — EN learning content, 457 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -5882,372 +5882,187 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 ===== WORLD 11 · LESSON session_plan_basics · Session plan in 30 seconds =====
 
 TASK w11_session_plan_intro [theory] One-focus plan
-CAPTION: Pick one concrete focus before each real session starts.
-TEACH: One focus, many reps. Choose one focus like blind steals, value sizing, or fold discipline. Then evaluate that same focus after the session.
-TEACH LABELS: One focus, Reps, Post-session review
-Q: What is the best pre-session plan style?
-HINT [theoryOnly]: One focus keeps decisions clear under pressure.
+CAPTION: A short plan helps you spot one leak while you play.
+TEACH: One-focus plan Choose a cue you can see during play. Use it to test a past leak. Bankroll means funds set aside for poker, not rent or other needs. These cash-game drills have no rake or antes.
+Q: Which plan can you track?
+HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Real-play habits improve when your session starts with one target behavior, not a long checklist.
+  + [correct] One clear skill to watch — Correct. One cue, such as BB defense, is easy to spot in a short session and check later.
+  - [wrong] Six skills to track at once — Look again. Six live cues split your focus. You may miss the one BB choice that you meant to study.
+    BETTER ANSWER: One clear skill to watch
+  - [wrong] A win goal for the day — Look again. A cash win can depend on luck. It does not show whether you read the next bet well.
+    BETTER ANSWER: One clear skill to watch
+
+TASK w11_bankroll_rule [drill] Bankroll rule
+CAPTION: Sharky cash-game plan: keep 40 full buy-ins for your stake. NL25 is $0.10/$0.25.
+TEACH: Bankroll rule A full buy-in is 100 big blinds (BB). Our course uses a buffer of 40 full buy-ins for cash games. At NL10, a full buy-in is $10. At NL5, it is $5. This is a risk guide, not a promise of profit.
+Q: What bankroll does NL25 need?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  - [wrong] $250 — Look again. $250 covers ten $25 buy-ins. That is 30 buy-ins short of the course plan.
+    BETTER ANSWER: $1,000
+  - [wrong] $100 — Look again. $100 covers four $25 buy-ins. A few losses could use the funds set aside for play.
+    BETTER ANSWER: $1,000
+  + [correct] $1,000 — Correct. At NL25 the big blind is $0.25. A full buy-in is $25. Forty buy-ins need $1,000.
 
 TASK w11_plan_focus_choice [drill] Choose one focus
-CAPTION: You have 45 minutes and noisy tables today.
-Q: What is the cleaner session objective?
-HINT [theoryOnly]: Simple focus beats wide ambition.
+CAPTION: You have 45 minutes and missed three blind calls last week.
+TEACH: Choose one focus A focus should fit the next session. Name one cue that links to a past error. Make the cue easy to spot and save a hand for a later check.
+Q: What should you track this session?
+HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Track six improvements at once — Too much load. In a 45-minute session on noisy tables, tracking six improvements at once overloads your attention and causes missed live cues.
-    BETTER ANSWER: One measurable focus for the whole session
-  + [correct] One measurable focus for the whole session — One measurable focus. A single measurable focus carries study into real play with less mental overload.
-  - [suboptimal] No plan, just react — Playable fallback. Across a 45-minute session, playing with no plan leaves you drifting into reactive mistakes instead of building one repeatable skill.
-    BETTER ANSWER: One measurable focus for the whole session
+  - [wrong] Profit from the next 45 minutes — Look again. Profit can rise from a lucky pot even if you keep making poor blind calls.
+    BETTER ANSWER: BB call price before each defense
+  + [correct] BB call price before each defense — Correct. You can note the pot, call amount and hand each time you face a raise in BB.
+  - [suboptimal] Blinds, bluffs, calls and bet sizes — Look again. These are real skills, but tracking four at once makes the three missed BB calls hard to repair.
+    BETTER ANSWER: BB call price before each defense
 
-TASK w11_plan_hj_open [drill] Use your plan from HJ
-CAPTION: Your goal is to stick to the chart when no one has raised. UTG folds. You have A-Q off suit in HJ.
-Q: What is the first-in play from HJ?
+TASK w11_bankroll_stake_choice [drill] Bankroll stake choice
+CAPTION: Your bankroll is $340. NL5 is $0.02/$0.05 with a $5 full buy-in. NL10 is $0.05/$0.10 with a $10 full buy-in.
+TEACH: Bankroll stake choice Use the 40-buy-in rule. A full buy-in is 100 BB. Keep rent and other needs out of your poker funds.
+Q: Which stake fits the plan?
 HINT [hidden]: (none)
-TABLE: Preflop | You Ad Qs | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
-SEATS: UTG folded stack 100 BB | HJ Ad Qs stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] Fold — Look again. A-Q off suit is in the first Medium row. HJ can open it after UTG folds.
-    BETTER ANSWER: Raise to 2.5 BB
-  + [correct] Raise to 2.5 BB — Correct. The first Medium row can open from HJ through BTN. Use your plan and open A-Q off suit.
-  - [wrong] Limp for 1 BB — Look again. A limp with A-Q puts in 1 BB but gives the players behind a cheap way in. The chart calls for a raise.
-    BETTER ANSWER: Raise to 2.5 BB
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  + [correct] NL5 — Correct. $340 covers 68 NL5 buy-ins. That clears the 40-buy-in course rule.
+  - [wrong] NL10 — Look again. $340 covers 34 NL10 buy-ins. This is six below the course buffer.
+    BETTER ANSWER: NL5
+  - [wrong] NL10 with a short buy-in — Look again. Buying in short does not change the 40 full-buy-in rule. It hides the gap rather than fixing it.
+    BETTER ANSWER: NL5
+
+===== WORLD 11 · LESSON session_plan_bankroll_followup · Keep the session plan =====
 
 TASK w11_plan_avoid_overload [drill] Avoid overload plan
-CAPTION: Your prior session had scattered notes and no clear pattern.
-Q: How should this session goal be narrowed?
-HINT [theoryOnly]: Reduce cognitive load first.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Add more tracking categories — Wrong direction. After a prior session with scattered notes, adding more tracking categories increases mental noise and hides your main table leak.
-    BETTER ANSWER: Narrow to one session goal next time
-  - [wrong] Play the next session without a focus target — Too passive. With scattered notes from the last session, playing without a focus target gives you no consistent decision to track this time.
-    BETTER ANSWER: Narrow to one session goal next time
-  + [correct] Narrow to one session goal next time — One goal clears the noise. Carryover improves when you narrow scope and collect cleaner evidence on one behavior.
-
-TASK w11_plan_table_focus_transfer [drill] Real-table focus plan
-CAPTION: Your evening session starts in an hour. You are tired and the first orbit will move fast.
-TEACH: Plan the routine before the cards fly. Real-table practice starts before the first hand. One focus sets the session goal, one trigger tells you when to apply it, and one review note closes the cycle after play.
-TEACH LABELS: Real table, One focus, Trigger, Review
-Q: What should you choose before sitting in?
-HINT [theoryOnly]: Pick one focus you can notice as a trigger during the session and review after the session ends.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Track only the blind-defense leak today — Clean session plan. That is the real-table habit. One focus keeps the session executable, gives you one trigger to notice live, and leaves one clean review target after the session.
-  - [wrong] Track all leaks from the start — Too noisy. When you are tired and the first orbit moves fast, tracking several leaks can distract you from the cues you need for blind defense.
-    BETTER ANSWER: Track only the blind-defense leak today
-  - [wrong] Play first and decide later — Too loose a cycle. If you play first and decide later, you start a fast first orbit tired and without a specific blind-defense cue to look for.
-    BETTER ANSWER: Track only the blind-defense leak today
-
-TASK w11_bankroll_set_limit [drill] Set a buy-in limit
-CAPTION: Your poker fund has 400 chips. Your plan sets aside one part in 40 for each cash-game buy-in.
-TEACH: Set a limit before play Your bankroll is the money set aside for poker. Keep it apart from the money you need to live. Set a buy-in cap before you sit down. Divide the fund by the number of buy-ins your plan calls for. You can move down or stop if a game costs more.
-Q: What buy-in cap fits this bankroll?
+CAPTION: Your notes show four rushed BB calls, two bad river calls and three weak bets.
+TEACH: Avoid overload plan Do not use one result as proof. Check which error came up most often. Pick a short fix for the next session. Save the other notes for later.
+Q: What should you review first?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] 5 chips — Look again. Five chips is one part in 80. You could still pick a cheaper game.
-    BETTER ANSWER: 10 chips
-  + [correct] 10 chips — Correct. 400 divided by 40 is 10 chips. That is the cap in this plan.
-  - [wrong] 20 chips — Look again. 20 chips would use one part in 20. Each loss would take twice the planned share.
-    BETTER ANSWER: 10 chips
+  + [correct] Four rushed BB calls — Correct. Four errors are the largest group. Work on the BB call routine before adding more cues.
+  - [suboptimal] Two bad river calls — Look again. River calls matter, but there are four rushed BB calls. The bigger repeat leak is still open.
+    BETTER ANSWER: Four rushed BB calls
+  - [wrong] Nine errors in one session — Look again. Nine live goals split your focus. You may miss the next BB call and have no clear repair signal.
+    BETTER ANSWER: Four rushed BB calls
 
 TASK w11_bankroll_move_down [drill] Check the limit after a loss
-CAPTION: Your poker fund fell from 600 chips to 480. Your cap is one part in 40. The next table costs 15 chips.
-Q: What is your new buy-in cap for this bankroll?
+CAPTION: Your NL10 bankroll fell from $420 to $350.
+TEACH: Check the limit after a loss At NL10, $10 is one full buy-in. At NL5, $5 is one full buy-in. Use the same 40-buy-in rule after a losing week. Use the new balance, not the old one.
+Q: What stake now meets the bankroll rule?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] 12 chips — Correct. 480 divided by 40 is 12 chips. Find a lower cost game or stop.
-  - [wrong] 15 chips — Look again. 15 chips was the cap with 600 chips. The same game now takes more of your fund.
-    BETTER ANSWER: 12 chips
-  - [wrong] 24 chips — Look again. 24 chips would use one part in 20 of the fund. That would double the planned share.
-    BETTER ANSWER: 12 chips
+  - [wrong] Stay at NL10 to win it back — Look again. 35 NL10 buy-ins are short of the 40-buy-in floor. Chasing the loss adds risk.
+    BETTER ANSWER: Move to NL5
+  - [wrong] Move to NL25 for a faster win — Look again. A $25 full buy-in means just 14 buy-ins at this bankroll. The risk is far above the plan.
+    BETTER ANSWER: Move to NL5
+  + [correct] Move to NL5 — Correct. $350 is 70 NL5 buy-ins. It is 35 NL10 buy-ins, below the plan.
 
-TASK w11_session_plan_recap [review] Session-plan recap
-CAPTION: Lesson learned: one focus plan creates cleaner real-play habits.
-Q: What is the session-plan takeaway?
-HINT [theoryOnly]: Simple plan first, then repetitions.
+TASK w11_plan_table_focus_transfer [drill] Real-table focus plan
+CAPTION: Your session starts soon. You feel tired. Your notes show missed BB calls.
+TEACH: Real-table focus plan One focus is still useful when you are low on energy. State the cue in plain words. Note a hand for review. If you are too tired to read the table, you may skip the session.
+Q: Which plan is easiest to use?
+HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Consistent one-focus planning improves execution quality and makes post-session review actionable.
+  - [wrong] Watch six leaks and play a full session — Look again. You are tired. Six live tasks add load and make it easy to miss the BB price.
+    BETTER ANSWER: Check BB call price, then review one hand
+  - [suboptimal] Play with no cue and sort it out later — Look again. This feels simple, but it gives the review no test of the blind leak you chose.
+    BETTER ANSWER: Check BB call price, then review one hand
+  + [correct] Check BB call price, then review one hand — Correct. The BB cue is clear. One saved choice makes the next review short and useful.
+
+TASK w11_session_plan_recap [review] Session-plan recap
+ENTRY: drill
+CAPTION: A session goal is a skill check, not a money target.
+TEACH: Session-plan recap Profit or loss from one session is not a skill grade. The hand you played and the reason for your choice matter more than the result.
+Q: What should a good session leave behind?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  + [correct] A noted choice to check and one next step — Correct. A saved cue can turn a live error into a skill you test in a new hand.
+  - [wrong] A profit target met — Look again. A winning session can still include poor calls. A cash result does not show a fixed leak.
+    BETTER ANSWER: A noted choice to check and one next step
+  - [suboptimal] A long list of new plans — Look again. The notes may help later, but a long list makes the next session harder to focus.
+    BETTER ANSWER: A noted choice to check and one next step
 
 ===== WORLD 11 · LESSON table_trigger_reads · In-session trigger reads =====
 
 TASK w11_trigger_intro [theory] Trigger-first routine
-CAPTION: When a trigger appears, apply one prepared adjustment quickly.
-TEACH: Pattern to action. If blinds overfold, steal a bit wider. If a player overcalls, value heavier. Use one adjustment per trigger.
-TEACH LABELS: Trigger, One change, Observe result
-Q: What is a trigger read for real play?
-HINT [theoryOnly]: Trigger -> one adjustment -> observe result.
+CAPTION: Read the table, then pick one response.
+TEACH: Trigger-first routine A multiway pot has three or more players on the flop. A c-bet is a flop bet by the preflop raiser. A 3-bet is a raise over an open raise. SPR is the smaller stack left after preflop, divided by the flop pot. An overpair is a pocket pair above the top board card. Check cards, seat, price and the player read.
+Q: Flop pot 6, stack left 12: what SPR?
+HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: A trigger read is a repeated in-session pattern that activates one preplanned adjustment.
+  + [correct] 2 — Correct. SPR is 12/6=2. You have twice the pot left to play.
+  - [wrong] 6 — Look again. 6 BB is the pot size, not the ratio. The 12 BB stack is twice that pot.
+    BETTER ANSWER: 2
+  - [wrong] 12 — Look again. 12 BB is the stack left, not the ratio. Divide it by the 6 BB pot.
+    BETTER ANSWER: 2
 
 TASK w11_trigger_overfold_blinds [drill] Blind overfold trigger
-CAPTION: Both blinds folded to 5 of your last 6 steals.
-Q: What is the cleaner table action?
-HINT [theoryOnly]: Overfold trigger supports a preflop widen adjustment.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Add turn barrels against the blinds too — Too broad. After both blinds folded to 5 of your last 6 preflop steals, adding turn barrels risks extra postflop chips on a purely preflop overfold read.
-    BETTER ANSWER: Widen late steals slightly
-  + [correct] Widen late steals slightly — Overfold means widen. This is a direct trigger-to-action adjustment with clear evidence and low complexity.
-  - [suboptimal] Wait one more orbit before using the trigger — Safe but misses edge. When both blinds have folded to 5 of your last 6 preflop steals, waiting another orbit forfeits high-frequency preflop blind profit.
-    BETTER ANSWER: Widen late steals slightly
+CAPTION: You have A7o in SB. BB has folded to 22 of 25 SB opens. This drill gives an 88% fold rate to a 2 or 4 BB open. On a 3-bet, you fold.
+Q: How should you enter?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ah 7d | Pot 1.5 BB | To call 0.5 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
+SEATS: UTG folded stack 62 BB | HJ folded stack 58 BB | CO folded stack 55 BB | BTN folded dealer stack 52 BB | SB Ah 7d stack 31.5 BB post 0.5 BB | BB stack 39 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds
+  - [suboptimal] Raise to 4 BB — Look again. BB folds at the same rate. The larger open risks 3.5 BB more than folding and gives up 0.24 BB of steal value.
+    BETTER ANSWER: Raise to 2 BB
+  - [wrong] Fold — Look again. A7o is weak in the base chart, but the observed 88% BB folds make a small SB steal worth more than giving up the blind.
+    BETTER ANSWER: Raise to 2 BB
+  + [correct] Raise to 2 BB — Correct. BB folds 88%. From this decision, the 2 BB open gains 1.14 BB on average: 0.88 x 1.5 - 0.12 x 1.5. SB has already put in 0.5 BB. The base chart is a guide for first-in hands. A tested player read can change a close choice. Check risk and the fold rate.
 
 TASK w11_trigger_overcall_flop [drill] Overcall trigger
-CAPTION: In several earlier showdowns, an opponent showed a weak pair after calling bets on both flop and turn.
-Q: What is the sharper one-change response?
-HINT [theoryOnly]: Overcall trigger points to value-density change.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Probe with more bluffs first — Wrong adjustment. This opponent has repeatedly called flop and turn bets and shown a weak pair at showdown. Extra bluffs are less likely to get folds.
-    BETTER ANSWER: Bet value heavier and trim bluffs
-  - [wrong] Wait to adjust until post-session review — Too rigid. The earlier weak-pair showdowns give you a cue for thinner value bets now. Waiting for post-session review gives up that opportunity.
-    BETTER ANSWER: Bet value heavier and trim bluffs
-  + [correct] Bet value heavier and trim bluffs — Callers want value. Those showdowns give you a reason to try more value bets and fewer bluffs against this player. Keep checking whether the pattern holds.
-
-TASK w11_trigger_small_price_continue [drill] Small-price continue
-CAPTION: Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Both started the flop with 35 BB behind. On J-7-4 rainbow, CO bets 2 BB into 8 BB.
-TEACH: Price plus position can support a continue. Read seat, hand, board, and price together. A marginal made hand can continue when the price is small and position keeps control.
-TEACH LABELS: Position, Top pair, Small price, Dry board
-Q: Which line keeps weaker bets in and lets you reassess after the next card?
-HINT [theoryOnly]: Real play means combining cues, not naming one concept.
-TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
-SEATS: UTG | HJ | CO bet 2 BB | BTN dealer | SB | BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO raises 2.5 BB · BTN calls 2.5 BB · Flop: CO bets 2 BB
-  + [correct] Call once in position — Clean table read. A 2 BB call makes a 12 BB pot, an immediate threshold of about 17%. A call in position is reasonable if CO bets enough hands you beat. CO’s range and later betting determine how much equity you realize.
-    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
-  - [wrong] Fold now — A fold ends this hand. On the J-7-4 flop from BTN at 35 BB effective facing CO's 2 BB bet into an 8 BB pot, folding immediately surrenders your equity against CO's weaker flop bets at a cheap 2 BB price.
-    BETTER ANSWER: Call once in position
-    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
-  - [suboptimal] Raise for protection now — Playable but noisy. CO bets 2 BB on J-7-4 and the pot is now 10 BB. Raising can drive out weaker bets that a call in position would keep in.
-    BETTER ANSWER: Call once in position
-    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 10 BB | To call 2 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center BTN, top pair, small price | Facts one pair, top pair, rainbow
-
-TASK w11_trigger_bad_price_fold [drill] Bad-price fold
-CAPTION: Same hand again. BTN called 2 BB on J-7-4. Both started the turn with 33 BB behind. Tight CO rarely bluffs big turn bets and now bets 12 BB into 12 BB.
-TEACH: Same hand, worse continue. A small flop bet can justify a call, yet a pot-sized turn barrel from an opponent who rarely bluffs can make the same top pair a fold. The range read matters as much as the price.
-TEACH LABELS: Same hand, Pot-size bet, Tight CO read, River risk
-Q: What is the cleaner response now?
-HINT [theoryOnly]: Combine a large second-barrel price with this opponent's unusually value-heavy betting range.
-TABLE: Turn | You Qs Js | Board Jh 7c 4d 2s | Pot 24 BB | To call 12 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1 | Center BTN top pair, tight CO barrel | Facts one pair, top pair
-SEATS: UTG | HJ | CO bet 12 BB | BTN dealer | SB | BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · CO raises 2.5 BB · BTN calls 2.5 BB · Flop: CO bets 2 BB · BTN calls 2 BB · Turn: CO bets 12 BB
-  - [wrong] Call the top pair — Tempting hand-label trap. Tight CO bets 12 BB into a 12 BB pot. Calling makes the pot 36 BB, so top pair needs about 33% equity. The read that CO rarely bluffs big on the turn makes that harder to find.
-    BETTER ANSWER: Fold the turn
-    FEEDBACK TABLE: Turn | You Qs Js | Board Jh 7c 4d 2s | Pot 24 BB | To call 12 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center BTN top pair, tight CO barrel | Facts one pair, top pair
-  + [correct] Fold the turn — Strong contrast read. Calling 12 BB makes a 36 BB pot, about 33% immediate pot odds. Folding is reasonable given that CO rarely bluffs this size. How often CO bets hands you beat and what happens on the river determine the best line.
-    FEEDBACK TABLE: Turn | You Qs Js | Board Jh 7c 4d 2s | Pot 24 BB | To call 12 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center BTN top pair, tight CO barrel | Facts one pair, top pair
-  - [wrong] Go all-in to deny equity — Too much pressure back. The pot is now 24 BB and you have 33 BB behind. Going all-in with one pair risks your stack when a tight CO rarely bluffs big on this turn and may continue with better hands.
-    BETTER ANSWER: Fold the turn
-    FEEDBACK TABLE: Turn | You Qs Js | Board Jh 7c 4d 2s | Pot 24 BB | To call 12 BB | Seat BTN | Active btn | Seat focus co, btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Center BTN top pair, tight CO barrel | Facts one pair, top pair
-
-TASK w11_sb_ajo_vs_btn [drill] A-J from the small blind
-CAPTION: BTN opens to 2.5 BB. You are SB. Use the course chart for one open.
-Q: What is the chart action?
+CAPTION: Three players see A-7-3. You hold AK. BTN and BB have called bets with weaker aces and 7x in prior hands. They each call a 4 BB bet often.
+Q: Bet or check?
 HINT [hidden]: (none)
-TABLE: Preflop | You Ah Jc | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
-SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO folded stack 40 BB | BTN dealer stack 37.5 BB raise 2.5 BB | SB Ah Jc stack 39.5 BB post 0.5 BB | BB stack 39 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  - [wrong] Fold — Look again. A-J off suit is in the first Medium row. The chart gives up too much here if you fold to BTN.
-    BETTER ANSWER: Raise to 9 BB
-  - [wrong] Call — Look again. A flat call leaves BB in and gives BTN the lead. This Medium row makes a re-raise from SB.
-    BETTER ANSWER: Raise to 9 BB
-  + [correct] Raise to 9 BB — Correct. A-J off suit is first-row Medium. SB re-raises this row over a BTN open.
+TABLE: Flop | You Ac Kc | Board As 7d 3h | Pot 8 BB | Seat UTG | Active utg | Decision utg | Facts one pair, top pair, rainbow
+SEATS: UTG Ac Kc stack 52.5 BB | HJ folded stack 62 BB | CO folded stack 60 BB | BTN dealer stack 41.5 BB | SB folded stack 50.5 BB | BB stack 42.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ folds · CO folds · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks
+  + [correct] Bet 4 BB — Correct. Your AK has top pair with the best kicker. The two loose callers can pay 4 BB with weaker aces or 7x. In a multiway pot, two players can pay the same bet. A bet seeks calls from worse hands. A check may save chips or give a free card. Check each range.
+    FEEDBACK TABLE: Flop | You Ac Kc | Board As 7d 3h | Pot 8 BB | Seat UTG | Active utg | Decision utg | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [suboptimal] Check — Look again. A check keeps the 8 BB pot small. It also gives two loose callers a free card and misses value from weaker aces.
+    BETTER ANSWER: Bet 4 BB
+    FEEDBACK TABLE: Flop | You Ac Kc | Board As 7d 3h | Pot 8 BB | Seat UTG | Active utg | Decision utg | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Bet 20 BB — Look again. An overbet of 20 into 8 may lose the 7x calls you want. You risk a large bet when either foe has two pair or a set.
+    BETTER ANSWER: Bet 4 BB
+    FEEDBACK TABLE: Flop | You Ac Kc | Board As 7d 3h | Pot 8 BB | Seat UTG | Active utg | Decision utg | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
-TASK w11_sb_kjo_vs_btn [drill] K-J from the small blind
-CAPTION: BTN opens to 2.5 BB. Your small blind is posted. Use the course chart.
-Q: What is the chart action?
+TASK w11_trigger_small_price_continue [drill] A small bet on the flop
+CAPTION: Three players see J-7-4. CO has c-bet weak overcards as well as Jx in past hands. BTN calls small bets with 7x and draws. You hold top pair QJ.
+Q: How should you respond?
 HINT [hidden]: (none)
-TABLE: Preflop | You Ks Jd | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
-SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO folded stack 40 BB | BTN dealer stack 37.5 BB raise 2.5 BB | SB Ks Jd stack 39.5 BB post 0.5 BB | BB stack 39 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  + [correct] Fold — Correct. K-J is in the second Medium row. The SB raise rule ends at the first Medium row.
-  - [wrong] Call — Look again. You would pay 2 BB more with K-J and act before BTN on the flop. The chart gives SB no flat call here.
-    BETTER ANSWER: Fold
-  - [wrong] Raise to 9 BB — Look again. A raise with K-J off suit risks 8.5 BB more and uses a hand outside the chart’s SB re-raise rows.
-    BETTER ANSWER: Fold
+TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 57 BB | HJ folded stack 58 BB | CO stack 55.5 BB bet 2 BB | BTN dealer stack 45.5 BB call 2 BB | SB folded stack 53.5 BB | BB Qs Js stack 41.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 2 BB · BTN calls 2 BB
+  - [suboptimal] Raise to 10 BB — Look again. Raising 10 can drive out the overcards and 7x you beat. It makes a larger pot with CO strong Jx still in.
+    BETTER ANSWER: Call 2 BB
+    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Fold — Look again. QJ has top pair and costs 2 BB to stay in a 12 BB pot. Folding loses a cheap chance against the weak bets in the read.
+    BETTER ANSWER: Call 2 BB
+    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] Call 2 BB — Correct. The pot is 12 BB now. Your 2 BB call needs 14.3% of a 14 BB final pot. QJ can beat CO overcards and BTN weak pairs. In a multiway pot, think about both players. A call closes the action here. If you raise, CO and BTN can act again.
+    FEEDBACK TABLE: Flop | You Qs Js | Board Jh 7c 4d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
-TASK w11_bb_72o_vs_hj [drill] Seven-deuce in the big blind
-CAPTION: HJ makes it 2.5 BB. All seats between HJ and BB fold.
-Q: What is the chart action?
+TASK w11_trigger_bad_price_fold [drill] Price under pressure
+CAPTION: CO bets 8 into 10 on K-8-4-2. In eight past big turn bets, CO showed sets, K8 or AK in seven. Assume KQ wins 15% against this betting range by the river, about 1 in 7.
+Q: Call or fold?
 HINT [hidden]: (none)
-TABLE: Preflop | You 7s 2c | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
-SEATS: UTG folded stack 40 BB | HJ stack 37.5 BB raise 2.5 BB | CO folded stack 40 BB | BTN folded dealer stack 40 BB | SB folded stack 39.5 BB post 0.5 BB | BB 7s 2c stack 39 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds
-  + [correct] Fold — Correct. Seven-deuce off suit is Weak. Fold and save the rest of your stack.
-  - [wrong] Call — Look again. The posted blind is gone. With seven-deuce, the extra 1.5 BB goes in with a Weak hand.
+TABLE: Turn | You Kc Qd | Board Ks 8d 4c 2h | Pot 18 BB | To call 8 BB | Seat SB | Active sb | Decision sb | Facts one pair, top pair
+SEATS: UTG folded stack 65 BB | HJ folded stack 62 BB | CO stack 46.5 BB bet 8 BB | BTN folded dealer stack 57 BB | SB Kc Qd stack 32.5 BB | BB folded stack 49 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB calls 2 BB more · BB folds · Flop: SB checks · CO bets 2 BB · SB calls 2 BB · Turn: SB checks · CO bets 8 BB
+  + [correct] Fold — Correct. The 8 BB call needs 30.8% wins. Your top pair KQ has 15% by this read. Folding saves 8 BB. A new street can change the cost of a call. A big turn bet is not the same as a small flop bet. Read the price and past hands, not the hand name.
+    FEEDBACK TABLE: Turn | You Kc Qd | Board Ks 8d 4c 2h | Pot 18 BB | To call 8 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  - [wrong] Call 8 BB — Look again. KQ loses to the sets, K8 and AK in this turn range. With 15% wins, calling loses 4.1 BB on average.
     BETTER ANSWER: Fold
-  - [wrong] Raise — Look again. A raise with seven-deuce risks more chips against an early open. This hand is outside the course range.
+    FEEDBACK TABLE: Turn | You Kc Qd | Board Ks 8d 4c 2h | Pot 18 BB | To call 8 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  - [wrong] All-in to 32.5 BB — Look again. You have 32.5 BB left before this choice. Shoving into a strong turn range risks the rest of the stack with top pair.
     BETTER ANSWER: Fold
-
-TASK w11_trigger_recap [review] Trigger recap
-CAPTION: Lesson learned: trigger reads convert pattern into one focused adjustment.
-Q: What is the trigger-read takeaway?
-HINT [theoryOnly]: Trigger must be repeated, not imagined.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Strong play uses repeated triggers and simple single adjustments you can track over time.
-
-===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
-
-TASK w11_review_loop_intro [theory] One leak one fix
-CAPTION: After play, name one leak and one repair target for tomorrow.
-TEACH: Close the cycle daily. Session plan starts the day, trigger reads guide live play, and review sets tomorrow’s focus. That cycle compounds skill.
-TEACH LABELS: Plan, Trigger, Review, Daily cycle
-Q: What makes review actionable?
-HINT [theoryOnly]: One leak, one fix, one next session test.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Actionable review links one observed leak to one concrete repair task for the next session.
-
-TASK w11_review_pick_leak [drill] Pick priority leak
-CAPTION: Today you missed thin value and overcalled one river.
-Q: What is the clean first review action?
-HINT [theoryOnly]: Pick the leak that repeats most often first.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Tackle both leaks together in the next session — Overload risk. After a session where you missed thin value and overcalled one river, trying to repair both leaks next session divides your attention between thin value and river calls, making it harder to tell which decision improved.
-    BETTER ANSWER: Select one repeated leak as priority
-  - [wrong] Skip review and just play more volume — Volume helps. After missing thin value and overcalling a river today, skipping review to grind more volume repeats the same chip-losing habits next session.
-    BETTER ANSWER: Select one repeated leak as priority
-  + [correct] Select one repeated leak as priority — Pick the repeat leak. Choosing one repeated leak gives the highest value for the next focused session.
-
-TASK w11_review_define_fix [drill] Define tomorrow fix
-CAPTION: Priority leak: overcalling rivers vs tight players.
-Q: Which repair target is most actionable?
-HINT [theoryOnly]: Define an if-then fix for next session.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] If an opponent underbluffs, fold marginal bluff-catchers — Specific fix carries over. Specific if-then repair targets carry directly into live decisions better than generic intentions.
-  - [wrong] Play better rivers somehow — Too vague. When your priority leak is overcalling on the river against tight players, a vague goal gives you no clear river fold rule and keeps costing chips.
-    BETTER ANSWER: If an opponent underbluffs, fold marginal bluff-catchers
-  - [wrong] Leave the river leak unwritten and move on — Missed chance. After identifying river overcalls against tight players, leaving the river leak unwritten gives you no specific cue to check the next time a tight player bets.
-    BETTER ANSWER: If an opponent underbluffs, fold marginal bluff-catchers
-
-TASK w11_multiway_turn_fold [drill] One pair in a three-way pot
-CAPTION: Three players see the turn. For this drill, CO and BTN each have a straight and will stay in.
-Q: What should you do with your sevens?
-HINT [hidden]: (none)
-TABLE: Turn | You 7h 7c | Board Ks Qd Jc 2h | Pot 24 BB | To call 8 BB | Seat BB | Active bb | Decision bb | Facts one pair, pocket pair
-SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO stack 29.5 BB bet 8 BB | BTN dealer stack 29.5 BB call 8 BB | SB folded stack 39.5 BB | BB 7h 7c stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · BTN checks · Turn: BB checks · CO bets 8 BB · BTN calls 8 BB
-  + [correct] Fold — Correct. Your pair of sevens cannot beat either straight on this board, even if a seven falls. Save the call.
-    FEEDBACK TABLE: Turn | You 7h 7c | Board Ks Qd Jc 2h | Pot 24 BB | To call 8 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, pocket pair
-  - [wrong] Call — Look again. CO bet 8 BB and BTN called. No river card can give your two sevens a hand that beats a straight here.
-    BETTER ANSWER: Fold
-  - [wrong] Raise — Look again. CO and BTN will stay in with their straights. More chips go in with no path to the best hand.
-    BETTER ANSWER: Fold
-
-TASK w11_first_in_seat [drill] Find the opener
-CAPTION: Read the voluntary action after the two blinds were posted.
-Q: Tap the seat that opened the pot.
-HINT [hidden]: (none)
-TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Tap utg, hj, bb | Facts no applicable hand facts
-SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO 6s 5s stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
-  - [wrong] UTG [seat utg] — Look again. UTG folded. Counting that seat as the opener ignores HJ’s 2.5 BB raise.
-    BETTER ANSWER: HJ
-    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
-  + [correct] HJ [seat hj] — Correct. HJ put in the first raise. The blinds posted before that action.
-    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
-  - [wrong] BB [seat bb] — Look again. BB posted a 1 BB blind. Counting that post as a raise gives the lead to the wrong seat.
-    BETTER ANSWER: HJ
-    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
-
-TASK w11_checkpoint_short_spr [drill] Two stacks, one cap
-CAPTION: CO has more chips than you. The turn starts with 15 BB in the pot and 10 BB left at your seat.
-Q: Which stack do you use to find the SPR here?
-HINT [hidden]: (none)
-TABLE: Turn | You Kc Td | Board Ks 8h 3s 2c | Pot 15 BB | Seat BB | Facts one pair, top pair
-SEATS: UTG folded stack 17.25 BB | HJ folded stack 17.25 BB | CO stack 32.75 BB | BTN folded dealer stack 17.25 BB | SB folded stack 16.75 BB | BB Kc Td stack 10 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 4.75 BB · BB calls 4.75 BB
-  - [wrong] The pot — Look again. The 15 BB in the middle is already at risk. It does not set the cap on new bets.
-    BETTER ANSWER: Your stack
-    FEEDBACK TABLE: Turn | You Kc Td | Board Ks 8h 3s 2c | Pot 15 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  + [correct] Your stack — Correct. Your 10 BB is the smaller stack. Divide it by 15 BB for an SPR of about 0.67.
-    FEEDBACK TABLE: Turn | You Kc Td | Board Ks 8h 3s 2c | Pot 15 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] CO’s stack — Look again. CO covers your 10 BB. The part of CO’s stack above yours cannot go into this heads-up pot.
-    BETTER ANSWER: Your stack
-    FEEDBACK TABLE: Turn | You Kc Td | Board Ks 8h 3s 2c | Pot 15 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-
-TASK w11_review_loop_recap [review] Review-habit recap
-CAPTION: Lesson learned: review carries your work forward into tomorrow.
-TEACH: Carry one fix forward. A session only teaches if your review stays small and concrete. Pick one repeated mistake from today, ignore lucky or unlucky short-term noise, and write one clear if-then habit for tomorrow. Bringing that single note into the next pre-session plan turns daily hands into steady skill.
-TEACH LABELS: One leak, If-then fix, Next session
-Q: What is the post-session review takeaway?
-HINT [theoryOnly]: Write one leak and one fix before ending session.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Post-session review converts play into learning only when it outputs one clear repair target for the next day.
-
-===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play session checkpoint =====
-
-TASK w11_checkpoint_intro [theory] Session cycle map
-CAPTION: Pick one goal.
-TEACH: Before you play Pick one skill. Check it again after play.
-Q: What will you work on?
-HINT [theoryOnly]: One focus keeps decisions clear under pressure.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-REVIEW: Real-play habits improve when your session starts with one target behavior, not a long checklist.
-
-TASK w11_checkpoint_plan_line [drill] Plan line
-CAPTION: You start play tired.
-Q: What is your plan?
-HINT [theoryOnly]: Plan should stay simple and executable.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Set a complex multi-phase improvement plan — Too heavy. When starting a session with low energy after a long workday, a complex multi-phase plan collapses under fatigue and causes sloppy table decisions.
-    BETTER ANSWER: Set one low-friction focus target
-  + [correct] Set one low-friction focus target — Low-energy plan first. Low-energy sessions still teach well when focus is clear, small, and measurable.
-  - [wrong] Play with no objective — Simpler, but blind. In a low-energy session, playing with no objective lets tired autopilot take over and wastes the session's learning value.
-    BETTER ANSWER: Set one low-friction focus target
-
-TASK w11_checkpoint_trigger_line [drill] Trigger line
-CAPTION: The blinds give up often. River bets are rarely bluffs.
-Q: Which change fits?
-HINT [theoryOnly]: Pick one prepared live cue first.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] Use both trigger and review changes now — Too broad. When you notice both blind overfolding and river underbluffing, applying multiple changes at once causes execution mix-ups across preflop and river spots.
-    BETTER ANSWER: Use one prepared live cue now
-  - [suboptimal] Log the trigger and wait for review — Review matters. After spotting repeated blind overfold and river underbluff patterns, logging the patterns for review delays an adjustment already supported by repeated observations, such as stealing a little wider against the overfolding blinds.
-    BETTER ANSWER: Use one prepared live cue now
-  + [correct] Use one prepared live cue now — One cue, one action. A single prepared cue keeps table play disciplined and observable.
-
-TASK w11_checkpoint_review_line [drill] Review line
-CAPTION: Two mistakes kept coming up.
-Q: What do you review?
-HINT [theoryOnly]: Review should output one next-session repair task.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  + [correct] Review one leak — Cycle closed cleanly. Progress compounds when review creates one actionable output that directly shapes the next session plan.
-  - [wrong] Write long notes — Incomplete review. After a session with two recurring mistakes, writing long notes without picking one priority repair leaves tomorrow's session plan unfocused and repeats the leaks.
-    BETTER ANSWER: Review one leak
-  - [wrong] Skip closeout — Common habit. When a session ends with two recurring mistakes, skipping closeout lets the details fade and carries the same unfixed leaks into tomorrow.
-    BETTER ANSWER: Review one leak
-
-TASK w11_checkpoint_mixed_table_line [drill] Mixed table line
-CAPTION: HJ opens, and BTN calls. Both started the flop with 30 BB behind. HJ bets 5 BB into 8 BB.
-Q: Which line keeps weaker bets in?
-HINT [theoryOnly]: Read seat, hand, board, price, and stack before choosing.
-TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Seat focus hj, btn | Facts one pair, top pair, two-tone
-SEATS: UTG folded stack 99.75 BB | HJ stack 25 BB bet 5 BB | CO folded stack 99.75 BB | BTN dealer As Js stack 30 BB | SB folded stack 99.25 BB | BB folded stack 98.75 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · 6 antes of 0.25 BB each · UTG folds · HJ raises to 2.5 BB · CO folds · BTN calls 2.5 BB · SB folds · BB folds · Flop: HJ bets 5 BB
-  - [suboptimal] Raise now for protection — Tempting pressure line. HJ bets 5 BB into an 8 BB pot on A-8-4. Raising may fold the weaker bets you want to keep in and build a bigger pot against the range that continues.
-    BETTER ANSWER: Call in position and keep the range wide
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-  + [correct] Call in position and keep the range wide — Integrated read. A 5 BB call makes an 18 BB pot, an immediate threshold of about 28%. Calling in position can keep weaker bets and draws in. HJ’s betting range and later action determine the best line.
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-  - [wrong] Fold to the c-bet — A fold ends this hand. On A-8-4, HJ has bet 5 BB and the pot is now 13 BB. Folding gives up your in-position equity against HJ's weaker flop bets and draws.
-    BETTER ANSWER: Call in position and keep the range wide
-    FEEDBACK TABLE: Flop | You As Js | Board Ah 8h 4c | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Seat focus hj, btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+    FEEDBACK TABLE: Turn | You Kc Qd | Board Ks 8d 4c 2h | Pot 18 BB | To call 8 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
 
 TASK w11_multiway_first_seat [drill] Find the first seat on the flop
 CAPTION: CO opened. BTN and BB called.
@@ -6265,46 +6080,281 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     BETTER ANSWER: BB
     FEEDBACK TABLE: Flop | You Ac Qh | Board Qc 8s 3h | Pot 8 BB | Seat CO | Seat focus bb | Tap co, bb, btn | Facts one pair, top pair, rainbow
 
-TASK w11_checkpoint_turn_price [drill] Check the price on the turn
-CAPTION: A heart wins. A miss loses. Assume the river checks through.
-Q: With nine outs and a one in 5 shot, what is your play?
+TASK w11_bb_defend_price [drill] Bb defend price
+CAPTION: BTN opens to 2 BB. BTN opens wide and has called 3-bets with better aces and pairs. You have KJs in BB. No antes.
+Q: How should you defend?
 HINT [hidden]: (none)
-TABLE: Turn | You Ah 5h | Board Kh 8h 3c Js | Pot 6.5 BB | To call 1 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
-SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO stack 36.5 BB bet 1 BB | BTN folded dealer stack 40 BB | SB folded stack 39.5 BB | BB Ah 5h stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO bets 1 BB
-  - [wrong] Fold — Look again. A fold gives up a draw that wins one time in five. A 1 BB call needs less than that to break even.
-    BETTER ANSWER: Call
-  + [correct] Call — Correct. You pay 1 BB to make a 7.5 BB pot. That is about 13%. One win in five pays for this call.
-  - [wrong] Raise — Look again. CO offers a 1 BB price. A raise spends more, and this drill gives no reason to count on a fold.
-    BETTER ANSWER: Call
+TABLE: Preflop | You Ks Js | Pot 3.5 BB | To call 1 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+SEATS: UTG folded stack 60 BB | HJ folded stack 58 BB | CO folded stack 56 BB | BTN dealer stack 48 BB raise 2 BB | SB folded stack 54.5 BB post 0.5 BB | BB Ks Js stack 43 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2 BB · SB folds
+  - [suboptimal] Raise to 8 BB — Look again. KJs has good strength, but an 8 BB 3-bet builds a larger pot against BTN strong continue range. A cheap call keeps those weaker opens in.
+    BETTER ANSWER: Call 1 BB
+  + [correct] Call 1 BB — Correct. Your call is 1 into a final 4.5 BB pot, a 22.2% price. KJs has play value against a wide BTN open. A BB has put in 1 BB before the hand starts. A small raise may cost little to call. The first-in chart is not a BB defense chart.
+  - [wrong] Fold — Look again. KJs can defend the BB against a wide 2 BB BTN open. Folding misses a cheap 22.2% price with a suited broadway hand.
+    BETTER ANSWER: Call 1 BB
 
-TASK w11_checkpoint_multiway_value [drill] Use a clear edge in a three-way pot
-CAPTION: CO will call one raise with a worse hand.
-Q: How do you get more chips in?
+TASK w11_sb_3bet_value [drill] Sb 3bet value
+CAPTION: BTN opens to 2.5 BB. BTN has called 3-bets with 99-JJ, ATs and KQs. BB folds to a 3-bet in this drill. You hold AA in SB.
+Q: How should you respond?
 HINT [hidden]: (none)
-TABLE: Flop | You Jc Tc | Board 9s 8h 7d | Pot 12 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts straight, rainbow, consecutive board
-SEATS: UTG folded stack 40 BB | HJ folded stack 40 BB | CO stack 35.5 BB bet 2 BB | BTN dealer stack 35.5 BB call 2 BB | SB folded stack 39.5 BB | BB Jc Tc stack 37.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 2 BB · BTN calls 2 BB
-  - [wrong] Fold — Look again. With a jack-high straight on 9-8-7, a fold gives up the best hand on this flop.
-    BETTER ANSWER: Raise
-  - [wrong] Call — Look again. A call gets to the turn, but CO would put in more with a worse hand right now.
-    BETTER ANSWER: Raise
-  + [correct] Raise — Correct. Raise for value. J-T makes the best straight on 9-8-7, and CO will put in more with a worse hand.
+TABLE: Preflop | You As Ad | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts pocket pair
+SEATS: UTG folded stack 60 BB | HJ folded stack 58 BB | CO folded stack 55 BB | BTN dealer stack 40.5 BB raise 2.5 BB | SB As Ad stack 44.5 BB post 0.5 BB | BB stack 47 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
+  - [suboptimal] Call 2 BB — Look again. AA can win by calling, but this gives BTN a cheap path and lets BB join while you’re out of position. You miss more value from 99-JJ and ATs.
+    BETTER ANSWER: 3-bet to 8 BB
+  - [wrong] Fold — Look again. AA is Premium and far ahead of the BTN calls shown. Folding gives up a strong chance to win a larger pot.
+    BETTER ANSWER: 3-bet to 8 BB
+  + [correct] 3-bet to 8 BB — Correct. AA is ahead of BTN weak calls. An 8 BB 3-bet builds a pot for value while BB is likely to fold. A 3-bet is a raise after an open raise. In SB, a call leaves BB free to act. A raise may make the pot larger against a wide opening range.
+
+===== WORLD 11 · LESSON table_trigger_multiway_and_spr · Multiway pots and stack depth =====
+
+TASK w11_sb_isolate_limp [drill] Sb isolate limp
+CAPTION: BTN limps, then calls raises with A8, A5 or QJ. BB usually folds to a raise.
+Q: How should you enter?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad Jd | Pot 2.5 BB | To call 0.5 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
+SEATS: UTG folded stack 65 BB | HJ folded stack 62 BB | CO folded stack 60 BB | BTN dealer stack 54 BB call 1 BB | SB Ad Jd stack 41.5 BB post 0.5 BB | BB stack 47 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN calls 1 BB
+  + [correct] Raise to 4 BB — Correct. AJs can get calls from A8, A5 and QJ. Raising to 4 BB can play a value pot with the loose BTN. A limp is a preflop call of the big blind. An isolation raise tries to play with that limper. Think about both the limper and the BB behind.
+  - [suboptimal] Call 0.5 BB — Look again. A complete to 1 BB is cheap, but it lets BB check and see a three-way flop. You miss the weak BTN calls to a raise.
+    BETTER ANSWER: Raise to 4 BB
+  - [wrong] Fold — Look again. AJs is Strong and leads the weak hands BTN has limp-called before. Folding gives up that value.
+    BETTER ANSWER: Raise to 4 BB
+
+TASK w11_bb_isolate_limp [drill] Bb isolate limp
+CAPTION: SB limps and calls small raises with K9, K8 or Q8.
+Q: Check or raise?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ks Qs | Pot 2 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+SEATS: UTG folded stack 62 BB | HJ folded stack 60 BB | CO folded stack 57 BB | BTN folded dealer stack 54 BB | SB stack 44 BB call 1 BB | BB Ks Qs stack 47 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds · SB calls 0.5 BB more
+  + [correct] Raise to 4 BB — Correct. KQs is ahead of the weak kings and queens SB calls with. A 4 BB raise can earn value from those hands. The BB can check for free after an SB limp. A raise costs more but can get calls from weaker hands. Judge the size by the limper read.
+  - [suboptimal] Check — Look again. Checking costs no more chips, but it gives K9 and Q8 a free flop. A value raise can get paid by them.
+    BETTER ANSWER: Raise to 4 BB
+  - [wrong] All-in to 48 BB — Look again. The pot is 2 BB. A 48 BB shove can scare off the worse hands and risks too much against SB strong hands.
+    BETTER ANSWER: Raise to 4 BB
+
+TASK w11_first_in_seat [drill] Find the opener
+CAPTION: Read the voluntary action after the two blinds were posted.
+Q: Tap the seat that opened the pot.
+HINT [hidden]: (none)
+TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Tap utg, hj, bb | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO 6s 5s stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+  - [wrong] UTG [seat utg] — Look again. UTG folded. Counting that seat as the opener ignores HJ’s 2.5 BB raise.
+    BETTER ANSWER: HJ
+    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
+  + [correct] HJ [seat hj] — Correct. HJ put in the first raise. The blinds posted before that action.
+    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
+  - [wrong] BB [seat bb] — Look again. BB posted a 1 BB blind. Counting that post as a raise gives the lead to the wrong seat.
+    BETTER ANSWER: HJ
+    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
+
+TASK w11_multiway_top_pair_fold [drill] Multiway top pair fold
+CAPTION: UTG bets 6. CO raises to 18. Its last seven flop raises showed sets or two pair.
+Q: What should you do?
+HINT [hidden]: (none)
+TABLE: Flop | You Kd Qc | Board Kh 9h 8d | Pot 32 BB | To call 18 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, two-tone, backdoor straight
+SEATS: UTG stack 63.5 BB bet 6 BB | HJ folded stack 68 BB | CO stack 41.5 BB raise 18 BB | BTN folded dealer stack 60 BB | SB folded stack 56.5 BB | BB Kd Qc stack 52.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ folds · CO calls 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · UTG bets 6 BB · CO raises to 18 BB
+  + [correct] Fold — Correct. KQ is top pair, but CO raises with sets and two pair. Calling 18 needs at least 36% wins and UTG can act again. Three players can see the flop, but more than one foe can hold a strong hand. A raise after a bet may leave the first bettor able to act again. A small call price is not the full story.
+  - [wrong] Call 18 BB — Look again. KQ loses to the shown raises. The price is 18/50=36% before more action from UTG. A call puts a lot at risk.
+    BETTER ANSWER: Fold
+  - [wrong] All-in to 52.5 BB — Look again. Your top pair is behind CO value raises. A shove of the rest of your stack can get calls from better hands.
+    BETTER ANSWER: Fold
+
+TASK w11_multiway_dirty_outs [drill] Multiway dirty outs
+CAPTION: CO bets 2.5 and shows 6s 6d. If you call, the river checks through.
+Q: How do the clean outs affect your call or fold?
+HINT [hidden]: (none)
+TABLE: Turn | You 9h 8h | Board Ah 6h 2c 4c | Pot 15 BB | To call 2.5 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 63 BB | HJ folded stack 58 BB | CO 6s 6d stack 53.5 BB bet 2.5 BB | BTN folded dealer stack 51 BB | SB folded stack 53.5 BB | BB 9h 8h stack 46 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2 BB · BTN calls 2 BB · SB folds · BB calls 1 BB more · Flop: BB checks · CO bets 2 BB · BTN calls 2 BB · BB calls 2 BB · Turn: BB checks · CO bets 2.5 BB · BTN folds
+  - [suboptimal] Fold — Look again. The set cuts your heart outs from nine to seven. Even so, 15.9% wins beats the 14.3% call price. A fold gives up about 0.28 BB.
+    BETTER ANSWER: Call 2.5 BB
+  - [wrong] Raise to 10 BB — Look again. CO has a set and will call a raise in this drill. Raising risks more chips while if 2h or 4h comes on the river, the flush loses to a full house.
+    BETTER ANSWER: Call 2.5 BB
+  + [correct] Call 2.5 BB — Correct. You have 7 clean hearts. If the river is 2h or 4h, CO makes a full house. You win on 7/44 = 15.9% of rivers; the call needs 14.3%. An out is a river card that can make you win. A flush draw has up to nine hearts. Some hearts may pair the board and give a set a full house. Count clean outs before you check the price. Three players saw the flop. CO has a set, and you have a heart draw.
+    FEEDBACK TABLE: Turn | You 9h 8h | Board Ah 6h 2c 4c | Pot 15 BB | To call 2.5 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+
+TASK w11_spr_low_overpair [drill] Spr low overpair
+CAPTION: Flop SPR is 2.1. BB shoves 8x or 99 four times as often as sets. Assume JJ wins 65%.
+Q: Call or fold at this SPR?
+HINT [hidden]: (none)
+TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, overpair, pocket pair, rainbow
+SEATS: UTG folded stack 63 BB | HJ Jc Jh stack 11.5 BB | CO folded stack 55 BB | BTN folded dealer stack 50 BB | SB folded stack 44.5 BB | BB stack 0 BB allIn 11.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB shoves 11.5 BB
+  + [correct] Call 11.5 BB — Correct. An overpair is above the top board card. Your 65% wins beat the 40.4% call price, so calling earns 7.03 BB on average. At a low SPR, a bet can put most of the stack at risk. Compare what the hand may beat with the final pot and call cost. SPR by itself is not a call signal. Both started with 14 BB. With 11.5 behind and 5.5 in the middle, SPR was about 2.1.
+    FEEDBACK TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+  - [wrong] Fold — Look again. JJ beats many 8x and 99 hands in this shove range. A 65% chance clears the 40.4% call cost by a large gap.
+    BETTER ANSWER: Call 11.5 BB
+
+TASK w11_spr_high_top_pair [drill] Spr high top pair
+CAPTION: Flop SPR is 17.7. BB raises 3 BB to 12. Its last seven flop raises showed sets or two pair.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: Flop | You Ad Qc | Board As 9h 6d | Pot 20.5 BB | To call 9 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 65 BB | HJ folded stack 62 BB | CO folded stack 60 BB | BTN dealer Ad Qc stack 94.5 BB bet 3 BB | SB folded stack 53.5 BB | BB stack 85.5 BB raise 12 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 3 BB · BB raises to 12 BB
+  + [correct] Fold — Correct. AQ is top pair, but the seven raised hands were sets or two pair. Saving 9 BB avoids a deep pot against better hands. A high SPR means more chips remain next to the pot. One pair may face large bets on later streets. Read what hands a flop raise may mean before you grow the pot. Both started with 100 BB. With 97.5 behind and 5.5 in the middle, the flop SPR was about 17.7.
+  - [wrong] Call 9 BB — Look again. A call needs 30.5% wins before later bets. AQ has too few clean ways to beat this strong raise range on A-9-6.
+    BETTER ANSWER: Fold
+  - [wrong] Raise to 35 BB — Look again. A large re-raise drives the pot up at SPR 17.7. BB strong flop-raise range is likely to call with better hands.
+    BETTER ANSWER: Fold
+
+TASK w11_trigger_recap [review] Trigger recap
+ENTRY: drill
+CAPTION: One table cue leads to one small change.
+Q: A new large turn bet calls for what check?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  - [wrong] The name of your hand — Look again. Top pair can win against bluffs and lose to a strong bet. The name alone does not set a call price.
+    BETTER ANSWER: Price and the player read
+  + [correct] Price and the player read — Correct. A call for 2 BB and a call for 8 BB need different win chances. The player read helps you rate those chances. Price tells you what a call costs. SPR shows how large the stack is next to the pot. In multiway pots, more than one foe can have a strong hand.
+  - [wrong] The last pot you won — Look again. A past result says little about the next bettor or the cost of a new call.
+    BETTER ANSWER: Price and the player read
+
+TASK w11_review_loop_intro [theory] One leak one fix
+CAPTION: Review one useful hand.
+Q: Which note is most useful?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  + [correct] BB called 8 into 18 versus a tight turn range — Correct. The note has a seat, cost and player clue. You can test the same skill in a new hand. Write the hand, seat, bet and price that led to the choice. Mark a repeat leak, not a loss from luck. Use the note to plan a new, fair test in a later hand.
+  - [wrong] Lost a big pot and felt bad — Look again. The loss says no bet size or price. It cannot show which call or fold needs work.
+    BETTER ANSWER: BB called 8 into 18 versus a tight turn range
+  - [wrong] Need more wins next time — Look again. A win target has no hand cue. It does not explain how to avoid the next price error.
+    BETTER ANSWER: BB called 8 into 18 versus a tight turn range
+
+===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
+
+TASK w11_review_pick_leak [drill] Pick priority leak
+CAPTION: Your log shows four bad BB calls and one missed value bet. Your goal is to find one repeated decision you can work on next session.
+TEACH: Pick priority leak The next focus should come from what the record shows. Count repeated errors, then name the same clue you missed. Do not call a lucky win a fixed leak.
+Q: Which leak should you review first?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  - [suboptimal] The single missed value bet — Look again. That hand may need work, but the log shows four BB price errors. The repeated leak needs the first check.
+    BETTER ANSWER: BB call price against strong bets
+  - [wrong] The largest pot you won — Look again. A large win is not listed as an error. It gives no reason to skip the four bad BB calls.
+    BETTER ANSWER: BB call price against strong bets
+  + [correct] BB call price against strong bets — Correct. Four BB price errors give more repeated evidence than the one missed value bet.
+
+TASK w11_review_define_fix [drill] Define tomorrow fix
+CAPTION: Your notes show calls with top pair against rare turn raises.
+TEACH: Define tomorrow fix A useful fix says when to use the clue. It does not ask you to guess a win rate. Save the old miss and test a new turn raise with no hint.
+Q: Which note is a clear repair cue?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  + [correct] On a turn raise, check range and call price — Correct. The cue names the turn raise and two facts to test before putting more chips in.
+  - [wrong] Play tighter after a loss — Look again. A loss is not the turn-raise cue. Tight play after a loss can fold good hands in new spots.
+    BETTER ANSWER: On a turn raise, check range and call price
+  - [wrong] Win back the cost of the error — Look again. The money lost is gone. A chase goal can cause another poor call in a new pot.
+    BETTER ANSWER: On a turn raise, check range and call price
+
+TASK w11_review_loop_recap [review] Review-habit recap
+ENTRY: drill
+CAPTION: A clean review gives one next test.
+TEACH: Review-habit recap A saved miss can teach you what to check next. Help may teach a clue. A new unassisted hand tests if you can use it. A result days later needs real time to pass.
+Q: What shows a new skill read?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  + [correct] An unassisted choice in a new hand — Correct. A new spot with no hint tests if you can use the cue beyond the first missed hand.
+  - [wrong] A replay solved with a hint — Look again. A hint can teach you. It does not show you found the cue on your own.
+    BETTER ANSWER: An unassisted choice in a new hand
+  - [wrong] A win after the old mistake — Look again. A pot win can come from luck. It does not test the price or the range clue.
+    BETTER ANSWER: An unassisted choice in a new hand
+
+===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play session checkpoint =====
+
+TASK w11_checkpoint_intro [drill] Session cycle map
+CAPTION: Five new hands test the full live table read.
+TEACH: Session cycle map Read the seat, cards and board. A pot price is the call divided by the final pot. Check each player who may still act. After you choose, review the reason.
+Q: An example pot starts with 8 BB. Your call would match a 4 BB wager. What is the call price?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  + [correct] 25% — Correct. The pot has 12 after the bet. Calling 4 makes 16. The price is 4/16=25%.
+  - [wrong] 33.3% — Look again. 4/12 leaves out your own call. The final pot is 16, so the call price is lower.
+    BETTER ANSWER: 25%
+  - [wrong] 50% — Look again. The 4 BB bet is half of the old 8 BB pot. The call cost uses the 16 BB final pot.
+    BETTER ANSWER: 25%
+
+TASK w11_checkpoint_plan_line [drill] Plan line
+CAPTION: BTN opens to 2.5 BB and calls 3-bets with AT, A9s, KQ and 88-JJ. BB folds to most 3-bets. You have AJs in SB.
+Q: How should you respond?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ah Jh | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
+SEATS: UTG folded stack 70 BB | HJ folded stack 66 BB | CO folded stack 60 BB | BTN dealer stack 47.5 BB raise 2.5 BB | SB Ah Jh stack 44.5 BB post 0.5 BB | BB stack 54 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
+  + [correct] 3-bet to 9 BB — Correct. AJs can get calls from weaker aces and KQ. A 9 BB 3-bet earns value and may keep BB out.
+  - [suboptimal] Call 2 BB — Look again. A call can play, but BB can join, you’re out of position and BTN’s weaker aces see a cheap flop. The strong hand misses part of its value.
+    BETTER ANSWER: 3-bet to 9 BB
+  - [wrong] Fold — Look again. AJs is Strong against the hands BTN calls with. Folding to 2.5 BB gives up a good SB value chance.
+    BETTER ANSWER: 3-bet to 9 BB
+
+TASK w11_checkpoint_trigger_line [drill] Trigger line
+CAPTION: BTN has shown weak bluffs in six of ten past flop bets. BTN bets 4 into 5.5 on K-7-3. You hold KT, top pair.
+Q: How should you respond?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc Td | Board Ks 7h 3d | Pot 9.5 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 65 BB | HJ folded stack 60 BB | CO folded stack 62 BB | BTN dealer stack 38.5 BB bet 4 BB | SB folded stack 52.5 BB | BB Kc Td stack 37.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 4 BB
+  - [suboptimal] Raise to 12 BB — Look again. A raise may push out BTN weak bluffs. A call keeps those hands in while top pair remains ahead of much of the betting range.
+    BETTER ANSWER: Call 4 BB
+  - [wrong] Fold — Look again. KT has top pair against a foe with six weak flop bluffs in ten. Folding gives up a call with good value at a 29.6% price.
+    BETTER ANSWER: Call 4 BB
+  + [correct] Call 4 BB — Correct. KT beats the shown bluffs and some weaker kings. A 4 BB call needs 29.6% wins in a 13.5 BB final pot.
+
+TASK w11_checkpoint_review_line [drill] Review line
+CAPTION: Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Both tend to fold these hands to a raise to 14, but pay a small turn bet after a flop call.
+Q: Call or raise?
+HINT [hidden]: (none)
+TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts set, pocket pair, rainbow
+SEATS: UTG stack 63.5 BB bet 4 BB | HJ stack 61.5 BB call 4 BB | CO 9h 9d stack 62.5 BB | BTN folded dealer stack 60 BB | SB folded stack 54.5 BB | BB stack 59.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ calls 2.5 BB · CO calls 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · UTG bets 4 BB · HJ calls 4 BB
+  - [suboptimal] Raise to 14 BB — Look again. A raise can win value from AA, but the read says weak hands fold. It may lose later calls from AK and HJ small pairs.
+    BETTER ANSWER: Call 4 BB
+    FEEDBACK TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
+  + [correct] Call 4 BB — Correct. Your set wins from many worse hands. A call keeps the weak UTG bets and HJ small pairs in the 22.5 BB pot.
+    FEEDBACK TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
+  - [wrong] Fold — Look again. A set of nines is far ahead of AK and 77-88 on 9-6-2. Folding gives up a large value chance in a four-way pot.
+    BETTER ANSWER: Call 4 BB
+    FEEDBACK TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
+
+TASK w11_checkpoint_mixed_table_line [drill] Mixed table line
+CAPTION: SB and BTN start with 35 BB. Flop pot 19 and 26 behind: SPR 1.4. BTN calls 7 BB with AJ, AT and 88-JJ. BTN calls a 26 BB shove with sets and AK.
+Q: Bet or check?
+HINT [hidden]: (none)
+TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 65 BB | HJ folded stack 61 BB | CO folded stack 60 BB | BTN dealer stack 26 BB | SB Ac Qc stack 26 BB | BB folded stack 49 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB raises to 9 BB · BB folds · BTN calls 6.5 BB more · Flop is dealt
+  - [suboptimal] Check — Look again. Checking can control the pot, but AQ is ahead of BTN weak calls. You miss a clear 7 BB value bet.
+    BETTER ANSWER: Bet 7 BB
+    FEEDBACK TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] All-in to 26 BB — Look again. The large shove can fold the worse aces and pairs that call 7 BB. It risks 26 BB when BTN has a strong hand.
+    BETTER ANSWER: Bet 7 BB
+    FEEDBACK TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] Bet 7 BB — Correct. AQ beats AJ, AT and 88-JJ. Those hands often call 7 BB, so this size gets paid at the low SPR.
+    FEEDBACK TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w11_checkpoint_review [review] Real-play recap
 ENTRY: drill
-CAPTION: Pick a plan, look for a cue, then review.
-TEACH: Cycle beats intensity. Pick one fix to try next time.
-TEACH LABELS: Session plan, Trigger action, Review repair, Daily habit
-Q: What can you repeat each day?
-HINT [theoryOnly]: This closes the core route and feeds your daily play-review habit. Next you build the mindset bridge.
-TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
-SEATS: UTG | HJ | CO | BTN dealer | SB | BB
-  - [wrong] One large review block after the session — Too brittle. One large review block can identify a leak. A small plan, trigger, and review cycle makes it easier to practise the fix on the next session.
-    BETTER ANSWER: A repeatable daily practice cycle
-  - [wrong] Study another concept before applying it — Partial progress. Before live play, studying another concept without applying a plan-trigger-review habit leaves your existing table leaks costing chips.
-    BETTER ANSWER: A repeatable daily practice cycle
-  + [correct] A repeatable daily practice cycle — Sharp read. That is the intended endpoint: practical, repeatable carryover from learning into daily table decisions.
+CAPTION: CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO shoves 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Facts one pair, overpair, pocket pair, rainbow
+SEATS: UTG folded stack 64 BB | HJ folded stack 60 BB | CO stack 0 BB allIn 10 BB | BTN folded dealer stack 55 BB | SB folded stack 53.5 BB | BB Td Th stack 10 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO shoves 10 BB
+  + [correct] Call 10 BB — Correct. Your overpair wins 60% of the time in this model. The 10 BB call needs 37.7%, so calling has a strong edge.
+    FEEDBACK TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
+  - [wrong] Fold — Look again. TT is an overpair on 8-5-2. The given 60% win chance is far above the 37.7% call price, so folding gives up value.
+    BETTER ANSWER: Call 10 BB
+    FEEDBACK TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
 
 ===== WORLD 12 · LESSON decision_over_outcome · Decision quality over outcome =====
 
@@ -9494,20 +9544,117 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
   - [wrong] All-in to 60 BB — Look again. CO has 60 BB and BTN covers with 63 BB. One bluff tells you too little to risk your stack before the flop.
     BETTER ANSWER: Raise to 2 BB
 
+===== WORLD 11 · LESSON table_trigger_reads · In-session trigger reads =====
+
+TASK w11_day7_sb_decision [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: A week later, CO opens 2.5 BB and calls 3-bets with AQ, AJ, KQ and 99-JJ. BB folds to a 3-bet often. You have AKs in SB.
+Q: How should you respond?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad Kd | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
+SEATS: UTG folded stack 60 BB | HJ folded stack 61 BB | CO stack 52.5 BB raise 2.5 BB | BTN folded dealer stack 52 BB | SB Ad Kd stack 45.5 BB post 0.5 BB | BB stack 54 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds
+  + [correct] 3-bet to 9 BB — Correct. AKs is Premium and ahead of CO AQ, AJ and KQ. A 9 BB 3-bet can earn value while BB is still to act.
+  - [suboptimal] Call 2 BB — Look again. AKs plays well as a call, but it misses value from CO weaker aces and can let BB into the pot while you’re out of position.
+    BETTER ANSWER: 3-bet to 9 BB
+  - [wrong] Fold — Look again. AKs is far ahead of CO calls in the read. Folding gives up a strong value spot from SB.
+    BETTER ANSWER: 3-bet to 9 BB
+
+TASK w11_day7_bb_decision [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: A week later, BTN opens to 3 BB. BTN raises wide but tends to call 3-bets with higher pairs and big aces. You hold 88 in BB.
+Q: How should you defend?
+HINT [hidden]: (none)
+TABLE: Preflop | You 8d 8h | Pot 4.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts pocket pair
+SEATS: UTG folded stack 60 BB | HJ folded stack 58 BB | CO folded stack 56 BB | BTN dealer stack 49 BB raise 3 BB | SB folded stack 54.5 BB post 0.5 BB | BB 8d 8h stack 44 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 3 BB · SB folds
+  + [correct] Call 2 BB — Correct. A 2 BB call makes the pot 6.5 BB. Your 88 gets a 30.8% price against a wide BTN opening range.
+  - [suboptimal] Raise to 10 BB — Look again. 88 has value but a large 3-bet risks more against BTN higher pairs and big aces. Calling keeps the pot less costly.
+    BETTER ANSWER: Call 2 BB
+  - [wrong] Fold — Look again. With 88 against this wide BTN range, folding gives up a 2 BB call in a 6.5 BB final pot.
+    BETTER ANSWER: Call 2 BB
+
+===== WORLD 11 · LESSON table_trigger_multiway_and_spr · Multiway pots and stack depth =====
+
+TASK w11_day7_multiway_outs [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Three players saw the flop. BTN now bets 7 on A-8-5-2. In this drill BTN has As 8s, two pair. You hold a heart draw. After a call, there is no river bet.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: Turn | You Jh Th | Board Ad 8c 5h 2h | Pot 19 BB | To call 7 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 62 BB | HJ folded stack 60 BB | CO folded stack 53.5 BB | BTN dealer As 8s stack 40.5 BB bet 7 BB | SB folded stack 49.5 BB | BB Jh Th stack 43.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO checks · BTN bets 2 BB · BB calls 2 BB · CO folds · Turn: BB checks · BTN bets 7 BB
+  + [correct] Fold — Correct. If the river is Ah or 8h, BTN makes a full house. You have 7 clean hearts, or 15.9% of 44 rivers. The 7 BB call needs 26.9%.
+  - [wrong] Call 7 BB — Look again. Two of your nine hearts lose to a full house. With 7 clean outs, the 7 BB call loses about 2.86 BB.
+    BETTER ANSWER: Fold
+  - [wrong] Raise to 18 BB — Look again. BTN has two pair and will call a raise in this drill. A raise risks more while your flush would still lose to a full house on the Ah or 8h.
+    BETTER ANSWER: Fold
+
+===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play session checkpoint =====
+
+TASK w11_day7_spr_read [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+CAPTION: You and BTN start with 100 BB. The flop pot is 6.5: SPR 15.0. BTN has shown sets and K9 after seven bets like this. You have top pair KQ.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: Flop | You Ks Qc | Board Kh 9d 6h | Pot 11.5 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, two-tone, backdoor straight
+SEATS: UTG folded stack 65 BB | HJ folded stack 60 BB | CO Ks Qc stack 97.5 BB | BTN dealer stack 92.5 BB bet 5 BB | SB folded stack 54.5 BB | BB folded stack 57 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN calls 2.5 BB · SB folds · BB folds · Flop: CO checks · BTN bets 5 BB
+  + [correct] Fold — Correct. KQ is one pair in a high-SPR pot. BTN value bets sets and K9 here. The 5 BB call needs 30.3% wins.
+  - [wrong] Call 5 BB — Look again. KQ is behind the shown sets and K9. Calling 5 BB now may lead to more deep-stack bets while you chase few clean outs.
+    BETTER ANSWER: Fold
+  - [wrong] Raise to 18 BB — Look again. A raise grows the pot with one pair at SPR 15.0. The shown sets and K9 can call with better hands.
+    BETTER ANSWER: Fold
+
+===== WORLD 11 · LESSON session_plan_bankroll_followup · Keep the session plan =====
+
+TASK w11_day7_bankroll [drill] Review decision
+DAY 7 FAMILY: bankroll_limit
+CAPTION: Your poker bankroll is $475. A full buy-in costs $5 at NL5, $10 at NL10 and $25 at NL25. Use the cash-game buffer of 40 full buy-ins.
+Q: What is the highest stake your bankroll covers?
+HINT [hidden]: (none)
+TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
+SEATS: UTG | HJ | CO | BTN dealer | SB | BB
+  - [suboptimal] NL5 — Look again. $475 covers 95 buy-ins at NL5. That fits the buffer, and you also have enough for the next higher stake.
+    BETTER ANSWER: NL10
+  + [correct] NL10 — Correct. $475 covers 47.5 NL10 buy-ins. NL25 would leave just 19 buy-ins, below the 40-buy-in buffer.
+  - [wrong] NL25 — Look again. $475 covers 19 NL25 buy-ins. Moving up would leave you 21 buy-ins below the buffer.
+    BETTER ANSWER: NL10
+
+===== WORLD 11 · LESSON table_trigger_multiway_and_spr · Multiway pots and stack depth =====
+
+TASK w11_day7_trigger_read [drill] Review decision
+DAY 7 FAMILY: misread_real_play_process
+CAPTION: BTN has folded to 17 of 20 small flop c-bets. On checks BTN bets 3 BB and you fold K-high. You have KQ on A-7-3. BTN folds 85% to either a 2 or 6 BB bet.
+Q: How should you act?
+HINT [hidden]: (none)
+TABLE: Flop | You Kd Qd | Board As 7h 3c | Pot 6.5 BB | Seat HJ | Active hj | Decision hj | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 65 BB | HJ Kd Qd stack 47.5 BB | CO folded stack 61 BB | BTN dealer stack 40.5 BB | SB folded stack 54.5 BB | BB folded stack 53 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN calls 2.5 BB · SB folds · BB folds · Flop is dealt
+  + [correct] Bet 2 BB — Correct. The 85% folds make a 2 BB bluff earn 5.23 BB on average. The same folds need less risk at the small size.
+    FEEDBACK TABLE: Flop | You Kd Qd | Board As 7h 3c | Pot 6.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  - [suboptimal] Bet 6 BB — Look again. This bet gets the same 85% folds. It wins less on average because the failed bluff costs 6 BB.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Kd Qd | Board As 7h 3c | Pot 6.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  - [wrong] Check — Look again. BTN bets when checked to and you fold K-high. Checking gives up the 85% chance to win the 6.5 BB pot now.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Kd Qd | Board As 7h 3c | Pot 6.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+
 ===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
 
-TASK spaced_review_w11_post_session_review_loop_hj_v1 [drill] Review decision
-DAY 7 FAMILY: hj
-Q: When you mark the first raise for review, which seat made it?
+TASK w11_day7_review_repair [drill] Review decision
+DAY 7 FAMILY: misread_real_play_process
+CAPTION: Last week you logged a bad top-pair call. New hand: CO bets 8 into 9.5 on Q-8-3-2. Past big turn bets showed sets, AA and AQ. Assume QJ wins 12% versus this range.
+Q: Call or fold?
 HINT [hidden]: (none)
-TABLE: Preflop | You Jd Td | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
-SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO Jd Td stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
-  - [wrong] UTG — Look again. UTG folded. Marking that seat would record the wrong player for the review.
-    BETTER ANSWER: HJ
-  + [correct] HJ — Correct. HJ raised to 2.5 BB. The two blind posts came before voluntary action.
-  - [wrong] BB — Look again. BB posted 1 BB as a blind. Counting that as a raise would hide who first took the betting lead.
-    BETTER ANSWER: HJ
+TABLE: Turn | You Qh Jd | Board Qs 8h 3d 2s | Pot 17.5 BB | To call 8 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 65 BB | HJ folded stack 60 BB | CO stack 42.5 BB bet 8 BB | BTN folded dealer stack 53 BB | SB folded stack 49.5 BB | BB Qh Jd stack 40.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · CO bets 2 BB · BB calls 2 BB · Turn: BB checks · CO bets 8 BB
+  + [correct] Fold — Correct. Your 8 BB call needs 31.4% wins. The stated QJ win rate is 12%. This matches the price leak in your review note.
+  - [wrong] Call 8 BB — Look again. QJ is top pair, but it wins 12% versus the tight turn range. This 8 BB call loses about 4.94 BB.
+    BETTER ANSWER: Fold
+  - [wrong] All-in to 40.5 BB — Look again. You have 40.5 BB left before acting. A shove risks it into a tight turn range that beats top pair often.
+    BETTER ANSWER: Fold
 
 ===== WORLD 11 · LESSON session_plan_basics · Session plan in 30 seconds =====
 
@@ -9529,22 +9676,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · C
 
 ===== WORLD 11 · LESSON table_trigger_reads · In-session trigger reads =====
 
-TASK spaced_review_w11_table_trigger_reads_misread_real_play_process_v1 [drill] Review decision
-DAY 7 FAMILY: misread_real_play_process
-Q: HJ made this small flop bet three times in a row. What should you track next?
-HINT [hidden]: (none)
-TABLE: Flop | You 9s 8s | Board Th 7d 3c | Pot 7.5 BB | Seat BB | Facts high card, rainbow, open-ended, completion cards 8
-SEATS: UTG folded stack 100 BB | HJ stack 95.5 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 9s 8s stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ bets 2 BB
-  - [wrong] A new plan for the whole table — Look again. The repeated 2 BB bet is HJ's cue. A whole-table plan loses that specific read.
-    BETTER ANSWER: Which hands HJ shows after this bet
-    FEEDBACK TABLE: Flop | You 9s 8s | Board Th 7d 3c | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
-  + [correct] Which hands HJ shows after this bet — Correct. This repeat gives you a pattern to test. A show of cards after a small flop bet helps you check what it means.
-    FEEDBACK TABLE: Flop | You 9s 8s | Board Th 7d 3c | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
-  - [wrong] What HJ did hands ago with a large bet — Look again. A large bet from HJ is a different cue. It gives weak evidence for these 2 BB bets.
-    BETTER ANSWER: Which hands HJ shows after this bet
-    FEEDBACK TABLE: Flop | You 9s 8s | Board Th 7d 3c | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
-
 TASK spaced_review_w11_table_trigger_reads_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
 Q: Which made hand do your cards give you?
@@ -9561,36 +9692,84 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   + [correct] Top pair, kings — Correct. Only the king at your seat pairs with the board. The eight is your spare card.
     FEEDBACK TABLE: Flop | You Kc 8h | Board Ks 7d 4s | Pot 5.5 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor straight
 
-TASK spaced_review_w11_table_trigger_reads_pot_to_call_v1 [drill] Review decision
+===== WORLD 11 · LESSON table_trigger_multiway_and_spr · Multiway pots and stack depth =====
+
+TASK spaced_review_w11_table_trigger_multiway_and_spr_hj_v1 [drill] Review decision
+DAY 7 FAMILY: hj
+Q: When you mark the first raise for review, which seat made it?
+HINT [hidden]: (none)
+TABLE: Preflop | You Jd Td | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO Jd Td stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+  - [wrong] UTG — Look again. UTG folded. Marking that seat would record the wrong player for the review.
+    BETTER ANSWER: HJ
+  + [correct] HJ — Correct. HJ raised to 2.5 BB. The two blind posts came before voluntary action.
+  - [wrong] BB — Look again. BB posted 1 BB as a blind. Counting that as a raise would hide who first took the betting lead.
+    BETTER ANSWER: HJ
+
+===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play session checkpoint =====
+
+TASK spaced_review_w11_real_play_transfer_checkpoint_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call
-Q: How much must BB add to stay in this hand?
+Q: What is the cost to see the last card?
 HINT [hidden]: (none)
-TABLE: Flop | You Ad 4d | Board Ts 8h 3c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts high card, rainbow, backdoor straight
-SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ad 4d stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ bets 3 BB
-  + [correct] 3 BB — Correct. HJ bet 3 BB on the flop. That is the part you must match.
-  - [wrong] 5.5 BB — Look again. The 5.5 BB was already in the middle before HJ bet. Calling that much would overstate the cost.
-    BETTER ANSWER: 3 BB
-  - [wrong] 8.5 BB — Look again. 8.5 BB is in the middle after the bet. Counting it as your cost mixes the pot and the price.
-    BETTER ANSWER: 3 BB
+TABLE: Turn | You Ah 9h | Board Kh 7d 4s Qh | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
+SEATS: UTG folded stack 100 BB | HJ stack 95.5 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah 9h stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
+  + [correct] 2 BB — Correct. The turn bet is 2 BB. Match that bet to see the river.
+  - [wrong] 5.5 BB — Look again. 5.5 BB was the pot before the bet. Using it as the call makes this draw look too costly.
+    BETTER ANSWER: 2 BB
+  - [wrong] 7.5 BB — Look again. 7.5 BB is the pot with the bet. Match the 2 BB bet rather than the whole pot.
+    BETTER ANSWER: 2 BB
 
-===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
+===== WORLD 11 · LESSON table_trigger_reads · In-session trigger reads =====
 
-TASK spaced_review_w11_post_session_review_loop_misread_real_play_process_v1 [drill] Review decision
+TASK spaced_review_w11_table_trigger_reads_big_blind_v1 [drill] Review decision
+DAY 7 FAMILY: big_blind
+Q: You and HJ are the sole live seats. Who acts first on the flop?
+HINT [hidden]: (none)
+TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc 9s stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more
+  - [wrong] HJ — Look again. HJ opened preflop, but that does not set the flop order. Acting there would skip BB.
+    BETTER ANSWER: BB
+    FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  + [correct] BB — Correct. BB is the first live seat to the left of the Button. HJ acts after BB.
+    FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  - [wrong] BTN — Look again. BTN is out. Giving that seat an action would put a folded player back in.
+    BETTER ANSWER: BB
+    FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+
+===== WORLD 11 · LESSON session_plan_bankroll_followup · Keep the session plan =====
+
+TASK spaced_review_w11_session_plan_bankroll_followup_misread_real_play_process_v1 [drill] Review decision
 DAY 7 FAMILY: misread_real_play_process
-Q: You called too fast. What should you keep for tomorrow’s review?
+Q: You meant to track call price from BB. Which note gives you a decision to review?
 HINT [hidden]: (none)
-TABLE: Turn | You Jh 9h | Board Jd 7s 3c 2h | Pot 9.5 BB | Seat BB | Facts one pair, top pair
-SEATS: UTG folded stack 100 BB | HJ stack 93.5 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jh 9h stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 4 BB
-  - [wrong] How long you sat — Look again. Minutes played cannot show if the call was good. Save HJ's 4 BB bet and your jack pair.
-    BETTER ANSWER: The hand and what the turn call cost
-    FEEDBACK TABLE: Turn | You Jh 9h | Board Jd 7s 3c 2h | Pot 9.5 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  + [correct] The hand and what the turn call cost — Correct. Write down this board and the 4 BB bet. You can use the full spot to check your call next time.
-    FEEDBACK TABLE: Turn | You Jh 9h | Board Jd 7s 3c 2h | Pot 9.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] Just the last card — Look again. The fourth card alone leaves out HJ's bet. You need both to review the turn price.
-    BETTER ANSWER: The hand and what the turn call cost
-    FEEDBACK TABLE: Turn | You Jh 9h | Board Jd 7s 3c 2h | Pot 9.5 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
+TABLE: Flop | You Kd 7d | Board Ks 5h 2c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kd 7d stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ bets 3 BB
+  + [correct] HJ bet 3 BB after I checked — Correct. The 3 BB flop decision is a concrete sample you can replay when you review the call price.
+  - [wrong] I had a bad session — Look again. The session result gives no information about HJ’s 3 BB bet, so it leaves your planned review without a hand.
+    BETTER ANSWER: HJ bet 3 BB after I checked
+  - [wrong] I should bet more tomorrow — Look again. A new bet-size goal skips the flop call you planned to check and replaces the useful sample.
+    BETTER ANSWER: HJ bet 3 BB after I checked
+
+===== WORLD 11 · LESSON table_trigger_reads · In-session trigger reads =====
+
+TASK spaced_review_w11_table_trigger_reads_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Which card gives you top pair before you decide how to answer HJ?
+HINT [hidden]: (none)
+TABLE: Turn | You Qd Td | Board Qs 8h 6d 2c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qd Td stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 3 BB
+  + [correct] Qs — Correct. Qs pairs your Qd and is the highest card on the board.
+    FEEDBACK TABLE: Turn | You Qd Td | Board Qs 8h 6d 2c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  - [wrong] 8h — Look again. 8h does not match either hole card. Using it to judge the 3 BB bet would understate your hand.
+    BETTER ANSWER: Qs
+  - [wrong] 6d — Look again. 6d shares a suit with your private cards, but it does not make a pair. Counting it as a pair gives you the wrong reason to continue.
+    BETTER ANSWER: Qs
 
 ===== WORLD 11 · LESSON real_play_transfer_checkpoint · Real-play session checkpoint =====
 
@@ -9609,99 +9788,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Turn | You Ac Jd | Board Ah 8c 4d 3s | Pot 9.5 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
   + [correct] Read this price before you act — Correct. The new 4 BB bet needs its own read. Use the plan you set and save the past calls for review.
     FEEDBACK TABLE: Turn | You Ac Jd | Board Ah 8c 4d 3s | Pot 9.5 BB | Seat CO | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-
-TASK spaced_review_w11_real_play_transfer_checkpoint_hero_cards_board_pot_v1 [drill] Review decision
-DAY 7 FAMILY: hero_cards_board_pot
-Q: What is your made hand on the turn?
-HINT [hidden]: (none)
-TABLE: Turn | You Qh Td | Board Qs 9s 5c 3d | Pot 5.5 BB | Seat BB | Facts one pair, top pair
-SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qh Td stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks
-  + [correct] A pair of queens — Correct. Your queen pairs with the queen on the board. The ten does not pair.
-    FEEDBACK TABLE: Turn | You Qh Td | Board Qs 9s 5c 3d | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] A straight — Look again. Your queen and the board queen match. The turn does not give you five cards in a row.
-    BETTER ANSWER: A pair of queens
-    FEEDBACK TABLE: Turn | You Qh Td | Board Qs 9s 5c 3d | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] A pair of tens — Look again. No ten is on the board. Counting a pair of tens would make you miss your actual queen pair.
-    BETTER ANSWER: A pair of queens
-    FEEDBACK TABLE: Turn | You Qh Td | Board Qs 9s 5c 3d | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
-
-TASK spaced_review_w11_real_play_transfer_checkpoint_big_blind_v1 [drill] Review decision
-DAY 7 FAMILY: big_blind
-Q: You and HJ are the sole live seats. Who acts first on the flop?
-HINT [hidden]: (none)
-TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Facts one pair, top pair, two-tone
-SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc 9s stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more
-  - [wrong] HJ — Look again. HJ opened preflop, but that does not set the flop order. Acting there would skip BB.
-    BETTER ANSWER: BB
-    FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-  + [correct] BB — Correct. BB is the first live seat to the left of the Button. HJ acts after BB.
-    FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-  - [wrong] BTN — Look again. BTN is out. Giving that seat an action would put a folded player back in.
-    BETTER ANSWER: BB
-    FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-
-TASK spaced_review_w11_real_play_transfer_checkpoint_pot_to_call_v1 [drill] Review decision
-DAY 7 FAMILY: pot_to_call
-Q: What is the cost to see the last card?
-HINT [hidden]: (none)
-TABLE: Turn | You Ah 9h | Board Kh 7d 4s Qh | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
-SEATS: UTG folded stack 100 BB | HJ stack 95.5 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah 9h stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
-  + [correct] 2 BB — Correct. The turn bet is 2 BB. Match that bet to see the river.
-  - [wrong] 5.5 BB — Look again. 5.5 BB was the pot before the bet. Using it as the call makes this draw look too costly.
-    BETTER ANSWER: 2 BB
-  - [wrong] 7.5 BB — Look again. 7.5 BB is the pot with the bet. Match the 2 BB bet rather than the whole pot.
-    BETTER ANSWER: 2 BB
-
-===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
-
-TASK spaced_review_w11_post_session_review_loop_board_cards_v1 [drill] Review decision
-DAY 7 FAMILY: board_cards
-Q: You are saving this hand for review. Which card was the turn?
-HINT [hidden]: (none)
-TABLE: Turn | You Ad 5d | Board Kh 9c 4s 2d | Pot 5.5 BB | Seat BB | Facts high card, gutshot, completion cards 4
-SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ad 5d stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks
-  - [wrong] The four — Look again. 4s was on the flop. Saving it as the turn changes the order the cards came out.
-    BETTER ANSWER: The two
-    FEEDBACK TABLE: Turn | You Ad 5d | Board Kh 9c 4s 2d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card, gutshot, completion cards 4
-  + [correct] The two — Correct. The flop is the first three cards. Save 2d as the fourth card so you can replay the same choice.
-    FEEDBACK TABLE: Turn | You Ad 5d | Board Kh 9c 4s 2d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card, gutshot, completion cards 4
-  - [wrong] The king — Look again. Kh was on the flop, not the fourth card. That note would send you back to the wrong street.
-    BETTER ANSWER: The two
-    FEEDBACK TABLE: Turn | You Ad 5d | Board Kh 9c 4s 2d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2, board_3 | Facts high card, gutshot, completion cards 4
-
-===== WORLD 11 · LESSON session_plan_basics · Session plan in 30 seconds =====
-
-TASK spaced_review_w11_session_plan_basics_pot_to_call_v1 [drill] Review decision
-DAY 7 FAMILY: pot_to_call
-Q: UTG folded. How much would a limp cost from HJ in this hand?
-HINT [hidden]: (none)
-TABLE: Preflop | You Ah Td | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
-SEATS: UTG folded stack 100 BB | HJ Ah Td stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] 0.5 BB — Look again. 0.5 BB is what SB posted. A limp from HJ must match the full big blind.
-    BETTER ANSWER: 1 BB
-  + [correct] 1 BB — Correct. You have posted no blind. A limp matches the 1 BB big blind.
-  - [wrong] 1.5 BB — Look again. 1.5 BB is the sum of the two blinds, not the largest live wager. It overstates the cost by half a blind.
-    BETTER ANSWER: 1 BB
-
-===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
-
-TASK spaced_review_w11_post_session_review_loop_pot_to_call_v1 [drill] Review decision
-DAY 7 FAMILY: pot_to_call
-Q: Which price should you write down to review your turn call?
-HINT [hidden]: (none)
-TABLE: Turn | You Kc Jd | Board Ks 9c 4s 8d | Pot 10.5 BB | To call 5 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
-SEATS: UTG folded stack 100 BB | HJ stack 92.5 BB bet 5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Jd stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 5 BB
-  - [wrong] 5.5 BB — Look again. 5.5 BB is what was in the pot before the turn bet. It is not the cost you are reviewing.
-    BETTER ANSWER: 5 BB
-  - [wrong] 10.5 BB — Look again. 10.5 BB is the pot after the bet. Using it as the price would make your call look too large.
-    BETTER ANSWER: 5 BB
-  + [correct] 5 BB — Correct. The turn bet costs 5 BB to match. The 10.5 BB in the pot is what you stand to win before calling.
 
 ===== WORLD 12 · LESSON decision_over_outcome · Decision quality over outcome =====
 

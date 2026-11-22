@@ -365,7 +365,9 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     eligibleRepairFamily: 'real_play_process_transfer',
     lessonKeys: <String>{
       'world_11/session_plan_basics',
+      'world_11/session_plan_bankroll_followup',
       'world_11/table_trigger_reads',
+      'world_11/table_trigger_multiway_and_spr',
       'world_11/post_session_review_loop',
       'world_11/real_play_transfer_checkpoint',
     },

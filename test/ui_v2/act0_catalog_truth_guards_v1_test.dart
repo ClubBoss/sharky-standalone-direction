@@ -205,6 +205,9 @@ void main() {
 
   test('G1 Day 7 uses new scenes with valid tables and one scored answer', () {
     final seen = <String>{};
+    const bankrollExceptionId =
+        'w11_day7_bankroll'; // Bankroll is not a hand decision.
+
     final courseIds = [
       ...catalogTasks,
       ...rulesCheckCatalogTasks,
@@ -221,7 +224,7 @@ void main() {
       final id = task.taskId;
       expect(seen.add(id), isTrue, reason: id);
       expect(courseIds.contains(id), isFalse, reason: id);
-      expect(courseHands.contains(day7HandKeyV1(table)), isFalse, reason: id);
+
       expect(task.rewardXp, 0, reason: id);
       expect(runner.hint, isEmpty, reason: id);
       expect(runner.teachingSteps, isEmpty, reason: id);
@@ -237,6 +240,17 @@ void main() {
         isTrue,
         reason: id,
       );
+      if (id == bankrollExceptionId) {
+        expect(row.world.worldId, 'world_11');
+        expect(row.lesson.lessonId, 'session_plan_bankroll_followup');
+        expect(table.scope, Act0TableScopeV1.explanation);
+        expect(table.heroCards, isEmpty);
+        expect(table.boardCards, isEmpty);
+        expect(table.actionTrail, isEmpty);
+        expect(table.handContributions, isNull);
+        continue;
+      }
+      expect(courseHands.contains(day7HandKeyV1(table)), isFalse, reason: id);
       final cards = [
         ...table.heroCards,
         ...table.boardCards,
@@ -260,6 +274,7 @@ void main() {
         reason: id,
       );
     }
+    expect(seen, contains(bankrollExceptionId));
     final audit = runCatalogAudit(rows: [...catalogTasks, ...day7CatalogTasks]);
     final day7Findings = audit.findings.keys.where(
       (key) => seen.contains(key.split('|')[1]),
@@ -994,7 +1009,7 @@ void main() {
               potLabel: 'Pot 99 BB',
               toCallLabel: 'To call 9 BB',
             ),
-            hint: 'Need 34% to call. CO bet 12 into 12.',
+            hint: 'Need 31% to call. CO bet 8 into 10.',
           ),
         ),
         isEmpty,
@@ -1003,10 +1018,10 @@ void main() {
 
     test('rejects the after-bet pot in bet-into phrasing', () {
       expect(
-        numericFindings(runner.copyWith(caption: 'CO bets 12 BB into 24 BB.')),
+        numericFindings(runner.copyWith(caption: 'CO bets 8 BB into 18 BB.')),
         contains(
           '22.bet_into_pot|world_11|w11_trigger_bad_price_fold|caption|'
-          'bets 12 BB into 24|before bet expected 12.0',
+          'bets 8 BB into 18|before bet expected 10.0',
         ),
       );
     });
@@ -1036,11 +1051,11 @@ void main() {
     test('rejects the before-bet pot in pot-now phrasing', () {
       expect(
         numericFindings(
-          runner.copyWith(feedbackReason: 'The pot is now 12 BB.'),
+          runner.copyWith(feedbackReason: 'The pot is now 10 BB.'),
         ),
         contains(
           '23.pot_with_bet|world_11|w11_trigger_bad_price_fold|feedbackReason|'
-          'pot is now 12 BB|expected 24.0',
+          'pot is now 10 BB|expected 18.0',
         ),
       );
     });
@@ -1057,7 +1072,7 @@ void main() {
       () {
         expect(
           numericFindings(
-            runner.copyWith(hint: 'Use the 33 BB effective stack.'),
+            runner.copyWith(hint: 'Use the 32.5 BB effective stack.'),
           ),
           isEmpty,
         );
@@ -1077,14 +1092,14 @@ void main() {
             teachingSteps: const [
               Act0TeachingStepV1(
                 title: 'Read your stack',
-                body: 'You have 35 BB behind.',
+                body: 'You have 34.5 BB behind.',
               ),
             ],
           ),
         ),
         contains(
           '25.street_stack|world_11|w11_trigger_bad_price_fold|theory[0].body|'
-          '35 BB behind|expected 33.0',
+          '34.5 BB behind|expected 32.5',
         ),
       );
     });
