@@ -939,14 +939,14 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_6max_wider',
   caption:
-      "Practice rule for A-J offsuit: raise to 2.5 BB with at most five players still to act. Otherwise fold.",
+      "Practice rule for A-J suited: raise to 2.5 BB with at most five players still to act. Otherwise fold.",
   hint: 'Check the given limits before choosing.',
   question: "You are first to act. What fits this table?",
   feedbackTitle: "Count the players behind.",
   feedbackReason:
-      "The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.",
+      "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
   table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ac Jd'),
+    heroCards: _act0LessonCardsV1('Ad Jd'),
     centerLabel: 'Read the seats',
   ),
   teachingSteps: const [],
@@ -959,7 +959,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Five players are left to act.",
       feedbackReason:
-          "The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.",
+          "A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.",
     ),
     Act0RunnerOptionV1(
       id: 'fullring',
@@ -970,7 +970,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The rule allows a raise here.",
       feedbackReason:
-          "Count the players besides you. There are five, so A-J offsuit can open in this example.",
+          "Five players remain in 6-max. Folding A-J suited passes up the chance to open a Strong hand and win the 1.5 BB in blinds.",
     ),
     Act0RunnerOptionV1(
       id: 'same',
@@ -981,7 +981,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Use the size in the rule.",
       feedbackReason:
-          "A raise fits the five players behind. In this example, the given size is 2.5 BB.",
+          "Five players remain, so the rule allows an open. An 8 BB raise puts 5.5 BB more at risk than the stated 2.5 BB size.",
     ),
   ],
 );
@@ -990,14 +990,14 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_fullring_tighter',
   caption:
-      "Add UTG+1, UTG+2 and LJ after you. Open A-J offsuit for 2.5 BB with at most five to act. Otherwise fold.",
+      "Add UTG+1, UTG+2 and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.",
   hint: 'Check the given limits before choosing.',
   question: "What fits the nine-player version of this hand?",
   feedbackTitle: "More players can act after you.",
   feedbackReason:
-      "Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.",
+      "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
   table: _act0UnopenedLessonTableV1(
-    heroCards: _act0LessonCardsV1('Ah Js'),
+    heroCards: _act0LessonCardsV1('Ah Jh'),
     centerLabel: 'Read the seats',
   ),
   teachingSteps: const [],
@@ -1010,7 +1010,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Eight players are left to act.",
       feedbackReason:
-          "Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.",
+          "Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.",
     ),
     Act0RunnerOptionV1(
       id: 'wider',
@@ -1021,7 +1021,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Count the three extra players.",
       feedbackReason:
-          "A 2.5 BB raise fit the six-player example. With eight players left, the rule says to fold instead.",
+          "Eight players can still wake up with a stronger hand. This full-ring rule folds A-J suited and saves the 2.5 BB open.",
     ),
     Act0RunnerOptionV1(
       id: 'depth',
@@ -1032,7 +1032,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "The number of players still matters.",
       feedbackReason:
-          "A different bet size does not change how many players are left to act. Use the fold in the stated model.",
+          "An 8 BB raise still faces the same eight players. It puts 8 BB at risk in a spot where the example calls for a fold.",
     ),
   ],
 );

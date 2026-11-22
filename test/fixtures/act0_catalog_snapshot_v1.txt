@@ -4908,29 +4908,29 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 REVIEW: From first position, a nine-handed table leaves more players to act than a six-handed table.
 
 TASK w7_6max_wider [drill] Checkpoint: act from first position
-CAPTION: Practice rule for A-J offsuit: raise to 2.5 BB with at most five players still to act. Otherwise fold.
+CAPTION: Practice rule for A-J suited: raise to 2.5 BB with at most five players still to act. Otherwise fold.
 Q: You are first to act. What fits this table?
 HINT [theoryOnly]: Check the given limits before choosing.
-TABLE: Preflop | You Ac Jd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
-SEATS: UTG Ac Jd stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TABLE: Preflop | You Ad Jd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
+SEATS: UTG Ad Jd stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  - [wrong] Fold — The rule allows a raise here. Count the players besides you. There are five, so A-J offsuit can open in this example.
+  - [wrong] Fold — The rule allows a raise here. Five players remain in 6-max. Folding A-J suited passes up the chance to open a Strong hand and win the 1.5 BB in blinds.
     BETTER ANSWER: Raise to 2.5 BB
-  - [wrong] Raise to 8 BB — Use the size in the rule. A raise fits the five players behind. In this example, the given size is 2.5 BB.
+  - [wrong] Raise to 8 BB — Use the size in the rule. Five players remain, so the rule allows an open. An 8 BB raise puts 5.5 BB more at risk than the stated 2.5 BB size.
     BETTER ANSWER: Raise to 2.5 BB
-  + [correct] Raise to 2.5 BB — Five players are left to act. The table has six players, including you. The other five remain, so the rule allows the 2.5 BB raise.
+  + [correct] Raise to 2.5 BB — Five players are left to act. A-J suited is Strong. Five players still act after UTG, so the stated rule allows the 2.5 BB open.
 
 TASK w7_fullring_tighter [drill] Checkpoint: add three seats
-CAPTION: Add UTG+1, UTG+2 and LJ after you. Open A-J offsuit for 2.5 BB with at most five to act. Otherwise fold.
+CAPTION: Add UTG+1, UTG+2 and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.
 Q: What fits the nine-player version of this hand?
 HINT [theoryOnly]: Check the given limits before choosing.
-TABLE: Preflop | You Ah Js | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
-SEATS: UTG Ah Js stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TABLE: Preflop | You Ah Jh | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
+SEATS: UTG Ah Jh stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
-  + [correct] Fold — Eight players are left to act. Five seats are visible after yours. Add UTG+1, UTG+2 and LJ. With eight players left, the named rule says to fold.
-  - [wrong] Raise to 2.5 BB — Count the three extra players. A 2.5 BB raise fit the six-player example. With eight players left, the rule says to fold instead.
+  + [correct] Fold — Eight players are left to act. Adding UTG+1, UTG+2 and LJ leaves eight players to act. Fold A-J suited under this full-ring example.
+  - [wrong] Raise to 2.5 BB — Count the three extra players. Eight players can still wake up with a stronger hand. This full-ring rule folds A-J suited and saves the 2.5 BB open.
     BETTER ANSWER: Fold
-  - [wrong] Raise to 8 BB — The number of players still matters. A different bet size does not change how many players are left to act. Use the fold in the stated model.
+  - [wrong] Raise to 8 BB — The number of players still matters. An 8 BB raise still faces the same eight players. It puts 8 BB at risk in a spot where the example calls for a fold.
     BETTER ANSWER: Fold
 
 TASK w7_format_table_notice [drill] Checkpoint: leave chips behind
