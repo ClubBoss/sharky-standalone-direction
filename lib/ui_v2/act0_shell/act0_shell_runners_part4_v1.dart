@@ -4716,45 +4716,124 @@ Act0LessonTaskV1 _w12Task(
   );
 }
 
-final _w12_river_ev_small_price = _w12Task(
-  'w12_river_ev_small_price',
-  'A small river price',
-  'CO bets 2 BB. Your model has seven better hands and three bluffs out of ten bets. CO will call a raise with the better hands and fold the bluffs.',
-  'Which action has the best EV in this model?',
-  correct: 1,
+final _w12_river_price_call = _w12Task(
+  'w12_river_price_call',
+  'River price',
+  'CO bets 10 into 20 on K-8-4-2-9. This river range is 35% missed QJ/JT and 65% AK, K9 or 88. Your KQ beats the misses and loses to the value hands. No ties.',
+  'Call or fold?',
+  correct: 0,
   choices: const [
+    (
+      'call_10_bb',
+      'Call 10 BB',
+      'KQ wins 35% of this river range. A 10 BB call needs 25%. Its average gain is 4 BB.',
+      null,
+    ),
     (
       'fold',
       'Fold',
-      'Fold gives up a gain. You win 3 times in 10 at a price that needs about 21%.',
+      'The bet makes the pot 30 BB. KQ beats the 35% missed hands, so folding gives up 4 BB of expected call value.',
       null,
     ),
     (
-      'call',
-      'Call',
-      'A 2 BB call needs 2 out of 9.5, or about 21%. You win 30% in the model. A call gains 0.85 BB on average.',
-      null,
-    ),
-    (
-      'raise',
-      'Raise',
-      'Raising puts in extra chips when the better hands call. Against bluffs it earns no more than a call.',
+      'raise_to_35_bb',
+      'Raise to 35 BB',
+      'KQ can catch missed QJ/JT for 10 BB. A raise to 35 may fold those bluffs and face calls from AK, K9 and 88.',
       null,
     ),
   ],
-  table: _day7PostflopV1(
-    'bb',
-    'Ac 8c',
-    'As Td 7h 3c 2d',
-    opponent: 'co',
-    openBb: 2.5,
-    betBb: 2,
-    showTurn: true,
+  table: _day7TableV1(
+    hero: 'bb',
+    hand: 'Kc Qd',
+    street: PokerStreet.river,
+    actor: 'bb',
+    board: _act0LessonCardsV1('Ks 8c 4d 2h 9s'),
+
+    folded: const {'utg', 'hj', 'btn', 'sb'},
+    stacks: const {
+      'utg': 70,
+      'hj': 69,
+      'co': 70,
+      'btn': 65,
+      'sb': 62,
+      'bb': 70,
+    },
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        2,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        1,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'co',
+        Act0ContributionKindV1.wager,
+        3.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        3.75,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'co',
+        Act0ContributionKindV1.wager,
+        4,
+      ),
+      Act0ContributionV1(
+        PokerStreet.turn,
+        'bb',
+        Act0ContributionKindV1.wager,
+        4,
+      ),
+      Act0ContributionV1(
+        PokerStreet.river,
+        'co',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO raises to 2 BB'),
+      Act0ActionTrailItemV1(label: 'BTN folds'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(label: 'BB calls 1 BB more'),
+      Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 3.75 BB'),
+      Act0ActionTrailItemV1(label: 'BB calls 3.75 BB'),
+      Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 4 BB'),
+      Act0ActionTrailItemV1(label: 'BB calls 4 BB'),
+      Act0ActionTrailItemV1(label: 'River: BB checks'),
+      Act0ActionTrailItemV1(label: 'CO bets 10 BB'),
+    ],
+    bets: const {
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'bet',
+        amountLabel: '10 BB',
+      ),
+    },
   ).copyWith(showDecisionPremise: true),
+
   teaching: const Act0TeachingStepV1(
-    title: 'What is EV?',
+    title: 'Read the river price',
     body:
-        'Expected value, or EV, is the average gain or loss from a choice made many times. Recall W4. Divide the call by the pot after your call. Compare that price with your chance to win. W5 clean outs count winning cards when there is another card to come. On the river the board is complete. Work out which bets you beat now.',
+        'W5’s clean outs matter while another card can come. On the river the board is complete. A bluff-catcher beats bluffs but loses to value hands. Use W4’s call price: divide the call by the pot after the bet and your call. Compare that price with the share of bluffs.',
   ),
 );
 

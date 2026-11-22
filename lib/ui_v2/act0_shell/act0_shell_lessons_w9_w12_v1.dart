@@ -847,7 +847,7 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         returnTarget: 'learn',
         nextLessonId: 'tilt_reset_protocol',
       ),
-      _w12_river_ev_small_price,
+      _w12_river_price_call,
       _w12_river_ev_costly_call,
       _w12_turn_count_heart_outs,
       Act0LessonTaskV1(

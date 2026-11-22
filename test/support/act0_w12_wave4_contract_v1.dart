@@ -1,11 +1,11 @@
 // Exact additions and incorrect-grade corrections admitted for W12.
 const w12Wave4ChoiceContractV1 = <String, (String, List<List<Object?>>)>{
-  'w12_river_ev_small_price': (
+  'w12_river_price_call': (
     'decision_over_outcome',
     [
-      ['fold', 'Fold', false, 'wrong', 'Call'],
-      ['call', 'Call', true, 'correct', 'Call'],
-      ['raise', 'Raise', false, 'wrong', 'Call'],
+      ['call_10_bb', 'Call 10 BB', true, 'correct', 'Call 10 BB'],
+      ['fold', 'Fold', false, 'wrong', 'Call 10 BB'],
+      ['raise_to_35_bb', 'Raise to 35 BB', false, 'wrong', 'Call 10 BB'],
     ],
   ),
   'w12_river_ev_costly_call': (
@@ -105,7 +105,7 @@ const w12Wave4GradeCorrectionsV1 = <String, String>{
 };
 
 const w12Wave4ReplayTasksV1 = <String>{
-  'w12_river_ev_small_price',
+  'w12_river_price_call',
   'w12_river_ev_costly_call',
   'w12_tilt_after_lucky_win',
   'w12_tilt_after_river_beat',
