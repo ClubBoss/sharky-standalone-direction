@@ -18,6 +18,7 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
   'blinds_order_practice': ['Blind play', 'Table sense'],
   'positions': ['Position play'],
   'hand_rankings_table': ['Hand reading', 'Board reading'],
+  'hand_rankings_sequences': ['Hand reading', 'Board reading'],
   'hand_rankings_upper': ['Hand reading', 'Board reading'],
   'hand_rankings_comparisons': ['Hand reading', 'Board reading'],
   'showdown_winning': ['Hand reading'],

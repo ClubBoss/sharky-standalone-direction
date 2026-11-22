@@ -115,6 +115,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
     eligibleRepairFamily: 'showdown_hand_strength',
     lessonKeys: <String>{
       'world_1/hand_rankings_table',
+      'world_1/hand_rankings_sequences',
       'world_1/hand_rankings_upper',
       'world_1/hand_rankings_comparisons',
       'world_1/showdown_winning',

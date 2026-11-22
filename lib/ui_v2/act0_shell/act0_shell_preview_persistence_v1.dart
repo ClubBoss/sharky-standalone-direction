@@ -1,5 +1,32 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
+String _w1RankingsResumeLessonV1(
+  String worldId,
+  String lessonId,
+  String taskId,
+) {
+  if (worldId != 'world_1') return lessonId;
+  return switch ((lessonId, taskId)) {
+    (
+      'hand_rankings_upper',
+      'hand_rankings_straight_drill' ||
+          'hand_rankings_flush_drill' ||
+          'hand_rankings_royal_flush_drill',
+    ) ||
+    (
+      'hand_rankings_comparisons',
+      'hand_rankings_review',
+    ) => 'hand_rankings_sequences',
+    (
+      'hand_rankings_comparisons',
+      'hand_rankings_full_house_vs_flush_drill' ||
+          'hand_rankings_quads_vs_full_house_drill',
+    ) =>
+      'hand_rankings_upper',
+    _ => lessonId,
+  };
+}
+
 extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
   bool _handleLearnLessonSelectV1({
     required Act0LessonCardV1 lesson,
@@ -104,14 +131,25 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     }.where(validTaskIds.contains).toSet();
     skippedTaskIds.addAll(compatSkipTaskIds.difference(completedTaskIds));
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
+    final resumedLessonId = _w1RankingsResumeLessonV1(
+      parsed.selectedWorldId,
+      parsed.selectedLessonId,
+      parsed.selectedTaskId,
+    );
+    final lessonResume = parsed.lessonResume;
+
     _routePracticeV1 =
         parsed.routePractice ??
         Act0RoutePracticeProgressV1.fromLegacy(
           state.worlds,
           closedTaskIds,
-          resumedLessonId:
-              parsed.lessonResume?.lessonId ??
-              (parsed.resumeInRunner ? parsed.selectedLessonId : null),
+          resumedLessonId: lessonResume != null
+              ? _w1RankingsResumeLessonV1(
+                  lessonResume.worldId,
+                  lessonResume.lessonId,
+                  lessonResume.taskId,
+                )
+              : (parsed.resumeInRunner ? resumedLessonId : null),
         );
     final restoredPractice = _routePracticeV1.run;
     if (restoredPractice != null) {
@@ -165,9 +203,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           );
     final persistedLesson =
         selectedWorld.lessons.any(
-          (lesson) => lesson.lessonId == parsed.selectedLessonId,
+          (lesson) => lesson.lessonId == resumedLessonId,
         )
-        ? _lessonById(selectedWorld.lessons, parsed.selectedLessonId)
+        ? _lessonById(selectedWorld.lessons, resumedLessonId)
         : null;
     final selectedLesson =
         persistedLesson != null &&
@@ -283,9 +321,27 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       _pendingDecisionAssistanceV1
         ..clear()
         ..addEntries(
-          parsed.pendingDecisionAssistance.map(
-            (receipt) => MapEntry(receipt.key, receipt),
-          ),
+          parsed.pendingDecisionAssistance.map((receipt) {
+            final lessonId = _w1RankingsResumeLessonV1(
+              receipt.worldId,
+              receipt.lessonId,
+              receipt.taskId,
+            );
+            if (lessonId == receipt.lessonId) {
+              return MapEntry(receipt.key, receipt);
+            }
+            // A moved task keeps its assistance marker. The old fingerprint
+            // cannot certify an independent answer at the new source.
+            final movedReceipt = _Act0PendingDecisionAssistanceV1(
+              worldId: receipt.worldId,
+              lessonId: lessonId,
+              taskId: receipt.taskId,
+              fingerprint: receipt.fingerprint,
+              afterSourceOrder: receipt.afterSourceOrder,
+              kind: receipt.kind,
+            );
+            return MapEntry(movedReceipt.key, movedReceipt);
+          }),
         );
       if (!parsed.hasPendingAssistanceProvenance &&
           parsed.resumePhase == 'drill' &&
@@ -375,6 +431,11 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       // Q3 shortened these authored sequences. Keep their task and feedback
       // cursor when loading an older save, then run the ordinary validation.
       if (savedResume != null) {
+        final newLessonId = _w1RankingsResumeLessonV1(
+          savedResume.worldId,
+          savedResume.lessonId,
+          savedResume.taskId,
+        );
         final oldStep = savedResume.teachingStepIndex;
         final step = switch (savedResume.taskId) {
           'positions_theory' when oldStep >= 2 && oldStep <= 5 => 1,
@@ -388,10 +449,10 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           'w4_checkpoint_table_price' when oldStep > 0 && oldStep <= 2 => 0,
           _ => oldStep,
         };
-        if (step != oldStep) {
+        if (step != oldStep || newLessonId != savedResume.lessonId) {
           savedResume = (
             worldId: savedResume.worldId,
-            lessonId: savedResume.lessonId,
+            lessonId: newLessonId,
             taskId: savedResume.taskId,
             phase: savedResume.phase,
             teachingStepIndex: step,
