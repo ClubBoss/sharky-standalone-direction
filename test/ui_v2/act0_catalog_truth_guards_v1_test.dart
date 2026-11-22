@@ -292,6 +292,9 @@ void main() {
         'w3_play_from_blinds_small_blind_medium_fold': ('sb', 2, 'fold'),
         'w3_play_from_blinds_big_blind_price': ('bb', 1.5, 'one_five'),
         'w3_play_from_blinds_big_blind_defend': ('bb', 1.5, 'call'),
+        'w3_play_from_blinds_bvb_sb_open': ('sb', .5, 'raise'),
+        'w3_play_from_blinds_bvb_bb_call': ('bb', 2, 'call'),
+        'w3_play_from_blinds_bvb_bb_repeat': ('bb', 2, 'fold'),
       };
       for (final MapEntry(key: id, value: (seat, price, correct))
           in frames.entries) {
@@ -303,7 +306,11 @@ void main() {
           actorSeatId: seat,
           seatIds: table.seats.map((s) => s.seatId).toSet(),
         );
-        expect(amounts.potBb, 4, reason: id);
+        expect(
+          amounts.potBb,
+          id.endsWith('_bvb_sb_open') ? 1.5 : 4,
+          reason: id,
+        );
         expect(amounts.toCallBb, price, reason: id);
         expect(
           runner.options.singleWhere(act0RunnerOptionIsAuthoredCorrectV1).id,

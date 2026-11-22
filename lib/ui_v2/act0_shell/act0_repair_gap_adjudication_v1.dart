@@ -1025,11 +1025,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "8e5c1469d63e755b01f7272125eee78431a455260593c45e0613dfcf95850b2c",
+        "e84ca8395e9699e0ed30ec2139ce8b7d4f91cf019c6e193bbac968a92bb269d5",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.",
+        "Raising ATo from UTG costs 2.5 BB with five players ready to respond. The Sharky starting chart folds here to save that wager.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
@@ -1288,7 +1288,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     sourceQuestion: "What action keeps playing for free?",
     sourceChoiceReason: "Folding gives up the hand. Checking is free here.",
     sourceChoiceLabel: "Fold",
@@ -1300,7 +1300,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1313,9 +1313,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     sourceQuestion: "What action keeps playing for free?",
-    sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
+    sourceChoiceReason:
+        "BB has put in no bet on this street. Trying to call misses the free check that keeps you in.",
     sourceChoiceLabel: "Call",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
@@ -1325,7 +1326,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_legal_context",
     targetFingerprint:
-        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1452,7 +1453,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "fold",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_fold",
     relationId: "selected_w1_042_fold_v1",
@@ -1466,7 +1467,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1479,21 +1480,22 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "call",
     sourceCorrectChoiceId: "check",
     sourceFingerprint:
-        "73363039ee2dfd32d0c546409bd344059509c28c3e1b5496b51bacc3eaabba21",
+        "2c3b640e35e6465962cbe711ccf06d371e4e335b6cb4c675eb777b28676ed9b8",
     goalId: "no_bet_free_continue",
     misconceptionId: "free_continue_as_call",
     relationId: "selected_w1_043_call_v1",
     relationRevision: 2,
     sourceQuestion:
         "No bet faces you. Which action keeps you in the hand without adding chips?",
-    sourceChoiceReason: "Calling means matching a bet. There is no bet here.",
+    sourceChoiceReason:
+        "BB has put in no bet on this street. Trying to call misses the free check that keeps you in.",
     sourceChoiceLabel: "Call",
     sourceChoiceQuality: "wrong",
     targetWorldId: "world_1",
     targetLessonId: "fold_check_call_raise",
     targetTaskId: "actions_check_drill",
     targetFingerprint:
-        "fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0",
+        "3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24",
     targetCorrectChoiceId: "check",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1575,7 +1577,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: 'fold_check_call_raise',
     targetTaskId: 'actions_check_drill',
     targetFingerprint:
-        'fd0c0733190724f0eb6676afa424ef4735fe28d294fcac8cc84f02b391b733f0',
+        '3316f4738b557160167c371bcdf54cb8d2fb284abb06646e40893fbba96f3c24',
     targetCorrectChoiceId: 'check',
     targetChoiceIds: <String>{'check', 'call', 'fold'},
     evidenceClass: 'diagnostic_learning_entry',

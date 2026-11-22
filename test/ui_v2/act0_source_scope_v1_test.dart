@@ -295,7 +295,8 @@ void main() {
         439 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
-            wave6TaskDeltaV1,
+            wave6TaskDeltaV1 +
+            w3BlindVsBlindChoicesV1.length,
       ),
     );
     expect(
@@ -304,7 +305,8 @@ void main() {
         439 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
-            wave6TaskDeltaV1,
+            wave6TaskDeltaV1 +
+            w3BlindVsBlindChoicesV1.length,
       ),
     );
     final newTasks = tasks
@@ -592,6 +594,7 @@ void main() {
     expect(
       played,
       328 +
+          w3BlindVsBlindChoicesV1.length +
           10 +
           9 +
           2 +
@@ -622,6 +625,7 @@ void main() {
       'w3_play_from_blinds_small_blind_medium_fold',
       'w3_play_from_blinds_big_blind_price',
       'w3_play_from_blinds_big_blind_defend',
+      ...w3BlindVsBlindChoicesV1.keys,
       ..._newW01OrderContextIds,
       ...w4TurnPriceIds,
       ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),

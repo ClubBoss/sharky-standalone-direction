@@ -135,7 +135,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold', 'Raise to 7.5 BB'],
     correct: 2,
     reason:
-        'KK is one of the highest starting pairs. Raising again against HJ can get a call from a weaker hand.',
+        'With KK on BTN, you can raise because HJ may call with a weaker pair or a strong ace. A call keeps the pot smaller against those hands.',
     wrongReasons: const {
       0: 'Calling HJ’s 2.5 BB from BTN gives up the chance to charge a weaker hand more for the flop.',
       1: 'Folding Kc Ks after one raise gives up the chance to win the 4 BB already in the middle.',
@@ -378,7 +378,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Call", "Fold"],
     correct: 1,
     reason:
-        "Calling pays the outstanding bet. A check cannot match it, and folding ends your participation.",
+        "HJ bets 2 BB on the turn, so a call pays that amount and keeps you in. A check leaves the bet unmatched.",
+    wrongReasons: const {
+      0: "Checking cannot match HJ’s 2 BB turn bet. Call to stay in.",
+      2: "Folding gives up your chance to win. A call keeps the hand live for 2 BB.",
+    },
+    //DAY7_REMOVE_QUOTE"",
   ),
   _day7ExampleV1(
     1,
@@ -389,7 +394,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Fold", "Raise"],
     correct: 2,
     reason:
-        "A raise increases the live wager. A call matches the current price and a fold gives up the hand.",
+        "UTG raised to 3 BB, so a reraise asks UTG to pay more to stay in. Calling only matches that 3 BB wager.",
+    wrongReasons: const {
+      0: "Calling matches the 3 BB and leaves UTG’s price unchanged. A raise sets a higher price.",
+      1: "Folding gives up the hand and never changes the wager. A raise sets a higher price.",
+    },
+    //DAY7_REMOVE_QUOTE"",
   ),
   _day7ExampleV1(
     1,
@@ -592,7 +602,12 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Check", "Call", "Fold"],
     correct: 0,
     reason:
-        "There is nothing to match. A check keeps your hand live without adding chips.",
+        "BB checked on the turn, so checking behind gives you the last card for free. Folding gives up your chance to win.",
+    wrongReasons: const {
+      1: "BB checked, leaving no turn bet to call. Checking gives you the last card for free.",
+      2: "Folding forfeits the pot. A check lets you see the river.",
+    },
+    //DAY7_REMOVE_QUOTE"",
   ),
   _day7ExampleV1(
     1,
@@ -761,7 +776,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Raise", "Fold"],
     correct: 2,
     reason:
-        "94o is a Weak offsuit hand. The chart folds this hand first in from HJ.",
+        "Fold 94o from HJ because CO, BTN and the blinds can still raise. A limp costs 1 BB and leaves you with weak cards if they continue.",
+    wrongReasons: const {
+      0: "Calling costs 1 BB with weak cards, and CO, BTN or either blind can still raise. Folding saves that chip.",
+      1: "A raise puts chips at risk against four players who can still act. Folding protects those chips with 94o.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -805,7 +824,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Call", "Raise"],
     correct: 2,
     reason:
-        "KJs has two high cards of one suit. The chart includes KJs for a first-in raise from CO.",
+        "Raise KJs from CO because BTN and both blinds can fold, while weaker suited hands can pay. A call brings those players in cheaply.",
+    wrongReasons: const {
+      0: "Folding gives up a chance to win the blinds when BTN, SB and BB all fold to a raise.",
+      1: "Limping lets BB see a flop cheaply. A raise can win the pot before the flop.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -816,9 +839,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold', 'Raise'],
     correct: 2,
     reason:
-        'AK suited is Premium in the starting chart. From CO, you can '
-        'reraise the 3 BB HJ open to build the pot in position. Calling '
-        'leaves the pot smaller, and folding gives up a Premium hand.',
+        "With AK suited, reraise the 3 BB HJ open because weaker suited aces can pay and some pairs can fold. Calling misses the chance to put HJ to that choice.",
+    wrongReasons: const {
+      0: "A call keeps the pot smaller and misses a chance to charge weaker suited aces. Reraising puts HJ to a new decision.",
+      1: "Folding gives up a strong suited ace with position on HJ. Reraising can get more chips from hands you lead.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -830,7 +855,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Raise", "Call"],
     correct: 0,
     reason:
-        "62o is a weak offsuit hand in the first seat to act. The chart leaves it out of UTG opens.",
+        "Fold 62o from UTG because five players can still raise. A limp risks 1 BB before any of them has acted.",
+    wrongReasons: const {
+      1: "A raise risks more chips with 62o while five players can still call or reraise. Folding saves the raise.",
+      2: "Limping costs 1 BB and gives players behind a chance to raise you off the hand. Folding keeps that chip.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -842,7 +871,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Raise", "Fold"],
     correct: 1,
     reason:
-        "AJo is Medium. The chart includes it for first-in raises from HJ and the later non-blind seats.",
+        "Raise AJo from HJ because CO, BTN and the blinds can fold or supply a call with a weaker ace. Limping makes it cheap for the blinds to stay.",
+    wrongReasons: const {
+      0: "Limping gives CO and BTN a cheap entry and lets BB check for free. Raising applies pressure before the flop.",
+      2: "Folding gives up a chance to win the blind pot or get paid by a weaker ace when you raise.",
+    },
   ),
   _day7ExampleV1(
     2,
@@ -970,7 +1003,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Fold", "Raise", "Call"],
     correct: 1,
     reason:
-        "A pair of sevens is included in the chart's BTN first-in opens. Only the blinds have decisions left.",
+        "Raise sevens on BTN so the blinds can fold and hand you the pot. A limp lets BB see a cheap flop and hit an overcard.",
     wrongReasons: const {
       0: "Folding from BTN gives up the open with sevens and a chance to win both blinds.",
       2: "Calling costs 1 BB and lets the blinds enter cheaply. The chart opens BTN sevens here.",
@@ -1029,7 +1062,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Raise", "Fold", "Call"],
     correct: 0,
     reason:
-        "The chart includes QTs when CO is first in. An earlier raise would give you a different decision.",
+        "Raise QTs from CO because BTN and both blinds can fold, and weaker suited hands can call. Limping makes it cheap for them to see the flop.",
     wrongReasons: const {
       1: "Folding QTs in CO gives up the chart open and a chance to win the blind pot.",
       2: "Calling costs 1 BB and lets BTN and the blinds enter cheaply.",
@@ -1080,7 +1113,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Raise", "Call", "Fold"],
     correct: 0,
     reason:
-        "AQo is included in HJ's first-in raises. No opponent has entered before you.",
+        "Raise AQo from HJ because players behind can fold or call with a weaker ace. Limping gives those players a cheap flop.",
     wrongReasons: const {
       1: "Limping costs 1 BB and lets CO, BTN and the blinds enter cheaply.",
       2: "Folding AQo from HJ gives up a chart open and the chance to win the blind pot.",
@@ -1096,10 +1129,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Call", "Fold", "Raise"],
     correct: 1,
     reason:
-        "A8o is a weak offsuit ace from UTG. The chart leaves it out of that seat's first-in opens.",
+        "Fold A8o from UTG because five players can still raise, and better aces can call. A limp costs 1 BB and can get you in trouble when you pair your ace.",
     wrongReasons: const {
       0: "Limping A8o costs 1 BB with five players behind UTG still able to raise.",
-      2: "Opening to 2.5 BB risks 2.5 BB with a hand outside the UTG opening row.",
+      2: "Opening to 2.5 BB costs more than folding and can get action from a stronger ace.",
     },
   ),
   _day7ExampleV1(

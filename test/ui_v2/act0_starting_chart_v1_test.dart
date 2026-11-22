@@ -83,6 +83,11 @@ void main() {
       (co, hand('K', 'T'), 'fold'),
       (co, hand('Q', 'J', suited: true), 'fold'),
       (btn, hand('K', 'T'), 'fold'),
+      (btn, hand('A', 'Q'), 'call'),
+      (btn, hand('A', 'J'), 'call'),
+      (btn, hand('A', 'T'), 'call'),
+      (btn, hand('A', 'T', suited: true), 'call'),
+      (co, hand('A', 'Q'), 'fold'),
       (btn, hand('K', 'Q'), 'call'),
       (btn, hand('K', 'J', suited: true), 'call'),
       (btn, hand('Q', 'J', suited: true), 'call'),
@@ -153,12 +158,21 @@ void main() {
       );
       if (runner.lessonId == 'w3_play_from_blinds') {
         final table = runner.table;
-        expect(chartRaisers(table), ['BTN'], reason: task.taskId);
+        final isBlindVsBlind = task.taskId.startsWith(
+          'w3_play_from_blinds_bvb_',
+        );
+        expect(
+          chartRaisers(table),
+          isBlindVsBlind
+              ? (table.heroSeatId == 'sb' ? isEmpty : ['SB'])
+              : ['BTN'],
+          reason: task.taskId,
+        );
         switch (table.heroSeat.seatId) {
           case 'sb':
             expect(
               correct.id,
-              chart.smallBlindVsButton(table),
+              isBlindVsBlind ? 'raise' : chart.smallBlindVsButton(table),
               reason: task.taskId,
             );
           case 'bb':
@@ -171,7 +185,9 @@ void main() {
               expect(correct.label, '$call BB', reason: task.taskId);
             } else {
               final statedChance = double.parse(
-                RegExp(r'you win (\d+)%').firstMatch(runner.caption)![1]!,
+                RegExp(
+                  r'(?:you win |Assume )(\d+)%',
+                ).firstMatch(runner.caption)![1]!,
               );
               expect(
                 correct.id,

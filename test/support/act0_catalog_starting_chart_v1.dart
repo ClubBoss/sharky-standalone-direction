@@ -49,9 +49,8 @@ String renderStartingChartOpening() => [
 ].join('\n\n');
 
 String renderStartingChartFacingRaise() =>
-    'Facing one ${_openerSeats.join(' or ')} raise, $_callerSeat calls with '
-    '${_callHands.take(_callHands.length - 1).join(', ')} or ${_callHands.last} '
-    'and folds $_weakGroup hands (A7o, J8o).';
+    '$_callerSeat vs one ${_openerSeats.join('/')} open: call '
+    '${_callHands.join(', ')}. Fold other Medium and $_weakGroup hands.';
 
 typedef StartingChartRow = ({String group, List<String> seats});
 

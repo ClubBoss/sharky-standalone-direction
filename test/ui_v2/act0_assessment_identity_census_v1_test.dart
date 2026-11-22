@@ -42,7 +42,8 @@ void main() {
         439 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
-            wave6TaskDeltaV1,
+            wave6TaskDeltaV1 +
+            w3BlindVsBlindChoicesV1.length,
       ),
     );
     expect(
@@ -51,7 +52,8 @@ void main() {
         439 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
-            wave6TaskDeltaV1,
+            wave6TaskDeltaV1 +
+            w3BlindVsBlindChoicesV1.length,
       ),
     );
     final problems = <String>[];
@@ -154,7 +156,8 @@ void main() {
         439 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
-            wave6TaskDeltaV1,
+            wave6TaskDeltaV1 +
+            w3BlindVsBlindChoicesV1.length,
       ),
     );
     verifyWave6AndRestoreIdentityV1(entries);
@@ -2448,7 +2451,8 @@ void main() {
         439 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
-            wave6TaskDeltaV1,
+            wave6TaskDeltaV1 +
+            w3BlindVsBlindChoicesV1.length,
       ),
     );
     var validated = 0;

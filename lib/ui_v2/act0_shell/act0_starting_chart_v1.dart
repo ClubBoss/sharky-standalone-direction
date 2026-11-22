@@ -65,7 +65,16 @@ Act0ChartGroupV1 act0ChartGroupV1(String hand) {
 
 const act0ChartThreeBetsV1 = {'AA', 'KK', 'QQ', 'AKs', 'AKo'};
 const act0ChartStrongCallsV1 = {'JJ', 'TT', 'AQs', 'AJs'};
-const act0ChartButtonCallsV1 = {'KQs', 'KQo', 'KJs', 'QJs'};
+const act0ChartButtonCallsV1 = {
+  'AQo',
+  'AJo',
+  'KQs',
+  'KQo',
+  'ATs',
+  'ATo',
+  'KJs',
+  'QJs',
+};
 
 Act0ChartActionV1 act0ChartActionV1(
   String hand,

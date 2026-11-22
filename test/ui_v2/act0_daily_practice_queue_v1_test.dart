@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../support/act0_w3_catalog_contract_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
@@ -198,6 +199,7 @@ void main() {
       expect(
         count,
         311 +
+            w3BlindVsBlindChoicesV1.length +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6CurrentRowsV1.values
