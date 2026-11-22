@@ -104,6 +104,7 @@ test/ui_v2/act0_s11_w1_recap_pot_contract_v1_test.dart
 test/ui_v2/act0_suboptimal_feedback_truth_v1_test.dart
 test/ui_v2/act0_terminal_survivor_replay_v1_test.dart
 test/ui_v2/act0_theory_advance_lock_rebuild_v1_test.dart
+test/ui_v2/act0_w1_frame_budget_v1_test.dart
 test/ui_v2/act0_w11_street_replay_projection_v1_test.dart
 test/ui_v2/act0_w3_prechoice_neutrality_v1_test.dart
 test/ui_v2/act0_w4_purpose_intro_teaching_v1_test.dart
