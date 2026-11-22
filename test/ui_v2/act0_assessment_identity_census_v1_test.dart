@@ -1338,14 +1338,15 @@ void main() {
     expect(stack[1], "The other player's whole 100 BB stack");
     stack[1] = 'All 100 BB from the covering stack';
     const pressureLabels = {
-      'Missed: check': 'Missed',
-      'Consider a bluff': 'Bluff candidate',
-      'Value: bet': 'Value',
+      'Check': 'Missed',
+      'Bet half pot as a bluff': 'Bluff candidate',
+      'Bet half pot for value': 'Value',
     };
     const l2AssessmentLabels = {
       'w6_missed_dry_board': pressureLabels,
       'w6_bluff_candidate': pressureLabels,
       'range_checkpoint_pressure': pressureLabels,
+      'w6_turn_pressure_shift_transfer': {'Check': 'Check more often'},
       'w6_value_range_action': {'Check': 'Check and see'},
       'w6_table_value_line_transfer': {'Check': 'Check back'},
       'w7_20bb_wider': {
@@ -1571,25 +1572,19 @@ void main() {
         [
           [
             "value",
-            "Get called by worse hands",
+            "Bet half pot for value",
             true,
             "correct",
-            "Get called by worse hands",
+            "Bet half pot for value",
           ],
           [
             "bluff",
-            "Make stronger hands fold",
+            "Bet half pot as a bluff",
             false,
             "suboptimal",
-            "Get called by worse hands",
+            "Bet half pot for value",
           ],
-          [
-            "missed",
-            "Give up on a missed flop",
-            false,
-            "wrong",
-            "Get called by worse hands",
-          ],
+          ["missed", "Check", false, "wrong", "Bet half pot for value"],
         ],
         [
           ["value", "Value", true, "correct", "Value"],
@@ -2047,10 +2042,7 @@ void main() {
         'Keep betting across streets',
         'Always barrel as pressure',
       ),
-      'w6_turn_pressure_shift_transfer': (
-        'Make another big bet',
-        'Barrel big again',
-      ),
+      'w6_turn_pressure_shift_transfer': ('Bet big again', 'Barrel big again'),
       'w7_low_spr_commit': (
         'Plenty of chips left for later bets',
         'Plenty of room to float and wait',

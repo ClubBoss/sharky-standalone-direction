@@ -1053,7 +1053,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           caption:
               "BB checks. Assume BB calls half pot with Q-9 and 5-4; other unpaired hands fold.",
           hint: 'Read the cards and the stated range.',
-          question: "What is a half-pot bet trying to achieve?",
+          question: "What do you do to earn a call from a weaker hand?",
           feedbackTitle: 'Read the range in this hand.',
           feedbackReason:
               "Q-9 has a worse kicker and 5-4 has a smaller pair. Both call in this example.",
@@ -1066,9 +1066,9 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: const <Act0RunnerOptionV1>[
             Act0RunnerOptionV1(
               id: 'value',
-              label: "Get called by worse hands",
+              label: "Bet half pot for value",
               isCorrect: true,
-              preferredLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.correct,
               feedbackTitle: "A bet can earn weaker calls.",
               feedbackReason:
@@ -1076,10 +1076,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             ),
             Act0RunnerOptionV1(
               id: 'bluff',
-              label: "Make stronger hands fold",
+              label: "Bet half pot as a bluff",
               isCorrect: false,
-              preferredLabel: "Get called by worse hands",
-              betterAnswerLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
+              betterAnswerLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "Read the hands that call.",
               feedbackReason:
@@ -1087,10 +1087,10 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
             ),
             Act0RunnerOptionV1(
               id: 'missed',
-              label: "Give up on a missed flop",
+              label: "Check",
               isCorrect: false,
-              preferredLabel: "Get called by worse hands",
-              betterAnswerLabel: "Get called by worse hands",
+              preferredLabel: "Bet half pot for value",
+              betterAnswerLabel: "Bet half pot for value",
               quality: Act0FeedbackQualityV1.wrong,
               feedbackTitle: "You paired the queen.",
               feedbackReason:
@@ -1274,8 +1274,8 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _w6BluffCandidateRunner.copyWith(
           caption:
-              'On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.',
-          question: 'Which plan fits 9-6 under this rule?',
+              'On K-8-3, BB checks. Any pair calls half pot. Q-J and A-9 fold. Check if your hand already beats either unpaired hand.',
+          question: 'What do you do with nine-six after BB checks?',
           feedbackTitle: 'A bet can fold better hands.',
           feedbackReason:
               'On K-8-3, 9-6 trails both Q-J and A-9. In this example, both of those hands fold to a half-pot bet.',

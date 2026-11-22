@@ -914,12 +914,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "barrel_big",
     sourceCorrectChoiceId: "check_more",
     sourceFingerprint:
-        "823635de5a9d3eb72907a3de7a7ff0f15e4bdadcef2c9006c01b1ff3b2e0952f",
-    sourceQuestion:
-        "Suppose fold pressure has dropped on this turn. What is the cleaner plan?",
+        "9b649a9369583e8ea5883c7a63404a14791ab3193ff1326ced597fd812f514d5",
+    sourceQuestion: "Fold pressure dropped on this turn. What do you do now?",
     sourceChoiceReason:
         "BB is less likely to fold now. A bigger second bet does not make the old plan a better fit.",
-    sourceChoiceLabel: "Make another big bet",
+    sourceChoiceLabel: "Bet big again",
     sourceChoiceQuality: "suboptimal",
     goalId: "bluff_needs_better_folds",
     misconceptionId: "repeat_bluff_after_callers_change",
