@@ -109,7 +109,7 @@ String _trail(Act0TableStateV1 table) => table.actionTrail
     .map((item) => item.displayLabel ?? item.label)
     .join(' · ');
 
-Iterable<String> _section(Iterable<CatalogTask> rows) sync* {
+Iterable<String> renderCatalogTaskSectionV1(Iterable<CatalogTask> rows) sync* {
   String? lessonId;
   for (final row in rows) {
     final task = row.task;
@@ -260,18 +260,22 @@ String renderCatalogSnapshot({Set<int>? worlds}) {
         'Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.',
         'Teaching and feedback table variants use the Runner projections. Board facts are deterministic.',
         '',
-        ..._section(course.where((row) => !row.task.repairOnly)),
+        ...renderCatalogTaskSectionV1(
+          course.where((row) => !row.task.repairOnly),
+        ),
         '===== REPAIR-ONLY TASKS =====',
         '',
-        ..._section(course.where((row) => row.task.repairOnly)),
+        ...renderCatalogTaskSectionV1(
+          course.where((row) => row.task.repairOnly),
+        ),
         if (worlds == null || worlds.contains(1)) ...[
           '===== W1 RULES CHECK =====',
           '',
-          ..._section(include(rulesCheckCatalogTasks)),
+          ...renderCatalogTaskSectionV1(include(rulesCheckCatalogTasks)),
         ],
         '===== DAY 7 REVIEW-ONLY TASKS · ZERO XP =====',
         '',
-        ..._section(include(day7CatalogTasks)),
+        ...renderCatalogTaskSectionV1(include(day7CatalogTasks)),
       ].join('\n').trimRight() +
       '\n');
 }

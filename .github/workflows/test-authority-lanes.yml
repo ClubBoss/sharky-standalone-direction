@@ -2,13 +2,15 @@ name: Test Authority Lanes
 
 on:
   pull_request:
-    # Release policy drafts need the same checks with a bounded PR changeset.
+    # Release and curriculum review docs need the same bounded PR checks.
     paths:
       - '**'
       - '!docs/**'
       - '!**/*.md'
       - 'docs/RELEASE.md'
       - 'docs/release/privacy_policy_1_0_en.md'
+      - 'docs/plan/OWNER_CONCEPTS_ADDENDUM_v1.md'
+      - 'docs/reference/LONG_TERM_WORLD_VISION_REFERENCE_v1.md'
   push:
     branches: [ main ]
   workflow_dispatch:
