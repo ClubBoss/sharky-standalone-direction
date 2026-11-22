@@ -3587,10 +3587,10 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] What size should I bet right now? — Too fast. Size comes after the bucket. First decide if the hand is value, bluff candidate, or missed.
     BETTER ANSWER: Which bucket is my hand in?
     FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Which bucket is my hand in? — Nice start. That is the clean live-table read. Bucket first, then action.
-    FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
   - [suboptimal] Was this hand strong preflop? — Useful start. Preflop strength matters, but the flop bucket is the first sharp live-table read now.
     BETTER ANSWER: Which bucket is my hand in?
+    FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  + [correct] Which bucket is my hand in? — Nice start. That is the clean live-table read. Bucket first, then action.
     FEEDBACK TABLE: Flop | You As Qc | Board Kd 7c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_buckets_recap [review] Buckets recap
@@ -3830,9 +3830,9 @@ SEATS: UTG 7d 6d stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] They have the same combo count — Not quite. The hand names may feel equally important, but combo weight is not equal: 16 beats 6.
     BETTER ANSWER: A-K has more combos
-  + [correct] A-K has more combos — Nice count. Before removing known cards, A-K has 16 combos and pocket eights have 6.
   - [wrong] Pocket eights have more combos — Not quite. Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.
     BETTER ANSWER: A-K has more combos
+  + [correct] A-K has more combos — Nice count. Before removing known cards, A-K has 16 combos and pocket eights have 6.
 
 TASK w6_combo_counts_recap [review] Combo recap
 CAPTION: Lesson learned: count the possible hands, then account for the action.
@@ -4023,10 +4023,10 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [suboptimal] Missed: check — Both high-card hands beat yours. 9-6 missed the board. You might improve after checking, but in this example a bet can make two better hands fold.
     BETTER ANSWER: Consider a bluff
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
-  + [correct] Consider a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat 9-6. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
-    FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
   - [wrong] Value: bet — Worse calls are missing. Q-J and A-9 are both ahead of 9-6 if no one improves. Getting those hands to fold is a bluff.
     BETTER ANSWER: Consider a bluff
+    FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
+  + [correct] Consider a bluff — A bet can fold out a better hand. If no one improves, both Q-J and A-9 beat 9-6. A half-pot bet can make both fold under the stated rule. The value of bluffing depends on how often BB has those hands versus hands that call.
     FEEDBACK TABLE: Flop | You 9h 6d | Board Kd 8s 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Center Read the flop | Facts high card, rainbow, backdoor straight
 
 TASK w6_kicker_showdown_compare [drill] Find weaker calls

@@ -520,7 +520,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _w6TableBucketNoticeRunner.options,
             correctOptionId: 'bucket_first',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
@@ -766,7 +766,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _w6ComboWeightCompareRunner.options,
             correctOptionId: 'ak_more',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
@@ -1107,7 +1107,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _w6BluffCandidateOptionsV1('9-6'),
             correctOptionId: 'bluff',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
