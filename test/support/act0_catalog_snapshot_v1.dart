@@ -109,7 +109,10 @@ String _trail(Act0TableStateV1 table) => table.actionTrail
     .map((item) => item.displayLabel ?? item.label)
     .join(' · ');
 
-Iterable<String> renderCatalogTaskSectionV1(Iterable<CatalogTask> rows) sync* {
+Iterable<String> renderCatalogTaskSectionV1(
+  Iterable<CatalogTask> rows, {
+  bool showPotBeforeDecision = false,
+}) sync* {
   String? lessonId;
   for (final row in rows) {
     final task = row.task;
@@ -179,7 +182,12 @@ Iterable<String> renderCatalogTaskSectionV1(Iterable<CatalogTask> rows) sync* {
                 '${decision.effectiveStacks[seat] == null ? 'unknown' : _bb(decision.effectiveStacks[seat]!)}',
       ];
       yield 'EFFECTIVE: ${stacks.isEmpty ? 'none' : stacks.join(' · ')}';
-      if (decision.hasAllIn) {
+      if (decision.hasAllIn && showPotBeforeDecision) {
+        final pot = decision.ledger
+            ?.amounts(seatIds: decision.occupiedSeatIds)
+            .potBb;
+        yield 'POTS: ${pot == null ? 'unknown' : 'current ${_bb(pot)}'}';
+      } else if (decision.hasAllIn) {
         final pots = decision.pots;
         yield 'POTS: ${pots == null
             ? 'unknown'

@@ -23,11 +23,8 @@ void main() {
 
     final templates = Act0DailyDealTemplateV1.values;
     final sections = [
-      for (final template in templates) ...[
-        '===== TEMPLATE ${template.name} · seeds 0–${_seedsPerTemplate - 1} =====',
-        '',
-        ...renderCatalogTaskSectionV1(_sample(template)),
-      ],
+      for (final template in templates)
+        ...renderDailyDealExportSectionV1(template),
     ];
     final contents = [
       'SHARKY POKER · Daily Practice generator · ${templates.length * _seedsPerTemplate} deals',
@@ -49,6 +46,17 @@ void main() {
     file.writeAsStringSync('$contents\n');
     stdout.writeln(file.path);
   });
+}
+
+Iterable<String> renderDailyDealExportSectionV1(
+  Act0DailyDealTemplateV1 template,
+) sync* {
+  yield '===== TEMPLATE ${template.name} · seeds 0–${_seedsPerTemplate - 1} =====';
+  yield '';
+  yield* renderCatalogTaskSectionV1(
+    _sample(template),
+    showPotBeforeDecision: template == Act0DailyDealTemplateV1.lowSpr,
+  );
 }
 
 Iterable<CatalogTask> _sample(Act0DailyDealTemplateV1 template) sync* {

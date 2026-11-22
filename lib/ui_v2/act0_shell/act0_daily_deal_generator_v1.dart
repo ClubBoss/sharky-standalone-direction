@@ -100,8 +100,8 @@ Act0LessonTaskV1? act0GenerateDailyDealV1({
   final rng = math.Random(seed);
   final deck = [..._dailyDealDeck]..shuffle(rng);
   final content = switch (template) {
-    Act0DailyDealTemplateV1.open || Act0DailyDealTemplateV1.defendBb =>
-      _dailyPreflopV1(template, deck, rng, seed),
+    Act0DailyDealTemplateV1.open => _dailyOpenV1(rng, seed),
+    Act0DailyDealTemplateV1.defendBb => _dailyDefendV1(rng),
     Act0DailyDealTemplateV1.callPrice => _dailyPriceV1(deck, rng),
     Act0DailyDealTemplateV1.cleanOuts => _dailyTurnV1(rng),
     Act0DailyDealTemplateV1.lowSpr => _dailyLowSprV1(rng),
@@ -157,73 +157,144 @@ Act0LessonTaskV1? act0GenerateDailyDealV1({
   );
 }
 
-_DailyDealContentV1? _dailyPreflopV1(
-  Act0DailyDealTemplateV1 template,
-  List<String> deck,
-  math.Random rng,
-  int seed,
+List<String> _dailyCardsForHandV1(String hand, math.Random rng) {
+  final suits = 'shdc'.split('')..shuffle(rng);
+  return [
+    '${hand[0]}${suits[0]}',
+    '${hand[1]}${suits[hand.endsWith('s') ? 0 : 1]}',
+  ];
+}
+
+typedef _DailyOpenPoolV1 = ({List<String> all, List<String> boundary});
+
+final _dailyOpenPoolsV1 = {
+  for (final seat in Act0ChartSeatV1.values.take(4))
+    for (final action in [Act0ChartActionV1.raise, Act0ChartActionV1.fold])
+      (seat, action): _dailyOpenPoolV1(seat, action),
+};
+
+_DailyOpenPoolV1 _dailyOpenPoolV1(
+  Act0ChartSeatV1 seat,
+  Act0ChartActionV1 action,
 ) {
-  final hand = deck.take(2).toList();
-  if (template == Act0DailyDealTemplateV1.open) {
-    final seat = Act0ChartSeatV1.values[seed % 4];
-    final action = act0ChartActionV1(
-      _dailyHandCodeV1(hand),
-      seat,
-      Act0ChartPrefixV1.unopened,
-    );
-    if (action != Act0ChartActionV1.raise && action != Act0ChartActionV1.fold) {
-      return null;
-    }
-    final title = seat.name.toUpperCase();
-    final remaining = 5 - seat.index;
-    final opens = action == Act0ChartActionV1.raise;
-    return (
-      table: _day7PreflopV1(seat.name, hand.join(' '), showTurn: true),
-      question: 'You are first in. Raise or fold?',
-      premise: 'Use the six-seat starting chart.',
-      preferred: opens ? 'Raise' : 'Fold',
-      alternative: opens ? 'Fold' : 'Raise',
-      explanation: opens
-          ? 'From $title with $remaining players left, the chart opens this hand. Raising can win the blinds when those players fold, while folding gives up that chance.'
-          : 'From $title with $remaining players left, this hand falls outside the opening row. Those players can continue with stronger hands, so folding keeps the chips a raise would risk.',
-      correction: opens
-          ? 'Folding gives up a chart opening. A raise also gives the blinds a chance to fold.'
-          : 'A raise puts chips at risk against players still to act. Fold in this seat with this hand.',
-    );
+  final all = <String>[];
+  final other = <String>[];
+  for (final hand in act0ChartHandsV1) {
+    final actual = act0ChartActionV1(hand, seat, Act0ChartPrefixV1.unopened);
+    (actual == action ? all : other).add(hand);
   }
-  final opener = rng.nextBool() ? Act0ChartSeatV1.btn : Act0ChartSeatV1.co;
-  final prefix = opener == Act0ChartSeatV1.btn
-      ? Act0ChartPrefixV1.btnOpen
-      : Act0ChartPrefixV1.coOpen;
-  if (act0ChartActionV1(_dailyHandCodeV1(hand), Act0ChartSeatV1.bb, prefix) !=
-      Act0ChartActionV1.priceDecision)
-    return null;
-  final openSize = [2.0, 2.5, 3.0, 4.0, 5.0][rng.nextInt(5)];
+
+  bool nextRank(String hand, String neighbor) {
+    if (hand.substring(2) != neighbor.substring(2)) return false;
+    int distance(int i) =>
+        (act0ChartRanksV1.indexOf(hand[i]) -
+                act0ChartRanksV1.indexOf(neighbor[i]))
+            .abs();
+    return hand.length == 2 ? distance(0) == 1 : distance(0) + distance(1) == 1;
+  }
+
+  return (
+    all: all,
+    boundary: [
+      for (final hand in all)
+        if (other.any((neighbor) => nextRank(hand, neighbor))) hand,
+    ],
+  );
+}
+
+_DailyDealContentV1 _dailyOpenV1(math.Random rng, int seed) {
+  final seat = Act0ChartSeatV1.values[seed % 4];
+  // Each seat gets both actions in every block of eight seeds.
+  final opens = seed % 8 < 4;
+  final action = opens ? Act0ChartActionV1.raise : Act0ChartActionV1.fold;
+  final pool = _dailyOpenPoolsV1[(seat, action)]!;
+  final candidates = pool.boundary.isNotEmpty && rng.nextInt(4) != 0
+      ? pool.boundary
+      : pool.all;
+  final code = candidates[rng.nextInt(candidates.length)];
+  final hand = _dailyCardsForHandV1(code, rng);
+  final behind = [
+    for (final player in Act0ChartSeatV1.values.skip(seat.index + 1))
+      player.name.toUpperCase(),
+  ].join(', ');
+  final group = act0ChartGroupV1(code);
+  final pair = code.length == 2;
+  final value = switch ((pair, group)) {
+    (true, Act0ChartGroupV1.premium || Act0ChartGroupV1.strong) =>
+      'weaker pairs can call',
+    (true, _) => 'you can win the blinds or flop a set when called',
+    (false, _) when code[0] == 'A' =>
+      'weaker aces can call, and your ace removes some strong ace combinations',
+    (false, _) =>
+      'you can win the blinds, and your high cards can make top pair when called',
+  };
+  final foldReason = group != Act0ChartGroupV1.weak
+      ? 'a raise can run into higher pairs or strong aces'
+      : pair
+      ? 'higher pairs can continue and overcards often come on the flop'
+      : 'a caller who shares one of your ranks can have a better kicker';
+  return (
+    table: _day7PreflopV1(seat.name, hand.join(' '), showTurn: true),
+    question: 'You are first in. Raise or fold?',
+    premise: 'Use the six-seat starting chart.',
+    preferred: opens ? 'Raise' : 'Fold',
+    alternative: opens ? 'Fold' : 'Raise',
+    explanation: opens
+        ? '$behind still act. Raise $code because $value. Folding gives up that chance.'
+        : '$behind still act. Fold $code because $foldReason. A raise risks chips against those hands.',
+    correction: opens
+        ? 'Folding $code gives up the chance to win the blinds or play a stronger hand against callers. Raise from this seat.'
+        : 'Fold $code. A raise risks chips when the players behind continue with stronger hands.',
+  );
+}
+
+typedef _DailyDefenseSpotV1 = ({String hand, double open, double equity});
+
+final _dailyDefenseSpotsV1 = {
+  for (final seat in act0DefendOpeningSeatsV1)
+    seat: [
+      for (final hand in act0ChartHandsV1)
+        if (act0PreflopEquityTenthsV1(hand, seat) case final equity?)
+          // The folded SB leaves 0.5 BB and Hero's 1 BB is already posted.
+          for (var quarters = 8; quarters <= 24; quarters++)
+            if ((equity / 1000 - (quarters - 4) / (2 * quarters + 2)).abs()
+                case final edge when edge >= 0.002 && edge <= 0.05)
+              (hand: hand, open: quarters / 4, equity: equity / 1000),
+    ],
+};
+
+_DailyDealContentV1? _dailyDefendV1(math.Random rng) {
+  final opener =
+      act0DefendOpeningSeatsV1[rng.nextInt(act0DefendOpeningSeatsV1.length)];
+  final spots = _dailyDefenseSpotsV1[opener]!;
+  if (spots.isEmpty) return null;
+  final spot = spots[rng.nextInt(spots.length)];
+  final hand = _dailyCardsForHandV1(spot.hand, rng);
   final table = _day7PreflopV1(
     'bb',
     hand.join(' '),
     opener: opener.name,
-    openBb: openSize,
+    openBb: spot.open,
     showTurn: true,
   );
-  final (potBb: pot, toCallBb: callPrice) = _dailyDealAmountsV1(table);
-  final due = callPrice!;
-  const win = 0.30;
-  final needed = due / (pot + due);
-  final calls = win > needed;
+  final (potBb: pot, toCallBb: due) = _dailyDealAmountsV1(table);
+  final needed = due! / (pot + due);
+  final calls = spot.equity > needed;
   final seat = opener.name.toUpperCase();
+  final equity = _dailyPctV1(spot.equity);
+  final price = _dailyPctV1(needed);
   return (
     table: table,
     question: 'Defend the big blind by calling, or fold?',
     premise:
-        'Against this opener, assume you win 30% after calling, with no ties or further bets.',
+        "Your ${spot.hand} has $equity equity against $seat's chart opening range. Each legal combination is equally likely. If you call, both players check to showdown and ties split the pot.",
     preferred: calls ? 'Call' : 'Fold',
     alternative: calls ? 'Fold' : 'Call',
     explanation:
-        'Against $seat, your posted blind leaves ${_act0BbLabelV1(due)} to call. The opener’s range gives you 30% in this exercise, ${calls ? 'above' : 'below'} the ${_dailyPctV1(needed)} price, so ${calls ? 'calling earns more than folding' : 'folding saves chips'}.',
+        "After $seat raises, you owe ${_act0BbLabelV1(due)}. Your ${spot.hand} has $equity equity against $seat's opening range, ${calls ? 'above' : 'below'} the $price price. ${calls ? 'Calling earns more than folding' : 'Folding saves more than calling'}.",
     correction: calls
-        ? 'Folding gives up a profitable call against this opener. Your 30% beats the ${_dailyPctV1(needed)} price.'
-        : 'Calling needs ${_dailyPctV1(needed)} wins against the opener. The stated 30% falls short.',
+        ? 'Folding gives up a profitable call. Your ${spot.hand} has $equity equity against $seat, above the $price price.'
+        : 'Calling ${spot.hand} loses chips. Its $equity equity against $seat falls below the $price price.',
   );
 }
 
@@ -330,7 +401,7 @@ _DailyDealContentV1? _dailyTurnV1(math.Random rng) {
   final other = opponent.toUpperCase();
   final comparison = calls
       ? 'calling earns more than folding'
-      : 'folding saves chips';
+      : 'folding saves more than calling';
   return (
     table: table,
     question: 'Count the rivers that win. Call or fold?',
@@ -339,10 +410,10 @@ _DailyDealContentV1? _dailyTurnV1(math.Random rng) {
     preferred: calls ? 'Call' : 'Fold',
     alternative: calls ? 'Fold' : 'Call',
     explanation:
-        '$other shows a set, so count only rivers that leave you ahead. You win $wins of 44 rivers, ${calls ? 'above' : 'below'} the ${_dailyPctV1(price)} price, so $comparison.',
+        '$other shows a set, so count only rivers that leave you ahead. The $wins winning rivers out of 44 give ${_dailyPctV1(equity)}, ${calls ? 'above' : 'below'} the ${_dailyPctV1(price)} price, so $comparison.',
     correction: calls
-        ? 'Count the rivers that beat $other’s set. The $wins winners clear the ${_dailyPctV1(price)} price, so folding passes up value.'
-        : 'Count only the rivers where you beat $other’s set. The $wins winners fall short of the ${_dailyPctV1(price)} price.',
+        ? 'Count the rivers that beat $other’s set. The $wins winning rivers out of 44 give ${_dailyPctV1(equity)}, above the ${_dailyPctV1(price)} price, so folding passes up value.'
+        : 'Count only the rivers where you beat $other’s set. You have ${_dailyPctV1(equity)} from $wins winning rivers out of 44, below the ${_dailyPctV1(price)} price. Fold because calling loses chips.',
   );
 }
 
