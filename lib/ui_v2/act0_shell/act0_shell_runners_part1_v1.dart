@@ -1725,6 +1725,125 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
   ],
 );
 
+final _w1SidePotEligibilityRunner = _sidePotIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'what_poker_is_side_pot_eligibility',
+  caption: 'You put in all 10 BB. Both opponents later added 5 BB each.',
+  hint: '',
+  question: 'Which pot can your hand win: main pot, side pot or both?',
+  table: _day7TableV1(
+    hero: 'co',
+    hand: '8c 8d',
+    street: PokerStreet.flop,
+    folded: const {'utg', 'hj', 'sb'},
+    board: _act0LessonCardsV1('8s 4h 2d'),
+    stacks: const {'co': 10, 'btn': 60, 'bb': 60},
+    entries: const [
+      ..._act0LessonBlinds,
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'co',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        10,
+      ),
+      Act0ContributionV1(
+        PokerStreet.preflop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        9,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'bb',
+        Act0ContributionKindV1.wager,
+        5,
+      ),
+      Act0ContributionV1(
+        PokerStreet.flop,
+        'btn',
+        Act0ContributionKindV1.wager,
+        5,
+      ),
+    ],
+    history: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO all-in 10 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 10 BB'),
+      Act0ActionTrailItemV1(label: 'SB folds'),
+      Act0ActionTrailItemV1(label: 'BB calls 9 BB more'),
+      Act0ActionTrailItemV1(label: 'Flop: BB bets 5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 5 BB'),
+    ],
+    bets: const {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'Bet',
+        amountLabel: '5 BB',
+      ),
+      'btn': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.call,
+        label: 'Call',
+        amountLabel: '5 BB',
+      ),
+    },
+  ),
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Side pot',
+      body:
+          'A side pot is extra chips matched after someone goes all-in. Only players who added chips to it can win it.',
+    ),
+  ],
+  feedbackTitle: 'You can win the main pot.',
+  feedbackReason:
+      'All three players put 10 BB into the main pot, plus the small blind’s 0.5 BB. Only BTN and BB matched the extra 5 BB each.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'both_pots',
+      label: 'Both pots',
+      isCorrect: false,
+      quality: Act0FeedbackQualityV1.wrong,
+      preferredLabel: 'Main pot only',
+      betterAnswerLabel: 'Main pot only',
+      repairFocusLabels: ['Confused chip commitment eligibility'],
+      feedbackTitle: 'Check which chips you matched.',
+      feedbackReason:
+          'Your chips were already in before BTN and BB added 5 BB each. Claiming both pots would add 10 BB that you did not contest.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'main_pot_only',
+      label: 'Main pot only',
+      isCorrect: true,
+      quality: Act0FeedbackQualityV1.correct,
+      preferredLabel: 'Main pot only',
+      feedbackTitle: 'You can win the main pot.',
+      feedbackReason:
+          'Your 10 BB matched each opponent’s first 10 BB. With the folded small blind, that makes the 30.5 BB main pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'side_pot_only',
+      label: 'Side pot only',
+      isCorrect: false,
+      quality: Act0FeedbackQualityV1.wrong,
+      preferredLabel: 'Main pot only',
+      betterAnswerLabel: 'Main pot only',
+      repairFocusLabels: ['Confused chip commitment eligibility'],
+      feedbackTitle: 'Find the chips you put in.',
+      feedbackReason:
+          'You put in 10 BB before the flop. Picking the 10 BB side pot would give up your claim to the 30.5 BB main pot.',
+    ),
+  ],
+);
+
 final _winWaysRunner = _meetTableRunner.copyWith(
   lessonId: 'win_ways',
   lessonTitle: 'What poker is',

@@ -196,7 +196,7 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 164),
+      ('D2.pot_feasibility', 165),
       ('D3.to_call_completeness', 118),
     ]) {
       final proof = rows.where(
@@ -1271,6 +1271,21 @@ void main() {
         ],
       };
     }
+    expectedComparison['what_poker_is_side_pot_eligibility'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        {
+          ...w3Option('both_pots'),
+          'repairLabels': ['Confused chip commitment eligibility'],
+        },
+        w3Option('main_pot_only', correct: true),
+        {
+          ...w3Option('side_pot_only'),
+          'repairLabels': ['Confused chip commitment eligibility'],
+        },
+      ],
+    };
     expectedComparison['first_table_guide_first_decision'] = {
       'rewardXp': 0,
       'family': 'decision',

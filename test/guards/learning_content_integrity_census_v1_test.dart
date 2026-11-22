@@ -91,6 +91,7 @@ const _newW01OrderGapIds = <String>{
 // These separately checked, current choices do not belong to the frozen
 // legacy declared-mapper fixtures below.
 const _wave5CurrentChoiceTaskIds = <String>{
+  'what_poker_is_side_pot_eligibility',
   'w4_value_worse_call_seat',
   'w4_bluff_target_seat',
   'board_texture_basics_w5_texture_dry_value',
@@ -903,15 +904,15 @@ void main() {
           if (correct == false)
             'world_${row.worldNumber}/${row.lessonId}/${row.task.taskId}/$choiceId',
     };
-    expect(rows, hasLength(357 + addedContracts.length));
+    expect(rows, hasLength(358 + addedContracts.length));
     expect(
       rows.map((r) => r.task.taskId).toSet(),
-      hasLength(357 + addedContracts.length),
+      hasLength(358 + addedContracts.length),
     );
     expect(
       allChoices,
       hasLength(
-        669 +
+        671 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,
@@ -991,7 +992,7 @@ void main() {
     expect(
       foundationDefaults,
       hasLength(
-        631 +
+        633 +
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length,

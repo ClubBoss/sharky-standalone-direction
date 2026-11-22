@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 450 tasks · W1–W12
+SHARKY POKER — EN learning content, 451 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -1165,16 +1165,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · First player folds · Player to your 
 
 TASK what_poker_is_pot_stack [theory] Pot and stack
 SUMMARY: Separate chips in the middle from chips that still belong to a player.
-CAPTION: Compare the chips at a seat with the chips in the middle.
-TEACH: BB also counts chips. BB also measures chips. Pot 8 BB = eight big blinds.
-
-In a $1/$2 game, 1 BB = $2.
-
-A $200 stack there is 100 BB. BB works across stakes.
-TEACH LABELS: Pot in BB, $1/$2 -> 1 BB = $2, $200 = 100 BB
-TEACH: Pot and stack are different. The pot is in the middle. Your stack stays with your seat.
-TEACH LABELS: Middle, Seat
-TEACH TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus hj | Tap utg, btn, bb | Center Pot vs stack | Empty board No board cards yet | Facts no applicable hand facts
+TEACH: BB also counts chips. BB also measures chips. In a $1/$2 game, $200 is 100 BB.
+TEACH: Pot and stack The pot is in the middle. Your stack stays at your seat.
 Q: Which label shows the chips in the middle?
 HINT [theoryOnly]: Compare the chips in the middle with the chips in front of you.
 TABLE: Preflop | Pot 1.5 BB | Seat HJ | Seat focus hj, sb, bb | Tap utg, btn, bb | Center Pot vs stack | Empty board No board cards yet | Facts no applicable hand facts
@@ -1218,9 +1210,25 @@ TRAIL: Blinds: 1.5 BB · UTG folds · You go all-in for 20 BB · CO calls, 20 BB
     BETTER ANSWER: 20 BB
   + [correct] 20 BB — Correct matched-chips read. You can win the 20 BB CO matched. That limit stays fixed for this hand, even if CO bets more against another player.
 
+TASK what_poker_is_side_pot_eligibility [drill] Which chips can you win?
+CAPTION: You put in all 10 BB. Both opponents later added 5 BB each.
+TEACH: Side pot A side pot is extra chips matched after someone goes all-in. Only players who added chips to it can win it.
+Q: Which pot can your hand win: main pot, side pot or both?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You 8c 8d | Board 8s 4h 2d | Pot 40.5 BB | Seat CO | Facts set, pocket pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 8c 8d stack 0 BB | BTN dealer stack 45 BB call 5 BB | SB folded stack 99.5 BB | BB stack 45 BB bet 5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO all-in 10 BB · BTN calls 10 BB · SB folds · BB calls 9 BB more · Flop: BB bets 5 BB · BTN calls 5 BB
+  - [wrong] Both pots — Check which chips you matched. Your chips were already in before BTN and BB added 5 BB each. Claiming both pots would add 10 BB that you did not contest.
+    BETTER ANSWER: Main pot only
+    REPAIR LABELS: Confused chip commitment eligibility
+  + [correct] Main pot only — You can win the main pot. Your 10 BB matched each opponent’s first 10 BB. With the folded small blind, that makes the 30.5 BB main pot.
+    FEEDBACK TABLE: Flop | You 8c 8d | Board 8s 4h 2d | Pot 40.5 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts set, pocket pair, rainbow
+  - [wrong] Side pot only — Find the chips you put in. You put in 10 BB before the flop. Picking the 10 BB side pot would give up your claim to the 30.5 BB main pot.
+    BETTER ANSWER: Main pot only
+    REPAIR LABELS: Confused chip commitment eligibility
+
 TASK what_poker_is_win_ways [drill] How pots are won
 SUMMARY: Read the table and choose before seeing the explanation.
-CAPTION: You win when others fold or when your hand wins showdown.
 TEACH: A pot can end two ways. Everyone else folds, or players compare hands at showdown.
 TEACH LABELS: Folds, Showdown
 Q: Which is a way to win the pot before showdown?
@@ -1254,9 +1262,7 @@ SEATS: UTG | HJ Kc Ks | CO Kh Jh | BTN dealer | SB | BB
 
 TASK what_poker_is_live_win_transfer [drill] Live win paths
 SUMMARY: Carry folds and showdown into one live table frame before strategy starts.
-CAPTION: The blinds have posted. The hand is still live.
-TEACH: Real hand, same endings. Even in a real hand, the pot still ends one of two ways: everyone else folds, or players reach showdown.
-TEACH LABELS: Fold, Showdown, Pot 1.5 BB
+CAPTION: Only the blinds have posted.
 Q: In this live hand, what can still decide the pot?
 HINT [theoryOnly]: After the first read, remember how this pot can still finish.
 TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus co, sb, bb | Center Blinds and pot | Empty board No board cards yet | Facts no applicable hand facts

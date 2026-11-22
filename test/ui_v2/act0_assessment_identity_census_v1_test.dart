@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,10 +131,22 @@ void main() {
     expect(
       entries,
       hasLength(
-        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
+      'what_poker_is_side_pot_eligibility': [
+        'world_1',
+        'what_poker_is_content',
+        'what_poker_is_side_pot_eligibility',
+        'drill',
+        'practice',
+        [
+          ['both_pots', 'Both pots', false, 'wrong', 'Main pot only'],
+          ['main_pot_only', 'Main pot only', true, 'correct', 'Main pot only'],
+          ['side_pot_only', 'Side pot only', false, 'wrong', 'Main pot only'],
+        ],
+      ],
       'cards_ranks_suits_premium_decision': [
         'world_1',
         'cards_ranks_suits',
@@ -2291,7 +2303,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        429 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;
