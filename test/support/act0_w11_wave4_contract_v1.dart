@@ -72,12 +72,12 @@ const w11Wave4ChoiceContractV1 = <String, (String, List<List<Object?>>)>{
       ['btn', 'BTN', false, 'wrong', 'BB'],
     ],
   ),
-  'w11_checkpoint_spr': (
-    'real_play_transfer_checkpoint',
+  'w11_first_in_seat': (
+    'post_session_review_loop',
     [
-      ['choice_1', '3', false, 'wrong', '6'],
-      ['choice_2', '6', true, 'correct', '6'],
-      ['choice_3', '12', false, 'wrong', '6'],
+      ['utg', 'UTG', false, 'wrong', 'HJ'],
+      ['hj', 'HJ', true, 'correct', 'HJ'],
+      ['bb', 'BB', false, 'wrong', 'HJ'],
     ],
   ),
   'w11_checkpoint_turn_price': (
@@ -121,6 +121,7 @@ const w11Wave4ReplayTasksV1 = <String>{
   'w11_sb_kjo_vs_btn',
   'w11_bb_72o_vs_hj',
   'w11_multiway_turn_fold',
+  'w11_first_in_seat',
   'w11_checkpoint_turn_price',
   'w11_checkpoint_multiway_value',
 };
@@ -136,7 +137,13 @@ Map<String, Object?> w11Wave4TableTruthContractV1() => {
             'id': id,
             'correct': correct,
             'quality': quality,
-            'seat': entry.key == 'w11_multiway_first_seat' ? id : null,
+            'seat':
+                const {
+                  'w11_multiway_first_seat',
+                  'w11_first_in_seat',
+                }.contains(entry.key)
+                ? id
+                : null,
             'repairSeats': const [],
             'repairCards': const [],
             'repairLabels': const [],

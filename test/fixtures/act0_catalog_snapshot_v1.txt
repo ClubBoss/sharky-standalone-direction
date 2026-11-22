@@ -5424,6 +5424,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] Raise — Look again. CO and BTN will stay in with their straights. More chips go in with no path to the best hand.
     BETTER ANSWER: Fold
 
+TASK w11_first_in_seat [drill] Find the opener
+CAPTION: Read the voluntary action after the two blinds were posted.
+Q: Tap the seat that opened the pot.
+HINT [hidden]: (none)
+TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Tap utg, hj, bb | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO 6s 5s stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+  - [wrong] UTG [seat utg] — Look again. UTG folded. Counting that seat as the opener ignores HJ’s 2.5 BB raise.
+    BETTER ANSWER: HJ
+    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
+  + [correct] HJ [seat hj] — Correct. HJ put in the first raise. The blinds posted before that action.
+    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
+  - [wrong] BB [seat bb] — Look again. BB posted a 1 BB blind. Counting that post as a raise gives the lead to the wrong seat.
+    BETTER ANSWER: HJ
+    FEEDBACK TABLE: Preflop | You 6s 5s | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Seat focus hj | Tap utg, hj, bb | Facts no applicable hand facts
+
 TASK w11_checkpoint_short_spr [drill] Two stacks, one cap
 CAPTION: CO has more chips than you. The turn starts with 15 BB in the pot and 10 BB left at your seat.
 Q: Which stack do you use to find the SPR here?
@@ -5528,23 +5544,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   - [wrong] BTN [seat btn] — Look again. BTN acts last among these three players on the flop. Starting there would skip both other live seats.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Flop | You Ac Qh | Board Qc 8s 3h | Pot 8 BB | Seat CO | Seat focus bb | Tap co, bb, btn | Facts one pair, top pair, rainbow
-
-TASK w11_checkpoint_spr [drill] Read the stack-to-pot ratio
-CAPTION: Both have 33 BB left. The pot is 5.5 BB.
-TEACH: Recall SPR Divide the smaller live stack by the pot.
-Q: What is the stack-to-pot ratio (SPR)?
-HINT [hidden]: (none)
-TABLE: Flop | You 8s 7s | Board As Td 3c | Pot 5.5 BB | Seat BB | Facts high card, rainbow, backdoor flush, backdoor straight
-SEATS: UTG folded stack 35.5 BB | HJ stack 33 BB | CO folded stack 35.5 BB | BTN folded dealer stack 35.5 BB | SB folded stack 35 BB | BB 8s 7s stack 33 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB
-  - [wrong] 3 — Look again. Three would use an 11 BB pot. The middle has 5.5 BB.
-    BETTER ANSWER: 6
-    FEEDBACK TABLE: Flop | You 8s 7s | Board As Td 3c | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor flush, backdoor straight
-  + [correct] 6 — Correct. 33 divided by 5.5 is 6. Use the smaller stack that can still go in.
-    FEEDBACK TABLE: Flop | You 8s 7s | Board As Td 3c | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor flush, backdoor straight
-  - [wrong] 12 — Look again. 12 would count both stacks. Each player can put in at most 33 BB more.
-    BETTER ANSWER: 6
-    FEEDBACK TABLE: Flop | You 8s 7s | Board As Td 3c | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor flush, backdoor straight
 
 TASK w11_checkpoint_turn_price [drill] Check the price on the turn
 CAPTION: A heart wins. A miss loses. Assume the river checks through.
@@ -7599,6 +7598,21 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
     BETTER ANSWER: 16
   + [correct] 16 — Correct. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
 
+===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
+
+TASK spaced_review_w11_post_session_review_loop_hj_v1 [drill] Review decision
+DAY 7 FAMILY: hj
+Q: When you mark the first raise for review, which seat made it?
+HINT [hidden]: (none)
+TABLE: Preflop | You Jd Td | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO Jd Td stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+  - [wrong] UTG — Look again. UTG folded. Marking that seat would record the wrong player for the review.
+    BETTER ANSWER: HJ
+  + [correct] HJ — Correct. HJ raised to 2.5 BB. The two blind posts came before voluntary action.
+  - [wrong] BB — Look again. BB posted 1 BB as a blind. Counting that as a raise would hide who first took the betting lead.
+    BETTER ANSWER: HJ
+
 ===== WORLD 11 · LESSON session_plan_basics · Session plan in 30 seconds =====
 
 TASK spaced_review_w11_session_plan_basics_misread_real_play_process_v1 [drill] Review decision
@@ -7731,22 +7745,6 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · C
   - [wrong] BTN — Look again. BTN is out. Giving that seat an action would put a folded player back in.
     BETTER ANSWER: BB
     FEEDBACK TABLE: Flop | You Kc 9s | Board Kh 6h 4d | Pot 5.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
-
-TASK spaced_review_w11_real_play_transfer_checkpoint_board_cards_v1 [drill] Review decision
-DAY 7 FAMILY: board_cards
-Q: Which board card is at the low end of your best straight?
-HINT [hidden]: (none)
-TABLE: Flop | You Js Tc | Board 9c 8s 7d | Pot 5.5 BB | Seat CO | Facts straight, rainbow, consecutive board
-SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Js Tc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more
-  - [wrong] The nine — Look again. Nine is in the middle of your seven-to-jack straight. It does not mark the low end.
-    BETTER ANSWER: The seven
-    FEEDBACK TABLE: Flop | You Js Tc | Board 9c 8s 7d | Pot 5.5 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, rainbow, consecutive board
-  - [wrong] The eight — Look again. Eight is next after seven. Starting at eight leaves a card out of the five-card run.
-    BETTER ANSWER: The seven
-    FEEDBACK TABLE: Flop | You Js Tc | Board 9c 8s 7d | Pot 5.5 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, rainbow, consecutive board
-  + [correct] The seven — Correct. Use seven through jack. The seven is the first card in that run.
-    FEEDBACK TABLE: Flop | You Js Tc | Board 9c 8s 7d | Pot 5.5 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts straight, rainbow, consecutive board
 
 TASK spaced_review_w11_real_play_transfer_checkpoint_pot_to_call_v1 [drill] Review decision
 DAY 7 FAMILY: pot_to_call

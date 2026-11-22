@@ -1206,6 +1206,21 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   // W11 fresh hands.
   _day7ExampleV1(
     11,
+    'post_session_review_loop',
+    'hj',
+    _day7PreflopV1('co', 'Jd Td', opener: 'hj', showTurn: true),
+    question: 'When you mark the first raise for review, which seat made it?',
+    choices: const ['UTG', 'HJ', 'BB'],
+    correct: 1,
+    reason:
+        'HJ raised to 2.5 BB. The two blind posts came before voluntary action.',
+    wrongReasons: const {
+      0: 'UTG folded. Marking that seat would record the wrong player for the review.',
+      2: 'BB posted 1 BB as a blind. Counting that as a raise would hide who first took the betting lead.',
+    },
+  ),
+  _day7ExampleV1(
+    11,
     'session_plan_basics',
     'misread_real_play_process',
     _day7PostflopV1('bb', 'As 8d', 'Ah 6c 2s', openBb: 2.5, betBb: 2),
@@ -1353,20 +1368,6 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     },
     reason:
         'BB is the first live seat to the left of the Button. HJ acts after BB.',
-  ),
-  _day7ExampleV1(
-    11,
-    'real_play_transfer_checkpoint',
-    'board_cards',
-    _day7PostflopV1('co', 'Js Tc', '9c 8s 7d', openBb: 2.5),
-    question: 'Which board card is at the low end of your best straight?',
-    choices: const ['The nine', 'The eight', 'The seven'],
-    correct: 2,
-    wrongReasons: const {
-      0: 'Nine is in the middle of your seven-to-jack straight. It does not mark the low end.',
-      1: 'Eight is next after seven. Starting at eight leaves a card out of the five-card run.',
-    },
-    reason: 'Use seven through jack. The seven is the first card in that run.',
   ),
   _day7ExampleV1(
     11,

@@ -720,6 +720,7 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       _w11_multiway_turn_fold,
+      _w11_first_in_seat,
       _w11_checkpoint_short_spr,
       Act0LessonTaskV1(
         taskId: 'w11_review_loop_recap',
@@ -795,7 +796,6 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
       _w11_multiway_first_seat,
-      _w11_checkpoint_spr,
       _w11_checkpoint_turn_price,
       _w11_checkpoint_multiway_value,
       Act0LessonTaskV1(
