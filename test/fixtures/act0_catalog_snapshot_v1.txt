@@ -9629,7 +9629,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Qc stack 97.25 B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
   + [correct] Bet 3 BB — Correct. BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 8h 5s 3c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Check to showdown — Look again. Checking takes your top pair to showdown for free, but K-J and K-T would pay 3 BB.
+  - [wrong] Check to showdown — Look again. Checking takes your top pair to showdown for free. Bet 3 BB to get paid by K-J and K-T.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Kd Qc | Board Kh 8h 5s 3c 2d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] Fold — Look again. BB checked, so folding gives up the pot for nothing with top pair. Bet to get paid by a weaker king.
@@ -9653,7 +9653,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
   + [correct] Bet 3 BB — Correct. Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Fold — Look again. BB checked, so folding hands over the pot before you can try the 3 BB bluff.
+  - [wrong] Fold — Look again. BB checked, so folding hands over the pot. Bet 3 BB to make the sevens fold.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: River | You Jh 8h | Board Qs 7h 3c 2s 9d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 

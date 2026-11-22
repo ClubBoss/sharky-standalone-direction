@@ -1523,7 +1523,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.",
     wrongReasons: const {
-      1: 'Checking takes your top pair to showdown for free, but K-J and K-T would pay 3 BB.',
+      1: 'Checking takes your top pair to showdown for free. Bet 3 BB to get paid by K-J and K-T.',
       2: 'BB checked, so folding gives up the pot for nothing with top pair. Bet to get paid by a weaker king.',
     },
     caption: "In this example BB calls 3 BB with K-J and K-T.",
@@ -1547,7 +1547,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.",
     wrongReasons: const {
       0: 'Checking takes your unpaired hand to showdown, where it loses to sevens. The stated 3 BB bet makes sevens fold.',
-      2: 'BB checked, so folding hands over the pot before you can try the 3 BB bluff.',
+      2: 'BB checked, so folding hands over the pot. Bet 3 BB to make the sevens fold.',
     },
     caption: "BB has a pair of sevens and folds it to a 3 BB bet.",
   ),
