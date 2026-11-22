@@ -2459,8 +2459,7 @@ final _w2FirstInIntroRunner =
       teachingSteps: [
         const Act0TeachingStepV1(
           title: 'You are first in.',
-          body:
-              'Enter first voluntarily. Open means the first raise.',
+          body: 'Enter first voluntarily. Open means the first raise.',
         ),
         ..._world3BucketsIntroRunner.teachingSteps,
       ],
@@ -2517,7 +2516,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           ),
           const {
             "premium":
-                "JJ on HJ is Strong. If UTG opens to 2.5 BB, an incorrect Premium reraise to 7.5 BB risks more with a hand outside the narrow raise range.",
+                "JJ on HJ is Strong. If UTG opens to 2.5 BB, treating JJ as Premium risks 7.5 BB on a reraise outside the narrow chart.",
             "medium":
                 "JJ is Strong and HJ can open it. Applying the CO–BTN Medium row would give up an HJ open and the chance to win 1.5 BB.",
           },
