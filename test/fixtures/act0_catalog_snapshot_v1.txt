@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 458 tasks · W1–W12
+SHARKY POKER — EN learning content, 461 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -1549,7 +1549,7 @@ Medium: AQ offsuit, AJ offsuit, KQ, AT (HJ–BTN).
 Medium: 99–22, KJ, QJ, KT, QT (CO–BTN).
 
 Weak: other hands (Fold).
-TEACH: On BTN after a raise. Facing one HJ or CO raise, BTN calls with AQo, AJo, KQs, KQo, ATs, ATo, KJs or QJs and folds the rest of Medium. Weak hands (A7o, J8o) fold.
+TEACH: On BTN after a raise. BTN vs one HJ/CO open: call AQo, AJo, KQs, KQo, ATs, ATo, KJs, QJs. Fold other Medium and Weak hands.
 Q: What should you name before the action?
 HINT [theoryOnly]: Hand code writes the two ranks together. T means ten, s means suited, and o means offsuit.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Center Your turn | Facts no applicable hand facts
@@ -2031,7 +2031,7 @@ EFFECTIVE: SB unknown · BB unknown
 REASONING: principle value_vs_worse · alt call · edge foldsBetter · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer As Jd stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. Folding AJo on BTN into an unopened 1.5 BB pot throws away a strong late-position open and concedes the blinds without a fight.
+  - [wrong] Fold — The chart gives this hand an open. Folding AJo on BTN gives up a raise that can win the blind pot or draw a call from a weaker ace.
     BETTER ANSWER: Raise
   - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with AJo into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and invites SB and BB in cheaply.
     BETTER ANSWER: Raise
@@ -2346,9 +2346,10 @@ Q: By the Sharky starting chart, what is the simple first-in action?
 HINT [theoryOnly]: First in and late position: opening is the clean action.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. Folding KTs on BTN into an unopened 1.5 BB pot gives up a profitable late-position open and lets the blinds win the pot for free.
+  - [wrong] Fold — The chart gives this hand an open. Folding KTs on BTN gives up a chance to win the blinds by raising in the unopened pot.
     BETTER ANSWER: Raise
   - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with KTs into the 1.5 BB pot instead of raising to 3 BB loses fold pressure and lets SB and BB see a cheap flop.
     BETTER ANSWER: Raise
@@ -2561,9 +2562,10 @@ Q: By the Sharky starting chart, what is the cleaner first-in action from CO?
 HINT [theoryOnly]: Cutoff is late, but Button and blinds still remain behind.
 TABLE: Preflop | You Ad Jc | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Seat focus co, btn, sb, bb | Center Folded to CO | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: BTN unknown · SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO Ad Jc | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: UTG folds · HJ folds · CO acts
-  + [correct] Raise [2.5 BB] — Clean execution. The starting chart raises this hand from CO before BTN and the blinds act.
+  + [correct] Raise [2.5 BB] — Clean execution. Raise AJo from CO because only BTN and the blinds can respond, and weaker aces can call. A limp lets the blinds see the flop more cheaply.
   - [suboptimal] Call [1 BB] — Legal, but passive. Limping 1 BB from CO with AJo into the 1.5 BB pot instead of raising to 2.5 BB loses fold pressure and invites BTN and the blinds in cheaply.
     BETTER ANSWER: Raise
   - [wrong] Fold — Check the clue again. Folding AJo from CO into an unopened 1.5 BB pot gives up a profitable late-position open with only BTN and the blinds left behind you.
@@ -2591,12 +2593,13 @@ Q: By the Sharky starting chart, what is the disciplined action?
 HINT [theoryOnly]: The same hand is less comfortable from early position.
 TABLE: Preflop | You Ad Tc | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center Early position | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: HJ unknown · CO unknown · BTN unknown · SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG Ad Tc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  + [correct] Fold — Read the UTG row. The Sharky starting chart opens ATo from HJ or later. Fold it from UTG here. Experienced players sometimes open ATo from earlier seats.
-  - [wrong] Raise — Re-check ATo and UTG. Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.
+  + [correct] Fold — Read the UTG row. With ATo at UTG, five players can still raise or call with stronger aces. Folding saves the 1 BB a limp would risk.
+  - [wrong] Raise — Re-check ATo and UTG. Raising ATo from UTG costs 2.5 BB with five players still able to respond, including players with better aces. Folding saves that wager.
     BETTER ANSWER: Fold
-  - [wrong] Call — Read the earlier actions and seat order. ATo must pay 1 BB to limp from UTG. Five players can still raise and make the hand more expensive.
+  - [wrong] Call — Read the earlier actions and seat order. Limping with ATo costs 1 BB while five players can still raise. Folding avoids paying to find out whether they do.
     BETTER ANSWER: Fold
 
 TASK same_hand_different_seat_same_hand_late_open [drill] Late seat open
@@ -2608,11 +2611,12 @@ Q: By the Sharky starting chart, what is the simple action?
 HINT [theoryOnly]: Late position supports a clean open with this playable hand.
 TABLE: Preflop | You Ad Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Unopened pot | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ad Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   - [suboptimal] Call [1 BB] — Limp is legal, raise is stronger. A 1 BB limp from BTN lets both blinds see a cheap flop and gives up the fold pressure of a 2.5 BB raise.
     BETTER ANSWER: Raise
-  + [correct] Raise [2.5 BB] — Sharp read. ATo in late position can open an unopened pot.
+  + [correct] Raise [2.5 BB] — Sharp read. With ATo on BTN, raise because only the blinds can call and may fold the pot to you. A limp lets BB see a cheap flop.
   - [wrong] Fold — Read the earlier actions and seat order. Folding from BTN gives up a chance to win the 1.5 BB in blinds with only SB and BB left to act.
     BETTER ANSWER: Raise
 
@@ -2662,9 +2666,10 @@ Q: By the Sharky starting chart, what is the simple first-in action?
 HINT [theoryOnly]: Same late seat, different playable hand, same clean open-or-fold rule.
 TABLE: Preflop | You Qs Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Your turn | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Qs Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  - [wrong] Fold — The chart gives this hand an open. Folding QTs on BTN into an unopened 1.5 BB pot gives up a profitable suited broadway open and hands the blinds straight to SB and BB.
+  - [wrong] Fold — The chart gives this hand an open. Folding QTs on BTN gives up a chance to win the 1.5 BB pot if both blinds fold to a raise.
     BETTER ANSWER: Raise
   + [correct] Raise [3 BB] — That hand and seat fit the chart. With BTN first in, a raise lets you win the blinds when they fold. A limp gives BB a cheap flop and leaves SB a cheaper call.
   - [suboptimal] Call [1 BB] — Calling matches the big blind. Limping 1 BB on BTN with QTs into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and lets the blinds see a cheap flop.
@@ -2676,12 +2681,13 @@ Q: By the Sharky starting chart, what is the simple action?
 HINT [theoryOnly]: Find your hand and seat in the chart.
 TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center No one has raised | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Kd Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   - [suboptimal] Call [1 BB] — Calling matches the blind. Calling 1 BB from BTN lets the blinds see a cheap flop and gives up the pressure of a 3 BB open.
     BETTER ANSWER: Raise
-  + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
-  - [wrong] Fold — Read the earlier actions and seat order. Folding this hand first in from BTN gives up the chart open with just two players left to act.
+  + [correct] Raise [3 BB] — Read the hand with the seat. Raise from BTN because only SB and BB can respond, and they can fold weak hands. A limp lets BB see a cheap flop.
+  - [wrong] Fold — Read the earlier actions and seat order. Folding KTo on BTN misses a chance to win the blinds when both players fold to your raise.
     BETTER ANSWER: Raise
 
 TASK position_apply_early_fold [drill] Early: AQo first in
@@ -2691,9 +2697,10 @@ Q: With AQo under the gun, what does the Sharky starting chart say to do?
 HINT [theoryOnly]: Find the first seat that opens this hand in the chart.
 TABLE: Preflop | You Ad Qc | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center Before the first raise | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: HJ unknown · CO unknown · BTN unknown · SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG Ad Qc | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
-  + [correct] Fold — UTG is before HJ. The Sharky starting chart opens AQo from HJ or later. Fold it from UTG here. Experienced players sometimes open AQo from earlier seats.
+  + [correct] Fold — UTG is before HJ. In this chart, AQo folds at UTG because five players can still raise or call with strong hands. Limping pays 1 BB and gives them a cheap entry.
   - [wrong] Raise — Find the first seat for AQo. Raising AQo from UTG into the 1.5 BB pot risks chips with five players still to act behind you, before HJ, where the Sharky starting chart first opens AQo.
     BETTER ANSWER: Fold
   - [wrong] Call — Read the earlier actions and seat order. Calling AQo costs 1 BB from UTG, with five players behind who can raise and make you pay more.
@@ -2707,12 +2714,13 @@ Q: By the Sharky starting chart, what is the disciplined action?
 HINT [theoryOnly]: Middle position still needs discipline when the offsuit hand gets loose.
 TABLE: Preflop | You Kd Tc | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Seat focus hj | Card focus hero_0, hero_1 | Center Middle position | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: CO unknown · BTN unknown · SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ Kd Tc | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ acts
   - [wrong] Raise — Re-check KTo and HJ. Raising KTo from HJ into the 1.5 BB pot risks chips with CO, BTN, and both blinds still behind you, one seat too early for KTo in the Sharky starting chart.
     BETTER ANSWER: Fold
-  + [correct] Fold — Read the HJ row. The Sharky starting chart opens KTo from CO or BTN. Fold it from HJ here. Experienced players sometimes open KTo from HJ as well.
-  - [wrong] Call — Read the earlier actions and seat order. From HJ, KTo would put in 1 BB while CO, BTN and the blinds can still increase the price.
+  + [correct] Fold — Read the HJ row. Fold KTo from HJ because CO, BTN and both blinds can raise or call with better kings. Limping pays 1 BB before they decide.
+  - [wrong] Call — Read the earlier actions and seat order. Limping KTo from HJ costs 1 BB before CO, BTN and the blinds decide. Folding keeps that chip.
     BETTER ANSWER: Fold
 
 TASK position_apply_recap [review] Position apply recap
@@ -2732,74 +2740,78 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 ===== WORLD 3 · LESSON w3_play_from_blinds · Play from the blinds =====
 
 TASK w3_play_from_blinds_intro [theory] Two blinds, different choices
-CAPTION: BTN raised and you already posted a blind.
-TEACH: Use the price that is still due. Against one BTN open from SB, reraise Premium, Strong, and the HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, KJ, QJ, KT, QT) and Weak hands. BB still acts behind you. In BB after SB folds, your posted 1 BB lowers what you owe. If calling ends betting, divide the extra call by the final pot: calling 1.5 BB makes 5.5 BB, needing about 27% equity (your pot share from winning or splitting).
-Q: How does posting a blind change the decision?
+TEACH: Facing BTN. SB reraises Premium, Strong and HJ Medium. Fold CO Medium and Weak. From BB, subtract your 1 BB post. A 1.5 BB call for 5.5 BB needs about 27% equity.
+TEACH: Blind against blind. SB opens strong hands and acts first after the flop. Limping lets BB see it cheaply. A BB call closes the action: the flop comes next.
+Q: What price remains?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Qc Tc | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB folded stack 99.5 BB post 0.5 BB | BB Qc Tc stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds
 REVIEW: Recognize every seat label before using position to decide.
 
-TASK w3_play_from_blinds_small_blind_fold [drill] Small blind with a weak hand
-CAPTION: BTN opens to 2.5 BB. BB has yet to act.
-Q: What does the small-blind rule say to do with Q5o here?
+TASK w3_play_from_blinds_small_blind_fold [drill] Weak hand in SB
+CAPTION: BB still acts.
+Q: Your play with Q5o?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Qc 5d | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
 EFFECTIVE: BTN 100 · BB 100
+REASONING: principle domination · alt call · edge avoidsDomination · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Qc 5d stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
   - [wrong] Call 2 BB — Read the price and seat. Calling costs 2 BB with Q5o from SB, and BB still has a turn. A better queen can cost you more after the flop.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. Q5o is weak and you act before BTN after the flop. Folding costs nothing more than the 0.5 BB already posted.
-  - [wrong] Reraise to 10 BB — Read the price and seat. Putting in 9.5 BB more from SB with Q5o risks a larger pot with a weak hand while BB can still respond.
+  + [correct] Fold — Correct. Fold Q5o because BTN can raise stronger queens and BB still has a turn. Calling 2 BB puts you first to act after the flop with a weak kicker.
+  - [wrong] Reraise to 10 BB — Read the price and seat. A reraise from SB costs 9.5 BB more and may draw action from stronger hands. Folding keeps those chips with Q5o.
     BETTER ANSWER: Fold
 
-TASK w3_play_from_blinds_small_blind_raise [drill] Small blind with a premium hand
-CAPTION: BTN opens to 2.5 BB. BB has yet to act.
-Q: What does the small-blind rule say to do with AA here?
+TASK w3_play_from_blinds_small_blind_raise [drill] Premium in SB
+CAPTION: BB still acts.
+Q: Your play with AA?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ad | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts pocket pair
 EFFECTIVE: BTN 100 · BB 100
+REASONING: principle value_vs_worse · alt call · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB As Ad stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  + [correct] Reraise to 10 BB — Correct. AA in SB can reraise to build the pot against weaker hands. A 10 BB total costs another 9.5 BB after your posted blind.
-  - [wrong] Call 2 BB — Read the price and seat. Matching 2 BB with AA keeps the pot smaller and offers BB a cheaper chance to enter behind you.
+  + [correct] Reraise to 10 BB — Correct. Reraise AA to 10 BB because BTN can call with weaker pairs or strong aces. Calling lets BB enter cheaply and keeps the pot smaller.
+  - [wrong] Call 2 BB — Read the price and seat. A call gives BB a cheaper flop and misses a chance to build the pot with AA. A reraise charges both players more.
     BETTER ANSWER: Reraise to 10 BB
   - [wrong] Fold — Read the price and seat. Folding AA from SB hands the 0.5 BB already posted to the pot and gives up a chance to build value against BTN.
     BETTER ANSWER: Reraise to 10 BB
 
-TASK w3_play_from_blinds_small_blind_medium_raise [drill] Small blind with an HJ medium hand
-CAPTION: BTN opens to 2.5 BB. BB has yet to act.
-Q: What does the small-blind rule say to do with AQo here?
+TASK w3_play_from_blinds_small_blind_medium_raise [drill] HJ Medium in SB
+CAPTION: BB still acts.
+Q: Your play with AQo?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ah Qd | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
 EFFECTIVE: BTN 100 · BB 100
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Ah Qd stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  + [correct] Reraise to 10 BB — Correct. AQo is in the HJ Medium row. Against a wide BTN open from SB, reraising to 10 BB (9.5 BB more) takes the lead and stops BB from entering cheaply.
-  - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB from SB with AQo leaves you out of position against BTN and invites BB in behind you for a cheap price.
+  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can raise weaker aces and BB faces a higher price. A call lets BB in cheaply while you act first after the flop.
+  - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB with AQo gives BB a cheap entry while you act first after the flop. A reraise charges BB more.
     BETTER ANSWER: Reraise to 10 BB
   - [wrong] Fold — Read the price and seat. Folding gives up a chance to win the 2.5 BB BTN open and the BB post with a hand in the chart's SB reraise row.
     BETTER ANSWER: Reraise to 10 BB
 
-TASK w3_play_from_blinds_small_blind_medium_fold [drill] Small blind with a CO medium hand
-CAPTION: BTN opens to 2.5 BB. BB has yet to act.
-Q: What does the small-blind rule say to do with KJo here?
+TASK w3_play_from_blinds_small_blind_medium_fold [drill] CO Medium in SB
+CAPTION: BB still acts.
+Q: Your play with KJo?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd Jc | Pot 4 BB | To call 2 BB | Seat SB | Active sb | Decision sb | Facts no applicable hand facts
 EFFECTIVE: BTN 100 · BB 100
+REASONING: principle domination · alt call · edge avoidsDomination · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Kd Jc stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
   - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB from SB with KJo puts you first to act after the flop while BB can still raise behind you. In this small-blind rule, the CO Medium row folds.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. KJo is in the CO Medium row. Against a BTN open from SB, only Premium, Strong, and the HJ Medium row reraise; folding KJo saves 2 BB out of position with BB still behind.
-  - [wrong] Reraise to 10 BB — Read the price and seat. Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a CO Medium hand when this rule reserves reraises for Premium, Strong, and the HJ Medium row.
+  + [correct] Fold — Correct. Fold KJo because BTN can raise stronger kings and BB still has a turn. Calling costs 2 BB and puts you first after the flop.
+  - [wrong] Reraise to 10 BB — Read the price and seat. A reraise costs 9.5 BB more with KJo, and BTN can continue with better kings. Folding keeps those chips.
     BETTER ANSWER: Fold
 
-TASK w3_play_from_blinds_big_blind_price [drill] Read the remaining price
-CAPTION: BTN opens to 2.5 BB and SB folds. You have already posted 1 BB.
-Q: How much more must you add to match BTN?
+TASK w3_play_from_blinds_big_blind_price [drill] Call price
+CAPTION: BTN opens to 2.5 BB. SB folds.
+Q: How much more to call?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd 8d | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB folded stack 99.5 BB post 0.5 BB | BB Kd 8d stack 99 BB post 1 BB
@@ -2808,19 +2820,64 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: 1.5 BB
   - [wrong] 1 BB — Read the price and seat. Putting in only 1 BB leaves the BB contribution at 2 BB, still 0.5 BB short of the open.
     BETTER ANSWER: 1.5 BB
-  + [correct] 1.5 BB — Correct. Your 1 BB post counts toward BTN’s 2.5 BB. Calling puts another 1.5 BB into the 4 BB pot.
+  + [correct] 1.5 BB — Correct. BTN raised to 2.5 BB, so subtract your posted 1 BB to get the 1.5 BB call. Paying 2.5 BB again would count your post twice.
 
-TASK w3_play_from_blinds_big_blind_defend [review] Defend when the price fits
+TASK w3_play_from_blinds_bvb_sb_open [drill] First in from SB
+CAPTION: Folded to you in SB.
+Q: What do you do with AA?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You As Ah | Pot 1.5 BB | To call 0.5 BB | Seat SB | Active sb | Decision sb | Facts pocket pair
+EFFECTIVE: BB 100
+REASONING: principle value_vs_worse · alt call · edge moreValueFromWorse · stack_matters false · assumption none
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB As Ah stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds
+  - [wrong] Call 0.5 BB — Read the price and seat. Completing costs 0.5 BB and gives BB a free check. A raise can get more chips in while your aces are ahead.
+    BETTER ANSWER: Raise to 3 BB
+  + [correct] Raise to 3 BB — Correct. Raise AA so BB can call with weaker pairs or strong aces. A limp gives BB a free check and the last turn after the flop.
+  - [wrong] Fold — Read the price and seat. Folding gives up a chance to win the blinds or get paid by a weaker hand. Raise against the one player still to act.
+    BETTER ANSWER: Raise to 3 BB
+
+TASK w3_play_from_blinds_bvb_bb_call [drill] Defend BB
+CAPTION: SB opens to 3 BB. Assume you win 38% of the time, never tie, and face no later bets.
+Q: What do you do?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You Qh Jh | Pot 4 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+EFFECTIVE: SB 100
+REASONING: principle blind_price_defense · alt fold · edge priceBeatsEquity · stack_matters false · assumption Assume you win 38% of the time, never tie, and face no later bets.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB stack 97 BB raise 3 BB | BB Qh Jh stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds · SB raises to 3 BB
+  - [wrong] Fold — Read the price and seat. Folding gives up a call that needs only one win in three. Your assumed 38% clears that price.
+    BETTER ANSWER: Call 2 BB
+  - [wrong] Check — Read the price and seat. SB raised, so a free check is unavailable. A call pays the remaining 2 BB.
+    BETTER ANSWER: Call 2 BB
+  + [correct] Call 2 BB — Correct. Call 2 BB into a final pot of 6 BB, so you need about 33%. SB has raised and the 38% assumption makes calling better than folding.
+
+TASK w3_play_from_blinds_bvb_bb_repeat [drill] Compare the price
+CAPTION: SB opens to 3 BB. Assume you win 25% of the time, never tie, and face no later bets.
+Q: What do you do?
+HINT [hidden]: (none)
+TABLE: Preflop | You 7s 3d | Pot 4 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+EFFECTIVE: SB 100
+REASONING: principle blind_price_defense · alt call · edge equityBelowPrice · stack_matters false · assumption Assume you win 25% of the time, never tie, and face no later bets.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB stack 97 BB raise 3 BB | BB 7s 3d stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN folds · SB raises to 3 BB
+  + [correct] Fold — Correct. SB raises to 3 BB, so a 2 BB call makes a 6 BB pot and needs about 33%. Fold because 25% wins too rarely for that price.
+  - [wrong] Call 2 BB — Read the price and seat. Calling puts 2 BB at risk with a 25% chance of winning the 6 BB final pot. Folding avoids that loss.
+    BETTER ANSWER: Fold
+  - [wrong] Check — Read the price and seat. SB has a live wager. Checking cannot answer it, so fold to leave the hand without paying more.
+    BETTER ANSWER: Fold
+
+TASK w3_play_from_blinds_big_blind_defend [review] Call or fold
 ENTRY: drill
-CAPTION: BTN opens to 2.5 BB and SB folds. For this example, assume you win 32% of the time and face no later bets. Compare calling with folding.
-Q: What does this price tell you?
+CAPTION: SB folds. Assume you win 32% and face no later bets.
+Q: Can you call?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Jh Th | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB folded stack 99.5 BB post 0.5 BB | BB Jh Th stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds
   - [wrong] The price is too high — Read the price and seat. Calling costs 1.5 BB and makes a 5.5 BB pot. Folding gives up this call with a 32% chance, above the roughly 27% threshold.
     BETTER ANSWER: The chance to win clears the price
-  + [correct] The chance to win clears the price — Correct. You need about 27% equity. In this model JTs wins 32%, so you can pay the 1.5 BB call.
+  + [correct] The chance to win clears the price — Correct. BTN raises and your 1.5 BB call makes a 5.5 BB pot, so you need about 27%. Call because the stated 32% clears the price while folding gives up that edge.
   - [wrong] The flop is free after posting BB — Read the price and seat. Your 1 BB post counts, but matching BTN still costs 1.5 BB. Treating it as free can lead to paying with hands below the threshold.
     BETTER ANSWER: The chance to win clears the price
 
@@ -2851,11 +2908,12 @@ Q: By the Sharky starting chart, what is the simple action?
 HINT [theoryOnly]: Find your hand and seat in the chart.
 TABLE: Preflop | You Qd Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center No one has raised | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Qd Tc stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
   - [suboptimal] Call [1 BB] — Calling matches the blind. Limping QTo from BTN stakes 1 BB and offers BB a free check. A 3 BB open gives the blinds a fold decision.
     BETTER ANSWER: Raise
-  + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
+  + [correct] Raise [3 BB] — Read the hand with the seat. Raise from BTN because only SB and BB can respond, and they can fold weak hands. A limp lets BB see a cheap flop.
   - [wrong] Fold — Read the earlier actions and seat order. The chart opens QTo in BTN. Folding from this seat passes up an open into the 1.5 BB blinds.
     BETTER ANSWER: Raise
 
@@ -2867,11 +2925,12 @@ Q: By the Sharky starting chart, what is the disciplined action?
 HINT [theoryOnly]: A tempting ace still needs an early-seat discipline check.
 TABLE: Preflop | You Ac 9d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Seat focus utg | Card focus hero_0, hero_1 | Center UTG discipline | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: HJ unknown · CO unknown · BTN unknown · SB unknown · BB unknown
+REASONING: principle domination · alt call · edge avoidsDomination · stack_matters false · assumption none
 SEATS: UTG Ac 9d | HJ | CO | BTN dealer stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG acts
   - [wrong] Raise — Re-check A9o and UTG. Raising A9o from UTG into the 1.5 BB pot risks chips with five players still to act. The Sharky starting chart folds A9o here because stronger aces can dominate it.
     BETTER ANSWER: Fold
-  + [correct] Fold — Ace discipline applied. A9o is in the Weak group of the Sharky starting chart. Fold it from UTG here.
+  + [correct] Fold — Ace discipline applied. Fold A9o at UTG because one of the five players behind can raise or call with a stronger ace. A limp puts chips at risk before any of them acts.
   - [wrong] Call — Read the earlier actions and seat order. Limping A9o from UTG costs 1 BB before any of the five seats behind have acted.
     BETTER ANSWER: Fold
 
@@ -2884,9 +2943,10 @@ Q: By the Sharky starting chart, what is the simple response?
 HINT [theoryOnly]: Late position helps when the hand can still continue cleanly.
 TABLE: Preflop | You Ks Js | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Card focus hero_0, hero_1 | Center HJ opens, BTN decides | Facts no applicable hand facts
 EFFECTIVE: HJ unknown · SB unknown · BB unknown
+REASONING: principle position_realizes · alt raise · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack 100 BB | BTN dealer Ks Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
-  + [correct] Call [2.5 BB] — Sharp read. The Sharky starting chart calls one HJ raise with KJs on BTN.
+  + [correct] Call [2.5 BB] — Sharp read. Call KJs on BTN because HJ can raise weaker suited hands and acts first after the flop. Reraising risks extra chips when better hands continue.
   - [wrong] Fold — Not quite. HJ opened to 2.5 BB, making the pot 4 BB before you act. Folding KJs on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
   - [wrong] Reraise to 7.5 BB — Read the earlier actions and seat order. The chart calls HJ for 2.5 BB with KJs on BTN. Reraising risks 5 BB extra against better hands.
@@ -2914,10 +2974,11 @@ Q: By the Sharky starting chart, what is the simple action?
 HINT [theoryOnly]: Find your hand and seat in the chart.
 TABLE: Preflop | You Ah Th | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center No one has raised | Empty board No board cards yet | Facts no applicable hand facts
 EFFECTIVE: SB unknown · BB unknown
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ah Th stack 100 BB | SB post 0.5 BB | BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN acts
-  + [correct] Raise [3 BB] — Read the hand with the seat. The chart includes this hand on BTN when everyone before you folds.
-  - [suboptimal] Call [1 BB] — Calling matches the blind. Calling the blind costs 1 BB from the early seat and leaves the players behind free to raise.
+  + [correct] Raise [3 BB] — Read the hand with the seat. Raise from BTN because only SB and BB can respond, and they can fold weak hands. A limp lets BB see a cheap flop.
+  - [suboptimal] Call [1 BB] — Calling matches the blind. Limping ATs on BTN costs 1 BB, gives BB a free check and misses the chance to take the blind pot with a raise.
     BETTER ANSWER: Raise
   - [wrong] Fold — Read the earlier actions and seat order. ATs on BTN is in the HJ–BTN opening row. Folding gives up a chance to raise for the 1.5 BB already posted.
     BETTER ANSWER: Raise
@@ -8403,11 +8464,12 @@ Q: Everyone before BTN folded. According to the Sharky starting chart, what do y
 HINT [hidden]: (none)
 TABLE: Preflop | You 7h 7d | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts pocket pair
 EFFECTIVE: SB 100 · BB 100
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 7h 7d stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds
   - [wrong] Fold — Look again. Folding from BTN gives up the open with sevens and a chance to win both blinds.
     BETTER ANSWER: Raise
-  + [correct] Raise — Correct. A pair of sevens is included in the chart's BTN first-in opens. Only the blinds have decisions left.
+  + [correct] Raise — Correct. Raise sevens on BTN so the blinds can fold and hand you the pot. A limp lets BB see a cheap flop and hit an overcard.
   - [wrong] Call — Look again. Calling costs 1 BB and lets the blinds enter cheaply. The chart opens BTN sevens here.
     BETTER ANSWER: Raise
 
@@ -8479,9 +8541,10 @@ Q: By the Sharky starting chart, what is the first-in action here with QTs?
 HINT [hidden]: (none)
 TABLE: Preflop | You Qd Td | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 EFFECTIVE: BTN 100 · SB 100 · BB 100
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qd Td stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  + [correct] Raise — Correct. The chart includes QTs when CO is first in. An earlier raise would give you a different decision.
+  + [correct] Raise — Correct. Raise QTs from CO because BTN and both blinds can fold, and weaker suited hands can call. Limping makes it cheap for them to see the flop.
   - [wrong] Fold — Look again. Folding QTs in CO gives up the chart open and a chance to win the blind pot.
     BETTER ANSWER: Raise
   - [wrong] Call — Look again. Calling costs 1 BB and lets BTN and the blinds enter cheaply.
@@ -8521,9 +8584,10 @@ Q: By the Sharky starting chart, what do you do first in from HJ with AQo?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ac Qd | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: CO 100 · BTN 100 · SB 100 · BB 100
+REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ Ac Qd stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  + [correct] Raise — Correct. AQo is included in HJ's first-in raises. No opponent has entered before you.
+  + [correct] Raise — Correct. Raise AQo from HJ because players behind can fold or call with a weaker ace. Limping gives those players a cheap flop.
   - [wrong] Call — Look again. Limping costs 1 BB and lets CO, BTN and the blinds enter cheaply.
     BETTER ANSWER: Raise
   - [wrong] Fold — Look again. Folding AQo from HJ gives up a chart open and the chance to win the blind pot.
@@ -8537,12 +8601,13 @@ Q: You have A8o first in from UTG. What does the Sharky starting chart say?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ah 8s | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
 EFFECTIVE: HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+REASONING: principle domination · alt call · edge avoidsDomination · stack_matters false · assumption none
 SEATS: UTG Ah 8s stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] Call — Look again. Limping A8o costs 1 BB with five players behind UTG still able to raise.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. A8o is a weak offsuit ace from UTG. The chart leaves it out of that seat's first-in opens.
-  - [wrong] Raise — Look again. Opening to 2.5 BB risks 2.5 BB with a hand outside the UTG opening row.
+  + [correct] Fold — Correct. Fold A8o from UTG because five players can still raise, and better aces can call. A limp costs 1 BB and can get you in trouble when you pair your ace.
+  - [wrong] Raise — Look again. Opening to 2.5 BB costs more than folding and can get action from a stronger ace.
     BETTER ANSWER: Fold
 
 TASK spaced_review_w3_position_checkpoint_players_behind_v1 [drill] Review decision

@@ -1,3 +1,21 @@
+const w3BlindVsBlindChoicesV1 = <String, List<List<Object?>>>{
+  'w3_play_from_blinds_bvb_sb_open': [
+    ['call', 'Call 0.5 BB', false, 'wrong', 'Raise to 3 BB'],
+    ['raise', 'Raise to 3 BB', true, 'correct', 'Raise to 3 BB'],
+    ['fold', 'Fold', false, 'wrong', 'Raise to 3 BB'],
+  ],
+  'w3_play_from_blinds_bvb_bb_call': [
+    ['fold', 'Fold', false, 'wrong', 'Call 2 BB'],
+    ['check', 'Check', false, 'wrong', 'Call 2 BB'],
+    ['call', 'Call 2 BB', true, 'correct', 'Call 2 BB'],
+  ],
+  'w3_play_from_blinds_bvb_bb_repeat': [
+    ['fold', 'Fold', true, 'correct', 'Fold'],
+    ['call', 'Call 2 BB', false, 'wrong', 'Fold'],
+    ['check', 'Check', false, 'wrong', 'Fold'],
+  ],
+};
+
 /// World 3 task identities and exact changes used by the historical census.
 const w3NewChoiceContractV1 = <String, List<List<Object?>>>{
   "position_six_seats_position_order_reason": [
@@ -28,6 +46,7 @@ const w3NewChoiceContractV1 = <String, List<List<Object?>>>{
       "BTN sees UTG act first",
     ],
   ],
+  ...w3BlindVsBlindChoicesV1,
   "w3_play_from_blinds_intro": [],
   "w3_play_from_blinds_small_blind_fold": [
     ["call", "Call 2 BB", false, "wrong", "Fold"],

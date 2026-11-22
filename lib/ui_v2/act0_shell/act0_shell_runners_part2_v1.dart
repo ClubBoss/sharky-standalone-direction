@@ -1906,7 +1906,7 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'On BTN after a raise.',
       body:
-          'Facing one HJ or CO raise, BTN calls with AQo, AJo, KQs, KQo, ATs, ATo, KJs or QJs and folds the rest of Medium. Weak hands (A7o, J8o) fold.',
+          'BTN vs one HJ/CO open: call AQo, AJo, KQs, KQo, ATs, ATo, KJs, QJs. Fold other Medium and Weak hands.',
     ),
   ],
 );
@@ -2175,7 +2175,7 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'The starting chart raises this hand from CO before BTN and the blinds act.',
+          "Raise AJo from CO because only BTN and the blinds can respond, and weaker aces can call. A limp lets the blinds see the flop more cheaply.",
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -2832,7 +2832,7 @@ final _world3PositionCheckpointCallRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason:
-          'The Sharky starting chart calls one HJ raise with KJs on BTN.',
+          "Call KJs on BTN because HJ can raise weaker suited hands and acts first after the flop. Reraising risks extra chips when better hands continue.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -3108,7 +3108,7 @@ const _additionalLateOpenChoices = <Act0RunnerOptionV1>[
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Read the hand with the seat.',
     feedbackReason:
-        'The chart includes this hand on BTN when everyone before you folds.',
+        "Raise from BTN because only SB and BB can respond, and they can fold weak hands. A limp lets BB see a cheap flop.",
   ),
 ];
 
@@ -3127,7 +3127,8 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
       preferredLabel: 'Raise',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
-      feedbackReason: 'ATo in late position can open an unopened pot.',
+      feedbackReason:
+          "With ATo on BTN, raise because only the blinds can call and may fold the pot to you. A limp lets BB see a cheap flop.",
     ),
     Act0RunnerOptionV1(
       id: 'call',
@@ -3176,7 +3177,7 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the UTG row.',
       feedbackReason:
-          'The Sharky starting chart opens ATo from HJ or later. Fold it from UTG here. Experienced players sometimes open ATo from earlier seats.',
+          "With ATo at UTG, five players can still raise or call with stronger aces. Folding saves the 1 BB a limp would risk.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -3229,7 +3230,7 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Read the HJ row.',
       feedbackReason:
-          'The Sharky starting chart opens KTo from CO or BTN. Fold it from HJ here. Experienced players sometimes open KTo from HJ as well.',
+          "Fold KTo from HJ because CO, BTN and both blinds can raise or call with better kings. Limping pays 1 BB before they decide.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -3290,7 +3291,7 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Ace discipline applied.',
       feedbackReason:
-          'A9o is in the Weak group of the Sharky starting chart. Fold it from UTG here.',
+          "Fold A9o at UTG because one of the five players behind can raise or call with a stronger ace. A limp puts chips at risk before any of them acts.",
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -5033,22 +5034,23 @@ final _w3ButtonOrderReasonRunner = _postflopButtonActorRunner.copyWith(
 final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
   lessonId: 'w3_play_from_blinds',
   lessonTitle: 'Play from the blinds',
-  caption: 'BTN raised and you already posted a blind.',
-  question: 'How does posting a blind change the decision?',
+  caption: '',
+  question: 'What price remains?',
   hint: '',
   options: const [],
   table: _day7PreflopV1('bb', 'Qc Tc', opener: 'btn', showTurn: true),
   teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Use the price that is still due.',
+      title: 'Facing BTN.',
       body:
-          'Against one BTN open from SB, reraise Premium, Strong, and the '
-          'HJ Medium row (AQo, AJo, KQ, AT); fold the CO Medium row (99–22, '
-          'KJ, QJ, KT, QT) and Weak hands. BB still acts behind you. In BB '
-          'after SB folds, your posted 1 BB lowers what you owe. If calling '
-          'ends betting, divide the extra call by the final pot: calling '
-          '1.5 BB makes 5.5 BB, needing about 27% equity (your pot share '
-          'from winning or splitting).',
+          'SB reraises Premium, Strong and HJ Medium. Fold CO Medium and Weak. '
+          'From BB, subtract your 1 BB post. A 1.5 BB call for 5.5 BB needs about 27% equity.',
+    ),
+    Act0TeachingStepV1(
+      title: 'Blind against blind.',
+      body:
+          'SB opens strong hands and acts first after the flop. Limping lets BB see it cheaply. '
+          'A BB call closes the action: the flop comes next.',
     ),
   ],
 );
@@ -5060,16 +5062,13 @@ Act0RunnerStateV1 _w3BlindDefenseRunner({
   required String question,
   required List<({String id, String label, String reason})> options,
   required int correct,
+  Act0TableStateV1? table,
 }) => _w3BlindDefenseIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   caption: caption,
   question: question,
-  table: _day7PreflopV1(
-    hero,
-    cards,
-    opener: 'btn',
-    showTurn: true,
-  ).copyWith(showDecisionPremise: true),
+  table: (table ?? _day7PreflopV1(hero, cards, opener: 'btn', showTurn: true))
+      .copyWith(showDecisionPremise: true),
   teachingSteps: const [],
   options: [
     for (final (index, option) in options.indexed)
@@ -5088,4 +5087,38 @@ Act0RunnerStateV1 _w3BlindDefenseRunner({
         feedbackReason: option.reason,
       ),
   ],
+);
+
+Act0TableStateV1 _w3BigBlindFacingSmallBlindV1(String hand) => _day7TableV1(
+  hero: 'bb',
+  hand: hand,
+  street: PokerStreet.preflop,
+  actor: 'bb',
+  folded: const {'utg', 'hj', 'co', 'btn'},
+  entries: const [
+    ..._act0LessonBlinds,
+    Act0ContributionV1(
+      PokerStreet.preflop,
+      'sb',
+      Act0ContributionKindV1.wager,
+      2.5,
+    ),
+  ],
+  history: const [
+    Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+    Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN folds'),
+    Act0ActionTrailItemV1(label: 'SB raises to 3 BB'),
+  ],
+  bets: const {
+    'sb': Act0SeatBetStateV1(
+      kind: Act0SeatBetKindV1.raise,
+      label: 'Raise',
+      amountLabel: '3 BB',
+    ),
+    'bb': _bigBlindPost,
+  },
 );

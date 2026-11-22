@@ -4506,7 +4506,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           _w1DisciplineApplyLateOpenRunner,
           const {
             'fold':
-                'Folding AJo on BTN into an unopened 1.5 BB pot throws away a strong late-position open and concedes the blinds without a fight.',
+                "Folding AJo on BTN gives up a raise that can win the blind pot or draw a call from a weaker ace.",
             'call':
                 'Limping 1 BB on BTN with AJo into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and invites SB and BB in cheaply.',
           },
@@ -5091,7 +5091,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.drill,
         runner: _act0WithWrongFeedbackReasonsV1(_world3ButtonOpenRunner, const {
           'fold':
-              'Folding KTs on BTN into an unopened 1.5 BB pot gives up a profitable late-position open and lets the blinds win the pot for free.',
+              "Folding KTs on BTN gives up a chance to win the blinds by raising in the unopened pot.",
           'call':
               'Limping 1 BB on BTN with KTs into the 1.5 BB pot instead of raising to 3 BB loses fold pressure and lets SB and BB see a cheap flop.',
         }),
@@ -5309,11 +5309,11 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             id: 'call',
             label: 'Call',
             reason:
-                'ATo must pay 1 BB to limp from UTG. Five players can still raise and make the hand more expensive.',
+                "Limping with ATo costs 1 BB while five players can still raise. Folding avoids paying to find out whether they do.",
           ),
           const {
             "raise":
-                "Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.",
+                "Raising ATo from UTG costs 2.5 BB with five players still able to respond, including players with better aces. Folding saves that wager.",
           },
         ),
         rewardXp: 9,
@@ -5403,7 +5403,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             'fold':
-                'Folding QTs on BTN into an unopened 1.5 BB pot gives up a profitable suited broadway open and hands the blinds straight to SB and BB.',
+                "Folding QTs on BTN gives up a chance to win the 1.5 BB pot if both blinds fold to a raise.",
             'call':
                 'Limping 1 BB on BTN with QTs into the 1.5 BB pot instead of raising to 3 BB gives up fold pressure and lets the blinds see a cheap flop.',
           },
@@ -5439,7 +5439,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "call":
                 "Calling 1 BB from BTN lets the blinds see a cheap flop and gives up the pressure of a 3 BB open.",
             "fold":
-                "Folding this hand first in from BTN gives up the chart open with just two players left to act.",
+                "Folding KTo on BTN misses a chance to win the blinds when both players fold to your raise.",
           },
         ),
         rewardXp: 9,
@@ -5471,7 +5471,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                 quality: Act0FeedbackQualityV1.correct,
                 feedbackTitle: 'UTG is before HJ.',
                 feedbackReason:
-                    'The Sharky starting chart opens AQo from HJ or later. Fold it from UTG here. Experienced players sometimes open AQo from earlier seats.',
+                    "In this chart, AQo folds at UTG because five players can still raise or call with strong hands. Limping pays 1 BB and gives them a cheap entry.",
               ),
               Act0RunnerOptionV1(
                 id: 'raise',
@@ -5524,7 +5524,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           id: 'call',
           label: 'Call',
           reason:
-              'From HJ, KTo would put in 1 BB while CO, BTN and the blinds can still increase the price.',
+              "Limping KTo from HJ costs 1 BB before CO, BTN and the blinds decide. Folding keeps that chip.",
         ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,
@@ -5550,7 +5550,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
     title: 'Play from the blinds',
     subtitle: 'Your posted blind changes the price of calling.',
     phaseLabel: 'Blinds',
-    rewardXp: 56,
+    rewardXp: 80,
     sourceTasks: [
       Act0LessonTaskV1(
         taskId: 'intro',
@@ -5562,13 +5562,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'small_blind_fold',
-        title: 'Small blind with a weak hand',
+        title: 'Weak hand in SB',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3BlindDefenseRunner(
           hero: 'sb',
           cards: 'Qc 5d',
-          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
-          question: 'What does the small-blind rule say to do with Q5o here?',
+          caption: 'BB still acts.',
+          question: 'Your play with Q5o?',
           options: const [
             (
               id: 'call',
@@ -5580,13 +5580,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               id: 'fold',
               label: 'Fold',
               reason:
-                  'Q5o is weak and you act before BTN after the flop. Folding costs nothing more than the 0.5 BB already posted.',
+                  "Fold Q5o because BTN can raise stronger queens and BB still has a turn. Calling 2 BB puts you first to act after the flop with a weak kicker.",
             ),
             (
               id: 'raise',
               label: 'Reraise to 10 BB',
               reason:
-                  'Putting in 9.5 BB more from SB with Q5o risks a larger pot with a weak hand while BB can still respond.',
+                  "A reraise from SB costs 9.5 BB more and may draw action from stronger hands. Folding keeps those chips with Q5o.",
             ),
           ],
           correct: 1,
@@ -5596,25 +5596,25 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'small_blind_raise',
-        title: 'Small blind with a premium hand',
+        title: 'Premium in SB',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3BlindDefenseRunner(
           hero: 'sb',
           cards: 'As Ad',
-          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
-          question: 'What does the small-blind rule say to do with AA here?',
+          caption: 'BB still acts.',
+          question: 'Your play with AA?',
           options: const [
             (
               id: 'raise',
               label: 'Reraise to 10 BB',
               reason:
-                  'AA in SB can reraise to build the pot against weaker hands. A 10 BB total costs another 9.5 BB after your posted blind.',
+                  "Reraise AA to 10 BB because BTN can call with weaker pairs or strong aces. Calling lets BB enter cheaply and keeps the pot smaller.",
             ),
             (
               id: 'call',
               label: 'Call 2 BB',
               reason:
-                  'Matching 2 BB with AA keeps the pot smaller and offers BB a cheaper chance to enter behind you.',
+                  'A call gives BB a cheaper flop and misses a chance to build the pot with AA. A reraise charges both players more.',
             ),
             (
               id: 'fold',
@@ -5630,26 +5630,26 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'small_blind_medium_raise',
-        title: 'Small blind with an HJ medium hand',
+        title: 'HJ Medium in SB',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0WithWrongFeedbackReasonsV1(
           _w3BlindDefenseRunner(
             hero: 'sb',
             cards: 'Ah Qd',
-            caption: 'BTN opens to 2.5 BB. BB has yet to act.',
-            question: 'What does the small-blind rule say to do with AQo here?',
+            caption: 'BB still acts.',
+            question: 'Your play with AQo?',
             options: const [
               (
                 id: 'raise',
                 label: 'Reraise to 10 BB',
                 reason:
-                    'AQo is in the HJ Medium row. Against a wide BTN open from SB, reraising to 10 BB (9.5 BB more) takes the lead and stops BB from entering cheaply.',
+                    "Reraise AQo to 10 BB because BTN can raise weaker aces and BB faces a higher price. A call lets BB in cheaply while you act first after the flop.",
               ),
               (
                 id: 'call',
                 label: 'Call 2 BB',
                 reason:
-                    'Calling 2 BB from SB with AQo leaves you out of position against BTN and invites BB in behind you for a cheap price.',
+                    'Calling 2 BB with AQo gives BB a cheap entry while you act first after the flop. A reraise charges BB more.',
               ),
               (
                 id: 'fold',
@@ -5670,13 +5670,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'small_blind_medium_fold',
-        title: 'Small blind with a CO medium hand',
+        title: 'CO Medium in SB',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3BlindDefenseRunner(
           hero: 'sb',
           cards: 'Kd Jc',
-          caption: 'BTN opens to 2.5 BB. BB has yet to act.',
-          question: 'What does the small-blind rule say to do with KJo here?',
+          caption: 'BB still acts.',
+          question: 'Your play with KJo?',
           options: const [
             (
               id: 'call',
@@ -5688,13 +5688,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               id: 'fold',
               label: 'Fold',
               reason:
-                  'KJo is in the CO Medium row. Against a BTN open from SB, only Premium, Strong, and the HJ Medium row reraise; folding KJo saves 2 BB out of position with BB still behind.',
+                  "Fold KJo because BTN can raise stronger kings and BB still has a turn. Calling costs 2 BB and puts you first after the flop.",
             ),
             (
               id: 'raise',
               label: 'Reraise to 10 BB',
               reason:
-                  'Putting in 9.5 BB more from SB with KJo builds a large pot out of position with a CO Medium hand when this rule reserves reraises for Premium, Strong, and the HJ Medium row.',
+                  "A reraise costs 9.5 BB more with KJo, and BTN can continue with better kings. Folding keeps those chips.",
             ),
           ],
           correct: 1,
@@ -5704,15 +5704,14 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'big_blind_price',
-        title: 'Read the remaining price',
+        title: 'Call price',
         phase: Act0LessonPhaseV1.drill,
         runner: _act0WithWrongFeedbackReasonsV1(
           _w3BlindDefenseRunner(
             hero: 'bb',
             cards: 'Kd 8d',
-            caption:
-                'BTN opens to 2.5 BB and SB folds. You have already posted 1 BB.',
-            question: 'How much more must you add to match BTN?',
+            caption: 'BTN opens to 2.5 BB. SB folds.',
+            question: 'How much more to call?',
             options: const [
               (
                 id: 'two_five',
@@ -5730,7 +5729,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                 id: 'one_five',
                 label: '1.5 BB',
                 reason:
-                    'Your 1 BB post counts toward BTN’s 2.5 BB. Calling puts another 1.5 BB into the 4 BB pot.',
+                    'BTN raised to 2.5 BB, so subtract your posted 1 BB to get the 1.5 BB call. Paying 2.5 BB again would count your post twice.',
               ),
             ],
             correct: 2,
@@ -5745,14 +5744,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'big_blind_defend',
-        title: 'Defend when the price fits',
+        title: 'Call or fold',
         phase: Act0LessonPhaseV1.review,
         runner: _w3BlindDefenseRunner(
           hero: 'bb',
           cards: 'Jh Th',
-          caption:
-              'BTN opens to 2.5 BB and SB folds. For this example, assume you win 32% of the time and face no later bets. Compare calling with folding.',
-          question: 'What does this price tell you?',
+          caption: 'SB folds. Assume you win 32% and face no later bets.',
+          question: 'Can you call?',
           options: const [
             (
               id: 'fold',
@@ -5764,7 +5762,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
               id: 'call',
               label: 'The chance to win clears the price',
               reason:
-                  'You need about 27% equity. In this model JTs wins 32%, so you can pay the 1.5 BB call.',
+                  'BTN raises and your 1.5 BB call makes a 5.5 BB pot, so you need about 27%. Call because the stated 32% clears the price while folding gives up that edge.',
             ),
             (
               id: 'posted_free',
@@ -5777,6 +5775,115 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
+      ),
+    ],
+    extraDrills: [
+      Act0LessonTaskV1(
+        taskId: 'bvb_sb_open',
+        title: 'First in from SB',
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _w3BlindDefenseRunner(
+          hero: 'sb',
+          cards: 'As Ah',
+          table: _day7PreflopV1('sb', 'As Ah', showTurn: true),
+          caption: 'Folded to you in SB.',
+          question: 'What do you do with AA?',
+          correct: 1,
+          options: const [
+            (
+              id: 'call',
+              label: 'Call 0.5 BB',
+              reason:
+                  'Completing costs 0.5 BB and gives BB a free check. A raise can get more chips in while your aces are ahead.',
+            ),
+            (
+              id: 'raise',
+              label: 'Raise to 3 BB',
+              reason:
+                  'Raise AA so BB can call with weaker pairs or strong aces. A limp gives BB a free check and the last turn after the flop.',
+            ),
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'Folding gives up a chance to win the blinds or get paid by a weaker hand. Raise against the one player still to act.',
+            ),
+          ],
+        ),
+      ),
+      Act0LessonTaskV1(
+        taskId: 'bvb_bb_call',
+        title: 'Defend BB',
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _w3BlindDefenseRunner(
+          hero: 'bb',
+          cards: 'Qh Jh',
+          table: _w3BigBlindFacingSmallBlindV1('Qh Jh'),
+          caption:
+              'SB opens to 3 BB. Assume you win 38% of the time, never tie, and face no later bets.',
+          question: 'What do you do?',
+          correct: 2,
+          options: const [
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'Folding gives up a call that needs only one win in three. Your assumed 38% clears that price.',
+            ),
+            (
+              id: 'check',
+              label: 'Check',
+              reason:
+                  'SB raised, so a free check is unavailable. A call pays the remaining 2 BB.',
+            ),
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Call 2 BB into a final pot of 6 BB, so you need about 33%. SB has raised and the 38% assumption makes calling better than folding.',
+            ),
+          ],
+        ),
+      ),
+      Act0LessonTaskV1(
+        taskId: 'bvb_bb_repeat',
+        title: 'Compare the price',
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _w3BlindDefenseRunner(
+          hero: 'bb',
+          cards: '7s 3d',
+          table: _w3BigBlindFacingSmallBlindV1('7s 3d'),
+          caption:
+              'SB opens to 3 BB. Assume you win 25% of the time, never tie, and face no later bets.',
+          question: 'What do you do?',
+          correct: 0,
+          options: const [
+            (
+              id: 'fold',
+              label: 'Fold',
+              reason:
+                  'SB raises to 3 BB, so a 2 BB call makes a 6 BB pot and needs about 33%. Fold because 25% wins too rarely for that price.',
+            ),
+            (
+              id: 'call',
+              label: 'Call 2 BB',
+              reason:
+                  'Calling puts 2 BB at risk with a 25% chance of winning the 6 BB final pot. Folding avoids that loss.',
+            ),
+            (
+              id: 'check',
+              label: 'Check',
+              reason:
+                  'SB has a live wager. Checking cannot answer it, so fold to leave the hand without paying more.',
+            ),
+          ],
+        ).copyWith(hintPolicy: Act0HintPolicyV1.hidden),
       ),
     ],
   ),
@@ -5958,7 +6065,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           ),
           const {
             "call":
-                "Calling the blind costs 1 BB from the early seat and leaves the players behind free to raise.",
+                "Limping ATs on BTN costs 1 BB, gives BB a free check and misses the chance to take the blind pot with a raise.",
           },
         ),
         rewardXp: 15,

@@ -158,12 +158,21 @@ void main() {
       );
       if (runner.lessonId == 'w3_play_from_blinds') {
         final table = runner.table;
-        expect(chartRaisers(table), ['BTN'], reason: task.taskId);
+        final isBlindVsBlind = task.taskId.startsWith(
+          'w3_play_from_blinds_bvb_',
+        );
+        expect(
+          chartRaisers(table),
+          isBlindVsBlind
+              ? (table.heroSeatId == 'sb' ? isEmpty : ['SB'])
+              : ['BTN'],
+          reason: task.taskId,
+        );
         switch (table.heroSeat.seatId) {
           case 'sb':
             expect(
               correct.id,
-              chart.smallBlindVsButton(table),
+              isBlindVsBlind ? 'raise' : chart.smallBlindVsButton(table),
               reason: task.taskId,
             );
           case 'bb':

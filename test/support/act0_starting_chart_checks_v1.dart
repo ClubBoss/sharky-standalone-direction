@@ -9,6 +9,13 @@ import 'act0_catalog_decision_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
 import 'act0_catalog_chart_audit_v1.dart';
 
+int _chartActionOrder(Act0ChartActionV1 action) => switch (action) {
+  Act0ChartActionV1.raise => 2,
+  Act0ChartActionV1.call => 1,
+  Act0ChartActionV1.fold => 0,
+  _ => -1,
+};
+
 void registerAct0StartingChartChecksV1() {
   test('G1·41–42 starting chart findings are individually accounted for', () {
     final rows = [
@@ -93,12 +100,6 @@ void registerAct0StartingChartChecksV1() {
   });
 
   test('G1·43 chart actions are monotone over same-form kickers and pairs', () {
-    int order(Act0ChartActionV1 action) => switch (action) {
-      Act0ChartActionV1.raise => 2,
-      Act0ChartActionV1.call => 1,
-      Act0ChartActionV1.fold => 0,
-      _ => -1,
-    };
     for (final seat in Act0ChartSeatV1.values) {
       for (final prefix in Act0ChartPrefixV1.values) {
         for (final weaker in act0ChartHandsV1) {
@@ -115,15 +116,35 @@ void registerAct0StartingChartChecksV1() {
             ],
           };
           final action = act0ChartActionV1(weaker, seat, prefix);
-          if (order(action) < 0) continue;
+          if (_chartActionOrder(action) < 0) continue;
           for (final hand in stronger) {
             expect(
-              order(act0ChartActionV1(hand, seat, prefix)),
-              greaterThanOrEqualTo(order(action)),
+              _chartActionOrder(act0ChartActionV1(hand, seat, prefix)),
+              greaterThanOrEqualTo(_chartActionOrder(action)),
               reason:
                   '${seat.name}/${prefix.name}: $hand must not play worse than $weaker',
             );
           }
+        }
+      }
+    }
+  });
+
+  test('G1·43 BTN versus one open respects both Medium rows', () {
+    const seat = Act0ChartSeatV1.btn;
+    final higherRow = act0ChartGroupsV1[Act0ChartGroupV1.mediumHj]!;
+    final lowerRow = act0ChartGroupsV1[Act0ChartGroupV1.mediumCo]!;
+    for (final prefix in [Act0ChartPrefixV1.hjOpen, Act0ChartPrefixV1.coOpen]) {
+      for (final higher in higherRow) {
+        for (final lower in lowerRow) {
+          expect(
+            _chartActionOrder(act0ChartActionV1(higher, seat, prefix)),
+            greaterThanOrEqualTo(
+              _chartActionOrder(act0ChartActionV1(lower, seat, prefix)),
+            ),
+            reason:
+                'BTN/${prefix.name}: $higher (HJ Medium) vs $lower (CO Medium)',
+          );
         }
       }
     }

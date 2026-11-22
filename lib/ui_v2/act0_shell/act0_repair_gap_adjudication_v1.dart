@@ -1025,11 +1025,11 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "raise",
     sourceCorrectChoiceId: "fold",
     sourceFingerprint:
-        "8e5c1469d63e755b01f7272125eee78431a455260593c45e0613dfcf95850b2c",
+        "ae4b54d96a9ea45adcba5e633af20fc3a8c19f300cc09754a964e6879c46d1fe",
     sourceQuestion:
         "By the Sharky starting chart, what is the disciplined action?",
     sourceChoiceReason:
-        "Raising ATo from UTG risks 2.5 BB with five players left to act. The Sharky starting chart opens ATo from HJ through BTN.",
+        "Raising ATo from UTG costs 2.5 BB with five players still able to respond, including players with better aces. Folding saves that wager.",
     sourceChoiceLabel: "Raise",
     sourceChoiceQuality: "wrong",
     goalId: "same_hand_different_seat",
