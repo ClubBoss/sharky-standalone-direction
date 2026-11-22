@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
@@ -1427,7 +1428,9 @@ void main() {
             .toSet();
         final expectedCount = w7ToW8
             ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
-            : (fullRoute ? 452 + wave6TaskDeltaV1 : 297) +
+            : (fullRoute
+                      ? 452 + wave6TaskDeltaV1 + y5dNewChoicesV1.length
+                      : 297) +
                   w3BlindVsBlindChoicesV1.length +
                   y5bNewChoicesV1.length +
                   (fullRoute ? y5cNewChoicesV1.length : y5cTasksInWorldV1(7));

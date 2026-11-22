@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
@@ -417,9 +418,24 @@ void main() {
               ).readAsStringSync(),
             )
             as Map<String, dynamic>;
+    for (final entry in y5dNewChoicesV1.entries) {
+      final row = (contract[entry.key] as Map).cast<String, dynamic>();
+      expect(row['rewardXp'], 8, reason: entry.key);
+      expect(row['family'], 'decision', reason: entry.key);
+      expect(
+        (row['options'] as List).map((raw) {
+          final option = raw as Map;
+          return [option['id'], option['correct'], option['quality']];
+        }).toList(),
+        entry.value.map((choice) => [choice[0], choice[2], choice[3]]).toList(),
+        reason: entry.key,
+      );
+    }
     final w10Learning = {
       for (final entry in contract.entries)
-        if (entry.key.startsWith('w10_')) entry.key: entry.value,
+        if (entry.key.startsWith('w10_') &&
+            !y5dNewChoicesV1.containsKey(entry.key))
+          entry.key: entry.value,
     };
     expect(
       sha256.convert(utf8.encode(jsonEncode(w10Learning))).toString(),
@@ -435,6 +451,7 @@ void main() {
     final historicalContract = Map<String, Object?>.from(contract)
       ..removeWhere(
         (id, _) =>
+            y5dNewChoicesV1.containsKey(id) ||
             admittedAdditions.contains(id) ||
             (id.startsWith('w9_') && !y5cNewChoicesV1.containsKey(id)) ||
             id.startsWith('w10_'),

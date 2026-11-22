@@ -450,7 +450,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 45,
+    rewardXp: 53,
     runner: _w10OneLeverIntroRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -517,6 +517,40 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
         runner: _w10OneLeverRecapRunner,
         rewardXp: 16,
         stepKind: Act0LessonStepKindV1.review,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w10_same_hand_river_overbluff",
+        title: "The player who bluffs too often",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner:
+            _day7ExampleV1(
+              10,
+              "adjust_one_lever",
+              "w10_same_hand_river_overbluff",
+              _y5dRiverAllInV1(
+                'co',
+                'Kh Qd',
+                'Ks Jc 8s 6d 2c',
+                openBb: 3.75,
+                betBb: 6,
+              ),
+              caption:
+                  "BB is all-in for 6 BB. Half the bets are missed spade draws you beat; half are sets. The call price is 30%.",
+              question: "Call or fold?",
+              choices: const ["Fold", "Call"],
+              correct: 1,
+              reason:
+                  "BB bets all-in with a missed draw half the time. Call because 50% wins clears the 30% price, worth 4 BB over folding.",
+              wrongReasons: const {
+                0: "Folding misses 4 BB on average because half the bets are bluffs and the call needs only 30%.",
+              },
+            ).task.runner.copyWith(
+              hint:
+                  'Find the share of missed draws that your king beats, then compare it with the price.',
+              hintPolicy: Act0HintPolicyV1.always,
+            ),
       ),
     ],
   ),
@@ -613,7 +647,7 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 50,
+    rewardXp: 58,
     runner: _world10PlayerAdjustmentCheckpointRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -623,6 +657,35 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
         runner: _w10CheckpointIntroRunner,
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.learn,
+      ),
+      Act0LessonTaskV1(
+        taskId: "w10_same_hand_river_underbluff",
+        title: "The player who rarely bluffs",
+        phase: Act0LessonPhaseV1.drill,
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+        runner: _day7ExampleV1(
+          10,
+          "player_adjustment_checkpoint",
+          "w10_same_hand_river_underbluff",
+          _y5dRiverAllInV1(
+            'co',
+            'Kh Qd',
+            'Ks Jc 8s 6d 2c',
+            openBb: 3.75,
+            betBb: 6,
+          ),
+          caption:
+              "BB is all-in for 6 BB. Missed spade draws you beat are 10%; sets are 90%. The call price is 30%.",
+          question: "Call or fold?",
+          choices: const ["Fold", "Call"],
+          correct: 0,
+          reason:
+              "BB bets all-in with a set 90% of the time. Fold because 10% wins falls below the 30% needed to call, which loses 4 BB on average.",
+          wrongReasons: const {
+            1: "Calling costs 6 BB and wins only when the missed draws bluff. At the stated 10%, a call loses 4 BB on average.",
+          },
+        ).task.runner,
       ),
       Act0LessonTaskV1(
         taskId: 'w10_river_price_check',
@@ -686,9 +749,9 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 45,
+    rewardXp: 69,
     runner: _w11SessionPlanBasicsTasksV1.first.runner,
-    tasks: _w11SessionPlanBasicsTasksV1,
+    tasks: [..._w11SessionPlanBasicsTasksV1, ..._w11Y5dSessionPlanV1],
   ),
   Act0LessonCardV1(
     lessonId: 'session_plan_bankroll_followup',
@@ -738,9 +801,13 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 45,
+    rewardXp: 69,
     runner: _w11PostSessionReviewLoopTasksV1.first.runner,
-    tasks: _w11PostSessionReviewLoopTasksV1,
+    tasks: [
+      ..._w11PostSessionReviewLoopTasksV1,
+      _w11Y5dSidePotV1,
+      ..._w11Y5dRiverReadsV1,
+    ],
   ),
   Act0LessonCardV1(
     lessonId: 'real_play_transfer_checkpoint',
@@ -819,9 +886,9 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
     state: Act0LessonStateV1.locked,
     isLocked: true,
     isSelectable: false,
-    rewardXp: 0,
+    rewardXp: 16,
     runner: _w12ConfidenceRiverDisciplineTasksV1.first.runner,
-    tasks: _w12ConfidenceRiverDisciplineTasksV1,
+    tasks: [..._w12ConfidenceRiverDisciplineTasksV1, ..._w12Y5dRiverReadsV1],
   ),
   Act0LessonCardV1(
     lessonId: 'mindset_bridge_checkpoint',

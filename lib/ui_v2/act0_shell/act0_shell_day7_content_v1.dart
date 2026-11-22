@@ -2,6 +2,57 @@ part of 'act0_shell_state_v1.dart';
 
 final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
+    11,
+    'post_session_review_loop',
+    'pot_to_call',
+    _y5dRiverAllInV1('co', 'Jd Th', 'Js 8h 6h 4c 2d', openBb: 3.25, betBb: 5),
+    caption:
+        'BB bets the last 5 BB. Missed heart draws make up 45% of the bets and sets make up 55%. Your pair wins only against the missed draws.',
+    question: 'Call or fold?',
+    choices: const ['Call', 'Fold'],
+    correct: 0,
+    reason:
+        'Call because BB bets enough missed draws. You win 45% of the time and paying 5 BB for a 17 BB pot needs about 29%.',
+    wrongReasons: const {
+      1: 'Folding gives up 2.65 BB on average because BB bets enough missed draws to make the call profitable.',
+    },
+    savedTaskId: 'spaced_review_w11_post_session_review_loop_pot_to_call_v1',
+  ),
+  _day7ExampleV1(
+    12,
+    'confidence_river_discipline',
+    'pot_to_call',
+    _y5dRiverAllInV1('co', 'Ah 9d', 'Ac 7s 6s 3h 2c', openBb: 3, betBb: 5),
+    caption:
+        'BB bets the last 5 BB. Missed spade draws make up 20% of the bets and sets make up 80%. Your pair wins only against the missed draws.',
+    question: 'Call or fold?',
+    choices: const ['Call', 'Fold'],
+    correct: 1,
+    reason:
+        'Fold because BB bets primarily sets. Paying 5 BB for a 16.5 BB pot needs about 30% wins and your pair wins only 20%.',
+    wrongReasons: const {
+      0: 'The call loses 1.7 BB on average because BB bets too few missed draws to justify paying 5 BB.',
+    },
+    savedTaskId: 'spaced_review_w12_confidence_river_discipline_pot_to_call_v1',
+  ),
+  _day7ExampleV1(
+    10,
+    "exploit_guardrails",
+    "pot_to_call",
+    _y5dRiverAllInV1('co', 'Qd Th', 'Qc 9s 7s 6d 3c', openBb: 3.75, betBb: 7),
+    caption:
+        "BB bets the last 7 BB. Missed spade draws account for 20% of the bets and sets for 80%. Your queen beats only the bluffs.",
+    question: "Call or fold?",
+    choices: const ["Call", "Fold"],
+    correct: 1,
+    reason:
+        "BB bets mostly sets. Fold because calling 7 BB for a 22 BB pot needs about 32%, above the 20% of bets you beat.",
+    wrongReasons: const {
+      0: "The 7 BB call needs about 32% wins. At 20%, paying that price costs 2.60 BB on average.",
+    },
+    savedTaskId: "spaced_review_w10_river_player_mix_v1",
+  ),
+  _day7ExampleV1(
     9,
     "bubble_risk_premium",
     "misread_tournament_pressure",

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
@@ -285,6 +286,7 @@ void main() {
       expect(
         count,
         311 +
+            y5dNewChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bDrillCountV1 +
             y5cDrillCountV1 +

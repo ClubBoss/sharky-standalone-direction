@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
@@ -47,7 +48,8 @@ void main() {
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
-            y5cNewChoicesV1.length,
+            y5cNewChoicesV1.length +
+            y5dNewChoicesV1.length,
       ),
     );
     expect(
@@ -59,7 +61,8 @@ void main() {
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
-            y5cNewChoicesV1.length,
+            y5cNewChoicesV1.length +
+            y5dNewChoicesV1.length,
       ),
     );
     final problems = <String>[];
@@ -165,10 +168,21 @@ void main() {
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
-            y5cNewChoicesV1.length,
+            y5cNewChoicesV1.length +
+            y5dNewChoicesV1.length,
       ),
     );
+    final y5dLateEntries = entries
+        .where(
+          (row) =>
+              wave6ContractsV1.containsKey(row[0]) &&
+              y5dNewChoicesV1.containsKey(row[2]),
+        )
+        .toList();
+    entries.removeWhere(y5dLateEntries.contains);
     verifyWave6AndRestoreIdentityV1(entries);
+    entries.addAll(y5dLateEntries);
+    entries.sort((a, b) => (a[2] as String).compareTo(b[2] as String));
     const w1Additions = {
       'w1_shared_card_access': [
         'world_1',
@@ -485,6 +499,12 @@ void main() {
       expect(task.take(2), [worldId, lessonId], reason: entry.key);
       expect(task.last, entry.value, reason: entry.key);
     }
+    for (final entry in y5dNewChoicesV1.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final (worldId, lessonId) = y5dLessonByTaskV1[entry.key]!;
+      expect(task.take(2), [worldId, lessonId], reason: entry.key);
+      expect(task.last, entry.value, reason: entry.key);
+    }
     for (final entry in w3CurrentReasonChoicesV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
       expect(task.last, entry.value, reason: entry.key);
@@ -781,7 +801,15 @@ void main() {
       sha256
           .convert(
             utf8.encode(
-              jsonEncode(entries.where((row) => row[0] == 'world_10').toList()),
+              jsonEncode(
+                entries
+                    .where(
+                      (row) =>
+                          row[0] == 'world_10' &&
+                          !y5dNewChoicesV1.containsKey(row[2]),
+                    )
+                    .toList(),
+              ),
             ),
           )
           .toString(),
@@ -803,6 +831,7 @@ void main() {
         .where(
           (row) =>
               !_asm05NewTaskIds.contains(row[2]) &&
+              !y5dNewChoicesV1.containsKey(row[2]) &&
               !w11Wave4ChoiceContractV1.containsKey(row[2]) &&
               !w12Wave4ChoiceContractV1.containsKey(row[2]) &&
               !w7AppliedTaskIdsV1.contains(row[2]) &&
@@ -2502,7 +2531,8 @@ void main() {
             wave6TaskDeltaV1 +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
-            y5cNewChoicesV1.length,
+            y5cNewChoicesV1.length +
+            y5dNewChoicesV1.length,
       ),
     );
     var validated = 0;

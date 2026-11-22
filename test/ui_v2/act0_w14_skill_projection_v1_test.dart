@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
@@ -288,7 +289,7 @@ void main() {
         reason: source.task.taskId,
       );
     }
-    expect(taskCounts, {9: 30 + y5cTasksInWorldV1(9), 10: 31});
+    expect(taskCounts, {9: 30 + y5cTasksInWorldV1(9), 10: 33});
   });
 
   test('every W11–W12 task projects to its authored topic', () {
@@ -323,8 +324,16 @@ void main() {
       );
     }
     expect(taskCounts, {
-      11: 21 + w11Wave4ChoiceContractV1.length + wave6WorldTaskDeltaV1(11),
-      12: 22 + w12Wave4ChoiceContractV1.length + wave6WorldTaskDeltaV1(12),
+      11:
+          21 +
+          y5dLessonByTaskV1.values.where((row) => row.$1 == 'world_11').length +
+          w11Wave4ChoiceContractV1.length +
+          wave6WorldTaskDeltaV1(11),
+      12:
+          22 +
+          y5dLessonByTaskV1.values.where((row) => row.$1 == 'world_12').length +
+          w12Wave4ChoiceContractV1.length +
+          wave6WorldTaskDeltaV1(12),
     });
   });
 

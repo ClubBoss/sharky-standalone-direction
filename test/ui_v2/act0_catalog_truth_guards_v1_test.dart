@@ -1377,7 +1377,10 @@ void main() {
     )!;
 
     test('26 rejects a missing or later principle', () {
-      expect(auditCatalogReasoningV1(row)!.findings, contains(26));
+      expect(
+        auditCatalogReasoningV1(row, reasoning: const {})!.findings,
+        contains(26),
+      );
       expect(
         audit(reasoning(principle: 'process_over_outcome')).findings,
         contains(26),

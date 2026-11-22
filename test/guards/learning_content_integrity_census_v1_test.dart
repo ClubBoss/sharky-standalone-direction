@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart'
     show
@@ -629,10 +630,10 @@ void main() {
         price == 10
             ? (wave6WorldTaskDeltaV1(12) == 0
                   ? 'dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184'
-                  : 'a9b1856a673365adcb98d36ed0e165d1b760c559cf1134722aadecfdfee2c446')
+                  : '5632b32cfe9d08a7e4e70f40595b4c427f4424b87cba864e933aad2880191759')
             : (wave6WorldTaskDeltaV1(12) == 0
                   ? 'ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7'
-                  : 'fd2e4b34c743efe3dabbe3796519744cf5d2f851c96141bd29e8a5fb0e48498b'),
+                  : 'd5dddfe936f2c086121bbc3f66c6378a52670ecc675e65fbb817e152db6edb3d'),
       );
       final current = _repairRow(row).intents.single;
       expect(current.mappingType, 'intentional_exact');
@@ -915,6 +916,8 @@ void main() {
                 y5cNewChoicesV1[row.task.taskId])
             case final choices?)
           row.task.taskId: (row.lessonId, choices),
+      for (final entry in y5dNewChoicesV1.entries)
+        entry.key: (y5dLessonByTaskV1[entry.key]!.$2, entry.value),
       ...w11Wave4ChoiceContractV1,
       ...w12Wave4ChoiceContractV1,
     };
@@ -965,7 +968,11 @@ void main() {
     expect(rows, hasLength(expectedRows));
     expect(
       allChoices
-          .where((key) => wave6ContractsV1.containsKey(key.split('/').first))
+          .where(
+            (key) =>
+                wave6ContractsV1.containsKey(key.split('/').first) &&
+                !y5dNewChoicesV1.containsKey(key.split('/')[2]),
+          )
           .toSet(),
       currentLateWrong,
     );
@@ -1188,6 +1195,7 @@ List<_Row> _assessedSourceRows({bool historical = false}) => <_Row>[
                       !y5bNewChoicesV1.containsKey(task.taskId) &&
                       !y5cNewChoicesV1.containsKey(task.taskId) &&
                       !w6NewChoiceContractV1.containsKey(task.taskId) &&
+                      !y5dNewChoicesV1.containsKey(task.taskId) &&
                       !w11Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       !w12Wave4ChoiceContractV1.containsKey(task.taskId) &&
                       preW2ReasonChoicesV1[task.taskId]?.isEmpty != true)) &&
