@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_components_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart'
     show Act0SharkyMoodV1;
+
+typedef _T = Act0ClubNightTokensV1;
 
 /// Visual label for an EXISTING source-owned recommendation, not a daily
 /// engine. Provenance: Draft PR #308 `Act0HomeTrainingPhaseV1`.
@@ -92,7 +94,9 @@ class Act0AcademyHomeProgressV1 {
   }
 }
 
-/// Premium Academy Home leaf (owner-approved immersive Home, Draft PR #308).
+/// Home renders the source-owned next action, with its artwork in a
+/// separate area of the card. The photo stacks above the details at larger
+/// text sizes.
 class Act0AcademyHomeLeafV1 extends StatelessWidget {
   const Act0AcademyHomeLeafV1({super.key, required this.input});
 
@@ -105,139 +109,73 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
       input.courseLessonCount,
     );
     final next = input.nextAction;
+    final resume = input.onResumeLesson;
+    final resumeLabel = input.resumeLabel;
     return ColoredBox(
       key: const Key('act0_academy_home_leaf'),
-      color: Act0AcademyLeafPaletteV1.ink,
-      child: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 350,
-            child: Act0AcademyLeafBackdropV1(image: input.backdrop),
+      color: _T.wall,
+      child: Act0ClubTextScaleV1(
+        key: input.backdrop == null
+            ? const Key('act0_academy_leaf_backdrop_fallback')
+            : null,
+        child: ListView(
+          key: const Key('act0_academy_home_leaf_scroll'),
+          padding: const EdgeInsets.fromLTRB(
+            _T.screenGutter,
+            _T.gapLg,
+            _T.screenGutter,
+            _T.gapXl,
           ),
-          const Positioned.fill(
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0x00020E13),
-                      Color(0x00020E13),
-                      Color(0xFF020E13),
-                    ],
-                    stops: [0, 0.30, 0.47],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          ListView(
-            key: const Key('act0_academy_home_leaf_scroll'),
-            padding: const EdgeInsets.fromLTRB(10, 2, 10, 16),
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: _HomeHeaderV1(
-                  mood: input.mood,
-                  streakDays: input.streakDays,
-                  onOpenDevMenu: input.onOpenDevMenu,
-                ),
-              ),
-              const SizedBox(height: 20),
-              _HomeGreetingV1(returningAfterBreak: input.returningAfterBreak),
-              if (input.dayGoalDone == null)
-                _LearningCycleV1(currentPhase: input.phase),
-              const SizedBox(height: 20),
-              if (next != null) ...[
-                _NextActionCardV1(action: next),
-                const SizedBox(height: 10),
-              ],
-              if (input.onResumeLesson != null && input.resumeLabel != null)
-                TextButton(
-                  key: const Key('act0_home_resume_lesson'),
-                  onPressed: input.onResumeLesson,
-                  child: Text(input.resumeLabel!, textAlign: TextAlign.center),
-                ),
-              if (input.dayGoalDone case final done?)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 6, 12, 14),
-                  child: Text(
-                    done
-                        ? 'Today’s goal complete'
-                        : 'Today’s goal: one lesson or review',
-                    key: const Key('act0_home_today_goal'),
-                    style: const TextStyle(
-                      color: Act0ClubNightTokensV1.text2,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              if (input.onStartDailyPractice != null)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    key: const Key('act0_home_daily_practice'),
-                    onPressed: input.onStartDailyPractice,
-                    child: const Text('Daily practice'),
-                  ),
-                ),
-              _CourseProgressStripV1(
-                courseTitle: input.courseTitle,
-                progress: progress,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HomeGreetingV1 extends StatelessWidget {
-  const _HomeGreetingV1({required this.returningAfterBreak});
-
-  final bool returningAfterBreak;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      // Min height keeps the donor rhythm; text scaling may grow it.
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 204),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              returningAfterBreak ? 'Welcome back' : 'Welcome,',
-              style: const TextStyle(
-                color: Act0AcademyLeafPaletteV1.textMuted,
-                fontSize: 16,
-              ),
+            _HomeHeaderV1(
+              returningAfterBreak: input.returningAfterBreak,
+              streakDays: input.streakDays,
+              onOpenDevMenu: input.onOpenDevMenu,
             ),
-            const SizedBox(height: 4),
-            const Text(
-              "Let's learn",
-              style: TextStyle(
-                color: Act0AcademyLeafPaletteV1.text,
-                fontSize: 28,
-                height: 1.15,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -0.4,
+            if (input.dayGoalDone == null) ...[
+              const SizedBox(height: _T.gapXl),
+              _LearningCycleV1(currentPhase: input.phase),
+            ],
+            if (next != null) ...[
+              const SizedBox(height: _T.gapXl),
+              _NextActionCardV1(action: next, cover: input.backdrop),
+            ] else if (input.backdrop case final artwork?) ...[
+              const SizedBox(height: _T.gapXl),
+              _NextActionArtworkV1(image: artwork, sideBySide: false),
+            ],
+            if (resume != null && resumeLabel != null) ...[
+              const SizedBox(height: _T.gapMd),
+              _ResumeLessonRowV1(label: resumeLabel, onPressed: resume),
+            ],
+            if (input.dayGoalDone case final done?) ...[
+              const SizedBox(height: _T.gapXl),
+              _DayGoalV1(done: done),
+            ],
+            if (input.onStartDailyPractice != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  key: const Key('act0_home_daily_practice'),
+                  onPressed: input.onStartDailyPractice,
+                  style: TextButton.styleFrom(
+                    foregroundColor: _T.text,
+                    minimumSize: const Size(_T.minTouch, _T.minTouch),
+                    textStyle: _T.link,
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Daily practice'),
+                      SizedBox(width: 2),
+                      Icon(Icons.chevron_right_rounded, size: 20),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Build your\npoker edge.',
-              style: TextStyle(
-                color: Act0AcademyLeafPaletteV1.textMuted,
-                fontSize: 16,
-                height: 1.4,
-              ),
+            const SizedBox(height: _T.gapXl),
+            _CourseProgressCardV1(
+              courseTitle: input.courseTitle,
+              progress: progress,
             ),
           ],
         ),
@@ -248,216 +186,235 @@ class _HomeGreetingV1 extends StatelessWidget {
 
 class _HomeHeaderV1 extends StatelessWidget {
   const _HomeHeaderV1({
-    required this.mood,
+    required this.returningAfterBreak,
     required this.streakDays,
     this.onOpenDevMenu,
   });
 
-  final Act0SharkyMoodV1 mood;
+  final bool returningAfterBreak;
   final int streakDays;
   final VoidCallback? onOpenDevMenu;
 
   @override
   Widget build(BuildContext context) {
-    final tone = act0SharkyToneForMoodV1(mood);
     return Row(
       key: const Key('act0_academy_home_leaf_identity_row'),
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 52,
-          height: 56,
-          padding: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            color: tone.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(13),
-            border: Border.all(color: tone.withValues(alpha: 0.28)),
-            boxShadow: [
-              BoxShadow(
-                color: Act0AcademyLeafPaletteV1.teal.withValues(alpha: 0.18),
-                blurRadius: 18,
-              ),
-            ],
-          ),
-          child: Act0SharkyPresenceMascotV1(mood: mood, tone: tone, size: 48),
-        ),
-        const SizedBox(width: 11),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sharky',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Act0AcademyLeafPaletteV1.text,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.4,
-                ),
+                returningAfterBreak ? 'Welcome back' : 'Welcome,',
+                style: _T.captionStyle,
               ),
-              SizedBox(height: 2),
-              Text(
-                'Poker Academy',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Act0AcademyLeafPaletteV1.textMuted,
-                  fontSize: 13,
-                ),
+              const SizedBox(height: 2),
+              Semantics(
+                header: true,
+                child: const Text("Let's learn", style: _T.title),
               ),
+              const SizedBox(height: 2),
+              const Text('Build your poker edge.', style: _T.secondary),
             ],
           ),
         ),
         if (streakDays > 0)
-          Semantics(
-            label: '$streakDays day streak',
-            excludeSemantics: true,
-            child: Container(
-              key: const Key('act0_academy_home_leaf_streak'),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(
-                color: Act0AcademyLeafPaletteV1.aqua.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: Act0AcademyLeafPaletteV1.rule.withValues(alpha: 0.42),
-                ),
-              ),
-              child: Text(
-                '$streakDays ${streakDays == 1 ? 'day' : 'days'}',
-                maxLines: 1,
-                style: const TextStyle(
-                  color: Act0AcademyLeafPaletteV1.aquaSoft,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Semantics(
+              label: '$streakDays day streak',
+              excludeSemantics: true,
+              child: KeyedSubtree(
+                key: const Key('act0_academy_home_leaf_streak'),
+                child: Act0ClubTagV1(
+                  label: '$streakDays ${streakDays == 1 ? 'day' : 'days'}',
+                  tone: Act0ClubTagToneV1.neutral,
                 ),
               ),
             ),
           ),
-        if (onOpenDevMenu != null) ...[
-          const SizedBox(width: 4),
+        if (onOpenDevMenu != null)
           IconButton(
             key: const Key('act0_academy_home_leaf_dev_menu'),
             onPressed: onOpenDevMenu,
             tooltip: 'Dev menu',
-            constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+            constraints: const BoxConstraints.tightFor(
+              width: _T.minTouch,
+              height: _T.minTouch,
+            ),
             icon: const Act0AcademyLeafGlyphV1(
               kind: Act0AcademyLeafGlyphKindV1.overflow,
-              color: Act0AcademyLeafPaletteV1.textMuted,
+              color: _T.caption,
             ),
           ),
-        ],
       ],
     );
   }
 }
 
 class _NextActionCardV1 extends StatelessWidget {
-  const _NextActionCardV1({required this.action});
+  const _NextActionCardV1({required this.action, this.cover});
 
   final Act0AcademyHomeNextActionV1 action;
+  final ImageProvider? cover;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Act0ClubCardV1(
       key: const Key('act0_academy_home_leaf_next_card'),
-      constraints: const BoxConstraints(minHeight: 190),
-      padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xB2082128), Color(0xC005141C)],
-        ),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0x4043D9D0), width: 0.8),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x30000000),
-            blurRadius: 22,
-            offset: Offset(0, 14),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'YOUR NEXT STEP',
-            maxLines: 1,
-            style: TextStyle(
-              color: Act0AcademyLeafPaletteV1.aqua,
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.2,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            action.title,
-            key: const Key('act0_academy_home_leaf_next_title'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Act0AcademyLeafPaletteV1.text,
-              fontSize: 25,
-              height: 1.08,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.6,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            action.subtitle,
-            key: const Key('act0_academy_home_leaf_next_subtitle'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Act0AcademyLeafPaletteV1.textMuted,
-              fontSize: 15,
-              height: 1.25,
-            ),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(13),
-                gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF43ECDD), Color(0xFF00D6C9)],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final image = cover;
+          final sideBySide =
+              constraints.maxWidth >= 284 &&
+              MediaQuery.textScalerOf(context).scale(16) <= 17;
+          final art = image == null
+              ? null
+              : _NextActionArtworkV1(image: image, sideBySide: sideBySide);
+          final details = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Your next step', style: _T.sectionLabel),
+              const SizedBox(height: _T.gapSm),
+              Text(
+                action.title,
+                key: const Key('act0_academy_home_leaf_next_title'),
+                style: _T.question.copyWith(
+                  fontSize: 23,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              child: FilledButton.icon(
+              const SizedBox(height: _T.gapSm),
+              Text(
+                action.subtitle,
+                key: const Key('act0_academy_home_leaf_next_subtitle'),
+                style: _T.secondary,
+              ),
+            ],
+          );
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (art != null && sideBySide)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: details),
+                    const SizedBox(width: _T.gapMd),
+                    art,
+                  ],
+                )
+              else ...[
+                if (art != null) ...[art, const SizedBox(height: _T.gapLg)],
+                details,
+              ],
+              const SizedBox(height: _T.gapLg),
+              Act0ClubButtonsV1.primary(
                 key: const Key('act0_academy_home_leaf_cta'),
+                label: action.ctaLabel,
                 onPressed: action.onPressed,
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  foregroundColor: Act0AcademyLeafPaletteV1.ink,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                iconAlignment: IconAlignment.end,
-                icon: const Act0AcademyLeafGlyphV1(
-                  kind: Act0AcademyLeafGlyphKindV1.forward,
-                  size: 19,
-                  color: Act0AcademyLeafPaletteV1.ink,
-                ),
-                label: Text(
-                  action.ctaLabel,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
               ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _NextActionArtworkV1 extends StatelessWidget {
+  const _NextActionArtworkV1({required this.image, required this.sideBySide});
+
+  final ImageProvider image;
+  final bool sideBySide;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(_T.radiusControl),
+      child: SizedBox(
+        width: sideBySide ? 104 : double.infinity,
+        height: sideBySide ? 122 : 136,
+        child: Act0AcademyLeafBackdropV1(
+          image: image,
+          alignment: const Alignment(0.76, 0.17),
+        ),
+      ),
+    );
+  }
+}
+
+class _ResumeLessonRowV1 extends StatelessWidget {
+  const _ResumeLessonRowV1({required this.label, required this.onPressed});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(_T.radiusCard);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: radius,
+      child: InkWell(
+        key: const Key('act0_home_resume_lesson'),
+        onTap: onPressed,
+        borderRadius: radius,
+        child: Semantics(
+          button: true,
+          child: Act0ClubCardV1(
+            padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
+            child: Row(
+              children: [
+                Expanded(child: Text(label, style: _T.headline)),
+                const SizedBox(width: _T.gapMd),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: _T.caption,
+                  size: 22,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DayGoalV1 extends StatelessWidget {
+  const _DayGoalV1({required this.done});
+
+  final bool done;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: _T.gapXs),
+      child: Row(
+        children: [
+          SizedBox.square(
+            dimension: _T.minTouch,
+            child: ExcludeSemantics(
+              child: CircularProgressIndicator(
+                key: const Key('act0_home_today_goal_ring'),
+                value: done ? 1 : 0,
+                strokeWidth: 5,
+                strokeCap: StrokeCap.round,
+                color: _T.brass,
+                backgroundColor: _T.track,
+              ),
+            ),
+          ),
+          const SizedBox(width: _T.gapLg),
+          Expanded(
+            child: Text(
+              done
+                  ? 'Today’s goal complete'
+                  : 'Today’s goal: one lesson or review',
+              key: const Key('act0_home_today_goal'),
+              style: _T.headline.copyWith(fontSize: 15),
             ),
           ),
         ],
@@ -480,22 +437,11 @@ class _LearningCycleV1 extends StatelessWidget {
           'No step is marked complete.',
       child: Stack(
         children: [
-          Positioned(
-            top: 30,
-            left: 55,
-            right: 55,
-            child: Container(
-              height: 2,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0x8035DAD2),
-                    Color(0xFF54E6DF),
-                    Color(0xFF163542),
-                  ],
-                ),
-              ),
-            ),
+          const Positioned(
+            top: 21,
+            left: 60,
+            right: 60,
+            child: SizedBox(height: 2, child: ColoredBox(color: _T.track)),
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -553,69 +499,42 @@ class _CycleStageV1 extends StatelessWidget {
             : 'Step $number, $label',
         child: Column(
           children: [
-            SizedBox(
-              height: 60,
-              child: Center(
-                child: Container(
-                  key: Key('act0_academy_home_leaf_stage_$number'),
-                  width: isCurrent ? 60 : 50,
-                  height: isCurrent ? 60 : 50,
-                  decoration: BoxDecoration(
-                    color: isCurrent
-                        ? const Color(0xFF073C40)
-                        : Act0AcademyLeafPaletteV1.inkRaised,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isCurrent
-                          ? Act0AcademyLeafPaletteV1.aqua
-                          : const Color(0xFF20404C),
-                      width: isCurrent ? 2 : 1,
-                    ),
-                    boxShadow: isCurrent
-                        ? const [
-                            BoxShadow(
-                              color: Color(0x8050EAE3),
-                              blurRadius: 18,
-                              spreadRadius: 1,
-                            ),
-                          ]
-                        : null,
-                  ),
-                  alignment: Alignment.center,
-                  child: Act0AcademyLeafGlyphV1(
-                    key: isCurrent
-                        ? Key('act0_academy_home_leaf_active_stage_$number')
-                        : null,
-                    kind: glyph,
-                    color: isCurrent
-                        ? Act0AcademyLeafPaletteV1.text
-                        : Act0AcademyLeafPaletteV1.textMuted,
-                    size: isCurrent ? 26 : 23,
-                  ),
+            Container(
+              key: Key('act0_academy_home_leaf_stage_$number'),
+              width: _T.minTouch,
+              height: _T.minTouch,
+              decoration: BoxDecoration(
+                color: _T.raised,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isCurrent ? _T.text : _T.hairlineStrong,
+                  width: isCurrent ? 1.5 : 1,
                 ),
               ),
+              alignment: Alignment.center,
+              child: Act0AcademyLeafGlyphV1(
+                key: isCurrent
+                    ? Key('act0_academy_home_leaf_active_stage_$number')
+                    : null,
+                kind: glyph,
+                color: isCurrent ? _T.text : _T.caption,
+                size: 22,
+              ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: _T.gapSm),
             Text(
               label,
               maxLines: 1,
-              style: const TextStyle(
-                color: Act0AcademyLeafPaletteV1.text,
-                fontSize: 13,
-                height: 1.25,
-                fontWeight: FontWeight.w500,
+              style: _T.sectionLabel.copyWith(
+                color: isCurrent ? _T.text : _T.text2,
               ),
             ),
-            const SizedBox(height: 3),
+            const SizedBox(height: 2),
             Text(
               description,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Act0AcademyLeafPaletteV1.textMuted,
-                fontSize: 12,
-                height: 1.25,
-              ),
+              style: _T.captionStyle,
             ),
           ],
         ),
@@ -624,8 +543,8 @@ class _CycleStageV1 extends StatelessWidget {
   }
 }
 
-class _CourseProgressStripV1 extends StatelessWidget {
-  const _CourseProgressStripV1({
+class _CourseProgressCardV1 extends StatelessWidget {
+  const _CourseProgressCardV1({
     required this.courseTitle,
     required this.progress,
   });
@@ -636,100 +555,58 @@ class _CourseProgressStripV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = progress;
-    return Container(
+    return Act0ClubCardV1(
       key: const Key('act0_academy_home_leaf_course_progress'),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      constraints: const BoxConstraints(minHeight: 94),
-      decoration: BoxDecoration(
-        color: Act0AcademyLeafPaletteV1.inkRaised.withValues(alpha: 0.48),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF102832), width: 0.6),
-      ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 50,
-            height: 52,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF146092), Color(0xFF287DAE)],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: Text(
+                  courseTitle,
+                  key: const Key('act0_academy_home_leaf_course_title'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: _T.headline,
+                ),
               ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            alignment: Alignment.center,
-            child: const Act0AcademyLeafGlyphV1(
-              kind: Act0AcademyLeafGlyphKindV1.learn,
-              color: Act0AcademyLeafPaletteV1.text,
-              size: 28,
-            ),
+              if (p != null)
+                Text(
+                  '${p.percent}%',
+                  key: const Key('act0_academy_home_leaf_percent'),
+                  style: _T.headline.copyWith(fontFeatures: _T.tabular),
+                ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        courseTitle,
-                        key: const Key('act0_academy_home_leaf_course_title'),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Act0AcademyLeafPaletteV1.text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    if (p != null)
-                      Text(
-                        '${p.percent}%',
-                        key: const Key('act0_academy_home_leaf_percent'),
-                        style: const TextStyle(
-                          color: Act0AcademyLeafPaletteV1.aqua,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                  ],
-                ),
-                if (p != null) ...[
-                  const SizedBox(height: 3),
-                  Text(
-                    '${p.earned} of ${p.total} lessons complete',
-                    key: const Key('act0_academy_home_leaf_progress_label'),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Act0AcademyLeafPaletteV1.textMuted,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 10),
-                // A missing/invalid count draws an empty decorative track
-                // only; it must not announce "0%" to assistive tech.
-                ExcludeSemantics(
-                  excluding: p == null,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: LinearProgressIndicator(
-                      key: const Key('act0_academy_home_leaf_progress_bar'),
-                      minHeight: 12,
-                      value: p?.ratio ?? 0,
-                      semanticsLabel: p == null ? null : 'Course progress',
-                      semanticsValue: p == null ? null : '${p.percent}%',
-                      backgroundColor: const Color(0xFF102A35),
-                      color: Act0AcademyLeafPaletteV1.aqua,
-                    ),
-                  ),
-                ),
-              ],
+          if (p != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              '${p.earned} of ${p.total} lessons complete',
+              key: const Key('act0_academy_home_leaf_progress_label'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: _T.captionStyle.copyWith(fontFeatures: _T.tabular),
+            ),
+          ],
+          const SizedBox(height: _T.gapMd),
+          // A missing/invalid count draws an empty decorative track only;
+          // it must not announce "0%" to assistive tech.
+          ExcludeSemantics(
+            excluding: p == null,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: LinearProgressIndicator(
+                key: const Key('act0_academy_home_leaf_progress_bar'),
+                minHeight: 4,
+                value: p?.ratio ?? 0,
+                semanticsLabel: p == null ? null : 'Course progress',
+                semanticsValue: p == null ? null : '${p.percent}%',
+                backgroundColor: _T.track,
+                color: _T.text,
+              ),
             ),
           ),
         ],

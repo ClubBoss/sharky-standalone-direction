@@ -119,14 +119,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
             Row(
               children: [
                 const Expanded(
-                  child: Text(
-                    'You',
-                    style: TextStyle(
-                      color: _text,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  child: Text('You', style: Act0ClubNightTokensV1.title),
                 ),
                 if (input.onOpenSettings != null)
                   IconButton(
@@ -148,7 +141,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
             Act0ClubCardV1(
               padding: EdgeInsets.zero,
               child: Padding(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(18),
                 child: Row(
                   children: [
                     _medallion(Act0AcademyLeafGlyphKindV1.you, _gold, 48),
@@ -166,7 +159,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                             key: const Key('act0_academy_you_leaf_name'),
                             style: const TextStyle(
                               color: _text,
-                              fontSize: 20,
+                              fontSize: 22,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
