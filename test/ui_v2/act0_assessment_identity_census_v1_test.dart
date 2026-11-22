@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,7 +131,7 @@ void main() {
     expect(
       entries,
       hasLength(
-        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
@@ -386,6 +386,38 @@ void main() {
           ];
       }
     }
+    const w4SeatAdditions = {
+      'w4_value_worse_call_seat': [
+        'world_4',
+        'value_bets',
+        'w4_value_worse_call_seat',
+        'drill',
+        'practice',
+        [
+          ['btn', 'Button', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+        ],
+      ],
+      'w4_bluff_target_seat': [
+        'world_4',
+        'bluff_pressure',
+        'w4_bluff_target_seat',
+        'drill',
+        'practice',
+        [
+          ['btn', 'Button', false, 'wrong', 'Big blind'],
+          ['co', 'Cutoff', false, 'wrong', 'Big blind'],
+          ['bb', 'Big blind', true, 'correct', 'Big blind'],
+        ],
+      ],
+    };
+    for (final addition in w4SeatAdditions.entries) {
+      expect(
+        entries.singleWhere((row) => row[2] == addition.key),
+        addition.value,
+      );
+    }
     const w4BettorTask = 'w4_price_find_bettor';
     expect(entries.singleWhere((row) => row[2] == w4BettorTask), [
       'world_4',
@@ -547,6 +579,7 @@ void main() {
               row[2] != w4BettorTask &&
               !w5Additions.containsKey(row[2]) &&
               !w8Additions.containsKey(row[2]) &&
+              !w4SeatAdditions.containsKey(row[2]) &&
               row[2] != boardRepair,
         )
         .toList(growable: false);
@@ -2234,7 +2267,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;

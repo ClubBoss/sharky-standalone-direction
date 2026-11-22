@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 446 tasks · W1–W12
+SHARKY POKER — EN learning content, 448 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -3027,6 +3027,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
   + [correct] Bet half-pot [3 BB] — Value collected. A half-pot bet lets worse hands call while you hold the stronger hand.
     FEEDBACK TABLE: Flop | You As Jd | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Value spot | Facts one pair, top pair, rainbow
 
+TASK w4_value_worse_call_seat [drill] Find the worse caller
+CAPTION: A pair of eights will call a 2 BB bet. Use the live seats.
+Q: Tap the seat that can pay off a value bet.
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Kd Qs | Board Kh 8c 3h | Pot 6 BB | Seat BTN | Active btn | Decision btn | Tap btn, bb, co | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qs stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Button [seat btn] — Check who can respond. You hold a pair of kings on the Button. Choosing your own seat misses the opponent who can add chips.
+    BETTER ANSWER: Big blind
+    FEEDBACK TABLE: Flop | You Kd Qs | Board Kh 8c 3h | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Tap btn, bb, co | Facts one pair, top pair, two-tone
+  + [correct] Big blind [seat bb] — You found the seat. BB can call 2 BB with eights, a weaker pair than your kings.
+    FEEDBACK TABLE: Flop | You Kd Qs | Board Kh 8c 3h | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Tap btn, bb, co | Facts one pair, top pair, two-tone
+  - [wrong] Cutoff [seat co] — Check who can respond. CO folded before the flop. A folded seat cannot add 2 BB to the pot.
+    BETTER ANSWER: Big blind
+    FEEDBACK TABLE: Flop | You Kd Qs | Board Kh 8c 3h | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Tap btn, bb, co | Facts one pair, top pair, two-tone
+
 TASK w4_value_recap [review] Value recap
 CAPTION: Lesson learned: value means worse can call.
 TEACH: Value checklist. Ask what worse hands can call before choosing a size.
@@ -3078,6 +3094,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Check — Check is the cleaner line. Checking lets you see the next card for free. The model gives the bluff no chance to fold a better hand.
   - [wrong] Bet one-third [2 BB] — A smaller losing bet still costs chips. A 2 BB bet risks less than 6 BB, but on A-7-2 the stated better hands still call. Checking lets K-Q see the turn without paying for those folds.
     BETTER ANSWER: Check
+
+TASK w4_bluff_target_seat [drill] Find the target of a bluff
+CAPTION: A pair of fives will fold to 3 BB. You have ace-high.
+Q: Tap the seat your 3 BB bluff is aimed at.
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ah 7c | Board Js 5d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Tap btn, co, bb | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah 7c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Button [seat btn] — Check who can respond. The Button folded preflop. Betting cannot make that seat give up another hand.
+    BETTER ANSWER: Big blind
+    FEEDBACK TABLE: Flop | You Ah 7c | Board Js 5d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Tap btn, co, bb | Facts high card, rainbow, backdoor straight
+  - [wrong] Cutoff [seat co] — Check who can respond. You are CO with ace-high. Choosing your seat misses who decides whether your bet wins immediately.
+    BETTER ANSWER: Big blind
+    FEEDBACK TABLE: Flop | You Ah 7c | Board Js 5d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Tap btn, co, bb | Facts high card, rainbow, backdoor straight
+  + [correct] Big blind [seat bb] — You found the seat. BB is your only live opponent. A fold from BB wins the 6 BB pot with ace-high.
+    FEEDBACK TABLE: Flop | You Ah 7c | Board Js 5d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Tap btn, co, bb | Facts high card, rainbow, backdoor straight
 
 TASK w4_bluff_recap [review] Bluff recap
 CAPTION: Lesson learned: bluff only when folds can happen.

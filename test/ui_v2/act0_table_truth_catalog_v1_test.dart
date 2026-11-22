@@ -196,8 +196,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 162),
-      ('D3.to_call_completeness', 116),
+      ('D2.pot_feasibility', 164),
+      ('D3.to_call_completeness', 118),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1452,6 +1452,43 @@ void main() {
         option['repairLabels'] = [label];
       }
     }
+    // W4's reviewed answer order is independent of the frozen identity fixture.
+    for (final (id, correctId, index) in [
+      ('w4_value_purpose', 'value', 2),
+      ('w4_bad_price_fold', 'fold', 2),
+      ('w4_checkpoint_table_price', 'call', 2),
+      ('w4_bluff_purpose', 'bluff', 1),
+      ('w4_value_missed', 'bet_half', 2),
+      ('w4_bad_bluff', 'check', 1),
+      ('w4_protection_check', 'free_card', 2),
+    ]) {
+      final options = (expectedComparison[id] as Map)['options'] as List;
+      final correct = options.indexWhere((choice) => choice['id'] == correctId);
+      expect(correct, isNonNegative, reason: id);
+      options.insert(index, options.removeAt(correct));
+    }
+    expectedComparison['w4_value_worse_call_seat'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['btn', 'bb', 'co'])
+          {
+            ...w3Option(choice, seat: choice, correct: choice == 'bb'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
+    expectedComparison['w4_bluff_target_seat'] = {
+      'rewardXp': 8,
+      'family': 'decision',
+      'options': [
+        for (final choice in ['btn', 'co', 'bb'])
+          {
+            ...w3Option(choice, seat: choice, correct: choice == 'bb'),
+            'repairCards': ['board_0', 'board_1', 'board_2'],
+          },
+      ],
+    };
     expect(
       historicalComparison,
       expectedComparison,

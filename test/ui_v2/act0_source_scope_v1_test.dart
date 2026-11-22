@@ -278,13 +278,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        422 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        427 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final newTasks = tasks
@@ -311,7 +311,7 @@ void main() {
             task.taskId != 'actions_call_chip_cost' &&
             task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(387),
+      hasLength(389),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -542,10 +542,10 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 286);
+    expect(legacyPlayed, 288);
     expect(
       played,
-      320 + 10 + 9,
+      325 + 10 + 9,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
       'cards_ranks_suits_premium_decision',
@@ -554,6 +554,8 @@ void main() {
       'first_table_guide_first_decision',
       'w4_price_find_bettor',
       'w6_continuation_bet_value_size',
+      'w4_value_worse_call_seat',
+      'w4_bluff_target_seat',
       'w3_play_from_blinds_intro',
       'w3_play_from_blinds_small_blind_fold',
       'w3_play_from_blinds_small_blind_raise',

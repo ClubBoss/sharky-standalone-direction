@@ -5524,6 +5524,44 @@ final _w4IdentifyBettorRunner = _world4PriceIntroRunner.copyWith(
   ],
 );
 
+Act0RunnerStateV1 _w4SeatDecisionV1({
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required String answer,
+  required Map<String, (String, String)> feedback,
+}) {
+  final preferred = feedback[answer]!.$1;
+  return _w4IdentifyBettorRunner.copyWith(
+    lessonId: id,
+    caption: caption,
+    question: question,
+    table: table.copyWith(selectableSeatIds: feedback.keys.toList()),
+    feedbackTitle: 'You found the seat.',
+    feedbackReason: feedback[answer]!.$2,
+    options: [
+      for (final entry in feedback.entries)
+        Act0RunnerOptionV1(
+          id: entry.key,
+          seatId: entry.key,
+          label: entry.value.$1,
+          isCorrect: entry.key == answer,
+          quality: entry.key == answer
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          preferredLabel: preferred,
+          betterAnswerLabel: entry.key == answer ? '' : preferred,
+          feedbackTitle: entry.key == answer
+              ? 'You found the seat.'
+              : 'Check who can respond.',
+          feedbackReason: entry.value.$2,
+          repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+        ),
+    ],
+  );
+}
+
 final _betPurposePriceLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'why_bets_happen',
@@ -5826,6 +5864,40 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'w4_value_worse_call_seat',
+        title: 'Find the worse caller',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4SeatDecisionV1(
+          id: 'w4_value_worse_call_seat',
+          caption: 'A pair of eights will call a 2 BB bet. Use the live seats.',
+          question: 'Tap the seat that can pay off a value bet.',
+          table: _day7PostflopV1(
+            'btn',
+            'Kd Qs',
+            'Kh 8c 3h',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          answer: 'bb',
+          feedback: const {
+            'btn': (
+              'Button',
+              'You hold a pair of kings on the Button. Choosing your own seat misses the opponent who can add chips.',
+            ),
+            'bb': (
+              'Big blind',
+              'BB can call 2 BB with eights, a weaker pair than your kings.',
+            ),
+            'co': (
+              'Cutoff',
+              'CO folded before the flop. A folded seat cannot add 2 BB to the pot.',
+            ),
+          },
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w4_value_recap',
         title: 'Value recap',
         phase: Act0LessonPhaseV1.review,
@@ -5876,6 +5948,40 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
             correctOptionId: 'check',
             correctIndex: 1,
           ),
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_bluff_target_seat',
+        title: 'Find the target of a bluff',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4SeatDecisionV1(
+          id: 'w4_bluff_target_seat',
+          caption: 'A pair of fives will fold to 3 BB. You have ace-high.',
+          question: 'Tap the seat your 3 BB bluff is aimed at.',
+          table: _day7PostflopV1(
+            'co',
+            'Ah 7c',
+            'Js 5d 2c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          answer: 'bb',
+          feedback: const {
+            'btn': (
+              'Button',
+              'The Button folded preflop. Betting cannot make that seat give up another hand.',
+            ),
+            'co': (
+              'Cutoff',
+              'You are CO with ace-high. Choosing your seat misses who decides whether your bet wins immediately.',
+            ),
+            'bb': (
+              'Big blind',
+              'BB is your only live opponent. A fold from BB wins the 6 BB pot with ace-high.',
+            ),
+          },
         ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
