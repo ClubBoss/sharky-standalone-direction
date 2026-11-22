@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -53,6 +55,88 @@ Act0ArchivedAttemptV1 _attempt(int n) =>
     )!;
 
 void main() {
+  group('Review replay', () {
+    Future<void> mount(
+      WidgetTester tester,
+      Act0ArchivedAttemptV1 attempt,
+    ) async {
+      tester.view.physicalSize = const Size(320, 568);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0AttemptReplayScreenV1(attempt: attempt, onClose: () {}),
+          ),
+        ),
+      );
+    }
+
+    testWidgets(
+      'reads only revealed journal steps and moves back and forward',
+      (tester) async {
+        await mount(tester, _attempt(1));
+        final previous = find.byKey(const Key('act0_attempt_replay_previous'));
+        final next = find.byKey(const Key('act0_attempt_replay_next'));
+
+        expect(find.text('Step 0 of 2'), findsOneWidget);
+        expect(tester.widget<TextButton>(previous).onPressed, isNull);
+        expect(find.text('CO bets 2 BB'), findsNothing);
+
+        await tester.tap(next);
+        await tester.pump();
+        expect(find.text('Step 1 of 2'), findsOneWidget);
+        expect(find.text('CO bets 2 BB'), findsOneWidget);
+        expect(find.text('Action returns to BB'), findsNothing);
+
+        await tester.tap(next);
+        await tester.pump();
+        expect(find.text('Step 2 of 2'), findsOneWidget);
+        expect(find.text('Action returns to BB'), findsOneWidget);
+        expect(tester.widget<TextButton>(next).onPressed, isNull);
+        await tester.tap(find.text('Earlier steps'));
+        await tester.pumpAndSettle();
+        expect(find.text('CO bets 2 BB'), findsOneWidget);
+
+        await tester.tap(previous);
+        await tester.pumpAndSettle();
+        expect(find.text('Step 1 of 2'), findsOneWidget);
+        expect(find.text('CO bets 2 BB'), findsOneWidget);
+        expect(find.text('Action returns to BB'), findsNothing);
+      },
+    );
+
+    testWidgets('pauses playback and resets to the start', (tester) async {
+      await mount(tester, _attempt(1));
+      await tester.tap(find.text('Play'));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('Step 1 of 2'), findsOneWidget);
+      await tester.tap(find.text('Pause'));
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.text('Step 1 of 2'), findsOneWidget);
+      await tester.tap(find.text('Play'));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('Step 2 of 2'), findsOneWidget);
+      expect(find.text('Pause'), findsNothing);
+      await tester.tap(find.text('Reset'));
+      await tester.pump();
+      expect(find.text('Step 0 of 2'), findsOneWidget);
+      expect(find.text('CO bets 2 BB'), findsNothing);
+    });
+
+    testWidgets('shows the missing journal for a migrated attempt', (
+      tester,
+    ) async {
+      final attempt = Act0ArchivedAttemptV1.fromRecordedDecision(_evidence(1))!;
+      await mount(tester, attempt);
+      expect(
+        find.text('No event history was saved for this attempt.'),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_attempt_replay_next')), findsNothing);
+    });
+  });
+
   test(
     'migrates only exact older decisions and leaves their journal empty',
     () {
