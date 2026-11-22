@@ -12,14 +12,14 @@ void main() {
     final beginnerTasks = lessons
         .takeWhile((lesson) => lesson.lessonId != 'blinds_action_order')
         .expand((lesson) => lesson.taskList);
-    expect(tasks, hasLength(73));
+    expect(tasks, hasLength(77));
     expect(
       tasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
-      hasLength(35),
+      hasLength(36),
     );
     expect(
       beginnerTasks.where((task) => task.runner.table.heroSeat.seatId == 'btn'),
-      hasLength(28),
+      hasLength(29),
     );
     final repair = beginnerTasks.singleWhere(
       (task) => task.taskId == 'first_table_guide_shared_cards_repair',

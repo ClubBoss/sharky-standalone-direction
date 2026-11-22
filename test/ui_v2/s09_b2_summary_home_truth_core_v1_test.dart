@@ -135,6 +135,7 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
   for (final taskId in [
     'actions_legal_context',
     'actions_check_drill',
+    'actions_call_chip_cost',
     'actions_fold_drill',
     'actions_call_drill',
     'actions_raise_drill',
