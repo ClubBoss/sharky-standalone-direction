@@ -484,7 +484,8 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
   }
   final selectedOption = option ?? runner.selectedOption;
   final correctOption = runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
-    (candidate) => candidate?.isCorrect == true,
+    (candidate) =>
+        candidate != null && act0RunnerOptionIsPreferredV1(candidate),
     orElse: () => null,
   );
   final targetOption = selectedOption?.isCorrect == true
@@ -623,7 +624,9 @@ Act0SkillReceiptV1? _skillReceiptForSignalProofV1({
         : proof.signalId.trim(),
     sourceSignalLabel: sourceSignalLabel,
     outcome: switch (quality) {
-      Act0FeedbackQualityV1.correct => Act0SkillReceiptOutcomeV1.learned,
+      Act0FeedbackQualityV1.correct ||
+      Act0FeedbackQualityV1.coCorrect ||
+      Act0FeedbackQualityV1.acceptable => Act0SkillReceiptOutcomeV1.learned,
       Act0FeedbackQualityV1.wrong => Act0SkillReceiptOutcomeV1.repairStarted,
       Act0FeedbackQualityV1.suboptimal => Act0SkillReceiptOutcomeV1.needsRep,
     },

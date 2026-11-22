@@ -73,17 +73,18 @@ void main() {
       if (t.phase == Act0LessonPhaseV1.theory || options.isEmpty) continue;
       graded += 1;
       final labels = options.map((o) => o.label).toSet();
-      final correct = options.where((o) => o.isCorrect).toList();
+      final correct = options.where(act0RunnerOptionIsPreferredV1).toList();
       if (correct.isEmpty) problems.add('${t.taskId}: no correct option');
       for (final o in options) {
         final id = '${t.taskId}/${o.id}';
-        if (o.isCorrect != (o.quality == Act0FeedbackQualityV1.correct)) {
+        if (o.isCorrect != o.quality.passes) {
           problems.add('$id: correct=${o.isCorrect} quality=${o.quality}');
         }
         if (!labels.contains(o.preferredLabel)) {
           problems.add('$id: preferred "${o.preferredLabel}" is no option');
         }
-        if (!o.isCorrect && !correct.any((c) => c.label == o.preferredLabel)) {
+        if (!o.quality.isPreferred &&
+            !correct.any((c) => c.label == o.preferredLabel)) {
           problems.add('$id: preferred answer is not a correct option');
         }
         if (o.feedbackReason.trim().isEmpty) problems.add('$id: no feedback');

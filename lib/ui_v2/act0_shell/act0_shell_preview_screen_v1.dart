@@ -1208,6 +1208,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.initialTab = Act0ShellTabV1.home,
     this.initialPhase = Act0LessonPhaseV1.theory,
     this.state,
+    this.debugPersistFixtureProgress = false,
     this.showPlacementOnStart = true,
     this.debugLegacyPlacementOnStart = false,
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
@@ -1224,6 +1225,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final Act0ShellTabV1 initialTab;
   final Act0LessonPhaseV1 initialPhase;
   final Act0ShellStateV1? state;
+  @visibleForTesting
+  final bool debugPersistFixtureProgress;
   final bool showPlacementOnStart;
   final bool debugLegacyPlacementOnStart;
   final bool enableBetaMetrics;
@@ -1843,7 +1846,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   };
 
   bool get _usesPersistedProgress =>
-      widget.state == null && widget.debugHarnessEntry == null;
+      widget.debugHarnessEntry == null &&
+      (widget.state == null ||
+          (kDebugMode && widget.debugPersistFixtureProgress));
 
   @override
   void initState() {

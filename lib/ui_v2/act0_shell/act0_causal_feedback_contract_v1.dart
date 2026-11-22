@@ -39,19 +39,15 @@ class Act0CausalFeedbackV1 {
   }) {
     final reason = authoredReason.trim();
     final clue = structuredClue.trim();
-    final isCorrect = quality == Act0FeedbackQualityV1.correct;
+    final hidesBetter = quality.isPreferred;
     final better =
         (betterAction.trim().isNotEmpty ? betterAction : preferredAction)
             .trim();
     final safeCounterfactual = structuredCounterfactual?.trim();
     return Act0CausalFeedbackV1(
-      classification: switch (quality) {
-        Act0FeedbackQualityV1.correct => 'correct',
-        Act0FeedbackQualityV1.wrong => 'incorrect',
-        Act0FeedbackQualityV1.suboptimal => 'suboptimal',
-      },
+      classification: quality.resultKind,
       chosenAction: chosenAction.trim(),
-      betterAction: isCorrect ? '' : better,
+      betterAction: hidesBetter ? '' : better,
       clue: clue,
       // Authored option feedback is the only causal source. When it is absent,
       // the fallback names only the supplied structured clue.
@@ -60,7 +56,7 @@ class Act0CausalFeedbackV1 {
           : clue.isEmpty
           ? 'Check the visible spot before choosing.'
           : 'The visible clue here is $clue.',
-      whyBetter: isCorrect || better.isEmpty
+      whyBetter: hidesBetter || better.isEmpty
           ? ''
           : clue.isEmpty
           ? 'That is the supported action for this spot.'

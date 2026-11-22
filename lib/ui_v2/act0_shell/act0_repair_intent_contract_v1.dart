@@ -218,8 +218,7 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
   Act0DiagnosticVariantFingerprintResolverV1?
   currentDiagnosticVariantFingerprint,
 }) {
-  if (selectedOption.isCorrect ||
-      selectedOption.quality == Act0FeedbackQualityV1.correct) {
+  if (selectedOption.isCorrect || selectedOption.quality.passes) {
     return null;
   }
 
@@ -253,7 +252,7 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     return null;
   }
 
-  final result = _resultForQualityV1(selectedOption.quality);
+  final result = selectedOption.quality.resultKind;
   final receiptOutcome = receipt == null
       ? 'repair_started'
       : _receiptOutcomeIdV1(receipt.outcome);
@@ -324,7 +323,7 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
               taskId: sourceTaskId,
             ) ==
             goal?.sourceFingerprint;
-  final expected = runner.options.where((o) => o.isCorrect).toList();
+  final expected = runner.options.where(act0RunnerOptionIsPreferredV1).toList();
   final sourceBound =
       goal != null &&
       canonicalChoices.length == 1 &&
@@ -391,14 +390,6 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     mappingType: mappingType,
     reasonCode: reasonCode,
   );
-}
-
-String _resultForQualityV1(Act0FeedbackQualityV1 quality) {
-  return switch (quality) {
-    Act0FeedbackQualityV1.correct => 'correct',
-    Act0FeedbackQualityV1.wrong => 'incorrect',
-    Act0FeedbackQualityV1.suboptimal => 'suboptimal',
-  };
 }
 
 String _receiptOutcomeIdV1(Act0SkillReceiptOutcomeV1 outcome) {

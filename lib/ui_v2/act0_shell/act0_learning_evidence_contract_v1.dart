@@ -466,8 +466,7 @@ class Act0LearningEvidenceRecordV1 {
         isCorrect is! bool ||
         !_decisionTimeBuckets.contains(decisionTimeBucket) ||
         !_resultKinds.contains(resultKind) ||
-        (isCorrect && resultKind != 'correct') ||
-        (!isCorrect && resultKind == 'correct') ||
+        isCorrect != _passingResultKinds.contains(resultKind) ||
         (isCorrect && errorType != 'none') ||
         reviewKind == null ||
         assistanceKind == null ||
@@ -1202,7 +1201,12 @@ const Set<String> _decisionTimeBuckets = <String>{
   'unknown',
 };
 
-const Set<String> _resultKinds = <String>{'correct', 'incorrect', 'suboptimal'};
+const Set<String> _passingResultKinds = {'correct', 'co_correct', 'acceptable'};
+const Set<String> _resultKinds = {
+  ..._passingResultKinds,
+  'incorrect',
+  'suboptimal',
+};
 
 String? _requiredString(Object? raw) {
   final value = raw?.toString().trim() ?? '';

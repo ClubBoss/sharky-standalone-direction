@@ -471,7 +471,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
       orElse: () => lesson.taskList.first,
     );
     final correctOption = task.runner.options.firstWhere(
-      (option) => option.isCorrect,
+      act0RunnerOptionIsPreferredV1,
       orElse: () => task.runner.options.isEmpty
           ? const Act0RunnerOptionV1(
               id: '',
