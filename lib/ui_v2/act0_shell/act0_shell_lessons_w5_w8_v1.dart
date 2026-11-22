@@ -667,7 +667,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
             showTurn: true,
           ),
           caption:
-              "BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets.",
+              "BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets. A combo draw is a hand with both a flush draw and a straight draw.",
           question: "Which play earns most?",
           choices: const ["Bet 1 BB", "Check", "Bet 3 BB"],
           correct: 1,
@@ -3140,7 +3140,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
               isCorrect: true,
               preferredLabel: '20 BB',
               quality: Act0FeedbackQualityV1.correct,
-              feedbackTitle: 'Your stack capped the match at 20 BB.',
+              feedbackTitle: 'Your stack limited the match to 20 BB.',
               feedbackReason:
                   'You went all-in for 20 BB, so that is all either bigger stack could match against you.',
             ),
@@ -3246,7 +3246,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
               title: 'Only chips both players can match count.',
               body:
                   'With two players, 100 BB against 25 BB plays like 25 BB. '
-                  'A short stack is a stack with fewer chips than the other player can match. That stack limits what a draw can earn and what a weaker hand can pay. '
+                  'A short stack means few big blinds left and limits what a draw can earn. Implied odds mean counting extra chips you could win on later streets. Reverse implied odds mean counting extra chips you could lose if you improve but still have the worse hand. '
                   'In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra chips that only the deeper players can win.',
             ),
           ],

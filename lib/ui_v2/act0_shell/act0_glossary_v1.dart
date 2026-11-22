@@ -352,7 +352,7 @@ const act0GlossaryTermsV1 = <Act0GlossaryTermV1>[
     'SPR',
     r'\bspr\b|\bstack-to-pot ratio\b',
     'The stack-to-pot ratio. Divide the effective stack (the smaller '
-        'remaining stack heads-up) by the current pot.',
+        'remaining stack in a two-player pot) by the current pot.',
   ),
   Act0GlossaryTermV1(
     'Full ring',

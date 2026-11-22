@@ -32,8 +32,6 @@
     "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_hero_button_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_utg_v1|choice_0",
     "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_utg_v1|choice_2",
-    "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_w1_rules_check_forced_bets_v1|choice_0",
-    "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_w1_rules_check_forced_bets_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_w1_rules_check_preflop_after_hj_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w1_blinds_action_order_w1_rules_check_preflop_after_hj_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w1_cards_ranks_suits_confused_card_rank_suit_v1|choice_0",
@@ -172,18 +170,8 @@
   "reasoning_v1": {
     "findings_by_world": {
       "world_1": {},
-      "world_2": {
-        "30": [
-          "discipline_checkpoint_checkpoint_borderline_continue|call",
-          "w2_narrow_three_bet_strong|call",
-          "weak_ace_warning_w3_strong_continue|call"
-        ]
-      },
-      "world_3": {
-        "30": [
-          "w3_play_from_blinds_small_blind_medium_raise|raise"
-        ]
-      },
+      "world_2": {},
+      "world_3": {},
       "world_4": {},
       "world_5": {},
       "world_6": {},
@@ -392,11 +380,8 @@
     "W10|w10_player_type_recap|692",
     "W10|w10_river_price_check|one_in_n",
     "W10|w10_top_pair_turn_raise|687",
-    "W10|w10_vs_sticky_defender_tighten_steals|blind_defense",
     "W11|w11_bankroll_move_down|gto",
     "W11|w11_bb_defend_price|842",
-    "W11|w11_bb_defend_price|blind_defense",
-    "W11|w11_checkpoint_mixed_table_line|pot_control",
     "W11|w11_checkpoint_plan_line|148",
     "W11|w11_checkpoint_plan_line|ip_oop",
     "W11|w11_checkpoint_trigger_line|push_fold",
@@ -732,8 +717,6 @@
     "W2|w2_narrow_three_bet_fold|139",
     "W2|w2_narrow_three_bet_intro|139",
     "W2|w2_narrow_three_bet_intro|141",
-    "W2|w2_narrow_three_bet_intro|148",
-    "W2|w2_narrow_three_bet_intro|ip_oop",
     "W2|w2_narrow_three_bet_medium|141",
     "W2|w2_narrow_three_bet_premium|139",
     "W2|w2_narrow_three_bet_premium|31",
@@ -962,8 +945,6 @@
     "W5|straight_draws_w5_straight_intro|gutshot",
     "W5|straight_draws_w5_straight_intro|oesd",
     "W5|straight_draws_w5_straight_intro|outs",
-    "W5|turn_river_changes_w5_river_misses|121",
-    "W5|turn_river_changes_w5_river_misses|flush_draw",
     "W6|range_checkpoint_review|141",
     "W6|range_checkpoint_review|action_order",
     "W6|w6_ak_combos|528",
@@ -976,8 +957,6 @@
     "W6|w6_board_pair_strength_compare|141",
     "W6|w6_checkpoint_table_combo_weight|528",
     "W6|w6_checkpoint_table_combo_weight|mixed_strategy",
-    "W6|w6_combo_counts_intro|497",
-    "W6|w6_combo_counts_intro|combos",
     "W6|w6_combo_weight_compare|169",
     "W6|w6_combo_weight_compare|528",
     "W6|w6_continuation_bet_intro|427",
@@ -996,12 +975,9 @@
     "W6|w6_turn_shift_bucket|141",
     "W6|w6_turn_shift_bucket|393",
     "W6|w6_turn_shift_bucket|check",
-    "W6|w6_turn_shift_bucket|exploit",
     "W6|w6_value_dry_board|440",
     "W6|w6_value_range_action|check",
     "W6|w6_value_wet_board|141",
-    "W6|w6_wrong_board|121",
-    "W6|w6_wrong_board|flush_draw",
     "W7|paired_board_texture_lite_intro|93",
     "W7|paired_board_texture_lite_intro|paired_board",
     "W8|w7_6max_wider|152",
@@ -1057,7 +1033,6 @@
     "W8|w8_hero_stack_cap_seat|14",
     "W8|w8_pot_bet_committed_seat|14",
     "W9|w9_big_stack_leverage|156",
-    "W9|w9_bubble_cover_seat|heads_up",
     "W9|w9_bubble_intro|388",
     "W9|w9_bubble_intro|848",
     "W9|w9_bubble_intro|889",
@@ -1066,7 +1041,6 @@
     "W9|w9_bubble_recap|296",
     "W9|w9_bubble_recap|889",
     "W9|w9_bubble_recap|bubble",
-    "W9|w9_bubble_recap|exploit",
     "W9|w9_bubble_short_stack|139",
     "W9|w9_bubble_short_stack|action_order",
     "W9|w9_cash_vs_tournament|141",
