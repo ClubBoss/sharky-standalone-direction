@@ -77,17 +77,33 @@ final _riverPriceLesson = RegExp(
   r'|\b(?:price|break.even|to call)\b[^.!?]{0,110}\briver\b',
 );
 
+final _namedW5Outs = RegExp(r"\bw5(?:['’]s)? (?:clean )?outs?\b");
+final _namedW4Price = RegExp(r"\bw4(?:['’]s)? (?:call )?price\b");
+
 bool _linksTurnOutsAndRiverPrice(CatalogTask row) {
   final runner = row.task.runner;
-  final learnerCopy = _norm(
-    [
-      for (final step in runner.teachingSteps) step.body,
-      for (final option in runner.options) option.feedbackReason,
-      runner.feedbackReason,
-    ].join(' '),
-  );
-  return _turnOutsLesson.hasMatch(learnerCopy) &&
-      _riverPriceLesson.hasMatch(learnerCopy);
+  if (_norm(runner.table.streetLabel) != 'river') return false;
+  final visibleCopy = [
+    for (final step in runner.teachingSteps) '${step.title} ${step.body}',
+    for (final option in runner.options) option.feedbackReason,
+  ];
+  final callouts = _norm(visibleCopy.join(' '));
+  if (_turnOutsLesson.hasMatch(callouts) &&
+      _riverPriceLesson.hasMatch(callouts)) {
+    return true;
+  }
+
+  // The approved river lesson names both previous lessons in one visible
+  // explanation. Its river board supplies the street for the W4 formula.
+  return visibleCopy
+      .map(_norm)
+      .any(
+        (copy) =>
+            _namedW5Outs.hasMatch(copy) &&
+            _namedW4Price.hasMatch(copy) &&
+            copy.contains('another card') &&
+            copy.contains('river'),
+      );
 }
 
 int _confirmedPostflopSeats(Act0TableStateV1 table) {
