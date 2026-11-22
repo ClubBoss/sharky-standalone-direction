@@ -41,6 +41,7 @@ void main() {
         final correctActions = <String>{};
         final scenes = <String>{};
         final flopEquities = <String, double>{};
+        final flopAnswers = <double, Set<String>>{};
         for (var seed = 0; seed < 1000; seed++) {
           final id = 'generated_${template.name}_$seed';
           final task = act0GenerateDailyDealV1(
@@ -85,7 +86,7 @@ void main() {
             reason: id,
           );
           final correct = template == Act0DailyDealTemplateV1.lowSpr
-              ? _verifiedLowSprAnswer(task, flopEquities)
+              ? _verifiedLowSprAnswer(task, flopEquities, flopAnswers)
               : _expected(template, table);
           expect(answer.label, correct, reason: id);
           correctActions.add(correct);
@@ -93,7 +94,8 @@ void main() {
         }
         expect(scenes.length, greaterThan(900));
         if (template == Act0DailyDealTemplateV1.lowSpr) {
-          expect(flopEquities, hasLength(4));
+          expect(flopEquities, hasLength(5));
+          expect(flopAnswers[1059 / 2970], {'Call', 'Fold'});
         }
         expect(correctActions.length, greaterThan(1), reason: template.name);
       },
@@ -195,6 +197,7 @@ String _expected(Act0DailyDealTemplateV1 template, Act0TableStateV1 table) {
 String _verifiedLowSprAnswer(
   Act0LessonTaskV1 task,
   Map<String, double> equities,
+  Map<double, Set<String>> answers,
 ) {
   final runner = task.runner;
   final table = runner.table;
@@ -278,13 +281,15 @@ String _verifiedLowSprAnswer(
   expect(
     runner.caption,
     contains(
-      'Your equity against that range is ${(100 * equity).toStringAsFixed(1)}%.',
+      'Your equity against that range is ${(100 * equity).toStringAsFixed(2)}%.',
     ),
   );
   final feedback = runner.options
       .singleWhere((option) => option.isCorrect)
       .feedbackReason;
-  expect(feedback, contains('${(100 * equity).toStringAsFixed(1)}% equity'));
-  expect(feedback, contains('${(100 * price).toStringAsFixed(1)}% call price'));
-  return equity > price ? 'Call' : 'Fold';
+  expect(feedback, contains('${(100 * equity).toStringAsFixed(2)}% equity'));
+  expect(feedback, contains('${(100 * price).toStringAsFixed(2)}% call price'));
+  final answer = equity > price ? 'Call' : 'Fold';
+  answers.putIfAbsent(equity, () => {}).add(answer);
+  return answer;
 }

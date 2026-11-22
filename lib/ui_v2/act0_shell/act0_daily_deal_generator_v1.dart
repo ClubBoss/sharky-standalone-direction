@@ -419,6 +419,17 @@ const _lowSprScenariosV1 = <_LowSprScenarioV1>[
     rangeRead: 'BB shoves weaker pairs and overcards',
   ),
   (
+    hand: ['Qs', 'Qd'],
+    flop: ['Jh', '7d', '2c'],
+    range: [
+      ['Js', 'Jd'],
+      ['Ah', 'Ad'],
+      ['9s', '9h'],
+    ],
+    handName: 'Your overpair',
+    rangeRead: 'BB shoves a set, aces or a lower pair',
+  ),
+  (
     hand: ['As', 'Qd'],
     flop: ['Ah', '8d', '3c'],
     range: [
@@ -522,8 +533,9 @@ _DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
   final price = due / (pot + due);
   if (equity == price) return null;
   final calls = equity > price;
-  final equityText = _dailyPctV1(equity);
-  final priceText = _dailyPctV1(price);
+  // Keep close calls visibly distinct as well as mathematically distinct.
+  final equityText = '${(100 * equity).toStringAsFixed(2)}%';
+  final priceText = '${(100 * price).toStringAsFixed(2)}%';
   final comparison = calls ? 'clears' : 'falls short of';
   return (
     table: table,
