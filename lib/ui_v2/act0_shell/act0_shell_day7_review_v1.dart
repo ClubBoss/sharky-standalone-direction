@@ -18,6 +18,7 @@ _SpacedReviewEntryV1 _day7ExampleV1(
   required String reason,
   Map<int, String> wrongReasons = const {},
   String caption = '',
+  String? savedTaskId,
 }) {
   final answer = choices[correct];
   return (
@@ -25,7 +26,7 @@ _SpacedReviewEntryV1 _day7ExampleV1(
     lessonId: lesson,
     conceptFamilyId: family,
     task: Act0LessonTaskV1(
-      taskId: 'spaced_review_w${world}_${lesson}_${family}_v1',
+      taskId: savedTaskId ?? 'spaced_review_w${world}_${lesson}_${family}_v1',
       title: 'Review decision',
       phase: Act0LessonPhaseV1.drill,
       rewardXp: 0,
@@ -66,7 +67,9 @@ _SpacedReviewEntryV1 _day7ExampleV1(
                   ? Act0FeedbackQualityV1.correct
                   : Act0FeedbackQualityV1.wrong,
               feedbackTitle: index == correct ? 'Correct.' : 'Look again.',
-              feedbackReason: wrongReasons[index] ?? reason,
+              feedbackReason: index == correct
+                  ? reason
+                  : wrongReasons[index] ?? reason,
             ),
         ],
         feedbackTitle: '',

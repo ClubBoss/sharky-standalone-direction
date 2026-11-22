@@ -117,9 +117,15 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     // Day 2 checks retention on familiar material. After a spaced success,
     // offer a new hand only if its review-only source has never been opened.
     if (family == null || family.spacedSuccessStage == 0) return null;
+    final reviewFamily = act0Day7FamilyForSavedSourceV1(
+      worldId: item.worldId,
+      lessonId: item.lessonId,
+      taskId: item.taskId,
+      family: item.conceptFamilyId,
+    );
     for (final entry in act0NewReviewTasksV1) {
       final id = entry.task.taskId;
-      if (entry.conceptFamilyId == item.conceptFamilyId &&
+      if (entry.conceptFamilyId == reviewFamily &&
           entry.worldId == item.worldId &&
           entry.lessonId == item.lessonId &&
           item.taskId != id &&

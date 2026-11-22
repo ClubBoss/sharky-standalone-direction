@@ -192,8 +192,6 @@
     "21.duplicate_wrong_reason|spaced_review_w6_range_bucket_basics_board_cards_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w6_range_bucket_basics_hero_cards_board_pot_v1|choice_0",
     "21.duplicate_wrong_reason|spaced_review_w6_range_bucket_basics_hero_cards_board_pot_v1|choice_2",
-    "21.duplicate_wrong_reason|spaced_review_w6_range_combo_counts_pot_to_call_v1|choice_0",
-    "21.duplicate_wrong_reason|spaced_review_w6_range_combo_counts_pot_to_call_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w6_range_pressure_lines_board_cards_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w6_range_pressure_lines_board_cards_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w6_range_pressure_lines_board_texture_change_v1|choice_0",
@@ -206,14 +204,10 @@
     "21.duplicate_wrong_reason|spaced_review_w6_range_pressure_lines_range_bucket_shift_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w6_range_reading_review_hero_cards_board_pot_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w6_range_reading_review_hero_cards_board_pot_v1|choice_2",
-    "21.duplicate_wrong_reason|spaced_review_w6_range_reading_review_pot_to_call_v1|choice_0",
-    "21.duplicate_wrong_reason|spaced_review_w6_range_reading_review_pot_to_call_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_board_cards_v1|choice_0",
     "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_board_cards_v1|choice_2",
     "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_hero_cards_board_pot_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_hero_cards_board_pot_v1|choice_2",
-    "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_pot_to_call_v1|choice_0",
-    "21.duplicate_wrong_reason|spaced_review_w6_range_thinking_checkpoint_pot_to_call_v1|choice_1",
     "21.duplicate_wrong_reason|spaced_review_w6_w6_continuation_bet_board_cards_v1|choice_0",
     "21.duplicate_wrong_reason|spaced_review_w6_w6_continuation_bet_board_cards_v1|choice_2"
   ]

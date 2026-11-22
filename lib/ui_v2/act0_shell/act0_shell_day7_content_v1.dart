@@ -1445,13 +1445,18 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     6,
     'range_combo_counts',
-    'pot_to_call',
+    'starting_hand_combinations',
     _day7PreflopV1('co', '8c 4d'),
     question: 'Before blockers, how many distinct K-Q hands are suited?',
     choices: const ['Six', 'Four', 'Sixteen'],
     correct: 1,
     reason:
         'There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.',
+    wrongReasons: const {
+      0: 'Six is the count for two cards of one rank. K-Q has two different ranks; six overcounts the four same-suit hands.',
+      2: 'Sixteen includes the twelve offsuit K-Q hands. Counting them inflates the suited part of the range.',
+    },
+    savedTaskId: 'spaced_review_w6_range_combo_counts_pot_to_call_v1',
   ),
   _day7ExampleV1(
     6,
@@ -1485,7 +1490,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     6,
     'range_thinking_checkpoint',
-    'pot_to_call',
+    'starting_hand_combinations',
     _day7PreflopV1('hj', '4s 3d'),
     question:
         'How many two-card combinations make pocket tens before blockers?',
@@ -1493,6 +1498,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         'Choose two distinct tens from four suits. Counting each pair once leaves six combinations.',
+    wrongReasons: const {
+      0: 'Counting the two suits in both orders gives twelve. Each physical hand has the same two cards either way, so that counts each of the six hands twice.',
+      1: 'Four counts individual suits. A hand here needs two distinct suits, so stopping at four misses two of the six possible hands.',
+    },
+    savedTaskId: 'spaced_review_w6_range_thinking_checkpoint_pot_to_call_v1',
   ),
   _day7ExampleV1(
     6,
@@ -1529,7 +1539,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     6,
     'range_reading_review',
-    'pot_to_call',
+    'starting_hand_combinations',
     _day7PreflopV1('hj', '7s 4s'),
     question:
         'With no blockers, how many distinct K-J combinations are possible?',
@@ -1537,6 +1547,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         'Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.',
+    wrongReasons: const {
+      0: 'Four counts only the K-J hands whose suits match. Ignoring the twelve offsuit combinations understates this range.',
+      1: 'Twelve counts only different-suit K-J. Leaving out one K-J hand per suit misses four legal combinations.',
+    },
+    savedTaskId: 'spaced_review_w6_range_reading_review_pot_to_call_v1',
   ),
   _day7ExampleV1(
     7,
