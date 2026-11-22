@@ -457,11 +457,6 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
   ),
   teachingSteps: const [
     Act0TeachingStepV1(
-      title: 'Read the board.',
-      body:
-          'The flop has three shared cards. The turn is the fourth. BTN is Button, the dealer marker.',
-    ),
-    Act0TeachingStepV1(
       title: 'Compare the highest rank.',
       body:
           'Broadway ranks are ten, jack, queen, king, and ace. A-2-3-4-5 is the five-high straight, called the wheel. The higher straight wins.',
@@ -801,6 +796,21 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _w1WithNumericLabelsV1(
           _boardCountRunner.copyWith(
             table: _w1WithPocketPairV1(_boardCountRunner.table, '9'),
+            teachingSteps: const [
+              Act0TeachingStepV1(
+                title: 'Count the board.',
+                body:
+                    'The flop has three shared cards. The turn is the fourth.',
+                focusCardIds: [
+                  'board_0',
+                  'board_1',
+                  'board_2',
+                  'board_3',
+                  'board_4',
+                ],
+                focusLabels: ['Shared cards'],
+              ),
+            ],
           ),
           const {'Five': '5 cards', 'Two': '2 cards', 'Three': '3 cards'},
         ),
@@ -1245,8 +1255,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             teachingSteps: const [
               Act0TeachingStepV1(
                 title: 'When cards reach the board',
-                body:
-                    'Preflop means no board cards yet. The flop has three. The turn is the fourth board card.',
+                body: 'Preflop means no board cards yet. The flop has three.',
               ),
               Act0TeachingStepV1(
                 title: 'Read the seat labels.',
