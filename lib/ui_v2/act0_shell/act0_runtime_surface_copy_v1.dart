@@ -393,6 +393,11 @@ String act0RuntimeFeedbackActionPrefixV1(
   if (quality == Act0FeedbackQualityV1.wrong) {
     return act0RuntimeLocalizedGeneralLabelV1(context, 'Better option');
   }
+  if (quality == Act0FeedbackQualityV1.acceptable) {
+    return act0AcademyLanguageV1(context) == 'ru'
+        ? 'Лучший ход'
+        : 'Better answer';
+  }
   if (quality == Act0FeedbackQualityV1.suboptimal) {
     return act0RuntimeLocalizedGeneralLabelV1(context, 'Sharper line');
   }
@@ -619,6 +624,8 @@ List<String> _feedbackCoachCandidatesV1(
 }) {
   switch (quality) {
     case Act0FeedbackQualityV1.correct:
+    case Act0FeedbackQualityV1.coCorrect:
+    case Act0FeedbackQualityV1.acceptable:
       return <String>[
         _coachLineV1(context, en: 'Sharp read.', ru: 'Sharp read.'),
         _coachLineV1(context, en: 'Clean read.', ru: 'Clean read.'),

@@ -965,14 +965,8 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0RepairIntentV1 intent,
   ) => Act0BoardTexturePersonalizationV1.fromRepairIntent(intent);
 
-  String _correctOptionIdV1(Act0RunnerStateV1 runner) {
-    for (final option in runner.options) {
-      if (option.isCorrect) {
-        return option.id;
-      }
-    }
-    return '';
-  }
+  String _correctOptionIdV1(Act0RunnerStateV1 runner) =>
+      runner.options.where(act0RunnerOptionIsPreferredV1).firstOrNull?.id ?? '';
 
   void _storeOpenRepairIntentForMissV1({
     required String sourceWorldId,

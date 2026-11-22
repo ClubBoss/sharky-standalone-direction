@@ -26,7 +26,9 @@ String act0CanonicalErrorTypeForDecisionV1({
     lessonId: sourceLessonId,
     taskId: sourceTaskId,
   );
-  if (result != 'correct' && concept != null) {
+  if (const {'correct', 'co_correct', 'acceptable'}.contains(result))
+    return 'none';
+  if (concept != null) {
     return concept.id;
   }
   if (result == 'incorrect' &&

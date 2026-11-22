@@ -1938,7 +1938,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           if (projection.streetLabel.isNotEmpty)
             'street_v1': projection.streetLabel,
           'acceptable_action_ids': projection.acceptableActionIds,
-          'option_quality': option.quality.name,
+          // Keep the legacy bucket; result_classification carries the grade.
+          'option_quality': option.quality.passes
+              ? 'correct'
+              : option.quality.name,
           'decisionTimeBucket': decisionTimeBucket,
           'attemptOrdinal': 1,
         },
@@ -2226,11 +2229,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Act0CompletedDecisionKindV1 kind = Act0CompletedDecisionKindV1.actionList,
   }) {
     final expectedOption = widget.runner.options
-        .cast<Act0RunnerOptionV1?>()
-        .firstWhere(
-          (candidate) => candidate?.isCorrect ?? false,
-          orElse: () => null,
-        );
+        .where(act0RunnerOptionIsPreferredV1)
+        .firstOrNull;
     final acceptableActionIds = widget.runner.options
         .where(
           (candidate) =>
@@ -2244,11 +2244,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       option: option,
       taskFamily: widget.selectedTaskFamily,
     );
-    final resultClassification = switch (option.quality) {
-      Act0FeedbackQualityV1.correct => 'correct',
-      Act0FeedbackQualityV1.wrong => 'incorrect',
-      Act0FeedbackQualityV1.suboptimal => 'suboptimal',
-    };
+    final resultClassification = option.quality.resultKind;
     final concept = act0ConceptErrorDefinitionForTaskV1(
       worldId: widget.selectedWorldId?.trim() ?? '',
       lessonId: _stableLessonTelemetryId,
@@ -2442,11 +2438,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }
     _completedDecisionOrdinal += 1;
     final expectedOption = widget.runner.options
-        .cast<Act0RunnerOptionV1?>()
-        .firstWhere(
-          (candidate) => candidate?.isCorrect ?? false,
-          orElse: () => null,
-        );
+        .where(act0RunnerOptionIsPreferredV1)
+        .firstOrNull;
     final worldId = widget.selectedWorldId?.trim();
     final normalizedWorldId = worldId == null || worldId.isEmpty
         ? null
@@ -2456,11 +2449,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       option: option,
       taskFamily: widget.selectedTaskFamily,
     );
-    final resultKind = switch (option.quality) {
-      Act0FeedbackQualityV1.correct => 'correct',
-      Act0FeedbackQualityV1.wrong => 'incorrect',
-      Act0FeedbackQualityV1.suboptimal => 'suboptimal',
-    };
+    final resultKind = option.quality.resultKind;
     final concept = act0ConceptErrorDefinitionForTaskV1(
       worldId: normalizedWorldId ?? '',
       lessonId: _stableLessonTelemetryId,
@@ -3528,7 +3517,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final selectedSeatId = runner.selectedOption?.seatId?.trim();
     final selectedSeatFeedbackState = switch (runner.reviewQuality) {
       Act0FeedbackQualityV1.wrong => _SeatSelectionFeedbackStateV1.wrong,
-      Act0FeedbackQualityV1.correct || Act0FeedbackQualityV1.suboptimal =>
+      Act0FeedbackQualityV1.correct ||
+      Act0FeedbackQualityV1.coCorrect ||
+      Act0FeedbackQualityV1.acceptable ||
+      Act0FeedbackQualityV1.suboptimal =>
         selectedSeatId != null && selectedSeatId.isNotEmpty
             ? _SeatSelectionFeedbackStateV1.confirmed
             : _SeatSelectionFeedbackStateV1.none,
@@ -3720,10 +3712,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       ),
       nextClueLine: causalFeedback.nextHandInstruction,
       quality: runner.reviewQuality,
-      sharkyLine: runner.reviewQuality == Act0FeedbackQualityV1.correct
+      sharkyLine: runner.reviewQuality.passes
           ? runner.sharky.correctReaction
           : runner.sharky.wrongReaction,
-      sharkyMood: runner.reviewQuality == Act0FeedbackQualityV1.correct
+      sharkyMood: runner.reviewQuality.passes
           ? runner.sharky.correctMood
           : (runner.reviewQuality == Act0FeedbackQualityV1.suboptimal
                 ? Act0SharkyMoodV1.thinking
@@ -4300,7 +4292,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 isRu
                     ? '\u0420\u0410\u0417\u0411\u0415\u0420\u0401\u041C \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0423'
                     : "LET'S CHECK THE CLUE",
-              Act0FeedbackQualityV1.correct =>
+              Act0FeedbackQualityV1.acceptable =>
+                isRu ? 'ТОЖЕ МОЖНО' : 'ALSO PLAYABLE',
+              Act0FeedbackQualityV1.correct ||
+              Act0FeedbackQualityV1.coCorrect =>
                 widget.isAssistedDecision
                     ? (isRu
                           ? '\u0412\u0415\u0420\u041d\u041e \u0421 \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u041E\u0419'
@@ -4311,7 +4306,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             }
           : (isRu ? '\u0412\u0410\u0428 \u0425\u041E\u0414' : 'YOUR MOVE');
       final feedbackAction =
-          (runner.reviewQuality == Act0FeedbackQualityV1.wrong
+          (runner.reviewQuality == Act0FeedbackQualityV1.wrong ||
+                      runner.reviewQuality == Act0FeedbackQualityV1.acceptable
                   ? runner.reviewBetterLabel
                   : runner.reviewPreferredLabel)
               .trim();
@@ -4322,6 +4318,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
       final headline = isTheory || isTeaching
           ? prompt
+          : isReview && runner.reviewQuality == Act0FeedbackQualityV1.acceptable
+          ? (isRu ? 'Тоже можно' : 'Also playable')
           : isReview &&
                 isRu &&
                 act0AcademyW1InstructionTaskV1(widget.selectedTaskId)

@@ -28,7 +28,21 @@ enum Act0LessonPhaseV1 { theory, drill, review }
 
 enum Act0LessonStepKindV1 { learn, practice, fixMistakes, review, proveIt }
 
-enum Act0FeedbackQualityV1 { correct, wrong, suboptimal }
+enum Act0FeedbackQualityV1 {
+  correct('correct'),
+  coCorrect('co_correct'),
+  acceptable('acceptable'),
+  suboptimal('suboptimal'),
+  wrong('incorrect');
+
+  const Act0FeedbackQualityV1(this.resultKind);
+
+  final String resultKind;
+
+  bool get isPreferred => this == correct || this == coCorrect;
+
+  bool get passes => isPreferred || this == acceptable;
+}
 
 enum Act0CompletionDisplayStateV1 { locked, current, clear, perfect }
 
@@ -721,12 +735,27 @@ class Act0RunnerStateV1 {
   Act0FeedbackQualityV1 get reviewQuality =>
       selectedOption?.quality ?? Act0FeedbackQualityV1.correct;
 
-  String get reviewPreferredLabel => selectedOption?.preferredLabel ?? '';
+  String get reviewPreferredLabel {
+    final selection = selectedOption;
+    if (selection == null) return '';
+    return selection.quality == Act0FeedbackQualityV1.coCorrect
+        ? selection.label
+        : selection.preferredLabel;
+  }
 
   String get reviewSelectedLabel => selectedOption?.label ?? '';
 
-  String get reviewBetterLabel =>
-      selectedOption?.betterAnswerLabel ?? selectedOption?.preferredLabel ?? '';
+  String get reviewBetterLabel {
+    final selection = selectedOption;
+    if (selection == null) return '';
+    final quality = selection.quality;
+    if (quality == Act0FeedbackQualityV1.acceptable ||
+        quality == Act0FeedbackQualityV1.suboptimal) {
+      return options.where(act0RunnerOptionIsPreferredV1).firstOrNull?.label ??
+          selection.betterAnswerLabel;
+    }
+    return selection.betterAnswerLabel;
+  }
 
   List<String> get reviewContextLabels {
     final optionLabels = selectedOption?.repairFocusLabels ?? const <String>[];
@@ -871,7 +900,11 @@ class Act0RunnerOptionV1 {
 
 /// Source grading predicate shared by runtime proof and content guards.
 bool act0RunnerOptionIsAuthoredCorrectV1(Act0RunnerOptionV1 option) =>
-    option.isCorrect && option.quality == Act0FeedbackQualityV1.correct;
+    option.isCorrect && option.quality.passes;
+
+/// Preferred alternatives exclude answers that merely pass.
+bool act0RunnerOptionIsPreferredV1(Act0RunnerOptionV1 option) =>
+    option.isCorrect && option.quality.isPreferred;
 
 /// Authored instructional intent, never a certificate of hand legality.
 /// Unclassified tables fail closed at hand-history consumers.

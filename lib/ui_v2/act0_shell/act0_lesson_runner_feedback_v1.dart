@@ -96,14 +96,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   Widget _buildFeedback(BuildContext context) {
     final isWrong = quality == Act0FeedbackQualityV1.wrong;
     final isSuboptimal = quality == Act0FeedbackQualityV1.suboptimal;
+    final isAcceptable = quality == Act0FeedbackQualityV1.acceptable;
     final isRepairFocusState =
         !rapidMode &&
         !suppressRepairFocus &&
         (repairReasonLine?.trim().isNotEmpty ?? false);
     // An open Review item can still supply table focus after a correct
     // lesson answer. It does not make the forward action another retry.
-    final isCorrectWithPendingRepair =
-        isRepairFocusState && quality == Act0FeedbackQualityV1.correct;
+    final isCorrectWithPendingRepair = isRepairFocusState && quality.passes;
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
     final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
@@ -192,6 +192,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       taskFamily: taskFamily,
     );
     final primaryResultLabel = _feedbackPrimaryResultLabelV1(
+      context,
       quality: quality,
       repairReceiptLine: repairResultReceiptLine,
     );
@@ -223,7 +224,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final fullActionLabel = _premiumSafeFeedbackOptionLabelV1(
       act0RuntimeLocalizedOptionLabelV1(
         context,
-        isWrong ? betterLabel : preferredLabel,
+        isWrong || isAcceptable || isSuboptimal ? betterLabel : preferredLabel,
       ),
     );
     final actionLabel = isCompactRefinedFeedback
@@ -462,8 +463,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         visibleRepairSessionSummaryLines.isEmpty &&
         completionSummary == null;
     final showActionContrastEyebrow =
-        !(streamlinedDirectDecisionFeedback && isCompactRefinedFeedback) &&
-        !usesCohesiveShortOutcome;
+        isAcceptable ||
+        (!(streamlinedDirectDecisionFeedback && isCompactRefinedFeedback) &&
+            !usesCohesiveShortOutcome);
     final feedbackStateKey = hasProofEarnedState
         ? const Key('act0_shell_wave2_feedback_proof_earned_state')
         : isRepairFocusState
@@ -543,6 +545,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       icon: Icons.check_rounded,
                       color: Act0ShellTokensV1.successProof,
                       label: 'Best answer · $bestAnswer',
+                    ),
+                    const SizedBox(height: 7),
+                  ],
+                  if (isAcceptable && bestAnswer.isNotEmpty) ...[
+                    _FeedbackAnswerRowV1(
+                      icon: Icons.check_rounded,
+                      color: Act0ShellTokensV1.successProof,
+                      label: '$actionPrefix · $bestAnswer',
                     ),
                     const SizedBox(height: 7),
                   ],
@@ -1499,7 +1509,7 @@ List<String> _visibleRepairReasonLinesV1({
   final receiptLine = repairReceiptLine.trim();
   if ((reasonLine.isEmpty && receiptLine.isEmpty) ||
       signalProof == null ||
-      quality == Act0FeedbackQualityV1.correct) {
+      quality.passes) {
     return const <String>[];
   }
   final clue = _visibleRepairCluePhraseV1(signalProof.label);
@@ -1821,7 +1831,8 @@ String _humanizedFeedbackProofLineV1(String proofLine) {
   return cleaned;
 }
 
-String _feedbackPrimaryResultLabelV1({
+String _feedbackPrimaryResultLabelV1(
+  BuildContext context, {
   required Act0FeedbackQualityV1 quality,
   required String? repairReceiptLine,
 }) {
@@ -1841,7 +1852,10 @@ String _feedbackPrimaryResultLabelV1({
     return 'Still fragile';
   }
   return switch (quality) {
-    Act0FeedbackQualityV1.correct => 'Correct read',
+    Act0FeedbackQualityV1.correct ||
+    Act0FeedbackQualityV1.coCorrect => 'Correct read',
+    Act0FeedbackQualityV1.acceptable =>
+      act0AcademyLanguageV1(context) == 'ru' ? 'Тоже можно' : 'Also playable',
     Act0FeedbackQualityV1.suboptimal => 'Better read',
     Act0FeedbackQualityV1.wrong => 'Missed clue',
   };
@@ -1948,7 +1962,7 @@ String _feedbackTitleFloorV1(
       : act0RuntimeLocalizedContextLabelV1(context, contextLabels.first).trim();
 
   if (focusLabel.isNotEmpty) {
-    if (quality == Act0FeedbackQualityV1.correct) {
+    if (quality.passes) {
       return focusLabel;
     }
     return localeIsRu
@@ -1956,7 +1970,7 @@ String _feedbackTitleFloorV1(
         : '$focusLabel first';
   }
 
-  if (quality == Act0FeedbackQualityV1.correct) {
+  if (quality.passes) {
     return localeIsRu
         ? '\u0412\u0435\u0440\u043D\u043E\u0435 \u0447\u0442\u0435\u043D\u0438\u0435'
         : 'Correct read';
@@ -2005,7 +2019,7 @@ String _feedbackReasonFloorV1(
   final safeBetterLine = _premiumSafeFeedbackOptionLabelV1(betterLine);
   final safePickedLine = _premiumSafeFeedbackOptionLabelV1(pickedLine);
 
-  if (quality == Act0FeedbackQualityV1.correct) {
+  if (quality.passes) {
     if (focusLabel.isNotEmpty) {
       return localeIsRu
           ? '$focusLabel \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D \u0432\u0435\u0440\u043D\u043E. \u0421\u043E\u0445\u0440\u0430\u043D\u0438 \u044D\u0442\u043E \u0438 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439.'

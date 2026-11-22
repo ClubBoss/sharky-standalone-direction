@@ -4,6 +4,37 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  test(
+    'resultKind round-trips existing and new grades with consistent credit',
+    () {
+      for (final (kind, passes) in [
+        ('correct', true),
+        ('incorrect', false),
+        ('suboptimal', false),
+        ('acceptable', true),
+        ('co_correct', true),
+      ]) {
+        final payload = _record(
+          order: 1,
+          resultKind: kind,
+          isCorrect: passes,
+          errorType: passes ? 'none' : 'missed_action_read',
+        ).toPayload();
+        expect(
+          Act0LearningEvidenceRecordV1.tryParse(payload)?.toPayload(),
+          payload,
+        );
+        expect(
+          Act0LearningEvidenceRecordV1.tryParse({
+            ...payload,
+            'isCorrect': !passes,
+          }),
+          isNull,
+        );
+      }
+    },
+  );
+
   test('serializes a deterministic learning evidence record', () {
     const record = Act0LearningEvidenceRecordV1(
       recordId: '1:world_1:actions_legal_context:fold',

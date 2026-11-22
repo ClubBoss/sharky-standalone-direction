@@ -684,7 +684,8 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       final correctOption = runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
-            (candidate) => candidate?.isCorrect == true,
+            (candidate) =>
+                candidate != null && act0RunnerOptionIsPreferredV1(candidate),
             orElse: () => null,
           );
       if (selectedOption == null || correctOption == null) {
@@ -793,7 +794,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       final selected = candidate.options.where(
         (option) => option.id == decision.choiceId && !option.isCorrect,
       );
-      final expected = candidate.options.where((option) => option.isCorrect);
+      final expected = candidate.options.where(act0RunnerOptionIsPreferredV1);
       if (selected.length == 1 &&
           expected.length == 1 &&
           expected.single.id == decision.expectedChoiceId) {
