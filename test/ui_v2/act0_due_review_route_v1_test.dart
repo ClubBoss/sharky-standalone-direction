@@ -280,173 +280,184 @@ void main() {
     await start(taskId: riverVariant);
   });
 
-  for (final entry in act0Day7MissSourcesV1.entries.where(
-    (entry) => day7MustBeCoveredV1(entry.key),
-  )) {
+  for (final (entry, savedFamily) in [
+    for (final entry in act0Day7MissSourcesV1.entries.where(
+      (entry) => day7MustBeCoveredV1(entry.key),
+    )) ...[
+      (entry, entry.key.$3),
+      if (entry.key.$1 == 'world_6' &&
+          entry.key.$3 == 'starting_hand_combinations')
+        (entry, 'pot_to_call'),
+    ],
+  ]) {
     final (world, lesson, family) = entry.key;
-    testWidgets('Day 7 opens a new task after Day 2 for $world/$lesson/$family', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(393, 852);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final source = entry.value.task;
-      final correct = source.runner.options.singleWhere(
-        (option) => option.isCorrect,
-      );
-      final day2 = DateTime.utc(2026, 11, 21, 12);
-      final day7 = day2.add(const Duration(days: 5));
+    final fixture = savedFamily == family
+        ? ''
+        : ' from a saved $savedFamily review';
+    testWidgets(
+      'Day 7 opens a new task after Day 2 for $world/$lesson/$family$fixture',
+      (tester) async {
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final source = entry.value.task;
+        final correct = source.runner.options.singleWhere(
+          (option) => option.isCorrect,
+        );
+        final day2 = DateTime.utc(2026, 11, 21, 12);
+        final day7 = day2.add(const Duration(days: 5));
 
-      Act0LearningEvidenceRecordV1 attempt(
-        int order,
-        Act0RunnerOptionV1 option,
-        DateTime time,
-      ) => Act0LearningEvidenceRecordV1(
-        recordId: 'day7_fixture|${source.taskId}|$order',
-        createdOrder: order,
-        worldId: world,
-        lessonId: lesson,
-        taskId: source.taskId,
-        sourceTaskId: source.taskId,
-        choiceId: option.id,
-        expectedChoiceId: correct.id,
-        isCorrect: option.isCorrect,
-        errorType: option.isCorrect ? 'none' : 'misread_table',
-        conceptFamilyId: family,
-        repairFocusId: family,
-        skillAtomId: 'table_read',
-        decisionTimeBucket: '3_to_10s',
-        resultKind: option.isCorrect ? 'correct' : 'incorrect',
-        runId:
-            'run_v1|$world|$lesson|${option.isCorrect ? 'repair' : 'lesson'}|$order',
-        runKind: option.isCorrect ? 'repair' : 'lesson',
-        runOrdinal: order,
-        startedBy: option.isCorrect ? 'review_repair' : 'learn_route',
-        sessionId: 'session_v1|1',
-        recordedAtUtc: time,
-        reviewKind: option.isCorrect
-            ? Act0ReviewKindV1.immediateRepair
-            : Act0ReviewKindV1.initialAssessment,
-        assistanceKind: Act0DecisionAssistanceV1.none,
-      );
+        Act0LearningEvidenceRecordV1 attempt(
+          int order,
+          Act0RunnerOptionV1 option,
+          DateTime time,
+        ) => Act0LearningEvidenceRecordV1(
+          recordId: 'day7_fixture|${source.taskId}|$order',
+          createdOrder: order,
+          worldId: world,
+          lessonId: lesson,
+          taskId: source.taskId,
+          sourceTaskId: source.taskId,
+          choiceId: option.id,
+          expectedChoiceId: correct.id,
+          isCorrect: option.isCorrect,
+          errorType: option.isCorrect ? 'none' : 'misread_table',
+          conceptFamilyId: savedFamily,
+          repairFocusId: savedFamily,
+          skillAtomId: 'table_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: option.isCorrect ? 'correct' : 'incorrect',
+          runId:
+              'run_v1|$world|$lesson|${option.isCorrect ? 'repair' : 'lesson'}|$order',
+          runKind: option.isCorrect ? 'repair' : 'lesson',
+          runOrdinal: order,
+          startedBy: option.isCorrect ? 'review_repair' : 'learn_route',
+          sessionId: 'session_v1|1',
+          recordedAtUtc: time,
+          reviewKind: option.isCorrect
+              ? Act0ReviewKindV1.immediateRepair
+              : Act0ReviewKindV1.initialAssessment,
+          assistanceKind: Act0DecisionAssistanceV1.none,
+        );
 
-      const progressKey = 'act0_shell_progress_v1';
-      SharedPreferences.setMockInitialValues({
-        progressKey: jsonEncode({
-          'schemaVersion': 17,
-          'completedTaskIds': <String>[],
-          'skippedTaskIds': <String>[],
-          'completedLessonIds': <String>[],
-          'selectedWorldId': 'world_1',
-          'selectedLessonId': 'what_poker_is_content',
-          'selectedTaskId': 'what_poker_is_pot_stack',
-          'earnedXp': 0,
-          'learningEvidenceHistory': [
-            attempt(
-              1,
-              entry.value.miss,
-              day2.subtract(const Duration(days: 2)),
-            ).toPayload(),
-            attempt(
-              2,
-              correct,
-              day2.subtract(const Duration(days: 1)),
-            ).toPayload(),
-          ],
-        }),
-      });
+        const progressKey = 'act0_shell_progress_v1';
+        SharedPreferences.setMockInitialValues({
+          progressKey: jsonEncode({
+            'schemaVersion': 17,
+            'completedTaskIds': <String>[],
+            'skippedTaskIds': <String>[],
+            'completedLessonIds': <String>[],
+            'selectedWorldId': 'world_1',
+            'selectedLessonId': 'what_poker_is_content',
+            'selectedTaskId': 'what_poker_is_pot_stack',
+            'earnedXp': 0,
+            'learningEvidenceHistory': [
+              attempt(
+                1,
+                entry.value.miss,
+                day2.subtract(const Duration(days: 2)),
+              ).toPayload(),
+              attempt(
+                2,
+                correct,
+                day2.subtract(const Duration(days: 1)),
+              ).toPayload(),
+            ],
+          }),
+        });
 
-      Future<Act0LessonRunnerShellV1> openDue(
-        DateTime time,
-        String label,
-      ) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            key: ValueKey(time),
-            home: Act0ShellPreviewScreenV1(
-              initialTab: Act0ShellTabV1.review,
-              showPlacementOnStart: false,
-              clock: Act0FixedUtcClockV1(time),
+        Future<Act0LessonRunnerShellV1> openDue(
+          DateTime time,
+          String label,
+        ) async {
+          await tester.pumpWidget(
+            MaterialApp(
+              key: ValueKey(time),
+              home: Act0ShellPreviewScreenV1(
+                initialTab: Act0ShellTabV1.review,
+                showPlacementOnStart: false,
+                clock: Act0FixedUtcClockV1(time),
+              ),
             ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        expect(find.text(label), findsOneWidget);
-        final button = act0ShellPresentationFinderV1(
-          'act0_shell_review_start_due_spaced_item',
-        );
-        await tester.ensureVisible(button);
-        await tester.tap(button);
-        await tester.pumpAndSettle();
-        return tester.widget<Act0LessonRunnerShellV1>(
-          find.byType(Act0LessonRunnerShellV1),
-        );
-      }
-
-      Future<void> answer(
-        Act0LessonRunnerShellV1 shell,
-        Act0RunnerOptionV1 option,
-      ) async {
-        await pumpSourceChoreographyToDecisionV1(tester, shell.runner.table);
-        final candidates = [
-          if (shell.runner.sizingConfig.isEnabled)
-            find.byKey(Key('act0_shell_sizing_preset_${option.id}')),
-          find.byKey(Key('act0_shell_option_${option.id}')),
-          if (option.seatId != null)
-            find.byKey(Key('act0_shell_seat_tap_${option.seatId}')),
-        ];
-        final button = candidates.firstWhere(
-          (candidate) => candidate.evaluate().isNotEmpty,
-        );
-        await tester.ensureVisible(button.first);
-        await tester.tap(button.first);
-        await tester.pumpAndSettle();
-        if (shell.runner.sizingConfig.isEnabled) {
-          final confirm = find.byKey(
-            const Key('act0_shell_sizing_confirm_cta'),
           );
-          await tester.ensureVisible(confirm);
-          await tester.tap(confirm);
           await tester.pumpAndSettle();
+          expect(find.text(label), findsOneWidget);
+          final button = act0ShellPresentationFinderV1(
+            'act0_shell_review_start_due_spaced_item',
+          );
+          await tester.ensureVisible(button);
+          await tester.tap(button);
+          await tester.pumpAndSettle();
+          return tester.widget<Act0LessonRunnerShellV1>(
+            find.byType(Act0LessonRunnerShellV1),
+          );
         }
-        final continueButton = find.byKey(
-          const Key('act0_shell_feedback_continue_cta'),
+
+        Future<void> answer(
+          Act0LessonRunnerShellV1 shell,
+          Act0RunnerOptionV1 option,
+        ) async {
+          await pumpSourceChoreographyToDecisionV1(tester, shell.runner.table);
+          final candidates = [
+            if (shell.runner.sizingConfig.isEnabled)
+              find.byKey(Key('act0_shell_sizing_preset_${option.id}')),
+            find.byKey(Key('act0_shell_option_${option.id}')),
+            if (option.seatId != null)
+              find.byKey(Key('act0_shell_seat_tap_${option.seatId}')),
+          ];
+          final button = candidates.firstWhere(
+            (candidate) => candidate.evaluate().isNotEmpty,
+          );
+          await tester.ensureVisible(button.first);
+          await tester.tap(button.first);
+          await tester.pumpAndSettle();
+          if (shell.runner.sizingConfig.isEnabled) {
+            final confirm = find.byKey(
+              const Key('act0_shell_sizing_confirm_cta'),
+            );
+            await tester.ensureVisible(confirm);
+            await tester.tap(confirm);
+            await tester.pumpAndSettle();
+          }
+          final continueButton = find.byKey(
+            const Key('act0_shell_feedback_continue_cta'),
+          );
+          if (continueButton.evaluate().isNotEmpty) {
+            await tester.ensureVisible(continueButton);
+            await tester.tap(continueButton);
+            await tester.pumpAndSettle();
+          }
+        }
+
+        final familiar = await openDue(day2, 'Familiar situation');
+        expect(familiar.selectedTaskId, source.taskId);
+        expect(familiar.reviewKindId, 'spacedReview');
+        await answer(familiar, correct);
+
+        final unseen = await openDue(day7, 'New situation');
+        expect(unseen.selectedTaskId, isNot(source.taskId));
+        expect(unseen.reviewKindId, 'unseenTransfer');
+        expect(
+          act0NewReviewConceptFamilyV1(world, lesson, unseen.selectedTaskId!),
+          family,
         );
-        if (continueButton.evaluate().isNotEmpty) {
-          await tester.ensureVisible(continueButton);
-          await tester.tap(continueButton);
-          await tester.pumpAndSettle();
-        }
-      }
-
-      final familiar = await openDue(day2, 'Familiar situation');
-      expect(familiar.selectedTaskId, source.taskId);
-      expect(familiar.reviewKindId, 'spacedReview');
-      await answer(familiar, correct);
-
-      final unseen = await openDue(day7, 'New situation');
-      expect(unseen.selectedTaskId, isNot(source.taskId));
-      expect(unseen.reviewKindId, 'unseenTransfer');
-      expect(
-        act0NewReviewConceptFamilyV1(world, lesson, unseen.selectedTaskId!),
-        family,
-      );
-      await answer(
-        unseen,
-        unseen.runner.options.singleWhere((option) => option.isCorrect),
-      );
-      final prefs = await SharedPreferences.getInstance();
-      final saved =
-          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-      final evidence = (saved['learningEvidenceHistory'] as List).last as Map;
-      expect(evidence['taskId'], unseen.selectedTaskId);
-      expect(evidence['conceptFamilyId'], family);
-      expect(evidence['reviewKind'], 'unseenTransfer');
-      expect(evidence['assistanceKind'], 'none');
-      expect(evidence['isCorrect'], isTrue);
-      expect(saved['earnedXp'], 0);
-      expect(saved['completedTaskIds'], isEmpty);
-    });
+        await answer(
+          unseen,
+          unseen.runner.options.singleWhere((option) => option.isCorrect),
+        );
+        final prefs = await SharedPreferences.getInstance();
+        final saved =
+            jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+        final evidence = (saved['learningEvidenceHistory'] as List).last as Map;
+        expect(evidence['taskId'], unseen.selectedTaskId);
+        expect(evidence['conceptFamilyId'], family);
+        expect(evidence['reviewKind'], 'unseenTransfer');
+        expect(evidence['assistanceKind'], 'none');
+        expect(evidence['isCorrect'], isTrue);
+        expect(saved['earnedXp'], 0);
+        expect(saved['completedTaskIds'], isEmpty);
+      },
+    );
   }
 }

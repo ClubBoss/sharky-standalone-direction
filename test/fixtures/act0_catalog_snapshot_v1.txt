@@ -3804,9 +3804,12 @@ SEATS: UTG Tc 9h stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] 12 combos — Not quite. 12 counts only the offsuit versions. Add the 4 suited combos and A-K reaches 16 total combinations.
     BETTER ANSWER: 16 combos
+    REPAIR LABELS: Starting hand combinations
   - [wrong] 6 combos — Not quite. Six combos is the count for a pocket pair. A-K has 16 possible suit combinations before removing known cards.
     BETTER ANSWER: 16 combos
+    REPAIR LABELS: Starting hand combinations
   + [correct] 16 combos — Nice count. A-K has 16 combos before blockers: 4 suited and 12 offsuit combinations. Blockers would remove visible or known cards from those private-card combinations.
+    REPAIR LABELS: Starting hand combinations
 
 TASK w6_pair_combos [drill] Pocket pair combo count
 CAPTION: Pocket eights are one pair family.
@@ -3816,10 +3819,13 @@ TABLE: Preflop | You 8h 8c | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg |
 SEATS: UTG 8h 8c stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] 6 combos — Nice count. Choose two of the four suits. That gives six possible pairs before removing known cards.
+    REPAIR LABELS: Starting hand combinations
   - [wrong] 12 combos — Not quite. Twelve is too high for one pair family. With four eights in the deck, only 6 suit pairings are possible.
     BETTER ANSWER: 6 combos
+    REPAIR LABELS: Starting hand combinations
   - [wrong] 16 combos — Not quite. Sixteen combos belongs to two different ranks like A-K, not to one pocket pair.
     BETTER ANSWER: 6 combos
+    REPAIR LABELS: Starting hand combinations
 
 TASK w6_combo_weight_compare [drill] Which family appears more?
 CAPTION: Compare A-K with pocket eights before blockers.
@@ -3830,9 +3836,12 @@ SEATS: UTG 7d 6d stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] They have the same combo count — Not quite. The hand names may feel equally important, but combo weight is not equal: 16 beats 6.
     BETTER ANSWER: A-K has more combos
+    REPAIR LABELS: Starting hand combinations
   - [wrong] Pocket eights have more combos — Not quite. Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.
     BETTER ANSWER: A-K has more combos
+    REPAIR LABELS: Starting hand combinations
   + [correct] A-K has more combos — Nice count. Before removing known cards, A-K has 16 combos and pocket eights have 6.
+    REPAIR LABELS: Starting hand combinations
 
 TASK w6_combo_counts_recap [review] Combo recap
 CAPTION: Lesson learned: count the possible hands, then account for the action.
@@ -3962,9 +3971,12 @@ SEATS: UTG 8c 7c stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] 12 — Count all suit combinations. Twelve counts only the offsuit hands. Four suited combinations are possible as well.
     BETTER ANSWER: 16
+    REPAIR LABELS: Starting hand combinations
   - [wrong] 6 — A-Q has two different ranks. Six is the count for a pocket pair. For A-Q, any of four aces can go with any of four queens.
     BETTER ANSWER: 16
+    REPAIR LABELS: Starting hand combinations
   + [correct] 16 — Four times four is sixteen. There are four aces and four queens available, giving 16 exact two-card hands.
+    REPAIR LABELS: Starting hand combinations
 
 ===== WORLD 6 · LESSON range_thinking_checkpoint · Range thinking checkpoint =====
 
@@ -3979,9 +3991,12 @@ SEATS: UTG Jh Th stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] 12 suited, 4 offsuit — Easy trap. Suited feels special, but it is rarer. Only 4 suited combinations exist, while the offsuit family has 12.
     BETTER ANSWER: 4 suited, 12 offsuit
+    REPAIR LABELS: Starting hand combinations
   + [correct] 4 suited, 12 offsuit — Clean weight read. A-K offsuit has 12 possible combos, while A-K suited has 4.
+    REPAIR LABELS: Starting hand combinations
   - [wrong] 8 suited, 8 offsuit — Count the suited and offsuit combos. The rank names match, but combo weight does not. Twelve offsuit combos clearly outweigh four suited combos.
     BETTER ANSWER: 4 suited, 12 offsuit
+    REPAIR LABELS: Starting hand combinations
 
 TASK w6_pair_vs_suited_weight_compare [drill] Pair or suited family
 CAPTION: Compare pocket nines with K-Q suited before blockers.
@@ -3994,9 +4009,12 @@ SEATS: UTG Ac Jc stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] K-Q suited — One more count. Unpaired does not always mean more common. Once you limit K-Q to suited only, it drops to 4 combos and loses to the pair family at 6.
     BETTER ANSWER: Pocket nines
+    REPAIR LABELS: Starting hand combinations
   - [wrong] They have the same combo count — Count the pairs and suited combos. These families are closer than A-K versus a pocket pair, but they are still not equal. Six pair combos outweigh four suited combos.
     BETTER ANSWER: Pocket nines
+    REPAIR LABELS: Starting hand combinations
   + [correct] Pocket nines — Good compare. Pocket nines have 6 possible combos, compared with 4 for K-Q suited.
+    REPAIR LABELS: Starting hand combinations
 
 TASK w6_checkpoint_table_combo_weight [drill] Live-table combo weight
 CAPTION: CO opens preflop. Assume CO opens every A-K offsuit and every 9-9 combo.
@@ -4009,9 +4027,12 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.5 BB · BTN acts
   - [wrong] 6 AK offsuit, 12 pairs — Count the off-suit combinations. CO opens all six pocket-nine combos here and all twelve A-K offsuit combos.
     BETTER ANSWER: 12 AK offsuit, 6 pairs
+    REPAIR LABELS: Starting hand combinations
   + [correct] 12 AK offsuit, 6 pairs — Practical read. With every combo of both hands included, A-K offsuit contributes 12 and pocket nines contribute 6.
+    REPAIR LABELS: Starting hand combinations
   - [wrong] 9 AK offsuit, 9 pairs — Not quite. CO opens both families at the same frequency per combo, so twelve A-K offsuit combos carry twice the weight of six pocket-nine combos.
     BETTER ANSWER: 12 AK offsuit, 6 pairs
+    REPAIR LABELS: Starting hand combinations
 
 TASK range_checkpoint_pressure [drill] Pressure after a check
 CAPTION: On K-8-3, BB checks with pairs, Q-J, and A-9. In this example, BB calls a half-pot bet with a pair and folds both high-card hands. Check if you can already beat either high-card hand.
@@ -4070,9 +4091,12 @@ SEATS: UTG 3h 6c stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer s
 TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] A-T suited — Only same-suit cards count here. A-T has 16 combinations overall, but only four are suited. The pair family has six.
     BETTER ANSWER: Pocket sevens
+    REPAIR LABELS: Board cards
   + [correct] Pocket sevens — Six combinations are more than four. There are six ways to pick two sevens. A-T suited has one combination for each of the four suits.
+    REPAIR LABELS: Board cards
   - [wrong] They have the same count — The counting rules differ. A pocket pair chooses two of four cards. A suited hand with two ranks has one combination per suit.
     BETTER ANSWER: Pocket sevens
+    REPAIR LABELS: Board cards
 
 TASK range_checkpoint_review [review] World 6 checkpoint
 ENTRY: drill
@@ -7563,16 +7587,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 ===== WORLD 6 · LESSON range_combo_counts · Count the combos =====
 
 TASK spaced_review_w6_range_combo_counts_pot_to_call_v1 [drill] Review decision
-DAY 7 FAMILY: pot_to_call
+DAY 7 FAMILY: starting_hand_combinations
 Q: Before blockers, how many distinct K-Q hands are suited?
 HINT [hidden]: (none)
 TABLE: Preflop | You 8c 4d | Pot 1.5 BB | Seat CO | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 8c 4d stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
-  - [wrong] Six — Look again. There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.
+  - [wrong] Six — Look again. Six is the count for two cards of one rank. K-Q has two different ranks; six overcounts the four same-suit hands.
     BETTER ANSWER: Four
   + [correct] Four — Correct. There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.
-  - [wrong] Sixteen — Look again. There are four suits, each providing one same-suit king and queen. The sixteen all include offsuit hands.
+  - [wrong] Sixteen — Look again. Sixteen includes the twelve offsuit K-Q hands. Counting them inflates the suited part of the range.
     BETTER ANSWER: Four
 
 ===== WORLD 6 · LESSON w6_continuation_bet · After your preflop raise =====
@@ -7614,15 +7638,15 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Flop | You Qh Qd | Board 9s 5d 2c | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
 
 TASK spaced_review_w6_range_thinking_checkpoint_pot_to_call_v1 [drill] Review decision
-DAY 7 FAMILY: pot_to_call
+DAY 7 FAMILY: starting_hand_combinations
 Q: How many two-card combinations make pocket tens before blockers?
 HINT [hidden]: (none)
 TABLE: Preflop | You 4s 3d | Pot 1.5 BB | Seat HJ | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ 4s 3d stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] Twelve — Look again. Choose two distinct tens from four suits. Counting each pair once leaves six combinations.
+  - [wrong] Twelve — Look again. Counting the two suits in both orders gives twelve. Each physical hand has the same two cards either way, so that counts each of the six hands twice.
     BETTER ANSWER: Six
-  - [wrong] Four — Look again. Choose two distinct tens from four suits. Counting each pair once leaves six combinations.
+  - [wrong] Four — Look again. Four counts individual suits. A hand here needs two distinct suits, so stopping at four misses two of the six possible hands.
     BETTER ANSWER: Six
   + [correct] Six — Correct. Choose two distinct tens from four suits. Counting each pair once leaves six combinations.
 
@@ -7663,14 +7687,14 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Flop | You Kc Jd | Board Kh 5s 2d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w6_range_reading_review_pot_to_call_v1 [drill] Review decision
-DAY 7 FAMILY: pot_to_call
+DAY 7 FAMILY: starting_hand_combinations
 Q: With no blockers, how many distinct K-J combinations are possible?
 HINT [hidden]: (none)
 TABLE: Preflop | You 7s 4s | Pot 1.5 BB | Seat HJ | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ 7s 4s stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] 4 — Look again. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
+  - [wrong] 4 — Look again. Four counts only the K-J hands whose suits match. Ignoring the twelve offsuit combinations understates this range.
     BETTER ANSWER: 16
-  - [wrong] 12 — Look again. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
+  - [wrong] 12 — Look again. Twelve counts only different-suit K-J. Leaving out one K-J hand per suit misses four legal combinations.
     BETTER ANSWER: 16
   + [correct] 16 — Correct. Four kings each pair with four jacks. This includes four suited hands and twelve offsuit hands.
