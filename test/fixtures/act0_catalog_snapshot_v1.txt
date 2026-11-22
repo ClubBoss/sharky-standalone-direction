@@ -3283,7 +3283,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK board_texture_basics_w5_texture_intro [theory] Board texture
 CAPTION: Board texture asks how much the next cards can change.
-TEACH: What can change? A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.
+TEACH: What can change? A dry board has few ways for the next card to change who leads. A wet board has many. A draw is a hand that needs another card to complete. When ranks sit close together or suits match, more hands can improve.
 TEACH LABELS: Rank gaps, Suits
 Q: What does board texture describe?
 HINT [theoryOnly]: Dry boards change less. Wet boards create more threats.
@@ -3367,7 +3367,7 @@ TASK connected_boards_w5_connected_intro [theory] Connected ranks
 CAPTION: Connected ranks sit close together, like 9-8-7.
 TEACH: Ranks can connect. Check the gap on each side of the middle rank. On 9-8-7, a player holding J-T can use every flop rank to make a straight. That possibility exists before anyone bets. With Q-J instead, you still need a ten to make five consecutive ranks.
 TEACH LABELS: 9, 8, 7, Connected
-TEACH: Ranks and suits describe different things. A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.
+TEACH: Ranks and suits describe different things. A paired board repeats one of its ranks. Two-tone means two flop cards share a suit.
 TEACH TABLE: Flop | You Qd Jc | Board 9c 9h 4c | Pot 5.5 BB | Seat CO | Active co | Facts one pair, two-tone, paired board, backdoor flush, backdoor straight
 TEACH TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
 Q: What makes a board connected?

@@ -2401,7 +2401,7 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'What can change?',
       body:
-          'A dry board has few ways for the next card to change who leads. A wet board has many. When ranks sit close together or suits match, more hands can improve.',
+          'A dry board has few ways for the next card to change who leads. A wet board has many. A draw is a hand that needs another card to complete. When ranks sit close together or suits match, more hands can improve.',
       focusLabels: <String>['Rank gaps', 'Suits'],
     ),
   ],
@@ -2571,7 +2571,7 @@ final _world5ConnectedIntroRunner = _world5TextureIntroRunner.copyWith(
         checkedToHero: true,
       ),
       body:
-          'A paired board repeats one of its ranks. Two-tone means two flop cards share a suit. A draw is a hand that needs another card to complete.',
+          'A paired board repeats one of its ranks. Two-tone means two flop cards share a suit.',
     ),
   ],
   feedbackTitle: 'Read the rank gaps.',
