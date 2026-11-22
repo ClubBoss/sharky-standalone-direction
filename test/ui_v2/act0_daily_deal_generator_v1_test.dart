@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_daily_practice_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
@@ -38,6 +40,7 @@ void main() {
                 .key]!;
         final correctActions = <String>{};
         final scenes = <String>{};
+        final flopEquities = <String, double>{};
         for (var seed = 0; seed < 1000; seed++) {
           final id = 'generated_${template.name}_$seed';
           final task = act0GenerateDailyDealV1(
@@ -81,12 +84,17 @@ void main() {
             lessThanOrEqualTo(40),
             reason: id,
           );
-          final correct = _expected(template, table);
+          final correct = template == Act0DailyDealTemplateV1.lowSpr
+              ? _verifiedLowSprAnswer(task, flopEquities)
+              : _expected(template, table);
           expect(answer.label, correct, reason: id);
           correctActions.add(correct);
           scenes.add(catalogTableLine(table));
         }
         expect(scenes.length, greaterThan(900));
+        if (template == Act0DailyDealTemplateV1.lowSpr) {
+          expect(flopEquities, hasLength(4));
+        }
         expect(correctActions.length, greaterThan(1), reason: template.name);
       },
     );
@@ -182,4 +190,101 @@ String _expected(Act0DailyDealTemplateV1 template, Act0TableStateV1 table) {
     return Hand.winners([player, bettor]).singleOrNull == player;
   });
   return wins.length / possible.length > price ? 'Call' : 'Fold';
+}
+
+String _verifiedLowSprAnswer(
+  Act0LessonTaskV1 task,
+  Map<String, double> equities,
+) {
+  final runner = task.runner;
+  final table = runner.table;
+  final ledger = table.handContributions!;
+  expect(ledger.throughStreet, PokerStreet.flop);
+  final flop = physicalCards(table.boardCards);
+  final hero = physicalCards(table.heroCards);
+  expect(flop, hasLength(3));
+  final overpair = hero[0][0] == hero[1][0];
+  int rank(String card) => '23456789TJQKA'.indexOf(card[0]);
+  final highest = flop.map(rank).reduce((a, b) => a > b ? a : b);
+  expect(
+    overpair ? rank(hero.first) > highest : hero.any((c) => rank(c) == highest),
+    isTrue,
+  );
+
+  final bb = table.seats.singleWhere((seat) => seat.seatId == 'bb');
+  expect(bb.cardsVisibleMode, Act0CardsVisibleModeV1.faceDown);
+  expect(bb.bet?.kind, Act0SeatBetKindV1.allIn);
+  final preflop = ledger.entries.where(
+    (entry) => entry.street == PokerStreet.preflop,
+  );
+  final openingPot = preflop.fold(0.0, (sum, entry) => sum + entry.amountBb);
+  double atFlop(String seatId) =>
+      ledger.startingStackBbBySeat[seatId]! -
+      preflop
+          .where((entry) => entry.seatId == seatId)
+          .fold(0.0, (sum, entry) => sum + entry.amountBb);
+  final depth = [
+    atFlop('bb'),
+    atFlop(table.heroSeatId!),
+  ].reduce((a, b) => a < b ? a : b);
+  final spr = depth / openingPot;
+  final due = double.parse(table.toCallLabel.split(' ')[2]);
+  expect(due, depth);
+  expect(spr, inInclusiveRange(1, 2));
+  expect(runner.caption, contains('SPR ${spr.toStringAsFixed(2)}'));
+  final price = due / (openingPot + 2 * due);
+
+  final cards = RegExp(
+    r'\b[23456789TJQKA][shdc]\b',
+  ).allMatches(runner.caption).map((m) => m[0]!).toList();
+  expect(cards, hasLength(6));
+  final range = [
+    for (var i = 0; i < cards.length; i += 2) cards.sublist(i, i + 2),
+  ];
+  final known = {...hero, ...flop};
+  for (final holding in range) {
+    expect({...known, ...holding}, hasLength(7));
+  }
+  final suits = <String, int>{};
+  final key = [...hero, ...flop, ...cards]
+      .map(
+        (card) =>
+            card[0] + suits.putIfAbsent(card[1], () => suits.length).toString(),
+      )
+      .join(' ');
+  final equity = equities.putIfAbsent(key, () {
+    final deck = [
+      for (final rank in '23456789TJQKA'.split(''))
+        for (final suit in 'cdhs'.split('')) '$rank$suit',
+    ];
+    var totalShare = 0.0;
+    for (final holding in range) {
+      final remaining = deck
+          .where((card) => !known.contains(card) && !holding.contains(card))
+          .toList();
+      expect(remaining, hasLength(45));
+      for (final (i, first) in remaining.indexed) {
+        for (final second in remaining.take(i)) {
+          final board = [...flop, first, second];
+          final player = Hand.solveHand([...hero, ...board]);
+          final opponent = Hand.solveHand([...holding, ...board]);
+          final winners = Hand.winners([player, opponent]);
+          if (winners.contains(player)) totalShare += 1 / winners.length;
+        }
+      }
+    }
+    return totalShare / (range.length * 990);
+  });
+  expect(
+    runner.caption,
+    contains(
+      'Your equity against that range is ${(100 * equity).toStringAsFixed(1)}%.',
+    ),
+  );
+  final feedback = runner.options
+      .singleWhere((option) => option.isCorrect)
+      .feedbackReason;
+  expect(feedback, contains('${(100 * equity).toStringAsFixed(1)}% equity'));
+  expect(feedback, contains('${(100 * price).toStringAsFixed(1)}% call price'));
+  return equity > price ? 'Call' : 'Fold';
 }

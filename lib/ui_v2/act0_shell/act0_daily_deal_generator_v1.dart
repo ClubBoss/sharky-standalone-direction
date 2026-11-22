@@ -1,6 +1,6 @@
 part of 'act0_shell_state_v1.dart';
 
-enum Act0DailyDealTemplateV1 { callPrice, cleanOuts, open, defendBb }
+enum Act0DailyDealTemplateV1 { callPrice, cleanOuts, open, defendBb, lowSpr }
 
 /// A rep is admitted only by a completed drill on the concrete skill. A lesson
 /// title or high world number by itself cannot unlock a generated decision.
@@ -22,6 +22,8 @@ const act0DailyDealSourceTasksV1 = <String, Act0DailyDealTemplateV1>{
   'w11_multiway_dirty_outs': Act0DailyDealTemplateV1.cleanOuts,
   'w12_clean_outs_vs_set': Act0DailyDealTemplateV1.cleanOuts,
   'w12_bad_call_good_result': Act0DailyDealTemplateV1.cleanOuts,
+  'w7_low_spr_commit': Act0DailyDealTemplateV1.lowSpr,
+  'w11_spr_low_overpair': Act0DailyDealTemplateV1.lowSpr,
 };
 
 typedef Act0DailyDealRecipeV1 = ({
@@ -102,6 +104,7 @@ Act0LessonTaskV1? act0GenerateDailyDealV1({
       _dailyPreflopV1(template, deck, rng, seed),
     Act0DailyDealTemplateV1.callPrice => _dailyPriceV1(deck, rng),
     Act0DailyDealTemplateV1.cleanOuts => _dailyTurnV1(rng),
+    Act0DailyDealTemplateV1.lowSpr => _dailyLowSprV1(rng),
   };
   if (content == null || !_dailyDealIsValidV1(content)) return null;
   final choices = [content.preferred, content.alternative]..shuffle(rng);
@@ -368,7 +371,13 @@ bool _dailyDealIsValidV1(_DailyDealContentV1 deal) {
       table.heroCards.length == 2 &&
       active.singleOrNull?.seatId == table.heroSeatId &&
       !table.heroSeat.isFolded &&
-      table.boardCards.length == (table.streetLabel == 'Turn' ? 4 : 0) &&
+      table.boardCards.length ==
+          (switch (table.handContributions!.throughStreet) {
+            PokerStreet.flop => 3,
+            PokerStreet.turn => 4,
+            PokerStreet.river => 5,
+            _ => 0,
+          }) &&
       cards.every(_dailyDealDeck.contains) &&
       cards.toSet().length == cards.length &&
       table.potLabel == 'Pot ${_act0BbLabelV1(amounts.potBb)}' &&
@@ -376,4 +385,159 @@ bool _dailyDealIsValidV1(_DailyDealContentV1 deal) {
       table.toCallLabel == (due == 0 ? '' : 'To call ${_act0BbLabelV1(due)}') &&
       deal.preferred != deal.alternative &&
       deal.explanation.split(RegExp(r'\s+')).length <= 40;
+}
+
+typedef _LowSprScenarioV1 = ({
+  List<String> hand,
+  List<String> flop,
+  List<List<String>> range,
+  String handName,
+  String rangeRead,
+});
+
+const _lowSprScenariosV1 = <_LowSprScenarioV1>[
+  (
+    hand: ['Qs', 'Qd'],
+    flop: ['Jh', '7d', '2c'],
+    range: [
+      ['Js', 'Jd'],
+      ['7h', '7s'],
+      ['Ah', 'Ad'],
+    ],
+    handName: 'Your overpair',
+    rangeRead: 'BB shoves only sets or a higher pair',
+  ),
+  (
+    hand: ['Qs', 'Qd'],
+    flop: ['Jh', '7d', '2c'],
+    range: [
+      ['Jc', 'Tc'],
+      ['9s', '9h'],
+      ['As', 'Kh'],
+    ],
+    handName: 'Your overpair',
+    rangeRead: 'BB shoves weaker pairs and overcards',
+  ),
+  (
+    hand: ['As', 'Qd'],
+    flop: ['Ah', '8d', '3c'],
+    range: [
+      ['8c', '8s'],
+      ['3h', '3d'],
+      ['Ac', 'Kh'],
+    ],
+    handName: 'Your top pair',
+    rangeRead: 'BB shoves only sets or a stronger ace',
+  ),
+  (
+    hand: ['As', 'Qd'],
+    flop: ['Ah', '8d', '3c'],
+    range: [
+      ['Ad', 'Jc'],
+      ['8s', '9s'],
+      ['Kh', 'Kd'],
+    ],
+    handName: 'Your top pair',
+    rangeRead: 'BB shoves weaker pairs and a weaker ace',
+  ),
+];
+
+// Relabelling every suit preserves the legal runouts and hand strengths.
+final _lowSprEquitiesV1 = _lowSprScenariosV1.map(_dailyFlopEquityV1).toList();
+
+double _dailyFlopEquityV1(_LowSprScenarioV1 scenario) {
+  var halfShares = 0;
+  var runouts = 0;
+  for (final holding in scenario.range) {
+    final seen = {...scenario.hand, ...scenario.flop, ...holding};
+    final deck = _dailyDealDeck.where((card) => !seen.contains(card)).toList();
+    for (var turn = 0; turn < deck.length - 1; turn++) {
+      for (var river = turn + 1; river < deck.length; river++) {
+        final board = [...scenario.flop, deck[turn], deck[river]];
+        final hero = solver.Hand.solveHand([...scenario.hand, ...board]);
+        final bettor = solver.Hand.solveHand([...holding, ...board]);
+        final result = hero.compare(bettor);
+        if (result < 0) halfShares += 2;
+        if (result == 0) halfShares++;
+        runouts++;
+      }
+    }
+  }
+  return halfShares / (2 * runouts);
+}
+
+_DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
+  final scenarioIndex = rng.nextInt(_lowSprScenariosV1.length);
+  final scenario = _lowSprScenariosV1[scenarioIndex];
+  final suits = 'shdc'.split('')..shuffle(rng);
+  String cards(List<String> list) =>
+      list.map((card) => card[0] + suits['shdc'.indexOf(card[1])]).join(' ');
+
+  final hero = ['hj', 'co', 'btn'][rng.nextInt(3)];
+  final hand = cards(scenario.hand);
+  final open = 2.5 + rng.nextInt(5) * .25;
+  // Each player put in the open size. The folded small blind adds 0.5 BB.
+  final flopPotQuarters = (4 * (2 * open + .5)).round();
+  final bet = (flopPotQuarters + rng.nextInt(flopPotQuarters + 1)) / 4;
+  final base = _day7PostflopV1(
+    hero,
+    hand,
+    cards(scenario.flop),
+    openBb: open,
+    betBb: bet,
+    showTurn: true,
+  );
+  final table = _day7TableV1(
+    hero: hero,
+    hand: hand,
+    street: PokerStreet.flop,
+    actor: hero,
+    board: base.boardCards,
+    folded: _day7SeatsV1.where((seat) => seat != hero && seat != 'bb').toSet(),
+    entries: base.handContributions!.entries,
+    history: [
+      ...base.actionTrail.take(base.actionTrail.length - 1),
+      Act0ActionTrailItemV1(label: 'Flop: BB all-in ${_act0BbLabelV1(bet)}'),
+    ],
+    bets: {
+      'bb': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.allIn,
+        label: 'All-in',
+        amountLabel: _act0BbLabelV1(bet),
+      ),
+    },
+    stacks: {'bb': open + bet},
+  );
+  final (potBb: pot, toCallBb: due) = _dailyDealAmountsV1(table);
+  if (due == null || due <= 0 || pot <= due) return null;
+  final depth = act0EffectiveStacksV1(
+    table.handContributions!,
+    heroSeatId: hero,
+    activeSeatIds: {hero, 'bb'},
+  )['bb']!;
+  final spr = depth / (pot - due);
+  if (spr > 2) return null;
+
+  final equity = _lowSprEquitiesV1[scenarioIndex];
+  final price = due / (pot + due);
+  if (equity == price) return null;
+  final calls = equity > price;
+  final equityText = _dailyPctV1(equity);
+  final priceText = _dailyPctV1(price);
+  final comparison = calls ? 'clears' : 'falls short of';
+  return (
+    table: table,
+    question: 'Call or fold to the flop all-in?',
+    premise:
+        'At the start of the flop, the effective stack was ${_act0BbLabelV1(depth)} and the pot was ${_act0BbLabelV1(pot - due)} (SPR ${spr.toStringAsFixed(2)}). '
+        'BB could shove with any of these equally likely hands: ${scenario.range.map(cards).join(' / ')}. '
+        'Your equity against that range is $equityText.',
+    preferred: calls ? 'Call' : 'Fold',
+    alternative: calls ? 'Fold' : 'Call',
+    explanation:
+        '${scenario.rangeRead}. At this SPR, it costs ${_act0BbLabelV1(due)} to call. ${scenario.handName} has $equityText equity, which $comparison the $priceText call price, so ${calls ? 'calling beats folding' : 'folding saves chips'}.',
+    correction: calls
+        ? 'Folding gives up value. Against BB’s stated range, $equityText equity clears the $priceText needed to call.'
+        : 'Calling loses chips. Against BB’s stated range, $equityText equity falls short of the $priceText call price.',
+  );
 }

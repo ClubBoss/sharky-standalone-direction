@@ -340,7 +340,12 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     }
     // Rotate templates across days and preserve a started set if another
     // lesson becomes eligible on the same day.
-    final templates = Act0DailyDealTemplateV1.values;
+    final templates = [
+      for (final template in Act0DailyDealTemplateV1.values)
+        if (template != Act0DailyDealTemplateV1.lowSpr ||
+            byTemplate.containsKey(template))
+          template,
+    ];
     return [
       for (var offset = 0; offset < templates.length; offset++)
         if (byTemplate[templates[(day + offset) % templates.length]]
