@@ -1846,7 +1846,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         returnTarget: '',
         table: _day7TableV1(
           hero: 'hj',
-          hand: "Kd Qd",
+          hand: "Kh Qh",
           street: PokerStreet.preflop,
           actor: 'hj',
 

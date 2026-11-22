@@ -7673,8 +7673,8 @@ DAY 7 FAMILY: pot_to_call
 CAPTION: UTG limps and calls raises with K9, QT, J9 and small pairs. CO, BTN and the blinds play tight.
 Q: How should you enter?
 HINT [hidden]: (none)
-TABLE: Preflop | You Kd Qd | Pot 2.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
-SEATS: UTG stack 60 BB call 1 BB | HJ Kd Qd stack 66 BB | CO stack 62 BB | BTN dealer stack 55 BB | SB stack 52.5 BB post 0.5 BB | BB stack 57 BB post 1 BB
+TABLE: Preflop | You Kh Qh | Pot 2.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
+SEATS: UTG stack 60 BB call 1 BB | HJ Kh Qh stack 66 BB | CO stack 62 BB | BTN dealer stack 55 BB | SB stack 52.5 BB post 0.5 BB | BB stack 57 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB
   - [suboptimal] Call 1 BB — Look again. A call sees a cheap flop but lets four players act behind. It misses value from UTG weak limp-calls.
     BETTER ANSWER: Raise to 4 BB
