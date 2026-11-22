@@ -2551,7 +2551,7 @@ final _w9BubbleShortStackRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "Shortest stack",
       body:
-          "A first-in all-in can win the blinds. A short stack must weigh the cost of waiting.",
+          "Compare the cost of waiting with what the shortest stack can still risk.",
     ),
   ],
   options: const [
