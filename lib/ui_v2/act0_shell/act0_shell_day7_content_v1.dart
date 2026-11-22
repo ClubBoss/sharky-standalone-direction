@@ -487,7 +487,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "As, Js, 9s, 8s and 5s are all spades. They do not form five consecutive ranks.",
     wrongReasons: const {
-      0: "The spades have gaps in rank, so they do not form a straight. Their shared suit makes a flush.",
+      0: "The available ranks have no five-card run. Five spades make a flush.",
       1: "There are five spades available, which ranks higher than any high-card hand.",
     },
   ),
@@ -1255,7 +1255,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason: "The six-seat preflop order starts UTG, HJ, then CO.",
     wrongReasons: const {
       1: "CO follows HJ. HJ is the seat immediately clockwise after UTG.",
-      2: "BB posted 1 BB before acting. Picking BB skips the information from both early seats.",
+      2: "BB sits immediately clockwise before UTG. HJ is the next seat clockwise after UTG.",
     },
   ),
   _day7ExampleV1(

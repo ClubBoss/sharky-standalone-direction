@@ -116,7 +116,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'The table can look busier, but the pot still closes by fold or by best hand at showdown.',
+          'You win early if all other players fold. If the hand reaches showdown, the strongest eligible hands win or split the pot.',
     ),
     Act0RunnerOptionV1(
       id: 'button_wins_now',
@@ -694,8 +694,9 @@ final _streetOrderRecapRunner = _riverBoardRunner.copyWith(
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Street order never skips.',
-      body: 'Preflop comes first, then flop, turn, and river.',
+      title: 'The order of the streets.',
+      body:
+          'When a hand runs all the way to the river, the order is preflop, flop, turn and river.',
       focusLabels: <String>['Preflop', 'Flop', 'Turn', 'River'],
     ),
   ],
@@ -3910,7 +3911,7 @@ final _world3DominatedIntroRunner = _world3FacingOpenIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare similar hands',
       body:
-          'Broadway ranks are T, J, Q, K, and A. Dominated means the hands share a rank and one has the weaker side card.',
+          'Broadway ranks are T, J, Q, K, and A. One common kind of domination happens when hands share a rank and one has the weaker side card.',
     ),
     Act0TeachingStepV1(
       title: 'Acting after your opponent',
@@ -4278,7 +4279,7 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Strong, not premium.',
       body:
-          'JJ is strong but can face an ace on the flop. Strong is the second bucket.',
+          'The Sharky chart groups JJ and TT in its Strong bucket. AA, KK and QQ are in the Premium pairs row.',
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['JJ', 'Strong'],
     ),
@@ -4530,7 +4531,8 @@ final _w1DisciplineApplyEarlyFoldRunner = _world3EarlyFoldRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Weak in early seat.',
-      body: '8♠4♦ from UTG is clear weak. No context rescues it.',
+      body:
+          '8♠4♦ is Weak in the Sharky starting chart. This six-player first-in example is from UTG.',
       focusSeatIds: <String>['utg'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['8 4o', 'UTG', 'Fold'],
@@ -5061,7 +5063,7 @@ final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
       body:
           'Blind versus blind means everyone folded to SB. SB acts before BB after the flop. '
           'An SB limp means completing the blind, usually worse than raising or folding. '
-          'A raise to 3 BB makes BB pay 2 BB more. A call closes the action.',
+          'When everyone else has folded and SB opens to 3 BB, BB must add 2 BB to call. That call finishes the preflop betting.',
     ),
   ],
 );
