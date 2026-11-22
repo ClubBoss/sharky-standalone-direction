@@ -55,6 +55,7 @@ String? act0AuthoredSourceFingerprintV1({
     task.taskId,
     task.phase.name,
     task.stepKind.name,
+    if (task.guidedDecision) 'guided_decision_v1',
     task.resolvedTaskFamily.name,
     task.tablePresentation.name,
     task.runner.lessonId,

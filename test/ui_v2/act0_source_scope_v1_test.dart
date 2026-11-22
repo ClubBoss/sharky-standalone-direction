@@ -292,8 +292,8 @@ void main() {
           .toSet(),
       w2Q9TaskIds,
     );
-    expect(tasks, hasLength(401));
-    expect(tasks.map((task) => task.taskId).toSet(), hasLength(401));
+    expect(tasks, hasLength(402));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(402));
     final newTasks = tasks
         .where((task) => _asm05NewTaskIds.contains(task.taskId))
         .toList(growable: false);
@@ -310,7 +310,8 @@ void main() {
             task.taskId != 'first_table_guide_first_decision' &&
             task.taskId != 'hand_rankings_compare_ace_straights' &&
             task.taskId != 'blinds_missing_post_amount' &&
-            task.taskId != 'actions_call_chip_cost',
+            task.taskId != 'actions_call_chip_cost' &&
+            task.taskId != 'cards_ranks_suits_premium_decision',
       ),
       hasLength(368),
     );
@@ -379,7 +380,8 @@ void main() {
             task.taskId != 'first_table_guide_first_decision' &&
             task.taskId != 'hand_rankings_compare_ace_straights' &&
             task.taskId != 'blinds_missing_post_amount' &&
-            task.taskId != 'actions_call_chip_cost')
+            task.taskId != 'actions_call_chip_cost' &&
+            task.taskId != 'cards_ranks_suits_premium_decision')
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
@@ -538,8 +540,9 @@ void main() {
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
     expect(legacyPlayed, 247);
-    expect(played, 279); // Authored contexts, not certified replay histories.
+    expect(played, 280); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'cards_ranks_suits_premium_decision',
       'blinds_missing_post_amount',
       'actions_call_chip_cost',
       'first_table_guide_first_decision',

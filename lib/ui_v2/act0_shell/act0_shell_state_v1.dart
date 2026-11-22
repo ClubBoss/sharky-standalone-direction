@@ -493,6 +493,7 @@ class Act0LessonTaskV1 {
     this.taskFamily,
     this.tablePresentation = Act0TaskTablePresentationV1.legacy,
     this.repairOnly = false,
+    this.guidedDecision = false,
     this.summary,
     this.lockedSummary,
   });
@@ -514,6 +515,9 @@ class Act0LessonTaskV1 {
   final Act0TaskFamilyV1? taskFamily;
   final Act0TaskTablePresentationV1 tablePresentation;
   final bool repairOnly;
+
+  /// The teaching step models the answer for this decision.
+  final bool guidedDecision;
   final String? summary;
   final String? lockedSummary;
 

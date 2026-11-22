@@ -273,16 +273,16 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   beatIndex: 1,
   beatCount: 1,
   phase: Act0LessonPhaseV1.drill,
-  caption: 'You have two aces. A player raised to 2.5 BB.',
+  caption: 'HJ raised to 2.5 BB.',
   hint: '',
-  question: 'What is the best choice with your aces?',
+  question: 'How will you play your aces?',
   options: const [
     Act0RunnerOptionV1(
       id: 'fold',
       label: 'Fold',
       isCorrect: false,
-      preferredLabel: 'Raise',
-      betterAnswerLabel: 'Raise',
+      preferredLabel: 'Raise to 7.5 BB',
+      betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Your aces can play.',
       feedbackReason:
@@ -293,8 +293,8 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       label: 'Call',
       amountLabel: '2.5 BB',
       isCorrect: false,
-      preferredLabel: 'Raise',
-      betterAnswerLabel: 'Raise',
+      preferredLabel: 'Raise to 7.5 BB',
+      betterAnswerLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Calling keeps you in.',
       feedbackReason:
@@ -302,13 +302,12 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
     ),
     Act0RunnerOptionV1(
       id: 'raise',
-      label: 'Raise',
+      label: 'Raise to 7.5 BB',
       isCorrect: true,
-      preferredLabel: 'Raise',
+      preferredLabel: 'Raise to 7.5 BB',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with aces.',
-      feedbackReason:
-          'Aces are Premium. Raise again to build the pot against one raise.',
+      feedbackReason: 'Raise to build the pot with your aces.',
     ),
   ],
   feedbackTitle: 'Raise with aces.',
@@ -322,7 +321,60 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'Three choices.',
       body:
-          'Fold to exit. Call to match. Raise to increase the price. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff.',
+          'Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
+    ),
+  ],
+);
+
+final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
+  lessonId: 'cards_ranks_suits_premium_decision',
+  lessonTitle: 'Cards, ranks & suits',
+  caption: 'CO raised to 2.5 BB.',
+  question: 'How will you play your kings?',
+  table: _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
+  hintPolicy: Act0HintPolicyV1.hidden,
+  teachingSteps: const [
+    Act0TeachingStepV1(
+      title: 'Your starting cards.',
+      body: 'Two kings are a top starting pair. BTN is Button.',
+    ),
+  ],
+  feedbackTitle: 'Raise with kings.',
+  feedbackReason: 'Kings can raise to get paid by a weaker hand.',
+  options: const [
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      amountLabel: '2.5 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise to 7.5 BB',
+      repairFocusLabels: ['Top starting pairs'],
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'The call keeps you in.',
+      feedbackReason:
+          'Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise to 7.5 BB',
+      isCorrect: true,
+      preferredLabel: 'Raise to 7.5 BB',
+      repairFocusLabels: ['Top starting pairs'],
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Raise with kings.',
+      feedbackReason:
+          'Raising KK to 7.5 BB builds the pot against the single CO raise.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Raise to 7.5 BB',
+      repairFocusLabels: ['Top starting pairs'],
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Your kings can play.',
+      feedbackReason:
+          'Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.',
     ),
   ],
 );
@@ -431,10 +483,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'first_table_guide_first_decision',
-        title: 'Make your first choice',
+        title: 'Decide with your coach',
         phase: Act0LessonPhaseV1.drill,
         runner: _w1FirstDecisionRunner,
-        rewardXp: 5,
+        guidedDecision: true,
+        rewardXp: 0,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -594,6 +647,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Higher card',
         phase: Act0LessonPhaseV1.drill,
         runner: _cardsRanksRunner.copyWith(
+          teachingSteps: [
+            ..._cardsRanksRunner.teachingSteps,
+            const Act0TeachingStepV1(
+              title: 'Pairs at the top.',
+              body:
+                  'Top starting pairs can reraise to get paid by weaker hands.',
+            ),
+          ],
           options: _act0AuthoredCorrectOptionAtV1(
             _cardsRanksRunner.options,
             correctOptionId: 'ace',
@@ -601,6 +662,14 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'cards_ranks_suits_premium_decision',
+        title: 'Decide with kings',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1FirstIndependentDecisionRunner,
+        rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(

@@ -545,7 +545,7 @@ const _raisesThePriceChoices = <Act0RunnerOptionV1>[
     isCorrect: true,
     preferredLabel: 'Raise',
     quality: Act0FeedbackQualityV1.correct,
-    feedbackTitle: 'Strong choice.',
+    feedbackTitle: 'Correct.',
     feedbackReason: 'Raising to 3 BB increases the price above the 1 BB blind.',
     repairFocusSeatIds: <String>['btn'],
     repairFocusCardIds: <String>['hero_0', 'hero_1'],
@@ -3907,7 +3907,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Your full house',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Strong hand, lower rank.',
+      feedbackTitle: 'A flush ranks lower here.',
       feedbackReason:
           'The other player does make a flush, but your full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.',
     ),
@@ -4253,7 +4253,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Correct.',
       feedbackReason:
           'At showdown, players use the best five-card hand they can make from private cards plus the shared board.',
     ),

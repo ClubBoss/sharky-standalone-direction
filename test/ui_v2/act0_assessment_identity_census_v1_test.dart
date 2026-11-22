@@ -33,8 +33,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(401));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(401));
+    expect(tasks, hasLength(402));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(402));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -116,8 +116,20 @@ void main() {
             .toList(),
       ];
     }
-    expect(entries, hasLength(401));
+    expect(entries, hasLength(402));
     const w1Additions = {
+      'cards_ranks_suits_premium_decision': [
+        'world_1',
+        'cards_ranks_suits',
+        'cards_ranks_suits_premium_decision',
+        'drill',
+        'practice',
+        [
+          ['call', 'Call', false, 'suboptimal', 'Raise to 7.5 BB'],
+          ['raise', 'Raise to 7.5 BB', true, 'correct', 'Raise to 7.5 BB'],
+          ['fold', 'Fold', false, 'wrong', 'Raise to 7.5 BB'],
+        ],
+      ],
       'blinds_missing_post_amount': [
         'world_1',
         'blinds_action_order',
@@ -149,9 +161,9 @@ void main() {
         'drill',
         'practice',
         [
-          ['fold', 'Fold', false, 'wrong', 'Raise'],
-          ['call', 'Call', false, 'suboptimal', 'Raise'],
-          ['raise', 'Raise', true, 'correct', 'Raise'],
+          ['fold', 'Fold', false, 'wrong', 'Raise to 7.5 BB'],
+          ['call', 'Call', false, 'suboptimal', 'Raise to 7.5 BB'],
+          ['raise', 'Raise to 7.5 BB', true, 'correct', 'Raise to 7.5 BB'],
         ],
       ],
       'hand_rankings_compare_ace_straights': [
@@ -2031,7 +2043,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(401));
+    expect(taskIndex, hasLength(402));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

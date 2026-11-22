@@ -63,6 +63,21 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     1,
+    'cards_ranks_suits',
+    'top_starting_pairs',
+    _day7PreflopV1('btn', 'Kc Ks', opener: 'hj'),
+    question: 'What fits your kings after the first raise?',
+    choices: const ['Call', 'Fold', 'Raise to 7.5 BB'],
+    correct: 2,
+    reason:
+        'KK is one of the highest starting pairs. Raising again against HJ can get a call from a weaker hand.',
+    wrongReasons: const {
+      0: 'Calling HJ’s 2.5 BB from BTN gives up the chance to charge a weaker hand more for the flop.',
+      1: 'Folding Kc Ks after one raise gives up the chance to win the 4 BB already in the middle.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
     "cards_ranks_suits",
     "confused_card_rank_suit",
     _day7PreflopV1("hj", "Jd 9d"),

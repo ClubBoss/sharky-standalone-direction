@@ -165,8 +165,8 @@ void main() {
         .map((task) => task.taskId)
         .toSet();
     for (final (rule, count) in [
-      ('D2.pot_feasibility', 160),
-      ('D3.to_call_completeness', 114),
+      ('D2.pot_feasibility', 161),
+      ('D3.to_call_completeness', 115),
     ]) {
       final proof = rows.where(
         (row) => earlyWorldTasks.contains(row.taskId) && row.invariant == rule,
@@ -1201,7 +1201,7 @@ void main() {
       };
     }
     expectedComparison['first_table_guide_first_decision'] = {
-      'rewardXp': 5,
+      'rewardXp': 0,
       'family': 'decision',
       'options': [
         w3Option('fold'),
@@ -1236,6 +1236,25 @@ void main() {
         w3Option('free'),
         w3Option('match_bet', correct: true),
         w3Option('match_pot'),
+      ],
+    };
+    expectedComparison['cards_ranks_suits_premium_decision'] = {
+      'rewardXp': 5,
+      'family': 'decision',
+      'options': [
+        {
+          ...w3Option('call'),
+          'quality': 'suboptimal',
+          'repairLabels': ['Top starting pairs'],
+        },
+        {
+          ...w3Option('raise', correct: true),
+          'repairLabels': ['Top starting pairs'],
+        },
+        {
+          ...w3Option('fold'),
+          'repairLabels': ['Top starting pairs'],
+        },
       ],
     };
     final w1Revision =
