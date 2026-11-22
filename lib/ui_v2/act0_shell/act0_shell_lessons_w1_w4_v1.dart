@@ -4425,7 +4425,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
               'TT is Strong on CO. Reraising to 7.5 BB risks '
               '5 BB more than the call against HJ.',
           callReason:
-              "Call 2.5 BB with TT because HJ also opens AQ, AJ and KQ, which your tens lead. A reraise builds a bigger pot against the higher pairs that can call.",
+              "Call 2.5 BB with TT because HJ also opens AQ, AJ and KQ, which your tens lead. HJ can call a reraise with higher pairs, so raising can build a bigger pot when you are behind.",
           foldReason:
               'Folding TT on CO gives up a call with a Strong '
               'pair against one 2.5 BB open from HJ.',
@@ -5648,7 +5648,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
                 id: 'raise',
                 label: 'Reraise to 10 BB',
                 reason:
-                    "Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop.",
+                    "Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop. BTN can fold or call the higher price against the reraise.",
               ),
               (
                 id: 'call',

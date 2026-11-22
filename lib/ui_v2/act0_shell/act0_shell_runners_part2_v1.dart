@@ -2624,7 +2624,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Call 2.5 BB with KQo on BTN because you see HJ’s decisions before yours on later rounds. A reraise risks more against the stronger aces and pairs that continue.",
+          "Call 2.5 BB with KQo on BTN because you see HJ’s decisions before yours on later rounds. HJ can continue against a reraise with strong aces or high pairs, so raising risks more.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -2712,7 +2712,7 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          "Call 2.5 BB with QJs on BTN because you see CO’s decisions before yours. Reraising risks more against stronger queens and pairs that can continue.",
+          "Call 2.5 BB with QJs on BTN because you see CO’s decisions before yours. CO can call a reraise with stronger queens or higher pairs, so raising risks more.",
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -4770,14 +4770,12 @@ final _w2ThreeBetIntroRunner = _world3BucketsIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'A 3-bet is a raise over the first raise.',
       body:
-          'In these examples, HJ or CO opens once and you have position '
-          'against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). '
+          'A 4-bet is a raise over a 3-bet; at micro stakes it usually means QQ+ or AK. '
+          'Here HJ or CO opens once, and you act after them. Reraise AA, KK, QQ, and AK (suited or offsuit). '
           'Call with the other Strong hands: JJ, TT, AQs, and AJs. '
           'With Medium hands, call from BTN with AQo, AJo, KQs, KQo, ATs, ATo, KJs, or QJs. '
           'Fold the rest of Medium, including all Medium hands from CO, '
-          'and fold Weak hands. '
-          'If other players enter or you are out of position, the example no '
-          'longer applies.',
+          'and fold Weak hands. This rule requires position and no other callers.',
     ),
   ],
 );
@@ -5041,13 +5039,15 @@ final _w3BlindDefenseIntroRunner = _w3SixSeatsIntroRunner.copyWith(
       title: 'Facing BTN.',
       body:
           'SB reraises Premium, Strong and HJ Medium. Fold CO Medium and Weak. '
+          '"Defend your blind" means calling or reraising from SB or BB. '
           'From BB subtract your 1 BB post. Equity means pot share from wins and ties. A 1.5 BB call for 5.5 BB needs about 27%.',
     ),
     Act0TeachingStepV1(
       title: 'Only the blinds remain.',
       body:
           'Blind versus blind means everyone folded to SB. SB acts before BB after the flop. '
-          'A limp means completing the blind. A raise to 3 BB makes BB pay 2 BB more. A call closes the action.',
+          'An SB limp means completing the blind, usually worse than raising or folding. '
+          'A raise to 3 BB makes BB pay 2 BB more. A call closes the action.',
     ),
   ],
 );

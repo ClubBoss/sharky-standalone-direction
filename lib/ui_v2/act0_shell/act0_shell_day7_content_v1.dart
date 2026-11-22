@@ -809,6 +809,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["UTG and HJ", "Everyone at the table", "SB and BB"],
     correct: 2,
     reason: "The two forced posts are 0.5 BB from SB and 1 BB from BB.",
+    wrongReasons: const {
+      0: "UTG and HJ posted nothing. They only put in chips if they choose to play.",
+      1: "The other seats have no forced post in this hand. Only the two blinds put chips in before anyone chooses an action.",
+    },
   ),
   _day7ExampleV1(
     1,

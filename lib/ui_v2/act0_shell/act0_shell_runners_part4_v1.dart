@@ -2493,7 +2493,7 @@ final _w9BubbleCoverSeatRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "How many of those stacks can bust you?",
   feedbackTitle: "Read the stacks",
   feedbackReason:
-      "You have more than each stack. One of those players can take chips but cannot bust you heads-up.",
+      "You have more than each stack. Any one of those players can take chips but cannot bust you in a two-player pot.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -2505,7 +2505,7 @@ final _w9BubbleCoverSeatRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "You have more than each stack. One of those players can take chips but cannot bust you heads-up.",
+          "You have more than each stack. Any one of those players can take chips but cannot bust you in a two-player pot.",
     ),
     Act0RunnerOptionV1(
       id: "1_stack",
@@ -2527,7 +2527,7 @@ final _w9BubbleCoverSeatRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Each stack has less than 32 BB. Adding them up gives the wrong risk for a heads-up pot.",
+          "Each stack has less than 32 BB. Adding them up overstates what you can lose to one player.",
     ),
   ],
   table: _w9TextStudyTableV1,
@@ -2705,7 +2705,7 @@ final _w9BubbleRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   caption: "Recall the three stack sizes in this lesson.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "What guides the bubble adjustment?",
+  question: "What guides bubble play?",
   feedbackTitle: "Three stacks recap",
   feedbackReason:
       "These explain why the 18 BB AJo fold, 60 BB pressure open and 6 BB AKo all-in can coexist.",
@@ -7620,7 +7620,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'check',
         'Check',
         Act0FeedbackQualityV1.suboptimal,
-        'Checking can control the pot, but AQ is ahead of BTN weak calls. You miss a clear 7 BB value bet.',
+        'Checking keeps the pot smaller, but AQ is ahead of BTN weak calls. You miss a clear 7 BB value bet.',
       ),
       (
         'all_in_to_26_bb',
@@ -8787,7 +8787,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
     caption: 'A good choice can lose. A poor choice can win.',
     question: 'What should you test after a lucky win?',
     teach:
-        'EV means expected value: the average gain or loss over many repeats. An out is a card that makes a losing hand win. On the turn, count clean outs, not cards that help the other player more. A river call needs a win rate high enough for its price. A c-bet is a flop bet from the preflop raiser.',
+        'EV means expected value: the average gain or loss over many repeats. An out is a card that makes a losing hand win. On the turn, count clean outs, not cards that help the other player more. A river call needs a win rate high enough for its price. A c-bet is a flop bet from the preflop raiser. Variance means short-term results naturally swing, and downswings are stretches of losses that can happen even when your decisions are sound.',
     choices: const [
       (
         'the_price_and_range_you_faced',

@@ -1771,7 +1771,7 @@ SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO folded stack
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO folds · BTN acts
   - [wrong] Fold — Not quite. HJ opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding KQo on BTN gives up the in-position call in the Sharky starting chart.
     BETTER ANSWER: Call
-  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with KQo on BTN because you see HJ’s decisions before yours on later rounds. A reraise risks more against the stronger aces and pairs that continue.
+  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with KQo on BTN because you see HJ’s decisions before yours on later rounds. HJ can continue against a reraise with strong aces or high pairs, so raising risks more.
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. Against the 2.5 BB HJ open, the BTN call row includes KQo. Reraising instead risks five extra blinds against better hands.
     BETTER ANSWER: Call
 
@@ -1923,7 +1923,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
 
 TASK w2_narrow_three_bet_intro [theory] One open ahead
 CAPTION: Face one opening raise with nobody else in the pot.
-TEACH: A 3-bet is a raise over the first raise. In these examples, HJ or CO opens once and you have position against the opener. Reraise AA, KK, QQ, and AK (suited or offsuit). Call with the other Strong hands: JJ, TT, AQs, and AJs. With Medium hands, call from BTN with AQo, AJo, KQs, KQo, ATs, ATo, KJs, or QJs. Fold the rest of Medium, including all Medium hands from CO, and fold Weak hands. If other players enter or you are out of position, the example no longer applies.
+TEACH: A 3-bet is a raise over the first raise. A 4-bet is a raise over a 3-bet; at micro stakes it usually means QQ+ or AK. Here HJ or CO opens once, and you act after them. Reraise AA, KK, QQ, and AK (suited or offsuit). Call with the other Strong hands: JJ, TT, AQs, and AJs. With Medium hands, call from BTN with AQo, AJo, KQs, KQo, ATs, ATo, KJs, or QJs. Fold the rest of Medium, including all Medium hands from CO, and fold Weak hands. This rule requires position and no other callers.
 Q: What changes when you raise over an open?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ah Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
@@ -1970,7 +1970,7 @@ SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO Th Tc stack 
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO acts
   - [wrong] Reraise to 7.5 BB — Check the response rule. TT is Strong on CO. Reraising to 7.5 BB risks 5 BB more than the call against HJ.
     BETTER ANSWER: Call 2.5 BB
-  + [correct] Call 2.5 BB — Correct. Call 2.5 BB with TT because HJ also opens AQ, AJ and KQ, which your tens lead. A reraise builds a bigger pot against the higher pairs that can call.
+  + [correct] Call 2.5 BB — Correct. Call 2.5 BB with TT because HJ also opens AQ, AJ and KQ, which your tens lead. HJ can call a reraise with higher pairs, so raising can build a bigger pot when you are behind.
   - [wrong] Fold — Check the response rule. Folding TT on CO gives up a call with a Strong pair against one 2.5 BB open from HJ.
     BETTER ANSWER: Call 2.5 BB
 
@@ -2124,7 +2124,7 @@ EFFECTIVE: CO unknown · SB unknown · BB unknown
 REASONING: principle domination · alt raise · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Qs Js stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5 BB · BTN acts
-  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with QJs on BTN because you see CO’s decisions before yours. Reraising risks more against stronger queens and pairs that can continue.
+  + [correct] Call [2.5 BB] — Clean execution. Call 2.5 BB with QJs on BTN because you see CO’s decisions before yours. CO can call a reraise with stronger queens or higher pairs, so raising risks more.
   - [wrong] Fold — A bit too tight. CO opened to 2.5 BB with 1.5 BB in the pot. The pot is 4 BB after the open. Folding QJs on BTN gives up the call the Sharky starting chart allows against one CO open.
     BETTER ANSWER: Call
   - [wrong] Reraise to 7.5 BB — Read the hand and earlier action. QJs on BTN can match CO for 2.5 BB. Putting in 7.5 BB instead gives CO the chance to call your larger bet with better hands.
@@ -2740,8 +2740,8 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 ===== WORLD 3 · LESSON w3_play_from_blinds · Play from the blinds =====
 
 TASK w3_play_from_blinds_intro [theory] Two blinds, different choices
-TEACH: Facing BTN. SB reraises Premium, Strong and HJ Medium. Fold CO Medium and Weak. From BB subtract your 1 BB post. Equity means pot share from wins and ties. A 1.5 BB call for 5.5 BB needs about 27%.
-TEACH: Only the blinds remain. Blind versus blind means everyone folded to SB. SB acts before BB after the flop. A limp means completing the blind. A raise to 3 BB makes BB pay 2 BB more. A call closes the action.
+TEACH: Facing BTN. SB reraises Premium, Strong and HJ Medium. Fold CO Medium and Weak. "Defend your blind" means calling or reraising from SB or BB. From BB subtract your 1 BB post. Equity means pot share from wins and ties. A 1.5 BB call for 5.5 BB needs about 27%.
+TEACH: Only the blinds remain. Blind versus blind means everyone folded to SB. SB acts before BB after the flop. An SB limp means completing the blind, usually worse than raising or folding. A raise to 3 BB makes BB pay 2 BB more. A call closes the action.
 Q: What price remains?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Qc Tc | Pot 4 BB | To call 1.5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
@@ -2788,7 +2788,7 @@ EFFECTIVE: BTN 100 · BB 100
 REASONING: principle position_realizes · alt call · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB raise 2.5 BB | SB Ah Qd stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB
-  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop.
+  + [correct] Reraise to 10 BB — Correct. Reraise AQo to 10 BB because BTN can open weaker aces such as AJo and ATs, and BB faces a higher price. A call lets BB in cheaply while you act before BTN after the flop. BTN can fold or call the higher price against the reraise.
   - [wrong] Call 2 BB — Read the price and seat. Calling 2 BB with AQo gives BB a cheap entry while you still act before BTN after the flop. A reraise charges BB more.
     BETTER ANSWER: Reraise to 10 BB
   - [wrong] Fold — Read the price and seat. Folding gives up a chance to win the 2.5 BB BTN open and the BB post with a hand in the chart's SB reraise row.
@@ -4144,7 +4144,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Turn | You Ah 7h | Board Kh 9h 4s 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
 TASK w5_semi_bluff_combo_draw [drill] Two draws, fewer folds
-CAPTION: BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets.
+CAPTION: BB always calls 1 BB and folds 20% of the time to 3 BB. A flush or straight wins. Other rivers lose. No more bets. A combo draw is a hand with both a flush draw and a straight draw.
 Q: Which play earns most?
 HINT [hidden]: (none)
 TABLE: Turn | You Jh 8h | Board Th 7s 4h 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, gutshot, completion cards 12
@@ -4359,7 +4359,7 @@ REVIEW: Value, bluff candidate, and missed. Board fit decides which bucket your 
 
 TASK w6_board_fit_intro [theory] Board shifts bucket
 CAPTION: Board texture can shift a hand from value to missed.
-TEACH: Board changes the bucket. A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop.
+TEACH: Board changes the bucket. A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop. An underpair is a pocket pair lower than every rank on the flop.
 TEACH LABELS: Board fit, Value, Missed, Texture
 TEACH: Compare both ranges. Range advantage is about which player has more strong hands on this board. In this lesson, use only the hands listed for each player and count hand types that make two pair or better.
 TEACH LABELS: Preflop raiser, Caller, Two pair or better
@@ -4406,7 +4406,7 @@ TASK w6_turn_shift_bucket [drill] Turn changes bucket
 CAPTION: BTN bet the flop and BB called. After checking the paired turn, BB calls with every hand that beats J9.
 TEACH: A bucket can change. Suppose a bluff candidate loses fold pressure on the turn. It can move toward missed; it does not become value automatically.
 TEACH LABELS: Fold pressure, Missed
-Q: With J9 on this turn, how should you adjust your former bluff plan?
+Q: With J9 on this turn, what should you do with your earlier bluff plan?
 HINT [theoryOnly]: When pressure drops, the bucket can slide.
 TABLE: Turn | You Jh 9d | Board Ad 7s 4c 4h | Pot 9.5 BB | Seat BTN | Active btn | Decision btn | Center Read the turn | Facts one pair, paired board
 EFFECTIVE: BB 95.5
@@ -5526,7 +5526,7 @@ HINT [theoryOnly]: Use your stack, not the amount the opponents added later.
 TABLE: Preflop | Main 60.5 BB; side 60 BB | Seat BTN | Tap utg, btn, bb | Center Read the stack limit | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG folded | HJ folded | CO stack 50 BB raise 50 BB | BTN dealer stack 0 BB allIn 20 BB | SB folded post 0.5 BB | BB stack 50 BB call 50 BB
 TRAIL: UTG folds · HJ folds · SB posts 0.5 BB, then folds · BB post is included in BB total · You go all-in for 20 BB · CO contributes 50 BB total · BB contributes 50 BB total · CO and BB: 30 BB each to side
-  + [correct] 20 BB — Your stack capped the match at 20 BB. You went all-in for 20 BB, so that is all either bigger stack could match against you.
+  + [correct] 20 BB — Your stack limited the match to 20 BB. You went all-in for 20 BB, so that is all either bigger stack could match against you.
   - [wrong] 50 BB — Use the smaller stack. The opponents each invested 50 BB, but their extra 30 BB was against each other. Each matched only your 20 BB.
     BETTER ANSWER: 20 BB
   - [wrong] 30 BB — Thirty was the additional amount. After matching you for 20 BB, the deeper stacks each put in 30 BB more against each other.
@@ -5585,7 +5585,7 @@ REVIEW: SPR tells you whether the hand is room-heavy or commitment-heavy. That c
 
 TASK short_stack_spots_intro [theory] Effective stack at two depths
 CAPTION: Compare a stack of 100 BB with a stack of 25 BB.
-TEACH: Only chips both players can match count. With two players, 100 BB against 25 BB plays like 25 BB. A short stack is a stack with fewer chips than the other player can match. That stack limits what a draw can earn and what a weaker hand can pay. In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra chips that only the deeper players can win.
+TEACH: Only chips both players can match count. With two players, 100 BB against 25 BB plays like 25 BB. A short stack means few big blinds left and limits what a draw can earn. Implied odds mean counting extra chips you could win on later streets. Reverse implied odds mean counting extra chips you could lose if you improve but still have the worse hand. In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra chips that only the deeper players can win.
 Q: How much can these two players put at risk against each other?
 HINT [theoryOnly]: Low SPR means less money is left relative to the pot. Check your hand and the price before going all-in.
 TABLE: Preflop | You Kh Qh | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
@@ -6066,10 +6066,10 @@ CAPTION: You have 32 BB. Three stacks behind you have 9 BB, 14 BB and 30 BB.
 Q: How many of those stacks can bust you?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] 0 stacks — Correct. You have more than each stack. One of those players can take chips but cannot bust you heads-up.
+  + [correct] 0 stacks — Correct. You have more than each stack. Any one of those players can take chips but cannot bust you in a two-player pot.
   - [wrong] 1 stack — Look again. 30 BB comes close. You still have 2 BB if you lose 30 BB to that stack.
     BETTER ANSWER: 0 stacks
-  - [wrong] 3 stacks — Look again. Each stack has less than 32 BB. Adding them up gives the wrong risk for a heads-up pot.
+  - [wrong] 3 stacks — Look again. Each stack has less than 32 BB. Adding them up overstates what you can lose to one player.
     BETTER ANSWER: 0 stacks
 
 TASK w9_bubble_short_stack [drill] Shortest stack
@@ -6102,7 +6102,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 TASK w9_bubble_recap [review] Three stacks recap
 ENTRY: drill
 CAPTION: Recall the three stack sizes in this lesson.
-Q: What guides the bubble adjustment?
+Q: What guides bubble play?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
 REASONING: principle risk_premium · alt stack_size_and_cards_without_the_payouts · edge processRule · stack_matters unknown · assumption none
@@ -7264,7 +7264,7 @@ EFFECTIVE: BTN 26
 REASONING: principle stack_depth_changes_play · alt check · edge moreValueFromWorse · stack_matters true · assumption none
 SEATS: UTG folded stack 65 BB | HJ folded stack 61 BB | CO folded stack 60 BB | BTN dealer stack 26 BB | SB Ac Qc stack 26 BB | BB folded stack 49 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB raises to 9 BB · BB folds · BTN calls 6.5 BB more · Flop is dealt
-  - [suboptimal] Check — Look again. Checking can control the pot, but AQ is ahead of BTN weak calls. You miss a clear 7 BB value bet.
+  - [suboptimal] Check — Look again. Checking keeps the pot smaller, but AQ is ahead of BTN weak calls. You miss a clear 7 BB value bet.
     BETTER ANSWER: Bet 7 BB
     FEEDBACK TABLE: Flop | You Ac Qc | Board As 7d 2h | Pot 19 BB | Seat SB | Active sb | Decision sb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] All-in to 26 BB — Look again. Going all-in risks 26 BB against sets and AK. Betting 7 BB keeps calls from worse aces and pairs.
@@ -7294,7 +7294,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 TASK w12_decision_quality_intro [theory] Process first
 CAPTION: A good choice can lose. A poor choice can win.
-TEACH: Process first EV means expected value: the average gain or loss over many repeats. An out is a card that makes a losing hand win. On the turn, count clean outs, not cards that help the other player more. A river call needs a win rate high enough for its price. A c-bet is a flop bet from the preflop raiser.
+TEACH: Process first EV means expected value: the average gain or loss over many repeats. An out is a card that makes a losing hand win. On the turn, count clean outs, not cards that help the other player more. A river call needs a win rate high enough for its price. A c-bet is a flop bet from the preflop raiser. Variance means short-term results naturally swing, and downswings are stretches of losses that can happen even when your decisions are sound.
 Q: What should you test after a lucky win?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -8946,9 +8946,9 @@ HINT [hidden]: (none)
 TABLE: Preflop | You Ad 8c | Pot 1.5 BB | Seat HJ | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ Ad 8c stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [wrong] UTG and HJ — Look again. The two forced posts are 0.5 BB from SB and 1 BB from BB.
+  - [wrong] UTG and HJ — Look again. UTG and HJ posted nothing. They only put in chips if they choose to play.
     BETTER ANSWER: SB and BB
-  - [wrong] Everyone at the table — Look again. The two forced posts are 0.5 BB from SB and 1 BB from BB.
+  - [wrong] Everyone at the table — Look again. The other seats have no forced post in this hand. Only the two blinds put chips in before anyone chooses an action.
     BETTER ANSWER: SB and BB
   + [correct] SB and BB — Correct. The two forced posts are 0.5 BB from SB and 1 BB from BB.
 

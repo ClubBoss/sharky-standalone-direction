@@ -4355,7 +4355,7 @@ final _w6BoardFitIntroRunner = _w6RangeIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Board changes the bucket.',
       body:
-          'A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop.',
+          'A preflop strong hand can become missed if it does not connect with the flop. An overpair is a pocket pair higher than every rank on the flop. An underpair is a pocket pair lower than every rank on the flop.',
       focusLabels: <String>['Board fit', 'Value', 'Missed', 'Texture'],
     ),
     Act0TeachingStepV1(
@@ -4488,7 +4488,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       'BTN bet the flop and BB called. After checking the paired turn, BB calls with every hand that beats J9.',
   hint: 'When pressure drops, the bucket can slide.',
   question:
-      'With J9 on this turn, how should you adjust your former bluff plan?',
+      'With J9 on this turn, what should you do with your earlier bluff plan?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'A bucket can change.',
