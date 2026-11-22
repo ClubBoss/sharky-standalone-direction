@@ -149,23 +149,26 @@ class _Act0AttemptArchiveScreenV1State
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ListTile(
-          key: Key('act0_attempt_archive_entry_${attempt.id}'),
-          contentPadding: EdgeInsets.zero,
-          title: Text(
-            attempt.taskLabel ?? evidence.taskId,
-            style: Act0AcademyReadingStyleV1.body,
+        Semantics(
+          expanded: selected,
+          child: ListTile(
+            key: Key('act0_attempt_archive_entry_${attempt.id}'),
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              attempt.taskLabel ?? evidence.taskId,
+              style: Act0AcademyReadingStyleV1.body,
+            ),
+            subtitle: Text(
+              '$date · $clock · $result',
+              style: Act0AcademyReadingStyleV1.muted,
+            ),
+            selected: selected,
+            trailing: Icon(selected ? Icons.expand_less : Icons.expand_more),
+            onTap: () {
+              setState(() => _confirmRemovalId = null);
+              widget.onSelect(selected ? null : attempt.id);
+            },
           ),
-          subtitle: Text(
-            '$date · $clock · $result',
-            style: Act0AcademyReadingStyleV1.muted,
-          ),
-          selected: selected,
-          trailing: Icon(selected ? Icons.expand_less : Icons.expand_more),
-          onTap: () {
-            setState(() => _confirmRemovalId = null);
-            widget.onSelect(selected ? null : attempt.id);
-          },
         ),
         if (selected) ...[
           Text(
