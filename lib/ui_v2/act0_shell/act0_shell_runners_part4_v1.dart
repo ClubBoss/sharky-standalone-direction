@@ -7760,7 +7760,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         Act0ActionTrailItemV1(label: 'SB folds'),
         Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
         Act0ActionTrailItemV1(label: 'Flop: BB checks'),
-        Act0ActionTrailItemV1(label: 'CO goes all-in for 10 BB'),
+        Act0ActionTrailItemV1(label: 'CO all-in 10 BB'),
       ],
       bets: const {
         'co': Act0SeatBetStateV1(
@@ -8377,7 +8377,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         Act0ActionTrailItemV1(label: 'BTN folds'),
         Act0ActionTrailItemV1(label: 'SB folds'),
         Act0ActionTrailItemV1(label: 'BB calls 1.5 BB more'),
-        Act0ActionTrailItemV1(label: 'Flop: BB goes all-in for 11.5 BB'),
+        Act0ActionTrailItemV1(label: 'Flop: BB all-in 11.5 BB'),
       ],
       bets: const {
         'bb': Act0SeatBetStateV1(

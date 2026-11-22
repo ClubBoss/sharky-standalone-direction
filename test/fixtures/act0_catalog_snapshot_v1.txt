@@ -6183,7 +6183,7 @@ Q: Call or fold at this SPR?
 HINT [hidden]: (none)
 TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, overpair, pocket pair, rainbow
 SEATS: UTG folded stack 63 BB | HJ Jc Jh stack 11.5 BB | CO folded stack 55 BB | BTN folded dealer stack 50 BB | SB folded stack 44.5 BB | BB stack 0 BB allIn 11.5 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB goes all-in for 11.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB all-in 11.5 BB
   + [correct] Call 11.5 BB — Correct. An overpair is above the top board card. Your 65% wins beat the 40.4% call price, so calling earns 7.03 BB on average. At a low SPR, a bet can put most of the stack at risk. Compare what the hand may beat with the final pot and call cost. SPR by itself is not a call signal. Both started with 14 BB. With 11.5 behind and 5.5 in the middle, SPR was about 2.1.
     FEEDBACK TABLE: Flop | You Jc Jh | Board 8d 5s 2c | Pot 17 BB | To call 11.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
   - [wrong] Fold — Look again. JJ beats many 8x and 99 hands in this all-in range. A 65% chance clears the 40.4% call cost by a large gap.
@@ -6349,7 +6349,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Facts one pair, overpair, pocket pair, rainbow
 SEATS: UTG folded stack 64 BB | HJ folded stack 60 BB | CO stack 0 BB allIn 10 BB | BTN folded dealer stack 55 BB | SB folded stack 53.5 BB | BB Td Th stack 10 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO goes all-in for 10 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks · CO all-in 10 BB
   + [correct] Call 10 BB — Correct. Your overpair wins 60% of the time in this model. The 10 BB call needs 37.7%, so calling has a strong edge.
     FEEDBACK TABLE: Flop | You Td Th | Board 8c 5d 2s | Pot 16.5 BB | To call 10 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
   - [wrong] Fold — Look again. TT is an overpair on 8-5-2. The given 60% win chance is far above the 37.7% call price, so folding gives up value.
