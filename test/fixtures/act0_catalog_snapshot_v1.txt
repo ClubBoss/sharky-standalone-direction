@@ -6,11 +6,11 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
-CAPTION: A new hand is on the table.
-TEACH: Find your cards. The two cards by You are yours. Players share the board. The pot holds the chips in the middle.
+CAPTION: A new hand.
+TEACH: Find your cards. The two cards by You are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
 TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
-Q: Where are the two cards you can use on your own?
+Q: Which two cards are yours?
 HINT [theoryOnly]: Find the seat with two visible cards.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
@@ -43,17 +43,17 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK first_table_guide_first_decision [drill] Make your first choice
 CAPTION: You have two aces. A player raised to 2.5 BB.
-TEACH: Three choices. Fold to give up the hand. Call to match the bet. Raise to set a higher price.
+TEACH: Three choices. Fold to exit. Call to match. Raise to increase the price. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff.
 Q: What is the best choice with your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As Ac stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
-  - [wrong] Fold — Your aces can play. Folding two aces against one raise gives up the strongest starting hand and your chance to win the chips in the middle.
+  - [wrong] Fold — Your aces can play. Folding aces to one raise gives up the strongest starting hand and the chance to win this pot.
     BETTER ANSWER: Raise
-  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Matching HJ’s 2.5 BB keeps your aces in the hand at the current price. Raising gives HJ a chance to put more chips in while your hand is strongest.
+  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.
     BETTER ANSWER: Raise
-  + [correct] Raise — Raise with aces. Two aces are in the Premium group. Against one raise, raise again to build the pot with your strongest starting hand.
+  + [correct] Raise — Raise with aces. Aces are Premium. Raise again to build the pot against one raise.
 
 TASK what_poker_is_table_read_transfer [drill] Read the table
 SUMMARY: Read one real table spot: your cards, the board, and the pot.
@@ -113,8 +113,8 @@ SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB p
 TASK first_table_guide_route_roles [review] Where to go next
 ENTRY: drill
 SUMMARY: Lock in what Home, Learn, Practice, Review, and You do after the first loop.
-CAPTION: After the first round, each tab has one clear job.
-TEACH: Know the five jobs. Home shows what to do now. Learn shows what to study next. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.
+CAPTION: Each tab has a job.
+TEACH: Know the five jobs. Home picks the next step. Learn opens lessons. Practice adds reps. Review fixes mistakes. You shows progress and settings.
 TEACH LABELS: Home, Learn, Practice, You
 Q: Where do you go to fix mistakes after a miss?
 HINT [theoryOnly]: Home shows what to do now. Learn shows what to study next.
@@ -384,7 +384,7 @@ SEATS: UTG | HJ | CO | BTN dealer 7s 7h | SB | BB
 TASK hand_rankings_quads_drill [drill] Hand ranking question
 AUTHORED TITLE: Four of a kind
 CAPTION: Four of a kind means all four cards of one rank.
-TEACH: Four of a kind uses all four of one rank. You use 9-9 from hand and 9-9 from the board. All four nines count, so this hand outranks a full house.
+TEACH: Four of a kind uses all four of one rank. Your two nines and the two board nines make 4 of one rank. This beats a full house.
 TEACH LABELS: 9-9-9-9
 Q: What matching ranks make up your best hand?
 HINT [theoryOnly]: Look for all four nines.
@@ -495,7 +495,8 @@ SEATS: UTG | HJ | CO | BTN dealer As 7d | SB | BB
 TASK hand_rankings_compare_ace_straights [drill] Hand ranking question
 AUTHORED TITLE: Two straights, one winner
 CAPTION: Suppose the other player has 4♠ 5♥.
-TEACH: Compare the highest rank. Broadway is T-J-Q-K-A, the ace-high straight. A-2-3-4-5 is the wheel, the five-high straight. A higher straight wins.
+TEACH: Read the board. The flop has three shared cards. The turn is the fourth. BTN is Button, the dealer marker.
+TEACH: Compare the highest rank. Broadway ranks are ten, jack, queen, king, and ace. A-2-3-4-5 is the five-high straight, called the wheel. The higher straight wins.
 Q: Which straight wins, Broadway or A-2-3-4-5?
 HINT [theoryOnly]: (none)
 TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Facts straight

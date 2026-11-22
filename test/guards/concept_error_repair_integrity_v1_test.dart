@@ -73,9 +73,9 @@ void main() {
       'world_1/fold_check_call_raise/actions_check_drill',
       'world_1/fold_check_call_raise/actions_call_drill',
       'world_1/blinds_action_order/blinds_posts_drill',
-      'world_1/blinds_action_order/blinds_first_actor',
-      'world_1/blinds_action_order/blinds_last_actor',
-      'world_1/blinds_action_order/blinds_review',
+      'world_1/blinds_order_practice/blinds_first_actor',
+      'world_1/blinds_order_practice/blinds_last_actor',
+      'world_1/blinds_order_practice/blinds_review',
       'world_1/blinds_action_order/positions_utg',
       'world_1/blinds_action_order/positions_cutoff',
       'world_1/positions/positions_early_late',
@@ -95,7 +95,7 @@ void main() {
       'world_8/spr_and_commitment/what_poker_is_side_pot_intro',
       'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap',
     ];
-    // Preserve the byte-stable original37 dispositions as their own cohort.
+    // Preserve the original 37 dispositions as a cohort when lesson ownership moves.
     expect(act0RepairGapAdjudicationsV1, hasLength(41));
     final rows = act0RepairGapAdjudicationsV1.take(37).toList();
     expect(rows, hasLength(37));

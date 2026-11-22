@@ -163,9 +163,9 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 1,
   beatCount: 5,
-  caption: 'A new hand is on the table.',
+  caption: 'A new hand.',
   hint: 'Find the seat with two visible cards.',
-  question: 'Where are the two cards you can use on your own?',
+  question: 'Which two cards are yours?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'top',
@@ -209,7 +209,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Find your cards.',
       body:
-          'The two cards by You are yours. Players share the board. The pot holds the chips in the middle.',
+          'The two cards by You are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Your cards', 'Board', 'Pot'],
       identityTeachingSemantics:
@@ -399,7 +399,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   beatIndex: 5,
   beatCount: 5,
   phase: Act0LessonPhaseV1.review,
-  caption: 'After the first round, each tab has one clear job.',
+  caption: 'Each tab has a job.',
   hint: 'Home shows what to do now. Learn shows what to study next.',
   question: 'Where do you go to fix mistakes after a miss?',
   options: const <Act0RunnerOptionV1>[
@@ -447,7 +447,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Know the five jobs.',
       body:
-          'Home shows what to do now. Learn shows what to study next. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.',
+          'Home picks the next step. Learn opens lessons. Practice adds reps. Review fixes mistakes. You shows progress and settings.',
       focusLabels: <String>['Home', 'Learn', 'Practice', 'Review', 'You'],
     ),
   ],

@@ -1477,19 +1477,20 @@ void main() {
       expect(_runner(tester).selectedLessonId, 'what_poker_is');
       await _advanceToPrompt(tester);
       final beforeWrong = await _saved(tester);
-      expect(beforeWrong['earnedXp'], 10);
+      expect(beforeWrong['earnedXp'], 15);
       expect(
         beforeWrong['completedTaskIds'],
         containsAll(<String>[
           'what_poker_is_theory',
           'what_poker_is_find_hero',
+          'first_table_guide_first_decision',
         ]),
       );
 
       await _choose(tester, 'five_board_now');
       expect(_runner(tester).repairReasonLine, contains('Replay this spot'));
       final missed = await _saved(tester);
-      expect(missed['earnedXp'], 10, reason: 'A wrong choice earns no XP.');
+      expect(missed['earnedXp'], 15, reason: 'A wrong choice earns no XP.');
       final miss = _rows(missed, 'learningEvidenceHistory').singleWhere(
         (row) =>
             row['taskId'] == _source && row['choiceId'] == 'five_board_now',
@@ -1517,24 +1518,24 @@ void main() {
       expect(_runner(tester).selectedTaskId, _source);
       expect(_runner(tester).repairResultReceiptLine, isNull);
       final retried = await _saved(tester);
-      expect(retried['earnedXp'], 10);
+      expect(retried['earnedXp'], 15);
       expect(retried['completedTaskIds'], isNot(contains(_mappedRepair)));
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_six');
-      expect((await _saved(tester))['earnedXp'], 10);
+      expect((await _saved(tester))['earnedXp'], 15);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       final sourceCompleted = await _saved(tester);
-      expect(sourceCompleted['earnedXp'], 15);
+      expect(sourceCompleted['earnedXp'], 20);
       expect(sourceCompleted['completedTaskIds'], contains(_source));
 
       // The ordinary lesson then visits the existing 4 BB task.
       expect(_runner(tester).selectedTaskId, _mappedRepair);
       await _advanceToPrompt(tester);
       await _choose(tester, 'two_three_four');
-      expect((await _saved(tester))['earnedXp'], 15);
+      expect((await _saved(tester))['earnedXp'], 20);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       final ordinaryFour = await _saved(tester);
-      expect(ordinaryFour['earnedXp'], 20);
+      expect(ordinaryFour['earnedXp'], 25);
       expect(ordinaryFour['completedTaskIds'], contains(_mappedRepair));
 
       final skillsBeforeFour = Map<String, dynamic>.from(
@@ -1559,10 +1560,10 @@ void main() {
       await _advanceToPrompt(tester);
       await _choose(tester, 'hero_btn_preflop_setup');
       expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-      expect((await _saved(tester))['earnedXp'], 20);
+      expect((await _saved(tester))['earnedXp'], 25);
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       final acknowledged = await _saved(tester);
-      expect(acknowledged['earnedXp'], 25);
+      expect(acknowledged['earnedXp'], 30);
       final evidence = _rows(acknowledged, 'learningEvidenceHistory');
       expect(
         evidence.singleWhere((row) => row['recordId'] == miss['recordId']),
@@ -1616,8 +1617,8 @@ void main() {
         containsAll(<String>[_source, _mappedRepair, _nextTask]),
       );
       expect(completed.toSet().length, completed.length);
-      // Main awards each ordinary first completion once: theory5 + Hero5 +
-      // source6BB5 + ordinary4BB5 + distinctpreflop5. The earlier wrong answer
+      // Main awards each ordinary first completion once: theory5 + first
+      // decision5 + Hero5 + source6BB5 + ordinary4BB5 + distinctpreflop5. The earlier wrong answer
       // and same-source retry add no extra completion or XP.
       expect(acknowledged['selectedWorldId'], 'world_1');
       expect(acknowledged['selectedLessonId'], 'what_poker_is');

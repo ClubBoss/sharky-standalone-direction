@@ -31,9 +31,23 @@ void main() {
         final correct = task.runner.options
             .where((option) => option.isCorrect)
             .single;
-        final wrong = task.runner.options
-            .where((option) => !option.isCorrect)
-            .single;
+        final (originalWrongId, newWrongId) = switch (id) {
+          'blinds_first_actor' => ('btn', 'bb'),
+          'blinds_last_actor' => ('sb', 'btn'),
+          'blinds_review' => ('btn', 'sb'),
+          'positions_utg' => ('hj', 'sb'),
+          _ => throw StateError('Missing wrong options for $id'),
+        };
+        final wrongOptions = task.runner.options.where(
+          (option) => !option.isCorrect,
+        );
+        expect(wrongOptions.map((option) => option.id), [
+          originalWrongId,
+          newWrongId,
+        ]);
+        final wrong = wrongOptions.singleWhere(
+          (option) => option.id == originalWrongId,
+        );
         expect(correct.seatId, id == 'blinds_last_actor' ? 'bb' : 'utg');
         if (id == 'positions_utg') {
           expect(task.runner.question, 'Tap UTG.');
