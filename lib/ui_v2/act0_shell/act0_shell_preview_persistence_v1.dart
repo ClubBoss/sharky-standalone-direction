@@ -320,6 +320,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
+      _attemptArchiveV1 = parsed.attemptArchive;
       _w1StartChosenV1 = parsed.w1StartChosen;
       _w1RulesBestScoreV1 = parsed.w1RulesBestScore;
       _w1RulesFocusTaskIdsV1 = parsed.w1RulesFocusTaskIds;
@@ -1164,6 +1165,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       studyObservations: _studyObservationsV1,
+      attemptArchive: _attemptArchiveV1,
       practiceDayKeys: _savedPracticeDaysV1,
       pendingDecisionAssistance: List.unmodifiable(
         _pendingDecisionAssistanceV1.values,
@@ -1422,6 +1424,15 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           orElse: () => null,
         );
     if (latestRecord != null && !wasAlreadyRecorded) {
+      if (Act0ArchivedAttemptV1.fromRecordedDecision(
+            latestRecord,
+            taskLabel: decision.recordedTaskLabel,
+            choiceLabel: decision.recordedChoiceLabel,
+            recordedTrail: decision.recordedTrail,
+          )
+          case final attempt?) {
+        _attemptArchiveV1 = _attemptArchiveV1.add(attempt);
+      }
       final day = latestRecord.localPracticeDayKey;
       if (day != null && !_savedPracticeDaysV1.contains(day)) {
         final days = [..._savedPracticeDaysV1, day]

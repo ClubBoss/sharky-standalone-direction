@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter/material.dart';
@@ -822,6 +823,135 @@ void main() {
           .selectedTaskId,
       'board_texture_basics_w5_wet_board',
     );
+  });
+
+  group('Review attempt archive', () {
+    Future<void> openArchive(WidgetTester t) async {
+      expect(await _tapFirst(t, [find.text('Review')]), isTrue);
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_review_open_attempts')),
+        ]),
+        isTrue,
+      );
+    }
+
+    testWidgets('opens empty from an older save and returns to Review', (
+      t,
+    ) async {
+      await _openSavedCourseTask(
+        t,
+        worldId: 'world_7',
+        taskId: 'visible_king_combo_reduction_intro',
+      );
+
+      await _mount(t);
+      await openArchive(t);
+      expect(find.text('No saved attempts yet.'), findsOneWidget);
+      expect(await t.binding.handlePopRoute(), isTrue);
+      await t.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_review_open_attempts')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('keeps the submitted attempt and deletion across restarts', (
+      t,
+    ) async {
+      const taskId = 'visible_king_combo_reduction_intro';
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: 'world_7',
+        taskId: taskId,
+      );
+      final runner = t
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .runner;
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_shell_option_king_combos_unchanged')),
+        ]),
+        isTrue,
+      );
+      final before = await _saved(t);
+      final history = Act0LearningEvidenceHistoryV1.restore(
+        before['learningEvidenceHistory'],
+        before['learningEvidenceLineage'],
+      );
+      expect(history, isNotNull);
+      final snapshot = before['attemptArchive'] as Map;
+      final archive = Act0AttemptArchiveV1.restore(
+        snapshot,
+        snapshotRecords: history!.records,
+      );
+      final entry = archive.attempts.single.toPayload();
+      final evidence = entry['evidence'] as Map;
+      final savedEntry = (snapshot['entries'] as List).single as Map;
+      expect(savedEntry['recordId'], evidence['recordId']);
+      expect(savedEntry.containsKey('evidence'), isFalse);
+      expect(evidence['taskId'], taskId);
+      expect(evidence['choiceId'], 'king_combos_unchanged');
+      expect(evidence['isCorrect'], isFalse);
+      expect(evidence['authoredSourceFingerprint'], hasLength(64));
+      expect(evidence['recordedAtUtc'], isNotNull);
+      expect(entry['taskLabel'], runner.question);
+      expect(entry['choiceLabel'], isNotEmpty);
+      expect((entry['events'] as List).map((event) => event['label']), [
+        ...runner.table.actionTrail.map((item) => item.label),
+        'Your choice: ${entry['choiceLabel']}',
+      ]);
+      final key = Key('act0_attempt_archive_entry_${evidence['recordId']}');
+      await _mount(t);
+      await openArchive(t);
+      final search = find.byKey(const Key('act0_attempt_archive_search'));
+      await t.enterText(search, 'no matching attempt');
+      await t.pumpAndSettle();
+      expect(find.text('No matching attempts.'), findsOneWidget);
+      expect(find.byKey(key), findsNothing);
+      await t.enterText(search, '  VISIBLE_KING  ');
+      await t.pumpAndSettle();
+      expect(find.byKey(key), findsOneWidget);
+      await t.enterText(search, '');
+      await t.testTextInput.receiveAction(TextInputAction.done);
+      await t.pumpAndSettle();
+      expect(await _tapFirst(t, [find.byKey(key)]), isTrue);
+      expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
+      expect(find.text('Help: none'), findsOneWidget);
+      final selected = await _saved(t);
+      expect(
+        (selected['attemptArchive'] as Map)['selectedId'],
+        evidence['recordId'],
+      );
+
+      await _mount(t);
+      await openArchive(t);
+      expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_attempt_archive_remove')),
+        ]),
+        isTrue,
+      );
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_attempt_archive_confirm_remove')),
+        ]),
+        isTrue,
+      );
+      expect(find.text('No saved attempts yet.'), findsOneWidget);
+      await _mount(t);
+      await openArchive(t);
+      expect(find.byKey(key), findsNothing);
+      final after = await _saved(t);
+      expect((after['attemptArchive'] as Map)['entries'], isEmpty);
+      expect(
+        after['learningEvidenceHistory'],
+        before['learningEvidenceHistory'],
+      );
+      expect(after['earnedXp'], xp);
+      expect(after['completedTaskIds'], before['completedTaskIds']);
+    });
   });
 
   testWidgets('a W7 king miss persists the same exercise for replay', (

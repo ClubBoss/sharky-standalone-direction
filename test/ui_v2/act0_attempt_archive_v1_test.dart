@@ -21,6 +21,7 @@ Act0LearningEvidenceRecordV1 _evidence(
   String revision =
       'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   Act0DecisionAssistanceV1 assistance = Act0DecisionAssistanceV1.quickHint,
+  bool callIsCorrect = false,
 }) => Act0LearningEvidenceRecordV1(
   recordId: 'attempt-$n',
   createdOrder: n,
@@ -28,13 +29,13 @@ Act0LearningEvidenceRecordV1 _evidence(
   lessonId: 'call_price',
   taskId: _task,
   choiceId: 'call',
-  expectedChoiceId: 'fold',
-  isCorrect: false,
-  errorType: 'price',
+  expectedChoiceId: callIsCorrect ? 'call' : 'fold',
+  isCorrect: callIsCorrect,
+  errorType: callIsCorrect ? 'none' : 'price',
   repairFocusId: 'pot',
   skillAtomId: 'call_price',
   decisionTimeBucket: 'under_3s',
-  resultKind: 'suboptimal',
+  resultKind: callIsCorrect ? 'correct' : 'suboptimal',
   authoredSourceFingerprint: revision,
   recordedAtUtc: _recorded,
   assistanceKind: assistance,
@@ -48,9 +49,56 @@ Act0ArchivedAttemptV1 _attempt(int n) =>
         openedClue: Act0CausalClueV1.callPrice,
       ),
       recordedTrail: _trail,
+      taskLabel: "How does the price affect your decision?",
+      choiceLabel: "Call",
     )!;
 
 void main() {
+  test('shares exact evidence and keeps expired records self-contained', () {
+    final archive = const Act0AttemptArchiveV1.empty()
+        .add(_attempt(1))
+        .add(_attempt(2))
+        .add(_attempt(3))
+        .select('attempt-2');
+    final shared = [_evidence(2), _evidence(3, callIsCorrect: true)];
+    final payload = archive.toPayload(snapshotRecords: shared);
+    final [third, second, first] = (payload['entries'] as List).cast<Map>();
+    expect(first['evidence'], isNotNull);
+    expect(second['recordId'], 'attempt-2');
+    expect(second.containsKey('evidence'), isFalse);
+    expect(third['evidence'], isNotNull);
+    final restored = Act0AttemptArchiveV1.restore(
+      payload,
+      snapshotRecords: shared,
+    );
+    expect(restored.toPayload(), archive.toPayload());
+    final missing = Act0AttemptArchiveV1.restore(payload);
+    expect(missing.attempts.map((attempt) => attempt.id), [
+      'attempt-3',
+      'attempt-1',
+    ]);
+    expect(missing.selected, isNull);
+  });
+
+  test(
+    'migrates only exact older decisions and leaves their journal empty',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: [
+          _evidence(1, revision: ''),
+          _evidence(2),
+          _evidence(3, assistance: Act0DecisionAssistanceV1.legacyUnknown),
+        ],
+      );
+      final archive = Act0AttemptArchiveV1.fromOlderSave(history);
+      final attempt = archive.attempts.single;
+      expect(attempt.id, 'attempt-2');
+      expect(attempt.events, isEmpty);
+      expect(attempt.taskLabel, isNull);
+      expect(attempt.choiceLabel, isNull);
+    },
+  );
+
   test('restores exact version, choice, help, grade, time and journal', () {
     final archive = const Act0AttemptArchiveV1.empty()
         .add(_attempt(1))
@@ -163,6 +211,43 @@ void main() {
       expect(
         clue.openedClue?.text,
         'Compare the chips you still owe with the pot after your call.',
+      );
+    },
+  );
+
+  test(
+    'swapping the correct choice leaves the optional reflection independent',
+    () {
+      const reflection = Act0AttemptReflectionV1(
+        confidence: Act0DecisionConfidenceV1.verySure,
+        openedClue: Act0CausalClueV1.callPrice,
+      );
+      final attempts = [
+        for (final callIsCorrect in [false, true])
+          Act0ArchivedAttemptV1.fromRecordedDecision(
+            _evidence(1, callIsCorrect: callIsCorrect),
+            reflection: reflection,
+          )!,
+      ].map((attempt) => Act0ArchivedAttemptV1.tryParse(attempt.toPayload())!);
+      expect(attempts.map((attempt) => attempt.evidence.expectedChoiceId), [
+        'fold',
+        'call',
+      ]);
+      expect(attempts.map((attempt) => attempt.evidence.isCorrect), [
+        false,
+        true,
+      ]);
+      expect(
+        attempts.map((attempt) => attempt.evidence.assistanceKind),
+        everyElement(Act0DecisionAssistanceV1.quickHint),
+      );
+      expect(
+        attempts.map((attempt) => attempt.reflection.confidence),
+        everyElement(Act0DecisionConfidenceV1.verySure),
+      );
+      expect(
+        attempts.map((attempt) => attempt.reflection.openedClue!.text),
+        everyElement(Act0CausalClueV1.callPrice.text),
       );
     },
   );

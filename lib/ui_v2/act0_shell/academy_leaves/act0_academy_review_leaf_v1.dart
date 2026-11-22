@@ -72,6 +72,7 @@ class Act0AcademyReviewLeafInputV1 {
     this.nextStep,
     this.onOpenRecommendedAction,
     this.onOpenLearn,
+    this.onOpenAttempts,
     this.backdrop,
   });
 
@@ -88,6 +89,7 @@ class Act0AcademyReviewLeafInputV1 {
   final Act0PersonalizedReturnReasonV1? nextStep;
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
+  final VoidCallback? onOpenAttempts;
   final ImageProvider? backdrop;
 }
 
@@ -141,6 +143,15 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 22),
         children: [
           _ReviewHeroV1(backdrop: input.backdrop),
+          if (input.onOpenAttempts != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                key: const Key('act0_review_open_attempts'),
+                onPressed: input.onOpenAttempts,
+                child: const Text('Attempt archive'),
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.fromLTRB(6, 0, 6, 10),
             child: Column(

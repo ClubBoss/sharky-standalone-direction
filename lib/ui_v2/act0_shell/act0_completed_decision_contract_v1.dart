@@ -3,8 +3,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 /// Internal handoff for a completed Act0 decision.
 ///
 /// This is deliberately separate from telemetry and durable learning evidence.
-/// It carries stable decision identity only; the shell retains ownership of
-/// repair-intent construction and any future persistence policy.
+/// Stable decision identity and the captured presentation reach the shell
+/// together. The shell owns repair intent construction and persistence.
 enum Act0CompletedDecisionKindV1 { actionList, seat, sizing }
 
 /// No provenance is inferred for records created before this field existed.
@@ -39,6 +39,9 @@ class Act0CompletedDecisionV1 {
     this.repairFocusId,
     this.missedSignalId,
     this.assistanceKind = Act0DecisionAssistanceV1.none,
+    this.recordedTaskLabel,
+    this.recordedChoiceLabel,
+    this.recordedTrail = const [],
   });
 
   final int schemaVersion;
@@ -60,4 +63,7 @@ class Act0CompletedDecisionV1 {
   final String? repairFocusId;
   final String? missedSignalId;
   final Act0DecisionAssistanceV1 assistanceKind;
+  final String? recordedTaskLabel;
+  final String? recordedChoiceLabel;
+  final List<Act0ActionTrailItemV1> recordedTrail;
 }

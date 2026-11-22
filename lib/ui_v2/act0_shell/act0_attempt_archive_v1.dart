@@ -29,7 +29,13 @@ class Act0AttemptReflectionV1 {
 }
 
 class Act0ArchivedAttemptV1 {
-  Act0ArchivedAttemptV1._(this.evidence, this.reflection, this.events);
+  Act0ArchivedAttemptV1._(
+    this.evidence,
+    this.reflection,
+    this.events,
+    this.taskLabel,
+    this.choiceLabel,
+  );
 
   static final _sourceRevision = RegExp(r'^[a-f0-9]{64}$');
 
@@ -39,6 +45,8 @@ class Act0ArchivedAttemptV1 {
     Act0LearningEvidenceRecordV1 evidence, {
     Act0AttemptReflectionV1 reflection = const Act0AttemptReflectionV1(),
     Iterable<Act0ActionTrailItemV1> recordedTrail = const [],
+    String? taskLabel,
+    String? choiceLabel,
   }) {
     if (Act0LearningEvidenceRecordV1.tryParse(evidence.toPayload()) == null ||
         !_sourceRevision.hasMatch(evidence.authoredSourceFingerprint) ||
@@ -59,17 +67,23 @@ class Act0ArchivedAttemptV1 {
       evidence,
       reflection,
       List.unmodifiable(events),
+      taskLabel,
+      choiceLabel,
     );
   }
 
   final Act0LearningEvidenceRecordV1 evidence;
   final Act0AttemptReflectionV1 reflection;
   final List<Act0ActionTrailItemV1> events;
+  final String? taskLabel;
+  final String? choiceLabel;
 
   String get id => evidence.recordId;
 
-  Map<String, Object?> toPayload() => {
-    'evidence': evidence.toPayload(),
+  Map<String, Object?> toPayload({bool linkEvidence = false}) => {
+    if (linkEvidence) 'recordId': id else 'evidence': evidence.toPayload(),
+    if (taskLabel != null) 'taskLabel': taskLabel,
+    if (choiceLabel != null) 'choiceLabel': choiceLabel,
     if (reflection.confidence case final confidence?)
       'confidence': confidence.name,
     if (reflection.openedClue case final clue?) 'openedClue': clue.name,
@@ -83,10 +97,26 @@ class Act0ArchivedAttemptV1 {
     ],
   };
 
-  static Act0ArchivedAttemptV1? tryParse(Object? raw) {
+  static Act0ArchivedAttemptV1? tryParse(
+    Object? raw, {
+    Map<String, Act0LearningEvidenceRecordV1> evidenceById = const {},
+  }) {
     if (raw is! Map || raw['events'] is! List) return null;
-    final evidence = Act0LearningEvidenceRecordV1.tryParse(raw['evidence']);
+    final reference = raw['recordId'];
+    if (reference != null &&
+        (reference is! String || raw.containsKey('evidence'))) {
+      return null;
+    }
+    final evidence = reference == null
+        ? Act0LearningEvidenceRecordV1.tryParse(raw['evidence'])
+        : evidenceById[reference];
     if (evidence == null) return null;
+    final taskLabel = raw['taskLabel'];
+    final choiceLabel = raw['choiceLabel'];
+    if ((taskLabel != null && taskLabel is! String) ||
+        (choiceLabel != null && choiceLabel is! String)) {
+      return null;
+    }
     final confidence = Act0DecisionConfidenceV1.values
         .where((value) => value.name == raw['confidence'])
         .firstOrNull;
@@ -129,6 +159,8 @@ class Act0ArchivedAttemptV1 {
         openedClue: clue,
       ),
       recordedTrail: events,
+      taskLabel: taskLabel as String?,
+      choiceLabel: choiceLabel as String?,
     );
   }
 }
@@ -171,26 +203,68 @@ class Act0AttemptArchiveV1 {
     selectedId == id ? null : selectedId,
   );
 
-  Map<String, Object?> toPayload() => {
-    'format': 1,
-    'entries': attempts.map((attempt) => attempt.toPayload()).toList(),
-    if (selectedId != null) 'selectedId': selectedId,
-  };
+  /// A progress snapshot can share evidence it already writes in full.
+  /// Attempts that age out of the main history still carry their own copy.
+  Map<String, Object?> toPayload({
+    Iterable<Act0LearningEvidenceRecordV1> snapshotRecords = const [],
+  }) {
+    final evidenceById = {for (final row in snapshotRecords) row.recordId: row};
+    return {
+      'format': 1,
+      'entries': [
+        for (final attempt in attempts)
+          attempt.toPayload(
+            linkEvidence: evidenceById[attempt.id] == attempt.evidence,
+          ),
+      ],
+      if (selectedId != null) 'selectedId': selectedId,
+    };
+  }
 
-  static Act0AttemptArchiveV1 restore(Object? payload) {
+  /// Migrate once, when the progress payload predates the archive field.
+  /// These records can prove a decision but have no historical event journal.
+  static Act0AttemptArchiveV1 fromOlderSave(
+    Act0LearningEvidenceHistoryV1 history,
+  ) {
+    var archive = const Act0AttemptArchiveV1.empty();
+    for (final evidence in history.records) {
+      if (Act0ArchivedAttemptV1.fromRecordedDecision(evidence)
+          case final attempt?) {
+        archive = archive.add(attempt);
+      }
+    }
+    return archive;
+  }
+
+  static Act0AttemptArchiveV1 restore(
+    Object? payload, {
+    Iterable<Act0LearningEvidenceRecordV1> snapshotRecords = const [],
+  }) {
     if (payload is! Map ||
         payload['format'] != 1 ||
         payload['entries'] is! List) {
       return const Act0AttemptArchiveV1.empty();
     }
-    var archive = const Act0AttemptArchiveV1.empty();
+    final evidenceById = {for (final row in snapshotRecords) row.recordId: row};
+    final records = <String, Act0ArchivedAttemptV1>{};
     for (final row in payload['entries'] as List) {
-      if (Act0ArchivedAttemptV1.tryParse(row) case final attempt?) {
-        archive = archive.add(attempt);
+      if (Act0ArchivedAttemptV1.tryParse(row, evidenceById: evidenceById)
+          case final attempt?) {
+        records.putIfAbsent(attempt.id, () => attempt);
       }
     }
+    final ordered = records.values.toList()
+      ..sort(
+        (a, b) => b.evidence.createdOrder.compareTo(a.evidence.createdOrder),
+      );
+    final attempts = ordered.take(limit);
     final selection = payload['selectedId'];
-    return selection is String ? archive.select(selection) : archive;
+    return Act0AttemptArchiveV1._(
+      attempts,
+      selection is String && attempts.any((attempt) => attempt.id == selection)
+          ? selection
+          : null,
+    );
   }
 }
 

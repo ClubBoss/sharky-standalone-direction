@@ -2474,8 +2474,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       _stableLessonTelemetryId,
       _stableTaskTelemetryId,
     );
+    final runner = widget.runner;
+    final choiceLabel = [
+      act0AcademyW1OptionLabelV1(context, option.label),
+      option.amountLabel,
+    ].where((label) => label.trim().isNotEmpty).join(' ');
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
+        recordedTaskLabel: runner.question.trim().isEmpty
+            ? runner.lessonTitle
+            : runner.question,
+        recordedChoiceLabel: choiceLabel,
+        recordedTrail: [
+          ...runner.table.actionTrail,
+          if (choiceLabel.isNotEmpty)
+            Act0ActionTrailItemV1.note(label: 'Your choice: $choiceLabel'),
+        ],
         attemptKey: _canonicalCompletedAttemptIdV1(
           option,
           kind,

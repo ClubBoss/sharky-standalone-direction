@@ -48,6 +48,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     this.nextStep,
     this.onOpenRecommendedAction,
     this.onOpenLearn,
+    this.onOpenAttempts,
   });
 
   final Act0ReviewStateV1 review;
@@ -66,6 +67,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final Act0PersonalizedReturnReasonV1? nextStep;
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
+  final VoidCallback? onOpenAttempts;
 
   @override
   Widget build(BuildContext context) {
@@ -200,6 +202,15 @@ class Act0ReviewShellV1 extends StatelessWidget {
       const _ReviewTodayBarV1(),
       const SizedBox(height: Act0ShellTokensV1.gapMd),
       _ReviewCompactHeaderV1(missCount: missCount),
+      if (onOpenAttempts != null)
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            key: const Key('act0_review_open_attempts'),
+            onPressed: onOpenAttempts,
+            child: const Text('Attempt archive'),
+          ),
+        ),
       const SizedBox(height: Act0ShellTokensV1.gapMd),
     ];
 

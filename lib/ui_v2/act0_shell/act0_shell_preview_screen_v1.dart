@@ -10,6 +10,8 @@ import 'act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
+import 'act0_attempt_archive_v1.dart';
+import 'act0_attempt_archive_screen_v1.dart';
 import 'act0_beta_metrics_v1.dart';
 import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
@@ -1388,7 +1390,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   static Act0ProgressStoreV1 _makeProgressStoreV1() => Act0ProgressStoreV1(
     key: _progressPrefsKey,
-    isValidPayload: (raw) => _Act0PersistedProgressV1.tryParse(raw) != null,
+    // The optional archive is recovered independently when opening a save.
+    // Validating each progress copy only needs the rest of the snapshot.
+    isValidPayload: (raw) =>
+        _Act0PersistedProgressV1.tryParse(raw, restoreAttemptArchive: false) !=
+        null,
     debugRecoveryBoundary:
         kDebugMode &&
             const bool.fromEnvironment('SHARKY_DAT06_PAUSE_AFTER_INTENT')
@@ -1441,6 +1447,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _selectedPresetId;
   String? _selectedPresetTaskId;
   String? _reviewConfidence;
+  bool _showAttemptArchiveV1 = false;
+  Act0AttemptArchiveV1 _attemptArchiveV1 = const Act0AttemptArchiveV1.empty();
   int _teachingStepIndex = 0;
   int _earnedXp = 0;
   int _lessonRunXp = 0;
@@ -4932,6 +4940,31 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   },
                                 ),
                               ),
+                      Act0ShellTabV1.review when _showAttemptArchiveV1 =>
+                        Act0AttemptArchiveScreenV1(
+                          archive: _attemptArchiveV1,
+                          onClose: () => setState(() {
+                            _showAttemptArchiveV1 = false;
+                          }),
+                          onSelect: (id) {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1)) {
+                              return;
+                            }
+                            setState(() {
+                              _attemptArchiveV1 = _attemptArchiveV1.select(id);
+                            });
+                            _persistProgress();
+                          },
+                          onRemove: (id) {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1)) {
+                              return;
+                            }
+                            setState(() {
+                              _attemptArchiveV1 = _attemptArchiveV1.remove(id);
+                            });
+                            _persistProgress();
+                          },
+                        ),
                       Act0ShellTabV1.review => act0AcademyReviewRuntimeV1(
                         context,
                         isCurrent: () =>
@@ -4939,6 +4972,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         legacy: Act0ReviewShellV1(
                           review: reviewState,
                           selected: _reviewConfidence,
+                          onOpenAttempts: () {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1)) {
+                              return;
+                            }
+                            setState(() => _showAttemptArchiveV1 = true);
+                          },
                           onSelected: (value) => setState(() {
                             _reviewConfidence = value;
                           }),
@@ -5156,6 +5195,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 }
                 final remember = _rememberLessonRunnerV1();
                 _tab = tab;
+                _showAttemptArchiveV1 = false;
                 if (tab == Act0ShellTabV1.play) {
                   _showPlayHub = true;
                   _blockCompletionSummary = null;
@@ -6062,6 +6102,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
+    this.attemptArchive = const Act0AttemptArchiveV1.empty(),
     this.studyObservations = const [],
     this.practiceDayKeys,
     this.pendingDecisionAssistance = const [],
@@ -6119,6 +6160,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
+  final Act0AttemptArchiveV1 attemptArchive;
   final List<Act0StudyObservationV1> studyObservations;
   final List<String>? practiceDayKeys;
   final List<_Act0PendingDecisionAssistanceV1> pendingDecisionAssistance;
@@ -6214,6 +6256,9 @@ class _Act0PersistedProgressV1 {
           receipt.toJson(),
       ],
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
+      'attemptArchive': attemptArchive.toPayload(
+        snapshotRecords: learningEvidenceHistory.records,
+      ),
       'studyObservations': [
         for (final observation in studyObservations) observation.toPayload(),
       ],
@@ -6266,7 +6311,10 @@ class _Act0PersistedProgressV1 {
     );
   }
 
-  static _Act0PersistedProgressV1? tryParse(String raw) {
+  static _Act0PersistedProgressV1? tryParse(
+    String raw, {
+    bool restoreAttemptArchive = true,
+  }) {
     final Object? decoded;
     try {
       decoded = jsonDecode(raw);
@@ -6498,6 +6546,14 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
+      attemptArchive: !restoreAttemptArchive
+          ? const Act0AttemptArchiveV1.empty()
+          : map.containsKey('attemptArchive')
+          ? Act0AttemptArchiveV1.restore(
+              map['attemptArchive'],
+              snapshotRecords: learningEvidenceHistory.records,
+            )
+          : Act0AttemptArchiveV1.fromOlderSave(learningEvidenceHistory),
       studyObservations: studyObservations,
       practiceDayKeys: switch (map['practiceDayKeys']) {
         final List<Object?> days =>
