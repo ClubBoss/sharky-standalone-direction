@@ -104,6 +104,41 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   ),
   _day7ExampleV1(
     1,
+    'hand_rankings_table',
+    'board_cards',
+    _day7PostflopV1('bb', 'Jh 6d', 'Js 8d 3h', opponent: 'btn'),
+    question: 'Which rank makes a pair with one of your own cards?',
+    choices: const ['Sixes', 'Jacks', 'Eights'],
+    correct: 1,
+    reason:
+        'Your jack matches the jack in the middle, so you have a pair of jacks.',
+    wrongReasons: const {
+      0: 'Your six has no match on J-8-3. Calling it a pair misses the jack you can match.',
+      2: 'The eight is shared, but neither of your private cards is an eight. That choice gives your hand a pair it cannot use.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'positions',
+    'hero_button',
+    _day7PostflopV1(
+      'btn',
+      'Qc 9s',
+      'Qd 7d 3s',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    question: 'Who still has a decision after the first action on this flop?',
+    choices: const ['SB', 'BB', 'BTN'],
+    correct: 2,
+    reason: 'BB already checked. BTN can use that fact before deciding.',
+    wrongReasons: const {
+      0: 'SB folded before the flop and has no more decisions in this hand. Picking SB passes over your own decision on the Button.',
+      1: 'BB has made the first flop decision by checking. Waiting for a second BB action would miss your own turn.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
     "hand_rankings_table",
     "hero_cards_board_pot",
     _day7PostflopV1("bb", "7s 7d", "Qh 7c 2s"),
@@ -138,6 +173,40 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "As, Js, 9s, 8s and 5s are all spades. They do not form five consecutive ranks.",
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_sequences',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', '8d 9d', '6d 7d Td 2c Qs'),
+    question: 'Which hand can you make with your two cards?',
+    choices: const [
+      'A pair',
+      'A straight flush',
+      'A straight with mixed suits',
+    ],
+    correct: 1,
+    reason:
+        'Your 8d and 9d join the 6d, 7d and Td for five consecutive diamonds.',
+    wrongReasons: const {
+      0: 'None of the displayed ranks repeats. Looking for a pair misses the run from six to ten.',
+      2: 'Every card in your run from six to ten is a diamond. Ignoring the suits understates your best hand.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'hand_rankings_sequences',
+    'board_cards',
+    _day7PostflopV1('bb', '7c 8d', '5h 6s 9c Ks 2d'),
+    question: 'Which hand do the five consecutive cards make?',
+    choices: const ['A flush', 'Two pair', 'A straight'],
+    correct: 2,
+    reason:
+        'The five ranks from five to nine are consecutive and come from different suits.',
+    wrongReasons: const {
+      0: 'The run uses hearts, spades, clubs and diamonds. Reading a flush credits five cards of one suit that are not there.',
+      1: 'The five ranks are all different. Counting two pair would miss the sequence that your seven and eight complete.',
+    },
   ),
   _day7ExampleV1(
     1,
@@ -1017,6 +1086,28 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'The 2.5 BB call would make a 7.5 BB pot, so you need about 33% '
         'equity. With 28% for 83o in this model, folding saves the extra 2.5 BB.',
+  ),
+  _day7ExampleV1(
+    4,
+    'why_bets_happen',
+    'board_cards',
+    _day7PostflopV1(
+      'co',
+      'Ad 9c',
+      'As 6c 2h',
+      checkedToHero: true,
+      showTurn: true,
+    ),
+    caption: 'BB checks with A-7, calls 2 BB and folds to 4 BB.',
+    question: 'Which action gets paid by the weaker ace?',
+    choices: const ['Check', 'Bet 4 BB', 'Bet 2 BB'],
+    correct: 2,
+    reason:
+        'Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.',
+    wrongReasons: const {
+      0: 'Checking on A-6-2 skips the 2 BB that BB would pay with A-7.',
+      1: 'BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.',
+    },
   ),
   _day7ExampleV1(
     4,

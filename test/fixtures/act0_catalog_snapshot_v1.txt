@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 451 tasks · W1–W12
+SHARKY POKER — EN learning content, 456 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -7,7 +7,7 @@ Teaching and feedback table variants use the Runner projections. Board facts are
 TASK what_poker_is_theory [theory] Meet the table
 SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
 CAPTION: A new hand.
-TEACH: Find your cards. Your cards are private. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
+TEACH: Find your cards. Your private cards are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
 TEACH LABELS: Your cards, Board, Pot
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which two cards are yours?
@@ -42,16 +42,16 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
 TASK first_table_guide_first_decision [drill] Decide with your coach
-CAPTION: HJ raised to 2.5 BB.
-TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
+CAPTION: The player before you raised to 2.5 BB.
+TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
 Q: How will you play your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO As Ac stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · The player before you raises to 2.5 BB
   - [wrong] Fold — Your aces can play. Folding aces to one raise gives up the strongest starting hand and the chance to win this pot.
     BETTER ANSWER: Raise to 7.5 BB
-  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.
+  - [suboptimal] Call [2.5 BB] — Calling keeps you in. Calling 2.5 BB keeps you in. Raising can get the player before you to pay more while you have the strongest hand.
     BETTER ANSWER: Raise to 7.5 BB
   + [correct] Raise to 7.5 BB — Raise with aces. Raise to build the pot with your aces.
 
@@ -166,19 +166,19 @@ SEATS: UTG | HJ | CO | BTN dealer | SB post 0.5 BB | BB post 1 BB
   + [correct] Ace — Spot on. Compare top card first: ace outranks king in this spot.
 
 TASK cards_ranks_suits_premium_decision [drill] Decide with kings
-CAPTION: CO raised to 2.5 BB.
+CAPTION: The player before you raised to 2.5 BB.
 TEACH: Your starting cards. Two kings are a top starting pair. BTN is Button.
 Q: How will you play your kings?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kh Kd | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts pocket pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB raise 2.5 BB | BTN dealer Kh Kd stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB
-  - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · The player before you raises to 2.5 BB
+  - [suboptimal] Call [2.5 BB] — The call keeps you in. Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
-  + [correct] Raise to 7.5 BB — Raise with kings. Raising KK to 7.5 BB builds the pot against the single CO raise.
+  + [correct] Raise to 7.5 BB — Raise with kings. Raising KK to 7.5 BB builds the pot against the single raise.
     REPAIR LABELS: Top starting pairs
-  - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.
+  - [wrong] Fold — Your kings can play. Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.
     BETTER ANSWER: Raise to 7.5 BB
     REPAIR LABELS: Top starting pairs
 
@@ -217,7 +217,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK cards_ranks_suits_board_count [drill] Board count
 CAPTION: Count the cards in the middle.
-TEACH: The board grows during the hand. A table can have up to five shared cards.
+TEACH: Count the board. The flop has three shared cards. The turn is the fourth.
 TEACH LABELS: Shared cards
 TEACH TABLE: River | You 9h 9s | Board Ah 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts one pair, pocket pair
 Q: How many shared cards can the table show?
@@ -344,7 +344,24 @@ SEATS: UTG | HJ | CO Jd 7h | BTN dealer Th Ts | SB | BB
     BETTER ANSWER: Three of a kind
     FEEDBACK TABLE: River | You Th Ts | Board Tc 7c 2d Jc 4s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Shared board | Facts set, pocket pair
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+TASK hand_rankings_find_the_match [drill] Hand ranking question
+AUTHORED TITLE: Match a private card
+CAPTION: Compare each of your two cards with the three shared cards.
+Q: Which rank forms your pair here?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Facts one pair, middle pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Kd 8d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · An earlier player folds · The player before you raises to 2.75 BB · SB folds · BB calls 1.75 BB more
+  - [wrong] Kings — Read the table again. Your king has no match among Q-8-2. Counting kings gives your hand a pair it cannot make.
+    BETTER ANSWER: Eights
+    FEEDBACK TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, middle pair, two-tone
+  - [wrong] Queens — Read the table again. There is one queen in the middle and none at your seat. Counting queens misses the two eights.
+    BETTER ANSWER: Eights
+    FEEDBACK TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, middle pair, two-tone
+  + [correct] Eights — Correct. Your eight matches the shared eight, making one pair.
+    FEEDBACK TABLE: Flop | You Kd 8d | Board Qh 8c 2h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, middle pair, two-tone
+
+===== WORLD 1 · LESSON hand_rankings_sequences · Straights and flushes =====
 
 TASK hand_rankings_straight_drill [drill] Hand ranking question
 AUTHORED TITLE: Find the straight
@@ -382,6 +399,45 @@ SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
     BETTER ANSWER: Flush
     FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
 
+TASK hand_rankings_royal_flush_drill [drill] Hand ranking question
+AUTHORED TITLE: Royal flush check
+CAPTION: A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 of hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.
+TEACH: Royal flush is the ace-high straight flush. You use T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five cards of one suit also run in sequence to the ace.
+TEACH LABELS: T-J-Q-K-A, Same suit
+Q: What is the highest hand category you can make?
+HINT [theoryOnly]: A flush with an ace is not royal unless the ranks run to ace.
+TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
+SEATS: UTG | HJ | CO | BTN dealer Kh Qh | SB | BB
+  + [correct] Royal flush — Top of the ladder. You make T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  - [wrong] Ace-high flush without a straight — Same suit, but stronger. The five hearts run T-J-Q-K-A in sequence. An ace-high flush without a straight would have a gap in its ranks.
+    BETTER ANSWER: Royal flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  - [wrong] Straight with mixed suits — Read the deciding detail. The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.
+    BETTER ANSWER: Royal flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+
+TASK hand_rankings_review [review] Hand ranking question
+ENTRY: drill
+AUTHORED TITLE: Ranking recap
+CAPTION: Lesson learned: compare the best five.
+TEACH: Ranking takeaway. First identify the hand type, then compare the ladder.
+TEACH LABELS: Pair, Straight
+Q: Which ranks higher: flush or straight?
+HINT [theoryOnly]: Compare the two hand types on the ranking ladder.
+TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Two completed hands | Facts flush
+SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
+  + [correct] Flush — Read the hand rankings. A flush ranks above a straight.
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+  - [wrong] Straight — Compare consecutive ranks with matching suits. A straight beats three of a kind. Five cards of one suit make a flush, which ranks higher.
+    BETTER ANSWER: Flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+  - [wrong] They rank the same — Read the deciding detail. Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.
+    BETTER ANSWER: Flush
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
+
 TASK hand_rankings_full_house_drill [drill] Hand ranking question
 AUTHORED TITLE: Full house shape
 CAPTION: A full house is three of one rank plus two of another.
@@ -417,26 +473,6 @@ SEATS: UTG | HJ | CO | BTN dealer 9h 9s | SB | BB
   - [wrong] 3 of one rank — Read the deciding detail. Two matching private cards join the two matching board cards. Three of a kind leaves out one card from the four of that rank.
     BETTER ANSWER: 4 of one rank
     FEEDBACK TABLE: River | You 9h 9s | Board 9c 9d 7c 2d Jc | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
-
-TASK hand_rankings_royal_flush_drill [drill] Hand ranking question
-AUTHORED TITLE: Royal flush check
-CAPTION: A straight flush is five ranks in a row in one suit. For example, 5-6-7-8-9 of hearts is a straight flush. T-J-Q-K-A in one suit is a royal flush.
-TEACH: Royal flush is the ace-high straight flush. You use T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five cards of one suit also run in sequence to the ace.
-TEACH LABELS: T-J-Q-K-A, Same suit
-Q: What is the highest hand category you can make?
-HINT [theoryOnly]: A flush with an ace is not royal unless the ranks run to ace.
-TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
-SEATS: UTG | HJ | CO | BTN dealer Kh Qh | SB | BB
-  + [correct] Royal flush — Top of the ladder. You make T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  - [wrong] Ace-high flush without a straight — Same suit, but stronger. The five hearts run T-J-Q-K-A in sequence. An ace-high flush without a straight would have a gap in its ranks.
-    BETTER ANSWER: Royal flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  - [wrong] Straight with mixed suits — Read the deciding detail. The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.
-    BETTER ANSWER: Royal flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-
-===== WORLD 1 · LESSON hand_rankings_comparisons · Compare made hands =====
 
 TASK hand_rankings_full_house_vs_flush_drill [drill] Hand ranking question
 AUTHORED TITLE: Full house beats flush
@@ -475,23 +511,7 @@ SEATS: UTG | HJ | CO Ac 7h | BTN dealer 9h 9s | SB | BB
     BETTER ANSWER: Your four of a kind
     FEEDBACK TABLE: River | You 9h 9s | Board 9c 9d 7c 7d 2s | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Read the cards | Facts four of a kind, pocket pair, paired board
 
-TASK hand_rankings_royal_vs_flush_drill [drill] Hand ranking question
-AUTHORED TITLE: Royal flush wins
-CAPTION: A royal flush beats an ace-high flush.
-TEACH: Royal flush is more than ace-high. You use T-J-Q-K-A in hearts. The other player also has five hearts, but only you connect the ranks all the way to the ace.
-TEACH LABELS: T-J-Q-K-A, Royal flush wins
-Q: Which run of hearts wins this comparison?
-HINT [theoryOnly]: Same suit is not enough. Check whether the cards also run T-J-Q-K-A.
-TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
-SEATS: UTG | HJ | CO 9h 3h | BTN dealer Kh Qh | SB | BB
-  - [wrong] 3 in a row, other player’s — Same suit, different ceiling. The other player does make an ace-high flush, but the five hearts do not run to the ace in sequence. You make a straight flush all the way to A, so it is the royal flush.
-    BETTER ANSWER: 5 in a row, yours
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  + [correct] 5 in a row, yours — Exactly. You have the royal flush because the hearts run T-J-Q-K-A. The other player has only an ace-high flush, so you win with the higher flush type.
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
-  - [wrong] 3 in a row each — Read the deciding detail. You finish the T-J-Q-K-A run in hearts. Treating it like the other flush ignores the connected ranks that win.
-    BETTER ANSWER: 5 in a row, yours
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+===== WORLD 1 · LESSON hand_rankings_comparisons · Compare made hands =====
 
 TASK hand_rankings_best_five_drill [drill] Hand ranking question
 AUTHORED TITLE: Choose best five
@@ -514,13 +534,12 @@ SEATS: UTG | HJ | CO | BTN dealer As 7d | SB | BB
 TASK hand_rankings_compare_ace_straights [drill] Hand ranking question
 AUTHORED TITLE: Two straights, one winner
 CAPTION: Suppose the other player has 4♠ 5♥.
-TEACH: Read the board. The flop has three shared cards. The turn is the fourth. BTN is Button, the dealer marker.
 TEACH: Compare the highest rank. Broadway ranks are ten, jack, queen, king, and ace. A-2-3-4-5 is the five-high straight, called the wheel. The higher straight wins.
 Q: Which straight wins, Broadway or A-2-3-4-5?
 HINT [theoryOnly]: (none)
 TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Facts straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Kc Qd stack 97.25 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · An earlier player folds · The player before you raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · The player before you checks · Turn: BB checks · The player before you checks
   + [correct] Broadway wins — The ace-high straight wins. Your king and queen join the ace, jack and ten. This ace-high straight beats the other player’s five-high straight.
     FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
   - [wrong] A-2-3-4-5 wins — Read the top of the sequence. The four and five connect to the board’s ace, two and three. The five is the highest card in that straight. Picking it awards the pot to the lower hand.
@@ -530,24 +549,23 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     BETTER ANSWER: Broadway wins
     FEEDBACK TABLE: River | You Kc Qd | Board Ah 2c 3d Ts Jc | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts straight
 
-TASK hand_rankings_review [review] Hand ranking question
-ENTRY: drill
-AUTHORED TITLE: Ranking recap
-CAPTION: Lesson learned: compare the best five.
-TEACH: Ranking takeaway. First identify the hand type, then compare the ladder.
-TEACH LABELS: Pair, Straight
-Q: Which ranks higher: flush or straight?
-HINT [theoryOnly]: Compare the two hand types on the ranking ladder.
-TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Two completed hands | Facts flush
-SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
-  + [correct] Flush — Read the hand rankings. A flush ranks above a straight.
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
-  - [wrong] Straight — Compare consecutive ranks with matching suits. A straight beats three of a kind. Five cards of one suit make a flush, which ranks higher.
-    BETTER ANSWER: Flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
-  - [wrong] They rank the same — Read the deciding detail. Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.
-    BETTER ANSWER: Flush
-    FEEDBACK TABLE: River | You Kh Qh | Board Ah 7h 2h Jc Td | Pot 5 BB | Seat BTN | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center Two completed hands | Facts flush
+TASK hand_rankings_royal_vs_flush_drill [drill] Hand ranking question
+AUTHORED TITLE: Royal flush wins
+CAPTION: A royal flush beats an ace-high flush.
+TEACH: Royal flush is more than ace-high. You use T-J-Q-K-A in hearts. The other player also has five hearts, but only you connect the ranks all the way to the ace.
+TEACH LABELS: T-J-Q-K-A, Royal flush wins
+Q: Which run of hearts wins this comparison?
+HINT [theoryOnly]: Same suit is not enough. Check whether the cards also run T-J-Q-K-A.
+TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Read the cards | Facts straight flush
+SEATS: UTG | HJ | CO 9h 3h | BTN dealer Kh Qh | SB | BB
+  - [wrong] 3 in a row, other player’s — Same suit, different ceiling. The other player does make an ace-high flush, but the five hearts do not run to the ace in sequence. You make a straight flush all the way to A, so it is the royal flush.
+    BETTER ANSWER: 5 in a row, yours
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  + [correct] 5 in a row, yours — Exactly. You have the royal flush because the hearts run T-J-Q-K-A. The other player has only an ace-high flush, so you win with the higher flush type.
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
+  - [wrong] 3 in a row each — Read the deciding detail. You finish the T-J-Q-K-A run in hearts. Treating it like the other flush ignores the connected ranks that win.
+    BETTER ANSWER: 5 in a row, yours
+    FEEDBACK TABLE: River | You Kh Qh | Board Ah Jh Th 2c 4d | Pot 5 BB | Seat BTN | Card focus board_0, board_1, board_2, hero_0, hero_1, board_3, board_4 | Center Read the cards | Facts straight flush
 
 TASK showdown_kicker_drill [drill] Same pair, better kicker
 CAPTION: Both players show their cards.
@@ -571,7 +589,7 @@ SEATS: UTG | HJ | CO Ad Qd | BTN dealer As Kh | SB | BB
 
 TASK positions_theory [theory] Six seats
 CAPTION: The six seats are UTG, HJ, CO, BTN, SB, and BB.
-TEACH: When cards reach the board Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.
+TEACH: When cards reach the board Preflop means no board cards yet. The flop has three.
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Read the seat labels. UTG means Under the Gun. HJ is Hijack, CO is Cutoff and BTN is Button. SB and BB are the blinds. Acting later lets you see more moves before you decide.
 TEACH LABELS: UTG, HJ, CO, SB, BB
@@ -665,7 +683,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK blinds_theory [theory] Blinds post first
 CAPTION: SB and BB post before cards are played.
-TEACH: Blinds force a starting pot. Blinds are real chips or money put in first. Players often count them in big blinds because BB is the clean shortcut for the price.
+TEACH: Blinds force a starting pot. The blinds put chips in before anyone decides. One big blind (1 BB) is the unit we use to count chips.
 TEACH LABELS: Real money, Count in BB
 TEACH TABLE: Preflop | Pot 1.5 BB | Seat CO | Seat focus sb, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 TEACH: Action starts after BB. BB is a unit for chips. A bet of 3 BB is three times the big blind. UTG is first to choose before the flop.
@@ -772,6 +790,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] 2 seats — Read the deciding detail. Moving two seats skips the next player. The marker moves one seat at a time.
     BETTER ANSWER: 1 seat
 
+TASK blinds_pot_after_posts [drill] Count the two posts
+CAPTION: Both blinds have posted. You are first to act and nobody else has added chips.
+Q: What total have the two players put in the middle?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You Jc 6h | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG Jc 6h stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB
+  + [correct] 1.5 BB — Correct. The small blind added 0.5 BB and the big blind added 1 BB. Together that is 1.5 BB.
+    REPAIR LABELS: Big blind
+  - [wrong] 1 BB — Read the table again. The big blind paid 1 BB. That leaves out the 0.5 BB small blind already in the middle.
+    BETTER ANSWER: 1.5 BB
+    REPAIR LABELS: Big blind
+  - [wrong] 2 BB — Read the table again. The small blind paid 0.5 BB, so counting two full blinds adds half a BB that nobody paid.
+    BETTER ANSWER: 1.5 BB
+    REPAIR LABELS: Big blind
+
 TASK blinds_review [review] Order recap
 ENTRY: drill
 CAPTION: The blinds have posted. No one has made a choice yet.
@@ -828,6 +862,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] HJ [seat hj] — Read the deciding detail. HJ follows UTG, so one fewer seat remains behind HJ on this first pass.
     BETTER ANSWER: UTG
     FEEDBACK TABLE: Preflop | Pot 1.5 BB | Seat HJ | Decision utg | Seat focus utg | Tap btn, utg, hj | Center Initial preflop pass | Empty board No board cards yet | Facts no applicable hand facts
+
+TASK positions_read_first_check [drill] Use the earlier action
+CAPTION: Only you and the big blind saw the flop. The action list starts with the forced posts and includes actions from both rounds. You still have a decision to make.
+Q: Who has already acted since the shared cards arrived?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Tc 8d | Board As 8h 3c | Pot 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, middle pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Tc 8d stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] HJ — Read the table again. HJ folded before the shared cards. Counting that seat misses the check from the remaining opponent.
+    BETTER ANSWER: BB
+    REPAIR LABELS: Hero on the Button
+  + [correct] BB — Correct. BB checked first. You can use that information before choosing what to do on the Button.
+    REPAIR LABELS: Hero on the Button
+  - [wrong] BTN — Read the table again. Your seat is still waiting to act. Treating the Button as done throws away the decision you now have.
+    BETTER ANSWER: BB
+    REPAIR LABELS: Hero on the Button
 
 TASK positions_review [review] Position recap
 ENTRY: drill
@@ -2779,6 +2829,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.75 BB · CO 
     BETTER ANSWER: BB folds a better hand
     FEEDBACK TABLE: Flop | You Kc Qc | Board Ah 7c 2d | Pot 6 BB | Seat HJ | Active hj | Decision hj | Seat focus hj, bb | Card focus board_0, board_1, board_2, hero_0, hero_1 | Center Flop | Facts high card, rainbow, backdoor flush, backdoor straight
 
+TASK w4_purpose_collect_value [drill] Get a call from a worse hand
+CAPTION: BB checks with Q-8 and will call 2 BB or fold to 4 BB.
+Q: What do you do to get paid by the weaker queen?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Jc stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  + [correct] Bet 2 BB — The smaller bet fits. Your jack beats BB’s eight beside the pair of queens. A 2 BB bet gets that weaker hand to pay.
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Check — Look at the response. Checking with Q-J against Q-8 skips the 2 BB that the weaker queen would pay.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Bet 4 BB — Compare both bets. BB folds Q-8 to 4 BB under this rule, so the bigger bet loses the call you wanted.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Qs Jc | Board Qh 6d 2c | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
 TASK w4_purpose_recap [review] Purpose recap
 CAPTION: Lesson learned: name the purpose before the size.
 TEACH: Purpose checklist. Ask what the bet wants before asking how big it should be.
@@ -3172,6 +3238,22 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
   + [correct] Free card — Strong choice. With two overcards to Q-9-4, BB can pair an ace or king without paying for the turn.
     FEEDBACK TABLE: Flop | You Qs Jd | Board Qh 9d 4c | Pot 6 BB | Seat BTN | Seat focus btn, bb | Card focus hero_0, board_0, board_1, board_2 | Center Next card matters | Facts one pair, top pair, rainbow, backdoor straight
+
+TASK w4_protection_small_denial [drill] Charge for the next card
+CAPTION: BB checks with A-K. In this example BB folds to either bet.
+Q: Which play makes BB give up the chance to catch up while risking the fewest chips?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ts 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Check — Look at the response. Checking lets BB see a card for free. An ace or a king could put A-K ahead of your tens.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  - [wrong] Bet 4 BB — Compare both bets. BB folds A-K to either bet. The 4 BB bet puts another 2 BB at risk for the same result in this example.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+  + [correct] Bet 2 BB — The smaller bet fits. BB folds A-K to 2 BB. Your pair of tens wins the 6 BB pot without letting BB see another card.
+    FEEDBACK TABLE: Flop | You Ts 9c | Board Th 6s 3d | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
 
 TASK w4_protection_recap [review] Protection recap
 CAPTION: Lesson learned: protection denies a free next card.
@@ -6791,7 +6873,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 ===== W1 RULES CHECK =====
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
 
 TASK w1_rules_check_made_hand [drill] Hand rankings
 Q: At showdown, which hand wins in Hold’em?
@@ -7070,6 +7152,42 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 
 ===== WORLD 1 · LESSON hand_rankings_table · Hand rankings 1 =====
 
+TASK spaced_review_w1_hand_rankings_table_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Which rank makes a pair with one of your own cards?
+HINT [hidden]: (none)
+TABLE: Flop | You Jh 6d | Board Js 8d 3h | Pot 6 BB | Seat BB | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.25 BB | SB folded stack 99.5 BB | BB Jh 6d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more
+  - [wrong] Sixes — Look again. Your six has no match on J-8-3. Calling it a pair misses the jack you can match.
+    BETTER ANSWER: Jacks
+    FEEDBACK TABLE: Flop | You Jh 6d | Board Js 8d 3h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] Jacks — Correct. Your jack matches the jack in the middle, so you have a pair of jacks.
+    FEEDBACK TABLE: Flop | You Jh 6d | Board Js 8d 3h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Eights — Look again. The eight is shared, but neither of your private cards is an eight. That choice gives your hand a pair it cannot use.
+    BETTER ANSWER: Jacks
+    FEEDBACK TABLE: Flop | You Jh 6d | Board Js 8d 3h | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
+===== WORLD 1 · LESSON positions · Why position matters =====
+
+TASK spaced_review_w1_positions_hero_button_v1 [drill] Review decision
+DAY 7 FAMILY: hero_button
+Q: Who still has a decision after the first action on this flop?
+HINT [hidden]: (none)
+TABLE: Flop | You Qc 9s | Board Qd 7d 3s | Pot 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, two-tone
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qc 9s stack 97.25 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.75 BB · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] SB — Look again. SB folded before the flop and has no more decisions in this hand. Picking SB passes over your own decision on the Button.
+    BETTER ANSWER: BTN
+    FEEDBACK TABLE: Flop | You Qc 9s | Board Qd 7d 3s | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  - [wrong] BB — Look again. BB has made the first flop decision by checking. Waiting for a second BB action would miss your own turn.
+    BETTER ANSWER: BTN
+    FEEDBACK TABLE: Flop | You Qc 9s | Board Qd 7d 3s | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+  + [correct] BTN — Correct. BB already checked. BTN can use that fact before deciding.
+    FEEDBACK TABLE: Flop | You Qc 9s | Board Qd 7d 3s | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone
+
+===== WORLD 1 · LESSON hand_rankings_table · Hand rankings 1 =====
+
 TASK spaced_review_w1_hand_rankings_table_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
 Q: How many sevens are in your made hand?
@@ -7086,7 +7204,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
     BETTER ANSWER: Three
     FEEDBACK TABLE: Flop | You 7s 7d | Board Qh 7c 2s | Pot 6 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
 
 TASK spaced_review_w1_hand_rankings_upper_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot
@@ -7119,6 +7237,40 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · 
     FEEDBACK TABLE: River | You As 5s | Board Js 8s 3d 9s 2c | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts flush
   + [correct] Flush — Correct. As, Js, 9s, 8s and 5s are all spades. They do not form five consecutive ranks.
     FEEDBACK TABLE: River | You As 5s | Board Js 8s 3d 9s 2c | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts flush
+
+===== WORLD 1 · LESSON hand_rankings_sequences · Straights and flushes =====
+
+TASK spaced_review_w1_hand_rankings_sequences_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Which hand can you make with your two cards?
+HINT [hidden]: (none)
+TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Facts straight flush
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 8d 9d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks
+  - [wrong] A pair — Look again. None of the displayed ranks repeats. Looking for a pair misses the run from six to ten.
+    BETTER ANSWER: A straight flush
+    FEEDBACK TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight flush
+  + [correct] A straight flush — Correct. Your 8d and 9d join the 6d, 7d and Td for five consecutive diamonds.
+    FEEDBACK TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight flush
+  - [wrong] A straight with mixed suits — Look again. Every card in your run from six to ten is a diamond. Ignoring the suits understates your best hand.
+    BETTER ANSWER: A straight flush
+    FEEDBACK TABLE: River | You 8d 9d | Board 6d 7d Td 2c Qs | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight flush
+
+TASK spaced_review_w1_hand_rankings_sequences_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+Q: Which hand do the five consecutive cards make?
+HINT [hidden]: (none)
+TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Facts straight
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 7c 8d stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks
+  - [wrong] A flush — Look again. The run uses hearts, spades, clubs and diamonds. Reading a flush credits five cards of one suit that are not there.
+    BETTER ANSWER: A straight
+    FEEDBACK TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
+  - [wrong] Two pair — Look again. The five ranks are all different. Counting two pair would miss the sequence that your seven and eight complete.
+    BETTER ANSWER: A straight
+    FEEDBACK TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
+  + [correct] A straight — Correct. The five ranks from five to nine are consecutive and come from different suits.
+    FEEDBACK TABLE: River | You 7c 8d | Board 5h 6s 9c Ks 2d | Pot 6 BB | Seat BB | Card focus board_0, board_1, board_2, board_3, board_4 | Facts straight
 
 ===== WORLD 1 · LESSON blinds_action_order · Seats and blinds =====
 
@@ -7366,7 +7518,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     BETTER ANSWER: It is split
     FEEDBACK TABLE: River | You Jd 7c | Board As Ks Qh Td 9c | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts straight
 
-===== WORLD 1 · LESSON hand_rankings_upper · Hand rankings 2 =====
+===== WORLD 1 · LESSON hand_rankings_upper · Full houses and four of a kind =====
 
 TASK spaced_review_w1_hand_rankings_upper_w1_rules_check_made_hand_v1 [drill] Review decision
 DAY 7 FAMILY: w1_rules_check_made_hand
@@ -8026,6 +8178,23 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
     BETTER ANSWER: The price is too high
 
 ===== WORLD 4 · LESSON why_bets_happen · Why bets happen =====
+
+TASK spaced_review_w4_why_bets_happen_board_cards_v1 [drill] Review decision
+DAY 7 FAMILY: board_cards
+CAPTION: BB checks with A-7, calls 2 BB and folds to 4 BB.
+Q: Which action gets paid by the weaker ace?
+HINT [hidden]: (none)
+TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad 9c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
+  - [wrong] Check — Look again. Checking on A-6-2 skips the 2 BB that BB would pay with A-7.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Bet 4 BB — Look again. BB gives up A-7 to 4 BB. That size loses the weaker call you wanted.
+    BETTER ANSWER: Bet 2 BB
+    FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  + [correct] Bet 2 BB — Correct. Your nine beats BB’s seven next to the pair of aces. The 2 BB bet gets paid.
+    FEEDBACK TABLE: Flop | You Ad 9c | Board As 6c 2h | Pot 6 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK spaced_review_w4_why_bets_happen_hero_cards_board_pot_v1 [drill] Review decision
 DAY 7 FAMILY: hero_cards_board_pot

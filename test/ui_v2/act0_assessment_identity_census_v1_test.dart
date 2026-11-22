@@ -38,13 +38,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((t) => t.taskId).toSet(),
       hasLength(
-        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final problems = <String>[];
@@ -131,10 +131,46 @@ void main() {
     expect(
       entries,
       hasLength(
-        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     const w1Additions = {
+      'hand_rankings_find_the_match': [
+        'world_1',
+        'hand_rankings_table',
+        'hand_rankings_find_the_match',
+        'drill',
+        'practice',
+        [
+          ['kings', 'Kings', false, 'wrong', 'Eights'],
+          ['queens', 'Queens', false, 'wrong', 'Eights'],
+          ['eights', 'Eights', true, 'correct', 'Eights'],
+        ],
+      ],
+      'blinds_pot_after_posts': [
+        'world_1',
+        'blinds_order_practice',
+        'blinds_pot_after_posts',
+        'drill',
+        'practice',
+        [
+          ['both', '1.5 BB', true, 'correct', '1.5 BB'],
+          ['bb_only', '1 BB', false, 'wrong', '1.5 BB'],
+          ['equal_posts', '2 BB', false, 'wrong', '1.5 BB'],
+        ],
+      ],
+      'positions_read_first_check': [
+        'world_1',
+        'positions',
+        'positions_read_first_check',
+        'drill',
+        'practice',
+        [
+          ['hj', 'HJ', false, 'wrong', 'BB'],
+          ['bb', 'BB', true, 'correct', 'BB'],
+          ['btn', 'BTN', false, 'wrong', 'BB'],
+        ],
+      ],
       'what_poker_is_side_pot_eligibility': [
         'world_1',
         'what_poker_is_content',
@@ -399,6 +435,30 @@ void main() {
       }
     }
     const w4SeatAdditions = {
+      'w4_purpose_collect_value': [
+        'world_4',
+        'why_bets_happen',
+        'w4_purpose_collect_value',
+        'drill',
+        'practice',
+        [
+          ['bet_two', 'Bet 2 BB', true, 'correct', 'Bet 2 BB'],
+          ['check', 'Check', false, 'wrong', 'Bet 2 BB'],
+          ['bet_four', 'Bet 4 BB', false, 'wrong', 'Bet 2 BB'],
+        ],
+      ],
+      'w4_protection_small_denial': [
+        'world_4',
+        'protection_and_denial',
+        'w4_protection_small_denial',
+        'drill',
+        'practice',
+        [
+          ['check', 'Check', false, 'wrong', 'Bet 2 BB'],
+          ['bet_four', 'Bet 4 BB', false, 'wrong', 'Bet 2 BB'],
+          ['bet_two', 'Bet 2 BB', true, 'correct', 'Bet 2 BB'],
+        ],
+      ],
       'w4_value_worse_call_seat': [
         'world_4',
         'value_bets',
@@ -2295,7 +2355,7 @@ void main() {
     expect(
       taskIndex,
       hasLength(
-        430 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     var validated = 0;

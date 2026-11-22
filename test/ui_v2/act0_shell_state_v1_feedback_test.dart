@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_shell_source_files_v1.dart';
 
@@ -26,11 +27,27 @@ void main() {
 
       expect(titles, isNotEmpty, reason: 'feedbackTitle entries not found');
       expect(reasons, isNotEmpty, reason: 'feedbackReason entries not found');
-      expect(
-        reasons.length,
-        greaterThanOrEqualTo(titles.length),
-        reason: 'feedbackReason count should not be below feedbackTitle count',
-      );
+      // Catalog factories can share reason expressions across many options.
+      // Check the resulting values instead of counting only string literals.
+      for (final world in Act0ShellStateV1.sample.worlds) {
+        for (final lesson in world.lessons) {
+          for (final task in lesson.taskList) {
+            final runner = task.runner;
+            if (runner.feedbackTitle.trim().isNotEmpty) {
+              expect(
+                runner.feedbackReason.trim(),
+                isNotEmpty,
+                reason: task.taskId,
+              );
+            }
+            for (final option in runner.options) {
+              final choice = '${task.taskId}/${option.id}';
+              expect(option.feedbackTitle.trim(), isNotEmpty, reason: choice);
+              expect(option.feedbackReason.trim(), isNotEmpty, reason: choice);
+            }
+          }
+        }
+      }
 
       final emptyTitles = titles.where((t) => t.trim().isEmpty).toList();
       final emptyReasons = reasons.where((r) => r.trim().isEmpty).toList();

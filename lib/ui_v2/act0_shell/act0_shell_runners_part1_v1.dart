@@ -2803,7 +2803,7 @@ final _blindsOrderRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Blinds force a starting pot.',
       body:
-          'Blinds are real chips or money put in first. Players often count them in big blinds because BB is the clean shortcut for the price.',
+          'The blinds put chips in before anyone decides. One big blind (1 BB) is the unit we use to count chips.',
       focusSeatIds: <String>['sb', 'bb'],
       focusLabels: <String>['Real money', 'Count in BB'],
     ),

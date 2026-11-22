@@ -266,6 +266,23 @@ Act0RunnerStateV1 _w1WithNumericLabelsV1(
   );
 }
 
+// Use the names the opening lessons have explained in the visible history.
+Act0TableStateV1 _w1EarlySeatCopyV1(
+  Act0TableStateV1 table, {
+  required String opener,
+}) => table.copyWith(
+  handContributions: table.handContributions,
+  actionTrail: [
+    for (final action in table.actionTrail)
+      Act0ActionTrailItemV1(
+        label: action.label,
+        displayLabel: action.learnerLabel
+            .replaceAll(opener, 'The player before you')
+            .replaceAll(RegExp(r'\b(?:UTG|HJ|CO)\b'), 'An earlier player'),
+      ),
+  ],
+);
+
 final _w1FirstDecisionRunner = Act0RunnerStateV1(
   lessonId: 'first_table_guide_first_decision',
   lessonTitle: 'First Table Guide',
@@ -273,7 +290,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   beatIndex: 1,
   beatCount: 1,
   phase: Act0LessonPhaseV1.drill,
-  caption: 'HJ raised to 2.5 BB.',
+  caption: 'The player before you raised to 2.5 BB.',
   hint: '',
   question: 'How will you play your aces?',
   options: const [
@@ -298,7 +315,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Calling keeps you in.',
       feedbackReason:
-          'Calling HJ’s 2.5 BB keeps you in. Raising can get HJ to pay more while you have the strongest hand.',
+          'Calling 2.5 BB keeps you in. Raising can get the player before you to pay more while you have the strongest hand.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -316,12 +333,15 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
   primaryCtaLabel: '',
   nextLessonId: null,
   returnTarget: '',
-  table: _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
+  table: _w1EarlySeatCopyV1(
+    _day7PreflopV1('co', 'As Ac', opener: 'hj', showTurn: true),
+    opener: 'HJ',
+  ),
   teachingSteps: const [
     Act0TeachingStepV1(
       title: 'Three choices.',
       body:
-          'Fold gives up. Call matches the bet. Raise increases it. UTG means Under the Gun, HJ is Hijack, and CO is Cutoff. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
+          'Fold gives up. Call matches the bet. Raise increases it. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
     ),
   ],
 );
@@ -329,9 +349,12 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
 final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
   lessonId: 'cards_ranks_suits_premium_decision',
   lessonTitle: 'Cards, ranks & suits',
-  caption: 'CO raised to 2.5 BB.',
+  caption: 'The player before you raised to 2.5 BB.',
   question: 'How will you play your kings?',
-  table: _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
+  table: _w1EarlySeatCopyV1(
+    _day7PreflopV1('btn', 'Kh Kd', opener: 'co', showTurn: true),
+    opener: 'CO',
+  ),
   hintPolicy: Act0HintPolicyV1.hidden,
   teachingSteps: const [
     Act0TeachingStepV1(
@@ -352,7 +375,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'The call keeps you in.',
       feedbackReason:
-          'Calling CO’s 2.5 BB keeps KK in the hand but gives up the chance to charge a weaker hand more to see the shared cards.',
+          'Calling 2.5 BB keeps your kings in the hand but gives up the chance to charge a weaker hand more to see the shared cards.',
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -363,7 +386,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Raise with kings.',
       feedbackReason:
-          'Raising KK to 7.5 BB builds the pot against the single CO raise.',
+          'Raising KK to 7.5 BB builds the pot against the single raise.',
     ),
     Act0RunnerOptionV1(
       id: 'fold',
@@ -374,7 +397,7 @@ final _w1FirstIndependentDecisionRunner = _w1FirstDecisionRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Your kings can play.',
       feedbackReason:
-          'Folding KK on BTN gives up your chance to win the 4 BB already in against a single CO raise.',
+          'Folding KK on BTN gives up your chance to win the 4 BB already in against a single raise.',
     ),
   ],
 );
@@ -428,13 +451,11 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
   primaryCtaLabel: '',
   nextLessonId: null,
   returnTarget: '',
-  table: _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
+  table: _w1EarlySeatCopyV1(
+    _day7PostflopV1('bb', 'Kc Qd', 'Ah 2c 3d Ts Jc', opponent: 'co'),
+    opener: 'CO',
+  ),
   teachingSteps: const [
-    Act0TeachingStepV1(
-      title: 'Read the board.',
-      body:
-          'The flop has three shared cards. The turn is the fourth. BTN is Button, the dealer marker.',
-    ),
     Act0TeachingStepV1(
       title: 'Compare the highest rank.',
       body:
@@ -442,6 +463,50 @@ final _w1CompareAceStraightsRunner = Act0RunnerStateV1(
     ),
   ],
 );
+
+Act0RunnerStateV1 _w1ExtraReadV1({
+  required Act0RunnerStateV1 source,
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required List<(String, String, String)> choices,
+  required int correct,
+  List<String> repairLabels = const [],
+  List<String> repairCards = const [],
+}) {
+  final answer = choices[correct];
+  return source.copyWith(
+    lessonId: id,
+    phase: Act0LessonPhaseV1.drill,
+    caption: caption,
+    hint: '',
+    question: question,
+    table: table,
+    teachingSteps: const [],
+    feedbackTitle: 'Read the visible facts.',
+    feedbackReason: answer.$3,
+    options: [
+      for (final (index, choice) in choices.indexed)
+        Act0RunnerOptionV1(
+          id: choice.$1,
+          label: choice.$2,
+          preferredLabel: answer.$2,
+          betterAnswerLabel: index == correct ? '' : answer.$2,
+          isCorrect: index == correct,
+          quality: index == correct
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          feedbackTitle: index == correct
+              ? 'Correct.'
+              : 'Read the table again.',
+          feedbackReason: choice.$3,
+          repairFocusLabels: repairLabels,
+          repairFocusCardIds: repairCards,
+        ),
+    ],
+  );
+}
 
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
@@ -731,6 +796,21 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _w1WithNumericLabelsV1(
           _boardCountRunner.copyWith(
             table: _w1WithPocketPairV1(_boardCountRunner.table, '9'),
+            teachingSteps: const [
+              Act0TeachingStepV1(
+                title: 'Count the board.',
+                body:
+                    'The flop has three shared cards. The turn is the fourth.',
+                focusCardIds: [
+                  'board_0',
+                  'board_1',
+                  'board_2',
+                  'board_3',
+                  'board_4',
+                ],
+                focusLabels: ['Shared cards'],
+              ),
+            ],
           ),
           const {'Five': '5 cards', 'Two': '2 cards', 'Three': '3 cards'},
         ),
@@ -873,18 +953,55 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_find_the_match',
+        title: 'Match a private card',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _twoPairRunner,
+          id: 'hand_rankings_find_the_match',
+          caption:
+              'Compare each of your two cards with the three shared cards.',
+          question: 'Which rank forms your pair here?',
+          table: _w1EarlySeatCopyV1(
+            _day7PostflopV1('bb', 'Kd 8d', 'Qh 8c 2h', opponent: 'btn'),
+            opener: 'BTN',
+          ),
+          choices: const [
+            (
+              'kings',
+              'Kings',
+              'Your king has no match among Q-8-2. Counting kings gives your hand a pair it cannot make.',
+            ),
+            (
+              'queens',
+              'Queens',
+              'There is one queen in the middle and none at your seat. Counting queens misses the two eights.',
+            ),
+            (
+              'eights',
+              'Eights',
+              'Your eight matches the shared eight, making one pair.',
+            ),
+          ],
+          correct: 2,
+          repairCards: const ['board_0', 'board_1', 'board_2'],
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
     ],
   ),
   Act0LessonCardV1(
-    lessonId: 'hand_rankings_upper',
-    title: 'Hand rankings 2',
-    subtitle: 'Compare sequences, suits, and stronger groups.',
+    lessonId: 'hand_rankings_sequences',
+    title: 'Straights and flushes',
+    subtitle: 'Use consecutive ranks and matching suits.',
     state: Act0LessonStateV1.locked,
     phaseLabel: 'Ranks',
     primaryCtaLabel: 'Locked',
     isSelectable: false,
     isLocked: true,
-    rewardXp: 35,
+    rewardXp: 29,
     runner: _straightRankRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
@@ -929,6 +1046,48 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'hand_rankings_royal_flush_drill',
+        title: 'Royal flush check',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1WithDistractorV1(
+          _royalFlushRankRunner,
+          id: 'mixed_straight',
+          label: 'Straight with mixed suits',
+          reason:
+              'The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.',
+        ),
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_review',
+        title: 'Ranking recap',
+        phase: Act0LessonPhaseV1.review,
+        runner: _w1WithDistractorV1(
+          _rankingRecapRunner,
+          id: 'tied_ranks',
+          label: 'They rank the same',
+          reason:
+              'Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.',
+        ),
+        rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.proveIt,
+      ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'hand_rankings_upper',
+    title: 'Full houses and four of a kind',
+    subtitle: 'Count matching ranks and compare the resulting hands.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Ranks',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 28,
+    runner: _fullHouseRankRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
         taskId: 'hand_rankings_full_house_drill',
         title: 'Full house shape',
         phase: Act0LessonPhaseV1.drill,
@@ -971,34 +1130,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
-        taskId: 'hand_rankings_royal_flush_drill',
-        title: 'Royal flush check',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1WithDistractorV1(
-          _royalFlushRankRunner,
-          id: 'mixed_straight',
-          label: 'Straight with mixed suits',
-          reason:
-              'The run T-J-Q-K-A is made of hearts. Ignoring the suit understates the ace-high straight flush.',
-        ),
-        rewardXp: 7,
-        stepKind: Act0LessonStepKindV1.practice,
-      ),
-    ],
-  ),
-  Act0LessonCardV1(
-    lessonId: 'hand_rankings_comparisons',
-    title: 'Compare made hands',
-    subtitle: 'Use the best five to break a tie or rank two hands.',
-    state: Act0LessonStateV1.locked,
-    phaseLabel: 'Ranks',
-    primaryCtaLabel: 'Locked',
-    isSelectable: false,
-    isLocked: true,
-    rewardXp: 43,
-    runner: _fullHouseVsFlushRunner,
-    tasks: <Act0LessonTaskV1>[
-      Act0LessonTaskV1(
         taskId: 'hand_rankings_full_house_vs_flush_drill',
         title: 'Full house beats flush',
         phase: Act0LessonPhaseV1.drill,
@@ -1034,6 +1165,43 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
       ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'hand_rankings_comparisons',
+    title: 'Compare made hands',
+    subtitle: 'Use the best five to break a tie or rank two hands.',
+    state: Act0LessonStateV1.locked,
+    phaseLabel: 'Ranks',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
+    rewardXp: 28,
+    runner: _bestFiveShowdownRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_best_five_drill',
+        title: 'Choose best five',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1WithDistractorV1(
+          _bestFiveShowdownRunner,
+          id: 'omit_pair',
+          label: 'Seven',
+          reason:
+              'The sevens form one of your two pairs. The jack plays as a side card, leaving the four outside the best five.',
+        ),
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_compare_ace_straights',
+        title: 'Two straights, one winner',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1CompareAceStraightsRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
       Act0LessonTaskV1(
         taskId: 'hand_rankings_royal_vs_flush_drill',
         title: 'Royal flush wins',
@@ -1062,43 +1230,6 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
-      ),
-      Act0LessonTaskV1(
-        taskId: 'hand_rankings_best_five_drill',
-        title: 'Choose best five',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1WithDistractorV1(
-          _bestFiveShowdownRunner,
-          id: 'omit_pair',
-          label: 'Seven',
-          reason:
-              'The sevens form one of your two pairs. The jack plays as a side card, leaving the four outside the best five.',
-        ),
-        rewardXp: 7,
-        stepKind: Act0LessonStepKindV1.practice,
-      ),
-      Act0LessonTaskV1(
-        taskId: 'hand_rankings_compare_ace_straights',
-        title: 'Two straights, one winner',
-        phase: Act0LessonPhaseV1.drill,
-        runner: _w1CompareAceStraightsRunner,
-        rewardXp: 7,
-        stepKind: Act0LessonStepKindV1.practice,
-        taskFamily: Act0TaskFamilyV1.compare,
-      ),
-      Act0LessonTaskV1(
-        taskId: 'hand_rankings_review',
-        title: 'Ranking recap',
-        phase: Act0LessonPhaseV1.review,
-        runner: _w1WithDistractorV1(
-          _rankingRecapRunner,
-          id: 'tied_ranks',
-          label: 'They rank the same',
-          reason:
-              'Your two hearts join three on the board for a flush. A straight uses a different pattern and ranks lower.',
-        ),
-        rewardXp: 8,
-        stepKind: Act0LessonStepKindV1.proveIt,
       ),
       Act0LessonTaskV1(
         taskId: 'showdown_kicker_drill',
@@ -1138,8 +1269,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             teachingSteps: const [
               Act0TeachingStepV1(
                 title: 'When cards reach the board',
-                body:
-                    'Preflop means no board cards yet. The flop has three. The turn is the fourth board card and the river is the fifth.',
+                body: 'Preflop means no board cards yet. The flop has three.',
               ),
               Act0TeachingStepV1(
                 title: 'Read the seat labels.',
@@ -1490,6 +1620,40 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'blinds_pot_after_posts',
+        title: 'Count the two posts',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _firstPreflopActorRunner,
+          id: 'blinds_pot_after_posts',
+          caption:
+              'Both blinds have posted. You are first to act and nobody else has added chips.',
+          question: 'What total have the two players put in the middle?',
+          table: _day7PreflopV1('utg', 'Jc 6h', showTurn: true),
+          choices: const [
+            (
+              'both',
+              '1.5 BB',
+              'The small blind added 0.5 BB and the big blind added 1 BB. Together that is 1.5 BB.',
+            ),
+            (
+              'bb_only',
+              '1 BB',
+              'The big blind paid 1 BB. That leaves out the 0.5 BB small blind already in the middle.',
+            ),
+            (
+              'equal_posts',
+              '2 BB',
+              'The small blind paid 0.5 BB, so counting two full blinds adds half a BB that nobody paid.',
+            ),
+          ],
+          correct: 0,
+          repairLabels: const ['Big blind'],
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'blinds_review',
         title: 'Order recap',
         phase: Act0LessonPhaseV1.review,
@@ -1600,6 +1764,46 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           reason:
               'HJ follows UTG, so one fewer seat remains behind HJ on this first pass.',
           seatId: 'hj',
+        ),
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'positions_read_first_check',
+        title: 'Use the earlier action',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w1ExtraReadV1(
+          source: _postflopButtonActorRunner,
+          id: 'positions_read_first_check',
+          caption:
+              'Only you and the big blind saw the flop. The action list starts with the forced posts and includes actions from both rounds. You still have a decision to make.',
+          question: 'Who has already acted since the shared cards arrived?',
+          table: _day7PostflopV1(
+            'btn',
+            'Tc 8d',
+            'As 8h 3c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          choices: const [
+            (
+              'hj',
+              'HJ',
+              'HJ folded before the shared cards. Counting that seat misses the check from the remaining opponent.',
+            ),
+            (
+              'bb',
+              'BB',
+              'BB checked first. You can use that information before choosing what to do on the Button.',
+            ),
+            (
+              'btn',
+              'BTN',
+              'Your seat is still waiting to act. Treating the Button as done throws away the decision you now have.',
+            ),
+          ],
+          correct: 1,
+          repairLabels: const ['Hero on the Button'],
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
@@ -5736,6 +5940,66 @@ Act0RunnerStateV1 _w4SeatDecisionV1({
   );
 }
 
+Act0RunnerStateV1 _w4ChooseSmallBetV1({
+  required Act0RunnerStateV1 source,
+  required String id,
+  required String caption,
+  required String question,
+  required Act0TableStateV1 table,
+  required String correctReason,
+  required String checkReason,
+  required String largerBetReason,
+  required int correctIndex,
+}) => source.copyWith(
+  lessonId: id,
+  phase: Act0LessonPhaseV1.drill,
+  caption: caption,
+  question: question,
+  hint: '',
+  table: table,
+  teachingSteps: const [],
+  feedbackTitle: 'The smaller bet fits.',
+  feedbackReason: correctReason,
+  options: _act0AuthoredCorrectOptionAtV1(
+    [
+      Act0RunnerOptionV1(
+        id: 'check',
+        label: 'Check',
+        isCorrect: false,
+        preferredLabel: 'Bet 2 BB',
+        betterAnswerLabel: 'Bet 2 BB',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Look at the response.',
+        feedbackReason: checkReason,
+        repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
+      Act0RunnerOptionV1(
+        id: 'bet_two',
+        label: 'Bet 2 BB',
+        isCorrect: true,
+        preferredLabel: 'Bet 2 BB',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'The smaller bet fits.',
+        feedbackReason: correctReason,
+        repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
+      Act0RunnerOptionV1(
+        id: 'bet_four',
+        label: 'Bet 4 BB',
+        isCorrect: false,
+        preferredLabel: 'Bet 2 BB',
+        betterAnswerLabel: 'Bet 2 BB',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Compare both bets.',
+        feedbackReason: largerBetReason,
+        repairFocusCardIds: const ['board_0', 'board_1', 'board_2'],
+      ),
+    ],
+    correctOptionId: 'bet_two',
+    correctIndex: correctIndex,
+  ),
+);
+
 final _betPurposePriceLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'why_bets_happen',
@@ -5789,6 +6053,33 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           hero: 'hj',
         ),
         rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_purpose_collect_value',
+        title: 'Get a call from a worse hand',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4ChooseSmallBetV1(
+          source: _world4ValuePurposeRunner,
+          id: 'w4_purpose_collect_value',
+          correctIndex: 0,
+          caption: 'BB checks with Q-8 and will call 2 BB or fold to 4 BB.',
+          question: 'What do you do to get paid by the weaker queen?',
+          table: _day7PostflopV1(
+            'co',
+            'Qs Jc',
+            'Qh 6d 2c',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          correctReason:
+              'Your jack beats BB’s eight beside the pair of queens. A 2 BB bet gets that weaker hand to pay.',
+          checkReason:
+              'Checking with Q-J against Q-8 skips the 2 BB that the weaker queen would pay.',
+          largerBetReason:
+              'BB folds Q-8 to 4 BB under this rule, so the bigger bet loses the call you wanted.',
+        ),
+        rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
@@ -6210,6 +6501,35 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           ),
         ),
         rewardXp: 8,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w4_protection_small_denial',
+        title: 'Charge for the next card',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w4ChooseSmallBetV1(
+          source: _world4ProtectionBetRunner,
+          id: 'w4_protection_small_denial',
+          correctIndex: 2,
+          caption:
+              'BB checks with A-K. In this example BB folds to either bet.',
+          question:
+              'Which play makes BB give up the chance to catch up while risking the fewest chips?',
+          table: _day7PostflopV1(
+            'co',
+            'Ts 9c',
+            'Th 6s 3d',
+            checkedToHero: true,
+            showTurn: true,
+          ),
+          correctReason:
+              'BB folds A-K to 2 BB. Your pair of tens wins the 6 BB pot without letting BB see another card.',
+          checkReason:
+              'Checking lets BB see a card for free. An ace or a king could put A-K ahead of your tens.',
+          largerBetReason:
+              'BB folds A-K to either bet. The 4 BB bet puts another 2 BB at risk for the same result in this example.',
+        ),
+        rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
