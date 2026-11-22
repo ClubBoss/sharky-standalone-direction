@@ -4562,7 +4562,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
             options: _act0AuthoredCorrectOptionAtV1(
               _world4ValuePurposeRunner.options,
               correctOptionId: 'value',
-              correctIndex: 1,
+              correctIndex: 2,
             ),
           ),
           hero: 'co',
@@ -4736,7 +4736,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _world4BadPriceFoldRunner.options,
             correctOptionId: 'fold',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 8,
@@ -4825,7 +4825,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
             options: _act0AuthoredCorrectOptionAtV1(
               _world4ValueCheckMissRunner.options,
               correctOptionId: 'bet_half',
-              correctIndex: 1,
+              correctIndex: 2,
             ),
           ),
           hero: 'hj',
@@ -4934,7 +4934,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _world4ProtectionCheckRunner.options,
             correctOptionId: 'free_card',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 8,
@@ -5086,7 +5086,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
           options: _act0AuthoredCorrectOptionAtV1(
             _world4PriceTableTransferRunner.options,
             correctOptionId: 'call',
-            correctIndex: 1,
+            correctIndex: 2,
           ),
         ),
         rewardXp: 10,
