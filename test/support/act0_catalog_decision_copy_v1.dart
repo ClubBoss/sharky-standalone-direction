@@ -122,7 +122,9 @@ Iterable<DecisionCopyFindingV1> auditDecisionCopyV1(CatalogTask row) sync* {
     final choices = [
       option,
       ...runner.options.where(
-        (candidate) => candidate.isCorrect && candidate.id != option.id,
+        (candidate) =>
+            act0RunnerOptionIsPreferredV1(candidate) &&
+            candidate.id != option.id,
       ),
     ];
     final sizes = {

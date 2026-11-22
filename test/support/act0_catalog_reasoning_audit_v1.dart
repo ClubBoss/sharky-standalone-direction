@@ -47,12 +47,36 @@ bool _saysAction(String text, String? action) {
       RegExp('\\b(?:$words)\\b', caseSensitive: false).hasMatch(text);
 }
 
-bool _mentionsOption(String text, Act0RunnerOptionV1 option) {
+bool _mentionsOption(
+  String text,
+  Act0RunnerOptionV1 option, {
+  Act0RunnerOptionV1? contrast,
+}) {
   final action = catalogActionV1(option.label);
   final label = _normalized(option.label);
-  return action == null
-      ? label.isNotEmpty && ' ${_normalized(text)} '.contains(' $label ')
-      : _saysAction(text, action);
+  final exactLabel =
+      label.isNotEmpty && ' ${_normalized(text)} '.contains(' $label ');
+  if (action == null) return exactLabel;
+  if (!_saysAction(text, action)) return false;
+  if (contrast == null || catalogActionV1(contrast.label) != action)
+    return true;
+
+  final size = _bbMention
+      .firstMatch('${option.label} ${option.amountLabel}')
+      ?.group(1);
+  if (size == null) return exactLabel && label != _normalized(contrast.label);
+  return text
+      .split(RegExp(r'[!?]|(?<!\d)\.|\.(?!\d)'))
+      .any(
+        (clause) =>
+            _saysAction(clause, action) &&
+            _bbMention
+                .allMatches(clause)
+                .any(
+                  (match) =>
+                      double.parse(match.group(1)!) == double.parse(size),
+                ),
+      );
 }
 
 bool _hasTableFact(String text, CatalogDecisionLedgerV1 decision) {
@@ -201,7 +225,7 @@ class CatalogReasoningResultV1 {
     this.stackMatters,
   );
 
-  final Act0DecisionKindV1 kind;
+  final Act0DecisionKindV1? kind;
   final Map<int, Set<String>> findings;
   final bool eligibleShortStack;
   final bool stackMatters;
@@ -214,13 +238,44 @@ CatalogReasoningResultV1? auditCatalogReasoningV1(
   final task = row.task;
   final runner = task.runner;
   final kind = catalogDecisionKindV1(task, row.world.worldNumber);
-  if (kind == null) return null;
   final entry = reasoning[task.taskId];
   final findings = <int, Set<String>>{};
   void flag(int rule, [String? option]) {
     findings.putIfAbsent(rule, () => {}).add(option ?? task.taskId);
   }
 
+  final correct = runner.options.where(act0RunnerOptionIsPreferredV1).toList();
+  for (final option in runner.options) {
+    final text = '${option.feedbackTitle} ${option.feedbackReason}';
+    if (option.quality == Act0FeedbackQualityV1.suboptimal &&
+        entry?.suboptimalKinds[option.id] == null) {
+      flag(36, option.id);
+    }
+    if (option.quality == Act0FeedbackQualityV1.acceptable &&
+        (!RegExp(
+              r'\balso (?:playable|works)\b',
+              caseSensitive: false,
+            ).hasMatch(text) ||
+            !correct.any(
+              (better) => _mentionsOption(text, better, contrast: option),
+            ))) {
+      flag(37, option.id);
+    }
+    if (option.quality == Act0FeedbackQualityV1.coCorrect &&
+        !correct.any(
+          (other) =>
+              other.id != option.id &&
+              other.quality == Act0FeedbackQualityV1.coCorrect &&
+              _mentionsOption(text, other, contrast: option),
+        )) {
+      flag(37, option.id);
+    }
+  }
+  if (kind == null) {
+    return findings.isEmpty
+        ? null
+        : CatalogReasoningResultV1(null, findings, false, false);
+  }
   bool knownPrinciple(String id) =>
       (act0PrinciplesV1[id] ?? 99) <= row.world.worldNumber;
   if (entry == null ||
@@ -256,13 +311,17 @@ CatalogReasoningResultV1? auditCatalogReasoningV1(
   }
 
   final decision = CatalogDecisionLedgerV1(runner.table);
-  final correct = runner.options.where((option) => option.isCorrect).toList();
   for (final option in correct) {
     final text = option.feedbackReason;
     if (!_cause.hasMatch(text) || !_hasTableFact(text, decision))
       flag(28, option.id);
-    if (alternative == null || !_mentionsOption(text, alternative))
+    final compared = alternative?.id == option.id
+        ? correct.where((other) => other.id != option.id).singleOrNull
+        : alternative;
+    if (compared == null ||
+        !_mentionsOption(text, compared, contrast: option)) {
       flag(29, option.id);
+    }
     if (decision.facingWager &&
         ((entry?.opponentRead?.trim().isEmpty ?? true) ||
             !_response.hasMatch(_withoutBbAmounts(text)))) {
@@ -273,7 +332,9 @@ CatalogReasoningResultV1? auditCatalogReasoningV1(
     final text = option.feedbackReason;
     if ((option.quality == Act0FeedbackQualityV1.wrong ||
             option.quality == Act0FeedbackQualityV1.suboptimal) &&
-        !correct.any((better) => _mentionsOption(text, better)) &&
+        !correct.any(
+          (better) => _mentionsOption(text, better, contrast: option),
+        ) &&
         !_loss.hasMatch(text)) {
       flag(31, option.id);
     }
@@ -323,7 +384,7 @@ Map<String, Object> catalogReasoningBaselineV1() {
     'findings_by_world': {
       for (final world in byWorld.entries)
         world.key: {
-          for (var rule = 26; rule <= 34; rule++)
+          for (final rule in [26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37])
             if (world.value['$rule'] case final ids?)
               '$rule': ids.toSet().toList()..sort(),
         },

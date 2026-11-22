@@ -33,9 +33,10 @@ void main() {
     final byWorld = <String, Map<String, int>>{};
     for (final row in reasoningCatalogRowsV1) {
       final audit = auditCatalogReasoningV1(row);
-      if (audit == null) continue;
+      final kind = audit?.kind;
+      if (audit == null || kind == null) continue;
       final task = row.task;
-      final decision = audit.kind == Act0DecisionKindV1.table
+      final decision = kind == Act0DecisionKindV1.table
           ? CatalogDecisionLedgerV1(task.runner.table)
           : null;
       final copy = auditDecisionCopyV1(row).toList();
@@ -43,7 +44,7 @@ void main() {
       void count(String key) =>
           summary.update(key, (value) => value + 1, ifAbsent: () => 1);
       count('decisions');
-      count(audit.kind.name);
+      count(kind.name);
       if (audit.eligibleShortStack) count('effective_stack_below_50_bb');
       if (audit.stackMatters) count('short_stack_matters');
       for (final rule in audit.findings.keys) {
@@ -56,7 +57,7 @@ void main() {
         'world': row.world.worldNumber,
         'lessonId': row.lesson.lessonId,
         'taskId': task.taskId,
-        'kind': audit.kind.name,
+        'kind': kind.name,
         'options': [
           for (final option in task.runner.options)
             {

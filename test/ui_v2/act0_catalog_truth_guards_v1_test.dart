@@ -74,16 +74,17 @@ CatalogTask _withRunner(
 
 Act0RunnerOptionV1 _withOptionReason(
   Act0RunnerOptionV1 option,
-  String reason,
-) => Act0RunnerOptionV1(
+  String reason, {
+  Act0FeedbackQualityV1? quality,
+}) => Act0RunnerOptionV1(
   id: option.id,
   label: option.label,
   amountLabel: option.amountLabel,
   seatId: option.seatId,
-  isCorrect: option.isCorrect,
+  isCorrect: quality?.passes ?? option.isCorrect,
   preferredLabel: option.preferredLabel,
   betterAnswerLabel: option.betterAnswerLabel,
-  quality: option.quality,
+  quality: quality ?? option.quality,
   feedbackTitle: option.feedbackTitle,
   feedbackReason: reason,
   repairFocusSeatIds: option.repairFocusSeatIds,
@@ -1133,7 +1134,7 @@ void main() {
     );
   });
 
-  test('G1·26–G1·35 reasoning baseline admits no regressions', () {
+  test('G1·26–G1·37 reasoning baseline admits no regressions', () {
     final file = File(_qualityBaselinePath);
     final baseline =
         jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
@@ -1298,6 +1299,7 @@ void main() {
       String? assumption,
       double? edge,
       bool stackMatters = false,
+      Map<String, Act0SuboptimalKindV1> suboptimalKinds = const {},
     }) => Act0DecisionReasoningV1(
       taskId: taskId,
       kind: Act0DecisionKindV1.table,
@@ -1308,11 +1310,13 @@ void main() {
       preChoiceAssumption: assumption,
       edgeBb: edge,
       stackMatters: stackMatters,
+      suboptimalKinds: suboptimalKinds,
     );
 
     CatalogReasoningResultV1 audit(
       Act0DecisionReasoningV1 fields, {
       Map<String, String> copy = const {},
+      Map<String, Act0FeedbackQualityV1> grades = const {},
     }) => auditCatalogReasoningV1(
       _withRunner(
         row,
@@ -1325,6 +1329,7 @@ void main() {
                     (option.isCorrect
                         ? 'Fold because an 8 BB call costs too much and CO continues with strong hands.'
                         : 'Fold to save chips.'),
+                quality: grades[option.id],
               ),
           ],
         ),
@@ -1437,6 +1442,94 @@ void main() {
       expect(audit(reasoning()).stackMatters, isFalse);
       expect(audit(reasoning(stackMatters: true)).stackMatters, isTrue);
     });
+
+    test('36 requires a meaning for each suboptimal option', () {
+      const grade = Act0FeedbackQualityV1.suboptimal;
+      expect(
+        audit(reasoning(), grades: {call.id: grade}).findings[36],
+        contains(call.id),
+      );
+      expect(
+        audit(
+          reasoning(
+            suboptimalKinds: {call.id: Act0SuboptimalKindV1.clearlyWorse},
+          ),
+          grades: {call.id: grade},
+        ).findings,
+        isNot(contains(36)),
+      );
+    });
+    test('37 acceptable explains that it works and names the best action', () {
+      final grades = {call.id: Act0FeedbackQualityV1.acceptable};
+      expect(
+        audit(
+          reasoning(),
+          grades: grades,
+          copy: {call.id: 'Also playable. You save chips.'},
+        ).findings[37],
+        contains(call.id),
+      );
+      expect(
+        audit(
+          reasoning(),
+          grades: grades,
+          copy: {call.id: 'Fold is a bit better.'},
+        ).findings[37],
+        contains(call.id),
+      );
+      expect(
+        audit(
+          reasoning(),
+          grades: grades,
+          copy: {call.id: 'Also works. Fold is a bit better.'},
+        ).findings,
+        isNot(contains(37)),
+      );
+    });
+    test('37 each co-correct option names the other action', () {
+      final grades = {
+        correct.id: Act0FeedbackQualityV1.coCorrect,
+        call.id: Act0FeedbackQualityV1.coCorrect,
+      };
+      final copy = {
+        correct.id: 'Calling also works at this price.',
+        call.id: 'Both work here.',
+      };
+      expect(
+        audit(reasoning(edge: 0), grades: grades, copy: copy).findings[37],
+        {call.id},
+      );
+      copy[call.id] = 'Folding also works here.';
+      expect(
+        audit(reasoning(edge: 0), grades: grades, copy: copy).findings,
+        isNot(contains(37)),
+      );
+    });
+  });
+
+  test('G1·29 distinguishes the size when both choices bet', () {
+    final row = _catalogRow('w4_protection_small_denial');
+    final options = row.task.runner.options;
+    final correct = options.firstWhere((option) => option.isCorrect);
+    final alternative = options.firstWhere(
+      (option) => option.label == 'Bet 4 BB',
+    );
+    final reasoning = {
+      row.task.taskId: Act0DecisionReasoningV1(
+        taskId: row.task.taskId,
+        kind: Act0DecisionKindV1.table,
+        principleId: 'smallest_size_same_job',
+        bestAlternativeOptionId: alternative.id,
+        edgeMechanism: Act0EdgeMechanismV1.cheaperSameResult,
+      ),
+    };
+    bool flags(String text) => auditCatalogReasoningV1(
+      _withDecisionCopy(row, {correct.id: text}),
+      reasoning: reasoning,
+    )!.findings.containsKey(29);
+
+    expect(flags('Bet 2 BB here.'), isTrue);
+    expect(flags('Bet 2 BB instead of 4 BB.'), isFalse);
   });
 
   test('G1·39–40 catches the W3 hero mismatches, not chart references', () {

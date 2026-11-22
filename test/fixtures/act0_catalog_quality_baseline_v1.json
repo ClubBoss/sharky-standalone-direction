@@ -282,6 +282,11 @@
           "actions_legal_context|call",
           "spaced_review_check_river_v1|call",
           "spaced_review_check_turn_v1|call"
+        ],
+        "36": [
+          "cards_ranks_suits_premium_decision|call",
+          "first_table_guide_first_decision|call",
+          "first_table_guide_route_roles|practice"
         ]
       },
       "world_2": {
@@ -410,6 +415,12 @@
         ],
         "34": [
           "w2_narrow_three_bet_fold|call"
+        ],
+        "36": [
+          "apply_btn_open|call",
+          "apply_hj_decision|call",
+          "continue_or_let_go_medium_open|call",
+          "discipline_checkpoint_checkpoint_table_discipline|maybe_limp"
         ]
       },
       "world_3": {
@@ -512,6 +523,15 @@
           "w3_play_from_blinds_small_blind_medium_fold|raise",
           "w3_play_from_blinds_small_blind_medium_raise|call",
           "w3_play_from_blinds_small_blind_raise|call"
+        ],
+        "36": [
+          "button_advantage_button_open|call",
+          "position_apply_btn_open|call",
+          "position_apply_late_open|call",
+          "position_checkpoint_position_checkpoint_late_open|call",
+          "position_checkpoint_position_checkpoint_review|call",
+          "same_hand_different_seat_same_hand_late_open|call",
+          "same_hand_different_seat_w3_same_hand_open|call"
         ]
       },
       "world_4": {
@@ -608,11 +628,22 @@
           "spaced_review_w4_why_bets_happen_board_cards_v1|check",
           "w4_bad_bluff|pot_bet",
           "w4_bad_price_fold|call",
+          "w4_cheap_price_marginal_call|call_ignore_price",
           "w4_checkpoint_table_price|call_ignore_price",
+          "w4_min_raise_preflop|four_bb",
           "w4_protection_bet|check",
           "w4_protection_small_denial|check",
           "w4_purpose_collect_value|check",
           "w4_value_missed|check"
+        ],
+        "36": [
+          "w4_bad_price_fold|fold_ignore_price",
+          "w4_cheap_price_marginal_call|call_ignore_price",
+          "w4_checkpoint_price|call_ignore_price",
+          "w4_checkpoint_review|size_only",
+          "w4_checkpoint_table_price|call_ignore_price",
+          "w4_good_price_call|call_ignore_price",
+          "w4_protection_bet|bet_pot"
         ]
       },
       "world_5": {
@@ -665,6 +696,11 @@
           "outs_improvement_w5_table_outs_flush_transfer|call_draw_alone",
           "outs_improvement_w5_table_outs_flush_transfer|price_only",
           "outs_improvement_w5_table_outs_straight_transfer|blank_turn_killed"
+        ],
+        "36": [
+          "outs_improvement_w5_table_outs_flush_transfer|call_draw_alone",
+          "outs_improvement_w5_table_outs_straight_transfer|fold_wrong_out_count",
+          "turn_river_changes_w5_board_checkpoint|call_cheap_only"
         ]
       },
       "world_6": {
@@ -721,15 +757,28 @@
         ],
         "31": [
           "range_checkpoint_pressure|value",
+          "range_checkpoint_value|bluff",
           "range_checkpoint_value|missed",
           "w6_bluff_candidate|value",
           "w6_continuation_bet_wet_check|bet_large",
           "w6_continuation_bet_wet_check|bet_small",
           "w6_missed_dry_board|bluff",
           "w6_missed_dry_board|value",
+          "w6_table_value_line_transfer|bet_bluff",
           "w6_turn_pressure_shift_transfer|barrel_big",
+          "w6_value_range_action|bet_bluff",
           "w6_wet_board_repair|nothing_changed",
           "w6_wet_board_repair|smaller_same_story"
+        ],
+        "36": [
+          "range_checkpoint_pressure|missed",
+          "range_checkpoint_review|range_plus_pot_size",
+          "w6_bluff_candidate|missed",
+          "w6_continuation_bet_value_size|bet_one_five",
+          "w6_missed_dry_board|bluff",
+          "w6_missed_hand_action|always_barrel",
+          "w6_table_bucket_notice|preflop_only",
+          "w6_turn_pressure_shift_transfer|barrel_big"
         ]
       },
       "world_7": {
@@ -838,9 +887,16 @@
           "w7_ajs_btn_25bb_transfer|cleaner_shallow"
         ],
         "31": [
+          "w7_20bb_wider|100bb",
           "w7_20bb_wider|same",
           "w7_ajs_btn_100bb_transfer|same_clean_call",
           "w7_format_table_notice|open_same"
+        ],
+        "36": [
+          "w7_table_effective_notice|total_138",
+          "w7_top_pair_spr2_transfer|ignore_stack_pressure",
+          "w7_top_pair_spr8_transfer|stack_irrelevant",
+          "w8_spr_value_size|two"
         ]
       },
       "world_9": {
@@ -931,6 +987,17 @@
           "w9_m_ratio_yellow_zone|all_in_to_18_bb",
           "w9_m_ratio_yellow_zone|raise_to_2_bb",
           "w9_medium_stack_tighten|call_16_bb"
+        ],
+        "36": [
+          "spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1|raise_to_3_bb",
+          "w9_big_stack_leverage|raise_to_3_bb",
+          "w9_bubble_recap|stack_size_and_cards_without_the_payouts",
+          "w9_checkpoint_table_notice|raise_to_3_bb",
+          "w9_m_ratio_ante_cost|1_6_bb",
+          "w9_m_ratio_green_zone|raise_to_3_bb",
+          "w9_m_ratio_recap|use_m_and_cards_but_skip_the_payout_context",
+          "w9_m_ratio_table_window_transfer|green_zone",
+          "w9_survival_recap|avoid_thin_calls_but_skip_sound_steals"
         ]
       },
       "world_10": {
@@ -1073,6 +1140,7 @@
           "w10_underbluff_second|fold"
         ],
         "31": [
+          "spaced_review_w10_adjust_one_lever_board_cards_v1|bet_18_bb",
           "spaced_review_w10_adjust_one_lever_board_cards_v1|bet_3_bb",
           "spaced_review_w10_exploit_guardrails_misread_player_adjustment_v1|all_in_to_60_bb",
           "spaced_review_w10_player_adjustment_checkpoint_hero_cards_board_pot_v1|all_in_to_57_5_bb",
@@ -1080,17 +1148,39 @@
           "spaced_review_w10_player_adjustment_checkpoint_misread_player_adjustment_v1|all_in_to_60_bb",
           "spaced_review_w10_player_adjustment_checkpoint_pot_to_call_v1|raise_to_25_bb",
           "spaced_review_w10_player_type_basics_hero_cards_board_pot_v1|raise_to_22_bb",
+          "spaced_review_w10_player_type_basics_misread_player_adjustment_v1|raise_to_5_bb",
           "w10_checkpoint_guardrail_line|call_12_bb",
           "w10_guardrail_sample_size|all_in_to_52_bb",
+          "w10_guardrail_sample_size|raise_to_3_bb",
+          "w10_outs_and_turn_price|call_nine_outs",
           "w10_overaggressive_tag|raise_to_12_bb",
           "w10_station_no_bluff_river|bet_4_bb",
+          "w10_table_value_vs_caller_transfer|bet_18_bb",
           "w10_table_value_vs_caller_transfer|bet_2_bb",
           "w10_top_pair_turn_raise|all_in_to_55_bb",
           "w10_underbluff_second|raise_to_30_bb",
+          "w10_vs_caller_value_heavier|bet_15_bb",
           "w10_vs_caller_value_heavier|bet_2_bb",
           "w10_vs_nit_open_wider|fold",
           "w10_vs_sticky_defender_tighten_steals|raise_to_2_bb",
           "w10_vs_sticky_defender_tighten_steals|raise_to_4_bb"
+        ],
+        "36": [
+          "spaced_review_w10_adjust_one_lever_board_cards_v1|bet_3_bb",
+          "spaced_review_w10_adjust_one_lever_pot_to_call_v1|call_1_bb",
+          "spaced_review_w10_exploit_guardrails_misread_player_adjustment_v1|raise_to_4_bb",
+          "spaced_review_w10_player_adjustment_checkpoint_misread_player_adjustment_v1|raise_to_4_bb",
+          "spaced_review_w10_player_type_basics_misread_player_adjustment_v1|raise_to_5_bb",
+          "w10_checkpoint_lever_line|raise_to_6_bb",
+          "w10_checkpoint_tag_line|call_1_bb",
+          "w10_guardrail_sample_size|raise_to_3_bb",
+          "w10_isolate_limper_bb|check",
+          "w10_loose_passive_tag|call_1_bb",
+          "w10_nit_tag|raise_to_4_bb",
+          "w10_outs_and_turn_price|call_nine_outs",
+          "w10_table_value_vs_caller_transfer|bet_2_bb",
+          "w10_vs_caller_value_heavier|bet_2_bb",
+          "w10_vs_nit_open_wider|raise_to_5_bb"
         ]
       },
       "world_11": {
@@ -1222,6 +1312,28 @@
           "w11_spr_high_top_pair|call_9_bb",
           "w11_spr_high_top_pair|raise_to_35_bb",
           "w11_trigger_bad_price_fold|all_in_to_32_5_bb",
+          "w11_trigger_small_price_continue|raise_to_10_bb"
+        ],
+        "36": [
+          "w11_bb_defend_price|raise_to_8_bb",
+          "w11_bb_isolate_limp|check",
+          "w11_checkpoint_mixed_table_line|check",
+          "w11_checkpoint_plan_line|call_2_bb",
+          "w11_checkpoint_review_line|raise_to_14_bb",
+          "w11_checkpoint_trigger_line|raise_to_12_bb",
+          "w11_day7_bankroll|nl5",
+          "w11_day7_bb_decision|raise_to_10_bb",
+          "w11_day7_sb_decision|call_2_bb",
+          "w11_day7_trigger_read|bet_6_bb",
+          "w11_multiway_dirty_outs|fold",
+          "w11_plan_focus_choice|blinds_bluffs_calls_and_bet_sizes",
+          "w11_plan_table_focus_transfer|play_with_no_cue_and_sort_it_out_later",
+          "w11_review_pick_leak|the_single_missed_value_bet",
+          "w11_sb_3bet_value|call_2_bb",
+          "w11_sb_isolate_limp|call_0_5_bb",
+          "w11_session_plan_recap|a_long_list_of_new_plans",
+          "w11_trigger_overcall_flop|check",
+          "w11_trigger_overfold_blinds|raise_to_4_bb",
           "w11_trigger_small_price_continue|raise_to_10_bb"
         ]
       },
@@ -1356,6 +1468,8 @@
         ],
         "31": [
           "w12_after_bad_beat_reset|all_in_to_53_5_bb_to_win_back_chips",
+          "w12_after_mistake_reset|raise_to_3_bb",
+          "w12_assertive_not_ego|raise_to_3_bb",
           "w12_checkpoint_discipline_line|raise_to_40_bb",
           "w12_checkpoint_reset_line|call_3_bb_to_win_chips_back",
           "w12_checkpoint_review|all_in_to_53_25_bb",
@@ -1367,6 +1481,19 @@
           "w12_revenge_raise_trap|all_in_to_36_75_bb",
           "w12_revenge_raise_trap|raise_to_7_bb",
           "w12_river_draw_missed|bet_12_bb"
+        ],
+        "36": [
+          "w12_after_bad_beat_reset|check_from_fear_of_another_loss",
+          "w12_after_mistake_reset|raise_to_3_bb",
+          "w12_assertive_not_ego|raise_to_3_bb",
+          "w12_checkpoint_full_loop_line|raise_to_8_bb_to_feel_in_control",
+          "w12_checkpoint_review|check",
+          "w12_confidence_recap|the_choice_to_avoid_that_player",
+          "w12_day7_ego_value|check_to_avoid_bb",
+          "w12_day7_tilt_after_error|call_2_bb",
+          "w12_day7_tilt_badbeat|raise_to_7_bb",
+          "w12_revenge_raise_trap|raise_to_7_bb",
+          "w12_river_value_vs_caller|check"
         ]
       }
     },
