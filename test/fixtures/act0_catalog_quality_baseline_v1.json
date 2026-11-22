@@ -5,15 +5,15 @@
     "12.two_option_w1_w5": 231,
     "13.intro_over_100_words": 79,
     "14.duplicate_theory_in_lesson": 244,
-    "15.internal_jargon": 474,
-    "16.extreme_wrong_option": 416,
-    "17.single_format_lesson": 65,
+    "15.internal_jargon": 476,
+    "16.extreme_wrong_option": 418,
+    "17.single_format_lesson": 66,
     "18.same_format_streak": 12,
     "19.lesson_length_corridor": 77,
     "20.hero_qq_per_world": 5,
-    "21.duplicate_wrong_reason": 1187,
+    "21.duplicate_wrong_reason": 1191,
     "22.bet_into_pot": 52,
-    "24.call_equity": 80,
+    "24.call_equity": 81,
     "25.street_stack": 30
   },
   "findings": [
@@ -183,60 +183,20 @@
       "world_5": {},
       "world_6": {},
       "world_7": {
-        "26": [
-          "spaced_review_w7_w7_visible_cards_and_price_board_cards_v1",
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1",
-          "w7_checkpoint_river_card_excludes_hand",
-          "w7_clean_outs_higher_price",
-          "w7_clean_outs_lower_price",
-          "w7_flop_bluff_one_player",
-          "w7_flop_bluff_two_players",
-          "w7_river_one_bluff_of_six",
-          "w7_river_two_bluffs_of_six"
-        ],
-        "27": [
-          "spaced_review_w7_w7_visible_cards_and_price_board_cards_v1",
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1",
-          "w7_checkpoint_river_card_excludes_hand",
-          "w7_clean_outs_higher_price",
-          "w7_clean_outs_lower_price",
-          "w7_flop_bluff_one_player",
-          "w7_flop_bluff_two_players",
-          "w7_river_one_bluff_of_six",
-          "w7_river_two_bluffs_of_six"
-        ],
         "28": [
           "w7_clean_outs_higher_price|choice_2",
           "w7_clean_outs_lower_price|choice_1",
-          "w7_river_one_bluff_of_six|choice_2",
-          "w7_river_two_bluffs_of_six|choice_1"
+          "w7_river_one_bluff_of_six|choice_2"
         ],
         "29": [
-          "spaced_review_w7_w7_visible_cards_and_price_board_cards_v1|choice_0",
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1|fold",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1|call",
-          "w7_checkpoint_river_card_excludes_hand|choice_2",
-          "w7_clean_outs_higher_price|choice_2",
           "w7_clean_outs_lower_price|choice_1",
           "w7_flop_bluff_one_player|choice_1",
-          "w7_flop_bluff_two_players|choice_2",
-          "w7_river_one_bluff_of_six|choice_2",
-          "w7_river_two_bluffs_of_six|choice_1"
+          "w7_river_one_bluff_of_six|choice_2"
         ],
         "30": [
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1|fold",
-          "spaced_review_w7_w7_visible_cards_range_checkpoint_hero_cards_board_pot_v1|call",
-          "w7_checkpoint_river_card_excludes_hand|choice_2",
           "w7_clean_outs_higher_price|choice_2",
           "w7_clean_outs_lower_price|choice_1",
-          "w7_river_one_bluff_of_six|choice_2",
-          "w7_river_two_bluffs_of_six|choice_1"
-        ],
-        "31": [
-          "spaced_review_w7_w7_visible_cards_and_price_pot_to_call_v1|call",
-          "w7_checkpoint_river_card_excludes_hand|choice_1"
+          "w7_river_one_bluff_of_six|choice_2"
         ]
       },
       "world_8": {
@@ -910,9 +870,11 @@
         "w6_check_line_raise_short"
       ],
       "world_7": [
+        "spaced_review_w7_visible_card_call_v1",
         "w7_checkpoint_river_card_excludes_hand",
         "w7_clean_outs_higher_price",
         "w7_clean_outs_lower_price",
+        "w7_read_visible_card_call",
         "w7_river_one_bluff_of_six",
         "w7_river_two_bluffs_of_six"
       ],
@@ -1006,6 +968,9 @@
       ],
       "world_6": [
         "w6_check_line_raise_short"
+      ],
+      "world_7": [
+        "w7_river_two_bluffs_of_six"
       ]
     }
   },

@@ -2,6 +2,32 @@ part of 'act0_shell_state_v1.dart';
 
 final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
+    7,
+    "w7_visible_cards_range_checkpoint",
+    "pot_to_call",
+    _day7PostflopV1(
+      'co',
+      'Th 9d',
+      'Ts 8c 5d 2h Kc',
+      openBb: 3.75,
+      betBb: 4,
+      opponentStartingBb: 7.75,
+      opponentAllIn: true,
+      showTurn: true,
+    ),
+    caption:
+        "Before the river, BB could bet K♣ T♦, Q♥ T♦, T♣ 7♦ or J♥ 9♥. Give all hands still possible equal weight.",
+    question: "Call or fold?",
+    choices: const ["Call", "Fold"],
+    correct: 0,
+    reason:
+        "BB bets one better ten and two hands you beat after the K♣ removes king-ten. Call because two wins in three clear the 25% price, so folding misses a gain.",
+    wrongReasons: const {
+      1: "Folding gives up two winning matchups out of the three left. A 4 BB call needs only 25%.",
+    },
+    savedTaskId: "spaced_review_w7_visible_card_call_v1",
+  ),
+  _day7ExampleV1(
     1,
     'chips_in_the_middle',
     'pot_to_call',
@@ -1888,7 +1914,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 0,
     reason:
-        'A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.',
+        "BB folds 40%, so a 2 BB bet earns 2.4 BB from folds and loses 1.2 BB to calls on average. Checking earns zero under this model.",
     wrongReasons: const {
       1: 'Checking returns zero in this model. It gives up a bet whose wins from folds exceed its losses when BB calls.',
       2: 'The folds earn 2.4 BB on average from the 6 BB pot. Losing the 2 BB bet on calls costs 1.2 BB on average, so those parts do not cancel.',
@@ -1905,9 +1931,9 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Call', 'Fold', 'Raise'],
     correct: 1,
     reason:
-        'Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.',
+        "HJ bets 2 BB with two pair under the model. Fold because the heart that pairs the king gives HJ a full house, leaving eight of 44 winners against a 20% call price.",
     wrongReasons: const {
-      0: 'One heart makes HJ a full house on this turn board. Eight winning rivers out of 44 fall short of the 20% needed for the 2 BB call.',
+      0: "One heart makes HJ a full house. Calling costs 2 BB with eight winners among 44 rivers, short of the 20% you need.",
       2: 'HJ has two pair on the turn and does not fold to a raise in this example. Adding chips increases the cost of drawing to eight winning rivers.',
     },
   ),
@@ -1923,7 +1949,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     choices: const ['Fold', 'Call', 'The price requires two wins out of three'],
     correct: 1,
     reason:
-        'Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.',
+        "HJ bets two stronger queens and ten-nine high equally often. One win in three clears the 29% needed to call 4 BB, so folding gives up about two thirds of a blind.",
     wrongReasons: const {
       0: 'Folding against ten-nine gives up a winning pair of queens. That hand is one third of this range, enough to justify the quoted call price.',
       2: 'Two wins in three would be about 67%. The call needs about 29%, so one win in three is already enough.',

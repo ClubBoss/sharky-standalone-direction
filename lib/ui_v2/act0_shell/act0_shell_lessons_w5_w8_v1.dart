@@ -1993,11 +1993,81 @@ final _w7RangeCheckpointV1 = _w7AppliedLessonV1(
       range: 'K♥ Q♦, K♦ Q♣, A♥ Q♦, A♦ Q♣, J♥ T♥ or A♠ 8♠',
       correctAt: 0,
       feedback:
-          'You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.',
+          "BB bets all-in with two bluffs among six equally likely hands. Call because two wins in six clear the 25% price, and folding gives up about 1.33 BB.",
       wrongFeedback:
           'Folding gives up wins against jack-ten and ace-eight. Those two of the six hands are enough to clear the 25% call price.',
     ),
     _w7UnseenRiverTaskV1(),
+    Act0LessonTaskV1(
+      taskId: "w7_read_visible_card_guided",
+      title: "Read the possible value hands",
+      phase: Act0LessonPhaseV1.drill,
+      rewardXp: 8,
+      stepKind: Act0LessonStepKindV1.practice,
+      runner:
+          _day7ExampleV1(
+            7,
+            "w7_visible_cards_range_checkpoint",
+            "w7_read_visible_card_guided",
+            _day7PostflopV1(
+              'co',
+              'Jh Jd',
+              'Js 9c 7c 4h 2s',
+              openBb: 3.75,
+              betBb: 5,
+              opponentStartingBb: 8.75,
+              opponentAllIn: true,
+              showTurn: true,
+            ),
+            caption:
+                "BB can bet T♣8♣, 9♥9♦ or 2♠2♦ if the cards are available.",
+            question: "Which possible hand did the river remove?",
+            choices: const ["T♣8♣", "2♠2♦", "9♥9♦"],
+            correct: 1,
+            reason:
+                "BB cannot bet the listed twos because the river is 2♠. Ten-eight remains possible and can bet a straight.",
+            wrongReasons: const {
+              0: "Ten-eight can still bet a straight. Removing it would miss a hand that beats your jacks.",
+              2: "Nines can still bet a lower set. Removing them would miss a hand your set beats.",
+            },
+          ).task.runner.copyWith(
+            hint: "Find the river card in one of the possible hands.",
+            hintPolicy: Act0HintPolicyV1.always,
+          ),
+    ),
+    Act0LessonTaskV1(
+      taskId: "w7_read_visible_card_call",
+      title: "Use the hands left in range",
+      phase: Act0LessonPhaseV1.drill,
+      rewardXp: 8,
+      stepKind: Act0LessonStepKindV1.practice,
+      taskFamily: Act0TaskFamilyV1.transfer,
+      runner: _day7ExampleV1(
+        7,
+        "w7_visible_cards_range_checkpoint",
+        "w7_read_visible_card_call",
+        _day7PostflopV1(
+          'co',
+          'Qh Jd',
+          'Qs 9c 7d 4h Ac',
+          openBb: 3.75,
+          betBb: 4,
+          opponentStartingBb: 7.75,
+          opponentAllIn: true,
+          showTurn: true,
+        ),
+        caption:
+            "Before the river, BB could bet A♣ Q♦, K♥ Q♦, Q♣ T♦ or T♥ 8♥. Give all hands still possible equal weight.",
+        question: "What is your decision?",
+        choices: const ["Fold", "Call"],
+        correct: 1,
+        reason:
+            "BB bets one better queen and two hands you beat after the A♣ removes ace-queen. Call because two wins in three clear the 25% price, and folding misses that gain.",
+        wrongReasons: const {
+          0: "Folding gives up two wins in three against the hands that can remain. Calling 4 BB only needs 25%.",
+        },
+      ).task.runner,
+    ),
   ],
 );
 
@@ -2020,12 +2090,8 @@ Act0LessonTaskV1 _w7UnseenRiverTaskV1() => _w7AppliedTaskV1(
   feedback: const [
     'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
         'If BB has a pair of nines, you win. The three ten-eight hands '
-        'make a straight. One win in four (25%) is below the roughly '
-        '28% needed to call 5 BB for a final pot of 18 BB.',
-    'The 2♠ is on the board. BB cannot have a pair of twos from that list. '
-        'If BB has a pair of nines, you win. The three ten-eight hands '
-        'make a straight. One win in four (25%) is below the roughly '
-        '28% this call needs.',
+        'make a straight. Calling costs 5 BB and needs about 28%, so fold with just one win in four.',
+    "BB bets three straights and a lower set once the river 2♠ removes the listed pocket twos. Fold because one win in four falls short of the 28% needed to call 5 BB.",
   ],
   family: Act0TaskFamilyV1.transfer,
   kind: Act0LessonStepKindV1.proveIt,

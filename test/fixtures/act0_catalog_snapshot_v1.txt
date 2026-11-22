@@ -1,4 +1,4 @@
-SHARKY POKER — EN learning content, 474 tasks · W1–W12
+SHARKY POKER — EN learning content, 476 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
@@ -5038,6 +5038,7 @@ Q: BB checks. Everyone folds to a 3 BB bet 40% of the time. For this exercise, c
 HINT [theoryOnly]: (none)
 TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 6.5 BB | Seat CO | Active co | Decision co | Center Flop decision | Facts high card, rainbow, backdoor straight
 EFFECTIVE: BB 97
+REASONING: principle folds_better · alt choice_2 · edge foldsBetter 0.8 BB · stack_matters false · assumption Everyone folds to a 3 BB bet 40% of the time.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7h 6h stack 97 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB checks
   + [correct] Bet 3 BB — That fits the table. With one opponent, the bet wins 6.5 BB on the 40% of hands where they fold and loses 3 BB otherwise. That is a gain of 0.8 BB on average in this example.
@@ -5052,6 +5053,7 @@ Q: SB and BB both check. Everyone folds to a 3 BB bet 16% of the time. For this 
 HINT [theoryOnly]: (none)
 TABLE: Flop | You 7h 6h | Board As 9d 3c | Pot 9 BB | Seat CO | Active co | Decision co | Center Flop decision | Facts high card, rainbow, backdoor straight
 EFFECTIVE: SB 97 · BB 97
+REASONING: principle folds_better · alt choice_1 · edge keepsWorseIn 1.08 BB · stack_matters false · assumption Everyone folds to a 3 BB bet 16% of the time.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO 7h 6h stack 97 BB | BTN folded dealer stack 100 BB | SB stack 97 BB | BB stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB calls 2.5 BB more · BB calls 2 BB more · Flop: SB checks · BB checks
   - [wrong] Bet 3 BB — Check what can still win. With SB and BB both in, the 3 BB bet loses money on average. It wins 9 BB on 16% of hands and costs 3 BB on the rest.
@@ -5080,6 +5082,7 @@ HINT [theoryOnly]: (none)
 TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 11 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 3
 POTS: main 8 (BB, BTN)
+REASONING: principle price_vs_equity · alt choice_2 · edge priceBeatsEquity 0.81818182 BB · stack_matters false · assumption Suppose BB holds K♣ Q♠.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 3 BB
   + [correct] Call — That fits the table. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
@@ -5093,6 +5096,7 @@ HINT [theoryOnly]: (none)
 TABLE: Turn | You Ah 8h | Board Kh 7h 2c 4d | Pot 14 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Center Turn decision | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 6
 POTS: main 8 (BB, BTN)
+REASONING: principle price_vs_equity · alt choice_1 · edge equityBelowPrice 0.54545455 BB · stack_matters false · assumption Suppose BB holds K♣ Q♠.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 6 BB
   - [wrong] Call — Check what can still win. The draw wins on the same 12 of 44 rivers. Paying 6 BB now requires 30%, so the call risks more than this chance is worth.
@@ -5108,6 +5112,7 @@ HINT [theoryOnly]: (none)
 TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts one pair, top pair
 EFFECTIVE: BB 4
 POTS: main 8 (BB, BTN)
+REASONING: principle price_vs_equity · alt choice_1 · edge equityBelowPrice 1.33333 BB · stack_matters false · assumption could have any of these equally likely hands
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 4 BB
   - [wrong] Call — Check what can still win. Your queen-jack beats just the jack-ten bluff. Paying 4 BB with one win in six fails the 25% threshold and loses chips on average.
@@ -5123,9 +5128,10 @@ HINT [theoryOnly]: (none)
 TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts one pair, top pair
 EFFECTIVE: BB 4
 POTS: main 8 (BB, BTN)
+REASONING: principle price_vs_equity · alt choice_2 · edge priceBeatsEquity 1.33333 BB · stack_matters true · assumption could have any of these equally likely hands
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 4 BB
-  + [correct] Call — That fits the table. You win if BB has J♥ T♥ or A♠ 8♠. Two of six is about 33%, more than the 25% this same call needs.
+  + [correct] Call — That fits the table. BB bets all-in with two bluffs among six equally likely hands. Call because two wins in six clear the 25% price, and folding gives up about 1.33 BB.
     FEEDBACK TABLE: River | You Qs Jd | Board Qh 9c 5s 4d 2c | Pot 12 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts one pair, top pair
   - [wrong] Fold — Check what can still win. Folding gives up wins against jack-ten and ace-eight. Those two of the six hands are enough to clear the 25% call price.
     BETTER ANSWER: Call
@@ -5138,13 +5144,44 @@ HINT [theoryOnly]: (none)
 TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Center River decision | Facts set, pocket pair
 EFFECTIVE: BB 5
 POTS: main 8 (BB, BTN)
+REASONING: principle combos_and_blockers · alt choice_1 · edge equityBelowPrice 0.5 BB · stack_matters false · assumption Give all hands that are still possible equal weight.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh Jd stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB checks · BTN checks · River: BB goes all-in for 5 BB
-  - [wrong] Call — Check what can still win. The 2♠ is on the board. BB cannot have a pair of twos from that list. If BB has a pair of nines, you win. The three ten-eight hands make a straight. One win in four (25%) is below the roughly 28% needed to call 5 BB for a final pot of 18 BB.
+  - [wrong] Call — Check what can still win. The 2♠ is on the board. BB cannot have a pair of twos from that list. If BB has a pair of nines, you win. The three ten-eight hands make a straight. Calling costs 5 BB and needs about 28%, so fold with just one win in four.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts set, pocket pair
-  + [correct] Fold — That fits the table. The 2♠ is on the board. BB cannot have a pair of twos from that list. If BB has a pair of nines, you win. The three ten-eight hands make a straight. One win in four (25%) is below the roughly 28% this call needs.
+  + [correct] Fold — That fits the table. BB bets three straights and a lower set once the river 2♠ removes the listed pocket twos. Fold because one win in four falls short of the 28% needed to call 5 BB.
     FEEDBACK TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Center River decision | Facts set, pocket pair
+
+TASK w7_read_visible_card_guided [drill] Read the possible value hands
+CAPTION: BB can bet T♣8♣, 9♥9♦ or 2♠2♦ if the cards are available.
+Q: Which possible hand did the river remove?
+HINT [always]: Find the river card in one of the possible hands.
+TABLE: River | You Jh Jd | Board Js 9c 7c 4h 2s | Pot 13 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts set, pocket pair
+REASONING: principle combos_and_blockers · alt choice_0 · edge processRule · stack_matters false · assumption BB can bet T♣8♣, 9♥9♦ or 2♠2♦ if the cards are available.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh Jd stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 5 BB
+  - [wrong] T♣8♣ — Look again. Ten-eight can still bet a straight. Removing it would miss a hand that beats your jacks.
+    BETTER ANSWER: 2♠2♦
+  + [correct] 2♠2♦ — Correct. BB cannot bet the listed twos because the river is 2♠. Ten-eight remains possible and can bet a straight.
+  - [wrong] 9♥9♦ — Look again. Nines can still bet a lower set. Removing them would miss a hand your set beats.
+    BETTER ANSWER: 2♠2♦
+
+TASK w7_read_visible_card_call [drill] Use the hands left in range
+CAPTION: Before the river, BB could bet A♣ Q♦, K♥ Q♦, Q♣ T♦ or T♥ 8♥. Give all hands still possible equal weight.
+Q: What is your decision?
+HINT [hidden]: (none)
+TABLE: River | You Qh Jd | Board Qs 9c 7d 4h Ac | Pot 12 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair
+EFFECTIVE: BB 4
+POTS: main 8 (BB, CO)
+REASONING: principle combos_and_blockers · alt fold · edge priceBeatsEquity 6.66666667 BB · stack_matters false · assumption Before the river, BB could bet A♣ Q♦, K♥ Q♦, Q♣ T♦ or T♥ 8♥. Give all hands still possible equal weight.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qh Jd stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 4 BB
+  - [wrong] Fold — Look again. Folding gives up two wins in three against the hands that can remain. Calling 4 BB only needs 25%.
+    BETTER ANSWER: Call
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 7d 4h Ac | Pot 12 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, middle pair
+  + [correct] Call — Correct. BB bets one better queen and two hands you beat after the A♣ removes ace-queen. Call because two wins in three clear the 25% price, and folding misses that gain.
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 7d 4h Ac | Pot 12 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, middle pair
 
 ===== WORLD 8 · LESSON effective_stack_basics · Effective stack =====
 
@@ -7678,6 +7715,23 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call — Not quite. BB has put in no bet on this street. Trying to call misses the free check that keeps you in.
     BETTER ANSWER: Check
 
+===== WORLD 7 · LESSON w7_visible_cards_range_checkpoint · Range and price checkpoint =====
+
+TASK spaced_review_w7_visible_card_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+CAPTION: Before the river, BB could bet K♣ T♦, Q♥ T♦, T♣ 7♦ or J♥ 9♥. Give all hands still possible equal weight.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Th 9d | Board Ts 8c 5d 2h Kc | Pot 12 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair
+EFFECTIVE: BB 4
+POTS: main 8 (BB, CO)
+REASONING: principle combos_and_blockers · alt fold · edge priceBeatsEquity 6.66666667 BB · stack_matters false · assumption Before the river, BB could bet K♣ T♦, Q♥ T♦, T♣ 7♦ or J♥ 9♥. Give all hands still possible equal weight.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Th 9d stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB all-in 4 BB
+  + [correct] Call — Correct. BB bets one better ten and two hands you beat after the K♣ removes king-ten. Call because two wins in three clear the 25% price, so folding misses a gain.
+  - [wrong] Fold — Look again. Folding gives up two winning matchups out of the three left. A 4 BB call needs only 25%.
+    BETTER ANSWER: Call
+
 ===== WORLD 1 · LESSON chips_in_the_middle · Blinds and the pot =====
 
 TASK spaced_review_w1_chips_in_the_middle_pot_to_call_v1 [drill] Review decision
@@ -9675,9 +9729,10 @@ Q: How does the 2 BB bluff compare with checking in this model?
 HINT [hidden]: (none)
 TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Facts high card, two-tone, backdoor flush
 EFFECTIVE: BB 97.25
+REASONING: principle folds_better · alt choice_1 · edge foldsBetter 1.2 BB · stack_matters false · assumption BB folds 40% to a 2 BB bet.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jh 9s stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks
-  + [correct] Bet earns 1.2 BB on average — Correct. A fold wins the 6 BB pot, worth 2.4 BB on average. Calls lose 2 BB, costing 1.2 BB on average. The difference is positive 1.2 BB.
+  + [correct] Bet earns 1.2 BB on average — Correct. BB folds 40%, so a 2 BB bet earns 2.4 BB from folds and loses 1.2 BB to calls on average. Checking earns zero under this model.
     FEEDBACK TABLE: Flop | You Jh 9s | Board As 6c 2s | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor flush
   - [wrong] Check earns 1.2 BB more — Look again. Checking returns zero in this model. It gives up a bet whose wins from folds exceed its losses when BB calls.
     BETTER ANSWER: Bet earns 1.2 BB on average
@@ -9693,13 +9748,12 @@ Q: Does the price justify calling with the flush draw?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
 EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt call · edge equityBelowPrice 0.181818 BB · stack_matters false · assumption Assume HJ holds a king and a queen, neither a heart.
 SEATS: UTG folded stack 100 BB | HJ stack 95.25 BB bet 2 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ah 8h stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ bets 2 BB
-  - [wrong] Call — Look again. One heart makes HJ a full house on this turn board. Eight winning rivers out of 44 fall short of the 20% needed for the 2 BB call.
+  - [wrong] Call — Look again. One heart makes HJ a full house. Calling costs 2 BB with eight winners among 44 rivers, short of the 20% you need.
     BETTER ANSWER: Fold
-    FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
-  + [correct] Fold — Correct. Eight of 44 rivers win. The heart that pairs the king on the board gives HJ a full house. The 2 BB call needs 20% equity, above eight out of 44.
-    FEEDBACK TABLE: Turn | You Ah 8h | Board Qh 7h 2s Kd | Pot 8 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
+  + [correct] Fold — Correct. HJ bets 2 BB with two pair under the model. Fold because the heart that pairs the king gives HJ a full house, leaving eight of 44 winners against a 20% call price.
   - [wrong] Raise — Look again. HJ has two pair on the turn and does not fold to a raise in this example. Adding chips increases the cost of drawing to eight winning rivers.
     BETTER ANSWER: Fold
 
@@ -9712,11 +9766,12 @@ Q: Does your pair of queens win often enough to pay for this river call?
 HINT [hidden]: (none)
 TABLE: River | You Qd Jc | Board Qh 8s 5d 4c 2h | Pot 10 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 EFFECTIVE: HJ 97.25
+REASONING: principle price_vs_equity · alt fold · edge priceBeatsEquity 0.666667 BB · stack_matters false · assumption king-queen, ace-queen or ten-nine
 SEATS: UTG folded stack 100 BB | HJ stack 93.25 BB bet 4 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qd Jc stack 97.25 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.75 BB · CO folds · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 4 BB
   - [wrong] Fold — Look again. Folding against ten-nine gives up a winning pair of queens. That hand is one third of this range, enough to justify the quoted call price.
     BETTER ANSWER: Call
-  + [correct] Call — Correct. Your pair of queens with a jack kicker beats ten-nine high and loses to the two stronger queens. One win in three clears the 28.57% price for a 4 BB call into 10 BB.
+  + [correct] Call — Correct. HJ bets two stronger queens and ten-nine high equally often. One win in three clears the 29% needed to call 4 BB, so folding gives up about two thirds of a blind.
   - [wrong] The price requires two wins out of three — Look again. Two wins in three would be about 67%. The call needs about 29%, so one win in three is already enough.
     BETTER ANSWER: Call
 
