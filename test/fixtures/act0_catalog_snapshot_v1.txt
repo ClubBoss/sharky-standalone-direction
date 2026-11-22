@@ -1733,7 +1733,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ opens 2.5 BB · CO ac
 
 TASK weak_ace_warning_w3_dominated_intro [theory] Trouble hands
 CAPTION: Some familiar hands are trouble when stronger versions open.
-TEACH: Compare similar hands Broadway ranks are T, J, Q, K, and A. One kind of domination is when two hands share a rank and one has the weaker side card.
+TEACH: Compare similar hands Broadway ranks are T, J, Q, K, and A. In one common case, dominated means you share a rank with another hand and your other card is lower.
 TEACH: Acting after your opponent You are in position when you act after the other player. Acting later gives you information. A weak ace can still lose to a stronger ace.
 Q: What kind of hand needs caution?
 HINT [theoryOnly]: A weak ace can be behind a better ace.
