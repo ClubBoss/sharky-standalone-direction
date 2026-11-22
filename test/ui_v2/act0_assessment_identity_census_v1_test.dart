@@ -149,6 +149,21 @@ void main() {
       expect(choices.last[3], 'wrong', reason: entry.key);
       choices.removeLast();
     }
+    // Verify the authored positions, then restore the historical order for
+    // the earlier application identity fingerprints.
+    const reorderedW6CorrectChoices = <String, String>{
+      'w6_table_bucket_notice': 'bucket_first',
+      'w6_combo_weight_compare': 'ak_more',
+      'range_checkpoint_pressure': 'bluff',
+    };
+    for (final entry in reorderedW6CorrectChoices.entries) {
+      final task = entries.singleWhere((row) => row[2] == entry.key);
+      final choices = task.last as List<List<Object?>>;
+      expect(choices, hasLength(3), reason: entry.key);
+      expect(choices.last[0], entry.value, reason: entry.key);
+      expect(choices.last[2], isTrue, reason: entry.key);
+      choices.insert(1, choices.removeLast());
+    }
     for (final entry in w4AddedOptionQualityV1.entries) {
       final task = entries.singleWhere((row) => row[2] == entry.key);
       final choices = task.last as List<List<Object?>>;
