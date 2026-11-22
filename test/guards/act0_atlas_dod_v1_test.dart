@@ -1,6 +1,6 @@
 // Report: ACT0_ATLAS_REPORT=/absolute/path/atlas_status.md flutter test \
 //   test/guards/act0_atlas_dod_v1_test.dart
-// Use the absolute l0-audit/wave4 path when publishing to the other streams.
+// Use the absolute l0-audit/wave5 path when publishing to the other streams.
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
@@ -10,12 +10,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_atlas_concepts_v1.dart';
 import '../support/act0_atlas_practice_v1.dart';
+import '../support/act0_atlas_preflop_feedback_v1.dart';
 import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
+const _r1DebtKey = 'R1|$atlasPreflopFeedbackScopeV1';
 
 typedef _Metric = ({
   String id,
@@ -78,17 +80,54 @@ int _confirmedPostflopSeats(Act0TableStateV1 table) {
   return active.intersection(known).length;
 }
 
-Map<String, String> _priorChecklist(File report) {
-  final input = Platform.environment['ACT0_ATLAS_CHECKLIST'];
-  final checklist = File(
-    input ?? '${report.absolute.parent.parent.path}/dod_checklist_20261121.md',
+typedef _AtlasComparison = ({
+  String label,
+  Map<String, String> checklist,
+  Map<(String, String), String> rows,
+});
+
+_AtlasComparison _priorChecklist(File report) {
+  final auditRoot = report.absolute.parent.parent.path;
+  final wave4 = File(
+    Platform.environment['ACT0_ATLAS_PRIOR_REPORT'] ??
+        '$auditRoot/wave4/atlas_status.md',
   );
-  if (!checklist.existsSync()) return {};
-  return {
-    for (final row in checklist.readAsLinesSync())
-      if (row.startsWith('| ☐ |'))
-        row.split('|')[2].trim(): row.split('|')[4].trim(),
-  };
+  final checklist = File(
+    Platform.environment['ACT0_ATLAS_CHECKLIST'] ??
+        '$auditRoot/dod_checklist_20261121.md',
+  );
+  final original = <String, String>{};
+  if (checklist.existsSync()) {
+    for (final line in checklist.readAsLinesSync()) {
+      if (!line.startsWith('| ☐ |')) continue;
+      final fields = line.split('|');
+      original[fields[2].trim()] = fields[4].trim();
+    }
+  }
+  final evidence = <(String, String), String>{};
+  if (wave4.existsSync()) {
+    var supplemental = false;
+    for (final line in wave4.readAsLinesSync()) {
+      if (line.startsWith('## Дополнительные свидетельства')) {
+        supplemental = true;
+      }
+      if (!line.startsWith('| ')) continue;
+      final fields = line.split('|').map((field) => field.trim()).toList();
+      if (!RegExp(r'^[A-Z][0-9]+$').hasMatch(fields[1])) continue;
+      if (supplemental && fields.length == 6) {
+        original.putIfAbsent(fields[1], () => fields[2]);
+        evidence[(fields[1], '')] = '${fields[3]} (${fields[4]})';
+      } else if (!supplemental && fields.length == 8) {
+        original.putIfAbsent(fields[1], () => fields[3]);
+        evidence[(fields[1], fields[2])] = '${fields[4]} (${fields[6]})';
+      }
+    }
+  }
+  return (
+    label: evidence.isEmpty ? 'Было 21.11' : 'После волны 4',
+    checklist: original,
+    rows: evidence,
+  );
 }
 
 // Optional machine receipt for P3. From a clean checkout, capture:
@@ -206,6 +245,30 @@ double _minutes(List<CatalogTask> lesson) {
 }
 
 void main() {
+  test('R1 distinguishes a concrete loss from a chart or amount alone', () {
+    for (final feedback in [
+      'The 4 BB pot includes the earlier raise. Use the chart.',
+      'You lose value here.',
+      'You give up value here.',
+      'The starting hand needs position.',
+      'UTG acts first.',
+      'BB posted 1 BB. There are five players behind.',
+    ]) {
+      expect(atlasExplainsPreflopLossV1(feedback), isFalse, reason: feedback);
+    }
+    for (final feedback in [
+      'Calling costs 2.5 BB with a dominated ace.',
+      'Folding gives up the in-position call against CO.',
+      'Calling leaves you out of position against BTN.',
+      'Limping lets the blinds see a cheap flop.',
+    ]) {
+      expect(atlasExplainsPreflopLossV1(feedback), isTrue, reason: feedback);
+    }
+    expect(atlasPreflopFeedbackShortfallV1(2, 3), 0);
+    expect(atlasPreflopFeedbackShortfallV1(2, 4), 1);
+    expect(atlasPreflopFeedbackShortfallV1(0, 0), 1);
+  });
+
   test('Act0 atlas checklist and optional ratchet', () {
     final metrics = <_Metric>[];
     final details = <String>[];
@@ -234,6 +297,45 @@ void main() {
 
     final route = catalogTasks.where((row) => !row.task.repairOnly).toList();
     final graded = route.where(atlasIsGradedV1).toList();
+    add(
+      'F1',
+      'W1',
+      'Замер на устройстве',
+      'Первое решение до 3 минут',
+      0,
+      manual: true,
+    );
+    var explained = 0;
+    var wrongOptions = 0;
+    for (final number in [2, 3]) {
+      final before = (explained, wrongOptions);
+      for (final row in graded.where(
+        (r) =>
+            r.world.worldNumber == number &&
+            _norm(r.task.runner.table.streetLabel) == 'preflop',
+      )) {
+        for (final option in row.task.runner.options.where(
+          (option) => !option.isCorrect,
+        )) {
+          wrongOptions++;
+          if (atlasExplainsPreflopLossV1(option.feedbackReason)) {
+            explained++;
+          } else {
+            details.add('R1 · ${_location(row)}/${option.id}');
+          }
+        }
+      }
+      details.add(
+        'R1 · W$number · ${explained - before.$1}/${wrongOptions - before.$2}',
+      );
+    }
+    add(
+      'R1',
+      atlasPreflopFeedbackScopeV1,
+      '$explained/$wrongOptions (${_pct(_share(explained, wrongOptions))})',
+      atlasPreflopFeedbackTargetV1,
+      atlasPreflopFeedbackShortfallV1(explained, wrongOptions),
+    );
     final played = graded.where(_hand).toList();
     final lessons = <String, List<CatalogTask>>{};
     final format = {
@@ -831,6 +933,9 @@ void main() {
         math.max(0, minimumTotal - total) + missing,
       );
     }
+    for (final MapEntry(key: world, value: count) in seatWidgets.entries) {
+      minimum('V5', 'W$world', count, 1);
+    }
     final numerics = graded.where((r) => kind(r) == 'numeric').length;
     final statement = graded.where((r) => kind(r) == 'statement').length;
     final statementShare = _share(statement, graded.length);
@@ -883,7 +988,14 @@ void main() {
         return '◐';
       }
 
-      final statuses = byId.map((id, rows) => MapEntry(id, groupStatus(rows)));
+      final statuses = byId.map(
+        (id, rows) => MapEntry(
+          id,
+          id == 'V5' && rows.any((row) => row.debt > 0)
+              ? '❌'
+              : groupStatus(rows),
+        ),
+      );
       final sha = Process.runSync('git', ['rev-parse', 'HEAD']);
       final worktree = Process.runSync('git', [
         'status',
@@ -896,7 +1008,28 @@ void main() {
           : 'неизвестно';
       final destination = File(output)..parent.createSync(recursive: true);
       final prior = _priorChecklist(destination);
-      final unmeasured = prior.keys.where((id) => !statuses.containsKey(id));
+      final unmeasured = prior.checklist.keys.where(
+        (id) => !statuses.containsKey(id),
+      );
+      String priorValue(_Metric metric) {
+        if (prior.rows[(metric.id, metric.scope)] case final exact?) {
+          return exact;
+        }
+        if (metric.id == 'V5' && RegExp(r'^W[0-9]+$').hasMatch(metric.scope)) {
+          final oldTotal = prior.rows[('V5', 'Целевые миры')] ?? '';
+          final match = RegExp(
+            '${metric.scope}: ([0-9]+)',
+          ).firstMatch(oldTotal);
+          if (match != null) {
+            final count = int.parse(match[1]!);
+            return '$count (${count >= 1 ? '✅' : '❌'})';
+          }
+        }
+        return prior.rows[(metric.id, '')] ??
+            (prior.rows.isEmpty ? prior.checklist[metric.id] : null) ??
+            '—';
+      }
+
       final report = <String>[
         '# Атлас Act0 · машинная проверка',
         '',
@@ -908,10 +1041,10 @@ void main() {
         if (unmeasured.isNotEmpty)
           '- Вне этого прогона (${unmeasured.length}) · ${unmeasured.join(', ')}',
         '',
-        '| Пункт | Разрез | Было 21.11 (пункт целиком) | Сейчас | Цель | Статус |',
+        '| Пункт | Разрез | ${prior.label} | Сейчас | Цель | Статус |',
         '| --- | --- | --- | --- | --- | --- |',
         for (final m in metrics)
-          '| ${m.id} | ${m.scope} | ${prior[m.id] ?? '—'} | ${m.current} | ${m.target} | ${rowStatus(m)} |',
+          '| ${m.id} | ${m.scope} | ${priorValue(m)} | ${m.current} | ${m.target} | ${rowStatus(m)} |',
         '',
         '## Как читать',
         '',
@@ -921,6 +1054,7 @@ void main() {
         '- A1–A2 используют допуск 10 п.п. как рабочее определение «на уровне случая». A3 измеряет маркеры лексики.',
         '- B1 сверяет ключи семейства и новизну раздачи. Известные взаимоисключающие задания исключены. Спорные формулировки требуют чтения.',
         '- S4 считает отдельный обязательный шаг в Learn. Home Practice и Review перед заблокированным чекпоинтом проверяются отдельными тестами.',
+        '- R1 считает все неверные и частичные варианты оцениваемых префлоп-заданий основного маршрута W2–W3. Нужна конкретная потеря, например сумма под риском, упущенный колл или позиция. Число без последствия само по себе не засчитывается.',
         '- P3 показывает объём по каталогу и проверяет приложенный JSONL FULL_ROUTE на том же коммите.',
         '',
         '## Места для проверки',
@@ -935,7 +1069,10 @@ void main() {
           (jsonDecode(file.readAsStringSync()) as Map<String, dynamic>);
       final regressions = [
         for (final entry in debt.entries)
-          if (entry.value > (prior[entry.key] as num? ?? 0) + 1e-9)
+          // R1 joins the wave 5 ratchet when the final successful
+          // candidate records its threshold.
+          if ((entry.key != _r1DebtKey || prior.containsKey(_r1DebtKey)) &&
+              entry.value > (prior[entry.key] as num? ?? 0) + 1e-9)
             '${entry.key}: ${prior[entry.key] ?? 0} → ${entry.value}',
       ];
       expect(regressions, isEmpty, reason: regressions.join('\n'));
