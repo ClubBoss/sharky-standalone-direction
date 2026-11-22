@@ -83,6 +83,7 @@ void main() {
     const orientationIds = <String>{
       'position_six_seats_position_order_reason',
       'first_table_guide_shared_cards_repair',
+      'w1_shared_card_access',
       'what_poker_is_theory',
       'what_poker_is_find_hero',
       'what_poker_is_pot_stack',
@@ -278,13 +279,13 @@ void main() {
     expect(
       tasks,
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     expect(
       tasks.map((task) => task.taskId).toSet(),
       hasLength(
-        435 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
+        439 + w11Wave4ChoiceContractV1.length + w12Wave4ChoiceContractV1.length,
       ),
     );
     final newTasks = tasks
@@ -311,7 +312,7 @@ void main() {
             task.taskId != 'actions_call_chip_cost' &&
             task.taskId != 'cards_ranks_suits_premium_decision',
       ),
-      hasLength(397),
+      hasLength(401),
     );
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
@@ -338,7 +339,7 @@ void main() {
       expect(replay.isConsumerSafe, isFalse);
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     }
-    expect(orientationIds, hasLength(48));
+    expect(orientationIds, hasLength(49));
     expect(explanationIds, hasLength(61 + w11Wave4ConceptTasksV1.length));
     expect(conceptualSignals, hasLength(1));
     expect(explanationIds, containsAll(conceptualSignals.keys));
@@ -511,7 +512,10 @@ void main() {
             expect(table.seats.where((seat) => seat.isActive), isEmpty);
           }
         } else {
-          if (task.taskId == 'first_table_guide_shared_cards_repair') {
+          if (const {
+            'first_table_guide_shared_cards_repair',
+            'w1_shared_card_access',
+          }.contains(task.taskId)) {
             expect(table.boardCards, hasLength(3));
             expect(table.heroCards, hasLength(2));
             expect(table.potLabel, isEmpty);
@@ -542,12 +546,13 @@ void main() {
       hasLength(23),
     );
     expect(_newW01OrderContextIds.intersection(orientationIds), hasLength(7));
-    expect(legacyPlayed, 296);
+    expect(legacyPlayed, 299);
     expect(
       played,
-      328 + 10 + 9 + 2 + 3,
+      328 + 10 + 9 + 2 + 3 + 3,
     ); // Authored contexts, not certified replay histories.
     final expectedHistories = <String>{
+      'w1_chips_starting_pot',
       'blinds_pot_after_posts',
       'positions_read_first_check',
       'w4_purpose_collect_value',

@@ -597,8 +597,12 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Set<String> _guideTaskIdsV1(Act0ShellStateV1 state) => <String>{
-    for (final task in state.worldById('world_1').lessons.first.courseTaskList)
-      task.taskId,
+    for (final lesson in state.worldById('world_1').lessons)
+      if (const {
+        'what_poker_is',
+        'first_table_guide',
+      }.contains(lesson.lessonId))
+        for (final task in lesson.courseTaskList) task.taskId,
   };
 
   Act0PlacementResultV1 _buildPlacementResult() {
@@ -768,7 +772,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
       weakSpots: _placementWeakSpotsFor(Act0PlacementResultLevelV1.newPlayer),
       recommendedLessonId: 'what_poker_is',
       recommendedTaskId: 'what_poker_is_theory',
-      recommendedTitle: 'First Table Guide',
+      recommendedTitle: 'Your cards and the board',
       recommendedReason:
           'The live check says the route should teach the Sharky loop first, then move into the poker foundations.',
       routeTrustLine:

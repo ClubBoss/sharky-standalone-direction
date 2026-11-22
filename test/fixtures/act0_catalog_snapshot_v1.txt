@@ -1,20 +1,20 @@
-SHARKY POKER — EN learning content, 456 tasks · W1–W12
+SHARKY POKER — EN learning content, 460 tasks · W1–W12
 Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
 Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
 
-===== WORLD 1 · LESSON what_poker_is · First Table Guide =====
+===== WORLD 1 · LESSON what_poker_is · Your cards and the board =====
 
 TASK what_poker_is_theory [theory] Meet the table
-SUMMARY: Start with one calm read: hero, blinds, table, and the Sharky loop.
+SUMMARY: Find the two cards that belong to you.
 CAPTION: A new hand.
-TEACH: Find your cards. Your private cards are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.
-TEACH LABELS: Your cards, Board, Pot
+TEACH: Find your cards. Your private cards are the two beside your seat. The board is the group of cards everyone still playing can use. Look at where each group sits before reading the ranks.
+TEACH LABELS: Your cards, Board
 TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 Q: Which two cards are yours?
 HINT [theoryOnly]: Find the seat with two visible cards.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB
+TRAIL: A player adds half a unit · A player adds one unit
   - [wrong] Upper seat [seat utg] — Where are the visible cards? The two face-up cards are at the bottom.
     BETTER ANSWER: Bottom seat
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
@@ -31,7 +31,7 @@ Q: Which cards belong to you alone?
 HINT [theoryOnly]: Compare the cards at your seat with the cards in the middle.
 TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn, sb, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 SEATS: UTG | HJ | CO | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
-TRAIL: SB blind 0.5 BB · BB blind 1 BB
+TRAIL: A player adds half a unit · A player adds one unit
   - [wrong] The shared cards in the middle — Shared cards can be used by everyone. Everyone still playing can use the cards in the middle.
     BETTER ANSWER: The two cards at your seat
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
@@ -40,6 +40,94 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   - [wrong] The cards at the other seats — Only your seat shows your cards. The cards at the other seats belong to those players.
     BETTER ANSWER: The two cards at your seat
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
+
+TASK first_table_guide_one_clear_choice [drill] Read the preflop setup
+SUMMARY: Identify the private cards when the middle is empty.
+CAPTION: Find the cards at your seat and check the middle.
+TEACH: Your cards and the board. Count your cards and the shared cards separately. The middle can be empty while you already have two cards. Look beside your seat first, then look at the middle. Count each group on its own even when one group has no cards.
+TEACH LABELS: Your cards, Shared cards
+TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
+Q: Which description matches the cards on this table?
+HINT [theoryOnly]: The shared cards would appear in the middle.
+TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
+SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
+  - [wrong] Two private cards and three shared cards — Count the shared cards separately. You correctly found the two private cards. The shared cards have yet to appear.
+    BETTER ANSWER: Two private cards and no shared cards
+    REPAIR LABELS: Your cards, Shared cards, Board space
+    FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
+  + [correct] Two private cards and no shared cards — That is the setup. Your two cards are visible next to you. The space for the shared cards is empty.
+    REPAIR LABELS: Your cards, Shared cards, Board space
+    FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
+  - [wrong] No private cards and no shared cards — Use the visible cards too. There are no cards in the middle, but two cards are visible beside you.
+    BETTER ANSWER: Two private cards and no shared cards
+    REPAIR LABELS: Your cards, Shared cards, Board space
+    FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
+
+TASK w1_shared_card_access [drill] Which cards can both players use?
+CAPTION: A second player still has cards at another seat. Your two cards sit beside you, and three more sit in the middle. Read the ranks and check where each group is placed.
+Q: Which of the visible cards can that other player use too?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Jd 4c | Board Qh 8s 3d | Seat BB | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ stack 97.25 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Jd 4c stack 97.25 BB
+  - [wrong] The jack and four beside you — Read the table again. The jack and four sit beside your seat. Giving them to the other player would mix up the two sets of cards.
+    BETTER ANSWER: The queen, eight and three
+    FEEDBACK TABLE: Flop | You Jd 4c | Board Qh 8s 3d | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  + [correct] The queen, eight and three — Correct. The queen, eight and three are in the middle, where both players can use them.
+    FEEDBACK TABLE: Flop | You Jd 4c | Board Qh 8s 3d | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  - [wrong] Jack, four, queen, eight and three — Read the table again. The queen, eight and three are shared. Your jack and four belong to your seat, so the other player cannot use them.
+    BETTER ANSWER: The queen, eight and three
+    FEEDBACK TABLE: Flop | You Jd 4c | Board Qh 8s 3d | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+
+===== WORLD 1 · LESSON chips_in_the_middle · Blinds and the pot =====
+
+TASK w1_chips_starting_pot [drill] Read the two forced posts
+CAPTION: The two marked seats have put in their starting amounts. Every other stack is still untouched. Read their two contributions before you read the total.
+TEACH: The first two contributions Blinds are forced contributions: the small blind puts in 0.5 BB and the big blind puts in 1 BB before anyone chooses.
+TEACH: Read the middle The pot is the chips in the middle, so add what both players have put in and leave out the chips still in their stacks.
+Q: What is the total in the middle before anyone chooses what to do?
+HINT [theoryOnly]: (none)
+TABLE: Preflop | You 5s 8c | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG 5s 8c stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB post 0.5 BB | BB stack 99 BB post 1 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB
+  - [wrong] 1 BB — Read the table again. The big blind put in 1 BB. Counting that seat alone leaves out the half chip unit at the other marked seat.
+    BETTER ANSWER: 1.5 BB
+  + [correct] 1.5 BB — Correct. The two forced amounts are 0.5 and 1 BB. Adding them gives the 1.5 BB already in the middle.
+  - [wrong] 0.5 BB — Read the table again. The small blind put in 0.5 BB. The 1 BB from the other marked seat belongs in the same total.
+    BETTER ANSWER: 1.5 BB
+
+TASK w1_chips_matched_pot [drill] Count each contribution once
+CAPTION: One player put in 2.5 BB. The big blind added enough to reach the same total. The small blind stopped playing, and the shared cards arrived with no new chips added.
+Q: How many chips are in the pot when the shared cards arrive?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You 9h 3c | Board Ks 7d 2h | Pot 5.5 BB | Seat BB | Facts high card, rainbow
+SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 9h 3c stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · Another player raises to 2.5 BB · An earlier player folds · An earlier player folds · SB folds · BB calls 1.5 BB more
+  - [wrong] 5 BB — Read the table again. Two contributions of 2.5 BB add to 5 BB. That leaves out the half BB the small blind already put in.
+    BETTER ANSWER: 5.5 BB
+    FEEDBACK TABLE: Flop | You 9h 3c | Board Ks 7d 2h | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow
+  - [wrong] 6.5 BB — Read the table again. The big blind reached 2.5 BB by adding to its first chip. Adding that first chip again counts it twice.
+    BETTER ANSWER: 5.5 BB
+    FEEDBACK TABLE: Flop | You 9h 3c | Board Ks 7d 2h | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow
+  + [correct] 5.5 BB — Correct. Count 2.5 BB from each continuing player and 0.5 BB left by the small blind.
+    FEEDBACK TABLE: Flop | You 9h 3c | Board Ks 7d 2h | Pot 5.5 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow
+
+TASK w1_chips_read_middle [drill] Separate the pot from a stack
+CAPTION: The two players still in each put in 3.25 BB. A third player left a half BB in the middle. The numbers beside the seats show the chips those players have left. Keep the chips in those stacks separate from everything the players have put in.
+Q: Which amount tells you how much the players have put in together?
+HINT [theoryOnly]: (none)
+TABLE: Flop | You Ts 6d | Board Ah 5s 3h | Pot 7 BB | Seat BB | Facts high card, two-tone, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ stack 96.75 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ts 6d stack 96.75 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · Another player raises to 3.25 BB · An earlier player folds · An earlier player folds · SB folds · BB calls 2.25 BB more
+  + [correct] 7 BB — Correct. The two 3.25 BB amounts and the half BB add up to 7 BB already in the middle.
+    FEEDBACK TABLE: Flop | You Ts 6d | Board Ah 5s 3h | Pot 7 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, two-tone, backdoor straight
+  - [wrong] 3.25 BB — Read the table again. This is one player’s contribution. Using it alone leaves out the other player and the small blind.
+    BETTER ANSWER: 7 BB
+    FEEDBACK TABLE: Flop | You Ts 6d | Board Ah 5s 3h | Pot 7 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, two-tone, backdoor straight
+  - [wrong] 96.75 BB — Read the table again. This amount is still beside a seat. Counting a remaining stack mistakes chips available for chips already put in.
+    BETTER ANSWER: 7 BB
+    FEEDBACK TABLE: Flop | You Ts 6d | Board Ah 5s 3h | Pot 7 BB | Seat BB | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, two-tone, backdoor straight
+
+===== WORLD 1 · LESSON first_table_guide · First Table Guide =====
 
 TASK first_table_guide_first_decision [drill] Decide with your coach
 CAPTION: The player before you raised to 2.5 BB.
@@ -87,28 +175,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     REPAIR LABELS: Your cards, Board cards, Pot 4 BB
   + [correct] 2 private cards, 3 board cards, 4 BB in the pot — Clean table read. Same scan, new numbers: you have two private cards, the board has three shared cards, and the pot is 4 BB.
     REPAIR LABELS: Your cards, Board cards, Pot 4 BB
-
-TASK first_table_guide_one_clear_choice [drill] Read the preflop setup
-SUMMARY: Carry the same scan into a preflop setup read before strategy choices start.
-CAPTION: Find the cards at your seat and check the middle.
-TEACH: Your cards and the board. Count your cards and the shared cards separately.
-TEACH LABELS: Your cards, Shared cards
-TEACH TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
-Q: Which description matches the cards on this table?
-HINT [theoryOnly]: The shared cards would appear in the middle.
-TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
-SEATS: UTG folded | HJ folded | CO folded | BTN dealer Ks Ts stack 100 BB | SB post 0.5 BB | BB post 1 BB
-  - [wrong] Two private cards and three shared cards — Count the shared cards separately. You correctly found the two private cards. The shared cards have yet to appear.
-    BETTER ANSWER: Two private cards and no shared cards
-    REPAIR LABELS: Your cards, Shared cards, Board space
-    FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
-  + [correct] Two private cards and no shared cards — That is the setup. Your two cards are visible next to you. The space for the shared cards is empty.
-    REPAIR LABELS: Your cards, Shared cards, Board space
-    FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
-  - [wrong] No private cards and no shared cards — Use the visible cards too. There are no cards in the middle, but two cards are visible beside you.
-    BETTER ANSWER: Two private cards and no shared cards
-    REPAIR LABELS: Your cards, Shared cards, Board space
-    FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Seat focus btn, sb, bb | Card focus hero_0, hero_1 | Center Cards on the table | Empty board No board cards yet | Facts no applicable hand facts
 
 TASK first_table_guide_route_roles [review] Where to go next
 ENTRY: drill
@@ -6717,7 +6783,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 ===== REPAIR-ONLY TASKS =====
 
-===== WORLD 1 · LESSON what_poker_is · First Table Guide =====
+===== WORLD 1 · LESSON what_poker_is · Your cards and the board =====
 
 TASK first_table_guide_shared_cards_repair [drill] Read the cards
 CAPTION: There are two groups of cards in view.
@@ -7046,7 +7112,72 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   - [wrong] Call — Not quite. Calling means matching a bet. There is no bet here.
     BETTER ANSWER: Check
 
-===== WORLD 1 · LESSON what_poker_is · First Table Guide =====
+===== WORLD 1 · LESSON chips_in_the_middle · Blinds and the pot =====
+
+TASK spaced_review_w1_chips_in_the_middle_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+Q: How many chips are in the middle after both players put in 3 BB?
+HINT [hidden]: (none)
+TABLE: Flop | You 7c 4s | Board Kd 8h 2d | Pot 6.5 BB | Seat BB | Facts high card, two-tone, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ stack 97 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB 7c 4s stack 97 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB · CO folds · BTN folds · SB folds · BB calls 2 BB more
+  + [correct] 6.5 BB — Correct. Two contributions of 3 BB and the small blind of 0.5 BB make 6.5 BB.
+    FEEDBACK TABLE: Flop | You 7c 4s | Board Kd 8h 2d | Pot 6.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor straight
+  - [wrong] 6 BB — Look again. Adding only the two continuing players leaves out the half BB from the small blind.
+    BETTER ANSWER: 6.5 BB
+    FEEDBACK TABLE: Flop | You 7c 4s | Board Kd 8h 2d | Pot 6.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor straight
+  - [wrong] 7.5 BB — Look again. The big blind’s first chip is already part of the 3 BB from that seat. Adding it again would count the same chip twice.
+    BETTER ANSWER: 6.5 BB
+    FEEDBACK TABLE: Flop | You 7c 4s | Board Kd 8h 2d | Pot 6.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, two-tone, backdoor straight
+
+TASK spaced_review_w1_chips_in_the_middle_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Which amount is the total already committed by all three seats?
+HINT [hidden]: (none)
+TABLE: Flop | You Tc 5s | Board 9c 4d 2s | Pot 7.5 BB | Seat BB | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ stack 96.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Tc 5s stack 96.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3.5 BB · CO folds · BTN folds · SB folds · BB calls 2.5 BB more
+  - [wrong] 3.5 BB — Look again. You counted one matching contribution. Include the second 3.5 BB and the half BB already posted.
+    BETTER ANSWER: 7.5 BB
+    FEEDBACK TABLE: Flop | You Tc 5s | Board 9c 4d 2s | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  - [wrong] 96.5 BB — Look again. That is what a continuing player has left. The committed chips have already left the stacks.
+    BETTER ANSWER: 7.5 BB
+    FEEDBACK TABLE: Flop | You Tc 5s | Board 9c 4d 2s | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+  + [correct] 7.5 BB — Correct. Each continuing player put in 3.5 BB. The small blind added 0.5 BB before leaving, so the pot is 7.5 BB.
+    FEEDBACK TABLE: Flop | You Tc 5s | Board 9c 4d 2s | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor straight
+
+===== WORLD 1 · LESSON first_table_guide · First Table Guide =====
+
+TASK spaced_review_w1_first_table_guide_pot_to_call_v1 [drill] Review decision
+DAY 7 FAMILY: pot_to_call
+Q: How many chips do you add to match the bet?
+HINT [hidden]: (none)
+TABLE: Flop | You Kd 5c | Board Qd 9h 3s | Pot 7.5 BB | To call 1.5 BB | Seat CO | Active co | Decision co | Facts high card, rainbow, backdoor straight
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd 5c stack 97.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.75 BB bet 1.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.75 BB · BTN folds · SB folds · BB calls 1.75 BB more · Flop: BB bets 1.5 BB
+  - [wrong] 6 BB — Look again. The 6 BB were already in the middle before the new bet. Matching only the new chips keeps that earlier total separate.
+    BETTER ANSWER: 1.5 BB
+  + [correct] 1.5 BB — Correct. Matching the new bet means putting in the same 1.5 BB.
+  - [wrong] 7.5 BB — Look again. The new bet and the earlier chips make 7.5 BB in the pot. Paying that amount would add chips no one asked you to match.
+    BETTER ANSWER: 1.5 BB
+
+TASK spaced_review_w1_first_table_guide_hero_cards_board_pot_v1 [drill] Review decision
+DAY 7 FAMILY: hero_cards_board_pot
+Q: Which reading matches the two groups of cards and the chips in the middle?
+HINT [hidden]: (none)
+TABLE: Flop | You Ts 7c | Board Kh 9d 6h | Pot 6.5 BB | Seat BB | Facts high card, two-tone, gutshot, completion cards 4
+SEATS: UTG folded stack 100 BB | HJ stack 97 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Ts 7c stack 97 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 3 BB · CO folds · BTN folds · SB folds · BB calls 2 BB more
+  + [correct] Two private, three shared, 6.5 BB — Correct. The ten and seven are yours. K-9-6 are shared, and the middle holds 6.5 BB.
+    FEEDBACK TABLE: Flop | You Ts 7c | Board Kh 9d 6h | Pot 6.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, two-tone, gutshot, completion cards 4
+  - [wrong] Two private, three shared, 6 BB — Look again. The cards match that count, but leaving out the half blind gives a total smaller than the one displayed.
+    BETTER ANSWER: Two private, three shared, 6.5 BB
+    FEEDBACK TABLE: Flop | You Ts 7c | Board Kh 9d 6h | Pot 6.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, two-tone, gutshot, completion cards 4
+  - [wrong] Three private, two shared, 6.5 BB — Look again. The displayed total is 6.5 BB. K-9-6 sit together in the middle, so assigning the three to your seat reverses the card groups.
+    BETTER ANSWER: Two private, three shared, 6.5 BB
+    FEEDBACK TABLE: Flop | You Ts 7c | Board Kh 9d 6h | Pot 6.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts high card, two-tone, gutshot, completion cards 4
+
+===== WORLD 1 · LESSON what_poker_is · Your cards and the board =====
 
 TASK spaced_review_w1_what_poker_is_hero_button_v1 [drill] Review decision
 DAY 7 FAMILY: hero_button

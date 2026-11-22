@@ -123,7 +123,7 @@ void main() {
   }
 
   testWidgets(
-    'fresh install canonical onboarding reaches First Table Guide while Action stays locked',
+    'fresh install canonical onboarding reaches Your cards and the board while Action stays locked',
     (tester) async {
       await pumpHost(tester, host(showPlacementOnStart: true));
       await completeFreshBeginnerOnboarding(tester);
@@ -133,7 +133,7 @@ void main() {
       );
 
       await openLearn(tester);
-      expect(find.textContaining('0 of 13 lessons'), findsOneWidget);
+      expect(find.textContaining('0 of 15 lessons'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_current_mission_card')),
         findsOneWidget,
@@ -141,7 +141,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_current_mission_card')),
-          matching: find.text('First Table Guide'),
+          matching: find.text('Your cards and the board'),
         ),
         findsOneWidget,
       );
@@ -158,7 +158,7 @@ void main() {
   );
 
   testWidgets(
-    'fresh install Learn route reaches authored First Table Guide theory and a truthful independent decision',
+    'fresh install Learn route reaches authored Your cards and the board theory and a truthful independent decision',
     (tester) async {
       final telemetry = Act0InMemoryTelemetrySinkV1();
       await pumpHost(
@@ -185,7 +185,10 @@ void main() {
       expect(runner.selectedLessonId, 'what_poker_is');
       expect(runner.selectedTaskId, 'what_poker_is_theory');
       expect(runner.runner.phase, Act0LessonPhaseV1.theory);
-      expect(find.textContaining('Players share the board.'), findsOneWidget);
+      expect(
+        find.textContaining('The board is the group of cards'),
+        findsOneWidget,
+      );
 
       bool atTaskWithOptions(String taskId) {
         final current = tester.widget<Act0LessonRunnerShellV1>(
@@ -287,7 +290,7 @@ void main() {
       );
       expect(runner.selectedLessonId, 'what_poker_is');
       expect(runner.selectedTaskId, 'what_poker_is_theory');
-      expect(runner.runner.lessonTitle, 'First Table Guide');
+      expect(runner.runner.lessonTitle, 'Your cards and the board');
       expect(runner.runner.phase, Act0LessonPhaseV1.theory);
       expect(
         telemetry.events.where((event) => event.name == 'user_choice'),
@@ -302,7 +305,7 @@ void main() {
   );
 
   testWidgets(
-    'completed First Table Guide advances ordered progression without unlocking Action early',
+    'completed Your cards and the board advances ordered progression without unlocking Action early',
     (tester) async {
       final state = Act0ShellStateV1.sample;
       final firstLesson = state.worldById('world_1').lessons.first;
@@ -325,8 +328,8 @@ void main() {
       });
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('1 of 13 lessons'), findsOneWidget);
-      expect(find.text('Cards, ranks & suits'), findsWidgets);
+      expect(find.textContaining('1 of 15 lessons'), findsOneWidget);
+      expect(find.text('Blinds and the pot'), findsWidgets);
       await tester.tap(find.text('All lessons'));
       await tester.pumpAndSettle();
       final actionState = tester.widget<Text>(
@@ -339,7 +342,7 @@ void main() {
   );
 
   testWidgets(
-    'unmet Action precondition is normalized back to First Table Guide',
+    'unmet Action precondition is normalized back to Your cards and the board',
     (tester) async {
       SharedPreferences.setMockInitialValues(<String, Object>{
         'intake_completed_v1': true,
@@ -357,8 +360,8 @@ void main() {
       });
 
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.text('First Table Guide'), findsWidgets);
-      expect(find.textContaining('0 of 13 lessons'), findsOneWidget);
+      expect(find.text('Your cards and the board'), findsWidgets);
+      expect(find.textContaining('0 of 15 lessons'), findsOneWidget);
     },
   );
 
@@ -367,7 +370,7 @@ void main() {
     (tester) async {
       await seedValidActionPrecondition();
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-      expect(find.textContaining('9 of 13 lessons'), findsOneWidget);
+      expect(find.textContaining('11 of 15 lessons'), findsOneWidget);
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_current_mission_card')),

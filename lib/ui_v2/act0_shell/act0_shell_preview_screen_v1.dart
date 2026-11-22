@@ -621,7 +621,7 @@ act0FirstValueSameSignalRepMappingV1({
       sourceTask != 'what_poker_is_table_read_recheck') {
     return (
       worldId: 'world_1',
-      lessonId: 'what_poker_is',
+      lessonId: 'first_table_guide',
       taskId: 'what_poker_is_table_read_recheck',
       mappingType: isRepair ? 'repair' : 'reinforcement',
     );
@@ -3965,6 +3965,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     );
                                     _showWorldMenu = false;
                                     _blockCompletionSummary = null;
+                                    return;
+                                  }
+                                  if (const {
+                                    'chips_in_the_middle',
+                                    'first_table_guide',
+                                  }.contains(nextLesson.lessonId)) {
+                                    final backToPlayHub =
+                                        _returnToPlayHubOnBack;
+                                    _startTaskByIds(
+                                      progressedWorld,
+                                      nextLesson.lessonId,
+                                      _firstIncompleteTask(nextLesson).taskId,
+                                    );
+                                    _returnToPlayHubOnBack = backToPlayHub;
+                                    _resetLessonRunMetrics();
                                     return;
                                   }
                                   _selectedLessonId = nextLesson.lessonId;
@@ -7357,21 +7372,21 @@ class _Act0PlacementDiagnosticSpotV1 {
 const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
-    lessonId: 'what_poker_is',
+    lessonId: 'first_table_guide',
     taskId: 'what_poker_is_table_read_transfer',
     signalId: 'table_read',
     isFoundation: true,
   ),
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
-    lessonId: 'what_poker_is',
+    lessonId: 'first_table_guide',
     taskId: 'what_poker_is_table_read_transfer',
     signalId: 'board_private_cards',
     isFoundation: true,
   ),
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
-    lessonId: 'what_poker_is',
+    lessonId: 'first_table_guide',
     taskId: 'what_poker_is_table_read_transfer',
     signalId: 'action_basics',
   ),

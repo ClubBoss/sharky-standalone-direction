@@ -107,6 +107,7 @@ Future<int> _openSavedCourseTask(
   required String worldId,
   required String taskId,
   String? legacyLessonId,
+  Set<String>? legacyCompletedIds,
   bool finishTeaching = true,
 }) async {
   final state = Act0ShellStateV1.sample;
@@ -123,10 +124,16 @@ Future<int> _openSavedCourseTask(
       (candidate) => candidate.lessonId != lesson.lessonId,
     ),
   ];
-  final completed = [
-    for (final earlier in earlierLessons) ...earlier.courseTaskList,
-    ...lesson.courseTaskList.takeWhile((task) => task.taskId != taskId),
-  ];
+  final completed = legacyCompletedIds == null
+      ? [
+          for (final earlier in earlierLessons) ...earlier.courseTaskList,
+          ...lesson.courseTaskList.takeWhile((task) => task.taskId != taskId),
+        ]
+      : [
+          for (final lesson in world.lessons)
+            for (final task in lesson.courseTaskList)
+              if (legacyCompletedIds.contains(task.taskId)) task,
+        ];
   final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
   SharedPreferences.setMockInitialValues({
     'act0_welcome_completed_v1': true,
@@ -139,9 +146,9 @@ Future<int> _openSavedCourseTask(
           .lineagePayload(),
       'durableRetentionHistory': <Object>[],
       'completedTaskIds': completed.map((task) => task.taskId).toList(),
-      'completedLessonIds': earlierLessons
-          .map((lesson) => lesson.lessonId)
-          .toList(),
+      'completedLessonIds': legacyCompletedIds == null
+          ? earlierLessons.map((lesson) => lesson.lessonId).toList()
+          : <String>[],
       'skippedTaskIds': <String>[],
       'earnedXp': xp,
       'selectedWorldId': worldId,
@@ -192,6 +199,57 @@ Future<int> _openSavedCourseTask(
 }
 
 void main() {
+  testWidgets('pre-split first lesson resumes the card read with its XP', (
+    t,
+  ) async {
+    final xp = await _openSavedCourseTask(
+      t,
+      worldId: 'world_1',
+      legacyLessonId: 'what_poker_is',
+      taskId: 'what_poker_is_find_hero',
+      legacyCompletedIds: {'what_poker_is_theory'},
+    );
+    final runner = t.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedLessonId, 'what_poker_is');
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_shell_option_top'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
+    expect(saved['earnedXp'], xp);
+    expect(saved['completedTaskIds'], ['what_poker_is_theory']);
+  });
+
+  testWidgets(
+    'pre-split AA save resumes the assisted raise in its new lesson',
+    (t) async {
+      const taskId = 'first_table_guide_first_decision';
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: 'world_1',
+        legacyLessonId: 'what_poker_is',
+        taskId: taskId,
+        legacyCompletedIds: {'what_poker_is_theory', 'what_poker_is_find_hero'},
+      );
+      final runner = t.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedLessonId, 'first_table_guide');
+      expect(find.text('Raise to 7.5 BB'), findsOneWidget);
+      expect(
+        await _tapFirst(t, [find.byKey(const Key('act0_shell_option_raise'))]),
+        isTrue,
+      );
+      final saved = await _saved(t);
+      expect(saved['earnedXp'], xp);
+      final evidence = (saved['learningEvidenceHistory'] as List).cast<Map>();
+      final move = evidence.singleWhere((row) => row['taskId'] == taskId);
+      expect(move['assistanceKind'], 'theoryRecall');
+    },
+  );
+
   testWidgets('W1 save resumes a drill from before the lesson split', (
     t,
   ) async {
@@ -1304,7 +1362,7 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8 ? 43 : (fullRoute ? 448 : 293);
+        final expectedCount = w7ToW8 ? 43 : (fullRoute ? 452 : 297);
         expect(
           taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,

@@ -90,7 +90,7 @@ void main() {
       const reviewTask = 'what_poker_is_find_hero';
       const interruptedTask = 'what_poker_is_table_read_transfer';
       const lessonId = 'what_poker_is';
-      final lesson = Act0ShellStateV1.sample.worldById('world_1').lessons.first;
+      final lesson = Act0ShellStateV1.sample.lessonById('first_table_guide');
       final interrupted = lesson.courseTaskList.singleWhere(
         (task) => task.taskId == interruptedTask,
       );
@@ -121,7 +121,11 @@ void main() {
           'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
               .lineagePayload(),
           'durableRetentionHistory': [scheduled.toPayload()],
-          'completedTaskIds': ['what_poker_is_theory', reviewTask],
+          'completedTaskIds': [
+            'what_poker_is_theory',
+            reviewTask,
+            'first_table_guide_first_decision',
+          ],
           'completedLessonIds': [],
           'skippedTaskIds': [],
           'earnedXp': 10,

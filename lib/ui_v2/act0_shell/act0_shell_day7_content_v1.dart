@@ -3,6 +3,71 @@ part of 'act0_shell_state_v1.dart';
 final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     1,
+    'chips_in_the_middle',
+    'pot_to_call',
+    _day7PostflopV1('bb', '7c 4s', 'Kd 8h 2d', openBb: 3),
+    question:
+        'How many chips are in the middle after both players put in 3 BB?',
+    choices: const ['6.5 BB', '6 BB', '7.5 BB'],
+    correct: 0,
+    reason:
+        'Two contributions of 3 BB and the small blind of 0.5 BB make 6.5 BB.',
+    wrongReasons: const {
+      1: 'Adding only the two continuing players leaves out the half BB from the small blind.',
+      2: 'The big blind’s first chip is already part of the 3 BB from that seat. Adding it again would count the same chip twice.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'chips_in_the_middle',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', 'Tc 5s', '9c 4d 2s', openBb: 3.5),
+    question: 'Which amount is the total already committed by all three seats?',
+    choices: const ['3.5 BB', '96.5 BB', '7.5 BB'],
+    correct: 2,
+    reason:
+        'Each continuing player put in 3.5 BB. The small blind added 0.5 BB before leaving, so the pot is 7.5 BB.',
+    wrongReasons: const {
+      0: 'You counted one matching contribution. Include the second 3.5 BB and the half BB already posted.',
+      1: 'That is what a continuing player has left. The committed chips have already left the stacks.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'first_table_guide',
+    'pot_to_call',
+    _day7PostflopV1('co', 'Kd 5c', 'Qd 9h 3s', betBb: 1.5, showTurn: true),
+    question: 'How many chips do you add to match the bet?',
+    choices: const ['6 BB', '1.5 BB', '7.5 BB'],
+    correct: 1,
+    reason: 'Matching the new bet means putting in the same 1.5 BB.',
+    wrongReasons: const {
+      0: 'The 6 BB were already in the middle before the new bet. Matching only the new chips keeps that earlier total separate.',
+      2: 'The new bet and the earlier chips make 7.5 BB in the pot. Paying that amount would add chips no one asked you to match.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
+    'first_table_guide',
+    'hero_cards_board_pot',
+    _day7PostflopV1('bb', 'Ts 7c', 'Kh 9d 6h', openBb: 3),
+    question:
+        'Which reading matches the two groups of cards and the chips in the middle?',
+    choices: const [
+      'Two private, three shared, 6.5 BB',
+      'Two private, three shared, 6 BB',
+      'Three private, two shared, 6.5 BB',
+    ],
+    correct: 0,
+    reason:
+        'The ten and seven are yours. K-9-6 are shared, and the middle holds 6.5 BB.',
+    wrongReasons: const {
+      1: 'The cards match that count, but leaving out the half blind gives a total smaller than the one displayed.',
+      2: 'The displayed total is 6.5 BB. K-9-6 sit together in the middle, so assigning the three to your seat reverses the card groups.',
+    },
+  ),
+  _day7ExampleV1(
+    1,
     "what_poker_is",
     "hero_button",
     _day7PreflopV1("co", "Kh 6d"),

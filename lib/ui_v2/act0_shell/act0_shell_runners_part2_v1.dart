@@ -159,7 +159,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
 
 final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   lessonId: 'first_table_guide_meet_table',
-  lessonTitle: 'First Table Guide',
+  lessonTitle: 'Your cards and the board',
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 1,
   beatCount: 5,
@@ -203,15 +203,30 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
       'Your cards stay next to you. The shared cards go in the middle.',
   table: _meetTableRunner.table.copyWith(
     heroCards: _heroKtCards,
+    actionTrail: [
+      for (final item in _meetTableRunner.table.actionTrail)
+        if (item.isNote)
+          item
+        else
+          Act0ActionTrailItemV1(
+            label: item.label,
+            displayLabel: item.learnerLabel.replaceFirstMapped(
+              RegExp(r'^(?:SB|BB) blind (0\.5|1) BB$'),
+              (match) => match[1] == '1'
+                  ? 'A player adds one unit'
+                  : 'A player adds half a unit',
+            ),
+          ),
+    ],
     selectableSeatIds: const <String>['utg', 'btn', 'bb'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Find your cards.',
       body:
-          'Your private cards are yours. Players share the board. The pot is the chips in the middle. Blinds are forced bets.',
+          'Your private cards are the two beside your seat. The board is the group of cards everyone still playing can use. Look at where each group sits before reading the ranks.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['Your cards', 'Board', 'Pot'],
+      focusLabels: <String>['Your cards', 'Board'],
       identityTeachingSemantics:
           Act0TableIdentityTeachingSemanticsV1.learnerOnly,
     ),
@@ -221,7 +236,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
 final _firstTableGuideFindHeroRunner = _meetTableRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'first_table_guide_find_hero',
-  lessonTitle: 'First Table Guide',
+  lessonTitle: 'Your cards and the board',
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 2,
   beatCount: 5,
@@ -264,6 +279,21 @@ final _firstTableGuideFindHeroRunner = _meetTableRunner.copyWith(
   feedbackReason: 'Look near the bottom for your two private cards.',
   table: _meetTableRunner.table.copyWith(
     heroCards: _heroKtCards,
+    actionTrail: [
+      for (final item in _meetTableRunner.table.actionTrail)
+        if (item.isNote)
+          item
+        else
+          Act0ActionTrailItemV1(
+            label: item.label,
+            displayLabel: item.learnerLabel.replaceFirstMapped(
+              RegExp(r'^(?:SB|BB) blind (0\.5|1) BB$'),
+              (match) => match[1] == '1'
+                  ? 'A player adds one unit'
+                  : 'A player adds half a unit',
+            ),
+          ),
+    ],
     selectableSeatIds: const <String>[],
   ),
   teachingSteps: const <Act0TeachingStepV1>[],
@@ -324,7 +354,7 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
 
 final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   lessonId: 'first_table_guide_one_clear_choice',
-  lessonTitle: 'First Table Guide',
+  lessonTitle: 'Your cards and the board',
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 4,
   beatCount: 5,
@@ -385,7 +415,8 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Your cards and the board.',
-      body: 'Count your cards and the shared cards separately.',
+      body:
+          'Count your cards and the shared cards separately. The middle can be empty while you already have two cards. Look beside your seat first, then look at the middle. Count each group on its own even when one group has no cards.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Your cards', 'Shared cards'],
     ),

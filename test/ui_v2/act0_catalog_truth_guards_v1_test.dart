@@ -280,9 +280,14 @@ void main() {
       act0Day7CoverageV1,
     );
     expect(missing.where(day7MustBeCoveredV1), isEmpty);
+    // These two existing review IDs still resolve for pre-split due items.
+    // Newly authored families must have a current course or Rules check source.
     expect(
       act0Day7CoverageV1.difference(act0Day7MissSourcesV1.keys.toSet()),
-      isEmpty,
+      const {
+        ('world_1', 'what_poker_is', 'hero_cards_board_pot'),
+        ('world_1', 'what_poker_is', 'pot_to_call'),
+      },
     );
     final log = Platform.environment['G1_REPORT_DIR'];
     if (log != null) {

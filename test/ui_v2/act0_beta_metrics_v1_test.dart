@@ -183,7 +183,7 @@ void main() {
             hours: 4,
             assistance: Act0DecisionAssistanceV1.legacyUnknown,
           ),
-          record(5, ids[4], hours: 24),
+          record(5, ids[0], hours: 24),
           record(
             6,
             'early',
