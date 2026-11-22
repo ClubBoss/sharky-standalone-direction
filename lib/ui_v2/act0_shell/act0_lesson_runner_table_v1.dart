@@ -775,6 +775,23 @@ class _Act0TableV1 extends StatelessWidget {
       );
     }
 
+    Offset holeCardsAnchor(int slot) {
+      final anchor = p.holeCardAnchorsFromHero[slot];
+      final seat = seats[slot];
+      if (seat.isHero ||
+          seat.cardsVisibleMode != Act0CardsVisibleModeV1.faceUp) {
+        return anchor;
+      }
+      // Shown hands must clear the rear nameplate and the central price pill.
+      // Keep the registered positions of hidden cards and every other overlay.
+      return anchor +
+          switch (slot) {
+            3 => const Offset(0, .028),
+            5 when hasPrice => const Offset(.08, -.045),
+            _ => Offset.zero,
+          };
+    }
+
     Widget cards(Act0SeatStateV1 seat) {
       final hero = seat.isHero;
       final visible = hero ? table.heroCards : seat.holeCards;
@@ -828,7 +845,7 @@ class _Act0TableV1 extends StatelessWidget {
         for (var i = 0; i < seats.length; i++) ...[
           at(
             'act0_f7_hole_cards_${seats[i].seatId}',
-            p.holeCardAnchorsFromHero[i],
+            holeCardsAnchor(i),
             cards(seats[i]),
           ),
           _SeatPlacementV1(
