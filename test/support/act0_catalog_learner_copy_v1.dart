@@ -38,31 +38,53 @@ List<String> catalogWorldCodeFindingsV1(Act0LessonTaskV1 task) => [
 
 const _bankrollAmount = r'(\d+(?:\.\d+)?|one hundred|[a-z]+(?:-[a-z]+)?)';
 const _buyInUnit = r'[-\s]+(?:full[-\s]+)?buy[-\s]?ins?\b';
+const _moveDirection = r'mov(?:e|ing)[-\s]+(up|down)';
 final _bankrollThresholdPatterns = [
-  RegExp(
-    r'\b(?:keep|maintain|set aside|at least|requires?|needs?|'
-            r'(?:buffer|floor|minimum|threshold|requirement|rule) (?:of|is|at))\s+' +
-        _bankrollAmount +
-        _buyInUnit +
-        r'(?!\s+(?:more|less|short|above|below)\b)',
-    caseSensitive: false,
+  (
+    RegExp(
+      r'\b' +
+          _moveDirection +
+          r'\s+(?:(?:line|floor|threshold|trigger)\s+(?:is|of|at)\s+|'
+              r'(?:at|below|under|with|when you (?:have|fall below))\s+)' +
+          _bankrollAmount +
+          '(?:$_buyInUnit' +
+          r'|(?=\s+(?:at|for)\s+(?:the |your )?(?:current|next|this) stake\b))',
+      caseSensitive: false,
+    ),
+    2,
   ),
-  RegExp(
-    r'\b' +
-        _bankrollAmount +
-        _buyInUnit +
-        r'\s+(?:(?:course|cash-game|bankroll)\s+)?(?:rule|plan|floor|minimum|'
-            r'buffer|threshold|requirement|needs?|(?:is|are) (?:required|needed))\b',
-    caseSensitive: false,
+  (
+    RegExp(
+      r'\b(?:keep|maintain|set aside|at least|requires?|needs?|'
+              r'(?:buffer|floor|minimum|threshold|requirement|rule) (?:of|is|at))\s+' +
+          _bankrollAmount +
+          _buyInUnit +
+          r'(?!\s+(?:more|less|short|above|below)\b)',
+      caseSensitive: false,
+    ),
+    1,
   ),
-  RegExp(
-    r'\bmove (?:up|down)\s+(?:at|below|under|with|when you (?:have|fall below))\s+' +
-        _bankrollAmount +
-        '(?:$_buyInUnit' +
-        r'|(?=\s+(?:at|for)\s+(?:the |your )?(?:current|next) stake\b))',
-    caseSensitive: false,
+  (
+    RegExp(
+      r'\b' +
+          _bankrollAmount +
+          _buyInUnit +
+          r'\s+(?:(?:course|cash-game|bankroll)\s+)?(?:rule|plan|floor|minimum|'
+              r'buffer|threshold|requirement|needs?|(?:is|are) (?:required|needed))\b',
+      caseSensitive: false,
+    ),
+    1,
   ),
 ];
+final _personalBankrollRule = RegExp(
+  r'\bpersonal (?:cash(?:-game)? )?(?:bankroll )?(?:rule|policy|plan)\b',
+  caseSensitive: false,
+);
+final _standardBankrollRule = RegExp(
+  r'\b(?:sharky|course|standard|default)\b',
+  caseSensitive: false,
+);
+final _sentenceBreak = RegExp(r'(?<=[.!?])\s+');
 
 const _bankrollNumberWords = {
   'one': 1,
@@ -103,27 +125,64 @@ num? _readBankrollAmount(String amount) {
   return parts.fold<int>(0, (sum, word) => sum + _bankrollNumberWords[word]!);
 }
 
-/// Checks policy thresholds rather than actual bankroll, losses or shortfalls.
-Iterable<({String surface, num buyIns})> catalogBankrollThresholdsV1(
-  Act0LessonTaskV1 task,
+typedef BankrollThresholdV1 = ({String surface, num buyIns, bool isPersonal});
+
+Iterable<({String? direction, num buyIns})> _bankrollThresholdsInText(
+  String text,
 ) sync* {
-  for (final (surface, text) in [
+  for (final (pattern, amountGroup) in _bankrollThresholdPatterns) {
+    for (final match in pattern.allMatches(text)) {
+      if (_readBankrollAmount(match[amountGroup]!) case final buyIns?) {
+        yield (
+          direction: amountGroup == 2 ? match[1]!.toLowerCase() : null,
+          buyIns: buyIns,
+        );
+      }
+    }
+  }
+}
+
+/// Checks policy thresholds rather than balances or shortfalls. An explicit
+/// custom rule applies only to the amount and direction stated before choice.
+Iterable<BankrollThresholdV1> bankrollThresholdsInCopyV1({
+  required Iterable<(String, String)> copy,
+  required Iterable<String> preChoice,
+}) sync* {
+  final personal = {
+    for (final text in preChoice)
+      for (final sentence in text.split(_sentenceBreak))
+        if (_personalBankrollRule.hasMatch(sentence) &&
+            !_standardBankrollRule.hasMatch(sentence))
+          ..._bankrollThresholdsInText(sentence),
+  };
+  for (final (surface, text) in copy) {
+    for (final sentence in text.split(_sentenceBreak)) {
+      for (final threshold in _bankrollThresholdsInText(sentence)) {
+        yield (
+          surface: surface,
+          buyIns: threshold.buyIns,
+          isPersonal:
+              !_standardBankrollRule.hasMatch(sentence) &&
+              personal.contains(threshold),
+        );
+      }
+    }
+  }
+}
+
+Iterable<BankrollThresholdV1> catalogBankrollThresholdsV1(
+  Act0LessonTaskV1 task,
+) => bankrollThresholdsInCopyV1(
+  copy: [
     ('title', task.title),
     ('summary', task.summary ?? ''),
     ('lesson title', task.runner.lessonTitle),
     ('lesson subtitle', task.runner.lessonSubtitle),
     ('hint', task.runner.hint),
     ..._learnerCopy(task),
-  ]) {
-    for (final pattern in _bankrollThresholdPatterns) {
-      for (final match in pattern.allMatches(text)) {
-        if (_readBankrollAmount(match[1]!) case final buyIns?) {
-          yield (surface: surface, buyIns: buyIns);
-        }
-      }
-    }
-  }
-}
+  ],
+  preChoice: [task.runner.caption, catalogQuestion(task)],
+);
 
 typedef _Action = ({int index, String seat, String verb});
 

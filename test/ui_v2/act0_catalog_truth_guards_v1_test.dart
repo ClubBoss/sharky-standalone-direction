@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:yaml/yaml.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
@@ -2336,6 +2337,114 @@ void main() {
         isEmpty,
       );
     });
+
+    List<String> bankrollSpecFindings(Object? document) {
+      if (document is! Map || document['tasks'] is! List) {
+        throw const FormatException('Expected a spec document with tasks.');
+      }
+      Iterable<(String, String)> textFields(
+        Object? node,
+        String surface,
+      ) sync* {
+        if (node is String) {
+          yield (surface, node);
+        } else if (node is Map) {
+          for (final entry in node.entries) {
+            yield* textFields(entry.value, '$surface.${entry.key}');
+          }
+        } else if (node is List) {
+          for (final (index, value) in node.indexed) {
+            yield* textFields(value, '$surface[$index]');
+          }
+        }
+      }
+
+      return [
+        for (final task in document['tasks'] as List)
+          for (final threshold in bankrollThresholdsInCopyV1(
+            copy: textFields(task, task['id'] as String),
+            preChoice: [
+              for (final field in ['caption', 'question', 'teach'])
+                if (task[field] case final String text) text,
+            ],
+          ))
+            if (!threshold.isPersonal &&
+                threshold.buyIns != act0CashBankrollBuyInsV1)
+              '${threshold.surface}: ${threshold.buyIns} buy-ins',
+      ];
+    }
+
+    test('G1·48 rejects an implicit move-down line in a YAML spec', () {
+      final spec = loadYaml("""
+tasks:
+  - id: downswing
+    caption: Your bankroll falls from 42 buy-ins to 34. Your written move-down line is 36 at this stake.
+  - id: explicit_personal
+    caption: Your personal bankroll rule says move down below 32 buy-ins.
+    options:
+      - feedback: Under your personal rule, move down below 32 buy-ins.
+      - feedback: Move up at 32 buy-ins.
+  - id: standard
+    caption: Your personal bankroll rule says move down below 32 buy-ins.
+    options:
+      - feedback: The Sharky course says move down below 32 buy-ins.
+  - id: undeclared
+    caption: Your current bankroll has 33 buy-ins.
+    options:
+      - feedback: Your personal move-down line is 36 at this stake.
+""");
+      expect(bankrollSpecFindings(spec), [
+        'downswing.caption: 36 buy-ins',
+        'explicit_personal.options[1].feedback: 32 buy-ins',
+        'standard.options[0].feedback: 32 buy-ins',
+        'undeclared.options[0].feedback: 36 buy-ins',
+      ]);
+    });
+
+    test('G1·48 catalog allows an explicitly stated personal rule', () {
+      final row = _catalogRow('w11_y5d_stay_at_nl10');
+      final comparison = _withRunner(
+        row,
+        row.task.runner.copyWith(
+          caption:
+              'Your personal bankroll rule says move down below 32 buy-ins.',
+          hint: 'Move up at 32 buy-ins.',
+        ),
+      );
+      final findings = runCatalogQualityAudit(rows: [comparison]).findings;
+      expect(
+        findings.where(
+          (key) => key.startsWith('$catalogBankrollThresholdRuleV1|'),
+        ),
+        ['$catalogBankrollThresholdRuleV1|${row.task.taskId}|hint|32'],
+      );
+    });
+
+    // Author specs live outside Git. Run this gate with ACT0_BANKROLL_SPEC_DIR
+    // set to the l0-audit/specs directory, including any nested spec types.
+    final specDirectory = Platform.environment['ACT0_BANKROLL_SPEC_DIR'];
+    test(
+      'G1·48 scans external author YAML specs',
+      () {
+        final files =
+            Directory(specDirectory!)
+                .listSync(recursive: true)
+                .whereType<File>()
+                .where((file) => file.path.endsWith('_spec.yaml'))
+                .toList()
+              ..sort((a, b) => a.path.compareTo(b.path));
+        expect(files, isNotEmpty);
+        final findings = [
+          for (final file in files)
+            for (final finding in bankrollSpecFindings(
+              loadYaml(file.readAsStringSync()),
+            ))
+              '${file.path}: $finding',
+        ];
+        expect(findings, isEmpty, reason: findings.join('\n'));
+      },
+      skip: specDirectory == null ? 'Author spec checkout is external.' : false,
+    );
 
     for (final (price, oldText, oldCount) in [
       (
