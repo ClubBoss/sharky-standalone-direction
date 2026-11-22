@@ -26,6 +26,11 @@ Map<String, dynamic> wave6RowsV1(String phase) => {
 
 final wave6CurrentRowsV1 = wave6RowsV1('current');
 final wave6PreviousRowsV1 = wave6RowsV1('previous');
+
+final wave6RetiredRowsV1 = <String, dynamic>{
+  for (final contract in wave6ContractsV1.values)
+    if (contract['retired'] case final Map<String, dynamic> rows) ...rows,
+};
 int get wave6TaskDeltaV1 =>
     wave6CurrentRowsV1.length - wave6PreviousRowsV1.length;
 
@@ -42,6 +47,19 @@ void verifyWave6AndRestoreIdentityV1(List<List<Object?>> entries) {
     final current = contract['current'] as Map<String, dynamic>;
     final previous = contract['previous'] as Map<String, dynamic>;
     final world = ((current.values.first as Map)['identity'] as List).first;
+    if (contract['retired'] case final Map<String, dynamic> rows) {
+      expect(
+        previous.keys.toSet().difference(current.keys.toSet()),
+        rows.keys.toSet(),
+      );
+      expect(
+        entries.map((row) => row[2]).toSet().intersection(rows.keys.toSet()),
+        isEmpty,
+      );
+      for (final reason in rows.values) {
+        expect(reason, 'replaced by approved W12 spec, pre-beta');
+      }
+    }
     expect(
       {for (final row in entries.where((r) => r[0] == world)) row[2]: row},
       {for (final e in current.entries) e.key: (e.value as Map)['identity']},

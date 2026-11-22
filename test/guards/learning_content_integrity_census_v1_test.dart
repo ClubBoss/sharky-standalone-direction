@@ -933,6 +933,14 @@ void main() {
         .map((entry) => entry['identity'] as List)
         .where((entry) => (entry[5] as List).length >= 2)
         .toList();
+    expect(
+      rows
+          .map((row) => row.task.taskId)
+          .toSet()
+          .intersection(wave6RetiredRowsV1.keys.toSet()),
+      isEmpty,
+      reason: 'Retired pre-beta W12 IDs remain in the historical census only.',
+    );
     final currentLateWrong = {
       for (final entry in currentLate)
         for (final option in (entry[5] as List).cast<List>())

@@ -1,4 +1,11 @@
 {
+  "retired": {
+    "w12_river_ev_draw_hit": "replaced by approved W12 spec, pre-beta",
+    "w12_river_ev_new_sample": "replaced by approved W12 spec, pre-beta",
+    "w12_river_ev_turn_draw_miss": "replaced by approved W12 spec, pre-beta",
+    "w12_tilt_after_lucky_win": "replaced by approved W12 spec, pre-beta",
+    "w12_tilt_after_river_beat": "replaced by approved W12 spec, pre-beta"
+  },
   "previous": {
     "w12_decision_quality_intro": {
       "identity": [
