@@ -51,7 +51,7 @@ void _writeReport(
 ) {
   final rows = reasoningCatalogRowsV1;
   final truth = runCatalogAudit(rows: rows);
-  final quality = runCatalogQualityAudit(rows: rows);
+  final quality = runCatalogQualityAudit();
   final reasoning = [
     for (final row in rows)
       if (auditCatalogReasoningV1(row) case final result?) result,
@@ -98,6 +98,7 @@ void _writeReport(
     '| E26 | Пороги M-ratio | Спека W9, проверка содержания |',
     '| E27 | Доступность скриптов ревью | Проверка рабочего окружения |',
     '| E28 | Младшие руки в диапазоне открытия | G1·44: ${rows.expand(auditOpeningRangeClaimsV1).length} находок в ${rows.expand(openingRangeClaimsV1).length} утверждениях в области стартового чарта |',
+    '| E29 | Одинаковые метки вариантов одного задания | G1·45: ${quality.findings.where((key) => key.startsWith('$catalogDuplicateOptionLabelRuleV1|')).length} находок в ${quality.checks[catalogDuplicateOptionLabelRuleV1] ?? 0} заданиях |',
     '',
     '## E13 — расхождения',
     '',

@@ -4921,7 +4921,8 @@ final _w6ComboCountsIntroRunner = _w6RangeIntroRunner.copyWith(
       title: 'Families have counts.',
       body:
           'A combo is one exact two-card hand. Four aces times four kings gives 16 A-K combos. '
-          'Four share a suit and 12 do not. A pocket pair has six ways to choose two of its four cards.',
+          'Four share a suit and 12 do not. A pocket pair has six ways to choose two of its four cards. '
+          'A blocker is a known card, such as one you hold, that rules out any opponent combo containing it.',
       focusLabels: <String>['16 combos', '6 combos', 'Range density'],
     ),
   ],

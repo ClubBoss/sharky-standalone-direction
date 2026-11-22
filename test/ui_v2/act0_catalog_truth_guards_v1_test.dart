@@ -1065,6 +1065,10 @@ void main() {
 
   test('G1·11–G1·25 catalog quality baseline admits no regressions', () {
     final report = runCatalogQualityAudit();
+    final duplicateLabels = report.findings.where(
+      (key) => key.startsWith('$catalogDuplicateOptionLabelRuleV1|'),
+    );
+    expect(duplicateLabels, isEmpty, reason: 'G1·45 duplicate option labels');
     final baselineFile = File(_qualityBaselinePath);
     if (Platform.environment['G1_UPDATE_QUALITY_BASELINE'] == '1') {
       final existing = baselineFile.existsSync()
@@ -2165,6 +2169,83 @@ void main() {
         '21.duplicate_wrong_reason|reused|call',
         '21.duplicate_wrong_reason|binary|call',
       });
+    });
+
+    test('G1·45 rejects the old duplicate Day 7 percentage label', () {
+      final base = day7CatalogTasks.firstWhere(
+        (row) =>
+            row.task.taskId ==
+            'spaced_review_w9_survival_pressure_basics_pot_to_call_v1',
+      );
+      final options = [...base.task.runner.options];
+      options[0] = const Act0RunnerOptionV1(
+        id: 'different_id',
+        label: '65.3%',
+        isCorrect: false,
+        preferredLabel: '39.5%',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Look again.',
+        feedbackReason: 'Count the whole final pot, including the call.',
+      );
+      final duplicate = _withRunner(
+        base,
+        base.task.runner.copyWith(options: options),
+      );
+      Iterable<String> labelFindings(CatalogTask row) =>
+          runCatalogQualityAudit(rows: [row]).findings.where(
+            (key) => key.startsWith('$catalogDuplicateOptionLabelRuleV1|'),
+          );
+      expect(labelFindings(base), isEmpty);
+      expect(labelFindings(duplicate), [
+        '$catalogDuplicateOptionLabelRuleV1|${base.task.taskId}|65.3%',
+      ]);
+    });
+
+    test('G1·21 checks each Day 7 option in a scoped catalog audit', () {
+      final base = day7CatalogTasks.firstWhere(
+        (row) =>
+            row.task.taskId == 'spaced_review_w4_value_bets_board_cards_v1',
+      );
+      final options = base.task.runner.options;
+      const sharedReason = 'Bet 3 BB to get paid by a weaker king.';
+      Act0RunnerOptionV1 withReason(
+        Act0RunnerOptionV1 option,
+        String reason, {
+        String? id,
+      }) => Act0RunnerOptionV1(
+        id: id ?? option.id,
+        label: option.label,
+        isCorrect: option.isCorrect,
+        preferredLabel: option.preferredLabel,
+        quality: option.quality,
+        feedbackTitle: option.feedbackTitle,
+        feedbackReason: reason,
+      );
+      Iterable<String> reasonFindings(List<Act0RunnerOptionV1> choices) =>
+          runCatalogQualityAudit(
+            rows: [
+              _withRunner(base, base.task.runner.copyWith(options: choices)),
+            ],
+          ).findings.where((key) => key.startsWith('21.'));
+
+      expect(reasonFindings(options), isEmpty);
+      expect(
+        reasonFindings([
+          for (final option in options) withReason(option, sharedReason),
+        ]),
+        unorderedEquals([
+          '21.duplicate_wrong_reason|${base.task.taskId}|choice_1',
+          '21.duplicate_wrong_reason|${base.task.taskId}|fold',
+        ]),
+      );
+      expect(
+        reasonFindings([
+          options[0],
+          withReason(options[1], sharedReason),
+          withReason(options[2], sharedReason, id: options[1].id),
+        ]),
+        ['21.duplicate_wrong_reason|${base.task.taskId}|choice_1'],
+      );
     });
   });
 

@@ -1522,6 +1522,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason:
         "BB can call 3 BB with weaker kings, so bet for value. Checking to showdown leaves that payment behind.",
+    wrongReasons: const {
+      1: 'Checking takes your top pair to showdown for free. Bet 3 BB to get paid by K-J and K-T.',
+      2: 'BB checked, so folding gives up the pot for nothing with top pair. Bet to get paid by a weaker king.',
+    },
     caption: "In this example BB calls 3 BB with K-J and K-T.",
   ),
   _day7ExampleV1(
@@ -1541,6 +1545,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason:
         "Bet 3 BB because BB’s pair of sevens beats your hand and folds to that size. A check takes away the chance to win by making BB fold.",
+    wrongReasons: const {
+      0: 'Checking takes your unpaired hand to showdown, where it loses to sevens. The stated 3 BB bet makes sevens fold.',
+      2: 'BB checked, so folding hands over the pot. Bet 3 BB to make the sevens fold.',
+    },
     caption: "BB has a pair of sevens and folds it to a 3 BB bet.",
   ),
   _day7ExampleV1(
@@ -1584,6 +1592,10 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 2,
     reason:
         "A bet makes BB pay or fold with ace-king. Checking gives BB a free chance to pair one of those cards and beat your nines.",
+    wrongReasons: const {
+      0: 'Checking lets BB see the turn for free and possibly pair an ace or king. Bet 3 BB to charge that hand.',
+      1: 'BB checked, so folding gives up the pot for nothing while your nines are ahead. Bet to make A-K pay or fold.',
+    },
     caption: "Assume BB has A-K and can pair either card on the turn.",
   ),
   _day7ExampleV1(
@@ -2983,15 +2995,15 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         question: "What share of the final pot is the call?",
         options: const [
           Act0RunnerOptionV1(
-            id: "65_3",
-            label: "65.3%",
+            id: "50",
+            label: "50%",
             isCorrect: false,
             preferredLabel: "39.5%",
             betterAnswerLabel: "39.5%",
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "8.5 BB was the pot before the bet. Use the 24.5 BB already in the pot, then add the call.",
+                "Dividing 16 by 32 counts only the bet and call. Include the 8.5 BB already in the middle for a final pot of 40.5 BB.",
           ),
           Act0RunnerOptionV1(
             id: "39_5",
@@ -3370,15 +3382,15 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         question: "What share of the final pot is the call?",
         options: const [
           Act0RunnerOptionV1(
-            id: "58_5",
-            label: "58.5%",
+            id: "50",
+            label: "50%",
             isCorrect: false,
             preferredLabel: "36.9%",
             betterAnswerLabel: "36.9%",
             quality: Act0FeedbackQualityV1.wrong,
             feedbackTitle: "Look again.",
             feedbackReason:
-                "8.5 BB was the pot before the bet. Use the 20.5 BB already in the pot, then add the call.",
+                "Dividing 12 by 24 leaves out the 8.5 BB from earlier streets. Add it to the bet and call to get the 32.5 BB final pot.",
           ),
           Act0RunnerOptionV1(
             id: "36_9",

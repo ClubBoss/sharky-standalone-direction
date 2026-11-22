@@ -37,6 +37,7 @@ class CatalogQualityReportV1 {
 }
 
 final _whitespacePattern = RegExp(r'\s+');
+const catalogDuplicateOptionLabelRuleV1 = '45.duplicate_option_label';
 final _jargonPattern = RegExp(
   r'\b(?:exploit(?:s|ed|ing|ative)?|loop|lever|transfer|baseline|villain|hero|heuristic|framework|calibration)\b',
   caseSensitive: false,
@@ -78,6 +79,9 @@ int _wordCount(String text) {
   if (trimmed.isEmpty) return 0;
   return trimmed.split(_whitespacePattern).where((w) => w.isNotEmpty).length;
 }
+
+String _normalizedCopy(String text) =>
+    text.trim().toLowerCase().replaceAll(_whitespacePattern, ' ');
 
 bool catalogIsHeadsUpAllInCallFoldV1(Act0RunnerStateV1 runner) {
   final labels = runner.options
@@ -293,9 +297,11 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
   // Keep the original course ordering and anchor. Day 7 can reuse neither
   // a course reason nor a reason from another review task. A review also
   // needs distinct feedback per choice, including binary reviews.
+  bool isReview(CatalogTask row) =>
+      row.task.taskId.startsWith('spaced_review_');
   auditDuplicateWrongReasonsV1(
-    course: targetRows,
-    day7: rows == null ? day7CatalogTasks : const [],
+    course: targetRows.where((row) => !isReview(row)),
+    day7: rows?.where(isReview) ?? day7CatalogTasks,
     count: count,
     findings: findings,
   );
@@ -304,6 +310,17 @@ CatalogQualityReportV1 runCatalogQualityAudit({List<CatalogTask>? rows}) {
       in rows ??
           [...catalogTasks, ...rulesCheckCatalogTasks, ...day7CatalogTasks]) {
     auditCatalogNumericCopy(row, count: count, findings: findings);
+    final task = row.task;
+    if (task.runner.options.length < 2) continue;
+    const rule = catalogDuplicateOptionLabelRuleV1;
+    count(rule);
+    final labels = <String>{};
+    for (final option in task.runner.options) {
+      final label = _normalizedCopy(option.label);
+      if (!labels.add(label)) {
+        findings.add('$rule|${task.taskId}|$label');
+      }
+    }
   }
 
   // Finalize G1.11 per world.
@@ -383,20 +400,17 @@ void auditDuplicateWrongReasonsV1({
   void scan(CatalogTask row, {required bool review}) {
     final task = row.task;
     if (task.repairOnly) return;
-    final reasons = {
+    final optionsWithReasons = [
       for (final option in task.runner.options)
-        option.id: option.feedbackReason.trim().toLowerCase().replaceAll(
-          _whitespacePattern,
-          ' ',
-        ),
-    };
+        (option: option, reason: _normalizedCopy(option.feedbackReason)),
+    ];
     final occurrences = <String, int>{};
-    for (final reason in reasons.values) {
+    for (final (:reason, option: _) in optionsWithReasons) {
       occurrences.update(reason, (n) => n + 1, ifAbsent: () => 1);
     }
-    for (final option in task.runner.options.where((o) => !o.isCorrect)) {
+    for (final (:option, :reason) in optionsWithReasons) {
+      if (option.isCorrect) continue;
       count(rule);
-      final reason = reasons[option.id]!;
       final repeatedInTask =
           review && reason.isNotEmpty && occurrences[reason]! > 1;
       final repeatedAcrossTasks =

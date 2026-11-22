@@ -2237,7 +2237,7 @@ final _w9BubblePressureIntroRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "What does a call cost?",
       body:
-          "Equity is your share of a pot on average. A tie gets its share too. Near a prize, a call that could bust you may need more equity than the chip price asks for. The gap is the risk premium. A stack that can bust yours covers you. Check the rest of the stacks and the prizes too.",
+          "Equity is your share of a pot on average. A tie gets its share too. Near a prize, a call that could bust you may need more equity than the chip price asks for. The gap is the risk premium. In this example the payout model requires 55% equity and the chip price requires 40%. A stack that can bust yours covers you. Check the rest of the stacks and the prizes too.",
     ),
   ],
   options: const [],
