@@ -8700,11 +8700,12 @@ final _w12_river_ev_costly_call = _w12Task(
 Act0LessonTaskV1 _wave6Asm05CopyV1(
   Act0LessonTaskV1 source, {
   required String caption,
-  required String question,
-  required List<(String, String, Act0FeedbackQualityV1, String)> choices,
-  required String teach,
+  required String wrongReason,
 }) {
-  final authored = _wave6AuthoredChoicesV1(choices);
+  final call = source.runner.options.singleWhere(
+    (option) => option.id == 'call',
+  );
+  final callLabel = '${call.label} ${call.amountLabel}';
   return Act0LessonTaskV1(
     taskId: source.taskId,
     title: source.title,
@@ -8716,25 +8717,22 @@ Act0LessonTaskV1 _wave6Asm05CopyV1(
     summary: source.summary,
     runner: source.runner.copyWith(
       caption: caption,
-      question: question,
+      question: 'Call or fold?',
       options: [
         for (final outcome in source.runner.options)
-          for (final option in authored.where(
-            (choice) => choice.id == outcome.id,
-          ))
-            Act0RunnerOptionV1(
-              id: option.id,
-              label: option.label,
-              isCorrect: outcome.isCorrect,
-              preferredLabel: option.preferredLabel,
-              quality: outcome.quality,
-              feedbackTitle: outcome.feedbackTitle,
-              feedbackReason: [
-                outcome.feedbackReason,
-                option.feedbackReason,
-                if (outcome.isCorrect && teach.isNotEmpty) teach,
-              ].join(' '),
-            ),
+          Act0RunnerOptionV1(
+            id: outcome.id,
+            label: outcome.id == call.id ? callLabel : outcome.label,
+            isCorrect: outcome.isCorrect,
+            preferredLabel: outcome.preferredLabel == call.label
+                ? callLabel
+                : outcome.preferredLabel,
+            quality: outcome.quality,
+            feedbackTitle: outcome.feedbackTitle,
+            feedbackReason: outcome.isCorrect
+                ? outcome.feedbackReason
+                : '${outcome.feedbackReason} $wrongReason',
+          ),
       ],
     ),
   );
@@ -9049,23 +9047,8 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
     ),
     caption:
         'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 10 into 40. If you call, both check the river. Raises are excluded. No ante or rake.',
-    question: 'Call or fold?',
-    choices: const [
-      (
-        'call',
-        'Call 10 BB',
-        Act0FeedbackQualityV1.correct,
-        'SB bets 10 BB with aces. Nine hearts win out of 44 unknown cards, so calling at 16.7% gains 2.27 BB over folding.',
-      ),
-      (
-        'fold',
-        'Fold',
-        Act0FeedbackQualityV1.wrong,
+    wrongReason:
         'The 10 BB price needs 16.7%. With 9 clean hearts, your 20.5% chance earns about 2.27 BB more than a fold.',
-      ),
-    ],
-    teach:
-        'On the turn, count the cards that win at showdown. Here the other four folded players gave no clues. The prior bet is gone in either choice.',
   ),
   _wave6Asm05CopyV1(
     act0Asm05AuthoredDecisionTaskV1(
@@ -9080,22 +9063,8 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
     ),
     caption:
         'SB shows As Ad (pocket aces). Other players folded without card clues; cards are random. SB bets 40 into 40. If you call, both check the river. Raises are excluded. No ante or rake.',
-    question: 'Call or fold?',
-    choices: const [
-      (
-        'fold',
-        'Fold',
-        Act0FeedbackQualityV1.correct,
-        'SB bets 40 BB with aces. Nine hearts win out of 44 unknown cards, so the 33.3% price makes calling lose 15.45 BB.',
-      ),
-      (
-        'call',
-        'Call 40 BB',
-        Act0FeedbackQualityV1.wrong,
+    wrongReason:
         'The river heart came in once, but 35 of 44 cards still lose. This 40 BB call loses 15.45 BB on average.',
-      ),
-    ],
-    teach: '',
   ),
   _w12_turn_count_heart_outs,
 ];

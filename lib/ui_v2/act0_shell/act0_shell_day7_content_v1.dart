@@ -3990,7 +3990,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             "CO calls 3 BB and 4 BB with weak kings and lower pairs. At 18 BB, those hands fold.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
-        question: "Bet or check?",
+        question: "Which bet size earns the most?",
         options: const [
           Act0RunnerOptionV1(
             id: "bet_3_bb",

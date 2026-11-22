@@ -473,7 +473,10 @@ Act0LessonTaskV1 act0Asm05AuthoredDecisionTaskV1({
   final expected = preferredActionLabel == 'Call'
       ? 'Call ${source.additionalCallBb} BB'
       : preferredActionLabel;
-  final ev = truth.callIncrementalEvBb.toStringAsFixed(2);
+  final ev = truth.callIncrementalEvBb;
+  final price = (100 * source.additionalCallBb / source.potAfterCallBb)
+      .toStringAsFixed(1);
+  final wins = '${truth.heroWins}/${truth.riverCount}';
   final options = List<Act0RunnerOptionV1>.unmodifiable([
     for (final action in source.availableActions)
       Act0RunnerOptionV1(
@@ -488,11 +491,20 @@ Act0LessonTaskV1 act0Asm05AuthoredDecisionTaskV1({
             : Act0FeedbackQualityV1.wrong,
         preferredLabel: preferredActionLabel,
         feedbackTitle: truth.accepts(action)
-            ? 'Correct decision. Judge the choice, not the result.'
+            ? 'Correct.'
             : '$expected has the higher expected value.',
-        feedbackReason:
-            '${_reviewOutcome(exercise.complete(action))} '
-            'Call EV $ev BB; Fold 0. The earlier 20 BB is sunk.',
+        feedbackReason: [
+          _reviewOutcome(exercise.complete(action)),
+          if (!truth.accepts(action))
+            'Call EV ${ev.toStringAsFixed(2)} BB; Fold 0.'
+          else if (action == Act0Asm05ActionV1.call)
+            'SB bets ${source.turnBetBb} BB, so $wins beats $price% and '
+                'calling gains ${ev.toStringAsFixed(2)} BB over folding.'
+          else
+            'SB bets ${source.turnBetBb} BB, so $wins misses $price% and '
+                'calling loses ${ev.abs().toStringAsFixed(2)} BB.',
+          'The earlier 20 BB is sunk.',
+        ].join(' '),
       ),
   ]);
   return Act0LessonTaskV1(
