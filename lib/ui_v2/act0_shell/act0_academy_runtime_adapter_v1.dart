@@ -163,6 +163,7 @@ Widget act0AcademyReviewRuntimeV1(
     input: Act0AcademyReviewLeafInputV1(
       openMistakes: legacy.review.mistakes,
       repeatedMistake: legacy.repeatedMistake,
+      leakDashboard: legacy.leakDashboard,
       pastRepairs: legacy.review.fixedMistakes,
       dueItems: due,
       savedChecks: legacy.sessionDrillRecheckQueueItems

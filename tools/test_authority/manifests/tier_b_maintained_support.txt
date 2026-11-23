@@ -99,6 +99,8 @@ test/ui_v2/act0_route_accessibility_v1_test.dart
 test/act0_matched_task_formats_v1_test.dart
 test/act0_poker_reference_math_v1_test.dart
 test/ui_v2/act0_attempt_archive_v1_test.dart
+test/ui_v2/act0_leak_archive_projection_v1_test.dart
+test/ui_v2/act0_leak_dashboard_v1_test.dart
 test/ui_v2/act0_repeated_mistake_route_v1_test.dart
 test/ui_v2/act0_rule_based_repair_personalization_v1_test.dart
 test/ui_v2/act0_s10_retake_persistence_safety_v1_test.dart

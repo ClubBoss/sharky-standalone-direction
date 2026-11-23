@@ -990,15 +990,24 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
             .where((card) => card.taskId == taskId)
             .firstOrNull;
         if (mistake == null) continue;
-        final target = _openRepairIntentTargetForSourceTaskV1(taskId);
-        if (target != null &&
-            target.intent.missedSignalId == pattern.conceptFamilyId &&
-            target.intent.errorType == pattern.errorType) {
+        if (_repeatedMistakeTargetV1(pattern, taskId) != null) {
           return mistake;
         }
       }
     }
     return null;
+  }
+
+  _Act0OpenRepairIntentTargetV1? _repeatedMistakeTargetV1(
+    Act0ReviewPatternCoachingPatternV1 pattern,
+    String taskId,
+  ) {
+    final target = _openRepairIntentTargetForSourceTaskV1(taskId);
+    return target != null &&
+            target.intent.missedSignalId == pattern.conceptFamilyId &&
+            target.intent.errorType == pattern.errorType
+        ? target
+        : null;
   }
 
   Act0ReviewPatternCoachingProjectionV1 _reviewPatternCoachingProjectionV1() {

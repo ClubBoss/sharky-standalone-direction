@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_leak_dashboard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
@@ -38,6 +39,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     required this.onSelected,
     this.onFixMistake,
     this.repeatedMistake,
+    this.leakDashboard,
     this.onReplayFixedMistake,
     this.sessionDrillRecheckQueueItems =
         const <SessionDrillRecheckLaunchQueueItemV1>[],
@@ -56,6 +58,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final ValueChanged<String> onSelected;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
   final Act0MistakeCardV1? repeatedMistake;
+  final Act0LeakDashboardV1? leakDashboard;
   final ValueChanged<Act0MistakeCardV1>? onReplayFixedMistake;
   final List<SessionDrillRecheckLaunchQueueItemV1>
   sessionDrillRecheckQueueItems;
