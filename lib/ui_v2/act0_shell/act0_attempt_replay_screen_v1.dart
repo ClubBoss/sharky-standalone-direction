@@ -5,10 +5,13 @@ import 'package:poker_analyzer/models/poker_street.dart';
 
 import 'act0_academy_reading_style_v1.dart';
 import 'act0_attempt_archive_v1.dart';
+import 'act0_attempt_replay_table_v1.dart';
 import 'act0_club_night_tokens_v1.dart';
 import 'act0_imported_hand_v1.dart';
+import 'act0_lesson_runner_shell_v1.dart';
 import 'act0_shell_state_v1.dart';
 import 'act0_shell_tokens_v1.dart';
+import 'act0_table_presentation_config_v1.dart';
 
 class Act0AttemptReplayScreenV1 extends StatefulWidget {
   const Act0AttemptReplayScreenV1({
@@ -35,11 +38,60 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
       _Act0AttemptReplayScreenV1State();
 }
 
-class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
+class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
+    with WidgetsBindingObserver {
+  late var _table = _buildReplayTable();
   late var _replay = Act0AttemptReplayV1.events(
     widget.attempt?.events ?? _ownHandEvents(widget.hand!),
   );
   Timer? _timer;
+
+  bool _visible = true;
+
+  Act0AttemptReplayTableV1? _buildReplayTable() {
+    final attempt = widget.attempt;
+    return attempt == null
+        ? null
+        : Act0AttemptReplayTableV1.fromAttempt(attempt);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _visible =
+        TickerMode.of(context) && (ModalRoute.isCurrentOf(context) ?? true);
+    if (!_visible && _replay.isPlaying) {
+      _timer?.cancel();
+      _timer = null;
+      _replay = _replay.pause();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didUpdateWidget(Act0AttemptReplayScreenV1 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.attempt != widget.attempt || oldWidget.hand != widget.hand) {
+      _timer?.cancel();
+      _timer = null;
+      _replay = Act0AttemptReplayV1.events(
+        widget.attempt?.events ?? _ownHandEvents(widget.hand!),
+      );
+      _table = _buildReplayTable();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed && _replay.isPlaying) {
+      _update(_replay.pause());
+    }
+  }
 
   void _update(Act0AttemptReplayV1 replay) {
     setState(() => _replay = replay);
@@ -66,6 +118,7 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
   @override
   void dispose() {
     _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -82,6 +135,7 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
     final mutedStyle = ownHand
         ? Act0ClubNightTokensV1.secondary
         : Act0AcademyReadingStyleV1.muted;
+    final frame = _table?.atPosition(_replay.position);
     final list = ListView(
       key: const Key('act0_attempt_replay_screen'),
       padding: EdgeInsets.fromLTRB(
@@ -126,6 +180,9 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
                   liveRegion: true,
                   child: Text(
                     'Step ${_replay.position} of $total',
+                    semanticsLabel: history.isEmpty
+                        ? 'Step 0 of $total'
+                        : 'Step ${_replay.position} of $total. ${history.last}',
                     style: mutedStyle,
                   ),
                 ),
@@ -160,6 +217,19 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
                     ),
                   ],
                 ),
+                if (frame != null)
+                  Act0TableSceneV1(
+                    key: const Key('act0_attempt_replay_table'),
+                    table: frame.table,
+                    config: Act0TablePresentationConfigV1(
+                      animateActiveCommitment: frame.newCommitment && _visible,
+                    ),
+                  )
+                else if (!ownHand && _table == null)
+                  const Text(
+                    'Table playback is unavailable for this attempt.',
+                    style: Act0AcademyReadingStyleV1.muted,
+                  ),
                 if (history.isNotEmpty) ...[
                   Text(
                     history.last,

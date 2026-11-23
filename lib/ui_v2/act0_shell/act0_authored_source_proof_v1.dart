@@ -71,59 +71,87 @@ String? act0AuthoredSourceFingerprintV1({
       for (final preset in sizingPresets)
         <Object?>[preset.id, preset.potFraction, preset.isPrimary],
     ],
-    <Object?>[
-      table.scope.name,
-      table.tableFormat.name,
-      table.playerCount,
-      table.density.name,
-      table.streetLabel,
-      table.potLabel,
-      table.toCallLabel,
-      table.centerLabel,
-      table.focusCalloutLabel,
-      table.emptyBoardLabel,
-      table.activeSeatId,
-      table.heroSeatId,
-      for (final seat in table.seats)
-        <Object?>[
-          seat.seatId,
-          seat.seatLabel,
-          seat.displayName,
-          seat.isHero,
-          seat.isDealerButton,
-          seat.isSmallBlind,
-          seat.isBigBlind,
-          seat.blindAmountLabel,
-          seat.isActive,
-          seat.isTarget,
-          seat.isInHand,
-          seat.isFolded,
-          seat.hasActed,
-          seat.isLastAggressor,
-          seat.isOccupied,
-          seat.stackLabel,
-          seat.currentBetLabel,
-          seat.cardsVisibleMode.name,
-          _cards(seat.holeCards),
-          seat.bet == null
-              ? null
-              : <Object?>[
-                  seat.bet!.kind.name,
-                  seat.bet!.label,
-                  seat.bet!.amountLabel,
-                ],
-        ],
-      _cards(table.heroCards),
-      _cards(table.boardCards),
-      for (final action in table.actionTrail)
-        <Object?>[action.kind.name, action.label],
-      table.selectableSeatIds.toList()..sort(),
-    ],
+    _authoredTablePayloadV1(table),
     optionSemantics,
     if (table.decisionSeatId != null)
       <Object?>['decision_actor_v1', table.decisionSeatId],
   ];
   return sha256.convert(utf8.encode(jsonEncode(payload))).toString();
+}
+
+/// Binds the actual table captured at submission to its authored counterpart.
+String act0ReplayTableFingerprintV1(Act0TableStateV1 table) => sha256
+    .convert(utf8.encode(jsonEncode(_authoredTablePayloadV1(table))))
+    .toString();
+
+List<Object?> _authoredTablePayloadV1(Act0TableStateV1 table) => <Object?>[
+  table.scope.name,
+  table.tableFormat.name,
+  table.playerCount,
+  table.density.name,
+  table.streetLabel,
+  table.potLabel,
+  table.toCallLabel,
+  table.centerLabel,
+  table.focusCalloutLabel,
+  table.emptyBoardLabel,
+  table.activeSeatId,
+  table.heroSeatId,
+  for (final seat in table.seats)
+    <Object?>[
+      seat.seatId,
+      seat.seatLabel,
+      seat.displayName,
+      seat.isHero,
+      seat.isDealerButton,
+      seat.isSmallBlind,
+      seat.isBigBlind,
+      seat.blindAmountLabel,
+      seat.isActive,
+      seat.isTarget,
+      seat.isInHand,
+      seat.isFolded,
+      seat.hasActed,
+      seat.isLastAggressor,
+      seat.isOccupied,
+      seat.stackLabel,
+      seat.currentBetLabel,
+      seat.cardsVisibleMode.name,
+      _cards(seat.holeCards),
+      seat.bet == null
+          ? null
+          : <Object?>[
+              seat.bet!.kind.name,
+              seat.bet!.label,
+              seat.bet!.amountLabel,
+            ],
+    ],
+  _cards(table.heroCards),
+  _cards(table.boardCards),
+  for (final action in table.actionTrail)
+    <Object?>[action.kind.name, action.label],
+  table.selectableSeatIds.toList()..sort(),
+];
+
+/// Resolves only the recorded table revision. A legacy journal can still play
+/// as text when no decision-time table fingerprint was captured.
+Act0TableStateV1? act0VerifiedReplayTableV1(
+  Act0LearningEvidenceRecordV1 record,
+  String? tableFingerprint,
+) {
+  if (tableFingerprint == null) return null;
+  final task = _resolveTask(record.worldId, record.lessonId, record.taskId);
+  if (task == null ||
+      act0AuthoredSourceFingerprintV1(
+            worldId: record.worldId,
+            lessonId: record.lessonId,
+            task: task,
+          ) !=
+          record.authoredSourceFingerprint) {
+    return null;
+  }
+  final table = task.runner.table;
+  return act0ReplayTableFingerprintV1(table) == tableFingerprint ? table : null;
 }
 
 /// Full semantic revision of the actual existing diagnostic factory output.

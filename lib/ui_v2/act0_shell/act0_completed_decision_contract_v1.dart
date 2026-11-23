@@ -42,6 +42,7 @@ class Act0CompletedDecisionV1 {
     this.recordedTaskLabel,
     this.recordedChoiceLabel,
     this.recordedTrail = const [],
+    this.recordedTable,
   });
 
   final int schemaVersion;
@@ -66,4 +67,5 @@ class Act0CompletedDecisionV1 {
   final String? recordedTaskLabel;
   final String? recordedChoiceLabel;
   final List<Act0ActionTrailItemV1> recordedTrail;
+  final Act0TableStateV1? recordedTable;
 }

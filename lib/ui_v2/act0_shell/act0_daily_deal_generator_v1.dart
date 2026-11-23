@@ -266,7 +266,7 @@ List<_DailyDefenseSpotV1> _dailyDefenseSpotsForSeatV1(Act0ChartSeatV1 opener) {
       startingStackBbBySeat: const {'bb': _day7DefaultStackBbV1},
     ).amounts(seatIds: seats, actorSeatId: 'bb');
     final due = amounts.toCallBb!;
-    pricesByOpen[open] = due / (amounts.potBb + due);
+    pricesByOpen[open] = act0CallPriceV1(amounts.potBb, due)!.equity;
   }
 
   return [
@@ -328,7 +328,7 @@ _DailyDealContentV1 _dailyPriceV1(List<String> deck, math.Random rng) {
   );
   final (potBb: pot, toCallBb: callPrice) = _dailyDealAmountsV1(table);
   final due = callPrice!;
-  final pct = due / (pot + due);
+  final pct = act0CallPriceV1(pot, due)!.equity;
   final alternative = due / pot;
   return (
     table: table,
@@ -410,8 +410,8 @@ _DailyDealContentV1? _dailyTurnV1(math.Random rng) {
     if (compared == 0) ties++;
   }
   if (ties != 0) return null;
-  final equity = wins / (52 - known.length);
-  final price = due / (pot + due);
+  final equity = act0OneCardOutsV1(wins, 52 - known.length)!;
+  final price = act0CallPriceV1(pot, due)!.equity;
   if (equity == price) return null;
   final calls = equity > price;
   final other = opponent.toUpperCase();
@@ -625,7 +625,7 @@ _DailyDealContentV1? _dailyLowSprV1(math.Random rng) {
   if (spr > 2) return null;
 
   final equity = _lowSprEquitiesV1[scenarioIndex];
-  final price = due / (pot + due);
+  final price = act0CallPriceV1(pot, due)!.equity;
   if (equity == price) return null;
   final calls = equity > price;
   // Keep close calls visibly distinct as well as mathematically distinct.

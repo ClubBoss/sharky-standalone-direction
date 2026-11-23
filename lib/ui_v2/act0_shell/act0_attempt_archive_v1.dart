@@ -36,6 +36,7 @@ class Act0ArchivedAttemptV1 {
     this.events,
     this.taskLabel,
     this.choiceLabel,
+    this.tableFingerprint,
   );
 
   static final _sourceRevision = RegExp(r'^[a-f0-9]{64}$');
@@ -48,6 +49,7 @@ class Act0ArchivedAttemptV1 {
     Iterable<Act0ActionTrailItemV1> recordedTrail = const [],
     String? taskLabel,
     String? choiceLabel,
+    String? tableFingerprint,
   }) {
     if (Act0LearningEvidenceRecordV1.tryParse(evidence.toPayload()) == null ||
         !_sourceRevision.hasMatch(evidence.authoredSourceFingerprint) ||
@@ -70,6 +72,7 @@ class Act0ArchivedAttemptV1 {
       List.unmodifiable(events),
       taskLabel,
       choiceLabel,
+      tableFingerprint,
     );
   }
 
@@ -78,6 +81,7 @@ class Act0ArchivedAttemptV1 {
   final List<Act0ActionTrailItemV1> events;
   final String? taskLabel;
   final String? choiceLabel;
+  final String? tableFingerprint;
 
   String get id => evidence.recordId;
 
@@ -85,6 +89,7 @@ class Act0ArchivedAttemptV1 {
     if (linkEvidence) 'recordId': id else 'evidence': evidence.toPayload(),
     if (taskLabel != null) 'taskLabel': taskLabel,
     if (choiceLabel != null) 'choiceLabel': choiceLabel,
+    if (tableFingerprint != null) 'tableFingerprint': tableFingerprint,
     if (reflection.confidence case final confidence?)
       'confidence': confidence.name,
     if (reflection.openedClue case final clue?) 'openedClue': clue.name,
@@ -112,6 +117,11 @@ class Act0ArchivedAttemptV1 {
         ? Act0LearningEvidenceRecordV1.tryParse(raw['evidence'])
         : evidenceById[reference];
     if (evidence == null) return null;
+    final rawFingerprint = raw['tableFingerprint'];
+    final tableFingerprint =
+        rawFingerprint is String && _sourceRevision.hasMatch(rawFingerprint)
+        ? rawFingerprint
+        : null;
     final taskLabel = raw['taskLabel'];
     final choiceLabel = raw['choiceLabel'];
     if ((taskLabel != null && taskLabel is! String) ||
@@ -162,6 +172,7 @@ class Act0ArchivedAttemptV1 {
       recordedTrail: events,
       taskLabel: taskLabel as String?,
       choiceLabel: choiceLabel as String?,
+      tableFingerprint: tableFingerprint,
     );
   }
 }

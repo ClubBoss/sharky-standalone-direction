@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_table_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_screen_v1.dart';
@@ -56,17 +59,47 @@ Act0ArchivedAttemptV1 _attempt(int n) =>
       choiceLabel: "Call",
     )!;
 
+Act0ArchivedAttemptV1 _verifiedAttempt({bool tampered = false}) {
+  final lesson = Act0ShellStateV1.sample.worlds
+      .singleWhere((world) => world.worldId == 'world_4')
+      .lessons
+      .singleWhere((lesson) => lesson.lessonId == 'call_price');
+  final task = lesson.taskList.singleWhere((task) => task.taskId == _task);
+  final table = task.runner.table;
+  final revision = act0AuthoredSourceFingerprintV1(
+    worldId: 'world_4',
+    lessonId: 'call_price',
+    task: task,
+  )!;
+  return Act0ArchivedAttemptV1.fromRecordedDecision(
+    _evidence(1, revision: revision, callIsCorrect: true),
+    tableFingerprint: act0ReplayTableFingerprintV1(table),
+    recordedTrail: [
+      if (tampered) const Act0ActionTrailItemV1(label: 'BTN bets 500 BB'),
+      ...table.actionTrail,
+      const Act0ActionTrailItemV1.note(label: 'Your choice: Call'),
+    ],
+  )!;
+}
+
 void main() {
   group('Review replay', () {
     Future<void> mount(
       WidgetTester tester,
-      Act0ArchivedAttemptV1 attempt,
-    ) async {
+      Act0ArchivedAttemptV1 attempt, {
+      bool reduceMotion = false,
+    }) async {
       tester.view.physicalSize = const Size(320, 568);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(disableAnimations: reduceMotion),
+            child: child!,
+          ),
           home: Scaffold(
             body: Act0AttemptReplayScreenV1(attempt: attempt, onClose: () {}),
           ),
@@ -126,6 +159,52 @@ void main() {
       expect(find.text('CO bets 2 BB'), findsNothing);
     });
 
+    for (final reduceMotion in [false, true]) {
+      testWidgets(
+        'replays saved table commitments (Reduce Motion $reduceMotion)',
+        (tester) async {
+          final attempt = _verifiedAttempt();
+          await mount(tester, attempt, reduceMotion: reduceMotion);
+          expect(find.byType(Act0TableSceneV1), findsNothing);
+          await tester.tap(find.text('Play'));
+          final projection = Act0AttemptReplayTableV1.fromAttempt(attempt)!;
+          final firstCommitment =
+              Iterable<int>.generate(
+                attempt.events.length,
+                (i) => i + 1,
+              ).firstWhere(
+                (position) =>
+                    projection.atPosition(position)?.newCommitment ?? false,
+              );
+          await tester.pump(Duration(seconds: firstCommitment));
+          final scene = tester.widget<Act0TableSceneV1>(
+            find.byType(Act0TableSceneV1),
+          );
+          expect(
+            scene.table.activeSeatId,
+            projection.atPosition(firstCommitment)!.table.activeSeatId,
+          );
+          final motion = find.byWidgetPredicate(
+            (widget) =>
+                widget.key.toString().contains('act0_shell_bet_chip_motion_'),
+          );
+          expect(motion, reduceMotion ? findsNothing : findsOneWidget);
+          tester.binding.handleAppLifecycleStateChanged(
+            AppLifecycleState.inactive,
+          );
+          await tester.pump(const Duration(seconds: 2));
+          expect(
+            find.text('Step $firstCommitment of ${attempt.events.length}'),
+            findsOneWidget,
+          );
+          expect(find.text('Play'), findsOneWidget);
+          tester.binding.handleAppLifecycleStateChanged(
+            AppLifecycleState.resumed,
+          );
+        },
+      );
+    }
+
     testWidgets('shows the missing journal for a migrated attempt', (
       tester,
     ) async {
@@ -137,6 +216,48 @@ void main() {
       );
       expect(find.byKey(const Key('act0_attempt_replay_next')), findsNothing);
     });
+  });
+
+  test(
+    'table replay requires matching capture and journal without future cards',
+    () {
+      final attempt = _verifiedAttempt();
+      final restored = Act0ArchivedAttemptV1.tryParse(attempt.toPayload())!;
+      final projection = Act0AttemptReplayTableV1.fromAttempt(restored)!;
+      expect(projection.atPosition(0), isNull);
+      final frames = [
+        for (var position = 1; position <= attempt.events.length; position++)
+          if (projection.atPosition(position) case final frame?) frame.table,
+      ];
+      expect(frames.first.boardCards, hasLength(0));
+      expect(frames.last.boardCards, hasLength(4));
+      expect(
+        Act0AttemptReplayTableV1.fromAttempt(_verifiedAttempt(tampered: true)),
+        isNull,
+      );
+      expect(Act0AttemptReplayTableV1.fromAttempt(_attempt(1)), isNull);
+    },
+  );
+
+  test('W4 replay restores the saved decision and steps back to the bet', () {
+    final attempt = _verifiedAttempt();
+    final projection = Act0AttemptReplayTableV1.fromAttempt(attempt)!;
+    var replay = Act0AttemptReplayV1(attempt);
+    while (replay.position < attempt.events.length - 1) {
+      replay = replay.forward();
+    }
+    final choice = replay.forward();
+    final decision = projection.atPosition(choice.position)!;
+    expect(decision.table.activeSeatId, decision.table.heroSeatId);
+    expect(decision.table.potLabel, 'Pot 10 BB');
+    expect(decision.table.toCallLabel, 'To call 1 BB');
+    expect(decision.newCommitment, isFalse);
+
+    final previous = projection.atPosition(choice.back().position)!;
+    expect(previous.table.activeSeatId, 'hj');
+    expect(previous.table.potLabel, isEmpty);
+    expect(previous.table.toCallLabel, isEmpty);
+    expect(previous.newCommitment, isTrue);
   });
 
   test('shares exact evidence and keeps expired records self-contained', () {

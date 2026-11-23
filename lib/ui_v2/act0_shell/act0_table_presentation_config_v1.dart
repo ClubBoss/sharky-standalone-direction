@@ -29,6 +29,7 @@ Act0TableIdentityPolicyV1 act0TableIdentityPolicyForTeachingSemanticsV1(
 class Act0TablePresentationConfigV1 {
   const Act0TablePresentationConfigV1({
     this.maxTableHeight,
+    this.animateActiveCommitment = false,
     this.useRefinedVisualVariant = true,
     this.showFocusBadge = true,
     this.showRepairCallout = false,
@@ -38,6 +39,7 @@ class Act0TablePresentationConfigV1 {
   });
 
   final double? maxTableHeight;
+  final bool animateActiveCommitment;
   final bool useRefinedVisualVariant;
   final bool showFocusBadge;
   final bool showRepairCallout;

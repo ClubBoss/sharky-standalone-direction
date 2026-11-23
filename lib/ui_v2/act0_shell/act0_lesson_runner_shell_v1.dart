@@ -2495,6 +2495,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ? runner.lessonTitle
             : runner.question,
         recordedChoiceLabel: choiceLabel,
+        recordedTable: runner.table,
         recordedTrail: [
           ...runner.table.actionTrail,
           if (choiceLabel.isNotEmpty)

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'act0_poker_reference_tools_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -113,6 +115,7 @@ class Act0GlossarySheetV1 extends StatelessWidget {
               controller: controller,
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
               children: [
+                const Act0PokerReferenceToolsV1(),
                 if (inTask.isNotEmpty) ...[
                   heading('IN THIS TASK', 'act0_glossary_in_task'),
                   for (final t in inTask)
