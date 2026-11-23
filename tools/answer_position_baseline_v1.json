@@ -1,0 +1,110 @@
+{
+  "1": {
+    "tasks": 65,
+    "slotCounts": [
+      22,
+      29,
+      14
+    ],
+    "longestRun": 3
+  },
+  "2": {
+    "tasks": 33,
+    "slotCounts": [
+      12,
+      17,
+      4
+    ],
+    "longestRun": 3
+  },
+  "3": {
+    "tasks": 32,
+    "slotCounts": [
+      12,
+      16,
+      4
+    ],
+    "longestRun": 2
+  },
+  "4": {
+    "tasks": 26,
+    "slotCounts": [
+      10,
+      8,
+      8
+    ],
+    "longestRun": 2
+  },
+  "5": {
+    "tasks": 31,
+    "slotCounts": [
+      10,
+      16,
+      5
+    ],
+    "longestRun": 3
+  },
+  "6": {
+    "tasks": 33,
+    "slotCounts": [
+      9,
+      11,
+      13
+    ],
+    "longestRun": 2
+  },
+  "7": {
+    "tasks": 6,
+    "slotCounts": [
+      0,
+      4,
+      2
+    ],
+    "longestRun": 2
+  },
+  "8": {
+    "tasks": 21,
+    "slotCounts": [
+      5,
+      5,
+      11
+    ],
+    "longestRun": 2
+  },
+  "9": {
+    "tasks": 18,
+    "slotCounts": [
+      6,
+      7,
+      5
+    ],
+    "longestRun": 1
+  },
+  "10": {
+    "tasks": 22,
+    "slotCounts": [
+      7,
+      8,
+      7
+    ],
+    "longestRun": 1
+  },
+  "11": {
+    "tasks": 29,
+    "slotCounts": [
+      15,
+      4,
+      10
+    ],
+    "longestRun": 4
+  },
+  "12": {
+    "tasks": 24,
+    "slotCounts": [
+      9,
+      7,
+      8
+    ],
+    "longestRun": 2
+  }
+}
