@@ -1,0 +1,574 @@
+import 'package:flutter/material.dart';
+
+import 'act0_skin_tokens_v1.dart';
+
+typedef _T = Act0SkinTokensV1;
+
+/// Full-width brass action. A null callback disables the action.
+class Act0SkinPrimaryButtonV1 extends StatelessWidget {
+  const Act0SkinPrimaryButtonV1({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.controlKey,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final Key? controlKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      key: controlKey,
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: _T.accent,
+        foregroundColor: _T.onAccent,
+        disabledBackgroundColor: _T.raised,
+        disabledForegroundColor: _T.caption,
+        minimumSize: const Size.fromHeight(_T.controlHeight),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        textStyle: _T.button,
+        elevation: _T.controlElevation,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_T.radiusControl),
+        ),
+      ),
+      child: Text(label, textAlign: TextAlign.center),
+    );
+  }
+}
+
+/// Outlined alternative, with the existing destructive treatment.
+class Act0SkinSecondaryButtonV1 extends StatelessWidget {
+  const Act0SkinSecondaryButtonV1({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.destructive = false,
+    this.controlKey,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final bool destructive;
+  final Key? controlKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      key: controlKey,
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: destructive ? _T.badSoft : _T.raised,
+        foregroundColor: destructive ? _T.bad : _T.onSurface,
+        disabledForegroundColor: _T.caption,
+        minimumSize: const Size.fromHeight(_T.controlHeight),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        textStyle: _T.button,
+        side: destructive
+            ? const BorderSide(color: _T.badEdge, width: 1.5)
+            : _T.controlBorder,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_T.radiusControl),
+        ),
+      ),
+      child: Text(label, textAlign: TextAlign.center),
+    );
+  }
+}
+
+/// A card on the wall: surface fill and a 1 px brass hairline.
+class Act0SkinCardV1 extends StatelessWidget {
+  const Act0SkinCardV1({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(_T.cardPadding),
+    this.emphasized = false,
+    this.quiet = false,
+  });
+
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  /// Brass edge for the one card that holds the screen's main action.
+  final bool emphasized;
+
+  /// Wall fill for later or inactive items.
+  final bool quiet;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: quiet ? _T.background : _T.surface,
+        borderRadius: BorderRadius.circular(_T.radiusCard),
+        border: Border.fromBorderSide(
+          emphasized ? const BorderSide(color: _T.accentEdge) : _T.cardBorder,
+        ),
+      ),
+      child: Padding(padding: padding, child: child),
+    );
+  }
+}
+
+enum Act0SkinChipToneV1 { brass, correct, neutral }
+
+/// A capsule label: "Extra practice", "On your own", "With help", "Day 2".
+class Act0SkinChipV1 extends StatelessWidget {
+  const Act0SkinChipV1({
+    super.key,
+    required this.label,
+    this.tone = Act0SkinChipToneV1.brass,
+  });
+
+  final String label;
+  final Act0SkinChipToneV1 tone;
+
+  @override
+  Widget build(BuildContext context) {
+    final (Color bg, Color fg) = switch (tone) {
+      Act0SkinChipToneV1.brass => (_T.accentSoft, _T.accent),
+      Act0SkinChipToneV1.correct => (_T.okSoft, _T.ok),
+      Act0SkinChipToneV1.neutral => (_T.raised, _T.muted),
+    };
+    return Container(
+      constraints: const BoxConstraints(minHeight: 26),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(label, style: _T.tag.copyWith(color: fg)),
+    );
+  }
+}
+
+/// Lesson steps: done in brass, current in light, ahead in track colour.
+/// The count never changes when the player makes a mistake.
+class Act0SkinStepBarV1 extends StatelessWidget {
+  const Act0SkinStepBarV1({
+    super.key,
+    required this.total,
+    required this.current,
+  }) : assert(total > 0),
+       assert(current >= 0 && current <= total);
+
+  /// Number of steps.
+  final int total;
+
+  /// 1-based current step; steps before it are done.
+  final int current;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Step $current of $total',
+      excludeSemantics: true,
+      child: Row(
+        children: [
+          for (var i = 1; i <= total; i++) ...[
+            if (i > 1) const SizedBox(width: 3),
+            Expanded(
+              child: Container(
+                key: Key('act0_club_step_$i'),
+                height: 4,
+                decoration: BoxDecoration(
+                  color: i < current
+                      ? _T.accent
+                      : i == current
+                      ? _T.onSurface
+                      : _T.track,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Why Sharky is on screen. Sharky is never shown while the player decides.
+enum Act0SkinSharkyMomentV1 { hint, mistake, selfFix, milestone }
+
+/// Sharky in one ring: 56 pt next to a reason or hint, 120 pt on summaries.
+class Act0SkinSharkyExpressionV1 extends StatelessWidget {
+  const Act0SkinSharkyExpressionV1({
+    super.key,
+    required this.moment,
+    this.size = _T.ringSmall,
+  });
+
+  final Act0SkinSharkyMomentV1 moment;
+  final double size;
+
+  static Color ringColorFor(Act0SkinSharkyMomentV1 moment) {
+    return switch (moment) {
+      Act0SkinSharkyMomentV1.hint => _T.lineRing,
+      Act0SkinSharkyMomentV1.mistake => _T.accent,
+      Act0SkinSharkyMomentV1.selfFix => _T.ok,
+      Act0SkinSharkyMomentV1.milestone => _T.ok,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final border = size >= _T.ringLarge ? 3.0 : 2.0;
+    return Semantics(
+      label: 'Sharky',
+      image: true,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: _T.raised,
+          border: Border.all(color: ringColorFor(moment), width: border),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Image.asset(
+          switch (moment) {
+            Act0SkinSharkyMomentV1.hint => _T.sharkyHintAsset,
+            Act0SkinSharkyMomentV1.mistake => _T.sharkyMistakeAsset,
+            Act0SkinSharkyMomentV1.selfFix => _T.sharkyFixedItAsset,
+            Act0SkinSharkyMomentV1.milestone => _T.sharkyLessonDoneAsset,
+          },
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+          excludeFromSemantics: true,
+          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
+
+enum Act0SkinAnswerVerdictV1 { none, notThisOne, better }
+
+/// One answer, 56 pt. After the answer the chosen wrong row turns coral
+/// with ✕ and "Not this one"; the better row turns green with ✓ and
+/// "Better". Colour is never the only signal.
+class Act0SkinAnswerOptionRowV1 extends StatelessWidget {
+  const Act0SkinAnswerOptionRowV1({
+    super.key,
+    required this.label,
+    this.verdict = Act0SkinAnswerVerdictV1.none,
+    this.onTap,
+  });
+
+  final String label;
+  final Act0SkinAnswerVerdictV1 verdict;
+  final VoidCallback? onTap;
+
+  static const String notThisOneLabel = 'Not this one';
+  static const String betterLabel = 'Better';
+
+  @override
+  Widget build(BuildContext context) {
+    final (
+      Color? tone,
+      Color fill,
+      String? word,
+      IconData? icon,
+    ) = switch (verdict) {
+      Act0SkinAnswerVerdictV1.none => (null, _T.raised, null, null),
+      Act0SkinAnswerVerdictV1.notThisOne => (
+        _T.bad,
+        _T.badSoft,
+        notThisOneLabel,
+        _T.mistakeIcon,
+      ),
+      Act0SkinAnswerVerdictV1.better => (
+        _T.ok,
+        _T.okSoft,
+        betterLabel,
+        _T.correctIcon,
+      ),
+    };
+    final semantics = word == null ? label : '$label, ${word.toLowerCase()}';
+    return Semantics(
+      button: onTap != null,
+      label: semantics,
+      excludeSemantics: true,
+      child: Material(
+        color: fill,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_T.radiusControl),
+          side: tone == null
+              ? _T.controlBorder
+              : BorderSide(color: tone, width: 1.5),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: _T.controlHeight),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: Row(
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 20, color: tone),
+                    const SizedBox(width: 12),
+                  ],
+                  Expanded(child: Text(label, style: _T.body)),
+                  if (word != null) ...[
+                    const SizedBox(width: 8),
+                    Text(word, style: _T.tag.copyWith(color: tone)),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Act0SkinSheetHeaderV1 extends StatelessWidget {
+  const Act0SkinSheetHeaderV1({
+    super.key,
+    required this.title,
+    this.overline,
+    this.subtitle,
+    this.trailing,
+  });
+
+  final String title;
+  final String? overline;
+  final String? subtitle;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (overline != null) ...[
+                Text(overline!, style: _T.captionStyle),
+                const SizedBox(height: 2),
+              ],
+              Semantics(header: true, child: Text(title, style: _T.title)),
+              if (subtitle != null) ...[
+                const SizedBox(height: 2),
+                Text(subtitle!, style: _T.secondary),
+              ],
+            ],
+          ),
+        ),
+        if (trailing != null) trailing!,
+      ],
+    );
+  }
+}
+
+/// Archive-style selectable row. Selection and ordering belong to the caller.
+class Act0SkinListRowV1 extends StatelessWidget {
+  const Act0SkinListRowV1({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.expanded,
+    required this.onTap,
+    this.controlKey,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool expanded;
+  final VoidCallback? onTap;
+  final Key? controlKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      expanded: expanded,
+      child: ListTile(
+        key: controlKey,
+        contentPadding: EdgeInsets.zero,
+        title: Text(title, style: _T.editorialBody),
+        subtitle: Text(subtitle, style: _T.editorialSupporting),
+        selected: expanded,
+        trailing: Icon(expanded ? _T.collapseIcon : _T.expandIcon),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+/// Home's course bar. A missing ratio draws a track without announcing a value.
+class Act0SkinProgressBarV1 extends StatelessWidget {
+  const Act0SkinProgressBarV1({
+    super.key,
+    required this.ratio,
+    required this.label,
+    this.valueLabel,
+    this.indicatorKey,
+  });
+
+  final double? ratio;
+  final String label;
+  final String? valueLabel;
+  final Key? indicatorKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      excluding: ratio == null,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(_T.courseProgressRadius),
+        child: LinearProgressIndicator(
+          key: indicatorKey,
+          minHeight: _T.courseProgressHeight,
+          value: ratio ?? 0,
+          semanticsLabel: label,
+          semanticsValue: valueLabel,
+          backgroundColor: _T.courseProgressTrack,
+          color: _T.courseProgressFill,
+        ),
+      ),
+    );
+  }
+}
+
+/// Circular indicator in the current Settings treatment.
+class Act0SkinProgressRingV1 extends StatelessWidget {
+  const Act0SkinProgressRingV1({
+    super.key,
+    this.ratio,
+    this.label,
+    this.valueLabel,
+  });
+
+  final double? ratio;
+  final String? label;
+  final String? valueLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircularProgressIndicator(
+      value: ratio ?? (MediaQuery.disableAnimationsOf(context) ? 0 : null),
+      color: _T.courseProgressFill,
+      semanticsLabel: label,
+      semanticsValue: valueLabel,
+    );
+  }
+}
+
+/// Uses the progress-save notice treatment of the current shell.
+class Act0SkinBannerV1 extends StatelessWidget {
+  const Act0SkinBannerV1({
+    super.key,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: _T.themeSurface(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: _T.gapLg,
+          vertical: _T.gapSm,
+        ),
+        child: Row(
+          children: [
+            Expanded(child: Semantics(liveRegion: true, child: Text(message))),
+            if (actionLabel case final label?)
+              TextButton(onPressed: onAction, child: Text(label)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The empty Review heading and support copy.
+class Act0SkinEmptyStateV1 extends StatelessWidget {
+  const Act0SkinEmptyStateV1({
+    super.key,
+    required this.title,
+    required this.description,
+    this.titleKey,
+  });
+
+  final String title;
+  final String description;
+  final Key? titleKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, key: titleKey, style: _T.reviewEmptyTitle),
+        const SizedBox(height: _T.gapSm),
+        Text(description, style: _T.reviewEmptyBody),
+      ],
+    );
+  }
+}
+
+/// Profile's standard and compact metric treatments.
+class Act0SkinStatTileV1 extends StatelessWidget {
+  const Act0SkinStatTileV1({
+    super.key,
+    required this.label,
+    required this.value,
+    this.subLine = '',
+    this.compact = false,
+  });
+
+  final String label;
+  final String value;
+  final String subLine;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(compact ? _T.gapSm : _T.gapMd),
+      decoration: BoxDecoration(
+        color: compact ? Colors.transparent : _T.navyRaised,
+        borderRadius: BorderRadius.circular(
+          compact ? _T.navyCompactStatRadius : _T.navyStatRadius,
+        ),
+        border: Border.all(
+          color: compact ? _T.navyLine : _T.navyLine.withValues(alpha: 0.86),
+        ),
+        boxShadow: compact ? null : const [_T.navyStatShadow],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: _T.navyStatLabel),
+          const SizedBox(height: _T.gapSm),
+          Text(
+            value,
+            style: compact
+                ? _T.navyStatValue.copyWith(fontWeight: FontWeight.w800)
+                : _T.navyStatValue,
+          ),
+          if (subLine.isNotEmpty) ...[
+            const SizedBox(height: _T.gapXs),
+            Text(subLine, style: _T.navyStatSupport),
+          ],
+        ],
+      ),
+    );
+  }
+}
