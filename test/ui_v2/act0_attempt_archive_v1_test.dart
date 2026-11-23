@@ -239,6 +239,27 @@ void main() {
     },
   );
 
+  test('W4 replay restores the saved decision and steps back to the bet', () {
+    final attempt = _verifiedAttempt();
+    final projection = Act0AttemptReplayTableV1.fromAttempt(attempt)!;
+    var replay = Act0AttemptReplayV1(attempt);
+    while (replay.position < attempt.events.length - 1) {
+      replay = replay.forward();
+    }
+    final choice = replay.forward();
+    final decision = projection.atPosition(choice.position)!;
+    expect(decision.table.activeSeatId, decision.table.heroSeatId);
+    expect(decision.table.potLabel, 'Pot 10 BB');
+    expect(decision.table.toCallLabel, 'To call 1 BB');
+    expect(decision.newCommitment, isFalse);
+
+    final previous = projection.atPosition(choice.back().position)!;
+    expect(previous.table.activeSeatId, 'hj');
+    expect(previous.table.potLabel, isEmpty);
+    expect(previous.table.toCallLabel, isEmpty);
+    expect(previous.newCommitment, isTrue);
+  });
+
   test('shares exact evidence and keeps expired records self-contained', () {
     final archive = const Act0AttemptArchiveV1.empty()
         .add(_attempt(1))

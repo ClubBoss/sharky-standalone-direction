@@ -65,19 +65,25 @@ class _Act0PokerReferenceToolsV1State extends State<Act0PokerReferenceToolsV1> {
             title: const Text('Price Bar and pot odds'),
             children: [
               const Text(
-                'Include the opposing bet in the current pot. Enter both amounts in BB or both in chips. The call can be zero up to the current pot.',
+                'Enter the pot you can win before adding your call. '
+                'Include only the part of the opposing bet you can match with your remaining chips. '
+                'Any unmatched chips are returned to the bettor and stay out of the pot. '
+                'Enter what you can actually put in to call, up to your remaining stack. '
+                'Use BB for both amounts or chips for both.',
               ),
               _input(
                 'act0_tool_pot',
-                'Current pot',
+                'Contestable pot before your call',
                 (v) => _pot = double.tryParse(v),
               ),
               _input(
                 'act0_tool_call',
-                'Amount to call',
+                'Call you can pay',
                 (v) => _call = double.tryParse(v),
               ),
-              const Text('Break-even equity = call ÷ (current pot + call).'),
+              const Text(
+                'Break-even equity = call ÷ (contestable pot + call).',
+              ),
               if (price != null) ...[
                 LinearProgressIndicator(
                   value: price.equity,

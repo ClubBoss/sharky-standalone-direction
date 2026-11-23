@@ -2,7 +2,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_poker_reference_math_v1.dar
 import 'package:test/test.dart';
 
 void main() {
-  test('price uses the current pot plus exactly one call', () {
+  test('price uses the contestable pot plus one matched call', () {
     final price = act0CallPriceV1(30, 10)!;
     expect(price.potAfterCall, 40);
     expect(price.equity, .25);
@@ -14,6 +14,19 @@ void main() {
     expect(act0CallPriceV1(0, 0), isNull);
     expect(act0CallPriceV1(30, double.nan), isNull);
     expect(act0CallPriceV1(1e308, 1e308), isNull);
+  });
+
+  test('short-stack shove price excludes chips returned to the opponent', () {
+    const potBeforeShove = 10.0;
+    const shove = 100.0;
+    const remainingStack = 10.0;
+    const returned = shove - remainingStack;
+    final price = act0CallPriceV1(
+      potBeforeShove + shove - returned,
+      remainingStack,
+    )!;
+    expect(price.potAfterCall, 30);
+    expect(price.equity, closeTo(1 / 3, .00001));
   });
 
   test('converts both ways and validates finite units', () {

@@ -1,5 +1,5 @@
-/// The current pot includes the opponent's wager and excludes this call.
-/// A call cannot exceed that pot. All amounts use one consistent unit.
+/// The pot includes only chips the caller can win, before adding the call.
+/// The call is capped by the caller's remaining stack. Use consistent units.
 ({double potAfterCall, double equity, double? oddsToOne})? act0CallPriceV1(
   double pot,
   double call,
