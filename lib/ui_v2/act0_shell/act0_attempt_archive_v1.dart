@@ -223,11 +223,35 @@ class Act0AttemptArchiveV1 {
         Act0HandImportErrorV1.conflictingSource,
       );
     }
+    _requireOwnHandSpace();
+    return Act0AttemptArchiveV1._(attempts, selectedId, [
+      hand,
+      ...importedHands,
+    ]);
+  }
+
+  Act0AttemptArchiveV1 saveManualHand(Act0ImportedHandV1 hand) {
+    if (!hand.isManual) throw ArgumentError('Expected a manual hand.');
+    final exists = importedHands.any(
+      (saved) => saved.sourceKey == hand.sourceKey,
+    );
+    if (!exists) _requireOwnHandSpace();
     return Act0AttemptArchiveV1._(
       attempts,
       selectedId,
-      [hand, ...importedHands].take(limit),
+      exists
+          ? [
+              for (final saved in importedHands)
+                saved.sourceKey == hand.sourceKey ? hand : saved,
+            ]
+          : [hand, ...importedHands],
     );
+  }
+
+  void _requireOwnHandSpace() {
+    if (importedHands.length >= limit) {
+      throw const Act0HandImportExceptionV1(Act0HandImportErrorV1.archiveFull);
+    }
   }
 
   Act0AttemptArchiveV1 removeImportedHand(String sourceKey) =>
@@ -320,34 +344,37 @@ class Act0AttemptArchiveV1 {
 
 /// A replay cursor owns no hand or grade. Its positions count saved events.
 class Act0AttemptReplayV1 {
-  const Act0AttemptReplayV1(this.attempt) : position = 0, isPlaying = false;
-  const Act0AttemptReplayV1._(this.attempt, this.position, this.isPlaying);
+  Act0AttemptReplayV1(Act0ArchivedAttemptV1 attempt)
+    : this.events(attempt.events);
+  const Act0AttemptReplayV1.events(this.events)
+    : position = 0,
+      isPlaying = false;
+  const Act0AttemptReplayV1._(this.events, this.position, this.isPlaying);
 
-  final Act0ArchivedAttemptV1 attempt;
+  final List<Act0ActionTrailItemV1> events;
   final int position;
   final bool isPlaying;
 
-  bool get atEnd => position == attempt.events.length;
+  bool get atEnd => position == events.length;
   Act0ActionTrailItemV1? get current =>
-      position == 0 ? null : attempt.events[position - 1];
+      position == 0 ? null : events[position - 1];
   List<String> get textAlternative =>
-      attempt.events.take(position).map((event) => event.learnerLabel).toList();
+      events.take(position).map((event) => event.learnerLabel).toList();
 
   Act0AttemptReplayV1 play() =>
-      atEnd ? this : Act0AttemptReplayV1._(attempt, position, true);
-  Act0AttemptReplayV1 pause() =>
-      Act0AttemptReplayV1._(attempt, position, false);
-  Act0AttemptReplayV1 reset() => Act0AttemptReplayV1(attempt);
+      atEnd ? this : Act0AttemptReplayV1._(events, position, true);
+  Act0AttemptReplayV1 pause() => Act0AttemptReplayV1._(events, position, false);
+  Act0AttemptReplayV1 reset() => Act0AttemptReplayV1.events(events);
   Act0AttemptReplayV1 back() =>
-      Act0AttemptReplayV1._(attempt, position > 0 ? position - 1 : 0, false);
+      Act0AttemptReplayV1._(events, position > 0 ? position - 1 : 0, false);
 
   Act0AttemptReplayV1 forward() {
     if (atEnd) return this;
     final next = position + 1;
     return Act0AttemptReplayV1._(
-      attempt,
+      events,
       next,
-      isPlaying && next < attempt.events.length,
+      isPlaying && next < events.length,
     );
   }
 

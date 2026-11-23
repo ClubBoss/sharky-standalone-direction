@@ -3,7 +3,16 @@ part of 'act0_imported_hand_v1.dart';
 const _boardCount = [0, 3, 4, 5];
 const _maxMoneyCents = 999999999;
 
-bool _validHand(Act0ImportedHandV1 hand) {
+bool _validHand(Act0ImportedHandV1 hand) => _handError(hand) == null;
+
+String? _handError(Act0ImportedHandV1 hand) {
+  if (_readCards(hand.heroCards, 2) == null ||
+      _readCards(hand.board, hand.board.length) == null ||
+      hand.shownCards.values.any((cards) => _readCards(cards, 2) == null)) {
+    return 'Enter cards as rank and suit, for example As Kd.';
+  }
+  if (hand.actions.length > _maxHandActions) return 'Too many actions.';
+
   if (hand.tableSize < 2 ||
       hand.tableSize > 9 ||
       hand.seats.length < 2 ||
@@ -12,7 +21,7 @@ bool _validHand(Act0ImportedHandV1 hand) {
       hand.smallBlindCents <= 0 ||
       hand.bigBlindCents <= hand.smallBlindCents ||
       hand.bigBlindCents > _maxMoneyCents) {
-    return false;
+    return 'Check the table size, blinds and board card count.';
   }
   var previous = 0;
   for (final seat in hand.seats) {
@@ -20,7 +29,7 @@ bool _validHand(Act0ImportedHandV1 hand) {
         seat.number > hand.tableSize ||
         seat.stackCents <= 0 ||
         seat.stackCents > _maxMoneyCents) {
-      return false;
+      return 'Enter a valid stack for each occupied seat.';
     }
     previous = seat.number;
   }
@@ -33,21 +42,30 @@ bool _validHand(Act0ImportedHandV1 hand) {
   );
   if (!ledger.remaining.containsKey(hand.heroSeat) ||
       !ledger.remaining.containsKey(hand.buttonSeat)) {
-    return false;
+    return 'The button and your seat must both be occupied.';
   }
   final lastStreet = _boardCount.indexOf(hand.board.length);
-  for (final action in hand.actions) {
-    if (action.street.index > lastStreet) return false;
+  for (final (index, action) in hand.actions.indexed) {
+    if (action.street.index > lastStreet)
+      return 'An action refers to a street without board cards.';
     while (ledger.street.index < action.street.index) {
-      if (!ledger.advance()) return false;
+      if (!ledger.advance())
+        return 'Finish betting and record any uncalled return before the next street.';
     }
-    if (!ledger.add(action)) return false;
+    if (!ledger.add(action)) {
+      return 'Action ${index + 1} (${action.street.name}, seat ${action.seat}) '
+          'is illegal. Check the action order, chip amount and stack.';
+    }
   }
   while (ledger.street.index < lastStreet) {
-    if (!ledger.advance()) return false;
+    if (!ledger.advance())
+      return 'Finish betting and record any uncalled return before dealing more cards.';
   }
-  if (!ledger.complete ||
-      (hand.showdown
+  if (ledger.hasSidePot) return act0OwnHandSidePotMessageV1;
+  if (!ledger.complete) {
+    return 'Finish betting and record any uncalled return.';
+  }
+  if ((hand.showdown
           ? lastStreet != PokerStreet.river.index || ledger.liveSeats.length < 2
           : ledger.liveSeats.length != 1 || hand.shownCards.isNotEmpty) ||
       hand.payouts.isEmpty ||
@@ -55,7 +73,7 @@ bool _validHand(Act0ImportedHandV1 hand) {
       hand.rakeCents < 0 ||
       hand.rakeCents > hand.potCents ||
       hand.potCents != ledger.potCents) {
-    return false;
+    return 'The hand must end in a fold or a complete showdown, with payouts and rake.';
   }
   var paid = hand.rakeCents;
   for (final entry in hand.payouts.entries) {
@@ -63,26 +81,47 @@ bool _validHand(Act0ImportedHandV1 hand) {
         entry.value > hand.potCents ||
         !ledger.liveSeats.contains(entry.key) ||
         (hand.showdown && !hand.shownCards.containsKey(entry.key))) {
-      return false;
+      return 'Each payout must go to a live seat. Record the cards shown by each showdown winner.';
     }
     paid += entry.value;
   }
-  if (paid != hand.potCents) return false;
+  if (paid != hand.potCents) return 'Payouts plus rake must equal the pot.';
 
   final visible = <String>{...hand.heroCards, ...hand.board};
-  if (visible.length != hand.heroCards.length + hand.board.length) return false;
+  if (visible.length != hand.heroCards.length + hand.board.length)
+    return 'Your cards and the board contain a duplicate card.';
   for (final entry in hand.shownCards.entries) {
-    if (!ledger.liveSeats.contains(entry.key)) return false;
+    if (!ledger.liveSeats.contains(entry.key))
+      return 'Only live seats can show at showdown.';
     if (entry.key == hand.heroSeat) {
       if (entry.value.toSet().length != 2 ||
           !entry.value.every(hand.heroCards.contains)) {
-        return false;
+        return 'Your shown cards must match your hole cards.';
       }
     } else if (entry.value.any((card) => !visible.add(card))) {
-      return false;
+      return 'A shown card duplicates another known card.';
     }
   }
-  return true;
+  if (hand.showdown) {
+    final known = {
+      ...hand.shownCards,
+      if (ledger.liveSeats.contains(hand.heroSeat))
+        hand.heroSeat: hand.heroCards,
+    };
+    final seats = known.keys.toList();
+    List<CardModel> cards(List<String> tokens) => [
+      for (final token in tokens) CardModel(rank: token[0], suit: token[1]),
+    ];
+    final winners = HandEvaluator.evaluateShowdown([
+      for (final seat in seats) cards(known[seat]!),
+    ], cards(hand.board));
+    for (final (index, seat) in seats.indexed) {
+      if (hand.payouts.containsKey(seat) && !winners.contains(index)) {
+        return 'Seat $seat is beaten by another known hand at showdown.';
+      }
+    }
+  }
+  return null;
 }
 
 /// Replays only the explicitly supported single-pot rules. Used when importing
@@ -103,6 +142,18 @@ class _HandLedger {
   final Map<int, int> remaining;
   final Set<int> liveSeats;
   final Map<int, int> _streetCents = {};
+  final Map<int, int> _totalCents = {};
+
+  // Two contributions above a live all-in stack create a second pot.
+  // Count folded contributions too, after any uncalled return.
+  bool get hasSidePot => liveSeats.any(
+    (seat) =>
+        remaining[seat] == 0 &&
+        _totalCents.values
+                .where((total) => total > _totalCents[seat]!)
+                .length >=
+            2,
+  );
   final Map<int, PokerStreet> folds = {};
   PokerStreet street = PokerStreet.preflop;
   int potCents = 0;
@@ -215,7 +266,7 @@ class _HandLedger {
     final legal = switch (kind) {
       Act0ImportedActionKindV1.fold => cents == 0,
       Act0ImportedActionKindV1.check => due == 0 && cents == 0,
-      Act0ImportedActionKindV1.call => due > 0 && cents == due,
+      Act0ImportedActionKindV1.call => due > 0 && cents == min(due, stack),
       Act0ImportedActionKindV1.bet => highest == 0 && cents >= _raiseMinimum,
       Act0ImportedActionKindV1.raise =>
         highest > 0 && cents - due >= _raiseMinimum,
@@ -242,6 +293,7 @@ class _HandLedger {
   void _transfer(int seat, int cents) {
     remaining[seat] = remaining[seat]! - cents;
     _streetCents[seat] = contributed(seat) + cents;
+    _totalCents[seat] = (_totalCents[seat] ?? 0) + cents;
     potCents += cents;
   }
 }

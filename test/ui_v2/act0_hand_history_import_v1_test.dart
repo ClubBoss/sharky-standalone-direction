@@ -53,6 +53,20 @@ void main() {
     );
   });
 
+  test('rejects a showdown payout to a known losing hand', () {
+    final loserPaid = showdown
+        .replaceFirst('AlexExample collected', 'CaseyExample collected')
+        .replaceFirst('lost with', r'won ($2.35) with')
+        .replaceFirst(
+          r'AlexExample (button) showed [As Qh] and won ($2.35)',
+          'AlexExample (button) showed [As Qh] and lost',
+        );
+    expect(
+      () => Act0ImportedHandV1.parsePokerStars(loserPaid),
+      throwsA(_error(Act0HandImportErrorV1.malformedHand)),
+    );
+  });
+
   test('uses the declared ET time and reconciles uncalled returns exactly', () {
     final hand = Act0ImportedHandV1.parsePokerStars(fold);
     expect(hand.timeEt, '2026/11/23 02:15:00 ET');
@@ -96,6 +110,53 @@ void main() {
       expect(hand.actions.last.street, PokerStreet.flop);
     },
   );
+
+  test('a short all-in call requires its uncalled return', () {
+    final input = showdown
+        .replaceFirst(
+          r'CaseyExample ($10 in chips)',
+          r'CaseyExample ($0.60 in chips)',
+        )
+        .replaceFirst(
+          r'CaseyExample: calls $0.40',
+          r'CaseyExample: calls $0.30 and is all-in'
+              '\n'
+              r'Uncalled bet ($0.10) returned to AlexExample',
+        )
+        .replaceFirst('CaseyExample: checks\nAlexExample: checks\n', '')
+        .replaceFirst(
+          r'CaseyExample: bets $0.50'
+              '\n'
+              r'AlexExample: calls $0.50'
+              '\n',
+          '',
+        )
+        .replaceAll(r'$2.35', r'$1.15')
+        .replaceFirst(r'$2.45', r'$1.25');
+    final hand = Act0ImportedHandV1.parsePokerStars(input);
+    expect(hand.potCents, 125);
+    expect(hand.payouts, {5: 115});
+    expect(hand.actions.last, (
+      street: PokerStreet.flop,
+      seat: 5,
+      kind: Act0ImportedActionKindV1.uncalledReturn,
+      cents: 10,
+    ));
+    expect(
+      Act0ImportedHandV1.tryParse(hand.toPayload())?.toPayload(),
+      hand.toPayload(),
+    );
+    expect(
+      () => Act0ImportedHandV1.parsePokerStars(
+        input.replaceFirst(
+          r'Uncalled bet ($0.10) returned to AlexExample'
+              '\n',
+          '',
+        ),
+      ),
+      throwsA(_error(Act0HandImportErrorV1.malformedHand)),
+    );
+  });
 
   for (final (description, input) in [
     ('unknown room', fold.replaceFirst('PokerStars', 'UnknownRoom')),

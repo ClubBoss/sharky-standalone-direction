@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
 
 import 'act0_academy_reading_style_v1.dart';
 import 'act0_attempt_archive_v1.dart';
+import 'act0_club_night_tokens_v1.dart';
+import 'act0_imported_hand_v1.dart';
+import 'act0_shell_state_v1.dart';
 import 'act0_shell_tokens_v1.dart';
 
 class Act0AttemptReplayScreenV1 extends StatefulWidget {
@@ -11,9 +15,19 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
     super.key,
     required this.attempt,
     required this.onClose,
-  });
+  }) : hand = null,
+       practice = null;
 
-  final Act0ArchivedAttemptV1 attempt;
+  const Act0AttemptReplayScreenV1.ownHand({
+    super.key,
+    required Act0ImportedHandV1 this.hand,
+    required this.onClose,
+    this.practice,
+  }) : attempt = null;
+
+  final Act0ArchivedAttemptV1? attempt;
+  final Act0ImportedHandV1? hand;
+  final Widget? practice;
   final VoidCallback onClose;
 
   @override
@@ -22,7 +36,9 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
 }
 
 class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
-  late var _replay = Act0AttemptReplayV1(widget.attempt);
+  late var _replay = Act0AttemptReplayV1.events(
+    widget.attempt?.events ?? _ownHandEvents(widget.hand!),
+  );
   Timer? _timer;
 
   void _update(Act0AttemptReplayV1 replay) {
@@ -56,10 +72,17 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
   @override
   Widget build(BuildContext context) {
     final attempt = widget.attempt;
-    final total = attempt.events.length;
+    final total = _replay.events.length;
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final history = _replay.textAlternative;
-    return ListView(
+    final ownHand = attempt == null;
+    final bodyStyle = ownHand
+        ? Act0ClubNightTokensV1.body
+        : Act0AcademyReadingStyleV1.body;
+    final mutedStyle = ownHand
+        ? Act0ClubNightTokensV1.secondary
+        : Act0AcademyReadingStyleV1.muted;
+    final list = ListView(
       key: const Key('act0_attempt_replay_screen'),
       padding: EdgeInsets.fromLTRB(
         pagePadding,
@@ -77,13 +100,22 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
               TextButton(
                 key: const Key('act0_attempt_replay_back_to_archive'),
                 onPressed: widget.onClose,
-                child: const Text('Back to attempt archive'),
+                child: Text(
+                  attempt == null
+                      ? 'Back to own hands'
+                      : 'Back to attempt archive',
+                ),
               ),
               Text(
-                attempt.taskLabel ?? attempt.evidence.taskId,
-                style: Act0AcademyReadingStyleV1.sectionTitle,
+                attempt == null
+                    ? 'Own hand · ${widget.hand!.isManual ? 'Manual entry' : 'PokerStars'}'
+                    : attempt.taskLabel ?? attempt.evidence.taskId,
+                style: ownHand
+                    ? Act0ClubNightTokensV1.title
+                    : Act0AcademyReadingStyleV1.sectionTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
+              if (widget.practice case final practice?) practice,
               if (total == 0)
                 const Text(
                   'No event history was saved for this attempt.',
@@ -94,7 +126,7 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
                   liveRegion: true,
                   child: Text(
                     'Step ${_replay.position} of $total',
-                    style: Act0AcademyReadingStyleV1.muted,
+                    style: mutedStyle,
                   ),
                 ),
                 Wrap(
@@ -132,22 +164,19 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
                   Text(
                     history.last,
                     key: const Key('act0_attempt_replay_current_event'),
-                    style: Act0AcademyReadingStyleV1.body,
+                    style: bodyStyle,
                   ),
                   if (history.length > 1)
                     ExpansionTile(
                       tilePadding: EdgeInsets.zero,
                       title: const Text('Earlier steps'),
-                      collapsedTextColor: Act0AcademyReadingStyleV1.text,
-                      textColor: Act0AcademyReadingStyleV1.text,
+                      collapsedTextColor: bodyStyle.color,
+                      textColor: bodyStyle.color,
                       children: [
                         for (final event in history.take(history.length - 1))
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text(
-                              event,
-                              style: Act0AcademyReadingStyleV1.body,
-                            ),
+                            title: Text(event, style: bodyStyle),
                           ),
                       ],
                     ),
@@ -158,5 +187,57 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1> {
         ),
       ],
     );
+    return ownHand
+        ? ColoredBox(color: Act0ClubNightTokensV1.wall, child: list)
+        : list;
   }
+}
+
+List<Act0ActionTrailItemV1> _ownHandEvents(Act0ImportedHandV1 hand) {
+  String usd(int cents) => '\$${(cents / 100).toStringAsFixed(2)}';
+  final events = <Act0ActionTrailItemV1>[];
+  void note(String label) =>
+      events.add(Act0ActionTrailItemV1.note(label: label));
+  note(
+    'Button: seat ${hand.buttonSeat}. Starting stacks: '
+    '${hand.seats.map((seat) => 'seat ${seat.number} ${usd(seat.stackCents)}').join(', ')}.',
+  );
+  var revealed = 0;
+  final seatIds = hand.seatIds;
+  for (final (index, street) in PokerStreet.values.indexed) {
+    final count = [0, 3, 4, 5][index];
+    if (hand.board.length < count) break;
+    if (count > 0)
+      note(
+        '${pokerStreetToString(street)}: ${hand.board.take(count).join(' ')}',
+      );
+    while (revealed < hand.actions.length &&
+        hand.actions[revealed].street == street) {
+      final action = hand.actions[revealed++];
+      final pot = hand
+          .contributions(
+            street,
+            hand.actions.take(revealed),
+            includeStackLimits: false,
+          )
+          .amounts(seatIds: seatIds)
+          .potBb;
+      note(
+        '${pokerStreetToString(street)}: seat ${action.seat} · ${action.kind.label}'
+        '${action.cents == 0 ? '' : ' ${usd(action.cents)}'} · '
+        'Pot ${usd((pot * hand.bigBlindCents).round())}',
+      );
+      if (action.kind == Act0ImportedActionKindV1.bigBlind) {
+        note('Your cards (seat ${hand.heroSeat}): ${hand.heroCards.join(' ')}');
+      }
+    }
+  }
+  for (final entry in hand.shownCards.entries) {
+    note('Showdown: seat ${entry.key} · ${entry.value.join(' ')}');
+  }
+  for (final entry in hand.payouts.entries) {
+    note('Seat ${entry.key} collected ${usd(entry.value)}');
+  }
+  note('Total pot ${usd(hand.potCents)} · Rake ${usd(hand.rakeCents)}');
+  return events;
 }

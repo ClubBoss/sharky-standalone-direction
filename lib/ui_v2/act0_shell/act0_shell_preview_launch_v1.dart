@@ -628,6 +628,41 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     return true;
   }
 
+  VoidCallback? _ownHandCallPricePracticeV1(
+    List<Act0WorldCardV1> worlds,
+    int callbackEpoch,
+  ) {
+    final world = worlds
+        .where((world) => world.worldId == 'world_4')
+        .firstOrNull;
+    final lesson = world?.lessons
+        .where((lesson) => lesson.lessonId == 'call_price')
+        .firstOrNull;
+    if (world == null || lesson == null || !lesson.isSelectable) return null;
+    final task = lesson.taskList
+        .where(
+          (task) =>
+              task.taskId == 'w4_good_price_call' &&
+              _completedTaskIds.contains(task.taskId),
+        )
+        .firstOrNull;
+    if (task == null || !_taskAvailable(lesson, task.taskId)) return null;
+    return () {
+      _setStateForRecoveryV1(callbackEpoch, () {
+        if (_startTaskByIds(
+          world,
+          lesson.lessonId,
+          task.taskId,
+          skipTeaching: true,
+          evidenceRunKind: 'practice',
+          evidenceStartedBy: 'own_hand_call_price',
+        )) {
+          _showAttemptArchiveV1 = false;
+        }
+      });
+    };
+  }
+
   void _startPracticeGroup(
     Act0PracticeGroupV1 group,
     Act0WorldCardV1 selectedWorld,
