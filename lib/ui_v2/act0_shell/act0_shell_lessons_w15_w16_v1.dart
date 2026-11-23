@@ -2349,7 +2349,7 @@ final _world15Pilot = _act0PilotWorldV1(
     ]),
   ],
 );
-final _world16Pilot = _act0PilotWorldV1(
+final _world16SourceV1 = _act0PilotWorldV1(
   16,
   "Turn and River Commitment",
   "6-max cash, 0.5/1 BB blinds, no ante or rake",
@@ -5176,6 +5176,31 @@ final _world16Pilot = _act0PilotWorldV1(
         ).copyWith(showDecisionPremise: true),
         explanation:
             "Pot = 7.5 (BTN) + 0.5 (SB) + 19.5 (BB) = 27.5 BB. Call price = to call / (pot + call) = 12/39.5 = 30.4%. Equity E=(W+T/2)/N over 11 legal combos = 18.2%. EV(call)=E×(15.5+2×12)−12=-4.82 BB. Fold yields 0 BB.",
+      ),
+    ]),
+  ],
+);
+
+final _world16Pilot = _act0PilotWorldV1(
+  16,
+  _world16SourceV1.title,
+  _world16SourceV1.subtitle,
+  "Flop strategy",
+  [
+    ..._world16SourceV1.lessons,
+    _act0PilotLessonV1('w16_play_the_hand', 'Play the hand', [
+      _w16HandPlaythroughV1('w16_3_guided_thin_third_street', 200, 300),
+      _w16HandPlaythroughV1(
+        'w16_3_transfer_jam_nut_straight',
+        1600,
+        3000,
+        threeBet: true,
+      ),
+      _w16HandPlaythroughV1(
+        'w16_6_day7_last_bet_independent',
+        200,
+        300,
+        riverLead: 1200,
       ),
     ]),
   ],

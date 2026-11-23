@@ -73,8 +73,10 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _activePracticeGroupId = null;
     _clearActiveRepairLaunchV1();
     _rapidPracticeLoop = rapidPracticeLoop;
-    _phase = task.entryPhase;
-    _selectedOptionId = null;
+    _selectedOptionId = _multiStreetRunsV1[task.taskId]?.choiceId;
+    _phase = _selectedOptionId == null
+        ? task.entryPhase
+        : Act0LessonPhaseV1.review;
     _teachingStepIndex =
         skipTeaching && (task.phase == Act0LessonPhaseV1.drill || spacedReview)
         ? task.runner.teachingSteps.length
@@ -95,6 +97,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
             lesson.taskList.any(
               (task) =>
                   task.taskId == item.taskId &&
+                  task.multiStreet == null &&
                   task.phase != Act0LessonPhaseV1.theory &&
                   task.runner.options.isNotEmpty,
             )) {

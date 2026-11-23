@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_screen_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_summary_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
+import '../support/act0_table_truth_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
@@ -231,6 +233,162 @@ const _preSplitIntroTasks = <String>{
 };
 
 void main() {
+  test(
+    'H5 is absent from the standard route and validates every pilot point',
+    () {
+      final state = Act0ShellStateV1.sample;
+      final hands = [
+        for (final world in state.worlds)
+          for (final lesson in world.lessons)
+            for (final task in lesson.courseTaskList)
+              if (task.multiStreet case final hand?) hand,
+      ];
+      if (!act0CurriculumPilotEnabledV1) {
+        expect(hands, isEmpty);
+        expect(state.worlds.last.worldNumber, 12);
+        return;
+      }
+      expect(hands, hasLength(3));
+      const pots = [
+        [5.5, 9.5, 15.5],
+        [20.5, 52.5, 112.5],
+        [5.5, 9.5, 27.5],
+      ];
+      for (final (handIndex, hand) in hands.indexed) {
+        expect(hand.decisions, hasLength(3));
+        final fullPrefix = hand.decisions.last.table.handTimelinePrefix!;
+        expect(() => Act0MultiStreetV1(fullPrefix, []), throwsFormatException);
+        for (final (index, decision) in hand.decisions.indexed) {
+          final table = decision.table;
+          final prefix = table.handTimelinePrefix!;
+          expect(prefix.street, PokerStreet.values[index + 1]);
+          expect(prefix.board, hasLength(index + 3));
+          expect(table.boardCards.map((card) => card.label), prefix.board);
+          expect(prefix.decisionError('btn'), isNull);
+          final amounts = prefix.contributions.amounts(
+            seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+            actorSeatId: 'btn',
+          );
+          expect(amounts.potBb, pots[handIndex][index]);
+          expect(amounts.toCallBb, handIndex == 2 && index == 2 ? 12 : 0);
+          expect(
+            auditTableContributionsV1(
+              'h5',
+              '$index',
+              table,
+            ).where((row) => row.result == 'FAIL'),
+            isEmpty,
+          );
+          expect(decision.caption, isNotEmpty);
+          expect(
+            decision.options.where((option) => option.quality.isPreferred),
+            hasLength(1),
+          );
+          for (final option in decision.options) {
+            expect(option.isCorrect, option.quality.passes);
+          }
+        }
+        final first = hand.decisions.first;
+        expect(
+          () => Act0MultiStreetV1(fullPrefix, [
+            for (var i = 0; i < 2; i++)
+              (
+                boundary: first.table.handTimelinePrefix!.events.length,
+                runner: first,
+                authoredChoiceId: 'flop_bet',
+              ),
+          ]),
+          throwsFormatException,
+        );
+      }
+    },
+  );
+
+  testWidgets(
+    'H5 resumes after a flop mistake and archives all three decisions',
+    (t) async {
+      const taskId = 'h5_w16_3_guided_thin_third_street';
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: 'world_16',
+        taskId: taskId,
+        restoreActive: true,
+      );
+      final shell = find.byType(Act0LessonRunnerShellV1);
+      Act0RunnerStateV1 runner() =>
+          t.widget<Act0LessonRunnerShellV1>(shell).runner;
+      Future<void> tap(String key) async {
+        expect(await _tapFirst(t, [find.byKey(Key(key))]), isTrue, reason: key);
+      }
+
+      expect(runner().table.boardCards, hasLength(3));
+      await tap('act0_shell_option_flop_check');
+      await _saved(t);
+      await _mount(t);
+      await tap('act0_academy_home_leaf_cta');
+      expect(runner().selectedOptionId, 'flop_check');
+      expect(
+        runner().selectedOption!.feedbackReason,
+        contains('continues with the recorded play'),
+      );
+      await tap('act0_shell_feedback_continue_cta');
+      expect(runner().table.boardCards, hasLength(4));
+      expect(runner().table.potLabel, 'Pot 9.5 BB');
+      await tap('act0_shell_option_turn_bet');
+      await tap('act0_shell_feedback_continue_cta');
+      expect(runner().table.boardCards, hasLength(5));
+      await tap('act0_shell_option_river_bet_3');
+      await tap('act0_shell_feedback_continue_cta');
+      final saved = await _saved(t);
+      expect(saved['earnedXp'], xp);
+      expect(saved['completedTaskIds'], contains(taskId));
+      final history = Act0LearningEvidenceHistoryV1.restore(
+        saved['learningEvidenceHistory'],
+        saved['learningEvidenceLineage'],
+      )!;
+      final records = history.records.where(
+        (record) => record.taskId == taskId,
+      );
+      expect(records.map((record) => record.choiceId), [
+        'flop_check',
+        'turn_bet',
+        'river_bet_3',
+      ]);
+      expect(records.map((record) => record.isCorrect), [false, true, true]);
+      final archive = Act0AttemptArchiveV1.restore(
+        saved['attemptArchive'],
+        snapshotRecords: history.records,
+      );
+      for (final attempt in archive.attempts) {
+        final table = act0VerifiedReplayTableV1(
+          attempt.evidence,
+          attempt.tableFingerprint,
+        );
+        expect(
+          table?.boardCards.map((card) => card.label),
+          attempt.timelineSnapshot!.board,
+        );
+      }
+      final reviewRows = saved['reviewMistakeHistory'] as List;
+      expect(
+        reviewRows
+            .where((row) => row['decisionTaskId'] == taskId)
+            .map((row) => row['selectedId']),
+        ['flop_check'],
+      );
+      final recordsByChoice = {
+        for (final attempt in archive.attempts)
+          attempt.evidence.choiceId: attempt.timelineSnapshot!.board.length,
+      };
+      expect(recordsByChoice, {
+        'flop_check': 3,
+        'turn_bet': 4,
+        'river_bet_3': 5,
+      });
+    },
+    skip: !act0CurriculumPilotEnabledV1,
+  );
+
   testWidgets('pre-split first lesson resumes the card read with its XP', (
     t,
   ) async {
