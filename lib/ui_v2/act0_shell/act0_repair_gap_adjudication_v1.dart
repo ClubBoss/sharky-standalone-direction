@@ -900,7 +900,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "turn_river_changes",
     targetTaskId: "turn_river_changes_w5_street_repair",
     targetFingerprint:
-        "33411f6662ac97f4d4cd6bf37dae4e74c8a3d6f2c4a4df5558a9e22d55ad8071",
+        "1d9330e2c828febc7dedb4455ee9054ec081f8456afe3f9a9c05715e94748cf9",
     targetCorrectChoiceId: "repair_story",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -914,10 +914,10 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "barrel_big",
     sourceCorrectChoiceId: "check_more",
     sourceFingerprint:
-        "fa36224e539c1f1386a13370c3e0bc47f12cc832a98ca79a412cba837845b167",
+        "46d539844f43589057fc248731ce311c0b23d8d95ec1cfc3cc2bef949a02337e",
     sourceQuestion: "Fold pressure dropped on this turn. What do you do now?",
     sourceChoiceReason:
-        "A bigger second bet risks more chips while BB folds less often. Check and keep the next card free.",
+        "A bigger second bet risks more chips. In this model every hand ahead of you still calls, so check for a free next card.",
     sourceChoiceLabel: "Bet big again",
     sourceChoiceQuality: "suboptimal",
     goalId: "bluff_needs_better_folds",

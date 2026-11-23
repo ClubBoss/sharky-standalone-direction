@@ -607,7 +607,7 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
               title: 'Two ways to win.',
               body:
                   'A semi-bluff is a bet with a draw. It can win when a better hand folds, '
-                  'or later when your draw hits. Checking gets the next card free. '
+                  'or later when your draw hits. After BB checks to you here, checking behind gives you a free river. '
                   'Compare what each choice wins and loses on average. '
                   'Checking can earn the pot if the draw hits. '
                   'When you bet, a fold wins the chips already in the middle. '
@@ -1647,7 +1647,8 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         runner: _w6BluffCandidateRunner.copyWith(
           caption:
               'On K-8-3, BB checks. Any pair calls half pot. Q-J and A-9 fold. Check if your hand already beats either unpaired hand.',
-          question: 'What do you do with nine-six after BB checks?',
+          question:
+              'With nine-six, which action can make a better unpaired hand fold?',
           feedbackTitle: 'A bet can fold better hands.',
           feedbackReason:
               'On K-8-3, 9-6 trails both Q-J and A-9. In this example, both of those hands fold to a half-pot bet.',
@@ -3627,12 +3628,11 @@ final _w6ContinuationBetIntro = _w6BoardFitIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Continuation bet, or c-bet',
       body:
-          'A continuation bet is a flop bet by the player who last raised preflop. '
-          'Against one caller who checks, a small bet is a good starting plan when you have a made hand on a dry flop. '
-          'On a wet flop, check back if you missed and have no useful draw. '
-          'The dry and wet textures tell you how many hands can connect, as in World 5. '
-          'On a dry rainbow flop, a one-third-pot bet leaves weaker hands a smaller call. '
-          'Connected two-tone flops give callers more ways to continue.',
+          'A flop continuation bet is a bet by the last preflop raiser. '
+          'Against one caller who checks on a dry flop, a one-third-pot bet can get paid by worse hands. '
+          'Connected two-tone flops give callers more ways to continue. '
+          'On those flops, often check behind when you miss and have neither a good draw nor a reason to expect folds. '
+          'Compare weaker calls with better folds before you bet.',
     ),
   ],
 );
