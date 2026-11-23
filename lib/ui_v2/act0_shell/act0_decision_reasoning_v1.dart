@@ -2,6 +2,7 @@ import 'act0_decision_reasoning_b19_v1.dart';
 import 'act0_decision_reasoning_w10_w12_v1.dart';
 import 'act0_decision_reasoning_w13_w14_v1.dart';
 import 'act0_decision_reasoning_w15_w16_v1.dart';
+import 'act0_decision_reasoning_w17_w18_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
@@ -105,6 +106,18 @@ const act0PrinciplesV1 = <String, int>{
     "delayed_attack": 16,
     "pressure_or_price": 16,
     "commitment_recheck": 16,
+    "three_bet_jobs": 17,
+    "squeeze_with_dead_money": 17,
+    "defend_three_bet": 17,
+    "four_bet_response": 17,
+    "trap_requires_trigger": 17,
+    "compressed_postflop": 17,
+    "multiway_value_threshold": 18,
+    "joint_multiway_folds": 18,
+    "multiway_acts_last": 18,
+    "eligible_side_pot": 18,
+    "reopen_or_enter": 18,
+    "multiway_showdown_plan": 18,
   },
 };
 
@@ -116,6 +129,7 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
   if (act0CurriculumPilotEnabledV1) ...{
     ...act0DecisionReasoningW13W14V1,
     ...act0DecisionReasoningW15W16V1,
+    ...act0DecisionReasoningW17W18V1,
     ...act0DecisionReasoningB19V1,
   },
 };

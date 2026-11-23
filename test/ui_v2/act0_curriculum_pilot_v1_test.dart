@@ -55,7 +55,10 @@ void main() {
             .authoredLessonId,
         'protection_and_denial',
       );
-      expect(worlds.map((w) => w.worldNumber), List.generate(16, (i) => i + 1));
+      expect(
+        worlds.map((w) => w.worldNumber),
+        List.generate(act0LastCurriculumWorldV1, (i) => i + 1),
+      );
       final options = catalogTasks
           .where(
             (row) =>
@@ -75,7 +78,7 @@ void main() {
             !_b19Lessons.contains(row.lesson.lessonId) &&
             row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
-      expect(played, hasLength(96));
+      expect(played, hasLength(144));
       for (final row in played) {
         final checks = auditTableContributionsV1(
           row.task.taskId,
@@ -90,6 +93,65 @@ void main() {
           checks.map((check) => check.result),
           everyElement('PASS'),
           reason: row.task.taskId,
+        );
+      }
+    },
+    skip: !act0CurriculumPilotEnabledV1,
+  );
+
+  test(
+    'W17–W18 use the accepted C1 pots and call prices',
+    () {
+      final rows = catalogTasks.where(
+        (row) => row.world.worldNumber == 17 || row.world.worldNumber == 18,
+      );
+      for (final world in [17, 18]) {
+        expect(
+          rows.where((row) => row.world.worldNumber == world),
+          hasLength(30),
+        );
+      }
+      final played = rows.where(
+        (row) => row.task.runner.table.scope == Act0TableScopeV1.playedHand,
+      );
+      expect(
+        played.map((row) => row.task.taskId),
+        unorderedEquals(_b4Prices.keys),
+      );
+      for (final row in played) {
+        final id = row.task.taskId;
+        final table = row.task.runner.table;
+        final ledger = table.handContributions!;
+        final hero = table.heroSeat.seatId;
+        final amounts = ledger.amounts(
+          seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+          actorSeatId: hero,
+        );
+        final paid = <String, double>{};
+        for (final entry in ledger.entries) {
+          final delta = entry.kind == Act0ContributionKindV1.uncalledReturn
+              ? -entry.amountBb
+              : entry.amountBb;
+          paid.update(
+            entry.seatId,
+            (total) => total + delta,
+            ifAbsent: () => delta,
+          );
+        }
+        final due = amounts.toCallBb!;
+        final cap = (paid[hero] ?? 0) + due;
+        final eligiblePot = paid.values.fold<double>(
+          0,
+          (sum, amount) => sum + (amount > cap ? cap : amount),
+        );
+        expect(
+          (
+            amounts.potBb,
+            due,
+            due == 0 ? null : (1000 * due / (eligiblePot + due)).round() / 10,
+          ),
+          _b4Prices[id],
+          reason: id,
         );
       }
     },
@@ -219,4 +281,56 @@ const _b19Prices = <String, (double, double, double, double?)>{
   "harder_overbet_passes_value": (11.5, 11.5, 0, null),
   "harder_block_weaker_flushes": (11.5, 11.5, 0, null),
   "harder_shorter_implied_payment": (11.5, 16.0, 4.5, 22.0),
+};
+
+// Accepted W17–W18 values: total pot, call amount, and eligible-pot equity.
+const _b4Prices = <String, (double, double, double?)>{
+  'w17_1_read_blocked_aces': (4, 2.5, 38.5),
+  'w17_1_guided_choose_value_job': (4, 2.5, 38.5),
+  'w17_1_transfer_select_bluff_candidate': (4, 2.5, 38.5),
+  'w17_1_day7_light_bluff_signal': (4, 2.5, 38.5),
+  'w17_2_read_squeeze_price': (6.5, 2.5, 27.8),
+  'w17_2_guided_size_oop': (4, 1.5, 27.3),
+  'w17_2_transfer_squeeze_all_fold': (6.5, 2.5, 27.8),
+  'w17_2_day7_squeeze_fails_if_one_stays': (6.5, 2.5, 27.8),
+  'w17_3_read_cold_call_identity': (12, 8, 40.0),
+  'w17_3_guided_count_caller_coverage': (20.5, 0, null),
+  'w17_3_transfer_defend_dry_3bet': (26.5, 6, 18.5),
+  'w17_3_day7_coverage_still_prices_call': (43.5, 23, 34.6),
+  'w17_4_read_four_bet_additional_cost': (12, 5.5, 31.4),
+  'w17_4_guided_four_bet_bluff_model': (12, 5.5, 31.4),
+  'w17_4_transfer_short_three_bet_shove': (32.5, 12, 27.0),
+  'w17_4_day7_spr_after_four_bet': (48.5, 0, null),
+  'w17_5_read_blind_on_blind_trap': (5, 3, 37.5),
+  'w17_5_guided_compare_deep_sizes': (4, 1.5, 27.3),
+  'w17_5_transfer_trap_not_triggered': (1.5, 0.5, 25.0),
+  'w17_5_day7_three_bet_dead_blind': (12, 5.5, 31.4),
+  'w17_6_read_lower_spr_mechanics': (50.5, 0, null),
+  'w17_6_guided_small_cbet_three_bet': (20.5, 0, null),
+  'w17_6_checkpoint_four_bet_shove': (125.5, 75, 37.4),
+  'w17_6_day7_narrow_range_small_call': (63.5, 15, 19.1),
+  'w18_1_read_compression_vs_hand_label': (8, 0, null),
+  'w18_1_guided_check_top_pair': (8, 0, null),
+  'w18_1_transfer_set_value_two_callers': (8, 0, null),
+  'w18_1_day7_multiple_value_calls': (8, 0, null),
+  'w18_2_read_joint_outcome': (8, 0, null),
+  'w18_2_guided_joint_folds_price': (8, 0, null),
+  'w18_2_transfer_profitable_joint_bluff': (8, 0, null),
+  'w18_2_day7_conditional_fold_count': (8, 0, null),
+  'w18_3_read_three_way_nuts': (8, 0, null),
+  'w18_3_guided_check_closes': (8, 0, null),
+  'w18_3_transfer_oop_check_may_face_bet': (8, 0, null),
+  'w18_3_day7_connected_caller_edge': (8, 0, null),
+  'w18_4_read_side_pot_layers': (8, 0, null),
+  'w18_4_guided_refund_uncalled': (8, 0, null),
+  'w18_4_transfer_call_only_eligible_pot': (50, 5, 14.3),
+  'w18_4_day7_award_eligible_pots': (8, 0, null),
+  'w18_5_read_overlimp': (3.5, 1, 22.2),
+  'w18_5_guided_short_raise_no_reopen': (32, 3, 8.6),
+  'w18_5_transfer_overcall_price': (16, 4, 20.0),
+  'w18_5_day7_full_raise_reopens': (35, 6, 14.6),
+  'w18_6_read_blockers_across_two_players': (8, 0, null),
+  'w18_6_guided_value_on_blank': (8, 0, null),
+  'w18_6_checkpoint_two_caller_check': (8, 0, null),
+  'w18_6_day7_tie_with_three_players': (8, 0, null),
 };

@@ -5111,4 +5111,6 @@ const _act0PilotCheckpointLessonsV1 = {
   'induce_and_checkpoint',
   'check_raise_and_checkpoint',
   'commitment_checkpoint',
+  'three_four_bet_checkpoint',
+  'multiway_checkpoint',
 };
