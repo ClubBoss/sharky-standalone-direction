@@ -1958,7 +1958,7 @@ final _w7PriceLessonV1 = _w7AppliedLessonV1(
       bet: 3,
       correctAt: 0,
       feedback:
-          'BB bets all-in, so this is the last decision. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
+          'Because BB is your only opponent and is all-in, calling ends the betting. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.',
       wrongFeedback:
           'Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.',
     ),
@@ -3247,8 +3247,8 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
               title: 'Only chips both players can match count.',
               body:
                   'With two players, 100 BB against 25 BB plays like 25 BB. '
-                  'A short stack means few big blinds left and limits what a draw can earn. Implied odds mean counting extra chips you could win on later streets. Reverse implied odds mean counting extra chips you could lose if you improve but still have the worse hand. '
-                  'In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra chips that only the deeper players can win.',
+                  'A short stack means few big blinds left. Implied odds mean extra chips you might win later. Reverse implied odds mean extra chips you might lose if you improve and still trail. '
+                  'In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra matched chips. Only live contributors can win it.',
             ),
           ],
         ),
@@ -3341,7 +3341,7 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
           ],
           correct: 1,
           reason:
-              "SB matches 10 BB from each seat, so all three can win the 30 BB main pot. You and the big blind each add 20 BB. Only you two can win that 40 BB side pot.",
+              "Each player puts 10 BB in the main pot, so all three are eligible for that 30 BB. You and the big blind each add 20 BB. Only you two can win that 40 BB side pot.",
           wrongReasons: const {
             0: "A single pot would let SB win chips it did not match. SB can win only the first 10 BB from each of the three players.",
             2: "Three players contribute to the main pot, so leaving out one 10 BB share understates it. You and the big blind add 20 BB each to the side pot.",

@@ -5085,7 +5085,7 @@ POTS: main 14 (BB, BTN)
 REASONING: principle price_vs_equity · alt choice_2 · edge priceBeatsEquity 0.81818182 BB · stack_matters false · assumption Suppose BB holds K♣ Q♠.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 8h stack 96.25 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 3 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 2.5 BB · SB folds · BB calls 1.5 BB more · Flop: BB checks · BTN bets 1.25 BB · BB calls 1.25 BB · Turn: BB goes all-in for 3 BB
-  + [correct] Call — That fits the table. BB bets all-in, so this is the last decision. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
+  + [correct] Call — That fits the table. Because BB is your only opponent and is all-in, calling ends the betting. You win on 12 of 44 rivers, about 27%. Calling 3 BB needs 3 of the final 14 BB, about 21%. Your chance is higher.
   - [wrong] Fold — Check what can still win. Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.
     BETTER ANSWER: Call
 
@@ -5291,7 +5291,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises 2.5 BB · CO f
     FEEDBACK TABLE: Flop | You Ac 9h | Board Ad 8s 4c | Pot 5.5 BB | Seat HJ | Seat focus hj | Tap hj, sb, bb | Center Read the stacks | Facts one pair, top pair, rainbow
 
 TASK w7_effective_stack_recap [review] Effective stack recap
-CAPTION: Lesson learned: the smaller stack sets the hand risk.
+CAPTION: Against one opponent, the smaller stack caps the chips each can match.
 TEACH: Risk starts here. Find the smaller stack first. That tells you how deep the hand really plays.
 TEACH LABELS: Smaller stack, Real risk, Hand depth
 Q: Why does effective stack matter?
@@ -5585,7 +5585,7 @@ REVIEW: SPR tells you whether the hand is room-heavy or commitment-heavy. That c
 
 TASK short_stack_spots_intro [theory] Effective stack at two depths
 CAPTION: Compare a stack of 100 BB with a stack of 25 BB.
-TEACH: Only chips both players can match count. With two players, 100 BB against 25 BB plays like 25 BB. A short stack means few big blinds left and limits what a draw can earn. Implied odds mean counting extra chips you could win on later streets. Reverse implied odds mean counting extra chips you could lose if you improve but still have the worse hand. In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra chips that only the deeper players can win.
+TEACH: Only chips both players can match count. With two players, 100 BB against 25 BB plays like 25 BB. A short stack means few big blinds left. Implied odds mean extra chips you might win later. Reverse implied odds mean extra chips you might lose if you improve and still trail. In a three-player pot, the main pot includes the chips everyone can match. A side pot is a separate pot for extra matched chips. Only live contributors can win it.
 Q: How much can these two players put at risk against each other?
 HINT [theoryOnly]: Low SPR means less money is left relative to the pot. Check your hand and the price before going all-in.
 TABLE: Preflop | You Kh Qh | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
@@ -5630,7 +5630,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB all-in 10 BB · BB all-in 30 BB
   - [wrong] One pot of 70 BB — Look again. A single pot would let SB win chips it did not match. SB can win only the first 10 BB from each of the three players.
     BETTER ANSWER: Main 30 BB, side 40 BB
-  + [correct] Main 30 BB, side 40 BB — Correct. SB matches 10 BB from each seat, so all three can win the 30 BB main pot. You and the big blind each add 20 BB. Only you two can win that 40 BB side pot.
+  + [correct] Main 30 BB, side 40 BB — Correct. Each player puts 10 BB in the main pot, so all three are eligible for that 30 BB. You and the big blind each add 20 BB. Only you two can win that 40 BB side pot.
   - [wrong] Main 20 BB, side 50 BB — Look again. Three players contribute to the main pot, so leaving out one 10 BB share understates it. You and the big blind add 20 BB each to the side pot.
     BETTER ANSWER: Main 30 BB, side 40 BB
 
@@ -5878,7 +5878,7 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_survival_recap [review] Chips and prizes recap
 ENTRY: drill
-CAPTION: Think back to the 20 BB call and the 9 BB all-in.
+CAPTION: Think back to the bubble decision and the 9 BB all-in.
 Q: Which plan balances growth and survival?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
@@ -5939,15 +5939,15 @@ REASONING: principle m_zone_shove · alt 1_6_bb · edge processRule · stack_mat
 
 TASK w9_m_ratio_green_zone [drill] First raise from HJ
 CAPTION: Stack: 30 BB. No antes. No special read.
-TEACH: First raise from HJ A small first raise leaves room to play after the flop.
-Q: Which opening size fits?
+TEACH: First raise from HJ A small open leaves room after the flop.
+Q: Which size leaves the most chips behind?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Jc | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: CO 30 · BTN 30 · SB 28 · BB 30
 REASONING: principle m_zone_shove · alt raise_to_3_bb · edge cheaperSameResult · stack_matters false · assumption No special read.
 SEATS: UTG folded stack 24 BB | HJ Ac Jc stack 30 BB | CO stack 34 BB | BTN dealer stack 32 BB | SB stack 27.5 BB post 0.5 BB | BB stack 34 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  + [correct] Raise to 2 BB — Correct. Raise AJs from HJ to 2 BB because M is 20 and you can still play later streets. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.
+  + [correct] Raise to 2 BB — Correct. Raise AJs from HJ to 2 BB because it leaves the most chips for later streets at M = 20. Raising to 3 BB risks another blind with no read that the remaining seats fold or call differently.
   - [suboptimal] Raise to 3 BB — Look again. From HJ with 30 BB, a 3 BB open loses one more chip if you fold to a raise. There is no read to pay for it.
     BETTER ANSWER: Raise to 2 BB
   - [wrong] All-in to 30 BB — Look again. At M = 20, risking 30 BB all-in for the blinds wastes the room you have. Raise to 2 BB instead.
@@ -6046,7 +6046,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   + [correct] Fold — Correct. BTN raises with JJ or better or AK, so a 16 BB call risks your last chips against a strong range. Fold because UTG has just 2 BB and surviving can pay.
 
 TASK w9_big_stack_leverage [drill] Three players left to act
-CAPTION: Six left, five paid. You cover BTN, SB and BB. They all fold 85% of the time to either size. When one re-raises, you fold.
+CAPTION: Six left, five paid. You cover BTN, SB and BB. They all fold 85% of the time to either size. If anyone continues, they reraise and you fold.
 TEACH: Three players left to act A big stack can put a smaller one at risk. Choose a size based on how the other players will act.
 Q: How should you open?
 HINT [theoryOnly]: (none)
@@ -6074,8 +6074,8 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_bubble_short_stack [drill] Shortest stack
 CAPTION: Six left, five paid. You start with 6 BB, the shortest stack. It folds to you in HJ.
-TEACH: Shortest stack When you act first, an all-in can win the blinds. Compare the short stack and the hand with the cost of waiting.
-Q: Go all-in or fold?
+TEACH: Shortest stack Compare the cost of waiting with what the shortest stack can still risk.
+Q: Which option can win the blinds?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Kh | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
 EFFECTIVE: CO 6 · BTN 6 · SB 6 · BB 6
@@ -6083,7 +6083,7 @@ REASONING: principle risk_premium · alt fold · edge foldsBetter · stack_matte
 SEATS: UTG folded stack 18 BB | HJ Ac Kh stack 6 BB | CO stack 20 BB | BTN dealer stack 24 BB | SB stack 11.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
   + [correct] All-in to 6 BB — Correct. Go all-in with AKo from HJ because you are the 6 BB shortest stack and others can fold. Folding forfeits the chance to win the 1.5 BB in blinds while you can still threaten a raise.
-  - [wrong] Fold — Look again. Folding misses a chance to take the blinds because AKo can go all-in first at 6 BB. No smaller stack can bust ahead of you.
+  - [wrong] Fold — Look again. You still have 6 BB if you fold. An all-in with AKo gives the later seats a fold decision and could win the blinds now.
     BETTER ANSWER: All-in to 6 BB
 
 TASK w9_bubble_table_risk_transfer [drill] A raise from BB
@@ -6097,7 +6097,7 @@ SEATS: UTG folded stack 2 BB | HJ folded stack 12 BB | CO folded stack 10 BB | B
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 2.5 BB · SB folds · BB raises to 18 BB
   - [wrong] Call 15.5 BB — Look again. Calling 15.5 BB needs 42.5% before payout pressure. AJo falls short against JJ+ or AK, so folding keeps your last chips.
     BETTER ANSWER: Fold
-  + [correct] Fold — Correct. BB raises with JJ+ or AK, leaving AJo under 31%. Fold because calling 15.5 BB needs 42.5% and risks elimination. A different raise range, set of stacks or set of prizes can change the answer.
+  + [correct] Fold — Correct. BB raises with JJ+ or AK, a range that leads AJo. Folding saves your remaining chips when the call needs 42.5% just to break even in chips. A different raise range, set of stacks or set of prizes can change the answer.
 
 TASK w9_bubble_recap [review] Three stacks recap
 ENTRY: drill
@@ -6135,7 +6135,7 @@ TABLE: Facts no applicable hand facts
 
 TASK w9_checkpoint_survival_line [drill] First in from CO
 CAPTION: You start with 7.5 BB. The money is far off. It folds to you in CO.
-Q: Go all-in or fold?
+Q: Which option can win the blinds?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Ac Qc | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 EFFECTIVE: BTN 7.5 · SB 7.5 · BB 7.5
@@ -6187,7 +6187,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   + [correct] Fold — Correct. BB bets stronger hands and missed nine-seven. Fold because your 40% wins beat the 36.9% chip price but do not clear the 58.4% prize threshold for calling your last 12 BB.
 
 TASK w9_checkpoint_table_notice [drill] Four seats behind
-CAPTION: Six left, five paid. You cover the four seats behind. They all fold 80% of the time to either size. When one re-raises, you fold.
+CAPTION: Six left, five paid. You cover the four seats behind. They all fold 80% of the time to either size. If anyone continues, they reraise and you fold.
 Q: How should you open?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You Kd Qd | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
@@ -8237,7 +8237,7 @@ HINT [hidden]: (none)
 TABLE: River | You Ah Kd | Board As Tc 7d 5c 2h | Pot 8 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Kd stack 96.25 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3.75 BB · BTN folds · SB folds · BB calls 2.75 BB more · Flop: BB checks · CO checks · Turn: BB checks · CO checks · River: BB checks
-  + [correct] A pair of tens — Correct. BB calls with tens because they have a pair. Missed club draws fold to the bet.
+  + [correct] A pair of tens — Correct. Under the stated read, a pair of tens calls this bet and a missed club draw folds. The pair supplies the payment.
     FEEDBACK TABLE: River | You Ah Kd | Board As Tc 7d 5c 2h | Pot 8 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] A missed club draw — Look again. A missed club draw folds, so counting it as a call overstates what you can win.
     BETTER ANSWER: A pair of tens
@@ -10275,7 +10275,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
     FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
   + [correct] 12 — Correct. The queen on the flop leaves three queens available. Four kings are still available, so there are 12 combinations.
     FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
-  - [wrong] 9 — Look again. Nine would count three kings and three queens. The board contains one queen and no kings, so BB can still use any of the four kings.
+  - [wrong] 9 — Look again. Nine would count three kings and three queens. The board shows one queen, and no king is visible at your seat or on the board. All four kings are available.
     BETTER ANSWER: 12
     FEEDBACK TABLE: Flop | You Ts 8s | Board Qh 9c 3d | Pot 6 BB | Seat CO | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, gutshot, completion cards 4
 
@@ -10557,7 +10557,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 TASK spaced_review_w9_survival_pressure_basics_misread_tournament_pressure_v1 [drill] Review decision
 DAY 7 FAMILY: misread_tournament_pressure
 CAPTION: You start with 8 BB. The money is far off. You act first.
-Q: Go all-in or fold?
+Q: Which option can win the blinds?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ah Kh | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
 EFFECTIVE: HJ 8 · CO 8 · BTN 8 · SB 8 · BB 8
@@ -10604,7 +10604,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK spaced_review_w9_tournament_pressure_checkpoint_misread_tournament_pressure_v1 [drill] Review decision
 DAY 7 FAMILY: misread_tournament_pressure
-CAPTION: Six left, five paid. You cover both blinds. They both fold 85% of the time to either size. When one re-raises, you fold.
+CAPTION: Six left, five paid. You cover both blinds. They both fold 85% of the time to either size. If either blind continues, that player reraises and you fold.
 Q: How should you open?
 HINT [hidden]: (none)
 TABLE: Preflop | You Kc Tc | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
