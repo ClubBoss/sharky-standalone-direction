@@ -907,8 +907,8 @@ final _w7SprRecapRunner = _w7SprIntroRunner.copyWith(
 );
 
 const _w7FullRingComparisonV1 =
-    'This table is 6-max. At a nine-player full-ring table, '
-    'UTG+1, UTG+2, and LJ also act after UTG.';
+    'This table is 6-max. MP stands for middle position. '
+    'At a nine-player full-ring table, UTG+1, MP, and LJ also act after UTG.';
 
 final _w7FormatPressureIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
@@ -991,7 +991,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_fullring_tighter',
   caption:
-      "Add UTG+1, UTG+2 and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.",
+      "Add UTG+1, MP and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.",
   hint: 'Check the given limits before choosing.',
   question: "What fits the nine-player version of this hand?",
   feedbackTitle: "More players can act after you.",
@@ -8480,7 +8480,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'price_and_the_player_read',
         'Price and the player read',
         Act0FeedbackQualityV1.correct,
-        'With the same pot before you call, a larger call needs a higher winning share. The player read helps you rate those chances. Price tells you what a call costs. SPR shows how large the stack is next to the pot. In multiway pots, more than one foe can have a strong hand.',
+        'With the same pot before you call, a larger call needs a higher winning share. Use your read to estimate your chances. SPR compares the stack with the pot. In multiway pots, several players can have strong hands.',
       ),
       (
         'the_last_pot_you_won',

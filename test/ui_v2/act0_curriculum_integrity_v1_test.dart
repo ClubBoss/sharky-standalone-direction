@@ -410,7 +410,7 @@ void main() {
         expect(runner.table.heroSeat.seatLabel, 'UTG');
         expect(runner.table.streetLabel, 'Preflop');
       }
-      for (final role in ['UTG+1', 'UTG+2', 'LJ']) {
+      for (final role in ['UTG+1', 'MP', 'LJ']) {
         expect(full.caption, contains(role));
       }
       expect(
