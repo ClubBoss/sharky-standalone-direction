@@ -16,6 +16,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
   }) {
     final lesson = _lessonById(selectedWorld.lessons, lessonId);
     final task = _taskById(lesson, taskId);
+    if (act0RunnerRequiresNineSeatPreviewV1(task.runner)) return false;
     final drillBypass =
         allowDrillBypass && task.phase == Act0LessonPhaseV1.drill;
     final repairBypass =

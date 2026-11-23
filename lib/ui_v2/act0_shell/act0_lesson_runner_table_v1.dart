@@ -78,8 +78,33 @@ class _Act0TableV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final skin = TableSkinScopeV1.of(context);
     final registered = sceneRegistration;
-    if (registered != null) return _registeredOverlays(context, registered);
+    if (registered != null) {
+      return _registeredOverlays(
+        context,
+        TableGeometryV1.registered(registered),
+      );
+    }
+    if (act0RequiresNineSeatPreviewV1(table)) {
+      final seatCount = act0TableSeatCountV1(table);
+      if (seatCount > 9 || !Act0NineSeatDebugScopeV1.enabledOf(context)) {
+        return const SizedBox.shrink();
+      }
+      return AspectRatio(
+        aspectRatio: this.cameraStageSize?.aspectRatio ?? .78,
+        child: LayoutBuilder(
+          builder: (context, constraints) => _registeredOverlays(
+            context,
+            TableGeometryV1.preview(
+              viewport: constraints.biggest,
+              seatCount: seatCount,
+            ),
+            debugPreview: true,
+          ),
+        ),
+      );
+    }
     // B6: `null` means this surface has no learning phase, so it renders the
     // settled decision-level scene and never animates.
     final sceneMotion =
@@ -156,7 +181,7 @@ class _Act0TableV1 extends StatelessWidget {
     // Wave A slot tables; B1 only resolves how deep each seat is and what
     // volume it reserves for future character art.
     final sceneSeatSlots = act0SceneSeatSlotsV1(
-      baseSlots: _seatSlotsForVariant(
+      baseSlots: TableGeometryV1.proceduralSeatAnchors(
         visualVariant,
         compactBottomDockClearance: compactBottomDockClearance,
         useAnswerListPerimeterRing: _viewportFamilyUsesAnswerListCompositionV1(
@@ -190,13 +215,13 @@ class _Act0TableV1 extends StatelessWidget {
           builder: (context, constraints) {
             final width = constraints.maxWidth;
             final height = constraints.maxHeight;
-            final baseSeatSlots = _seatSlotsForVariant(
+            final baseSeatSlots = TableGeometryV1.proceduralSeatAnchors(
               visualVariant,
               compactBottomDockClearance: compactBottomDockClearance,
               useAnswerListPerimeterRing:
                   _viewportFamilyUsesAnswerListCompositionV1(viewportFamily),
             );
-            final baseChipSlots = _chipSlotsForVariant(
+            final baseChipSlots = TableGeometryV1.proceduralBetAnchors(
               visualVariant,
               compactBottomDockClearance: compactBottomDockClearance,
             );
@@ -274,176 +299,23 @@ class _Act0TableV1 extends StatelessWidget {
               // gone.
               decoration: integratedPerspectivePrototype
                   ? null
-                  : Act0ShellTokensV1.tableRimDecoration(),
+                  : skin.proceduralRim(),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Positioned.fill(
-                    child: ValueListenableBuilder<bool>(
-                      valueListenable: Act0SceneHybridShellRegistryV1
-                          .shellStore
-                          .readyNotifier,
-                      builder: (context, hybridShellReady, _) => Container(
-                        key: const Key('act0_shell_table_felt'),
-                        // RENDER_CLASS_HYBRID_INTEGRATION_V1: once the baked
-                        // shell is ready its own felt/rail owns this pixel
-                        // area, so the procedural felt fill goes transparent
-                        // rather than double-painting under the same
-                        // dynamic-object geometry.
-                        decoration: !integratedPerspectivePrototype
-                            ? Act0ShellTokensV1.feltDecoration()
-                            : hybridShellReady
-                            ? null
-                            : ShapeDecoration(
-                                gradient: const RadialGradient(
-                                  center: Alignment(0, -0.16),
-                                  radius: 1.08,
-                                  colors: <Color>[
-                                    Act0IntegratedSceneFeltV1.centerLit,
-                                    Act0IntegratedSceneFeltV1.midLit,
-                                    Act0IntegratedSceneFeltV1.edgeDeep,
-                                  ],
-                                  stops: <double>[0, 0.55, 1],
-                                ),
-                                shape: const Act0SceneTableShapeV1(),
-                              ),
-                      ),
-                    ),
+                  ...skin.proceduralFelt(
+                    integratedPerspective: integratedPerspectivePrototype,
+                    refined: refined,
+                    heroAnchor: heroSceneSlot?.plateAnchor,
                   ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable:
-                        Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
-                    builder: (context, hybridShellReady, _) =>
-                        integratedPerspectivePrototype && !hybridShellReady
-                        ? const Positioned.fill(
-                            child: IgnorePointer(
-                              child: CustomPaint(
-                                key: Key('act0_scene_felt_material'),
-                                painter: Act0SceneFeltMaterialPainterV1(),
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.all(13),
-                      child: DecoratedBox(
-                        decoration: integratedPerspectivePrototype
-                            ? ShapeDecoration(
-                                shape: Act0SceneTableShapeV1(
-                                  side: BorderSide(
-                                    color: Act0ShellTokensV1.feltLine
-                                        .withValues(alpha: 0.30),
-                                    width: 1,
-                                  ),
-                                ),
-                              )
-                            : BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.tableInnerRadius,
-                                ),
-                                border: Border.all(
-                                  color: Act0ShellTokensV1.feltLine.withValues(
-                                    alpha: 0.30,
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        decoration: integratedPerspectivePrototype
-                            ? ShapeDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    Colors.white.withValues(
-                                      alpha: refined ? 0.06 : 0.04,
-                                    ),
-                                    Colors.transparent,
-                                    Act0VisualCanonV1.deepNavy.withValues(
-                                      alpha: refined ? 0.14 : 0.10,
-                                    ),
-                                  ],
-                                  stops: const <double>[0, 0.34, 1],
-                                ),
-                                shape: const Act0SceneTableShapeV1(),
-                              )
-                            : BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.tableInnerRadius,
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    Colors.white.withValues(
-                                      alpha: refined ? 0.06 : 0.04,
-                                    ),
-                                    Colors.transparent,
-                                    Act0VisualCanonV1.deepNavy.withValues(
-                                      alpha: refined ? 0.14 : 0.10,
-                                    ),
-                                  ],
-                                  stops: const <double>[0, 0.34, 1],
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: Align(
-                        child: FractionallySizedBox(
-                          widthFactor: refined ? 0.56 : 0.52,
-                          heightFactor: refined ? 0.20 : 0.18,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                Act0ShellTokensV1.radiusPill,
-                              ),
-                              gradient: RadialGradient(
-                                center: const Alignment(0, -0.12),
-                                radius: refined ? 1.12 : 1.04,
-                                colors: <Color>[
-                                  Act0TableFeltCanonV1.feltSoftLift.withValues(
-                                    alpha: refined ? 0.10 : 0.08,
-                                  ),
-                                  Colors.transparent,
-                                ],
-                                stops: const <double>[0, 1],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (heroSceneSlot != null)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: ClipPath(
-                          clipper: const ShapeBorderClipper(
-                            shape: Act0SceneTableShapeV1(),
-                          ),
-                          child: CustomPaint(
-                            key: const Key('act0_scene_hero_near_plane'),
-                            painter: Act0SceneHeroPlanePainterV1(
-                              heroAnchor: heroSceneSlot.plateAnchor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   Center(
                     child: Transform.translate(
                       // The callout owns the upper-center teaching lane; keep
                       // the context/street stack in its reserved middle lane.
-                      offset: Offset(0, hasRepairCallout ? height * 0.075 : 0),
+                      offset: TableGeometryV1.proceduralCenterOffset(
+                        height,
+                        hasRepairCallout,
+                      ),
                       child: _CenterPotV1(
                         clueMotion: sceneMotion,
                         table: table,
@@ -565,14 +437,7 @@ class _Act0TableV1 extends StatelessWidget {
                   // rail painter is suppressed rather than double-painted
                   // behind it.
                   ? tableBody
-                  : CustomPaint(
-                      key: const Key('act0_scene_table_material'),
-                      painter: const Act0SceneTableMaterialPainterV1(
-                        railWidth: _act0SceneRailWidthV1,
-                        railOverhang: _act0SceneRailOverhangV1,
-                      ),
-                      child: tableBody,
-                    ),
+                  : skin.proceduralRail(tableBody),
             );
           },
         ),
@@ -724,9 +589,15 @@ class _Act0TableV1 extends StatelessWidget {
   /// F7 changes physical registration only. The existing source seat order,
   /// card widgets, marker policy, focus resolver, commitments and callbacks are
   /// reused. The baked plate owns every person, hand and table contour.
-  Widget _registeredOverlays(BuildContext context, Act0SceneRegistrationV1 r) {
-    final p = r.profile;
-    final seats = _visualSeatOrder(table.seats);
+  Widget _registeredOverlays(
+    BuildContext context,
+    TableGeometryV1 geometry, {
+    bool debugPreview = false,
+  }) {
+    final skin = TableSkinScopeV1.of(context);
+    final seats = debugPreview
+        ? _nineSeatPreviewOrder(table)
+        : _visualSeatOrder(table.seats);
     final active = (playbackActiveSeatId ?? '').trim().isNotEmpty
         ? playbackActiveSeatId
         : _resolveActiveSeatId(table);
@@ -749,22 +620,18 @@ class _Act0TableV1 extends StatelessWidget {
         label.isNotEmpty &&
         label != 'Blinds posted' &&
         label != 'Action on hero';
-    final slots = [
-      for (final a in p.seatAnchorsFromHero)
-        Offset(r.map(a).dx / r.viewport.width, r.map(a).dy / r.viewport.height),
-    ];
+    final slots = geometry.seatAnchors
+        .map(geometry.normalizedViewportPoint)
+        .toList();
     final commitments = [
       for (var i = 0; i < seats.length; i++)
         Act0SceneCommitmentAnchorV1(
           seatId: seats[i].seatId,
-          anchor: Offset(
-            r.map(p.betAnchorsFromHero[i]).dx / r.viewport.width,
-            r.map(p.betAnchorsFromHero[i]).dy / r.viewport.height,
-          ),
+          anchor: geometry.normalizedViewportPoint(geometry.betAnchors[i]),
         ),
     ];
     Widget at(String key, Offset anchor, Widget child) {
-      final point = r.map(anchor);
+      final point = geometry.map(anchor);
       return Positioned(
         left: point.dx,
         top: point.dy,
@@ -773,23 +640,6 @@ class _Act0TableV1 extends StatelessWidget {
           child: KeyedSubtree(key: Key(key), child: child),
         ),
       );
-    }
-
-    Offset holeCardsAnchor(int slot) {
-      final anchor = p.holeCardAnchorsFromHero[slot];
-      final seat = seats[slot];
-      if (seat.isHero ||
-          seat.cardsVisibleMode != Act0CardsVisibleModeV1.faceUp) {
-        return anchor;
-      }
-      // Shown hands must clear the rear nameplate and the central price pill.
-      // Keep the registered positions of hidden cards and every other overlay.
-      return anchor +
-          switch (slot) {
-            3 => const Offset(0, .028),
-            5 when hasPrice => const Offset(.08, -.045),
-            _ => Offset.zero,
-          };
     }
 
     Widget cards(Act0SeatStateV1 seat) {
@@ -806,8 +656,8 @@ class _Act0TableV1 extends StatelessWidget {
       final back =
           !hero && seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceDown;
       final width =
-          r.destinationRect.width *
-          (hero ? p.heroCardWidth : p.opponentCardWidth);
+          geometry.referenceWidth *
+          (hero ? geometry.heroCardWidth : geometry.opponentCardWidth);
       return Transform.scale(
         scale: width / (back ? 22 : Act0ShellTokensV1.heroCardWidth),
         child: Row(
@@ -815,10 +665,12 @@ class _Act0TableV1 extends StatelessWidget {
           children: [
             for (var i = 0; i < visible.length; i++) ...[
               Transform.rotate(
-                angle: hero ? (i == 0 ? -p.heroCardTilt : p.heroCardTilt) : 0,
+                angle: hero
+                    ? (i == 0 ? -geometry.heroCardTilt : geometry.heroCardTilt)
+                    : 0,
                 child: back
-                    ? const _MiniCardBackV1()
-                    : _CardV1(
+                    ? skin.cardBack()
+                    : skin.cardFace(
                         card: visible[i],
                         cardId: hero ? 'hero_$i' : '${seat.seatId}_$i',
                         highlighted: highlightedCardIds.contains(
@@ -834,7 +686,9 @@ class _Act0TableV1 extends StatelessWidget {
     }
 
     return Stack(
-      key: const Key('act0_f7_dynamic_table'),
+      key: debugPreview
+          ? const Key('act0_nine_seat_debug_table')
+          : const Key('act0_f7_dynamic_table'),
       fit: StackFit.expand,
       children: [
         SizedBox.shrink(
@@ -842,10 +696,17 @@ class _Act0TableV1 extends StatelessWidget {
             'act0_scene_attention_phase_${attention?.phase.name ?? 'decision'}',
           ),
         ),
+        if (debugPreview) Positioned.fill(child: skin.previewFelt()),
         for (var i = 0; i < seats.length; i++) ...[
           at(
             'act0_f7_hole_cards_${seats[i].seatId}',
-            holeCardsAnchor(i),
+            geometry.holeCardsAnchor(
+              i,
+              revealedOpponent:
+                  !seats[i].isHero &&
+                  seats[i].cardsVisibleMode == Act0CardsVisibleModeV1.faceUp,
+              hasPrice: hasPrice,
+            ),
             cards(seats[i]),
           ),
           _SeatPlacementV1(
@@ -872,8 +733,8 @@ class _Act0TableV1 extends StatelessWidget {
             ),
             decisionPriceOwnedByTable: hasPrice,
             onChooseSeat: onChooseSeat,
-            tableWidth: r.viewport.width,
-            tableHeight: r.viewport.height,
+            tableWidth: geometry.viewport.width,
+            tableHeight: geometry.viewport.height,
             seatSlots: slots,
             visualVariant: visualVariant,
             identityPolicy: identityPolicy,
@@ -883,7 +744,7 @@ class _Act0TableV1 extends StatelessWidget {
           ),
           at(
             'act0_f7_dealer_anchor_${seats[i].seatId}',
-            p.dealerAnchorsFromHero[i],
+            geometry.dealerAnchors[i],
             _SeatMarkersV1(
               seatId: seats[i].seatId,
               markers: _resolveSeatMarkerDisplayV1(
@@ -901,8 +762,8 @@ class _Act0TableV1 extends StatelessWidget {
           _BetChipPlacementV1(
             slot: i,
             seat: seats[i],
-            tableWidth: r.viewport.width,
-            tableHeight: r.viewport.height,
+            tableWidth: geometry.viewport.width,
+            tableHeight: geometry.viewport.height,
             commitmentAnchors: commitments,
             seatSlots: slots,
             visualVariant: visualVariant,
@@ -913,11 +774,11 @@ class _Act0TableV1 extends StatelessWidget {
         if (table.boardCards.isNotEmpty)
           at(
             'act0_f7_board',
-            p.boardAnchor,
+            geometry.boardAnchor,
             Transform.scale(
               scale:
-                  r.destinationRect.width *
-                  p.boardCardWidth /
+                  geometry.referenceWidth *
+                  geometry.boardCardWidth /
                   Act0ShellTokensV1.boardCardWidth,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -929,7 +790,7 @@ class _Act0TableV1 extends StatelessWidget {
                     KeyedSubtree(
                       key: Key('act0_f7_board_slot_$i'),
                       child: i < table.boardCards.length
-                          ? _BoardCardV1(
+                          ? skin.boardCard(
                               card: table.boardCards[i],
                               cardId: 'board_$i',
                               highlighted: highlightedCardIds.contains(
@@ -950,7 +811,7 @@ class _Act0TableV1 extends StatelessWidget {
           ),
         at(
           'act0_f7_street',
-          p.streetAnchor,
+          geometry.streetAnchor,
           _CenterStreetStatusV1(
             label: act0RuntimeLocalizedStreetLabelV1(
               context,
@@ -961,10 +822,10 @@ class _Act0TableV1 extends StatelessWidget {
         ),
         at(
           'act0_f7_pot_price',
-          p.potAnchor,
+          geometry.potAnchor,
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: r.destinationRect.width * (hasPrice ? .60 : .23),
+              maxWidth: geometry.referenceWidth * (hasPrice ? .60 : .23),
             ),
             // The fixed rail between board and hero has room for one row.
             // Allow long values to wrap within their own pill.
@@ -972,7 +833,7 @@ class _Act0TableV1 extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
-                  child: _CenterPriorityStatV1(
+                  child: skin.potLabel(
                     key: const Key('act0_shell_wave1_pot_priority_stat'),
                     legacyKey: const Key('act0_shell_center_pot_stat'),
                     label: act0RuntimeLocalizedPotLabelV1(
@@ -987,7 +848,7 @@ class _Act0TableV1 extends StatelessWidget {
                 if (hasPrice) ...[
                   const SizedBox(width: 5),
                   Flexible(
-                    child: _CenterPriorityStatV1(
+                    child: skin.potLabel(
                       key: const Key('act0_shell_wave1_price_priority_stat'),
                       legacyKey: const Key('act0_shell_center_to_call_stat'),
                       label: act0RuntimeLocalizedToCallLabelV1(context, price),
@@ -1003,7 +864,7 @@ class _Act0TableV1 extends StatelessWidget {
         if (completionSummary != null)
           at(
             'act0_shell_completion_reward_lane',
-            p.clueAnchor,
+            geometry.clueAnchor,
             _CompletionToastV1(
               summary: completionSummary!,
               overlayStyle: _CompletionToastOverlayStyleV1.table,
@@ -1014,9 +875,9 @@ class _Act0TableV1 extends StatelessWidget {
             (showRepairCallout && repairCallout.isNotEmpty))
           at(
             'act0_f7_clue',
-            p.clueAnchor,
+            geometry.clueAnchor,
             SizedBox(
-              width: r.destinationRect.width * .245,
+              width: geometry.referenceWidth * .245,
               child: lateRouteSignal != null
                   ? _LateRouteCenterSignalV1(signal: lateRouteSignal!)
                   : _CenterSignalAnchorV1(
@@ -1316,74 +1177,46 @@ class _DockBackButtonV1 extends StatelessWidget {
   }
 }
 
-List<Offset> _seatSlotsForVariant(
-  Act0ShellTableVisualVariantV1 variant, {
-  bool compactBottomDockClearance = false,
-  bool useAnswerListPerimeterRing = false,
-}) {
-  switch (variant) {
-    case Act0ShellTableVisualVariantV1.classic:
-      return _SeatPlacementV1.defaultSlots;
-    case Act0ShellTableVisualVariantV1.refinedDev2:
-      if (compactBottomDockClearance) {
-        final heroY = useAnswerListPerimeterRing ? 0.86 : 0.80;
-        return <Offset>[
-          Offset(0.47, heroY),
-          Offset(0.08, 0.69),
-          Offset(0.08, 0.31),
-          Offset(0.47, 0.06),
-          Offset(0.86, 0.31),
-          Offset(0.86, 0.69),
-        ];
-      }
-      return const <Offset>[
-        Offset(0.50, 0.91),
-        Offset(0.12, 0.75),
-        Offset(0.12, 0.33),
-        Offset(0.50, 0.12),
-        Offset(0.88, 0.33),
-        Offset(0.88, 0.75),
-      ];
+List<Act0SeatStateV1> _nineSeatPreviewOrder(Act0TableStateV1 table) {
+  if (table.tableFormat != Act0TableFormatV1.nineMax) {
+    return _visualSeatOrder(table.seats);
   }
+  final positions = table.canonicalSeatOrder;
+  final byPosition = {
+    for (final seat in table.seats) seat.seatLabel.toUpperCase(): seat,
+  };
+  final seatIds = table.seats.map((seat) => seat.seatId).toSet();
+  return _visualSeatOrder(
+    [
+      ...table.seats,
+      for (final position in positions)
+        if (!byPosition.containsKey(position) &&
+            !seatIds.contains('preview_empty_$position'))
+          Act0SeatStateV1(
+            seatId: 'preview_empty_$position',
+            seatLabel: position,
+            displayName: position,
+            isOccupied: false,
+            isInHand: false,
+          ),
+    ],
+    canonicalOrder: positions,
+    defaultFirstPosition: 'BTN',
+  ).take(positions.length).toList();
 }
 
-List<Offset> _chipSlotsForVariant(
-  Act0ShellTableVisualVariantV1 variant, {
-  bool compactBottomDockClearance = false,
+List<Act0SeatStateV1> _visualSeatOrder(
+  List<Act0SeatStateV1> seats, {
+  List<String>? canonicalOrder,
+  String? defaultFirstPosition,
 }) {
-  switch (variant) {
-    case Act0ShellTableVisualVariantV1.classic:
-      return _BetChipPlacementV1.defaultChipSlots;
-    case Act0ShellTableVisualVariantV1.refinedDev2:
-      if (compactBottomDockClearance) {
-        return const <Offset>[
-          Offset(0.50, 0.62),
-          Offset(0.067, 0.55),
-          Offset(0.087, 0.45),
-          Offset(0.50, 0.29),
-          Offset(0.80, 0.39),
-          Offset(0.84, 0.59),
-        ];
-      }
-      return const <Offset>[
-        Offset(0.50, 0.71),
-        Offset(0.24, 0.64),
-        Offset(0.26, 0.30),
-        Offset(0.50, 0.29),
-        Offset(0.74, 0.30),
-        Offset(0.76, 0.64),
-      ];
-  }
-}
-
-List<Act0SeatStateV1> _visualSeatOrder(List<Act0SeatStateV1> seats) {
-  final canonicalOrder = _inferCanonicalSeatOrder(seats);
+  canonicalOrder ??= _inferCanonicalSeatOrder(seats);
   final byLabel = <String, Act0SeatStateV1>{
     for (final seat in seats) seat.seatLabel.toUpperCase(): seat,
   };
   final hero = seats.where((seat) => seat.isHero).toList(growable: false);
   final heroLabel = hero.isEmpty
-      ? canonicalOrder.first
+      ? defaultFirstPosition ?? canonicalOrder.first
       : hero.first.seatLabel.toUpperCase();
   final heroIndex = canonicalOrder.indexOf(heroLabel);
   final start = heroIndex < 0 ? 0 : heroIndex;
@@ -1448,6 +1281,7 @@ class _CenterPotV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final skin = TableSkinScopeV1.of(context);
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
     final resolvedCenterLabel = (centerLabelOverride ?? table.centerLabel)
         .trim();
@@ -1538,7 +1372,7 @@ class _CenterPotV1 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   for (var i = 0; i < table.boardCards.length; i++) ...[
-                    _BoardCardV1(
+                    skin.boardCard(
                       card: table.boardCards[i],
                       cardId: 'board_$i',
                       highlighted: highlightedCardIds.contains('board_$i'),
@@ -1557,7 +1391,7 @@ class _CenterPotV1 extends StatelessWidget {
             spacing: 5,
             runSpacing: 3,
             children: [
-              _CenterPriorityStatV1(
+              skin.potLabel(
                 key: const Key('act0_shell_wave1_pot_priority_stat'),
                 legacyKey: const Key('act0_shell_center_pot_stat'),
                 label: act0RuntimeLocalizedPotLabelV1(
@@ -1569,7 +1403,7 @@ class _CenterPotV1 extends StatelessWidget {
                 pulse: table.actionTrail.isNotEmpty,
               ),
               if (resolvedToCallLabel.isNotEmpty)
-                _CenterPriorityStatV1(
+                skin.potLabel(
                   key: const Key('act0_shell_wave1_price_priority_stat'),
                   legacyKey: const Key('act0_shell_center_to_call_stat'),
                   label: act0RuntimeLocalizedToCallLabelV1(
@@ -1853,15 +1687,6 @@ class _BetChipPlacementV1 extends StatelessWidget {
   /// When non-null, shown instead of seat.bet (used during action trail playback).
   final Act0SeatBetStateV1? betOverride;
 
-  static const List<Offset> defaultChipSlots = <Offset>[
-    Offset(0.50, 0.75),
-    Offset(0.055, 0.60),
-    Offset(0.055, 0.50),
-    Offset(0.50, 0.25),
-    Offset(0.945, 0.50),
-    Offset(0.945, 0.60),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final bet = betOverride ?? seat.bet;
@@ -1878,7 +1703,7 @@ class _BetChipPlacementV1 extends StatelessWidget {
     final seatPoint = seatSlots[safeSlot.clamp(0, seatSlots.length - 1)];
     final child = KeyedSubtree(
       key: Key('act0_shell_bet_chip_owner_${seat.seatId}'),
-      child: _BetChipV1(
+      child: TableSkinScopeV1.of(context).chipStack(
         bet: bet,
         compact: visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
       ),
@@ -1975,15 +1800,6 @@ class _SeatPlacementV1 extends StatelessWidget {
   final bool depthTieredPrototype;
   final bool compactInformativeColumn;
   final bool showCards, showDealerMarker, registeredScene;
-
-  static const List<Offset> defaultSlots = <Offset>[
-    Offset(0.50, 0.90),
-    Offset(0.08, 0.72),
-    Offset(0.06, 0.36),
-    Offset(0.50, 0.08),
-    Offset(0.94, 0.36),
-    Offset(0.92, 0.72),
-  ];
 
   @override
   Widget build(BuildContext context) {

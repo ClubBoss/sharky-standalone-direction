@@ -18,7 +18,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'
-    show debugPrintSynchronously, kReleaseMode;
+    show debugPrintSynchronously, kDebugMode, kReleaseMode;
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
@@ -62,6 +62,8 @@ part 'act0_lesson_runner_scene_v1.dart';
 part 'act0_lesson_runner_feedback_v1.dart';
 part 'act0_lesson_runner_completion_v1.dart';
 part 'act0_lesson_runner_table_v1.dart';
+part 'act0_table_geometry_v1.dart';
+part 'act0_table_skin_v1.dart';
 part 'act0_lesson_runner_seats_v1.dart';
 part 'act0_lesson_runner_actions_v1.dart';
 
@@ -3159,6 +3161,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   @override
   Widget build(BuildContext context) {
     final runner = widget.runner;
+    final recallTable = widget.theoryRecallStep?.table;
+    if ((act0RunnerRequiresNineSeatPreviewV1(runner) ||
+            (recallTable != null &&
+                act0RequiresNineSeatPreviewV1(recallTable))) &&
+        !Act0NineSeatDebugScopeV1.enabledOf(context)) {
+      return Center(
+        key: const Key('act0_full_ring_runner_unavailable'),
+        child: BackButton(onPressed: widget.onBack),
+      );
+    }
     final isTheory = _isTheory;
     final isDrill = runner.phase == Act0LessonPhaseV1.drill;
     final isReview = _isReview;
@@ -4872,15 +4884,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           return Stack(
             fit: StackFit.expand,
             children: [
-              IgnorePointer(
-                child: CustomPaint(
-                  key: const Key('act0_f7_baked_room_cast_hero'),
-                  painter: Act0F7RegisteredScenePainterV1(
-                    image: image,
-                    registration: registration,
-                  ),
-                ),
-              ),
+              TableSkinScopeV1.of(context).registeredFelt(image, registration),
               if (scrimBottom != null)
                 Positioned(
                   left: 0,
