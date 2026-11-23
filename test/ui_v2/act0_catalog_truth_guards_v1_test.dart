@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_summary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -172,6 +173,15 @@ void main() {
         }
         covered[task.taskId] = timeline.coverage;
         final reason = 'History gap in ${task.taskId}';
+        final summary = Act0StreetSummaryV1(timeline);
+        expect(summary.heroSeat, table.heroSeatId ?? table.heroSeat.seatId);
+        expect(summary.coverage, timeline.coverage);
+        expect(
+          summary.streets.map((row) => row.name),
+          PokerStreet.values.take(timeline.street.index),
+          reason: reason,
+        );
+        expect(summary.frameAt(timeline.street), isNull, reason: reason);
         expect(
           pokerStreetToString(timeline.street),
           table.streetLabel,
@@ -181,6 +191,14 @@ void main() {
           for (final card in table.boardCards) card.label,
         ], reason: reason);
         if (timeline.coverage == Act0HandHistoryCoverageV1.partialDrill) {
+          expect(summary.amountsAtDecision(), isNull, reason: reason);
+          expect(
+            summary.streets.every(
+              (row) => row.actions.isEmpty && row.potAfterBb == null,
+            ),
+            isTrue,
+            reason: reason,
+          );
           expect(
             () => timeline.contributions,
             throwsStateError,
@@ -192,10 +210,19 @@ void main() {
         expect(timeline.decisionError(actor), isNull, reason: reason);
         final contributions = timeline.contributions;
         final authored = table.handContributions!;
-        final totals = contributions.amounts(
-          seatIds: table.seats.map((seat) => seat.seatId).toSet(),
-          actorSeatId: actor,
-        );
+        final totals = summary.amountsAtDecision(actorSeat: actor)!;
+        final expectedStreetPots = switch (task.taskId) {
+          'w11_trigger_bad_price_fold' => [6.0, 10.0],
+          'w12_river_draw_missed' => [5.0, 10.0, 14.0],
+          _ => null,
+        };
+        if (expectedStreetPots != null) {
+          expect(
+            summary.streets.map((row) => row.potAfterBb),
+            expectedStreetPots,
+            reason: reason,
+          );
+        }
         double labelAmount(String label) =>
             double.parse(RegExp(r'(\d+(?:\.\d+)?) BB$').firstMatch(label)![1]!);
         expect(

@@ -69,6 +69,7 @@ extension on Act0TableStateV1 {
                       100)
                   .round(),
       },
+      heroSeat: heroSeatId ?? heroSeat.seatId,
       button: seats.singleWhere((seat) => seat.isDealerButton).seatId,
       smallBlind: 50,
       bigBlind: 100,

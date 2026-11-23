@@ -163,6 +163,7 @@ class Act0ImportedHandV1 {
       for (final seat in seats) '${seat.number}': seat.stackCents,
     },
     button: '$buttonSeat',
+    heroSeat: '$heroSeat',
     smallBlind: smallBlindCents,
     bigBlind: bigBlindCents,
     board: board,

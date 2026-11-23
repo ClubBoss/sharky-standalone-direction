@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_summary_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -895,6 +898,21 @@ void main() {
         expect(find.text('Own hand · PokerStars'), findsOneWidget);
         expect(find.text('Betting decisions · Call price'), findsOneWidget);
         expect(find.text('Step 0 of 9'), findsOneWidget);
+        final summary = t
+            .widget<Act0AttemptReplayScreenV1>(
+              find.byType(Act0AttemptReplayScreenV1),
+            )
+            .streetSummary;
+        if (act0StreetSummaryPreviewV1) {
+          expect(summary!.heroSeat, '1');
+          expect(summary.streets, isEmpty);
+          final frame = summary.frameAt(PokerStreet.preflop)!;
+          expect(frame.potBb, closeTo(2, 1e-9));
+          expect(frame.stacksBb, {'1': 99.0, '2': 99.0});
+          expect(frame.foldedSeats, {'2'});
+        } else {
+          expect(summary, isNull);
+        }
         await tap('Next');
         expect(find.textContaining('Button: seat 1.'), findsOneWidget);
         await tap('Next');
@@ -976,10 +994,18 @@ void main() {
     ) async {
       const taskId = 'w11_trigger_bad_price_fold';
       await _openSavedCourseTask(t, worldId: 'world_11', taskId: taskId);
-      final runner = t
-          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
-          .runner;
+      final runnerWidget = t.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      final runner = runnerWidget.runner;
       final prefix = runner.table.handTimelinePrefix!;
+      final taskSummary = runnerWidget.streetSummary;
+      if (act0StreetSummaryPreviewV1) {
+        expect(taskSummary!.streets.map((row) => row.potAfterBb), [6, 10]);
+        expect(taskSummary.frameAt(PokerStreet.turn), isNull);
+      } else {
+        expect(taskSummary, isNull);
+      }
       expect(
         await _tapFirst(t, [find.byKey(const Key('act0_shell_option_fold'))]),
         isTrue,
@@ -998,6 +1024,18 @@ void main() {
         (row) => row.evidence.taskId == taskId,
       );
       expect(attempt.timelineSnapshot?.toPayload(), prefix.toPayload());
+      final replay = Act0AttemptReplayScreenV1(
+        attempt: attempt,
+        onClose: () {},
+      );
+      final replaySummary = replay.streetSummary;
+      if (act0StreetSummaryPreviewV1) {
+        expect(replaySummary!.heroSeat, taskSummary!.heroSeat);
+        expect(replaySummary.streets.map((row) => row.potAfterBb), [6, 10]);
+        expect(replaySummary.frameAt(PokerStreet.turn), isNull);
+      } else {
+        expect(replaySummary, isNull);
+      }
       expect(attempt.events.map((event) => event.label), [
         ...runner.table.actionTrail.map((event) => event.label),
         'Your choice: ${attempt.choiceLabel}',

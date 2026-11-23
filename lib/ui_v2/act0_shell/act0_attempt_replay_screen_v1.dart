@@ -12,6 +12,8 @@ import 'act0_lesson_runner_shell_v1.dart';
 import 'act0_shell_state_v1.dart';
 import 'act0_shell_tokens_v1.dart';
 import 'act0_table_presentation_config_v1.dart';
+import 'act0_street_summary_preview_v1.dart';
+import 'act0_street_summary_v1.dart';
 
 class Act0AttemptReplayScreenV1 extends StatefulWidget {
   const Act0AttemptReplayScreenV1({
@@ -32,6 +34,15 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
   final Act0ImportedHandV1? hand;
   final Widget? practice;
   final VoidCallback onClose;
+
+  Act0StreetSummaryV1? get streetSummary {
+    if (!act0StreetSummaryPreviewV1) return null;
+    final ownHand = hand;
+    return Act0StreetSummaryV1(
+      ownHand?.timeline.beforeDecision ?? attempt?.timelineSnapshot,
+      completedHand: ownHand != null,
+    );
+  }
 
   @override
   State<Act0AttemptReplayScreenV1> createState() =>
