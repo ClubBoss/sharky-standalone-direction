@@ -57,12 +57,17 @@ class Act0AttemptReplayTableV1 {
           );
     if (index < 0) return null;
     final frame = act0TableChoreographyFrameAfterBeatV1(_plan, index);
+    var table = act0TableForChoreographyFrameV1(
+      _table,
+      frame,
+      showDecisionSeatDetails: false,
+    );
+    if (frame.heroDecisionReady && table.heroSeatId == null) {
+      final hero = _table.seats.where((seat) => seat.isHero).firstOrNull;
+      if (hero != null) table = table.copyWith(heroSeatId: hero.seatId);
+    }
     return (
-      table: act0TableForChoreographyFrameV1(
-        _table,
-        frame,
-        showDecisionSeatDetails: false,
-      ),
+      table: table,
       newCommitment:
           frame.latestCommitmentSeatId != null &&
           _plan.beats[index].sourceIndex == position - 1,
