@@ -121,20 +121,20 @@ void main() {
       );
 
       final wizard = find.byType(Act0ManualHandScreenV1);
-      final wizardScroll = find.descendant(
+      final wizardScrollables = find.descendant(
         of: wizard,
         matching: find.byType(Scrollable),
-      ).first;
+      );
       final dialog = find.byType(AlertDialog);
 
       Future<void> reveal(Finder finder, {double scrollDelta = 150}) async {
-        if (wizardScroll.evaluate().isNotEmpty &&
+        if (wizardScrollables.evaluate().isNotEmpty &&
             dialog.evaluate().isEmpty &&
             finder.evaluate().isEmpty) {
           await t.scrollUntilVisible(
             finder,
             scrollDelta,
-            scrollable: wizardScroll,
+            scrollable: wizardScrollables.first,
           );
         } else {
           await t.ensureVisible(finder);

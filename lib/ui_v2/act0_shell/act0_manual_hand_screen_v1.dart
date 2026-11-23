@@ -367,6 +367,7 @@ class _ActionEditorState extends State<_ActionEditor> {
             onChanged: (seat) => setState(() => _seat = seat),
           ),
           DropdownButtonFormField<Act0ImportedActionKindV1>(
+            isExpanded: true,
             initialValue: _kind,
             decoration: const InputDecoration(labelText: 'Action'),
             items: [
