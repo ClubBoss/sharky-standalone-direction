@@ -56,6 +56,7 @@ class Act0HandTimelineV1 {
     required int bigBlind,
     required List<Act0HandEventV1> events,
     required int decisionIndex,
+    String? heroSeat,
   }) : beforeDecision = Act0HandTimelinePrefixV1._(
          coverage,
          startingStacks,
@@ -63,6 +64,7 @@ class Act0HandTimelineV1 {
          smallBlind,
          bigBlind,
          events.sublist(0, decisionIndex),
+         heroSeat,
        );
 
   /// Normalize source contributions and insert a marker for each dealt street.
@@ -74,6 +76,7 @@ class Act0HandTimelineV1 {
     required int bigBlind,
     required List<String> board,
     required List<Act0HandDeltaV1> actions,
+    String? heroSeat,
   }) {
     final events = <Act0HandEventV1>[];
     final totals = <(PokerStreet, String), int>{};
@@ -130,6 +133,7 @@ class Act0HandTimelineV1 {
       bigBlind: bigBlind,
       events: events,
       decisionIndex: events.length,
+      heroSeat: heroSeat,
     );
   }
 
@@ -145,7 +149,9 @@ class Act0HandTimelinePrefixV1 {
     this.smallBlind,
     this.bigBlind,
     List<Act0HandEventV1> events,
-  ) : startingStacks = Map.unmodifiable(stacks),
+    String? heroSeat,
+  ) : heroSeat = stacks.containsKey(heroSeat) ? heroSeat : null,
+      startingStacks = Map.unmodifiable(stacks),
       events = List.unmodifiable(events) {
     if (_structureError() case final error?) throw FormatException(error);
   }
@@ -155,6 +161,7 @@ class Act0HandTimelinePrefixV1 {
   /// In clockwise seat order, starting at any occupied seat.
   final Map<String, int> startingStacks;
   final String button;
+  final String? heroSeat;
   final int smallBlind, bigBlind;
   final List<Act0HandEventV1> events;
 
@@ -167,19 +174,28 @@ class Act0HandTimelinePrefixV1 {
 
   PokerStreet get street => events.lastOrNull?.street ?? PokerStreet.preflop;
 
-  Act0HandContributionsV1 get contributions {
+  Act0HandContributionsV1 get contributions => contributionsThrough(street);
+
+  Act0HandContributionsV1 contributionsThrough(PokerStreet endStreet) {
     if (coverage != Act0HandHistoryCoverageV1.complete) {
       throw StateError('History has gaps. A full-hand pot cannot be derived.');
     }
+    if (endStreet.index > street.index) {
+      throw ArgumentError.value(
+        endStreet,
+        'endStreet',
+        'Outside visible history',
+      );
+    }
     return Act0HandContributionsV1(
-      throughStreet: street,
+      throughStreet: endStreet,
       startingStackBbBySeat: {
         for (final entry in startingStacks.entries)
           entry.key: entry.value / bigBlind,
       },
       entries: [
         for (final action in events.whereType<Act0HandActionV1>())
-          if (action.chipsAdded != 0)
+          if (action.street.index <= endStreet.index && action.chipsAdded != 0)
             act0TimelineContributionV1(
               action.street,
               action.seat,
@@ -300,6 +316,7 @@ class Act0HandTimelinePrefixV1 {
       for (final row in startingStacks.entries) [row.key, row.value],
     ],
     'button': button,
+    if (heroSeat != null) 'heroSeat': heroSeat,
     'blinds': [smallBlind, bigBlind],
     'events': [
       for (final event in events)
@@ -393,6 +410,10 @@ class Act0HandTimelinePrefixV1 {
           smallBlind,
           bigBlind,
           events,
+          switch (raw['heroSeat']) {
+            String seat => seat,
+            _ => null,
+          },
         );
       } on FormatException {
         return null;

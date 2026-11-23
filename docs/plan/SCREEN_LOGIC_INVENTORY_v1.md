@@ -211,3 +211,17 @@ Copy entries identify the current English state and action strings and the sourc
 ## LRN-01.a storage boundary
 
 `Act0LearnerReflectionInputV1` stores optional confidence and learner-authored mistake-reason text. `Act0AttemptArchiveV1.withLearnerInput` replaces or clears the input for an existing attempt. Confidence is independent of grade and help. A mistake reason attaches only to an incorrect attempt. The input round-trips in the existing local progress snapshot and disappears when the archive entry or all local data is deleted. Archive rows still display their existing historical reflection fields. The visual wave owns capture timing and the widget/callback binding to the existing archive snapshot writer.
+
+## H2 earlier streets
+
+Task and replay widgets expose `streetSummary` in debug builds with `--dart-define=SHARKY_STREET_SUMMARY_PREVIEW=true`. Read it from the lesson runner or the shared replay screen, which uses the saved B20 prefix for attempts and the completed timeline for own hands.
+
+| Data or state | Fields and behavior |
+| --- | --- |
+| Summary | `heroSeat`, `decisionStreet`, `coverage`, chronological `streets`. Older attempts can lack hero metadata. Use `amountsAtDecision(actorSeat: ...)` for the decision pot and call price when covered. |
+| Street row | `name` (street enum), `boardOnStreet` (cumulative board), ordered `actions` with `seat`, `verb`, signed `amountBb` (chips added or returned), and `allIn`, plus `potAfterBb`. |
+| Paused frame | `frameAt(street)` exposes `stacksBb`, `potBb`, `board`, and `foldedSeats` before payouts. A street outside the exposed range returns null. |
+| Complete | Task and attempt rows end before the decision street. Completed own hands include their last recorded street. |
+| Partial drill | Only recorded board and actions are shown. Pot, remaining stacks, and the full folded-seat set are unknown. |
+| Missing | Empty rows and no frames. Metadata is available only where the route supplies it. |
+| Preflop only | Empty rows. A completed own hand can still expose its final preflop frame. |

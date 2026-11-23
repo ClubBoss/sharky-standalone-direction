@@ -8,6 +8,8 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'act0_predecision_card_focus_v1.dart';
 import 'act0_prechoice_answer_cue_policy_v1.dart';
+import 'act0_street_summary_preview_v1.dart';
+import 'act0_street_summary_v1.dart';
 import 'act0_scene_profile_v1.dart';
 import 'act0_f7_scene_source_v1.dart';
 import 'act0_f7_scene_gate_v1.dart';
@@ -17,6 +19,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'
     show debugPrintSynchronously, kReleaseMode;
+import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -1285,6 +1288,21 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   });
 
   final Act0RunnerStateV1 runner;
+
+  Act0StreetSummaryV1? get streetSummary {
+    if (!act0StreetSummaryPreviewV1) return null;
+    final table = runner.table;
+    return Act0StreetSummaryV1(
+      table.handTimelinePrefix,
+      heroSeat:
+          table.heroSeatId ??
+          table.seats.where((seat) => seat.isHero).firstOrNull?.seatId,
+      decisionStreet: PokerStreet.values
+          .where((street) => pokerStreetToString(street) == table.streetLabel)
+          .firstOrNull,
+    );
+  }
+
   final int worldNumber;
   final String? selectedWorldId;
   final String? selectedLessonId;
