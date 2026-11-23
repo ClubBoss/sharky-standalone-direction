@@ -8,7 +8,17 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import 'export_answer_positions_v1.dart' as answer_positions;
+
 void main() {
+  if (const bool.fromEnvironment('ANSWER_POSITIONS')) {
+    test(
+      'export answer positions for the pure-Dart audit',
+      answer_positions.main,
+    );
+    return;
+  }
+
   test('export catalog', () {
     const out = String.fromEnvironment('OUT', defaultValue: 'catalog.json');
     const worlds = String.fromEnvironment('WORLDS', defaultValue: '1-12');
