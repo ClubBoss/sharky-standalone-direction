@@ -81,6 +81,64 @@ void main() {
     expect(_openRepairIntentCount(tester), 1);
   });
 
+  testWidgets(
+    'B36 exact retry reaches Result and archive without a first read moment',
+    (tester) async {
+      await _pumpLifecycleHost(
+        tester,
+        viewport: const Size(393, 852),
+        state: _stateForFoldCheckCallRaiseTasks(const ['actions_raise_drill']),
+        taskId: 'actions_raise_drill',
+      );
+      await _advanceTeachingToDrill(tester);
+      await _answerOption(tester, 'call');
+      final forward = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+      await tester.ensureVisible(forward);
+      await tester.tap(forward);
+      await tester.pumpAndSettle();
+      expect(_activeTaskId(tester), 'actions_raise_drill');
+      await _advanceTeachingToDrill(tester);
+      await _answerCorrectly(tester);
+      expect(find.text('Fixed after a hint'), findsWidgets);
+      expect(find.text('CORRECT READ'), findsNothing);
+      await tester.ensureVisible(forward);
+      await tester.tap(forward);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
+      final result = tester.widget<Act0BlockCompletionShellV1>(
+        find.byType(Act0BlockCompletionShellV1),
+      );
+      expect(result.summary.repairedCount, 1);
+      expect(result.summary.independentCount, 0);
+      expect(result.summary.assistedCorrectCount, 0);
+      expect(result.summary.errorCount, 1);
+      expect(result.firstCorrectEarnedThisRun, isFalse);
+
+      final close = find.byKey(const Key('act0_shell_result_close'));
+      await tester.ensureVisible(close);
+      await tester.tap(
+        find.descendant(of: close, matching: find.byType(IconButton)),
+      );
+      await tester.pumpAndSettle();
+      Finder tab(String label) => find.descendant(
+        of: find.byKey(const Key('act0_shell_bottom_nav')),
+        matching: find.text(label),
+      );
+      await tester.tap(tab('Review'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_review_open_attempts')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('· Repaired'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('act0_attempt_archive_back')));
+      await tester.pumpAndSettle();
+      await tester.tap(tab('You'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('act0_academy_you_leaf')), findsOneWidget);
+      expect(find.text('First correct read'), findsNothing);
+    },
+  );
+
   testWidgets('correct answer does not store open repair intent', (
     tester,
   ) async {
@@ -471,8 +529,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('NEXT · REPAIR THE CLUE'), findsNothing);
       expect(find.text('Try the same table clue once more.'), findsOneWidget);
-      expect(find.text('Not this one · Fold').hitTestable(), findsOneWidget);
-      expect(find.text('Best answer · Check').hitTestable(), findsOneWidget);
+      expect(find.text('Not this one: Fold').hitTestable(), findsOneWidget);
+      expect(find.text('Right answer: Check').hitTestable(), findsOneWidget);
       expect(find.byIcon(Icons.close_rounded), findsOneWidget);
       expect(find.byIcon(Icons.check_rounded), findsOneWidget);
       expect(find.text('Try same clue'), findsOneWidget);

@@ -1,3 +1,4 @@
+import 'skin/act0_skin_components_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
@@ -138,6 +139,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.phase,
     required this.sharkyState,
     this.isAssistedFeedback = false,
+    this.feedbackGrade,
     required this.eyebrow,
     required this.headline,
     required this.support,
@@ -157,6 +159,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   final Act0SharkyCompanionStateV1 sharkyState;
 
   final bool isAssistedFeedback;
+  final Act0SkinFeedbackGradeV1? feedbackGrade;
   final String eyebrow;
   final String headline;
   final String support;
@@ -240,6 +243,16 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               Expanded(
                 child: eyebrow.isEmpty
                     ? const SizedBox.shrink()
+                    : feedbackGrade != null
+                    ? Act0SkinFeedbackPanelV1(
+                        grade: feedbackGrade!,
+                        label: eyebrow,
+                        labelKey: const Key('act0_integrated_scene_purpose'),
+                        style: Act0ShellTokensV1.label.copyWith(
+                          fontSize: showSpokenSurface ? 8.8 : 10.2,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      )
                     : Text(
                         eyebrow,
                         key: const Key('act0_integrated_scene_purpose'),

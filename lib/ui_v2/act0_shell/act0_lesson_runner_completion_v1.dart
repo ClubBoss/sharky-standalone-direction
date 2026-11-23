@@ -55,9 +55,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final celebrateTone = summary.qualifiesForNextLesson
         ? (summary.leveledUp
-              ? Act0AcademyReadingStyleV1.gold
-              : Act0AcademyReadingStyleV1.primary)
-        : Act0AcademyReadingStyleV1.gold;
+              ? Act0SkinTokensV1.editorialNeedsReviewFg
+              : Act0SkinTokensV1.editorialFocus)
+        : Act0SkinTokensV1.editorialNeedsReviewFg;
     final visibleEvidenceSummary =
         evidenceSummary != null && evidenceSummary!.hasEvidence
         ? evidenceSummary
@@ -93,9 +93,27 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
           : const <Act0AchievementMomentViewModelV1>[],
       receipt: visibleRepairOutcomeReceipt,
     );
-    final hasSourceNext = view.hasSourceNext;
+    final hasNextStep =
+        summary.qualifiesForNextLesson && summary.hasForwardPath;
+    final primaryAction = hasNextStep
+        ? Act0SessionSummaryPrimaryActionV1.milestone
+        : view.primaryAction;
+    final primaryKind = hasNextStep
+        ? Act0MilestoneCtaKindV1.continueForward
+        : summary.primaryCtaKind;
     final fixMissedSpots =
-        view.primaryAction == Act0SessionSummaryPrimaryActionV1.fixMissedSpots;
+        primaryAction == Act0SessionSummaryPrimaryActionV1.fixMissedSpots;
+    final practiceLaunchRequest = visibleEvidenceSummary?.practiceLaunchRequest;
+    final canRetrySecondarily =
+        primaryAction != Act0SessionSummaryPrimaryActionV1.practiceClue &&
+        practiceLaunchRequest?.isLaunchable == true &&
+        onLaunchPracticeRepairQueueTarget != null;
+    final canReviewSecondarily =
+        onOpenReview != null &&
+        !fixMissedSpots &&
+        (primaryAction == Act0SessionSummaryPrimaryActionV1.practiceClue ||
+            (primaryKind != Act0MilestoneCtaKindV1.reviewFirst &&
+                primaryKind != Act0MilestoneCtaKindV1.reviewForPerfect));
     final summarySharkyLine = localeIsRu
         ? (summary.assistedCount > 0
               ? '\u041f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0430 \u043f\u043e\u043c\u043e\u0433\u043b\u0430 \u043f\u043e\u043d\u044f\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0443. \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u044d\u0442\u043e\u0442 \u0441\u0438\u0433\u043d\u0430\u043b \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e.'
@@ -113,22 +131,6 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
             Act0SharkyCoachMomentV1.sessionSummaryProof,
           )
         : '';
-    final sessionSummaryCompanionState = _act0SessionSummaryCompanionStateV1(
-      hasWorldCompletionMoment:
-          summary.hasWorldOneCompletionPayoff ||
-          summary.hasWorldCompletionPayoff ||
-          summary.hasBandTransitionPayoff,
-      qualifiesForNextLesson: summary.qualifiesForNextLesson,
-      receipt: visibleRepairOutcomeReceipt,
-    );
-    final sessionSummaryCompanionMood = act0SharkyMoodForCompanionStateV1(
-      sessionSummaryCompanionState,
-    );
-    final sessionSummaryCompanionRinged =
-        act0SharkyCompanionStateHasAccentRingV1(sessionSummaryCompanionState);
-    final sessionSummaryGrowthStage = act0SharkyGrowthStageForWorldNumberV1(
-      summary.worldNumber,
-    );
     final foldUnlockIntoMilestonePanel = view.foldUnlockIntoMilestonePanel;
     final showHabitReward = view.showHabitReward;
     final tabletLayout = MediaQuery.sizeOf(context).shortestSide >= 700;
@@ -139,9 +141,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
           key: const Key('act0_shell_block_summary_next_label'),
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
           decoration: BoxDecoration(
-            color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+            color: Act0SkinTokensV1.editorialPageSurface.withValues(
+              alpha: 0.86,
+            ),
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-            border: Border.all(color: Act0AcademyReadingStyleV1.border),
+            border: Border.all(color: Act0SkinTokensV1.editorialRule),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,14 +154,17 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 localeIsRu
                     ? '\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433'
                     : (payoffHero == null ? 'What next' : 'Next hand'),
-                style: Act0AcademyReadingStyleV1.label.copyWith(
-                  color: Act0AcademyReadingStyleV1.info,
+                style: Act0SkinTokensV1.editorialLabel.copyWith(
+                  color: Act0SkinTokensV1.editorialFocus,
                   letterSpacing: 0.35,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
-                hasSourceNext
+                hasNextStep && !localeIsRu
+                    ? 'Continue to ${summary.isWorldComplete ? summary.nextWorldTitle : summary.nextLessonTitle}.'
+                    : primaryAction ==
+                          Act0SessionSummaryPrimaryActionV1.practiceClue
                     ? nextUsefulHand!.copyLine
                     : localeIsRu
                     ? (summary.errorCount > 0 || summary.assistedCount > 0
@@ -171,8 +178,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_block_summary_suggested_next'),
                 maxLines: 4,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.body.copyWith(
-                  color: Act0AcademyReadingStyleV1.text,
+                style: Act0SkinTokensV1.editorialBody.copyWith(
+                  color: Act0SkinTokensV1.editorialInk,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -183,24 +190,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_next_reason'),
                   maxLines: 3,
                   overflow: TextOverflow.fade,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.textMuted,
+                  style: Act0SkinTokensV1.editorialBody.copyWith(
+                    color: Act0SkinTokensV1.editorialInkMuted,
                     fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-              if (summarySharkyLine.isNotEmpty && payoffHero == null) ...[
-                const SizedBox(height: 6),
-                Act0SharkyPresenceBubbleV1(
-                  line: summarySharkyLine,
-                  mood: sessionSummaryCompanionMood,
-                  ringed: sessionSummaryCompanionRinged,
-                  growthStage: sessionSummaryGrowthStage,
-                  textKey: const Key('act0_shell_block_summary_sharky_line'),
-                  mascotSize: 68,
-                  bubblePadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
                   ),
                 ),
               ],
@@ -211,43 +203,43 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     }
 
     Widget primaryCtaButton() {
-      return FilledButton(
-        key: const Key('act0_shell_block_summary_continue_cta'),
-        onPressed: switch (view.primaryAction) {
+      return Act0SkinPrimaryButtonV1(
+        controlKey: const Key('act0_shell_block_summary_continue_cta'),
+        onPressed: switch (primaryAction) {
           Act0SessionSummaryPrimaryActionV1.fixMissedSpots => onOpenReview,
           Act0SessionSummaryPrimaryActionV1.practiceClue => onNextUsefulHand,
           Act0SessionSummaryPrimaryActionV1.milestone => _callbackForCta(
-            summary.primaryCtaKind,
+            primaryKind,
           ),
         },
-        style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(),
-        child: Text(
-          fixMissedSpots
-              ? (openMissedSpots == 1
-                    ? 'Fix 1 missed spot'
-                    : 'Fix $openMissedSpots missed spots')
-              : hasSourceNext
-              ? (localeIsRu
-                    ? '\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0441\u043F\u043E\u0442'
-                    : 'Practice this clue')
-              : localeIsRu
-              ? switch (summary.primaryCtaKind) {
-                  Act0MilestoneCtaKindV1.continueForward =>
-                    '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u0435',
-                  Act0MilestoneCtaKindV1.replayForPerfect =>
-                    '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0443\u0440\u043e\u043a',
-                  Act0MilestoneCtaKindV1.reviewFirst ||
-                  Act0MilestoneCtaKindV1.reviewForPerfect =>
-                    '\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u0440\u0430\u0437\u0431\u043e\u0440',
-                  Act0MilestoneCtaKindV1.backToMap =>
-                    '\u041a \u043a\u0430\u0440\u0442\u0435 \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u044f',
-                }
-              : payoffHero != null &&
-                    summary.primaryCtaKind ==
-                        Act0MilestoneCtaKindV1.replayForPerfect
-              ? 'Replay the saved read'
-              : summary.primaryCtaLabel,
-        ),
+        label: fixMissedSpots
+            ? (openMissedSpots == 1
+                  ? 'Fix 1 missed spot'
+                  : 'Fix $openMissedSpots missed spots')
+            : primaryAction == Act0SessionSummaryPrimaryActionV1.practiceClue
+            ? (localeIsRu
+                  ? '\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0441\u043F\u043E\u0442'
+                  : 'Practice this clue')
+            : localeIsRu
+            ? switch (primaryKind) {
+                Act0MilestoneCtaKindV1.continueForward =>
+                  '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u0435',
+                Act0MilestoneCtaKindV1.replayForPerfect =>
+                  '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0443\u0440\u043e\u043a',
+                Act0MilestoneCtaKindV1.reviewFirst ||
+                Act0MilestoneCtaKindV1.reviewForPerfect =>
+                  '\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u0440\u0430\u0437\u0431\u043e\u0440',
+                Act0MilestoneCtaKindV1.backToMap =>
+                  '\u041a \u043a\u0430\u0440\u0442\u0435 \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u044f',
+              }
+            : payoffHero != null &&
+                  primaryKind == Act0MilestoneCtaKindV1.replayForPerfect
+            ? 'Replay the saved read'
+            : primaryKind == Act0MilestoneCtaKindV1.backToMap
+            ? 'Done'
+            : hasNextStep
+            ? summary.progressionCtaLabel
+            : summary.primaryCtaLabel,
       );
     }
 
@@ -264,32 +256,36 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: tabletLayout ? 720 : 388),
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
           decoration: BoxDecoration(
-            color: Act0AcademyReadingStyleV1.surface,
+            color: Act0SkinTokensV1.editorialCardSurface,
             borderRadius: BorderRadius.circular(
               Act0ShellTokensV1.radiusOverlay,
             ),
-            border: Border.all(color: Act0AcademyReadingStyleV1.border),
+            border: Border.all(color: Act0SkinTokensV1.editorialRule),
           ),
           child: Column(
             key: const Key('act0_shell_session_summary_victory_lap'),
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                height: 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+              Align(
+                key: const Key('act0_shell_result_close'),
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  key: Key(
+                    onBackToHome != null
+                        ? 'act0_shell_block_summary_home_cta'
+                        : 'act0_shell_block_summary_map_cta',
                   ),
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: <Color>[
-                      celebrateTone.withValues(alpha: 0.18),
-                      celebrateTone.withValues(alpha: 0.82),
-                      Act0AcademyReadingStyleV1.info.withValues(alpha: 0.34),
-                    ],
-                  ),
+                  tooltip: localeIsRu ? 'Закрыть' : 'Close result',
+                  onPressed: onBackToHome ?? onBackToMap,
+                  icon: const Icon(Icons.close_rounded),
+                ),
+              ),
+              const Center(
+                child: Act0SkinSharkyExpressionV1(
+                  key: Key('act0_shell_session_summary_payoff_sharky'),
+                  moment: Act0SkinSharkyMomentV1.lessonDone,
+                  size: Act0SkinTokensV1.ringLarge,
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -312,7 +308,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: <Color>[
                           celebrateTone.withValues(alpha: 0.22),
-                          Act0AcademyReadingStyleV1.surface2.withValues(
+                          Act0SkinTokensV1.editorialPageSurface.withValues(
                             alpha: 0.96,
                           ),
                         ],
@@ -369,7 +365,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                         : payoffHero == null
                                         ? summary.masteryLabel
                                         : payoffHero.kicker,
-                                    style: Act0AcademyReadingStyleV1.label
+                                    style: Act0SkinTokensV1.editorialLabel
                                         .copyWith(
                                           color: celebrateTone,
                                           letterSpacing: 0.5,
@@ -395,7 +391,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               : (payoffHero == null
                                     ? 'What finished'
                                     : 'Session complete'),
-                          style: Act0AcademyReadingStyleV1.label.copyWith(
+                          style: Act0SkinTokensV1.editorialLabel.copyWith(
                             color: celebrateTone,
                             letterSpacing: 0.35,
                           ),
@@ -420,7 +416,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                 : payoffHero?.headline ??
                                       summary.milestoneTitle,
                             key: const Key('act0_shell_block_summary_title'),
-                            style: Act0AcademyReadingStyleV1.screenTitle
+                            style: Act0SkinTokensV1.editorialLessonHeading
                                 .copyWith(
                                   fontSize: payoffHero == null ? 30 : 32,
                                   height: 1.05,
@@ -441,8 +437,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.fade,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.text,
+                          style: Act0SkinTokensV1.editorialBody.copyWith(
+                            color: Act0SkinTokensV1.editorialInk,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -458,31 +454,18 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                           maxLines: 4,
                           overflow: TextOverflow.fade,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.textMuted,
+                          style: Act0SkinTokensV1.editorialBody.copyWith(
+                            color: Act0SkinTokensV1.editorialInkMuted,
                           ),
                         ),
-                        if (summarySharkyLine.isNotEmpty &&
-                            payoffHero != null) ...[
-                          const SizedBox(height: Act0ShellTokensV1.gapSm),
-                          Act0SharkyPresenceBubbleV1(
+                        if (summarySharkyLine.isNotEmpty)
+                          Text(
+                            summarySharkyLine,
                             key: const Key(
-                              'act0_shell_session_summary_payoff_sharky',
-                            ),
-                            line: summarySharkyLine,
-                            mood: sessionSummaryCompanionMood,
-                            ringed: sessionSummaryCompanionRinged,
-                            growthStage: sessionSummaryGrowthStage,
-                            textKey: const Key(
                               'act0_shell_block_summary_sharky_line',
                             ),
-                            mascotSize: 64,
-                            bubblePadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
+                            style: Act0SkinTokensV1.editorialSupporting,
                           ),
-                        ],
                         if (summary.hasWorldOneCompletionPayoff) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                           _WorldOneCompletionPayoffV1(
@@ -522,8 +505,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.fade,
-                            style: Act0AcademyReadingStyleV1.body.copyWith(
-                              color: Act0AcademyReadingStyleV1.text,
+                            style: Act0SkinTokensV1.editorialBody.copyWith(
+                              color: Act0SkinTokensV1.editorialInk,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -535,10 +518,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.fade,
-                            style: Act0AcademyReadingStyleV1.muted.copyWith(
-                              color: Act0AcademyReadingStyleV1.textMuted,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: Act0SkinTokensV1.editorialSupporting
+                                .copyWith(
+                                  color: Act0SkinTokensV1.editorialInkMuted,
+                                  fontWeight: FontWeight.w700,
+                                ),
                           ),
                         ],
                       ],
@@ -555,13 +539,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_unlock_card'),
                   padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                   decoration: BoxDecoration(
-                    color: Act0AcademyReadingStyleV1.surface2.withValues(
+                    color: Act0SkinTokensV1.editorialPageSurface.withValues(
                       alpha: 0.86,
                     ),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
                     ),
-                    border: Border.all(color: Act0AcademyReadingStyleV1.border),
+                    border: Border.all(color: Act0SkinTokensV1.editorialRule),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -574,8 +558,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.fade,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.text,
+                          style: Act0SkinTokensV1.editorialBody.copyWith(
+                            color: Act0SkinTokensV1.editorialInk,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -588,8 +572,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.fade,
-                        style: Act0AcademyReadingStyleV1.muted.copyWith(
-                          color: Act0AcademyReadingStyleV1.textMuted,
+                        style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                          color: Act0SkinTokensV1.editorialInkMuted,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -598,79 +582,51 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
+              if (summary.independentCount case final independent?) ...[
+                Text(
+                  (summary.independentProvenanceKnown
+                          ? '$independent independent'
+                          : 'Independent count unconfirmed') +
+                      ' · ${summary.assistedCorrectCount} assisted · ${summary.repairedCount} repaired',
+                  key: const Key('act0_result_grade_counts'),
+                  style: Act0SkinTokensV1.editorialSupporting,
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
               nextActionCard(),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               primaryCtaButton(),
-              if (view.hasReminderAction) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                Text(
-                  'Want one reminder at 6 pm when practice is ready?',
-                  style: Act0AcademyReadingStyleV1.body,
-                ),
-                Wrap(
-                  spacing: Act0ShellTokensV1.gapSm,
-                  children: [
-                    TextButton(
-                      key: const Key('act0_first_lesson_reminder_yes'),
-                      onPressed: () => onFirstLessonReminder!(true),
-                      child: const Text('Yes'),
-                    ),
-                    TextButton(
-                      key: const Key('act0_first_lesson_reminder_no'),
-                      onPressed: () => onFirstLessonReminder!(false),
-                      child: const Text('No thanks'),
-                    ),
-                  ],
+              if (canRetrySecondarily || canReviewSecondarily) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                Act0SkinSecondaryButtonV1(
+                  controlKey: Key(
+                    canRetrySecondarily
+                        ? 'act0_shell_session_summary_practice_cta'
+                        : 'act0_shell_block_summary_quality_cta',
+                  ),
+                  label: canRetrySecondarily
+                      ? (localeIsRu ? 'Повторить ошибку' : 'Retry the mistake')
+                      : (localeIsRu ? 'Разобрать ошибки' : 'Review mistakes'),
+                  onPressed: canRetrySecondarily
+                      ? () => onLaunchPracticeRepairQueueTarget!(
+                          practiceLaunchRequest!,
+                        )
+                      : onOpenReview,
                 ),
               ],
               if (view.showShare) const Act0ShareLessonResultButtonV1(),
-              if (onBackToHome != null)
-                TextButton(
-                  key: const Key('act0_shell_block_summary_home_cta'),
-                  onPressed: onBackToHome,
-                  child: const Text('Back to Home'),
-                ),
-              if (onBackToHome == null &&
-                  summary.secondaryCtaLabel != null) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                OutlinedButton(
-                  key: const Key('act0_shell_block_summary_quality_cta'),
-                  onPressed: _callbackForCta(summary.secondaryCtaKind!),
-                  style: Act0AcademyReadingStyleV1.tonalButtonStyle(
-                    tone: Act0AcademyReadingStyleV1.info,
-                    fullWidth: true,
+              if (view.hasReminderAction) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                Act0SkinBannerV1(
+                  message: 'Want one reminder at 6 pm when practice is ready?',
+                  actionLabel: 'Yes',
+                  actionKey: const Key('act0_first_lesson_reminder_yes'),
+                  onAction: () => onFirstLessonReminder!(true),
+                  secondaryActionLabel: 'No',
+                  secondaryActionKey: const Key(
+                    'act0_first_lesson_reminder_no',
                   ),
-                  child: Text(
-                    localeIsRu
-                        ? switch (summary.secondaryCtaKind!) {
-                            Act0MilestoneCtaKindV1.replayForPerfect =>
-                              '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0431\u0435\u0437 \u043e\u0448\u0438\u0431\u043e\u043a',
-                            Act0MilestoneCtaKindV1.reviewFirst ||
-                            Act0MilestoneCtaKindV1.reviewForPerfect =>
-                              '\u0420\u0430\u0437\u043e\u0431\u0440\u0430\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0438',
-                            Act0MilestoneCtaKindV1.continueForward =>
-                              '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c',
-                            Act0MilestoneCtaKindV1.backToMap =>
-                              '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432',
-                          }
-                        : summary.secondaryCtaLabel!,
-                  ),
-                ),
-              ],
-              if (onBackToHome == null &&
-                  (summary.hasNextLesson ||
-                      (summary.isWorldComplete &&
-                          summary.nextWorldTitle != null &&
-                          summary.nextWorldTitle!.isNotEmpty))) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                TextButton(
-                  key: const Key('act0_shell_block_summary_map_cta'),
-                  onPressed: onBackToMap,
-                  child: Text(
-                    localeIsRu
-                        ? '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432'
-                        : 'Back to map',
-                  ),
+                  onSecondaryAction: () => onFirstLessonReminder!(false),
                 ),
               ],
               const SizedBox(height: Act0ShellTokensV1.gapLg),
@@ -679,13 +635,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_habit_reward'),
                   padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                   decoration: BoxDecoration(
-                    color: Act0AcademyReadingStyleV1.surface2.withValues(
+                    color: Act0SkinTokensV1.editorialPageSurface.withValues(
                       alpha: 0.82,
                     ),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
                     ),
-                    border: Border.all(color: Act0AcademyReadingStyleV1.border),
+                    border: Border.all(color: Act0SkinTokensV1.editorialRule),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -724,8 +680,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               key: const Key(
                                 'act0_shell_block_summary_habit_reward_label',
                               ),
-                              style: Act0AcademyReadingStyleV1.label.copyWith(
-                                color: Act0AcademyReadingStyleV1.info,
+                              style: Act0SkinTokensV1.editorialLabel.copyWith(
+                                color: Act0SkinTokensV1.editorialFocus,
                                 letterSpacing: 0.35,
                               ),
                             ),
@@ -741,8 +697,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               ),
                               maxLines: 4,
                               overflow: TextOverflow.fade,
-                              style: Act0AcademyReadingStyleV1.body.copyWith(
-                                color: Act0AcademyReadingStyleV1.textMuted,
+                              style: Act0SkinTokensV1.editorialBody.copyWith(
+                                color: Act0SkinTokensV1.editorialInkMuted,
                               ),
                             ),
                           ],
@@ -761,7 +717,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             : 'Самостоятельные ответы оценены; исходные ошибки сохранены для разбора.')
                       : 'Самостоятельный итог этого прохождения не подтверждён; помощь не засчитана как независимый успех.',
                   key: const Key('act0_b2_summary_ru_assessed_truth'),
-                  style: Act0AcademyReadingStyleV1.body,
+                  style: Act0SkinTokensV1.editorialBody,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
@@ -769,8 +725,6 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 _SessionSummaryEvidenceCardV1(
                   summary: visibleEvidenceSummary,
                   localeIsRu: localeIsRu,
-                  onLaunchPracticeRepairQueueTarget:
-                      onLaunchPracticeRepairQueueTarget,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
@@ -845,8 +799,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_block_summary_accuracy'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.muted.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                  color: Act0SkinTokensV1.editorialInkMuted,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -856,13 +810,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_repair_mix'),
                   padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
                   decoration: BoxDecoration(
-                    color: Act0AcademyReadingStyleV1.surface2.withValues(
+                    color: Act0SkinTokensV1.editorialPageSurface.withValues(
                       alpha: 0.82,
                     ),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusLg,
                     ),
-                    border: Border.all(color: Act0AcademyReadingStyleV1.border),
+                    border: Border.all(color: Act0SkinTokensV1.editorialRule),
                   ),
                   child: Row(
                     children: [
@@ -874,8 +828,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           key: const Key(
                             'act0_shell_block_summary_quick_fixes',
                           ),
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.text,
+                          style: Act0SkinTokensV1.editorialBody.copyWith(
+                            color: Act0SkinTokensV1.editorialInk,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -888,10 +842,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               : 'Deep leaks: ${summary.deepLeakCount}',
                           key: const Key('act0_shell_block_summary_deep_leaks'),
                           textAlign: TextAlign.right,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
+                          style: Act0SkinTokensV1.editorialBody.copyWith(
                             color: summary.deepLeakCount == 0
-                                ? Act0AcademyReadingStyleV1.textMuted
-                                : Act0AcademyReadingStyleV1.danger,
+                                ? Act0SkinTokensV1.editorialInkMuted
+                                : Act0SkinTokensV1.editorialNeedsReviewFg,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -1099,8 +1053,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 child: Text(
                   payoffLabel,
                   key: Key('${keyPrefix}_payoff_label'),
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: Act0SkinTokensV1.editorialBody.copyWith(
+                    color: Act0SkinTokensV1.editorialInk,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1116,8 +1070,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 key: Key('${keyPrefix}_learning_label'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.muted.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                  color: Act0SkinTokensV1.editorialInkMuted,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -1140,8 +1094,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                       key: Key('${keyPrefix}_proof_line'),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
-                      style: Act0AcademyReadingStyleV1.muted.copyWith(
-                        color: Act0AcademyReadingStyleV1.textMuted,
+                      style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                        color: Act0SkinTokensV1.editorialInkMuted,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -1152,7 +1106,7 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
               Text(
                 nextLabel,
                 key: Key('${keyPrefix}_next_label'),
-                style: Act0AcademyReadingStyleV1.body.copyWith(
+                style: Act0SkinTokensV1.editorialBody.copyWith(
                   color: tone,
                   fontWeight: FontWeight.w900,
                 ),
@@ -1163,8 +1117,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 key: Key('${keyPrefix}_preview_line'),
                 maxLines: 3,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.body.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: Act0SkinTokensV1.editorialBody.copyWith(
+                  color: Act0SkinTokensV1.editorialInkMuted,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1280,33 +1234,6 @@ class _MilestoneMotionRevealV1State extends State<_MilestoneMotionRevealV1> {
   }
 }
 
-/// Resolves the Session Summary Sharky companion state from the exact same
-/// structured evidence already used to decide this screen's copy and proof
-/// icons: real world/band completion, a source-backed improvement
-/// observation, banked-fix proof, and the ordinary repair-vs-forward gate.
-/// Priority is milestone > improve > confirm > repair > neutral, so a
-/// genuine completion boundary always wins and `repair` can never coexist
-/// with a success/milestone moment. Never parses copy text.
-Act0SharkyCompanionStateV1 _act0SessionSummaryCompanionStateV1({
-  required bool hasWorldCompletionMoment,
-  required bool qualifiesForNextLesson,
-  Act0RepairOutcomeSessionReceiptV1? receipt,
-}) {
-  if (hasWorldCompletionMoment) {
-    return Act0SharkyCompanionStateV1.milestone;
-  }
-  if (receipt?.hasImprovementObservation == true) {
-    return Act0SharkyCompanionStateV1.improve;
-  }
-  if (receipt?.isBankedFixProof == true) {
-    return Act0SharkyCompanionStateV1.confirm;
-  }
-  if (!qualifiesForNextLesson) {
-    return Act0SharkyCompanionStateV1.repair;
-  }
-  return Act0SharkyCompanionStateV1.neutral;
-}
-
 class _SessionSummaryPayoffHeroV1 {
   const _SessionSummaryPayoffHeroV1({
     required this.kicker,
@@ -1358,8 +1285,8 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
 
   Widget _buildCard(BuildContext context) {
     final tone = summary.leveledUp
-        ? Act0AcademyReadingStyleV1.gold
-        : Act0AcademyReadingStyleV1.primary;
+        ? Act0SkinTokensV1.editorialNeedsReviewFg
+        : Act0SkinTokensV1.editorialFocus;
     // A saved/assisted/wrong run is not automatically an independent clean read.
     // The bar displays assessed correctness, not "all XP equals mastery".
     final cleanIndependentRead =
@@ -1372,9 +1299,9 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
         : 0.0;
     return Container(
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.9),
+        color: Act0SkinTokensV1.editorialPageSurface.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: Act0SkinTokensV1.editorialRule),
       ),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       child: Column(
@@ -1396,7 +1323,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                 child: Text(
                   cleanIndependentRead ? 'One clean read' : 'Practice recorded',
                   key: const Key('act0_shell_block_summary_xp_gain'),
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
+                  style: Act0SkinTokensV1.editorialLabel.copyWith(
                     color: tone,
                     letterSpacing: 0.4,
                   ),
@@ -1412,8 +1339,8 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   textAlign: TextAlign.right,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: Act0SkinTokensV1.editorialBody.copyWith(
+                    color: Act0SkinTokensV1.editorialInk,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1428,7 +1355,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                 key: const Key('act0_shell_block_summary_xp_progress'),
                 minHeight: 8,
                 value: assessedFraction,
-                backgroundColor: Act0AcademyReadingStyleV1.surface3,
+                backgroundColor: Act0SkinTokensV1.editorialCorrectBg,
                 color: tone,
               ),
             ),
@@ -1443,30 +1370,23 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
   const _SessionSummaryEvidenceCardV1({
     required this.summary,
     this.localeIsRu = false,
-    this.onLaunchPracticeRepairQueueTarget,
   });
 
   final Act0SessionSummaryEvidenceViewModelV1 summary;
   final bool localeIsRu;
-  final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
-  onLaunchPracticeRepairQueueTarget;
 
   @override
   Widget build(BuildContext context) {
     final repairFocusLine = summary.repairFocusLine;
     final repairCandidateLine = summary.repairCandidateLine;
     final learningProofLine = summary.learningProofLine;
-    final practiceLaunchRequest = summary.practiceLaunchRequest;
-    final showPracticeCta =
-        practiceLaunchRequest?.isLaunchable == true &&
-        onLaunchPracticeRepairQueueTarget != null;
     return Container(
       key: const Key('act0_shell_block_summary_evidence_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: Act0SkinTokensV1.editorialPageSurface.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: Act0SkinTokensV1.editorialRule),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1476,8 +1396,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                 ? '\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u043f\u0440\u043e\u0445\u043e\u0434'
                 : summary.title,
             key: const Key('act0_shell_block_summary_evidence_title'),
-            style: Act0AcademyReadingStyleV1.label.copyWith(
-              color: Act0AcademyReadingStyleV1.info,
+            style: Act0SkinTokensV1.editorialLabel.copyWith(
+              color: Act0SkinTokensV1.editorialFocus,
               letterSpacing: 0.35,
             ),
           ),
@@ -1489,8 +1409,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
             key: const Key('act0_shell_block_summary_evidence_spots'),
             maxLines: 2,
             overflow: TextOverflow.fade,
-            style: Act0AcademyReadingStyleV1.body.copyWith(
-              color: Act0AcademyReadingStyleV1.text,
+            style: Act0SkinTokensV1.editorialBody.copyWith(
+              color: Act0SkinTokensV1.editorialInk,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -1502,8 +1422,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
             key: const Key('act0_shell_block_summary_evidence_result'),
             maxLines: 2,
             overflow: TextOverflow.fade,
-            style: Act0AcademyReadingStyleV1.muted.copyWith(
-              color: Act0AcademyReadingStyleV1.textMuted,
+            style: Act0SkinTokensV1.editorialSupporting.copyWith(
+              color: Act0SkinTokensV1.editorialInkMuted,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -1516,8 +1436,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               key: const Key('act0_shell_block_summary_evidence_repair_focus'),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0AcademyReadingStyleV1.muted.copyWith(
-                color: Act0AcademyReadingStyleV1.textMuted,
+              style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                color: Act0SkinTokensV1.editorialInkMuted,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -1534,8 +1454,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               ),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0AcademyReadingStyleV1.muted.copyWith(
-                color: Act0AcademyReadingStyleV1.textMuted,
+              style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                color: Act0SkinTokensV1.editorialInkMuted,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -1555,31 +1475,10 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.muted.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                  color: Act0SkinTokensV1.editorialInkMuted,
                   fontWeight: FontWeight.w700,
                 ),
-              ),
-            ),
-          ],
-          if (showPracticeCta) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            TextButton(
-              key: const Key('act0_shell_session_summary_practice_cta'),
-              onPressed: () =>
-                  onLaunchPracticeRepairQueueTarget!(practiceLaunchRequest!),
-              style: TextButton.styleFrom(
-                foregroundColor: Act0AcademyReadingStyleV1.info,
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Act0ShellTokensV1.gapXs,
-                  vertical: Act0ShellTokensV1.gapSm,
-                ),
-              ),
-              child: Text(
-                localeIsRu
-                    ? '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443'
-                    : 'Practice this next',
               ),
             ),
           ],
@@ -1609,9 +1508,9 @@ class _GrowthHighlightV1 extends StatelessWidget {
         vertical: 10,
       ),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: Act0SkinTokensV1.editorialPageSurface.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: Act0SkinTokensV1.editorialRule),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1633,16 +1532,16 @@ class _GrowthHighlightV1 extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: Act0AcademyReadingStyleV1.info,
+                  style: Act0SkinTokensV1.editorialLabel.copyWith(
+                    color: Act0SkinTokensV1.editorialFocus,
                     letterSpacing: 0.35,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   label,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: Act0SkinTokensV1.editorialBody.copyWith(
+                    color: Act0SkinTokensV1.editorialInk,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -1674,9 +1573,9 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
       key: const Key('act0_shell_block_summary_earned_moment'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: Act0SkinTokensV1.editorialPageSurface.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: Act0SkinTokensV1.editorialRule),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1704,8 +1603,8 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                             : '\u0412\u0435\u0440\u043D\u043E \u0432 \u044D\u0442\u043E\u0439 \u0441\u0435\u0441\u0441\u0438\u0438')
                       : (previouslySaved ? 'Saved earlier' : 'Collected read'),
                   key: const Key('act0_shell_block_summary_earned_label'),
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: Act0AcademyReadingStyleV1.info,
+                  style: Act0SkinTokensV1.editorialLabel.copyWith(
+                    color: Act0SkinTokensV1.editorialFocus,
                     letterSpacing: 0.35,
                   ),
                 ),
@@ -1717,8 +1616,8 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_earned_seed'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: Act0SkinTokensV1.editorialBody.copyWith(
+                    color: Act0SkinTokensV1.editorialInk,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -1730,8 +1629,8 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_earned_proof'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0AcademyReadingStyleV1.muted.copyWith(
-                    color: Act0AcademyReadingStyleV1.textMuted,
+                  style: Act0SkinTokensV1.editorialSupporting.copyWith(
+                    color: Act0SkinTokensV1.editorialInkMuted,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1775,8 +1674,8 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
           child: Text(
             receipt.title,
             key: const Key('act0_shell_session_repair_outcome_title'),
-            style: Act0AcademyReadingStyleV1.label.copyWith(
-              color: Act0AcademyReadingStyleV1.info,
+            style: Act0SkinTokensV1.editorialLabel.copyWith(
+              color: Act0SkinTokensV1.editorialFocus,
               letterSpacing: 0.35,
             ),
           ),
@@ -1787,9 +1686,9 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
       key: const Key('act0_shell_session_repair_outcome_receipt'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: Act0SkinTokensV1.editorialPageSurface.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: Act0SkinTokensV1.editorialRule),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1803,10 +1702,10 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
               key: Key('act0_shell_session_repair_outcome_line_$index'),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0AcademyReadingStyleV1.body.copyWith(
+              style: Act0SkinTokensV1.editorialBody.copyWith(
                 color: index == 0
-                    ? Act0AcademyReadingStyleV1.text
-                    : Act0AcademyReadingStyleV1.textMuted,
+                    ? Act0SkinTokensV1.editorialInk
+                    : Act0SkinTokensV1.editorialInkMuted,
                 fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
               ),
             ),
@@ -1836,9 +1735,9 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
       key: cardKey,
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: Act0SkinTokensV1.editorialPageSurface.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: Act0SkinTokensV1.editorialRule),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1848,10 +1747,10 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
             height: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0AcademyReadingStyleV1.info.withValues(alpha: 0.14),
+              color: Act0SkinTokensV1.editorialFocus.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
             ),
-            child: Icon(icon, size: 17, color: Act0AcademyReadingStyleV1.info),
+            child: Icon(icon, size: 17, color: Act0SkinTokensV1.editorialFocus),
           ),
           const SizedBox(width: Act0ShellTokensV1.gapSm),
           Expanded(
@@ -1860,8 +1759,8 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: Act0AcademyReadingStyleV1.info,
+                  style: Act0SkinTokensV1.editorialLabel.copyWith(
+                    color: Act0SkinTokensV1.editorialFocus,
                     letterSpacing: 0.35,
                   ),
                 ),
@@ -1869,8 +1768,8 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
                 for (final line in lines) ...[
                   Text(
                     line,
-                    style: Act0AcademyReadingStyleV1.body.copyWith(
-                      color: Act0AcademyReadingStyleV1.text,
+                    style: Act0SkinTokensV1.editorialBody.copyWith(
+                      color: Act0SkinTokensV1.editorialInk,
                       fontWeight: FontWeight.w800,
                     ),
                   ),

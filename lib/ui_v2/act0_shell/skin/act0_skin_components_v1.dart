@@ -11,11 +11,15 @@ class Act0SkinPrimaryButtonV1 extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.controlKey,
+    this.labelKey,
+    this.compact = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final Key? controlKey;
+  final Key? labelKey;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +31,18 @@ class Act0SkinPrimaryButtonV1 extends StatelessWidget {
         foregroundColor: _T.onAccent,
         disabledBackgroundColor: _T.raised,
         disabledForegroundColor: _T.caption,
-        minimumSize: const Size.fromHeight(_T.controlHeight),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        minimumSize: Size.fromHeight(compact ? _T.minTouch : _T.controlHeight),
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 12 : 20,
+          vertical: compact ? 6 : 16,
+        ),
         textStyle: _T.button,
         elevation: _T.controlElevation,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(_T.radiusControl),
         ),
       ),
-      child: Text(label, textAlign: TextAlign.center),
+      child: Text(label, key: labelKey, textAlign: TextAlign.center),
     );
   }
 }
@@ -192,7 +199,7 @@ class Act0SkinStepBarV1 extends StatelessWidget {
 }
 
 /// Why Sharky is on screen. Sharky is never shown while the player decides.
-enum Act0SkinSharkyMomentV1 { hint, mistake, selfFix, milestone }
+enum Act0SkinSharkyMomentV1 { hint, mistake, selfFix, milestone, lessonDone }
 
 /// Sharky in one ring: 56 pt next to a reason or hint, 120 pt on summaries.
 class Act0SkinSharkyExpressionV1 extends StatelessWidget {
@@ -210,7 +217,8 @@ class Act0SkinSharkyExpressionV1 extends StatelessWidget {
       Act0SkinSharkyMomentV1.hint => _T.lineRing,
       Act0SkinSharkyMomentV1.mistake => _T.accent,
       Act0SkinSharkyMomentV1.selfFix => _T.ok,
-      Act0SkinSharkyMomentV1.milestone => _T.ok,
+      Act0SkinSharkyMomentV1.milestone ||
+      Act0SkinSharkyMomentV1.lessonDone => _T.ok,
     };
   }
 
@@ -234,7 +242,8 @@ class Act0SkinSharkyExpressionV1 extends StatelessWidget {
             Act0SkinSharkyMomentV1.hint => _T.sharkyHintAsset,
             Act0SkinSharkyMomentV1.mistake => _T.sharkyMistakeAsset,
             Act0SkinSharkyMomentV1.selfFix => _T.sharkyFixedItAsset,
-            Act0SkinSharkyMomentV1.milestone => _T.sharkyLessonDoneAsset,
+            Act0SkinSharkyMomentV1.milestone => _T.sharkyFixedItAsset,
+            Act0SkinSharkyMomentV1.lessonDone => _T.sharkyLessonDoneAsset,
           },
           fit: BoxFit.cover,
           alignment: Alignment.topCenter,
@@ -257,11 +266,15 @@ class Act0SkinAnswerOptionRowV1 extends StatelessWidget {
     required this.label,
     this.verdict = Act0SkinAnswerVerdictV1.none,
     this.onTap,
+    this.compact = false,
+    this.verdictLabel,
   });
 
   final String label;
   final Act0SkinAnswerVerdictV1 verdict;
   final VoidCallback? onTap;
+  final bool compact;
+  final String? verdictLabel;
 
   static const String notThisOneLabel = 'Not this one';
   static const String betterLabel = 'Better';
@@ -288,6 +301,22 @@ class Act0SkinAnswerOptionRowV1 extends StatelessWidget {
         _T.correctIcon,
       ),
     };
+    if (compact && icon != null) {
+      final caption = verdictLabel ?? word!;
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 16, color: tone),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              '$caption: $label',
+              style: _T.tag.copyWith(color: tone),
+            ),
+          ),
+        ],
+      );
+    }
     final semantics = word == null ? label : '$label, ${word.toLowerCase()}';
     return Semantics(
       button: onTap != null,
@@ -470,11 +499,19 @@ class Act0SkinBannerV1 extends StatelessWidget {
     required this.message,
     this.actionLabel,
     this.onAction,
+    this.actionKey,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
+    this.secondaryActionKey,
   });
 
   final String message;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final Key? actionKey;
+  final String? secondaryActionLabel;
+  final VoidCallback? onSecondaryAction;
+  final Key? secondaryActionKey;
 
   @override
   Widget build(BuildContext context) {
@@ -489,7 +526,17 @@ class Act0SkinBannerV1 extends StatelessWidget {
           children: [
             Expanded(child: Semantics(liveRegion: true, child: Text(message))),
             if (actionLabel case final label?)
-              TextButton(onPressed: onAction, child: Text(label)),
+              TextButton(
+                key: actionKey,
+                onPressed: onAction,
+                child: Text(label),
+              ),
+            if (secondaryActionLabel case final label?)
+              TextButton(
+                key: secondaryActionKey,
+                onPressed: onSecondaryAction,
+                child: Text(label),
+              ),
           ],
         ),
       ),
@@ -569,6 +616,126 @@ class Act0SkinStatTileV1 extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+class Act0SkinTaskHeaderV1 extends StatelessWidget {
+  const Act0SkinTaskHeaderV1({
+    super.key,
+    required this.step,
+    required this.total,
+    required this.onClose,
+    this.modeLabel,
+    this.onHelp,
+    this.closeLabel = 'Close',
+    this.progressLabel,
+  });
+
+  final int step;
+  final int total;
+  final VoidCallback onClose;
+  final String? modeLabel;
+  final VoidCallback? onHelp;
+  final String closeLabel;
+  final String? progressLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = progressLabel ?? '$step of $total';
+    return SizedBox(
+      height: 48,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 48,
+            child: IconButton(
+              key: const Key('act0_shell_runner_back'),
+              tooltip: closeLabel,
+              onPressed: onClose,
+              icon: const Icon(Icons.close_rounded),
+            ),
+          ),
+          Expanded(
+            child: Act0SkinProgressBarV1(
+              ratio: total > 0 ? (step / total).clamp(0.0, 1.0) : null,
+              label: 'Lesson progress',
+              valueLabel: count,
+            ),
+          ),
+          const SizedBox(width: _T.gapMd),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(count, style: _T.captionStyle),
+              if (modeLabel case final mode?)
+                Text(mode, style: _T.tag.copyWith(color: _T.accent)),
+            ],
+          ),
+          SizedBox(
+            width: 48,
+            child: onHelp == null
+                ? null
+                : IconButton(
+                    key: const Key('act0_shell_runner_glossary'),
+                    tooltip: 'Glossary',
+                    onPressed: onHelp,
+                    icon: const Icon(Icons.menu_book_rounded, size: 22),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum Act0SkinFeedbackGradeV1 {
+  correct('CORRECT READ'),
+  wrong('MISSED CLUE'),
+  repaired('Fixed after a hint'),
+  assisted('CORRECT WITH HELP');
+
+  const Act0SkinFeedbackGradeV1(this.label);
+  final String label;
+}
+
+/// The grade slot fits the existing feedback surface without moving the table.
+class Act0SkinFeedbackPanelV1 extends StatelessWidget {
+  const Act0SkinFeedbackPanelV1({
+    super.key,
+    required this.grade,
+    this.label,
+    this.labelKey,
+    this.style,
+    this.child,
+  });
+
+  final Act0SkinFeedbackGradeV1 grade;
+  final String? label;
+  final Key? labelKey;
+  final TextStyle? style;
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = switch (grade) {
+      Act0SkinFeedbackGradeV1.correct => _T.ok,
+      Act0SkinFeedbackGradeV1.wrong => _T.bad,
+      Act0SkinFeedbackGradeV1.repaired ||
+      Act0SkinFeedbackGradeV1.assisted => _T.accent,
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label ?? grade.label,
+          key: labelKey,
+          style: (style ?? _T.tag).copyWith(color: tone),
+        ),
+        if (child case final content?) content,
+      ],
     );
   }
 }

@@ -549,7 +549,11 @@ Act0LearningEvidenceHistoryV1 act0CompleteCurrentAuthoredEvidenceV1(
     payload['skillAtomId'] = proof.skillAtomId;
     payload['conceptFamilyId'] = family;
     payload['repairFocusId'] = family;
-    payload['resultKind'] = proof.isCurrentlyCorrect ? 'correct' : 'incorrect';
+    payload['resultKind'] = !proof.isCurrentlyCorrect
+        ? 'incorrect'
+        : record.isRepaired
+        ? record.resultKind
+        : 'correct';
     final current = Act0LearningEvidenceRecordV1.tryParse(payload);
     if (current == null) return unavailable;
     validated.add(current);
@@ -651,7 +655,11 @@ Act0RecentAuthoredEvidenceV1 act0RecentAuthoredEvidenceV1(
     payload['skillAtomId'] = proof.skillAtomId;
     payload['conceptFamilyId'] = family;
     payload['repairFocusId'] = family;
-    payload['resultKind'] = proof.isCurrentlyCorrect ? 'correct' : 'incorrect';
+    payload['resultKind'] = !proof.isCurrentlyCorrect
+        ? 'incorrect'
+        : r.isRepaired
+        ? r.resultKind
+        : 'correct';
     if (proof.isCurrentlyCorrect) payload['errorType'] = 'none';
     final current = Act0LearningEvidenceRecordV1.tryParse(payload);
     if (current == null) {

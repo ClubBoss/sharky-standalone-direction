@@ -946,66 +946,23 @@ class _RunnerProgressV1 extends StatelessWidget {
     final step = progress?.step ?? runner.beatIndex;
     final total = progress?.total ?? runner.beatCount;
     final russian = act0AcademyLanguageV1(context) == 'ru';
-    final label = russian ? 'Шаг $step/$total' : 'Step $step of $total';
-    return Row(
-      children: [
-        SizedBox(
-          width: 48,
-          height: 48,
-          child: IconButton(
-            key: const Key('act0_shell_runner_back'),
-            tooltip: act0AcademyLanguageV1(context) == 'ru'
-                ? '\u041d\u0430\u0437\u0430\u0434'
-                : 'Back',
-            onPressed: onBack,
-            padding: EdgeInsets.zero,
-            icon: const Icon(Icons.arrow_back_rounded),
-            color: Act0ShellTokensV1.text,
-          ),
-        ),
-        const SizedBox(width: Act0ShellTokensV1.gapMd),
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            child: LinearProgressIndicator(
-              minHeight: Act0ShellTokensV1.progressHeight,
-              value: step / total,
-              backgroundColor: Act0ShellTokensV1.surface3,
-              color: Act0ShellTokensV1.primary,
-            ),
-          ),
-        ),
-        if (showGlossary) ...[
-          const SizedBox(width: Act0ShellTokensV1.gapXs),
-          SizedBox(
-            width: 44,
-            height: 44,
-            child: IconButton(
-              key: const Key('act0_shell_runner_glossary'),
-              tooltip: 'Glossary',
-              onPressed: () => showAct0GlossarySheetV1(
-                context,
-                taskText: act0GlossaryTaskTextV1(runner),
-              ),
-              padding: EdgeInsets.zero,
-              icon: const Icon(Icons.menu_book_rounded, size: 22),
-              color: Act0ShellTokensV1.text,
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapXs),
-        ] else
-          const SizedBox(width: Act0ShellTokensV1.gapMd),
-        Text(
-          progress == null
-              ? label
-              : '$label\n${russian ? 'Ещё практика' : 'Extra practice'}',
-          textAlign: TextAlign.end,
-          style: Act0ShellTokensV1.body.copyWith(
-            fontSize: 12,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-      ],
+    return Act0SkinTaskHeaderV1(
+      step: step,
+      total: total,
+      onClose: onBack,
+      closeLabel: russian ? 'Закрыть' : 'Close',
+      progressLabel: russian ? '$step из $total' : null,
+      modeLabel: progress == null
+          ? null
+          : russian
+          ? 'Ещё практика'
+          : 'Extra practice',
+      onHelp: showGlossary
+          ? () => showAct0GlossarySheetV1(
+              context,
+              taskText: act0GlossaryTaskTextV1(runner),
+            )
+          : null,
     );
   }
 }

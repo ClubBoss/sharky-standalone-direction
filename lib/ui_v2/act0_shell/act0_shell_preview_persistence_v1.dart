@@ -1273,13 +1273,20 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         !_progressRestoredV1) {
       return false; // Coalesced requests have no durable acknowledgement.
     }
-    _setProgressSaveStatusV1(
-      _Act0ProgressSaveStatusV1.saving,
-      generation,
-      store,
-      epoch,
-    );
-    final acknowledged = await store.save(snapshot);
+    final noticeDelay = Timer(const Duration(seconds: 2), () {
+      _setProgressSaveStatusV1(
+        _Act0ProgressSaveStatusV1.saving,
+        generation,
+        store,
+        epoch,
+      );
+    });
+    final bool acknowledged;
+    try {
+      acknowledged = await store.save(snapshot);
+    } finally {
+      noticeDelay.cancel();
+    }
     // False is indeterminate, never proof of data loss or an OS-level cause.
     _recordTelemetryEventV1('progress_persist_result', <String, Object?>{
       ...diagnosticContext,
@@ -1328,39 +1335,19 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           return const SizedBox.shrink();
         }
         final saving = status == _Act0ProgressSaveStatusV1.saving;
-        return Material(
+        return Act0SkinBannerV1(
           key: const Key('act0_progress_save_notice'),
-          color: Theme.of(context).colorScheme.surface,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Semantics(
-                    liveRegion: true,
-                    child: Text(
-                      saving
-                          ? 'Saving progress. Keep Sharky open.'
-                          : 'Progress save not confirmed. Keep Sharky open and retry.',
-                    ),
-                  ),
-                ),
-                if (!saving)
-                  TextButton(
-                    key: const Key('act0_progress_save_retry'),
-                    // Rebuild the full current snapshot. Never replay an old
-                    // answer, completion or cached failed payload.
-                    onPressed: () {
-                      if (_acceptRecoveryCallbackV1(epoch) &&
-                          identical(store, _progressStore)) {
-                        _persistProgress();
-                      }
-                    },
-                    child: const Text('Retry save'),
-                  ),
-              ],
-            ),
-          ),
+          message: saving
+              ? 'Saving…'
+              : 'Progress save not confirmed. Keep Sharky open and retry.',
+          actionLabel: saving ? null : 'Retry save',
+          actionKey: const Key('act0_progress_save_retry'),
+          onAction: () {
+            if (_acceptRecoveryCallbackV1(epoch) &&
+                identical(store, _progressStore)) {
+              _persistProgress();
+            }
+          },
         );
       },
     );

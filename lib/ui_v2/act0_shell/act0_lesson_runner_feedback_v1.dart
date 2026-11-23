@@ -22,7 +22,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.refined = false,
     this.completionSummary,
     this.isAssistedDecision = false,
-    this.isRepaired = false,
+    this.isRepairedFeedback = false,
     this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
@@ -65,7 +65,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
-  final bool isRepaired;
+  final bool isRepairedFeedback;
   final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
@@ -90,7 +90,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
-    title: isRepaired ? _fixedFeedbackLabelV1(context) : title,
+    title: isRepairedFeedback ? _fixedFeedbackLabelV1(context) : title,
     selectedLabel: selectedLabel,
     otherOptions: otherOptions,
     reason: reason,
@@ -174,7 +174,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isSuboptimal
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
-    final resolvedTitle = isRepaired
+    final resolvedTitle = isRepairedFeedback
         ? _fixedFeedbackLabelV1(context)
         : isAssistedDecision && !isWrong
         ? act0AcademyLanguageV1(context) == 'ru'
@@ -198,7 +198,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           '${quality.name}|${resolvedTitle.trim().toLowerCase()}|${resolvedSharkyLine.trim().toLowerCase()}',
       taskFamily: taskFamily,
     );
-    final primaryResultLabel = isRepaired
+    final primaryResultLabel = isRepairedFeedback
         ? _fixedFeedbackLabelV1(context)
         : _feedbackPrimaryResultLabelV1(
             context,
@@ -267,7 +267,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final preserveFullCompactReason =
         isCompactRefinedFeedback &&
         _shouldPreserveFullCompactFeedbackReasonV1(resolvedReason);
-    final skillReceipt = firstValueReceiptLine == null || isAssistedDecision
+    final skillReceipt =
+        firstValueReceiptLine == null ||
+            isAssistedDecision ||
+            isRepairedFeedback
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
     final repairReason = repairReasonLine?.trim() ?? '';
@@ -285,7 +288,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     ];
     final fallbackReceiptLine = repairReceiptLine.isNotEmpty
         ? repairReceiptLine
-        : isAssistedDecision
+        : isAssistedDecision || isRepairedFeedback
         ? null
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
@@ -383,45 +386,19 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             const SizedBox(width: Act0ShellTokensV1.gapSm),
           ],
           Expanded(
-            child: FilledButton(
-              key: const Key('act0_shell_feedback_continue_cta'),
+            child: Act0SkinPrimaryButtonV1(
+              compact: true,
+              controlKey: const Key('act0_shell_feedback_continue_cta'),
+              labelKey: const Key('act0_shell_feedback_continue_cta_label'),
               onPressed: onContinue,
-              style: Act0ShellTokensV1.premiumActionButtonStyle(
-                height: usesSharedAccessibilitySurface
-                    ? 48
-                    : isCompactRefinedFeedback
-                    ? 44
-                    : Act0ShellTokensV1.compactCtaHeight,
-              ),
-              child: Text(
-                key: const Key('act0_shell_feedback_continue_cta_label'),
-                // Keep the primary action readable in deterministic rendered
-                // evidence as well as runtime; flutter_test otherwise falls
-                // back to its block-glyph Ahem face for this button style.
-                style: const TextStyle(fontFamily: 'Roboto'),
-                (localizeW1Ctas && forwardCtaLabel != null
-                        ? act0AcademyW1CtaV1(context, forwardCtaLabel!)
-                        : forwardCtaLabel) ??
-                    (localizeW1Ctas
-                        ? act0AcademyW1CtaV1(
-                            context,
-                            isRecoveredSourceRecheck
-                                ? 'Continue'
-                                : isWrong && isSourceRecheckAttempt
-                                ? 'Continue to Review'
-                                : repairReceiptLine.isNotEmpty && !isWrong
-                                ? repairContinuesToSourceRecheck
-                                      ? 'Check original read'
-                                      : 'Continue to Review'
-                                : isCorrectWithPendingRepair
-                                ? 'Continue'
-                                : isWrong || isRepairFocusState
-                                ? isExactReplayRepair
-                                      ? 'Try this spot again'
-                                      : 'Try same clue'
-                                : 'Next hand',
-                          )
-                        : (isRecoveredSourceRecheck
+              label:
+                  (localizeW1Ctas && forwardCtaLabel != null
+                      ? act0AcademyW1CtaV1(context, forwardCtaLabel!)
+                      : forwardCtaLabel) ??
+                  (localizeW1Ctas
+                      ? act0AcademyW1CtaV1(
+                          context,
+                          isRecoveredSourceRecheck
                               ? 'Continue'
                               : isWrong && isSourceRecheckAttempt
                               ? 'Continue to Review'
@@ -435,8 +412,23 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                               ? isExactReplayRepair
                                     ? 'Try this spot again'
                                     : 'Try same clue'
-                              : 'Next hand')),
-              ),
+                              : 'Next hand',
+                        )
+                      : (isRecoveredSourceRecheck
+                            ? 'Continue'
+                            : isWrong && isSourceRecheckAttempt
+                            ? 'Continue to Review'
+                            : repairReceiptLine.isNotEmpty && !isWrong
+                            ? repairContinuesToSourceRecheck
+                                  ? 'Check original read'
+                                  : 'Continue to Review'
+                            : isCorrectWithPendingRepair
+                            ? 'Continue'
+                            : isWrong || isRepairFocusState
+                            ? isExactReplayRepair
+                                  ? 'Try this spot again'
+                                  : 'Try same clue'
+                            : 'Next hand')),
             ),
           ),
         ],
@@ -492,7 +484,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isWrong
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
-    final companionRoleLabel = isRepaired
+    final companionRoleLabel = isRepairedFeedback
         ? _fixedFeedbackLabelV1(context)
         : hasProofEarnedState
         ? isRecoveredSourceRecheck
@@ -546,24 +538,26 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (showAnswerContrast) ...[
-                    _FeedbackAnswerRowV1(
-                      icon: Icons.close_rounded,
-                      color: missedCueTone,
-                      label: 'Not this one · $missedAnswer',
+                    Act0SkinAnswerOptionRowV1(
+                      compact: true,
+                      verdict: Act0SkinAnswerVerdictV1.notThisOne,
+                      label: missedAnswer,
                     ),
                     const SizedBox(height: 3),
-                    _FeedbackAnswerRowV1(
-                      icon: Icons.check_rounded,
-                      color: Act0ShellTokensV1.successProof,
-                      label: 'Best answer · $bestAnswer',
+                    Act0SkinAnswerOptionRowV1(
+                      compact: true,
+                      verdict: Act0SkinAnswerVerdictV1.better,
+                      verdictLabel: 'Right answer',
+                      label: bestAnswer,
                     ),
                     const SizedBox(height: 7),
                   ],
                   if (isAcceptable && bestAnswer.isNotEmpty) ...[
-                    _FeedbackAnswerRowV1(
-                      icon: Icons.check_rounded,
-                      color: Act0ShellTokensV1.successProof,
-                      label: '$actionPrefix · $bestAnswer',
+                    Act0SkinAnswerOptionRowV1(
+                      compact: true,
+                      verdict: Act0SkinAnswerVerdictV1.better,
+                      verdictLabel: actionPrefix,
+                      label: bestAnswer,
                     ),
                     const SizedBox(height: 7),
                   ],
@@ -1215,6 +1209,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     ],
                     if (!rapidMode &&
                         !isAssistedDecision &&
+                        !isRepairedFeedback &&
                         completionSummary != null) ...[
                       const SizedBox(height: 8),
                       _CompletionToastV1(summary: completionSummary!),
@@ -1299,39 +1294,6 @@ String _compactFeedbackActionLabelV1(String label) => switch (label.trim()) {
     'Fewer queen hands remain; exact hand unknown.',
   _ => label,
 };
-
-class _FeedbackAnswerRowV1 extends StatelessWidget {
-  const _FeedbackAnswerRowV1({
-    required this.icon,
-    required this.color,
-    required this.label,
-  });
-
-  final IconData icon;
-  final Color color;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 16, color: color),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            label,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: color,
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class _FeedbackVerdictDividerV1 extends StatelessWidget {
   const _FeedbackVerdictDividerV1();
