@@ -6,6 +6,7 @@ import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_imported_hand_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_manual_hand_screen_v1.dart';
 
 void main() {
   final fixture = File(
@@ -119,15 +120,43 @@ void main() {
         ),
       );
 
-      Future<void> tap(Finder finder) async {
-        await t.ensureVisible(finder.first);
-        await t.tap(finder.first);
+      final wizard = find.byType(Act0ManualHandScreenV1);
+      final wizardScroll = find.descendant(
+        of: wizard,
+        matching: find.byType(Scrollable),
+      ).first;
+      final dialog = find.byType(AlertDialog);
+
+      Future<void> reveal(Finder finder, {double scrollDelta = 150}) async {
+        if (wizardScroll.evaluate().isNotEmpty &&
+            dialog.evaluate().isEmpty &&
+            finder.evaluate().isEmpty) {
+          await t.scrollUntilVisible(
+            finder,
+            scrollDelta,
+            scrollable: wizardScroll,
+          );
+        } else {
+          await t.ensureVisible(finder);
+        }
         await t.pumpAndSettle();
       }
 
-      Future<void> enter(String label, String value) async {
-        final field = find.widgetWithText(TextFormField, label);
-        await t.ensureVisible(field);
+      Future<void> tap(Finder finder) async {
+        await reveal(finder);
+        await t.tap(finder.hitTestable());
+        await t.pumpAndSettle();
+      }
+
+      Future<void> enter(
+        String label,
+        String value, {
+        double scrollDelta = 150,
+      }) async {
+        final field = label == 'Amount in cents'
+            ? find.descendant(of: dialog, matching: find.byType(TextFormField))
+            : find.byKey(ValueKey(label));
+        await reveal(field, scrollDelta: scrollDelta);
         await t.enterText(field, value);
         await t.pumpAndSettle();
       }
@@ -165,12 +194,11 @@ void main() {
       await enter('Seat 1 collected', '19');
       await enter('Rake', '0');
       await tap(find.text('Save hand'));
-      expect(
-        find.text('Payouts plus rake must equal the pot.'),
-        findsOneWidget,
-      );
+      final payoutError = find.text('Payouts plus rake must equal the pot.');
+      await reveal(payoutError);
+      expect(payoutError.hitTestable(), findsOneWidget);
       expect(archive.importedHands, isEmpty);
-      await enter('Seat 1 collected', '20');
+      await enter('Seat 1 collected', '20', scrollDelta: -150);
       await tap(find.text('Save hand'));
       expect(find.text('Own hand · Manual entry'), findsOneWidget);
       expect(archive.importedHands.single.potCents, 20);
