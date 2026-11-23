@@ -50,7 +50,9 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
 
   Act0AttemptReplayTableV1? _buildReplayTable() {
     final attempt = widget.attempt;
-    return attempt == null ? null : Act0AttemptReplayTableV1.fromAttempt(attempt);
+    return attempt == null
+        ? null
+        : Act0AttemptReplayTableV1.fromAttempt(attempt);
   }
 
   @override
