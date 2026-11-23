@@ -249,17 +249,6 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
             _label('PRIVACY & INFORMATION'),
             _group(legal),
           ],
-          if (input.version case final version?)
-            FutureBuilder<String>(
-              future: version,
-              builder: (context, snapshot) => Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  snapshot.data ?? 'Reading version and build…',
-                  style: const TextStyle(color: _muted, fontSize: 12),
-                ),
-              ),
-            ),
           if (feel.isNotEmpty)
             const Padding(
               padding: EdgeInsets.only(top: 16),

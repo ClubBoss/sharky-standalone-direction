@@ -432,7 +432,10 @@ class _ActionPanelV1 extends StatelessWidget {
         ? Act0ShellTokensV1.info.withValues(alpha: 0.22)
         : Act0ShellTokensV1.border.withValues(alpha: 0.92);
     Widget withCommitMotion(Widget child) {
-      return _DecisionCommitMotionV1(child: child);
+      return FocusTraversalGroup(
+        policy: WidgetOrderTraversalPolicy(),
+        child: _DecisionCommitMotionV1(child: child),
+      );
     }
 
     if (stackOptions) {

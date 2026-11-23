@@ -236,6 +236,8 @@ void main() {
           matching: find.byType(Scrollable),
         ),
       );
+      await tester.pumpAndSettle();
+      expect(delete.hitTestable(), findsOneWidget);
       await tester.tap(delete);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_delete_data_cancel')));
@@ -253,6 +255,8 @@ void main() {
           matching: find.byType(Scrollable),
         ),
       );
+      await tester.pumpAndSettle();
+      expect(delete.hitTestable(), findsOneWidget);
       await tester.tap(delete);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_delete_data_confirm')));

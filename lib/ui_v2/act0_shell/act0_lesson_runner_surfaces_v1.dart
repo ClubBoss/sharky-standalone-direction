@@ -1374,7 +1374,7 @@ bool act0ShouldActivateCompactAccessibilityPrototypeV1(
   return required > available;
 }
 
-class _AccessibilityDirectDecisionV1 extends StatelessWidget {
+class _AccessibilityDirectDecisionV1 extends StatefulWidget {
   const _AccessibilityDirectDecisionV1({
     required this.question,
     required this.guidance,
@@ -1388,7 +1388,18 @@ class _AccessibilityDirectDecisionV1 extends StatelessWidget {
   final ValueChanged<Act0RunnerOptionV1> onChoose;
 
   @override
+  State<_AccessibilityDirectDecisionV1> createState() =>
+      _AccessibilityDirectDecisionV1State();
+}
+
+class _AccessibilityDirectDecisionV1State
+    extends State<_AccessibilityDirectDecisionV1> {
+  String? _focusedOptionId;
+
+  @override
   Widget build(BuildContext context) {
+    final options = widget.options;
+    final guidance = widget.guidance;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Column(
@@ -1406,7 +1417,7 @@ class _AccessibilityDirectDecisionV1 extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
-                    question,
+                    widget.question,
                     key: const Key('act0_shell_accessibility_question'),
                     style: Act0ShellTokensV1.body.copyWith(
                       fontSize: 16,
@@ -1448,16 +1459,24 @@ class _AccessibilityDirectDecisionV1 extends StatelessWidget {
                       name: 'act0_choices',
                     ),
                     selected: false,
+                    focused: _focusedOptionId == option.id,
                     value: option.amountLabel.trim().isEmpty
                         ? null
                         : option.amountLabel,
-                    onTap: () => onChoose(option),
+                    onTap: () => widget.onChoose(option),
                     child: Material(
                       color: Act0ShellTokensV1.surface,
                       borderRadius: BorderRadius.circular(12),
                       child: InkWell(
                         key: Key('act0_shell_option_${option.id}'),
-                        onTap: () => onChoose(option),
+                        onTap: () => widget.onChoose(option),
+                        onFocusChange: (focused) {
+                          if (focused) {
+                            setState(() => _focusedOptionId = option.id);
+                          } else if (_focusedOptionId == option.id) {
+                            setState(() => _focusedOptionId = null);
+                          }
+                        },
                         borderRadius: BorderRadius.circular(12),
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(minHeight: 48),
