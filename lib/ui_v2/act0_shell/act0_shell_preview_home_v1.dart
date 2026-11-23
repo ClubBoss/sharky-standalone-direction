@@ -1860,8 +1860,9 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       return resume.selectedOptionId == null;
     }
     return task.runner.options.any(
-      (option) => option.id == resume.selectedOptionId,
-    );
+          (option) => option.id == resume.selectedOptionId,
+        ) ||
+        act0RestoredNumberOptionV1(task, resume.selectedOptionId) != null;
   }
 
   void _resumeHomeLessonV1(_Act0LessonResumeV1 resume) {

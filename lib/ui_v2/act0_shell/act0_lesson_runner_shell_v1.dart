@@ -1,4 +1,8 @@
 import 'act0_action_reason_v1.dart';
+import 'act0_club_night_components_v1.dart';
+import 'act0_club_night_tokens_v1.dart';
+import 'act0_number_entry_v1.dart';
+import 'act0_number_entry_runner_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_accessibility_semantics_v1.dart';
@@ -59,6 +63,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_id
 import 'act0_session_summary_view_model_v1.dart';
 
 part 'act0_lesson_runner_surfaces_v1.dart';
+part 'act0_lesson_runner_number_entry_v1.dart';
 part 'act0_lesson_runner_scene_v1.dart';
 part 'act0_lesson_runner_feedback_v1.dart';
 part 'act0_lesson_runner_completion_v1.dart';
@@ -1246,6 +1251,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onPreviousTheory,
     this.onUndoInteraction,
     required this.onChooseOption,
+    this.numberEntry,
     this.onSelectSizingPreset,
     this.onConfirmSizingPreset,
     this.onChooseSeat,
@@ -1323,6 +1329,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback? onPreviousTheory;
   final VoidCallback? onUndoInteraction;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
+  final Act0NumberEntryRunnerV1? numberEntry;
   final ValueChanged<Act0SizingPresetV1>? onSelectSizingPreset;
   final VoidCallback? onConfirmSizingPreset;
   final ValueChanged<String>? onChooseSeat;
@@ -3883,7 +3890,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         widget.selectedTaskId,
         causalFeedback.whyChosen,
       ),
-      nextClueLine: causalFeedback.nextHandInstruction,
+      nextClueLine: widget.numberEntry == null
+          ? causalFeedback.nextHandInstruction
+          : '',
+      assistedTitle: widget.numberEntry == null ? null : 'Answered with help',
       quality: runner.reviewQuality,
       sharkyLine: runner.reviewQuality.passes
           ? runner.sharky.correctReaction
@@ -3994,7 +4004,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         accessibilityFeedbackSurface: isAccessibilityFlow && isReview,
         protectFixedSlotBottom:
             taskCycleEnvelope.usesFixedLowerSlot && isReview,
-        child: isAccessibilityDirectDecision
+        child: widget.numberEntry != null && isDrill && !isTeaching
+            ? _NumberEntryPromptV1(
+                question: widget.numberEntry!.spec.question,
+                onOpen: _heroDecisionReady ? _openNumberEntryV1 : null,
+              )
+            : isAccessibilityDirectDecision
             ? _AccessibilityDirectDecisionV1(
                 question: question,
                 guidance: act0RuntimeNeutralTableReadCueLabelV1(context),
@@ -4417,7 +4432,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
-    if (widget.tablePresentation ==
+    if (widget.numberEntry == null &&
+        widget.tablePresentation ==
             Act0TaskTablePresentationV1.stablePractice &&
         ((isDrill && !isTeaching) || isReview) &&
         !usesSharedActiveRunnerAllocation) {

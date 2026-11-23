@@ -1,3 +1,4 @@
+import 'act0_number_entry_v1.dart';
 import 'package:flutter/material.dart';
 
 import 'act0_academy_reading_style_v1.dart';
@@ -359,11 +360,17 @@ class _Act0AttemptArchiveScreenV1State
     final dateLabels = MaterialLocalizations.of(context);
     final date = dateLabels.formatMediumDate(time);
     final clock = dateLabels.formatTimeOfDay(TimeOfDay.fromDateTime(time));
+    final usedWorkedMath =
+        act0IsNumberEntryChoiceV1(evidence.choiceId) &&
+        evidence.assistanceKind == Act0DecisionAssistanceV1.quickHint;
     final result =
         attempt.actionReason?.title ??
         (evidence.isRepaired
             ? 'Fixed'
             : switch (evidence.resultKind) {
+                'correct' ||
+                'co_correct' ||
+                'acceptable' when usedWorkedMath => 'Answered with help',
                 'correct' || 'co_correct' => 'Correct',
                 'acceptable' => 'Acceptable',
                 'suboptimal' => 'Suboptimal',
@@ -407,6 +414,8 @@ class _Act0AttemptArchiveScreenV1State
             ),
           Text(switch (evidence.assistanceKind) {
             Act0DecisionAssistanceV1.none => 'Help: none',
+            Act0DecisionAssistanceV1.quickHint when usedWorkedMath =>
+              'Help: worked calculation',
             Act0DecisionAssistanceV1.quickHint => 'Help: quick hint',
             Act0DecisionAssistanceV1.theoryRecall => 'Help: theory recall',
             Act0DecisionAssistanceV1.legacyUnknown => 'Help: unknown',

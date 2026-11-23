@@ -7,6 +7,8 @@ import 'act0_daily_practice_queue_v1.dart';
 import 'act0_path_progress_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
 import 'dart:async';
+import 'act0_number_entry_runner_v1.dart';
+import 'act0_number_entry_v1.dart';
 import 'act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'dart:convert';
@@ -1223,6 +1225,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.debugPersistFixtureProgress = false,
     this.showPlacementOnStart = true,
     this.debugLegacyPlacementOnStart = false,
+    this.numberEntryV1 = const bool.fromEnvironment('numberEntryV1'),
     this.goalRouteV1 = const bool.fromEnvironment('goalRouteV1'),
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
@@ -1243,6 +1246,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final bool debugPersistFixtureProgress;
   final bool showPlacementOnStart;
   final bool debugLegacyPlacementOnStart;
+  final bool numberEntryV1;
   final bool goalRouteV1;
   final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
@@ -3087,7 +3091,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 !_tasksWithDeferredXpV1.contains(playSelectedTask.taskId))
         ? 0
         : playSelectedTask.rewardXp;
-    final playRunner = isPlayRunner
+    final sourcePlayRunner = isPlayRunner
         ? normalizeAct0DrillSeatHighlightPolicyV1(
             normalizeAct0SeatTapRunnerV1(
               _actionSequenceRunnerForStageV1(
@@ -3128,6 +3132,36 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ),
           )
         : null;
+    final numberEntry =
+        sourcePlayRunner != null &&
+            playSelectedTask != null &&
+            selectedWorld.worldNumber == 4 &&
+            !_placementDiagnosticActive &&
+            _diagnosticLearningEntryV1 == null &&
+            (widget.numberEntryV1 ||
+                act0IsNumberEntryChoiceV1(_selectedOptionId))
+        ? Act0NumberEntryRunnerV1.fromTask(
+            playSelectedTask.taskId,
+            sourcePlayRunner.table,
+          )
+        : null;
+    final numberAnswer = numberEntry?.restore(_selectedOptionId);
+    final useNumberEntry =
+        numberEntry != null &&
+        (_phase == Act0LessonPhaseV1.drill || numberAnswer != null);
+    final playRunner = useNumberEntry
+        ? sourcePlayRunner!.copyWith(
+            question: numberEntry.spec.question,
+            caption: '',
+            hint: '',
+            options: [
+              numberEntry.expected,
+              if (numberAnswer != null &&
+                  numberAnswer.id != numberEntry.expected.id)
+                numberAnswer,
+            ],
+          )
+        : sourcePlayRunner;
     final placementDiagnosticSignalId = _placementDiagnosticActive
         ? _placementDiagnosticSpotsV1[_placementDiagnosticIndex].signalId
         : null;
@@ -3160,7 +3194,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           )
         : playRunner;
     final accessibilityPrototypeStep =
-        activePlayRunner != null &&
+        !useNumberEntry &&
+            activePlayRunner != null &&
             activePlayRunner.phase != Act0LessonPhaseV1.theory &&
             (activePlayRunner.phase == Act0LessonPhaseV1.review ||
                 activePlayRunner.activeTeachingStep == null) &&
@@ -4158,9 +4193,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 // already computes; it drives no progression.
                                 learningLoopStage: _activeActionSequenceStageV1,
                                 runner: activePlayRunner!,
+                                numberEntry: useNumberEntry
+                                    ? numberEntry
+                                    : null,
                                 preserveSourceOwnedQuestion:
                                     _placementDiagnosticActive ||
-                                    multiStreet != null,
+                                    multiStreet != null ||
+                                    useNumberEntry,
                                 worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,

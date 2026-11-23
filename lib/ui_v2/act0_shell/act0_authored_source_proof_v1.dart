@@ -1,4 +1,5 @@
 import 'act0_action_reason_v1.dart';
+import 'act0_number_entry_runner_v1.dart';
 import 'dart:convert';
 import 'act0_predecision_card_focus_v1.dart';
 import 'act0_prechoice_answer_cue_policy_v1.dart';
@@ -405,8 +406,10 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
   final choices = task.runner.options
       .where((option) => option.id == record.choiceId)
       .toList();
-  if (choices.length != 1) return null;
-  final option = choices.single;
+  if (choices.length > 1) return null;
+  final option =
+      choices.firstOrNull ?? act0RestoredNumberOptionV1(task, record.choiceId);
+  if (option == null) return null;
   final receipt = act0FirstValueSkillReceiptForRunnerV1(
     runner: task.runner,
     option: option,

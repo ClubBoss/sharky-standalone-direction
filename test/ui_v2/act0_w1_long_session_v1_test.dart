@@ -45,14 +45,28 @@ const _continueKeys = [
   'act0_academy_home_leaf_cta',
 ];
 
-Future<void> _mount(WidgetTester t, {bool firstRun = false}) async {
+Future<void> _mount(
+  WidgetTester t, {
+  bool firstRun = false,
+  bool numberEntryV1 = false,
+  double? textScale,
+}) async {
   await t.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
+      builder: textScale == null
+          ? null
+          : (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(textScale)),
+              child: child!,
+            ),
       home: Act0ShellPreviewScreenV1(
         key: UniqueKey(),
         initialTab: Act0ShellTabV1.home,
         showPlacementOnStart: firstRun,
+        numberEntryV1: numberEntryV1,
       ),
     ),
   );
@@ -128,6 +142,8 @@ Future<int> _openSavedCourseTask(
   bool restoreActive = false,
   bool finishTeaching = true,
   bool persistSeed = false,
+  bool numberEntryV1 = false,
+  double? textScale,
 }) async {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(worldId);
@@ -198,7 +214,7 @@ Future<int> _openSavedCourseTask(
   t.view.physicalSize = const Size(393, 852);
   t.view.devicePixelRatio = 1;
   addTearDown(t.view.reset);
-  await _mount(t);
+  await _mount(t, numberEntryV1: numberEntryV1, textScale: textScale);
   await t.runAsync(() async {
     await Future<void>.delayed(const Duration(milliseconds: 50));
   });
@@ -408,6 +424,152 @@ void _registerFocusedCases() {
     },
     skip: !act0CurriculumPilotEnabledV1,
   );
+  testWidgets('flag off keeps the authored W4 answer and saved choice', (
+    t,
+  ) async {
+    const taskId = 'w4_good_price_call';
+    await _openSavedCourseTask(t, worldId: 'world_4', taskId: taskId);
+    final shell = find.byType(Act0LessonRunnerShellV1);
+    final runner = t.widget<Act0LessonRunnerShellV1>(shell);
+    final source = Act0ShellStateV1.sample
+        .worldById('world_4')
+        .lessons
+        .expand((lesson) => lesson.courseTaskList)
+        .singleWhere((task) => task.taskId == taskId)
+        .runner;
+    expect(runner.runner.options, same(source.options));
+    expect(runner.runner.question, source.question);
+    expect(runner.numberEntry, isNull);
+    expect(find.byKey(const Key('act0_number_entry_open')), findsNothing);
+    final choice = source.options.singleWhere(act0RunnerOptionIsPreferredV1);
+    expect(
+      await _tapFirst(t, [find.byKey(Key('act0_shell_option_${choice.id}'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
+    expect(
+      (saved['learningEvidenceHistory'] as List).cast<Map>().any(
+        (row) => row['taskId'] == taskId && row['choiceId'] == choice.id,
+      ),
+      isTrue,
+    );
+  });
+
+  testWidgets('W4 number entry preserves a mistake and marks worked help', (
+    t,
+  ) async {
+    const taskId = 'w4_good_price_call';
+    final semantics = t.ensureSemantics();
+    addTearDown(semantics.dispose);
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_4',
+      taskId: 'w4_price_intro',
+      numberEntryV1: true,
+      textScale: 1.3,
+    );
+    final shell = find.byType(Act0LessonRunnerShellV1);
+    Future<void> tapKey(String key) async {
+      expect(await _tapFirst(t, [find.byKey(Key(key))]), isTrue);
+    }
+
+    Future<void> enter(String value) async {
+      for (final symbol in value.split('')) {
+        await tapKey('act0_number_key_$symbol');
+      }
+      await tapKey('act0_number_entry_submit');
+    }
+
+    await tapKey('act0_number_entry_open');
+    expect(find.bySemanticsLabel('Numeric keypad'), findsOneWidget);
+    expect(find.bySemanticsLabel('Answer in percent'), findsOneWidget);
+    await enter('90');
+    expect(find.textContaining('You entered 90%'), findsWidgets);
+    final before = await _saved(t);
+    final miss = (before['learningEvidenceHistory'] as List)
+        .cast<Map>()
+        .lastWhere((row) => row['taskId'] == taskId);
+    expect(miss['isCorrect'], isFalse);
+
+    await _mount(t, numberEntryV1: true, textScale: 1.3);
+    final after = await _saved(t);
+    expect(after['learningEvidenceHistory'], before['learningEvidenceHistory']);
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_academy_home_leaf_cta'))]),
+      isTrue,
+    );
+    final resumed = t.widget<Act0LessonRunnerShellV1>(shell);
+    expect(resumed.selectedTaskId, taskId);
+    expect(resumed.runner.phase, Act0LessonPhaseV1.review);
+    expect(resumed.runner.selectedOptionId, miss['choiceId']);
+    expect(find.textContaining('You entered 90%'), findsWidgets);
+    await tapKey('act0_shell_feedback_continue_cta');
+    final visited = <String>{};
+    var reachedSummary = false;
+    for (var step = 0; step < 36; step++) {
+      if (find
+          .byKey(const Key('act0_shell_block_summary_continue_cta'))
+          .evaluate()
+          .isNotEmpty) {
+        reachedSummary = true;
+        break;
+      }
+      final runner = t.widget<Act0LessonRunnerShellV1>(shell);
+      if (runner.runner.phase == Act0LessonPhaseV1.review) {
+        await tapKey('act0_shell_feedback_continue_cta');
+      } else if (runner.runner.activeTeachingStep != null ||
+          runner.runner.phase == Act0LessonPhaseV1.theory) {
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_shell_theory_continue_cta')),
+            find.byKey(const Key('act0_shell_continue_cta')),
+          ]),
+          isTrue,
+        );
+      } else if (runner.numberEntry case final entry?) {
+        visited.add(runner.selectedTaskId!);
+        await pumpSourceChoreographyToDecisionV1(t, runner.runner.table);
+        await tapKey('act0_number_entry_open');
+        if (runner.selectedTaskId == 'w4_bad_price_fold') {
+          expect(find.text(entry.steps.last), findsNothing);
+          expect(await _tapFirst(t, [find.text('Show the math')]), isTrue);
+          expect(find.text(entry.steps.last), findsOneWidget);
+        }
+        await enter(entry.answerLabel.replaceAll('%', ''));
+      } else {
+        final choice = runner.runner.options.firstWhere(
+          act0RunnerOptionIsPreferredV1,
+        );
+        await pumpSourceChoreographyToDecisionV1(t, runner.runner.table);
+        await tapKey(
+          choice.seatId == null
+              ? 'act0_shell_option_${choice.id}'
+              : 'act0_shell_seat_tap_${choice.seatId}',
+        );
+      }
+    }
+    expect(reachedSummary, isTrue);
+    expect(
+      visited,
+      containsAll([
+        'w4_bad_price_fold',
+        'w4_cheap_price_marginal_call',
+        'w4_big_price_marginal_fold',
+      ]),
+    );
+    final finished = await _saved(t);
+    final history = (finished['learningEvidenceHistory'] as List).cast<Map>();
+    expect(history, contains(miss));
+    expect(
+      history.any(
+        (row) =>
+            row['taskId'] == 'w4_bad_price_fold' &&
+            row['assistanceKind'] == 'quickHint',
+      ),
+      isTrue,
+    );
+    expect(t.takeException(), isNull);
+  });
 
   testWidgets('pre-split first lesson resumes the card read with its XP', (
     t,

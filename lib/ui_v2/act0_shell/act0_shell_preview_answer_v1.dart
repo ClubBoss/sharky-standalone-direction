@@ -1890,7 +1890,14 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       final record = _mistakeRecords[selectedTask.taskId];
       final option = record == null
           ? null
-          : _optionById(selectedTask.runner.options, record.selectedOptionId);
+          : (_optionById(
+                  selectedTask.runner.options,
+                  record.selectedOptionId,
+                ) ??
+                act0RestoredNumberOptionV1(
+                  selectedTask,
+                  record.selectedOptionId,
+                ));
       final focusLabels = option == null || record == null
           ? const <String>[]
           : _repairContextLabels(selectedTask.runner, option);
@@ -1936,10 +1943,9 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     if (record == null) {
       return selectedTask.runner;
     }
-    final option = _optionById(
-      selectedTask.runner.options,
-      record.selectedOptionId,
-    );
+    final option =
+        _optionById(selectedTask.runner.options, record.selectedOptionId) ??
+        act0RestoredNumberOptionV1(selectedTask, record.selectedOptionId);
     final focusLabels = option == null
         ? record.contextLabels
         : _repairContextLabels(selectedTask.runner, option);

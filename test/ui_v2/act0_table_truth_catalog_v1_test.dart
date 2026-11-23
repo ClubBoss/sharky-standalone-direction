@@ -1,3 +1,5 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_number_entry_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_number_entry_runner_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -231,6 +233,81 @@ void main() {
     expect(runner.selectedTaskId, next.taskId);
     expect(runner.runner.table.tableFormat, Act0TableFormatV1.sixMax);
     expect(find.text(blocked.title), findsNothing);
+  });
+
+  test('W4 number-entry answers and bands agree with C1 and Table Truth', () {
+    const expected = {
+      'w4_good_price_call': (8.0, 1.0),
+      'w4_bad_price_fold': (14.0, 7.0),
+      'w4_cheap_price_marginal_call': (10.0, 1.0),
+      'w4_big_price_marginal_fold': (13.0, 6.0),
+      'w4_protection_short_shove_price': (12.0, 6.0),
+      'w4_checkpoint_price': (10.0, 3.0),
+      'w4_checkpoint_table_price': (7.0, 2.0),
+      'w4_checkpoint_table_purpose_price': (8.0, 2.0),
+    };
+    expect(act0W4NumberEntriesV1.keys, unorderedEquals(expected.keys));
+    for (final row in expected.entries) {
+      final catalog = catalogTasks.singleWhere(
+        (task) => task.task.taskId == row.key,
+      );
+      final table = catalog.task.runner.table;
+      final entry = Act0NumberEntryRunnerV1.fromTask(row.key, table);
+      expect(entry, isNotNull, reason: row.key);
+      final (pot, price) = row.value;
+      expect(CatalogDecisionLedgerV1(table).callBb, price, reason: row.key);
+      expect(entry!.pot, pot, reason: row.key);
+      expect(entry.price, price, reason: row.key);
+      expect(entry.threshold, closeTo(100 * price / (pot + price), 1e-9));
+      final spec = entry.spec;
+      expect(
+        spec.answer,
+        closeTo(spec.isPrice ? price : entry.threshold, 1e-9),
+      );
+      expect(spec.exactTolerance, spec.isPrice ? 0 : .005);
+      expect(spec.acceptableTolerance, spec.isPrice ? .1 : 1);
+      expect(entry.expected.quality, Act0FeedbackQualityV1.correct);
+      for (final direction in [-1, 1]) {
+        expect(
+          spec.grade(spec.answer + direction * spec.exactTolerance),
+          Act0NumberGradeV1.correct,
+        );
+        expect(
+          spec.grade(spec.answer + direction * spec.acceptableTolerance),
+          Act0NumberGradeV1.acceptable,
+        );
+        expect(
+          spec.grade(
+            spec.answer + direction * (spec.acceptableTolerance + .001),
+          ),
+          Act0NumberGradeV1.mistake,
+        );
+      }
+    }
+  });
+
+  test('W4 number entry parses only the authored forms', () {
+    final threshold = act0W4NumberEntriesV1['w4_bad_price_fold']!;
+    const forms = Act0NumberFormV1.values;
+    expect(threshold.parse('33%', forms[1]), 33);
+    expect(threshold.parse('1 / 3', forms[2]), closeTo(100 / 3, 1e-9));
+    expect(threshold.parse('1 in 3', forms[3]), closeTo(100 / 3, 1e-9));
+    expect(threshold.parse('3', forms[3]), closeTo(100 / 3, 1e-9));
+    expect(threshold.grade(33), Act0NumberGradeV1.acceptable);
+    expect(threshold.grade(100 / 3), Act0NumberGradeV1.correct);
+    expect(threshold.parse('33 BB', forms[0]), isNull);
+    expect(threshold.parse('1/0', forms[2]), isNull);
+    expect(threshold.parse('1 in 0', forms[3]), isNull);
+    expect(
+      threshold.grade(threshold.parse('101%', forms[1])!),
+      Act0NumberGradeV1.mistake,
+    );
+    expect(threshold.parse('-1%', forms[1]), isNull);
+    expect(threshold.parse('NaN', forms[1]), isNull);
+    final price = act0W4NumberEntriesV1['w4_checkpoint_table_price']!;
+    expect(price.parse('2.0 BB', forms[0]), 2);
+    expect(price.parse('2', forms[0]), 2);
+    expect(price.parse('2%', forms[1]), isNull);
   });
 
   test('W11 all-in decision projects both pots after the hero calls', () {

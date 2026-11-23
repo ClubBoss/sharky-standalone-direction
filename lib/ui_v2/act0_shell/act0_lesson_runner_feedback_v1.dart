@@ -23,6 +23,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.isRepaired = false,
+    this.assistedTitle,
     this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
@@ -66,6 +67,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool isRepaired;
+  final String? assistedTitle;
   final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
@@ -90,7 +92,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
-    title: isRepaired ? _fixedFeedbackLabelV1(context) : title,
+    title: isRepaired
+        ? _fixedFeedbackLabelV1(context)
+        : isAssistedDecision && quality.passes
+        ? assistedTitle ?? title
+        : title,
     selectedLabel: selectedLabel,
     otherOptions: otherOptions,
     reason: reason,
@@ -177,9 +183,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final resolvedTitle = isRepaired
         ? _fixedFeedbackLabelV1(context)
         : isAssistedDecision && !isWrong
-        ? act0AcademyLanguageV1(context) == 'ru'
-              ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
-              : 'Correct with help'
+        ? assistedTitle ??
+              (act0AcademyLanguageV1(context) == 'ru'
+                  ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
+                  : 'Correct with help')
         : _feedbackTitleFloorV1(
             context,
             title: title,
