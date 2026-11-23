@@ -32,20 +32,40 @@ extension _Act0GrowthV1 on _Act0ShellPreviewScreenV1State {
   }
 
   void _openGrowthLinkV1(String link) {
-    if (!mounted ||
-        !_bootSurfaceReady ||
-        _recoveryBusyV1 ||
-        _progressLoadFailed ||
-        _firstStartPreferencesLoadFailedV1 ||
-        _showWelcome ||
-        _showPlacement ||
-        _showW1StartV1) {
-      return;
-    }
-    final destination = act0GrowthDestinationForLinkV1(link);
-    _selectShellTabV1(switch (destination) {
-      Act0GrowthDestinationV1.home => Act0ShellTabV1.home,
-      Act0GrowthDestinationV1.learn => Act0ShellTabV1.learn,
+    if (!mounted) return;
+    _setStateV1(() {
+      _pendingGrowthDestinationV1 = act0GrowthDestinationForLinkV1(link);
+    });
+  }
+
+  bool get _canApplyGrowthLinkV1 =>
+      _bootSurfaceReady &&
+      !_privacyDeletionStarted &&
+      !_recoveryBusyV1 &&
+      !_progressLoadFailed &&
+      !_firstStartPreferencesLoadFailedV1 &&
+      !_showWelcome &&
+      !_showPlacement &&
+      !_showW1StartV1 &&
+      _w1RulesAnswersV1 == null &&
+      _w1RulesResultV1 == null &&
+      !_routePracticeV1.inRunner &&
+      _activeRepairTaskId == null &&
+      !(_tab == Act0ShellTabV1.play &&
+          (!_showPlayHub || _blockCompletionSummary != null)) &&
+      ModalRoute.isCurrentOf(context) == true;
+
+  void _schedulePendingGrowthLinkV1() {
+    if (_pendingGrowthDestinationV1 == null || !_canApplyGrowthLinkV1) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_canApplyGrowthLinkV1) return;
+      final destination = _pendingGrowthDestinationV1;
+      if (destination == null) return;
+      _pendingGrowthDestinationV1 = null;
+      _selectShellTabV1(switch (destination) {
+        Act0GrowthDestinationV1.home => Act0ShellTabV1.home,
+        Act0GrowthDestinationV1.learn => Act0ShellTabV1.learn,
+      }, fromGrowthLink: true);
     });
   }
 

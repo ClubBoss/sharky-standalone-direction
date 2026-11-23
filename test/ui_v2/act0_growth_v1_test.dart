@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_accessibility_semantics_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_growth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Act0BlockCompletionSummaryV1 _summary({
@@ -51,6 +52,39 @@ void main() {
     messenger.setMockMethodCallHandler(act0GrowthChannelV1, null);
   });
 
+  String selectedTabLabel(WidgetTester tester) => tester
+      .widgetList<Act0SemanticActionV1>(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.byType(Act0SemanticActionV1),
+        ),
+      )
+      .singleWhere((tab) => tab.selected == true)
+      .label;
+
+  testWidgets('cold Home link survives first start through AppRoot', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
+      expect(call.method, 'takeLink');
+      return 'sharky://open/v1/home';
+    });
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+
+    final basics = find.byKey(const Key('act0_shell_w1_start_basics'));
+    expect(basics, findsOneWidget);
+    await tester.tap(basics);
+    await tester.pumpAndSettle();
+    final back = find.byKey(const Key('act0_shell_runner_back'));
+    expect(back, findsOneWidget);
+    await tester.tap(back);
+    await tester.pumpAndSettle();
+    expect(selectedTabLabel(tester), 'Home');
+  });
+
   testWidgets('cold Learn link and warm fallback use the existing shell tabs', (
     tester,
   ) async {
@@ -71,16 +105,14 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    String selectedTabLabel() => tester
-        .widgetList<Act0SemanticActionV1>(
-          find.descendant(
-            of: find.byKey(const Key('act0_shell_bottom_nav')),
-            matching: find.byType(Act0SemanticActionV1),
-          ),
-        )
-        .singleWhere((tab) => tab.selected == true)
-        .label;
-    expect(selectedTabLabel(), 'Learn');
+    expect(selectedTabLabel(tester), 'Learn');
+
+    final shellContext = tester.element(find.byType(Act0ShellPreviewScreenV1));
+    final dialog = showDialog<void>(
+      context: shellContext,
+      builder: (_) => const AlertDialog(title: Text('Keep this open')),
+    );
+    await tester.pumpAndSettle();
 
     await messenger.handlePlatformMessage(
       act0GrowthChannelV1.name,
@@ -90,7 +122,13 @@ void main() {
       null,
     );
     await tester.pumpAndSettle();
-    expect(selectedTabLabel(), 'Home');
+    expect(find.text('Keep this open'), findsOneWidget);
+    expect(selectedTabLabel(tester), 'Learn');
+
+    Navigator.of(shellContext).pop();
+    await tester.pumpAndSettle();
+    await dialog;
+    expect(selectedTabLabel(tester), 'Home');
   });
 
   testWidgets(
@@ -178,7 +216,7 @@ void main() {
       messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
         calls.add(call.method);
         // StoreKit reports neither a rating nor whether it showed a prompt.
-        return null;
+        return true;
       });
       final now = DateTime.utc(2026, 11, 23);
       var summaryVisible = false;
@@ -203,29 +241,31 @@ void main() {
       Future<void> attempt(DateTime date) => Act0StoreReviewV1()
           .requestAfterMilestone(now: date, canPresent: () => summaryVisible);
       await attempt(now);
-      await attempt(now.add(const Duration(days: 179)));
+      await attempt(now.add(const Duration(days: 180, milliseconds: -1)));
       await attempt(now.subtract(const Duration(days: 1)));
       expect(calls, ['requestReview']);
-      await attempt(now.add(Act0StoreReviewV1.cooldown));
+      await attempt(now.add(const Duration(days: 180)));
       expect(calls, ['requestReview', 'requestReview']);
     },
   );
 
-  test('a failed native request still consumes the cap', () async {
+  test('a skipped native request leaves the cooldown unreserved', () async {
     var calls = 0;
     messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
       calls++;
-      throw PlatformException(code: 'unavailable');
+      return calls > 1;
     });
     final now = DateTime.utc(2026, 11, 23);
     await Act0StoreReviewV1().requestAfterMilestone(
       now: now,
       canPresent: () => true,
     );
+    final preferences = await SharedPreferences.getInstance();
+    expect(preferences.getKeys(), isEmpty);
     await Act0StoreReviewV1().requestAfterMilestone(
       now: now,
       canPresent: () => true,
     );
-    expect(calls, 1);
+    expect(calls, 2);
   });
 }

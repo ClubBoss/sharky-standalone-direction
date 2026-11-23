@@ -91,8 +91,10 @@ import UserNotifications
           } else {
             SKStoreReviewController.requestReview()
           }
+          result(true)
+        } else {
+          result(false)
         }
-        result(nil)
       default:
         result(FlutterMethodNotImplemented)
       }

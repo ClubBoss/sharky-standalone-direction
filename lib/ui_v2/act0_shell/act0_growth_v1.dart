@@ -78,13 +78,11 @@ class Act0StoreReviewV1 {
         return;
       }
       if (!canPresent()) return;
-      // Reserve the attempt even when StoreKit suppresses or dismisses it.
-      final reserved = await preferences.setInt(
-        _lastRequestKey,
-        now.millisecondsSinceEpoch,
+      final called = await act0GrowthChannelV1.invokeMethod<bool>(
+        'requestReview',
       );
-      if (reserved && canPresent()) {
-        await act0GrowthChannelV1.invokeMethod<void>('requestReview');
+      if (called == true) {
+        await preferences.setInt(_lastRequestKey, now.millisecondsSinceEpoch);
       }
     } catch (_) {
       // A failed preference write or unavailable store cannot block learning.

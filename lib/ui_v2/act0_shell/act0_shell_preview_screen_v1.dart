@@ -1754,6 +1754,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final _storeReview = Act0StoreReviewV1();
   Timer? _storeReviewTimer;
   bool _growthLinksRegistered = false;
+  Act0GrowthDestinationV1? _pendingGrowthDestinationV1;
   bool _showPlacement = false;
   bool _placementDiagnosticActive = false;
   bool _placementIntroVisible = true;
@@ -2698,6 +2699,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   Widget build(BuildContext context) {
+    _schedulePendingGrowthLinkV1();
     if (_privacyDeletionStarted) {
       return Scaffold(
         body: SafeArea(
@@ -5208,7 +5210,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return _withRunnerChromeV1(shell);
   }
 
-  void _selectShellTabV1(Act0ShellTabV1 tab) => setState(() {
+  void _selectShellTabV1(
+    Act0ShellTabV1 tab, {
+    bool fromGrowthLink = false,
+  }) => setState(() {
     if (_diagnosticLearningEntryV1 != null) {
       _returnFromDiagnosticLearningEntryV1();
     }
@@ -5221,7 +5226,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (_tab == Act0ShellTabV1.play &&
             _showPlayHub &&
             tab != Act0ShellTabV1.play);
-    if (leavingLearningRunSurface && !preserveRepairBridge) {
+    if (!fromGrowthLink && leavingLearningRunSurface && !preserveRepairBridge) {
       _closeLearningRunForLearnExitV1();
     }
     final remember = _rememberLessonRunnerV1();
