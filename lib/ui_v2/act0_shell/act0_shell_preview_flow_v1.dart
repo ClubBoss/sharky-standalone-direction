@@ -416,6 +416,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       _persistProgress();
     }
     _fireBlockCompletionEffects(_blockCompletionSummary!);
+    _queueStoreReviewV1(_blockCompletionSummary!);
     _emitSessionCompleteTelemetryV1(sourceSurface: 'act0_completion');
     if (isWorldComplete) {
       _recordTelemetryEventV1('world_complete', <String, Object?>{

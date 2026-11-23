@@ -92,6 +92,8 @@ import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.da
 import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consumer_v1.dart';
 
 import 'act0_practice_reminder_v1.dart';
+import 'act0_growth_v1.dart';
+import 'act0_growth_links_v1.dart';
 
 part 'act0_shell_preview_telemetry_v1.dart';
 part 'act0_shell_preview_copy_v1.dart';
@@ -106,6 +108,7 @@ part 'act0_shell_preview_answer_v1.dart';
 part 'act0_shell_preview_route_practice_v1.dart';
 part 'act0_shell_preview_profile_v1.dart';
 part 'act0_shell_preview_flow_v1.dart';
+part 'act0_shell_preview_growth_v1.dart';
 
 @visibleForTesting
 bool act0DevMenuEnabledV1({required bool isReleaseMode}) => !isReleaseMode;
@@ -1748,6 +1751,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _practiceCompletionTitle;
   String? _practiceCompletionBody;
   Act0BlockCompletionSummaryV1? _blockCompletionSummary;
+  final _storeReview = Act0StoreReviewV1();
+  Timer? _storeReviewTimer;
+  bool _growthLinksRegistered = false;
   bool _showPlacement = false;
   bool _placementDiagnosticActive = false;
   bool _placementIntroVisible = true;
@@ -1865,6 +1871,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     super.initState();
     _reviewLifecycleV1 = AppLifecycleListener(
       onHide: () {
+        _storeReviewTimer?.cancel();
         _betaWentToBackground = true;
         if (_rememberLessonRunnerV1()) _persistProgress();
       },
@@ -1917,7 +1924,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _applyDebugHarnessEntry(entry, state);
       return;
     }
-    unawaited(_bootstrapFirstStartRouteV1());
+    final bootstrap = _bootstrapFirstStartRouteV1();
+    if (act0GrowthSupportedV1 && widget.state == null) {
+      unawaited(_registerGrowthLinksV1(bootstrap));
+    }
   }
 
   Future<void> _loadSessionDrillRecheckQueueItemsV1() async {
@@ -1944,6 +1954,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   @override
   void dispose() {
     _reviewLifecycleV1.dispose();
+    _storeReviewTimer?.cancel();
+    if (_growthLinksRegistered) {
+      act0GrowthChannelV1.setMethodCallHandler(null);
+    }
     _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _persistProgress();
@@ -3788,6 +3802,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
                                 summary: _blockCompletionSummary!,
+                                canShareResult:
+                                    act0GrowthSupportedV1 &&
+                                    widget.debugHarnessEntry == null,
                                 openMissedSpots:
                                     _blockCompletionSummary!.isWorldComplete
                                     ? _openMistakeCountForWorldV1(selectedWorld)
@@ -5175,62 +5192,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               premium: premiumAcademy,
               academy: academySurface,
               reviewHasDot: reviewNavHasDot,
-              onSelected: (tab) => setState(() {
-                if (_diagnosticLearningEntryV1 != null) {
-                  _returnFromDiagnosticLearningEntryV1();
-                }
-                final preserveRepairBridge =
-                    _shouldPreserveLearningRunForRepairBridgeV1(
-                      currentTab: _tab,
-                      requestedTab: tab,
-                    );
-                final leavingLearningRunSurface =
-                    (_tab == Act0ShellTabV1.learn &&
-                        tab != Act0ShellTabV1.learn) ||
-                    (_tab == Act0ShellTabV1.play &&
-                        _showPlayHub &&
-                        tab != Act0ShellTabV1.play);
-                if (leavingLearningRunSurface && !preserveRepairBridge) {
-                  _closeLearningRunForLearnExitV1();
-                }
-                final remember = _rememberLessonRunnerV1();
-                _tab = tab;
-                _showAttemptArchiveV1 = false;
-                if (tab == Act0ShellTabV1.play) {
-                  _showPlayHub = true;
-                  _blockCompletionSummary = null;
-                  _placementHandoffActive = false;
-                }
-                if (tab != Act0ShellTabV1.play) {
-                  _practiceCompletionTitle = null;
-                  _practiceCompletionBody = null;
-                  _phase = Act0LessonPhaseV1.theory;
-                  _selectedOptionId = null;
-                  _teachingStepIndex = 0;
-                  _blockCompletionSummary = null;
-                  _showPlayHub = true;
-                  _clearActiveRepairLaunchV1();
-                  _activeRepairSourceTaskId = null;
-                  _activeRepairResultReceiptLine = null;
-                  _activeRepairSessionSummaryLines = const <String>[];
-                }
-                if (tab != Act0ShellTabV1.home) {
-                  _placementHandoffActive = false;
-                }
-                if (tab == Act0ShellTabV1.learn) {
-                  _activateLearnVisitEligibilityV1();
-                  _restoreSelectableLearnFocusV1();
-                }
-                if (tab == Act0ShellTabV1.home && !selectedWorld.isSelectable) {
-                  _restoreSelectableLearnFocusV1();
-                }
-                if (tab != Act0ShellTabV1.learn) {
-                  _learnDetailLessonId = null;
-                  _learnDetailWorldId = null;
-                  _showWorldMenu = false;
-                }
-                if (remember) _persistProgress();
-              }),
+              onSelected: _selectShellTabV1,
             ),
     );
     // The task UI scales up to 1.3. Physical table labels keep their own
@@ -5245,6 +5207,65 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     return _withRunnerChromeV1(shell);
   }
+
+  void _selectShellTabV1(Act0ShellTabV1 tab) => setState(() {
+    if (_diagnosticLearningEntryV1 != null) {
+      _returnFromDiagnosticLearningEntryV1();
+    }
+    final preserveRepairBridge = _shouldPreserveLearningRunForRepairBridgeV1(
+      currentTab: _tab,
+      requestedTab: tab,
+    );
+    final leavingLearningRunSurface =
+        (_tab == Act0ShellTabV1.learn && tab != Act0ShellTabV1.learn) ||
+        (_tab == Act0ShellTabV1.play &&
+            _showPlayHub &&
+            tab != Act0ShellTabV1.play);
+    if (leavingLearningRunSurface && !preserveRepairBridge) {
+      _closeLearningRunForLearnExitV1();
+    }
+    final remember = _rememberLessonRunnerV1();
+    _tab = tab;
+    _showAttemptArchiveV1 = false;
+    if (tab == Act0ShellTabV1.play) {
+      _showPlayHub = true;
+      _blockCompletionSummary = null;
+      _placementHandoffActive = false;
+    }
+    if (tab != Act0ShellTabV1.play) {
+      _practiceCompletionTitle = null;
+      _practiceCompletionBody = null;
+      _phase = Act0LessonPhaseV1.theory;
+      _selectedOptionId = null;
+      _teachingStepIndex = 0;
+      _blockCompletionSummary = null;
+      _showPlayHub = true;
+      _clearActiveRepairLaunchV1();
+      _activeRepairSourceTaskId = null;
+      _activeRepairResultReceiptLine = null;
+      _activeRepairSessionSummaryLines = const <String>[];
+    }
+    if (tab != Act0ShellTabV1.home) {
+      _placementHandoffActive = false;
+    }
+    if (tab == Act0ShellTabV1.learn) {
+      _activateLearnVisitEligibilityV1();
+      _restoreSelectableLearnFocusV1();
+    }
+    if (tab == Act0ShellTabV1.home &&
+        !_worldById(
+          _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+          _selectedWorldId,
+        ).isSelectable) {
+      _restoreSelectableLearnFocusV1();
+    }
+    if (tab != Act0ShellTabV1.learn) {
+      _learnDetailLessonId = null;
+      _learnDetailWorldId = null;
+      _showWorldMenu = false;
+    }
+    if (remember) _persistProgress();
+  });
 
   Widget _withRunnerChromeV1(Widget shell) {
     return MediaQuery.withClampedTextScaling(

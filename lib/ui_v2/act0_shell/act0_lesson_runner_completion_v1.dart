@@ -18,6 +18,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     this.onBackToHome,
     this.openMissedSpots = 0,
     this.onFirstLessonReminder,
+    this.canShareResult = false,
   });
 
   final Act0BlockCompletionSummaryV1 summary;
@@ -38,6 +39,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   final VoidCallback? onBackToHome;
   final int openMissedSpots;
   final ValueChanged<bool>? onFirstLessonReminder;
+  final bool canShareResult;
 
   VoidCallback? _callbackForCta(Act0MilestoneCtaKindV1 kind) {
     return switch (kind) {
@@ -615,6 +617,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ],
                 ),
               ],
+              if (canShareResult && summary.curriculumCompleted)
+                const Act0ShareLessonResultButtonV1(),
               if (onBackToHome != null)
                 TextButton(
                   key: const Key('act0_shell_block_summary_home_cta'),
