@@ -296,6 +296,16 @@ void main() {
     const pricedSession = {
       'w11_trigger_small_price_continue',
       'w11_trigger_bad_price_fold',
+      'w11_checkpoint_intro',
+      'w11_checkpoint_mixed_table_line',
+      'w11_checkpoint_review',
+    };
+    const pricedMentalGame = {
+      'w12_pretty_hand_bad_price_fold',
+      'w12_checkpoint_intro',
+      'w12_checkpoint_process_line',
+      'w12_checkpoint_discipline_line',
+      'w12_checkpoint_full_loop_line',
     };
     const knownHoleCards = {
       'asm05_new_known_holes_turn_call_10',
@@ -317,7 +327,7 @@ void main() {
           if (world == 12 && !knownHoleCards.contains(id)) 'Mental game',
           if (pricedSession.contains(id) ||
               knownHoleCards.contains(id) ||
-              id == 'w12_pretty_hand_bad_price_fold')
+              pricedMentalGame.contains(id))
             'Betting decisions',
         },
         reason: id,

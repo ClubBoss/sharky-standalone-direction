@@ -141,9 +141,16 @@ const _skillOverridesByTaskId = <String, List<String>>{
   ],
   'w11_trigger_small_price_continue': ['Session routine', 'Betting decisions'],
   'w11_trigger_bad_price_fold': ['Session routine', 'Betting decisions'],
+  'w11_checkpoint_intro': ['Session routine', 'Betting decisions'],
+  'w11_checkpoint_mixed_table_line': ['Session routine', 'Betting decisions'],
+  'w11_checkpoint_review': ['Session routine', 'Betting decisions'],
   'asm05_new_known_holes_turn_call_10': ['Betting decisions'],
   'asm05_new_known_holes_turn_call_40': ['Betting decisions'],
   'w12_pretty_hand_bad_price_fold': ['Mental game', 'Betting decisions'],
+  'w12_checkpoint_intro': ['Mental game', 'Betting decisions'],
+  'w12_checkpoint_process_line': ['Mental game', 'Betting decisions'],
+  'w12_checkpoint_discipline_line': ['Mental game', 'Betting decisions'],
+  'w12_checkpoint_full_loop_line': ['Mental game', 'Betting decisions'],
 };
 
 List<String> act0SkillsForTaskV1(String lessonId, String taskId) =>
