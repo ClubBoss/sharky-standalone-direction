@@ -7003,7 +7003,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
           amountLabel: '8 BB',
         ),
       },
-    ).copyWith(showDecisionPremise: true),
+    ).copyWith(showDecisionPremise: true)._withB20TurnTimeline(),
   ),
   _w11_multiway_first_seat,
   _wave6AuthoredTaskV1(
@@ -10514,7 +10514,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         Act0ActionTrailItemV1(label: 'River is dealt'),
       ],
       bets: const {},
-    ).copyWith(showDecisionPremise: true),
+    ).copyWith(showDecisionPremise: true)._withB20RiverTimeline(),
   ),
   _wave6AuthoredTaskV1(
     id: 'w12_decision_quality_recap',

@@ -67,7 +67,7 @@ class _PokerStarsParser {
   final _mucked = <int>{};
   final _paid = <int, int>{};
   List<String> _board = const [];
-  late final _HandLedger _ledger;
+  late final Act0HandBettingLedgerV1 _ledger;
   bool _showdown = false;
   bool _declinedShow = false;
 
@@ -100,7 +100,9 @@ class _PokerStarsParser {
       kind: kind,
       cents: cents,
     );
-    if (_actions.length == _maxHandActions || !_ledger.add(action)) _fail();
+    if (_actions.length == _maxHandActions ||
+        !_ledger.add(_bettingAction(action)))
+      _fail();
     _actions.add(action);
   }
 
@@ -138,7 +140,13 @@ class _PokerStarsParser {
     }
     if (_seats.length < 2 || !_names.containsValue(buttonSeat)) _fail();
     _seats.sort((a, b) => a.number.compareTo(b.number));
-    _ledger = _HandLedger(_seats, tableSize, buttonSeat, small, big);
+    _ledger = Act0HandBettingLedgerV1(
+      _seats,
+      tableSize,
+      buttonSeat,
+      small,
+      big,
+    );
     for (final kind in [
       Act0ImportedActionKindV1.smallBlind,
       Act0ImportedActionKindV1.bigBlind,
@@ -330,8 +338,8 @@ class _PokerStarsParser {
       if (role == null) break;
       final expected = switch (role[1]) {
         'button' => _ledger.buttonSeat,
-        'small blind' => _ledger._smallBlindSeat,
-        'big blind' => _ledger._bigBlindSeat,
+        'small blind' => _ledger.smallBlindSeat,
+        'big blind' => _ledger.bigBlindSeat,
         _ => null,
       };
       if (expected != seat || !roles.add(role[1]!)) _fail();

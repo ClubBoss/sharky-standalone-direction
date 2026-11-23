@@ -8,6 +8,7 @@ import 'act0_curriculum_pilot_v1.dart';
 import 'act0_goal_route_v1.dart';
 import 'act0_decision_ledger_v1.dart';
 import 'act0_hand_contributions_v1.dart';
+import 'act0_hand_timeline_v1.dart';
 import 'act0_poker_reference_math_v1.dart';
 import 'act0_preflop_equity_v1.dart';
 import 'act0_starting_chart_v1.dart';
@@ -19,6 +20,7 @@ import 'act0_w1_rules_check_v1.dart';
 part 'act0_shell_review_tasks_v1.dart';
 part 'act0_daily_deal_generator_v1.dart';
 part 'act0_shell_day7_review_v1.dart';
+part 'act0_shell_hand_timelines_v1.dart';
 part 'act0_shell_day7_content_v1.dart';
 part 'act0_shell_lessons_w1_w4_v1.dart';
 part 'act0_shell_lessons_w5_w8_v1.dart';
@@ -947,6 +949,7 @@ class Act0TableStateV1 {
     this.emptyBoardLabel = '',
     this.actionTrail = const <Act0ActionTrailItemV1>[],
     this.handContributions,
+    this.handTimelinePrefix,
     this.autoPlayHistory = true,
     this.activeSeatId,
     this.decisionSeatId,
@@ -975,6 +978,10 @@ class Act0TableStateV1 {
   final String emptyBoardLabel;
   final List<Act0ActionTrailItemV1> actionTrail;
   final Act0HandContributionsV1? handContributions;
+  final Act0HandTimelinePrefixV1? handTimelinePrefix;
+
+  Act0HandHistoryCoverageV1 get handHistoryCoverage =>
+      handTimelinePrefix?.coverage ?? Act0HandHistoryCoverageV1.missing;
   final bool autoPlayHistory;
   final String? activeSeatId;
   // Source-owned current actor; independent of answer-revealing display focus.
@@ -1012,6 +1019,7 @@ class Act0TableStateV1 {
     String? emptyBoardLabel,
     List<Act0ActionTrailItemV1>? actionTrail,
     Act0HandContributionsV1? handContributions,
+    Act0HandTimelinePrefixV1? handTimelinePrefix,
     bool? autoPlayHistory,
     String? activeSeatId,
     String? decisionSeatId,
@@ -1051,6 +1059,15 @@ class Act0TableStateV1 {
                   (streetLabel == null || streetLabel == this.streetLabel)
               ? this.handContributions
               : null),
+      handTimelinePrefix:
+          handTimelinePrefix ??
+          (streetLabel != null && streetLabel != this.streetLabel ||
+                  boardCards != null &&
+                      !identical(boardCards, this.boardCards) ||
+                  actionTrail != null &&
+                      !identical(actionTrail, this.actionTrail)
+              ? null
+              : this.handTimelinePrefix),
       autoPlayHistory: autoPlayHistory ?? this.autoPlayHistory,
       activeSeatId: activeSeatId ?? this.activeSeatId,
       decisionSeatId: clearDecisionSeatId

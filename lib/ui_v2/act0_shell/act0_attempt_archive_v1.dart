@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_imported_hand_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -40,6 +41,7 @@ class Act0ArchivedAttemptV1 {
     this.choiceLabel,
     this.tableFingerprint,
     this.learnerInput,
+    this.timelineSnapshot,
   );
 
   static final _sourceRevision = RegExp(r'^[a-f0-9]{64}$');
@@ -54,6 +56,7 @@ class Act0ArchivedAttemptV1 {
     String? choiceLabel,
     String? tableFingerprint,
     Act0LearnerReflectionInputV1? learnerInput,
+    Act0HandTimelinePrefixV1? timelineSnapshot,
   }) {
     if (Act0LearningEvidenceRecordV1.tryParse(evidence.toPayload()) == null ||
         !_sourceRevision.hasMatch(evidence.authoredSourceFingerprint) ||
@@ -78,6 +81,7 @@ class Act0ArchivedAttemptV1 {
       choiceLabel,
       tableFingerprint,
       _inputFor(evidence, learnerInput),
+      timelineSnapshot,
     );
   }
 
@@ -87,6 +91,7 @@ class Act0ArchivedAttemptV1 {
   final String? taskLabel;
   final String? choiceLabel;
   final String? tableFingerprint;
+  final Act0HandTimelinePrefixV1? timelineSnapshot;
 
   // Kept apart from the historical reflection rendered by the archive row.
   final Act0LearnerReflectionInputV1? learnerInput;
@@ -110,6 +115,8 @@ class Act0ArchivedAttemptV1 {
     if (taskLabel != null) 'taskLabel': taskLabel,
     if (choiceLabel != null) 'choiceLabel': choiceLabel,
     if (tableFingerprint != null) 'tableFingerprint': tableFingerprint,
+    if (timelineSnapshot case final snapshot?)
+      'handTimeline': snapshot.toPayload(),
     if (reflection.confidence case final confidence?)
       'confidence': confidence.name,
     if (reflection.openedClue case final clue?) 'openedClue': clue.name,
@@ -197,6 +204,8 @@ class Act0ArchivedAttemptV1 {
       learnerInput: Act0LearnerReflectionInputV1.fromPayload(
         raw['learnerInput'],
       ),
+      // A damaged optional snapshot leaves the original text replay usable.
+      timelineSnapshot: Act0HandTimelinePrefixV1.tryParse(raw['handTimeline']),
     );
   }
 }
@@ -255,6 +264,7 @@ class Act0AttemptArchiveV1 {
               attempt.choiceLabel,
               attempt.tableFingerprint,
               Act0ArchivedAttemptV1._inputFor(attempt.evidence, input),
+              attempt.timelineSnapshot,
             )
           else
             attempt,

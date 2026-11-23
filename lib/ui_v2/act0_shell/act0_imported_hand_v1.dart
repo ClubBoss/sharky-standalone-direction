@@ -6,7 +6,9 @@ import 'package:poker_analyzer/models/card_model.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/services/hand_evaluator.dart';
 
+import 'act0_hand_betting_ledger_v1.dart' show Act0HandBettingLedgerV1;
 import 'act0_hand_contributions_v1.dart';
+import 'act0_hand_timeline_v1.dart';
 
 part 'act0_pokerstars_hand_history_v1.dart';
 part 'act0_imported_hand_ledger_v1.dart';
@@ -154,6 +156,29 @@ class Act0ImportedHandV1 {
     return hand;
   }
 
+  /// Completed imports can expose their entire shared timeline.
+  late final Act0HandTimelineV1 timeline = Act0HandTimelineV1.fromDeltas(
+    coverage: Act0HandHistoryCoverageV1.complete,
+    startingStacks: {
+      for (final seat in seats) '${seat.number}': seat.stackCents,
+    },
+    button: '$buttonSeat',
+    smallBlind: smallBlindCents,
+    bigBlind: bigBlindCents,
+    board: board,
+    actions: [
+      for (final action in actions)
+        (
+          street: action.street,
+          seat: '${action.seat}',
+          verb: Act0HandVerbV1.values.byName(action.kind.name),
+          chipsAdded: action.kind == Act0ImportedActionKindV1.uncalledReturn
+              ? -action.cents
+              : action.cents,
+        ),
+    ],
+  );
+
   Act0HandContributionsV1 contributions(
     PokerStreet street,
     Iterable<Act0ImportedActionV1> recordedActions, {
@@ -168,16 +193,10 @@ class Act0ImportedHandV1 {
     entries: [
       for (final action in recordedActions)
         if (action.cents > 0)
-          Act0ContributionV1(
+          act0TimelineContributionV1(
             action.street,
-            action.seat.toString(),
-            switch (action.kind) {
-              Act0ImportedActionKindV1.smallBlind ||
-              Act0ImportedActionKindV1.bigBlind => Act0ContributionKindV1.blind,
-              Act0ImportedActionKindV1.uncalledReturn =>
-                Act0ContributionKindV1.uncalledReturn,
-              _ => Act0ContributionKindV1.wager,
-            },
+            '${action.seat}',
+            Act0HandVerbV1.values.byName(action.kind.name),
             action.cents / bigBlindCents,
           ),
     ],
@@ -189,7 +208,7 @@ class Act0ImportedHandV1 {
   late final String? practiceLessonId = _findPracticeLesson();
 
   String? _findPracticeLesson() {
-    final ledger = _HandLedger(
+    final ledger = Act0HandBettingLedgerV1(
       seats,
       tableSize,
       buttonSeat,
@@ -211,7 +230,7 @@ class Act0ImportedHandV1 {
           }.contains(action.kind)) {
         return 'call_price';
       }
-      if (!ledger.add(action)) return null;
+      if (!ledger.add(_bettingAction(action))) return null;
     }
     return null;
   }
@@ -244,10 +263,16 @@ class Act0ImportedHandV1 {
       for (final row in seats) [row.number, row.stackCents],
     ],
     'heroCards': heroCards,
-    'board': board,
+    'board': timeline.beforeDecision.board,
     'actions': [
-      for (final action in actions)
-        [action.street.name, action.seat, action.kind.name, action.cents],
+      for (final action
+          in timeline.beforeDecision.events.whereType<Act0HandActionV1>())
+        [
+          action.street.name,
+          int.parse(action.seat),
+          action.verb.name,
+          action.chipsAdded.abs(),
+        ],
     ],
     'shownCards': [
       for (final seat in seats)
@@ -369,6 +394,15 @@ class Act0ImportedHandV1 {
     return null;
   }
 }
+
+({PokerStreet street, int seat, Act0HandVerbV1 kind, int cents}) _bettingAction(
+  Act0ImportedActionV1 action,
+) => (
+  street: action.street,
+  seat: action.seat,
+  kind: Act0HandVerbV1.values.byName(action.kind.name),
+  cents: action.cents,
+);
 
 const _maxHandActions = 150;
 final _sourceKey = RegExp(r'^[a-f0-9]{64}$');

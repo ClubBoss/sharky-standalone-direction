@@ -1441,6 +1441,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
             taskLabel: decision.recordedTaskLabel,
             choiceLabel: decision.recordedChoiceLabel,
             recordedTrail: decision.recordedTrail,
+            timelineSnapshot: table?.handTimelinePrefix,
             tableFingerprint: table == null
                 ? null
                 : act0ReplayTableFingerprintV1(table),
