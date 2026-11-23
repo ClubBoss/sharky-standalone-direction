@@ -24,7 +24,7 @@ void main() {
     const worlds = String.fromEnvironment('WORLDS', defaultValue: '1-12');
     final bounds = worlds.split('-').map(int.parse).toList();
     final tasks = <Object>[];
-    for (final w in Act0ShellStateV1.sample.worlds.where(
+    for (final w in Act0ShellStateV1.authoredCatalog.worlds.where(
       (w) => w.worldNumber >= bounds.first && w.worldNumber <= bounds.last,
     )) {
       for (final l in w.lessons) {

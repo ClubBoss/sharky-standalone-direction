@@ -3,10 +3,12 @@ import 'package:poker_analyzer/models/poker_street.dart';
 // Catalog invariants over the actual Runner projection. Not a betting engine.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 
-import 'act0_pot_showdown_truth_v1.dart' show potTruthBbV1, potTruthSplitBbV1;
+import 'act0_pot_showdown_truth_v1.dart'
+    show potTruthBbV1, potTruthPositionPatternV1, potTruthSplitBbV1;
 
 class TableTruthRow {
   TableTruthRow(
@@ -161,9 +163,9 @@ List<TableTruthRow> auditTableContributionsV1(
   return rows;
 }
 
-List<TableTruthRow> auditTableTruth() {
+List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
   final rows = <TableTruthRow>[];
-  for (final world in Act0ShellStateV1.sample.worlds) {
+  for (final world in worlds ?? Act0ShellStateV1.authoredCatalog.worlds) {
     for (final lesson in world.lessons) {
       for (final task in lesson.taskList) {
         final r = task.runner;
@@ -283,8 +285,28 @@ List<TableTruthRow> auditTableTruth() {
             taskFamily: task.resolvedTaskFamily,
           ),
         };
-        final plan = act0TableChoreographyPlanForTableV1(r.table);
-        if (plan == null) {
+        final nineMax = r.table.tableFormat == Act0TableFormatV1.nineMax;
+        final plan = nineMax
+            ? null
+            : act0TableChoreographyPlanForTableV1(r.table);
+        final timeline = r.table.handTimelinePrefix;
+        if (nineMax &&
+            r.table.scope == Act0TableScopeV1.playedHand &&
+            r.table.handHistoryCoverage == Act0HandHistoryCoverageV1.complete) {
+          final actor = r.table.decisionSeatId ?? r.table.activeSeatId;
+          final error = actor == null || actor.isEmpty
+              ? timeline!.replayError()
+              : timeline!.decisionError(actor);
+          rows.add(
+            TableTruthRow(
+              task.taskId,
+              'timeline',
+              'D6.history_support',
+              error == null ? 'PASS' : 'FAIL',
+              error ?? 'Complete typed history replays legally',
+            ),
+          );
+        } else if (plan == null) {
           rows.add(
             TableTruthRow(
               task.taskId,
@@ -308,6 +330,24 @@ List<TableTruthRow> auditTableTruth() {
         for (final e in states.entries) {
           final t = e.value;
           final v = e.key;
+          if (t.tableFormat == Act0TableFormatV1.nineMax) {
+            final labels = t.seats.map((seat) => seat.seatLabel).toSet();
+            final valid =
+                t.usesCanonicalPlayerCount &&
+                t.seats.length == t.playerCount &&
+                labels.containsAll(t.canonicalSeatOrder) &&
+                t.seats.map((seat) => seat.seatId).toSet().length ==
+                    t.playerCount;
+            rows.add(
+              TableTruthRow(
+                task.taskId,
+                v,
+                'D6.nine_max_roster',
+                valid ? 'PASS' : 'FAIL',
+                'playerCount=${t.playerCount} seats=${labels.join(',')}',
+              ),
+            );
+          }
           if (t.scope != Act0TableScopeV1.playedHand) {
             final gradedAmount =
                 v == 'decision' &&
@@ -410,7 +450,8 @@ List<TableTruthRow> auditTableTruth() {
           final nextActor = actionLabels.isEmpty
               ? null
               : RegExp(
-                  r'^(?:Preflop: |Flop: |Turn: |River: )?(UTG|HJ|CO|BTN|SB|BB) acts$',
+                  r'^(?:Preflop: |Flop: |Turn: |River: )?'
+                  '(${potTruthPositionPatternV1(t)}) acts\$',
                   caseSensitive: false,
                 ).firstMatch(actionLabels.last)?.group(1)?.toLowerCase();
           if (!v.startsWith('choreography/')) {
@@ -452,14 +493,7 @@ List<TableTruthRow> auditTableTruth() {
             check(
               'D3.bet_label_owner',
               s.bet == null ||
-                  ![
-                    'UTG',
-                    'HJ',
-                    'CO',
-                    'BTN',
-                    'SB',
-                    'BB',
-                  ].contains(s.bet!.label.toUpperCase()) ||
+                  !t.canonicalSeatOrder.contains(s.bet!.label.toUpperCase()) ||
                   s.bet!.label.toLowerCase() == s.seatId.toLowerCase(),
               'seat=${s.seatId} label=${s.bet?.label}',
             );
@@ -477,7 +511,7 @@ List<TableTruthRow> auditTableTruth() {
                 .map((a) => a.label)
                 .join(' | ');
             for (final m in RegExp(
-              r'\b(UTG|HJ|CO|BTN|SB|BB) folds\b',
+              '\\b(${potTruthPositionPatternV1(t)}) folds\\b',
               caseSensitive: false,
             ).allMatches(trail)) {
               final s = t.seats
@@ -559,13 +593,13 @@ List<TableTruthRow> auditTableTruth() {
             if (currentBet != null) {
               final seat = t.seats
                   .where((s) => s.seatLabel == currentBet.$1)
-                  .first;
+                  .firstOrNull;
               final amount = RegExp(
                 r'^(\d+(?:\.\d+)?) BB$',
-              ).firstMatch(seat.bet?.amountLabel ?? '');
+              ).firstMatch(seat?.bet?.amountLabel ?? '');
               check(
                 'D3.explicit_current_bet',
-                seat.bet?.kind == Act0SeatBetKindV1.bet &&
+                seat?.bet?.kind == Act0SeatBetKindV1.bet &&
                     amount != null &&
                     double.parse(amount[1]!) == currentBet.$2,
                 'owner=${currentBet.$1} amount=${currentBet.$2} BB',
@@ -658,7 +692,8 @@ bool madeHandClaimMatches(Act0TableStateV1 table, String claim) {
       candidate = null; // commitments from an earlier street are collected.
     }
     final bet = RegExp(
-      r'\b(UTG|HJ|CO|BTN|SB|BB) bets (\d+(?:\.\d+)?) BB',
+      '\\b(${potTruthPositionPatternV1(table)})'
+      r' bets (\d+(?:\.\d+)?) BB',
     ).firstMatch(item.label);
     if (bet != null &&
         (declaredStreet == null ||

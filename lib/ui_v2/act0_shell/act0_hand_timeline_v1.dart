@@ -273,9 +273,41 @@ class Act0HandTimelinePrefixV1 {
     return null;
   }
 
+  /// Validates a complete prefix, including all street transitions.
+  /// Use [coverage] to distinguish partial source from verified history.
+  String? replayError() =>
+      coverage == Act0HandHistoryCoverageV1.complete ? _replay().error : null;
+
   /// Complete coverage establishes legality all the way to the next actor.
   String? decisionError(String actor) {
     if (coverage != Act0HandHistoryCoverageV1.complete) return null;
+    final (:ledger, :error) = _replay();
+    if (error != null) return error;
+    final next = ledger.nextActor;
+    return next != null && startingStacks.keys.elementAt(next - 1) == actor
+        ? null
+        : 'Incorrect decision actor';
+  }
+
+  /// Projects the main and side pots at this prefix, in the source's chips.
+  /// A history with gaps or illegal actions cannot prove pot eligibility.
+  List<({int chips, Set<String> eligibleSeatIds})>? get contestablePots {
+    if (coverage != Act0HandHistoryCoverageV1.complete) return null;
+    final (:ledger, :error) = _replay();
+    if (error != null) return null;
+    final seats = startingStacks.keys.toList();
+    return [
+      for (final pot in ledger.pots)
+        (
+          chips: pot.amountCents,
+          eligibleSeatIds: {
+            for (final seat in pot.eligibleSeats) seats[seat - 1],
+          },
+        ),
+    ];
+  }
+
+  ({Act0HandBettingLedgerV1 ledger, String? error}) _replay() {
     final seatNumbers = {
       for (final (index, seat) in startingStacks.keys.indexed) seat: index + 1,
     };
@@ -301,12 +333,13 @@ class Act0HandTimelinePrefixV1 {
             cents: chipsAdded.abs(),
           )),
       };
-      if (!legal) return 'Illegal action or deal at event ${index + 1}';
+      if (!legal)
+        return (
+          ledger: ledger,
+          error: 'Illegal action or deal at event ${index + 1}',
+        );
     }
-    if (ledger.nextActor == null || ledger.nextActor != seatNumbers[actor]) {
-      return 'Incorrect decision actor';
-    }
-    return null;
+    return (ledger: ledger, error: null);
   }
 
   Map<String, Object?> toPayload() => {

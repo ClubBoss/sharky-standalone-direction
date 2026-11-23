@@ -1,7 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
@@ -12,12 +17,222 @@ import '../support/act0_y5c_catalog_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
 import '../support/act0_catalog_decision_v1.dart';
+import '../support/act0_catalog_decision_copy_v1.dart';
+import '../support/act0_pot_showdown_truth_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 import '../support/act0_w2_catalog_contract_v1.dart';
 
+Act0LessonTaskV1 _nineSeatCatalogTask(
+  Act0RunnerStateV1 base, {
+  int playersBehind = 6,
+  String decisionSeat = 'mp',
+}) {
+  final order = act0CanonicalSeatOrderForFormatV1(Act0TableFormatV1.nineMax);
+  final timeline = Act0HandTimelineV1.fromDeltas(
+    coverage: Act0HandHistoryCoverageV1.complete,
+    startingStacks: {for (final label in order) label.toLowerCase(): 10000},
+    button: 'btn',
+    heroSeat: 'mp',
+    smallBlind: 50,
+    bigBlind: 100,
+    board: const [],
+    actions: [
+      for (final (seat, verb, chips) in const [
+        ('sb', Act0HandVerbV1.smallBlind, 50),
+        ('bb', Act0HandVerbV1.bigBlind, 100),
+        ('utg', Act0HandVerbV1.fold, 0),
+        ('utg+1', Act0HandVerbV1.raise, 200),
+      ])
+        (
+          street: PokerStreet.preflop,
+          seat: seat,
+          verb: verb,
+          chipsAdded: chips,
+        ),
+    ],
+  ).beforeDecision;
+  final table = Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
+    tableFormat: Act0TableFormatV1.nineMax,
+    playerCount: 9,
+    seats: [
+      for (final position in order)
+        Act0SeatStateV1(
+          seatId: position.toLowerCase(),
+          seatLabel: position,
+          displayName: position,
+          isHero: position == 'MP',
+          isActive: position == 'MP',
+          isDealerButton: position == 'BTN',
+          isSmallBlind: position == 'SB',
+          isBigBlind: position == 'BB',
+          isFolded: position == 'UTG',
+          isInHand: position != 'UTG',
+        ),
+    ],
+    heroCards: const [],
+    boardCards: const [],
+    streetLabel: 'Preflop',
+    potLabel: 'Pot 3.5 BB',
+    toCallLabel: 'To call 2 BB',
+    centerLabel: '',
+    activeSeatId: 'mp',
+    decisionSeatId: decisionSeat,
+    heroSeatId: 'mp',
+    highlightedSeatIds: const [],
+    highlightedCardIds: const [],
+    actionTrail: const [
+      Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'UTG+1 raises to 2 BB'),
+      Act0ActionTrailItemV1(label: 'MP acts'),
+    ],
+    handContributions: timeline.contributions,
+    handTimelinePrefix: timeline,
+  );
+  return Act0LessonTaskV1(
+    taskId: 'f2_nine_seat_catalog_fixture',
+    title: 'Full ring action order',
+    phase: Act0LessonPhaseV1.drill,
+    runner: base.copyWith(
+      phase: Act0LessonPhaseV1.drill,
+      question: 'How do you respond to the raise?',
+      caption: '',
+      hint: '',
+      table: table,
+      teachingSteps: const [],
+      options: [
+        Act0RunnerOptionV1(
+          id: 'fold',
+          label: 'Fold',
+          isCorrect: true,
+          preferredLabel: 'Fold',
+          quality: Act0FeedbackQualityV1.correct,
+          feedbackTitle: 'Correct',
+          feedbackReason: 'There are $playersBehind players left to act.',
+        ),
+        const Act0RunnerOptionV1(
+          id: 'call',
+          label: 'Call',
+          isCorrect: false,
+          preferredLabel: 'Fold',
+          quality: Act0FeedbackQualityV1.wrong,
+          feedbackTitle: 'Try again',
+          feedbackReason: 'Count the seats after you.',
+        ),
+      ],
+    ),
+    rewardXp: 1,
+  );
+}
+
 void main() {
+  test('nine-seat source passes Table Truth and G1 position checks', () {
+    final world = Act0ShellStateV1.authoredCatalog.worldById('world_8');
+    final source = world.lessons.first;
+    final task = _nineSeatCatalogTask(source.runner);
+    List<TableTruthRow> inspect(Act0LessonTaskV1 task) => auditTableTruth(
+      worlds: [
+        world.copyWith(
+          lessons: [
+            source.copyWith(tasks: [task]),
+          ],
+        ),
+      ],
+    );
+
+    final findings = inspect(task);
+    expect(findings.where((row) => row.result != 'PASS'), isEmpty);
+    expect(
+      findings.map((row) => row.invariant),
+      containsAll([
+        'D1.explicit_next_actor',
+        'D2.pot_feasibility',
+        'D3.to_call_completeness',
+        'D6.history_support',
+        'D6.nine_max_roster',
+      ]),
+    );
+    expect(
+      inspect(
+        _nineSeatCatalogTask(source.runner, decisionSeat: 'co'),
+      ).singleWhere((row) => row.invariant == 'D6.history_support').result,
+      'FAIL',
+    );
+    expect(
+      potTruthParseActionV1(task.runner.table, 'UTG+1 raises to 2 BB')?.actor,
+      'UTG+1',
+    );
+    CatalogTask row(Act0LessonTaskV1 task) =>
+        (world: world, lesson: source, task: task, lessonIndex: 0);
+    expect(auditDecisionCopyV1(row(task)), isEmpty);
+    expect(
+      auditDecisionCopyV1(
+        row(_nineSeatCatalogTask(source.runner, playersBehind: 5)),
+      ).single.rule,
+      39,
+    );
+  });
+
+  testWidgets('the learner route skips an authored nine-seat task', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.authoredCatalog;
+    final original = sample.currentLesson;
+    final blocked = _nineSeatCatalogTask(original.runner);
+    final source = original.copyWith(tasks: [blocked, ...original.taskList]);
+    final world = sample.selectedWorld.copyWith(
+      lessons: [
+        for (final lesson in sample.selectedWorld.lessons)
+          identical(lesson, original) ? source : lesson,
+      ],
+    );
+    final catalog = Act0ShellStateV1(
+      courseTitle: sample.courseTitle,
+      courseSubtitle: sample.courseSubtitle,
+      levelLabel: sample.levelLabel,
+      xp: sample.xp,
+      xpTarget: sample.xpTarget,
+      streakDays: sample.streakDays,
+      dailyGoalLabel: sample.dailyGoalLabel,
+      dailyGoalValue: sample.dailyGoalValue,
+      pathProgressLabel: sample.pathProgressLabel,
+      selectedWorldId: world.worldId,
+      worlds: [world, ...sample.worlds.skip(1)],
+      lessons: world.lessons,
+      review: sample.review,
+      profile: sample.profile,
+    );
+    expect(catalog.currentLesson.taskList.first, blocked);
+    expect(catalog.forLearners().currentLesson.taskList, original.taskList);
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final next = original.courseTaskList.first;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          state: catalog,
+          initialTab: Act0ShellTabV1.play,
+          initialPhase: next.entryPhase,
+          showPlacementOnStart: false,
+          enableBetaMetrics: false,
+        ),
+      ),
+    );
+    await tester.pump();
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, next.taskId);
+    expect(runner.runner.table.tableFormat, Act0TableFormatV1.sixMax);
+    expect(find.text(blocked.title), findsNothing);
+  });
+
   test('W11 all-in decision projects both pots after the hero calls', () {
     const taskId = 'w11_y5d_two_pot_call';
     final row = catalogTasks.singleWhere((row) => row.task.taskId == taskId);

@@ -189,7 +189,7 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
       if (label.isEmpty) continue;
     }
     final parsed = RegExp(
-      r'^(UTG|HJ|CO|BTN|SB|BB|UTG\+1|UTG\+2|LJ) '
+      '^(${table.canonicalSeatOrder.map(RegExp.escape).join('|')}) '
       r'(blind|posts|folds?|checks?|calls?|bets?|raises?|shoves?|jams?|all-in)'
       r'(?: (?:to )?([0-9]{1,7}(?:\.[0-9]{1,6})? BB)( more)?)?$',
       caseSensitive: false,

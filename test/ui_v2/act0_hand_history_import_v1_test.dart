@@ -240,6 +240,21 @@ void main() {
     );
   });
 
+  test('archive stores and dedupes nine-handed cash imports', () {
+    final text = _fixture('nine_max_showdown');
+    final archive = const Act0AttemptArchiveV1.empty().importPokerStars(text);
+    expect(archive.importPokerStars(text), same(archive));
+    final restored = Act0AttemptArchiveV1.restore(
+      jsonDecode(jsonEncode(archive.toPayload())),
+    );
+    expect(restored.importedHands.single.seats, hasLength(9));
+    expect(
+      restored.importedHands.single.timeline.beforeDecision.replayError(),
+      isNull,
+    );
+    expect(restored.attempts, isEmpty);
+  });
+
   test('archive dedupes by source identity and rejects conflicting copies', () {
     final archive = const Act0AttemptArchiveV1.empty().importPokerStars(fold);
     expect(archive.attempts, isEmpty);

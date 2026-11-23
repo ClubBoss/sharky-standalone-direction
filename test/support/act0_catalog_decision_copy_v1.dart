@@ -1,6 +1,7 @@
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_seat_order_v1.dart';
 
 import 'act0_catalog_decision_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
@@ -13,7 +14,7 @@ typedef DecisionCopyFindingV1 = ({
   String quote,
 });
 
-const _positions = r'UTG\+1|UTG\+2|UTG|LJ|HJ|CO|BTN|SB|BB';
+const _positions = r'UTG\+1|UTG\+2|UTG|MP|LJ|HJ|CO|BTN|SB|BB';
 const _actions =
     r'fold(?:ing)?|call(?:ing)?|limp(?:ing)?|rais(?:e|ing)|bett?ing|bet|open(?:ing)?|check(?:ing)?|shov(?:e|ing)';
 final _heroSeat = RegExp(
@@ -34,6 +35,10 @@ final _otherSubject = RegExp(
   r'\s+(?:has|have|with|faces?)\b|\bbehind (?:it|them|him|her)\b|\b(?:adding|add|remove|removing)\s+(?:seats?|players?|UTG\+|LJ)',
   caseSensitive: false,
 );
+final _utgReference = RegExp(
+  r'\b(?:UTG\s+(?:is|acts)\s+first|behind\s+UTG\b(?![+’\x27]))',
+  caseSensitive: false,
+);
 final _utgFrame = RegExp(
   r'\b(?:UTG\s+(?:is|acts)\s+first|behind\s+UTG\b(?![+’\x27])|'
   r'(?:five|5)\s+players?\s+(?:are\s+)?(?:still\s+)?left(?:\s+to\s+act\b|(?=\s*[,.;!?]|$)))',
@@ -51,18 +56,6 @@ final _heroSizing = RegExp(
 );
 final _amount = RegExp(r'\b(\d+(?:\.\d+)?)\s*BB\b', caseSensitive: false);
 
-const _preflop = ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
-const _postflop = [
-  'SB',
-  'BB',
-  'UTG',
-  'UTG+1',
-  'UTG+2',
-  'LJ',
-  'HJ',
-  'CO',
-  'BTN',
-];
 const _smallNumbers = [
   'zero',
   'one',
@@ -77,7 +70,15 @@ const _smallNumbers = [
 
 int? _playersAfterHero(CatalogDecisionLedgerV1 decision, PokerStreet? street) {
   if (street == null) return null;
-  final order = street == PokerStreet.preflop ? _preflop : _postflop;
+  final positions = decision.table.canonicalSeatOrder;
+  final order = positions.length <= 9
+      ? Act0SeatOrderV1(positions, 'BTN').actionOrder(street)
+      : street == PokerStreet.preflop
+      ? positions
+      : [
+          ...positions.skip(positions.length - 2),
+          ...positions.take(positions.length - 2),
+        ];
   final hero = order.indexOf(decision.table.heroSeat.seatLabel.toUpperCase());
   if (hero < 0) return null;
   var count = 0;
@@ -134,8 +135,11 @@ Iterable<DecisionCopyFindingV1> auditDecisionCopyV1(CatalogTask row) sync* {
   final behind = isTableDecision ? _playersAfterHero(decision, street) : null;
   for (final option in runner.options) {
     final text = option.feedbackReason;
+    final utgPattern = table.tableFormat == Act0TableFormatV1.sixMax
+        ? _utgFrame
+        : _utgReference;
     String? seatQuote = checkUtgFrame
-        ? _utgFrame.firstMatch(text)?.group(0)
+        ? utgPattern.firstMatch(text)?.group(0)
         : null;
     if (isTableDecision) {
       for (final match in _heroSeat.allMatches(text)) {
