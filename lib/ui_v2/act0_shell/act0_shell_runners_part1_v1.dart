@@ -3051,11 +3051,11 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
     teachingSteps: [
       Act0TeachingStepV1(
         title: flop
-            ? 'After the flop, the button acts last.'
+            ? 'The first pass after the flop.'
             : 'Preflop starts after the big blind.',
         body: flop
-            ? 'From the flop on, the first live seat left of the button acts first. BTN acts last on every later street.'
-            : 'Before the flop, UTG acts first, right after the big blind. Then HJ, CO, BTN and SB act, and BB acts last.',
+            ? 'From the flop on, the first player still in and able to act clockwise after the Button acts first. If the Button can still act, it goes after all the others on the first pass.'
+            : 'On the first preflop pass, UTG acts first, right after the big blind. Then the order is HJ, CO, BTN, SB and BB. A raise can bring the action back to earlier seats.',
         focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
       ),
     ],
@@ -3286,7 +3286,8 @@ const _dealerMarkerChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'BTN',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'BTN seat found.',
-    feedbackReason: 'BTN is the dealer button and acts last after the flop.',
+    feedbackReason:
+        'The round marker identifies BTN. CO sits directly before it and SB sits directly after it.',
   ),
   Act0RunnerOptionV1(
     id: 'co',
@@ -3331,7 +3332,8 @@ const _earliestSeatChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'UTG',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'UTG seat found.',
-    feedbackReason: 'UTG acts first preflop, so UTG should open fewer hands.',
+    feedbackReason:
+        'UTG is directly clockwise after BB and takes the first voluntary preflop turn at this six-seat table.',
   ),
   Act0RunnerOptionV1(
     id: 'hj',
@@ -3626,7 +3628,8 @@ const _laterSeatChoices = <Act0RunnerOptionV1>[
     preferredLabel: 'BTN',
     quality: Act0FeedbackQualityV1.correct,
     feedbackTitle: 'Late seat found.',
-    feedbackReason: 'BTN is late and often acts last after the flop.',
+    feedbackReason:
+        'On the first preflop pass, only SB and BB act after BTN. From the flop on, if BTN can still act, it sees the other players act first.',
   ),
   Act0RunnerOptionV1(
     id: 'utg',
@@ -3780,7 +3783,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
-          'A straight uses connected ranks, but it does not need five cards of one suit, so it stays below a flush.',
+          'The other player has a straight. Your five hearts make a flush, which ranks higher on the hand ladder.',
     ),
   ],
   table: _readBoardRunner.table.copyWith(
@@ -3914,7 +3917,7 @@ final _quadsRankRunner = _riverBoardRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Four nines.',
       feedbackReason:
-          'You use all four nines. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
+          'Your two nines and the two on the board make four of a kind. The hand rankings place four of a kind above a full house.',
     ),
     Act0RunnerOptionV1(
       id: 'full_house',

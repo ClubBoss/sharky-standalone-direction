@@ -1125,7 +1125,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "position_six_seats",
     targetTaskId: "position_six_seats_position_repair_seat_id_utg",
     targetFingerprint:
-        "3dea8f3884a0111cfa18b3c72a63cbc6bed4735d346ae9a8516bfb08b8da2eea",
+        "be89e95e13c37e29b914a19996a2bda258cbd63ae8fe1a25b2d0841e73231b7c",
     targetCorrectChoiceId: "utg",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1139,7 +1139,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "co",
     sourceCorrectChoiceId: "btn",
     sourceFingerprint:
-        "56bc4ceae88956349b897389bb78e08742542430f2449a6024d3db095337677c",
+        "1bb7834994004b002a8c764950a76be87a7c72b48f761feba65158ef869a2b57",
     sourceQuestion:
         "Which seat has the dealer marker when you sit one seat earlier?",
     sourceChoiceReason:
@@ -1153,7 +1153,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "position_six_seats",
     targetTaskId: "position_six_seats_position_repair_seat_id_btn",
     targetFingerprint:
-        "1d336b24bebdaef9ef3bfdbbf80271bbcfae28ac484c4687425e3c9a77116f64",
+        "55815ba8315ad3e519282fbab89e77d7c91552ee8d86979dc5de91d25850cf3c",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1180,7 +1180,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "position_six_seats",
     targetTaskId: "position_six_seats_position_repair_seat_id_btn",
     targetFingerprint:
-        "1d336b24bebdaef9ef3bfdbbf80271bbcfae28ac484c4687425e3c9a77116f64",
+        "55815ba8315ad3e519282fbab89e77d7c91552ee8d86979dc5de91d25850cf3c",
     targetCorrectChoiceId: "btn",
     evidenceClass: "familiar_rehearsal",
     mappingType: "repair",
@@ -1617,7 +1617,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceChoiceId: "sb",
     sourceCorrectChoiceId: "bb",
     sourceFingerprint:
-        "a6f234aba20e1b6f86161d4ce6fe4c3f4e9f13cdcbc45845b0cb51a0973efea0",
+        "7cc74cdb2cae81fd4ed15140edb5757ed355834aa0ec3cf5a61e2abaf1ea4ea5",
     sourceQuestion: "Who has the next option before the flop here?",
     sourceChoiceReason: "The small blind acts before the big blind preflop.",
     sourceChoiceLabel: "SB",
@@ -1628,7 +1628,7 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetLessonId: "blinds_order_practice",
     targetTaskId: "blinds_last_actor",
     targetFingerprint:
-        "a6f234aba20e1b6f86161d4ce6fe4c3f4e9f13cdcbc45845b0cb51a0973efea0",
+        "7cc74cdb2cae81fd4ed15140edb5757ed355834aa0ec3cf5a61e2abaf1ea4ea5",
     targetCorrectChoiceId: "bb",
     evidenceClass: "intentional_exact_replay",
     mappingType: "intentional_exact",

@@ -1765,7 +1765,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           id: 'btn',
           label: 'BTN',
           reason:
-              'BTN has already matched the blind in this 6 BB pot. Choosing it again takes away BB’s remaining option.',
+              'BTN has already matched the blind. BB has posted the same amount and still has the option.',
           seatId: 'btn',
         ),
         rewardXp: 5,
@@ -2012,7 +2012,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             (
               'btn',
               'BTN',
-              'Your seat is still waiting to act. Treating the Button as done throws away the decision you now have.',
+              'BTN is still waiting to act. BB is the seat that already checked on this flop.',
             ),
           ],
           correct: 1,
@@ -2388,7 +2388,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
                 isCorrect: false,
                 preferredLabel: 'You — A-A-K-J-7',
                 quality: Act0FeedbackQualityV1.wrong,
-                feedbackTitle: 'Compare the two pairs.',
+                feedbackTitle: 'Compare the rank of each pair.',
                 feedbackReason:
                     'Two aces beat two jacks. Having an ace beside the jacks does not change the rank of the pair.',
               ),
@@ -4123,7 +4123,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
             id: 'ace_and_king_equal',
             label: 'Both hands lose for the same reason',
             reason:
-                'KQo is in the call row on BTN against CO. Treating it like A7o can make you give up the chart call for 2.5 BB.',
+                'A7o shares an ace with AK. KQo shares a king with AK or a queen with AQ. Which paired rank leaves you with the weaker side card depends on the matchup.',
           ),
           const {
             "two_big_cards_auto":
@@ -4229,7 +4229,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
           ),
           const {
             'fold':
-                'Folding KQo on BTN into an unopened 1.5 BB pot gives up a profitable late-position open and hands the blinds straight to SB and BB.',
+                'Folding KQo from BTN passes up the chart’s first-in raise and the chance to collect the blinds if SB and BB both fold.',
             'call':
                 'Limping 1 BB on BTN with KQo into the 1.5 BB pot instead of raising to 2.5 BB gives up fold pressure and lets the blinds see a cheap flop.',
           },
@@ -4818,8 +4818,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             seat: 'utg',
           ).copyWith(teachingSteps: const []),
           const {
-            "co":
-                "CO has three players behind. Treating it as HJ misses one more live player still to act.",
+            "co": "CO comes one seat after HJ. HJ sits between UTG and CO.",
             "utg":
                 "UTG sits between BB and HJ. HJ is the seat immediately after UTG.",
           },
@@ -4844,7 +4843,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
             "hj":
                 "HJ comes immediately before CO. CO is the seat between HJ and BTN.",
             "btn":
-                "BTN takes its preflop turn after CO. Mixing them up misses the player CO must wait to hear from.",
+                "BTN holds the dealer marker. CO is the seat immediately before it in the preflop order.",
           },
         ),
         rewardXp: 5,
@@ -4858,7 +4857,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           "cutoff_first":
               "HJ comes immediately after UTG. The correct sequence continues through CO and BTN.",
           "button_before_cutoff":
-              "BTN gets to see what CO does before acting. Reversing them gives up that information advantage in your read.",
+              "CO follows HJ and acts before BTN on the first preflop pass. This list swaps CO and BTN.",
         }),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
@@ -5578,7 +5577,7 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
           _w3PositionApplyRecapRunner,
           const {
             "off_chart":
-                "Ignoring the opening chart gives up the distinction between putting 2.5 BB in from CO and risking it earlier with more players behind.",
+                "The chart opens AJo from HJ, CO and BTN. This choice leaves out BTN, your seat in this hand.",
           },
         ),
         rewardXp: 16,
