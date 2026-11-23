@@ -634,7 +634,9 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     }
 
     final taskExists = normalizedLesson.taskList.any(
-      (task) => task.taskId == _selectedTaskId,
+      (task) =>
+          task.taskId == _selectedTaskId &&
+          !act0RunnerRequiresNineSeatPreviewV1(task.runner),
     );
     final normalizedTask =
         taskExists ||
@@ -703,15 +705,23 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     Act0LessonCardV1 lesson,
     Set<String> completedTaskIds,
   ) {
-    return lesson.courseTaskList.firstWhere(
+    final eligible = lesson.courseTaskList.where(
+      (task) => !act0RunnerRequiresNineSeatPreviewV1(task.runner),
+    );
+    return eligible.firstWhere(
       (task) => !completedTaskIds.contains(task.taskId),
-      orElse: () => lesson.courseTaskList.first,
+      orElse: () => eligible.firstOrNull ?? lesson.courseTaskList.first,
     );
   }
 
   bool _taskAvailable(Act0LessonCardV1 lesson, String taskId) {
-    if (!lesson.courseTaskList.any((task) => task.taskId == taskId))
+    if (!lesson.courseTaskList.any(
+      (task) =>
+          task.taskId == taskId &&
+          !act0RunnerRequiresNineSeatPreviewV1(task.runner),
+    )) {
       return false;
+    }
     if (_completedTaskIds.contains(taskId)) {
       return true;
     }
@@ -754,16 +764,17 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Act0LessonTaskV1? _nextTask(Act0LessonCardV1 lesson, String taskId) {
-    final index = lesson.courseTaskList.indexWhere(
-      (task) => task.taskId == taskId,
-    );
-    if (index >= 0 && index + 1 < lesson.courseTaskList.length) {
-      return lesson.courseTaskList[index + 1];
+    final tasks = lesson.courseTaskList
+        .where((task) => !act0RunnerRequiresNineSeatPreviewV1(task.runner))
+        .toList();
+    final index = tasks.indexWhere((task) => task.taskId == taskId);
+    if (index >= 0 && index + 1 < tasks.length) {
+      return tasks[index + 1];
     }
     // End of the list. A route that jumped over a task (the Action sequence
     // skips its legal-context node) must still visit it before the lesson
     // ends; otherwise the lesson never completes and only "replay" is left.
-    for (final task in lesson.courseTaskList) {
+    for (final task in tasks) {
       if (task.taskId != taskId &&
           !_completedTaskIds.contains(task.taskId) &&
           !_lessonRunMistakeTaskIds.contains(task.taskId)) {

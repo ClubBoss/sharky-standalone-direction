@@ -246,7 +246,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         : _firstPlayableLesson(selectedWorld);
     final selectedTask =
         selectedLesson.courseTaskList.any(
-              (task) => task.taskId == parsed.selectedTaskId,
+              (task) =>
+                  task.taskId == parsed.selectedTaskId &&
+                  !act0RunnerRequiresNineSeatPreviewV1(task.runner),
             ) &&
             !closedTaskIds.contains(parsed.selectedTaskId)
         ? _taskByIdWithTaskIds(

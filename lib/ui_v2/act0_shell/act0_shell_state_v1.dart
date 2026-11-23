@@ -612,6 +612,26 @@ class Act0SizingConfigV1 {
   bool get isEnabled => mode != Act0SizingUiModeV1.hidden;
 }
 
+/// The F2 model declares the table format and player count. Older snapshots
+/// can still carry a seat list with more places than the declared count.
+int act0TableSeatCountV1(Act0TableStateV1 table) {
+  final modelCount = table.tableFormat == Act0TableFormatV1.sixMax
+      ? table.playerCount
+      : act0ExpectedPlayerCountForFormatV1(table.tableFormat);
+  return modelCount > table.seats.length ? modelCount : table.seats.length;
+}
+
+/// Full-ring layouts stay out of the learner route until designer admission.
+bool act0RequiresNineSeatPreviewV1(Act0TableStateV1 table) =>
+    act0TableSeatCountV1(table) > 6;
+
+bool act0RunnerRequiresNineSeatPreviewV1(Act0RunnerStateV1 runner) =>
+    act0RequiresNineSeatPreviewV1(runner.table) ||
+    runner.teachingSteps.any(
+      (step) =>
+          step.table != null && act0RequiresNineSeatPreviewV1(step.table!),
+    );
+
 class Act0RunnerStateV1 {
   const Act0RunnerStateV1({
     required this.lessonId,

@@ -47,6 +47,7 @@ class _SeatNodeV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final skin = TableSkinScopeV1.of(context);
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
     // Dead vertical space in the seat's informative column, trimmed under the
     // camera. Cards keep their size and the plate keeps its type and width.
@@ -150,7 +151,7 @@ class _SeatNodeV1 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < visibleCards.length; i++) ...[
-                    _CardV1(
+                    skin.cardFace(
                       card: visibleCards[i],
                       cardId: 'hero_$i',
                       highlighted: highlightedCardIds.contains('hero_$i'),
@@ -167,7 +168,7 @@ class _SeatNodeV1 extends StatelessWidget {
                   for (var i = 0; i < visibleCards.length; i++) ...[
                     Transform.rotate(
                       angle: i == 0 ? -0.06 : 0.06,
-                      child: const _MiniCardBackV1(),
+                      child: skin.cardBack(),
                     ),
                     if (i < visibleCards.length - 1) const SizedBox(width: 2),
                   ],
@@ -179,7 +180,7 @@ class _SeatNodeV1 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < visibleCards.length; i++) ...[
-                    _CardV1(
+                    skin.cardFace(
                       card: visibleCards[i],
                       cardId: '${seat.seatId}_$i',
                       highlighted: highlightedCardIds.contains(
@@ -193,13 +194,13 @@ class _SeatNodeV1 extends StatelessWidget {
               SizedBox(height: cardPlateGap),
             ],
             if (folded && !registeredScene) ...[
-              const _FoldedBadgeV1(),
+              skin.foldedBadge(),
               SizedBox(height: cardPlateGap),
             ],
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Container(
+                skin.seatPlate(
                   key: hero
                       ? Key('act0_shell_hero_identity_${seat.seatId}')
                       : Key('act0_shell_seat_identity_${seat.seatId}'),
@@ -221,11 +222,7 @@ class _SeatNodeV1 extends StatelessWidget {
                         : (useSlimRefinedSeat ? 5 : (refined ? 6 : 5)) -
                               plateVerticalPad,
                   ),
-                  decoration: Act0SceneNameplateV1.decoration(
-                    radius: Act0ShellTokensV1.radiusSm,
-                    stateTone: shouldShowRing ? borderColor : null,
-                    stateStrength: shouldShowRing ? 1.0 : 0.0,
-                  ),
+                  stateTone: shouldShowRing ? borderColor : null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -389,25 +386,7 @@ class _SeatNodeV1 extends StatelessWidget {
                   ),
                 if (shouldShowRing)
                   Positioned.fill(
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        key: const Key('act0_shell_active_seat_ring'),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusSm,
-                          ),
-                          border: Border.all(
-                            color: ringColor.withValues(alpha: 0.42),
-                            width: 2,
-                          ),
-                        ),
-                        child: SizedBox(
-                          key: Key(
-                            'act0_shell_active_seat_ring_${seat.seatId}',
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: skin.turnHighlight(seat.seatId, ringColor),
                   ),
                 if (seatVisualState != _SeatVisualStateV1.passive)
                   Positioned(
@@ -421,7 +400,7 @@ class _SeatNodeV1 extends StatelessWidget {
             ),
             if (folded && registeredScene) ...[
               const SizedBox(height: 2),
-              const _FoldedBadgeV1(),
+              skin.foldedBadge(),
             ],
           ],
         ),
@@ -2121,7 +2100,9 @@ class _SeatMarkersV1 extends StatelessWidget {
         for (final marker in markers)
           KeyedSubtree(
             key: Key('act0_shell_marker_${seatId}_${marker.name}'),
-            child: _MarkerDotV1(marker: marker),
+            child: marker == _SeatMarkerKindV1.dealer
+                ? TableSkinScopeV1.of(context).dealerButton()
+                : TableSkinScopeV1.of(context).actionBadge(marker.name),
           ),
       ],
     );
@@ -2429,19 +2410,6 @@ class _MarkerDotV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (marker == _SeatMarkerKindV1.dealer) {
-      // Same dealer semantic, physical expression. Wave A drew a flat white
-      // capsule floating above the scene; a dealer button is a pressed disc
-      // resting on the cloth. Keys, meaning, seat assignment and telemetry are
-      // untouched.
-      return const KeyedSubtree(
-        key: Key('act0_shell_wave1_dealer_marker'),
-        child: Act0SceneDealerPuckV1(
-          key: Key('act0_shell_wave1b_button_marker'),
-        ),
-      );
-    }
-
     final localizedActLabel =
         Localizations.localeOf(
           context,

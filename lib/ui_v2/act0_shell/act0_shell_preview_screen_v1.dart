@@ -2966,11 +2966,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       groups: practiceGroups,
     );
     final isPlayTab = _tab == Act0ShellTabV1.play;
-    final isPlayRunner =
-        isPlayTab && !_showPlayHub && _blockCompletionSummary == null;
     final playSelectedTask = isPlayTab
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
+    final isPlayRunner =
+        playSelectedTask != null &&
+        !act0RunnerRequiresNineSeatPreviewV1(playSelectedTask.runner) &&
+        !_showPlayHub &&
+        _blockCompletionSummary == null;
     const seatNamesLessonId = 'blinds_action_order';
     const seatNamesTaskId = 'positions_theory';
     // The final page of this introduction names the seats.
@@ -3037,7 +3040,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? normalizeAct0DrillSeatHighlightPolicyV1(
             normalizeAct0SeatTapRunnerV1(
               _actionSequenceRunnerForStageV1(
-                _repairRunnerForTask(playSelectedTask!).copyWith(
+                _repairRunnerForTask(playSelectedTask).copyWith(
                   lessonId: selectedLesson.lessonId,
                   lessonTitle: _localizedLessonTitleV1(selectedLesson),
                   lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
@@ -3130,7 +3133,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             widget.tableVisualVariant ==
                 Act0ShellTableVisualVariantV1.refinedDev2 &&
             playTaskAwardXp > 0 &&
-            _cleanTaskIds.contains(playSelectedTask?.taskId) &&
+            _cleanTaskIds.contains(playSelectedTask.taskId) &&
             _choiceHasIndependentProvenanceV1 &&
             !suppressTaskCompletionToast
         ? Act0RunnerCompletionSummaryV1(
@@ -3147,7 +3150,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ).xp,
             xpTarget: baseState.xpTarget,
             skillGains: _skillGainsFromMapV1(
-              _skillDeltaForAnswer(selectedLesson, playSelectedTask!),
+              _skillDeltaForAnswer(selectedLesson, playSelectedTask),
               source: playSelectedTask.title,
             ),
           )
@@ -3789,7 +3792,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         },
                       ),
                       Act0ShellTabV1.play =>
-                        _showPlayHub && _blockCompletionSummary == null
+                        !isPlayRunner && _blockCompletionSummary == null
                             ? act0AcademyPracticeRuntimeV1(
                                 context,
                                 isCurrent: () =>
