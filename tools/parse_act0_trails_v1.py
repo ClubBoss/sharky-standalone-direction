@@ -23,7 +23,7 @@ CALL = re.compile(
     rf"(?P<label>(?:{TOKEN}\s*)+)?"
 )
 STREET = r"preflop|flop|turn|river"
-SEAT = r"UTG(?:\+[12])?|LJ|HJ|CO|BTN|SB|BB|MP"
+SEAT = r"UTG(?:\+[12])?|LJ|HJ|CO|BTN|SB|BB|MP|Hero"
 CHIPS = r"(?P<amount>\d+(?:\.\d+)?) BB"
 POST = re.compile(rf"(?P<seat>SB|BB) (?P<verb>blind|posts(?: (?:small|big) blind)?) {CHIPS}", re.I)
 PASSIVE = re.compile(rf"(?P<seat>{SEAT}) (?P<verb>folds?|checks?)", re.I)
@@ -32,9 +32,11 @@ WAGER = re.compile(
     rf"(?P<to> to)? {CHIPS}(?P<suffix> more| total)?", re.I
 )
 DEAL = re.compile(rf"(?P<street>{STREET}) (?:is )?dealt", re.I)
+ACTOR = re.compile(rf"(?P<seat>{SEAT}) acts", re.I)
+ANTE = re.compile(rf"(?P<seat>{SEAT}) (?:posts )?ante {CHIPS}", re.I)
 
 
-def parse_label(label):
+def parse_label(label, hero_seat=None):
     """Parse street/seat/verb and amount meaning, keeping ambiguous amounts out."""
     label = label.strip()
     if deal := DEAL.fullmatch(label):
@@ -43,6 +45,17 @@ def parse_label(label):
     street = prefix[1].lower() if prefix else None
     if prefix:
         label = label[prefix.end():]
+    if re.match(r"^Hero\b", label, re.I):
+        if hero_seat is None:
+            return None, "Hero alias needs seat context"
+        label = re.sub(r"^Hero\b", hero_seat, label, flags=re.I)
+    if match := ACTOR.fullmatch(label):
+        return {"street": street, "seat": match["seat"].lower(), "verb": "decision"}, None
+    if match := ANTE.fullmatch(label):
+        return {
+            "street": street, "seat": match["seat"].lower(), "verb": "ante",
+            "amount": match["amount"], "amount_kind": "added",
+        }, None
     if match := POST.fullmatch(label):
         return {
             "street": street, "seat": match["seat"].lower(), "verb": "blind",
@@ -53,7 +66,7 @@ def parse_label(label):
             "street": street, "seat": match["seat"].lower(),
             "verb": match["verb"].lower().rstrip("s"),
         }, None
-    if match := WAGER.fullmatch(label):
+    if match := WAGER.fullmatch(re.sub(r"(calls?), ", r"\1 ", label, flags=re.I)):
         verb = match["verb"].lower().rstrip("s")
         verb = {"open": "raise", "jam": "all-in", "shove": "all-in",
                 "all in": "all-in"}.get(verb, verb)
@@ -69,8 +82,6 @@ def parse_label(label):
             "street": street, "seat": match["seat"].lower(), "verb": verb,
             "amount": match["amount"], "amount_kind": amount_kind,
         }, None
-    if re.match(r"^Hero\s+(?:all[- ]in|posts|folds|checks|calls|bets|raises)\b", label, re.I):
-        return None, "Hero alias needs seat context"
     if re.search(r"\bside(?: pot)?\b|\bcontributes\b|, then |\bpost is included\b", label, re.I):
         return None, "compound action or pot annotation"
     if re.search(r"\bante\b", label, re.I):
