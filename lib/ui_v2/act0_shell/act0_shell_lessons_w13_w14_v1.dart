@@ -5057,6 +5057,7 @@ final _world14Pilot = _act0PilotWorldV1(
             "Pot = sum of paid chips (2.5 (BTN) + 0.5 (SB) + 2.5 (BB)). Call price = to call / (pot with bet + call). Pot 5.5 BB. No call yet. Full range has 47 combos and 80.9% equity. E=(W+T/2)/N. EV(check)=P×E(all). At 3 BB, 12/47 fold and return P, 26/47 call with E=100.0% and payoff E×(P+2B)−B. 9/47 raise to 10 BB. The extra call costs R−B and needs (R−B)/(P+2R)=27.5%. Against that group, E=0.0%. Compare −B with E×(P+2R)−R = -10.00 BB. The better response is fold. At 5 BB, 22/47 fold and return P, 16/47 call with E=100.0% and payoff E×(P+2B)−B. 9/47 raise to 14 BB. The extra call costs R−B and needs (R−B)/(P+2R)=26.9%. Against that group, E=0.0%. Compare −B with E×(P+2R)−R = -14.00 BB. The better response is fold. Weight all branch payoffs by their combo shares. Check 4.45 BB, Bet 3 BB 5.53 BB, Bet 5 BB 5.19 BB. The best offered line gains 0.34 BB over bet 5 bb.",
       ),
     ]),
+    ..._b19PilotLessons,
   ],
 );
 Act0WorldCardV1 _act0PilotWorldV1(

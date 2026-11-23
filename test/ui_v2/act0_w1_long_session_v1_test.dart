@@ -1408,6 +1408,12 @@ void main() {
         t.view.devicePixelRatio = 1;
         addTearDown(t.view.resetPhysicalSize);
         addTearDown(t.view.resetDevicePixelRatio);
+        const b19MissTasks = {
+          'mistake_half_pot',
+          'turn_heart_completes',
+          'harder_river_value_added',
+        };
+        final confirmedB19Misses = <String>{};
         final worlds = Act0ShellStateV1.sample.worlds
             .where(
               (w) => w.worldNumber >= firstWorld && w.worldNumber <= lastWorld,
@@ -1523,10 +1529,15 @@ void main() {
             if (deciding) {
               await pumpSourceChoreographyToDecisionV1(t, runner.table);
               final wrong = runner.options.where((o) => !o.isCorrect).toList();
+              final b19Miss =
+                  pilot &&
+                  b19MissTasks.contains(taskId) &&
+                  !answered.contains(taskId);
               final injectMiss =
-                  !missedWorlds.contains(world) &&
-                  wrong.isNotEmpty &&
-                  (world != 7 || taskId == w7Checkpoint);
+                  b19Miss ||
+                  (!missedWorlds.contains(world) &&
+                      wrong.isNotEmpty &&
+                      (world != 7 || taskId == w7Checkpoint));
               final choice = injectMiss
                   ? wrong.first
                   : runner.options.firstWhere(
@@ -1579,6 +1590,7 @@ void main() {
                   );
                 }
                 confirmedMisses.add(world);
+                if (b19Miss) confirmedB19Misses.add(taskId);
               }
               answered.add(taskId);
               final worldAnswered = answered
@@ -1706,7 +1718,7 @@ void main() {
             .map((task) => task.taskId)
             .toSet();
         final expectedCount = pilot
-            ? 120
+            ? 150
             : w7ToW8
             ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
             : (fullRoute
@@ -1738,6 +1750,7 @@ void main() {
           ),
         );
         expect(confirmedMisses, expectedWorlds);
+        if (pilot) expect(confirmedB19Misses, b19MissTasks);
         if (fullRoute || pilot) {
           await _mount(t);
           final restored = await _saved(t);

@@ -1,3 +1,4 @@
+import 'act0_decision_reasoning_b19_v1.dart';
 import 'act0_decision_reasoning_w10_w12_v1.dart';
 import 'act0_decision_reasoning_w13_w14_v1.dart';
 import 'act0_decision_reasoning_w15_w16_v1.dart';
@@ -112,6 +113,9 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
   ...act0DecisionReasoningW4W6V1,
   ...act0DecisionReasoningW7W9V1,
   ...act0DecisionReasoningW10W12V1,
-  if (act0CurriculumPilotEnabledV1) ...act0DecisionReasoningW13W14V1,
-  if (act0CurriculumPilotEnabledV1) ...act0DecisionReasoningW15W16V1,
+  if (act0CurriculumPilotEnabledV1) ...{
+    ...act0DecisionReasoningW13W14V1,
+    ...act0DecisionReasoningW15W16V1,
+    ...act0DecisionReasoningB19V1,
+  },
 };
