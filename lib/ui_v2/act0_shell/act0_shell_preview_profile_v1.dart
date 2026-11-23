@@ -332,6 +332,16 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
     if (target == null) {
       return null;
     }
+    // The goal is bound to the saved choice by repair validation.
+    final intentGoal = act0RepairGoalContractForSourceV1(
+      worldId: target.intent.sourceWorldId,
+      lessonId: target.intent.sourceLessonId,
+      taskId: target.intent.sourceTaskId,
+      choiceId: target.intent.choiceId,
+    );
+    if (intentGoal != null && intentGoal.goalId == target.intent.goalId) {
+      return 'Review: ${intentGoal.learnerGoalLabel}';
+    }
     final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
       sourceTaskId: sourceTaskId,
       target: target,

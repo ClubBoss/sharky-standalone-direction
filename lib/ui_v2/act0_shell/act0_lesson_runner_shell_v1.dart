@@ -1255,6 +1255,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     required this.onContinueReview,
     this.completionSummary,
     this.isAssistedDecision = false,
+    this.isRepairAttempt = false,
     this.localizeW1Ctas = false,
     this.preserveSourceOwnedQuestion = false,
     this.showDecisionCoach = true,
@@ -1330,6 +1331,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
+  final bool isRepairAttempt;
   final bool localizeW1Ctas;
   // Placement quick-check reuses one task ID for three authored questions.
   final bool preserveSourceOwnedQuestion;
@@ -2481,7 +2483,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       option: option,
       taskFamily: widget.selectedTaskFamily,
     );
-    final resultKind = option.quality.resultKind;
+    final resultKind = widget.isRepairAttempt && option.isCorrect
+        ? act0RepairedResultKindV1
+        : option.quality.resultKind;
     final concept = act0ConceptErrorDefinitionForTaskV1(
       worldId: normalizedWorldId ?? '',
       lessonId: _stableLessonTelemetryId,
@@ -3827,6 +3831,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       refined: isRefinedDev2,
       completionSummary: null,
       isAssistedDecision: widget.isAssistedDecision,
+      isRepaired: widget.isRepairAttempt && runner.reviewQuality.passes,
       localizeW1Ctas: act0AcademyW1InstructionTaskV1(widget.selectedTaskId),
       firstValueReceiptLine: widget.firstValueReceiptLine,
       repairReasonLine: widget.repairReasonLine,
@@ -4328,6 +4333,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           runner: runner,
           table: table,
           isReview: isReview,
+          isRepaired: widget.isRepairAttempt && runner.reviewQuality.passes,
           question: question,
           onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
@@ -4366,27 +4372,29 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final purpose = isTheory || isTeaching
           ? ''
           : isReview
-          ? switch (runner.reviewQuality) {
-              Act0FeedbackQualityV1.wrong =>
-                isRu
-                    ? '\u041F\u0420\u041E\u041F\u0423\u0429\u0415\u041D\u041D\u0410\u042F \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0410'
-                    : 'MISSED CLUE',
-              Act0FeedbackQualityV1.suboptimal =>
-                isRu
-                    ? '\u0420\u0410\u0417\u0411\u0415\u0420\u0401\u041C \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0423'
-                    : "LET'S CHECK THE CLUE",
-              Act0FeedbackQualityV1.acceptable =>
-                isRu ? 'ТОЖЕ МОЖНО' : 'ALSO PLAYABLE',
-              Act0FeedbackQualityV1.correct ||
-              Act0FeedbackQualityV1.coCorrect =>
-                widget.isAssistedDecision
-                    ? (isRu
-                          ? '\u0412\u0415\u0420\u041d\u041e \u0421 \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u041E\u0419'
-                          : 'CORRECT WITH HELP')
-                    : (isRu
-                          ? '\u0412\u0415\u0420\u041D\u041E\u0415 \u0427\u0422\u0415\u041D\u0418\u0415'
-                          : 'CORRECT READ'),
-            }
+          ? widget.isRepairAttempt && runner.reviewQuality.passes
+                ? (isRu ? 'ИСПРАВЛЕНО' : 'FIXED')
+                : switch (runner.reviewQuality) {
+                    Act0FeedbackQualityV1.wrong =>
+                      isRu
+                          ? '\u041F\u0420\u041E\u041F\u0423\u0429\u0415\u041D\u041D\u0410\u042F \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0410'
+                          : 'MISSED CLUE',
+                    Act0FeedbackQualityV1.suboptimal =>
+                      isRu
+                          ? '\u0420\u0410\u0417\u0411\u0415\u0420\u0401\u041C \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0423'
+                          : "LET'S CHECK THE CLUE",
+                    Act0FeedbackQualityV1.acceptable =>
+                      isRu ? 'ТОЖЕ МОЖНО' : 'ALSO PLAYABLE',
+                    Act0FeedbackQualityV1.correct ||
+                    Act0FeedbackQualityV1.coCorrect =>
+                      widget.isAssistedDecision
+                          ? (isRu
+                                ? '\u0412\u0415\u0420\u041d\u041e \u0421 \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u041E\u0419'
+                                : 'CORRECT WITH HELP')
+                          : (isRu
+                                ? '\u0412\u0415\u0420\u041D\u041E\u0415 \u0427\u0422\u0415\u041D\u0418\u0415'
+                                : 'CORRECT READ'),
+                  }
           : (isRu ? '\u0412\u0410\u0428 \u0425\u041E\u0414' : 'YOUR MOVE');
       final feedbackAction =
           (runner.reviewQuality == Act0FeedbackQualityV1.wrong ||
@@ -4401,6 +4409,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
       final headline = isTheory || isTeaching
           ? prompt
+          : isReview && widget.isRepairAttempt && runner.reviewQuality.passes
+          ? (repairReceipt.isNotEmpty ? repairReceipt : feedbackAction)
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.acceptable
           ? (isRu ? 'Тоже можно' : 'Also playable')
           : isReview &&

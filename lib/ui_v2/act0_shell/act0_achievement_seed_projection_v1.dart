@@ -311,7 +311,9 @@ Act0AchievementSeedV1 _earnedWhen<T extends Object>({
 }
 
 bool _isIndependentAssessmentCorrectV1(Act0LearningEvidenceRecordV1 record) =>
-    record.isIndependentCorrect && !act0RecordIsAuthoredTeachingV1(record);
+    record.isIndependentCorrect &&
+    !record.isRepaired &&
+    !act0RecordIsAuthoredTeachingV1(record);
 
 Act0LearningEvidenceRecordV1? _firstCorrectRecord(
   Act0LearningEvidenceHistoryV1 history,

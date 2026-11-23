@@ -213,6 +213,14 @@ void main() {
       );
 
       await _answerCorrectly(tester);
+      expect(
+        find.textContaining(RegExp(r'^fixed$', caseSensitive: false)),
+        findsWidgets,
+      );
+      expect(
+        find.textContaining(RegExp(r'^correct read$', caseSensitive: false)),
+        findsNothing,
+      );
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
       );

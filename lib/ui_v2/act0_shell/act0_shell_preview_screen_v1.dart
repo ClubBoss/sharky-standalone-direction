@@ -3013,6 +3013,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         total: selectedLesson.courseTaskList.length,
       );
     }
+    final lastAnswer = _learningEvidenceHistoryV1.records.lastOrNull;
+    final isRepairAttempt =
+        playSelectedTask != null &&
+        !openedAsSpacedReview &&
+        _activeSameSignalRecheckTaskId != playSelectedTask.taskId &&
+        (_isExactLessonRetryV1(playSelectedTask) ||
+            _activeLessonWrapUpTaskId == playSelectedTask.taskId ||
+            _activeRepairTaskId == playSelectedTask.taskId ||
+            _practiceQueueRepairRequestForTaskV1(playSelectedTask.taskId) !=
+                null ||
+            (_phase == Act0LessonPhaseV1.review &&
+                lastAnswer != null &&
+                lastAnswer.worldId == selectedWorld.worldId &&
+                lastAnswer.lessonId == selectedLesson.lessonId &&
+                lastAnswer.taskId == playSelectedTask.taskId &&
+                lastAnswer.choiceId == _selectedOptionId &&
+                lastAnswer.isRepaired));
     final sameSessionLearningDelta =
         playSelectedTask != null &&
             _activeRepairTaskId != playSelectedTask.taskId
@@ -4143,6 +4160,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
                                 isAssistedDecision: _choiceWasAssistedV1,
+                                isRepairAttempt: isRepairAttempt,
                                 firstValueReceiptLine:
                                     _diagnosticLearningEntryV1 == null &&
                                         _placementHandoffActive &&

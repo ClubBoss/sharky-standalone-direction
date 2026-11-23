@@ -6,6 +6,7 @@ import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_summary_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter/material.dart';
@@ -841,6 +842,130 @@ void main() {
         isTrue,
       );
     }
+
+    testWidgets('B39 saved cards miss keeps its Review identity and grade', (
+      t,
+    ) async {
+      const sourceId = 'what_poker_is_find_hero';
+      const repairId = 'first_table_guide_shared_cards_repair';
+      Act0LessonRunnerShellV1 runner() =>
+          t.widget(find.byType(Act0LessonRunnerShellV1));
+      Future<void> tap(Finder finder) async {
+        expect(await _tapFirst(t, [finder]), isTrue);
+      }
+
+      Future<void> answer(String id) async {
+        await pumpSourceChoreographyToDecisionV1(t, runner().runner.table);
+        await tap(find.byKey(Key('act0_shell_option_$id')));
+      }
+
+      Act0AttemptArchiveV1 archive(Map<String, dynamic> snapshot) {
+        final history = Act0LearningEvidenceHistoryV1.restore(
+          snapshot['learningEvidenceHistory'],
+          snapshot['learningEvidenceLineage'],
+        )!;
+        return Act0AttemptArchiveV1.restore(
+          snapshot['attemptArchive'],
+          snapshotRecords: history.records,
+        );
+      }
+
+      await _openSavedCourseTask(
+        t,
+        worldId: 'world_1',
+        taskId: sourceId,
+        legacyLessonId: 'what_poker_is',
+        legacyCompletedIds: {'what_poker_is_theory'},
+        restoreActive: true,
+      );
+      await answer('top');
+      final miss = archive(await _saved(t)).attempts.single;
+      expect(miss.evidence.taskId, sourceId);
+      expect(miss.evidence.resultKind, 'incorrect');
+
+      await _mount(t);
+      await openArchive(t);
+      final wrongRow = find.byKey(Key('act0_attempt_archive_entry_${miss.id}'));
+      expect(
+        find.descendant(
+          of: wrongRow,
+          matching: find.textContaining(' · Incorrect'),
+        ),
+        findsOneWidget,
+      );
+      final background = t
+          .widget<Scaffold>(find.byKey(const Key('act0_shell_preview_screen')))
+          .backgroundColor!;
+      final rowTitle = t.widget<ListTile>(wrongRow).title! as Text;
+      final heading = t.widget<Text>(find.text('Attempt archive'));
+      for (final text in [heading, rowTitle]) {
+        final fg = Color.alphaBlend(
+          text.style!.color!,
+          background,
+        ).computeLuminance();
+        final bg = background.computeLuminance();
+        expect(
+          (fg + 0.05) / (bg + 0.05),
+          greaterThanOrEqualTo(4.5),
+          reason: text.data,
+        );
+      }
+      await tap(find.byKey(const Key('act0_attempt_archive_back')));
+      expect(find.text('Your cards and the board'), findsWidgets);
+      expect(find.text('Review: Private and shared cards'), findsOneWidget);
+      await tap(find.byKey(const Key('act0_academy_review_leaf_repair_cta')));
+      expect(runner().selectedTaskId, repairId);
+      while (runner().runner.activeTeachingStep != null) {
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_shell_theory_continue_cta')),
+            find.byKey(const Key('act0_shell_continue_cta')),
+          ]),
+          isTrue,
+          reason: 'The Review repair intro must lead to the decision.',
+        );
+      }
+      expect(runner().selectedTaskId, repairId);
+      final correct = runner().runner.options.singleWhere((o) => o.isCorrect);
+      await answer(correct.id);
+      expect(
+        find.textContaining(RegExp(r'^fixed$', caseSensitive: false)),
+        findsWidgets,
+      );
+      expect(
+        find.textContaining(RegExp(r'^correct read$', caseSensitive: false)),
+        findsNothing,
+      );
+
+      final saved = await _saved(t);
+      final fixed = archive(
+        saved,
+      ).attempts.firstWhere((a) => a.evidence.taskId == repairId);
+      expect(fixed.evidence.resultKind, act0RepairedResultKindV1);
+      final history = Act0LearningEvidenceHistoryV1.restore(
+        saved['learningEvidenceHistory'],
+        saved['learningEvidenceLineage'],
+      )!;
+      expect(
+        Act0AchievementSeedProjectionV1.fromSources(
+          learningEvidenceHistory: history,
+        ).seedForId(act0AchievementSeedFirstCorrectReadV1).earned,
+        isFalse,
+      );
+
+      await _mount(t);
+      await openArchive(t);
+      final fixedRow = find.byKey(
+        Key('act0_attempt_archive_entry_${fixed.id}'),
+      );
+      expect(
+        find.descendant(
+          of: fixedRow,
+          matching: find.textContaining(' · Fixed'),
+        ),
+        findsOneWidget,
+      );
+    });
 
     testWidgets('opens empty from an older save and returns to Review', (
       t,

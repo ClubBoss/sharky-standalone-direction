@@ -1,3 +1,5 @@
+import 'act0_repair_gap_adjudication_v1.dart';
+import 'act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_pattern_coaching_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
@@ -43,23 +45,53 @@ class Act0ReviewMistakeHistoryConsumerV1 {
       if (patternLine != null) {
         didAttachPattern = true;
       }
+      final task = _decisionTask(record, sourceState);
+      final goal = act0RepairGoalContractForSourceV1(
+        worldId: record.worldId,
+        lessonId: record.lessonId,
+        taskId: task?.taskId ?? record.decisionTaskId,
+        choiceId: record.selectedId,
+      );
+      final choice = task?.runner.options
+          .where((option) => option.id == record.selectedId)
+          .firstOrNull;
+      final authoredGoalLabel =
+          goal != null &&
+              task?.runner.question == goal.sourceQuestion &&
+              choice?.label == goal.sourceChoiceLabel
+          ? goal.learnerGoalLabel
+          : null;
+      final concept = act0ConceptErrorDefinitionForTaskV1(
+        worldId: record.worldId,
+        lessonId: record.lessonId,
+        taskId: task?.taskId ?? record.decisionTaskId,
+      );
       items.add(
         Act0ReviewMistakeHistoryItemV1(
           stableKey: record.recordId,
           sourceTaskId: record.sourceTaskId,
-          primaryLabel: _firstReadableLabel(<String>[
-            record.skillAtomId,
-            record.repairFocusId,
-            record.errorType,
-          ]),
-          detailLine: _firstReadableLabel(<String>[
-            record.errorType,
-            record.repairFocusId,
-            record.resultKind,
-          ]),
+          primaryLabel:
+              task?.title ??
+              _firstReadableLabel(<String>[
+                record.skillAtomId,
+                record.repairFocusId,
+                record.errorType,
+              ]),
+          detailLine:
+              authoredGoalLabel ??
+              _firstReadableLabel(<String>[
+                if (concept != null &&
+                    concept.taskKeys.contains(
+                      '${record.worldId}/${record.lessonId}/${task?.taskId}',
+                    ))
+                  concept.eligibleRepairFamily,
+                record.errorType,
+                record.repairFocusId,
+                record.resultKind,
+              ]),
           decisionLine: localeIsRu
-              ? '\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440: ${_readableAction(record, record.selectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel, localeIsRu: true)}; \u043B\u0443\u0447\u0448\u0435: ${_readableAction(record, record.expectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel, localeIsRu: true)}.'
-              : 'You chose ${_readableAction(record, record.selectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel)}; better was ${_readableAction(record, record.expectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel)}.',
+              ? '\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440: ${_readableAction(record, record.selectedId, task: task, localizeOptionLabel: localizeOptionLabel, localeIsRu: true)}; \u043B\u0443\u0447\u0448\u0435: ${_readableAction(record, record.expectedId, task: task, localizeOptionLabel: localizeOptionLabel, localeIsRu: true)}.'
+              : 'You chose ${_readableAction(record, record.selectedId, task: task, localizeOptionLabel: localizeOptionLabel)}; better was ${_readableAction(record, record.expectedId, task: task, localizeOptionLabel: localizeOptionLabel)}.',
           contextLine: _readableContext(record),
           orderLabel: items.isEmpty ? 'Most recent' : 'Earlier',
           patternLine: patternLine,
@@ -129,12 +161,28 @@ String _firstReadableLabel(List<String> values) {
   return 'Review spot';
 }
 
+Act0LessonTaskV1? _decisionTask(
+  Act0ReviewMistakeRecordV1 record,
+  Act0ShellStateV1? state,
+) {
+  final taskId = record.decisionTaskId.trim().isEmpty
+      ? record.sourceTaskId.trim()
+      : record.decisionTaskId.trim();
+  return state?.worlds
+      .where((world) => world.worldId == record.worldId)
+      .expand((world) => world.lessons)
+      .where((lesson) => lesson.lessonId == record.lessonId)
+      .expand((lesson) => lesson.taskList)
+      .where((task) => task.taskId == taskId)
+      .firstOrNull;
+}
+
 // Source-owned task option copy, not a guessed interpretation of technical IDs.
 // The immutable answer IDs remain in persisted history and telemetry.
 String _readableAction(
   Act0ReviewMistakeRecordV1 record,
   String raw, {
-  Act0ShellStateV1? sourceState,
+  Act0LessonTaskV1? task,
   String Function(String)? localizeOptionLabel,
   bool localeIsRu = false,
 }) {
@@ -143,45 +191,31 @@ String _readableAction(
     return localeIsRu
         ? '\u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442'
         : 'unknown option';
-  if (sourceState != null) {
-    final decisionTaskId = record.decisionTaskId.trim().isNotEmpty
-        ? record.decisionTaskId.trim()
-        : record.sourceTaskId.trim();
-    for (final world in sourceState.worlds) {
-      if (world.worldId != record.worldId) continue;
-      for (final lesson in world.lessons) {
-        if (lesson.lessonId != record.lessonId) continue;
-        for (final task in lesson.taskList) {
-          if (task.taskId != decisionTaskId) continue;
-          for (final option in task.runner.options) {
-            if (option.id != id) continue;
-            final sourceCopy = option.label.trim();
-            final localCopy =
-                (localizeOptionLabel?.call(sourceCopy) ?? sourceCopy).trim();
-            if (localeIsRu && localCopy == sourceCopy) {
-              // Exact authored W1 option text, never guessed from answer IDs.
-              final match = RegExp(
-                r'^(\d+) private cards, (\d+) board cards, (.+) in the pot$',
-              ).firstMatch(sourceCopy);
-              if (match != null) {
-                return '${match.group(1)} \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0435 \u043a\u0430\u0440\u0442\u044b, '
-                    '${match.group(2)} \u043e\u0431\u0449\u0438\u0435 \u043a\u0430\u0440\u0442\u044b, \u0431\u0430\u043d\u043a ${match.group(3)}';
-              }
-              if (sourceCopy == '5 board cards are already out') {
-                return '\u0423\u0436\u0435 \u043e\u0442\u043a\u0440\u044b\u0442\u043e 5 \u043e\u0431\u0449\u0438\u0445 \u043a\u0430\u0440\u0442';
-              }
-            }
-            if (localCopy.isNotEmpty) {
-              // The decision UI renders the authored wager beside its action.
-              // Keep that same amount in the English history receipt.
-              final amount = option.amountLabel.trim();
-              return !localeIsRu && amount.isNotEmpty
-                  ? '$localCopy $amount'
-                  : localCopy;
-            }
-          }
-        }
+  for (final option in task?.runner.options ?? const <Act0RunnerOptionV1>[]) {
+    if (option.id != id) continue;
+    final sourceCopy = option.label.trim();
+    final localCopy = (localizeOptionLabel?.call(sourceCopy) ?? sourceCopy)
+        .trim();
+    if (localeIsRu && localCopy == sourceCopy) {
+      // Exact authored W1 option text, never guessed from answer IDs.
+      final match = RegExp(
+        r'^(\d+) private cards, (\d+) board cards, (.+) in the pot$',
+      ).firstMatch(sourceCopy);
+      if (match != null) {
+        return '${match.group(1)} \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0435 \u043a\u0430\u0440\u0442\u044b, '
+            '${match.group(2)} \u043e\u0431\u0449\u0438\u0435 \u043a\u0430\u0440\u0442\u044b, \u0431\u0430\u043d\u043a ${match.group(3)}';
       }
+      if (sourceCopy == '5 board cards are already out') {
+        return '\u0423\u0436\u0435 \u043e\u0442\u043a\u0440\u044b\u0442\u043e 5 \u043e\u0431\u0449\u0438\u0445 \u043a\u0430\u0440\u0442';
+      }
+    }
+    if (localCopy.isNotEmpty) {
+      // The decision UI renders the authored wager beside its action.
+      // Keep that same amount in the English history receipt.
+      final amount = option.amountLabel.trim();
+      return !localeIsRu && amount.isNotEmpty
+          ? '$localCopy $amount'
+          : localCopy;
     }
   }
   // Only direct poker action IDs have unambiguous standalone meanings.
