@@ -8480,7 +8480,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'price_and_the_player_read',
         'Price and the player read',
         Act0FeedbackQualityV1.correct,
-        'With the same pot before you call, a larger call needs a higher winning share. The player read helps you rate those chances. Price tells you what a call costs. SPR shows how large the stack is next to the pot. In multiway pots, more than one foe can have a strong hand.',
+        'With the same pot before you call, a larger call needs a higher winning share. Use your read to judge that chance. SPR compares stack size with pot size. In multiway pots, several players can have strong hands.',
       ),
       (
         'the_last_pot_you_won',
