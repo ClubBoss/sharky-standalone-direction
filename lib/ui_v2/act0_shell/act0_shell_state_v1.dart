@@ -22,6 +22,7 @@ part 'act0_shell_lessons_w1_w4_v1.dart';
 part 'act0_shell_lessons_w5_w8_v1.dart';
 part 'act0_shell_lessons_w9_w12_v1.dart';
 part 'act0_shell_lessons_w13_w14_v1.dart';
+part 'act0_shell_lessons_w15_w16_v1.dart';
 part 'act0_shell_runners_part1_v1.dart';
 part 'act0_shell_runners_part2_v1.dart';
 part 'act0_shell_runners_part3_v1.dart';
@@ -1945,5 +1946,10 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     rewardXp: 360,
     lessons: _mindsetBridgeLessons,
   ),
-  if (act0CurriculumPilotEnabledV1) ...[_world13Pilot, _world14Pilot],
+  if (act0CurriculumPilotEnabledV1) ...[
+    _world13Pilot,
+    _world14Pilot,
+    _world15Pilot,
+    _world16Pilot,
+  ],
 ];

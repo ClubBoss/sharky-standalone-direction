@@ -1,5 +1,6 @@
 import 'act0_decision_reasoning_w10_w12_v1.dart';
 import 'act0_decision_reasoning_w13_w14_v1.dart';
+import 'act0_decision_reasoning_w15_w16_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
@@ -92,6 +93,17 @@ const act0PrinciplesV1 = <String, int>{
     "spr_commitment": 14,
     "pot_geometry": 14,
     "induce_raise": 14,
+    "texture_cbet_frequency": 15,
+    "earned_slowplay": 15,
+    "flop_texture_coverage": 15,
+    "lead_and_stab": 15,
+    "flop_raise_shape": 15,
+    "barrel_on_range_shift": 16,
+    "commitment_by_price": 16,
+    "street_value_budget": 16,
+    "delayed_attack": 16,
+    "pressure_or_price": 16,
+    "commitment_recheck": 16,
   },
 };
 
@@ -101,4 +113,5 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
   ...act0DecisionReasoningW7W9V1,
   ...act0DecisionReasoningW10W12V1,
   if (act0CurriculumPilotEnabledV1) ...act0DecisionReasoningW13W14V1,
+  if (act0CurriculumPilotEnabledV1) ...act0DecisionReasoningW15W16V1,
 };

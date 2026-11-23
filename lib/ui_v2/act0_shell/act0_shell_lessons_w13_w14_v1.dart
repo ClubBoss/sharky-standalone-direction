@@ -5085,15 +5085,12 @@ Act0LessonCardV1 _act0PilotLessonV1(
   String title,
   List<Act0LessonTaskV1> tasks,
 ) => Act0LessonCardV1(
-  // W8 already owns the original ID in globally keyed route progress.
-  lessonId: id == 'spr_and_commitment' ? 'w14_spr_and_commitment' : id,
+  // W4 and W8 already own these IDs in globally keyed route progress.
+  lessonId: _act0PilotLessonIdOverridesV1[id] ?? id,
   authoredLessonId: id,
   title: title,
   subtitle: tasks.first.runner.caption,
-  phaseLabel:
-      id == 'initiative_cbet_checkpoint' || id == 'induce_and_checkpoint'
-      ? 'Checkpoint'
-      : '',
+  phaseLabel: _act0PilotCheckpointLessonsV1.contains(id) ? 'Checkpoint' : '',
   primaryCtaLabel: 'Locked',
   state: Act0LessonStateV1.locked,
   isLocked: true,
@@ -5102,3 +5099,15 @@ Act0LessonCardV1 _act0PilotLessonV1(
   runner: tasks.first.runner,
   tasks: tasks,
 );
+
+const _act0PilotLessonIdOverridesV1 = {
+  'spr_and_commitment': 'w14_spr_and_commitment',
+  'protection_and_denial': 'w15_protection_and_denial',
+};
+
+const _act0PilotCheckpointLessonsV1 = {
+  'initiative_cbet_checkpoint',
+  'induce_and_checkpoint',
+  'check_raise_and_checkpoint',
+  'commitment_checkpoint',
+};

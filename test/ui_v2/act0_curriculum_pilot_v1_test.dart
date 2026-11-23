@@ -39,18 +39,29 @@ void main() {
       final lessons = worlds.expand((world) => world.lessons).toList();
       expect(lessons.map((l) => l.lessonId).toSet(), hasLength(lessons.length));
       expect(
-        worlds.last.lessons
+        worlds
+            .singleWhere((w) => w.worldNumber == 14)
+            .lessons
             .singleWhere((l) => l.lessonId == 'w14_spr_and_commitment')
             .authoredLessonId,
         'spr_and_commitment',
       );
+      expect(
+        worlds
+            .singleWhere((w) => w.worldNumber == 15)
+            .lessons
+            .singleWhere((l) => l.lessonId == 'w15_protection_and_denial')
+            .authoredLessonId,
+        'protection_and_denial',
+      );
+      expect(worlds.map((w) => w.worldNumber), List.generate(16, (i) => i + 1));
       final options = catalogTasks
           .where((row) => row.world.worldNumber >= 13)
           .expand((row) => row.task.runner.options)
           .where(
             (option) => option.quality == Act0FeedbackQualityV1.acceptable,
           );
-      expect(options, hasLength(2));
+      expect(options, hasLength(3));
       expect(options.every(act0RunnerOptionIsAuthoredCorrectV1), isTrue);
       expect(options.any(act0RunnerOptionIsPreferredV1), isFalse);
       final played = catalogTasks.where(
@@ -58,7 +69,7 @@ void main() {
             row.world.worldNumber >= 13 &&
             row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
-      expect(played, hasLength(48));
+      expect(played, hasLength(96));
       for (final row in played) {
         final checks = auditTableContributionsV1(
           row.task.taskId,
