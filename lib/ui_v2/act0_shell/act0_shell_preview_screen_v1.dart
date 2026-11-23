@@ -1218,7 +1218,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     super.key,
     this.initialTab = Act0ShellTabV1.home,
     this.initialPhase = Act0LessonPhaseV1.theory,
-    this.state,
+    Act0ShellStateV1? state,
     this.debugPersistFixtureProgress = false,
     this.showPlacementOnStart = true,
     this.debugLegacyPlacementOnStart = false,
@@ -1232,11 +1232,12 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     // Dev2 is now the canonical detached Act0 shell. The classic variant stays
     // available for explicit fallback comparisons.
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
-  });
+  }) : _state = state;
 
   final Act0ShellTabV1 initialTab;
   final Act0LessonPhaseV1 initialPhase;
-  final Act0ShellStateV1? state;
+  final Act0ShellStateV1? _state;
+  Act0ShellStateV1? get state => _state?.forLearners();
   @visibleForTesting
   final bool debugPersistFixtureProgress;
   final bool showPlacementOnStart;

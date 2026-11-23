@@ -14,7 +14,7 @@ typedef CatalogTask = ({
 });
 
 final catalogTasks = [
-  for (final world in Act0ShellStateV1.sample.worlds)
+  for (final world in Act0ShellStateV1.authoredCatalog.worlds)
     for (final (index, lesson) in world.lessons.indexed)
       for (final task in lesson.taskList)
         (world: world, lesson: lesson, task: task, lessonIndex: index),

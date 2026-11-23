@@ -1,0 +1,50 @@
+PokerStars Hand #900000000109:  Hold'em No Limit ($0.05/$0.10 USD) - 2026/11/23 02:13:00 ET
+Table 'Synthetic Full Ring' 9-max Seat #8 is the button
+Seat 1: PlayerOne ($10 in chips)
+Seat 2: PlayerTwo ($10 in chips)
+Seat 3: PlayerThree ($10 in chips)
+Seat 4: PlayerFour ($10 in chips)
+Seat 5: PlayerFive ($10 in chips)
+Seat 6: PlayerSix ($10 in chips)
+Seat 7: PlayerSeven ($10 in chips)
+Seat 8: PlayerEight ($10 in chips)
+Seat 9: PlayerNine ($10 in chips)
+PlayerNine: posts small blind $0.05
+PlayerOne: posts big blind $0.10
+*** HOLE CARDS ***
+Dealt to PlayerThree [As Qh]
+PlayerThree: raises $0.20 to $0.30
+PlayerTwo: folds
+PlayerFour: folds
+PlayerFive: folds
+PlayerSix: folds
+PlayerSeven: folds
+PlayerEight: folds
+PlayerNine: folds
+PlayerOne: calls $0.20
+*** FLOP *** [Ad 7c 2s]
+PlayerOne: checks
+PlayerThree: bets $0.40
+PlayerOne: calls $0.40
+*** TURN *** [Ad 7c 2s] [Kh]
+PlayerOne: checks
+PlayerThree: checks
+*** RIVER *** [Ad 7c 2s Kh] [9d]
+PlayerOne: bets $0.50
+PlayerThree: calls $0.50
+*** SHOW DOWN ***
+PlayerOne: shows [Ah Th] (a pair of Aces)
+PlayerThree: shows [As Qh] (a pair of Aces)
+PlayerThree collected $2.35 from pot
+*** SUMMARY ***
+Total pot $2.45 | Rake $0.10
+Board [Ad 7c 2s Kh 9d]
+Seat 1: PlayerOne (big blind) showed [Ah Th] and lost with a pair of Aces
+Seat 2: PlayerTwo folded before Flop (didn't bet)
+Seat 3: PlayerThree showed [As Qh] and won ($2.35) with a pair of Aces
+Seat 4: PlayerFour folded before Flop (didn't bet)
+Seat 5: PlayerFive folded before Flop (didn't bet)
+Seat 6: PlayerSix folded before Flop (didn't bet)
+Seat 7: PlayerSeven folded before Flop (didn't bet)
+Seat 8: PlayerEight (button) folded before Flop (didn't bet)
+Seat 9: PlayerNine (small blind) folded before Flop

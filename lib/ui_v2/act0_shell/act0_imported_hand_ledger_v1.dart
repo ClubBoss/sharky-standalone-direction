@@ -33,6 +33,10 @@ String? _handError(Act0ImportedHandV1 hand) {
     }
     previous = seat.number;
   }
+  if (!hand.seats.any((seat) => seat.number == hand.heroSeat) ||
+      !hand.seats.any((seat) => seat.number == hand.buttonSeat)) {
+    return 'The button and your seat must both be occupied.';
+  }
   final ledger = Act0HandBettingLedgerV1(
     hand.seats,
     hand.tableSize,
@@ -40,10 +44,6 @@ String? _handError(Act0ImportedHandV1 hand) {
     hand.smallBlindCents,
     hand.bigBlindCents,
   );
-  if (!ledger.remaining.containsKey(hand.heroSeat) ||
-      !ledger.remaining.containsKey(hand.buttonSeat)) {
-    return 'The button and your seat must both be occupied.';
-  }
   final lastStreet = _boardCount.indexOf(hand.board.length);
   for (final (index, action) in hand.actions.indexed) {
     if (action.street.index > lastStreet)

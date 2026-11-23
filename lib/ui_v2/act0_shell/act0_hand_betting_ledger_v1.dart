@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:poker_analyzer/models/poker_street.dart';
 
+import 'act0_hand_contributions_v1.dart';
+import 'act0_seat_order_v1.dart';
+
 enum Act0HandVerbV1 {
   smallBlind('Small blind'),
   bigBlind('Big blind'),
@@ -17,8 +20,8 @@ enum Act0HandVerbV1 {
   final String label;
 }
 
-/// Replays only the explicitly supported single-pot rules. Used when importing
-/// text and when checking a persisted record before exposing it to the archive.
+/// Replays betting for a dealt-in ring. Importers can impose additional
+/// restrictions on the source formats they accept.
 class Act0HandBettingLedgerV1 {
   Act0HandBettingLedgerV1(
     List<({int number, int stackCents})> seats,
@@ -28,10 +31,20 @@ class Act0HandBettingLedgerV1 {
     this.bigBlind, {
     this.allowShortRaises = false,
   }) : remaining = {for (final seat in seats) seat.number: seat.stackCents},
+       _seatOrder = Act0SeatOrderV1(
+         seats.map((seat) => seat.number).toList()..sort(),
+         buttonSeat,
+       ),
        liveSeats = {for (final seat in seats) seat.number},
        _lastSeat = buttonSeat,
-       _raiseMinimum = bigBlind;
+       _raiseMinimum = bigBlind {
+    if (!act0PreflopPositionsByCountV1.containsKey(tableSize) ||
+        seats.any((seat) => seat.number < 1 || seat.number > tableSize)) {
+      throw const FormatException('Seat number outside the table');
+    }
+  }
 
+  final Act0SeatOrderV1<int> _seatOrder;
   final bool allowShortRaises;
   final int tableSize, buttonSeat, smallBlind, bigBlind;
   final Map<int, int> remaining;
@@ -39,16 +52,29 @@ class Act0HandBettingLedgerV1 {
   final Map<int, int> _streetCents = {};
   final Map<int, int> _totalCents = {};
 
-  // Two contributions above a live all-in stack create a second pot.
-  // Count folded contributions too, after any uncalled return.
-  bool get hasSidePot => liveSeats.any(
-    (seat) =>
-        remaining[seat] == 0 &&
-        _totalCents.values
-                .where((total) => total > _totalCents[seat]!)
-                .length >=
-            2,
-  );
+  int _anteCents = 0;
+
+  /// Current contestable amounts in exact integer units, excluding uncalled
+  /// excess. Once betting settles and returns are recorded, these sum to potCents.
+  List<({int amountCents, Set<int> eligibleSeats})> get pots {
+    if (complete && liveSeats.length == 1) {
+      return [
+        (amountCents: potCents, eligibleSeats: {...liveSeats}),
+      ];
+    }
+    final contestable = act0ContestablePotsV1(
+      _totalCents,
+      liveSeats: liveSeats,
+      deadChips: _anteCents,
+    );
+    return [
+      for (final pot in contestable ?? const [])
+        (amountCents: pot.amount.toInt(), eligibleSeats: pot.eligibleSeats),
+    ];
+  }
+
+  bool get hasSidePot => pots.length > 1;
+
   final Map<int, PokerStreet> folds = {};
   PokerStreet street = PokerStreet.preflop;
   int potCents = 0;
@@ -66,10 +92,6 @@ class Act0HandBettingLedgerV1 {
   int get highest => _streetCents.values.fold(0, (a, b) => a > b ? a : b);
   Iterable<int> get _funded => liveSeats.where((seat) => remaining[seat]! > 0);
   Set<int> get _eligible => _pending ?? _funded.toSet();
-  int _nextSeat(int after, Set<int> candidates) => List.generate(
-    tableSize,
-    (index) => (after + index) % tableSize + 1,
-  ).firstWhere(candidates.contains);
   bool get _settled =>
       liveSeats.length == 1 ||
       _eligible.isEmpty ||
@@ -103,7 +125,7 @@ class Act0HandBettingLedgerV1 {
 
   int? get nextActor => _settled || _bigBlindSeat == null
       ? null
-      : _nextSeat(_lastSeat, _eligible);
+      : _seatOrder.nextAfter(_lastSeat, eligible: _eligible);
 
   bool add(
     ({PokerStreet street, int seat, Act0HandVerbV1 kind, int cents}) action,
@@ -144,25 +166,22 @@ class Act0HandBettingLedgerV1 {
         return false;
       }
       remaining[seat] = stack - cents;
-      _totalCents[seat] = (_totalCents[seat] ?? 0) + cents;
+      _anteCents += cents;
       potCents += cents;
       return true;
     }
     if (kind == Act0HandVerbV1.smallBlind || kind == Act0HandVerbV1.bigBlind) {
       if (_bigBlindSeat != null || stack <= cents) return false;
       if (kind == Act0HandVerbV1.smallBlind) {
-        final expected = liveSeats.length == 2
-            ? buttonSeat
-            : _nextSeat(buttonSeat, liveSeats);
         if (_smallBlindSeat != null ||
             cents != smallBlind ||
-            seat != expected) {
+            seat != _seatOrder.smallBlind) {
           return false;
         }
         _smallBlindSeat = seat;
       } else {
         if (_smallBlindSeat == null ||
-            seat != _nextSeat(_smallBlindSeat!, liveSeats) ||
+            seat != _seatOrder.bigBlind ||
             cents != bigBlind) {
           return false;
         }
@@ -175,7 +194,7 @@ class Act0HandBettingLedgerV1 {
 
     if (_bigBlindSeat == null || _settled || stack == 0) return false;
     final pending = _pending ??= _funded.toSet();
-    final next = _nextSeat(_lastSeat, pending);
+    final next = _seatOrder.nextAfter(_lastSeat, eligible: pending);
     if (seat != next) return false;
     final due = highest - contributed(seat);
     final raises = kind == Act0HandVerbV1.bet || kind == Act0HandVerbV1.raise;

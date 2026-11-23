@@ -247,8 +247,8 @@ class Act0ImportedHandV1 {
   final int potCents, rakeCents;
 
   /// Parse one complete English PokerStars USD NLHE cash record. This version
-  /// supports the single-pot two-blind format, including fold-outs and
-  /// showdowns. Unsupported source variants fail without returning a hand.
+  /// supports the single-pot two-blind format for 2–9 seats, including
+  /// fold-outs and showdowns. Unsupported source variants fail without returning a hand.
   static Act0ImportedHandV1 parsePokerStars(String text) =>
       _PokerStarsParser(text).parse();
 

@@ -9,6 +9,7 @@ import 'act0_goal_route_v1.dart';
 import 'act0_decision_ledger_v1.dart';
 import 'act0_hand_contributions_v1.dart';
 import 'act0_hand_timeline_v1.dart';
+import 'act0_seat_order_v1.dart';
 import 'act0_poker_reference_math_v1.dart';
 import 'act0_practice_showdown_v1.dart';
 import 'act0_preflop_equity_v1.dart';
@@ -91,21 +92,12 @@ enum Act0TaskFamilyV1 {
   transfer,
 }
 
-const Map<Act0TableFormatV1, List<String>> act0CanonicalSeatOrderByFormatV1 =
-    <Act0TableFormatV1, List<String>>{
-      Act0TableFormatV1.sixMax: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
-      Act0TableFormatV1.nineMax: <String>[
-        'UTG',
-        'UTG+1',
-        'MP',
-        'LJ',
-        'HJ',
-        'CO',
-        'BTN',
-        'SB',
-        'BB',
-      ],
-      Act0TableFormatV1.tenMax: <String>[
+final Map<Act0TableFormatV1, List<String>> act0CanonicalSeatOrderByFormatV1 =
+    Map.unmodifiable({
+      Act0TableFormatV1.sixMax: act0PreflopPositionsByCountV1[6]!,
+      Act0TableFormatV1.nineMax: act0PreflopPositionsByCountV1[9]!,
+      // Retained for existing data and labels.
+      Act0TableFormatV1.tenMax: const [
         'UTG',
         'UTG+1',
         'UTG+2',
@@ -117,7 +109,7 @@ const Map<Act0TableFormatV1, List<String>> act0CanonicalSeatOrderByFormatV1 =
         'SB',
         'BB',
       ],
-    };
+    });
 
 List<String> act0CanonicalSeatOrderForFormatV1(Act0TableFormatV1 format) =>
     act0CanonicalSeatOrderByFormatV1[format]!;
@@ -219,8 +211,13 @@ class Act0ShellStateV1 {
   Act0WorldCardV1 worldById(String worldId) =>
       worlds.firstWhere((world) => world.worldId == worldId);
 
-  Act0LessonCardV1 get currentLesson =>
-      lessons.firstWhere((lesson) => lesson.state == Act0LessonStateV1.current);
+  Act0LessonCardV1 get currentLesson => lessons.firstWhere(
+    (lesson) => lesson.state == Act0LessonStateV1.current,
+    orElse: () => lessons.firstWhere(
+      (lesson) => !lesson.isLocked,
+      orElse: () => lessons.first,
+    ),
+  );
 
   Act0LessonCardV1 lessonById(String lessonId) => lessons.firstWhere(
     (lesson) => lesson.lessonId == lessonId,
@@ -233,7 +230,63 @@ class Act0ShellStateV1 {
 
   double get xpProgress => xpTarget <= 0 ? 0 : (xp / xpTarget).clamp(0, 1);
 
-  static final sample = Act0ShellStateV1(
+  /// The normal Act0 entry uses the route-safe view of the authored catalog.
+  static final sample = authoredCatalog.forLearners();
+
+  Act0ShellStateV1 forLearners() {
+    final routedLessons = <Act0LessonCardV1, Act0LessonCardV1?>{};
+    Act0LessonCardV1? admitted(Act0LessonCardV1 lesson) {
+      if (routedLessons.containsKey(lesson)) return routedLessons[lesson];
+      return routedLessons[lesson] = lesson._forLearners();
+    }
+
+    final projectedWorlds = <Act0WorldCardV1>[];
+    for (final world in worlds) {
+      final visible = world.lessons.map(admitted).nonNulls.toList();
+      if (visible.length == world.lessons.length &&
+          world.lessons.every(
+            (lesson) => identical(admitted(lesson), lesson),
+          )) {
+        projectedWorlds.add(world);
+      } else if (visible.isNotEmpty) {
+        projectedWorlds.add(
+          world.copyWith(lessons: List.unmodifiable(visible)),
+        );
+      }
+    }
+    final projectedLessons = lessons.map(admitted).nonNulls.toList();
+    if (projectedWorlds.length == worlds.length &&
+        projectedWorlds.every((world) => worlds.contains(world)) &&
+        projectedLessons.length == lessons.length &&
+        lessons.every((lesson) => identical(admitted(lesson), lesson))) {
+      return this;
+    }
+    final selected =
+        projectedWorlds
+            .where((world) => world.worldId == selectedWorldId)
+            .firstOrNull ??
+        projectedWorlds.firstOrNull;
+    return Act0ShellStateV1(
+      courseTitle: courseTitle,
+      courseSubtitle: courseSubtitle,
+      levelLabel: levelLabel,
+      xp: xp,
+      xpTarget: xpTarget,
+      streakDays: streakDays,
+      dailyGoalLabel: dailyGoalLabel,
+      dailyGoalValue: dailyGoalValue,
+      pathProgressLabel: pathProgressLabel,
+      selectedWorldId: selected?.worldId ?? selectedWorldId,
+      worlds: List.unmodifiable(projectedWorlds),
+      lessons: List.unmodifiable(
+        projectedLessons.isEmpty ? selected?.lessons ?? [] : projectedLessons,
+      ),
+      review: review,
+      profile: profile,
+    );
+  }
+
+  static final authoredCatalog = Act0ShellStateV1(
     courseTitle: 'Poker from Zero',
     courseSubtitle: 'Learn the table one clear decision at a time.',
     levelLabel: 'Level 1',
@@ -415,6 +468,23 @@ class Act0LessonCardV1 {
   /// The mandatory route; repair targets stay addressable in the full catalog.
   List<Act0LessonTaskV1> get courseTaskList =>
       taskList.where((task) => !task.repairOnly).toList(growable: false);
+
+  Act0LessonCardV1? _forLearners() {
+    final all = taskList;
+    final visible = all
+        .where((task) => task.runner.supportsLearnerTable)
+        .toList();
+    if (visible.length == all.length && runner.supportsLearnerTable)
+      return this;
+    final firstCourseTask = visible
+        .where((task) => !task.repairOnly)
+        .firstOrNull;
+    if (firstCourseTask == null) return null;
+    return copyWith(
+      runner: runner.supportsLearnerTable ? runner : firstCourseTask.runner,
+      tasks: List.unmodifiable(visible),
+    );
+  }
 
   Act0LessonCardV1 copyWith({
     Act0LessonStateV1? state,
@@ -684,6 +754,10 @@ class Act0RunnerStateV1 {
   final String? selectedPresetId;
   final Act0SharkyCueV1 sharky;
   final String? feedbackSignalId;
+
+  bool get supportsLearnerTable =>
+      table.supportsLearnerTable &&
+      teachingSteps.every((step) => step.table?.supportsLearnerTable ?? true);
 
   Act0TeachingStepV1? get activeTeachingStep {
     if (teachingStepIndex < 0 || teachingStepIndex >= teachingSteps.length) {
@@ -1016,6 +1090,12 @@ class Act0TableStateV1 {
   final String? selectedSeatId;
   final String? instructionAnchor;
 
+  // Larger tables can be authored and audited before their visual layout ships.
+  bool get supportsLearnerTable =>
+      tableFormat == Act0TableFormatV1.sixMax &&
+      playerCount <= 6 &&
+      seats.length <= 6;
+
   String get tableSize => act0TableFormatLabelV1(tableFormat);
 
   List<String> get canonicalSeatOrder =>
@@ -1030,6 +1110,7 @@ class Act0TableStateV1 {
     Act0TableScopeV1? scope,
     bool? showDecisionPremise,
     Act0TableFormatV1? tableFormat,
+    int? playerCount,
     Act0TableDensityV1? density,
     List<Act0SeatStateV1>? seats,
     List<Act0CardStateV1>? heroCards,
@@ -1058,7 +1139,7 @@ class Act0TableStateV1 {
       scope: scope ?? this.scope,
       showDecisionPremise: showDecisionPremise ?? this.showDecisionPremise,
       tableFormat: tableFormat ?? this.tableFormat,
-      playerCount: playerCount,
+      playerCount: playerCount ?? this.playerCount,
       density: density ?? this.density,
       seats: (seats ?? this.seats)
           .map(

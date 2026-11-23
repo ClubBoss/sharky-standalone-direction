@@ -22,20 +22,15 @@ class PotTruthFindingV1 {
   String toString() => key;
 }
 
-/// Preflop action order for the six-max catalog.
-const act0PotTruthPreflopOrderV1 = <String>[
-  'UTG',
-  'HJ',
-  'CO',
-  'BTN',
-  'SB',
-  'BB',
-];
+String potTruthPositionPatternV1(Act0TableStateV1 table) =>
+    table.canonicalSeatOrder.reversed.map(RegExp.escape).join('|');
 
 final _amount = RegExp(r'^(\d+(?:\.\d+)?)\s*BB$', caseSensitive: false);
 final _trailAmount = RegExp(r'(\d+(?:\.\d+)?)\s*BB', caseSensitive: false);
-final _actor = RegExp(
-  r'^(?:(?:Preflop|Flop|Turn|River):\s*)?(UTG|HJ|CO|BTN|SB|BB|Hero)\b\s*(.*)$',
+RegExp _actor(Act0TableStateV1 table) => RegExp(
+  r'^(?:(?:Preflop|Flop|Turn|River):\s*)?'
+  '(${potTruthPositionPatternV1(table)}|Hero)'
+  r'\b\s*(.*)$',
   caseSensitive: false,
 );
 
@@ -112,7 +107,7 @@ String _heroActor(Act0TableStateV1 table) {
 /// Parses one trail label into an attributed action. Labels that do not name
 /// a single seat (for example "CO and BB: 30 BB each to side") are ignored.
 PotTruthActionV1? potTruthParseActionV1(Act0TableStateV1 table, String label) {
-  final m = _actor.firstMatch(label.trim());
+  final m = _actor(table).firstMatch(label.trim());
   if (m == null) return null;
   var actor = m.group(1)!.toUpperCase();
   if (actor == 'HERO') actor = _heroActor(table);
@@ -180,7 +175,7 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
     if (!potTruthContributionVerbsV1.contains(a.chipVerb) || a.amount != null) {
       continue;
     }
-    final clause = _actor.firstMatch(a.raw.trim())?.group(2) ?? '';
+    final clause = _actor(t).firstMatch(a.raw.trim())?.group(2) ?? '';
     if (RegExp(r'\bBB\b', caseSensitive: false).hasMatch(clause)) {
       bad('action_amount_unparsed', a.raw);
     }
@@ -253,19 +248,18 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
   // that did neither would be shown as eligible for chips it never matched.
   if (allIns.isNotEmpty && t.boardCards.isEmpty) {
     final first = allIns.first;
-    final from = act0PotTruthPreflopOrderV1.indexOf(first.actor);
+    final order = t.canonicalSeatOrder;
+    final from = order.indexOf(first.actor);
     final after = actions.skip(actions.indexOf(first) + 1);
     var reach = 0;
     for (final a in after) {
-      final i = act0PotTruthPreflopOrderV1.indexOf(a.actor);
+      final i = order.indexOf(a.actor);
       if (from < 0 || i < 0 || a.actor == first.actor) continue;
-      final d = (i - from) % act0PotTruthPreflopOrderV1.length;
+      final d = (i - from) % order.length;
       if (d > reach) reach = d;
     }
     for (var d = 1; d < reach; d++) {
-      final actor =
-          act0PotTruthPreflopOrderV1[(from + d) %
-              act0PotTruthPreflopOrderV1.length];
+      final actor = order[(from + d) % order.length];
       final seat = seats[actor];
       if (seat == null || !_live(seat)) continue;
       final put = potTruthBbV1(seat.currentBetLabel) ?? 0;
@@ -359,7 +353,9 @@ bool _pkr06HasPreflopCapBudgetV1(Act0TableStateV1 t) {
       t.actionTrail.isEmpty)
     return false;
   final action = RegExp(
-    r'^(?:Preflop:\s*)?(?:UTG|HJ|CO|BTN|SB|BB|Hero)\s+'
+    r'^(?:Preflop:\s*)?'
+    '(?:${potTruthPositionPatternV1(t)}|Hero)'
+    r'\s+'
     r'(?:folds|(?:blind|posts|bets|calls,?|raises to|shoves(?: to)?|all-in|contributes)'
     r'\s+\d+(?:\.\d+)?\s+BB(?: total| \(limps\))?(?:, then folds)?)$',
     caseSensitive: false,
