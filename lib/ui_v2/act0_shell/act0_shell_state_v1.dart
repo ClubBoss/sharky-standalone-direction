@@ -10,6 +10,7 @@ import 'act0_decision_ledger_v1.dart';
 import 'act0_hand_contributions_v1.dart';
 import 'act0_hand_timeline_v1.dart';
 import 'act0_poker_reference_math_v1.dart';
+import 'act0_practice_showdown_v1.dart';
 import 'act0_preflop_equity_v1.dart';
 import 'act0_starting_chart_v1.dart';
 import 'act0_asm05_authored_decision_truth_v1.dart';
@@ -19,6 +20,7 @@ import 'act0_w1_rules_check_v1.dart';
 
 part 'act0_shell_review_tasks_v1.dart';
 part 'act0_daily_deal_generator_v1.dart';
+part 'act0_daily_deal_pilot_v1.dart';
 part 'act0_shell_day7_review_v1.dart';
 part 'act0_shell_hand_timelines_v1.dart';
 part 'act0_shell_day7_content_v1.dart';

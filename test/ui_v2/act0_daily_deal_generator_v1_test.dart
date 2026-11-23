@@ -30,11 +30,11 @@ void main() {
     expect(anchors.keys, containsAll(act0DailyDealSourceTasksV1.keys));
     expect(
       act0DailyDealSourceTasksV1.values.toSet(),
-      Act0DailyDealTemplateV1.values.toSet(),
+      act0LegacyDailyDealTemplatesV1.toSet(),
     );
   });
 
-  for (final template in Act0DailyDealTemplateV1.values) {
+  for (final template in act0LegacyDailyDealTemplatesV1) {
     test(
       '1000 ${template.name} deals satisfy G1, Table Truth and independent score',
       () {
@@ -241,7 +241,7 @@ void main() {
 
   test('daily recipe and finite selection survive a queue round trip', () {
     final recipes = [
-      for (final template in Act0DailyDealTemplateV1.values.take(3))
+      for (final template in act0LegacyDailyDealTemplatesV1.take(3))
         (
           day: 20779,
           template: template,

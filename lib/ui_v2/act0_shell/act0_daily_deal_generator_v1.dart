@@ -1,6 +1,22 @@
 part of 'act0_shell_state_v1.dart';
 
-enum Act0DailyDealTemplateV1 { callPrice, cleanOuts, open, defendBb, lowSpr }
+enum Act0DailyDealTemplateV1 {
+  callPrice,
+  cleanOuts,
+  open,
+  defendBb,
+  lowSpr,
+  continuationTexture,
+  riverBluffCatch,
+}
+
+const act0LegacyDailyDealTemplatesV1 = [
+  Act0DailyDealTemplateV1.callPrice,
+  Act0DailyDealTemplateV1.cleanOuts,
+  Act0DailyDealTemplateV1.open,
+  Act0DailyDealTemplateV1.defendBb,
+  Act0DailyDealTemplateV1.lowSpr,
+];
 
 /// A rep is admitted only by a completed drill on the concrete skill. A lesson
 /// title or high world number by itself cannot unlock a generated decision.
@@ -26,6 +42,15 @@ const act0DailyDealSourceTasksV1 = <String, Act0DailyDealTemplateV1>{
   'w11_spr_low_overpair': Act0DailyDealTemplateV1.lowSpr,
 };
 
+Act0DailyDealTemplateV1? act0DailyDealTemplateForSourceV1(String taskId) =>
+    act0DailyDealSourceTasksV1[taskId] ??
+    (act0CurriculumPilotEnabledV1
+        ? _pilotDailySpotsV1[taskId]?.template
+        : null);
+
+bool act0IsPilotDailyDealSourceV1(String taskId) =>
+    act0CurriculumPilotEnabledV1 && _pilotDailySpotsV1.containsKey(taskId);
+
 typedef Act0DailyDealRecipeV1 = ({
   int day,
   Act0DailyDealTemplateV1 template,
@@ -42,7 +67,7 @@ Act0DailyDealRecipeV1? act0DailyDealRecipeV1(String id) {
   final parts = id.split(':');
   if (parts.length != 5 || parts[0] != _dailyDealPrefixV1) return null;
   final day = int.tryParse(parts[1]);
-  final template = act0DailyDealSourceTasksV1[parts[4]];
+  final template = act0DailyDealTemplateForSourceV1(parts[4]);
   if (day == null ||
       day < 0 ||
       parts[2] != template?.name ||
@@ -96,16 +121,25 @@ Act0LessonTaskV1? act0GenerateDailyDealV1({
   required String lessonId,
   required Act0DailyDealTemplateV1 template,
   required int seed,
+  String? sourceTaskId,
 }) {
   final rng = math.Random(seed);
   final deck = [..._dailyDealDeck]..shuffle(rng);
-  final content = switch (template) {
-    Act0DailyDealTemplateV1.open => _dailyOpenV1(rng, seed),
-    Act0DailyDealTemplateV1.defendBb => _dailyDefendV1(rng),
-    Act0DailyDealTemplateV1.callPrice => _dailyPriceV1(deck, rng),
-    Act0DailyDealTemplateV1.cleanOuts => _dailyTurnV1(rng),
-    Act0DailyDealTemplateV1.lowSpr => _dailyLowSprV1(rng),
-  };
+  final pilot = _pilotDailySpotsV1[sourceTaskId];
+  if (pilot != null &&
+      (!act0CurriculumPilotEnabledV1 || pilot.template != template))
+    return null;
+  final content = pilot != null
+      ? _pilotDailyDealV1(pilot, rng)
+      : switch (template) {
+          Act0DailyDealTemplateV1.open => _dailyOpenV1(rng, seed),
+          Act0DailyDealTemplateV1.defendBb => _dailyDefendV1(rng),
+          Act0DailyDealTemplateV1.callPrice => _dailyPriceV1(deck, rng),
+          Act0DailyDealTemplateV1.cleanOuts => _dailyTurnV1(rng),
+          Act0DailyDealTemplateV1.lowSpr => _dailyLowSprV1(rng),
+          Act0DailyDealTemplateV1.continuationTexture ||
+          Act0DailyDealTemplateV1.riverBluffCatch => null,
+        };
   if (content == null || !_dailyDealIsValidV1(content)) return null;
   final choices = [content.preferred, content.alternative]..shuffle(rng);
   return Act0LessonTaskV1(
@@ -326,18 +360,34 @@ _DailyDealContentV1 _dailyPriceV1(List<String> deck, math.Random rng) {
     openBb: 2.5 + 0.25 * rng.nextInt(7),
     showTurn: true,
   );
-  final (potBb: pot, toCallBb: callPrice) = _dailyDealAmountsV1(table);
-  final due = callPrice!;
-  final pct = act0CallPriceV1(pot, due)!.equity;
-  final alternative = due / pot;
-  return (
-    table: table,
+  final (potBb: pot, toCallBb: due) = _dailyDealAmountsV1(table);
+  return _dailyPriceAnswerV1(
+    table,
+    due! / pot,
     question: 'How often must you win to break even on a call?',
     premise: 'Assume there are no ties or bets after a call.',
+    opponent: opponent.toUpperCase(),
+  );
+}
+
+_DailyDealContentV1 _dailyPriceAnswerV1(
+  Act0TableStateV1 table,
+  double alternative, {
+  required String question,
+  required String premise,
+  String? opponent,
+}) {
+  final (potBb: pot, toCallBb: due) = _dailyDealAmountsV1(table);
+  final pct = act0CallPriceV1(pot, due!)!.equity;
+  final action = opponent == null ? '' : '$opponent has bet, and ';
+  return (
+    table: table,
+    question: question,
+    premise: premise,
     preferred: _dailyPctV1(pct),
     alternative: _dailyPctV1(alternative),
     explanation:
-        '${opponent.toUpperCase()} has bet, and your ${_act0BbLabelV1(due)} call makes the final pot ${_act0BbLabelV1(pot + due)}. Dividing by that final pot gives ${_dailyPctV1(pct)}. Dividing by the current pot sets the bar too high.',
+        '$action${opponent == null ? 'Your' : 'your'} ${_act0BbLabelV1(due)} call makes the final pot ${_act0BbLabelV1(pot + due)}. Dividing by that final pot gives ${_dailyPctV1(pct)}. Dividing by the current pot sets the bar too high.',
     correction:
         'That divides by the pot after the opponent’s bet. Include your call too. You need ${_dailyPctV1(pct)}.',
   );

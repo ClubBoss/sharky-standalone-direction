@@ -349,7 +349,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         (lesson) => lesson.isSelectable,
       )) {
         for (final task in lesson.courseTaskList) {
-          final template = act0DailyDealSourceTasksV1[task.taskId];
+          final template = act0DailyDealTemplateForSourceV1(task.taskId);
           if (template == null ||
               task.entryPhase != Act0LessonPhaseV1.drill ||
               !_completedTaskIds.contains(task.taskId))
@@ -375,21 +375,17 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     // lesson becomes eligible on the same day.
     final templates = [
       for (final template in Act0DailyDealTemplateV1.values)
-        if (template != Act0DailyDealTemplateV1.lowSpr ||
+        if (template.index < Act0DailyDealTemplateV1.lowSpr.index ||
             byTemplate.containsKey(template))
           template,
     ];
-    return [
+    final generated = [
       for (var offset = 0; offset < templates.length; offset++)
         if (byTemplate[templates[(day + offset) % templates.length]]
             case final entries?)
           for (final entry in [
-            entries[day % entries.length],
-            ...entries.where(
-              (entry) =>
-                  entry.taskId != entries[day % entries.length].taskId &&
-                  _dailyPracticeQueue.taskIds.contains(entry.taskId),
-            ),
+            _dailyTemplateEntryV1(entries, day, templates.length),
+            ...entries.where(_isQueuedDailyEntryV1),
           ])
             if (_generatedDailyTaskV1(
                   _lessonById(
@@ -400,7 +396,33 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
                 ) !=
                 null)
               entry,
+    ].toSet().toList();
+    if (!act0CurriculumPilotEnabledV1) return generated;
+    return [
+      ...generated.where(_isPilotDailyEntryV1),
+      ...generated.where((entry) => !_isPilotDailyEntryV1(entry)),
     ];
+  }
+
+  bool _isQueuedDailyEntryV1(_Act0DailyDeckEntryV1 entry) =>
+      _dailyPracticeQueue.taskIds.contains(entry.taskId);
+
+  bool _isPilotDailyEntryV1(_Act0DailyDeckEntryV1 entry) =>
+      act0IsPilotDailyDealSourceV1(
+        act0DailyDealRecipeV1(entry.taskId)!.sourceTaskId,
+      );
+
+  _Act0DailyDeckEntryV1 _dailyTemplateEntryV1(
+    List<_Act0DailyDeckEntryV1> entries,
+    int day,
+    int templateCount,
+  ) {
+    if (!act0CurriculumPilotEnabledV1) return entries[day % entries.length];
+    final pilot = entries.where(_isPilotDailyEntryV1).toList();
+    // Advance the source on a different cadence from the template rotation.
+    return pilot.isEmpty
+        ? entries[day % entries.length]
+        : pilot[(day ~/ templateCount + day % templateCount) % pilot.length];
   }
 
   Act0LessonTaskV1? _generatedDailyTaskV1(
@@ -429,6 +451,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         lessonId: lesson.lessonId,
         template: recipe.template,
         seed: day * 31 + recipe.template.index,
+        sourceTaskId: recipe.sourceTaskId,
       ),
     );
   }
