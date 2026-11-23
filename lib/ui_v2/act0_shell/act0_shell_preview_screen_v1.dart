@@ -11,6 +11,8 @@ import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
 import 'act0_attempt_archive_v1.dart';
+import 'act0_leak_archive_projection_v1.dart';
+import 'act0_leak_dashboard_v1.dart';
 import 'act0_attempt_archive_screen_v1.dart';
 import 'act0_beta_metrics_v1.dart';
 import 'act0_observability_projection_v1.dart';
@@ -102,6 +104,7 @@ part 'act0_shell_preview_copy_v1.dart';
 part 'act0_shell_preview_debug_surfaces_v1.dart';
 part 'act0_shell_preview_persistence_v1.dart';
 part 'act0_shell_preview_learning_run_v1.dart';
+part 'act0_shell_preview_leaks_v1.dart';
 part 'act0_shell_preview_home_v1.dart';
 part 'act0_shell_preview_launch_v1.dart';
 part 'act0_shell_preview_placement_v1.dart';
@@ -5042,6 +5045,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           onSelected: (value) => setState(() {
                             _reviewConfidence = value;
                           }),
+                          leakDashboard: Act0LeakDashboardV1.forReview(
+                            () => _leakDashboardForReviewV1(
+                              state,
+                              reviewState,
+                              reviewCoaching,
+                            ),
+                          ),
                           repeatedMistake: _repeatedMistakeForReviewV1(
                             reviewState,
                             reviewCoaching,

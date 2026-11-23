@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_leak_dashboard_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart'
@@ -61,6 +62,7 @@ class Act0AcademyReviewLeafInputV1 {
   const Act0AcademyReviewLeafInputV1({
     this.openMistakes = const <Act0MistakeCardV1>[],
     this.repeatedMistake,
+    this.leakDashboard,
     this.pastRepairs = const <Act0MistakeCardV1>[],
     this.dueItems = const <Act0DueReviewItemV1>[],
     this.savedChecks = const <Act0AcademyReviewSavedCheckV1>[],
@@ -78,6 +80,7 @@ class Act0AcademyReviewLeafInputV1 {
 
   final List<Act0MistakeCardV1> openMistakes;
   final Act0MistakeCardV1? repeatedMistake;
+  final Act0LeakDashboardV1? leakDashboard;
   final List<Act0MistakeCardV1> pastRepairs;
   final List<Act0DueReviewItemV1> dueItems;
   final List<Act0AcademyReviewSavedCheckV1> savedChecks;

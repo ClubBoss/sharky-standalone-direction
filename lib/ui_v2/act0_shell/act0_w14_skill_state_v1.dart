@@ -146,6 +146,12 @@ const _skillOverridesByTaskId = <String, List<String>>{
   'w12_pretty_hand_bad_price_fold': ['Mental game', 'Betting decisions'],
 };
 
+List<String> act0SkillsForTaskV1(String lessonId, String taskId) =>
+    _skillOverridesByTaskId[taskId] ??
+    act0W14LessonSkillsV1[lessonId] ??
+    _extensionLessonSkills[lessonId] ??
+    const <String>[];
+
 class Act0W14SkillStateV1 {
   const Act0W14SkillStateV1({
     required this.label,
@@ -198,12 +204,8 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
         world.worldNumber >= 1 && world.worldNumber <= act0SkillMapLastWorldV1,
   )) {
     for (final lesson in world.lessons) {
-      final lessonSkills =
-          act0W14LessonSkillsV1[lesson.lessonId] ??
-          _extensionLessonSkills[lesson.lessonId] ??
-          const <String>[];
       for (final task in lesson.taskList) {
-        final skills = _skillOverridesByTaskId[task.taskId] ?? lessonSkills;
+        final skills = act0SkillsForTaskV1(lesson.lessonId, task.taskId);
         final key = identity(world.worldId, lesson.lessonId, task.taskId);
         taskSkills[key] = skills;
         for (final skill in skills) {

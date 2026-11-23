@@ -104,12 +104,26 @@ B23 status: the screen-logic inventory (`docs/plan/SCREEN_LOGIC_INVENTORY_v1.md`
 | | |
 |---|---|
 | **Job** | P1/P3: repeat what I got wrong until it sticks. P2: gentle second chance. |
-| **Must-have (by index)** | 1) Due repeats (Day 2 / Day 7) with count. 2) Recurring mistake patterns → targeted practice (HST-05). 3) Entry to Attempt archive and Own hands. 4) Leak dashboard (NEW VI-34, later: accuracy by position/street/skill). |
+| **Must-have (by index)** | 1) Due repeats (Day 2 / Day 7) with count. 2) Recurring mistake patterns → targeted practice (HST-05). 3) Entry to Attempt archive and Own hands. 4) Leak dashboard (VI-34, mechanism behind a preview flag). |
 | **States** | empty (no mistakes yet: explain how review fills) · due items · nothing due · patterns found · storage error |
 | **Actions / nav** | Start review → task. Pattern → practice. Archive → Archive. Own hands → Own hands. |
 | **NOT here** | Raw stats without a next action, solver charts, paywall. |
 | **Designer DoD** | Empty state drawn with a reason; due vs not-due clear; pattern rows lead to an action. |
 | **Mechanisms first** | `act0_review_shell_v1.dart`, `act0_review_mistake_history_*`, `act0_review_pattern_coaching_v1.dart`: review view model `{due[], patterns[], archiveCount, ownHandsCount}`; leak aggregates (VI-34) from attempt archive + skill map. |
+
+### Your leaks (B31 · Review data contract, also usable in Profile)
+
+| State | Data and behavior |
+|---|---|
+| Flag off | Review receives no model. `leakDashboardV1` defaults off and is disabled in release builds. |
+| Empty | No eligible learning records in the local attempt archive. Explain what fills the section. |
+| Too little data | No breakdown bucket has the required sample. Show first-attempt and repeat counts and “Not enough data” for each thin sample. |
+| Ready | At least one bucket qualifies. Show accuracy and counts by position, street, skill, concept and world. Rank up to three groups with misses by lowest accuracy, then larger sample and stable bucket order. A fully correct group has no leak. |
+| Improving | Ready, with higher accuracy in the latest seven days than the preceding seven days. Both samples meet the threshold. This describes the observed answers across those periods. |
+| Trends | Rolling UTC 7- and 30-day samples, each compared with its preceding equal-length window. Apply the threshold independently to each sample. |
+| Practice targets | Each ranked leak carries deduplicated task IDs from the existing HST-05 repair route and the currently eligible Daily Practice deck. The target includes its route, world, lesson and source task ID. An empty list means there is no current target. |
+
+The denominator is first independent answers to distinct tasks in the retained archive. The default minimum is eight first answers per bucket or trend sample. Repeat counts are separate. Placement, guided or assisted first answers and legacy rows with unproven first-attempt status cannot contribute to accuracy. Position and street depend on verifiable task metadata. The model is read-only and uses the existing Review input for both current renderers.
 
 ## 9. Archive / Replay
 | | |
@@ -166,4 +180,4 @@ B23 status: the screen-logic inventory (`docs/plan/SCREEN_LOGIC_INVENTORY_v1.md`
 | 4 | LRN-01.a confidence/mistake-reason data | 6,8 | VI-16 | B23 step 3 |
 | 5 | View models for Placement, Map, Lesson intro, Result, Settings | 2,4,5,7,12 | VI-01 | B25 (B23 follow-up) |
 | 6 | Trail gap fixes + migration | 6 | VI-14 | B21 |
-| 7 | Leak aggregates (data only) | 8 | VI-34 | after owner scope |
+| 7 | Leak aggregates and Review model (data only) | 8,11 | VI-34 | B31 |
