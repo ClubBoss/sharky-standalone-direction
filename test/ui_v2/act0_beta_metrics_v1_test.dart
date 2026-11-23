@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_release_support_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -368,25 +370,61 @@ void main() {
     },
   );
 
-  testWidgets('Settings hides Beta activity with the feature off', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Act0ShellPreviewScreenV1(
-          initialTab: Act0ShellTabV1.profile,
-          showPlacementOnStart: false,
-          enableBetaMetrics: false,
+  testWidgets(
+    'Settings shows version and local support with Beta activity off',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      PackageInfo.setMockInitialValues(
+        appName: 'Sharky',
+        packageName: 'test.sharky',
+        version: '1.2.3',
+        buildNumber: '45',
+        buildSignature: '',
+      );
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            initialTab: Act0ShellTabV1.profile,
+            showPlacementOnStart: false,
+            enableBetaMetrics: false,
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('act0_settings_beta_activity')), findsNothing);
-    expect(find.text('Copy summary'), findsNothing);
-  });
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_settings_beta_activity')),
+        findsNothing,
+      );
+      expect(find.text('Version 1.2.3 (build 45)'), findsOneWidget);
+      final support = find.byKey(const Key('act0_settings_support'));
+      await tester.ensureVisible(support);
+      await tester.tap(support);
+      await tester.pumpAndSettle();
+
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      String? copied;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied = (call.arguments as Map)['text'] as String;
+        }
+        return null;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      await tester.tap(find.text('Copy diagnostics'));
+      await tester.pumpAndSettle();
+      expect(copied, contains('Version 1.2.3 (build 45)'));
+      expect(copied, contains('Framework errors this session: 0'));
+      expect(copied, contains('Uncaught errors this session: 0'));
+      expect(copied, isNot(contains('Survey')));
+      expect(find.text('Copy summary'), findsNothing);
+      expect(find.text('Diagnostics copied.'), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'beta foreground records a return and Settings shows local feedback',
@@ -435,6 +473,21 @@ void main() {
       await tester.ensureVisible(entry);
       await tester.tap(entry);
       await settle();
+      if (act0SupportEmailV1.isEmpty) {
+        expect(
+          find.textContaining(
+            'Open TestFlight, select Sharky, and tap Send Beta Feedback.',
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining(
+            'Paste the copied diagnostics into the comments field',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('Copy diagnostics'), findsOneWidget);
+      }
       expect(find.text('Day 2: Returned'), findsOneWidget);
       expect(find.text('Day 7: Still open'), findsOneWidget);
       expect(find.text('Corrected mistakes: 0'), findsOneWidget);

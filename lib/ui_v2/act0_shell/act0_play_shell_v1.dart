@@ -784,6 +784,7 @@ class _PracticeQueueCtaPressMotionV1State
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.disableAnimationsOf(context)) return widget.child;
     return Listener(
       key: const Key('act0_shell_play_repair_queue_cta_press_motion'),
       onPointerDown: (_) => _setPressed(true),

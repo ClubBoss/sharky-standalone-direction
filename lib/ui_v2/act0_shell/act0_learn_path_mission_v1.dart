@@ -1264,7 +1264,9 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
               ),
             ),
             AnimatedSize(
-              duration: const Duration(milliseconds: 110),
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 110),
               reverseDuration: const Duration(milliseconds: 90),
               curve: Curves.easeOutCubic,
               alignment: Alignment.topCenter,

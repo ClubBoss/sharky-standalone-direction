@@ -588,6 +588,9 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       }
       showDialog<void>(
         context: context,
+        animationStyle: MediaQuery.disableAnimationsOf(context)
+            ? AnimationStyle.noAnimation
+            : null,
         barrierDismissible: false,
         builder: (context) => Act0LearningRunPayoffSheetV1(
           payoff: _pendingLearningRunPayoffV1!,
@@ -874,6 +877,9 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
   Future<void> _handleResetAppProgress() async {
     final shouldReset = await showDialog<bool>(
       context: context,
+      animationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       builder: (context) {
         return AlertDialog(
           title: const Text('Reset progress?'),
@@ -919,6 +925,9 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
   }) async {
     await showModalBottomSheet<void>(
       context: context,
+      sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Act0PremiumPreviewSheetV1(

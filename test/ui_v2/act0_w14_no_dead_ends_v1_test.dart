@@ -184,21 +184,29 @@ void main() {
         continue;
       }
       final correct = task.runner.options.firstWhere((o) => o.isCorrect);
-      final candidates = [
-        if (task.runner.sizingConfig.isEnabled)
-          find.byKey(Key('act0_shell_sizing_preset_${correct.id}')),
-        find.byKey(Key('act0_shell_option_${correct.id}')),
-        if (correct.seatId != null)
-          find.byKey(Key('act0_shell_seat_tap_${correct.seatId}')),
-      ];
       Finder? target;
-      for (final f in candidates) {
-        if (f.evaluate().isEmpty) continue;
-        await tester.ensureVisible(f.first);
-        await tester.pumpAndSettle();
-        if (f.hitTestable().evaluate().isNotEmpty) {
-          target = f.first;
-          break;
+      for (final option in task.runner.options) {
+        final candidates = [
+          if (task.runner.sizingConfig.isEnabled)
+            find.byKey(Key('act0_shell_sizing_preset_${option.id}')),
+          find.byKey(Key('act0_shell_option_${option.id}')),
+          if (option.seatId != null)
+            find.byKey(Key('act0_shell_seat_tap_${option.seatId}')),
+        ];
+        Finder? reachable;
+        for (final candidate in candidates) {
+          if (candidate.evaluate().isEmpty) continue;
+          await tester.ensureVisible(candidate.first);
+          await tester.pumpAndSettle();
+          if (candidate.hitTestable().evaluate().isNotEmpty) {
+            reachable = candidate.hitTestable().first;
+            break;
+          }
+        }
+        if (reachable == null) {
+          problems.add('${task.taskId}: option ${option.id} is not tappable');
+        } else if (option.id == correct.id) {
+          target = find.byKey(tester.widget(reachable).key!).first;
         }
       }
       if (target == null) {
@@ -206,6 +214,8 @@ void main() {
         continue;
       }
       checked++;
+      await tester.ensureVisible(target);
+      await tester.pumpAndSettle();
       await tester.tap(target, warnIfMissed: false);
       await tester.pumpAndSettle();
       if (task.runner.sizingConfig.isEnabled) {

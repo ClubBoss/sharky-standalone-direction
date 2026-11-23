@@ -13,9 +13,11 @@ typedef _Sample = ({int frames, int widgets, int runner, int peakMicros});
 // The widget binding measures synchronous build/layout/paint, excluding raster.
 const _baseline = <String, _Sample>{
   'enterTheory': (frames: 39, widgets: 396, runner: 1, peakMicros: 80000),
-  'openDecision': (frames: 39, widgets: 703, runner: 2, peakMicros: 90000),
+  // ACC-03 keyboard focus nodes (+6)
+  'openDecision': (frames: 39, widgets: 709, runner: 2, peakMicros: 90000),
   'showFeedback': (frames: 152, widgets: 894, runner: 2, peakMicros: 120000),
-  'openRepair': (frames: 19, widgets: 738, runner: 2, peakMicros: 120000),
+  // ACC-03 keyboard focus nodes (+6)
+  'openRepair': (frames: 19, widgets: 744, runner: 2, peakMicros: 120000),
   'showRecheck': (frames: 152, widgets: 835, runner: 2, peakMicros: 110000),
 };
 

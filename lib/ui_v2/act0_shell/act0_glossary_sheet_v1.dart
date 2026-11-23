@@ -26,6 +26,9 @@ Future<void> showAct0GlossarySheetV1(
 }) {
   return showModalBottomSheet<void>(
     context: context,
+    sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+        ? AnimationStyle.noAnimation
+        : null,
     isScrollControlled: true,
     useSafeArea: true,
     backgroundColor: Act0ShellTokensV1.surface,

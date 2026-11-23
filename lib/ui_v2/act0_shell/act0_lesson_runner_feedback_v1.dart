@@ -10,6 +10,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     required this.sharkyLine,
     required this.sharkyMood,
     required this.selectedLabel,
+    this.otherOptions = const [],
     required this.preferredLabel,
     required this.betterLabel,
     this.taskFamily,
@@ -51,6 +52,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String sharkyLine;
   final Act0SharkyMoodV1 sharkyMood;
   final String selectedLabel;
+  final List<String> otherOptions;
   final String preferredLabel;
   final String betterLabel;
   final Act0TaskFamilyV1? taskFamily;
@@ -88,6 +90,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
     title: title,
     selectedLabel: selectedLabel,
+    otherOptions: otherOptions,
     reason: reason,
     assisted: isAssistedDecision,
     child: _buildFeedback(context),
@@ -1045,7 +1048,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         ],
                       ),
                     ],
-                    if (!rapidMode && showPotSweep && potLabel.isNotEmpty) ...[
+                    if (!rapidMode &&
+                        !MediaQuery.disableAnimationsOf(context) &&
+                        showPotSweep &&
+                        potLabel.isNotEmpty) ...[
                       const SizedBox(height: 9),
                       _PotSweepMomentV1(potLabel: potLabel),
                     ],

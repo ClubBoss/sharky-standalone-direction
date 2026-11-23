@@ -654,7 +654,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              InkWell(
+              _LearnButtonV1(
                 key: Key('act0_shell_lesson_${lesson.title}'),
                 onTap: () => onSelectLesson(lesson.lessonId),
                 borderRadius: BorderRadius.circular(
@@ -778,7 +778,9 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                       const SizedBox(width: 4),
                       AnimatedRotation(
                         turns: expanded ? 0.5 : 0.0,
-                        duration: const Duration(milliseconds: 150),
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : const Duration(milliseconds: 150),
                         curve: Curves.easeOutCubic,
                         child: Icon(
                           Icons.keyboard_arrow_down_rounded,
@@ -792,7 +794,9 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
               ),
               ClipRect(
                 child: AnimatedSize(
-                  duration: const Duration(milliseconds: 140),
+                  duration: MediaQuery.disableAnimationsOf(context)
+                      ? Duration.zero
+                      : const Duration(milliseconds: 140),
                   reverseDuration: const Duration(milliseconds: 110),
                   curve: Curves.easeInOutCubic,
                   alignment: Alignment.topCenter,

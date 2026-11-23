@@ -333,6 +333,10 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
         return;
       }
       final top = _learnScrollController.position.minScrollExtent;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _learnScrollController.jumpTo(top);
+        return;
+      }
       _learnScrollController.animateTo(
         top,
         duration: const Duration(milliseconds: 240),
@@ -400,6 +404,10 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       return;
     }
     final durationMs = (140 + (delta * 0.18)).clamp(140, 320).round();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _learnScrollController.jumpTo(target);
+      return;
+    }
     await _learnScrollController.animateTo(
       target,
       duration: Duration(milliseconds: durationMs),
@@ -463,6 +471,10 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     if (epoch != _scrollEpochV1 ||
         widget.detailLessonId != lessonId ||
         widget.activePopupTaskId != taskId) {
+      return;
+    }
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _learnScrollController.jumpTo(target);
       return;
     }
     await _learnScrollController.animateTo(
@@ -877,4 +889,18 @@ int _hiddenLockedLessonCountV5(
       if (!visible.contains(i) && lessons[i].state == Act0LessonStateV1.locked)
         i,
   ].length;
+}
+
+class _LearnButtonV1 extends InkWell {
+  const _LearnButtonV1({
+    required super.key,
+    required super.onTap,
+    required super.borderRadius,
+    required super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) => MergeSemantics(
+    child: Semantics(button: true, child: super.build(context)),
+  );
 }

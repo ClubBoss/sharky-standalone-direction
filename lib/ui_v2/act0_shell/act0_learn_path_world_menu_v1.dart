@@ -26,6 +26,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
   ) async {
     await showModalBottomSheet<void>(
       context: context,
+      sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       backgroundColor: Colors.transparent,
       isScrollControlled: false,
       builder: (context) => Padding(
@@ -391,6 +394,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
               key: const Key('act0_shell_world_popup_scrim'),
               color: Colors.black.withValues(alpha: 0.18),
               dismissible: true,
+              semanticsLabel: MaterialLocalizations.of(
+                context,
+              ).modalBarrierDismissLabel,
               onDismiss: onDismissWorldDetail,
             ),
           ),
@@ -404,6 +410,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                 Act0ShellTokensV1.gapMd,
               ),
               child: GestureDetector(
+                excludeFromSemantics: true,
                 onTap: () {},
                 child: _SelectedWorldPopupV1(
                   world: detailWorld!,
@@ -588,14 +595,24 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
-    _controller.forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1;
+    } else if (_controller.isDismissed) {
+      _controller.forward();
+    }
   }
 
   @override
   void didUpdateWidget(_WorldNodeV1 oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.selected != widget.selected ||
-        oldWidget.world.status != widget.world.status) {
+    if (!MediaQuery.disableAnimationsOf(context) &&
+        (oldWidget.selected != widget.selected ||
+            oldWidget.world.status != widget.world.status)) {
       _controller.forward(from: 0.0);
     }
   }
@@ -657,7 +674,7 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
           clipBehavior: Clip.none,
           child: Material(
             color: Colors.transparent,
-            child: InkWell(
+            child: _LearnButtonV1(
               key: Key('act0_shell_world_${widget.world.worldNumber}'),
               borderRadius: BorderRadius.circular(nodeRadius),
               onTap: () => widget.onSelectWorld(widget.world.worldId),
