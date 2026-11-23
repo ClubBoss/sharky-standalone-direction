@@ -1,4 +1,5 @@
 import 'package:flutter/semantics.dart';
+import 'act0_curriculum_pilot_v1.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_glossary_sheet_v1.dart';
 import 'act0_growth_v1.dart';
@@ -542,7 +543,7 @@ class Act0BlockCompletionSummaryV1 {
   bool get hasWorldCompletionPayoff =>
       isWorldComplete &&
       worldNumber >= 2 &&
-      worldNumber <= 12 &&
+      worldNumber <= act0LastCurriculumWorldV1 &&
       (nextWorldNumber == worldNumber + 1 || worldNumber == 12) &&
       nextWorldTitle != null &&
       nextWorldTitle!.trim().isNotEmpty;
@@ -610,6 +611,7 @@ class Act0BlockCompletionSummaryV1 {
   bool get hasTerminalCompletionPayoff =>
       isWorldComplete &&
       worldNumber == 12 &&
+      (!act0CurriculumPilotEnabledV1 || nextWorldNumber == null) &&
       nextWorldTitle != null &&
       nextWorldTitle!.trim().isNotEmpty;
 
@@ -4481,7 +4483,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final decisionShelfMaxHeight =
           registration == null ||
               widget.worldNumber < 1 ||
-              widget.worldNumber > 12
+              widget.worldNumber > act0LastCurriculumWorldV1
           ? null
           : math.max(
               0.0,

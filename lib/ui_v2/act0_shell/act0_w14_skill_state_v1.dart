@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'act0_authored_source_proof_v1.dart';
+import 'act0_curriculum_pilot_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 
-const act0SkillMapLastWorldV1 = 12;
+const act0SkillMapLastWorldV1 = act0LastCurriculumWorldV1;
 
 // Explicit curriculum ownership, independent of task-name substring guesses.
 // These are lesson topics; individual tasks can have a narrower topic.
@@ -48,6 +49,20 @@ const act0W14LessonSkillsV1 = <String, List<String>>{
 };
 
 const _extensionLessonSkills = <String, List<String>>{
+  if (act0CurriculumPilotEnabledV1) ...{
+    "range_advantage": ["Range reading"],
+    "nut_advantage": ["Range reading"],
+    "equity_vs_range": ["Range reading"],
+    "equity_realization": ["Range reading"],
+    "backdoor_draws": ["Range reading"],
+    "initiative_cbet_checkpoint": ["Range reading"],
+    "merged_underbet": ["Betting decisions"],
+    "polarized_sizing": ["Betting decisions"],
+    "read_sizing_and_abstraction": ["Betting decisions"],
+    "w14_spr_and_commitment": ["Stack decisions"],
+    "pot_geometry": ["Stack decisions", "Betting decisions"],
+    "induce_and_checkpoint": ["Betting decisions"],
+  },
   'board_texture_basics': ['Board reading'],
   'connected_boards': ['Board reading'],
   'flush_draws': ['Board reading'],

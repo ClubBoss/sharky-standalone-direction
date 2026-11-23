@@ -119,8 +119,8 @@ Iterable<String> renderCatalogTaskSectionV1(
     final runner = task.runner;
     final table = runner.table;
     final tableLine = catalogTableLine(table);
-    if (lessonId != row.lesson.lessonId) {
-      lessonId = row.lesson.lessonId;
+    if (lessonId != row.lesson.authoredLessonId) {
+      lessonId = row.lesson.authoredLessonId;
       yield '===== WORLD ' +
           row.world.worldNumber.toString() +
           ' · LESSON $lessonId · ' +
@@ -130,7 +130,7 @@ Iterable<String> renderCatalogTaskSectionV1(
     }
     final reviewFamily = act0NewReviewConceptFamilyV1(
       row.world.worldId,
-      row.lesson.lessonId,
+      row.lesson.authoredLessonId,
       task.taskId,
     );
     yield 'TASK ' +
@@ -255,13 +255,13 @@ Iterable<String> renderCatalogTaskSectionV1(
   }
 }
 
-String renderCatalogSnapshot({Set<int>? worlds}) {
+String renderCatalogSnapshot({Set<int>? worlds, bool excludePilot = false}) {
   Iterable<CatalogTask> include(Iterable<CatalogTask> rows) => worlds == null
-      ? rows
+      ? rows.where((row) => !excludePilot || row.world.worldNumber <= 12)
       : rows.where((row) => worlds.contains(row.world.worldNumber));
   final course = include(catalogTasks).toList();
   final worldNames = worlds == null
-      ? 'W1–W12'
+      ? 'W1–W${course.last.world.worldNumber}'
       : (worlds.toList()..sort()).map((world) => 'W$world').join(', ');
   return ([
         'SHARKY POKER — EN learning content, ${course.length} tasks · $worldNames',

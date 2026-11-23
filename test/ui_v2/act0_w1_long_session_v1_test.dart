@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -1277,14 +1278,16 @@ void main() {
 
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const w7ToW8 = bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
-  const lastWorld = w7ToW8 ? 8 : (fullRoute ? 12 : 7);
-  for (final firstWorld in w7ToW8 ? [7] : (fullRoute ? [1, 2] : [1])) {
+  const pilot = act0CurriculumPilotEnabledV1 && !w7ToW8;
+  const lastWorld = pilot ? 14 : (w7ToW8 ? 8 : (fullRoute ? 12 : 7));
+  for (final firstWorld
+      in pilot ? [13] : (w7ToW8 ? [7] : (fullRoute ? [1, 2] : [1]))) {
     final expectedWorlds = {
       for (var world = firstWorld; world <= lastWorld; world++) world,
     };
     final useRulesCheck = firstWorld == 2;
     testWidgets(
-      'a ${w7ToW8 ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
+      'a ${w7ToW8 || pilot ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
       (t) async {
         SharedPreferences.setMockInitialValues(<String, Object>{});
         t.view.physicalSize = const Size(393, 852);
@@ -1320,10 +1323,10 @@ void main() {
         var complete = false;
         const w7Checkpoint = 'w7_checkpoint_river_card_excludes_hand';
         var priorXp = 0;
-        if (w7ToW8) {
+        if (w7ToW8 || pilot) {
           priorXp = await _openSavedCourseTask(
             t,
-            worldId: 'world_7',
+            worldId: 'world_$firstWorld',
             taskId: worlds.first.lessons.first.courseTaskList.first.taskId,
           );
         } else {
@@ -1412,7 +1415,11 @@ void main() {
                   (world != 7 || taskId == w7Checkpoint);
               final choice = injectMiss
                   ? wrong.first
-                  : runner.options.firstWhere((o) => o.isCorrect);
+                  : runner.options.firstWhere(
+                      pilot
+                          ? act0RunnerOptionIsPreferredV1
+                          : (o) => o.isCorrect,
+                    );
               if (injectMiss) missedWorlds.add(world);
               final tapped = await _tapFirst(t, [
                 if (runner.sizingConfig.isEnabled)
@@ -1567,7 +1574,8 @@ void main() {
             .toSet();
         expect(taskWorld.keys.toSet().difference(completed), isEmpty);
         final practiced =
-            (snapshot['routePractice'] as Map)['finished'] as List;
+            ((snapshot['routePractice'] as Map?)?['finished'] as List?) ??
+            const [];
         expect(
           practiced.toSet(),
           {
@@ -1583,7 +1591,9 @@ void main() {
             .expand((lesson) => lesson.courseTaskList)
             .map((task) => task.taskId)
             .toSet();
-        final expectedCount = w7ToW8
+        final expectedCount = pilot
+            ? 60
+            : w7ToW8
             ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
             : (fullRoute
                       ? 452 + wave6TaskDeltaV1 + y5dNewChoicesV1.length
@@ -1596,7 +1606,7 @@ void main() {
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
         );
         if (useRulesCheck) expect(completed.intersection(w1Ids), isEmpty);
-        if (fullRoute && !w7ToW8) {
+        if (fullRoute && !w7ToW8 && !pilot) {
           expect(completed, contains('w12_checkpoint_full_loop_line'));
           expect(completed, contains('w12_checkpoint_review'));
         }
@@ -1614,7 +1624,7 @@ void main() {
           ),
         );
         expect(confirmedMisses, expectedWorlds);
-        if (fullRoute) {
+        if (fullRoute || pilot) {
           await _mount(t);
           final restored = await _saved(t);
           expect(restored['completedTaskIds'], snapshot['completedTaskIds']);
