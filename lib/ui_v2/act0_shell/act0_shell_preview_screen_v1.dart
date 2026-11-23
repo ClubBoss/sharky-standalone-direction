@@ -4965,6 +4965,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           onClose: () => setState(() {
                             _showAttemptArchiveV1 = false;
                           }),
+                          onOwnHandsChanged: (archive) {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1))
+                              return;
+                            setState(() => _attemptArchiveV1 = archive);
+                            _persistProgress();
+                          },
+                          onPracticeCallPrice: _ownHandCallPricePracticeV1(
+                            worlds,
+                            callbackEpochV1,
+                          ),
                           onSelect: (id) {
                             if (!_acceptRecoveryCallbackV1(callbackEpochV1)) {
                               return;

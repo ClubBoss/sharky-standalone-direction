@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
@@ -856,6 +858,118 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets(
+      'imports, replays, restores around corruption and deletes an own hand',
+      (t) async {
+        await _openSavedCourseTask(
+          t,
+          worldId: 'world_7',
+          taskId: 'visible_king_combo_reduction_intro',
+        );
+        await _mount(t);
+        await openArchive(t);
+        Future<void> tap(String label) async {
+          expect(await _tapFirst(t, [find.text(label)]), isTrue, reason: label);
+        }
+
+        await tap('Own hands');
+        await tap('Import own hand');
+        final fixture = File(
+          'test/fixtures/hand_history/pokerstars_nlhe_usd_fold.txt',
+        ).readAsStringSync();
+        final text = find.widgetWithText(TextField, 'PokerStars hand history');
+        await t.enterText(text, 'Other provider · PrivateName');
+        await tap('Import hand');
+        expect(find.textContaining('Unsupported format.'), findsOneWidget);
+        await t.enterText(text, fixture.split('*** SUMMARY ***').first);
+        await tap('Import hand');
+        expect(
+          find.textContaining(
+            'Incomplete, invalid or unsupported hand details',
+          ),
+          findsOneWidget,
+        );
+        await t.enterText(text, fixture);
+        await tap('Import hand');
+        expect(find.text('Own hand · PokerStars'), findsOneWidget);
+        expect(find.text('Betting decisions · Call price'), findsOneWidget);
+        expect(find.text('Step 0 of 9'), findsOneWidget);
+        await tap('Next');
+        expect(find.textContaining('Button: seat 1.'), findsOneWidget);
+        await tap('Next');
+        expect(
+          find.text(r'Preflop: seat 1 · Small blind $0.05 · Pot $0.05'),
+          findsOneWidget,
+        );
+        await tap('Previous');
+        expect(find.textContaining('Button: seat 1.'), findsOneWidget);
+        await tap('Back to own hands');
+        await tap('Import own hand');
+        await t.enterText(text, fixture);
+        await tap('Import hand');
+        expect(find.text('This hand is already saved.'), findsOneWidget);
+        await tap('Cancel');
+
+        final saved = await _saved(t);
+        final archive = saved['attemptArchive'] as Map;
+        final hand = (archive['importedHands'] as List).single as Map;
+        expect(jsonEncode(hand), isNot(contains('TestButton')));
+        expect(jsonEncode(hand), isNot(contains('900000000102')));
+        expect(archive['entries'], isEmpty);
+        await t.pumpWidget(const SizedBox());
+        // Seed one damaged record alongside the real save. The retained row
+        // must still be reachable through the learner path after remount.
+        SharedPreferences.setMockInitialValues({
+          'act0_welcome_completed_v1': true,
+          'intake_completed_v1': true,
+          'act0_shell_progress_v1': jsonEncode({
+            ...saved,
+            'attemptArchive': {
+              ...archive,
+              'importedHands': [
+                {...hand, 'sourceKey': 'c' * 64, 'potCents': 999},
+                hand,
+              ],
+            },
+          }),
+        });
+        await _mount(t);
+        await openArchive(t);
+        await tap('Own hands');
+        expect(find.text('Replay hand'), findsOneWidget);
+        await tap('Replay hand');
+        expect(find.text('Own hand · PokerStars'), findsOneWidget);
+        await tap('Practice call price');
+        expect(
+          t
+              .widget<Act0LessonRunnerShellV1>(
+                find.byType(Act0LessonRunnerShellV1),
+              )
+              .selectedTaskId,
+          'w4_good_price_call',
+        );
+        await _mount(t);
+        await openArchive(t);
+        await tap('Own hands');
+        await tap('Remove own hand');
+        await tap('Cancel');
+        expect(find.text('Replay hand'), findsOneWidget);
+        await tap('Remove own hand');
+        await tap('Remove hand');
+        expect(find.text('No saved own hands.'), findsOneWidget);
+        final deleted = await _saved(t);
+        expect((deleted['attemptArchive'] as Map)['importedHands'], isNull);
+        expect(
+          deleted['learningEvidenceHistory'],
+          saved['learningEvidenceHistory'],
+        );
+        await _mount(t);
+        await openArchive(t);
+        await tap('Own hands');
+        expect(find.text('No saved own hands.'), findsOneWidget);
+      },
+    );
 
     testWidgets('keeps the submitted attempt and deletion across restarts', (
       t,

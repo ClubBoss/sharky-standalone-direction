@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
+
+import 'act0_hand_contributions_v1.dart';
 
 part 'act0_pokerstars_hand_history_v1.dart';
 part 'act0_imported_hand_ledger_v1.dart';
@@ -24,14 +27,17 @@ class Act0HandImportExceptionV1 implements Exception {
 }
 
 enum Act0ImportedActionKindV1 {
-  smallBlind,
-  bigBlind,
-  fold,
-  check,
-  call,
-  bet,
-  raise,
-  uncalledReturn,
+  smallBlind('Small blind'),
+  bigBlind('Big blind'),
+  fold('Fold'),
+  check('Check'),
+  call('Call'),
+  bet('Bet'),
+  raise('Raise'),
+  uncalledReturn('Uncalled return');
+
+  const Act0ImportedActionKindV1(this.label);
+  final String label;
 }
 
 typedef Act0ImportedSeatV1 = ({int number, int stackCents});
@@ -47,6 +53,7 @@ typedef Act0ImportedActionV1 = ({
 class Act0ImportedHandV1 {
   Act0ImportedHandV1._({
     required this.sourceKey,
+    this.isManual = false,
     required this.timeEt,
     required this.tableSize,
     required this.buttonSeat,
@@ -73,7 +80,133 @@ class Act0ImportedHandV1 {
        payouts = Map.unmodifiable(payouts);
 
   static const format = 'pokerstars-usd-nlhe-v1';
+  static const manualFormat = 'manual-usd-nlhe-v1';
+  final bool isManual;
   final String sourceKey;
+
+  static Act0ImportedHandV1 manual({
+    Act0ImportedHandV1? previous,
+    required int tableSize,
+    required int buttonSeat,
+    required int heroSeat,
+    required int smallBlindCents,
+    required int bigBlindCents,
+    required List<Act0ImportedSeatV1> seats,
+    required List<String> heroCards,
+    required List<String> board,
+    required List<Act0ImportedActionV1> actions,
+    required Map<int, List<String>> shownCards,
+    required Map<int, int> payouts,
+    required int rakeCents,
+  }) {
+    if (previous != null && !previous.isManual) {
+      throw const FormatException('Only manually entered hands can be edited.');
+    }
+    final random = Random.secure();
+    final hand = Act0ImportedHandV1._(
+      sourceKey:
+          previous?.sourceKey ??
+          sha256
+              .convert(List.generate(32, (_) => random.nextInt(256)))
+              .toString(),
+      isManual: true,
+      timeEt: '',
+      tableSize: tableSize,
+      buttonSeat: buttonSeat,
+      heroSeat: heroSeat,
+      smallBlindCents: smallBlindCents,
+      bigBlindCents: bigBlindCents,
+      seats: [...seats]..sort((a, b) => a.number.compareTo(b.number)),
+      heroCards: heroCards,
+      board: board,
+      actions: actions,
+      shownCards: shownCards,
+      payouts: payouts,
+      showdown:
+          seats.length -
+              actions
+                  .where(
+                    (action) => action.kind == Act0ImportedActionKindV1.fold,
+                  )
+                  .length >
+          1,
+      potCents: actions.fold(
+        0,
+        (pot, action) =>
+            pot +
+            (action.kind == Act0ImportedActionKindV1.uncalledReturn
+                ? -action.cents
+                : action.cents),
+      ),
+      rakeCents: rakeCents,
+    );
+    final error = _handError(hand);
+    if (error != null) throw FormatException(error);
+    return hand;
+  }
+
+  Act0HandContributionsV1 contributions(
+    PokerStreet street,
+    Iterable<Act0ImportedActionV1> recordedActions, {
+    bool includeStackLimits = true,
+  }) => Act0HandContributionsV1(
+    throughStreet: street,
+    startingStackBbBySeat: {
+      if (includeStackLimits)
+        for (final seat in seats)
+          seat.number.toString(): seat.stackCents / bigBlindCents,
+    },
+    entries: [
+      for (final action in recordedActions)
+        if (action.cents > 0)
+          Act0ContributionV1(
+            action.street,
+            action.seat.toString(),
+            switch (action.kind) {
+              Act0ImportedActionKindV1.smallBlind ||
+              Act0ImportedActionKindV1.bigBlind => Act0ContributionKindV1.blind,
+              Act0ImportedActionKindV1.uncalledReturn =>
+                Act0ContributionKindV1.uncalledReturn,
+              _ => Act0ContributionKindV1.wager,
+            },
+            action.cents / bigBlindCents,
+          ),
+    ],
+  );
+
+  Set<String> get seatIds => {for (final seat in seats) seat.number.toString()};
+
+  /// The recorded decision faced a price. This describes the spot only.
+  late final String? practiceLessonId = _findPracticeLesson();
+
+  String? _findPracticeLesson() {
+    final ledger = _HandLedger(
+      seats,
+      tableSize,
+      buttonSeat,
+      smallBlindCents,
+      bigBlindCents,
+    );
+    for (final action in actions) {
+      while (ledger.street.index < action.street.index) {
+        if (!ledger.advance()) return null;
+      }
+      final facesPrice =
+          action.seat == heroSeat &&
+          ledger.highest > ledger.contributed(heroSeat);
+      if (facesPrice &&
+          const {
+            Act0ImportedActionKindV1.fold,
+            Act0ImportedActionKindV1.call,
+            Act0ImportedActionKindV1.raise,
+          }.contains(action.kind)) {
+        return 'call_price';
+      }
+      if (!ledger.add(action)) return null;
+    }
+    return null;
+  }
+
   final String timeEt;
   final int tableSize, buttonSeat, heroSeat, smallBlindCents, bigBlindCents;
   final List<Act0ImportedSeatV1> seats;
@@ -91,7 +224,7 @@ class Act0ImportedHandV1 {
       _PokerStarsParser(text).parse();
 
   Map<String, Object?> toPayload() => {
-    'format': format,
+    'format': isManual ? manualFormat : format,
     'sourceKey': sourceKey,
     'timeEt': timeEt,
     'tableSize': tableSize,
@@ -125,7 +258,7 @@ class Act0ImportedHandV1 {
 
   static Act0ImportedHandV1? tryParse(Object? data) {
     if (data case {
-      'format': format,
+      'format': final String sourceFormat,
       'sourceKey': final String sourceKey,
       'timeEt': final String timeEt,
       'tableSize': final int tableSize,
@@ -142,8 +275,10 @@ class Act0ImportedHandV1 {
       'potCents': final int pot,
       'rakeCents': final int rake,
     }) {
-      if (!_sourceKey.hasMatch(sourceKey) ||
-          !_validEt(timeEt) ||
+      final isManual = sourceFormat == manualFormat;
+      if ((sourceFormat != format && !isManual) ||
+          !_sourceKey.hasMatch(sourceKey) ||
+          (isManual ? timeEt.isNotEmpty : !_validEt(timeEt)) ||
           rawSeats.length > 9 ||
           rawBoard.length > 5 ||
           rawActions.length > _maxHandActions ||
@@ -203,6 +338,7 @@ class Act0ImportedHandV1 {
       }
       final hand = Act0ImportedHandV1._(
         sourceKey: sourceKey,
+        isManual: isManual,
         timeEt: timeEt,
         tableSize: tableSize,
         buttonSeat: buttonSeat,
