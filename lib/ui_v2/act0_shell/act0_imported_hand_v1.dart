@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:poker_analyzer/models/card_model.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/services/hand_evaluator.dart';
 
 import 'act0_hand_contributions_v1.dart';
 
@@ -13,7 +15,14 @@ enum Act0HandImportErrorV1 {
   unsupportedFormat,
   malformedHand,
   conflictingSource,
+  archiveFull,
+  sidePot,
 }
+
+const act0OwnHandArchiveFullMessageV1 =
+    'Own hands is full. Remove a hand before adding another.';
+const act0OwnHandSidePotMessageV1 =
+    'Side pots are unsupported. A short all-in call must leave one pot.';
 
 class Act0HandImportExceptionV1 implements Exception {
   const Act0HandImportExceptionV1(this.code, {this.line});

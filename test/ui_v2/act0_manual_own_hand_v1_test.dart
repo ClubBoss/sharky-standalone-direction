@@ -69,6 +69,47 @@ void main() {
     },
   );
 
+  test('the 201st own hand is refused and the oldest hand is retained', () {
+    var archive = const Act0AttemptArchiveV1.empty().importPokerStars(fixture);
+    final editable = manual();
+    archive = archive.saveManualHand(editable);
+    for (var count = 2; count < 200; count++) {
+      archive = archive.saveManualHand(manual());
+    }
+    final before = archive.toPayload();
+    final full = isA<Act0HandImportExceptionV1>().having(
+      (error) => error.code,
+      'code',
+      Act0HandImportErrorV1.archiveFull,
+    );
+    expect(() => archive.saveManualHand(manual()), throwsA(full));
+    expect(
+      () => archive.importPokerStars(
+        fixture.replaceFirstMapped(
+          RegExp(r'Hand #([0-9]+)'),
+          (match) => 'Hand #${int.parse(match[1]!) + 1}',
+        ),
+      ),
+      throwsA(full),
+    );
+    expect(archive.toPayload(), before);
+    expect(archive.importedHands.last.sourceKey, imported.sourceKey);
+    expect(archive.importPokerStars(fixture), same(archive));
+
+    final edited = manual(previous: editable, cards: ['Ac', '2s']);
+    final updated = archive.saveManualHand(edited);
+    expect(updated.importedHands, hasLength(200));
+    expect(updated.importedHands, contains(same(edited)));
+    expect(updated.importedHands.last.sourceKey, imported.sourceKey);
+    expect(
+      updated
+          .removeImportedHand(imported.sourceKey)
+          .saveManualHand(manual())
+          .importedHands,
+      hasLength(200),
+    );
+  });
+
   test('manual entry rejects illegal actions, payouts and duplicate cards', () {
     final invalid = [...imported.actions];
     invalid[2] = (

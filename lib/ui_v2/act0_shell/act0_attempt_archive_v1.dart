@@ -223,11 +223,11 @@ class Act0AttemptArchiveV1 {
         Act0HandImportErrorV1.conflictingSource,
       );
     }
-    return Act0AttemptArchiveV1._(
-      attempts,
-      selectedId,
-      [hand, ...importedHands].take(limit),
-    );
+    _requireOwnHandSpace();
+    return Act0AttemptArchiveV1._(attempts, selectedId, [
+      hand,
+      ...importedHands,
+    ]);
   }
 
   Act0AttemptArchiveV1 saveManualHand(Act0ImportedHandV1 hand) {
@@ -235,6 +235,7 @@ class Act0AttemptArchiveV1 {
     final exists = importedHands.any(
       (saved) => saved.sourceKey == hand.sourceKey,
     );
+    if (!exists) _requireOwnHandSpace();
     return Act0AttemptArchiveV1._(
       attempts,
       selectedId,
@@ -243,8 +244,14 @@ class Act0AttemptArchiveV1 {
               for (final saved in importedHands)
                 saved.sourceKey == hand.sourceKey ? hand : saved,
             ]
-          : [hand, ...importedHands].take(limit),
+          : [hand, ...importedHands],
     );
+  }
+
+  void _requireOwnHandSpace() {
+    if (importedHands.length >= limit) {
+      throw const Act0HandImportExceptionV1(Act0HandImportErrorV1.archiveFull);
+    }
   }
 
   Act0AttemptArchiveV1 removeImportedHand(String sourceKey) =>

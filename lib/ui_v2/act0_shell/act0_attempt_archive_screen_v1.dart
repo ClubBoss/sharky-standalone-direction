@@ -49,7 +49,15 @@ class _Act0AttemptArchiveScreenV1State
       ),
     );
     if (!mounted || hand == null) return;
-    widget.onOwnHandsChanged(widget.archive.saveManualHand(hand));
+    try {
+      widget.onOwnHandsChanged(widget.archive.saveManualHand(hand));
+    } on Act0HandImportExceptionV1 catch (failure) {
+      if (failure.code != Act0HandImportErrorV1.archiveFull) rethrow;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(act0OwnHandArchiveFullMessageV1)),
+      );
+      return;
+    }
     setState(() => _replayingHand = hand);
   }
 
@@ -69,8 +77,7 @@ class _Act0AttemptArchiveScreenV1State
             enableSuggestions: false,
             decoration: InputDecoration(
               labelText: 'PokerStars hand history',
-              helperText:
-                  'English USD NLHE cash · one complete single-pot hand',
+              helperText: 'English USD NLHE cash. Side pots are unsupported.',
               helperMaxLines: 2,
               errorText: error,
               errorMaxLines: 3,
@@ -101,6 +108,10 @@ class _Act0AttemptArchiveScreenV1State
                             '${failure.line == null ? '.' : ' near line ${failure.line}.'}',
                       Act0HandImportErrorV1.conflictingSource =>
                         'A different record for this PokerStars hand is already saved.',
+                      Act0HandImportErrorV1.archiveFull =>
+                        act0OwnHandArchiveFullMessageV1,
+                      Act0HandImportErrorV1.sidePot =>
+                        act0OwnHandSidePotMessageV1,
                     },
                   );
                 }

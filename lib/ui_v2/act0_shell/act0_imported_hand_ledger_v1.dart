@@ -61,6 +61,7 @@ String? _handError(Act0ImportedHandV1 hand) {
     if (!ledger.advance())
       return 'Finish betting and record any uncalled return before dealing more cards.';
   }
+  if (ledger.hasSidePot) return act0OwnHandSidePotMessageV1;
   if (!ledger.complete) {
     return 'Finish betting and record any uncalled return.';
   }
@@ -101,6 +102,25 @@ String? _handError(Act0ImportedHandV1 hand) {
       return 'A shown card duplicates another known card.';
     }
   }
+  if (hand.showdown) {
+    final known = {
+      ...hand.shownCards,
+      if (ledger.liveSeats.contains(hand.heroSeat))
+        hand.heroSeat: hand.heroCards,
+    };
+    final seats = known.keys.toList();
+    List<CardModel> cards(List<String> tokens) => [
+      for (final token in tokens) CardModel(rank: token[0], suit: token[1]),
+    ];
+    final winners = HandEvaluator.evaluateShowdown([
+      for (final seat in seats) cards(known[seat]!),
+    ], cards(hand.board));
+    for (final (index, seat) in seats.indexed) {
+      if (hand.payouts.containsKey(seat) && !winners.contains(index)) {
+        return 'Seat $seat is beaten by another known hand at showdown.';
+      }
+    }
+  }
   return null;
 }
 
@@ -122,6 +142,18 @@ class _HandLedger {
   final Map<int, int> remaining;
   final Set<int> liveSeats;
   final Map<int, int> _streetCents = {};
+  final Map<int, int> _totalCents = {};
+
+  // Two contributions above a live all-in stack create a second pot.
+  // Count folded contributions too, after any uncalled return.
+  bool get hasSidePot => liveSeats.any(
+    (seat) =>
+        remaining[seat] == 0 &&
+        _totalCents.values
+                .where((total) => total > _totalCents[seat]!)
+                .length >=
+            2,
+  );
   final Map<int, PokerStreet> folds = {};
   PokerStreet street = PokerStreet.preflop;
   int potCents = 0;
@@ -234,7 +266,7 @@ class _HandLedger {
     final legal = switch (kind) {
       Act0ImportedActionKindV1.fold => cents == 0,
       Act0ImportedActionKindV1.check => due == 0 && cents == 0,
-      Act0ImportedActionKindV1.call => due > 0 && cents == due,
+      Act0ImportedActionKindV1.call => due > 0 && cents == min(due, stack),
       Act0ImportedActionKindV1.bet => highest == 0 && cents >= _raiseMinimum,
       Act0ImportedActionKindV1.raise =>
         highest > 0 && cents - due >= _raiseMinimum,
@@ -261,6 +293,7 @@ class _HandLedger {
   void _transfer(int seat, int cents) {
     remaining[seat] = remaining[seat]! - cents;
     _streetCents[seat] = contributed(seat) + cents;
+    _totalCents[seat] = (_totalCents[seat] ?? 0) + cents;
     potCents += cents;
   }
 }

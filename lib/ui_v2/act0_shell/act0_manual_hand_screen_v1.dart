@@ -218,7 +218,8 @@ class _Act0ManualHandScreenV1State extends State<Act0ManualHandScreenV1> {
             ),
             if (_step == 0) ...[
               const Text(
-                'Enter a complete single-pot NLHE hand. Use USD cents and leave empty seats blank.',
+                'Enter a complete single-pot NLHE hand. Use USD cents and leave empty seats blank. '
+                'Side pots are unsupported. Return any uncalled chips after a short all-in call.',
               ),
               DropdownButtonFormField<int>(
                 initialValue: _size,

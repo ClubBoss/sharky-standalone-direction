@@ -160,6 +160,9 @@ class _PokerStarsParser {
     _index++;
     while (_line != '*** SUMMARY ***') {
       _playLine();
+      if (_ledger.complete && _ledger.hasSidePot) {
+        _fail(Act0HandImportErrorV1.sidePot);
+      }
       _index++;
     }
     _index++;
