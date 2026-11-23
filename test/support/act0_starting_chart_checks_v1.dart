@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
 
 import 'act0_catalog_decision_v1.dart';
+import 'act0_catalog_poker_facts_v1.dart';
 import 'act0_catalog_snapshot_v1.dart';
 import 'act0_catalog_chart_audit_v1.dart';
 
@@ -17,6 +19,87 @@ int _chartActionOrder(Act0ChartActionV1 action) => switch (action) {
 };
 
 void registerAct0StartingChartChecksV1() {
+  test('Full-ring opening ranges strictly widen from UTG through BTN', () {
+    expect(
+      Act0FullRingChartSeatV1.values.map((seat) => seat.label),
+      act0CanonicalSeatOrderForFormatV1(Act0TableFormatV1.nineMax),
+    );
+    final ranges = act0FullRingOpenRangesV1;
+    expect(ranges.keys, Act0FullRingChartSeatV1.values.take(7));
+    var previous = const <String>{};
+    for (final entry in ranges.entries) {
+      expect(
+        act0ChartHandsV1,
+        containsAll(entry.value),
+        reason: entry.key.label,
+      );
+      expect(entry.value, containsAll(previous), reason: entry.key.label);
+      expect(
+        entry.value.length,
+        greaterThan(previous.length),
+        reason: entry.key.label,
+      );
+      previous = entry.value;
+    }
+  });
+
+  test('Full-ring opens stay within six-max for the same players behind', () {
+    final sixMax = Act0ChartSeatV1.values;
+    final fullRing = Act0FullRingChartSeatV1.values;
+    for (final seat in fullRing.skip(fullRing.length - sixMax.length)) {
+      final playersBehind = fullRing.length - seat.index - 1;
+      final equivalent = sixMax[sixMax.length - playersBehind - 1];
+      for (final hand in act0ChartHandsV1) {
+        final action = act0FullRingOpenActionV1(hand, seat);
+        final sixMaxAction = act0ChartActionV1(
+          hand,
+          equivalent,
+          Act0ChartPrefixV1.unopened,
+        );
+        final reason =
+            '${seat.label}/${equivalent.name} $hand ($playersBehind behind)';
+        if (sixMaxAction == Act0ChartActionV1.notCovered) {
+          expect(action, Act0ChartActionV1.notCovered, reason: reason);
+        } else if (action == Act0ChartActionV1.raise) {
+          expect(sixMaxAction, Act0ChartActionV1.raise, reason: reason);
+        }
+      }
+    }
+  });
+
+  test('W8 format drills agree with the AJs opening boundary', () {
+    for (final seat in act0FullRingOpenRangesV1.keys) {
+      final behind = Act0FullRingChartSeatV1.values.length - seat.index - 1;
+      expect(
+        act0FullRingOpenActionV1('AJs', seat),
+        behind <= 5 ? Act0ChartActionV1.raise : Act0ChartActionV1.fold,
+        reason: seat.label,
+      );
+    }
+    for (final (id, isFullRing) in [
+      ('w7_6max_wider', false),
+      ('w7_fullring_tighter', true),
+    ]) {
+      final row = catalogTasks.singleWhere((row) => row.task.taskId == id);
+      final runner = row.task.runner;
+      final hand = startingHandCode(physicalCards(runner.table.heroCards));
+      expect(row.world.worldNumber, 8, reason: id);
+      expect(hand, 'AJs', reason: id);
+      expect(runner.table.heroSeat.seatLabel, 'UTG', reason: id);
+      final action = isFullRing
+          ? act0FullRingOpenActionV1(hand!, Act0FullRingChartSeatV1.utg)
+          : act0ChartActionV1(
+              hand!,
+              Act0ChartSeatV1.utg,
+              Act0ChartPrefixV1.unopened,
+            );
+      final correct = runner.options.singleWhere(
+        act0RunnerOptionIsAuthoredCorrectV1,
+      );
+      expect(catalogActionV1(correct.label), action.name, reason: id);
+    }
+  });
+
   test('G1·41–42 starting chart findings are individually accounted for', () {
     final rows = [
       ...catalogTasks,
