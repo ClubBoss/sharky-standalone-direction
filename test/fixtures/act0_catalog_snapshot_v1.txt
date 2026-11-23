@@ -24,8 +24,8 @@ TRAIL: A player adds half a unit · A player adds one unit
   + [correct] Bottom seat [seat btn] — Your cards found. The two cards at the bottom belong to you.
     FEEDBACK TABLE: Preflop | You Ks Ts | Pot 1.5 BB | Seat BTN | Seat focus btn | Tap utg, btn, bb | Center Blinds posted | Empty board No board cards yet | Facts no applicable hand facts
 
-TASK what_poker_is_find_hero [drill] Find your seat
-SUMMARY: Spot where Hero sits before anything else starts moving.
+TASK what_poker_is_find_hero [drill] Your cards and the board
+SUMMARY: Distinguish your private cards from the shared board.
 CAPTION: Look at the cards in both parts of the table.
 Q: Which cards belong to you alone?
 HINT [theoryOnly]: Compare the cards at your seat with the cards in the middle.
