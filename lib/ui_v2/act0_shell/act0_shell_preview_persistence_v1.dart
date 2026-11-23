@@ -496,6 +496,24 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           );
         }
       }
+      _multiStreetRunsV1.clear();
+      if (parsed.multiStreetRuns.isNotEmpty) {
+        for (final world in worldsAfterProgress) {
+          for (final lesson in world.lessons) {
+            for (final task in lesson.courseTaskList) {
+              final hand = task.multiStreet;
+              final run = parsed.multiStreetRuns[task.taskId];
+              if (hand != null &&
+                  run != null &&
+                  run.index < hand.decisions.length &&
+                  (run.choiceId == null ||
+                      hand.choiceAt(run.index, run.choiceId) != null)) {
+                _multiStreetRunsV1[task.taskId] = run;
+              }
+            }
+          }
+        }
+      }
       _lessonResumeV1 =
           savedResume != null &&
               _validLessonResumeV1(
@@ -1150,6 +1168,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       lastShortSessionDay: _lastShortSessionDayV1,
       firstLessonReminderAnswered: _firstLessonReminderAnsweredV1,
       lessonResume: _lessonResumeV1,
+      multiStreetRuns: _multiStreetRunsV1,
       lastEarnedDailyDay: _lastDailyDate,
       dailyCompletedRepCount: _dailyCompletedRepCount,
       dailyPracticeQueue: _dailyPracticeQueue,

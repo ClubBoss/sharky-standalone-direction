@@ -165,6 +165,17 @@ class Act0HandTimelinePrefixV1 {
   final int smallBlind, bigBlind;
   final List<Act0HandEventV1> events;
 
+  /// A smaller boundary can never reveal an event absent from this prefix.
+  Act0HandTimelinePrefixV1 takeEvents(int count) => Act0HandTimelinePrefixV1._(
+    coverage,
+    startingStacks,
+    button,
+    smallBlind,
+    bigBlind,
+    events.sublist(0, count),
+    heroSeat,
+  );
+
   List<Act0HandEventV1> eventsOn(PokerStreet street) =>
       List.unmodifiable(events.where((event) => event.street == street));
 

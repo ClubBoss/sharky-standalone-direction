@@ -1847,6 +1847,14 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         resume.teachingStepIndex > task.runner.teachingSteps.length) {
       return false;
     }
+    if (task.multiStreet != null) {
+      final run = _multiStreetRunsV1[task.taskId];
+      return (run?.choiceId == null
+                  ? Act0LessonPhaseV1.drill
+                  : Act0LessonPhaseV1.review) ==
+              resume.phase &&
+          run?.choiceId == resume.selectedOptionId;
+    }
     if (resume.phase != Act0LessonPhaseV1.review ||
         task.runner.options.isEmpty) {
       return resume.selectedOptionId == null;
@@ -1891,7 +1899,9 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
           .firstOrNull;
       _choiceAssistanceV1 =
           answer?.assistanceKind ?? Act0DecisionAssistanceV1.legacyUnknown;
-      if (answer != null && !answer.isCorrect) {
+      if (answer != null &&
+          !answer.isCorrect &&
+          !_multiStreetRunsV1.containsKey(resume.taskId)) {
         _lessonRunMistakeTaskIds.add(resume.taskId);
         _lessonRunPendingRetryTaskIds.add(resume.taskId);
       }

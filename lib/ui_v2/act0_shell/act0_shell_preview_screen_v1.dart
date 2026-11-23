@@ -1510,6 +1510,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _returningAfterBreakV1 = false;
   bool _firstLessonReminderAnsweredV1 = false;
   _Act0LessonResumeV1? _lessonResumeV1;
+  final _multiStreetRunsV1 = <String, _Act0MultiStreetRunV1>{};
   // Date owning the in-memory 0–3 daily counter.
   late String _dailyRepCountDay = _todayDateString();
   int _retentionSequence = 0;
@@ -2975,6 +2976,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !act0RunnerRequiresNineSeatPreviewV1(playSelectedTask.runner) &&
         !_showPlayHub &&
         _blockCompletionSummary == null;
+    final multiStreet = playSelectedTask?.multiStreet;
+    final multiStreetRun = multiStreet == null
+        ? null
+        : (_multiStreetRunsV1[playSelectedTask!.taskId] ??
+              const _Act0MultiStreetRunV1());
+    final multiStreetRunner = multiStreetRun == null
+        ? null
+        : multiStreet!.decisions[multiStreetRun.index];
+    final hasNextStreet =
+        multiStreetRun != null &&
+        multiStreetRun.index + 1 < multiStreet!.decisions.length;
     const seatNamesLessonId = 'blinds_action_order';
     const seatNamesTaskId = 'positions_theory';
     // The final page of this introduction names the seats.
@@ -3058,26 +3070,38 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? normalizeAct0DrillSeatHighlightPolicyV1(
             normalizeAct0SeatTapRunnerV1(
               _actionSequenceRunnerForStageV1(
-                _repairRunnerForTask(playSelectedTask).copyWith(
-                  lessonId: selectedLesson.lessonId,
-                  lessonTitle: _localizedLessonTitleV1(selectedLesson),
-                  lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
-                  beatIndex:
-                      _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
-                  beatCount: selectedLesson.courseTaskList.length,
-                  phase: _phase,
-                  selectedOptionId: _selectedOptionId,
-                  sizingConfig: _activeSizingConfigV1(
-                    selectedLesson,
-                    playSelectedTask,
-                  ),
-                  selectedPresetId: _activeSelectedPresetIdV1(playSelectedTask),
-                  teachingStepIndex: _teachingStepIndex,
-                  nextLessonId: _nextLessonId(
-                    selectedWorld.lessons,
-                    selectedLesson.lessonId,
-                  ),
-                ),
+                (multiStreetRunner ?? _repairRunnerForTask(playSelectedTask!))
+                    .copyWith(
+                      lessonId: selectedLesson.lessonId,
+                      lessonTitle: _localizedLessonTitleV1(selectedLesson),
+                      lessonSubtitle: _localizedLessonSubtitleV1(
+                        selectedLesson,
+                      ),
+                      beatIndex:
+                          _taskIndex(selectedLesson, playSelectedTask!.taskId) +
+                          1,
+                      beatCount: selectedLesson.courseTaskList.length,
+                      phase: multiStreetRun == null
+                          ? _phase
+                          : multiStreetRun.choiceId == null
+                          ? Act0LessonPhaseV1.drill
+                          : Act0LessonPhaseV1.review,
+                      selectedOptionId: multiStreetRun == null
+                          ? _selectedOptionId
+                          : multiStreetRun.choiceId,
+                      sizingConfig: _activeSizingConfigV1(
+                        selectedLesson,
+                        playSelectedTask,
+                      ),
+                      selectedPresetId: _activeSelectedPresetIdV1(
+                        playSelectedTask,
+                      ),
+                      teachingStepIndex: _teachingStepIndex,
+                      nextLessonId: _nextLessonId(
+                        selectedWorld.lessons,
+                        selectedLesson.lessonId,
+                      ),
+                    ),
                 taskId: playSelectedTask.taskId,
               ),
             ),
@@ -3150,6 +3174,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         isPlayRunner &&
             widget.tableVisualVariant ==
                 Act0ShellTableVisualVariantV1.refinedDev2 &&
+            multiStreet == null &&
             playTaskAwardXp > 0 &&
             _cleanTaskIds.contains(playSelectedTask.taskId) &&
             _choiceHasIndependentProvenanceV1 &&
@@ -4098,6 +4123,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                               )
                             : Act0LessonRunnerShellV1(
+                                key: multiStreetRun == null
+                                    ? null
+                                    : ValueKey((
+                                        playSelectedTask!.taskId,
+                                        multiStreetRun.index,
+                                      )),
                                 // B5 view metadata. `_activeActionSequenceStageV1`
                                 // is the existing typed owner of the canonical
                                 // wrong-feedback -> repair -> recheck transition
@@ -4107,7 +4138,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 learningLoopStage: _activeActionSequenceStageV1,
                                 runner: activePlayRunner!,
                                 preserveSourceOwnedQuestion:
-                                    _placementDiagnosticActive,
+                                    _placementDiagnosticActive ||
+                                    multiStreet != null,
                                 worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,
@@ -4210,9 +4242,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                           nextExample,
                                         ),
                                       ),
-                                feedbackForwardCtaLabel:
-                                    repeatedMissSource != null ||
-                                        _lessonExampleSourceTaskIdV1 != null
+                                feedbackForwardCtaLabel: multiStreetRun != null
+                                    ? (hasNextStreet
+                                          ? 'Next decision'
+                                          : 'Finish hand')
+                                    : repeatedMissSource != null ||
+                                          _lessonExampleSourceTaskIdV1 != null
                                     ? 'Continue lesson'
                                     : _diagnosticLearningEntryV1 != null ||
                                           _spacedReviewReturnV1 != null
@@ -4234,6 +4269,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                               ? 'Continue to Review'
                                               : null),
                                 suppressFeedbackRepairFocus:
+                                    multiStreet != null ||
                                     _placementDiagnosticActive,
                                 relaxTheoryAdvanceLock: _completedTaskIds
                                     .contains(playSelectedTask!.taskId),
@@ -4317,7 +4353,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         }
                                       },
                                     ),
-                                onUndoInteraction: _spacedReviewReturnV1 != null
+                                onUndoInteraction:
+                                    multiStreet != null ||
+                                        _spacedReviewReturnV1 != null
                                     ? null
                                     : () => _setStateForRunnerCallbackV1(
                                         callbackEpochV1,
@@ -4409,6 +4447,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   callbackDiagnosticEntryV1,
                                   callbackDiagnosticRunIdV1,
                                   () {
+                                    if (multiStreetRun != null) {
+                                      final current =
+                                          _multiStreetRunsV1[playSelectedTask
+                                              .taskId];
+                                      if (_selectedTaskId !=
+                                              playSelectedTask.taskId ||
+                                          multiStreetRun.choiceId != null ||
+                                          (current != null &&
+                                              current != multiStreetRun)) {
+                                        return;
+                                      }
+                                      _fireAnswerEffects(option);
+                                      _multiStreetRunsV1[playSelectedTask
+                                          .taskId] = multiStreetRun.answer(
+                                        option,
+                                        independent:
+                                            _choiceHasIndependentProvenanceV1,
+                                      );
+                                      _selectedOptionId = option.id;
+                                      _phase = Act0LessonPhaseV1.review;
+                                      return;
+                                    }
                                     _fireAnswerEffects(option);
                                     if (_isPracticeQueueRepairAnswerV1(
                                       playSelectedTask,
@@ -4573,6 +4633,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_lessonExampleSourceTaskIdV1 != null)
                                     return;
                                   setState(() {
+                                    if (multiStreet != null) {
+                                      if (_selectedTaskId == decision.taskId &&
+                                          _multiStreetRunsV1[decision.taskId]
+                                                  ?.choiceId ==
+                                              decision.selectedId) {
+                                        _appendLearningEvidenceV1(decision);
+                                      }
+                                      return;
+                                    }
                                     if (_activeSpacedReviewTaskV1 != null) {
                                       _appendLearningEvidenceV1(decision);
                                       return;
@@ -4671,6 +4740,60 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   callbackDiagnosticEntryV1,
                                   callbackDiagnosticRunIdV1,
                                   () {
+                                    if (multiStreetRun != null) {
+                                      if (_selectedTaskId !=
+                                              playSelectedTask.taskId ||
+                                          multiStreetRun.choiceId == null ||
+                                          _multiStreetRunsV1[playSelectedTask
+                                                  .taskId] !=
+                                              multiStreetRun) {
+                                        return;
+                                      }
+                                      if (hasNextStreet) {
+                                        _multiStreetRunsV1[playSelectedTask
+                                            .taskId] = multiStreetRun
+                                            .next();
+                                        _selectedOptionId = null;
+                                        _phase = Act0LessonPhaseV1.drill;
+                                        _choiceAssistanceV1 =
+                                            Act0DecisionAssistanceV1.none;
+                                        _persistProgress();
+                                        return;
+                                      }
+                                      _multiStreetRunsV1.remove(
+                                        playSelectedTask.taskId,
+                                      );
+                                      if (multiStreetRun.passed &&
+                                          multiStreetRun.independent) {
+                                        _cleanTaskIds.add(
+                                          playSelectedTask.taskId,
+                                        );
+                                      } else if (!multiStreetRun.passed) {
+                                        _lessonRunMistakeTaskIds.add(
+                                          playSelectedTask.taskId,
+                                        );
+                                      }
+                                      _completeCurrentTask(
+                                        playSelectedTask,
+                                        awardXp:
+                                            multiStreetRun.passed &&
+                                            multiStreetRun.independent,
+                                      );
+                                      _selectedOptionId = null;
+                                      _phase = Act0LessonPhaseV1.drill;
+                                      if (!_maybeShowBlockCompletionSummary(
+                                        selectedWorld: selectedWorld,
+                                        selectedLesson: selectedLesson,
+                                        selectedTask: playSelectedTask,
+                                      )) {
+                                        _advanceAfterTask(
+                                          selectedWorld,
+                                          selectedLesson,
+                                        );
+                                      }
+                                      _persistProgress();
+                                      return;
+                                    }
                                     if (_diagnosticLearningEntryV1 != null) {
                                       _returnFromDiagnosticLearningEntryV1();
                                       return;
@@ -6176,6 +6299,55 @@ typedef _Act0LessonResumeV1 = ({
   String? selectedOptionId,
 });
 
+class _Act0MultiStreetRunV1 {
+  const _Act0MultiStreetRunV1({
+    this.index = 0,
+    this.choiceId,
+    this.passed = true,
+    this.independent = true,
+  });
+
+  final int index;
+  final String? choiceId;
+  final bool passed;
+  final bool independent;
+
+  _Act0MultiStreetRunV1 answer(
+    Act0RunnerOptionV1 option, {
+    required bool independent,
+  }) => _Act0MultiStreetRunV1(
+    index: index,
+    choiceId: option.id,
+    passed: passed && option.quality.passes,
+    independent: this.independent && independent,
+  );
+
+  _Act0MultiStreetRunV1 next() => _Act0MultiStreetRunV1(
+    index: index + 1,
+    passed: passed,
+    independent: independent,
+  );
+
+  List<Object?> toPayload() => [index, choiceId, passed, independent];
+
+  static _Act0MultiStreetRunV1? tryParse(Object? raw) => switch (raw) {
+    [
+      final int index,
+      final String? choiceId,
+      final bool passed,
+      final bool independent,
+    ]
+        when index >= 0 && index < 4 =>
+      _Act0MultiStreetRunV1(
+        index: index,
+        choiceId: choiceId,
+        passed: passed,
+        independent: independent,
+      ),
+    _ => null,
+  };
+}
+
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
@@ -6198,6 +6370,7 @@ class _Act0PersistedProgressV1 {
     this.lastShortSessionDay = '',
     this.firstLessonReminderAnswered = false,
     this.lessonResume,
+    this.multiStreetRuns = const {},
     this.lastEarnedDailyDay = '',
     this.hasEarnedDailyDayField = false,
     this.dailyCompletedRepCount = 0,
@@ -6256,6 +6429,7 @@ class _Act0PersistedProgressV1 {
   final String lastShortSessionDay;
   final bool firstLessonReminderAnswered;
   final _Act0LessonResumeV1? lessonResume;
+  final Map<String, _Act0MultiStreetRunV1> multiStreetRuns;
   final String lastEarnedDailyDay;
   // Whether the incoming stored payload carried the new provenance key.
   final bool hasEarnedDailyDayField;
@@ -6338,6 +6512,10 @@ class _Act0PersistedProgressV1 {
       'lastActiveDay': lastActiveDay,
       'lastShortSessionDay': lastShortSessionDay,
       'firstLessonReminderAnswered': firstLessonReminderAnswered,
+      if (multiStreetRuns.isNotEmpty)
+        'multiStreetRuns': multiStreetRuns.map(
+          (taskId, run) => MapEntry(taskId, run.toPayload()),
+        ),
       if (lessonResume case final resume?)
         'lessonResume': {
           'worldId': resume.worldId,
@@ -6641,6 +6819,13 @@ class _Act0PersistedProgressV1 {
       lastShortSessionDay: (map['lastShortSessionDay'] ?? '').toString(),
       firstLessonReminderAnswered: map['firstLessonReminderAnswered'] == true,
       lessonResume: _parseLessonResumeV1(map['lessonResume']),
+      multiStreetRuns: {
+        if (map['multiStreetRuns'] case final Map runs)
+          for (final entry in runs.entries)
+            if (entry.key case final String taskId)
+              if (_Act0MultiStreetRunV1.tryParse(entry.value) case final run?)
+                taskId: run,
+      },
       lastEarnedDailyDay: lastEarnedDailyDay,
       hasEarnedDailyDayField: map.containsKey('lastEarnedDailyDay'),
       dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),

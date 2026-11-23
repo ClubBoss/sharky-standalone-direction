@@ -73,6 +73,18 @@ String? act0AuthoredSourceFingerprintV1({
     ],
     _authoredTablePayloadV1(table),
     optionSemantics,
+    if (task.multiStreet case final hand?)
+      [
+        Act0MultiStreetV1.taskType,
+        for (final decision in hand.decisions)
+          [
+            decision.caption,
+            decision.question,
+            decision.table.handTimelinePrefix!.toPayload(),
+            for (final option in decision.options)
+              [option.id, option.quality.name, option.feedbackReason],
+          ],
+      ],
     if (table.decisionSeatId != null)
       <Object?>['decision_actor_v1', table.decisionSeatId],
   ];
@@ -150,7 +162,18 @@ Act0TableStateV1? act0VerifiedReplayTableV1(
           record.authoredSourceFingerprint) {
     return null;
   }
-  final table = task.runner.table;
+  final hand = task.multiStreet;
+  final table = hand == null
+      ? task.runner.table
+      : hand.decisions
+            .where(
+              (decision) => decision.options.any(
+                (option) => option.id == record.choiceId,
+              ),
+            )
+            .firstOrNull
+            ?.table;
+  if (table == null) return null;
   return act0ReplayTableFingerprintV1(table) == tableFingerprint ? table : null;
 }
 

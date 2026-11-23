@@ -10,6 +10,7 @@ import 'act0_decision_ledger_v1.dart';
 import 'act0_hand_contributions_v1.dart';
 import 'act0_hand_timeline_v1.dart';
 import 'act0_seat_order_v1.dart';
+import 'act0_street_summary_v1.dart';
 import 'act0_poker_reference_math_v1.dart';
 import 'act0_practice_showdown_v1.dart';
 import 'act0_preflop_equity_v1.dart';
@@ -22,6 +23,7 @@ import 'act0_w1_rules_check_v1.dart';
 part 'act0_shell_review_tasks_v1.dart';
 part 'act0_daily_deal_generator_v1.dart';
 part 'act0_daily_deal_pilot_v1.dart';
+part 'act0_multi_street_v1.dart';
 part 'act0_shell_day7_review_v1.dart';
 part 'act0_shell_hand_timelines_v1.dart';
 part 'act0_shell_day7_content_v1.dart';
@@ -604,6 +606,7 @@ class Act0LessonTaskV1 {
     this.guidedDecision = false,
     this.summary,
     this.lockedSummary,
+    this.multiStreet,
   });
 
   final String taskId;
@@ -628,6 +631,7 @@ class Act0LessonTaskV1 {
   final bool guidedDecision;
   final String? summary;
   final String? lockedSummary;
+  final Act0MultiStreetV1? multiStreet;
 
   Act0TaskFamilyV1 get resolvedTaskFamily =>
       taskFamily ?? act0InferTaskFamilyV1(phase: phase, stepKind: stepKind);
