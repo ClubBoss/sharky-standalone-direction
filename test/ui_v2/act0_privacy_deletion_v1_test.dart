@@ -6,10 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_reminder_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
@@ -207,6 +209,36 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('production Settings binds the learner rules check', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    SharedPreferences.setMockInitialValues({'onboardingCompleted': true});
+
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('You').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+    await tester.pumpAndSettle();
+
+    final settings = tester.widget<Act0AcademySettingsLeafV1>(
+      find.byType(Act0AcademySettingsLeafV1),
+    );
+    expect(settings.input.onReplayWelcome, isNull);
+    expect(settings.input.onRetakePlacement, isNotNull);
+    settings.input.onRetakePlacement!();
+    await tester.pumpAndSettle();
+    expect(find.text(act0W1RulesQuestionsV1.first.question), findsWidgets);
+    expect(
+      find.byKey(const Key('act0_shell_placement_intro_cta')),
+      findsNothing,
+    );
+  });
 
   testWidgets(
     'Settings cancellation preserves data; confirmed erase starts fresh and cannot resurrect on remount',

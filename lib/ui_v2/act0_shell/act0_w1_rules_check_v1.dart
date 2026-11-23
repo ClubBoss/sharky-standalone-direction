@@ -304,3 +304,44 @@ class Act0W1RulesResultV1 {
     }
   }
 }
+
+enum Act0W1RulesScreenStateV1 {
+  firstRun,
+  inProgress,
+  passed,
+  notPassed,
+  skipped,
+}
+
+/// The chooser, current question and scored result share the same local inputs.
+class Act0W1RulesViewModelV1 {
+  Act0W1RulesViewModelV1({
+    List<int>? answers,
+    this.result,
+    bool introductionSkipped = false,
+  }) : answers = answers == null ? null : List.unmodifiable(answers),
+       state = answers != null
+           ? Act0W1RulesScreenStateV1.inProgress
+           : result != null
+           ? (result.passed
+                 ? Act0W1RulesScreenStateV1.passed
+                 : Act0W1RulesScreenStateV1.notPassed)
+           : introductionSkipped
+           ? Act0W1RulesScreenStateV1.skipped
+           : Act0W1RulesScreenStateV1.firstRun;
+
+  final List<int>? answers;
+  final Act0W1RulesResultV1? result;
+  final Act0W1RulesScreenStateV1 state;
+
+  int get index => answers?.length ?? result?.choices.length ?? 0;
+  int get total => act0W1RulesQuestionsV1.length;
+  Act0W1RulesQuestionV1? get question =>
+      answers == null ? null : act0W1RulesQuestionsV1[index];
+  List<Act0W1RulesQuestionV1> get missed =>
+      result?.missedQuestions.toList() ?? const [];
+  String get landingWorldId =>
+      state == Act0W1RulesScreenStateV1.passed ? 'world_2' : 'world_1';
+  bool get showWelcomeAfterPlacement =>
+      state != Act0W1RulesScreenStateV1.skipped;
+}

@@ -2,7 +2,9 @@ import 'dart:async' show Timer, unawaited;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'act0_curriculum_pilot_v1.dart';
 import 'act0_goal_route_v1.dart';
+import 'act0_learn_path_view_model_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
@@ -59,18 +61,6 @@ const Color _learnV6Deep = Act0VisualCanonV1.deepNavy;
     ),
     _ => (accent: const Color(0xFFE76FB3), accentSoft: const Color(0xFF44233D)),
   };
-}
-
-Act0WorldCardV1? _nextWorldAfterV1(
-  List<Act0WorldCardV1> worlds,
-  Act0WorldCardV1 currentWorld,
-) {
-  for (final world in worlds) {
-    if (world.worldNumber == currentWorld.worldNumber + 1) {
-      return world;
-    }
-  }
-  return null;
 }
 
 bool _isImmediateNextWorldV1(
@@ -614,80 +604,29 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
 
   @override
   Widget build(BuildContext context) {
-    final detailLesson = widget.detailLessonId == null
-        ? null
-        : widget.lessons.cast<Act0LessonCardV1?>().firstWhere(
-            (lesson) => lesson?.lessonId == widget.detailLessonId,
-            orElse: () => null,
-          );
-    final detailWorld = widget.worldDetailId == null
-        ? null
-        : widget.worlds.firstWhere(
-            (world) => world.worldId == widget.worldDetailId,
-            orElse: () => widget.worlds.first,
-          );
-    final selectedWorld = widget.worlds.firstWhere(
-      (world) => world.worldId == widget.selectedWorldId,
-      orElse: () => widget.worlds.first,
+    final view = Act0LearnPathViewModelV1(
+      worlds: widget.worlds,
+      lessons: widget.lessons,
+      selectedWorldId: widget.selectedWorldId,
+      selectedLessonId: widget.selectedLessonId,
+      detailLessonId: widget.detailLessonId,
+      worldDetailId: widget.worldDetailId,
+      requiredPractice: widget.requiredPractice,
+      pathClosedTaskIds: widget.pathClosedTaskIds,
+      completedTaskIds: widget.completedTaskIds,
+      showFullPath: _showFullJourneyPathV5,
+      catalogFlag: act0CurriculumPilotEnabledV1,
     );
+    final detailLesson = view.detailLesson;
+    final selectedWorld = view.selectedWorld;
     final detailLessonId = widget.detailLessonId;
     final journeyDetailLessonId = _showFullJourneyPathV5
         ? _fullPathManualExpandedLessonIdV6
         : detailLessonId;
     final shouldShowDefaultTaskFocus =
         detailLesson != null && _shouldShowDefaultTaskFocusV1(detailLesson);
-    final currentMissionLesson =
-        widget.requiredPractice ??
-        widget.lessons.firstWhere(
-          (lesson) => lesson.state == Act0LessonStateV1.current,
-          orElse: () => widget.lessons.firstWhere(
-            (lesson) => lesson.lessonId == widget.selectedLessonId,
-            orElse: () => widget.lessons.first,
-          ),
-        );
-    final currentMissionTask = currentMissionLesson.courseTaskList.firstWhere(
-      (task) => !widget.pathClosedTaskIds.contains(task.taskId),
-      orElse: () => currentMissionLesson.courseTaskList.first,
-    );
-    final currentMissionStepIndex =
-        currentMissionLesson.courseTaskList.indexWhere(
-          (task) => task.taskId == currentMissionTask.taskId,
-        ) +
-        1;
-    final isFirstLessonLanding =
-        currentMissionLesson.lessonId == 'what_poker_is' &&
-        currentMissionStepIndex == 1 &&
-        detailLessonId == null;
-    // Routing may be closed by Placement; the visible progress bar is earned
-    // completion only. Keep lesson.state for existing navigation/eligibility.
-    final progressFraction = widget.lessons.isEmpty
-        ? 0.0
-        : widget.lessons
-                  .where(
-                    (lesson) =>
-                        lesson.courseTaskList.isNotEmpty &&
-                        lesson.courseTaskList.every(
-                          (task) =>
-                              widget.completedTaskIds.contains(task.taskId),
-                        ),
-                  )
-                  .length /
-              widget.lessons.length;
-    final journeyLessonIndexes =
-        _missionFirstJourneyPreviewIndexesV5(
-              widget.lessons,
-              showFullPath: _showFullJourneyPathV5,
-            )
-            .where(
-              (index) =>
-                  widget.lessons[index].lessonId !=
-                  currentMissionLesson.lessonId,
-            )
-            .toList();
-    final deferredLockedCount = _hiddenLockedLessonCountV5(
-      widget.lessons,
-      journeyLessonIndexes,
-    );
+    final currentMissionLesson = view.currentMissionLesson;
+    final currentMissionTask = view.currentMissionTask;
     return TapRegionSurface(
       child: Stack(
         key: _learnStackKey,
@@ -751,16 +690,16 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         moduleTitle: widget.moduleTitle,
                         moduleProgressLabel: widget.moduleProgressLabel,
                         lessonCount: widget.lessons.length,
-                        progressFraction: progressFraction,
+                        progressFraction: view.progressFraction,
                         onOpenWorldMenu: widget.onOpenWorldMenu,
                         onDismissDetail: widget.detailLessonId == null
                             ? null
                             : widget.onDismissDetail,
                         currentMissionLesson: currentMissionLesson,
                         currentMissionTask: currentMissionTask,
-                        currentMissionStepIndex: currentMissionStepIndex,
+                        currentMissionStepIndex: view.currentMissionStepIndex,
                         detailMode: detailLessonId != null,
-                        firstLessonLanding: isFirstLessonLanding,
+                        firstLessonLanding: view.firstRun,
                         onStartMission:
                             widget.onStartRequiredPractice ??
                             (currentMissionLesson.isSelectable
@@ -770,8 +709,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                   )
                                 : null),
                         lessons: widget.lessons,
-                        journeyLessonIndexes: journeyLessonIndexes,
-                        deferredLockedCount: deferredLockedCount,
+                        journeyLessonIndexes: view.journeyLessonIndexes,
+                        deferredLockedCount: view.deferredLockedCount,
                         showFullPath: _showFullJourneyPathV5,
                         onToggleFullPath: () {
                           setState(() {
@@ -835,9 +774,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
           if (widget.showWorldMenu)
             Positioned.fill(
               child: _WorldMenuOverlayV1(
-                worlds: widget.worlds,
+                view: view,
                 selectedWorldId: widget.selectedWorldId,
-                detailWorld: detailWorld,
                 onSelectWorld: widget.onSelectWorld,
                 onClose: widget.onCloseWorldMenu,
                 onDismissWorldDetail: widget.onDismissWorldDetail,
@@ -848,50 +786,6 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       ),
     );
   }
-}
-
-List<int> _missionFirstJourneyPreviewIndexesV5(
-  List<Act0LessonCardV1> lessons, {
-  required bool showFullPath,
-}) {
-  if (showFullPath) {
-    return List<int>.generate(lessons.length, (index) => index);
-  }
-  final currentIndex = lessons.indexWhere(
-    (lesson) => lesson.state == Act0LessonStateV1.current,
-  );
-  if (currentIndex < 0) {
-    return _focusedJourneyLessonIndexesV1(lessons);
-  }
-  final indexes = <int>{};
-  final completedIndexes = <int>[
-    for (var i = 0; i < lessons.length; i++)
-      if (lessons[i].state == Act0LessonStateV1.completed) i,
-  ];
-  if (completedIndexes.isNotEmpty) {
-    indexes.add(completedIndexes.first);
-  }
-  if (completedIndexes.length > 1) {
-    indexes.add(completedIndexes.last);
-  }
-  indexes.add(currentIndex);
-  final nextIndex = currentIndex + 1;
-  if (nextIndex < lessons.length) {
-    indexes.add(nextIndex);
-  }
-  return indexes.toList()..sort();
-}
-
-int _hiddenLockedLessonCountV5(
-  List<Act0LessonCardV1> lessons,
-  List<int> visibleIndexes,
-) {
-  final visible = visibleIndexes.toSet();
-  return <int>[
-    for (var i = 0; i < lessons.length; i++)
-      if (!visible.contains(i) && lessons[i].state == Act0LessonStateV1.locked)
-        i,
-  ].length;
 }
 
 class _LearnButtonV1 extends InkWell {

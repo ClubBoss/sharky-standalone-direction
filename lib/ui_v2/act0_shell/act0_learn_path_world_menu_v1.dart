@@ -2,18 +2,16 @@ part of 'act0_learn_path_shell_v1.dart';
 
 class _WorldMenuOverlayV1 extends StatelessWidget {
   const _WorldMenuOverlayV1({
-    required this.worlds,
+    required this.view,
     required this.selectedWorldId,
-    required this.detailWorld,
     required this.onSelectWorld,
     required this.onClose,
     required this.onDismissWorldDetail,
     required this.onPreviewPremiumWorld,
   });
 
-  final List<Act0WorldCardV1> worlds;
+  final Act0LearnPathViewModelV1 view;
   final String selectedWorldId;
-  final Act0WorldCardV1? detailWorld;
   final ValueChanged<String> onSelectWorld;
   final VoidCallback onClose;
   final VoidCallback onDismissWorldDetail;
@@ -52,16 +50,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedWorld = worlds.firstWhere(
-      (world) => world.worldId == selectedWorldId,
-      orElse: () => worlds.first,
-    );
-    final currentWorld = worlds.firstWhere(
-      (world) => world.status == Act0WorldStateV1.current,
-      orElse: () => selectedWorld,
-    );
+    final worlds = view.worlds;
+    final currentWorld = view.currentWorld;
+    final detailWorld = view.detailWorld;
     final currentStateColor = _worldRouteStatusColorV1(worlds, currentWorld);
-    final nextWorld = _nextWorldAfterV1(worlds, currentWorld);
+    final nextWorld = view.nextWorld;
     final volumePills = <_VolumePillModelV1>[
       _VolumePillModelV1(
         id: 'volume_i',
@@ -413,7 +406,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                 excludeFromSemantics: true,
                 onTap: () {},
                 child: _SelectedWorldPopupV1(
-                  world: detailWorld!,
+                  world: detailWorld,
                   worlds: worlds,
                   currentWorld: currentWorld,
                   onContinueCurrentWorld: () =>

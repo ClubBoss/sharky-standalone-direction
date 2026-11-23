@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 
-/// Loading state of the persisted preferences the caller owns
-/// (`AppSettingsService.instance.load()` in the accepted runtime).
-enum Act0AcademySettingsLoadStateV1 { loading, failed, ready }
+import '../act0_settings_view_model_v1.dart';
+
+export '../act0_settings_view_model_v1.dart'
+    show Act0AcademySettingsLoadStateV1;
 
 /// Source-owned Settings inputs. The leaf owns NO persistence:
 /// - [soundEnabled]/[hapticsEnabled] are the saved snapshot values.

@@ -19,6 +19,7 @@ import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 
+import 'act0_settings_view_model_v1.dart';
 import 'package:flutter/foundation.dart'
     show kDebugMode, kReleaseMode, visibleForTesting;
 import 'package:flutter/material.dart';
@@ -1391,8 +1392,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _progressSaveStatusDisposedV1 = false;
   int _recoveryEpochV1 = 0;
   bool _recoveryBusyV1 = false;
-  bool _privacyDeletionStarted = false;
-  bool _privacyDeletionFailed = false;
+  var _settingsDeletion = Act0SettingsDeletionStateV1.idle;
+  bool get _privacyDeletionStarted => _settingsDeletion.showDeletionScreen;
+  bool get _privacyDeletionFailed =>
+      _settingsDeletion == Act0SettingsDeletionStateV1.error;
   // A canonical reset severs all legacy SessionDrill projections. Their raw
   // preferences are retained; current Act0 repair/evidence remains supported.
   bool _suppressLegacyRecheckAfterRecoveryV1 = false;
@@ -1931,7 +1934,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         if (mounted) unawaited(_loadSessionDrillRecheckQueueItemsV1());
       });
     }
-    if (widget.debugHarnessEntry case final entry?) {
+    if (widget.debugHarnessEntry case final entry?
+        when act0DevMenuEnabledV1(isReleaseMode: kReleaseMode)) {
       _applyDebugHarnessEntry(entry, state);
       return;
     }
@@ -2384,6 +2388,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _requestDeleteLocalDataV1() async {
+    _settingsDeletion = Act0SettingsDeletionStateV1.deleteConfirm;
     final confirmed = await showModalBottomSheet<bool>(
       context: context,
       sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
@@ -2445,7 +2450,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       ),
     );
-    if (confirmed == true && mounted) await _deleteLocalDataV1();
+    if (!mounted) return;
+    if (confirmed == true) {
+      await _deleteLocalDataV1();
+    } else {
+      _settingsDeletion = Act0SettingsDeletionStateV1.idle;
+    }
   }
 
   Future<void> _deleteLocalDataV1() async {
@@ -2453,8 +2463,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnLessonOpenSequenceV1++;
     _progressPersistGeneration++;
     setState(() {
-      _privacyDeletionStarted = true;
-      _privacyDeletionFailed = false;
+      _settingsDeletion = Act0SettingsDeletionStateV1.deleting;
       _recoveryBusyV1 = true;
       _progressRestoredV1 = false;
     });
@@ -2477,14 +2486,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _restorePreviewToFreshStart(showPlacement: true);
       _progressStore = _makeProgressStoreV1();
       setState(() {
-        _privacyDeletionStarted = false;
+        _settingsDeletion = Act0SettingsDeletionStateV1.deleted;
         _recoveryBusyV1 = false;
         _progressLoadFailed = false;
         _bootSurfaceReady = true;
         _progressRestoredV1 = true;
       });
     } catch (_) {
-      if (mounted) setState(() => _privacyDeletionFailed = true);
+      if (mounted)
+        setState(() => _settingsDeletion = Act0SettingsDeletionStateV1.error);
     }
   }
 
@@ -5217,15 +5227,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               ? _openRecoveryOptionsV1
                               : null,
                           onRetakePlacement:
-                              kDebugMode && widget.debugLegacyPlacementOnStart
-                              ? _openPlacementFlow
-                              : _canTakeW1RulesCheckV1
-                              ? _beginW1RulesCheckV1
-                              : null,
-                          onReplayWelcome:
-                              kDebugMode && widget.debugLegacyPlacementOnStart
-                              ? _openWelcomeReplayV1
-                              : null,
+                              act0SettingsPreviewActionV1(
+                                _openPlacementFlow,
+                                isDebugMode: kDebugMode,
+                                legacyPreviewRequested:
+                                    widget.debugLegacyPlacementOnStart,
+                              ) ??
+                              (_canTakeW1RulesCheckV1
+                                  ? _beginW1RulesCheckV1
+                                  : null),
+                          onReplayWelcome: act0SettingsPreviewActionV1(
+                            _openWelcomeReplayV1,
+                            isDebugMode: kDebugMode,
+                            legacyPreviewRequested:
+                                widget.debugLegacyPlacementOnStart,
+                          ),
                           onGoToHome: () =>
                               setState(() => _tab = Act0ShellTabV1.home),
                         ),

@@ -52,6 +52,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_causal_feedback_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_ids_v1.dart';
 
+import 'act0_session_summary_view_model_v1.dart';
+
 part 'act0_lesson_runner_surfaces_v1.dart';
 part 'act0_lesson_runner_scene_v1.dart';
 part 'act0_lesson_runner_feedback_v1.dart';
