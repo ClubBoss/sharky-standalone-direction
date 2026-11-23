@@ -1,8 +1,24 @@
-/// The course's six-max starting chart. Hand keys use standard notation:
+/// The course's starting charts. Hand keys use standard notation:
 /// AA for pairs, AKs for suited hands, and AKo for offsuit hands.
 enum Act0ChartGroupV1 { premium, strong, mediumHj, mediumCo, weak }
 
 enum Act0ChartSeatV1 { utg, hj, co, btn, sb, bb }
+
+enum Act0FullRingChartSeatV1 {
+  utg('UTG'),
+  utgPlusOne('UTG+1'),
+  mp('MP'),
+  lj('LJ'),
+  hj('HJ'),
+  co('CO'),
+  btn('BTN'),
+  sb('SB'),
+  bb('BB');
+
+  const Act0FullRingChartSeatV1(this.label);
+
+  final String label;
+}
 
 enum Act0ChartActionV1 { raise, call, fold, priceDecision, notCovered }
 
@@ -44,6 +60,48 @@ const act0ChartGroupsV1 = <Act0ChartGroupV1, Set<String>>{
   },
 };
 
+// Source: Sharky's G1 six-max starting chart (#705) and W8's
+// "6-max vs full ring" drill. Keep the same hand groups, and tighten
+// first-in ranges when more players remain. AJs starts at five behind (LJ).
+const _fullRingUtg = {'AA', 'KK', 'QQ', 'AKs'};
+const _fullRingUtgPlusOne = {..._fullRingUtg, 'JJ'};
+const _fullRingMp = {..._fullRingUtgPlusOne, 'AQs'};
+const _fullRingLj = {..._fullRingMp, 'TT', 'AKo', 'AJs'};
+const _fullRingHj = {..._fullRingLj, 'AQo', 'AJo', 'KQs', 'KQo', 'ATs', 'ATo'};
+const _fullRingCo = {
+  ..._fullRingHj,
+  '99',
+  '88',
+  '77',
+  '66',
+  'KJs',
+  'KJo',
+  'QJs',
+  'QJo',
+  'KTs',
+  'QTs',
+};
+
+/// First-in raises by position. Hand groups come from [act0ChartGroupV1].
+/// SB and BB are outside the first-in chart, as in six-max.
+const act0FullRingOpenRangesV1 = <Act0FullRingChartSeatV1, Set<String>>{
+  Act0FullRingChartSeatV1.utg: _fullRingUtg,
+  Act0FullRingChartSeatV1.utgPlusOne: _fullRingUtgPlusOne,
+  Act0FullRingChartSeatV1.mp: _fullRingMp,
+  Act0FullRingChartSeatV1.lj: _fullRingLj,
+  Act0FullRingChartSeatV1.hj: _fullRingHj,
+  Act0FullRingChartSeatV1.co: _fullRingCo,
+  Act0FullRingChartSeatV1.btn: {
+    ..._fullRingCo,
+    '55',
+    '44',
+    '33',
+    '22',
+    'KTo',
+    'QTo',
+  },
+};
+
 final act0ChartHandsV1 = Set<String>.unmodifiable({
   for (var high = 0; high < act0ChartRanksV1.length; high++) ...[
     '${act0ChartRanksV1[high]}${act0ChartRanksV1[high]}',
@@ -61,6 +119,19 @@ Act0ChartGroupV1 act0ChartGroupV1(String hand) {
     if (entry.value.contains(hand)) return entry.key;
   }
   return Act0ChartGroupV1.weak;
+}
+
+Act0ChartActionV1 act0FullRingOpenActionV1(
+  String hand,
+  Act0FullRingChartSeatV1 seat,
+) {
+  final range = act0FullRingOpenRangesV1[seat];
+  if (range == null || !act0ChartHandsV1.contains(hand)) {
+    return Act0ChartActionV1.notCovered;
+  }
+  return range.contains(hand)
+      ? Act0ChartActionV1.raise
+      : Act0ChartActionV1.fold;
 }
 
 const act0ChartThreeBetsV1 = {'AA', 'KK', 'QQ', 'AKs', 'AKo'};

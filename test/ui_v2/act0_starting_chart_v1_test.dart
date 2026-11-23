@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
 
 import '../support/act0_catalog_starting_chart_v1.dart';
 
@@ -12,6 +13,62 @@ final _tasks = [
 
 void main() {
   final chart = CatalogStartingChart.foundation();
+
+  test('Six-max hand groups and first-in rows match the original chart', () {
+    const groups = {
+      Act0ChartGroupV1.premium: {'AA', 'KK', 'QQ', 'AKs'},
+      Act0ChartGroupV1.strong: {'JJ', 'TT', 'AKo', 'AQs', 'AJs'},
+      Act0ChartGroupV1.mediumHj: {'AQo', 'AJo', 'KQs', 'KQo', 'ATs', 'ATo'},
+      Act0ChartGroupV1.mediumCo: {
+        '99',
+        '88',
+        '77',
+        '66',
+        '55',
+        '44',
+        '33',
+        '22',
+        'KJs',
+        'KJo',
+        'QJs',
+        'QJo',
+        'KTs',
+        'KTo',
+        'QTs',
+        'QTo',
+      },
+    };
+    final utg = {
+      ...groups[Act0ChartGroupV1.premium]!,
+      ...groups[Act0ChartGroupV1.strong]!,
+    };
+    final hj = {...utg, ...groups[Act0ChartGroupV1.mediumHj]!};
+    final co = {...hj, ...groups[Act0ChartGroupV1.mediumCo]!};
+    final ranges = {
+      Act0ChartSeatV1.utg: utg,
+      Act0ChartSeatV1.hj: hj,
+      Act0ChartSeatV1.co: co,
+      Act0ChartSeatV1.btn: co,
+    };
+
+    expect(act0ChartGroupsV1, groups);
+    expect(act0ChartHandsV1, hasLength(169));
+    for (final seat in Act0ChartSeatV1.values) {
+      final range = ranges[seat];
+      for (final hand in act0ChartHandsV1) {
+        final expected = switch (range?.contains(hand)) {
+          true => Act0ChartActionV1.raise,
+          false => Act0ChartActionV1.fold,
+          null => Act0ChartActionV1.notCovered,
+        };
+        expect(
+          act0ChartActionV1(hand, seat, Act0ChartPrefixV1.unopened),
+          expected,
+          reason: '${seat.name} $hand',
+        );
+      }
+    }
+  });
 
   test('W2 introduces first in before the two exact starting chart pages', () {
     final steps = _tasks
