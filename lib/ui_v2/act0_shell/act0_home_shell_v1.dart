@@ -1,5 +1,6 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
+import 'act0_goal_route_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -102,6 +103,7 @@ class Act0HomeShellV1 extends StatelessWidget {
     this.onOpenDevMenu,
     this.onStartDailyDrill,
     this.showChecklist,
+    this.goalRoute,
     this.completionEarnedStreak = false,
     required this.onContinue,
   });
@@ -136,6 +138,7 @@ class Act0HomeShellV1 extends StatelessWidget {
   final VoidCallback? onOpenDevMenu;
   final VoidCallback? onStartDailyDrill;
   final bool? showChecklist;
+  final Act0GoalRouteViewModelV1<Act0WorldCardV1>? goalRoute;
   final bool completionEarnedStreak;
   final VoidCallback onContinue;
 

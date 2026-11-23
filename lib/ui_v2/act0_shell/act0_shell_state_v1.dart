@@ -5,6 +5,7 @@ import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_solver/poker_solver.dart' as solver;
 
 import 'act0_curriculum_pilot_v1.dart';
+import 'act0_goal_route_v1.dart';
 import 'act0_decision_ledger_v1.dart';
 import 'act0_hand_contributions_v1.dart';
 import 'act0_poker_reference_math_v1.dart';
@@ -307,7 +308,7 @@ class Act0ShellStateV1 {
 }
 
 // TODO(Wave F): Move to world_card.dart
-class Act0WorldCardV1 {
+class Act0WorldCardV1 implements Act0GoalRouteWorldV1 {
   const Act0WorldCardV1({
     required this.worldId,
     required this.worldNumber,
@@ -323,7 +324,9 @@ class Act0WorldCardV1 {
     required this.lessons,
   });
 
+  @override
   final String worldId;
+  @override
   final int worldNumber;
   final String title;
   final String subtitle;

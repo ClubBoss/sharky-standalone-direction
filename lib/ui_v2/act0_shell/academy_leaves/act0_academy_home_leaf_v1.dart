@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../act0_goal_route_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart'
-    show Act0SharkyMoodV1;
+    show Act0SharkyMoodV1, Act0WorldCardV1;
 
 /// Visual label for an EXISTING source-owned recommendation, not a daily
 /// engine. Provenance: Draft PR #308 `Act0HomeTrainingPhaseV1`.
@@ -51,6 +52,7 @@ class Act0AcademyHomeLeafInputV1 {
     this.returningAfterBreak = false,
     this.resumeLabel,
     this.onResumeLesson,
+    this.goalRoute,
   });
 
   final String courseTitle;
@@ -67,6 +69,7 @@ class Act0AcademyHomeLeafInputV1 {
   final bool returningAfterBreak;
   final String? resumeLabel;
   final VoidCallback? onResumeLesson;
+  final Act0GoalRouteViewModelV1<Act0WorldCardV1>? goalRoute;
 }
 
 /// Validated earned progress. Invalid or missing counts produce `null` so no

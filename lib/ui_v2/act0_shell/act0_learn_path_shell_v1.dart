@@ -2,6 +2,7 @@ import 'dart:async' show Timer, unawaited;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'act0_goal_route_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
@@ -197,6 +198,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     this.sharkyGuideDetail,
     this.sharkyGuideMood = Act0SharkyMoodV1.thinking,
     required this.worlds,
+    this.goalRoute,
     required this.selectedWorldId,
     required this.showWorldMenu,
     this.onW1RulesCheck,
@@ -233,6 +235,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final String? sharkyGuideDetail;
   final Act0SharkyMoodV1 sharkyGuideMood;
   final List<Act0WorldCardV1> worlds;
+  final Act0GoalRouteViewModelV1<Act0WorldCardV1>? goalRoute;
   final String selectedWorldId;
   final bool showWorldMenu;
   final VoidCallback? onW1RulesCheck;

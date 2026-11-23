@@ -49,6 +49,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_same_session_learning_delta
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_last_session_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
+import 'act0_curriculum_pilot_v1.dart';
+import 'act0_goal_route_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_multi_repair_queue_v1.dart';
@@ -1216,6 +1218,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.debugPersistFixtureProgress = false,
     this.showPlacementOnStart = true,
     this.debugLegacyPlacementOnStart = false,
+    this.goalRouteV1 = const bool.fromEnvironment('goalRouteV1'),
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
     this.telemetrySink,
@@ -1234,6 +1237,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final bool debugPersistFixtureProgress;
   final bool showPlacementOnStart;
   final bool debugLegacyPlacementOnStart;
+  final bool goalRouteV1;
   final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
   final Act0TelemetrySinkV1? telemetrySink;
@@ -1837,6 +1841,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Map<String, int> _profileSkillValues = <String, int>{};
   final List<Act0SkillGainV1> _recentSkillGains = <Act0SkillGainV1>[];
   Act0PlacementResultV1? _placementResult;
+  Act0LearnerGoalV1 _learnerGoalV1 = Act0LearnerGoalV1.onlineCash;
+  Act0GoalRoutePlacementV1? _goalRoutePlacementV1;
+  bool get _goalRouteEnabledV1 => kDebugMode && widget.goalRouteV1;
   int _progressPersistGeneration = 0;
   String _dismissedHomeHandoffKey = '';
   String _dismissedHomeHandoffDay = '';
@@ -2047,6 +2054,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         }
         if (!mounted || epoch != _recoveryEpochV1) return;
       }
+    }
+    if (_goalRouteEnabledV1 &&
+        _usesPersistedProgress &&
+        !_suppressLegacyRecheckAfterRecoveryV1) {
+      await _restoreGoalRoutePlacementV1(epoch);
+      if (!mounted || epoch != _recoveryEpochV1) return;
     }
     var intakeCompleted = false;
     var welcomeCompleted = false;
@@ -2908,6 +2921,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     final reviewNavHasDot = reviewState.mistakes.isNotEmpty;
     final worlds = _progressWorlds(baseState);
+    final goalRoute =
+        _goalRouteEnabledV1 &&
+            (_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.learn)
+        ? _goalRouteViewModelV1(worlds)
+        : null;
     _normalizeSelection(worlds);
     final selectedWorld = _worldById(worlds, _selectedWorldId);
     final selectedLesson = _lessonById(
@@ -3415,6 +3433,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               },
                         legacy: Act0HomeShellV1(
                           state: state,
+                          goalRoute: goalRoute,
                           showChecklist: _showHomeChecklistV1(),
                           currentLesson: _firstPlayableLesson(selectedWorld),
                           pathProgressLabel: selectedWorld.progressLabel,
@@ -3583,6 +3602,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _lessonById(selectedWorld.lessons, _selectedLessonId),
                         ),
                         worlds: worlds,
+                        goalRoute: goalRoute,
                         selectedWorldId: _selectedWorldId,
                         showWorldMenu: _showWorldMenu,
                         onW1RulesCheck:
@@ -6123,6 +6143,7 @@ class _Act0PersistedProgressV1 {
     this.w1RulesBestScore = 0,
     this.w1RulesFocusTaskIds = const {},
     this.suppressLegacyRecheckAfterRecovery = false,
+    this.learnerGoal = Act0LearnerGoalV1.onlineCash,
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
@@ -6180,6 +6201,7 @@ class _Act0PersistedProgressV1 {
   final int w1RulesBestScore;
   final Set<String> w1RulesFocusTaskIds;
   final bool suppressLegacyRecheckAfterRecovery;
+  final Act0LearnerGoalV1 learnerGoal;
   final Map<String, int> profileSkillValues;
   final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
@@ -6252,6 +6274,8 @@ class _Act0PersistedProgressV1 {
       if (w1RulesBestScore > 0) 'w1RulesBestScore': w1RulesBestScore,
       if (w1RulesFocusTaskIds.isNotEmpty)
         'w1RulesFocusTaskIds': w1RulesFocusTaskIds.toList(),
+      if (learnerGoal != Act0LearnerGoalV1.onlineCash)
+        'learnerGoal': learnerGoal.id,
       'profileSkillValues': <String, int>{
         for (final key in sortedSkillKeys) key: profileSkillValues[key]!,
       },
@@ -6562,6 +6586,7 @@ class _Act0PersistedProgressV1 {
         },
         _ => const {},
       },
+      learnerGoal: Act0LearnerGoalV1.fromStorage(map['learnerGoal']),
       profileSkillValues: profileSkillValues,
       recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,

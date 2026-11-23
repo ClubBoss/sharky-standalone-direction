@@ -313,6 +313,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..clear()
         ..addAll(skippedTaskIds);
       _earnedXp = parsed.earnedXp;
+      _learnerGoalV1 = parsed.learnerGoal;
       _profileSkillValues
         ..clear()
         ..addAll(restoredSkillValues);
@@ -1131,6 +1132,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       w1StartChosen: _w1StartChosenV1,
       w1RulesBestScore: _w1RulesBestScoreV1,
       w1RulesFocusTaskIds: _w1RulesFocusTaskIdsV1,
+      learnerGoal: _learnerGoalV1,
       profileSkillValues: _profileSkillValues,
       recentSkillGains: _recentSkillGains,
       lastActiveDay: today,
