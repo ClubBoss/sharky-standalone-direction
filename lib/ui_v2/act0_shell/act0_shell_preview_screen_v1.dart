@@ -3070,7 +3070,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? normalizeAct0DrillSeatHighlightPolicyV1(
             normalizeAct0SeatTapRunnerV1(
               _actionSequenceRunnerForStageV1(
-                (multiStreetRunner ?? _repairRunnerForTask(playSelectedTask!))
+                (multiStreetRunner ?? _repairRunnerForTask(playSelectedTask))
                     .copyWith(
                       lessonId: selectedLesson.lessonId,
                       lessonTitle: _localizedLessonTitleV1(selectedLesson),
@@ -3078,7 +3078,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         selectedLesson,
                       ),
                       beatIndex:
-                          _taskIndex(selectedLesson, playSelectedTask!.taskId) +
+                          _taskIndex(selectedLesson, playSelectedTask.taskId) +
                           1,
                       beatCount: selectedLesson.courseTaskList.length,
                       phase: multiStreetRun == null
