@@ -3,7 +3,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_imported_hand_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-enum Act0DecisionConfidenceV1 { unsure, somewhatSure, verySure }
+import 'act0_learner_reflection_input_v1.dart';
+
+export 'act0_learner_reflection_input_v1.dart';
 
 enum Act0CausalClueV1 {
   callPrice('Compare the chips you still owe with the pot after your call.'),
@@ -37,6 +39,7 @@ class Act0ArchivedAttemptV1 {
     this.taskLabel,
     this.choiceLabel,
     this.tableFingerprint,
+    this.learnerInput,
   );
 
   static final _sourceRevision = RegExp(r'^[a-f0-9]{64}$');
@@ -50,6 +53,7 @@ class Act0ArchivedAttemptV1 {
     String? taskLabel,
     String? choiceLabel,
     String? tableFingerprint,
+    Act0LearnerReflectionInputV1? learnerInput,
   }) {
     if (Act0LearningEvidenceRecordV1.tryParse(evidence.toPayload()) == null ||
         !_sourceRevision.hasMatch(evidence.authoredSourceFingerprint) ||
@@ -73,6 +77,7 @@ class Act0ArchivedAttemptV1 {
       taskLabel,
       choiceLabel,
       tableFingerprint,
+      _inputFor(evidence, learnerInput),
     );
   }
 
@@ -82,6 +87,21 @@ class Act0ArchivedAttemptV1 {
   final String? taskLabel;
   final String? choiceLabel;
   final String? tableFingerprint;
+
+  // Kept apart from the historical reflection rendered by the archive row.
+  final Act0LearnerReflectionInputV1? learnerInput;
+
+  static Act0LearnerReflectionInputV1? _inputFor(
+    Act0LearningEvidenceRecordV1 evidence,
+    Act0LearnerReflectionInputV1? input,
+  ) {
+    if (input == null || input.isEmpty) return null;
+    if (!evidence.isCorrect || input.mistakeReason == null) return input;
+    final confidence = input.confidence;
+    return confidence == null
+        ? null
+        : Act0LearnerReflectionInputV1(confidence: confidence);
+  }
 
   String get id => evidence.recordId;
 
@@ -93,6 +113,7 @@ class Act0ArchivedAttemptV1 {
     if (reflection.confidence case final confidence?)
       'confidence': confidence.name,
     if (reflection.openedClue case final clue?) 'openedClue': clue.name,
+    if (learnerInput case final input?) 'learnerInput': input.toPayload(),
     'events': [
       for (final event in events)
         {
@@ -173,6 +194,9 @@ class Act0ArchivedAttemptV1 {
       taskLabel: taskLabel as String?,
       choiceLabel: choiceLabel as String?,
       tableFingerprint: tableFingerprint,
+      learnerInput: Act0LearnerReflectionInputV1.fromPayload(
+        raw['learnerInput'],
+      ),
     );
   }
 }
@@ -208,6 +232,34 @@ class Act0AttemptArchiveV1 {
     return Act0AttemptArchiveV1._(
       kept,
       kept.any((saved) => saved.id == selectedId) ? selectedId : null,
+      importedHands,
+    );
+  }
+
+  /// Replaces the input for an existing attempt. Null clears it. A missing
+  /// attempt cannot be created by a reflection write.
+  Act0AttemptArchiveV1 withLearnerInput(
+    String id,
+    Act0LearnerReflectionInputV1? input,
+  ) {
+    if (!attempts.any((attempt) => attempt.id == id)) return this;
+    return Act0AttemptArchiveV1._(
+      [
+        for (final attempt in attempts)
+          if (attempt.id == id)
+            Act0ArchivedAttemptV1._(
+              attempt.evidence,
+              attempt.reflection,
+              attempt.events,
+              attempt.taskLabel,
+              attempt.choiceLabel,
+              attempt.tableFingerprint,
+              Act0ArchivedAttemptV1._inputFor(attempt.evidence, input),
+            )
+          else
+            attempt,
+      ],
+      selectedId,
       importedHands,
     );
   }
