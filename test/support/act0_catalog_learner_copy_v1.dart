@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
 
 import 'act0_catalog_snapshot_v1.dart';
 
@@ -35,6 +36,34 @@ List<String> catalogWorldCodeFindingsV1(Act0LessonTaskV1 task) => [
   for (final (surface, copy) in _learnerCopy(task))
     if (_worldCode.hasMatch(copy)) '${task.taskId}: $surface: $copy',
 ];
+
+final _chartSeatLabels = Act0FullRingChartSeatV1.values
+    .map((seat) => seat.label)
+    .toSet();
+
+final _seatToken = RegExp(
+  r'\b(?:' +
+      _chartSeatLabels
+          .map((label) => label.split('+').first)
+          .toSet()
+          .join('|') +
+      r'|EP|LP|BU)(?:\+?\d+)?\b',
+);
+
+Iterable<String> nonChartSeatTokensV1(String copy) sync* {
+  for (final match in _seatToken.allMatches(copy)) {
+    final token = match[0]!;
+    if (!_chartSeatLabels.contains(token)) yield token;
+  }
+}
+
+Iterable<String> catalogSeatNameFindingsV1(Act0LessonTaskV1 task) sync* {
+  for (final (surface, copy) in _learnerCopy(task)) {
+    for (final token in nonChartSeatTokensV1(copy)) {
+      yield '${task.taskId}: $surface: $token in "$copy"';
+    }
+  }
+}
 
 final _seatRecognitionQuestion = RegExp(
   r'\btap (?:utg|hj|co|btn|sb|bb|the (?:button|small blind|big blind))\b'

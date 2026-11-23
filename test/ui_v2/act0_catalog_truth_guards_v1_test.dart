@@ -157,6 +157,15 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 }
 
 void main() {
+  test('learner catalog copy uses full-ring chart seat names', () {
+    expect(nonChartSeatTokensV1('UTG+1 opens.'), isEmpty);
+    expect(nonChartSeatTokensV1('«UTG+2» opens.'), ['UTG+2']);
+    expect(
+      catalogTasks.expand((row) => catalogSeatNameFindingsV1(row.task)),
+      isEmpty,
+    );
+  });
+
   registerAct0StartingChartChecksV1();
   registerAct0ErrorAtlasV1();
   group('G1 catalog rubric', () {
