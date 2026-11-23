@@ -3296,7 +3296,7 @@ final _w10NitTagRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Read both blinds",
   lessonSubtitle: 'Player Adjustment',
   caption:
-      "Both blinds are nits. They fold 90% of the time to either size. When one 3-bets, you fold.",
+      "Both blinds are nits. They fold together 90% of the time to either size. If a blind continues, it 3-bets and you fold.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Open or fold?",
@@ -3911,7 +3911,7 @@ final _w10VsNitOpenWiderRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Three seats behind",
   lessonSubtitle: 'Player Adjustment',
   caption:
-      "BTN, SB and BB fold together 88% of the time to 2 BB or 5 BB. You fold to a raise.",
+      "BTN, SB and BB fold together 88% of the time to 2 BB or 5 BB. If anyone continues, they reraise and you fold.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Open or fold?",
@@ -4001,7 +4001,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       "BB calls 2 BB and 3 BB with weak kings and sevens. Past hands show that BB calls 15 BB with strong hands.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Which size earns most from that read?",
+  question: "Which size collects most from the stated weaker callers?",
   feedbackTitle: "Pick a flop size",
   feedbackReason:
       "Bet 3 BB because BB pays that size with weaker kings and sevens. Bet the larger size because 2 BB earns a blind less per call.",
@@ -4207,7 +4207,7 @@ final _w10TableValueVsCallerTransferRunner = _w7FormatPressureIntroRunner.copyWi
       "BB calls 2 BB and 3 BB with sevens, 88–TT and weak jacks. At 18 BB, BB folds those hands and keeps strong ones.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
-  question: "Which size earns most from that read?",
+  question: "Which size collects most from the stated weaker callers?",
   feedbackTitle: "Value on the flop",
   feedbackReason:
       "Bet 3 BB because BB calls with worse jacks and sevens. Betting 2 BB earns less per call. If BB calls, folds or raises with each hand differently, the best size can change.",
@@ -4601,7 +4601,7 @@ final _w10ExploitGuardrailsIntroRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "Check the read",
       body:
-          "A bluff-catcher beats bluffs. A blocker is a card you hold that rules out some hands. Divide the call by the pot after your call. Use the range and check the sample size.",
+          "A bluff-catcher beats bluffs and loses to the value range. A blocker is a known card that rules out some hands. Divide the call by the pot after your call. Use the range and check the sample size.",
     ),
   ],
   options: const [],
@@ -5386,7 +5386,7 @@ final _w10OutsAndTurnPriceRunner = _w7FormatPressureIntroRunner.copyWith(
     Act0TeachingStepV1(
       title: "A draw and a price",
       body:
-          "A clean out makes you win. A card that gives the set a full house cannot help. Both hands are known, so 44 cards are unseen.",
+          "A clean out makes you win. Here, a heart that makes a full house for BTN leaves your flush behind. Both hands are known, so 44 cards are unseen.",
     ),
   ],
   options: const [
@@ -5510,7 +5510,7 @@ final _w10ExploitGuardrailsRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "What should stop a rushed call?",
   feedbackTitle: "Read the price",
   feedbackReason:
-      "If your hand wins less often than the call price needs, the call loses chips.",
+      "With no more bets, a call loses chips when your share of the final pot is smaller than the cost.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -5544,7 +5544,7 @@ final _w10ExploitGuardrailsRecapRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "If your hand wins less often than the call price needs, the call loses chips.",
+          "With no more bets, a call loses chips when your share of the final pot is smaller than the cost.",
     ),
   ],
 
@@ -6082,7 +6082,7 @@ final _world10PlayerAdjustmentCheckpointRunner = _w7FormatPressureIntroRunner.co
   lessonTitle: "Last street choice",
   lessonSubtitle: 'Player Adjustment',
   caption:
-      "BTN is a calling station. The pair hands call either size 85% of the time. The other 15% fold. No pair will fold to a bet.",
+      "BTN is a calling station. On 85% of hands, BTN has a pair and calls either size. BTN folds the other 15%.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Bet or check?",
@@ -6614,7 +6614,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
     caption: 'Read the table, then pick one response.',
     question: 'Flop pot 6, stack left 12: what SPR?',
     teach:
-        'A multiway pot has three or more players on the flop. A c-bet is a flop bet by the preflop raiser. A 3-bet is a raise over an open raise. SPR is the smaller stack left after preflop, divided by the flop pot. An overpair is a pocket pair above the top board card. Check cards, seat, price and the player read.',
+        'A multiway pot has at least three live players. A c-bet is a flop bet by the preflop raiser. A 3-bet is a raise over an open. Against one opponent, flop SPR is the smaller stack divided by the flop pot. An overpair is a pocket pair above every board rank.',
     choices: const [
       (
         '2',
@@ -6646,7 +6646,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'You have A7o in SB. BB has folded to 22 of 25 SB opens. This drill gives an 88% fold rate to a 2 or 4 BB open. On a 3-bet, you fold.',
+        'You have A7o in SB. BB has folded to 22 of 25 SB opens. This drill gives an 88% fold rate to a 2 or 4 BB open. Otherwise BB reraises and you fold.',
     question: 'How should you enter?',
     teach: '',
     choices: const [
@@ -6909,7 +6909,7 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
     xp: 10,
     family: Act0TaskFamilyV1.transfer,
     caption:
-        'CO bets 8 into 10 on K-8-4-2. In eight past big turn bets, CO showed sets, K8 or AK in seven. Assume KQ wins 15% against this betting range by the river, about 1 in 7.',
+        'CO bets 8 into 10 on K-8-4-2. CO showed sets, K8 or AK on seven of eight big turn bets. Assume KQ wins 15% against this betting range by the river, about 1 in 7. No ties or later bets.',
     question: 'Call or fold?',
     teach: '',
     choices: const [
@@ -7429,7 +7429,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_4_bb',
         'Call 4 BB',
         Act0FeedbackQualityV1.correct,
-        'BTN bets 4 BB and has shown weak hands on this line. Call KT because your 29.6% price keeps those bets in; raising to 12 BB can lose them.',
+        'BTN bets 4 BB and has shown weak hands on this line. Calling for 4 BB keeps those weaker hands in. Raising to 12 BB can make them fold.',
       ),
     ],
     table: _day7TableV1(
@@ -7699,7 +7699,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.proveIt,
     xp: 17,
     caption:
-        'CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO goes all-in with 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix.',
+        'CO and BB start with 13 BB. Flop pot 6.5, with 10 left: SPR 1.5. CO goes all-in with 8x or 99 twice as often as sets. Assume TT wins 60% versus this mix with no ties.',
     question: 'Call or fold?',
     teach: '',
     choices: const [
@@ -8163,7 +8163,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'CO bets 2.5 and shows 6s 6d. If you call, the river checks through.',
+        'CO bets 2.5 and shows 6s 6d. If you call, the river checks through. CO calls a raise.',
     question: 'How do the clean outs affect your call or fold?',
     teach: '',
     choices: const [
@@ -8282,7 +8282,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'Flop SPR is 2.1. BB goes all-in with 8x or 99 four times as often as sets. Assume JJ wins 65%.',
+        'Flop SPR is 2.1. BB goes all-in with 8x or 99 four times as often as sets. Assume JJ wins 65% and there are no ties.',
     question: 'Call or fold at this SPR?',
     teach: '',
     choices: const [
@@ -8480,7 +8480,7 @@ final _w11TableTriggerMultiwayAndSprTasksV1 = <Act0LessonTaskV1>[
         'price_and_the_player_read',
         'Price and the player read',
         Act0FeedbackQualityV1.correct,
-        'A call for 2 BB and a call for 8 BB need different win chances. The player read helps you rate those chances. Price tells you what a call costs. SPR shows how large the stack is next to the pot. In multiway pots, more than one foe can have a strong hand.',
+        'With the same pot before you call, a larger call needs a higher winning share. The player read helps you rate those chances. Price tells you what a call costs. SPR shows how large the stack is next to the pot. In multiway pots, more than one foe can have a strong hand.',
       ),
       (
         'the_last_pot_you_won',
@@ -8841,7 +8841,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'BB bets mostly aces or sets. Fold JJ because it beats only 15% of those river bets and calling 12 BB needs 30%. One earlier bluff changes neither number.',
+        'BB bets mostly aces or sets. Fold JJ because it beats only 15% of those river bets and calling 12 BB needs 30%. Use the given 20-hand sample for this exercise.',
       ),
     ],
     table: _day7TableV1(
@@ -8942,7 +8942,7 @@ final _w12DecisionOverOutcomeTasksV1 = <Act0LessonTaskV1>[
     family: Act0TaskFamilyV1.transfer,
     signal: 'process_over_outcome',
     caption:
-        'Last hand you called a costly draw bet and hit. This time BB shows Kc Kd: a set of kings. You have a heart draw on K-7-2-4. BB bets 12 into 10. If you call, both players check the river. No rake.',
+        'Last hand you called a costly draw bet and hit. This time BB shows Kc Kd: a set of kings. You have a heart draw on K-7-2-4. BB bets 12 into 10. If you call, both players check the river. BB calls an all-in. No rake.',
     question: 'Call or fold?',
     teach:
         'A set is three cards of the same rank. If the board pairs, a set may make a full house. A past win does not make a future draw more likely.',
@@ -9116,7 +9116,7 @@ final _w12TiltResetProtocolTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'Last hand, your AA lost to KK after a preflop all-in. You feel angry. New hand: AQs on A-7-2. BB calls flop bets with weaker aces and 7x. Pot 5.5.',
+        'Last hand, your AA lost to KK after a preflop all-in. You feel angry. New hand: AQs on A-7-2. BB calls 3 BB with weaker aces and 7x and folds those hands to an all-in. Pot 5.5.',
     question: 'What is your flop action?',
     teach:
         'A lost all-in can make the next bet feel urgent. The new pot has its own hand, board and player read. A short pause is an option before a large choice.',
@@ -9974,7 +9974,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
     family: Act0TaskFamilyV1.transfer,
     caption:
         'You have AT on A-9-6-3-2. The pot is 14. BB calls a 6 BB bet with A4, A5, A7, A8 and 9x. BB raises two pair or sets. You have not seen BB call a river all-in with weak hands.',
-    question: 'What river action fits?',
+    question: 'Which bet gets paid by the stated weaker hands?',
     teach: '',
     choices: const [
       (
@@ -10083,7 +10083,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'SB shows 9d 9c: a set of nines. You have Ah Jh on 2h 7h 9s 3c. SB bets 2 into 12. If you call, both check the river. No rake.',
+        'SB shows 9d 9c: a set of nines. You have Ah Jh on 2h 7h 9s 3c. SB bets 2 into 12. If you call, both check the river. SB calls a raise. No rake.',
     question: 'Call or fold?',
     teach:
         'A flush is five cards of one suit. Nine hearts may finish a flush, yet some can make a set into a full house or quads. Count cards that win, then compare the bet.',
@@ -10310,7 +10310,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
     xp: 10,
     caption:
         'BB is a loose caller. BB calls a 6 BB river bet with A3, A5, A6, A8, 7x and 9x, but raises two pair or sets. You have AJ on A-7-2-4-9, with 14 BB in the pot.',
-    question: 'What river action fits?',
+    question: 'Which bet gets paid by the stated weaker hands?',
     teach:
         'A value bet aims to get paid by a worse hand. A loose caller may pay with weak pairs. A large size can change which hands call. Plan the size before you bet.',
     choices: const [

@@ -3801,7 +3801,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         beatCount: 1,
         phase: Act0LessonPhaseV1.drill,
         caption:
-            "CO, BTN and both blinds fold as a group 95% of the time to both sizes. When one 3-bets, you fold.",
+            "CO, BTN and both blinds fold as a group 95% of the time to both sizes. If someone continues, they 3-bet and you fold.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
         question: "Open or fold?",
@@ -4274,7 +4274,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
             "CO calls 3 BB and 4 BB with weak kings and lower pairs. At 18 BB, those hands fold.",
         hint: '',
         hintPolicy: Act0HintPolicyV1.hidden,
-        question: "Which bet size earns the most?",
+        question: "Which size collects most from the stated weaker callers?",
         options: const [
           Act0RunnerOptionV1(
             id: "bet_3_bb",
@@ -5562,7 +5562,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'fold',
           'Fold',
           Act0FeedbackQualityV1.wrong,
-          'AKs is far ahead of CO calls in the read. Folding gives up a strong value spot from SB.',
+          'AKs dominates the weaker aces and KQ in CO’s calling range. Folding misses the chance to get paid by those hands.',
         ),
       ],
       table: _day7TableV1(
@@ -5719,7 +5719,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       step: Act0LessonStepKindV1.practice,
       xp: 0,
       caption:
-          'Three players saw the flop. BTN now bets 7 on A-8-5-2. In this drill BTN has As 8s, two pair. You hold a heart draw. After a call, there is no river bet.',
+          'Three players saw the flop. BTN now bets 7 on A-8-5-2. In this drill BTN has As 8s, two pair. You hold a heart draw. After a call, there is no river bet. BTN calls a raise.',
       question: 'Call or fold?',
       teach: '',
       choices: const [
@@ -5971,7 +5971,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       step: Act0LessonStepKindV1.practice,
       xp: 0,
       caption:
-          'BTN has folded to 17 of 20 small flop c-bets. On checks BTN bets 3 BB and you fold K-high. You have KQ on A-7-3. BTN folds 85% to either a 2 or 6 BB bet.',
+          'BTN has folded to 17 of 20 small flop c-bets. On checks BTN bets 3 BB and you fold K-high. You have KQ on A-7-3. BTN folds 85% to either a 2 or 6 BB bet. Count the full bet as lost whenever BTN continues.',
       question: 'How should you act?',
       teach: '',
       choices: const [
@@ -6073,7 +6073,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'all_in_to_40_5_bb',
           'All-in to 40.5 BB',
           Act0FeedbackQualityV1.wrong,
-          'A shove risks all 40.5 BB against a tight range that beats QJ. Folding avoids the costly call and the extra risk.',
+          'Going all-in risks all 40.5 BB against a tight range that beats QJ. Folding avoids the costly call and the extra risk.',
         ),
       ],
       table: _day7TableV1(
@@ -6285,7 +6285,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason: 'Qs pairs your Qd and is the highest card on the board.',
     wrongReasons: const {
-      1: '8h does not match either hole card. Using it to judge the 3 BB bet would understate your hand.',
+      1: '8h does not match either private card. Using it to judge the 3 BB bet would understate your hand.',
       2: '6d shares a suit with your private cards, but it does not make a pair. Counting it as a pair gives you the wrong reason to continue.',
     },
   ),
@@ -6686,7 +6686,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'all_in_to_47_5_bb',
           'All-in to 47.5 BB',
           Act0FeedbackQualityV1.wrong,
-          'KQ is one pair, and your 47.5 BB shove risks a large stack just after the bad beat. Stronger kings may call.',
+          'KQ is one pair, and going all-in for 47.5 BB risks a large stack just after the bad beat. Stronger kings may call.',
         ),
       ],
       table: _day7TableV1(
@@ -6781,7 +6781,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'all_in_to_45_bb',
           'All-in to 45 BB',
           Act0FeedbackQualityV1.wrong,
-          'A 45 BB shove risks far more than an 8 BB 3-bet. BTN may fold the weaker hands and call with a stronger range.',
+          'Going all-in for 45 BB risks far more than an 8 BB 3-bet. BTN may fold the weaker hands and call with a stronger range.',
         ),
       ],
       table: _day7TableV1(
@@ -6981,7 +6981,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'all_in_to_53_25_bb',
           'All-in to 53.25 BB',
           Act0FeedbackQualityV1.wrong,
-          'BB calls most river bets with a pair. A shove of 53.25 BB risks too much on queen-high after the draw missed.',
+          'BB calls most river bets with a pair. Going all-in for 53.25 BB risks too much on queen-high after the draw missed.',
         ),
       ],
       table: _day7TableV1(
