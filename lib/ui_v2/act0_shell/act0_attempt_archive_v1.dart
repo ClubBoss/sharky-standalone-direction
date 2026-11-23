@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_imported_hand_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -166,15 +167,21 @@ class Act0ArchivedAttemptV1 {
 }
 
 class Act0AttemptArchiveV1 {
-  const Act0AttemptArchiveV1.empty() : attempts = const [], selectedId = null;
+  const Act0AttemptArchiveV1.empty()
+    : attempts = const [],
+      importedHands = const [],
+      selectedId = null;
 
   Act0AttemptArchiveV1._(
     Iterable<Act0ArchivedAttemptV1> attempts,
     this.selectedId,
-  ) : attempts = List.unmodifiable(attempts);
+    Iterable<Act0ImportedHandV1> importedHands,
+  ) : attempts = List.unmodifiable(attempts),
+      importedHands = List.unmodifiable(importedHands);
 
   static const limit = Act0LearningEvidenceHistoryV1.maxRecords;
   final List<Act0ArchivedAttemptV1> attempts;
+  final List<Act0ImportedHandV1> importedHands;
   final String? selectedId;
 
   Act0ArchivedAttemptV1? get selected =>
@@ -190,18 +197,45 @@ class Act0AttemptArchiveV1 {
     return Act0AttemptArchiveV1._(
       kept,
       kept.any((saved) => saved.id == selectedId) ? selectedId : null,
+      importedHands,
     );
   }
 
   Act0AttemptArchiveV1 select(String? id) => Act0AttemptArchiveV1._(
     attempts,
     attempts.any((attempt) => attempt.id == id) ? id : null,
+    importedHands,
   );
 
   Act0AttemptArchiveV1 remove(String id) => Act0AttemptArchiveV1._(
     attempts.where((attempt) => attempt.id != id),
     selectedId == id ? null : selectedId,
+    importedHands,
   );
+
+  /// A source hand never enters the graded attempt or learning evidence lists.
+  Act0AttemptArchiveV1 importPokerStars(String text) {
+    final hand = Act0ImportedHandV1.parsePokerStars(text);
+    for (final saved in importedHands) {
+      if (saved.sourceKey != hand.sourceKey) continue;
+      if (saved.hasSameRecord(hand)) return this;
+      throw const Act0HandImportExceptionV1(
+        Act0HandImportErrorV1.conflictingSource,
+      );
+    }
+    return Act0AttemptArchiveV1._(
+      attempts,
+      selectedId,
+      [hand, ...importedHands].take(limit),
+    );
+  }
+
+  Act0AttemptArchiveV1 removeImportedHand(String sourceKey) =>
+      Act0AttemptArchiveV1._(
+        attempts,
+        selectedId,
+        importedHands.where((hand) => hand.sourceKey != sourceKey),
+      );
 
   /// A progress snapshot can share evidence it already writes in full.
   /// Attempts that age out of the main history still carry their own copy.
@@ -217,6 +251,8 @@ class Act0AttemptArchiveV1 {
             linkEvidence: evidenceById[attempt.id] == attempt.evidence,
           ),
       ],
+      if (importedHands.isNotEmpty)
+        'importedHands': [for (final hand in importedHands) hand.toPayload()],
       if (selectedId != null) 'selectedId': selectedId,
     };
   }
@@ -264,7 +300,21 @@ class Act0AttemptArchiveV1 {
       selection is String && attempts.any((attempt) => attempt.id == selection)
           ? selection
           : null,
+      _restoreImportedHands(payload['importedHands']),
     );
+  }
+
+  static Iterable<Act0ImportedHandV1> _restoreImportedHands(Object? raw) {
+    if (raw is! List || raw.length > limit) return const [];
+    final hands = <String, Act0ImportedHandV1>{};
+    final conflicts = <String>{};
+    for (final row in raw) {
+      final hand = Act0ImportedHandV1.tryParse(row);
+      if (hand == null) continue;
+      final saved = hands.putIfAbsent(hand.sourceKey, () => hand);
+      if (!saved.hasSameRecord(hand)) conflicts.add(hand.sourceKey);
+    }
+    return hands.values.where((hand) => !conflicts.contains(hand.sourceKey));
   }
 }
 

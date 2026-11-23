@@ -1,0 +1,32 @@
+PokerStars Hand #900000000101:  Hold'em No Limit ($0.05/$0.10 USD) - 2026/11/23 02:13:00 ET
+Table 'Synthetic Shore' 6-max Seat #5 is the button
+Seat 1: RowanExample ($10 in chips)
+Seat 3: CaseyExample ($10 in chips)
+Seat 5: AlexExample ($10 in chips)
+RowanExample: posts small blind $0.05
+CaseyExample: posts big blind $0.10
+*** HOLE CARDS ***
+Dealt to AlexExample [As Qh]
+AlexExample: raises $0.20 to $0.30
+RowanExample: folds
+CaseyExample: calls $0.20
+*** FLOP *** [Ad 7c 2s]
+CaseyExample: checks
+AlexExample: bets $0.40
+CaseyExample: calls $0.40
+*** TURN *** [Ad 7c 2s] [Kh]
+CaseyExample: checks
+AlexExample: checks
+*** RIVER *** [Ad 7c 2s Kh] [9d]
+CaseyExample: bets $0.50
+AlexExample: calls $0.50
+*** SHOW DOWN ***
+CaseyExample: shows [Ah Th] (a pair of Aces)
+AlexExample: shows [As Qh] (a pair of Aces)
+AlexExample collected $2.35 from pot
+*** SUMMARY ***
+Total pot $2.45 | Rake $0.10
+Board [Ad 7c 2s Kh 9d]
+Seat 1: RowanExample (small blind) folded before Flop
+Seat 3: CaseyExample (big blind) showed [Ah Th] and lost with a pair of Aces
+Seat 5: AlexExample (button) showed [As Qh] and won ($2.35) with a pair of Aces

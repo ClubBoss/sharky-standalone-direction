@@ -1,0 +1,17 @@
+PokerStars Hand #900000000102: Hold'em No Limit ($0.05/$0.10 USD) - 2026/11/23 08:15:00 CET [2026/11/23 02:15:00 ET]
+Table 'Synthetic Cove' 2-max Seat #1 is the button
+Seat 1: TestButton ($10 in chips)
+Seat 2: TestBlind ($10 in chips)
+TestButton: posts small blind $0.05
+TestBlind: posts big blind $0.10
+*** HOLE CARDS ***
+Dealt to TestButton [2s 7d]
+TestButton: raises $0.20 to $0.30
+TestBlind: folds
+Uncalled bet ($0.20) returned to TestButton
+TestButton collected $0.20 from pot
+TestButton: doesn't show hand
+*** SUMMARY ***
+Total pot $0.20 | Rake $0
+Seat 1: TestButton (button) (small blind) collected ($0.20)
+Seat 2: TestBlind (big blind) folded before Flop (didn't bet)
