@@ -958,7 +958,7 @@ HINT [theoryOnly]: Early seats decide sooner. Late seats see more before acting.
 TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Center First pass on the flop | Facts rainbow
 SEATS: UTG stack 99 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB stack 99 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG calls 1 BB · HJ calls 1 BB · CO calls 1 BB · BTN calls 1 BB · SB calls 0.5 more, 1 total · BB checks
-  - [wrong] 2 players — Read the order after the flop. Two is the number of blinds. UTG, HJ and CO also act before BTN after the flop.
+  - [wrong] 2 players — Read the order after the flop. Two is the number of blinds. UTG, HJ and CO also act before BTN on this flop.
     BETTER ANSWER: 5 players
     FEEDBACK TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus btn | Center First pass on the flop | Facts rainbow
   - [wrong] 1 player — Read the order after the flop. One would be a two-player hand. This flop still has six players, five of them before BTN.
@@ -5682,7 +5682,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 ===== WORLD 8 · LESSON format_pressure · 6-max vs full ring =====
 
 TASK w7_format_intro [theory] Format changes pressure
-CAPTION: This table is 6-max. At a nine-player full-ring table, UTG+1, UTG+2, and LJ also act after UTG.
+CAPTION: This table is 6-max. MP stands for middle position. At a nine-player full-ring table, UTG+1, MP, and LJ also act after UTG.
 TEACH: Fewer players behind. A full-ring table seats nine players. From UTG, eight players still act behind you, compared with five at a six-player table. With more players to act, open fewer hands.
 TEACH LABELS: 6-max, Full ring, Fewer players behind
 Q: Why does 6-max usually widen ranges?
@@ -5708,7 +5708,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
   + [correct] Raise to 2.5 BB — Five players are left to act. Open AJs for 2.5 BB because only five players act after UTG and they may fold and leave the blinds. Folding passes up that chance when fewer players remain who might hold a stronger hand.
 
 TASK w7_fullring_tighter [drill] Checkpoint: add three seats
-CAPTION: Add UTG+1, UTG+2 and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.
+CAPTION: Add UTG+1, MP and LJ after you. Open A-J suited for 2.5 BB with at most five to act. Otherwise fold.
 Q: What fits the nine-player version of this hand?
 HINT [theoryOnly]: Check the given limits before choosing.
 TABLE: Preflop | You Ah Jh | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Center Read the seats | Facts no applicable hand facts
@@ -5742,7 +5742,7 @@ SIZES: Bet 10 BB 1.25 | Bet 12 BB 1.5 | Bet 6 BB 0.75
     FEEDBACK TABLE: Flop | You Ad Td | Board Ac 8h 4s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Read the stacks | Facts one pair, top pair, rainbow
 
 TASK w7_format_recap [review] Format recap
-CAPTION: This table is 6-max. At a nine-player full-ring table, UTG+1, UTG+2, and LJ also act after UTG.
+CAPTION: This table is 6-max. MP stands for middle position. At a nine-player full-ring table, UTG+1, MP, and LJ also act after UTG.
 TEACH: Format shapes pressure. The hand is the same, but table format changes how often someone behind wakes up with strength.
 TEACH LABELS: 6-max, Full ring, Players behind
 Q: Why does format change opening pressure?
@@ -7093,7 +7093,7 @@ TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premis
 SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] The name of your hand — Look again. Top pair can win against bluffs and lose to a strong bet. The name alone does not set a call price.
     BETTER ANSWER: Price and the player read
-  + [correct] Price and the player read — Correct. With the same pot before you call, a larger call needs a higher winning share. Use your read to judge that chance. SPR compares stack size with pot size. In multiway pots, several players can have strong hands.
+  + [correct] Price and the player read — Correct. With the same pot before you call, a larger call needs a higher winning share. Use your read to estimate your chances. SPR compares the stack with the pot. In multiway pots, several players can have strong hands.
   - [wrong] The last pot you won — Look again. A past result says little about the next bettor or the cost of a new call.
     BETTER ANSWER: Price and the player read
 

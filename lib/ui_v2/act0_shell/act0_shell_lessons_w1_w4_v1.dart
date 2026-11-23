@@ -2077,7 +2077,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
           focusSeats: const ['btn'],
           reasons: const {
             'top':
-                'Two is the number of blinds. UTG, HJ and CO also act before BTN after the flop.',
+                'Two is the number of blinds. UTG, HJ and CO also act before BTN on this flop.',
             'bottom':
                 'SB, BB, UTG, HJ and CO are all still in. Those five seats act before BTN.',
             'random':
