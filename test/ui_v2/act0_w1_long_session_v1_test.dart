@@ -1435,7 +1435,9 @@ void main() {
   const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   const w7ToW8 = bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
   const pilot = act0CurriculumPilotEnabledV1 && !w7ToW8;
-  const lastWorld = pilot ? 16 : (w7ToW8 ? 8 : (fullRoute ? 12 : 7));
+  const lastWorld = pilot
+      ? act0LastCurriculumWorldV1
+      : (w7ToW8 ? 8 : (fullRoute ? 12 : 7));
   for (final firstWorld
       in pilot ? [13] : (w7ToW8 ? [7] : (fullRoute ? [1, 2] : [1]))) {
     final expectedWorlds = {
@@ -1760,7 +1762,7 @@ void main() {
             .map((task) => task.taskId)
             .toSet();
         final expectedCount = pilot
-            ? 150
+            ? 210
             : w7ToW8
             ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
             : (fullRoute
