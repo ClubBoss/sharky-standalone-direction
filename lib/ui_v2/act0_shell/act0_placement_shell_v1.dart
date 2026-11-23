@@ -10,6 +10,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
+import 'act0_placement_view_model_v1.dart';
+
 bool _isRuLocaleV1(BuildContext context) =>
     Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
 
@@ -261,30 +263,23 @@ class Act0PlacementShellV1 extends StatelessWidget {
       final currentQuestion = currentQuestionIndex < questions.length
           ? questions[currentQuestionIndex]
           : null;
-      final currentQuestionSelections = currentQuestion == null
-          ? const <String>{}
-          : selectedOptionIds[currentQuestion.questionId] ?? const <String>{};
-      final explicitBeginnerStart =
-          currentQuestion?.questionId == 'experience' &&
-          currentQuestionSelections.contains('new');
-      final minimumCount = currentQuestion == null
-          ? 0
-          : (currentQuestion.minSelections <= 0
-                ? 1
-                : currentQuestion.minSelections);
-      final allowNext =
-          currentQuestion != null &&
-          currentQuestionSelections.length >= minimumCount;
+      final view = Act0PlacementViewModelV1(
+        showIntro: showIntro,
+        questionId: currentQuestion?.questionId,
+        selections:
+            selectedOptionIds[currentQuestion?.questionId] ?? const <String>{},
+        minSelections: currentQuestion?.minSelections ?? 0,
+      );
       final flowActions = _PlacementFlowActionBarV1(
         title: showIntro
             ? (localeIsRu
                   ? 'Около двух минут. Потом первый урок будет готов.'
                   : 'About two minutes. Then your first lesson is ready.')
-            : explicitBeginnerStart
+            : view.explicitBeginnerStart
             ? (localeIsRu
                   ? 'Шарки начнёт просто.'
                   : 'Sharky will start simple.')
-            : currentQuestionIndex >= questions.length
+            : view.awaitingDiagnostic
             ? (localeIsRu
                   ? 'Три короткие проверки — и первая раздача готова.'
                   : 'Three short checks, then your first hand is ready.')
@@ -300,24 +295,24 @@ class Act0PlacementShellV1 extends StatelessWidget {
         buttonKey: Key(
           showIntro
               ? 'act0_shell_placement_intro_cta'
-              : currentQuestionIndex >= questions.length
+              : view.awaitingDiagnostic
               ? 'act0_shell_placement_start_diagnostic'
               : 'act0_shell_placement_next_cta',
         ),
         buttonLabel: showIntro
             ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
-            : explicitBeginnerStart
+            : view.explicitBeginnerStart
             ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
-            : currentQuestionIndex >= questions.length
+            : view.awaitingDiagnostic
             ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
             : (localeIsRu ? 'Продолжить' : 'Continue'),
-        onPressed: showIntro
-            ? onStartPlacement
-            : explicitBeginnerStart
-            ? onStartFromZero
-            : currentQuestionIndex >= questions.length
-            ? onStartDiagnostic
-            : (allowNext ? onNext : null),
+        onPressed: switch (view.primaryAction) {
+          Act0PlacementActionV1.start => onStartPlacement,
+          Act0PlacementActionV1.startFromZero => onStartFromZero,
+          Act0PlacementActionV1.diagnostic => onStartDiagnostic,
+          Act0PlacementActionV1.next => onNext,
+          null => null,
+        },
       );
       if (Localizations.localeOf(context).languageCode == 'en') {
         return _greenFlow(context, flowActions);

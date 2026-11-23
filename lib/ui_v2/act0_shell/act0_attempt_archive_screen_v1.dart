@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'act0_academy_reading_style_v1.dart';
 import 'act0_attempt_archive_v1.dart';
+import 'act0_attempt_archive_view_model_v1.dart';
 import 'act0_attempt_replay_screen_v1.dart';
 import 'act0_completed_decision_contract_v1.dart';
 import 'act0_club_night_tokens_v1.dart';
@@ -36,11 +37,7 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
 class _Act0AttemptArchiveScreenV1State
     extends State<Act0AttemptArchiveScreenV1> {
   String? _confirmRemovalId;
-  bool _showOwnHands = false;
-  String _query = '';
-  Act0ArchivedAttemptV1? _replayingAttempt;
-
-  Act0ImportedHandV1? _replayingHand;
+  final _view = Act0AttemptArchiveViewModelV1();
 
   Future<void> _enterHand([Act0ImportedHandV1? previous]) async {
     final hand = await Navigator.of(context).push<Act0ImportedHandV1>(
@@ -58,7 +55,7 @@ class _Act0AttemptArchiveScreenV1State
       );
       return;
     }
-    setState(() => _replayingHand = hand);
+    setState(() => _view.replayingHand = hand);
   }
 
   Future<void> _import() async {
@@ -124,7 +121,7 @@ class _Act0AttemptArchiveScreenV1State
     );
     if (!mounted || updated == null) return;
     widget.onOwnHandsChanged(updated);
-    setState(() => _replayingHand = updated.importedHands.first);
+    setState(() => _view.replayingHand = updated.importedHands.first);
   }
 
   Future<void> _removeHand(Act0ImportedHandV1 hand) async {
@@ -149,24 +146,17 @@ class _Act0AttemptArchiveScreenV1State
   }
 
   void _back() {
-    if (_replayingAttempt == null && _replayingHand == null) {
-      if (_showOwnHands) {
-        setState(() => _showOwnHands = false);
-      } else {
-        widget.onClose();
-      }
+    if (_view.atArchiveRoot) {
+      widget.onClose();
     } else {
-      setState(() {
-        _replayingAttempt = null;
-        _replayingHand = null;
-      });
+      setState(_view.backToParent);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final attempt = _replayingAttempt;
-    final hand = _replayingHand;
+    final attempt = _view.replayingAttempt;
+    final hand = _view.replayingHand;
     final skill = act0W14LessonSkillsV1[hand?.practiceLessonId]?.first;
     return PopScope<void>(
       canPop: false,
@@ -199,28 +189,16 @@ class _Act0AttemptArchiveScreenV1State
                     ),
             )
           : attempt == null
-          ? (_showOwnHands ? _ownHandsList(context) : _archiveList(context))
+          ? (_view.showOwnHands
+                ? _ownHandsList(context)
+                : _archiveList(context))
           : Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back),
     );
   }
 
   Widget _archiveList(BuildContext context) {
     final archive = widget.archive;
-    final query = _query.trim().toLowerCase();
-    final attempts = query.isEmpty
-        ? archive.attempts
-        : archive.attempts
-              .where((attempt) {
-                return [
-                  attempt.taskLabel,
-                  attempt.choiceLabel,
-                  attempt.evidence.taskId,
-                  attempt.evidence.choiceId,
-                ].whereType<String>().any(
-                  (label) => label.toLowerCase().contains(query),
-                );
-              })
-              .toList(growable: false);
+    final attempts = _view.visibleAttempts(archive);
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     return ListView.builder(
       key: const PageStorageKey('act0_attempt_archive_list'),
@@ -248,20 +226,20 @@ class _Act0AttemptArchiveScreenV1State
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               TextButton(
-                onPressed: () => setState(() => _showOwnHands = true),
+                onPressed: () => setState(() => _view.showOwnHands = true),
                 child: const Text('Own hands'),
               ),
               if (archive.attempts.isNotEmpty) ...[
                 TextFormField(
                   key: const Key('act0_attempt_archive_search'),
-                  initialValue: _query,
+                  initialValue: _view.query,
                   style: Act0AcademyReadingStyleV1.body,
                   decoration: const InputDecoration(
                     labelText: 'Search saved attempts',
                     prefixIcon: Icon(Icons.search),
                   ),
                   onChanged: (value) => setState(() {
-                    _query = value;
+                    _view.query = value;
                     _confirmRemovalId = null;
                   }),
                 ),
@@ -353,7 +331,7 @@ class _Act0AttemptArchiveScreenV1State
           TextButton(
             onPressed: () {
               FocusScope.of(context).unfocus();
-              setState(() => _replayingHand = hand);
+              setState(() => _view.replayingHand = hand);
             },
             child: const Text('Replay hand'),
           ),
@@ -437,7 +415,7 @@ class _Act0AttemptArchiveScreenV1State
               key: const Key('act0_attempt_archive_open_replay'),
               onPressed: () {
                 FocusScope.of(context).unfocus();
-                setState(() => _replayingAttempt = attempt);
+                setState(() => _view.replayingAttempt = attempt);
               },
               child: const Text('Replay attempt'),
             ),

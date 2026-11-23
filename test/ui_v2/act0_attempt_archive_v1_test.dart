@@ -6,7 +6,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_table_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_archive_view_model_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_attempt_replay_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -83,6 +85,157 @@ Act0ArchivedAttemptV1 _verifiedAttempt({bool tampered = false}) {
 }
 
 void main() {
+  test('archive view searches labels and IDs and preserves return targets', () {
+    final view = Act0AttemptArchiveViewModelV1();
+    final attempt = _attempt(1);
+    final archive = const Act0AttemptArchiveV1.empty().add(attempt);
+    expect(view.visibleAttempts(const Act0AttemptArchiveV1.empty()), isEmpty);
+    expect(view.visibleAttempts(archive), [attempt]);
+    for (final query in ['  PRICE ', ' Call ', _task, 'unmatched']) {
+      view.query = query;
+      expect(
+        view.visibleAttempts(archive),
+        query == 'unmatched' ? [] : [attempt],
+      );
+    }
+    view.replayingAttempt = attempt;
+    expect(view.atArchiveRoot, isFalse);
+    view.backToParent();
+    expect(view.atArchiveRoot, isTrue);
+    expect(view.query, 'unmatched');
+
+    view.showOwnHands = true;
+    final hand = archive
+        .importPokerStars(
+          File(
+            'test/fixtures/hand_history/pokerstars_nlhe_usd_fold.txt',
+          ).readAsStringSync(),
+        )
+        .importedHands
+        .single;
+    view.replayingHand = hand;
+    view.backToParent();
+    expect(view.replayingHand, isNull);
+    expect(view.showOwnHands, isTrue);
+    view.backToParent();
+    expect(view.atArchiveRoot, isTrue);
+  });
+
+  test(
+    'hidden learner input survives linked and inline storage without grading changes',
+    () {
+      final attempt = _attempt(1);
+      final archive = const Act0AttemptArchiveV1.empty()
+          .add(attempt)
+          .select(attempt.id);
+      final input = Act0LearnerReflectionInputV1(
+        confidence: Act0DecisionConfidenceV1.unsure,
+        mistakeReason: '  I misread the price. ',
+      );
+      final updated = archive.withLearnerInput(attempt.id, input);
+      for (final records in [
+        <Act0LearningEvidenceRecordV1>[],
+        [attempt.evidence],
+      ]) {
+        final restored = Act0AttemptArchiveV1.restore(
+          jsonDecode(jsonEncode(updated.toPayload(snapshotRecords: records))),
+          snapshotRecords: records,
+        ).selected!;
+        expect(restored.learnerInput?.mistakeReason, 'I misread the price.');
+        expect(
+          restored.learnerInput?.confidence,
+          Act0DecisionConfidenceV1.unsure,
+        );
+        expect(restored.evidence.toPayload(), attempt.evidence.toPayload());
+        expect(restored.reflection.confidence, attempt.reflection.confidence);
+        expect(restored.reflection.openedClue, attempt.reflection.openedClue);
+        expect(
+          restored.events.map((event) => event.label),
+          _trail.map((event) => event.label),
+        );
+      }
+      expect(archive.selected!.learnerInput, isNull);
+      expect(
+        updated.withLearnerInput(attempt.id, null).selected!.learnerInput,
+        isNull,
+      );
+      expect(updated.withLearnerInput('missing', input), same(updated));
+    },
+  );
+
+  test(
+    'legacy saves and malformed optional input retain archived evidence',
+    () {
+      final attempt = _attempt(1);
+      final old = attempt.toPayload();
+      expect(Act0ArchivedAttemptV1.tryParse(old)!.learnerInput, isNull);
+      old['learnerInput'] = {'confidence': 'future', 'mistakeReason': 4};
+      final restored = Act0ArchivedAttemptV1.tryParse(old)!;
+      expect(restored.learnerInput, isNull);
+      expect(restored.evidence.toPayload(), attempt.evidence.toPayload());
+    },
+  );
+
+  test(
+    'winner swap preserves source grade and confidence and only keeps a reason for the mistake',
+    () {
+      final input = Act0LearnerReflectionInputV1(
+        confidence: Act0DecisionConfidenceV1.somewhatSure,
+        mistakeReason: 'My explanation.',
+      );
+      for (final correct in [false, true]) {
+        final evidence = _evidence(1, callIsCorrect: correct);
+        final archived = Act0ArchivedAttemptV1.fromRecordedDecision(
+          evidence,
+          learnerInput: input,
+        )!;
+        expect(archived.evidence, same(evidence));
+        expect(archived.learnerInput!.confidence, input.confidence);
+        expect(
+          archived.learnerInput!.mistakeReason,
+          correct ? null : input.mistakeReason,
+        );
+        expect(
+          archived.learnerInput!.toPayload().keys,
+          correct ? ['confidence'] : ['confidence', 'mistakeReason'],
+        );
+      }
+    },
+  );
+
+  testWidgets(
+    'archive still shows historical confidence and hides learner input',
+    (tester) async {
+      final attempt = _attempt(1);
+      final archive = const Act0AttemptArchiveV1.empty()
+          .add(attempt)
+          .select(attempt.id)
+          .withLearnerInput(
+            attempt.id,
+            Act0LearnerReflectionInputV1(
+              confidence: Act0DecisionConfidenceV1.unsure,
+              mistakeReason: 'I misread the price.',
+            ),
+          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0AttemptArchiveScreenV1(
+              archive: archive,
+              onClose: () {},
+              onSelect: (_) {},
+              onRemove: (_) {},
+              onOwnHandsChanged: (_) {},
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Confidence: very sure'), findsOneWidget);
+      expect(find.text('Confidence: unsure'), findsNothing);
+      expect(find.text('I misread the price.'), findsNothing);
+    },
+  );
+
   group('Review replay', () {
     Future<void> mount(
       WidgetTester tester,

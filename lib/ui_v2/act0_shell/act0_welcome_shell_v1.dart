@@ -14,7 +14,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contrac
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 
-enum Act0WelcomeBeatV1 { intro, demoSpot, handoff }
+import 'act0_welcome_state_v1.dart';
+
+export 'act0_welcome_state_v1.dart' show Act0WelcomeBeatV1;
 
 class Act0WelcomeShellV1 extends StatefulWidget {
   const Act0WelcomeShellV1({
@@ -37,9 +39,8 @@ class Act0WelcomeShellV1 extends StatefulWidget {
 }
 
 class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
-  Act0WelcomeBeatV1 _beat = Act0WelcomeBeatV1.intro;
+  final _flow = Act0WelcomeStateV1();
   Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
-  String? _orientationChoiceLabel;
 
   bool get _isRuLocaleV1 => Localizations.localeOf(
     context,
@@ -87,7 +88,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         ? _accessibilityPrototypeStep ??
               Act0AccessibilityPrototypeStepV1.evidence
         : null;
-    return switch (_beat) {
+    return switch (_flow.beat) {
       Act0WelcomeBeatV1.intro => _WelcomeTextBeatV1(
         beatIndex: 1,
         beatCount: 3,
@@ -122,7 +123,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           en: 'Try one table read',
           ru: '\u041f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c',
         ),
-        onNext: () => setState(() => _beat = Act0WelcomeBeatV1.demoSpot),
+        onNext: () => setState(_flow.openDemo),
       ),
       // Keep the existing Table rendering context while Academy text scales.
       Act0WelcomeBeatV1.demoSpot => MediaQuery.withClampedTextScaling(
@@ -137,19 +138,16 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           },
           onBack: widget.replayMode && widget.onClose != null
               ? widget.onClose!
-              : () => setState(() => _beat = Act0WelcomeBeatV1.intro),
+              : () => setState(_flow.returnToIntro),
           onContinueTheory: () {},
           // Any pick moves straight to the truthful handoff beat: Welcome never
           // renders the real review/feedback phase, so no fabricated graded
           // choice (correct/wrong banner, fake retry CTA) can appear here.
           onChooseOption: (option) {
-            setState(() {
-              _orientationChoiceLabel = option.label;
-              _beat = Act0WelcomeBeatV1.handoff;
-            });
+            setState(() => _flow.choose(option.label));
           },
           onContinueReview: () {
-            setState(() => _beat = Act0WelcomeBeatV1.handoff);
+            setState(_flow.finishDemo);
           },
           tableVisualVariant: widget.tableVisualVariant,
         ),
@@ -195,12 +193,12 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           accent: Act0AcademyDesignTokensV1.primaryAction,
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
           line: _copyV1(
-            en: _orientationChoiceLabel == null
+            en: _flow.orientationChoiceLabel == null
                 ? 'Your first useful hand is ready.'
-                : 'You tried ${_orientationChoiceLabel!}. This preview was ungraded.',
-            ru: _orientationChoiceLabel == null
+                : 'You tried ${_flow.orientationChoiceLabel!}. This preview was ungraded.',
+            ru: _flow.orientationChoiceLabel == null
                 ? '\u0422\u0432\u043e\u044f \u043f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u0435\u0437\u043d\u0430\u044f \u0440\u0430\u0437\u0434\u0430\u0447\u0430 \u0433\u043e\u0442\u043e\u0432\u0430.'
-                : '\u0422\u0432\u043e\u0439 \u0432\u044b\u0431\u043e\u0440: ${_welcomeChoiceRuV1(_orientationChoiceLabel!)}. \u042d\u0442\u043e \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e \u0431\u0435\u0437 \u043e\u0446\u0435\u043d\u043a\u0438.',
+                : '\u0422\u0432\u043e\u0439 \u0432\u044b\u0431\u043e\u0440: ${_welcomeChoiceRuV1(_flow.orientationChoiceLabel!)}. \u042d\u0442\u043e \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e \u0431\u0435\u0437 \u043e\u0446\u0435\u043d\u043a\u0438.',
           ),
           detail: _copyV1(
             en: 'Learn keeps the next one visible after that.',
