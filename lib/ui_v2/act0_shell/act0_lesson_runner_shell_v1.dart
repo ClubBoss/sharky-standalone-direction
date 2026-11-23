@@ -3,6 +3,7 @@ import 'act0_accessibility_semantics_v1.dart';
 import 'act0_glossary_sheet_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'act0_predecision_card_focus_v1.dart';
 import 'act0_prechoice_answer_cue_policy_v1.dart';
 import 'act0_scene_profile_v1.dart';
@@ -12,6 +13,8 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'
+    show debugPrintSynchronously, kReleaseMode;
 import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -56,6 +59,10 @@ part 'act0_lesson_runner_seats_v1.dart';
 part 'act0_lesson_runner_actions_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
+
+const _traceFirstDecisionV1 =
+    !kReleaseMode && bool.fromEnvironment('SHARKY_F1_STARTUP_TRACE');
+bool _firstDecisionTracedV1 = false;
 
 enum Act0ProgressMilestoneTierV1 { lesson, world }
 
@@ -3134,6 +3141,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final isRefinedDev2 = _isRefinedDev2;
     final teachingStep = _teachingStep;
     final isTeaching = _isTeaching;
+    if (_traceFirstDecisionV1 &&
+        !_firstDecisionTracedV1 &&
+        widget.selectedTaskId == 'what_poker_is_find_hero' &&
+        isDrill &&
+        !isTeaching &&
+        _heroDecisionReady &&
+        runner.selectedOptionId == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _firstDecisionTracedV1) return;
+        _firstDecisionTracedV1 = true;
+        debugPrintSynchronously(
+          'SHARKY_F1_FIRST_DECISION_US=${developer.Timeline.now}',
+        );
+      });
+    }
     final prompt = isTeaching
         ? act0AcademyTeachingCopyV1(
             context,
