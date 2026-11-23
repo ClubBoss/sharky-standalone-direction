@@ -89,7 +89,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       heroLeadBb: 3,
       betBb: 10,
       showTurn: true,
-    ),
+    )._withB20Day7Timeline(),
     caption:
         "BB check-raises the turn only with sets. Assume no further betting.",
     question: "Call or fold?",

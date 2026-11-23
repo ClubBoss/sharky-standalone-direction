@@ -971,6 +971,48 @@ void main() {
       },
     );
 
+    testWidgets('saves the B20 prefix with the submitted attempt journal', (
+      t,
+    ) async {
+      const taskId = 'w11_trigger_bad_price_fold';
+      await _openSavedCourseTask(t, worldId: 'world_11', taskId: taskId);
+      final runner = t
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .runner;
+      final prefix = runner.table.handTimelinePrefix!;
+      expect(
+        await _tapFirst(t, [find.byKey(const Key('act0_shell_option_fold'))]),
+        isTrue,
+      );
+
+      final saved = await _saved(t);
+      final history = Act0LearningEvidenceHistoryV1.restore(
+        saved['learningEvidenceHistory'],
+        saved['learningEvidenceLineage'],
+      )!;
+      final archive = Act0AttemptArchiveV1.restore(
+        saved['attemptArchive'],
+        snapshotRecords: history.records,
+      );
+      final attempt = archive.attempts.singleWhere(
+        (row) => row.evidence.taskId == taskId,
+      );
+      expect(attempt.timelineSnapshot?.toPayload(), prefix.toPayload());
+      expect(attempt.events.map((event) => event.label), [
+        ...runner.table.actionTrail.map((event) => event.label),
+        'Your choice: ${attempt.choiceLabel}',
+      ]);
+      final fallback = Act0ArchivedAttemptV1.tryParse({
+        ...attempt.toPayload(),
+        'handTimeline': {'version': 0},
+      })!;
+      expect(fallback.timelineSnapshot, isNull);
+      expect(
+        fallback.events.map((event) => event.label),
+        attempt.events.map((event) => event.label),
+      );
+    });
+
     testWidgets('keeps the submitted attempt and deletion across restarts', (
       t,
     ) async {

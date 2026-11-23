@@ -9,6 +9,7 @@ import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_ledger_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -157,6 +158,224 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
 }
 
 void main() {
+  test(
+    'G1·51 history gaps and complete timelines agree with authored truth',
+    () {
+      final covered = <String, Act0HandHistoryCoverageV1>{};
+      for (final row in [...catalogTasks, ...day7CatalogTasks]) {
+        final task = row.task;
+        final table = task.runner.table;
+        final timeline = table.handTimelinePrefix;
+        if (timeline == null) {
+          expect(table.handHistoryCoverage, Act0HandHistoryCoverageV1.missing);
+          continue;
+        }
+        covered[task.taskId] = timeline.coverage;
+        final reason = 'History gap in ${task.taskId}';
+        expect(
+          pokerStreetToString(timeline.street),
+          table.streetLabel,
+          reason: reason,
+        );
+        expect(timeline.board, [
+          for (final card in table.boardCards) card.label,
+        ], reason: reason);
+        if (timeline.coverage == Act0HandHistoryCoverageV1.partialDrill) {
+          expect(
+            () => timeline.contributions,
+            throwsStateError,
+            reason: reason,
+          );
+          continue;
+        }
+        final actor = table.decisionSeatId!;
+        expect(timeline.decisionError(actor), isNull, reason: reason);
+        final contributions = timeline.contributions;
+        final authored = table.handContributions!;
+        final totals = contributions.amounts(
+          seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+          actorSeatId: actor,
+        );
+        double labelAmount(String label) =>
+            double.parse(RegExp(r'(\d+(?:\.\d+)?) BB$').firstMatch(label)![1]!);
+        expect(
+          totals.potBb,
+          closeTo(labelAmount(table.potLabel), 1e-9),
+          reason: reason,
+        );
+        expect(
+          totals.toCallBb,
+          closeTo(
+            table.toCallLabel.isEmpty ? 0 : labelAmount(table.toCallLabel),
+            1e-9,
+          ),
+          reason: reason,
+        );
+        expect(
+          contributions.startingStackBbBySeat,
+          authored.startingStackBbBySeat,
+          reason: reason,
+        );
+        expect(
+          contributions.entries.map(
+            (e) => (e.street, e.seatId, e.kind, e.amountBb),
+          ),
+          authored.entries.map((e) => (e.street, e.seatId, e.kind, e.amountBb)),
+          reason: reason,
+        );
+        expect(
+          timeline.events
+              .whereType<Act0HandActionV1>()
+              .where((action) => action.verb == Act0HandVerbV1.fold)
+              .map((action) => action.seat)
+              .toSet(),
+          table.seats
+              .where((seat) => seat.isFolded)
+              .map((seat) => seat.seatId)
+              .toSet(),
+          reason: reason,
+        );
+      }
+      expect(covered, {
+        'w11_trigger_bad_price_fold': Act0HandHistoryCoverageV1.complete,
+        'w12_river_draw_missed': Act0HandHistoryCoverageV1.complete,
+        'spaced_review_w8_effective_stack_fold_v1':
+            Act0HandHistoryCoverageV1.partialDrill,
+      });
+    },
+  );
+
+  test('hand timeline exposes only pre-decision actions and cards', () {
+    final events = [
+      Act0HandDealV1(PokerStreet.flop, ['As', '2h', '3d']),
+      const Act0HandActionV1(
+        PokerStreet.flop,
+        'BB',
+        Act0HandVerbV1.check,
+        0,
+        streetTotal: 0,
+      ),
+      const Act0HandActionV1(
+        PokerStreet.flop,
+        'BTN',
+        Act0HandVerbV1.bet,
+        500,
+        streetTotal: 500,
+      ),
+      Act0HandDealV1(PokerStreet.turn, ['4s']),
+      Act0HandDealV1(PokerStreet.river, ['5s']),
+    ];
+    final prefix = Act0HandTimelineV1(
+      coverage: Act0HandHistoryCoverageV1.partialDrill,
+      startingStacks: const {'BB': 10000, 'BTN': 10000},
+      button: 'BTN',
+      smallBlind: 50,
+      bigBlind: 100,
+      events: events,
+      decisionIndex: 2,
+    ).beforeDecision;
+    events.clear();
+    expect(prefix.events, hasLength(2));
+    expect(prefix.board, ['As', '2h', '3d']);
+    expect(prefix.eventsOn(PokerStreet.turn), isEmpty);
+    expect(prefix.eventsOn(PokerStreet.river), isEmpty);
+    expect(
+      prefix.events.whereType<Act0HandActionV1>().single.verb,
+      Act0HandVerbV1.check,
+    );
+    expect(() => prefix.events.clear(), throwsUnsupportedError);
+    final restored = Act0HandTimelinePrefixV1.tryParse(
+      jsonDecode(jsonEncode(prefix.toPayload())),
+    );
+    expect(restored?.toPayload(), prefix.toPayload());
+  });
+
+  test(
+    'complete timelines reject wrong order and a raise over one short all-in',
+    () {
+      Act0HandTimelinePrefixV1 prefix(List<Act0HandDeltaV1> actions) =>
+          Act0HandTimelineV1.fromDeltas(
+            coverage: Act0HandHistoryCoverageV1.complete,
+            startingStacks: const {'BTN': 2000, 'SB': 350, 'BB': 2000},
+            button: 'BTN',
+            smallBlind: 50,
+            bigBlind: 100,
+            board: const [],
+            actions: actions,
+          ).beforeDecision;
+      const start = [
+        (
+          street: PokerStreet.preflop,
+          seat: 'SB',
+          verb: Act0HandVerbV1.smallBlind,
+          chipsAdded: 50,
+        ),
+        (
+          street: PokerStreet.preflop,
+          seat: 'BB',
+          verb: Act0HandVerbV1.bigBlind,
+          chipsAdded: 100,
+        ),
+        (
+          street: PokerStreet.preflop,
+          seat: 'BTN',
+          verb: Act0HandVerbV1.raise,
+          chipsAdded: 300,
+        ),
+        (
+          street: PokerStreet.preflop,
+          seat: 'SB',
+          verb: Act0HandVerbV1.raise,
+          chipsAdded: 300,
+        ),
+        (
+          street: PokerStreet.preflop,
+          seat: 'BB',
+          verb: Act0HandVerbV1.call,
+          chipsAdded: 250,
+        ),
+      ];
+      final legal = prefix(start);
+      expect(
+        prefix(start.skip(1).toList()).decisionError('BTN'),
+        contains('event 1'),
+      );
+      expect(legal.decisionError('BTN'), isNull);
+      expect(
+        legal.events.whereType<Act0HandActionV1>().elementAt(3).allIn,
+        isTrue,
+      );
+      expect(
+        prefix([start[0], start[1], start[3]]).decisionError('BTN'),
+        contains('event 3'),
+      );
+      expect(
+        prefix([
+          ...start,
+          (
+            street: PokerStreet.preflop,
+            seat: 'BTN',
+            verb: Act0HandVerbV1.raise,
+            chipsAdded: 250,
+          ),
+        ]).decisionError('BB'),
+        contains('event 6'),
+      );
+      expect(
+        () => prefix([
+          ...start,
+          (
+            street: PokerStreet.preflop,
+            seat: 'BTN',
+            verb: Act0HandVerbV1.raise,
+            chipsAdded: 1800,
+          ),
+        ]),
+        throwsFormatException,
+      );
+    },
+  );
+
   test('learner catalog copy uses full-ring chart seat names', () {
     expect(nonChartSeatTokensV1('UTG+1 opens.'), isEmpty);
     expect(nonChartSeatTokensV1('«UTG+2» opens.'), ['UTG+2']);
