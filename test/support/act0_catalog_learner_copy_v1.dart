@@ -36,6 +36,29 @@ List<String> catalogWorldCodeFindingsV1(Act0LessonTaskV1 task) => [
     if (_worldCode.hasMatch(copy)) '${task.taskId}: $surface: $copy',
 ];
 
+final _seatRecognitionQuestion = RegExp(
+  r'\btap (?:utg|hj|co|btn|sb|bb|the (?:button|small blind|big blind))\b'
+  r'|\b(?:which (?:of (?:these |utg, hj and btn )?)?(?:seat|position)s?|who) '
+  r'(?:acts?|sits?|follows?|posts?|gets? to see|sees?|has|usually gets|would end)\b'
+  r'|\bwhich (?:of these )?seats? (?:has fewer|has more)\b'
+  r'|\bwhat is the (?:order after|clean seat read)\b'
+  r'|\bwhich (?:clockwise )?sequence\b'
+  r'|\bwhich position are you in\b'
+  r'|\bwhat does the label at your seat mean\b',
+  caseSensitive: false,
+);
+final _recognitionDecisionLoss = RegExp(
+  r'\b(?:choosing|picking|selecting)\b[^.!?]{0,45}'
+  r'\b(?:gives? up|miss(?:es)?|costs?|risks?|loses?)\b',
+  caseSensitive: false,
+);
+
+bool catalogIsSeatRecognitionV1(Act0LessonTaskV1 task) =>
+    _seatRecognitionQuestion.hasMatch(catalogQuestion(task));
+
+bool catalogSeatRecognitionDecisionLossV1(String feedback) =>
+    _recognitionDecisionLoss.hasMatch(feedback);
+
 const _bankrollAmount = r'(\d+(?:\.\d+)?|one hundred|[a-z]+(?:-[a-z]+)?)';
 const _buyInUnit = r'[-\s]+(?:full[-\s]+)?buy[-\s]?ins?\b';
 const _moveDirection = r'mov(?:e|ing)[-\s]+(up|down)';

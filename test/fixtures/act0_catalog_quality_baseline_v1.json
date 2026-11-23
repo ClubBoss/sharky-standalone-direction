@@ -19,7 +19,8 @@
     "46.action_question_options": 71,
     "47.correct_feedback_length": 656,
     "48.bankroll_threshold": 17,
-    "49.shared_feedback_body": 656
+    "49.shared_feedback_body": 656,
+    "50.seat_recognition_feedback": 84
   },
   "correct_feedback_word_limits_v1": {
     "w3_play_from_blinds_small_blind_medium_raise|raise": 48,
@@ -641,7 +642,6 @@
     "W3|button_advantage_find_button|141",
     "W3|button_advantage_find_button|31",
     "W3|button_advantage_find_button|action_order",
-    "W3|button_advantage_find_button|position_information",
     "W3|early_vs_late_early_pressure_choice|139",
     "W3|early_vs_late_early_pressure_choice|141",
     "W3|early_vs_late_late_info_choice|139",
@@ -701,7 +701,6 @@
     "W3|position_six_seats_position_order_reason|139",
     "W3|position_six_seats_position_order_reason|141",
     "W3|position_six_seats_positions_button|141",
-    "W3|position_six_seats_positions_button|31",
     "W3|position_six_seats_positions_button|action_order",
     "W3|position_six_seats_positions_cutoff|139",
     "W3|position_six_seats_positions_cutoff|141",

@@ -2408,6 +2408,43 @@ TASK river [decision] River
       );
     });
 
+    test('G1·50 rejects a decision-loss explanation for naming a seat', () {
+      final row = day7CatalogTasks.singleWhere(
+        (row) =>
+            row.task.taskId == 'spaced_review_w3_position_six_seats_seat_v1',
+      );
+      final runner = row.task.runner;
+      final co = runner.options.singleWhere((option) => option.label == 'CO');
+      final altered = Act0RunnerOptionV1(
+        id: co.id,
+        label: co.label,
+        isCorrect: co.isCorrect,
+        preferredLabel: co.preferredLabel,
+        quality: co.quality,
+        feedbackTitle: co.feedbackTitle,
+        feedbackReason:
+            'CO follows HJ. Choosing CO gives up the information CO gets from seeing HJ act first.',
+      );
+      Iterable<String> findingsFor(CatalogTask task) =>
+          runCatalogQualityAudit(rows: [task]).findings.where(
+            (key) => key.startsWith('$catalogSeatRecognitionFeedbackRuleV1|'),
+          );
+      expect(catalogIsSeatRecognitionV1(row.task), isTrue);
+      expect(findingsFor(row), isEmpty);
+      final choices = [
+        for (final option in runner.options)
+          option.id == co.id ? altered : option,
+      ];
+      expect(findingsFor(_withRunner(row, runner.copyWith(options: choices))), [
+        '$catalogSeatRecognitionFeedbackRuleV1|${row.task.taskId}|${co.id}',
+      ]);
+      final action = _withRunner(
+        row,
+        runner.copyWith(question: 'Call or fold from CO?', options: choices),
+      );
+      expect(findingsFor(action), isEmpty);
+    });
+
     test('G1·49 rejects a shared body despite different verdict titles', () {
       final row = day7CatalogTasks.singleWhere(
         (row) =>

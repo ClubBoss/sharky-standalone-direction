@@ -1254,7 +1254,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 0,
     reason: "The six-seat preflop order starts UTG, HJ, then CO.",
     wrongReasons: const {
-      1: "CO follows HJ. Choosing CO gives up the information CO gets from seeing HJ act first.",
+      1: "CO follows HJ. HJ is the seat immediately clockwise after UTG.",
       2: "BB posted 1 BB before acting. Picking BB skips the information from both early seats.",
     },
   ),
@@ -1268,8 +1268,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason: "CO sits one place before the Button and one place after HJ.",
     wrongReasons: const {
-      0: "SB posts 0.5 BB after BTN. Picking it gives up the information BTN gets from seeing CO act.",
-      2: "UTG acts before HJ. Choosing UTG gives up the information CO gets from seeing HJ act.",
+      0: "SB sits immediately clockwise after BTN. CO is between HJ and BTN.",
+      2: "UTG is immediately before HJ. CO comes after HJ and before BTN.",
     },
   ),
   _day7ExampleV1(
@@ -1284,8 +1284,8 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "The dealer marker is at BTN. Your own HJ seat and the dealer are separate.",
     wrongReasons: const {
-      0: "SB posted 0.5 BB. Picking SB gives up the last postflop action that belongs to BTN.",
-      1: "HJ is your seat. Choosing it misses the information BTN gets by seeing other players act.",
+      0: "SB is the seat to the left of the dealer marker. The marker itself is on BTN.",
+      1: "HJ is your seat in this hand. The round dealer marker identifies BTN.",
     },
   ),
   _day7ExampleV1(
@@ -1300,7 +1300,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
         "SB is the smaller blind immediately after the Button. It posts 0.5 BB here.",
     wrongReasons: const {
       1: "BB pays 1 BB. Using that for SB would overstate your post by 0.5 BB.",
-      2: "BTN has the dealer marker. Picking BTN misses the 0.5 BB in the pot from SB.",
+      2: "BTN has the dealer marker. The half-blind is posted by SB, the next seat clockwise.",
     },
   ),
   _day7ExampleV1(
@@ -1314,7 +1314,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     correct: 1,
     reason: "BB means big blind. It is the seat that posted 1 BB in this hand.",
     wrongReasons: const {
-      0: "BTN has not posted. Choosing that seat misses the 1 BB in the pot from your blind.",
+      0: "BTN holds the dealer marker in this hand. The full blind was posted by BB.",
       2: "SB pays 0.5 BB. Using that as your full blind would miss another 0.5 BB in the pot.",
     },
   ),
