@@ -207,55 +207,58 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.runAsync(() => Act0F7SceneGateV1.premiumStore.warmUp());
     final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
-    await tester.pumpWidget(const AppRoot());
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Start with the basics'));
-    await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 1));
-    await tester.tap(find.text('Next'));
-    await tester.pumpAndSettle();
+    try {
+      await tester.pumpWidget(const AppRoot());
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Start with the basics'));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
 
-    final options = find.byWidgetPredicate(
-      (widget) =>
-          widget.key is ValueKey<String> &&
-          (widget.key! as ValueKey<String>).value.startsWith(
-            'act0_shell_option_',
-          ) &&
-          widget is InkWell,
-    );
-    expect(options.evaluate().length, greaterThan(1));
-    final ordered = options
-        .evaluate()
-        .map((element) => element.widget.key!)
-        .toList();
-    bool focused(Key key) =>
-        tester.getSemantics(find.byKey(key)).flagsCollection.isFocused;
-    for (final option in ordered) {
-      final finder = find.byKey(option);
-      expect(finder.hitTestable(), findsOneWidget);
-      expect(tester.getSize(finder).height, greaterThanOrEqualTo(44));
-    }
-    for (
-      var attempts = 0;
-      attempts < 24 && !focused(ordered.first);
-      attempts++
-    ) {
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      final options = find.byWidgetPredicate(
+        (widget) =>
+            widget.key is ValueKey<String> &&
+            (widget.key! as ValueKey<String>).value.startsWith(
+              'act0_shell_option_',
+            ) &&
+            widget is InkWell,
+      );
+      expect(options.evaluate().length, greaterThan(1));
+      final ordered = options
+          .evaluate()
+          .map((element) => element.widget.key!)
+          .toList();
+      bool focused(Key key) =>
+          tester.getSemantics(find.byKey(key)).flagsCollection.isFocused;
+      for (final option in ordered) {
+        final finder = find.byKey(option);
+        expect(finder.hitTestable(), findsOneWidget);
+        expect(tester.getSize(finder).height, greaterThanOrEqualTo(44));
+      }
+      for (
+        var attempts = 0;
+        attempts < 24 && !focused(ordered.first);
+        attempts++
+      ) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pumpAndSettle();
+      }
+      expect(focused(ordered.first), isTrue);
+      for (var index = 1; index < ordered.length; index++) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pumpAndSettle();
+        expect(focused(ordered[index]), isTrue);
+      }
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_accessibility_choice_result')),
+        findsOneWidget,
+      );
+    } finally {
+      semantics.dispose();
     }
-    expect(focused(ordered.first), isTrue);
-    for (var index = 1; index < ordered.length; index++) {
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pumpAndSettle();
-      expect(focused(ordered[index]), isTrue);
-    }
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
-    expect(
-      find.byKey(const Key('act0_accessibility_choice_result')),
-      findsOneWidget,
-    );
   });
 
   testWidgets('platform Reduce Motion shortens route animations', (

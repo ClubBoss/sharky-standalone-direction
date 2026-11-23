@@ -1485,7 +1485,6 @@ class _AccessibilityDirectDecisionV1State
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 14,
-                                vertical: 6,
                               ),
                               child: Text(
                                 act0AcademyW1OptionLabelV1(
