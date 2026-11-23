@@ -1,4 +1,6 @@
 import 'act0_decision_reasoning_w10_w12_v1.dart';
+import 'act0_decision_reasoning_w13_w14_v1.dart';
+import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
 import 'act0_decision_reasoning_w7_w9_v1.dart';
@@ -78,6 +80,19 @@ const act0PrinciplesV1 = <String, int>{
   'session_plan': 11,
   'bankroll_rule': 11,
   'tilt_reset': 12,
+  if (act0CurriculumPilotEnabledV1) ...{
+    "range_advantage": 13,
+    "nut_advantage": 13,
+    "equity_realization": 13,
+    "backdoor_equity": 13,
+    "initiative": 13,
+    "merged_sizing": 14,
+    "polarized_sizing": 14,
+    "size_range_signal": 14,
+    "spr_commitment": 14,
+    "pot_geometry": 14,
+    "induce_raise": 14,
+  },
 };
 
 const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
@@ -85,4 +100,5 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
   ...act0DecisionReasoningW4W6V1,
   ...act0DecisionReasoningW7W9V1,
   ...act0DecisionReasoningW10W12V1,
+  if (act0CurriculumPilotEnabledV1) ...act0DecisionReasoningW13W14V1,
 };

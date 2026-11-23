@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_solver/poker_solver.dart' as solver;
 
+import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_ledger_v1.dart';
 import 'act0_hand_contributions_v1.dart';
 import 'act0_preflop_equity_v1.dart';
@@ -20,6 +21,7 @@ part 'act0_shell_day7_content_v1.dart';
 part 'act0_shell_lessons_w1_w4_v1.dart';
 part 'act0_shell_lessons_w5_w8_v1.dart';
 part 'act0_shell_lessons_w9_w12_v1.dart';
+part 'act0_shell_lessons_w13_w14_v1.dart';
 part 'act0_shell_runners_part1_v1.dart';
 part 'act0_shell_runners_part2_v1.dart';
 part 'act0_shell_runners_part3_v1.dart';
@@ -361,6 +363,7 @@ class Act0WorldCardV1 {
 class Act0LessonCardV1 {
   const Act0LessonCardV1({
     required this.lessonId,
+    String? authoredLessonId,
     required this.title,
     required this.subtitle,
     required this.state,
@@ -371,9 +374,10 @@ class Act0LessonCardV1 {
     required this.rewardXp,
     required this.runner,
     this.tasks = const <Act0LessonTaskV1>[],
-  });
+  }) : authoredLessonId = authoredLessonId ?? lessonId;
 
   final String lessonId;
+  final String authoredLessonId;
   final String title;
   final String subtitle;
   final Act0LessonStateV1 state;
@@ -411,6 +415,7 @@ class Act0LessonCardV1 {
   }) {
     return Act0LessonCardV1(
       lessonId: lessonId,
+      authoredLessonId: authoredLessonId,
       title: title,
       subtitle: subtitle,
       state: state ?? this.state,
@@ -1940,4 +1945,5 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     rewardXp: 360,
     lessons: _mindsetBridgeLessons,
   ),
+  if (act0CurriculumPilotEnabledV1) ...[_world13Pilot, _world14Pilot],
 ];

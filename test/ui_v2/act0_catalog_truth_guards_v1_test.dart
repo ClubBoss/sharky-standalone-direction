@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -376,11 +377,12 @@ TASK river [decision] River
 
   test('W1–W12 catalog snapshot', () {
     final fixture = File(_snapshotPath);
-    final current = renderCatalogSnapshot();
-    expect(
-      catalogTasks.map((row) => row.world.worldNumber).toSet(),
-      hasLength(12),
+    final current = renderCatalogSnapshot(
+      excludePilot: act0CurriculumPilotEnabledV1,
     );
+    expect(catalogTasks.map((row) => row.world.worldNumber).toSet(), {
+      for (var world = 1; world <= act0LastCurriculumWorldV1; world++) world,
+    });
     if (Platform.environment['G1_UPDATE_SNAPSHOT'] == '1') {
       fixture.createSync(recursive: true);
       fixture.writeAsStringSync(current);
@@ -402,6 +404,16 @@ TASK river [decision] River
     );
     expect(lines.length, expected.length);
   });
+
+  test('W13–W14 pilot catalog snapshot', () {
+    final fixture = File('test/fixtures/act0_catalog_snapshot_w13_w14_v1.txt');
+    final current = renderCatalogSnapshot(worlds: {13, 14});
+    if (Platform.environment['G1_UPDATE_SNAPSHOT'] == '1') {
+      fixture.writeAsStringSync(current);
+      return;
+    }
+    expect(current, fixture.readAsStringSync());
+  }, skip: !act0CurriculumPilotEnabledV1);
 
   test(
     'W3 blind lesson charges the amount still due and checks its decisions',

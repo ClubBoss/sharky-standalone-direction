@@ -1,3 +1,4 @@
+import 'act0_curriculum_pilot_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'act0_shell_state_v1.dart';
 
@@ -1714,7 +1715,7 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
 }
 
 const _exerciseGoalPrefix = 'exercise/';
-const act0SameGoalReplayThroughWorldV1 = 12;
+const act0SameGoalReplayThroughWorldV1 = act0LastCurriculumWorldV1;
 
 // These are task-level goals shared by more than one exercise. A single
 // exercise with no equivalent keeps its own goal and supports familiar replay.
@@ -1824,7 +1825,9 @@ _buildFoundationRepairDefaults() {
       final exercises = <_FoundationRepairExercise>[];
       for (final task in lesson.courseTaskList) {
         final correct = task.runner.options.where(
-          act0RunnerOptionIsAuthoredCorrectV1,
+          world.worldNumber > 12
+              ? act0RunnerOptionIsPreferredV1
+              : act0RunnerOptionIsAuthoredCorrectV1,
         );
         if (correct.length != 1) continue;
         final exercise = (

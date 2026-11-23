@@ -320,7 +320,9 @@ Act0TableStateV1 _day7TableV1({
   Map<String, List<Act0CardStateV1>> shown = const {},
   Map<String, double> stacks = const {},
 }) {
-  final heroCards = _act0LessonCardsV1(hand);
+  final heroCards = hand.isEmpty
+      ? const <Act0CardStateV1>[]
+      : _act0LessonCardsV1(hand);
   final startingStacks = {
     for (final seat in _day7SeatsV1)
       seat: stacks[seat] ?? _day7DefaultStackBbV1,
@@ -416,12 +418,14 @@ List<Act0RunnerOptionV1> _wave6AuthoredChoicesV1(
       Act0RunnerOptionV1(
         id: id,
         label: label,
-        isCorrect: grade == Act0FeedbackQualityV1.correct,
+        isCorrect: grade.passes,
         preferredLabel: answer,
         quality: grade,
-        feedbackTitle: grade == Act0FeedbackQualityV1.correct
-            ? 'Correct.'
-            : 'Look again.',
+        feedbackTitle: switch (grade) {
+          Act0FeedbackQualityV1.correct => 'Correct.',
+          Act0FeedbackQualityV1.acceptable => 'Playable.',
+          _ => 'Look again.',
+        },
         feedbackReason: feedback,
       ),
   ];
@@ -442,6 +446,7 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
   required Act0TableStateV1 table,
   Act0TaskFamilyV1? family,
   String? signal,
+  String? explanation,
 }) {
   final answers = _wave6AuthoredChoicesV1(choices);
   return Act0LessonTaskV1(
@@ -464,9 +469,9 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
       question: question,
       options: answers,
       feedbackTitle: 'Review your choice.',
-      feedbackReason: answers
-          .singleWhere((answer) => answer.isCorrect)
-          .feedbackReason,
+      feedbackReason:
+          explanation ??
+          answers.singleWhere(act0RunnerOptionIsPreferredV1).feedbackReason,
       feedbackSignalId: signal,
       primaryCtaLabel: '',
       nextLessonId: null,

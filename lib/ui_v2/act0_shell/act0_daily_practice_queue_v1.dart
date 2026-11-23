@@ -1,4 +1,6 @@
-const act0DailyPracticeLastWorldV1 = 12;
+import 'act0_curriculum_pilot_v1.dart';
+
+const act0DailyPracticeLastWorldV1 = act0LastCurriculumWorldV1;
 
 /// A finite short set, separate from the day's activity goal and repair debt.
 class Act0DailyPracticeQueueV1 {
