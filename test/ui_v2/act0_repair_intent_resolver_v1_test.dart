@@ -85,12 +85,7 @@ void main() {
 
     await _openReview(tester);
 
-    expect(
-      find.text(
-        'You missed that nobody has bet yet. This rep repeats the same clue.',
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Review: Checking for free'), findsOneWidget);
     final snapshot = _reviewSupportCopySnapshot(tester);
     expect(snapshot?['schemaVersion'], 1);
     expect(snapshot?['safeTemplateId'], 'repair_same_clue_v1');
@@ -353,7 +348,7 @@ void main() {
 
     await _openReview(tester);
 
-    expect(find.text(expectedLine), findsOneWidget);
+    expect(find.text('Review: Card rank comparison'), findsOneWidget);
     final snapshot = _reviewSupportCopySnapshot(tester);
     expect(snapshot?['schemaVersion'], 1);
     expect(snapshot?['safeTemplateId'], 'repair_exact_replay_v1');

@@ -562,12 +562,12 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_find_hero',
-        title: 'Find your seat',
+        title: 'Your cards and the board',
         phase: Act0LessonPhaseV1.drill,
         runner: _firstTableGuideFindHeroRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
-        summary: 'Spot where Hero sits before anything else starts moving.',
+        summary: 'Distinguish your private cards from the shared board.',
       ),
       Act0LessonTaskV1(
         taskId: 'first_table_guide_one_clear_choice',

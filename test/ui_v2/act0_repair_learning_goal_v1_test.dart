@@ -573,8 +573,10 @@ void main() {
       final firstRead = Act0AchievementSeedProjectionV1.fromSources(
         learningEvidenceHistory: history,
       ).seedForId(act0AchievementSeedFirstCorrectReadV1);
-      expect(firstRead.earned, isTrue);
-      expect(firstRead.sourceSummary['completedCorrectDecisions'], 1);
+      // A genuine repair can bank proof and schedule review without earning
+      // the first correct read achievement.
+      expect(firstRead.earned, isFalse);
+      expect(firstRead.sourceSummary, isEmpty);
       for (final choice in ['check', 'fold']) {
         final next = _appendAuthoredDiagnosticControl(
           history: history,
@@ -621,12 +623,11 @@ void main() {
         final currentSeeds = Act0AchievementSeedProjectionV1.fromSources(
           learningEvidenceHistory: history,
         );
-        expect(
-          currentSeeds
-              .seedForId(act0AchievementSeedFirstCorrectReadV1)
-              .sourceSummary,
-          firstRead.sourceSummary,
+        final currentFirstRead = currentSeeds.seedForId(
+          act0AchievementSeedFirstCorrectReadV1,
         );
+        expect(currentFirstRead.earned, firstRead.earned);
+        expect(currentFirstRead.sourceSummary, firstRead.sourceSummary);
         final currentProof = Act0FixProofProjectionV1.fromSources(
           repairOutcomeProjection: outcomes,
           reviewResolutionReceiptHistory: receipts,

@@ -220,9 +220,11 @@ class _Act0AttemptArchiveScreenV1State
                 onPressed: widget.onClose,
                 child: const Text('Back to Review'),
               ),
-              const Text(
+              Text(
                 'Attempt archive',
-                style: Act0AcademyReadingStyleV1.sectionTitle,
+                style: Act0AcademyReadingStyleV1.sectionTitle.copyWith(
+                  color: Act0ClubNightTokensV1.text,
+                ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               TextButton(
@@ -357,12 +359,14 @@ class _Act0AttemptArchiveScreenV1State
     final dateLabels = MaterialLocalizations.of(context);
     final date = dateLabels.formatMediumDate(time);
     final clock = dateLabels.formatTimeOfDay(TimeOfDay.fromDateTime(time));
-    final result = switch (evidence.resultKind) {
-      'correct' || 'co_correct' => 'Correct',
-      'acceptable' => 'Acceptable',
-      'suboptimal' => 'Suboptimal',
-      _ => 'Incorrect',
-    };
+    final result = evidence.isRepaired
+        ? 'Fixed'
+        : switch (evidence.resultKind) {
+            'correct' || 'co_correct' => 'Correct',
+            'acceptable' => 'Acceptable',
+            'suboptimal' => 'Suboptimal',
+            _ => 'Incorrect',
+          };
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -373,7 +377,9 @@ class _Act0AttemptArchiveScreenV1State
             contentPadding: EdgeInsets.zero,
             title: Text(
               attempt.taskLabel ?? evidence.taskId,
-              style: Act0AcademyReadingStyleV1.body,
+              style: Act0AcademyReadingStyleV1.body.copyWith(
+                color: Act0ClubNightTokensV1.text,
+              ),
             ),
             subtitle: Text(
               '$date · $clock · $result',

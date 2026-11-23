@@ -22,6 +22,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.refined = false,
     this.completionSummary,
     this.isAssistedDecision = false,
+    this.isRepaired = false,
     this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
@@ -64,6 +65,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
+  final bool isRepaired;
   final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
@@ -88,7 +90,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
-    title: title,
+    title: isRepaired ? _fixedFeedbackLabelV1(context) : title,
     selectedLabel: selectedLabel,
     otherOptions: otherOptions,
     reason: reason,
@@ -172,7 +174,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isSuboptimal
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
-    final resolvedTitle = isAssistedDecision && !isWrong
+    final resolvedTitle = isRepaired
+        ? _fixedFeedbackLabelV1(context)
+        : isAssistedDecision && !isWrong
         ? act0AcademyLanguageV1(context) == 'ru'
               ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
               : 'Correct with help'
@@ -194,11 +198,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           '${quality.name}|${resolvedTitle.trim().toLowerCase()}|${resolvedSharkyLine.trim().toLowerCase()}',
       taskFamily: taskFamily,
     );
-    final primaryResultLabel = _feedbackPrimaryResultLabelV1(
-      context,
-      quality: quality,
-      repairReceiptLine: repairResultReceiptLine,
-    );
+    final primaryResultLabel = isRepaired
+        ? _fixedFeedbackLabelV1(context)
+        : _feedbackPrimaryResultLabelV1(
+            context,
+            quality: quality,
+            repairReceiptLine: repairResultReceiptLine,
+          );
     final stateLabel = isRecoveredSourceRecheck
         ? 'Original read proven'
         : isFailedSourceRecheck
@@ -486,7 +492,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isWrong
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
-    final companionRoleLabel = hasProofEarnedState
+    final companionRoleLabel = isRepaired
+        ? _fixedFeedbackLabelV1(context)
+        : hasProofEarnedState
         ? isRecoveredSourceRecheck
               ? 'Original read proven'
               : 'Repair landed'
@@ -1836,6 +1844,9 @@ String _humanizedFeedbackProofLineV1(String proofLine) {
   }
   return cleaned;
 }
+
+String _fixedFeedbackLabelV1(BuildContext context) =>
+    act0AcademyLanguageV1(context) == 'ru' ? 'Исправлено' : 'Fixed';
 
 String _feedbackPrimaryResultLabelV1(
   BuildContext context, {

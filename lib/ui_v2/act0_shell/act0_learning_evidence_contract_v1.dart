@@ -345,6 +345,12 @@ class Act0LearningEvidenceRecordV1 {
     return answeredAt.toLocal().toIso8601String().substring(0, 10);
   }
 
+  bool get isRepaired =>
+      isCorrect &&
+      (resultKind == act0RepairedResultKindV1 ||
+          (runKind == 'repair' &&
+              reviewKind != Act0ReviewKindV1.originalSourceRecheck));
+
   bool get isAssistedCorrect => isCorrect && hasKnownAssistance;
 
   bool get hasKnownAssistance =>
@@ -1201,7 +1207,14 @@ const Set<String> _decisionTimeBuckets = <String>{
   'unknown',
 };
 
-const Set<String> _passingResultKinds = {'correct', 'co_correct', 'acceptable'};
+const act0RepairedResultKindV1 = 'repaired';
+
+const Set<String> _passingResultKinds = {
+  'correct',
+  'co_correct',
+  'acceptable',
+  act0RepairedResultKindV1,
+};
 const Set<String> _resultKinds = {
   ..._passingResultKinds,
   'incorrect',

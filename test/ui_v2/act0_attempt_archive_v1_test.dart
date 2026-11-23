@@ -1,3 +1,5 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -233,6 +235,61 @@ void main() {
       expect(find.text('Confidence: very sure'), findsOneWidget);
       expect(find.text('Confidence: unsure'), findsNothing);
       expect(find.text('I misread the price.'), findsNothing);
+    },
+  );
+
+  test(
+    'B39 W1–W12 saved mistake labels resolve to their exact decision task',
+    () {
+      final source = Act0ShellStateV1.sample;
+      final coveredWorlds = <String>{};
+      for (final world in source.worlds.where(
+        (w) => RegExp(r'^world_(?:[1-9]|1[0-2])$').hasMatch(w.worldId),
+      )) {
+        for (final lesson in world.lessons) {
+          for (final task in lesson.taskList) {
+            final expected = task.runner.options
+                .where(act0RunnerOptionIsPreferredV1)
+                .firstOrNull;
+            if (expected == null) continue;
+            for (final choice in task.runner.options.where(
+              (o) => !o.isCorrect,
+            )) {
+              coveredWorlds.add(world.worldId);
+              final attemptId = '${task.taskId}|${choice.id}';
+              final history = const Act0ReviewMistakeHistoryV1()
+                  .appendCompletedDecision(
+                    Act0CompletedDecisionV1(
+                      attemptKey: attemptId,
+                      worldId: world.worldId,
+                      lessonId: lesson.lessonId,
+                      taskId: task.taskId,
+                      sourceTaskId: task.taskId,
+                      decisionKind: Act0CompletedDecisionKindV1.actionList,
+                      selectedId: choice.id,
+                      expectedId: expected.id,
+                      isCorrect: false,
+                      decisionTimeBucket: 'unknown',
+                      taskFamily: task.resolvedTaskFamily,
+                      resultKind: choice.quality.resultKind,
+                      errorType: 'incorrect_read',
+                      skillAtomId: 'table_read',
+                    ),
+                  );
+              final restored = Act0ReviewMistakeRecordV1.tryParse(
+                history.records.single.toPayload(),
+              )!;
+              expect(restored.sourceDecisionId, attemptId);
+              final item = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+                Act0ReviewMistakeHistoryV1(records: [restored]),
+                sourceState: source,
+              ).items.single;
+              expect(item.primaryLabel, task.title, reason: attemptId);
+            }
+          }
+        }
+      }
+      expect(coveredWorlds, {for (var n = 1; n <= 12; n++) 'world_$n'});
     },
   );
 
