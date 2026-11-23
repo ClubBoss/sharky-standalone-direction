@@ -15,6 +15,7 @@ import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'academy_leaves/act0_academy_practice_leaf_v1.dart';
 import 'academy_leaves/act0_academy_review_leaf_v1.dart';
 import 'academy_leaves/act0_academy_settings_leaf_v1.dart';
+import 'act0_settings_view_model_v1.dart';
 import 'academy_leaves/act0_academy_you_leaf_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
@@ -326,7 +327,11 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
     setState(() => _savingReminder = true);
     try {
       final scheduled = await Act0PracticeReminderV1.setEnabled(enabled);
-      if (mounted && enabled && !scheduled) {
+      if (mounted &&
+          Act0SettingsViewModelV1.showReminderPermissionNotice(
+            enabled: enabled,
+            scheduled: scheduled,
+          )) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Allow Sharky notifications in iPhone Settings.'),
@@ -357,72 +362,80 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
       AppSettingsService.instance.changes,
       Act0PracticeReminderV1.enabled,
     ]),
-    builder: (context, _) => Scaffold(
-      backgroundColor: Act0AcademyLeafPaletteV1.ink,
-      body: SafeArea(
-        child: Act0AcademySettingsLeafV1(
-          input: Act0AcademySettingsLeafInputV1(
-            loadState: _loadState,
-            version: _version,
-            hapticsEnabled:
-                AppSettingsService.instance.changes.value.hapticsEnabled,
-            practiceReminderEnabled: Act0PracticeReminderV1.isSupported
-                ? Act0PracticeReminderV1.enabled.value
-                : null,
-            onPracticeReminderChanged: _savingReminder
-                ? null
-                : _setPracticeReminder,
-            onHapticsChanged: (value) async {
-              try {
-                await AppSettingsService.instance.setHapticsEnabled(value);
-              } catch (_) {
-                if (context.mounted)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Preference was not saved. Try again.'),
+    builder: (context, _) {
+      final view = Act0SettingsViewModelV1(
+        loadState: _loadState,
+        version: _version,
+        hapticsEnabled:
+            AppSettingsService.instance.changes.value.hapticsEnabled,
+        reminderSupported: Act0PracticeReminderV1.isSupported,
+        reminderEnabled: Act0PracticeReminderV1.enabled.value,
+        savingReminder: _savingReminder,
+      );
+      return Scaffold(
+        backgroundColor: Act0AcademyLeafPaletteV1.ink,
+        body: SafeArea(
+          child: Act0AcademySettingsLeafV1(
+            input: Act0AcademySettingsLeafInputV1(
+              loadState: view.loadState,
+              version: view.version,
+              hapticsEnabled: view.hapticsEnabled,
+              practiceReminderEnabled: view.practiceReminderEnabled,
+              onPracticeReminderChanged: view.canChangeReminder
+                  ? _setPracticeReminder
+                  : null,
+              onHapticsChanged: (value) async {
+                try {
+                  await AppSettingsService.instance.setHapticsEnabled(value);
+                } catch (_) {
+                  if (context.mounted)
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Preference was not saved. Try again.'),
+                      ),
+                    );
+                }
+              },
+              // Sound is withheld until actual audibility is verified on this build.
+              onRetryLoad: _load,
+              onOpenBetaMetrics: widget.onOpenBetaMetrics == null
+                  ? null
+                  : () => widget.onOpenBetaMetrics!(context),
+              onOpenSupport: widget.onOpenBetaMetrics != null
+                  ? null
+                  : () => showDialog<void>(
+                      context: context,
+                      animationStyle: MediaQuery.disableAnimationsOf(context)
+                          ? AnimationStyle.noAnimation
+                          : null,
+                      builder: (_) => Act0BetaMetricsDialogV1(
+                        learning: null,
+                        nowUtc: DateTime.now,
+                      ),
                     ),
-                  );
-              }
-            },
-            // Sound is withheld until actual audibility is verified on this build.
-            onRetryLoad: _load,
-            onOpenBetaMetrics: widget.onOpenBetaMetrics == null
-                ? null
-                : () => widget.onOpenBetaMetrics!(context),
-            onOpenSupport: widget.onOpenBetaMetrics != null
-                ? null
-                : () => showDialog<void>(
-                    context: context,
-                    animationStyle: MediaQuery.disableAnimationsOf(context)
-                        ? AnimationStyle.noAnimation
-                        : null,
-                    builder: (_) => Act0BetaMetricsDialogV1(
-                      learning: null,
-                      nowUtc: DateTime.now,
-                    ),
-                  ),
-            onBack: () => Navigator.of(context).pop(),
-            onReplayWelcome: widget.onReplayWelcome == null
-                ? null
-                : () => _returnToShell(widget.onReplayWelcome!),
-            onRetakePlacement: widget.onRetakePlacement == null
-                ? null
-                : () => _returnToShell(widget.onRetakePlacement!),
-            onRecoveryOptions: widget.onRecoveryOptions == null
-                ? null
-                : () => _returnToShell(widget.onRecoveryOptions!),
-            onDeleteLocalData: widget.onDeleteLocalData == null
-                ? null
-                : () => _returnToShell(widget.onDeleteLocalData!),
-            onOpenPrivacy: () => Navigator.of(context).push<void>(
-              MaterialPageRoute(builder: (_) => const PrivacyScreen()),
-            ),
-            onOpenTerms: () => Navigator.of(context).push<void>(
-              MaterialPageRoute(builder: (_) => const TermsScreen()),
+              onBack: () => Navigator.of(context).pop(),
+              onReplayWelcome: widget.onReplayWelcome == null
+                  ? null
+                  : () => _returnToShell(widget.onReplayWelcome!),
+              onRetakePlacement: widget.onRetakePlacement == null
+                  ? null
+                  : () => _returnToShell(widget.onRetakePlacement!),
+              onRecoveryOptions: widget.onRecoveryOptions == null
+                  ? null
+                  : () => _returnToShell(widget.onRecoveryOptions!),
+              onDeleteLocalData: widget.onDeleteLocalData == null
+                  ? null
+                  : () => _returnToShell(widget.onDeleteLocalData!),
+              onOpenPrivacy: () => Navigator.of(context).push<void>(
+                MaterialPageRoute(builder: (_) => const PrivacyScreen()),
+              ),
+              onOpenTerms: () => Navigator.of(context).push<void>(
+                MaterialPageRoute(builder: (_) => const TermsScreen()),
+              ),
             ),
           ),
         ),
-      ),
-    ),
+      );
+    },
   );
 }

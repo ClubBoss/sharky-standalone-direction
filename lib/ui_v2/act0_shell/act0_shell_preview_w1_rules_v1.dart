@@ -92,12 +92,14 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Widget _buildW1RulesFlowV1() {
-    final answers = _w1RulesAnswersV1;
-    final result = _w1RulesResultV1;
+    final view = Act0W1RulesViewModelV1(
+      answers: _w1RulesAnswersV1,
+      result: _w1RulesResultV1,
+    );
+    final result = view.result;
     final Widget body;
-    if (answers != null) {
-      final index = answers.length;
-      final question = act0W1RulesQuestionsV1[index];
+    if (view.question case final question?) {
+      final index = view.index;
       final runner = question.runner(index);
       body = Act0LessonRunnerShellV1(
         key: ValueKey(question.taskId),
@@ -117,7 +119,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
         onContinueReview: () {},
       );
     } else if (result != null) {
-      final missed = result.missedQuestions.toList();
+      final missed = view.missed;
       body = Padding(
         padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
         child: Column(
@@ -139,7 +141,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
               ),
             ],
             const SizedBox(height: 8),
-            Text('${result.score} of ${act0W1RulesQuestionsV1.length} correct'),
+            Text('${result.score} of ${view.total} correct'),
             const SizedBox(height: 12),
             Expanded(
               child: ListView.separated(
@@ -159,9 +161,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
             ),
             FilledButton(
               key: const Key('act0_shell_w1_rules_continue'),
-              onPressed: () => _openRulesStartLessonV1(
-                result.passed ? 'world_2' : 'world_1',
-              ),
+              onPressed: () => _openRulesStartLessonV1(view.landingWorldId),
               child: Text(result.passed ? 'Start World 2' : 'Start World 1'),
             ),
           ],

@@ -65,31 +65,37 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final visibleEarnedMoment = earnedMomentConsumer.moments.isNotEmpty
         ? earnedMomentConsumer.moments.first
         : null;
-    final visibleRepairOutcomeReceipt =
-        firstCorrectEarnedThisRun == null ||
-            (summary.independentProvenanceKnown &&
-                summary.quickFixCount > 0 &&
-                summary.assistedCount == 0)
+    final view = Act0SessionSummaryViewModelV1(
+      worldDone: summary.isWorldComplete,
+      cleanPass: summary.masteryStatus == Act0MasteryStatusV1.cleanPass,
+      quickFixCount: summary.quickFixCount,
+      assistedCount: summary.assistedCount,
+      independentProvenanceKnown: summary.independentProvenanceKnown,
+      firstCorrectEarnedThisRun: firstCorrectEarnedThisRun,
+      openMissedSpots: openMissedSpots,
+      canReturnHome: onBackToHome != null,
+      hasSourceNext:
+          nextUsefulHand?.isActionableRepair == true &&
+          onNextUsefulHand != null,
+      hasUnlockLabel: summary.unlockedLabel != null,
+      hasGrowthLabel: summary.growthLabel.isNotEmpty,
+      hasReminderAction: onFirstLessonReminder != null,
+      canShareResult: canShareResult,
+      curriculumCompleted: summary.curriculumCompleted,
+    );
+    final visibleRepairOutcomeReceipt = view.showRepairReceipt
         ? repairOutcomeConsumer.sessionReceipt
         : null;
     final localeIsRu = Localizations.localeOf(context).languageCode == 'ru';
-    final earnedInThisRun = firstCorrectEarnedThisRun ?? true;
-    final currentRunMoments = earnedInThisRun
-        ? earnedMomentConsumer.moments
-        : const <Act0AchievementMomentViewModelV1>[];
-    final currentRunRepairReceipt = firstCorrectEarnedThisRun == null
-        ? visibleRepairOutcomeReceipt // Existing isolated renderer contract.
-        : summary.independentProvenanceKnown &&
-              summary.quickFixCount > 0 &&
-              summary.assistedCount == 0
-        ? visibleRepairOutcomeReceipt
-        : null;
     final payoffHero = _SessionSummaryPayoffHeroV1.fromProof(
-      moments: currentRunMoments,
-      receipt: currentRunRepairReceipt,
+      moments: view.showCurrentRunMoments
+          ? earnedMomentConsumer.moments
+          : const <Act0AchievementMomentViewModelV1>[],
+      receipt: visibleRepairOutcomeReceipt,
     );
-    final hasSourceNext =
-        nextUsefulHand?.isActionableRepair == true && onNextUsefulHand != null;
+    final hasSourceNext = view.hasSourceNext;
+    final fixMissedSpots =
+        view.primaryAction == Act0SessionSummaryPrimaryActionV1.fixMissedSpots;
     final summarySharkyLine = localeIsRu
         ? (summary.assistedCount > 0
               ? '\u041f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0430 \u043f\u043e\u043c\u043e\u0433\u043b\u0430 \u043f\u043e\u043d\u044f\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0443. \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u044d\u0442\u043e\u0442 \u0441\u0438\u0433\u043d\u0430\u043b \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e.'
@@ -123,10 +129,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final sessionSummaryGrowthStage = act0SharkyGrowthStageForWorldNumberV1(
       summary.worldNumber,
     );
-    final foldUnlockIntoMilestonePanel =
-        summary.isWorldComplete && summary.unlockedLabel != null;
-    final showHabitReward =
-        !summary.isWorldComplete || summary.growthLabel.isEmpty;
+    final foldUnlockIntoMilestonePanel = view.foldUnlockIntoMilestonePanel;
+    final showHabitReward = view.showHabitReward;
     final tabletLayout = MediaQuery.sizeOf(context).shortestSide >= 700;
     Widget nextActionCard() {
       return _ProofMotionRevealV1(
@@ -209,14 +213,16 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     Widget primaryCtaButton() {
       return FilledButton(
         key: const Key('act0_shell_block_summary_continue_cta'),
-        onPressed: onBackToHome != null && openMissedSpots > 0
-            ? onOpenReview
-            : hasSourceNext
-            ? onNextUsefulHand
-            : _callbackForCta(summary.primaryCtaKind),
+        onPressed: switch (view.primaryAction) {
+          Act0SessionSummaryPrimaryActionV1.fixMissedSpots => onOpenReview,
+          Act0SessionSummaryPrimaryActionV1.practiceClue => onNextUsefulHand,
+          Act0SessionSummaryPrimaryActionV1.milestone => _callbackForCta(
+            summary.primaryCtaKind,
+          ),
+        },
         style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(),
         child: Text(
-          onBackToHome != null && openMissedSpots > 0
+          fixMissedSpots
               ? (openMissedSpots == 1
                     ? 'Fix 1 missed spot'
                     : 'Fix $openMissedSpots missed spots')
@@ -372,7 +378,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            if (summary.isWorldComplete) ...[
+                            if (view.worldDone) ...[
                               const Spacer(),
                               Icon(
                                 Icons.emoji_events_rounded,
@@ -595,7 +601,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               nextActionCard(),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               primaryCtaButton(),
-              if (onFirstLessonReminder case final onReminder?) ...[
+              if (view.hasReminderAction) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 Text(
                   'Want one reminder at 6 pm when practice is ready?',
@@ -606,19 +612,18 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   children: [
                     TextButton(
                       key: const Key('act0_first_lesson_reminder_yes'),
-                      onPressed: () => onReminder(true),
+                      onPressed: () => onFirstLessonReminder!(true),
                       child: const Text('Yes'),
                     ),
                     TextButton(
                       key: const Key('act0_first_lesson_reminder_no'),
-                      onPressed: () => onReminder(false),
+                      onPressed: () => onFirstLessonReminder!(false),
                       child: const Text('No thanks'),
                     ),
                   ],
                 ),
               ],
-              if (canShareResult && summary.curriculumCompleted)
-                const Act0ShareLessonResultButtonV1(),
+              if (view.showShare) const Act0ShareLessonResultButtonV1(),
               if (onBackToHome != null)
                 TextButton(
                   key: const Key('act0_shell_block_summary_home_cta'),
@@ -773,7 +778,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 _SessionSummaryEarnedMomentCardV1(
                   moment: visibleEarnedMoment,
                   tone: celebrateTone,
-                  previouslySaved: !earnedInThisRun,
+                  previouslySaved: !view.showCurrentRunMoments,
                   localeIsRu: localeIsRu,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),

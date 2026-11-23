@@ -1,6 +1,6 @@
-# Act0 screen logic inventory · V6 / B23
+# Act0 screen logic inventory · V6 / B23 / B25
 
-Source baseline `bb8af520`, with the B23 extractions below. Scope follows `lib/main.dart` → `lib/ui_v2/app_root.dart` → `Act0ShellPreviewScreenV1`. Paths below are relative to `lib/ui_v2/act0_shell/` unless stated. Tables describe states and data available to the current UI. A shared boot state or “no separate state” has no screen-specific data to draw.
+Source baseline `bb8af520`, with the B23 extractions below. B25 uses `0d010ce7e` as its source baseline. Scope follows `lib/main.dart` → `lib/ui_v2/app_root.dart` → `Act0ShellPreviewScreenV1`. Paths below are relative to `lib/ui_v2/act0_shell/` unless stated. Tables describe states and data available to the current UI. A shared boot state or “no separate state” has no screen-specific data to draw.
 
 Copy entries identify the current English state and action strings and the source for variable and localized copy. Standard buttons, links, switches and form fields expose their visible text or Flutter control semantics. Accessibility entries call out extra labels, hints and state announcements. The shell navigation exposes the Home, Learn, Practice, Review and You tab names and selection. Telemetry below belongs to shell action/exposure hooks and the existing sink in `act0_shell_preview_telemetry_v1.dart`. It is conditional on the run and route.
 
@@ -41,6 +41,17 @@ Copy entries identify the current English state and action strings and the sourc
 
 **Owner and outputs.** `act0_placement_shell_v1.dart` uses B23 `Act0PlacementViewModelV1` for the primary-action rule. The question/result widgets own copy and controls. `act0_shell_preview_placement_v1.dart` owns routing, answers, diagnostic and persistence. `act0_shell_preview_w1_rules_v1.dart` owns W1 start/check/result and can bypass the legacy questionnaire. **Accessibility.** “Back” tooltip in the English flow, question and option text and CTA labels. **Telemetry.** Placement shell logic can emit `session_start` on learning entry. The questionnaire/widget itself emits no separate event.
 
+**B25 · W1 rules check** (`Act0W1RulesViewModelV1`). The legacy questionnaire still reads the B23 primary-action model and its existing intake/result inputs.
+
+| Vision state | Data to draw and actions |
+| --- | --- |
+| First run | Chooser with Start with the basics or the 10-question check. |
+| In progress | Zero-based index, total, selected choice indices, current authored question/task and options. The runner formats the header and submits a choice. |
+| Passed | Source score and total, W2 landing target and existing Start World 2 action. The result retains the authored explanations for any misses. |
+| Not passed | Source score and total, W1 landing target, distinct missed topics, and each missed question's topic and reason. |
+| Skipped | Legacy introduction skip is saved separately from completion. Home uses the existing mission. No scored result or skipped result screen. Leaving the W1 check opens W1 and discards in-flight answers. |
+| Interrupted | Gap. In-flight check answers are held in memory. No same-question restore after restart. |
+
 ## Home
 
 | State | Data to draw and actions |
@@ -65,7 +76,18 @@ Copy entries identify the current English state and action strings and the sourc
 | Loading / error | Shared startup/recovery; no separate map fetch. |
 | Offline | Catalog, progress and unlocks are local. |
 
-**Owner and outputs.** Shell owns selection, progression truth and launch. `act0_path_progress_v1.dart` and `act0_learn_path_journey_v1.dart` hold route models. `act0_learn_path_shell_v1.dart`, `act0_learn_path_cards_v1.dart`, `act0_learn_path_world_menu_v1.dart` and `act0_learn_path_mission_v1.dart` build cards, volume/world selection and mission. Strings include “Cleared”, “Active”, “Next”, “Locked”, “Finish … to open.” and catalog titles. **Accessibility.** Merged button semantics for Learn targets and Material dialog semantics for the world picker barrier. **Telemetry.** Launch can start the lesson/run events. `world_complete` belongs to the completion transition. **Next seam.** Move remaining volume/focus/mission selection from Learn widget state while preserving callbacks.
+**Owner and outputs.** Shell owns selection, progression truth and launch. `act0_path_progress_v1.dart` and `act0_learn_path_journey_v1.dart` hold route models. `act0_learn_path_shell_v1.dart`, `act0_learn_path_cards_v1.dart`, `act0_learn_path_world_menu_v1.dart` and `act0_learn_path_mission_v1.dart` build cards, volume/world selection and mission. Strings include “Cleared”, “Active”, “Next”, “Locked”, “Finish … to open.” and catalog titles. **Accessibility.** Merged button semantics for Learn targets and Material dialog semantics for the world picker barrier. **Telemetry.** Launch can start the lesson/run events. `world_complete` belongs to the completion transition.
+
+**B25 · Map** (`Act0LearnPathViewModelV1`). The widget reads existing world/lesson statuses, selection, mission and windowed journey data. Expanded lesson disclosure, scrolling and callbacks remain in the widget.
+
+| Vision state | Data to draw and actions |
+| --- | --- |
+| First run | Selected world, first mission task at step 1, lesson total and earned progress. |
+| In progress | Current/next worlds, selected world and lesson, mission task and step, required-practice input, journey indexes, deferred locked count, authored prerequisites and lesson availability. Placement closures can advance the step. Earned progress counts completed tasks only. |
+| World done | Existing completed-world status, completed lesson rows and earned progress. |
+| All done | Closed route from world statuses (completed or passed by rules check), with the ordinary Learn UI. No dedicated Map closeout screen. |
+| Flag-on extended catalog | Existing pilot flag and supplied W13–W16 cards. World/lesson status and navigation use the same models as W1–W12. |
+| 9-max tasks hidden | Gap. No active 9-max lesson tasks or separate Map visibility state for a B15 gate. |
 
 ## Lesson intro / teaching entry
 
@@ -91,7 +113,16 @@ Copy entries identify the current English state and action strings and the sourc
 | Loading / error | No summary fetch; durable-save failure belongs to the shell. |
 | Offline | Same locally computed summary. Reminder support is platform dependent. |
 
-**Owner and outputs.** `act0_shell_preview_flow_v1.dart` and `act0_shell_preview_learning_run_v1.dart` assemble and close the run. `Act0RunnerCompletionSummaryV1`, `Act0SessionSummaryEvidenceViewModelV1` and payoff projections hold source data. `Act0BlockCompletionShellV1` in `act0_lesson_runner_completion_v1.dart` selects/layouts optional sections and shows localized summary labels. **Accessibility.** Visible heading, outcome and action text; reminder actions retain visible labels. **Telemetry.** Session/run completion and applicable `session_payoff_generated`, `session_payoff_viewed`, `session_focus_selected`, `next_practice_recommended`, `session_payoff_completed`, `world_complete`. **Next seam.** Move section eligibility and CTA pairing still assembled in the shell or completion widget.
+**Owner and outputs.** `act0_shell_preview_flow_v1.dart` and `act0_shell_preview_learning_run_v1.dart` assemble and close the run. `Act0RunnerCompletionSummaryV1`, `Act0SessionSummaryEvidenceViewModelV1` and payoff projections hold source data. `Act0BlockCompletionShellV1` in `act0_lesson_runner_completion_v1.dart` selects/layouts optional sections and shows localized summary labels. **Accessibility.** Visible heading, outcome and action text; reminder actions retain visible labels. **Telemetry.** Session/run completion and applicable `session_payoff_generated`, `session_payoff_viewed`, `session_focus_selected`, `next_practice_recommended`, `session_payoff_completed`, `world_complete`.
+
+**B25 · Summary** (`Act0SessionSummaryViewModelV1` with the existing block summary, evidence and handoff contracts). It supplies primary action priority and eligibility for repair proof, reward/unlock sections, reminder and sharing.
+
+| Vision state | Data to draw and actions |
+| --- | --- |
+| Lesson done clean | Existing clean-pass status, lesson title, task and correct counts, skill gains, milestones and available next/replay action. |
+| Done with repairs | Source repair and assisted counts, independent provenance, available repair receipt, missed-spot count and source next-clue action. Proof and next action retain their separate eligibility rules. |
+| World done | World title and number, skill/outcome evidence, next-world unlock when supplied and existing reminder/share eligibility. Store-review eligibility stays in the shell. |
+| Partial | Gap. Leaving mid-lesson preserves the learner's position through the existing flow. It does not open a partial result screen. |
 
 ## Review
 
@@ -141,7 +172,16 @@ Copy entries identify the current English state and action strings and the sourc
 | Done | Persisted preference values continue on the ready screen. Deletion completion goes through shell restart. |
 | Offline | Local preferences, replay, checks and recovery work locally. Legal/external destinations have platform/browser availability. |
 
-**Owner and outputs.** Settings route state in `act0_academy_runtime_adapter_v1.dart`; `academy_leaves/act0_academy_settings_leaf_v1.dart` reads `Act0AcademySettingsLeafInputV1`. Stores are `lib/services/app_settings_service.dart`, `act0_practice_reminder_v1.dart` and the shell's recovery/deletion owners. **Accessibility.** “Back” tooltip and merged row semantics, switch state and retry text. **Telemetry.** No Settings leaf emission; optional beta diagnostics use the existing local data surface. **Next seam.** Move route preference loading/saving state only if needed for a replacement Settings widget.
+**Owner and outputs.** Settings route state in `act0_academy_runtime_adapter_v1.dart`; `academy_leaves/act0_academy_settings_leaf_v1.dart` reads `Act0AcademySettingsLeafInputV1`. Stores are `lib/services/app_settings_service.dart`, `act0_practice_reminder_v1.dart` and the shell's recovery/deletion owners. **Accessibility.** “Back” tooltip and merged row semantics, switch state and retry text. **Telemetry.** No Settings leaf emission; optional beta diagnostics use the existing local data surface.
+
+**B25 · Settings** (`Act0SettingsViewModelV1`, `Act0SettingsDeletionStateV1`). Preference storage, reminder scheduling, navigation and deletion effects keep their existing owners.
+
+| Vision state | Data to draw and actions |
+| --- | --- |
+| Default | Load state, haptics, supported reminder value and change availability, version/build label and existing destination callbacks. |
+| Reminders denied by iOS | Enabling without a scheduled reminder shows the existing iPhone Settings instruction. Gap. There is no separate permission value or action that opens iOS Settings. |
+| Delete confirm | Shell confirmation sheet with existing scope copy and Cancel/Delete actions. |
+| Deleted | Successful local erase returns to first start. No separate deleted confirmation screen. |
 
 ## Practice hub
 

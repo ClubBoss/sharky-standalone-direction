@@ -361,7 +361,11 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     _selectedWorldId = world.worldId;
     _selectedLessonId = focusLesson.lessonId;
     _selectedTaskId = focusTask.taskId;
-    final showWelcome = !_welcomeCompletedV1 && !_introductionSkippedV1;
+    final placement = Act0W1RulesViewModelV1(
+      introductionSkipped: _introductionSkippedV1,
+    );
+    final showWelcome =
+        !_welcomeCompletedV1 && placement.showWelcomeAfterPlacement;
     _showPlacement = false;
     _showWelcome = showWelcome;
     _welcomeHandoffStartsRecommendedTaskV1 = directRunner;

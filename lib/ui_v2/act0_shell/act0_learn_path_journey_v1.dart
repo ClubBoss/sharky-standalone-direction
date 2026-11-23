@@ -960,27 +960,6 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
   }
 }
 
-List<int> _focusedJourneyLessonIndexesV1(List<Act0LessonCardV1> lessons) {
-  return <int>[
-    for (var i = 0; i < lessons.length; i++)
-      if (_shouldShowJourneyLessonInWindowV1(lessons, i)) i,
-  ];
-}
-
-bool _shouldShowJourneyLessonInWindowV1(
-  List<Act0LessonCardV1> lessons,
-  int index,
-) {
-  final lesson = lessons[index];
-  if (lesson.state != Act0LessonStateV1.locked) {
-    return true;
-  }
-  if (lesson.primaryCtaLabel == 'Clear weak spots') {
-    return true;
-  }
-  return index > 0 && lessons[index - 1].state == Act0LessonStateV1.current;
-}
-
 class _LockedJourneySummaryV1 extends StatelessWidget {
   const _LockedJourneySummaryV1({required this.count});
 
