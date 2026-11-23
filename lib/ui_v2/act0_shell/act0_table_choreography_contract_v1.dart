@@ -385,8 +385,9 @@ Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
 
 Act0TableStateV1 act0TableForChoreographyFrameV1(
   Act0TableStateV1 source,
-  Act0TableChoreographyFrameV1 frame,
-) {
+  Act0TableChoreographyFrameV1 frame, {
+  bool showDecisionSeatDetails = true,
+}) {
   if (frame.heroDecisionReady) {
     return source;
   }
@@ -407,15 +408,20 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
           isBigBlind: seat.isBigBlind,
           blindAmountLabel: seat.blindAmountLabel,
           isActive: seat.seatId == frame.focusSeatId,
-          isTarget: seat.isTarget,
+          isTarget: showDecisionSeatDetails && seat.isTarget,
           isInHand: !folded && (sourceActor || seat.isInHand),
           isFolded: folded,
-          hasActed: seat.hasActed,
-          isLastAggressor: seat.isLastAggressor,
+          hasActed: showDecisionSeatDetails && seat.hasActed,
+          isLastAggressor: showDecisionSeatDetails && seat.isLastAggressor,
           isOccupied: seat.isOccupied,
-          stackLabel: seat.stackLabel,
+          stackLabel: showDecisionSeatDetails ? seat.stackLabel : '',
           holeCards: seat.holeCards,
-          cardsVisibleMode: seat.cardsVisibleMode,
+          cardsVisibleMode:
+              !showDecisionSeatDetails &&
+                  !seat.isHero &&
+                  seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceUp
+              ? Act0CardsVisibleModeV1.faceDown
+              : seat.cardsVisibleMode,
           currentBetLabel: null,
           bet: frame.commitments[seat.seatId],
         );

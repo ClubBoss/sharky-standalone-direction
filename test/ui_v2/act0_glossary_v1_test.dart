@@ -16,6 +16,64 @@ final _rows = [
 ];
 
 void main() {
+  testWidgets('opens the numeric tools from the lesson glossary', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showAct0GlossarySheetV1(context, taskText: ''),
+              child: const Text('Open glossary'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open glossary'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Price Bar and pot odds'));
+    await tester.pumpAndSettle();
+    final pot = find.byKey(const Key('act0_tool_pot'));
+    final call = find.byKey(const Key('act0_tool_call'));
+    await tester.enterText(pot, '30');
+    await tester.enterText(call, '10');
+    await tester.pump();
+    expect(
+      find.text('Pot after call 40.00 · Break-even equity 25.00%'),
+      findsOneWidget,
+    );
+    expect(find.text('Pot odds 3.00 to 1'), findsOneWidget);
+    await tester.enterText(call, '31');
+    await tester.pump();
+    expect(
+      find.text('Enter a positive pot and a valid call amount.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Price Bar and pot odds'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('BB and chips'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('act0_tool_blind_amount')),
+      '2.5',
+    );
+    await tester.enterText(find.byKey(const Key('act0_tool_blind_rate')), '20');
+    await tester.pump();
+    expect(find.text('50.00 chips'), findsOneWidget);
+    await tester.tap(find.text('BB and chips'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Outs to percentage'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('act0_tool_outs')), '9');
+    await tester.pump();
+    expect(find.text('Next card 19.15%'), findsOneWidget);
+    expect(find.text('By the river 34.97%'), findsOneWidget);
+  });
+
   test('every term the glossary shows for a W1–W12 task is defined', () {
     final names = act0GlossaryTermsV1.map((t) => t.name).toList();
     expect(names.toSet().length, names.length, reason: 'duplicate terms');

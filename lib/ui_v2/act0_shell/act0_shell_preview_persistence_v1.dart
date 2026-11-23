@@ -1424,11 +1424,15 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           orElse: () => null,
         );
     if (latestRecord != null && !wasAlreadyRecorded) {
+      final table = decision.recordedTable;
       if (Act0ArchivedAttemptV1.fromRecordedDecision(
             latestRecord,
             taskLabel: decision.recordedTaskLabel,
             choiceLabel: decision.recordedChoiceLabel,
             recordedTrail: decision.recordedTrail,
+            tableFingerprint: table == null
+                ? null
+                : act0ReplayTableFingerprintV1(table),
           )
           case final attempt?) {
         _attemptArchiveV1 = _attemptArchiveV1.add(attempt);

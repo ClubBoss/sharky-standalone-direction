@@ -63,9 +63,19 @@ class Act0TableSceneV1 extends StatelessWidget {
       );
     }
     final resolved = config!;
+    final activeCommitment =
+        resolved.animateActiveCommitment &&
+            !MediaQuery.disableAnimationsOf(context)
+        ? table.seats
+              .where((seat) => seat.seatId == table.activeSeatId)
+              .firstOrNull
+              ?.bet
+        : null;
     return _Act0TableV1(
       table: table,
       highlightedCardIds: resolved.highlightedCardIds,
+      animateBetMotion: activeCommitment != null,
+      betOverride: activeCommitment,
       interactiveCalloutLabel: '',
       onBoardCardTap: (table) => onBoardCardTap?.call(table),
       visualVariant: resolved.useRefinedVisualVariant
