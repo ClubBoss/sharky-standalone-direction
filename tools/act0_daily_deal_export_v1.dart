@@ -21,7 +21,7 @@ void main() {
     expect(status.exitCode, 0, reason: '${status.stderr}');
     expect(status.stdout, isEmpty, reason: 'Export from a clean checkout.');
 
-    final templates = Act0DailyDealTemplateV1.values;
+    final templates = act0LegacyDailyDealTemplatesV1;
     final sections = [
       for (final template in templates)
         ...renderDailyDealExportSectionV1(template),

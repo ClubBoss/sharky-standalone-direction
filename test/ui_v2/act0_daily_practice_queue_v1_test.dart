@@ -5,6 +5,7 @@ import '../support/act0_y5b_catalog_contract_v1.dart';
 import '../support/act0_y5c_catalog_contract_v1.dart';
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -162,7 +163,12 @@ void main() {
     );
   }
 
-  for (final (lastWorld, day) in [(5, 21), (8, 22)]) {
+  for (final (lastWorld, day) in [
+    (5, 21),
+    (8, 22),
+    (12, 23),
+    if (act0CurriculumPilotEnabledV1) (18, 24),
+  ]) {
     testWidgets(
       'generated Daily Practice through W$lastWorld advances and restores without course XP',
       (tester) async {
@@ -230,6 +236,10 @@ void main() {
           expect(recipe.sourceTaskId, 'w7_low_spr_commit');
           expect(first.runner.table.boardCards, hasLength(3));
         }
+        if (lastWorld == 18) {
+          expect(act0IsPilotDailyDealSourceV1(recipe.sourceTaskId), isTrue);
+          expect(act0PilotDailyDealTableIsValidV1(first.runner.table), isTrue);
+        }
         final choice = first.runner.options.singleWhere(
           (option) => option.isCorrect,
         );
@@ -244,6 +254,23 @@ void main() {
         final queue = Act0DailyPracticeQueueV1.tryParse(
           saved['dailyPracticeQueue'],
         )!;
+        if (!act0CurriculumPilotEnabledV1 && lastWorld == 12) {
+          const oldFirst =
+              'daily_deal_v1:20780:callPrice:price_checkpoint:w4_checkpoint_price';
+          const oldQueue = <String, Object>{
+            'taskIds': [
+              oldFirst,
+              'daily_deal_v1:20780:cleanOuts:table_trigger_multiway_and_spr:w11_multiway_dirty_outs',
+              'daily_deal_v1:20780:open:hand_discipline_apply:apply_btn_open',
+            ],
+            'answeredTaskIds': [oldFirst],
+            'cleanTaskIds': [oldFirst],
+          };
+          expect(
+            utf8.encode(jsonEncode(queue.toPayload())),
+            utf8.encode(jsonEncode(oldQueue)),
+          );
+        }
         expect(queue.answeredTaskIds, contains(firstId));
         expect(queue.nextTaskId, isNotNull);
         expect(saved['completedTaskIds'], unorderedEquals(completedIds));
@@ -252,6 +279,11 @@ void main() {
         expect(next.selectedTaskId, queue.nextTaskId);
         expect(next.selectedTaskId, isNot(firstId));
         expect(act0DailyDealRecipeV1(next.selectedTaskId!), isNotNull);
+        if (lastWorld == 18) {
+          final restored = act0DailyDealRecipeV1(next.selectedTaskId!)!;
+          expect(act0IsPilotDailyDealSourceV1(restored.sourceTaskId), isTrue);
+          expect(act0PilotDailyDealTableIsValidV1(next.runner.table), isTrue);
+        }
       },
     );
   }

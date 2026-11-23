@@ -82,46 +82,12 @@ _PracticeDeal _model(PostflopPracticeSkillV1 skill, bool first, Random rng) {
 bool _jointOpponents(PostflopPracticeSkillV1 skill) =>
     skill == PostflopPracticeSkillV1.multiwayPrice;
 
-Iterable<List<String>> _runouts(List<String> deck, int needed) sync* {
-  if (needed == 0) {
-    yield const [];
-  } else if (needed == 1) {
-    for (final card in deck) {
-      yield [card];
-    }
-  } else {
-    for (var i = 0; i < deck.length; i++) {
-      for (var j = i + 1; j < deck.length; j++) {
-        yield [deck[i], deck[j]];
-      }
-    }
-  }
-}
-
-_Showdown _showdowns(_PracticeDeal model, List<String> opponents) {
-  final hero = model.hero.split(' ');
-  final board = model.board.split(' ');
-  final villains = opponents.map((hand) => hand.split(' ')).toList();
-  final seen = {...hero, ...board, ...villains.expand((hand) => hand)};
-  final remaining = _fullDeck().where((card) => !seen.contains(card)).toList();
-  var wins = 0;
-  var outcomes = 0;
-  var potShares = 0.0;
-  for (final runout in _runouts(remaining, 5 - board.length)) {
-    final complete = [...board, ...runout];
-    final heroHand = Hand.solveHand([...hero, ...complete]);
-    final comparisons = [
-      for (final villain in villains)
-        heroHand.compare(Hand.solveHand([...villain, ...complete])),
-    ];
-    outcomes++;
-    if (comparisons.any((result) => result > 0)) continue;
-    final tied = comparisons.where((result) => result == 0).length;
-    if (tied == 0) wins++;
-    potShares += 1 / (1 + tied);
-  }
-  return (share: potShares / outcomes, wins: wins, outcomes: outcomes);
-}
+_Showdown _showdowns(_PracticeDeal model, List<String> opponents) =>
+    act0PracticeShowdownV1(
+      model.hero.split(' '),
+      model.board.split(' '),
+      opponents,
+    );
 
 List<_Showdown> _practiceEquities(
   _PracticeDeal deal,
@@ -418,9 +384,12 @@ _PracticeAnswer _betAnswer(
   final checkEv = equity * pot;
   var betEv = 0.0;
   for (final (index, result) in results.indexed) {
-    betEv += deal.folds.contains(index)
-        ? pot
-        : result.share * (pot + 2 * bet) - bet;
+    betEv += act0PracticeBetPayoffV1(
+      equity: result.share,
+      pot: pot,
+      bet: bet,
+      folds: deal.folds.contains(index),
+    );
   }
   betEv /= results.length;
   final isBucket = skill == PostflopPracticeSkillV1.rangeBuckets;
